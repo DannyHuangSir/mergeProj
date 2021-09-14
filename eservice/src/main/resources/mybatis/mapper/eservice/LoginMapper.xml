@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.web.dao.LoginDao">
+	
+	<resultMap id="auditLogMap" type="com.twfhclife.eservice.web.model.AuditLogVo">
+		<result column="id" property="id" />
+		<result column="userId" property="userId" />
+		<result column="loginDate" property="loginDate" />
+		<result column="logoutDate" property="logoutDate" />
+		<result column="loginStatus" property="loginStatus" />
+		<result column="clientIp" property="clientIp" />
+		<result column="euNationality" property="euNationality" />
+	</resultMap>
+	
+	<!-- 新增登入記錄 -->
+	<insert id="addAuditLog">
+		INSERT INTO ESERVICE.DBO.AUDIT_LOG (
+			ID
+			,USER_ID
+			,LOGIN_DATE
+			,LOGIN_STATUS
+			,CLIENT_IP
+			,EUNATIONALITY
+		) VALUES (
+			(SELECT COALESCE(MAX(ID) + 1, 1) FROM ESERVICE.DBO.AUDIT_LOG),
+			#{auditLogVo.userId},
+			getdate(),
+			#{auditLogVo.loginStatus},
+			#{auditLogVo.clientIp},
+			#{auditLogVo.euNationality}
+		)
+	</insert>
+	
+	<!-- 更新登出記錄 -->
+	<update id="updateLogoutDate">
+		UPDATE
+			ESERVICE.DBO.AUDIT_LOG
+		SET
+			LOGOUT_DATE = getdate()
+		WHERE
+			ID = (
+				SELECT
+					MAX(ID)
+				FROM
+					ESERVICE.DBO.AUDIT_LOG
+				WHERE
+					LOWER(USER_ID) = LOWER(#{userId})
+			)
+	</update>
+	
+	<!-- 更新登出記錄 -->
+	<select id="getLastLoginTime" resultType="date">
+		SELECT
+			MAX(LOGIN_DATE)
+		FROM
+			ESERVICE.DBO.AUDIT_LOG
+		WHERE
+			LOWER(USER_ID) = LOWER(#{userId})
+	</select>
+	
+	<select id="getLastAuditLog" resultMap="auditLogMap" parameterType="java.lang.String">
+		SELECT TOP (CAST(#{row} AS int)) ID, USER_ID userId, LOGIN_DATE loginDate, LOGOUT_DATE logoutDate, LOGIN_STATUS loginStatus, CLIENT_IP clientIp 
+		FROM ESERVICE.DBO.AUDIT_LOG 
+		WHERE USER_ID = #{userId}
+		ORDER BY ID DESC
+	</select>
+
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransDnsDao">
+
+	<resultMap id="TransDnsResultMap" type="com.twfhclife.eservice.onlineChange.model.TransDnsVo">
+		<result property="seqId"   column="SEQ_ID" />
+		<result property="notifySeqId" column="NOTIFY_SEQ_ID" />
+		<result property="type"    column="TYPE" />
+		<result property="jobId"   column="JOB_ID" />
+		<result property="caseId"  column="CASE_ID" />
+		<result property="idno"    column="IDNO" />
+		<result property="insnom"  column="INSNOM" />
+		<result property="name"    column="NAME" />
+		<result property="birdate" column="BIRDATE" />
+		<result property="sex" column="SEX" />
+		<result property="con" column="CON" />
+		<result property="condate" column="CONDATE" />
+		<result property="adddate" column="ADDDATE" />
+		<result property="status"  column="STATUS" />
+		<result property="sendAlliance"   column="SEND_ALLIANCE" />
+		<result property="createDate"     column="CREATE_DATE" />
+		<result property="code"    column="CODE" />
+		<result property="msg"     column="MSG" />
+		<result property="updateCodeDate" column="UPDATE_CODE_DATE" />
+
+
+		<result property="transNum" column="TRANS_NUM" />
+		<result property="conName" column="CON_NAME" />
+	</resultMap>
+	<sql id="TRANS_DNS_ALL">
+		A.SEQ_ID
+		,A.NOTIFY_SEQ_ID
+		,A.TRANS_NUM
+		,A.TYPE
+		,A.JOB_ID
+		,A.CASE_ID
+		,A.ESERVICE.DBO.FN_DEBASE64(IDNO) IDNO
+		,A.INSNOM
+		,A.ESERVICE.DBO.FN_DEBASE64(NAME) NAME
+		,A.ESERVICE.DBO.FN_DEBASE64(BIRDATE) BIRDATE
+		,A.SEX
+		,A.CON
+		,A.CONDATE
+		,A.ADDDATE
+		,A.SEND_ALLIANCE
+		,A.CREATE_DATE
+		,A.CODE
+		,A.MSG
+		,A.UPDATENUMBER
+		,A.UPDATE_CODE_DATE
+	</sql>
+	<!--查询详情-->
+	<select id="getTransDaoDnsDetail"  parameterType="java.lang.String"  resultMap="TransDnsResultMap">
+		select
+		 <include refid="TRANS_DNS_ALL"></include>
+		,B.TRANS_TYPE,B.STATUS,
+		CASE SEX WHEN '1' THEN '男' WHEN '2' THEN '女'  ELSE '其他' END  SEX,
+		CASE CON WHEN '30' THEN '被保險人因自然死身故' WHEN '31' THEN '被保險人因意外身故'   WHEN '32' THEN '被保險人因其他原因身故'  ELSE '' END  CON_NAME
+		from ESERVICE.DBO.TRANS_DNS A lEFT JOIN ESERVICE.DBO.TRANS B ON A.TRANS_NUM = B.TRANS_NUM
+		where A.TRANS_NUM = #{transNum}
+		order by A.CREATE_DATE desc
+	</select>
+
+	<insert id="insertTransDns" parameterType="com.twfhclife.eservice.onlineChange.model.TransDnsVo" >
+		insert into ESERVICE.DBO.TRANS_DNS
+			(SEQ_ID,NOTIFY_SEQ_ID,TRANS_NUM,TYPE,JOB_ID,CASE_ID,
+			IDNO,INSNOM,NAME,BIRDATE,SEX,CON,CONDATE,ADDDATE,SEND_ALLIANCE)
+		values
+			(
+				<choose>
+       				<when test="vo.seqId!=null and vo.seqId>0">
+       					#{vo.seqId, jdbcType=FLOAT},
+       				</when>
+       				<otherwise>
+       					(NEXT VALUE for TRANS_DNS_SEQ),
+       				</otherwise>
+       			</choose>
+       			#{vo.notifySeqId, jdbcType=VARCHAR},
+				#{vo.type, jdbcType=VARCHAR},
+				#{vo.jobId, jdbcType=VARCHAR},
+				#{vo.caseId, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.idno, jdbcType=VARCHAR}),
+				#{vo.insnom, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.name, jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.birdate, jdbcType=VARCHAR}),
+				#{vo.sex, jdbcType=VARCHAR},
+				#{vo.con, jdbcType=VARCHAR},
+				#{vo.condate, jdbcType=VARCHAR},
+				#{vo.adddate, jdbcType=VARCHAR},
+				#{vo.status, jdbcType=VARCHAR}
+			)
+	</insert>
+</mapper>

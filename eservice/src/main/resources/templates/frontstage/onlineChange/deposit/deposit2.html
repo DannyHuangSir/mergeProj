@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>申請保單提領(贖回)｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">申請保單提領(贖回)</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 申請保單提領(贖回)
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-3">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-3">
+						2<span class="hid1">. 提領金額</span>
+					</li>
+					<li class="step3b col-xs-3">
+						3<span class="hid1">. 給付方式</span>
+					</li>
+					<li class="step4 col-xs-3">
+						4<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請選擇提領保單</h2>
+    <div class="col-md-10 col-md-offset-1">
+      <form class="form-horizontal no-borderBottom" role="form">
+          <div class="form-group">
+            <label for="productID123" class="col-sm-2">提領保單：</label><div id="productID123" class="col-sm-8">
+              <th:block th:text="${depositVo.policyNo != null and userInfo.productNameMap != null}
+								? ${userInfo.productNameMap[depositVo.policyNo]}"/>
+              <span>(<th:block th:text="${depositVo.policyNo}"/>)</span></div>
+          </div>
+          <div class="form-group">
+             <label for="inputEmail3" class="col-sm-2">參考帳戶價值：</label>
+            <div class="col-sm-6">
+                <th:block th:text="${depositVo.currency}"/>
+                <th:block th:if="${depositVo.currency != 'NTD'}">
+                    <th:block th:text="${depositVo.policyAcctValue != null}
+							? ${#numbers.formatDecimal(depositVo.policyAcctValue, 0, 'DEFAULT', 2, 'POINT')}"/>
+                </th:block>
+                <th:block th:if="${depositVo.currency == 'NTD'}">
+                    <th:block th:text="${depositVo.policyAcctValue != null}
+							? ${#numbers.formatDecimal(depositVo.policyAcctValue, 0, 'DEFAULT', 0, 'COMMA')}"/>
+                </th:block>
+            </div>
+          </div>
+          <div class="form-group">
+             <label for="inputPassword3" class="col-sm-2">可提領金額：</label>
+            <div class="col-sm-10">
+                <th:block th:text="${depositVo.currency}"/>
+                <th:block th:text="${#numbers.formatDecimal((minValue) , 0, 'DEFAULT', 0, 'COMMA')}"/> ~
+                <th:block th:text="${depositVo.currency}"/>
+                <th:block th:text="${#numbers.formatDecimal((maxValue) , 0, 'DEFAULT', 0, 'COMMA')}"/>
+            </div>
+          </div>
+          <div class="form-group">
+                      <label for="inputPassword3" class="col-sm-2">可提領金額：</label>
+                      <div class="col-sm-9">
+                          <div class="radio inline">
+                              <label>
+                                  <div class="radio-btn checkedRadio"><i><input type="radio" id="tab_group_1" name="tab_group_2" value="option1" checked="checked" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div> 指定總金額
+                              </label>
+                          </div>
+                          <div class="radio inline">
+                              <label>
+                                  <div class="radio-btn"><i><input type="radio" name="tab_group_2" value="option2" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div> 自定投資標的比例 
+                              </label>
+                          </div>
+                      </div>
+                      <div class="col-sm-11">
+                          <div class="tabs">
+                      <!-- TAB 1 -->
+                              <article id="tab_1" class="tab tab-show">
+                                <section id="tab_frame_1" class="tab-frame">
+                                  <div class="arrow-upleft" style="left: 25%"></div>
+                                  <div class="grey2">
+                                       <div class="check-title depo2">欲提領金額</div>
+                                       <div class="check-list2 grey2">
+                                        <label for="" class="col-sm-2"></label>
+                                        <i class="my5"><th:block th:text="${depositVo.currency}"/></i>
+                                        <div class="col-sm-9"><input name="depositAmount" type="number" class="col-sm-11 marginTop20" placeholder="請以千元為單位"></div>
+                                        </div>
+                                  </div>
+                                  <p class="text-ps">若保單內有兩個（含）以上投資標的，贖回金額按當時各投資標的的價值比例分配。</p>
+                                </section>
+                              </article>
+                      <!-- TAB 2 -->
+                              <article id="tab_2" class="tab">
+                                  <section id="tab_frame_2" class="tab-frame">
+                                    <div class="arrow-upleft ml37" style="left: 45%"></div>
+                                    <div class="grey">
+                                      <div class="check-title depo2">欲提領金額</div>
+                                      
+                                      <table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack"> 
+                                          <thead>
+                                            <tr class="table2">
+                                              <th class="text-left item180" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+                                              <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">參考帳戶價值</th>
+                                              <th class="item180" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">提領比例</th>
+                                              <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">提領金額</th>
+                                            </tr>
+                                          </thead>   
+                                          <tbody>
+                                          <th:block th:if="${depositVo.portfolioVoList} != null">
+                                              <th:block th:each="vo, rowStat : ${depositVo.portfolioVoList}">
+                                                  <tr class="h65">
+                                                      <td class="text-left"><th:block th:text="${vo.invtName}"/> <p class="enSmall">(<th:block th:text="${vo.invtNo}"/>)</p></td>
+                                                      <td>
+                                                          <th:block th:if="${vo.invtExchCurr != 'NTD'}">
+                                                              <th:block th:text="${vo.acctValue != null} ? ${#numbers.formatDecimal(vo.acctValue, 0, 'DEFAULT', 2, 'POINT')}"/>
+                                                          </th:block>
+                                                          <th:block th:if="${vo.invtExchCurr == 'NTD'}">
+                                                               <th:block th:text="${vo.acctValue != null} ? ${#numbers.formatDecimal(vo.acctValue, 0, 'DEFAULT', 0, 'COMMA')}"/>
+                                                          </th:block>
+                                                          <i class="my5" style="color:#666666"><th:block th:text="${vo.invtExchCurr}"/></i>
+                                                      </td>
+                                                      <input name="acctValue" type="hidden" th:value="${vo.acctValue}"/>
+                                                      <input name="currency" type="hidden" th:value="${vo.invtExchCurr}"/>
+                                                      <input name="invtName" type="hidden" th:value="${vo.invtName}"/>
+                                                      <input name="invtNo" type="hidden" th:value="${vo.invtNo}"/>
+                                                      <td><input class="item90" name="percent" type="number">%</td>
+                                                      <td><input class="item90" name="amount" type="number"><i class="my5" style="color:#666666"><th:block th:text="${vo.invtExchCurr}"/></i></td>
+                                                  </tr>
+                                              </th:block>
+                                          </th:block>
+                                          </tbody>
+                                        </table>
+                                    </div>
+                                    <p class="text-ps" name="tips"></p>
+                                    <div class="check-list2 sum-list marginTop20">
+                                      <label class="col-sm-12 text-left" style="color: red;">可能有贖回手續費產生，於執行後需另扣除，若對贖回手續費有清楚的地方可詢問客戶人員。</label>
+                                   </div>
+                                  </section>
+                                </article>
+                          </div>
+                      </div>
+          </div> 
+
+
+
+
+      </form>
+  
+    </div>
+
+				<div class="col-md-8 col-md-offset-2 two-buttons">
+					<a href="deposit1"><button id="deny" class="btn-signup">上一步</i></button></a>
+					<button id="go" class="btn-signup" onclick="go()">下一步</i></button>
+				</div>
+			</div>
+		</div>
+        <input type="hidden" id="policyNo" name="policyNo" th:value="${depositVo.policyNo}"/>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<div class="modal fade in" id="modal-container-locked" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 grey2" style="padding: 20px 50px;">
+									實際贖回金額/單位數<br/>以後端系統執行基準日為準
+					<p class="marginBottom30">是否要繼續變更？</p>
+				</div>
+				<div class="modal-footer">
+					  <button type="button" class="btn-signup" data-dismiss="modal" aria-label="Close">取消</button>
+					  <a><button type="button" class="btn-signup" style="background-color: #CC7A02;" id="ok" >确定</button></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	    var maxPercent = 90;
+        var minPercent = 10;
+        var maxValue = [[${maxValue}]];
+        var minValue = [[${minValue}]];
+        var surplusValue = 0;
+
+		/*<![CDATA[*/
+		function go(){   	
+			if($('input:radio[name="tab_group_2"]:checked').val() == 'option1'){
+				acctValue = Math.round(/*[[${depositVo.policyAcctValue}]]*/)
+		        currency = [[${depositVo.currency}]]
+		        depositAmount = $("input[name='depositAmount']").val()
+
+		        if (depositAmount > maxValue || depositAmount < minValue) {
+		            openAlert("提領金額只能為" + minValue + "~" + maxValue)
+		            return
+		        }
+
+		        if ((acctValue - depositAmount) < surplusValue) {
+		            openAlert("剩余金額必須大於" + surplusValue)
+		            return
+		        }
+
+		        var formData = {
+		            depositMethod: "1",
+		            currency: [[${depositVo.currency}]],
+		            amount: depositAmount,
+		            policyNo: $('#policyNo').val()
+		        };
+			    postWithFormData(/*[[@{/deposit3}]]*/, formData);
+			} else {
+                $("#modal-container-locked").modal({
+                    show: true,
+                    backdrop: 'static',
+                    keyboard: false
+                });
+			}
+		}
+		$(function(){
+
+            $([[${depositPercent}]]).each(function(index, e){
+               policyType = /*[[${depositVo.policyType}]]*/
+               currency = /*[[${depositVo.currency}]]*/
+               if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + currency + "_MAX_PERCENT") {
+                    maxPercent = parseInt(e.parameterValue)
+               }
+               if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + currency + "_MIN_PERCENT") {
+                    minPercent = parseInt(e.parameterValue)
+               }
+               if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + currency + "_SURPLUS_VALUE") {
+                    surplusValue = parseInt(e.parameterValue)
+               }
+            })
+
+            $("[name='tips']").text(
+                '僅顯示帳價>0之基金。提領金額會依使用者輸入的提領比例自動計算。提領比例只能輸入'
+                                        + minPercent + '-' + maxPercent +
+                                        '整數數字，若不符合規則則無法輸入。'
+            )
+
+		    $("#ok").on("click", function(){
+		        acctValue = /*[[${depositVo.policyAcctValue}]]*/
+		        var invtDeposits = []
+		        $("input[name='amount']").each(function(index, e){
+		            if ($(this).val() != null && $(this).val() != "") {
+		                context = $(this).parent().parent()
+		                invtDeposits.push({
+		                    invtNo: $(context).find("[name='invtNo']").val(),
+		                    invtName: $(context).find("[name='invtName']").val(),
+		                    currency: $(context).find("[name='currency']").val(),
+		                    ratio: $(context).find("[name='percent']").val(),
+		                    amount: $(this).val(),
+		                    acctValue: $(context).find("[name='acctValue']").val()
+                        })
+		            }
+		        })
+		        if (invtDeposits.length <= 0) {
+		            openAlert("提領項不能為空")
+		            return
+		        }
+		        var formData = {
+		            depositMethod: "2",
+		            currency: [[${depositVo.currency}]],
+		            policyNo: $('#policyNo').val(),
+		            invtDeposits: JSON.stringify(invtDeposits)
+		        }
+			    postWithFormData(/*[[@{/deposit3}]]*/, formData);
+		    })
+
+		    $("input[name='percent']").on('change', function(){
+                 percent = parseInt($(this).val())
+                 context = $(this).parent().parent()
+                 if (percent <= maxPercent && percent >= minPercent) {
+                     val = $(context).find("[name='acctValue']").val()
+                     $(context).find("[name='amount']").val(Math.round((val * percent)/100))
+                    return
+                 }
+                 openAlert("提領比例只能輸入" + minPercent + "-" + maxPercent)
+                 $(this).val("");
+                 $(context).find("[name='amount']").val("")
+		    })
+
+		    $("input[name='amount']").on('change', function(){
+
+		         context = $(this).parent().parent()
+		         val = $(context).find("[name='acctValue']").val()
+		         currency = $(context).find("[name='currency']").val()
+                 let percent = Math.round($(this).val() / val * 100)
+
+		         if (percent <= maxPercent && percent >= minPercent) {
+                   $(context).find("[name='percent']").val(percent)
+                   return
+                 }
+
+                 openAlert("提領金額比例只能" + minPercent + "-" + maxPercent)
+                 $(this).val("");
+                 $(context).find("[name='percent']").val("")
+                 return
+		    })
+		})
+		/*]]>*/
+		</script>
+</body>
+
+</html>

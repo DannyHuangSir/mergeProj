@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+    <div th:replace="fragments/header :: top"></div>
+    <header>
+        <div class="container">
+            <div class="row">
+               <th:block th:replace="fragments/logo"/>
+                <div class="col-sm-2 col-xs-7 col-md-3 n1">保單網路服務</div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="hello1-list">
+                    <div class="list hid2">Hi, (使用者名字) 你好</div>
+                    <!--div class="list marginRight20">
+                        <a href="#" data-target="#notification" data-toggle="popover" data-width="520" data-scroll-height="300" data-class="to-right" data-content=" " data-placement="bottom" class="b3" data-original-title="" title=""><span class="badge b4 pull-right">4</span>我的通知</a>
+                    </div-->
+                    <div class="list">
+                        <a href="partner" class="b3"><i class="foo-object_10 foo-1x "></i>回到保戶查詢頁</a>
+                    </div>
+                    <div class="list">
+                        <a href="login">
+                            <button class="btn-login pull-right">登出</button>
+                            <button class="pull-right btn-reset">
+                                <div class="rp1"><i class="foo-cw"></i>293秒</div>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="row grey">
+        <div class="container grey nopd">
+            <div class="col-xs-4">
+                <a href="dashboard">
+                    <div class="row folder borderRight">
+                        <i class="foo-business_9 foo-3x hid3"></i>
+                        <p>保障總覽</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <a href="mylist1">
+                    <div class="row folder borderRight">
+                        <i class="foo-business_1 foo-3x hid3"></i>
+                        <p>我的保單</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <a href="apply1">
+                    <div class="row folder borderRight">
+                        <i class="foo-technology_1 foo-3x hid3"></i>
+                        <p>線上申請</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <section class="grey partner fullContent">
+        <div class="container bg3 list1">
+            <div class="mystyle3">
+                <div class="row-offcanvas row-offcanvas-left">
+                    <!--/.sidebar-offcanvas-->
+                    <div class="col-xs-6 col-sm-3 col-md-2 sidebar-offcanvas nopd box-border" id="sidebar">
+                        <form action="partnerResult">
+                            <h4 class="divider">客服與銀行保險通路查詢</h4>
+                            <div class="form-group">
+                                <label for="partner_type">合作對象</label>
+                                <div class="selector-box">
+                                    <select class="selector">
+                                        <option>合作對象</option>
+                                        <option>合作對象1</option>
+                                        <option>合作對象2</option>
+                                        <option>合作對象3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="partner_id">要保人身分證字號</label>
+                                <input type="text" name="partner_id" id="partner_id" />
+                            </div>
+                            <div class="form-group">
+                                <label for="first_name">要保人姓名</label>
+                                <div class="input-inline">
+                                    <input type="text" name="first_name" id="first_name" placeholder="姓" />
+                                    <input type="text" name="last_name" id="last_name" placeholder="名" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn-form btn-sidebar-search">搜尋</button>
+                            </div>
+                            <div class="tog4">
+                                <i class="fa foo-finance_1 fa-lg orange"></i> 
+                                <span class="colorBlack">變更手機</span>
+                            </div>
+                            <div class="tog4">
+                                <i class="fa foo-unlock fa-lg orange"></i> 
+                                <span class="colorBlack">變更密碼</span>
+                            </div>
+                            <br/>
+                        </form>
+                    </div>
+                    <!--END/.sidebar-offcanvas-->
+                    <div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+                        <a href="partner">
+                            <div class="col-xs-6 folder active">保戶查詢</div>
+                        </a>
+                        <a href="roiSearch">
+                            <div class="col-xs-6 folder ">帳戶價值與報酬率查詢</div>
+                        </a>
+                        <div class="tb3 relax">
+                            <i class="fas fa-chevron-down"></i> 
+                            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
+                            保戶查詢結果
+                            <p class="result-count pull-right">搜尋到 <em>2</em> 個結果</p>
+                        </div>
+                        <div class="panel result">
+                            <div class="tb-list">
+                                <div class="tb-item tb3 relax">
+                                    王臺銀
+                                    <small>(L123456789)</small>
+                                    <i class="fa foo-angle-downpull-right"></i>
+                                </div>
+                                <div class="tb-item tb3 relax">
+                                    陳文翰
+                                    <small>(L123456789)</small>
+                                    <i class="fa foo-angle-downpull-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer th:replace="fragments/footer"></footer>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="plugin/jquery-1.11.3.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="plugin/jquery.placeholder.min.js"></script>
+    <script>
+    $(function(){
+        $('input, textarea').placeholder();
+    });
+    </script>
+    <script src="plugin/detectmobilebrowser_jquery.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/offcanvas.js"></script>
+    <script src="plugin/bootstrap.min.js"></script>
+    <script src="plugin/tablesaw.stackonly.js"></script>
+</body>
+
+</html>

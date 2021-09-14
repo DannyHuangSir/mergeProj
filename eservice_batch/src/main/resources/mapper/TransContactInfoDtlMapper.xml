@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransContactInfoDtlMapper">
+
+	<resultMap id="TransContactInfoDtlMap" type="com.twfhclife.eservice_batch.model.TransContactInfoDtlVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_CONTACT_ID" property="transContactId"/>
+		<result column="TEL_HOME" property="telHome"/>
+		<result column="TEL_OFFICE" property="telOffice"/>
+		<result column="MOBILE" property="mobile"/>
+		<result column="CITY" property="city"/>
+		<result column="REGION" property="region"/>
+		<result column="ADDRESS" property="address"/>
+		<result column="ADDRESS_FULL" property="addressFull"/>
+		<result column="CITY_CHARGE" property="cityCharge"/>
+		<result column="REGION_CHARGE" property="regionCharge"/>
+		<result column="ADDRESS_CHARGE" property="addressCharge"/>
+		<result column="ADDRESS_FULL_CHARGE" property="addressFullCharge"/>
+		<result column="EMAIL" property="email"/>
+		<result column="FROM_COMPANY_ID" property="fromCompanyId" />
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transContactInfoDtlVo.id != null"> AND ID = #{transContactInfoDtlVo.id} </if>
+			<if test="transContactInfoDtlVo.transContactId != null"> AND TRANS_CONTACT_ID = #{transContactInfoDtlVo.transContactId} </if>
+			<if test="transContactInfoDtlVo.telHome != null and transContactInfoDtlVo.telHome != ''"> AND ESERVICE.DBO.FN_DEBASE64(TEL_HOME) = #{transContactInfoDtlVo.telHome} </if>
+			<if test="transContactInfoDtlVo.telOffice != null and transContactInfoDtlVo.telOffice != ''"> AND ESERVICE.DBO.FN_DEBASE64(TEL_OFFICE) = #{transContactInfoDtlVo.telOffice} </if>
+			<if test="transContactInfoDtlVo.mobile != null and transContactInfoDtlVo.mobile != ''"> AND ESERVICE.DBO.FN_DEBASE64(MOBILE) = #{transContactInfoDtlVo.mobile} </if>
+			<if test="transContactInfoDtlVo.city != null and transContactInfoDtlVo.city != ''"> AND CITY = #{transContactInfoDtlVo.city} </if>
+			<if test="transContactInfoDtlVo.region != null and transContactInfoDtlVo.region != ''"> AND REGION = #{transContactInfoDtlVo.region} </if>
+			<if test="transContactInfoDtlVo.address != null and transContactInfoDtlVo.address != ''"> AND ESERVICE.DBO.FN_DEBASE64(ADDRESS) = #{transContactInfoDtlVo.address} </if>
+			<if test="transContactInfoDtlVo.addressFull != null and transContactInfoDtlVo.addressFull != ''"> AND ESERVICE.DBO.FN_DEBASE64(ADDRESS_FULL) = #{transContactInfoDtlVo.addressFull} </if>
+			<if test="transContactInfoDtlVo.cityCharge != null and transContactInfoDtlVo.cityCharge != ''"> AND CITY_CHARGE = #{transContactInfoDtlVo.cityCharge} </if>
+			<if test="transContactInfoDtlVo.regionCharge != null and transContactInfoDtlVo.regionCharge != ''"> AND REGION_CHARGE = #{transContactInfoDtlVo.regionCharge} </if>
+			<if test="transContactInfoDtlVo.addressCharge != null and transContactInfoDtlVo.addressCharge != ''"> AND ESERVICE.DBO.FN_DEBASE64(ADDRESS_CHARGE) = #{transContactInfoDtlVo.addressCharge} </if>
+			<if test="transContactInfoDtlVo.addressFullCharge != null and transContactInfoDtlVo.addressFullCharge != ''"> AND ESERVICE.DBO.FN_DEBASE64(ADDRESS_FULL_CHARGE) = #{transContactInfoDtlVo.addressFullCharge} </if>
+			<if test="transContactInfoDtlVo.fromCompanyId != null and transContactInfoDtlVo.fromCompanyId != ''"> AND FROM_COMPANY_ID = #{transContactInfoDtlVo.fromCompanyId} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transContactInfoDtlVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransContactInfoDtlList" resultMap="TransContactInfoDtlMap">
+		SELECT
+			ID,
+			TRANS_CONTACT_ID,
+			ESERVICE.DBO.FN_DEBASE64(TEL_HOME) TEL_HOME,
+			ESERVICE.DBO.FN_DEBASE64(TEL_OFFICE) TEL_OFFICE,
+			ESERVICE.DBO.FN_DEBASE64(MOBILE) MOBILE,
+			CITY,
+			REGION,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS) ADDRESS,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_FULL) ADDRESS_FULL,
+			CITY_CHARGE,
+			REGION_CHARGE,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_CHARGE) ADDRESS_CHARGE,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_FULL_CHARGE) ADDRESS_FULL_CHARGE,
+			ESERVICE.DBO.FN_DEBASE64(EMAIL) EMAIL,
+			FROM_COMPANY_ID
+		FROM
+			ESERVICE.DBO.TRANS_CONTACT_INFO_DTL
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransContactInfoDtlMap">
+		SELECT
+			ID,
+			TRANS_CONTACT_ID,
+			ESERVICE.DBO.FN_DEBASE64(TEL_HOME) TEL_HOME,
+			ESERVICE.DBO.FN_DEBASE64(TEL_OFFICE) TEL_OFFICE,
+			ESERVICE.DBO.FN_DEBASE64(MOBILE) MOBILE,
+			CITY,
+			REGION,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS) ADDRESS,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_FULL) ADDRESS_FULL,
+			CITY_CHARGE,
+			REGION_CHARGE,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_CHARGE) ADDRESS_CHARGE,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_FULL_CHARGE) ADDRESS_FULL_CHARGE,
+			FROM_COMPANY_ID
+		FROM
+			ESERVICE.DBO.TRANS_CONTACT_INFO_DTL
+		<include refid="wherePkClause" />
+	</select>
+	<!-- 取得變更保單聯絡明細資料 -->
+	<select id="getTransContactInfoDetailList" resultType="hashmap">
+		SELECT
+			ESERVICE.DBO.FN_DEBASE64(A.EMAIL) EMAIL,
+			A.SEND_ALLIANCE,
+			A.FROM_COMPANY_ID,
+			E.TRANS_TYPE,
+		   ESERVICE.DBO.FN_DEBASE64(O.EMAIL) OEMAIL
+			FROM
+			ESERVICE.DBO.TRANS_CONTACT_INFO_DTL A
+			JOIN ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_CONTACT_ID = B.ID
+			JOIN ESERVICE.DBO.TRANS_POLICY C on B.TRANS_NUM = C.TRANS_NUM
+		    JOIN ESERVICE.DBO.TRANS E on  C.TRANS_NUM = E.TRANS_NUM
+			JOIN ESERVICE.DBO.LILIPM D ON C.POLICY_NO = D.LIPM_INSU_NO
+			JOIN ESERVICE.DBO.TRANS_CONTACT_INFO_OLD  O ON O.TRANS_CONTACT_ID=B.ID
+		WHERE C.TRANS_NUM = #{transContactId}
+	</select>
+</mapper>
+

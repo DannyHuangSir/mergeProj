@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.RoleFuncAuthDao">
+	<resultMap id="RoleFuncAuthMap" type="com.twfhclife.adm.model.RoleFuncAuthVo" >
+		<result column="ROLE_ID" property="roleId"/>
+		<result column="FUNCTION_ID" property="functionId"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_DATE" property="createDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ROLE_ID,FUNCTION_ID,CREATE_USER,CREATE_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="roleFuncAuthVo.roleId != null and roleFuncAuthVo.roleId != ''"> AND ROLE_ID = #{roleFuncAuthVo.roleId} </if>
+			<if test="roleFuncAuthVo.functionId != null"> AND FUNCTION_ID = #{roleFuncAuthVo.functionId} </if>
+			<if test="roleFuncAuthVo.createUser != null and roleFuncAuthVo.createUser != ''"> AND CREATE_USER = #{roleFuncAuthVo.createUser} </if>
+			<if test="roleFuncAuthVo.createDate != null"> AND CREATE_DATE = #{roleFuncAuthVo.createDate} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得角色的功能ID清單 -->
+	<select id="getFunctionIdByRoleIdList" resultType="string">
+		SELECT 
+			FUNCTION_ID 
+		FROM 
+			ESERVICE_ADM.DBO.ROLE_FUNC_AUTH 
+		WHERE 
+			ROLE_ID IN
+		<foreach collection="roleIds" item="roleId" index="index" open="(" close=")" separator="," >
+			#{roleId}
+		</foreach>
+	</select>
+	
+	<!-- 取得角色功能權限查詢結果 -->
+	<select id="getRoleFuncAuth" resultMap="RoleFuncAuthMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.ROLE_FUNC_AUTH
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 角色功能權限-新增 -->
+	<insert id="insertRoleFuncAuth">
+		INSERT INTO ESERVICE_ADM.DBO.ROLE_FUNC_AUTH
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{roleFuncAuthVo.roleId, jdbcType=VARCHAR},
+			#{roleFuncAuthVo.functionId, jdbcType=NUMERIC},
+			#{roleFuncAuthVo.createUser, jdbcType=VARCHAR},
+			getdate()
+		)
+	</insert>
+	
+	<!-- 角色功能權限-刪除 -->
+	<delete id="deleteByRoleId">
+		DELETE ESERVICE_ADM.DBO.ROLE_FUNC_AUTH WHERE ROLE_ID = #{roleId}
+	</delete>
+	
+	<select id="getRoleFuncAuthByRoleId" resultType="hashmap">
+		SELECT
+			FI.SYS_ID
+			,RFA.ROLE_ID
+			,R.ROLE_NAME
+			,FI.FUNCTION_ID
+			,FI.FUNCTION_NAME
+		FROM
+			ESERVICE_ADM.DBO.ROLE R
+			,ESERVICE_ADM.DBO.FUNCTION_ITEM FI
+			,ESERVICE_ADM.DBO.ROLE_FUNC_AUTH RFA
+		WHERE
+			R.ROLE_ID = RFA.ROLE_ID
+			AND FI.FUNCTION_ID = RFA.FUNCTION_ID
+			AND RFA.ROLE_ID = #{roleId}
+		ORDER BY
+			FI.FUNCTION_ID
+	</select>
+
+</mapper>

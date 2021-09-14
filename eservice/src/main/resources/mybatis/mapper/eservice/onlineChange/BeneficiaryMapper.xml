@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.BeneficiaryDao">
+
+	<!-- 取出使用者保單下的受益人 -->
+	<select id="getBeneficiaryByPolicyNo" resultType="com.twfhclife.eservice.web.model.BeneficiaryVo" parameterType="string">
+		SELECT 
+			POLICY_NO AS policyNo, 
+			BENI_CODE AS beneficiaryType, 
+			BENI_SEQ AS allocateSeq, 
+			ESERVICE.DBO.FN_DEBASE64(BENI_NAME) AS beneficiaryName, 
+			BENI_RELATION AS beneficiaryRelation,
+			LIPB_ID AS beneficiaryRocid
+		FROM 
+			ESERVICE.DBO.POLICY_BENEFICIARY 
+		WHERE 
+			POLICY_NO = #{policyNo}
+	</select>
+	
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.keycloak.dao.KeycloakUserDao">
+
+	<select id="findByUserName" resultType="org.keycloak.representations.idm.UserRepresentation" parameterType="string">
+		SELECT
+			ID as id
+			,EMAIL AS email
+			,USERNAME as username
+		FROM
+			ESERVICE_ADM.DBO.USER_ENTITY
+		WHERE
+			REALM_ID = #{realm}
+			AND LOWER(USERNAME) = LOWER(#{username})
+	</select>
+	
+	<select id="findByUserAttributes" resultType="hashmap" parameterType="string">
+		SELECT
+			NAME
+			,VALUE
+		FROM
+			ESERVICE_ADM.DBO.USER_ATTRIBUTE
+		WHERE
+			USER_ID = #{userId}
+	</select>
+	
+</mapper>

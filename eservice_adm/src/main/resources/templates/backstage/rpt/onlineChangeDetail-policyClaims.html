@@ -1,0 +1,513 @@
+<tr class="detail-row even open" role="row">
+	<td colspan="7">
+		<div class="table-detail">
+			<div class="row" style="background-color: #fff; border-bottom: none">
+				<div class="col-xs-12 col-sm-11">
+					<div class="space visible-xs"></div>
+					<div class="profile-user-info profile-user-info-striped">
+						<th:block th:if="${session.ROLE_CODE_00}">
+							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+								<div class="profile-info-row">
+									<div class="profile-info-name"> 是否開始處理 </div>
+									<div class="profile-info-value">
+										<span class='tg-list-item'>
+											<th:block th:if="${detailData['STATUS_TYPE'] == '-1'}">
+												<input class='checkboxY checkboxY-light' id='cb1' type='checkbox' th:onclick="'javascript:clickItems(\'cb1\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+											</th:block>
+											<th:block th:if="${detailData['STATUS_TYPE'] != '-1'}">
+												<input class='checkboxY checkboxY-light' id='cb1' type='checkbox' checked disabled>
+											</th:block>
+											<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='cb1'></label>
+										</span>
+									</div>
+								</div>
+							</th:block>
+
+							<div class="profile-info-row">
+								<div class="profile-info-name"> 是否已紙本回收 </div>
+								<th:block th:if="${detailData['FROM_COMPANY_ID'] != 'L01'}">
+									<span class='tg-list-item'>
+										<th:block th:if="${detailData['FILE_RECEIVED'] != '1'}">
+											<label>  未回收</label>
+										</th:block>
+										<th:block th:if="${detailData['FILE_RECEIVED'] == '1'}">
+											<label>  已回收</label>
+										</th:block>
+									</span>
+								</th:block>
+								<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+									<div class="profile-info-value" style="position: relative;">
+										<span class='tg-list-item'>
+											<th:block th:if="${detailData['STATUS_TYPE'] == '0'}">
+												<th:block th:if="${detailData['FILE_RECEIVED'] != 'C' && detailData['FILE_RECEIVED'] != '1'}">
+													<input class='checkboxY checkboxY-light' id='cb2' type='checkbox' th:onclick="'javascript:clickItems(\'cb2\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+												</th:block>
+												<th:block th:if="${detailData['FILE_RECEIVED'] == 'C' || detailData['FILE_RECEIVED'] == '1'}">
+													<input class='checkboxY checkboxY-light' id='cb2' type='checkbox' checked disabled>
+												</th:block>
+											</th:block>
+											<th:block th:if="${detailData['STATUS_TYPE'] != '0'}">
+												<th:block th:if="${detailData['FILE_RECEIVED'] != 'C' && detailData['FILE_RECEIVED'] != '1'}">
+													<input class='checkboxY checkboxY-light checkboxY-disabled' id='cb2' type='checkbox' disabled>
+												</th:block>
+												<th:block th:if="${detailData['FILE_RECEIVED'] == 'C' || detailData['FILE_RECEIVED'] == '1'}">
+													<input class='checkboxY checkboxY-light' id='cb2' type='checkbox' checked disabled>
+												</th:block>
+											</th:block>
+											<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='cb2'></label>
+										</span>
+										<!-- 覆核 -->
+										<th:block th:if="${detailData['FILE_RECEIVED'] == 'C'}">
+											<label class="checkboxY-3"> 待覆核</label>
+											<th:block th:if="${session['ROLE_CODE_02']}">
+												<div class="checkbox" style="margin-right: 20px;line-height: 23px; cursor: pointer;position: absolute;top: 13px;right: 130px;">
+													<div class="check-box-1 pop01" style="float: left;margin-right: 5px;"  id="pop01"><i class=""><input id="checkBox1" type="checkbox" th:onclick="'javascript:approvedItems(\'cb2\',\'' + ${detailData['TRANS_NUM']} + '\');'" name="checkBox1"></i></div>覆核人員審核
+												</div>
+											</th:block>
+										</th:block>
+										<th:block th:if="${detailData['FILE_RECEIVED'] == '1'}">
+											<div class="checkbox" style="margin-right: 20px;line-height: 23px; cursor: pointer;position: absolute;top: 13px;right: 130px;">
+												<div class="check-box-1 pop02" style="float: left;margin-right: 5px;"  id="pop02"><i class="">
+													<input id="checkBox1" type="checkbox" checked disabled name="checkBox1">
+												</i></div>覆核人員審核
+											</div>
+										</th:block>
+									</div>
+								</th:block>
+							</div>
+
+							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+								<div class="profile-info-row">
+									<div class="profile-info-name"> 是否已開啓傳送公會聯盟鏈 </div>
+
+									<div class="profile-info-value" style="position: relative;">
+										<span class='tg-list-item'>
+											<th:block th:if="${detailData['STATUS_TYPE'] == '0'}">
+												<th:block th:if="${detailData['SEND_ALLIANCE'] != 'C' && detailData['SEND_ALLIANCE'] != 'Y'}">
+													<input class='checkboxY checkboxY-light' id='cb3' type='checkbox' th:onclick="'javascript:clickItems(\'cb3\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+												</th:block>
+												<th:block th:if="${detailData['SEND_ALLIANCE'] == 'C' || detailData['SEND_ALLIANCE'] == 'Y'}">
+													<input class='checkboxY checkboxY-light' id='cb3' type='checkbox' checked disabled>
+												</th:block>
+											</th:block>
+											<th:block th:if="${detailData['STATUS_TYPE'] != '0'}">
+												<th:block th:if="${detailData['SEND_ALLIANCE'] != 'C' && detailData['SEND_ALLIANCE'] != 'Y'}">
+													<input class='checkboxY checkboxY-light' id='cb3' type='checkbox' disabled>
+												</th:block>
+												<th:block th:if="${detailData['SEND_ALLIANCE'] == 'C' || detailData['SEND_ALLIANCE'] == 'Y'}">
+													<input class='checkboxY checkboxY-light' id='cb3' type='checkbox' checked disabled>
+												</th:block>
+											</th:block>
+											<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='cb3'></label>
+										</span>
+										<!-- 覆核 -->
+										<th:block th:if="${detailData['SEND_ALLIANCE'] == 'C'}">
+											<label class="checkboxY-3"> 待覆核</label>
+											<th:block th:if="${session['ROLE_CODE_02']}">
+												<div class="checkbox" style="margin-right: 20px;line-height: 23px; cursor: pointer;position: absolute;top: 13px;right: 130px;">
+													<div class="check-box-1 pop02" style="float: left;margin-right: 5px;" id="pop02"><i class="">
+														<input id="checkBox2" type="checkbox" th:onclick="'javascript:approvedItems(\'cb3\',\'' + ${detailData['TRANS_NUM']} + '\');'" name="checkBox2">
+													</i></div>覆核人員審核
+												</div>
+											</th:block>
+										</th:block>
+										<th:block th:if="${detailData['SEND_ALLIANCE'] == 'Y'}">
+											<div class="checkbox" style="margin-right: 20px;line-height: 23px; cursor: pointer;position: absolute;top: 13px;right: 130px;">
+												<div class="check-box-1 pop02" style="float: left;margin-right: 5px;" id="pop02"><i class="">
+													<input id="checkBox2" type="checkbox" checked disabled name="checkBox2">
+												</i></div>覆核人員審核
+											</div>
+										</th:block>
+									</div>
+								</div>
+							</th:block>
+
+							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+								<div class="profile-info-row">
+									<div class="profile-info-name"> 執行審核 </div>
+									<div class="profile-info-value">
+										<th:block th:if="${detailData['STATUS_TYPE'] != '0'}">
+											<button type="button" class="bgGrey" disabled>通知補件</button>
+										</th:block>
+										<th:block th:if="${detailData['STATUS_TYPE'] == '0'}">
+											<button type="button" class="bgOrange" th:onclick="'javascript:onSupplement(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">通知補件</button>
+										</th:block>
+
+										<th:block th:if="${detailData['STATUS_TYPE'] != '0' && detailData['STATUS_TYPE'] != '4' && detailData['STATUS_TYPE'] != '5' && detailData['STATUS_TYPE'] != '7C'}">
+											<button type="button" class="bgGrey" disabled>異常件註記</button>
+										</th:block>
+										<th:block th:if="${detailData['STATUS_TYPE'] == '0' || detailData['STATUS_TYPE'] == '4' || detailData['STATUS_TYPE'] == '5' || detailData['STATUS_TYPE'] == '7C'}">
+											<button type="button" class="bgOrange" th:onclick="'javascript:onReturn(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">異常件註記</button>
+										</th:block>
+
+										<th:block th:if="${detailData['STATUS_TYPE'] == '-1' || detailData['STATUS_TYPE'] == '2' || detailData['STATUS_TYPE'] == '3' ||detailData['STATUS_TYPE'] == '7'}">
+											<button type="button" class="bgGrey" disabled>已完成</button>
+										</th:block>
+										<th:block th:if="${detailData['STATUS_TYPE'] != '-1' && detailData['STATUS_TYPE'] != '2' && detailData['STATUS_TYPE'] != '3' && detailData['STATUS_TYPE'] != '7'}">
+											<button type="button" class="bgOrange" th:onclick="'javascript:onAudit(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">已完成</button>
+										</th:block>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 查詢歷程資料 </div>
+							<div class="profile-info-value">
+								<button type="button" class="bgOrange" th:onclick="'javascript:onStatus(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'\');'">狀態歷程</button>
+								<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+									<button type="button" class="bgOrange" th:onclick="'javascript:viewSupplement(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'\');'" style="position: relative;">
+										補件單歷程<i class="foo-warning"></i>
+									</button>
+								</th:block>
+								<button type="button" class="bgOrange" th:onclick="'javascript:onAlliance(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CASE_ID']} + '\',\'' + ${detailData['FROM_COMPANY_ID']} + '\',\'\');'">聯盟鏈歷程</button>
+								<!-- <button type="button" class="bgOrange" onclick="onPrint()">詳細資料列印</button> -->
+								<button style="width: 100px;" type="button" class="bgOrange" th:onclick="'javascript:onDetail(\'' + ${detailData['TRANS_NUM']} + '\');'">詳細資料列印</button>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+
+				<div th:id="${detailData['TRANS_NUM']}" class="col-xs-12 col-sm-11">				
+					<div class="panel panel-default profile-user-info">
+
+						<div class="panel-heading">※ 申請資料</div>
+						<div class="panel-body clear1" id="poliyClaimsDetail">
+ 
+						<div class="mycigna3">
+							<div class="col-md-12 detailPolicy">
+								<div class="form-horizontal">
+									<div class="form-group">
+										<label class="col-xs-3">申請項目：</label>
+										<div class="col-xs-9" id="label_apply_item">
+											<th:block th:each="from : ${#strings.arraySplit(detailData['APPLYITEM'], ',')}">
+												<th:block th:each="vo : ${session.APPLICATION_ITEMS}">
+													<th:block th:if="${from eq vo.value.parameterValue}"> 
+														<th:block th:inline="text" >[[${ vo.value.parameterName}]]</th:block>
+													</th:block>
+												</th:block>
+											</th:block>
+										</div>
+									</div>
+									<!-- <div class="form-group">
+										<label class="col-xs-3">要保人姓名：</label>
+										<div class="col-xs-9">
+											<b><span><th:block th:text="${detailData['CUSTOMERNAME']}"/></span></b>
+										</div>
+									</div> -->
+									<div class="form-group">
+										<label class="col-xs-3">保單號碼：</label>
+										<div class="col-xs-9">
+											<span><th:block th:text="${detailData['POLICYNO']}"/></span>
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i>  ^ 事故者質料
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">事故人：</label>
+											<div class="col-xs-9">會員本人</div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">被保險人姓名：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">身份證字號：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ID_NO']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">出生年月日：</label>
+											<div class="col-xs-9">
+												<span>
+													<th:block th:text="${detailData['BIRDATE']} "/>
+												</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">聯絡電話：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['TEL']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">行動電話：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['PHONE']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">E-MAIL：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['MAIL']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">聯絡地址：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ADDRESS']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3">與主被保險人(員工關係)：</label>
+											<div class="col-sm-9"><span><th:block th:text="${detailData['RELATION_NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3">被保險人是否投保別家保險公司之保險：</label>
+											<div class="col-sm-9"><span>
+												<!-- <th:block th:text="${detailData['OTHERCOMPANYINSURED']}"/> -->
+												<th:block th:if="${detailData['OTHERCOMPANYINSURED'] eq 'Y'}">有</th:block>
+											    <th:block th:if="${detailData['OTHERCOMPANYINSURED'] eq 'N'}">沒有</th:block>
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">保險公司名稱：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['OTHERINSUCOMMPANY']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">保險種類：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['OTHERINSUTYPE']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">保險金額：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['OTHERINSUAMOUNT']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">同時申請理賠：</label>
+											<div class="col-xs-9"><span>
+												<!-- <th:block th:text="${detailData['OTHERINSUCLAIM']}"/> -->
+												<th:block th:if="${detailData['OTHERINSUCLAIM'] eq 'Y'}">是</th:block>
+												<th:block th:if="${detailData['OTHERINSUCLAIM'] eq 'N'}">否</th:block>
+											</span></div>
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  保險事故
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">事故種類：</label>
+											<!-- <div class="col-xs-9">意外</div> -->
+											<th:block th:if="${session['PAGE_WORDING'] == null}">
+												<div class="col-sm-8">
+													<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '1'}">疾病</th:block>
+													<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '2'}">意外</th:block>
+												</div>
+											</th:block>
+											<th:block th:if="${session['PAGE_WORDING'] != null}">
+												<div class="col-sm-8">
+													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_01'] == null}">
+														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '1'}">疾病</th:block>
+													</th:block>
+													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_01'] != null}">
+														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq session.PAGE_WORDING['INS_ACCIDENT_01'].parameterValue}">
+														<label th:inline="text">[[${session.PAGE_WORDING['INS_ACCIDENT_01'].parameterName}]] </label></th:block>
+													</th:block>
+													
+													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_02'] == null}">
+														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '2'}">意外</th:block>
+													</th:block>
+													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_02'] != null}">
+														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq session.PAGE_WORDING['INS_ACCIDENT_02'].parameterValue}">
+														<label th:inline="text">[[${session.PAGE_WORDING['INS_ACCIDENT_02'].parameterName}]] </label></th:block>
+													</th:block>
+												</div>
+											</th:block>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">事故當時職業：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['JOB']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">發生時間：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCIDENT_DATE']+' ' +detailData['ACCIDENT_TIME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">事故地點：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCIDENT_LOCATION']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">事故原因及送醫經過詳情:<br/> (請述明就診醫院名稱)</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCIDENT_DESCR']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">是否報警：</label>
+											<div class="col-xs-9"><span>
+												<th:block th:if="${detailData['CALLPOLICE'] eq 'Y'}">是</th:block>
+                                    			<th:block th:if="${detailData['CALLPOLICE'] eq 'N'}">否</th:block>
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">事故處理單位：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['POLICE_STATION']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">承辦警員：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['POLICE_NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">警方電話：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['POLICE_PHONE']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">報案日期：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['POLICE_DATE'] +' ' +detailData['POLICE_TIME']}"/></span></div>
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  壽險公會理賠聯盟鏈授權專區
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">理賠聯盟説明：</label>
+											<div class="col-xs-9">[[${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_POLICYCLAIM_015'] != null} ? ${session.PAGE_WORDING['WORDING_POLICYCLAIM_015'].parameterValue} : '即日起，使用本公司線上理賠申請服務時，可一併授權本公司將您的理賠申請資料，透過「中華民國人壽保險同業公會」
+												建制「保險區塊鏈聯盟科技通用共享平臺」傳送予您有投保之保險公司（該保險公司需有參與聯盟鏈），免除以往需向不同
+												公司分別提出理賠申請之不便。']]</div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">是否傳送其他保險公司：</label>
+											<div class="col-xs-9"><span>
+												<th:block th:if="${detailData['SEND_ALLIANCE'] eq 'Y'}">同意</th:block>
+                                				<th:block th:if="${detailData['SEND_ALLIANCE'] eq 'N'}">不同意</th:block>
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">授權傳送公司：</label>
+											<th:block th:if="${session.SEND_COMPANY_ITEMS != null}">
+												<div class="col-sm-9">
+													<th:block th:each="from : ${#strings.arraySplit(detailData['TO_COMPANY_ID'], ',')}">
+														<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
+															<th:block th:if="${from eq vo.value.parameterValue}">
+																<th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+														</th:block>
+															</th:block>
+														</th:block>
+												</div>
+											</th:block>
+											
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  給付方式
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">指定給付方式：</label>
+											<!-- <div class="col-xs-9"><span>
+												<th:block th:if="${detailData['PAYMENT_METHOD'] eq '1'}">電匯</th:block>
+                                				<th:block th:if="${detailData['PAYMENT_METHOD'] eq '2'}">郵寄支票</th:block>
+											</span></div> -->
+											<th:block th:if="${session['PAGE_WORDING'] == null}">
+												<div class="col-xs-9"><span>
+													<th:block th:if="${detailData['PAYMENT_METHOD'] eq '1'}">電匯</th:block>
+													<th:block th:if="${detailData['PAYMENT_METHOD'] eq '2'}">郵寄支票</th:block>
+												</span></div>
+											</th:block>
+											<th:block th:if="${session['PAGE_WORDING'] != null}">
+												<div class="col-xs-9"><span>
+													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_01'] == null}">
+														<th:block th:if="${detailData['PAYMENT_METHOD'] eq '1'}">電匯</th:block>
+													</th:block>
+													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_01'] != null}">
+														<th:block th:if="${detailData['PAYMENT_METHOD'] eq session.PAGE_WORDING['TRANS_MDOE_01'].parameterValue}">
+														<label th:inline="text">[[${session.PAGE_WORDING['TRANS_MDOE_01'].parameterName}]] </label></th:block>
+													</th:block>
+													
+													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_02'] == null}">
+														<th:block th:if="${detailData['PAYMENT_METHOD'] eq '2'}">郵寄支票</th:block>
+													</th:block>
+													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_02'] != null}">
+														<th:block th:if="${detailData['PAYMENT_METHOD'] eq session.PAGE_WORDING['TRANS_MDOE_02'].parameterValue}">
+														<label th:inline="text">[[${session.PAGE_WORDING['TRANS_MDOE_02'].parameterName}]] </label></th:block>
+													</th:block>
+												</span></div>
+											</th:block>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">匯款賬戶：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCOUNTNAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">銀行名稱：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['BANK_NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">分行名稱：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['BRANCH_NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">賬號：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['BANK_ACCOUNT']}"/></span></div>
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  上傳申請應備文件
+									</div>
+									<div class="mobile-toggle-panel">
+										<th:block th:if="${not #lists.isEmpty(detailData.FileDatas)}">
+											<th:block th:each="vo, rowStat : ${detailData.FileDatas}">
+												 <div class="form-group">
+													 <label class="col-sm-3">
+														<th:block th:if="${vo.TYPE_NAME != ''}">
+															<th:block th:inline="text">[[${vo.TYPE_NAME}]]：</th:block>
+														</th:block>
+														<th:block th:if="${vo.TYPE_NAME == ''}">
+															補件：
+														</th:block>
+													 </label>
+													 <div class="col-sm-9">
+														 <th:block th:text="${vo.FILE_NAME}"/>
+														 <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
+															  <embed th:src="'data:application/pdf;base64, '+${vo.FileBase64}" type="application/pdf" width="50">
+														 </div>
+														 <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.jpg')}">
+															 <img th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+														 </div>
+														 <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
+															 <img th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+														 </div>
+													 </div>
+												 </div>
+											 </th:block>
+										</th:block>
+									 </div>
+									
+								</div>
+							</div>
+						</div>
+
+					</div>			
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</td>
+</tr>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        // var fileDatas = /*[[${detailData.FileDatas}]]*/;
+        // if (fileDatas != null) {
+        //     for(var i=0; i < fileDatas.length ; i++){
+		// 		if (fileDatas[i].FILE_NAME.indexOf('.pdf') >= 0 || fileDatas[i].FILE_NAME.indexOf('.PDF') >= 0) {
+		// 			var A = document.createElement("a");  
+		// 			A.setAttribute("href","/images/" + fileDatas[i].FILE_NAME);
+		// 			A.setAttribute("target","_blank");
+		// 			document.body.appendChild(A);
+		// 			A.click();
+		// 		}
+		// 	}
+        // }
+		
+    /*]]>*/
+</script>

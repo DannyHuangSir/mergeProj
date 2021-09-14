@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.web.dao.UserDataDao">
+
+	<!-- 取得使用者的保單名稱清單 -->
+	<!-- @param policyNos 使用者保單號碼清單 -->
+	<select id="getProductNameList" resultType="hashMap">
+		SELECT
+			P.POLICY_NO
+			,case when POLICY_TYPE in ('UC','UH','UP','UQ','UR','US') then '1' else '2' end AS POLICY_LIST_TYPE
+			,(
+				SELECT TOP 1
+					REPLACE(RTRIM(a.PRODUCT_NAME), '　', '')
+				FROM
+					ESERVICE.DBO.PRODUCT a 
+				WHERE
+					a.PRODUCT_CODE = P.POLICY_TYPE
+					AND (SELECT LIPM_INSU_BEG_DATE FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = P.POLICY_NO) BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
+			) AS PRODUCT_NAME
+		FROM
+			ESERVICE.DBO.POLICY P
+		WHERE
+			P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+	<!-- 增加找被保人保單號碼清單 -->
+		or
+		P.POLICY_NO IN (SELECT LIPI_INSU_NO FROM ESERVICE.DBO.LILIPI WHERE LIPI_ID = #{rocId})
+	</select>
+
+	<!-- 取得使用者的保單主約被保險人名稱清單 -->
+	<!-- @param policyNos 使用者保單號碼清單 -->
+	<select id="getMainInsuredNameList" resultType="hashMap">
+		SELECT
+			P.POLICY_NO
+			,(
+				SELECT TOP 1
+					ESERVICE.DBO.FN_DEBASE64(C.LIPI_NAME) AS LIPI_NAME
+				FROM
+					ESERVICE.DBO.LILIPI C
+				WHERE
+					C.LIPI_INSU_NO = P.POLICY_NO
+			) AS MAIN_INSURED_NAME
+		FROM
+			ESERVICE.DBO.POLICY P
+		WHERE
+			P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+	<!-- 增加找被保人保單號碼清單 -->
+		or
+		P.POLICY_NO IN (SELECT LIPI_INSU_NO FROM ESERVICE.DBO.LILIPI WHERE LIPI_ID = #{rocId})
+	</select>
+	
+</mapper>

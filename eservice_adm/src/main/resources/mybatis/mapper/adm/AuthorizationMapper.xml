@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.AuthorizationDao">
+	
+	<resultMap id="UserAuthCSVMap" type="com.twfhclife.adm.domain.DownloadUserAuthCSVResponse">
+		<result property="userAcct" column="USER_ACCT" />
+		<result property="role" column="ROLE" />
+		<result property="functionName" column="FUNCTION_NAME" />
+		<result property="sysName" column="SYS_NAME" />
+		<result property="firstName" column="FIRST_NAME" />
+		<result property="createDate" column="CREATE_DATE" />
+	</resultMap>
+	
+	<sql id="Systems_Column_List">
+		S.SYS_ID, S.SYS_NAME, S.CREATE_USER, S.CREATE_TIMESTAMP, S.UPDATE_USER, S.UPDATE_TIMESTAMP
+	</sql>
+		
+	<select id="downloadUserAuthCSV" resultMap="UserAuthCSVMap" parameterType="java.lang.String">
+		SELECT 
+			UE.USERNAME USER_ACCT 
+			,R.ROLE_NAME ROLE
+			,FI.FUNCTION_NAME
+			,S.SYS_NAME
+			,UE.FIRST_NAME
+            ,RFA.CREATE_DATE
+		FROM 
+			ESERVICE_ADM.DBO.USER_ENTITY UE
+			LEFT JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON UR.USER_ID = UE.ID
+			LEFT JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
+			LEFT JOIN ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA ON R.ROLE_ID = RSA.ROLE_ID
+			LEFT JOIN ESERVICE_ADM.DBO.ROLE_FUNC_AUTH RFA ON RSA.ROLE_ID = RFA.ROLE_ID
+			LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS S ON RSA.SYS_ID = S.SYS_ID
+			LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_ITEM FI ON RFA.FUNCTION_ID = FI.FUNCTION_ID
+		<where>
+			<if test="sysId != null and sysId != ''">
+				AND S.SYS_ID = #{sysId}
+			</if>
+		</where>
+		ORDER BY USER_ACCT
+	</select>
+
+</mapper>

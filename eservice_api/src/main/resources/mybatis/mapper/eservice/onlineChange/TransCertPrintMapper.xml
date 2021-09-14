@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransCertPrintDao">
+
+	<resultMap id="TransCertPrintMap" type="com.twfhclife.eservice.onlineChange.model.TransCertPrintVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="LANG" property="lang"/>
+		<result column="PASSPORT_NAME" property="passportName"/>
+		<result column="PASSPORT_NO" property="passportNo"/>
+		<result column="PRINT_CURR" property="printCurr"/>
+		<result column="DELIVER_TYPE" property="deliverType"/>
+		<result column="DELIVER_ADDR" property="deliverAddr"/>
+		<result column="BELIVER_MAIL" property="beliverMail"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transCertPrintVo.id != null"> AND ID = #{transCertPrintVo.id} </if>
+			<if test="transCertPrintVo.transNum != null and transCertPrintVo.transNum != ''"> AND TRANS_NUM = #{transCertPrintVo.transNum} </if>
+			<if test="transCertPrintVo.lang != null and transCertPrintVo.lang != ''"> AND LANG = #{transCertPrintVo.lang} </if>
+			<if test="transCertPrintVo.passportName != null and transCertPrintVo.passportName != ''"> AND ESERVICE.DBO.FN_DEBASE64(PASSPORT_NAME) = #{transCertPrintVo.passportName} </if>
+			<if test="transCertPrintVo.passportNo != null and transCertPrintVo.passportNo != ''"> AND ESERVICE.DBO.FN_DEBASE64(PASSPORT_NO) = #{transCertPrintVo.passportNo} </if>
+			<if test="transCertPrintVo.printCurr != null and transCertPrintVo.printCurr != ''"> AND PRINT_CURR = #{transCertPrintVo.printCurr} </if>
+			<if test="transCertPrintVo.deliverType != null and transCertPrintVo.deliverType != ''"> AND DELIVER_TYPE = #{transCertPrintVo.deliverType} </if>
+			<if test="transCertPrintVo.deliverAddr != null and transCertPrintVo.deliverAddr != ''"> AND ESERVICE.DBO.FN_DEBASE64(DELIVER_ADDR) = #{transCertPrintVo.deliverAddr} </if>
+			<if test="transCertPrintVo.beliverMail != null and transCertPrintVo.beliverMail != ''"> AND ESERVICE.DBO.FN_DEBASE64(BELIVER_MAIL) = #{transCertPrintVo.beliverMail} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transCertPrintVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得投保證明列印查詢結果 -->
+	<select id="getTransCertPrint" resultMap="TransCertPrintMap">
+		SELECT
+			ID,
+			TRANS_NUM,
+			LANG,
+			ESERVICE.DBO.FN_DEBASE64(PASSPORT_NAME) PASSPORT_NAME,
+			ESERVICE.DBO.FN_DEBASE64(PASSPORT_NO) PASSPORT_NO,
+			PRINT_CURR,
+			DELIVER_TYPE,
+			ESERVICE.DBO.FN_DEBASE64(DELIVER_ADDR) DELIVER_ADDR,
+			ESERVICE.DBO.FN_DEBASE64(BELIVER_MAIL) BELIVER_MAIL
+		FROM
+			ESERVICE.DBO.TRANS_CERT_PRINT
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertTransCertPrint">
+		INSERT INTO ESERVICE.DBO.TRANS_CERT_PRINT
+		(
+			ID,TRANS_NUM,LANG,PASSPORT_NAME,PASSPORT_NO,PRINT_CURR,DELIVER_TYPE,DELIVER_ADDR,BELIVER_MAIL
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_CERT_PRINT),
+			#{transCertPrintVo.transNum, jdbcType=VARCHAR},
+			#{transCertPrintVo.lang, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transCertPrintVo.passportName, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{transCertPrintVo.passportNo, jdbcType=VARCHAR}),
+			#{transCertPrintVo.printCurr, jdbcType=VARCHAR},
+			#{transCertPrintVo.deliverType, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transCertPrintVo.deliverAddr, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{transCertPrintVo.beliverMail, jdbcType=VARCHAR})
+		)
+	</insert>
+
+    <select id="queryBenefitDetail" resultType="hashmap">
+        SELECT 
+            P.PRODUCT_TYPE
+            , B.BENEFIT_NAME
+            , B.BENEFIT_DETAIL
+            , C.MAIN_AMOUNT 
+            , PROD.PROD_BASE_AMT
+            , P.PRODUCT_ID
+            , B.BENEFIT_CODE,
+			B.DESI_SALE_DATE,B.DESI_CHAN_VAR_DATE
+        FROM ESERVICE.DBO.COVERAGE C
+		JOIN ESERVICE.DBO.PRODUCT P ON P.PRODUCT_ID = C.PRODUCT_ID AND PRODUCT_TYPE = '1'
+		JOIN ESERVICE.DBO.BENEFIT B ON B.PRODUCT_CODE = P.PRODUCT_CODE
+        JOIN ESERVICE.DBO.LIPROD_ES PROD ON PROD.PROD_NO = P.PRODUCT_CODE
+        WHERE C.POLICY_NO = #{insuNo}
+        AND C.EFFECTIVE_DATE BETWEEN B.DESI_SALE_DATE AND B.DESI_CHAN_VAR_DATE
+		AND C.EFFECTIVE_DATE BETWEEN P.DESI_SALE_DATE AND P.DESI_CHAN_VAR_DATE
+		UNION ALL
+		SELECT P1.PRODUCT_TYPE
+				, BENEFIT_NAME
+				, BENEFIT_DETAIL
+				, CASE WHEN PAPF.AMT > 0 
+	                   THEN PAPF.AMT 
+	                   ELSE 
+                        CASE 
+                            WHEN PAPF.INSU_QUAN > 0 THEN PAPF.INSU_QUAN 
+                            ELSE PAPF.RANG 
+                        END 
+	              END MAIN_AMOUNT
+                , PROD_BASE_AMT
+                , NULL PRODUCT_ID
+                , DESI_CODE BENEFIT_CODE
+                , NULL DESI_SALE_DATE
+                , NULL DESI_CHAN_VAR_DATE
+		FROM ESERVICE.DBO.LIPROD_ES 
+		JOIN ESERVICE.DBO.PRODUCT P1 ON P1.PRODUCT_TYPE = '2' AND PROD_NO = P1.PRODUCT_CODE
+		JOIN (
+            select LIPA_ADD_CODE ADD_CODE, LIPA_RANG RANG, LIPA_AMT AMT, LIPA_INSU_BEG_DATE BEG_DATE, LIPA_INSU_END_DATE END_DATE, LIPA_INSU_QUAN INSU_QUAN FROM ESERVICE.DBO.LILIPA_ES
+            where LIPA_INSU_TYPE + CONVERT(VARCHAR(1),LIPA_INSU_GRP_NO) + LIPA_INSU_SEQ_NO = #{insuNo}
+            AND LIPA_ADD_CODE IN ('01','02','03','04','07','1A','1B','1D','1E','1H','1J','1K','1L','1N','1R')
+            AND LIPA_ST <![CDATA[ < ]]> 19 
+			AND COALESCE(LIPA_INSU_END_DATE, GETDATE()) >= GETDATE()
+            UNION ALL
+            SELECT LIPF_ADD_CODE ADD_CODE, LIPF_RANG RANG, LIPF_AMT AMT, LIPF_INSU_BEG_DATE BEG_DATE, LIPF_INSU_END_DATE END_DATE, LIPF_INSU_QUAN INSU_QUAN FROM ESERVICE.DBO.LILIPF_ES PFES
+            JOIN ESERVICE.DBO.LILIPA_ES PAES ON PFES.LIPF_INSU_TYPE = PAES.LIPA_INSU_TYPE AND PFES.LIPF_INSU_GRP_NO = PAES.LIPA_INSU_GRP_NO AND PFES.LIPF_INSU_SEQ_NO = PAES.LIPA_INSU_SEQ_NO AND PFES.LIPF_ADD_CODE = PAES.LIPA_ADD_CODE 
+            WHERE (LIPF_INSU_TYPE + CONVERT(VARCHAR(1),LIPF_INSU_GRP_NO) + LIPF_INSU_SEQ_NO) = #{insuNo}
+            AND COALESCE(LIPF_INSU_END_DATE, GETDATE()) >= GETDATE()
+            AND LIPF_RELB = '1' AND LIPA_ST <![CDATA[ < ]]> 12 
+            ) PAPF ON PAPF.ADD_CODE = P1.PRODUCT_CODE
+		JOIN 
+			(
+			SELECT SUBSTRING(DESI_CODE, 1, 2) DESI_CODE, DESI_DESC_CH BENEFIT_NAME, DESI_DESC_EN BENEFIT_DETAIL FROM ESERVICE.DBO.LIDESI_ES
+			WHERE DESI_TYPE = 'D1' GROUP BY SUBSTRING(DESI_CODE, 1, 2), DESI_DESC_CH, DESI_DESC_EN
+			) P ON SUBSTRING(P.DESI_CODE, 1, 2) = P1.PRODUCT_CODE
+		ORDER BY PRODUCT_TYPE, BENEFIT_CODE
+    </select>
+    
+    <select id="queryInsuDetail" resultType="hashmap">
+        SELECT 
+            LIPM_INSU_NO, PROD.PRODUCT_NAME, ESERVICE.DBO.FN_DEBASE64(LIPM_NAME_1) LIPM_NAME_1, ESERVICE.DBO.FN_DEBASE64(LIPI_NAME) LIPI_NAME, LIPI_ID, 
+            CONVERT(VARCHAR(10),LIPI_BIRTH,120) AS LIPI_BIRTH, 
+            CONVERT(VARCHAR(10),LIPI_INSU_BEG_DATE,120) AS LIPI_INSU_BEG_DATE, 
+            LIPM_RCP_CODE, PARAMETER_VALUE AS PAYMODE_CHT, 
+            COALESCE(LIPI_TABL_PREM, 0) AS LIPI_TABL_PREM, 
+			COALESCE(LIPI_MAIN_AMT, 0) AS LIPI_MAIN_AMT,
+			COALESCE(LIPI_CANCER_QUAN, 0) AS LIPI_CANCER_QUAN,
+		    CASE WHEN COALESCE(LIPI_MAIN_AMT, 0) = 0 THEN COALESCE(LIPI_CANCER_QUAN, 0) ELSE COALESCE(LIPI_MAIN_AMT, 0) END MAIN_AMT
+		    , DE.DESI_DESC_EN AS PRODUCT_NAME_ENG
+		    , A1.PROD_BASE_AMT
+		    , PROD.PRODUCT_ID
+		    , POL.CURRENCY
+		    , PM.LIPM_ST
+			, A1.PROD_BASE_TYPE
+		FROM ESERVICE.DBO.LILIPM PM
+		JOIN ESERVICE.DBO.LILIPI PI ON PM.LIPM_INSU_NO = PI.LIPI_INSU_NO
+		LEFT JOIN ESERVICE_ADM.DBO.PARAMETER P ON PARAMETER_CATEGORY_ID=3
+		LEFT JOIN ESERVICE.DBO.POLICY POL ON POL.POLICY_NO = PM.LIPM_INSU_NO
+		LEFT JOIN ESERVICE.DBO.PRODUCT PROD ON PROD.PRODUCT_TYPE = '1' AND PROD.PRODUCT_CODE = SUBSTRING(PM.LIPM_INSU_NO, 1, 2)
+		LEFT JOIN ESERVICE.DBO.LIDESI_ES DE ON DE.DESI_CODE=PROD.PRODUCT_CODE AND DE.DESI_VERSION = PROD.DESI_VERSION
+		JOIN (
+          SELECT 
+              PROD_NO, PROD_BASE_AMT, PRODUCT_CODE DTAB_CODE,PRODUCT_NAME DTAB_DESC,PROD_BASE_TYPE
+          FROM 
+              ESERVICE.DBO.LIPROD_ES
+          JOIN 
+              ESERVICE.DBO.PRODUCT
+		      ON PROD_NO = PRODUCT_CODE
+          JOIN 
+              LILIPI ON LIPI_INSU_NO = #{insuNo} AND LIPI_INSU_TYPE = PRODUCT_CODE            
+              AND LIPI_INSU_BEG_DATE BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
+		) A1 ON A1.PROD_NO = PROD.PRODUCT_CODE
+		<where>
+		    AND PM.LIPM_INSU_NO = #{insuNo}
+	 		AND PM.LIPM_RCP_CODE = P.PARAMETER_CODE
+			AND PROD.PRODUCT_CODE = SUBSTRING(PM.LIPM_INSU_NO, 1, 2)
+			AND PI.LIPI_INSU_BEG_DATE BETWEEN PROD.DESI_SALE_DATE AND PROD.DESI_CHAN_VAR_DATE
+		</where> 
+    </select>
+</mapper>

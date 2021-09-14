@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.UsersDao">
+
+	<resultMap id="UsersMap" type="com.twfhclife.adm.model.UsersVo" >
+		<result column="USER_ID" property="userId"/>
+		<result column="USER_TYPE" property="userType"/>
+		<result column="ROC_ID" property="rocId"/>
+		<result column="MOBILE" property="mobile"/>
+		<result column="EMAIL" property="email"/>
+		<result column="LOGIN_FAIL_COUNT" property="loginFailCount"/>
+		<result column="LAST_CHANG_PASSWORD_DATE" property="lastChangPasswordDate"/>
+		<result column="SMS_FLAG" property="smsFlag"/>
+		<result column="MAIL_FLAG" property="mailFlag"/>
+		<result column="FB_ID" property="fbId"/>
+		<result column="MOICA_ID" property="moicaId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		USER_ID,USER_TYPE,ROC_ID,MOBILE,EMAIL,LOGIN_FAIL_COUNT,LAST_CHANG_PASSWORD_DATE,SMS_FLAG,MAIL_FLAG,FB_ID,MOICA_ID,CREATE_DATE,CREATE_USER
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="usersVo.userId != null and usersVo.userId != ''"> AND USER_ID = #{usersVo.userId} </if>
+			<if test="usersVo.userType != null and usersVo.userType != ''"> AND USER_TYPE = #{usersVo.userType} </if>
+			<if test="usersVo.rocId != null and usersVo.rocId != ''"> AND ROC_ID = #{usersVo.rocId} </if>
+			<if test="usersVo.mobile != null and usersVo.mobile != ''"> AND MOBILE = #{usersVo.mobile} </if>
+			<if test="usersVo.email != null and usersVo.email != ''"> AND EMAIL = #{usersVo.email} </if>
+			<if test="usersVo.loginFailCount != null"> AND LOGIN_FAIL_COUNT = #{usersVo.loginFailCount} </if>
+			<if test="usersVo.lastChangPasswordDate != null"> AND LAST_CHANG_PASSWORD_DATE = #{usersVo.lastChangPasswordDate} </if>
+			<if test="usersVo.smsFlag != null and usersVo.smsFlag != ''"> AND SMS_FLAG = #{usersVo.smsFlag} </if>
+			<if test="usersVo.mailFlag != null and usersVo.mailFlag != ''"> AND MAIL_FLAG = #{usersVo.mailFlag} </if>
+			<if test="usersVo.fbId != null and usersVo.fbId != ''"> AND FB_ID = #{usersVo.fbId} </if>
+			<if test="usersVo.moicaId != null and usersVo.moicaId != ''"> AND MOICA_ID = #{usersVo.moicaId} </if>
+			<if test="usersVo.createDate != null"> AND CREATE_DATE = #{usersVo.createDate} </if>
+			<if test="usersVo.createUser != null and usersVo.createUser != ''"> AND CREATE_USER = #{usersVo.createUser} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND USER_ID = #{usersVo.userId}
+		</where>
+	</sql>
+	
+	<!-- 取得人員資訊查詢結果 -->
+	<select id="getUsers" resultMap="UsersMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.USERS
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 人員資訊-檢查帳號是否存在 -->
+	<select id="checkUserIdExist" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM
+			ESERVICE.DBO.USERS
+		WHERE
+			USER_ID = #{userId}
+	</select>
+	
+	<!-- 人員資訊-新增 -->
+	<insert id="insertUsers">
+		INSERT INTO ESERVICE.DBO.USERS
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{usersVo.userId, jdbcType=VARCHAR},
+			#{usersVo.userType, jdbcType=VARCHAR},
+			#{usersVo.rocId, jdbcType=VARCHAR},
+			#{usersVo.mobile, jdbcType=VARCHAR},
+			#{usersVo.email, jdbcType=VARCHAR},
+			#{usersVo.loginFailCount, jdbcType=NUMERIC},
+			#{usersVo.lastChangPasswordDate, jdbcType=TIMESTAMP},
+			#{usersVo.smsFlag, jdbcType=VARCHAR},
+			#{usersVo.mailFlag, jdbcType=VARCHAR},
+			#{usersVo.fbId, jdbcType=VARCHAR},
+			#{usersVo.moicaId, jdbcType=VARCHAR},
+			#{usersVo.createDate, jdbcType=TIMESTAMP},
+			#{usersVo.createUser, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 人員資訊-刪除 -->
+	<delete id="deleteUsers">
+		DELETE ESERVICE.DBO.USERS 
+		<include refid="wherePkClause" />
+	</delete>
+	
+	<update id="updateOnlineChangeUse">
+	   UPDATE ESERVICE.DBO.USERS
+	      SET ONLINE_FLAG = #{usersVo.onlineFlag}
+	   <include refid="whereClause" />
+	</update>
+	
+	<update id="updateUsers">
+	   UPDATE ESERVICE.DBO.USERS
+	      SET STATUS = #{usersVo.status},
+	      	  LOGIN_FAIL_COUNT = #{usersVo.loginFailCount},
+	      	  LAST_CHANG_PASSWORD_DATE = null
+	      WHERE USER_ID = #{usersVo.userId}  
+	</update>
+
+</mapper>

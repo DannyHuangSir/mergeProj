@@ -1,0 +1,253 @@
+<div class="item100" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="cityOptionChar" class="selector adr"></select>
+	</div>
+</div>
+<div class="item100" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="regionOptionChar" class="selector adr"></select>
+	</div>
+</div>
+<div class="item150" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="roadOptionChar" class="selector adr"></select>
+	</div>
+</div>
+<div class="clearfix"></div>
+ <div class="" style="float: left; margin-top: 4px; margin-right: 4px;line-height: 1em;">
+	<input type="text" id="addrChar-1" class="item50 adr">巷
+	<input type="text" id="addrChar-2" class="item50 adr">弄
+	<input type="text" id="addrChar-3" class="item50 adr">號之
+	<input type="text" id="addrChar-4" class="item50 adr">，
+	<input type="text" id="addrChar-5" class="item50 adr">樓之
+	<input type="text" id="addrChar-6" class="item50 adr">
+	<input type="text" id="addrChar-7" class="item50 adr hide">
+</div>
+<!--<div style="float: left;">
+	<input type="text" id="addrChar" class="" placeholder="請輸入所在路、巷、號、樓層">
+</div>-->
+<input type="hidden" id="selectAddressChar" name="selectAddressChar"/>
+<input type="hidden" id="addressCharValid" name="addressCharValid"/>
+<input type="hidden" id="selectAddressCharFull" name="selectAddressChar"/>
+<script src="plugin/jquery-1.11.2.min.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function () {
+		// 地址下拉選單
+		var cityUrl = /*[[@{/getCityList}]]*/;
+		var regionUrl = /*[[@{/getRegionList}]]*/;
+		var roadUrl = /*[[@{/getRoadList}]]*/;
+		//eserviceOption.cityRegion('#cityOptionChar', cityUrl, '#regionOptionChar', regionUrl);
+		eserviceOption.common('#cityOptionChar', cityUrl);
+		eserviceOption.empty('#roadOptionChar', '請選擇');
+		eserviceOption.empty('#regionOptionChar', '請選擇');
+
+		$('#regionOptionChar').change(function () {
+			eserviceOption.common('#roadOptionChar', (roadUrl + '?regionId=' + $(this).val()));
+			var regionOptionCharID = $(this).val();
+			$('#regionOptionChar option[selected=selected]').attr("selected", false);
+			$('#regionOptionChar option[value="' + regionOptionCharID + '"]').attr("selected", true);
+		});
+
+		$('#cityOptionChar').change(function () {
+			var cityOptionCharID = $(this).val();
+			eserviceOption.common('#regionOptionChar', (regionUrl + '?cityId=' + $(this).val()));
+			$('#cityOptionChar option[selected=selected]').attr("selected", false);
+			$('#cityOptionChar option[value="' + cityOptionCharID + '"]').attr("selected", true);
+		});
+		$('#roadOptionChar').change(function () {
+			var roadOptionCharID = $(this).val();
+			$('#roadOptionChar option[selected=selected]').attr("selected", false);
+			$('#roadOptionChar option[value="' + roadOptionCharID + '"]').attr("selected", true);
+		});
+
+		//$('#cityOptionChar,#regionOptionChar,#roadOptionChar,#addrChar,#addrChar-1,#addrChar-2,#addrChar-3,#addrChar-4,#addrChar-5,#addrChar-6,#addrChar-7').change(function() {
+
+		//});
+
+		/**var dataDetailChar = /*[[${dataDetail}]]*/;
+		/**if(dataDetailChar != null){
+			if(dataDetailChar['CITY_CHAR'] != undefined && dataDetailChar['CITY_CHAR'] != null){
+				eserviceOption.common('#regionOptionChar', (regionUrl + '?cityId=' + dataDetailChar['CITY_CHAR']));
+			$('#regionOptionChar option[selected=selected]').attr("selected",false);
+			$('#regionOptionChar option[value="'+dataDetailChar['CITY_CHAR']+'"]').attr("selected",true);
+			}
+			if(dataDetailChar['REGION_CHAR'] != undefined && dataDetailChar['REGION_CHAR'] != null){
+				eserviceOption.common('#roadOptionChar', (roadUrl + '?regionId=' + dataDetailChar['REGION_CHAR']));
+				$('#roadOptionChar option[selected=selected]').attr("selected",false);
+				$('#roadOptionChar option[value="'+dataDetailChar['REGION_CHAR']+'"]').attr("selected",true);
+			}
+		}**/
+
+		/**setTimeout(function () {
+			if(dataDetailChar['CITY_CHAR'] != undefined && dataDetailChar['CITY_CHAR'] != null){
+				$('#cityOptionChar').val(dataDetailChar['CITY_CHAR']);
+				$('#cityOptionChar option[selected=selected]').attr("selected",false);
+				$('#cityOptionChar option[value="'+dataDetailChar['CITY_CHAR']+'"]').attr("selected",true);
+			}
+			if(dataDetailChar['REGION_CHAR'] != undefined && dataDetailChar['REGION_CHAR'] != null){
+				$('#regionOptionChar').val(dataDetailChar['REGION_CHAR']);
+				$('#regionOptionChar option[selected=selected]').attr("selected",false);
+				$('#regionOptionChar option[value="'+dataDetailChar['REGION_CHAR']+'"]').attr("selected",true);
+			}
+			if(dataDetailChar['ROAD_CHAR'] != undefined && dataDetailChar['ROAD_CHAR'] != null){
+				$('#roadOptionChar').val(dataDetailChar['ROAD_CHAR']);
+				$('#roadOptionChar option[selected=selected]').attr("selected",false);
+				$('#roadOptionChar option[value="'+dataDetailChar['ROAD_CHAR']+'"]').attr("selected",true);
+			}
+			if(dataDetailChar['ADDRESS_CHAR'] != undefined && dataDetailChar['ADDRESS_CHAR'] != null){
+				$('#addrChar').val(dataDetailChar['ADDRESS_CHAR']);
+			}
+		}, 2000); // 延时1秒
+		**/
+	});
+	function selectAddressChar() {
+		var addressChar = '';
+		var addressCharFull = '';
+		var addressCharValid = '';
+		if ($('#cityOptionChar').val() != '') {
+			addressCharFull += $('#cityOptionChar option:selected').text();
+		}
+		if ($('#regionOptionChar').val() != '') {
+			addressCharFull += $('#regionOptionChar option:selected').text();
+		}
+		if ($('#roadOptionChar').val() != '') {
+			addressChar += $('#roadOptionChar option:selected').text();
+			addressCharFull += $('#roadOptionChar option:selected').text();
+		}
+		//if ($('#addrChar').val() != '') {
+		//	addressChar += $('#addrChar').val();
+		//	addressCharFull += $('#addrChar').val();
+		//}
+		if ($('#addrChar-1').val() != '') {
+			addressChar += $('#addrChar-1').val() + '巷';
+			addressCharFull += $('#addrChar-1').val() + '巷';
+			addressCharValid += $('#addrChar-1').val() + '巷';
+		}
+		if ($('#addrChar-2').val() != '') {
+			addressChar += $('#addrChar-2').val() + '弄';
+			addressCharFull += $('#addrChar-2').val() + '弄';
+			addressCharValid += $('#addrChar-2').val() + '弄';
+		}
+		if ($('#addrChar-3').val() != '') {
+			addressChar += $('#addrChar-3').val() + '號';
+			addressCharFull += $('#addrChar-3').val() + '號';
+			addressCharValid += $('#addrChar-3').val() + '號';
+		}
+		if ($('#addrChar-4').val() != '') {
+			addressChar += '之' + $('#addrChar-4').val();
+			addressCharFull += '之' + $('#addrChar-4').val();
+			addressCharValid += '之' + $('#addrChar-4').val();
+		}
+		if ($('#addrChar-4').val() != '' && $('#addrChar-5').val() != '') {
+			addressChar += '，';
+			addressCharFull += '，';
+			addressCharValid += '，';
+		}
+		if ($('#addrChar-5').val() != '') {
+			addressChar += $('#addrChar-5').val() + '樓';
+			addressCharFull += $('#addrChar-5').val() + '樓';
+			addressCharValid += $('#addrChar-5').val() + '樓';
+		}
+		if ($('#addrChar-6').val() != '') {
+			addressChar += '之' + $('#addrChar-6').val();
+			addressCharFull += '之' + $('#addrChar-6').val();
+			addressCharValid += '之' + $('#addrChar-6').val();
+		}
+		if ($('#addrChar-6').val() != '' && $('#addrChar-7').val() != '') {
+			addressChar += '，';
+			addressCharFull += '，';
+			addressCharValid += '，';
+		}
+		// if ($('#addrChar-7').val() != '') {
+		//	addressChar += $('#addrChar-7').val() + '室';
+		// 	addressCharFull += $('#addrChar-7').val() + '室';
+		// }
+		$('#addressCharValid').val(eserviceForm.convertAddressNumber(addressCharValid));
+		$('#selectAddressChar').val(eserviceForm.convertAddressNumber(addressChar));
+		$('#selectAddressCharFull').val(eserviceForm.convertAddressNumber(addressCharFull));
+	}
+	function isValidCharCityRegionRoad() {
+		if ($('#cityOptionChar').val() == '') {
+			openAlert("請選擇[收費地址]都市");
+			return false;
+		}
+		if ($('#regionOptionChar').val() == '') {
+			openAlert("請輸入[收費地址]區域");
+			return false;
+		}
+		if ($('#roadOptionChar').val() == '') {
+			openAlert("請輸入[收費地址]街道");
+			return false;
+		}
+		return true;
+	}
+
+	function isAddressCharValid(alertMsg) {
+		/**if ($('#cityOptionChar').val() == '') {
+			openAlert(alertMsg);
+			return false;
+		}
+		if ($('#regionOptionChar').val() == '') {
+			openAlert(alertMsg);
+			return false;
+		}
+		if ($('#roadOptionChar').val() == '') {
+			openAlert(alertMsg);
+			return false;
+		}**/
+
+		if ($('#addrChar-1').val() != '') {
+			if (!eserviceForm.isNumber($('#addrChar-1').val())) {
+				/* openAlert("請輸入數字"); */
+				openAlert($('#E0119').val());
+				return false;
+			}
+			return isValidCharCityRegionRoad();
+		}
+
+		if ($('#addrChar-2').val() != '') {
+			if (!eserviceForm.isNumber($('#addrChar-2').val())) {
+				/* openAlert("請輸入數字"); */
+				openAlert($('#E0119').val());
+				return false;
+			}
+			return isValidCharCityRegionRoad();
+		}
+
+		if ($('#addrChar-3').val() != '') {
+			if (!eserviceForm.isNumber($('#addrChar-3').val())) {
+				/* openAlert("請輸入數字"); */
+				openAlert($('#E0119').val());
+				return false;
+			}
+			return isValidCharCityRegionRoad();
+		}
+		//else {
+		//	openAlert("請輸入號");
+		//	$('#addrChar-3').focus();
+		//	return false;
+		//}
+
+		if ($('#addrChar-4').val() != '') {
+			if (!eserviceForm.isNumber($('#addrChar-4').val())) {
+				/* openAlert("請輸入數字"); */
+				openAlert($('#E0119').val());
+				return false;
+			}
+			return isValidCharCityRegionRoad();
+		}
+
+		if ($('#addrChar-5').val() != '') {
+			if (!eserviceForm.isNumber($('#addrChar-5').val())) {
+				/* openAlert("請輸入數字"); */
+				openAlert($('#E0119').val());
+				return false;
+			}
+			return isValidCharCityRegionRoad();
+		}
+		return true;
+	}
+
+	/*]]>*/
+</script>

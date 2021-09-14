@@ -1,0 +1,39 @@
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<div class="col-sm-12 hid-title2" id="transDetailTitle"></div>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<th:block th:if="${transResendPolicyVo != null}">
+							<tr class="">
+								<th class="hid-th w40p">收件人：</th>
+								<td>
+									<th:block th:text="${transResendPolicyVo.name}"/>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">聯絡電話：</th>
+								<td>
+									<th:block th:text="${transResendPolicyVo.tel}"/>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">收件地址：</th>
+								<td>
+									<th:block th:text="${transResendPolicyVo.address}"/>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">全國繳費網匯款帳號：</th>
+								<td>
+									<span style="color: red;"><b><th:block th:text="${payAcct}"/></b></span>
+								</td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

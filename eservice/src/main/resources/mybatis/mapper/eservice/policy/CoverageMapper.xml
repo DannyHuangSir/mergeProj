@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.CoverageDao">
+
+	<!-- 保項資訊(附加資訊請繼承) -->
+	<resultMap id="CoverageMap" type="com.twfhclife.eservice.policy.model.CoverageVo" >
+		<result column="COVERAGE_ID" property="coverageId"/>
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="PRODUCT_ID" property="productId"/>
+		<result column="INDIVIDUAL_ID" property="individualId"/>
+		<result column="INSURED_NAME" property="insuredName"/>
+		<result column="STATUS" property="status"/>
+		<result column="EFFECTIVE_DATE" property="effectiveDate"/>
+		<result column="EXPIRE_DATE" property="expireDate"/>
+		<result column="MAIN_AMOUNT" property="mainAmount"/>
+		<result column="PREMIUM_AMOUNT" property="premiumAmount"/>
+	</resultMap>
+
+	<!-- 清單附加資訊 -->
+	<resultMap id="CoverageListMap" type="com.twfhclife.eservice.policy.model.CoverageVo" extends="CoverageMap">
+		<result column="PRODUCT_NAME" property="productVo.productName"/>
+		<result column="PRODUCT_CODE" property="productVo.productCode"/>
+		<result column="PRODUCT_TYPE" property="productVo.productType"/>
+		<result column="PRODUCT_TYPE_NAME" property="productVo.productTypeName"/>
+		<result column="CURRENCY" property="policyVo.currency"/>
+		<result column="ROC_ID" property="individualVo.rocId"/>
+		<result column="SEX" property="individualVo.sex"/>
+		<result column="BIRTH_DATE" property="individualVo.birthDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		C.COVERAGE_ID,C.POLICY_NO,C.PRODUCT_ID,C.INDIVIDUAL_ID,ESERVICE.DBO.FN_DEBASE64(C.INSURED_NAME) INSURED_NAME,C.STATUS,C.EFFECTIVE_DATE,C.EXPIRE_DATE,C.MAIN_AMOUNT,C.PREMIUM_AMOUNT
+	</sql>
+	
+	<!-- 商品相關欄位 -->
+	<sql id="Product_Column_List">
+		REPLACE(RTRIM(PROD.PRODUCT_NAME), '　', '') AS PRODUCT_NAME
+		,PROD.PRODUCT_CODE
+		,PROD.PRODUCT_TYPE
+		,case 
+			when PROD.PRODUCT_TYPE = '1' then '主約'
+			when PROD.PRODUCT_TYPE = '2' then '附約'
+			else PROD.PRODUCT_TYPE
+		 end AS PRODUCT_TYPE_NAME
+	</sql>
+	
+	<!-- 幣別欄位 -->
+	<sql id="Currency_Column">
+		P.CURRENCY
+	</sql>
+	
+	<!-- 個人主體欄位 -->
+	<sql id="Individual_Column_List">
+		ESERVICE.DBO.FN_GETHIDDENCODE(1, I.ROC_ID, '*', 4, 5) AS ROC_ID, I.SEX, I.BIRTH_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="coverageVo.coverageId != null and coverageVo.coverageId != ''"> AND C.COVERAGE_ID = #{coverageVo.coverageId} </if>
+			<if test="coverageVo.policyNo != null and coverageVo.policyNo != ''"> AND C.POLICY_NO = #{coverageVo.policyNo} </if>
+			<if test="coverageVo.productId != null and coverageVo.productId != ''"> AND C.PRODUCT_ID = #{coverageVo.productId} </if>
+			<if test="coverageVo.individualId != null and coverageVo.individualId != ''"> AND C.INDIVIDUAL_ID = #{coverageVo.individualId} </if>
+			<if test="coverageVo.insuredName != null and coverageVo.insuredName != ''"> AND ESERVICE.DBO.FN_DEBASE64(C.INSURED_NAME) = #{coverageVo.insuredName} </if>
+			<if test="coverageVo.status != null and coverageVo.status != ''"> AND C.STATUS = #{coverageVo.status} </if>
+			<if test="coverageVo.effectiveDate != null"> AND C.EFFECTIVE_DATE = #{coverageVo.effectiveDate} </if>
+			<if test="coverageVo.expireDate != null"> AND C.EXPIRE_DATE = #{coverageVo.expireDate} </if>
+			<if test="coverageVo.mainAmount != null"> AND C.MAIN_AMOUNT = #{coverageVo.mainAmount} </if>
+			<if test="coverageVo.premiumAmount != null"> AND C.PREMIUM_AMOUNT = #{coverageVo.premiumAmount} </if>
+			<if test="coverageVo.ltStatus != null and coverageVo.ltStatus != ''"> 
+				AND C.STATUS <![CDATA[<]]> #{coverageVo.ltStatus}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 取得保單保項查詢結果 -->
+	<select id="getCoverageList" resultMap="CoverageListMap">
+		SELECT
+			<include refid="Base_Column_List" />
+			,<include refid="Product_Column_List" />
+			,<include refid="Currency_Column" />
+		FROM
+			ESERVICE.DBO.COVERAGE C
+				LEFT OUTER JOIN ESERVICE.DBO.PRODUCT PROD
+					ON C.PRODUCT_ID = PROD.PRODUCT_ID
+				LEFT OUTER JOIN ESERVICE.DBO.POLICY P
+					ON C.POLICY_NO = P.POLICY_NO
+		<include refid="whereClause" />
+		order by PRODUCT_TYPE
+	</select>
+	
+	<!-- 取得主約被保人保項查詢結果 -->
+	<select id="getInsuredCoverage" resultMap="CoverageListMap">
+		SELECT TOP 1 
+			<include refid="Base_Column_List" />
+			,<include refid="Individual_Column_List" />
+		FROM
+			ESERVICE.DBO.COVERAGE C
+				LEFT OUTER JOIN ESERVICE.DBO.PRODUCT PROD
+					ON C.PRODUCT_ID = PROD.PRODUCT_ID
+				LEFT OUTER JOIN ESERVICE.DBO.INDIVIDUAL I
+					ON C.INDIVIDUAL_ID = I.INDIVIDUAL_ID
+		WHERE
+			C.POLICY_NO = #{coverageVo.policyNo}
+			AND PROD.PRODUCT_TYPE = '1'
+	</select>
+
+</mapper>

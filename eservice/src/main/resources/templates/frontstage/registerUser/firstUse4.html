@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>加入會員｜臺銀人壽保單網路服務</title>
+	<link th:href="@{/css/pwdcheck.css}" rel="stylesheet"/>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header>
+		<div class="container">
+			<div class="row">
+				<th:block th:replace="fragments/logo"/>
+				<div class="n0 inlineBlock float-left">保單網路服務<span class="colorBlue">&nbsp;加入會員</span></div>
+				<div class="clearfix visible-xs-block"></div>
+			</div>
+		</div>
+	</header>
+	<section class="grey mobile-nopd fullContent">
+		<div class="container bg3 box-border no-borderTop">
+	        <div th:switch="${session.register_isMember}">	        
+			    <!-- 一般會員 start -->
+			    <div th:case="'false'">
+					<div class="">
+			            <ul class="step">
+		                    <li class="step1 col-xs-4">
+		                        <span class="mobile">步驟 </span> 1<span class="hid1">. 接受條款</span>
+		                    </li>
+		                    <li class="step2 col-xs-4">
+		                        <span class="mobile">步驟 </span> 2<span class="hid1">. 輸入驗證碼</span>
+		                    </li>
+		                    <li class="step3 active col-xs-4">
+		                        <span class="mobile">步驟 </span> 3<span class="hid1">. 設定用戶名稱與密碼</span>
+		                    </li>
+			            </ul>
+					</div>
+			    </div>
+			    <!-- 一般會員 end -->
+	        
+			    <!-- 保戶會員 start -->
+			    <div th:case="'true'">
+					<div class="">
+			            <ul class="step">
+			                <li class="step1 col-xs-3">
+			                    <span class="mobile">步驟 </span> 1<span class="hid1">. 接受條款</span>
+			                </li>
+			                <li class="step2 col-xs-3">
+			                    <span class="mobile">步驟 </span> 2<span class="hid1">. 確認身分</span>
+			                </li>
+			                <li class="step2 col-xs-3">
+			                    <span class="mobile">步驟 </span> 3<span class="hid1">. 輸入驗證碼</span>
+			                </li>
+			                <li class="step3 active col-xs-3">
+			                    <span class="mobile">步驟 </span> 4<span class="hid1">. 設定用戶名稱與密碼</span>
+			                </li>
+			            </ul>
+					</div>
+			    </div>
+			    <!-- 保戶會員 end -->			    
+	        </div>
+			<div class="col-md-6 col-md-offset-3 mobile-panel">
+				<!-- <div class="cert1" style="width:360px;margin:30px auto 40px auto"> -->
+				<div class="cert1">
+					<h2 class="title tex-center">請設定用戶名稱與密碼</h2>
+					<div class="form-group">
+						<div class="text-left colorBlack">新用戶名稱</div>
+						<input class="form-control" id="InputAccount" placeholder="8～20碼之數字或英文字母(不區分大小寫)" maxlength="40" autocomplete="off" />
+					</div>
+					<div class="form-group">
+						<div class="text-left colorBlack">新密碼</div>
+						<input type="password" class="form-control" id="InputPassword" placeholder="8～20碼混合之數字及英文字母和符號(須區分大小寫)"/>
+						<div id="pwdCheckLevelDiv" class="pw-strength pw-default">
+							<div class="pw-bar"></div>
+							<div class="pw-bar-on"></div>
+							<div class="pw-txt">
+								<span>弱</span>
+								<span>中</span>
+								<span>强</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="text-left colorBlack">確認新密碼</div>
+						<input type="password" class="form-control" id="InputPasswordAgain" placeholder="請再次輸入新密碼"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8 col-md-offset-2 two-buttons">
+				<button class="go btn-signup" onclick="createUser()">確認送出</button>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<!-- script src="plugin/jquery-1.11.3.min.js"></script>
+	<script src="plugin/jquery.placeholder.min.js"></script>
+	<script src="plugin/detectmobilebrowser_jquery.js"></script>
+	<script src="js/scripts.js"></script>
+	<script src="js/Chart.js"></script>
+	<script src="plugin/bootstrap.min.js"></script -->
+	<script>
+	
+	$(function(){ 
+		eserviceForm.pwdCheck('#InputPassword');
+	});
+
+	function createUser(){
+		$('#InputAccount').val($('#InputAccount').val().trim());
+		$('#InputPassword').val($('#InputPassword').val().trim());
+		if ($('#InputAccount').val().length < 8) {
+			/*openAlert("用戶名稱請輸入8～20碼之數字或英文字母(不區分大小寫)！");*/
+			openAlert($('#E0023').val());
+			return false;
+		} else {
+			var reg = $('#InputAccount').val().match(/^[a-zA-Z0-9@._-]+$/) != null;
+			if(!reg) {
+				/*openAlert("用戶名稱含有空白字元或非法字元，請重新輸入！");*/
+				openAlert($('#E0102').val());
+				return false;
+			}
+		}
+		if ($('#InputPassword').val() == '') {
+			/* openAlert("請輸入新密碼！"); */
+			openAlert($('#E0013').val());
+			return false;
+		}
+		
+		if (!eserviceForm.checkPassword($('#InputPassword').val())) {
+			/* openAlert("密碼請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！"); */
+			openAlert($('#E0024').val());
+			return false;
+		}
+		
+		if ($('#InputPasswordAgain').val() == '') {
+			/* openAlert("請確認新密碼！"); */
+			openAlert($('#E0015').val());
+			return false;
+		}
+		
+		if($("#InputPassword").val() != $("#InputPasswordAgain").val()){
+			/* openAlert("輸入的密碼不一致！"); */
+			openAlert($('#E0016').val());
+			return false;
+		}
+		
+		var data = {
+			userId : $("#InputAccount").val(),
+			password : $("#InputPassword").val()
+		}
+		postJson("/eservice/register/registerUserData", data);
+	}
+	
+	function postJson(url, data){
+		popupLoading();
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : url,
+			data : JSON.stringify(data),
+			success : function(response) {
+				console.log(response);
+				if(response.resultMsg != ""){
+					if(response.result == "ACCESS_DENY") {
+						openAlert(response.resultMsg, "/eservice/firstUse3");
+					} else {
+						openAlert(response.resultMsg);
+					}
+					return;
+				} else {
+					window.location.href = "/eservice/firstUseSuccess";
+				}
+			},
+			error : function() {
+				openAlert('error!');
+			},
+	        complete: function(data) {
+	            removeLoading();
+	        }
+		});
+	}
+	</script>
+</body>
+
+</html>

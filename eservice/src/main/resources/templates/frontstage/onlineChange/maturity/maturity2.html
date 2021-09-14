@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>滿期｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">滿期</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 滿期
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-4">
+						2<span class="hid1">. 設定滿期金匯款帳戶</span>
+					</li>
+					<li class="step3 col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>設定滿期金匯款帳戶</h2>
+				<div class="col-md-8 col-md-offset-2">
+					<form id="step2Form" class="form-horizontal no-borderBottom marginTop20" role="form" th:action="@{/maturity3}" method="POST">
+						<div class="form-group">
+							<label class="col-sm-3">保單號碼：</label>
+							<div class="col-sm-8">
+								<th:block th:text="${maturityVo.policyNo}"/>
+								<input type="hidden" name="policyNo" th:value="${maturityVo.policyNo}"/>
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-3">要保人：</label>
+							<div class="col-sm-8">
+								<th:block th:text="${maturityVo.customerName}"/>
+								<input type="hidden" name="customerName" th:value="${maturityVo.customerName}"/>
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-3">被保險人：</label>
+							<div class="col-sm-8">
+								<th:block th:text="${maturityVo.insuredName}"/>
+								<input type="hidden" name="insuredName" th:value="${maturityVo.insuredName}"/>
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-3">滿期金受益人：</label>
+							<div class="col-sm-8">
+								<th:block th:text="${maturityVo.beneficiaryName}"/>
+								<input type="hidden" name="beneficiaryName" th:value="${maturityVo.beneficiaryName}"/>
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-3">投保始期：</label>
+							<div class="col-sm-8">
+								<th:block th:text="${maturityVo.effectiveDate}"/>
+								<input type="hidden" name="effectiveDate" th:value="${maturityVo.effectiveDate}"/>
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-3">保險金額：</label>
+							<div class="col-sm-8">
+								<th:block th:text="${maturityVo.mainAmount} != null 
+									? ${#numbers.formatDecimal(maturityVo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+								<input type="hidden" name="mainAmount" th:value="${maturityVo.mainAmount}"/>
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-3">滿期日期：</label>
+							<div class="col-sm-8">
+								<th:block th:text="${maturityVo.expireDate}"/>
+								<input type="hidden" name="expireDate" th:value="${maturityVo.expireDate}"/>
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-3">滿期金額：</label>
+							<div class="col-sm-8">依保單條款約定之滿期金給付</div>
+							<div class="clearfix"></div>
+							<h2 class="divider divider88"></h2>
+							<div class="clearfix"></div>
+							<label class="col-sm-3">領款方式：</label>
+							<div class="col-sm-8">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="paymentMethod" value="01" onclick="if(this.checked) $('#tab_3').show().siblings().hide();"></i></div>電匯
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="paymentMethod" value="02" onclick="if(this.checked) $('#tab_4').show().siblings().hide();"></i></div>郵寄支票
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-8" style="width: 100%">
+								<div class="tabs">
+									<!-- TAB 1 -->
+									<article id="tab_3" class="tab">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 25%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">電匯</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">匯款帳戶</label>
+													<div class="col-sm-9">
+													<input type="text" name="accountName" class="col-sm-8" value="" placeholder=""><span style="font-size:14px;color:red">&nbsp;限受益人本人之帳戶</span></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">銀行名稱</label>
+													<div class="col-sm-5">
+														<div>
+															<select id="bankOpt" name="bankOpt" data-placeholder="選擇銀行" class="wht">
+																<option value=""></option>
+															</select>
+															<input type="hidden" id="bankName" name="bankName"/>
+														</div>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">分行名稱</label>
+													<div class="col-sm-5">
+														<div>
+															<select class="selector wht" id="brancheOpt" name="brancheOpt" data-placeholder="選擇分行">
+																<option value=""></option>
+															</select>
+															<input type="hidden" id="branchName" name="branchName"/>
+														</div>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">帳號</label>
+													<div class="col-sm-9">
+														<input type="text" name="accountNumber" class="col-sm-8" value=""> </div>
+												</div>
+											</div>
+										</section>
+									</article>
+									<!-- TAB 2 -->
+									<article class="tab tab-hide" id="tab_4">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 35%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">郵寄支票</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">郵遞區號</label>
+													<div class="col-sm-8">
+														<input type="text" name="postalCode" class="col-sm-8" value=""> 
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">郵寄地址</label>
+													<div class="col-sm-8">
+														<input type="text" name="postalAddr" class="col-sm-8" value="">
+													</div>
+												</div>
+											</div>
+										</section>
+									</article>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-12 two-buttons">
+					<a href="maturity1">
+						<button id="deny" class="btn-signup">上一步</button>
+					</a>
+					<button id="go" class="btn-signup" onclick="$('#step2Form').submit();">下一步</button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		$("#bankOpt").chosen({
+			allow_single_deselect:true, 
+			search_contains: true
+		});
+		
+		$("#brancheOpt").chosen({
+			allow_single_deselect:true, 
+			search_contains: true
+		});
+		
+	  	//銀行下拉選單
+		var bankUrl = /*[[@{/getBankList}]]*/;
+		var branchesUrl = /*[[@{/getBranchesList}]]*/;
+		eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+		
+		// 設定寬度
+		$('.chosen-container').width('207px');
+		
+		// 取得名稱
+		$('#bankOpt').change(function() {
+			$('#bankName').val($('#bankOpt option:selected').text());
+		});
+		$('#brancheOpt').change(function() {
+			if ($('#brancheOpt').val() != '') {
+				$('#branchName').val($('#brancheOpt option:selected').text());
+			} else {
+				$('#branchName').val('');
+			}
+		});
+		
+	});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

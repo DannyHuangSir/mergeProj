@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+	<style>
+	.chosen-container-single .chosen-single span {
+		padding-top: 5px;
+	}
+	.chosen-container-single .chosen-single div {
+		padding-top: 3px;
+	}
+	</style>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header>
+		<div class="container">
+			<div class="row">
+				<th:block th:replace="fragments/logo"/>
+				<div class="col-sm-2 col-xs-7 col-md-3 n1">保單網路服務</div>
+				<div class="clearfix visible-xs-block"></div>
+				<div class="hello1-list">
+					<div class="list hid2">Hi, (<th:block th:text="${session.USER_DETAIL.userName == null ? session.LOGIN_USER_ID : session.USER_DETAIL.userName}"/>) 你好</div>
+					<div class="list">
+						<a href="partner" class="b3"><i class="foo-object_10 foo-1x "></i>回到保戶查詢頁</a>
+					</div>
+					<div id="logoutDiv" class="list" th:attr="data-timeout_seconds=${session.TIMEOUT_SECONDS}">
+						<a th:href="@{/doLogout}">
+							<button class="btn-login pull-right">登出</button>
+						</a>
+							<button id="logoutResetBtn" class="pull-right btn-reset">
+								<div class="rp1"><i class="foo-cw"></i>秒</div>
+							</button>
+						<form id="logoutForm" th:action="@{/doLogout}"></form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<section class="grey partner fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3">
+				<div class="row-offcanvas row-offcanvas-left">
+					<!--/.sidebar-offcanvas-->
+					<div class="col-xs-6 col-sm-3 col-md-2 sidebar-offcanvas nopd box-border" id="sidebar">
+						<form onsubmit="return false;">
+							<h4 class="divider">內部人員/保經代查詢</h4>
+							<div class="form-group">
+								<label for="partner_type">合作對象</label>
+								<div>
+									<select class="chosen-select selector" id="agentOpt" data-placeholder="請選擇系統別...">
+										<th:block th:if="${loginUserType eq 'admin'}">
+											<option value="">請選擇</option>
+										</th:block>
+										<th:block th:if="${agentOptionList} != null">
+										<th:block th:each="vo : ${agentOptionList}">
+											<option th:value="${vo.agentCode}"><th:block th:text="${vo.abbrName}"/>(<th:block th:text="${vo.agentCode}"/>)</option>
+										</th:block>
+										</th:block>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="policyNo">要保人身分證字號</label>
+								<input type="text" name="rocId" id="rocId" />
+							</div>
+							<div class="form-group">
+								<label for="rocId">保單號碼</label>
+								<input type="text" name="policyNo" id="policyNo" />
+							</div>
+							<div class="form-group">
+								<button id="searchBtn" class="btn-form btn-sidebar-search">搜尋</button>
+							</div>
+							<br/>
+						</form>
+					</div>
+					<!--END/.sidebar-offcanvas-->
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<ul class="tab">
+							<li class="col-xs-6 folder"><a href="#tabs-2">要保人與保單查詢</a></li>
+						</ul>
+						<div id="tabs-2">
+							<div class="tb3 relax no-borderBottom clearfix">
+								<button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fas fa-bars fa-2x"></i></button>
+								<i class="fas fa-chevron-down"></i> 查詢結果
+								<p class="result-count pull-right">搜尋到 <em id="totalNum">0</em> 個結果</p>
+							</div>
+							<div class="panel result">
+								<table id="grid1" class="tablesaw tablesaw-stack wht table-striped-even" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">要保人</th>
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">身分證字號</th>
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">保單號碼</th>
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">被保人</th>
+											<th  scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3" class="text-right">生效日</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+							<div class="col-md-12 wht box-border no-borderTop">
+								<div class="col-md-5 col-md-offset-4">
+									<nav>
+										<ul class="pagination center1">
+											<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>
+											<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>
+											<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>	
+						<!--tabs-2-->
+					</div>
+					<!--list2 tabs-->
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var grid1;
+	$(function() {
+		$('.chosen-select').chosen({allow_single_deselect:true});
+		$(window)
+		.off('resize.chosen')
+		.on('resize.chosen', function() {
+			$('.chosen-select').each(function() {
+				 var $this = $(this);
+				 $this.next().css({'width': $this.parent().width()});
+			})
+		}).trigger('resize.chosen');
+
+		
+		// 建立查詢結果 grid
+		grid1 = new eserviceGrid();
+		grid1.sGridId = '#grid1';
+		grid1.sQueryUrl = /*[[@{/getPartnerPolicyList}]]*/;
+		grid1.sRowClass = 'h65';
+		grid1.aoColumns = [
+			{
+				// 要保人
+				'mDataProp': 'proposer',
+				'tdClass': 'table3'
+			},
+			{
+				// 身分證字號
+				'mDataProp': 'rocId',
+				'tdClass': 'table3'
+			},
+			{
+				// 保單號碼
+				'mDataProp': 'policyNo',
+				'tdClass': 'table3'
+			},
+			{
+				// 被保人
+				'mDataProp': 'insuredNameBase64',
+				'tdClass': 'table3'
+			},
+			{
+				// 生效日
+				'fnRender': function(oRow) {
+					return westDate(oRow.effectiveDate);
+				},
+				'tdClass': 'enThin'
+			}
+		];
+		grid1.fnInitComplete = function() { 
+			showTotalNum('#totalNum', grid1.rownum());
+			if (grid1.rownum() == 0) {
+				/* openAlert('查無資料'); */
+				openAlert($('#E0035').val());
+				return false;
+			}
+		};
+		grid1.fnRowClick = function(oRow) { 
+			toListing1(oRow)
+		};
+		
+		// 查詢
+		$('#searchBtn').click(function() {
+			popupLoading();
+			grid1.setPostData('policyNo', $('#policyNo').val());
+			grid1.setPostData('rocId', $('#rocId').val());
+			
+			if ($('#agentOpt').val() != '') {
+				grid1.setPostData('agentCode', $('#agentOpt').val());
+			} else {
+				grid1.setPostData('agentCode', null);
+			}
+			grid1.queryByPage(1);
+			removeLoading();
+		});
+		
+		// 產生要保人與保單查詢頁簽
+		$('#list2').tabs();
+	});
+	
+	function showTotalNum(selectId, num) {
+		$(selectId).html((num == null || num == '' ? 0 : num));
+	}
+	
+	function toListing1(oRow) {
+		postWithParams(/*[[@{/listing1}]]*/, [
+			{
+				name: 'policyNo',
+				value: oRow.policyNo
+			},
+			{
+				name: 'policyListType',
+				value: oRow.policyListType
+			}
+		]);
+	}
+	
+	// 分頁查詢
+	function queryDataByPage(pageNum) {
+		grid1.queryByPage(pageNum);
+	}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

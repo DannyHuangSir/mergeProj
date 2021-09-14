@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransResendPolicyDao">
+
+	<resultMap id="TransResendPolicyMap" type="com.twfhclife.eservice.onlineChange.model.TransResendPolicyVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="NAME" property="name"/>
+		<result column="TEL" property="tel"/>
+		<result column="ADDRESS" property="address"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transResendPolicyVo.id != null"> AND ID = #{transResendPolicyVo.id} </if>
+			<if test="transResendPolicyVo.transNum != null and transResendPolicyVo.transNum != ''"> AND TRANS_NUM = #{transResendPolicyVo.transNum} </if>
+			<if test="transResendPolicyVo.name != null and transResendPolicyVo.name != ''"> AND ESERVICE.DBO.FN_DEBASE64(NAME) = #{transResendPolicyVo.name} </if>
+			<if test="transResendPolicyVo.tel != null and transResendPolicyVo.tel != ''"> AND ESERVICE.DBO.FN_DEBASE64(TEL) = #{transResendPolicyVo.tel} </if>
+			<if test="transResendPolicyVo.address != null and transResendPolicyVo.address != ''"> AND ESERVICE.DBO.FN_DEBASE64(ADDRESS) = #{transResendPolicyVo.address} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transResendPolicyVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得補發保單查詢結果 -->
+	<select id="getTransResendPolicy" resultMap="TransResendPolicyMap">
+		SELECT
+			ID,
+			TRANS_NUM,
+			ESERVICE.DBO.FN_DEBASE64(NAME) NAME,
+			ESERVICE.DBO.FN_DEBASE64(TEL) TEL,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS) ADDRESS
+		FROM
+			ESERVICE.DBO.TRANS_RESEND_POLICY
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 補發保單-新增 -->
+	<insert id="insertTransResendPolicy">
+		INSERT INTO ESERVICE.DBO.TRANS_RESEND_POLICY
+		(
+			ID,TRANS_NUM,NAME,TEL,ADDRESS
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_RESEND_POLICY),
+			#{transResendPolicyVo.transNum, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transResendPolicyVo.name, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{transResendPolicyVo.tel, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{transResendPolicyVo.address, jdbcType=VARCHAR})
+		)
+	</insert>
+
+</mapper>

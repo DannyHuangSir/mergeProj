@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+	<style>
+	.check-body.relax {
+		padding: 15px;
+	}
+	@media screen and (max-width: 767px) {
+		.check-body.relax {
+			padding: 5px;
+		}
+	}
+	</style>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey listing7 fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3 listing-area">
+				<div class="row-offcanvas row-offcanvas-left">
+					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing7')"></div>
+					<div th:replace="fragments/sidebar :: sidebar (funId='listing7')"></div>
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<div class="box-border">
+							<div class="tb3 top0">
+								<i class="fas fa-chevron-down"></i> 保費費用
+								<div class="tog4 pull-right "></div>
+							</div>
+							<div class="wht">
+								<form class="form-inline grey wht" id="collapseSearchBar">
+									<div class="col-sm-7 input-inline text-right">
+										<div>
+											<label>日期</label>
+											<input id="startDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>
+											<br class="hid2"/><span class="dateFix">至</span>
+											<input id="endDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>
+											<button id="searchBtn" type="button" class="btn-form btn-search">搜尋</button>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-down hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 交易明細
+							</div>
+							<div class="mobile-toggle-panel specialHeight toggle-hide">
+								<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">交易日期</th>
+											<th class="text-center" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">繳納金額</th>
+											<th:block th:switch="${#strings.substring(param.policyNo[0],0,2)}">
+												<th:block th:case="'UC'">
+													<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right">(-)基本保費費用</th>
+													<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3" class="text-right">(-)增額保費費用</th>
+												</th:block>									
+												<th:block th:case="'US'">
+													<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right">(-)保單費用</th>
+												</th:block>
+												<th:block th:case="'UH'">
+													<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right">(-)首期保費費用</th>
+													<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3" class="text-right">(-)單筆保費費用</th>
+												</th:block>
+											</th:block>
+											<th:block th:switch="${#strings.substring(param.policyNo[0],0,2)}">
+												<th:block th:case="'US'">
+												</th:block>
+												<th:block th:case='*'>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4" class="text-right">(-)保險成本</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5" class="text-right">(-)管理費</th>
+												</th:block>
+											</th:block>											
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6" class="text-right">(+)利息</th>
+											 <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7" class="text-right">(=)投入金額</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+							<div class="col-md-12 wht box-border no-borderTop">
+								<div class="col-md-5 col-md-offset-5">
+									<nav>
+										<ul class="pagination center1">
+											<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>
+											<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>
+											<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+						<div th:replace="fragments/listingReferOnly"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<div class="modal listing7" id="detail-list" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					交易項目明細
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="col-sm-12">
+						<br/>
+						<p class="chNormal"><b>日期：</b>2014/11/28</p>
+						<p class="chNormal"><b>交易代號：</b>COI</p>
+						<div class="check-title">富蘭克林坦伯頓全球債券基金(CDJI3)</div>
+						<div class="check-body relax grey2">
+							<table class="tablesaw">
+								<tbody>
+									<tr>
+										<th class="grey orange-title">投資比例</th>
+										<td>0%</td>
+										<th class="grey orange-title">匯率</th>
+										<td>30.<span class="enThin">57</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">淨投資金額</th>
+										<td><span class="colorGray">NTD</span> 77.<span class="enThin">03</span></td>
+										<th class="grey orange-title">在途金額</th>
+										<td><span class="colorGray">NTD</span> 0.<span class="enThin">00</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">交易日基金淨值</th>
+										<td><span class="colorGray">NTD</span> 632.<span class="enThin">28</span></td>
+										<th class="grey orange-title">淨值日</th>
+										<td>2015/01/15</td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">交易日原幣淨值</th>
+										<td><span class="colorGray">USD</span> 20.<span class="enThin">68</span></td>
+										<th class="grey orange-title">累計單位數</th>
+										<td>59.<span class="enThin">55</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">增減單位數</th>
+										<td>0.<span class="enThin">12</span></td>
+									</tr>
+								</tbody>
+							</table>
+							<!--p class="chNormal">「在途金額=尚未完整完成交易之金額，因尚待基金淨值回報中」</p-->
+						</div>
+						<div class="check-title">富蘭克林坦伯頓全球債券基金(CDJI3)</div>
+						<div class="check-body relax grey2">
+							<table class="tablesaw">
+								<tbody>
+									<tr>
+										<th class="grey orange-title">投資比例</th>
+										<td>0%</td>
+										<th class="grey orange-title">匯率</th>
+										<td>30.<span class="enThin">57</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">淨投資金額</th>
+										<td><span class="colorGray">NTD</span> 77.<span class="enThin">03</span></td>
+										<th class="grey orange-title">在途金額</th>
+										<td><span class="colorGray">NTD</span> 0.<span class="enThin">00</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">交易日基金淨值</th>
+										<td><span class="colorGray">NTD</span> 632.<span class="enThin">28</span></td>
+										<th class="grey orange-title">淨值日</th>
+										<td>2015/01/15</td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">交易日原幣淨值</th>
+										<td><span class="colorGray">USD</span> 20.<span class="enThin">68</span></td>
+										<th class="grey orange-title">累計單位數</th>
+										<td>59.<span class="enThin">55</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">增減單位數</th>
+										<td>0.<span class="enThin">12</span></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- <p class="chNormal">「在途金額=尚未完整完成交易之金額，因尚待基金淨值回報中」</p> -->
+						</div>
+						<div class="check-title">富蘭克林坦伯頓全球債券基金(CDJI3)</div>
+						<div class="check-body relax grey2">
+							<table class="tablesaw">
+								<tbody>
+									<tr>
+										<th class="grey orange-title">投資比例</th>
+										<td>0%</td>
+										<th class="grey orange-title">匯率</th>
+										<td>30.<span class="enThin">57</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">淨投資金額</th>
+										<td><span class="colorGray">NTD</span> 77.<span class="enThin">03</span></td>
+										<th class="grey orange-title">在途金額</th>
+										<td><span class="colorGray">NTD</span> 0.<span class="enThin">00</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">交易日基金淨值</th>
+										<td><span class="colorGray">NTD</span> 632.<span class="enThin">28</span></td>
+										<th class="grey orange-title">淨值日</th>
+										<td>2015/01/15</td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">交易日原幣淨值</th>
+										<td><span class="colorGray">USD</span> 20.<span class="enThin">68</span></td>
+										<th class="grey orange-title">累計單位數</th>
+										<td>59.<span class="enThin">55</span></td>
+									</tr>
+									<tr>
+										<th class="grey orange-title">增減單位數</th>
+										<td>0.<span class="enThin">12</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<div class="statement1 wht clearfix">
+							<p class="text-ps">備註：</p>
+							<ol class="text-ps">
+								<li>在途金額：尚未完成交易之金額(等待基金淨值回報中)</li>
+								<li>系統自2015年?月?日起，提供交易日原幣淨值</li>
+								<li>交易日原幣淨值、匯率和淨值日欄位僅提供兩年內資料之查詢</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer center1">
+					<button type="button" class="btn-signup" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">關閉</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var grid1;
+	var policyType = /*[[${#strings.substring(param.policyNo[0],0,2)}]]*/;
+	var fractionDigits = 0;
+	if (policyType == 'UH') {
+		fractionDigits = 2;
+	}
+	
+	$(function() {
+		$('.datepicker').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'yy/mm/dd'
+		});
+		
+		// 建立保費費用 grid
+		grid1 = new eserviceGrid();
+		grid1.sGridId = '#grid1';
+		grid1.sQueryUrl = /*[[@{/getPremTransList?policyNo=} + ${param.policyNo[0]}]]*/;
+		grid1.sRowClass = 'h65';
+		if(policyType !="US"){
+		grid1.aoColumns = [
+			{
+				// 交易日期
+				'fnRender': function(oRow) {
+					return westDate(oRow.prdtBookDate);
+				},
+				'tdClass': 'enThin text-left',
+				'rwdName': '交易日期'
+			},
+			{
+				// 繳納金額
+				'fnRender': function(oRow) {
+					return formatNumber(oRow.prdtRcpAmt, fractionDigits);
+				},
+				'tdClass': 'text-center',
+				'rwdName': '繳納金額'
+			},
+			{
+				// (-)首期保費費用
+				'fnRender': function(oRow) {
+					return formatNumber(oRow.prdtTargetLoading, fractionDigits);
+				},
+				'rwdName': (policyType == ('UC') ? '(-)基本保費費用' : '(-)首期保費費用' )
+			},
+			{
+				// (-)單筆保費費用
+				'fnRender': function(oRow) {
+					return formatNumber(oRow.prdtIncreLoading, fractionDigits);
+				},
+				'rwdName': (policyType == ('UC') ? '(-)增額保費費用' : '(-)單筆保費費用')
+			},
+			{
+				// (-)保險成本
+				'fnRender': function(oRow) {
+					return formatNumber(oRow.cost, fractionDigits);
+				},
+				'rwdName': '(-)保險成本'
+			},
+			{
+				// (-)管理費
+				'fnRender': function(oRow) {
+					return formatNumber(oRow.maintenanceFee, fractionDigits);
+				},
+				'rwdName': '(-)管理費'
+			},
+			{
+				// (+)利息
+				'fnRender': function(oRow) {
+					return formatNumber(oRow.interest, fractionDigits);
+				},
+				'rwdName': '(+)利息'
+			},
+			{
+				// (=)投入金額
+				'fnRender': function(oRow) {
+					return formatNumber(oRow.prdtRcpAmt - oRow.prdtTargetLoading - oRow.prdtIncreLoading - oRow.cost - oRow.maintenanceFee + oRow.interest, fractionDigits);
+				},
+				'rwdName': '(=)投入金額'
+			}
+		];
+	}
+else{
+	grid1.aoColumns = [
+		{
+			// 交易日期
+			'fnRender': function(oRow) {
+				return westDate(oRow.prdtBookDate);
+			},
+			'tdClass': 'enThin text-left',
+			'rwdName': '交易日期'
+		},
+		{
+			// 繳納金額
+			'fnRender': function(oRow) {
+				return formatNumber(oRow.prdtRcpAmt, fractionDigits);
+			},
+			'tdClass': 'text-center',
+			'rwdName': '繳納金額'
+		},
+		{
+			// (-)保單費用
+			'fnRender': function(oRow) {
+ 				return formatNumber( oRow.prdtTargetLoading+oRow.prdtIncreLoading, fractionDigits);	
+/* 			   if(oRow.rowNum == 1){					
+					return formatNumber(oRow.prdtTargetLoading, fractionDigits);						
+				}else
+					{
+						return formatNumber(oRow.prdtIncreLoading, fractionDigits);
+					} */
+				
+			},
+			'rwdName': '(-)保單費用'
+		},		
+		{
+			// (+)利息
+			'fnRender': function(oRow) {
+				return formatNumber(oRow.interest, fractionDigits);
+			},
+			'rwdName': '(+)利息'
+		},
+		{
+			// (=)投入金額
+			'fnRender': function(oRow) {
+				return formatNumber(oRow.prdtRcpAmt - oRow.prdtTargetLoading - oRow.prdtIncreLoading - oRow.cost - oRow.maintenanceFee + oRow.interest, fractionDigits);
+			},
+			'rwdName': '(=)投入金額'
+		}
+	];
+		}
+		grid1.fnInitComplete = function() { 
+			if (grid1.rownum() == 0) {
+				/* openAlert('查無資料'); */
+				openAlert($('#E0035').val());
+				return false;
+			}
+		};
+		
+		grid1.queryByPage(1);
+		
+		// 查詢
+		$('#searchBtn').click(function() {
+			if ($('#startDate').val() != '' && $('#endDate').val() != '') {
+				if ($('#startDate').val() > $('#endDate').val()) {
+					//openAlert('結束日期不能小於開始日期');
+					openAlert($('#E0003').val());
+					return false;
+				}
+			}
+			
+			grid1.setPostData('startDate', $('#startDate').val());
+			grid1.setPostData('endDate', $('#endDate').val());
+			grid1.queryByPage(1);
+		});
+	});
+	
+	function queryDataByPage(pageNum) {
+		grid1.queryByPage(pageNum);
+	}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

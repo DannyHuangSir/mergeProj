@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyAccountValueDao">
+	
+	<sql id="Base_Column_List">
+		ID id
+		,POEV_INSU_NO poevInsuNo
+		,PAV.FUND_CODE fundCode
+		,PAV.FUND_NAME fundName
+		,(
+			SELECT
+				PARAMETER_NAME
+			FROM
+				ESERVICE_ADM.DBO.PARAMETER
+			WHERE
+				PARAMETER_CATEGORY_ID = 6
+				AND PARAMETER_CODE = CURRENCY
+		) currency
+		,POEV_EDATE poevDate
+		,POEV_EVAL_DATE poevEvalDate
+		,(ROUND(POEV_AVG_PNTDVAL, 2) * POEV_SAFP_UNITS) poevAvgPntdval
+		,POEV_SAFP_UNITS poevSafpUnits
+		,COALESCE(FV.SELL_PRICE, 0) poevInprRate
+		,POEV_STATE_EXCH_RATE poevStateExchRate
+		,ROUND(POEV_SAFP_UNITS * COALESCE(FV.SELL_PRICE, 0) * POEV_STATE_EXCH_RATE, 2) accountValue
+		,ROUND(POEV_SAFP_UNITS * COALESCE(FV.SELL_PRICE, 0) * POEV_STATE_EXCH_RATE - (POEV_AVG_PNTDVAL * POEV_SAFP_UNITS), 2) cost
+		
+	</sql>
+
+	<!-- 取得保單帳戶價值 -->
+	<!-- @param policyNo 保單號碼 -->	
+	<!-- 平均成本(A) : POEV_AVG_PNTDVAL * POEV_SAFP_UNITS -->
+	<!-- 單位數/金額(B) : POEV_SAFP_UNITS -->
+	<!-- 參考單位淨值(C) : POEV_INPR_RATE -->
+	<!-- 參考匯率(D) : POEV_STATE_EXCH_RATE -->
+	<!-- 參考價戶價值(E=B*C*D) : POEV_SAFP_UNITS * POEV_INPR_RATE * POEV_STATE_EXCH_RATE -->
+	<!-- 未實現損益(F=E-A) : POEV_SAFP_UNITS * POEV_INPR_RATE * POEV_STATE_EXCH_RATE - (POEV_AVG_PNTDVAL * POEV_SAFP_UNITS) -->
+	<!-- 參考報酬率(G=F/A) : (POEV_SAFP_UNITS * POEV_INPR_RATE * POEV_STATE_EXCH_RATE - (POEV_AVG_PNTDVAL * POEV_SAFP_UNITS)) / (POEV_AVG_PNTDVAL * POEV_SAFP_UNITS) -->
+	<select id="getPolicyAccountValueList" resultType="com.twfhclife.eservice.policy.model.PolicyAccountValueVo" parameterType="string">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_ACCOUNT_VALUE PAV
+		LEFT JOIN ESERVICE.DBO.FUND_VALUE FV ON FV.EFFECTIVE_DATE = POEV_INPR_DATE AND FV.FUND_CODE = PAV.FUND_CODE
+		WHERE
+			POEV_INSU_NO = #{policyNo}
+			AND POEV_EVAL_DATE = (
+				SELECT
+					MAX(POEV_EVAL_DATE)
+				FROM
+					ESERVICE.DBO.POLICY_ACCOUNT_VALUE
+				WHERE
+					POEV_INSU_NO = #{policyNo}
+			)
+	</select>
+
+	<!-- 取得每季的保單帳戶價值 -->
+	<!-- @param policyNo 保單號碼 -->	
+	<!-- 平均成本(A) : POEV_AVG_PNTDVAL * POEV_SAFP_UNITS -->
+	<!-- 單位數/金額(B) : POEV_SAFP_UNITS -->
+	<!-- 參考單位淨值(C) : POEV_INPR_RATE -->
+	<!-- 參考匯率(D) : POEV_STATE_EXCH_RATE -->
+	<!-- 參考價戶價值(E=B*C*D) : POEV_SAFP_UNITS * POEV_INPR_RATE * POEV_STATE_EXCH_RATE -->
+	<!-- 未實現損益(F=E-A) : POEV_SAFP_UNITS * POEV_INPR_RATE * POEV_STATE_EXCH_RATE - (POEV_AVG_PNTDVAL * POEV_SAFP_UNITS) -->
+	<!-- 參考報酬率(G=F/A) : (POEV_SAFP_UNITS * POEV_INPR_RATE * POEV_STATE_EXCH_RATE - (POEV_AVG_PNTDVAL * POEV_SAFP_UNITS)) / (POEV_AVG_PNTDVAL * POEV_SAFP_UNITS) -->
+	<select id="getQuaterPolicyAccountValueList" resultType="com.twfhclife.eservice.policy.model.PolicyAccountValueVo" parameterType="string">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_ACCOUNT_VALUE PAV
+		LEFT JOIN ESERVICE.DBO.FUND_VALUE FV ON FV.EFFECTIVE_DATE = POEV_EDATE AND FV.FUND_CODE = PAV.FUND_CODE
+		WHERE
+			POEV_INSU_NO = #{policyNo}
+			AND convert(varchar(10), POEV_EVAL_DATE, 126) BETWEEN #{startDate} AND #{endDate}
+	</select>
+	
+</mapper>

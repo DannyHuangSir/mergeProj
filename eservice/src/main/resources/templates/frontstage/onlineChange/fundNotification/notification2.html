@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=9, chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>設定停損停利通知｜臺銀人壽保單網路服務</title>
+	<!-- Bootstrap -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/icon.css" rel="stylesheet">
+	<link href="css/layout.css" rel="stylesheet">
+	<!--link rel="stylesheet" href="font-awesome-4.3.0/css/font-awesome.min.css"-->
+	<!--link rel="stylesheet" href="fontello/css/fontello.css"-->
+	<!--link rel="stylesheet" href="fontello/css/animation.css"-->
+	<!--[if IE 7]><link rel="stylesheet" href="css/fontello-ie7.css"><![endif]-->
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/html5shiv.min.js"></script>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" href="css/tablesaw.stackonly.css">
+	<link rel="shortcut icon" href="img/favor-icon.png">
+	<link rel="stylesheet" type="text/css" href="css/scrollbar.css">
+
+</head>
+
+<body>
+<div th:replace="fragments/header :: top"></div>
+<header th:replace="fragments/header :: header"></header>
+<th:block th:if="${showUserDataInfo}">
+	<div th:replace="fragments/header :: alert_mobile"></div>
+	<div th:replace="fragments/header :: alert_container"></div>
+	<div th:replace="fragments/header :: compensation_processing"></div>
+	<div th:replace="fragments/header :: compensation_incomplete"></div>
+	<div th:replace="fragments/header :: application_processing"></div>
+	<div th:replace="fragments/header :: application_complete"></div>
+	<div th:replace="fragments/header :: compensation_complete"></div>
+	<div th:replace="fragments/header :: payment_notification"></div>
+	<div th:replace="fragments/header :: payonline_template"></div>
+</th:block>
+<!--major 3 tabs-->
+<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+<section class="grey applyInner has-special-note fullContent">
+	<div class="container bg3">
+		<ul class="breadcrumb detail1">
+			<li>
+				<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+			</li>
+			<li class="active">
+				<a href="javascript:;">設定停損停利通知</a>
+			</li>
+		</ul>
+	</div>
+	<div class="container bg3 box-border listing-area">
+		<div class="tb3 top0 nopd">
+			<i class="fas fa-edit"></i> 設定停損停利通知
+		</div>
+		<div class="">
+			<ul class="step">
+				<li class="step1 col-xs-4">
+					1<span class="hid1">. 選擇保單</span>
+				</li>
+				<li class="step2 active col-xs-4">
+					2<span class="hid1">. 設定停損停利點</span>
+				</li>
+				<li class="step3 col-xs-4">
+					3<span class="hid1">. 確認資料</span>
+				</li>
+			</ul>
+		</div>
+		<div class="mystyle3 loan1">
+			<h2>請設定投資標的之停損停利點</h2>
+			<div class="check-title">設定停損停利點通知</div>
+			<span style="display:none" id="policyNo" class="colorBlack">
+					<th:block th:if="${transFundNotificationVo != null}">
+						<th:block th:each="policyNo : ${transFundNotificationVo.policyNoList}">
+							<th:block th:text="${policyNo}"/>
+						</th:block>
+					</th:block>
+				</span>
+			<div class=" grey2">
+				<div class="tb3 top0">
+					<i class="fa foo-angle-down"></i>  請設定停損停利點
+				</div>
+				<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+					<thead>
+					<tr class="table2 orange2">
+						<th class="item90">類型</th>
+						<th> 投資標的</th>
+						<th class="text-left">幣別</th>
+						<th scope="col">投資收益等級</th>
+						<th scope="col">參考帳戶價值</th>
+						<th scope="col">參考報酬率(%)</th>
+						<th class="item100">現行的停利點</th>
+						<th class="item100">現行的停損點</th>
+						<th class="item90"></th>
+					</tr>
+					</thead>
+					<tbody id="fundContent0"></tbody>
+				</table>
+				<div class="tb3 top0">
+					<i class="fa foo-angle-down"></i> 請設定現行淨值
+				</div>
+				<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+					<thead>
+					<tr class="table2 orange2" style="background: #FDE3D2;">
+						<th class="item90"  style="background: #FDE3D2;">類型</th>
+						<th class="item400"  style="background: #FDE3D2;">投資標的</th>
+						<th class="item100"  style="background: #FDE3D2;">淨值日</th>
+						<th  style="background: #FDE3D2;">單位淨值</th>
+						<th  style="background: #FDE3D2;">現行淨值上限</th>
+						<th  style="background: #FDE3D2;">現行淨值下限</th>
+						<th class="item90"  style="background: #FDE3D2;"></th>
+					</tr>
+					</thead>
+					<tbody id="fundContent1">
+					</tbody>
+				</table>
+			</div>
+			<div class="check-body grey2">
+				<div class="check-list2 center1"><button class="btn-login invst2btn" id="add-check-list"
+														 onclick="addInvestment()"><i class="fa fa-plus-circle fa-lg"></i> 新增投資標的</button>
+				</div>
+				<div class="statement1 wht">
+					<p class="text-ps">備註：</p>
+					<ol class="text-ps" id="remark">
+					</ol>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-12 two-buttons">
+			<a href="notification1">
+				<button id="deny" class="btn-signup">上一步</button>
+			</a>
+			<th:block th:if="${loginUserType eq 'member'}">
+				<button id="go" class="btn-signup">下一步</button>
+			</th:block>
+		</div>
+	</div>
+</section>
+<footer th:replace="fragments/footer"></footer>
+<th:block th:replace="fragments/script"/>
+<script th:src="@{/plugin/jquery.base64.js}"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var formData = {};
+	formData.policyNoList = /*[[${transFundNotificationVo.policyNoList}]]*/;
+	var grid1 = new eserviceGrid();
+	$(function() {
+		// 建立保障項目 grid
+		grid1.sGridId = '#grid1';
+		grid1.sQueryUrl = /*[[@{/getNotificationPortfolioList?policyNo=} + ${policyNo}]]*/;
+		grid1.aoColumns = [
+			{
+				// 投資標的
+				'fnRender': function(oRow) {
+					return '已持有';
+				}
+			},
+			{
+				// 投資標的
+				'fnRender': function(oRow) {
+					return '<div name="invtName" itemValue="' + $.base64.encode(JSON.stringify(oRow), true) + '">' + emptyIfNull(oRow.invtName) + '</div><p class="enSmall">(' + emptyIfNull(oRow.invtNo) + ')</p>';
+				}
+			},
+			{
+				// 幣別
+				'mDataProp': 'currency'
+			},
+			{
+				// 投資效益等級
+				'mDataProp': 'invtRiskBeneLevel'
+			},
+			{
+				// 參考帳戶價值
+				'fnRender': function(oRow) {
+					return showAcctValue(oRow);
+				}
+			},
+			{
+				// 參考報酬率(%)
+				'fnRender': function(oRow) {
+					return showRoiRate(oRow);
+				}
+			},
+			{
+				// 停利點
+				'fnRender': function(oRow) {
+					var html = '';
+					if (oRow.percentageUp == null) {
+						oRow.percentageUp = ''
+					}
+					html += '<input type="text" name="percentageUp" class="col-sm-8 lineHigh28" maxlength="3" value="' + oRow.percentageUp + '" ' ;
+					html += 'onKeyPress="if (event.keyCode!=46 && event.keyCode!=45 && (event.keyCode<48 || event.keyCode>57)) event.returnValue=false">'
+					html += '<span class="sub1">%</span>';
+	 				return html;
+				}
+			},
+			{
+				// 停損點
+				'fnRender': function(oRow) {
+					var html = '';
+					if (oRow.percentageDown == null) {
+						oRow.percentageDown = ''
+					}
+					html += '<input type="text" name="percentageDown" class="col-sm-8 lineHigh28" maxlength="3" value="' + oRow.percentageDown + '" ' ;
+					html += 'onKeyPress="if (event.keyCode!=46 && event.keyCode!=45 && (event.keyCode<48 || event.keyCode>57)) event.returnValue=false">'
+					html += '<span class="sub1">%</span>';
+	 				return html;
+				}
+			},
+			{
+				// 重置按鈕
+				'fnRender': function(oRow) {
+					var html = '';
+					html += '<a class="btn-cancel orange-bg" onclick="resetInput(this)">重設</a>';
+	 				return html;
+				}
+			}
+		];
+		grid1.fnInitComplete = function() {
+			initSearchItems()
+			initNewInvestments()
+			if (grid1.rownum() == 0) {
+				/* openAlert('查無資料'); */
+				openAlert($('#E0035').val());
+				return false;
+			}
+		};
+		grid1.createSimple();
+
+		$('#go').click(function() {
+			// 檢查至少輸入一筆停損點或停利點
+			var checkInput = true;
+			$("#fundContent0,#fundContent1").children().each(function() {
+				var tmpPercentageUp = $(this).find("[name='percentageUp']").val();
+				var tmpPercentageDown = $(this).find("[name='percentageDown']").val();
+				if (tmpPercentageUp != '' && parseInt(tmpPercentageUp) < 0 || parseInt(tmpPercentageUp) > 100) {
+					openAlert("停利點只能為0-100");
+					checkInput = false;
+				}
+
+				if (tmpPercentageDown != '' && parseInt(tmpPercentageDown) < 0 || parseInt(tmpPercentageDown) > 100) {
+					openAlert("停損點只能為0-100");
+					checkInput = false;
+				}
+ 			});
+
+			if(!checkInput){
+				return false;
+			}
+
+			var jsonDataArray = [];
+			let check = true
+			let validRepetition = []
+			$("#fundContent0,#fundContent1").children().each(function(index, e) {
+				let oRow = {}
+				var rowData = {};
+				let old = $(e).find("[name='invtName']").attr("itemValue")
+				if (old != undefined && old != '') {
+					oRow = JSON.parse($.base64.decode(old, true))
+					rowData.type = '1'
+				} else {
+					let sel = $(e).find("[name='invSelect'] option:selected")
+					if (sel.size() == 0) {
+						openAlert("請選擇有效基金！");
+						check = false
+						return
+					}
+					if (validRepetition.indexOf(sel.val()) != -1) {
+						openAlert("重復的基金！");
+						check = false
+						return
+					}
+					validRepetition.push(sel.val())
+					oRow = JSON.parse($.base64.decode($(sel).attr("itemValue"), true))
+					rowData.type = '2'
+				}
+
+				rowData.fundCode = oRow.invtNo;
+				rowData.invtName = oRow.invtName;
+				rowData.currency = oRow.currency;
+				rowData.riskBeneLevel = oRow.invtRiskBeneLevel;
+				rowData.acctValue = oRow.acctValue;
+				rowData.roiRate = oRow.roiRate;
+				rowData.effectiveDate = oRow.effectiveDate;
+				rowData.sellPrice = oRow.sellPrice;
+				rowData.percentageUp = $(e).find("[name='percentageUp']").val();
+				rowData.percentageDown = $(e).find("[name='percentageDown']").val();
+				rowData.upValue = $(e).find("[name='upValue']").val();
+				rowData.downValue = $(e).find("[name='downValue']").val();
+				jsonDataArray.push(rowData);
+			})
+
+			if (check == false) {
+				return
+			}
+
+			formData.fundNotificationDtlJsonData = JSON.stringify(jsonDataArray);
+			postWithFormData(/*[[@{/notification3}]]*/, formData);
+		});
+
+		//公司选项变更
+		$("body").on('change', "[name='companysItem']", function(){
+			filterAndRestItems($(this).parent().parent().parent().parent())
+		})
+
+		//币别选项变更
+		$("body").on('change', "[name='currencysItem']", function(){
+			filterAndRestItems($(this).parent().parent().parent().parent())
+		})
+
+		//公司选项变更
+		$("body").on('change', "[name='invSelect']", function(){
+			setItemVals($(this).parent().parent().parent().parent())
+		})
+
+		var transformationRemark = /*[[${transformationRemark}]]*/;
+		if (transformationRemark!= undefined && transformationRemark != null && transformationRemark != ''){
+			$("#remark").html(transformationRemark);
+		}
+	});
+
+	function resetInput(img){
+		$(img).closest("tr").find("td:eq(6)").find("span").find("input").val("");
+		$(img).closest("tr").find("td:eq(7)").find("span").find("input").val("");
+	}
+
+	// 參考帳戶價值
+	function showAcctValue(oRow) {
+		var fractionDigits = 0;
+		if (oRow.invtExchCurr == 'NTD') {
+			fractionDigits = 0;
+		} else {
+			fractionDigits = 2;
+		}
+		return '<p class="marginTop26">' + formatNumber(oRow.acctValue, fractionDigits) + '</p>';
+	}
+
+	// 參考報酬率(%)
+	// 基金編號為RT且保單幣別等於基金幣別時，不顯示參考報酬率
+	function showRoiRate(oRow) {
+		var html = '';
+		if (oRow.invtNo.substring(0, 2) == 'RT' && oRow.insuCurr == oRow.invtExchCurr) {
+			html = '--';
+		} else {
+			html += '<p class="marginTop26">' + formatNumber(oRow.roiRate * 100, 2) +'%</p>';
+		}
+		return html;
+	}
+
+	function addInvestment(vm){
+			vm = (vm == null ? {} : vm)
+			item = '<tr class="h65 tr-odd-noEvent">'
+    			    +'<td style="padding-top: 70px !important;">觀查中</td>'
+                    +'<td class="text-left">'
+                    +'	<div class="col-sm-6" style="padding-left: 0;">'
+                    +'        <div class="selector-box">'
+                    +'          <select class="selector" name="companysItem">'
+
+					$(companysItems).each(function(index, e){
+						  item = item + '<option'
+						  if (vm.company != null && vm.company == e.VALUE) {
+						  	item = item + ' selected'
+						  }
+						  item = item +  ' value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+					})
+
+                     item = item +  '</select>'
+                     +'       </div>'
+                     +'     </div>'
+                     +'     <div class="col-sm-6" style="padding-left: 0;">'
+                     +'       <div class="selector-box">'
+                     +'        <select class="selector" name="currencysItem">'
+
+                     $(currencysItems).each(function(index, e){
+                     	  item = item + '<option'
+						  if (vm.company != null && vm.invtExchCurr == e.VALUE) {
+						  	item = item + ' selected'
+						  }
+						  item = item +  ' value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+					 })
+
+                     item = item +  '</select>'
+                     +'       </div>'
+                     +'     </div>'
+                     +'     <div class="col-sm-12" style="padding-left: 0;padding-top: 10px;">'
+                     +'       <div class="selector-box">'
+                     +'         <select class="selector" name="invSelect">'
+                     $(newInvestments).each(function(index, e){
+						item += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '" itemValue=' + $.base64.encode(JSON.stringify(e), true) + '> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
+					 })
+
+                    item = item +  '</select>'
+                    +'       </div>'
+                    +'     </div>'
+                    +' </td>'
+
+                    item = item + ' <td style="padding-top: 70px !important;" name="effectiveDate">' + (vm.effectiveDate == null ? '' : vm.effectiveDate) + '</td>'
+                    item = item + ' <td style="padding-top: 70px !important;" name="sellPrice">' + (vm.sellPrice == null ? '' : vm.sellPrice) + '</td>'
+
+                    item = item + ' <td style="padding-top: 65px !important;">'
+                    item = item +'    <input type="text" class="col-sm-8 lineHigh28" name="upValue" value="' + (vm.upValue == null ? '' : vm.upValue) + '"><span class="sub1"></span>'
+
+                    item = item +' </td>'
+
+                    item = item + ' <td style="padding-top: 65px !important;">'
+                    item = item +' 		<input type="text" class="col-sm-8 lineHigh28" name="downValue" value="' + (vm.downValue == null ? '' : vm.downValue) + '"><span class="sub1"></span>'
+                    item = item +' </td>'
+                    +' <td style="padding-top: 70px !important;"><a class="btn-cancel" onclick="removeInvestmentList(this)">删除</a></td>'
+                +' </tr>'
+
+    		$('#fundContent1').append(filterAndRestItems($(item)))
+    	}
+
+    	function removeInvestmentList(obj){
+    		$(obj).parent().parent('tr').remove()
+    	}
+
+		var companysItems = []
+		var currencysItems = []
+		function initSearchItems() {
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/getInvestmentSearchItem}]]*/,
+				success : function(response) {
+					if(response.result == "ERROR") {
+						openAlert(response.resultMsg);
+					} else {
+						companysItems = response.resultData.companys
+						currencysItems = response.resultData.currencys
+					}
+				},
+				error : function() {
+					openAlert($('#E0018').val());
+				}
+			});
+		}
+
+		var newInvestments = []
+		function initNewInvestments() {
+			let ownInvtNos = []
+			$.each(grid1.getDataList(), function(i, oRow) {
+				ownInvtNos.push(oRow.invtNo)
+			})
+			let data = {policyNo: [[${policyNo}]], invtNos: ownInvtNos}
+			$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/getSearchPortfolio}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						if(response.result == "ERROR") {
+							openAlert(response.resultMsg);
+						} else {
+							newInvestments = response.resultData
+							$(response.resultData).each(function(index, e){
+								if (e.downValue != null && e.upValue != null) {
+									addInvestment(e)
+								}
+							})
+						}
+					},
+					error : function() {
+						openAlert($('#E0018').val());
+					}
+				});
+		}
+
+		function filterAndRestItems(vm) {
+			arr = $(newInvestments).filter(function(index, e) {
+				return e.company == $(vm).find("[name='companysItem'] option:selected").val()
+			}).filter(
+				function(index, e) {
+					return e.invtExchCurr == $(vm).find("[name='currencysItem'] option:selected").val()
+				}
+			)
+			let html = ''
+			$(arr).each(function(index, e){
+				html  += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '" itemValue=' + $.base64.encode(JSON.stringify(e), true) + '> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
+			})
+
+			$(vm).find("[name='invSelect']").html(html)
+			if(html != '') {
+				setItemVals(vm)
+			} else {
+				$(vm).find("[name='effectiveDate']").text('')
+				$(vm).find("[name='sellPrice']").text('')
+			}
+			return $(vm)
+		}
+
+		function setItemVals(vm) {
+			val = $(vm).find("[name='invSelect'] option:selected").attr("itemValue")
+			if (val != undefined && val != '') {
+				let oRow = JSON.parse($.base64.decode(val, true))
+				$(vm).find("[name='effectiveDate']").text(oRow.effectiveDate == null ? '' : oRow.effectiveDate)
+				$(vm).find("[name='sellPrice']").text(oRow.sellPrice == null ? '' : oRow.sellPrice)
+			}
+		}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

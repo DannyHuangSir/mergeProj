@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>補發保單｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3 box-border marginTop25">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 補發保單
+			</div>
+			<div class="col-sm-8 col-sm-offset-2 col-lg-8 col-lg-offset-2">
+				<div class="activated">
+					<figure><img src="img/check1.png" alt="check"></figure>
+					<h2>系統已收到您的申請！</h2>
+					<!-- <p>系統將於每日下午3:00處理您送出的申請。<br>
+						補發保單約需3個工作天進行作業，您可隨時至「我的申請紀錄」掌握最新處理進度。</p> -->
+					<ul style="margin-left: 100px;">
+					<li>請依步驟操作完成後本次申請始為有效</li>
+					<li>至全國繳費網繳納補發保單手續費，匯款帳號為&nbsp;<span style="color: red;"><b>『<th:block th:text="${payAcct}"/>』</b></span></li>
+					<li>取得已完成繳費之電子影像檔</li>
+					<li>至線上申請＞我的申請紀錄＞選擇補發保單補件＞將電子影像檔上傳至系統</li>
+					<li>申請紀錄狀態由待補件變更為處理中，代表已完成本次申請</li>
+					</ul>
+				</div>
+			</div>
+			<div class="mycigna3">
+				<div class="col-md-12 two-buttons">
+					<a href="apply1">
+						<button id="deny" class="btn-signup">回線上申請首頁
+						</button>
+					</a>
+					<a href="apply2">
+						<button id="go" class="btn-signup">看我的申請紀錄
+						</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		
+	});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

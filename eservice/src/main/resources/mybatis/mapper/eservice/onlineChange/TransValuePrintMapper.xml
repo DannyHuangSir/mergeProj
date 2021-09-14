@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransValuePrintDao">
+
+	<resultMap id="TransValuePrintMap" type="com.twfhclife.eservice.onlineChange.model.TransValuePrintVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="LANG" property="lang"/>
+		<result column="DELIVER_TYPE" property="deliverType"/>
+		<result column="DELIVER_ADDR" property="deliverAddr"/>
+		<result column="BELIVER_MAIL" property="beliverMail"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transValuePrintVo.id != null"> AND ID = #{transValuePrintVo.id} </if>
+			<if test="transValuePrintVo.transNum != null and transValuePrintVo.transNum != ''"> AND TRANS_NUM = #{transValuePrintVo.transNum} </if>
+			<if test="transValuePrintVo.lang != null and transValuePrintVo.lang != ''"> AND LANG = #{transValuePrintVo.lang} </if>
+			<if test="transValuePrintVo.deliverType != null and transValuePrintVo.deliverType != ''"> AND DELIVER_TYPE = #{transValuePrintVo.deliverType} </if>
+			<if test="transValuePrintVo.deliverAddr != null and transValuePrintVo.deliverAddr != ''"> AND DELIVER_ADDR = #{transValuePrintVo.deliverAddr} </if>
+			<if test="transValuePrintVo.beliverMail != null and transValuePrintVo.beliverMail != ''"> AND BELIVER_MAIL = #{transValuePrintVo.beliverMail} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transValuePrintVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得保單價值列印查詢結果 -->
+	<select id="getTransValuePrint" resultMap="TransValuePrintMap">
+		SELECT
+			ID,
+			TRANS_NUM,
+			LANG,
+			DELIVER_TYPE,
+			ESERVICE.DBO.FN_DEBASE64(DELIVER_ADDR) DELIVER_ADDR,
+			ESERVICE.DBO.FN_DEBASE64(BELIVER_MAIL) BELIVER_MAIL
+		FROM
+			ESERVICE.DBO.TRANS_VALUE_PRINT
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 保單價值列印-新增 -->
+	<insert id="insertTransValuePrint">
+		INSERT INTO ESERVICE.DBO.TRANS_VALUE_PRINT
+		(
+			ID,TRANS_NUM,LANG,DELIVER_TYPE,DELIVER_ADDR,BELIVER_MAIL
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_VALUE_PRINT),
+			#{transValuePrintVo.transNum, jdbcType=VARCHAR},
+			#{transValuePrintVo.lang, jdbcType=VARCHAR},
+			#{transValuePrintVo.deliverType, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transValuePrintVo.deliverAddr, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{transValuePrintVo.beliverMail, jdbcType=VARCHAR})
+		)
+	</insert>
+
+</mapper>

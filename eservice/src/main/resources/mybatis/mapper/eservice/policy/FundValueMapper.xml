@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.FundValueDao">
+
+	<resultMap id="FundValueMap" type="com.twfhclife.eservice.policy.model.FundValueVo" >
+		<result column="FUND_CODE" property="fundCode"/>
+		<result column="EFFECTIVE_DATE" property="effectiveDate"/>
+		<result column="BUY_PRICE" property="buyPrice"/>
+		<result column="SELL_PRICE" property="sellPrice"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		FUND_CODE,EFFECTIVE_DATE,BUY_PRICE,SELL_PRICE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="fundValueVo.fundCode != null and fundValueVo.fundCode != ''"> AND FUND_CODE = #{fundValueVo.fundCode} </if>
+			<if test="fundValueVo.effectiveDate != null"> AND EFFECTIVE_DATE = #{fundValueVo.effectiveDate} </if>
+			<if test="fundValueVo.buyPrice != null"> AND BUY_PRICE = #{fundValueVo.buyPrice} </if>
+			<if test="fundValueVo.sellPrice != null"> AND SELL_PRICE = #{fundValueVo.sellPrice} </if>
+			<if test="fundValueVo.queryType != null and fundValueVo.queryType == 'A'.toString()"> 
+				AND EFFECTIVE_DATE > DATEADD(month, -1, getdate()) + 1
+			</if>
+			<if test="fundValueVo.queryType != null and fundValueVo.queryType == 'B'.toString()"> 
+				AND EFFECTIVE_DATE > DATEADD(month, -3, getdate()) + 1
+			</if>
+			<if test="fundValueVo.queryType != null and fundValueVo.queryType == 'C'.toString()"> 
+				AND convert(varchar(7), EFFECTIVE_DATE, 126) = #{fundValueVo.queryMonth}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND FUND_CODE = #{fundValueVo.fundCode}
+			AND EFFECTIVE_DATE = #{fundValueVo.effectiveDate}
+		</where>
+	</sql>
+	
+	<!-- 取得淨值查詢結果 -->
+	<select id="getFundValue" resultMap="FundValueMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.FUND_VALUE
+		<include refid="whereClause" />
+		ORDER BY
+			EFFECTIVE_DATE
+	</select>
+
+</mapper>

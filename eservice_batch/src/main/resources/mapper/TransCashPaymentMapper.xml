@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransCashPaymentMapper" >
+	<resultMap id="BaseResultMap" type="com.twfhclife.eservice_batch.model.TransCashPaymentVo" >
+		<id column="ID" property="id" jdbcType="NUMERIC" />
+		<result column="TRANS_NUM" property="transNum" jdbcType="NVARCHAR" />
+		<result column="POLICY_NO" property="policyNo" jdbcType="NVARCHAR" />
+		<result column="ALLOCATION" property="allocation" jdbcType="NVARCHAR" />
+		<result column="PRE_ALLOCATION" property="preAllocation" jdbcType="NVARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		ID, TRANS_NUM, POLICY_NO, ALLOCATION, PRE_ALLOCATION
+	</sql>
+
+	<select id="getTransCashPayments" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/>
+		FROM  ESERVICE.dbo.TRANS_CASH_PAYMENT
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+</mapper>

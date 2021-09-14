@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.RoleSysAuthDao">
+
+	<resultMap id="RoleSysAuthMap" type="com.twfhclife.adm.model.RoleSysAuthVo" >
+		<result column="ROLE_ID" property="roleId"/>
+		<result column="SYS_ID" property="sysId"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_DATE" property="createDate"/>
+	</resultMap>
+
+	<resultMap id="RoleSysNameAuthMap" type="com.twfhclife.adm.model.RoleSysAuthVo" extends="RoleSysAuthMap">
+		<result column="SYS_NAME" property="sysName"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		RSA.ROLE_ID,RSA.SYS_ID,RSA.CREATE_USER,RSA.CREATE_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="roleSysAuthVo.roleId != null and roleSysAuthVo.roleId != ''"> AND RSA.ROLE_ID = #{roleSysAuthVo.roleId} </if>
+			<if test="roleSysAuthVo.sysId != null and roleSysAuthVo.sysId != ''"> AND RSA.SYS_ID = #{roleSysAuthVo.sysId} </if>
+			<if test="roleSysAuthVo.createUser != null and roleSysAuthVo.createUser != ''"> AND RSA.CREATE_USER = #{roleSysAuthVo.createUser} </if>
+			<if test="roleSysAuthVo.createDate != null"> AND RSA.CREATE_DATE = #{roleSysAuthVo.createDate} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得角色系統權限查詢結果 -->
+	<select id="getRoleSysAuth" resultMap="RoleSysNameAuthMap">
+		SELECT
+			<include refid="Base_Column_List" />
+			,S.SYS_NAME
+		FROM
+			ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA
+			LEFT OUTER JOIN ESERVICE_ADM.DBO.SYSTEMS S ON RSA.SYS_ID = S.SYS_ID
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 角色系統權限-新增 -->
+	<insert id="insertRoleSysAuth">
+		INSERT INTO ESERVICE_ADM.DBO.ROLE_SYS_AUTH
+		(
+			ROLE_ID
+			,SYS_ID
+			,CREATE_USER
+			,CREATE_DATE
+		)
+		VALUES
+		(
+			#{roleSysAuthVo.roleId, jdbcType=VARCHAR},
+			#{roleSysAuthVo.sysId, jdbcType=VARCHAR},
+			#{roleSysAuthVo.createUser, jdbcType=VARCHAR},
+			getdate()
+		)
+	</insert>
+	
+	<!-- 角色系統權限-刪除 -->
+	<delete id="deleteByRoleId">
+		DELETE ESERVICE_ADM.DBO.ROLE_SYS_AUTH WHERE ROLE_ID = #{roleId}
+	</delete>
+
+</mapper>

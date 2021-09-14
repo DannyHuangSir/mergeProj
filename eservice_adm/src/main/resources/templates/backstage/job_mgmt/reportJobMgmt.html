@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <th:block th:replace="fragments/head"/>
+    </head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='reportJobMgmt')"></div>
+			<div class="main-content">
+                <div class="main-content-inner">
+                    <div class="breadcrumbs my-save-state" id="breadcrumbs">
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-signal" aria-hidden="true"></i>
+                                     工作管理
+                                <i class="my-icon fa fa-angle-double-right"></i>
+                                    報表排程
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="page-content">
+                        <div class="row">
+                            <!-- 查詢 start -->
+                            <div class="col-xs-12">
+                                <form class="form-horizontal" role="form" id="form1">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right text-right" for="form-field-1">選擇報表 </label>
+                                        <div class="col-sm-3">
+                                            <select class="form-control" id="reportSelect">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button type="button" id="qryBtn" class="btn btn-info">
+                                                <i class="my-icon fa fa-check bigger-110" aria-hidden="true"></i>
+                                                                                                                        查詢
+                                            </button>
+                                            <button type="button" id="addBtn" class="btn btn-primary">
+                                                <i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                                                                                                        新增排程
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- 查詢 end -->
+                        </div>
+                        <div class="hr hr-18 dotted hr-double"></div>
+                        <div class="row">
+                            <!-- 查詢結果 start -->
+                            <div class="col-xs-12">
+                                <div id="show-detail-results" hidden="true">
+                                    <h3 class="header smaller lighter blue">查詢結果</h3>
+                                    <div>
+                                        <table id="qryGrid"></table>
+                                        <div id="qryPager"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 查詢結果 end -->
+	                        <!-- 設定新增畫面 start -->
+                            <div id="reportJobDialog" class="hide">
+                                <div class="widget-main no-padding">
+                                    <form class="form-horizontal" id="reportJobForm">
+                                        <div class="form-group">
+											<label class="col-sm-3 control-label text-right no-padding-right">報表名稱 :</label>
+											<div class="col-sm-8">
+											    <label class="control-label no-padding-right" id="showReportName"></label>
+											</div>
+                                        </div>
+                                        <div class="form-group">
+	                                        <label class="col-sm-3 control-label text-right no-padding-right">報表條件 :</label>
+	                                        <div class="col-sm-8">
+	                                            <div id="formValue1">
+			                                        <div class="form-group">
+			                                            <label class="col-sm-2 control-label text-right no-padding-right">部門 :</label>
+			                                            <div class="col-sm-6">
+			                                                <select class="form-control" id="deptSelect"></select>
+			                                            </div>
+			                                        </div>
+			                                        <div class="form-group">
+			                                            <label class="col-sm-2 control-label text-right no-padding-right">職位 :</label>
+			                                            <div class="col-sm-6">
+			                                                <select class="form-control" id="jobTitleSelect"></select>
+			                                            </div>
+			                                        </div>
+			                                        <div class="form-group">
+			                                            <label class="col-sm-2 control-label text-right no-padding-right">角色 :</label>
+			                                            <div class="col-sm-6">
+			                                                <select class="form-control" id="roleSelect"></select>
+			                                            </div>
+			                                        </div>
+			                                        <div class="form-group">
+			                                            <label class="col-sm-2 control-label text-right no-padding-right">帳號 :</label>
+			                                            <div class="col-sm-6">
+			                                                <input class="form-control" id="userIdInput" type="text">
+			                                            </div>
+			                                        </div>
+	                                            </div>
+	                                            <div id="formValue2">
+			                                        <div class="form-group">
+			                                            <label class="col-sm-2 control-label text-right no-padding-right">系統名稱 :</label>
+			                                            <div class="col-sm-6">
+			                                                <select class="form-control" id="systemSelect"></select>
+			                                            </div>
+			                                        </div>
+	                                            </div>
+	                                            <div id="formValue3">
+	                                               <div class="form-group">
+                                                        <label class="col-sm-2 control-label text-right no-padding-right">API類型 :</label>
+                                                        <div class="col-sm-6">
+                                                            <select class="form-control" id="apiTypeSelect"></select>
+                                                        </div>
+                                                    </div>
+	                                            </div>
+		                                        <div class="form-group">
+		                                            <label class="col-sm-2 control-label text-right no-padding-right">
+		                                            <span style="color: red;">*</span>統計期間 :</label>
+		                                            <div class="col-sm-2">
+		                                                <input class="form-control" id="countRangeInput">
+		                                            </div>
+		                                            <label class="control-label">日 (自報表排程日推算)</label>
+		                                        </div>
+		                                        <div class="form-group">
+		                                            <label class="col-sm-2 control-label text-right no-padding-right"><span style="color: red;">*</span>排程時間 :</label>
+		                                            <div class="col-sm-7 ">
+		                                                <div class="form-group">
+				                                            <label class="col-sm-2 control-label no-padding-right no-padding-left">每星期</label>
+				                                            <div class="col-xs-2 no-padding-right">
+				                                                <input class="form-control" id="weekChooseInput" type="text" maxlength="3" />
+				                                            </div>
+			                                                <label class="col-sm-1 control-label no-padding-right no-padding-left">,</label>
+			                                                <div class="col-xs-2 no-padding-right">
+			                                                    <input class="form-control" id="monthChooseInput" type="text" maxlength="5" />
+			                                                </div>
+			                                                <label class="col-sm-1 control-label no-padding-right no-padding-left">月</label>
+			                                                <div class="col-xs-2 no-padding-right">
+			                                                    <input class="form-control" id="dayChooseInput" type="text" maxlength="5" />
+			                                                </div>
+			                                                <label class="col-sm-1 control-label no-padding-right no-padding-left">日</label>
+		                                                </div>
+		                                                <div class="form-group">
+			                                                <div class="col-xs-2 no-padding-right">
+			                                                    <input class="form-control" id="hourChooseInput" type="text" maxlength="5" />
+	                                                        </div>
+			                                                <label class="col-sm-1 control-label no-padding-right no-padding-left">時</label>
+			                                                <div class="col-xs-2 no-padding-right">
+			                                                    <input class="form-control" id="minsChooseInput" type="text" maxlength="5" />
+			                                                </div>
+			                                                <label class="col-sm-1 control-label no-padding-right no-padding-left">分</label>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+	                                        </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="align-center">
+	                                            <button type="button" class="btn btn-primary" id="confirmAddRptJobBtn">確定新增</button>
+	                                            <button type="button" class="btn btn-primary" id="confirmEditRptJobBtn">確定修改</button>
+	                                            <button type="button" class="btn btn-warning" id="cancelRptJobBtn">取消</button>
+                                            </div>
+                                        </div>
+                                        <input hidden="true" id="editReportJobId"/>
+                                    </form>
+                                </div>
+                            </div>
+	                        <!-- 設定新增畫面 end -->
+	                        <!-- 設定歷史紀錄畫面 start -->
+	                        <div id="reportJobHistoryDialog" class="hide">
+                                <div id="widget-main no-padding">
+                                    <div>
+                                        <table id="tableReportJobHistory" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <td style="width: 25%">報表名稱</td>
+                                                    <td style="width: 50%">報表條件</td>
+                                                    <td style="width: 25%">排程時間</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td id="histDialogHeadName"></td>
+                                                    <td id="histDialogHeadValue"></td>
+                                                    <td id="histDialogHeadTime"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div>
+                                        <table id="historyGrid"></table>
+                                        <div id="historyPager"></div>
+                                    </div>
+                                </div>
+                            </div>
+	                        <!-- 設定歷史紀錄畫面 end -->
+                        </div>
+                    </div>
+                </div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+                <i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+            </a>
+		</div>
+		<div th:replace="fragments/commonScript :: common_js(~{::script})">
+<!-- 		    <script	th:src="@{/plugin/Chart.min.js}"></script> -->
+			<script th:inline="javascript">
+			/*<![CDATA[*/
+                var qryGrid, historyGrid;
+                var selectedReport;
+                var reportJobValue;
+                var formValue;
+				$(document).ready(function() {
+					
+					eserviceAdmOption.common('#reportSelect', 
+		                    /*[[@{/common/optionList?categoryCode=REPORT_JOB_NAME}]]*/, 
+		                    '請選擇報表...',
+		                    'VALUE');
+					
+				    initGrid();
+				    initOption();
+					
+					$('#qryBtn').on('click', function() {
+					     // 設定查詢條件
+					     qryGrid.setPostData('reportId', $('#reportSelect').val());
+					     // 產生grid
+					     qryGrid.create();
+					     // 顯示查詢結果區域
+					     $('#show-detail-results').show();
+				     });
+					
+				    $('#addBtn').on('click', function(){
+				    	selectedReport = $('#reportSelect option:selected');
+				    	openAddRptJobDialog($('#reportSelect').val());
+				    });
+				    
+				    $('#confirmAddRptJobBtn').on('click', function(){
+				        confirmMsg('確定新增排程？', function(r){
+				        	if(r){
+				        		addReportJob($('#reportJobForm'));
+				        	} else{
+				        		return false;
+				        	}
+				        });
+				    });
+				    
+				    $('#confirmEditRptJobBtn').on('click', function(){
+				    	// 設定確定編輯事件
+                        confirmMsg('確定修改排程？', function(r){
+	                        if(r){
+	                        	updateReportJob($('#reportJobForm'));
+	                        } else{
+	                            return false;
+	                        }
+	                    });
+				    });
+				    
+				    $('#cancelRptJobBtn').on('click', function(){
+	                    $(this.offsetParent).dialog('close');
+	                });
+				    
+				    formValue = {
+				    	report01: 1,
+				    	report02: 1,
+				    	report03: 2,
+				    	report04: 3
+				    };
+				    
+				    // for dialog 可以支援 HTML 設定 Title
+				    eserviceAdmEvent.initDialog();
+				});
+				// 初始化下拉選單
+		        function initOption() {
+		            // 取得部門名稱下拉選單
+		            eserviceAdmOption.dept('#deptSelect', /*[[@{/common/deptList}]]*/);
+		            
+		            // 取得職位名稱下拉選單
+		            eserviceAdmOption.jobTitle('#jobTitleSelect', /*[[@{/common/jobTitleList}]]*/);
+		            
+		            // 取得角色名稱下拉選單
+		            eserviceAdmOption.role('#roleSelect', /*[[@{/common/roleList}]]*/);
+		            // 取得系統名稱下拉選單
+		            eserviceAdmOption.system('#systemSelect', /*[[@{/common/systemList}]]*/);
+		            
+		        }
+				// 初始化結果 grid
+			    function initGrid(){
+			    	qryGrid = new jqGridUtil();
+		            qryGrid.id = '#qryGrid';
+		            qryGrid.pager = '#qryPager';
+		            qryGrid.url = /*[[@{/reportJobMgmt/getReportJobList}]]*/;
+		            qryGrid.caption = '報表排程查詢';
+		            qryGrid.colNames = ['報表名稱', '報表條件', '排程時間', '操作功能'];
+		            qryGrid.colModel = [
+		                {name: 'REPORT_NAME', index: "REPORT_NAME", width: 100},
+		                {name: 'REPORT_RULE', index: "REPORT_RULE", width: 150},
+		                {width: 100, formatter: function(cellvalue, options, row){
+		                	var actionHtml = '';
+		                	actionHtml += '每 ' + row.JOB_TIME;
+		                	return actionHtml;
+		                }},
+		                {width: 150, formatter: function(cellvalue, options, row){
+		                	var actionHtml = '';
+		                	var paramArray = '\'' + row.REPORT_NAME + '\', \'' + row.REPORT_RULE + '\', \'' + row.JOB_TIME + '\'';
+		                	actionHtml += '<button type="button" onclick="getRptJobHist(' + row.REPORT_KEY + ', [' + paramArray + ']);" class="btn btn-info">歷史</button>&nbsp;&nbsp;'; 
+		                	actionHtml += '<button type="button" onclick="editRptJob('+ row.REPORT_KEY + ');" class="btn btn-warning">修改</button>&nbsp;&nbsp;'; 
+		                	actionHtml += '<button type="button" onclick="delRptJob(' + row.REPORT_KEY+ ');" class="btn btn-danger">刪除</button>&nbsp;&nbsp;'; 
+		                	return actionHtml;
+		                }}
+		            ];
+		            
+		            historyGrid = new jqGridUtil();
+		            historyGrid.id = '#historyGrid';
+		            historyGrid.pager = '#historyPager';
+		            historyGrid.url = /*[[@{/reportJobMgmt/getReportJobHistory}]]*/;
+		            historyGrid.caption = '排程歷史紀錄';
+		            historyGrid.colNames = ['執行時間', '執行結果', '報表下載'];
+		            historyGrid.colModel = [
+		            	{name: 'TIME', index: 'TIME', width: 100},
+		            	{name: 'STATUS', indexd: 'STATUS', width: 100},
+		            	{width: 100, formatter: function(cellvalue, options, row){
+		            		var actionHtml = '';
+		            		actionHtml += '<a href="javascript:preparedDownload('+ row.REPORT_ID+ ');">';
+		            		actionHtml += $.trim(row.FILENAME);
+		            		actionHtml += '</a>';
+		            		return actionHtml;
+		            	}}
+		            ];
+			    }
+			    
+		    	<!-- 報表排程歷史查詢 -->
+			    function getRptJobHist(reportKey, param){
+                    // 設定查詢條件
+                    var formData = {
+                    	reportJobId: parseInt(reportKey)
+                    }
+                    
+                    $.each($('#tableReportJobHistory').find('tbody').find('td'), function(index, obj){
+                        $(obj).html(param[index]);
+                    });
+                    historyGrid.setFormData(formData);
+                    // 產生grid
+                    historyGrid.create();
+                    
+                    $('#reportJobHistoryDialog').removeClass('hide').dialog({
+                        modal: true,
+                        title: "<div class='widget-header widget-header-small'><h4 class='smaller'>排程歷史紀錄</h4></div>",
+                        title_html: true,
+                        width: 800,
+                        height: 530
+                    });
+			    }
+			    
+		    	<!-- 開啟修改報表排程設定 -->
+			    function editRptJob(reportKey){
+			    	openUpdateReportJobDialog(reportKey);
+			    }
+			    
+			    <!-- 刪除報表排程 -->
+			    function delRptJob(reportKey){
+			    	confirmMsg('確定刪除排程？', function(r){
+			    		if(r){
+			    			eserviceForm.post(/*[[@{reportJobMgmt/deleteReportJob}]]*/, {reportJobId: reportKey}, function(response){
+			    				alertMsg('刪除成功');
+				    			qryGrid.reload();
+			    			});
+			    		} else{
+			    			return false;
+			    		}
+			    	});
+			    }
+			    
+			    <!-- 開啟新增報表排程畫面 -->
+			    function openAddRptJobDialog(){
+			    	if(selectedReport.val() == ''){
+			    		alertMsg('請選擇新增排程的報表名稱');
+			    		return false;
+			    	}
+			    	$('#reportJobDialog #showReportName').html(selectedReport.html());
+			    	$('#reportJobForm')[0].reset();
+			    	// reportJobValue 使用selectedReport.val
+			    	valueHideControl(formValue[selectedReport.val()])
+			    	editBthControl($('#confirmAddRptJobBtn'));
+			    	
+			    	$('#reportJobDialog').removeClass('hide').dialog({
+		                modal: true,
+		                title: "<div class='widget-header widget-header-small'><h4 class='smaller'>新增報表排程</h4></div>",
+		                title_html: true,
+		                width: 800,
+		                height: 530
+			    	});
+			    }
+			    
+			    <!-- 開啟修改報表排程畫面 -->
+			    function openUpdateReportJobDialog(reportKey){
+			    	$('#reportJobForm')[0].reset(); // 先清空
+			    	editBthControl($('#confirmEditRptJobBtn'));
+			    	var formData = {
+			    			reportJobId: reportKey
+			    	};
+			    	//帶出資料 start 
+			    	eserviceForm.post(/*[[@{/reportJobMgmt/getReportJobSetting}]]*/, formData, function(response){
+		    			setCondition(response.resultData);
+		    			var report = response.resultData.reportId;
+		    			valueHideControl(formValue[report]);
+		    			selectedReport = $('#reportSelect option[value="'+ report +'"]');
+		    			$('#editReportJobId').val(reportKey);
+		    			$('#reportJobDialog').removeClass('hide').dialog({
+	                        modal: true,
+	                        title: "<div class='widget-header widget-header-small'><h4 class='smaller'>修改報表排程</h4></div>",
+	                        title_html: true,
+	                        width: 800,
+	                        height: 530
+	                    });
+			    	});
+			    	// end
+			    }
+			    
+			    <!-- 新增報表排程 -->
+			    function addReportJob(paramForm){
+			    	var validMsg = validInput(paramForm);
+			    	if(validMsg != ''){
+			    		alertMsg(validMsg);
+			    		return false;
+			    	}
+			    	var formData = createParamObj(paramForm);
+			    	eserviceForm.post(/*[[@{/reportJobMgmt/addReportJobSchedule}]]*/, formData, function(response){
+	    				alertMsg('新增成功');
+	    				qryGrid.reload();
+	    				//$('#reportJobDialog').dialog('close');
+			    	});
+			    }
+			    
+			    <!-- 更新報表排程 -->
+			    function updateReportJob(paramForm){
+			    	var validMsg = validInput(paramForm);
+			    	if(validMsg != ''){
+			    		alertMsg(validMsg);
+			    		return false;
+			    	}
+			    	var formData = createParamObj(paramForm);
+			    	formData.reportJobId = $('#editReportJobId').val();
+			    	eserviceForm.post(/*[[@{/reportJobMgmt/updateReportJobSchedule}]]*/, formData, function(response){
+		    			alertMsg('修改成功');
+		    			qryGrid.reload();
+		    			//$('#reportJobDialog').dialog('close');
+			    	});
+			    }
+			    
+			    <!-- 驗證畫面資料 -->
+			    function validInput(paramForm){
+			    	if(paramForm.find('#countRangeInput').val() == ''){
+			    		return '統計期間尚未設定';
+			    	}
+			    	if(paramForm.find('#weekChooseInput').val() == ''
+			    			|| paramForm.find('#monthChooseInput').val() == ''
+		    				|| paramForm.find('#dayChooseInput').val() == ''
+	    					|| paramForm.find('#hourChooseInput').val() == ''
+	    					|| paramForm.find('#minsChooseInput').val() == ''){
+			    		return '排程時間設置不完整';
+			    	}
+			    	return '';
+			    }
+			    
+			    <!-- 建立 condition 使用 -->
+			    function createConditionValue(paramKey, param){
+			    	var conditionObj = {
+			    			condition: paramKey,
+			    			conditionValue: param.val(),
+			    			conditionValueCht: param.html()
+			    	};
+			    	return conditionObj;
+			    }
+			    
+			    function valueHideControl(reportJobValue){
+			    	$('#formValue1').hide();
+                    $('#formValue2').hide();
+                    $('#formValue3').hide();
+			    	switch(reportJobValue){
+				        case 1: 
+				    		$('#formValue1').show();
+	                        break;
+				        case 2: 
+                            $('#formValue2').show();
+                            break;
+				        case 3:
+                            $('#formValue3').show();
+                            break;
+                        default: 
+	                        alertMsg('沒有被設定的條件項目');
+                        	break;
+			    	}
+			    }
+			    
+			    function editBthControl(useNow){
+			    	$('#confirmAddRptJobBtn').hide();
+			    	$('#confirmEditRptJobBtn').hide();
+			    	$(useNow).show();
+			    }
+			    
+			    function createParamObj(paramForm){
+			    	var conditionValue = new Array(
+                            createConditionValue('REPORT_PARAM_DEPT', paramForm.find('#deptSelect option:selected')),
+                            createConditionValue('REPORT_PARAM_JOBTITLE', paramForm.find('#jobTitleSelect option:selected')),
+                            createConditionValue('REPORT_PARAM_ROLE', paramForm.find('#roleSelect option:selected')),
+                            createConditionValue('REPORT_PARAM_USERNAME', paramForm.find('#userIdInput')),
+                            createConditionValue('REPORT_PARAM_SYSNAME', paramForm.find('#systemSelect option:selected')),
+                            createConditionValue('REPORT_PARAM_APITYPE', paramForm.find('#apiTypeSelect option:selected')),
+                    );
+                    var conditionTime = 
+                            paramForm.find('#minsChooseInput').val()
+                            + ' ' + paramForm.find('#hourChooseInput').val()
+                            + ' ' + paramForm.find('#dayChooseInput').val()
+                            + ' ' + paramForm.find('#monthChooseInput').val()
+                            + ' ' + paramForm.find('#weekChooseInput').val();
+                    var paramObj = {
+                            reportId: selectedReport.val(),
+                            reportName: paramForm.find('#showReportName').html(),
+                            dateRange: paramForm.find('#countRangeInput').val(),
+                            listCondition: conditionValue,
+                            cronExp: conditionTime
+                    };
+                    return paramObj;
+			    }
+			    
+			    function setCondition(data){
+			    	$('#showReportName').html(data.reportName);
+			    	$('#countRangeInput').val(data.dateRange);
+			    	var timeList = ['#minsChooseInput', '#hourChooseInput', '#dayChooseInput', '#monthChooseInput','#weekChooseInput'];
+			    	var timeSet = data.cronExp.split(" ", 5);
+			    	$.each(timeSet, function(index, value){
+			    		$(timeList[index]).val(value);
+			    	});
+			    	var conditionMap = {
+			    			REPORT_PARAM_DEPT: '#deptSelect',
+			    			REPORT_PARAM_JOBTITLE: '#jobTitleSelect',
+			    			REPORT_PARAM_ROLE: '#roleSelect',
+			    			REPORT_PARAM_USERNAME: '#userIdInput',
+			    			REPORT_PARAM_SYSNAME: '#systemSelect',
+			    			REPORT_PARAM_APITYPE: '#apiTypeSelect',
+			    	}
+			    	$.each(data.listCondition, function(index, obj){
+			    		var condition = obj.condition;
+			    		$(conditionMap[condition]).val(obj.conditionValue);
+			    	});
+			    }
+			    
+			    function preparedDownload(reportId){
+			    	var url = /*[[@{
+			    		/reportJobMgmt/reportDownload
+			    	}]]*/;
+			    	window.open(url + "?reportId="+ reportId);
+			    }
+			    
+			/*]]>*/
+			</script>
+		</div>
+		
+	</body>
+</html>

@@ -1,0 +1,100 @@
+<tr class="detail-row even open" role="row" xmlns:th="http://www.w3.org/1999/xhtml">
+	<td colspan="8">
+		<div class="table-detail">
+			<div class="row">
+				<div class="col-xs-12 col-sm-11">
+					<div class="space visible-xs"></div>
+					<div class="profile-user-info profile-user-info-striped">
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請日期 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_DATE']!=null}?${detailData['TRANS_DATE']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請項目 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_TYPE_NAME']!=null}?${detailData['TRANS_TYPE_NAME']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請狀態 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['STATUS_NAME']!=null}?${detailData['STATUS_NAME']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 保單號碼 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['POLICY_NO']!=null}?${detailData['POLICY_NO']}"/></span>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default profile-user-info">
+						<div class="panel-heading">※ 申請資料</div>
+						<div class="panel-body clear1" id="poliyClaimsDetail">
+							<div class="mycigna3">
+								<div class="col-md-12  detailPolicy">
+									<div class="col-sm-12" style="text-align: left;">
+										<div class="check-title">新投資標的與比例</div>
+										<div class=" grey2">
+											<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+												<thead>
+												<tr class="table2 orange2">
+													<th class="text-left">投資標的</th>
+													<th class="text-left">變更前分配比例與</th>
+													<th class="text-left">變更後分配比例</th>
+												</tr>
+												</thead>
+												<tbody>
+												<th:block  th:if="not ${#lists.isEmpty(detailData['investments'])}">
+													<th:block th:each="from : ${detailData['investments']}">
+														<tr class="h90 tr-odd-noEvent">
+															<td class="text-left"  >
+																<th:block th:text="${from.invtName != null} ?${from.invtName}"  ></th:block>
+																<p class="enSmall"  th:text="(${from.invtNo != null} ?${from.invtNo})"></p>
+															</td>
+															<td th:text="${from.preRatio}"></td>
+															<td  th:text="${from.afterRatio}"></td>
+														</tr>
+													</th:block>
+													<tr style="background: #FDE3D2;">
+														<td>總百分比：</td>
+														<td id="preRatio">0%</td>
+														<td id="aftRatio">0%</td>
+													</tr>
+												</th:block>
+												</tbody>
+											</table>
+										</div>
+										<div class="center1 ptop30" style="background: #FFFFFF;"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</td>
+</tr>
+
+<script th:inline="javascript">
+	$(function(){
+		var pre = 0
+		var aft = 0
+		$([[${detailData['investments']}]]).each(function(index, e) {
+			pre += parseInt(e.preRatio)
+			aft += parseInt(e.afterRatio)
+		})
+		$("#preRatio").text(pre + '%')
+		$("#aftRatio").text(aft + '%')
+	})
+</script>

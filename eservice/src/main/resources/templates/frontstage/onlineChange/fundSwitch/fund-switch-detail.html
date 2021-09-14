@@ -1,0 +1,53 @@
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<div class="col-sm-12 hid-title2">轉出投資標的與比例</div>
+				<table class="hid-body col-sm-12">
+					<tbody>
+						<tr>
+							<th class="hid-th" style="text-align: left;">轉出投資標的</th>
+							<th class="hid-th" style="text-align: left;">轉出百分比</th>
+							<th class="hid-th" style="text-align: left;">轉出金額</th>
+						</tr>
+						<th:block th:each="vo, rowStat : ${transFundSwitchVo.fundSwitchOutList}">
+						<tr>
+							<td style="text-align: left;"><th:block th:text="${vo.fundName}"/><span class="enSmall">(<th:block th:text="${vo.fundCode}"/>)</span></td>
+							<td style="text-align: left;"><th:block th:text="${vo.switchPercentage}"/>%</td>
+							<td style="text-align: left;"><th:block th:text="${#numbers.formatDecimal(vo.switchAmount, 0, 'COMMA', 2, 'POINT')}"/></td>
+						</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div class="col-sm-12 hid-title3">
+	<i class="fas fa-chevron-down fa orange"></i>
+</div>
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<div class="col-sm-12 hid-title2">轉入投資標的與比例</div>
+				<table class="hid-body col-sm-12">
+					<tbody>
+						<tr>
+							<th class="hid-th" style="text-align: left;">轉入投資標的</th>
+							<th class="hid-th" style="text-align: left;">轉入百分比</th>
+							<th class="hid-th" style="text-align: left;">轉入金額</th>
+						</tr>
+						<th:block th:each="vo, rowStat : ${transFundSwitchVo.fundSwitchInList}">
+						<tr>
+							<td style="text-align: left;"><th:block th:text="${vo.fundName}"/><span class="enSmall">(<th:block th:text="${vo.fundCode}"/>)</span></td>
+							<td style="text-align: left;"><th:block th:text="${vo.switchPercentage}"/>%</td>
+							<td style="text-align: left;"><th:block th:text="${#numbers.formatDecimal(vo.switchAmount, 0, 'COMMA', 2, 'POINT')}"/></td>
+						</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransBeneficiaryOldDao">
+
+	<resultMap id="TransBeneficiaryOldMap" type="com.twfhclife.eservice.onlineChange.model.TransBeneficiaryOldVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_BENEFICIARY_ID" property="transBeneficiaryId"/>
+		<result column="BENEFICIARY_TYPE" property="beneficiaryType"/>
+		<result column="BENEFICIARY_NAME" property="beneficiaryName"/>
+		<result column="BENEFICIARY_RELATION" property="beneficiaryRelation"/>
+		<result column="ALLOCATE_TYPE" property="allocateType"/>
+		<result column="ALLOCATE_SEQ" property="allocateSeq"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transBeneficiaryOldVo.id != null"> AND ID = #{transBeneficiaryOldVo.id} </if>
+			<if test="transBeneficiaryOldVo.transBeneficiaryId != null"> AND TRANS_BENEFICIARY_ID = #{transBeneficiaryOldVo.transBeneficiaryId} </if>
+			<if test="transBeneficiaryOldVo.beneficiaryType != null"> AND BENEFICIARY_TYPE = #{transBeneficiaryOldVo.beneficiaryType} </if>
+			<if test="transBeneficiaryOldVo.beneficiaryName != null and transBeneficiaryOldVo.beneficiaryName != ''"> AND BENEFICIARY_NAME = #{transBeneficiaryOldVo.beneficiaryName} </if>
+			<if test="transBeneficiaryOldVo.beneficiaryRelation != null and transBeneficiaryOldVo.beneficiaryRelation != ''"> AND BENEFICIARY_RELATION = #{transBeneficiaryOldVo.beneficiaryRelation} </if>
+			<if test="transBeneficiaryOldVo.allocateType != null"> AND ALLOCATE_TYPE = #{transBeneficiaryOldVo.allocateType} </if>
+			<if test="transBeneficiaryOldVo.allocateSeq != null"> AND ALLOCATE_SEQ = #{transBeneficiaryOldVo.allocateSeq} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transBeneficiaryOldVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更受益人修改前查詢結果 -->
+	<select id="getTransBeneficiaryOld" resultMap="TransBeneficiaryOldMap">
+		SELECT
+			ID,TRANS_BENEFICIARY_ID,BENEFICIARY_TYPE,ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_NAME) BENEFICIARY_NAME,BENEFICIARY_RELATION,ALLOCATE_TYPE,ALLOCATE_SEQ
+		FROM
+			ESERVICE.DBO.TRANS_BENEFICIARY_OLD
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 變更受益人修改前-新增 -->
+	<insert id="insertTransBeneficiaryOld">
+		INSERT INTO ESERVICE.DBO.TRANS_BENEFICIARY_OLD
+		(
+			ID,TRANS_BENEFICIARY_ID,BENEFICIARY_TYPE,BENEFICIARY_NAME,BENEFICIARY_RELATION,ALLOCATE_TYPE,ALLOCATE_SEQ
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_BENEFICIARY_OLD),
+			#{transBeneficiaryOldVo.transBeneficiaryId, jdbcType=NUMERIC},
+			#{transBeneficiaryOldVo.beneficiaryType, jdbcType=NUMERIC},
+			ESERVICE.DBO.FN_ENBASE64(#{transBeneficiaryOldVo.beneficiaryName, jdbcType=VARCHAR}),
+			#{transBeneficiaryOldVo.beneficiaryRelation, jdbcType=VARCHAR},
+			#{transBeneficiaryOldVo.allocateType, jdbcType=NUMERIC},
+			#{transBeneficiaryOldVo.allocateSeq, jdbcType=NUMERIC}
+		)
+	</insert>
+
+</mapper>

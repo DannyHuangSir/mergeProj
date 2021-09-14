@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransExtendAttrDao">
+	
+	<resultMap id="TransExtendAttrMap" type="com.twfhclife.eservice.onlineChange.model.TransExtendAttrVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="ATTR_KEY" property="attrKey"/>
+		<result column="ATTR_VALUE" property="attrValue"/>
+	</resultMap>
+	
+	<!-- 查詢線上申請額外資料 -->
+	<select id="getTransExtendsByTransNum" resultMap="TransExtendAttrMap">
+		SELECT
+			ID, TRANS_NUM, ATTR_KEY, ESERVICE.DBO.FN_DEBASE64(ATTR_VALUE) ATTR_VALUE
+		FROM
+			ESERVICE.DBO.TRANS_EXTEND_ATTR
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+	
+	<!-- 新增線上申請額外資料 -->
+	<insert id="insertTransExtendAttr">
+		INSERT INTO ESERVICE.DBO.TRANS_EXTEND_ATTR (ID, TRANS_NUM, ATTR_KEY, ATTR_VALUE)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_EXTEND_ATTR),
+			#{transExtendAttrVo.transNum, jdbcType=VARCHAR},
+			#{transExtendAttrVo.attrKey, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transExtendAttrVo.attrValue, jdbcType=VARCHAR})
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransBeneficiaryDtlMapper">
+
+	<resultMap id="TransBeneficiaryDtlMap" type="com.twfhclife.eservice_batch.model.TransBeneficiaryDtlVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_BENEFICIARY_ID" property="transBeneficiaryId"/>
+		<result column="BENEFICIARY_TYPE" property="beneficiaryType"/>
+		<result column="BENEFICIARY_NAME" property="beneficiaryName"/>
+		<result column="BENEFICIARY_ROCID" property="beneficiaryRocid"/>
+		<result column="BENEFICIARY_RELATION" property="beneficiaryRelation"/>
+		<result column="REASON" property="reason"/>
+		<result column="ALLOCATE_TYPE" property="allocateType"/>
+		<result column="ALLOCATE_SEQ" property="allocateSeq"/>
+		<result column="BENEFICIARY_TEL" property="beneficiaryTel"/>
+		<result column="BENEFICIARY_CITY" property="beneficiaryCity"/>
+		<result column="BENEFICIARY_REGION" property="beneficiaryRegion"/>
+		<result column="BENEFICIARY_ADDRESS" property="beneficiaryAddress"/>
+		<result column="BENEFICIARY_ADDRESS_FULL" property="beneficiaryAddressFull"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,
+		TRANS_BENEFICIARY_ID,
+		BENEFICIARY_TYPE,
+		ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_NAME) BENEFICIARY_NAME,
+		BENEFICIARY_ROCID,
+		BENEFICIARY_RELATION,
+		REASON,
+		ALLOCATE_TYPE,
+		ALLOCATE_SEQ,
+		ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_TEL) BENEFICIARY_TEL,
+		BENEFICIARY_CITY,
+		BENEFICIARY_REGION,
+		ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_ADDRESS) BENEFICIARY_ADDRESS,
+		ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_ADDRESS_FULL) BENEFICIARY_ADDRESS_FULL
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transBeneficiaryDtlVo.id != null"> AND ID = #{transBeneficiaryDtlVo.id} </if>
+			<if test="transBeneficiaryDtlVo.transBeneficiaryId != null"> AND TRANS_BENEFICIARY_ID = #{transBeneficiaryDtlVo.transBeneficiaryId} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryType != null"> AND BENEFICIARY_TYPE = #{transBeneficiaryDtlVo.beneficiaryType} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryName != null and transBeneficiaryDtlVo.beneficiaryName != ''"> AND ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_NAME) = #{transBeneficiaryDtlVo.beneficiaryName} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryRocid != null and transBeneficiaryDtlVo.beneficiaryRocid != ''"> AND BENEFICIARY_ROCID = #{transBeneficiaryDtlVo.beneficiaryRocid} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryRelation != null and transBeneficiaryDtlVo.beneficiaryRelation != ''"> AND BENEFICIARY_RELATION = #{transBeneficiaryDtlVo.beneficiaryRelation} </if>
+			<if test="transBeneficiaryDtlVo.reason != null and transBeneficiaryDtlVo.reason != ''"> AND REASON = #{transBeneficiaryDtlVo.reason} </if>
+			<if test="transBeneficiaryDtlVo.allocateType != null"> AND ALLOCATE_TYPE = #{transBeneficiaryDtlVo.allocateType} </if>
+			<if test="transBeneficiaryDtlVo.allocateSeq != null"> AND ALLOCATE_SEQ = #{transBeneficiaryDtlVo.allocateSeq} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryTel != null and transBeneficiaryDtlVo.beneficiaryTel != ''"> AND ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_TEL) = #{transBeneficiaryDtlVo.beneficiaryTel} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryCity != null and transBeneficiaryDtlVo.beneficiaryCity != ''"> AND BENEFICIARY_CITY = #{transBeneficiaryDtlVo.beneficiaryCity} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryRegion != null and transBeneficiaryDtlVo.beneficiaryRegion != ''"> AND BENEFICIARY_REGION = #{transBeneficiaryDtlVo.beneficiaryRegion} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryAddress != null and transBeneficiaryDtlVo.beneficiaryAddress != ''"> AND ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_ADDRESS) = #{transBeneficiaryDtlVo.beneficiaryAddress} </if>
+			<if test="transBeneficiaryDtlVo.beneficiaryAddressFull != null and transBeneficiaryDtlVo.beneficiaryAddressFull != ''"> AND ESERVICE.DBO.FN_DEBASE64(BENEFICIARY_ADDRESS_FULL) = #{transBeneficiaryDtlVo.beneficiaryAddressFull} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transBeneficiaryDtlVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransBeneficiaryDtlList" resultMap="TransBeneficiaryDtlMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_BENEFICIARY_DTL
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransBeneficiaryDtlMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_BENEFICIARY_DTL
+		<include refid="wherePkClause" />
+	</select>
+
+</mapper>
+

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+    <div th:replace="fragments/header :: top"></div>
+    <header th:replace="fragments/header :: header"></header>
+    <div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+    <section class="grey listing9 fullContent">
+        <div class="container bg3 list1">
+            <div class="mystyle3 listing-area">
+                <div class="row-offcanvas row-offcanvas-left">
+                    <div class="my1 marginTop20">
+                        <p class="pull-left visible-xs">
+                            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
+                        </p>
+                        <i class="foo-business_7 foo-2x hidden-xs"></i> 增值分紅養老壽險
+                        <span class="enNormal">VLJ<span class="hidden-xs">(UC70000001)</span></span>
+                        <div class="dropdown pull-right r30">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                <i class="hidden-xs r31">其他保單</i>
+                                <i class="foo-down-dir r32"></i>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">金彩人生變額萬能壽險 
+                        (UC70000001)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">金彩人生變額萬能壽險 
+                        (UC70000001)</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">金彩人生變額萬能壽險 
+                        (UC70000001)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/.sidebar-offcanvas-->
+                    <div class="col-xs-6 col-sm-3 col-md-2 sidebar-offcanvas nopd" id="sidebar">
+                        <div class="list-group tog1">
+                            <div class="tog2">保單資訊</div>
+                            <a href="listing1" class="list-group-item tog3">保單資料</a>
+                            <a href="listing2" class="list-group-item tog3">投資損益及投報率</a>
+                            <div class="tog2">一般查詢</div>
+                            <a href="listing3" class="list-group-item tog3">繳費紀錄</a>
+                            <a href="listing4" class="list-group-item tog3">保單貸款資料</a>
+                            <a href="listing5" class="list-group-item tog3">保單紅利資料</a>
+                            <div class="tog2">投資型保單查詢</div>
+                            <a href="listing6" class="list-group-item tog3">保單帳戶價值</a>
+                            <a href="listing6-2" class="list-group-item tog3">保單收益分配</a>
+                            <a href="listing7" class="list-group-item tog3">投資型保單保費費用</a>
+                            <a href="listing10" class="list-group-item tog3">交易歷史記錄</a>
+                            <a href="listing8" class="list-group-item tog3">帳戶價值通知書</a>
+                             
+                            <a href="listing9" class="list-group-item tog3 active">歷史年報</a>
+                            <div class="tog4 hide"><i class="fa foo-finance_1 fa-lg orange"></i> <span class="colorBlack">基金投資試算</span></div>
+                            <div class="tog4 hide"><i class="fa foo-printer fa-lg orange"></i> <span class="colorBlack">列印保單明細</span></div>
+                        </div>
+                    </div>
+                    <!--END/.sidebar-offcanvas-->
+                    <div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+                        <div class="box-border wht">
+
+                            <div class="tb3 top0 mobile-toggle" data-toggle="true">
+                                <i class="fa hid2 foo-angle-down mobile"></i>
+                                <i class="fa foo-angle-up hid1"></i> 歷史年報
+                                <div class="tog4 pull-right"><i class="fa foo-printer fa-lg orange"></i> <span class="colorBlack">列印此頁</span></div>
+                            </div>
+
+                            <div class="">
+                                <div class="paddingInner wht">
+                                    <div class="col-xs-12 my6  paddingInner grey">
+                                        <div class="inlineBlock pull-right">
+                                            <div class="lineHigh32 float-left">選擇年份</div>
+                                            <div class="float-left">
+                                                <div class="selector-box">
+                                                    <select class="selector">
+                                                        <option>2015</option>
+                                                        <option>2014</option>
+                                                        <option>2013</option>
+                                                        <option>2012</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-ps text-ps-range">資料期間：2014/07/01至2014/09/30；計算基準日：2014/09/30</div>
+
+                            <div class="mobile-toggle-panel specialHeight toggle-hide">
+                                <div class="col-md-12 down20">
+                                    <table class="tablesaw tablesaw-stack wht mobileTwoCol col-table" data-tablesaw-mode="stack">
+                                        <tr class="noEvent borderTop">
+                                            <th class="item180">保單號碼</th>
+                                            <td>UC70000001</td>
+                                            <th class="item180">保單生效日</th>
+                                            <td>2007/04/26</td>
+                                        </tr>
+                                        <tr class="noEvent">
+                                            <th class="item180">要保人</th>
+                                            <td>陳文倫</td>
+                                            <th class="item180">基本保額</th>
+                                            <td><span class="chNormal">NTD</span>72,000.<span class="point">98</span></td>
+                                        </tr>
+                                        <tr class="noEvent">
+                                            <th class="item180">被保險人</th>
+                                            <td>陳文倫</td>
+                                            <th class="textSpace item180">space</th>
+                                            <td class="textSpace">space</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                
+                            </div>
+
+
+
+
+                            <div class="tb3 top0 mobile-toggle" data-toggle="true">
+                                <i class="fa hid2 foo-angle-down mobile"></i>
+                                <i class="fa foo-angle-up hid1"></i> 帳戶總覽
+                            </div>
+
+                            <div class="mobile-toggle-panel specialHeight toggle-hide">
+
+                                <div class="col-md-12 down20 paper-overview">
+                                    <table class="tablesaw tablesaw-stack wht mobileTwoCol col-table" data-tablesaw-mode="stack">
+                                        <tr class="noEvent borderTop">
+                                            <th class="item180">保單帳戶價值</th>
+                                            <td><span class="chNormal">NTD</span>68,680 </td>
+                                            <th class="item180">累計轉換費用</th>
+                                            <td><span class="chNormal">NTD</span>0 </td>
+                                        </tr>
+                                        <tr class="noEvent">
+                                            <th class="item180">累計已繳保費</th>
+                                            <td><span class="chNormal">NTD</span>88,000 </td>
+                                            <th class="item180">累計已提領(贖回)<br/>帳戶價值</th>
+                                            <td><span class="chNormal">NTD</span>0 </td>
+                                        </tr>
+                                        <tr class="noEvent">
+                                            <th class="item180">累計保險費費用</th>
+                                            <td><span class="chNormal">NTD</span>72,000 </td>
+                                            <th class="item180">累計增額保險費</th>
+                                            <td><span class="chNormal">NTD</span>9,000 </td>
+                                        </tr>
+                                        <tr class="noEvent">
+                                            <th class="item180">累計部分提領費用</th>
+                                            <td><span class="chNormal">NTD</span>72,000 </td>
+                                            <th class="item180 clearLeft">保單貸款本息</th>
+                                            <td><span class="chNormal">NTD</span>0 </td>
+                                        </tr>
+                                        <tr class="noEvent">
+                                            <th class="textSpace item180">space</th>
+                                            <td class="textSpace">space</td>
+                                            <th class="item180">身故/全殘廢保險金</th>
+                                            <td><span class="chNormal">NTD</span>72,000.<span class="point">45</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                            <div class="tb3 top0 mobile-toggle" data-toggle="true">
+                                <i class="fa hid2 foo-angle-down mobile"></i>
+                                <i class="fa foo-angle-up hid1"></i> 本年費用明細
+                            </div>
+
+                            <div class="mobile-toggle-panel specialHeight toggle-hide">
+
+                                <div class="col-md-12 down20 paper-overview">
+                                    <table class="tablesaw tablesaw-stack wht mobileTwoCol col-table" data-tablesaw-mode="stack">
+                                        <tr class="noEvent borderTop">
+                                            <th class="item180">已繳保費</th>
+                                            <td><span class="chNormal">NTD</span>0 </td>
+                                            <th class="item180">保險費費用</th>
+                                            <td><span class="chNormal">NTD</span>0 </td>
+                                        </tr>
+                                        <tr class="noEvent">
+                                            <th class="item180">保單管理費<br/>(保單帳戶費用)</th>
+                                            <td class=""><span class="chNormal">NTD</span>2,408 </td>
+                                            <th class="item180 clearLeft">部分提領費用</th>
+                                            <td><span class="chNormal">NTD</span>0</td>
+                                        </tr>
+                                        <tr class="noEvent">
+                                            <th class="item180">保險成本(保障費用)</th>
+                                            <td><span class="chNormal">NTD</span>355 </td>
+                                            <th class="item180 clearLeft">轉換費用</th>
+                                            <td><span class="chNormal">NTD</span>0</td>
+                                        </tr>
+                                    </table>
+                                </div>
+ 
+
+                                <div class="clearfix"></div>
+
+                                <table class="tablesaw tablesaw-stack wht smallerTb clearfix" data-tablesaw-mode="stack">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left item160">投資標的</th>
+                                            <th>計價幣別</th>
+                                            <th>目前投資<br/>比例</th>
+                                            <th>年初<br/>單位數</th>
+                                            <th>年初<br/>單位淨值</th>
+                                            <th>本年<br/>單位數之增減</th>
+                                            <th>本年<br/>配息單位數</th>
+                                            <th>年末<br/>單位數</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="noEvent no-borderBottom">
+                                            <td class="text-left table3">元大多福基金
+                                                <p class="enSmall">(CPES1)</p>
+                                            </td>
+                                            <td>台幣</td>
+                                            <td>70%</td>
+                                            <td>844.<span class="point">12</span></td>
+                                            <td>43.<span class="point">57</span><i class="my5">NTD</i></td>
+                                            <td>-36.<span class="point">04</span></td>
+                                            <td>0</td>
+                                            <td>808.<span class="point">08</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="tablesaw tablesaw-stack wht smallerTb" data-tablesaw-mode="stack">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left item160">投資標的</th>
+                                            <th>年末<br/>單位淨值<span class="enSmall displayNone">A</span></th>
+                                            <th>年末<br/>參考匯率<span class="enSmall displayNone">B</span></th>
+                                            <th>年末帳戶價值<span class="enSmall displayNone">(C=A*B)</span></th>
+                                            <th>累計已贖回<br/>帳戶價值<span class="enSmall displayNone">D</span></th>
+                                            <th>單支基金<br/>累計投資成本<span class="enSmall displayNone">E</span></th>
+                                            <th>參考報酬率<br/><span class="enSmall displayNone">(F=C+D-E/E%)</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="noEvent">
+                                            <td class="text-left table3">元大多福基金
+                                                <p class="enSmall">(CPES1)</p>
+                                            </td>
+                                            <td>50<i class="my5">NTD</i></td>
+                                            <td>30.<span class="point">57</span></td>
+                                            <td>36,000<i class="my5">NTD</i></td>
+                                            <td>0<i class="my5">NTD</i></td>
+                                            <td>34,000<i class="my5">NTD</i></td>
+                                            <td class="colorBlue">+4.<span class="point">48</span>%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="statement1 wht">
+                                <p class="text-ps">備註：</p>
+                                <ol class="text-ps">
+                                    <li>所有數值顯示至小數第二位，因系統實際計算至小數第六位，故參考帳戶價值可能會有些微誤差</li>
+                                    <li>平均單位淨值＝[(前期末單位數 X 前期末平均單位淨值) +當期申購金額] / (前期末單位數+當期申購單位數)</li>
+                                    <li>無單位數之投資標的不計算及顯示報酬率</li>
+                                    <li>現金配息不列入平均報酬率之計算</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer th:replace="fragments/footer"></footer>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="plugin/jquery-1.11.3.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="plugin/jquery.placeholder.min.js"></script>
+    <script>
+    $(function(){
+        $('input, textarea').placeholder();
+    });
+    </script>
+    <script src="plugin/detectmobilebrowser_jquery.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/offcanvas.js"></script>
+    <script src="plugin/bootstrap.min.js"></script>
+    <script src="plugin/tablesaw.stackonly.js"></script>
+    <script type="text/javascript" src="plugin/scrollbar.js"></script>
+    <script type="text/javascript" src="js/popover.js"></script>
+    <script src="js/according.js"></script>
+    <script>
+    $(function() {
+        $('#list2').find('table').find('span.enSmall').hide();
+    });
+    </script>`
+</body>
+
+</html>

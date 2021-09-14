@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.FunctionItemDao">
+	<resultMap id="BaseResultMap" type="com.twfhclife.adm.model.FunctionItemVo">
+		<result column="function_id" property="functionId" />
+		<result column="function_name" property="functionName" />
+		<result column="function_type" property="functionType" />
+		<result column="function_url" property="functionUrl" />
+		<result column="sort" property="sort" />
+		<result column="parent_func_id" property="parentFuncId" />
+		<result column="sys_id" property="sysId" />
+		<result column="sort" property="sort" />
+		<result column="active" property="active" />
+		<result column="create_user" property="createUser" />
+		<result column="create_timestamp" property="createDate" />
+		<result column="update_user" property="updateUser" />
+		<result column="update_timestamp" property="updateDate" />
+	</resultMap>
+
+	<parameterMap id="FunctionItemVo" type="com.twfhclife.adm.model.FunctionItemVo"/>
+
+	<sql id="Base_Column_List">
+		function_id,function_name,function_type,function_url,sort,parent_func_id,sys_id,
+		sort,active,create_user,create_timestamp,update_user,update_timestamp
+	</sql>
+
+	<!-- 根據系統別取得所有功能 -->
+	<select id="getAllFuncBySysId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		WITH USER_FUNC_AUTH AS (
+			SELECT
+				CAST(FLOOR(FUNCTION_ID) AS VARCHAR) AS FUNCTION_ID
+				,FUNCTION_NAME
+				,FUNCTION_TYPE
+				,FUNCTION_URL
+				,CAST(FLOOR(SORT) AS VARCHAR) AS SORT
+				,(SELECT SUBSTRING(PARENT_FUNC_ID+'.',1,CHARINDEX('.',PARENT_FUNC_ID+'.')-1)) AS PARENT_FUNC_ID
+				,SYS_ID
+				,ACTIVE
+			FROM
+				ESERVICE_ADM.DBO.FUNCTION_ITEM
+			WHERE
+				ACTIVE = 'Y'
+		)
+		,ALL_SYSTEM_FUNCTION_SORT (LEVEL, FUNCTION_ID, FUNCTION_NAME, FUNCTION_TYPE, FUNCTION_URL, SORT, PARENT_FUNC_ID, ACTIVE, SYS_ID) AS (
+			SELECT 
+				CAST(1 				       AS VARCHAR) AS LEVEL,
+				CAST(FLOOR(b.FUNCTION_ID)  AS VARCHAR) AS FUNCTION_ID,
+				b.FUNCTION_NAME,
+				b.FUNCTION_TYPE,
+				b.FUNCTION_URL,
+				CAST(FLOOR(b.SORT) AS VARCHAR) AS SORT,
+				(SELECT SUBSTRING(b.PARENT_FUNC_ID+'.',1,CHARINDEX('.',b.PARENT_FUNC_ID+'.')-1)) AS PARENT_FUNC_ID,
+				b.ACTIVE,
+				b.SYS_ID
+			FROM ESERVICE_ADM.DBO.FUNCTION_ITEM b
+			WHERE b.ACTIVE = 'Y'
+				AND b.FUNCTION_ID IN (SELECT FUNCTION_ID FROM USER_FUNC_AUTH)
+				AND b.PARENT_FUNC_ID  = #{sysId}
+				
+			UNION ALL
+				
+			SELECT 
+				CAST(PARENT.LEVEL + 1	        AS VARCHAR) AS LEVEL, 
+				CAST(FLOOR(CHILD.FUNCTION_ID)	AS VARCHAR) AS FUNCTION_ID, 
+				CHILD.FUNCTION_NAME, 
+				CHILD.FUNCTION_TYPE, 
+				CHILD.FUNCTION_URL,  
+				CAST(FLOOR(CHILD.SORT) AS VARCHAR) AS SORT,
+				(SELECT SUBSTRING(CHILD.PARENT_FUNC_ID+'.',1,CHARINDEX('.',CHILD.PARENT_FUNC_ID+'.')-1)) AS PARENT_FUNC_ID,
+				CHILD.ACTIVE,
+				CHILD.SYS_ID
+			FROM ESERVICE_ADM.DBO.FUNCTION_ITEM AS CHILD
+			JOIN ALL_SYSTEM_FUNCTION_SORT AS PARENT ON PARENT.FUNCTION_ID = CHILD.PARENT_FUNC_ID
+		) 
+		SELECT
+			ft.function_id
+			,ft.function_name
+			,ft.function_type
+			,ft.function_url
+			,ft.sort
+			,ft.parent_func_id
+			,ft.sys_id
+			,ft.active
+		FROM ALL_SYSTEM_FUNCTION_SORT ft
+		ORDER BY FUNCTION_ID, SORT
+	</select>
+	
+	<!-- 新增系統 -->
+	<insert id="addSystem">
+		INSERT
+			INTO
+				ESERVICE_ADM.DBO.SYSTEMS(
+					SYS_ID,
+					SYS_NAME,
+					CREATE_USER,
+					CREATE_TIMESTAMP
+				)
+			VALUES
+				(
+					#{systemsVo.sysId,jdbcType=VARCHAR}
+					,#{systemsVo.sysName,jdbcType=VARCHAR}
+					,#{systemsVo.createUser,jdbcType=VARCHAR}
+					,getdate()
+				)
+	</insert>
+	
+	<!-- 新增功能節點 -->
+	<insert id="addFunctionItem">
+		INSERT
+			INTO
+				ESERVICE_ADM.DBO.FUNCTION_ITEM(
+					FUNCTION_ID
+					,FUNCTION_NAME
+					,FUNCTION_TYPE
+					,FUNCTION_URL
+					,SORT
+					,PARENT_FUNC_ID
+					,SYS_ID
+					,CREATE_USER
+					,CREATE_TIMESTAMP
+					,UPDATE_USER
+					,UPDATE_TIMESTAMP
+				)
+			VALUES
+				(
+					(SELECT MAX(FUNCTION_ID) + 1 FROM ESERVICE_ADM.DBO.FUNCTION_ITEM)
+					,#{functionVo.functionName,jdbcType=VARCHAR}
+					,#{functionVo.functionType,jdbcType=VARCHAR}
+					,#{functionVo.functionUrl,jdbcType=VARCHAR}
+					,#{functionVo.sort,jdbcType=NUMERIC}
+					,#{functionVo.parentFuncId,jdbcType=VARCHAR}
+					,#{functionVo.sysId,jdbcType=VARCHAR}
+					,#{functionVo.createUser,jdbcType=VARCHAR}
+					,getdate()
+					,#{functionVo.updateUser,jdbcType=VARCHAR}
+					,getdate()
+				)
+	</insert>
+	
+	<!-- 更新功能節點 -->
+	<update id="updateFunctionItem">
+		UPDATE
+			ESERVICE_ADM.DBO.FUNCTION_ITEM
+		SET
+			FUNCTION_NAME = #{functionVo.functionName,jdbcType=VARCHAR}
+			,FUNCTION_TYPE = #{functionVo.functionType,jdbcType=VARCHAR}
+			,FUNCTION_URL = #{functionVo.functionUrl,jdbcType=VARCHAR}
+			,SORT = #{functionVo.sort,jdbcType=NUMERIC}
+			,UPDATE_USER = #{functionVo.updateUser,jdbcType=VARCHAR}
+			,UPDATE_TIMESTAMP = getdate()
+		WHERE
+			FUNCTION_ID = #{functionVo.functionId,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 刪除功能節點 -->
+	<delete id="deleteFunctionItem">
+		DELETE FROM ESERVICE_ADM.DBO.FUNCTION_ITEM WHERE FUNCTION_ID = #{functionId}
+	</delete>
+	
+	<!-- 取得目前有設定的系統別 -->
+	<select id="getUnionSysId" resultType="string">
+		SELECT DISTINCT SYS_ID FROM ESERVICE_ADM.DBO.FUNCTION_ITEM
+	</select>
+
+</mapper>

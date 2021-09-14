@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.BankInfoDao">
+
+	<resultMap id="BankInfoMap" type="com.twfhclife.eservice.onlineChange.model.BankInfoVo" >
+		<result column="BANK_ID" property="bankId"/>
+		<result column="BRANCH_ID" property="branchId"/>
+		<result column="BANK_NAME" property="bankName"/>
+		<result column="BRANCH_NAME" property="branchName"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		BANK_ID,BRANCH_ID,BANK_NAME,BRANCH_NAME
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="bankInfoVo.bankId != null and bankInfoVo.bankId != ''"> AND BANK_ID = #{bankInfoVo.bankId} </if>
+			<if test="bankInfoVo.branchId != null and bankInfoVo.branchId != ''"> AND BRANCH_ID = #{bankInfoVo.branchId} </if>
+			<if test="bankInfoVo.bankName != null and bankInfoVo.bankName != ''"> AND BANK_NAME = #{bankInfoVo.bankName} </if>
+			<if test="bankInfoVo.branchName != null and bankInfoVo.branchName != ''"> AND BRANCH_NAME = #{bankInfoVo.branchName} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND BANK_ID = #{bankInfoVo.bankId}
+			AND BRANCH_ID = #{bankInfoVo.branchId}
+		</where>
+	</sql>
+	
+	<!-- 取得銀行資訊查詢結果 -->
+	<select id="getBankInfo" resultMap="BankInfoMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.BANK_INFO
+		<include refid="whereClause" />
+	</select>
+
+</mapper>

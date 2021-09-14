@@ -1,0 +1,84 @@
+<tr class="detail-row even open" role="row">
+    <td colspan="7">
+        <div class="table-detail">
+            <div class="row" style="background-color: #fff; border-bottom: none">
+                <div class="col-xs-12 col-sm-11">
+                    <div class="space visible-xs"></div>
+                    <div class="profile-user-info profile-user-info-striped">
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請日期</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData['TRANS_DATE']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請項目</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData['TRANS_TYPE_NAME']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請狀態</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData['STATUS_NAME']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">保單號碼</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData['SHOW_POLICY_NO']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請資訊</div>
+                            <div class="profile-info-value">
+                                <span>
+                                    <table class="table  table-bordered table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <th>列印格式</th>
+                                                <th>收件方式</th>
+                                                <th>收件地址</th>
+                                                <th>電子郵件信箱</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <th:block th:if="${detailData['LANG'] eq 'C'}">中文</th:block>
+                                                    <th:block th:if="${detailData['LANG'] eq 'E'}">英文</th:block>
+                                                </td>
+                                                <td>
+                                                    <th:block th:if="${detailData['DELIVER_TYPE'] eq 'P'}">紙本</th:block>
+                                                    <th:block th:if="${detailData['DELIVER_TYPE'] eq 'E'}">電子郵件信箱</th:block>
+                                                </td>
+                                                <td><th:block th:text="${detailData['DELIVER_ADDR']}"/></td>
+                                                <td><th:block th:text="${detailData['BELIVER_MAIL']}"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-1">
+                    <th:block th:if="${detailData['STATUS_TYPE']} == '0'">
+                    <button
+                        class="pull-right btn btn-sm btn-primary btn-white btn-round"
+                        type="button" th:onclick="'javascript:review(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+                        已審核<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                    </button>
+                    <br/>
+                    <br/>
+                    <button
+                        class="pull-right btn btn-sm btn-primary btn-white btn-round"
+                        type="button" th:onclick="'javascript:resend(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+                        待補件<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                    </button>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

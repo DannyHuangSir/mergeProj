@@ -1,0 +1,104 @@
+<tr class="detail-row even open" role="row">
+	<td colspan="8">
+		<div class="table-detail">
+			<div class="row">
+
+				<div class="col-xs-12 col-sm-11">
+					<div class="space visible-xs"></div>
+
+					<div class="profile-user-info profile-user-info-striped">																	
+						
+						
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 查詢歷程資料 </div>
+
+							<div class="profile-info-value">
+								<button style="width: 90px;" type="button" class="bgGreen"  th:onclick="'javascript:onStatus(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'\');'">狀態歷程</button>
+								<button style="width: 90px;" type="button" class="bgGreen" th:onclick="'javascript:onAlliance(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CASE_ID']} + '\',\'\',\'\');'">聯盟鏈歷程</button>
+								<th:block th:if="${detailData['STATUS'] != '2'}">
+									<button style="width: 90px;" type="button" class="bgOrange" th:onclick="'javascript:onDnsAudit(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">已完成</button>
+								</th:block>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default profile-user-info">
+						<div class="panel-heading">※ 申請資料</div>
+						<div class="panel-body clear1">
+ 
+						<div class="mycigna3">
+							<div class="detailPolicy">
+								<div class="form-horizontal">
+									<div class="form-group">
+										<div class="col-sm-3">申請編號： </div>
+										<div class="col-sm-8" th:text="${detailData['TRANS_NUM']}"></div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3">工作編號： </div>
+										<div class="col-sm-8" th:text="${detailData['JOB_ID']}"></div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3">CASE ID： </div>
+										<div class="col-sm-8" th:text="${detailData['CASE_ID']}"></div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3">被保險人身分證字號： </div>
+										<div class="col-sm-8" th:text="${detailData['IDNO']}"></div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3">被保險人姓名： </div>
+										<div class="col-sm-8"  th:text="${detailData['NAME']}"></div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-sm-3">
+											<label for="" clasee="col-sm-3">出生年月日：</label>
+										</div>
+										<div class="col-sm-8"  th:text="${detailData['BIRDATE']}"></div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3">
+											<label for="" clasee="col-sm-3">主保單號碼：</label>
+										</div>
+										<div class="col-sm-8" th:text="${detailData['INSNOM']}"> </div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3">
+											<label for="" clasee="col-sm-3">性別：</label>
+										</div>
+										<div class="col-sm-8" th:text="${detailData['SEX_NAME']}">  </div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3" style="padding-right: 20px;">
+											<label for="" clasee="col-sm-3">身故原因：</label>
+										</div>
+										<div class="col-sm-8" th:text="${detailData['CON_NAME']}"> </div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3" style="padding-right: 10px;">
+											<label for="" clasee="col-sm-3">身故日期</label>
+										</div>
+										<div class="col-sm-8" th:text="${detailData['CONDATE']}"> </div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-3" style="padding-right: 10px;">
+											<label for="" clasee="col-sm-3">通知日期與時間</label>
+										</div>
+										<div class="col-sm-8" th:text="${detailData['CREATE_DATE']}">  </div>
+									</div>
+								</div>
+							</div>
+				
+						</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			
+				
+			</div>
+			
+		</div>
+	</td>
+</tr>

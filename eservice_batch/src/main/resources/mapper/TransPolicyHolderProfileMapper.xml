@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransPolicyHolderProfileMapper">
+
+	<resultMap id="TransPolicyHolderProfileMap" type="com.twfhclife.eservice_batch.model.TransPolicyHolderProfileVo" >
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="COUNTRY" property="country"/>
+		<result column="COUNTRY_DESC" property="countryDesc"/>
+		<result column="COUNTRY_LIVE" property="countryLive"/>
+		<result column="COUNTRY_LIVE_DESC" property="countryLiveDesc"/>
+		<result column="HAS_ADDRESS_IN_TAIWAN" property="hasAddressInTaiwan"/>
+		<result column="JOB_B" property="jobB"/>
+		<result column="JOB_M" property="jobM"/>
+		<result column="JOB_S" property="jobS"/>
+		<result column="JOB_B_DESC" property="jobBDesc"/>
+		<result column="JOB_M_DESC" property="jobMDesc"/>
+		<result column="JOB_S_DESC" property="jobSDesc"/>
+		<result column="COMPANY_NAME" property="companyName"/>
+		<result column="JOB_TITLE" property="jobTitle"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		TRANS_NUM,COUNTRY,COUNTRY_DESC,COUNTRY_LIVE,COUNTRY_LIVE_DESC,HAS_ADDRESS_IN_TAIWAN,JOB_B,JOB_M,JOB_S,JOB_B_DESC,JOB_M_DESC,JOB_S_DESC,COMPANY_NAME,JOB_TITLE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transPolicyHolderProfileVo.transNum != null and transPolicyHolderProfileVo.transNum != ''"> AND TRANS_NUM = #{transPolicyHolderProfileVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得保戶基本資料更新查詢結果 -->
+	<select id="getPolicyHolderProfileList" resultMap="TransPolicyHolderProfileMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_POLICY_HOLDER_PROFILE
+		<include refid="whereClause" />
+		ORDER BY TRANS_NUM DESC
+	</select>
+	
+	<select id="getOldJobByTransNum" resultMap="TransPolicyHolderProfileMap">
+		SELECT 
+		    B1.HATB_TJOB_NAME + '(' + J.HATJ_TJOB_B + ')' JOB_B , 
+		    B2.HATB_TJOB_NAME + '(' + J.HATJ_TJOB_M + ')'  JOB_M, 
+		    B3.HATB_TJOB_NAME + '(' + J.HATJ_TJOB_S + ')'  JOB_S,
+		    N.NATN_CODE COUNTRY,
+		    N.NATN_STATE + ',' + N.NATN_CH_ABBR + '(' + N.NATN_EN_ABBR + ')' COUNTRY_DESC
+		FROM ESERVICE.DBO.LIHATJ_ES J
+		JOIN ESERVICE.DBO.LIHATB_ES B1 ON B1.HATB_TJOB_B = J.HATJ_TJOB_B AND B1.HATB_TJOB_S = '****' 
+		JOIN ESERVICE.DBO.LIHATB_ES B2 ON B2.HATB_TJOB_M = J.HATJ_TJOB_M AND B2.HATB_TJOB_S = '0000' AND B2.HATB_TJOB_B = B1.HATB_TJOB_B
+		JOIN ESERVICE.DBO.LIHATB_ES B3 ON B3.HATB_TJOB_S = J.HATJ_TJOB_S AND B3.HATB_TJOB_M = B2.HATB_TJOB_M AND B3.HATB_TJOB_B = B1.HATB_TJOB_B
+		JOIN ESERVICE.DBO.LIPMDA_ES P ON (P.PMDA_INSU_TYPE + cast(P.PMDA_INSU_GRP_NO as NVARCHAR(1)) + P.PMDA_INSU_SEQ_NO ) = J.HATJ_INSU_NO
+		JOIN ESERVICE.DBO.LINATN_ES N ON N.NATN_CODE = P.PMDA_PM_NATION
+		JOIN ESERVICE.DBO.TRANS_POLICY TP ON TP.POLICY_NO = J.HATJ_INSU_NO
+		WHERE TP.TRANS_NUM = #{transNum}
+		AND J.HATJ_ADD_CODE = '00'
+		AND J.HATJ_RELB = '0'
+	</select>
+
+</mapper>

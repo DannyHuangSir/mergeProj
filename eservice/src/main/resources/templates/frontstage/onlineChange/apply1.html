@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>線上申請｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+    <div th:replace="fragments/header :: top"></div>
+    <header th:replace="fragments/header :: header"></header>
+    <th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+    <!--major 3 tabs-->
+    <div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+    <section class="grey applyIndex fullContent">
+        <div class="container bg3 box-border">
+            <div class="col-sm-12 a1 marginBottom30">
+                <h2><i class="fas fa-globe-americas fa-lg"></i> 一鍵申請，電子化環保愛地球</h2>
+            	<th:block th:if="${loginUserType eq 'member' or loginUserType eq 'admin'}">
+                <div class="pull-right">
+                    <a href="apply2">
+                        <button id="check1" class="btn-login">我的申請紀錄 <i class="fas fa-chevron-right"></i></button>
+                    </a>
+                </div>
+                </th:block>
+            </div>
+            <div class="clearfix"></div>
+            <th:block th:if="${loginUserType eq 'member' or loginUserType eq 'admin'}">
+            <div id="preservationCategory" class="apply1">
+                <div class="my1 center1 ">
+                    <i class="far fa-edit fa-lg"></i> 保全類別
+                </div>
+                <a href="paymentMode1" id="useControl">
+                    <div class="col-sm-6 center1 gradient no-borderRight">
+                        <h3>繳別</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30001']}"/></p>
+                    </div>
+                </a>
+                <a href="annuityPayMethod1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>年金給付方式</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30002']}"/></p>
+                    </div>
+                </a>
+                <a href="chooseBonus1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>紅利選擇權</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30003']}"/></p>
+                    </div>
+                </a>
+                <a href="returnBonus1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>增值回饋金領取方式</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30004']}"/></p>
+                    </div>
+                </a>
+ <!--                <a href="policyAutopay1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>自動墊繳選擇權</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30005']}"/></p>
+                    </div>
+                </a>
+                <a href="beneficiary1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>受益人</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30006']}"/></p>
+                    </div>
+                </a>
+                <a href="renew1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>展期定期保險/減額繳清保險</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30007']}"/></p>
+                    </div>
+                </a>
+                <a href="paymentReduce1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>減少保險金額</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30008']}"/></p>
+                    </div>
+                </a> -->
+                <a href="changeContact1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>聯絡資料變更暨保全聯盟鏈</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30009']}"/></p>
+                    </div>
+                </a>
+                <a href="valuePrint1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>保單價值列印</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30011']}"/></p>
+                    </div>
+                </a>
+                <a href="certificatePrint1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>投保證明列印</h3>                       
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30012']}"/></p>                       
+                    </div>
+                </a>
+               
+              <!--   <a href="policyResend1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>補發保單</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30013']}"/></p>
+                    </div>
+                </a>
+                <a href="riskLevel1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>投資風險屬性設定</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30027']}"/></p>
+                    </div>
+                </a> -->
+                <a href="policyHolderProfile1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>保戶基本資料更新</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30028']}"/></p>
+                    </div>
+                </a>
+         <!--        <a href="fundSwitch1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>變更投資標的及配置比例</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30029']}"/></p>
+                    </div>
+                </a> -->
+                <div class="clearfix"></div>
+            </div>
+             <div id="investmientCategory" class="apply1">
+                <div class="my1 center1 ">
+                    <i class="fas fa-dolly-flatbed fa-lg"></i> 投資類別
+                </div>
+                <a href="investment1">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>未來保費投資標的與分配比例</h3>
+                        <p>
+                        <th:block th:text="${onlineChangeHome['WORDING_30026']}"/>
+                        </p>
+                    </div>
+                </a>
+                <a href="fund1">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>已持有投資標的轉換</h3>
+                        <p>
+                            <th:block th:text="${onlineChangeHome['WORDING_30027']}"/>
+                        </p>
+                    </div>
+                </a>
+                <a href="attribute1">
+                     <div class="col-sm-6 center1 gradient">
+                         <h3>變更風險屬性</h3>
+                         <p>
+                             可變更個人投資風險屬性
+                             <!-- <th:block th:text="${onlineChangeHome['WORDING_30017']}"/>-->
+                         </p>
+                     </div>
+                </a>
+                <a href="deposit1">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>保單提領(贖回)</h3>
+                        <p>
+                            <th:block th:text="${onlineChangeHome['WORDING_30028']}"/>
+                        </p>
+                    </div>
+                </a>
+                <a href="notification1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>設定停利停損通知</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30029']}"/></p>
+                    </div>
+                </a>
+                <a href="cashPayment1">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>收益分配或撥回資產分配方式</h3>
+                        <p>
+                            <th:block th:text="${onlineChangeHome['WORDING_30030']}"/>
+                        </p>
+                    </div>
+                </a>
+                <div class="clearfix"></div>
+            </div>
+            <div id="premiumCategory" class="apply1">
+                <div class="my1 center1 ">
+                    <i class="fas fa-donate fa-lg"></i> 保費類別
+                </div>
+       <!--          <a href="paymentMethod1" id="useControl">
+                    <div class="col-sm-6 center1 gradient no-borderRight">
+                        <h3>收費管道</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30018']}"/></p>
+                    </div>
+                </a> -->
+                <a href="paymentCardDate1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>信用卡有效年月</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30019']}"/></p>
+                    </div>
+                </a>
+                <a href="cancelAuth1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>終止授權</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30017']}"/></p>
+                    </div>
+                </a>
+                <a href="changePremium1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>定期超額保費</h3>
+                        <p>彈性保費</p>
+                        <!-- <p><th:block th:text="${onlineChangeHome['WORDING_30017']}"/></p> -->
+                    </div>
+                </a>
+                
+                <div class="clearfix"></div>
+            </div>
+            <div id="benefitCategory" class="apply1">
+                <div class="my1 center1 ">
+                    <i class="fas fa-dollar-sign fa-lg"></i> 給付類別
+                </div>
+                <a  class="benefitCategory" href="cancelContract1" id="useControl">
+                    <div class="col-sm-6 center1 gradient no-borderRight hide">
+                        <h3>解約</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30020']}"/></p>
+                    </div>
+                </a>
+     <!--            <a class="benefitCategory" href="surrender1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>紅利(儲存生息)/增值之提領</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30021']}"/></p>
+                    </div>
+                </a> -->
+                <a class="benefitCategory" href="" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-container-ConfirmLoan" 
+                	onclick="$('#cnt').html('此為要、被保人同一人且已有指定帳號者之線上申請，故要、被保人不同者請至另一網頁申請。');$('#ln1').hide();$('#lnNew1').show();">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>保單貸款(已申請指定帳號)</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30031']}"/></p>
+                    </div>
+                </a>
+   <!--              <a class="benefitCategory" href="claim1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>理賠</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30014']}"/></p>
+                    </div>
+                </a> -->
+                <a class="benefitCategory" href="" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-container-ConfirmLoan"
+                	onclick="$('#cnt').html('要、被保人同一人且已有指定帳號者，無法在此網頁申請。');$('#lnNew1').hide();$('#ln1').show();">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>保單貸款(未申請指定帳號)</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30022']}"/></p>
+                    </div>
+                </a>
+<!--                 <a class="benefitCategory"  href="maturity1" id="useControl"> -->
+<!--                     <div class="col-sm-6 center1 gradient"> -->
+<!--                         <h3>滿期</h3> -->
+<!--                         <p><th:block th:text="${onlineChangeHome['WORDING_30015']}"/></p> -->
+<!--                     </div> -->
+<!--                 </a> -->
+                <a class="benefitCategory"  href="changePayAcct1" id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>匯款帳號新增/變更</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30016']}"/></p>
+                    </div>
+                </a>
+                <a href="policyClaims1" id="useControl" name="policyClaims" onclick="checkUsed();return false;">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>保單理賠</h3>
+                        <p>本公司理賠及轉送其它公司</p>
+                    </div>
+                </a>
+                <div class="clearfix"></div>
+            </div>
+            </th:block>
+            
+            
+            <!-- <div id="travelCategory" class="apply1">
+                <div class="my1 center1 ">
+                    <i class="fas fa-luggage-cart fa-lg"></i> 旅平險申請
+                </div>
+                <a href="#" onclick="window.open('travelPolicy1')">
+                    <div class="col-sm-6 center1 gradient no-borderRight">
+                        <h3>旅平險申請</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30023']}"/></p>
+                    </div>
+                </a>
+                <a href="">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                </a>
+                <div class="clearfix"></div>
+            </div> -->
+            <div id="baseInfoCategory" class="apply1">
+                <div class="my1 center1 " style="background-color: #D26900">
+                    <i class="far fa-address-card fa-lg"></i> 會員登入之基本資料變更
+                </div>
+                <a href="changeInfo1">
+                    <div class="col-sm-6 center1 gradient no-borderRight">
+                        <h3>變更會員基本資料</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30024']}"/></p>
+                    </div>
+                </a>
+                <a href="changePassword1">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>變更會員密碼</h3>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_30025']}"/></p>
+                    </div>
+                </a>
+                <div class="clearfix"></div>
+            </div>
+            
+        </div>
+    </section>
+	
+    <div class="modal fade in" id="modal-container-ConfirmLoan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content lock-up">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body apply2 center1 grey2">
+                    <p class="item360 text-center" style="margin:auto" id="cnt"></p> 
+                    <p class="marginTop20">
+                        <a>
+                        	<button class="btn-login lock2" id="deny" data-dismiss="modal">取消</button>
+                            <button class="btn-login lock2" onclick="window.location.href='loan1'" id="ln1" data-dismiss="modal">確定</button>
+                            <button class="btn-login lock2" onclick="window.location.href='loanNew1'" id="lnNew1" data-dismiss="modal">確定</button>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade in" id="confirmPoPModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content lock-up">
+                <div class="modal-header">
+                    <button type="button"  class="close" onclick="window.location.href='/eservice/apply1'" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body apply2 center1 grey2">
+                    <h4 id="popMsg">
+                        
+                    </h4>
+                    
+                    <p class="marginTop20">
+                        <a href="apply1.html">
+                            <button class="btn-login lock2" id="bindFbIdBtn">取消</button>
+                        </a>
+                        <a href="apply1.html">
+                            <button class="btn-login lock2" id="joinBtn">確定</button>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <footer th:replace="fragments/footer"></footer>
+    <th:block th:replace="fragments/script"/>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+        $(function(){
+            var identity = JSON.parse(sessionStorage.getItem('identity'));
+            if (identity != null && identity.lilipi == false) {
+                $("a[name='policyClaims']")[0].hidden = true
+            }
+            if (identity != null && identity.lilipm == false) {
+                $("#preservationCategory").hide();
+                $("#premiumCategory").hide();
+                $("#investmientCategory").hide();
+                $("#benefitCategory").find('.benefitCategory').hide();
+                $("#travelCategory").hide();
+                //$("#baseInfoCategory").hide();
+            }
+            var errorMeg = $('#E0088').val();
+        	var canUse = /*[[${canUseFlag}]]*/;
+        	var onlinechangeEnableEntry = /*[[${onlinechangeEnableEntry}]]*/;
+        	if(canUse != 'Y'){
+	        	$('a#useControl').click(function(){
+	        		// add 當按下確認關閉 loading 動畫
+	        		/* openAlert("目前無法使用此功能，請臨櫃申請線上服務。", 'javascript:removeLoading();'); */
+	        		openAlert(errorMeg, 'javascript:removeLoading();');
+	        		return false;
+	        	});
+        	} else {
+        		$('a#useControl').click(function(){
+            		var action = this.href.substr(this.href.lastIndexOf("/") + 1);
+	        		if (onlinechangeEnableEntry.indexOf(action) == -1) {
+		        		openAlert(errorMeg, 'javascript:removeLoading();');
+	        			return false;
+	        		}
+	        	});
+            }
+        	// 插入跳轉 loading 動畫
+        	$('.apply1 a[href != ""][href != "#"]').on('click', function(){
+        		// 排除新開頁面(旅平險)、沒有跳轉對象連結
+        		popupLoading();
+        	});
+        });
+        function checkUsed(){
+            var data = {
+					idNo :  /*[[${session.KEYCLOAK_USER.rocId}]]*/,
+				}
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/checkBackList}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						if (response.result == 'SUCCESS') {
+                            window.location.href="/eservice/policyClaims1";
+						} else {
+							$('#confirmPoPModal').modal({
+                                show: true,
+                                backdrop: 'static', 
+                                keyboard: false
+                            });
+                            if (response.resultMsg != null) {
+                                $('#popMsg').html(response.resultMsg);
+                            }
+						}
+					},
+					error :function() {
+						alertMsg("更新失敗!");
+					}
+				});
+        }
+    /*]]>*/
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,221 @@
+<tr class="detail-row even open" role="row" xmlns:th="http://www.w3.org/1999/xhtml">
+    <td colspan="7">
+        <div class="table-detail">
+            <div class="row" style="background-color: #fff; border-bottom: none">
+                <div class="col-xs-12 col-sm-11">
+                    <div class="space visible-xs"></div>
+                    <div class="profile-user-info profile-user-info-striped">
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">聯盟鏈申請狀態</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['CHAIN_STATUS_STR']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">紙本接收狀態</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['RECEIVE_PAPER_STR']}"/></span>
+                            </div>
+                        </div>
+
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請日期</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData['TRANS_DATE']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請項目</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData['TRANS_TYPE_NAME']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請狀態</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData['STATUS_NAME']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">保單號碼</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData['SHOW_POLICY_NO']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">被保人姓名</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_INSURED_NAME']}" /></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">授權傳送公司</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['CHAIN_TO_STR']}"/></span>
+                            </div>
+                        </div>
+                        <!---->
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">身分證號碼</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['ROC_ID']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">生日</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['BIRDATE']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">電話</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_PHONE']}"/></span>
+                            </div>
+                        </div>
+
+<!--                        <div class="profile-info-row">-->
+<!--                            <div class="profile-info-name">手機</div>-->
+<!--                            <div class="profile-info-value">-->
+<!--                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_MOBILE']}"/></span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">郵遞區號</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['ZIPCODE']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">地址</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_ADDRESS_DESC']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">信箱</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_MAIL']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">銀行</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['BANK_NAME']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">分行</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['BRANCH_NAME']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">帳號</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_BANK_ACCOUNT']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">匯款帳戶</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_ACCOUNT_NAME']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">職業</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_JOB']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">發生日</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['ACCIDENT_DATE']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">發生時間</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['ACCIDENT_TIME']}"/></span>
+                            </div>
+                        </div>
+
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">種類</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['ACCIDENT_CAUSE_STR']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">地點</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_ACCIDENT_LOCATION']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">補充說明</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_ACCIDENT_DESCR']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">員警姓名</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_POLICE_NAME']}"/></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">員警電話</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['DE_POLICE_PHONE']}"/></span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-1">
+                    <th:block th:if="${detailData} != null and ${detailData['CHAIN_STATUS'] eq '1'} and ${detailData['STATUS_NAME'] eq '處理中'}">
+	                    <button
+	                        class="pull-right btn btn-sm btn-primary btn-white btn-round"
+	                        type="button" th:onclick="'javascript:updateChainStatus(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CHAIN_STATUS']} + '\',\'' + ${detailData['RECEIVE_PAPER']} + '\');'">
+	                        上傳公會<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+	                    </button>
+                    </th:block>
+                    <br/>
+                    <br/>
+                    <th:block th:if="${detailData} != null and ${detailData['RECEIVE_PAPER'] eq '0'} and ${detailData['STATUS_NAME'] eq '處理中'}">
+                        <button
+                                class="pull-right btn btn-sm btn-primary btn-white btn-round"
+                                type="button" th:onclick="'javascript:updateReceivePaper(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CHAIN_STATUS']} + '\',\'' + ${detailData['RECEIVE_PAPER']} + '\');'">
+                            接收紙本<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                        </button>
+                    </th:block>
+
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

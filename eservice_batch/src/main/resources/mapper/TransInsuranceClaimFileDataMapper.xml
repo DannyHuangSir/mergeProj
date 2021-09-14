@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransInsuranceClaimFileDataMapper">
+
+	<resultMap id="TransInsuranceCliamFileDataResultMap" type="com.twfhclife.eservice_batch.model.TransInsuranceClaimFileDataVo">
+		<result property="fdId"   column="FD_ID" />
+		<result property="claimsSeqId" column="CLAIMS_SEQ_ID" />
+		<result property="type"        column="TYPE" />
+		<result property="fileName"    column="FILE_NAME" />
+		<result property="path"        column="PATH" />
+		<result property="transNum"    column="TRANS_NUM" />
+		<result property="ezAcquireTaskId" column="EZ_ACQUIRE_TASK_ID" />
+		<result property="policyNo"    column="POLICY_NO" />
+		<result property="lipiId"      column="LIPI_ID" />
+		<result property="lipmId"      column="LIPM_ID" />
+	</resultMap>
+	
+	<select id="queryTransInsuranceClaimFileDataVo" resultMap="TransInsuranceCliamFileDataResultMap" parameterType="com.twfhclife.eservice_batch.model.TransInsuranceClaimFileDataVo">
+		select a.FD_ID,a.CLAIMS_SEQ_ID,a.TYPE,a.FILE_NAME,a.PATH,a.RFE_ID,b.TRANS_NUM, b.POLICYNO, ESERVICE.DBO.FN_DEBASE64(b.ID_NO) as LIPI_ID
+		from ESERVICE.dbo.TRANS_INSURANCE_CLAIM_FILEDATAS as a, 
+			 ESERVICE.dbo.TRANS_INSURANCE_CLAIM as b, 
+			 ESERVICE.dbo.TRANS c
+		where a.EZ_ACQUIRE_TASK_ID is null
+		and a.CLAIMS_SEQ_ID=b.CLAIMS_SEQ_ID
+		and b.TRANS_NUM=c.TRANS_NUM
+		and c.TRANS_TYPE='INSURANCE_CLAIM'
+		and c.STATUS in ('-1','0','8','2')
+	</select><!-- STATUS='2'補送影像件用 -->
+
+	<update id="updateEzAcquireTaskId" parameterType="com.twfhclife.eservice_batch.model.TransInsuranceClaimFileDataVo">
+		update ESERVICE.dbo.TRANS_INSURANCE_CLAIM_FILEDATAS
+		set EZ_ACQUIRE_TASK_ID = #{vo.ezAcquireTaskId}
+		where FD_ID = #{vo.fdId}
+	</update>
+
+
+</mapper>

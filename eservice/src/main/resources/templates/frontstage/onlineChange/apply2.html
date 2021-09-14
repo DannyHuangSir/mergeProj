@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的申請紀錄｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note apply2history fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">我的申請紀錄</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 list1">
+			<div class="mystyle3">
+				<div class="col-xs-12 box-border paddingClear">
+					<div class="tb3 top0 nopd">
+						<i class="foo-business_15 foo-2x"></i> 我的申請紀錄
+						<a data-toggle="collapse" data-target="#collapseBar" aria-expanded="false" aria-controls="collapseBar" class="btn btn-linl">
+							<i class="fa fa-search gray search1"></i>
+						</a>
+					</div>
+					<div id="collapseBar" class="collapse">
+						<form class="form-inline wht" id="collapseSearchBar">
+							<div class="col-md-5 input-inline">
+								<label>申請日期</label>
+								<div>
+									<input id="startDate" type="text" class="datepicker item120" placeholder="YYYY/MM/DD"/> 至
+									<input id="endDate" type="text" class="datepicker item120" placeholder="YYYY/MM/DD"/>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="selector-box w100p">
+									<select id="transStatus" class="selector">
+									</select>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="selector-box w100p">
+									<select id="transType" class="selector">
+									</select>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="selector-box w100p">
+									<select id="policyNolist" class="selector">
+										<option value="">請選擇</option>
+										<th:block th:each="map : ${session.USER_PRODUCT_NAME_LIST}">
+											<option th:value="${map['POLICY_NO']}"><th:block th:text="${map['PRODUCT_NAME']}"/>(<th:block th:text="${map['POLICY_NO']}"/>)</option>
+										</th:block>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-1 text-right">
+								<button id="searchBtn" type="button" class="btn-cancel orange-bg">搜尋</button>
+							</div>
+						</form>
+					</div>
+					<div class="wht">
+						<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+							<thead>
+								<tr class="table2">
+									<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">申請項目</th>
+									<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">保單</th>
+									<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">申請時間</th>
+									<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">申請序號</th>
+									<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">狀態</th>
+									<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6"></th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-12 wht">
+						<nav class="text-center">
+							<ul class="pagination center1">
+								<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>
+								<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>
+								<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>
+							</ul>
+						</nav>
+					</div>
+					<div class="statement1 wht">
+						<p class="text-ps">備註：</p>
+						<ol class="text-ps">
+							<li>※本網頁僅顯示於「保單網路服務」送出的線上申請紀錄</li>
+							<!-- <li>※在您送出線上申請後，系統將自動發送申請進度通知至您的手機號碼/電子信箱：XXXXXXX；如欲更改通知設定，請至「<a href="changeInfo1" class="orange">變更基本資料</a>」申請變更</li> -->
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<!--  警告提示 -->
+	<div class="modal fade in" id="modal-container-deleteConfirm-fail" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 center1 grey2">
+					<h3>提示</h3>
+					<p class="item360 text-center" style="margin:auto">
+						當前批次單號不能進行取消
+					</p>
+					<p class="marginTop20">
+						<a href="#">
+							<button class="btn-login lock2" id="cancelThisApplyFail">是</button>
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--  刪除警告 -->
+	<div class="modal fade in" id="modal-container-deleteConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 center1 grey2">
+					<h3>確定取消申請嗎？</h3>
+					<p class="item360 text-center" style="margin:auto">
+						請再次確認是否要撤銷本次申請？
+					</p>
+					<form method="POST" id="cancelTransForm" action="cancelApplyTrans">
+							<input type="hidden" id="cancelTransType" name="transType" value=""/>
+							<input type="hidden" id="cancelTransNum" name="transNum" value=""/>
+					</form>
+					<p class="marginTop20">
+						<a href="#">
+							<button class="btn-login lock2" id="deny">否</button>
+						</a>
+						<a href="#">
+							<button class="btn-login lock2" id="cancelThisApply">是</button>
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--  end -->
+	<!--  上傳檔案 -->
+	<div class="modal fade in" id="modal-container-addFileConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close closeAdded" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 center1 grey2">
+					<h3>請選擇檔案 <span id="limitTag" style="color:red; size:12px"></span></h3>
+					<form method="POST" id="addFileForm" action="beAddedTrans" enctype="multipart/form-data">
+						<input type="hidden" id="addFileNum" name="transNum" value=""/>
+						<input type="file" class="text-center" name="file1" class="form-control" style="margin-bottom: 1px;"/>
+						<input type="file" class="text-center" name="file2" class="form-control" style="margin-bottom: 1px;"/>
+						<input type="file" class="text-center" name="file3" class="form-control" style="margin-bottom: 1px;"/>
+						<input type="file" class="text-center" name="file4" class="form-control" style="margin-bottom: 1px;"/>
+						<input type="file" class="text-center" name="file5" class="form-control" style="margin-bottom: 1px;"/>
+					</form>
+					<p class="marginTop10">
+						<a href="#">
+							<button class="btn-login lock2" id="denyAdded">取消</button>
+						</a>
+						<a href="#">
+							<button class="btn-login lock2" onclick="addedTransFile()">上傳</button>
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!--  補件 -->
+	<!-- <div class="modal fade in" id="modal-container-addFileConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">完成補件
+					<button type="button" class="close closeAdded" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body clearfix  grey2">
+                	<div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3">申請項目：</label>
+                            <div class="col-sm-9">住院醫療</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">申請序號：</label>
+                            <div class="col-sm-9">WWA144180006</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">通知内容：</label>
+                            <div class="col-sm-9">就醫收據日期及看診醫院與事故描述中的就醫醫院不同，請重新
+                            確認后上傳正確的收據影像，并且列印出補件單后聯通就醫收據正本一并寄回。
+                            </div>
+                        </div>
+                   </div>
+                </div>
+				<div class="modal-body apply2">
+					<th th:replace="policyClaims-supplement"></th>
+				</div>
+
+				<div class="modal-footer grey2">
+                    <a href="#">
+                        <button class="btn-login lock2" id="deny">取消</button>
+                    </a>
+                    <a href="#">
+                        <button class="btn-login lock2" id="go" onclick="onSend()">確認送出</button>
+                    </a>
+                </div>
+			</div>
+		</div>
+	</div> -->
+	<!--狀態歷程-->
+	<div class="modal fade in" id="modal-container-statusConfirm" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header"> 狀態歷程
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body clearfix  grey2">
+					<div class="form-horizontal" style="border-top: 0;">
+						<div class="form-group">
+							<label class="col-xs-3">申請項目：</label>
+							<div class="col-xs-9" id="status_application_items"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3">申請序號：</label>
+							<div class="col-xs-9" id="status_insurance_num"></div>
+						</div>
+				</div>
+				</div>
+				<div class="modal-body clearfix grey2">
+					<div class="tb3 top0 nopd clearfix" style="padding: 5px 0;">
+							<i class="foo-business_15 foo-2x"></i>
+							<a data-toggle="collapse" data-target="#collapseBar2" aria-expanded="false" aria-controls="collapseBar2" class="btn btn-linl">
+								<i class="fa fa-search gray search1" style="color: #DDDDDD;"></i>
+							</a>
+						</div>
+						<div id="collapseBar2" class="collapse">
+							<form class="form-inline wht clearfix" id="status_collapseSearchBar" style="padding: 10px 0;">
+								<div class="col-xs-6 input-inline">
+									<label>申請日期</label>
+									<div style="float: right;">
+										<input style="width: 130px;" type="text" class="datepicker" name="startDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)"> 至
+										<input style="width: 130px;" type="text" class="datepicker" name="endDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)">
+									</div>
+								</div>
+								<div class="col-xs-4">
+									<div class="selector-box w100p">
+										<select class="selector" id="status_select" name="status"> </select>
+									</div>
+								</div>
+								<div class="col-xs-2 text-right">
+									<button type="button" class="btn-cancel orange-bg" onclick="onStatus('','','query')">搜尋</button>
+								</div>
+							</form>
+						</div>
+					<table class="tablesaw" style="background: #FFFFFF;">
+						<thead>
+							<tr>
+								<th>狀態</th>
+								<th>異動時間</th>
+								<th>異動人</th>
+								<th>異動人姓名</th>
+								<th>備注説明</th>
+							</tr>
+						</thead>
+						<tbody id="status_body">						
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--補件單歷程-->
+	<div class="modal fade in" id="modal-container-viewsupplementConfirm" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;"  aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header"> 補件單歷程
+					<button type="button" class="close"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body clearfix  grey2">
+					<div class="form-horizontal" style="border-bottom: 0;">
+						<div class="form-group">
+							<label class="col-xs-3">申請項目：</label>
+							<div class="col-xs-9" id="view_application_items"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3">申請序號：</label>
+							<div class="col-xs-9" id="view_insurance_num"></div>
+						</div>
+				</div>
+				</div>
+				<div class="modal-body clearfix grey2">
+					<div class="tb3 top0 nopd clearfix">
+							<i class="foo-business_15 foo-2x"></i>
+							<a data-toggle="collapse" data-target="#collapseBar1" aria-expanded="false" aria-controls="collapseBar" class="btn btn-linl">
+								<i class="fa fa-search gray search1" style="color: #DDDDDD;"></i>
+							</a>
+						</div>
+						<div id="collapseBar1" class="collapse">
+							<form class="form-inline wht clearfix" id="view_collapseSearchBar" style="padding: 10px 0;">
+								<div class="col-xs-4">
+									<label style="float: left;">補件單號</label>
+									<div class="selector-box"  style="width: 100px;float: right;">
+										<input type="text" style="width:100%" name="attNum"/>
+									</div>
+								</div>
+								<div class="col-xs-6 input-inline">
+									<label>提出時間</label>
+									<div>
+										<input type="text" class="datepicker" name="startDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)"> 至
+										<input type="text" class="datepicker" name="endDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)">
+									</div>
+								</div>
+								
+								<div class="col-xs-2 text-right">
+									<button type="button" class="bgGrey" style="border: 0;padding: 5PX 10PX;" onclick="viewSupplement('','','query')">搜尋</button>
+								</div>
+							</form>
+						</div>
+					<table class="tablesaw" style="background: #FFFFFF;">
+						<thead>
+							<tr>
+								<th>補件單號</th>
+								<th>提出時間</th>
+								<th>回應時間</th>
+								<th>補件單内容</th>
+								<th>補件審查狀態</th>
+							</tr>
+						</thead>
+						<tbody id="view_body">
+							<!-- <tr>
+								<td>ADD001</td>
+								<td>2020/12/22 13:00</td>
+								<td>2020/12/22 13:20</td>
+								<td>
+									<button type="button" onclick="viewSupplementDetil()" style="position: relative;">
+										查看
+										<i class="foo-warning"></i>
+									</button>
+								</td>
+								<td>處理中</td>
+							</tr> -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--查看補件單-->              
+	<div class="modal fade in" id="modal-container-viewsupplementdetilConfirm" role="dialog" aria-labelledby="myModalLabel"  style="z-index: 111111;" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">查看補件單
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body clearfix  grey2">
+					<div class="form-horizontal" style="border-bottom: 0;">
+						<div class="form-group">
+							<label class="col-xs-3">補件單號：</label>
+							<div class="col-xs-9" id="rfe_id"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3">補件狀態：</label>
+							<div class="col-xs-9" id="rfe_status"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3">提出時間：</label>
+							<div class="col-xs-9" id="rfe_s_date"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3">回應時間：</label>
+							<div class="col-xs-9" id="rfe_e_date"></div>
+						</div>
+				</div>
+				</div>
+				<div class="modal-body clearfix">
+					<!-- <div class="profile-user-info profile-user-info-striped" style="border-bottom: 1px solid #DDDDDD;padding-bottom: 10px;">
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 執行審核 </div>
+
+							<div class="profile-info-value">
+								<button type="button" class="bgOrange">核可補件</button>
+								<button type="button" class="bgOrange">駁回補件</button>
+							</div>
+						</div>
+					</div> -->
+					<div class="form-horizontal">
+						<div class="mobile-toggle colorGreen" data-toggle="true">
+							<i class="fa hid2 foo-angle-up mobile"></i>
+							<i class="fa foo-angle-up hid1"></i>^ 通知内容
+						</div>
+						<div class="mobile-toggle-panel">
+							<div class="form-group">
+								<label class="col-xs-3">説明内容：</label>
+								<div class="col-xs-9" id="rfe_request_con">
+									
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">通知方式：</label>
+								<div class="col-xs-9">
+								E-MAIL
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="form-horizontal">
+						<div class="mobile-toggle colorGreen" data-toggle="true">
+							<i class="fa hid2 foo-angle-up mobile"></i>
+							<i class="fa foo-angle-up hid1"></i>^ 回應説明
+						</div>
+						<div class="mobile-toggle-panel">
+							<div class="form-group">
+								<label class="col-xs-3">説明内容：</label>
+								<div class="col-xs-9" id="rfe_response_con">
+								
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<div class="form-horizontal">
+						<div class="mobile-toggle colorGreen" data-toggle="true">
+							<i class="fa hid2 foo-angle-up mobile"></i>
+							<i class="fa foo-angle-up hid1"></i>^ 上傳補充附件
+						</div>
+						<div class="mobile-toggle-panel" id="ref_file_data">
+						
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer grey2">
+					<a href="#" data-dismiss="modal" aria-label="Close">
+						<button type="button" class="bgGrey lock2" id="deny">關閉視窗</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 申請明細 -->
+	<div class="modal fade in" id="modal-iframe-container" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header"><span id="transTypeStr">申請明細</span>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body center1 grey2 clearfix">
+					<div id="transDetailScroll" style="overflow-y: scroll">
+						<div id="transDetailDiv"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/script"/>
+	<script src="js/tablepand.js"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var grid1;
+	var detailUrlMap = {
+		'PAYMODE': /*[[@{/getTransPaymodeDetail}]]*/,
+		'ANNUITY_METHOD': /*[[@{/getTransAnnuityMethodDetail}]]*/,
+		'BONUS': /*[[@{/getTransBounsDetail}]]*/,
+		'REWARD': /*[[@{/getTransRewardDetail}]]*/,
+		'CUSHION': /*[[@{/getTransCushionDetail}]]*/,
+		'FUND_NOTIFICATION': /*[[@{/getTransFundNotificationDetail}]]*/,
+		'CUST_INFO': /*[[@{/getTransCustInfoDetail}]]*/,
+		'CONTACT_INFO': /*[[@{/getTransContactInfoDetail}]]*/,
+		'CHANGE_PAY_ACCOUNT': /*[[@{/getTransChangeAccountDetail}]]*/,
+		'CERTIFICATE_PRINT': /*[[@{/getTransCertPrintDetail}]]*/,
+		'VALUE_PRINT': /*[[@{/getTransValuePrintDetail}]]*/,
+		'LOAN': /*[[@{/getTransLoanDetail}]]*/,
+		'LOAN_NEW': /*[[@{/getTransLoanDetail}]]*/,
+		'PAYMETHOD': /*[[@{/getTransPaymethodDetail}]]*/,
+		'BENEFICIARY': /*[[@{/getTransBeneficiaryDetail}]]*/,
+		'CREDIT_CARD_DATE': /*[[@{/getTransCreditCardDateDetail}]]*/,
+		'REDUCE_POLICY': /*[[@{/getTransReducePolicyDetail}]]*/,
+		'POLICY_RESEND':  /*[[@{/getTransPolicyResendDetail}]]*/,
+		'RISK_LEVEL': /*[[@{/getTransRiskLevelDetail}]]*/,
+		'POLICY_HOLDER_PROFILE': /*[[@{/getPolicyHolderProfileDetail}]]*/,
+		'FUND_SWITCH': /*[[@{/getTransFundSwitchDetail}]]*/,
+		'INSURANCE_CLAIM':/*[[@{/getTransInsuranceClaimDetail}]]*/,
+		'DNS_ALLIANCE':/*[[@{/getTransDnsDetail}]]*/,
+		'INVESTMENT':/*[[@{/getTransInvestmentDetail}]]*/,
+		'CONVERSION':/*[[@{/getTransInvestmentConversionDetail}]]*/,
+		'DEPOSIT':/*[[@{/getTransDepositDetail}]]*/,
+		'CASH_PAYMENT':/*[[@{/getCashPaymentDetail}]]*/,
+	};
+	$(function(){
+		var test = window.location.pathname;
+		if(test != "/eservice/apply2"){
+			//window.location.href = "/eservice/apply2";
+		}
+		
+		$('.datepicker').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'yy/mm/dd'
+		});
+		
+	 	// 取得申請狀態下拉選單
+		eserviceOption.common('#transStatus', /*[[@{/getTransStatusList}]]*/);
+	 	// 取得申請項目下拉選單
+		eserviceOption.common('#transType', /*[[@{/getTransTypeList}]]*/);
+	 	
+		// 建立交易歷史 grid
+		grid1 = new eserviceGrid();
+		grid1.sGridId = '#grid1';
+		grid1.sQueryUrl = /*[[@{/getTransList}]]*/;
+		grid1.sRowClass = 'tr-odd';
+		grid1.bNoEventStyle = false;
+		grid1.fnRowClick = function(row) {
+			checkGridTr(row);
+		};
+		grid1.aoColumns = [
+			{
+				// 申請項目
+				'mDataProp': 'transTypeStr',
+				'tdClass': 'enThin text-left'
+			},
+			{
+				// 保單
+				'fnRender': function(oRow) {
+					var policy = "";
+					$.each(oRow.policys, function(inx, obj) {
+						if(policy == ""){
+							policy = emptyIfNull(obj.productName) + '<br/>' + '(' + emptyIfNull(obj.policyNo) + ')';
+						}else{
+							policy = policy + ',<br/>' + emptyIfNull(obj.productName) + '<br/>' + '(' + emptyIfNull(obj.policyNo) + ')';
+						}
+					});
+					return policy;
+				},
+				'tdClass': 'enThin text-left'
+			},
+			{
+				// 申請時間
+				'fnRender': function(oRow) {
+					return westDate(oRow.transDate);
+				},
+				'tdClass': 'enThin text-left'
+			},
+			{
+				// 申請序號
+				'mDataProp': 'transNum',
+				'tdClass': 'enThin text-left'
+			},
+			{
+				// 狀態
+				'mDataProp': 'statusStr',
+				'tdClass': 'enThin text-left'
+			},
+			{
+				// button
+				'fnRender': function(oRow) {
+					var botton = "";
+					if(oRow.status == '0' || oRow.status == '-1'){
+						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">取消申請  <i class="fas fa-chevron-right"></i></button>';
+					}else if(oRow.status == '4'){
+						botton = '<button class="btn-cancel" id="upload_'+oRow.transNum+'" onclick="addedFile('+oRow.transNum+')">補件  <i class="fas fa-chevron-right"></i></button>&nbsp;'+
+						'<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>';
+					}else if(oRow.status == '2' && oRow.endorsementStatus > 0){
+						botton = '<button class="btn-cancel" id="endorsement_'+oRow.transNum+'" onclick="downloadEndorsement(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">下載批註單  <i class="fas fa-chevron-right"></i></button>';
+					}else if(oRow.transType == 'CONTACT_INFO' && oRow.status == '1'){
+						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTransCheck(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>';
+					}
+					return botton;
+				},
+				'tdClass': 'enThin text-left'
+			}
+		];
+		grid1.queryByPage(1);
+		
+		// 查詢
+		$('#searchBtn').click(function() {
+			if ($('#startDate').val() != '' && $('#endDate').val() != '') {
+				if ($('#startDate').val() > $('#endDate').val()) {
+					/* openAlert('結束日期不能小於開始日期'); */
+					openAlert($('#E0003').val());
+					return false;
+				}
+			}
+			
+			grid1.setPostData('startDate', $('#startDate').val());
+			grid1.setPostData('endDate', $('#endDate').val());
+			grid1.setPostData('status', $('#transStatus').val());
+			grid1.setPostData('transType', $('#transType').val());
+			grid1.setPostData('policyNo', $('#policyNolist').val());
+			grid1.queryByPage(1);
+		});
+	});
+	
+	function queryDataByPage(pageNum) {
+		grid1.queryByPage(pageNum);
+	}
+
+	var winTab;
+	function checkGridTr(row) {
+		if (winTab != undefined) {
+			winTab = undefined;
+			return false;
+		}
+		if ($('#modal-container-deleteConfirm').css("display") != 'none') {
+			return false;
+		}
+		if ($('#modal-container-deleteConfirm-fail').css("display") != 'none') {
+			return false;
+		}
+		if ($('#modal-container-addFileConfirm').css("display") != 'none') {
+			return false;
+		}
+		
+		var transNum = row.transNum;
+		var transType = row.transType;
+		var transTypeStr = row.transTypeStr;
+		
+		/* var defaultHeight = 300;
+		var defaultWidth = 800;
+		if (transType == 'TRAVEL_POLICY') {
+			defaultWidth = $(window).width() * 0.9;
+			defaultHeight = $(window).height() * 0.8;
+		} */
+		
+		// 調整申請明細modal大小
+		/* $('#modal-iframe-container').on('show.bs.modal', function(event) {
+			$('#modal-iframe-container .modal-content')
+				.css('width', defaultWidth + 'px')
+				.css('height', defaultHeight + 'px');
+			$('#transDetailScroll').css('height', defaultHeight + 'px');
+			$('#modal-iframe-container .modal-dialog')
+				.css('margin-left', ($(window).width() - defaultWidth) / 2);
+		}); */
+		
+		$("#transTypeStr").text("申請明細-"+transTypeStr);
+
+		if (transType == 'MATURITY' || transType == 'CLAIM' || transType == 'CANCEL_CONTRACT' || transType == 'SURRENDER' || transType == 'RENEW' || transType == 'REDUCE') {
+			$('#transDetailDiv').html('無明細資料');
+			$('#transDetailTitle').html("申請明細-"+transTypeStr);
+			$('#transDetailDiv').show();
+		} else {
+			// TODO 重構明細顯示方式，新的明細方式由各自申請項目的物件決定
+			var detailDataUrl = detailUrlMap[transType];
+			if (detailDataUrl != null) {
+				var transDetailTitle = '';
+				$.each(row.policys, function(inx, obj) {
+					if (transDetailTitle == '') {
+						transDetailTitle = emptyIfNull(obj.productName) + '(' + emptyIfNull(obj.policyNo) + ')';
+					} else {
+						transDetailTitle = transDetailTitle + ',<br/>' + emptyIfNull(obj.productName) + '(' + emptyIfNull(obj.policyNo) + ')';
+					}
+				});
+				
+				$.ajaxSetup({async: false});
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : detailDataUrl + '?transNum=' + transNum,
+					success : function(detailRowHtml) {
+						$('#transDetailDiv').html(detailRowHtml);
+						$('#transDetailTitle').html(transDetailTitle);
+						$('#transDetailDiv').show();
+					}
+				});
+				$.ajaxSetup({async: true});
+			} else {
+				$('#transDetailDiv').load("tableget?transType="+transType+"&transNum="+transNum);
+			}
+		}
+		
+		
+		
+		$('#modal-iframe-container').modal({
+			show: true,
+			//backdrop: 'static', 
+			keyboard: false
+		});
+	}
+
+	//验证是否可以进行取消
+	function cancelTransCheck(transNum,transType){
+			var  respon='';
+				$.ajaxSetup({async: false});
+				$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				url : getRootPath()+'/eservice/cancelApplyTransCheck',
+				data : {
+						transNum:transNum
+						},
+				success : function(response) {
+					respon=response[0];
+				},
+				error :function() {
+				}
+			});
+			$.ajaxSetup({async: true});
+			if('SUCCESS'==respon){
+					cancelTrans(transNum,transType);
+				}
+			if('FAIL'==respon){
+					cancelTransTips();
+				}
+	}
+
+	//提示
+	function cancelTransTips(){
+		$('#modal-container-deleteConfirm-fail').show();
+		$('#fadeInBg').show();
+	}
+	//提示 关闭
+	$("#cancelThisApplyFail").click(function() {
+		hideDeleteAlert();
+	});
+	//撤銷
+	function cancelTrans(transNum,transType){
+		$("#cancelTransType").val(transType);
+		$("#cancelTransNum").val(transNum);
+		$('#modal-container-deleteConfirm').show();
+		$('#fadeInBg').show();
+	}
+
+	function downloadEndorsement(transNum, transType) {
+		winTab = window.open('getEndorsementPDF?transNum=' + transNum + '&transType=' + transType, 'endormentTab');
+		return false;
+	}
+	
+	//打開
+	function openCancelTrans() {
+		$('#modal-container-deleteConfirm').show();
+		$('#fadeInBg').show();
+	}
+
+	//關閉
+	function hideDeleteAlert() {
+		$('#modal-container-deleteConfirm-fail').hide();
+		$('#modal-container-deleteConfirm').hide();
+		$('#fadeInBg').hide();
+	}
+
+	//上傳檔案
+	function addedFile(transNum){
+		$("#addFileNum").val(transNum);
+		$('#modal-container-addFileConfirm').show();
+		$('#fadeInBg').show();
+	}
+	
+	$("#denyAdded, .closeAdded").click(function(event) {
+		$('#modal-container-addFileConfirm').hide();
+		$('#fadeInBg').hide();
+	});
+	
+	$("#deny, .close").click(function(event) {
+		// $('#transDetailDiv').hide();
+		hideDeleteAlert();
+	});
+	
+	function addedTransFile(){
+		if(!$("input[name=file1]").val() 
+				&& !$("input[name=file2]").val()
+				&& !$("input[name=file3]").val()
+				&& !$("input[name=file4]").val()
+				&& !$("input[name=file5]").val()) {
+			/* openAlert("請選擇檔案!"); */
+			openAlert($('#E0089').val());
+			return;
+		}
+		popupLoading();
+		$("#addFileForm").submit();
+		$('#addFileForm')[0].reset();
+		$('#modal-container-addFileConfirm').hide();
+		$('#fadeInBg').hide();
+	}
+	
+	$("#cancelThisApply").click(function() {
+		popupLoading();
+		$("#cancelTransForm").submit();
+		hideDeleteAlert();
+	});
+	
+
+
+	var isAllow = /*[[${isAllow}]]*/;
+	if (isAllow != null) {
+		if (isAllow == 'success') {
+			openAlert("補件成功");
+		} else {
+			openAlert("補件失敗 !上傳檔案大小超過上限:" + isAllow + "M，請重新上傳");
+		}
+	}
+	var limitSizeStr = /*[[${limitSizeStr}]]*/;
+	if (limitSizeStr != null) {
+		$('#limitTag').html('(上傳檔案總和上限:<b>' + limitSizeStr + 'M</b>)');
+	}
+
+	// 狀態歷程
+	function onStatus(APPLYITEM, TRANS_NUM, str){
+		var data = {};
+		var form = $('#status_collapseSearchBar')[0];
+		if (!checkYMD(form.startDate.value)) {
+			return;
+		}
+		if (!checkYMD(form.endDate.value)) {
+			return;
+		}
+		if (str != 'query') {
+			$('#modal-container-statusConfirm').modal({
+				show: true,
+				backdrop: 'static', 
+				keyboard: false
+			});
+			$('#status_application_items').html($('#div-app-item').html());
+			$('#status_insurance_num').html(TRANS_NUM);
+			data = { transNum : TRANS_NUM };
+			// 刪除查詢條件中的數據
+			form.reset();
+		}else {
+			data = {
+					transNum : $('#status_insurance_num').html(),
+					status: form.status.value,
+					startDate: form.startDate.value.replaceAll('/','-'),
+					endDate: form.endDate.value.replaceAll('/','-')
+					};
+		}
+		$('#status_body').html('');
+		$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : getRootPath()+'/eservice_adm/onlineChange/getTransStatusHistoryList',
+				data : JSON.stringify(data),
+				success : function(response) {
+					var html = '';
+					if (response.resultData != null) {
+						response.resultData.forEach(function(item,index){
+							html += '<tr>'+
+										'<td>'+item.status+'</td>'+
+										'<td>'+item.requestDate+'</td>'+
+										'<td>'+item.identity+'</td>'+
+										'<td>'+item.customerName+'</td>'+
+										'<td>'+(item.content != null ? item.content : '')+'</td>'+
+									'</tr>';
+						});
+						$('#status_body').html(html);
+					}
+				},
+				error :function() {
+				}
+			});
+	}
+	//補件單歷程
+	var fileLogList = [];
+	function viewSupplement(APPLYITEM, TRANS_NUM, str){
+		var data = {};
+		var form = $('#view_collapseSearchBar')[0];
+		if (str != 'query') {
+			$('#modal-container-viewsupplementConfirm').modal({
+				show: true,
+				backdrop: 'static', 
+				keyboard: false
+			});
+			$('#view_application_items').html($('#div-app-item').html());
+			$('#view_insurance_num').html(TRANS_NUM);
+			// 刪除查詢條件中的數據
+			form.reset();
+			data = {transNum : TRANS_NUM};
+		}else {
+			data = {
+					transNum : $('#view_insurance_num').html(),
+					claimSeqId: form.attNum.value,
+					startDate: form.startDate.value.replaceAll('/','-'),
+					endDate: form.endDate.value.replaceAll('/','-')
+					};
+		}
+		if (!checkYMD(form.startDate.value)) {
+			return;
+		}
+		if (!checkYMD(form.endDate.value)) {
+			return;
+		}
+		$('#view_body').html('');
+		$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : getRootPath()+'/eservice_adm/onlineChange/getTransRFEList',
+				data : JSON.stringify(data),
+				success : function(response) {
+					var html = '';
+					if (response.resultData != null) {
+						fileLogList = response.resultData;
+						response.resultData.forEach(function(item,index){
+							html += '<tr>'+
+										'<td>'+item.rfeId+'</td>'+
+										'<td>'+item.requestDate+'</td>'+
+										'<td>'+item.responseDate+'</td>'+
+										'<td>'+
+											'<button type="button" onclick="viewSupplementDetil(\''+ index +'\')" style="position: relative;">查看<i class="foo-warning"></i></button>'+
+										'</td>';
+								html +=	'<td>'+ item.statusName+'</td>'+
+									'</tr>';
+						});
+						$('#view_body').html(html);
+					}
+					
+				},
+				error :function() {
+					
+				}
+			});
+	};
+	function viewSupplementDetil(index){
+		$('#modal-container-viewsupplementdetilConfirm').modal({
+			show: true,
+			backdrop: 'static', 
+			keyboard: false
+		});
+		var item = fileLogList[index];
+		$('#rfe_id').html(item.rfeId);
+		$('#rfe_status').html(item.statusName);
+		$('#rfe_s_date').html(item.requestDate);
+		$('#rfe_e_date').html(item.responseDate);
+		$('#rfe_request_con').html(item.requestContent);
+		$('#rfe_response_con').html(item.responseContent);
+		var rHtml = ''
+		$('#ref_file_data').html(rHtml);
+		item.fileDatas.forEach(function(file, i){  
+			rHtml += '<div class="form-group">'+
+					'<label class="col-xs-3">補充附件'+(i+1)+'：</label>'+
+					'<div class="col-sm-9">'+
+								file.fileName +
+							
+							' <div class="col-sm-12 upload-drop-zone boardDotted">';
+								if (file.fileName.indexOf('.pdf') === -1 && file.fileName.indexOf('.PDF') === -1) {
+									rHtml +='<img src="/images/'+file.fileName+'" width=50>';
+								}else{
+									rHtml +='<embed src="/images/' + file.fileName+'" type="application/pdf" width=50>';
+								}
+								
+					rHtml +=	'</div>'+
+						'</div>'+
+					'</div>';
+		})
+		
+		$('#ref_file_data').html(rHtml);
+	}
+	function checkYMD(str){
+		var reg = /^\d{4}\/(0[1-9]|1[1-2])\/(0[1-9]|[1-2][0-9]|3[0-1])$/;
+		if (str != null && str != ''){
+			if(reg.test(str)){
+				return true;
+			}else {
+				alert("日期格式錯誤，重新輸入。")
+				return false;
+			};
+		}else {
+			return true;
+		}
+		
+	}
+	function getRootPath(){
+				var strFullPath=window.document.location.href;
+				var strPath=window.document.location.pathname;
+				var pos=strFullPath.indexOf(strPath);
+				var prePath=strFullPath.substring(0,pos);
+				return prePath;
+			}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

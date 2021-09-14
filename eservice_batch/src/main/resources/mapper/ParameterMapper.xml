@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.ParameterMapper">
+
+	<resultMap id="ParameterMap" type="com.twfhclife.eservice_batch.model.ParameterVo" >
+		<result column="PARAMETER_ID" property="parameterId"/>
+		<result column="SYSTEM_ID" property="systemId"/>
+		<result column="PARAMETER_CODE" property="parameterCode"/>
+		<result column="PARAMETER_NAME" property="parameterName"/>
+		<result column="PARAMETER_VALUE" property="parameterValue"/>
+		<result column="PARAMETER_CATEGORY_ID" property="parameterCategoryId"/>
+		<result column="SORT_NO" property="sortNo"/>
+		<result column="REMARK" property="remark"/>
+		<result column="STATUS" property="status"/>
+		<result column="ENCRYPT_TYPE" property="encryptType"/>
+		<result column="PARENT_PARAMETER_ID" property="parentParameterId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		PARAMETER_ID,SYSTEM_ID,PARAMETER_CODE,PARAMETER_NAME,PARAMETER_VALUE,PARAMETER_CATEGORY_ID,SORT_NO,REMARK,STATUS,ENCRYPT_TYPE,PARENT_PARAMETER_ID,CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER
+	</sql>
+	
+	<!-- 用參數類別代碼取出所有以下的參數 -->
+	<select id="getParameterByCategoryCode" resultMap="ParameterMap">
+		SELECT
+			P.PARAMETER_NAME
+			,P.PARAMETER_VALUE
+			, P.PARAMETER_CODE
+			,DATALENGTH(P.PARAMETER_CODE) PARAMETER_CODE_LENG
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER_CATEGORY PC
+			,ESERVICE_ADM.DBO.PARAMETER P
+		WHERE
+			PC.PARAMETER_CATEGORY_ID = P.PARAMETER_CATEGORY_ID
+			AND PC.STATUS = P.STATUS
+			AND PC.STATUS = 1
+			AND PC.CATEGORY_CODE = #{categoryCode}
+		<if test="systemId != '' and systemId != null">
+			AND PC.SYSTEM_ID = P.SYSTEM_ID
+			AND PC.SYSTEM_ID = #{systemId}	
+		</if>
+		ORDER BY  PARAMETER_CODE_LENG DESC,PARAMETER_CODE  DESC
+	</select>
+
+	<!-- 用參數代碼取出參數，回傳應只有一筆 -->
+	<!-- 通常用於顯示指定參數值 例如錯誤訊息 或 郵件內容等 -->
+	<select id="getParameterValueByCode" resultMap="ParameterMap">
+		SELECT top 1 
+			parameter_value, encrypt_type
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER
+		WHERE
+			PARAMETER_CODE = #{parameterCode}
+			AND STATUS = 1
+		<if test="systemId != '' and systemId != null">
+			AND SYSTEM_ID = #{systemId}	
+		</if>
+	</select>
+
+	<select id="getStatusName" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT a.PARAMETER_VALUE FROM ESERVICE_ADM.DBO.PARAMETER a ,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND b.CATEGORY_CODE = #{parentCategoryCode}
+		AND a.PARAMETER_CODE = #{status}
+
+	</select>
+</mapper>

@@ -1,0 +1,21 @@
+<div class="item150" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="areaOption" class="selector"></select>
+	</div>
+</div>
+<div class="item250" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="countryOption" class="selector"></select>
+	</div>
+</div>
+<script src="plugin/jquery-1.11.2.min.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		// 地址下拉選單
+		var areaUrl = /*[[@{/getAreaList}]]*/;
+		var countryUrl = /*[[@{/getCountryList}]]*/;
+		eserviceOption.areaCountry('#areaOption', areaUrl, '#countryOption', countryUrl, '國家');
+	});	
+	/*]]>*/
+</script>

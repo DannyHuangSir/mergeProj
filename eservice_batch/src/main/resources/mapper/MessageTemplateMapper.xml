@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.MessageTemplateMapper">
+
+
+	<resultMap id="MessagingTemplateMap" type="com.twfhclife.eservice_batch.model.MessagingTemplateVo" >
+		<result column="MESSAGING_TEMPLATE_ID" property="messagingTemplateId"/>
+		<result column="SYSTEM_ID" property="systemId"/>
+		<result column="MESSAGING_TEMPLATE_CODE" property="messagingTemplateCode"/>
+		<result column="MESSAGING_TEMPLATE_NAME" property="messagingTemplateName"/>
+		<result column="STATUS" property="status"/>
+		<result column="TRIGGER_TYPE" property="triggerType"/>
+		<result column="EVENT_TYPE" property="eventType"/>
+		<result column="SEND_TYPE" property="sendType"/>
+		<result column="SEND_TIME" property="sendTime"/>
+		<result column="CIRCLE_TYPE" property="circleType"/>
+		<result column="CIRCLE_VALUE" property="circleValue"/>
+		<result column="RECEIVER_MODE" property="receiverMode"/>
+		<result column="MESSAGING_SUBJECT" property="messagingSubject"/>
+		<result column="MESSAGING_CONTENT" property="messagingContent"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<!-- 自定義  -->
+		<result column="STATUS_NAME" property="statusName"/>
+		<result column="TMP_STATUS" property="tmpStatus"/>
+		<result column="TMP_STATUS_NAME" property="tmpStatusName"/>
+		<result column="SYS_NAME" property="sysName"/>
+		<result column="EVENT_TYPE_NAME" property="eventTypeName"/>
+		<result column="TYPE" property="type"/>
+		<result column="PARAMS" property="params"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		MESSAGING_TEMPLATE_ID,SYSTEM_ID,MESSAGING_TEMPLATE_CODE,MESSAGING_TEMPLATE_NAME,STATUS,TRIGGER_TYPE,EVENT_TYPE,SEND_TYPE,SEND_TIME,CIRCLE_TYPE,CIRCLE_VALUE,RECEIVER_MODE,MESSAGING_SUBJECT,MESSAGING_CONTENT,CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER
+	</sql>
+
+	<select id="getMessageTemplateByCode" resultMap="MessagingTemplateMap" >
+		select
+		<include refid="Base_Column_List" />
+		,(
+		select PARAMETER_VALUE+','
+		from ESERVICE_ADM.dbo.PARAMETER
+		where PARAMETER_ID in
+		(select PARAMETER_ID
+		from ESERVICE_ADM.dbo.MESSAGING_PARAMETER
+		where MESSAGING_TEMPLATE_ID=
+		(
+		select mt.MESSAGING_TEMPLATE_ID
+		from ESERVICE_ADM.DBO.MESSAGING_TEMPLATE mt
+		where mt.TRIGGER_TYPE='api'
+		and mt.MESSAGING_TEMPLATE_CODE=#{messagingTemplateCode}
+		)
+		)
+		for xml path('')
+		) as PARAMS
+		from ESERVICE_ADM.DBO.MESSAGING_TEMPLATE mt
+		where mt.TRIGGER_TYPE='api'
+		and mt.MESSAGING_TEMPLATE_CODE=#{messagingTemplateCode}
+	</select>
+
+	<select id="getReceiversByTemplateId" resultType="java.lang.String" parameterType="int">
+		SELECT MESSAGING_RECEIVER_VALUE from ESERVICE_ADM.DBO.MESSAGING_RECEIVER
+		WHERE MESSAGING_RECEIVER_TYPE=#{receiverType} and MESSAGING_TEMPLATE_ID=#{messagingTemplateId}
+
+	</select>
+
+</mapper>

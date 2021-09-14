@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}" />
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='partnerUserMgnt')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-user" aria-hidden="true"></i>
+								權限管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								基本資料管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								外部人員管理
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+								<form class="form-horizontal" role="form" id="form1" action="func7-1.html">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者帳號 </label>
+										<div class="col-sm-5">
+											<input type="text" id="username" placeholder="輸入欲查詢的使用者帳號" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">身分證字號</label>
+										<div class="col-sm-5">
+											<input type="text" id="rocId" placeholder="輸入欲查詢的身分證字號" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="col-md-offset-3 col-md-9">
+										<button id="qryBtn" class="btn btn-success" type="button">
+											<i class="my-icon fa fa-check bigger-110"></i>
+											查詢
+										</button>
+										&nbsp; &nbsp; &nbsp;
+										<button id="resetBtn" class="btn" type="reset">
+											<i class="my-icon fa fa-undo bigger-110"></i>
+											重新輸入
+										</button>
+										&nbsp; &nbsp; &nbsp;
+										<button type="button" id="addPartnerBtn" class="btn btn-primary" th:if="${addPartnerBtn == null}">
+											<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+											新增外部人員
+										</button>
+									</div>
+
+									<div style="visibility:hidden;">
+										<input id="hideDelBtn" name="hideDelBtn" type="text" th:if="${session.containsKey('HIDE_DEL_BTN')}" th:value="${session.HIDE_DEL_BTN}" >
+									</div>
+									
+								</form>
+							</div>
+						</div>
+						<div class="hr hr-18 dotted hr-double"></div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div id="show-detail-results" hidden="true">
+									<h3 class="header smaller lighter blue">查詢結果</h3>
+									<div>
+										<table id="qryGrid"></table>
+										<div id="qryPager"></div>
+									</div>
+								</div>
+							</div>
+							<div id="addPartnerDialog" class="hide">
+								<div class="widget-main no-padding">
+									<form id="addPartnerForm">
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right"><font color="red">*</font>&nbsp;角色 :</label>
+											<div class="col-sm-10">
+												<input type="radio" class="my" name="roleCode" title="通路經辦" value="agent" onclick="doSetRole(this);"/><span class="lbl"> 通路經辦</span>&nbsp;&nbsp;
+												<input type="radio" class="my" name="roleCode" title="內部人員" value="admin" onclick="doSetRole(this);"/><span class="lbl"> 內部人員</span>
+											</div>
+										</fieldset>
+										<fieldset id="chalTR" style="display:none;">
+											<label class="col-sm-2 control-label text-right no-padding-right"><font color="red">*</font>&nbsp;通路別 :</label>
+											<div class="col-sm-10">
+												<input type="radio" class="my" name="chalCode" id="chalCode01" title="銀行分行" value="C01" onclick="doSetAgent(this);"/><span class="lbl"> 銀行分行</span>&nbsp;&nbsp;
+												<input type="radio" class="my" name="chalCode" id="chalCode02" title="保經代" value="C02" onclick="doSetAgent(this);"/><span class="lbl"> 保經代</span>&nbsp;&nbsp;
+												<input type="radio" class="my" name="chalCode" id="chalCode03" title="通訊處" value="C03" onclick="doSetAgent(this);"/><span class="lbl"> 通訊處</span>
+											</div>
+										</fieldset>
+										<fieldset id="agentTR" style="display:none;">
+											<label class="col-sm-2 control-label text-right no-padding-right"><font color="red">*</font>&nbsp;代理人別 :</label>
+											<div class="col-sm-10">
+												<input type="text" id="agenCode" name="agenCode" onblur="doSetNameAndPW();" style="text-transform: uppercase" maxlength="3" size="4"/><span id="hyphen">&nbsp;-&nbsp;</span>
+												<input type="text" id="branchCode" name="branchCode" onblur="doSetNameAndPW();" maxlength="4" size="5"/><span id="branchTX">&nbsp;(分行別)</span>
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right"><font color="red">*</font>&nbsp;帳號 :</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="partnerUsername" name="partnerUsername" size="26" readonly="readonly"/>
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right"><font color="red">*</font>&nbsp;EMail :</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="email" name="email" size="50"/>
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right"><font color="red">*</font>&nbsp;手機號碼 :</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="mobile" name="mobile" size="26"/>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+<!-- 		<script th:src="@{/plugin/loading-modal/loading-modal.js}"></script> -->
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var qryGrid;
+		var selectUserId;
+		var hideDelBtn = false;
+		$(function() {
+			var sessionHDB = $("#hideDelBtn").val();
+            if('true' == sessionHDB){
+            	hideDelBtn = true;
+            }
+			
+			initGrid();   // 初始Grid
+			initQuery();  // 初始查詢事件
+			initAdd();    // 初始新增事件
+			//initAuth();
+			
+			eserviceAdmEvent.initDialog();
+		});
+		
+		function initAuth() {
+			console.log('initAuth');
+			console.log(/*[[${deletePartnerBtn}]]*/);
+			var delAuth = /*[[${deletePartnerBtn}]]*/;
+			console.log('deletePartnerBtn=' + delAuth);
+			if(delAuth) {
+				hideDelBtn = true;
+			}
+		}
+		
+		// 初始Grid
+		function initGrid() {
+			// 查詢結果grid
+			qryGrid = new jqGridUtil();
+			qryGrid.id = '#qryGrid';
+			qryGrid.pager = '#qryPager';
+			qryGrid.url = /*[[@{/partnerUserMgnt/getPartnerUserEntityPageList}]]*/;
+			qryGrid.caption = '人員查詢';
+			qryGrid.colNames = ['使用者帳號', '身分證字號', '信箱', '手機', '帳號狀態', '操作', '啟用線上申請'];
+			qryGrid.colModel = [
+				{name: 'USERNAME', index: 'USERNAME', width: 90},
+				{name: 'ROCID', index: 'ROCID', width: 50},
+				{name: 'EMAIL', index: 'EMAIL', width: 130},
+				{name: 'MOBILE', index: 'MOBILE', width: 60},
+				{name: 'STATUS', index: 'STATUS', width: 60},
+				{width: 40, align: 'center', formatter: function(cellvalue, options, row) {
+					var actionHtml = '';
+					if(hideDelBtn == false) {
+						actionHtml += '<a id="deletePartnerBtn" href="javascript:deletePartnerUser(\'' + row.ID + '\', \'' + row.USERNAME + '\');" class="green bigger-140 show-details-btn" title="刪除">';
+						actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
+						actionHtml += '</a>';
+						if (row.STATUS == 'locked') {
+							actionHtml += '<a id="unlockBtn" href="javascript:unlockUser(\'' + row.ID + '\', \'' + row.USERNAME + '\', \'' + row.EMAIL + '\', \'' + row.MOBILE + '\');" class="green bigger-140 show-details-btn" title="解鎖">';
+							actionHtml += '    <i class="my-icon fa fa-unlock bigger-120"></i> <span class="sr-only">Details</span> ';
+							actionHtml += '</a>';
+						}
+					}
+					
+					return actionHtml;
+				}}, 
+				{width: 50, align: 'center', formatter: function(cellvalue, options, row){
+                    var actionHtml = '';
+                    actionHtml += '<input type="checkbox" onclick="javascript:updateUsersOnlineChangeUse(\''+ row.USERNAME + '\', this)"';
+                    if(row.ONLINE_FLAG == 'Y'){
+                        actionHtml += ' checked ';
+                    }
+                    actionHtml += ' />';
+                    return actionHtml;
+                }}
+			];
+		}
+		
+		// 初始查詢事件
+		function initQuery() {
+			// 查詢
+			$('#qryBtn').click(function() {
+				//hideDelBtn = false;
+				// 設定查詢條件
+				qryGrid.setPostData('username', $('#username').val());
+				qryGrid.setPostData('rocId', $('#rocId').val());
+				// 產生grid
+				qryGrid.create();
+				// 顯示查詢結果區域
+				$('#show-detail-results').show();
+
+			});
+		}
+		
+		// 初始新增事件
+		function initAdd() {
+			// 新增外部人員
+			$('#addPartnerBtn').on('click', function() {
+				$('#addPartnerForm')[0].reset();
+				$('#addPartnerDialog').removeClass('hide').dialog({
+					modal: true,
+					title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-check'></i>新增外部人員</h4></div>",
+					title_html: true,
+					buttons: [ 
+						{
+							text: '取消',
+							'class' : 'btn',
+							click: function() {
+								$(this).dialog('close');
+							} 
+						},
+						{
+							text: '確定',
+							'class' : 'btn btn-primary',
+							click: function() {
+								if ($('#partnerUsername').val() == '') {
+									alertMsg("請輸入帳號名稱");
+									return false;
+								}
+								if ($('#email').val() == '') {
+									alertMsg("請輸入EMAIL");
+									return false;
+								}
+								if ($('#mobile').val() == '') {
+									alertMsg("請輸入手機號碼");
+									return false;
+								}
+								
+								var formData = {
+									roleCode : $("input[name='roleCode']:checked").val(),
+									username : $('#partnerUsername').val(),
+									email : $('#email').val(),
+									mobile : $('#mobile').val()
+								};
+								eserviceForm.post(/*[[@{/partnerUserMgnt/checkUserNameAndEmail}]]*/, formData, function(response) {
+									if (response.resultMsg == '') {
+										$('#addPartnerDialog').dialog('close');
+										popupLoading();
+										eserviceForm.post(/*[[@{/partnerUserMgnt/insertPartnerUser}]]*/, formData, function(response) {
+											removeLoading();
+											alertMsg(response.resultMsg);
+											qryGrid.reload();
+										});
+									} else {
+										alertMsg(response.resultMsg);
+									}
+								});
+							} 
+						}
+					],
+					width: 600
+				});
+			});
+		}
+		
+		function doSetRole(obj) {
+			resetUser();
+			
+			var roleCode = $(obj).val();
+			if (roleCode == "agent") {
+				$("#chalTR").show();
+				$('#chalCode01').click();
+				$("#partnerUsername").attr('readonly', true);
+			} else {
+				$("#chalTR").hide();
+				$("#agentTR").hide();
+				$("#partnerUsername").attr('readonly', false);
+			}
+		}
+		
+		function resetUser(obj) {
+			$("#partnerUsername").val('');
+			$("#agenCode").val("");
+			$("#branchCode").val("");
+			$("#email").val("");
+			$("#mobile").val("");
+		}
+		
+		function doSetAgent(obj) {
+			var chalCode = $(obj).val();
+			if (chalCode == "C01") {// 銀行分行
+				$("#agentTR").show();// 代理人別
+				$("#branchCode").show();
+				$("#hyphen").show();
+				$("#branchTX").show();
+
+				$("#agenCode").val("");
+				$("#branchCode").val("");
+			} else if (chalCode == "C02" || chalCode == "C03") {// 保經代與通訊處
+				$("#agentTR").show();// 代理人別
+				$("#branchCode").hide();
+				$("#hyphen").hide();
+				$("#branchTX").hide();
+
+				$("#agenCode").val("");
+				$("#branchCode").val("");
+			}
+			//轉換通路別時清空帳號密碼
+			$("#partnerUsername").val('');
+		}
+
+		function doSetNameAndPW() {
+			var chalCode = $("input[name='chalCode']:checked").val();
+			var agenCode = $("#agenCode").val(); //代理人別
+			var branchCode = $("#branchCode").val(); //分行代碼
+			if (chalCode != "C01") {//通路別為保經代或通訊處
+				branchCode = ''; //清空分行代碼
+				if (agenCode.length != 0) {//代理人別有值
+					//使用ajax取值
+					ajaxNameAndPw(chalCode, agenCode, branchCode);
+				} else {//如果代理人別沒有值清空帳號密碼
+					$("#partnerUsername").val('');
+				}
+			} else {//通路別為銀行
+				if (agenCode.length != 0 && branchCode.length != 0) {//銀行代碼與分行代碼皆有填寫
+					//使用ajax取值
+					ajaxNameAndPw(chalCode, agenCode, branchCode);
+				} else {//如果其一尚未填寫，則清空
+					$("#partnerUsername").val('');
+				}
+			}
+		}
+
+		// 使用ajax取得
+		function ajaxNameAndPw(chalCode, agenCode, branchCode) {
+			var formData = {
+				chalCode : chalCode,
+				agenCode : agenCode,
+				branchCode : branchCode
+			};
+			eserviceForm.post(/*[[@{/partnerUserMgnt/getNextPartnerUserName}]]*/, formData, function(response) {
+				$("#partnerUsername").val(response.resultData);
+			});
+		}
+		
+		// 刪除
+		function deletePartnerUser(id, username) {
+			confirmMsg('是否確認刪除', function(r) {
+				if (r) {
+					var formData = {
+						id : id,
+						username: username
+					};
+					eserviceForm.post(/*[[@{/partnerUserMgnt/deletePartnerUser}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						qryGrid.reload();
+					});
+				} else {
+					return false;
+				}
+			});
+		}
+		
+		// unlock
+		function unlockUser(id, username, email, mobile) {
+			confirmMsg('是否確認解鎖', function(r) {
+				if (r) {
+					if (email == "undefined") {
+						email = '';
+					}
+					if (mobile == "undefined") {
+						mobile = '';
+					}
+					var formData = {
+						id : id,
+						username: username,
+						email: email,
+						mobile: mobile
+					};
+					eserviceForm.post(/*[[@{/partnerUserMgnt/unlockUser}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						qryGrid.reload();
+					});
+				} else {
+					return false;
+				}
+			});
+		}
+		
+		function updateUsersOnlineChangeUse(username, checkBox){
+            confirmMsg('是否更新線上申請功能', function(r){
+                if(r){
+		            var formData = {
+		                userId: username,
+		                onlineFlag: checkBox.checked===true? 'Y': null
+		            };
+		            eserviceForm.post(/*[[@{/partnerUserMgnt/updateOnlineChangeUse}]]*/, 
+		                formData, 
+		                function(response){
+		                    if(response.result != "SUCCESS") {
+		                        // 沒有成功都還原之前勾選狀態
+		                        checkBox.checked = !(checkBox.checked);
+		                    }
+		                    alertMsg(response.resultMsg);
+		                }
+		            );
+                } else{
+                    return false;
+                }
+            });
+		}
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

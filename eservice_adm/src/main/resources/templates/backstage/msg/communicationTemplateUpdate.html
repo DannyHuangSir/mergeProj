@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<!-- <head>
+		<th:block th:replace="fragments/head"/>
+	</head>-->
+	<head th:replace="fragments/commonHead :: common_header(~{::title},~{::link},~{::style})">
+		<title>eService通信管理</title>
+		<link rel="stylesheet" th:href="@{/plugin/summernote-editor/summernote.css}" />
+		<style>
+			#mailContentDiv .btn-group>.btn, #mailContentDiv .btn-group>.btn+.btn, #mailContentDiv .btn-group>.btn:first-child {
+			    margin: 0 0 0 0 !important;
+			}
+			#mailContentDiv .btn-group .btn+.btn, #mailContentDiv .btn-group .btn+.btn-group, #mailContentDiv .btn-group .btn-group+.btn, #mailContentDiv .btn-group .btn-group+.btn-group {
+			    margin-left: -1px !important;
+			}
+			.btn-group-vertical>.btn, #mailContentDiv .btn-group>.btn {
+			    position: relative !important;
+			    float: left !important;
+			}
+			#mailContentDiv .btn-group-sm>.btn, #mailContentDiv .btn-sm {
+			    font-size: 12px !important;
+			    line-height: 1.5 !important;
+			    /* border-radius: 3px !important; */
+			}
+			#mailContentDiv .btn-default {
+			    color: #333 !important;
+			    background-color: #fff !important;
+			    border-color: #ccc !important;
+			}
+			#mailContentDiv .btn {
+				color: #000 !important;
+				text-shadow: 0 -0 0 rgba(0,0,0,0) !important;
+			    display: inline-block !important;
+			    font-weight: 400 !important;
+			    text-align: center !important;
+			    vertical-align: middle !important;
+			    touch-action: manipulation !important;
+			    cursor: pointer !important;
+			    border: 1px solid #00000045 !important;
+			    white-space: nowrap !important;
+			    user-select: none !important;
+			}
+			#mailContentDiv .btn-group>.btn-group:last-child:not(:first-child)>.btn:first-child {
+			    border-bottom-left-radius: 0 !important;
+			    border-top-left-radius: 0 !important;
+			}
+			#mailContentDiv .panel-default>.panel-heading {
+			    color: #333 !important;
+			    background-color: #f5f5f5 !important;
+			    border-color: #ddd !important;
+			}
+			#mailContentDiv .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle) {
+			    border-bottom-right-radius: 0 !important;
+			    border-top-right-radius: 0 !important;
+			}
+			#mailContentDiv .btn .caret, #mailContentDiv .btn-group>.btn:first-child {
+			    margin-left: 0 !important;
+			}
+			.note-editable .transparent>.widget-body .widget-main .table-bordered>tbody>tr>td:last-child, .note-editable .transparent>.widget-body .widget-main .table-bordered>tfoot>tr>td:last-child, .note-editable .transparent>.widget-body .widget-main .table-bordered>thead>tr>th:last-child, .note-editable .widget-main.no-padding .table-bordered>tbody>tr>td:last-child, .note-editable .widget-main.no-padding .table-bordered>tfoot>tr>td:last-child, .note-editable .widget-main.no-padding .table-bordered>thead>tr>th:last-child {
+			    border-right-width: 0 !important;
+			}
+			.note-editable .widget-main.no-padding .table-bordered td:first-child, .note-editable .widget-main.no-padding .table-bordered th:first-child {
+			    border-left-width: 0 !important;
+			}
+			.note-editable .transparent>.widget-body .widget-main .table-bordered>tbody>tr:last-child>td, .note-editable .widget-main.no-padding .table-bordered>tbody>tr:last-child>td {
+			    border-bottom-width: 0 !important;
+			}
+		</style>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='communicationTemplateSearch')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-signal" aria-hidden="true"></i>
+									通信管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+									修改通信模板
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="alert alert-info" id="updateError" hidden="true">
+										<i class="my-icon fa fa-hand-o-right"></i>
+										<span id="updateErrorCont"></span>
+									</div>
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">修改通信模板</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form id="updateCommTemp">
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">系統別</label>
+														<div class="col-sm-10" id="leave">
+															<label id="systems"></label>
+															<input type="hidden" id="systemId"/>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">通信模板代碼</label>
+														<div class="col-sm-10" id="leave">
+															<label id="messagingTemplateCode"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">通信模板名稱</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="messagingTemplateName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">狀態</label>
+														<div class="col-sm-10" id="leave">
+															<label id="status"></label>
+														</div>
+													</fieldset>
+													<fieldset style="padding:16px">
+														<label class="col-sm-2 control-label no-padding-right">寄送方式</label>
+														<div class="col-sm-9">
+															<div class="radio inline">
+																<label>
+																	<input name="sendType" type="radio" class="my" value="email" checked="true" />
+																	<span class="lbl"> 電子郵件</span>
+																</label>
+															</div>
+															&nbsp; &nbsp;
+															<div class="radio inline">
+																<label>
+																<input name="sendType" type="radio" class="my" value="sms"/>
+																<span class="lbl"> 手機簡訊</span>
+																</label>
+															</div>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">觸發方式</label>
+														<div class="col-sm-8">
+															<div class="radio inline">
+																<label>
+																	<input name="triggerType" type="radio" class="my" checked="true" value="api"/>
+																	<span class="lbl"> 通信API</span>
+																</label>
+															</div>
+															&nbsp; &nbsp;
+															<div class="radio inline">
+																<label>
+																	<input name="triggerType" type="radio" class="my" value="event"/>
+																	<span class="lbl"> 事件通知</span>
+																</label>
+															</div>
+														</div>
+													</fieldset>
+													<fieldset id="showSet">
+														<label class="col-sm-2 control-label no-padding-right"></label>
+														<div class="col-sm-10">
+															<div class="widget-box">
+																<div class="widget-header">
+																	<h4 class="widget-title">事件通知</h4>
+																</div>
+																<div class="widget-body">
+																	<div class="widget-main no-padding">
+																		<fieldset style="padding:16px">
+																			<label class="col-sm-2 control-label no-padding-right">事件類型</label>
+																			<div class="col-sm-9" id="leave">
+																				<select class="chosen-select form-control" id="eventTypes" data-placeholder="請選擇事件類型..." style="display: none;">
+																					<option value=""></option>
+																				</select>
+																			</div>
+																		</fieldset>
+																		<fieldset style="padding:16px">
+																			<label class="col-sm-2 control-label no-padding-right">寄送時間</label>
+																			<div class="col-sm-9">
+																				<div class="radio inline">
+																					<label>
+																						<input name="sendTimeRadio" type="radio" class="my" checked="true" value="now"/>
+																						<span class="lbl"> 立即執行 </span>
+																					</label>
+																				</div>
+																					&nbsp; &nbsp;
+																				<div class="radio inline">
+																					<label>
+																						<input name="sendTimeRadio" type="radio" class="my" value="sendTime"/>
+																						<span class="lbl"> hh:ss </span>
+																					</label>
+																				</div>
+																				<label class="inline">
+																					<div class="col-sm-5" style="padding-top:16px" id="showTime">
+																						<div class="input-group bootstrap-timepicker">
+																						<input id="sendTimeDetail" type="text" class="form-control" />
+																							<span class="input-group-addon">
+																								<i class="fa fa-clock-o bigger-110"></i>
+																							</span>
+																						</div>
+																					</div>
+																				</label>
+																			</div>
+																		</fieldset>
+																		<fieldset style="padding:16px" id="showTimeList">
+																			<label class="col-sm-2 control-label no-padding-right">寄送週期</label>
+																			<div class="col-sm-10">
+																				<div class="widget-box">
+																					<div class="widget-body">
+																						<fieldset style="padding:16px">
+																							<div class="radio">
+																								<label>
+																									<input name="circleType" type="radio" class="my" value="yearly" />
+																									<span class="lbl"> 每年 </span>
+																								</label>
+																								<label class="inline">
+																									<select class="form-control" id="yearlyMonth" >
+																										<option value="">請選擇月份...</option>
+																										<option value="01">1</option>
+																										<option value="02">2</option>
+																										<option value="03">3</option>
+																										<option value="04">4</option>
+																										<option value="05">5</option>
+																										<option value="06">6</option>
+																										<option value="07">7</option>
+																										<option value="08">8</option>
+																										<option value="09">9</option>
+																										<option value="10">10</option>
+																										<option value="11">11</option>
+																										<option value="12">12</option>
+																									</select>
+																								</label>
+																								<label class="inline">月</label>
+																								<label class="inline">
+																									<select class="form-control" id="yearlyDay" >
+																										<option value="">請選擇日期...</option>
+																										<option value="01">1</option>
+																										<option value="02">2</option>
+																										<option value="03">3</option>
+																										<option value="04">4</option>
+																										<option value="05">5</option>
+																										<option value="06">6</option>
+																										<option value="07">7</option>
+																										<option value="08">8</option>
+																										<option value="09">9</option>
+																										<option value="10">10</option>
+																										<option value="11">11</option>
+																										<option value="12">12</option>
+																										<option value="13">13</option>
+																										<option value="14">14</option>
+																										<option value="15">15</option>
+																										<option value="16">16</option>
+																										<option value="17">17</option>
+																										<option value="18">18</option>
+																										<option value="19">19</option>
+																										<option value="20">20</option>
+																										<option value="21">21</option>
+																										<option value="22">22</option>
+																										<option value="23">23</option>
+																										<option value="24">24</option>
+																										<option value="25">25</option>
+																										<option value="26">26</option>
+																										<option value="27">27</option>
+																										<option value="28">28</option>
+																										<option value="29">29</option>
+																										<option value="30">30</option>
+																									</select>
+																								</label>
+																								<label class="inline">日</label>
+																							</div>
+																						</fieldset>
+																						<fieldset style="padding:16px">
+																							<div class="radio">
+																								<label>
+																									<input name="circleType" type="radio" class="my" value="monthly" />
+																									<span class="lbl"> 每月 </span>
+																								</label>
+																								<label class="inline">
+																									<select class="form-control" id="monthlyDay" >
+																										<option value="">請選擇日期...</option>
+																										<option value="01">1</option>
+																										<option value="02">2</option>
+																										<option value="03">3</option>
+																										<option value="04">4</option>
+																										<option value="05">5</option>
+																										<option value="06">6</option>
+																										<option value="07">7</option>
+																										<option value="08">8</option>
+																										<option value="09">9</option>
+																										<option value="10">10</option>
+																										<option value="11">11</option>
+																										<option value="12">12</option>
+																										<option value="13">13</option>
+																										<option value="14">14</option>
+																										<option value="15">15</option>
+																										<option value="16">16</option>
+																										<option value="17">17</option>
+																										<option value="18">18</option>
+																										<option value="19">19</option>
+																										<option value="20">20</option>
+																										<option value="21">21</option>
+																										<option value="22">22</option>
+																										<option value="23">23</option>
+																										<option value="24">24</option>
+																										<option value="25">25</option>
+																										<option value="26">26</option>
+																										<option value="27">27</option>
+																										<option value="28">28</option>
+																										<option value="29">29</option>
+																										<option value="30">30</option>
+																									</select>
+																								</label>
+																								<label class="inline">日</label>
+																							</div>
+																						</fieldset>
+																						<fieldset style="padding:16px">
+																							<div class="radio">
+																								<label>
+																									<input name="circleType" type="radio" class="my" value="weekly" />
+																									<span class="lbl"> 每週 &nbsp; &nbsp; &nbsp;</span>
+																								</label>
+																								<div class="widget-box inline">
+																									<div class="widget-body">
+																										<label style="padding:16px">
+																											<label>
+																												<input name="weekly" type="radio" class="my" value="1" />
+																												<span class="lbl"> 週一 </span>
+																											</label>
+																											<label>
+																												<input name="weekly" type="radio" class="my" value="2" />
+																												<span class="lbl"> 週二 </span>
+																											</label>
+																											<label>
+																												<input name="weekly" type="radio" class="my" value="3" />
+																												<span class="lbl"> 週三 </span>
+																											</label>
+																											<label>
+																												<input name="weekly" type="radio" class="my" value="4" />
+																												<span class="lbl"> 週四 </span>
+																											</label>
+																											<label>
+																												<input name="weekly" type="radio" class="my" value="5" />
+																												<span class="lbl"> 週五 </span>
+																											</label>
+																											<label>
+																												<input name="weekly" type="radio" class="my" value="6" />
+																												<span class="lbl"> 週六 </span>
+																											</label>
+																											<label>
+																												<input name="weekly" type="radio" class="my" value="7" />
+																												<span class="lbl"> 週日 </span>
+																											</label>
+																										</label>
+																									</div>
+																								</div>
+																							</div>
+																						</fieldset>
+																					</div>
+																				</div>
+																			</div>
+																		</fieldset>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">收件者</label>
+														<div class="col-sm-9">
+															<div class="radio inline">
+																<label>
+																	<input name="receiverMode" type="radio" class="my" value="dynamic" checked="true" />
+																	<span class="lbl"> 動態指定</span>
+																</label>
+															</div>
+															&nbsp; &nbsp;
+															<div class="radio inline">
+																<label>
+																	<input name="receiverMode" type="radio" class="my" value="customize"/>
+																	<span class="lbl"> 自訂</span>
+																</label>
+																<label>
+																	<button class="pull-left btn btn-primary" type="button" id="receiverBtn">
+																	...</button>
+																</label>
+															</div>
+														</div>
+													</fieldset>
+													<fieldset id="messagingSubjectHide">
+														<label class="col-sm-2 control-label no-padding-right">主旨</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="messagingSubject" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset id="showCont1">
+														<label class="col-sm-2 control-label no-padding-right">內容</label>
+														<!-- <div class="col-sm-10" id="leave">
+															<textarea class="form-control" id="mailMessagingContent" placeholder="請輸入內容..."></textarea>
+														</div>-->
+														<div class="col-sm-10" id="mailContentDiv">
+															<div id="mailMessagingContent"></div>
+														</div>
+													</fieldset>
+													<fieldset id="showCont2">
+														<label class="col-sm-2 control-label no-padding-right">內容</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="mobileMessagingContent" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">引用變數</label>
+														<div class="col-sm-10" id="leave">
+															<select class="chosen-select form-control" id="parameters" data-placeholder="請選擇引用變數..."   multiple="multiple" style="display: none;">
+																<option value=""></option>
+															</select>
+														</div>
+													</fieldset>
+													<div class="form-actions center">
+														<button type="button" class="btn btn-success" id="updateSendCommTemp" onclick="updateFormValue()" disabled="true">
+															<i class="my-icon fa fa-check bigger-110"></i>更新
+														</button>
+														<button class="btn" type="reset" id="resetCommTemp" disabled="true">
+														<i class="my-icon fa fa-undo bigger-110"></i>
+															重新輸入
+														</button>
+														<button type="button" class="btn btn-info" onclick="returnCommTemp()">
+															<i class="my-icon fa fa-angle-double-left"></i>
+															返回
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="receiverTipe">
+								<form id="receiverform">
+									<div id="addFieldset">
+									</div>
+								</form>
+								<fieldset style="padding:16px">
+									<div class="col-sm-2" id="addReceiver">
+										<a href="#" onclick="addReceiver()"><i class='my-icon fa fa-plus-circle bigger-160'></i></a>
+									</div>
+								</fieldset>
+							</div>
+							<form id="editForm" th:action="@{/communicationTemplateDetail}" method="POST">
+								<input type="hidden" id="messagingTemplateId" name="messagingTemplateId"/>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<!-- 		<th:block th:replace="fragments/script"/> -->
+		<div th:replace="fragments/commonScript :: common_js(~{::script})">
+		    <script th:src="@{/plugin/summernote-editor/summernote.min.js}"></script>
+			<script th:src="@{/plugin/summernote-editor/lang/summernote-zh-TW.js}"></script>
+		</div>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var dext = 0;
+		$(document).ready(function() {
+			$("#parameters").chosen().change(function(e, params) {
+				console.log("e",e);
+				 var chosenValues = $("#parameters").chosen().val();
+				 //console.log("chosenValues:"+chosenValues);
+				 if(chosenValues) {
+					 for(var i=0; i<chosenValues.length;i++) {
+						 var paramId = chosenValues[i].split("^")[0];
+                         var paramValue = chosenValues[i].split("^")[1];
+                         console.log("paramId="+paramId+",paramValue="+paramValue);
+						 var sendtype = $('input[type=radio][name=sendType]:checked').val();
+						 if(sendtype == "sms") {
+							 var content = $("#mobileMessagingContent").val();
+							 //console.log($(contentElement).val().indexOf("${" + chosenValues[i]+"}"));
+							 if(content.indexOf("${" + paramValue+"}") < 0) {
+								 //檢查內容沒有該參數才加入
+								 var newContents = $("#mobileMessagingContent").val() + "${" + paramValue+"}";
+								 $("#mobileMessagingContent").val(newContents);
+							 }
+						 } else if(sendtype == "email") {
+							 var content = $("#mailMessagingContent").summernote('code');
+							//console.log($(contentElement).val().indexOf("${" + chosenValues[i]+"}"));
+							 if(content.indexOf("${" + paramValue+"}") < 0) {
+								 //檢查內容沒有該參數才加入
+								 var newContents = content + "${" + paramValue+"}";
+								 $("#mailMessagingContent").summernote('code', newContents);
+							 }
+						 }
+						 
+					 }
+				 }
+			});
+			
+			//$('#mailMessagingContent').wysihtml5();
+			$("#mailMessagingContent").summernote({
+				minHeight: 100,             // set minimum height of editor
+				maxHeight: 300,             // set maximum height of editor
+				placeholder: '請輸入郵件內容及格式...',
+				lang: 'zh-TW',
+				toolbar: [
+				    // [groupName, [list of button]]
+				    ['style', ['bold', 'italic', 'underline', 'clear']],
+				    ['font', ['fontname', 'fontsize','color']],
+				    ['para', ['ul', 'ol']],
+				    ['Insert', ['link', 'hr']],
+				    ['height', ['height']],
+				    ['misc', ['codeview']]
+				],
+				fontNames: ['Arial', 'Consolas', 'Courier New', '新細明體', '微軟正黑體', '標楷體']
+			});
+
+			// 取得明細資料
+			var formData = {};
+			formData.messagingTemplateId = /*[[${param.messagingTemplateId} != null ? ${param.messagingTemplateId[0]}]]*/;
+			eserviceForm.post(/*[[@{/communctionTemp/getMessagingTemplateTmpById}]]*/, formData, function(response) {
+				var data = response.resultData;
+				$('#systems').text(data.sysName);
+				$("#systemId").val(data.systemId);
+				$('#messagingTemplateCode').text(data.messagingTemplateCode);
+				$('#messagingTemplateName').val(data.messagingTemplateName);
+				$('#messagingSubject').val(data.messagingSubject);
+				$('#status').text(data.statusName);
+				
+				setBtnStatus(data.Status);    // 設定修改按鈕狀態
+				setSendType(data);            // 設定寄送方式
+				setTriggerType(data);         // 設定觸發方式
+				setReceiverMode(data);        // 設定收件方式
+				setMessagingParameter(data);  // 設定引用變數
+				
+				//觸發方式
+				$('#updateCommTemp').change(function() {
+					$("#status").text("等待覆核");
+				});
+				
+				//觸發方式
+				$('#receiverform').change(function() {
+					$("#status").text("等待覆核");
+				});
+			});
+			initEvent(); // 初始化事件
+		});
+		
+		// 初始化事件
+		function initEvent() {
+			
+			// 載入事件功能下拉選單
+			eserviceAdmOption.chosenParameter("#eventTypes", /*[[@{/common/optionList?categoryCode=MSG_EVENT_TYPE}]]*/);
+			
+			//觸發方式
+			$('input[type=radio][name=triggerType]').change(function() {
+				if(this.value == 'api'){
+					$("#showSet").hide();
+				}else if(this.value == 'event'){
+					$("#showSet").show();
+				}
+			});
+			
+			//寄送方式
+			$('input[type=radio][name=sendType]').change(function() {
+				$("fieldset[name=receiverFor]").each(function(){
+					$(this).remove();
+				})
+				dext = 0;
+				if(this.value == 'sms'){
+					//$("#mobileMessagingContent").val($("#mailMessagingContent").val());
+					$("#showCont2").show();
+					$("#showCont1").hide();
+					$("#messagingSubjectHide").hide();
+					var mobile = '<fieldset style="padding:16px" id="mobile_0" name="receiverFor"><label class="col-sm-2 control-label no-padding-right">手機門號</label>'+
+					'<div class="col-sm-8"><input type="text" id="receiver_0" class="form-control" /></div><div class="col-sm-2" id="delete_'+dext+'">'+
+					'<a href="#" onclick="removeReceiver(0)"><i class="my-icon fa fa-trash bigger-160 red"></i></a></div></fieldset>';
+					$("#addFieldset").append(mobile);
+					//dext = dext + 1;
+				}else if(this.value == 'email'){
+					//$("#mailMessagingContent").val($("#mobileMessagingContent").val());
+					$("#showCont2").hide();
+					$("#showCont1").show();
+					$("#messagingSubjectHide").show();
+					var email = '<fieldset style="padding:16px" id="mail_0" name="receiverFor"><label class="col-sm-2 control-label no-padding-right">電子郵件</label>'+
+					'<div class="col-sm-8"><input type="text" id="receiver_0" class="form-control" /></div><div class="col-sm-2" id="delete_'+dext+'">'+
+					'<a href="#" onclick="removeReceiver(0)"><i class="my-icon fa fa-trash bigger-160 red"></i></a></div></fieldset>';
+					$("#addFieldset").append(email);
+					//dext = dext + 1;
+				}
+			});
+			
+			//寄送時間
+			$('input[type=radio][name=sendTimeRadio]').change(function() {
+				if(this.value == 'now'){
+					$("#showTime").hide();
+					$("#showTimeList").hide();
+				}else if(this.value == 'sendTime'){
+					$("#showTime").show();
+					$("#showTimeList").show();
+				}
+			});
+			
+			//收件者
+			$('input[type=radio][name=receiverMode]').change(function() {
+				if(this.value == "customize"){
+					$("#addFieldset").show();
+					$("#addReceiver").show();
+				}else if(this.value == "dynamic"){
+					$("#addFieldset").hide();
+					$("#addReceiver").hide();
+				}
+			});
+			
+			// 收件人設定
+			$('#receiverBtn').on('click', function(e) {
+				e.preventDefault();
+				var dialog = $('#receiverTipe').removeClass('hide').dialog({
+					modal: true,
+					title: "<div class='widget-header widget-header-small center'><h4 class='smaller'>收件人設定</h4></div>",
+					title_html: true,
+					buttons: [ 
+						{
+							text: "確定",
+							"class" : "btn btn-primary btn-minier",
+							click: function() {
+								$(this).dialog('close');
+							} 
+						}
+					],
+					width: 600
+				});
+			});
+			
+			$('#sendTimeDetail').timepicker({
+				minuteStep: 1,
+				showSeconds: false,
+				showMeridian: false,
+				disableFocus: true,
+				icons: {
+					up: 'fa fa-chevron-up',
+					down: 'fa fa-chevron-down'
+				}
+			}).on('focus', function() {
+				$('#sendTimeDetail').timepicker('showWidget');
+			}).next().on(my.click_event, function(){
+				$(this).prev().focus();
+			});
+			
+			$('#receiverTipe').hide();
+			eserviceAdmEvent.initDialog();
+			eserviceAdmEvent.initChosenSelect();
+		}
+		
+		// 設定修改按鈕狀態
+		function setBtnStatus(tmpStatus) {
+			// 0:停用 2:覆核中
+			if (tmpStatus == "0" || tmpStatus == "2") {
+				$.each($("input[type=text]"), function(inx, obj) {
+					$(this).attr('disabled', true);
+				});
+				$.each($("select"), function(inx, obj) {
+					$(this).attr('disabled', true);
+				});
+				$("#systems").trigger("chosen:updated");
+				$.each($("input[type=radio]"), function(inx, obj) {
+					$(this).attr('disabled', true);
+				});
+				$("textarea").attr('disabled', true);
+				$("#updateSendCommTemp").attr('disabled', true);
+				$("#resetCommTemp").attr('disabled', true);
+				
+				if (tmpStatus == "0") {
+					$("#updateError").show();
+					$("#updateErrorCont").text("此模版已被停用!");
+				} else {
+					$("#updateError").show();
+					$("#updateErrorCont").text("請等待模版審核...");
+				}
+			} else {
+				$("#updateSendCommTemp").attr('disabled', false);
+				$("#resetCommTemp").attr('disabled', false);
+			}
+		}
+		
+		// 設定寄送方式
+		function setSendType(data) {
+			$("input[type=radio][name=sendType][value=" + data.sendType + "]").attr("checked", true);
+			$("input[type=radio][name=sendType][value=" + data.sendType + "]").trigger("change");
+			
+			if (data.sendType == "email") {
+				//$("#mailMessagingContent").val(data.messagingContent);
+				$("#mailMessagingContent").summernote('code', data.messagingContent);
+			} else if (data.sendType == "sms") {
+				$("#mobileMessagingContent").val(data.messagingContent);
+			}
+		}
+		
+		// 設定觸發方式
+		function setTriggerType(data) {
+			$("input[type=radio][name=triggerType][value=" + data.triggerType + "]").attr("checked", true);
+			$("input[type=radio][name=triggerType][value=" + data.triggerType + "]").trigger("change");
+			$("input[type=radio][name=sendTimeRadio][value=now]").trigger("change");
+		}
+		
+		// 設定收件方式
+		function setReceiverMode(data) {
+			// 收件者
+			$("input[type=radio][name=receiverMode][value=" + data.receiverMode + "]").attr("checked", true);
+			$("input[type=radio][name=receiverMode][value=" + data.receiverMode + "]").trigger("change");
+			
+			// 收件者設定
+			if(data.receiverMode == "customize"){
+				$.each(data.messagingReceiverTmpList, function(inx, obj) {
+					if (dext == 0) {
+						$("#receiver_0").val(obj.messagingReceiverValue);
+						if(data.status == "0" || data.status == "2"){
+							$("#receiver_0").attr('disabled', true);
+							$("#delete_0").remove();
+							$("#addReceiver").remove();
+						}
+						dext = dext + 1;
+					} else {
+						addReceiver();
+						var oldDext = dext-1;
+						$("#receiver_"+oldDext).val(obj.messagingReceiverValue);
+						if(data.status == "0" || data.status == "2"){
+							$("#receiver_"+oldDext).attr('disabled', true);
+							$("#delete_"+oldDext).remove();
+						}
+					}
+				});
+			} else {
+				$("#addFieldset").hide();
+				$("#addReceiver").hide();
+			}
+		}
+		
+		// 設定引用變數
+		function setMessagingParameter(data) {
+			var parameters = [];
+			console.log("setMessagingParameter datalist=", data.messagingParameterTmpList);
+			$.each(data.messagingParameterTmpList, function(i, obj) {
+				parameters.push(obj.parameterId+"^"+obj.parameterValue);
+			});
+			eserviceAdmOption.chosenMsgTempParameter("#parameters", /*[[@{/common/msg/parameterList}]]*/, function() {
+				$('#parameters').val(parameters);//value對應不上（data少了parameterValue)
+				$('#parameters').trigger("chosen:updated");
+			});
+		}
+		
+		function updateFormValue() {
+			$("#updateError").hide();
+			var sendTime = "";
+			var circleType = "";
+			var circleValue = "";
+			var messagingContent = "";
+			var receiverList = [];
+			
+			//檢查欄位輸入
+			if($("#messagingTemplateName").val() == ""){
+				$("#updateError").show();
+				$("#updateErrorCont").text("請輸入通信模版名稱");
+				return false;
+			}
+			
+			if(typeof($("input[type=radio][name=sendType]:checked").val()) == "undefined"){
+				$("#updateError").show();
+				$("#updateErrorCont").text("請選擇寄送方式");
+				return false;
+			}
+			
+			if(typeof($("input[type=radio][name=triggerType]:checked").val()) == "undefined"){
+				$("#updateError").show();
+				$("#updateErrorCont").text("請選擇觸發方式");
+				return false;
+			}
+			
+			if($("input[type=radio][name=triggerType]:checked").val() == "event"){
+				if($("#eventTypes").val() == ""){
+					$("#updateError").show();
+					$("#updateErrorCont").text("請選擇事件類型");
+					return false;
+				}
+
+				if($("input[type=radio][name=sendTimeRadio]:checked").val() == "sendTime"){
+					if($("#sendTimeDetail").val() == ""){
+						$("#updateError").show();
+						$("#updateErrorCont").text("請填入寄送時間");
+						return false;
+					}else{
+						sendTime = $("#sendTimeDetail").val()
+						
+						if(typeof($("input[type=radio][name=circleType]:checked").val()) == "undefined"){
+							$("#updateError").show();
+							$("#updateErrorCont").text("請選擇寄送週期");
+							return false;
+						}
+						
+						circleType = $("input[type=radio][name=circleType]:checked").val();
+						
+						if(circleType == "yearly"){
+							if($("#yearlyMonth").val() == "" || $("#yearlyDay").val() == ""){
+								$("#updateError").show();
+								$("#updateErrorCont").text("請選擇月日");
+								return false;
+							}else{
+								circleValue	= $("#yearlyMonth").val() + "/" + $("#yearlyDay").val();
+							}
+						}
+						
+						if(circleType == "monthly"){
+							if($("#monthlyDay").val() == ""){
+								$("#updateError").show();
+								$("#updateErrorCont").text("請選擇日");
+								return false;
+							}else{
+								circleValue	= $("#monthlyDay").val();
+							}
+						}
+						
+						if(circleType == "weekly"){
+							if(typeof($("input[type=radio][name=weekly]:checked").val()) == "undefined"){
+								$("#updateError").show();
+								$("#updateErrorCont").text("請選擇星期");
+								return false;
+							}else{
+								circleValue	= $("input[type=radio][name=weekly]:checked").val();
+							}
+						}
+					}
+				}else{
+					sendTime = $("input[type=radio][name=sendTimeRadio]:checked").val();
+				}
+			}
+			
+			if(typeof($("input[type=radio][name=receiverMode]:checked").val()) == "undefined"){
+				$("#updateError").show();
+				$("#updateErrorCont").text("請選擇收件者接收類型");
+				return false;
+			}else{
+				//收件人資訊
+				if($("input[type=radio][name=receiverMode]:checked").val() == "customize"){
+					var check = false;
+					$("input[id^=receiver_]").each(function(){
+						receiverList.push($(this).val());
+						if($(this).val() != ""){
+							check = true;
+						}
+					});
+					if(!check){
+						$("#updateError").show();
+						$("#updateErrorCont").text("請填入至少一個收件者資訊");
+						return false;
+					}
+				}
+			}
+			
+			if($("#messagingSubject").val() =="" && $("input[type=radio][name=sendType]:checked").val() == "email"){
+				$("#updateError").show();
+				$("#updateErrorCont").text("請填寫主旨");
+				return false;
+			}
+			
+			if($("input[type=radio][name=sendType]:checked").val() == "email"){
+				if($("#mailMessagingContent").val() ==""){
+					$("#updateError").show();
+					$("#updateErrorCont").text("請填入內容");
+					return false;
+				}
+				//messagingContent = $("#mailMessagingContent").val();
+			    messagingContent = $("#mailMessagingContent").summernote('code');
+			}
+			
+			if($("input[type=radio][name=sendType]:checked").val() == "sms"){
+				if($("#mobileMessagingContent").val() ==""){
+					$("#updateError").show();
+					$("#updateErrorCont").text("請填入內容");
+					return false;
+				}
+				messagingContent = $("#mobileMessagingContent").val();
+			}
+			
+			var formData = {
+				messagingTemplateId : /*[[${param.messagingTemplateId} != null ? ${param.messagingTemplateId[0]}]]*/,
+				systemId : $("#systemId").val(),
+				messagingTemplateCode : $("#messagingTemplateCode").text(),
+				messagingTemplateName : $("#messagingTemplateName").val(),
+				status : 1,
+				triggerType : $("input[type=radio][name=triggerType]:checked").val(),
+				eventType : $("#eventTypes").val(),
+				sendType : $("input[type=radio][name=sendType]:checked").val(),
+				sendTime : sendTime,
+				circleType : circleType,
+				circleValue : circleValue,
+				receiverMode : $("input[type=radio][name=receiverMode]:checked").val(),
+				messagingSubject : $("#messagingSubject").val(),
+				messagingContent : messagingContent,
+				parameters : $("#parameters").val(),
+				messagingReceivers : receiverList
+			};
+			eserviceForm.post(/*[[@{/communctionTemp/updateMessagingTemplate}]]*/, formData, function(response) {
+				if (response.result != 'SUCCESS') {
+					alertMsg(response.resultMsg);
+				} else {
+					alertMsg("更新成功!");
+					toEdit();
+				}
+			});
+		}
+		
+		function addReceiver(){	
+			var email = '<fieldset style="padding:16px" id="mail_'+dext+'" name="receiverFor"><label class="col-sm-2 control-label no-padding-right">電子郵件</label>'+
+				'<div class="col-sm-8"><input type="text" id="receiver_'+dext+'" class="form-control" /></div><div class="col-sm-2" id="delete_'+dext+'">'+
+				'<a href="#" onclick="removeReceiver('+dext+')"><i class="my-icon fa fa-trash bigger-160 red"></i></a></div></fieldset>';
+		
+			var mobile = '<fieldset style="padding:16px" id="mobile_'+dext+'" name="receiverFor"><label class="col-sm-2 control-label no-padding-right">手機門號</label>'+
+				'<div class="col-sm-8"><input type="text" id="receiver_'+dext+'" class="form-control" /></div><div class="col-sm-2" id="delete_'+dext+'">'+
+				'<a href="#" onclick="removeReceiver('+dext+')"><i class="my-icon fa fa-trash bigger-160 red"></i></a></div></fieldset>';
+			
+			if($("input[type=radio][name=sendType]:checked").val() == "sms"){
+				$("#addFieldset").append(mobile);
+			}
+			if($("input[type=radio][name=sendType]:checked").val() == "email"){
+				$("#addFieldset").append(email);
+			}
+			dext = dext + 1;
+		}
+		
+		function removeReceiver(dex) {
+			if ($("input[type=radio][name=sendType]:checked").val() == "sms") {
+				$("#mobile_"+dex).remove();
+			}
+			if ($("input[type=radio][name=sendType]:checked").val() == "email") {
+				$("#mail_"+dex).remove();
+			}
+		}
+		
+		function returnCommTemp() {
+			toEdit();
+		}
+		
+		function toEdit() {
+			$('#editForm #messagingTemplateId').val(/*[[${param.messagingTemplateId} != null ? ${param.messagingTemplateId[0]}]]*/);
+			$('#editForm')[0].submit();
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

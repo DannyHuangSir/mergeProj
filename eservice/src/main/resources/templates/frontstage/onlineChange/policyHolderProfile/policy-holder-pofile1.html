@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>保戶基本資料更新｜臺銀人壽保單網路服務</title>
+	<link th:href="@{/css/tmp-radio.css}" rel="stylesheet"/>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">保戶基本資料更新</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 保戶基本資料更新
+			</div>
+			    <div class="mystyle3">
+                <h2>保戶基本資料更新</h2>
+                <div class="change3">
+					<div class="col-sm-2 col-sm-offset-2 ">
+						<label>&nbsp;&nbsp;&nbsp;要保人姓名：</label>
+					</div>
+					<div class="col-sm-7">
+						<th:block th:text="${transPolicyHolderProfileVo} != null and ${transPolicyHolderProfileVo.name} != null ? ${transPolicyHolderProfileVo.name}"/>
+					</div>
+				</div>
+                <div class="change3">
+					<div class="col-sm-2 col-sm-offset-2 ">
+						<label>&nbsp;&nbsp;&nbsp;要保人國籍：</label>
+					</div>
+					<div class="col-sm-7">
+						<th:block th:replace="fragments/country"/>
+					</div>
+				</div>
+				<!-- <div class="change3">
+                    <div class="col-sm-2 col-sm-offset-2 ">
+						<label><span style="color: red;">＊</span>在台有無居住地址：</label>
+					</div>
+                    <div class="col-sm-7">
+						<div class="selector-box" style="width: 200px;">
+							<select id="hasAddressInTaiwan" data-validation="required" style="width: 200px;" onchange="chgAdrInTw(this)">
+								<option value="">請選擇</option>
+								<option value="1">有</option>
+								<option value="0">無</option>
+							</select>	
+						</div>
+					</div>
+                </div>
+				<div class="change3 hide">
+					<div class="col-sm-2 col-sm-offset-2 ">
+						<label>&nbsp;&nbsp;&nbsp;居住地國別：</label>
+					</div>
+					<div class="col-sm-7">
+						<th:block th:replace="fragments/countryLive"/>
+					</div>
+				</div> -->
+                
+				<div class="change3">
+                    <div class="col-sm-2 col-sm-offset-2 ">
+						<label>&nbsp;&nbsp;&nbsp;要保人職業：</label>
+					</div>
+                    <div class="col-sm-7">
+						<th:block th:replace="fragments/jobOption"/>
+					</div>
+                </div>
+                
+				<div class="change3">
+                    <div class="col-sm-2 col-sm-offset-2 ">
+						<label>&nbsp;&nbsp;&nbsp;服務單位：</label>
+					</div>
+                    <div class="col-sm-7">
+						<input type="text" class="col-sm-7" id="companyName" />
+					</div>
+                </div>
+                
+                <div class="change3">
+                    <div class="col-sm-2 col-sm-offset-2 ">
+						<label>&nbsp;&nbsp;&nbsp;收費地址：</label>
+					</div>
+                    <div class="col-sm-7">
+                    	<table>
+						<th:block th:each="vo : ${lipmList}">
+							<tr>
+								<td class="text-left" style="padding: 2px;">
+									<th:block th:text="${vo.lipmInsuNo}"/><!-- <th:block th:text="${#strings.substring(vo.lipmInsuNo,0,3)}"/>*****<th:block th:text="${#strings.substring(vo.lipmInsuNo,8,10)}"/> -->
+								</td>
+								<td class="text-left" style="padding: 2px;">&nbsp;&nbsp;&nbsp;<th:block th:text="${vo.lipmCharAddr}"/></td>
+							</tr>
+						</th:block>
+						</table>
+					</div>
+                </div>
+                
+				<!-- <div class="change3">
+                    <div class="col-sm-2 col-sm-offset-2 ">
+						<label>&nbsp;&nbsp;&nbsp;職稱：</label>
+					</div>
+                    <div class="col-sm-7">
+						<input type="text" class="col-sm-7" id="jobTitle" />
+					</div>
+                </div> -->
+				
+				<div class="statement1 wht">
+					<ol class="text-ps">
+						<li>※本項申請僅受理要保人職業變更，如須辦理被保險人職業變更，請另填「契約內容變更申請書」並檢附保險單正本郵寄至本公司或電洽至本公司協助您書面辦理變更。</li>
+						<li>※如須變更地址、電話或E-mail，請至「聯絡資料變更」辦理。</li>
+					</ol>
+				</div>
+                <div class="col-md-12 two-buttons">
+                    <a href="apply1">
+						<button type="button" id="deny" class="btn-signup">取消</button>
+					</a>
+					<button type="button" id="go" class="btn-signup">下一步</button>
+                </div>
+            </div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = /*[[${transPolicyHolderProfileVo}]]*/;
+		var msg1r = /*[[${MSG_1R}]]*/;
+		var msg1d = /*[[${MSG_1D}]]*/;
+		$(function() {
+			// 下一步事件
+			$('#go').click(function() {
+				if($('#countryOption').val() == "" && $('#jobSOption').val() == ""){
+					openAlert("國籍與職業分類至少需輸入一項。");
+					return false;
+				}
+				/* if($('#hasAddressInTaiwan').val() == ""){
+					openAlert("請輸入在台有無居住地址");
+					return false;
+				}
+				if($("#hasAddressInTaiwan").val() == "1" && $('#countryLiveOption').val() == ""){
+					openAlert("請輸入居住地國別");
+					return false;
+				} */
+				if ($('#countryOption').val() == 'DENY') {
+					openAlert("本次變更要保人之國籍不受理線上變更，請書面至本公司辦理。");
+					return false;
+				}
+				if (msg1r == 'Y') {
+					var jobCode = new Number($('#jobSOption').val().split(',')[1]);
+					if (jobCode >= 5) {
+						openAlert("變更要保人職業，將影響真放心保險費豁免保附約(1R)保費，不受理線上變更，請書面至本公司辦理。");
+						return false;
+					}
+				}
+				if (msg1d == 'Y') {
+					var jobCode = new Number($('#jobSOption').val().split(',')[1]);
+					if (jobCode >= 4) {
+						openAlert("變更要保人職業，將影響保險費豁免附約(1D)保費，不受理線上變更，請書面至本公司辦理。");
+						return false;
+					}
+				}
+				 
+				if($('#areaOption').val() != "" && $('#countryOption').val() == ""){
+					openAlert("請輸入要保人國籍");
+					return false;
+				}
+				
+				if($('#jobBOption').val() != "" && $('#jobSOption').val() == ""){
+					openAlert("請輸入完整職業分類");
+					return false;
+				}
+
+				if($('#countryOption').val() != ""){
+					formData.country = $('#countryOption').val();
+					formData.countryDesc = $('#areaOption option:selected').text() + ',' + $('#countryOption option:selected').text();
+				}
+				
+				/* formData.countryLive = $('#countryLiveOption').val();
+				formData.countryLiveDesc=$('#areaLiveOption option:selected').text() + ',' + $('#countryLiveOption option:selected').text();
+				formData.hasAddressInTaiwan=$('#hasAddressInTaiwan').val(); */
+				if($('#jobSOption').val() != ""){
+					formData.jobB=$('#jobBOption').val();
+					formData.jobM=$('#jobMOption').val();
+					formData.jobS=$('#jobSOption').val().split(',')[0];
+					formData.jobBDesc=$('#jobBOption option:selected').text();
+					formData.jobMDesc=$('#jobMOption option:selected').text();
+					formData.jobSDesc=$('#jobSOption option:selected').text();
+				}
+				
+				formData.companyName=$('#companyName').val();
+				/* formData.jobTitle=$('#jobTitle').val(); */
+				postWithFormData(/*[[@{/policyHolderProfile2}]]*/, formData);
+			});
+		});
+
+		/* function chgAdrInTw(obj) {
+			if (obj.value == "0") {
+				$('.csCountryLive').addClass('disabled');
+				$('.csCountryLive').attr('disabled', true);
+				$("#areaLiveOption").val("");
+				$("#countryLiveOption").val("");
+			} else {
+				$('.csCountryLive').removeClass('disabled');
+				$('.csCountryLive').attr('disabled', false);
+			}
+		} */
+	/*]]>*/
+	</script>
+</body>
+
+</html>

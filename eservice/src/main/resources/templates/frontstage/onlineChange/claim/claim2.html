@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>理賠申請書套印｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">理賠申請書套印</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 理賠申請書套印
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-4">
+						2<span class="hid1">. 填寫申請書</span>
+					</li>
+					<li class="step3 col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>填寫申請書</h2>
+				<div class="col-md-8 col-md-offset-2">
+					<form id="step2Form" class="form-horizontal no-borderBottom marginTop20" role="form" th:action="@{/claim3}" method="POST">
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-2">申請項目：</label>
+							<div class="col-sm-10">
+								<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+									<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" value="01"></i></div>死亡給付
+								</div>
+								<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+									<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" value="02"></i></div>殘廢給付
+								</div>
+								<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+									<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" value="03"></i></div>住院醫療
+								</div>
+								<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+									<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" value="04"></i></div>傷害醫療
+								</div>
+								<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+									<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" value="05"></i></div>癌症醫療
+								</div>
+								<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+									<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" value="06"></i></div>重大疾病
+								</div>
+								<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+									<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" value="07"></i></div>生命末期提前給付
+								</div>
+								<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+									<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" value="08"></i></div>其他
+								</div>
+								<input type="text" id="itemOther" name="itemOther" class="item100" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">要保人姓名：</label>
+							<div class="col-sm-10">
+								<th:block th:text="${claimVo.customerName}"/>
+								<input type="hidden" name="customerName" th:value="${claimVo.customerName}"/>
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">保單號碼：</label>
+							<div class="col-sm-10">
+								<th:block th:text="${claimVo.policyNo}"/>
+								<input type="hidden" name="policyNo" th:value="${claimVo.policyNo}"/>
+							</div>
+							<div class="clearfix"></div><h2 class="divider divider88"></h2>
+						</div>
+						<div class="form-group"><h2>事故者資料</h2>
+							<label for="inputPassword3" class="col-sm-2">被保人姓名：</label>
+							<div class="col-sm-10">
+								<input type="text" name="insuredName" th:value="${claimVo.insuredName}" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">身分證號碼：</label>
+							<div class="col-sm-10">
+								<input type="text" name="rocId" th:value="${claimVo.rocId}" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">聯絡電話：</label>
+							<div class="col-sm-10">
+								<input type="text" name="tel1" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">出生日期：</label>
+							<div class="col-sm-10">
+								<input type="text" name="birthDate" th:value="${claimVo.birthDate}" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">手機號碼：</label>
+							<div class="col-sm-10">
+								<input type="text" name="mobile" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">職業：</label>
+							<div class="col-sm-10">
+								<input type="text" name="job" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">聯絡地址：</label>
+							<div class="col-sm-10">
+								<input type="text" name="addr" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-4">與主被保險人(員工)之關係：</label>
+							<div class="col-sm-8">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="relation" value="01"></i></div>本人
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="relation" value="04"></i></div>子女
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="relation" value="03"></i></div>配偶
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="relation" value="02"></i></div>父母
+									</label>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<h2 class="divider divider88"></h2>
+						</div>
+						<div class="form-group"><h2>保險事故</h2>
+							<label for="inputPassword3" class="col-sm-3">保險事故：</label>
+							<div class="col-sm-9">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="bbb" value="option1" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>疾病
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="bbb" value="option2" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div>意外
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-12" style="width: 120%">
+								<div class="tabs">
+									<!-- TAB 1 -->
+									<article id="tab_1" class="tab">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 35%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">意外</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">發生時間</label>
+													<div class="col-sm-8" style="float: left;">
+														<input type="text" name="accidentYear" class="item100">年
+														<input type="text" name="accidentMonth" class="item50">月
+														<input type="text" name="accidentDay" class="item50">日
+														<input type="text" name="accidentHour" class="item50">時
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">事故地點</label>
+													<div class="col-sm-8"><input type="text" name="accidentLocation" class="col-sm-9" value="" placeholder=""></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">事故處理單位</label>
+													<div class="col-sm-8"><input type="text" name="accidentHandleUnit" class="col-sm-9" value="" placeholder=""></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">承辦員警</label>
+													<div class="col-sm-8"><input type="text" name="policeName" class="col-sm-9" value="" placeholder=""></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">員警電話</label>
+													<div class="col-sm-8"><input type="text" name="policeTel" class="col-sm-9" value="" placeholder=""></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">事故原因及送醫經過詳情（請述明就診醫院名稱）</label>
+													<div class="col-sm-8"><textarea name="accidentReason" class="col-sm-9"></textarea></div>
+												</div>
+											</div>
+										</section>
+									</article>
+									<!-- TAB 2 -->
+									<article class="tab tab-hide" id="tab_2">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 25%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">疾病</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">診斷病名</label>
+													<div class="col-sm-9"><input type="text" name="diseaseName" class="col-sm-9" value="" placeholder=""></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">該疾病初診日</label>
+													<div class="col-sm-9"><input type="text" name="diagnosisDate" class="col-sm-9" value="" placeholder=""></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">曾就診之醫院</label>
+													<div class="col-sm-9"><input type="text" name="hospital" class="col-sm-9" value="" placeholder=""></div>
+												</div>
+											</div>
+										</section>
+									</article>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<h2 class="divider divider88"></h2>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-6">被保險人是否投保別家保險公司之保險？</label>
+							<div class="col-sm-6">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="Y"></i></div>有
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="N"></i></div>沒有
+									</label>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">公司名稱：</label>
+							<div class="col-sm-10">
+								<input type="text" name="otherInsuCompany" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">保險種類：</label>
+							<div class="col-sm-10">
+								<input type="text" name="otherInsuType" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-2">保險金額：</label>
+							<div class="col-sm-10">
+								<input type="text" name="otherInsuAmout" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-3">同時申請理賠？</label>
+							<div class="col-sm-9">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="otherInsuClaim" value="Y"></i></div>是　
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="otherInsuClaim" value="N"></i></div>否
+									</label>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<h2 class="divider divider88"></h2>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-3">給付方式：</label>
+							<div class="col-sm-9">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="paymentMethod" value="01" onclick="if(this.checked) $('#tab_3').show().siblings().hide();"></i></div>電匯
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="paymentMethod" value="02" onclick="if(this.checked) $('#tab_4').show().siblings().hide();"></i></div>郵寄支票
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-12" style="width: 120%">
+								<div class="tabs">
+									<!-- TAB 1 -->
+									<article id="tab_3" class="tab">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 25%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">電匯</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">匯款帳戶</label>
+													<div class="col-sm-9">
+													<input type="text" name="accountName" class="col-sm-8" value="" placeholder=""><span style="font-size:14px;color:red">&nbsp;限受益人本人之帳戶</span></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">銀行名稱</label>
+													<div class="col-sm-5">
+														<div>
+															<select id="bankOpt" name="bankOpt" data-placeholder="選擇銀行" class="wht">
+																<option value=""></option>
+															</select>
+															<input type="hidden" id="bankName" name="bankName"/>
+														</div>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">分行名稱</label>
+													<div class="col-sm-5">
+														<div>
+															<select class="selector wht" id="brancheOpt" name="brancheOpt" data-placeholder="選擇分行">
+																<option value=""></option>
+															</select>
+															<input type="hidden" id="branchName" name="branchName"/>
+														</div>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">帳號</label>
+													<div class="col-sm-9">
+														<input type="text" name="accountNumber" class="col-sm-8" value=""> </div>
+												</div>
+											</div>
+										</section>
+									</article>
+									<!-- TAB 2 -->
+									<article class="tab tab-hide" id="tab_4">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 35%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">郵寄支票</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">郵遞區號</label>
+													<div class="col-sm-8">
+														<input type="text" name="postalCode" class="col-sm-8" value=""> 
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">郵寄地址</label>
+													<div class="col-sm-8">
+														<input type="text" name="postalAddr" class="col-sm-8" value="">
+													</div>
+												</div>
+											</div>
+										</section>
+									</article>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-12 two-buttons">
+					<a href="claim1">
+						<button id="deny" class="btn-signup">上一步</button>
+					</a>
+					<button id="go" class="btn-signup" onclick="$('#step2Form').submit();">下一步</button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		$("#bankOpt").chosen({
+			allow_single_deselect:true, 
+			search_contains: true
+		});
+		
+		$("#brancheOpt").chosen({
+			allow_single_deselect:true, 
+			search_contains: true
+		});
+		
+		$('div.checkbox').click(function() {
+			$(this).find('input[type=checkbox]').click();
+		});
+		
+		//銀行下拉選單
+		var bankUrl = /*[[@{/getBankList}]]*/;
+		var branchesUrl = /*[[@{/getBranchesList}]]*/;
+		eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+		
+		// 設定寬度
+		$('.chosen-container').width('207px');
+		
+		// 取得名稱
+		$('#bankOpt').change(function() {
+			$('#bankName').val($('#bankOpt option:selected').text());
+		});
+		$('#brancheOpt').change(function() {
+			if ($('#brancheOpt').val() != '') {
+				$('#branchName').val($('#brancheOpt option:selected').text());
+			} else {
+				$('#branchName').val('');
+			}
+		});
+		
+	});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

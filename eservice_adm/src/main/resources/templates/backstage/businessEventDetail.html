@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+<!-- 		<th:block th:replace="fragments/navbar"/> -->
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+<!-- 			<div th:replace="fragments/sidebar :: sidebar (funId='businessEventDetail')"></div> -->
+			<div class="main-content">
+				<div class="main-content-inner">
+<!-- 					<div class="breadcrumbs my-save-state" id="breadcrumbs"> -->
+<!-- 						<ul class="breadcrumb"> -->
+<!-- 							<li> -->
+<!-- 								<i class="fa fa-search" aria-hidden="true"></i> -->
+<!-- 								<a href="#">記錄管理</a> -->
+<!-- 							</li> -->
+<!-- 						</ul> -->
+<!-- 					</div> -->
+
+					<div class="page-content">
+<!-- 						<div class="page-header"> -->
+<!-- 							<h1> -->
+<!-- 								記錄管理 -->
+<!-- 								<small> -->
+<!-- 									<i class="my-icon fa fa-angle-double-right"></i> -->
+<!-- 									業務事件記錄 -->
+<!-- 								</small> -->
+<!-- 							</h1> -->
+<!-- 						</div> -->
+
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<div class="col-xs-12">
+										<table id="simple-table" class="table  table-bordered table-hover">
+											<thead>
+												<tr>
+													<th align="left">業務事件記錄</th>
+												</tr>
+											</thead>
+
+											<tbody>
+												<tr>
+													<td>
+														<div class="table-detail">
+															<div class="row">
+
+																<div class="col-xs-12 col-sm-12">
+																	<div class="space visible-xs"></div>
+
+																	<div class="profile-user-info profile-user-info-striped">
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 帳號 </div>
+																			<div class="profile-info-value">
+																				<span id="userId"></span>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 記錄日期時間 </div>
+
+																			<div class="profile-info-value">
+																				<span id="eventDate"></span>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 來源IP </div>
+
+																			<div class="profile-info-value">
+																				<span id="sourceIp"></span>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 目的IP </div>
+
+																			<div class="profile-info-value">
+																				<span id="targetIp"></span>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 目的系統 </div>
+
+																			<div class="profile-info-value">
+																				<span id="targetSystemId"></span>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 事件代碼 </div>
+
+																			<div class="profile-info-value">
+																				<span id="eventCode"></span>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 事件名稱 </div>
+
+																			<div class="profile-info-value">
+																				<span id="eventName"></span>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 事件條件主鍵值物件 </div>
+
+																			<div class="profile-info-value">
+																				<table class="table  table-bordered table-hover" id="eventCondition">
+																					<thead>
+																						<tr>
+																							<th>事件主鍵類型</th>
+																							<th>事件主鍵類型代碼</th>
+																							<th>事件主鍵值</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																					</tbody>
+																				</table>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 事件變數值物件 </div>
+
+																			<div class="profile-info-value">
+																				<table class="table  table-bordered table-hover" id="eventParameter">
+																					<thead>
+																						<tr>
+																							<th>變數名稱</th>
+																							<th>變數代碼</th>
+																							<th>變數值</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																					</tbody>
+																				</table>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 事件狀態 </div>
+
+																			<div class="profile-info-value">
+																				<span id="eventStatus"></span>
+																			</div>
+																		</div>
+
+																		<div class="profile-info-row">
+																			<div class="profile-info-name"> 偵錯訊息按鈕 </div>
+
+																			<div class="profile-info-value">
+																				<button class="pull-left btn btn-yellow" type="button" id="id-btn-dialog1">
+																					...
+																				</button>
+																			</div>
+																		</div>
+																		
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div><!-- /.span -->
+								</div><!-- /.row -->
+
+								<div class="col-xs-12 col-sm-12">
+									
+<!-- 									<button href="/eservice_adm/eventRecord" class="pull-right btn btn-info" type="button" onclick="$('#form1').submit()"> -->
+<!-- 										<i class="my-icon fa fa-angle-double-left"></i> -->
+<!-- 										回上層 -->
+<!-- 									</button> -->
+<!-- 									<div class="pull-right">&nbsp;</div>  -->
+									<button class="pull-right btn btn-yellow" type="button" onclick="searchSystemEventDetail()">
+										系統事件
+										<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+									</button>
+									
+								</div>
+								
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+							
+							<div id="dialog-message" class="hide">
+								<div class="widget-main no-padding">
+									<span id="eventMsg"></span>
+								</div>
+							</div><!-- #dialog-message -->
+							
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+			<form role="form" id="form1" action="/eservice_adm/eventRecord"></form>
+			<form role="form" id="form2" action="/eservice_adm/systemEventDetail"></form>
+
+<!-- 			<div th:replace="fragments/footer"></div> -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+		<th:block th:replace="fragments/script"/>
+
+		<!-- page specific plugin scripts -->
+		<script	th:src="@{/js/jquery.dataTables.min.js}"></script>
+		<script	th:src="@{/js/jquery.dataTables.bootstrap.min.js}"></script>
+		<script	th:src="@{/js/jquery-ui.min.js}"></script>
+		<script	th:src="@{/js/dataTables.buttons.min.js}"></script>
+		<script	th:src="@{/js/buttons.flash.min.js}"></script>
+		<script	th:src="@{/js/buttons.html5.min.js}"></script>
+		<script	th:src="@{/js/buttons.print.min.js}"></script>
+		<script	th:src="@{/js/buttons.colVis.min.js}"></script>
+		<script	th:src="@{/js/dataTables.select.min.js}"></script>
+
+		<!-- inline scripts related to this page -->
+		<script	th:src="@{/js/businessEventDetail.js}"></script>
+		
+	</body>
+</html>

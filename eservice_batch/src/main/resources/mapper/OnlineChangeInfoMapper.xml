@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.OnlineChangeInfoMapper">
+
+	<resultMap id="OnlineChangeInfoMap" type="com.twfhclife.eservice_batch.model.OnlineChangeInfoVo" >
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="STATUS" property="status"/>
+		<result column="EFFECTIVE_DATE" property="effectiveDate"/>
+		<result column="EXPIRE_DATE" property="expireDate"/>
+		<result column="PAYMENT_MODE" property="paymentMode"/>
+		<result column="PREM_YEAR" property="premYear"/>
+		<result column="CURRENCY" property="currency"/>
+		<result column="LIPM_ID" property="lipmId"/>
+		<result column="LIPM_NAME_1" property="policyHolderName"/>
+		<result column="LIPI_ID" property="lipiId"/>
+		<result column="LIPI_NAME" property="insuredName"/>
+		<result column="LIPI_MAIN_AMT" property="mainAmount"/>
+		<result column="PRODUCT_NAME" property="productName"/>
+		<result column="TRANS_TYPE" property="transType"/>
+	</resultMap>
+	
+	<select id="getOnlineChangeInfo" resultMap="OnlineChangeInfoMap">
+		SELECT
+			P.POLICY_NO
+			,CASE WHEN P.EXPIRE_DATE <![CDATA[ < ]]> GETDATE()+1 THEN '50' ELSE P.STATUS END STATUS <!-- 50:滿期 -->
+			,P.EFFECTIVE_DATE
+			,P.EXPIRE_DATE
+			,P.PAID_TO_DATE
+			,P.PAYMENT_MODE
+			,P.MAIN_AMOUNT
+			,P.PREM_YEAR
+			,P.CURRENCY
+			,LIPM_ID
+			,ESERVICE.DBO.FN_DEBASE64(PM.LIPM_NAME_1) LIPM_NAME_1
+			,LIPI_ID
+			,ESERVICE.DBO.FN_DEBASE64(PI.LIPI_NAME) LIPI_NAME
+			,PI.LIPI_MAIN_AMT
+			,PROD.PRODUCT_NAME
+		FROM
+			ESERVICE.DBO.POLICY P
+		JOIN ESERVICE.DBO.LILIPM PM ON PM.LIPM_INSU_NO = P.POLICY_NO
+		JOIN ESERVICE.DBO.LILIPI PI ON PI.LIPI_INSU_NO = P.POLICY_NO
+		JOIN ESERVICE.DBO.PRODUCT PROD ON PROD.PRODUCT_CODE = PM.LIPM_INSU_TYPE
+		WHERE
+			P.POLICY_NO = #{policyNo}
+			AND PM.LIPM_ID = #{rocId}
+	</select>
+	
+	<select id="getOnlineChangeInfoByTransNum" resultMap="OnlineChangeInfoMap">
+		SELECT
+			P.POLICY_NO
+			,CASE WHEN P.EXPIRE_DATE <![CDATA[ < ]]> GETDATE()+1 THEN '50' ELSE P.STATUS END STATUS <!-- 50:滿期 -->
+			,P.EFFECTIVE_DATE
+			,P.EXPIRE_DATE
+			,P.PAID_TO_DATE
+			,P.PAYMENT_MODE
+			,P.MAIN_AMOUNT
+			,P.PREM_YEAR
+			,P.CURRENCY
+			,LIPM_ID
+			,ESERVICE.DBO.FN_DEBASE64(PM.LIPM_NAME_1) LIPM_NAME_1
+			,LIPI_ID
+			,ESERVICE.DBO.FN_DEBASE64(PI.LIPI_NAME) LIPI_NAME
+			,PI.LIPI_MAIN_AMT
+			,PROD.PRODUCT_NAME
+			,T.TRANS_TYPE
+		FROM
+			ESERVICE.DBO.POLICY P
+		JOIN ESERVICE.DBO.LILIPM PM ON PM.LIPM_INSU_NO = P.POLICY_NO
+		JOIN ESERVICE.DBO.LILIPI PI ON PI.LIPI_INSU_NO = P.POLICY_NO
+		JOIN ESERVICE.DBO.PRODUCT PROD ON PROD.PRODUCT_CODE = PM.LIPM_INSU_TYPE AND P.EFFECTIVE_DATE BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
+		JOIN ESERVICE.DBO.TRANS_POLICY TP ON TP.POLICY_NO = PM.LIPM_INSU_NO
+		JOIN ESERVICE.DBO.TRANS T ON T.TRANS_NUM = TP.TRANS_NUM
+		WHERE
+			TP.TRANS_NUM = #{transNum} OR TP.TRANS_NUM = (SELECT TOP 1 TRANS_NUM FROM ESERVICE.DBO.TRANS_MERGE WHERE TRANS_NUM_MERGE = #{transNum})
+	</select>
+	
+</mapper>

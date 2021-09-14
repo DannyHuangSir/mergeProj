@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.generic.dao.adm.UsersDao">
+	<resultMap id="UsersMap" type="com.twfhclife.generic.model.UsersVo">
+		<result column="user_id" property="userId" />
+		<result column="roc_id" property="rocId" />
+		<result column="mobile" property="mobile" />
+		<result column="email" property="email" />
+		<result column="login_fail_count" property="loginFailCount" />
+		<result column="last_chang_password_date" property="lastChangPasswordDate" />
+		<result column="sms_flag" property="smsFlag" />
+		<result column="mail_flag" property="mailFlag" />
+		<result column="fb_id" property="fbId" />
+		<result column="moica_id" property="moicaId" />
+		<result column="user_type" property="userType" />
+		<result column="create_date" property="createDate" />
+		<result column="create_user" property="createUser" />
+		<result column="username" property="userName" />
+		<result column="encrypted_pwd" property="password" />
+		<result column="online_flag" property="onlineFlag"/>
+		<result column="status" property="status"/>
+	</resultMap>
+	
+	<sql id="User_Column_List">
+		user_id,roc_id,ESERVICE.DBO.FN_DEBASE64(mobile) mobile,ESERVICE.DBO.FN_DEBASE64(email) email,login_fail_count,last_chang_password_date,
+		sms_flag,mail_flag,fb_id,moica_id,user_type,create_date,create_user,online_flag,status
+	</sql>
+
+	<select id="getUserByRocId" resultMap="UsersMap" parameterType="java.lang.String">
+		SELECT
+		    <include refid="User_Column_List" />
+		FROM
+			ESERVICE.DBO.USERS
+		WHERE
+		    roc_id = #{rocId}
+	</select>
+	
+	<insert id="createUser" parameterType="com.twfhclife.generic.model.UserVo">
+		insert into 
+		ESERVICE.DBO.USERS
+		(user_id,
+		roc_id,
+		mobile,
+		email,
+		login_fail_count,
+		last_chang_password_date,
+		sms_flag,
+		mail_flag,
+		user_type,
+		create_date,
+		create_user) 
+		VALUES (
+		lower(#{vo.username,jdbcType=VARCHAR}),
+		#{vo.rocId,jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.mobile,jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.email,jdbcType=VARCHAR}),
+		0,
+		getdate(),
+		<choose>
+			<when test="vo.mobile != null and vo.mobile != ''">
+            	'1',
+			</when>
+			<otherwise>
+            	'0',
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="vo.email != null and vo.email != ''">
+            	'1',
+			</when>
+			<otherwise>
+            	'0',
+			</otherwise>
+		</choose>
+		#{vo.userType,jdbcType=VARCHAR},
+		getdate(),
+		#{vo.userId,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="createUserRole" parameterType="com.twfhclife.generic.model.UserRoleVo">
+		INSERT INTO 
+		ESERVICE_ADM.DBO.USER_ROLE 
+		(USER_ID, ROLE_ID) 
+		VALUES (
+			#{vo.userId},
+			(SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE WHERE DESCRIPTION = #{vo.userType})
+		)
+	</insert>
+	
+	<select id="getUserByAccount" resultMap="UsersMap" parameterType="java.lang.String">
+		SELECT 
+		<include refid="User_Column_List" />
+		FROM ESERVICE.DBO.USERS
+		WHERE
+		USER_ID = lower(#{account})
+	</select>
+	
+	<update id="updatePasswordDate" parameterType="java.lang.String">
+		update ESERVICE.DBO.USERS set 
+		last_chang_password_date = getdate()
+		where lower(user_id) = lower(#{username})
+	</update>
+	
+	<update id="updateUserType" parameterType="java.lang.String">
+		update ESERVICE.DBO.USERS set 
+		user_type = #{userType}
+		where lower(user_id) = lower(#{account})
+	</update>
+	
+	<!-- 取登入的使用者姓名 -->
+	<!-- 只有保戶會員可以從保單去找出姓名 -->
+	<select id="getUserNameById" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT DISTINCT(CUS.NAME) AS userName
+		FROM
+			ESERVICE.DBO.POLICY P
+			,ESERVICE.DBO.CUSTOMER_POLICY_JOINER CPJ
+			,(
+				SELECT
+					C.CUSTOMER_ID
+					,I.NAME
+				FROM
+					ESERVICE.DBO.INDIVIDUAL I
+					,ESERVICE.DBO.CUSTOMER C
+					,ESERVICE.DBO.USERS U
+				WHERE
+					I.INDIVIDUAL_ID = C.INDIVIDUAL_ID
+					AND I.ROC_ID = U.ROC_ID
+					AND U.USER_ID = #{userId}
+			) CUS
+		WHERE
+			P.POLICY_NO = CPJ.POLICY_NO
+			AND CPJ.CUSTOMER_ID = CUS.CUSTOMER_ID
+	</select>
+	
+	<select id="getUserByFbId" resultMap="UsersMap" parameterType="java.lang.String">
+		select ue.ID USER_ID, ue.USERNAME USERNAME, ua1.VALUE FB_ID, ua2.VALUE ENCRYPTED_PWD
+			from ESERVICE_ADM.DBO.USER_ENTITY ue
+			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua1 on ue.ID=ua1.USER_ID and ua1.NAME='fb_id'
+			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua2 on ue.ID=ua2.USER_ID and ua2.NAME='idp'
+			where ue.REALM_ID=#{realm} 
+			and ua1.VALUE=#{fbId}
+	</select>
+	<select id="getUserByCardSn" resultMap="UsersMap" parameterType="java.lang.String">
+		select ue.ID USER_ID, ue.USERNAME USERNAME, ua1.VALUE CARD_SN, ua2.VALUE ENCRYPTED_PWD
+			from ESERVICE_ADM.DBO.USER_ENTITY ue
+			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua1 on ue.ID=ua1.USER_ID and ua1.NAME='card_sn'
+			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua2 on ue.ID=ua2.USER_ID and ua2.NAME='idp'
+			where ue.REALM_ID=#{realm} 
+			and ua1.VALUE=#{cardSn}
+	</select>
+</mapper>

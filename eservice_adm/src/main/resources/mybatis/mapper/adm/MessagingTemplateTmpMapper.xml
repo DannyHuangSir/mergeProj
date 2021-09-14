@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.MessagingTemplateTmpDao">
+
+	<resultMap id="MessagingTemplateTmpMap" type="com.twfhclife.adm.model.MessagingTemplateTmpVo" >
+		<result column="MESSAGING_TEMPLATE_ID" property="messagingTemplateId"/>
+		<result column="SYSTEM_ID" property="systemId"/>
+		<result column="MESSAGING_TEMPLATE_CODE" property="messagingTemplateCode"/>
+		<result column="MESSAGING_TEMPLATE_NAME" property="messagingTemplateName"/>
+		<result column="STATUS" property="status"/>
+		<result column="TRIGGER_TYPE" property="triggerType"/>
+		<result column="EVENT_TYPE" property="eventType"/>
+		<result column="SEND_TYPE" property="sendType"/>
+		<result column="SEND_TIME" property="sendTime"/>
+		<result column="CIRCLE_TYPE" property="circleType"/>
+		<result column="CIRCLE_VALUE" property="circleValue"/>
+		<result column="RECEIVER_MODE" property="receiverMode"/>
+		<result column="MESSAGING_SUBJECT" property="messagingSubject"/>
+		<result column="MESSAGING_CONTENT" property="messagingContent"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<!-- 自定義  -->
+		<result column="STATUS_NAME" property="statusName"/>
+		<result column="SYS_NAME" property="sysName"/>
+		<result column="EVENT_TYPE_NAME" property="eventTypeName"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		MESSAGING_TEMPLATE_ID,SYSTEM_ID,MESSAGING_TEMPLATE_CODE,MESSAGING_TEMPLATE_NAME,STATUS,TRIGGER_TYPE,EVENT_TYPE,SEND_TYPE,SEND_TIME,CIRCLE_TYPE,CIRCLE_VALUE,RECEIVER_MODE,MESSAGING_SUBJECT,MESSAGING_CONTENT,CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="messagingTemplateTmpVo.messagingTemplateId != null"> AND MESSAGING_TEMPLATE_ID = #{messagingTemplateTmpVo.messagingTemplateId} </if>
+			<if test="messagingTemplateTmpVo.systemId != null and messagingTemplateTmpVo.systemId != ''"> AND SYSTEM_ID = #{messagingTemplateTmpVo.systemId} </if>
+			<if test="messagingTemplateTmpVo.messagingTemplateCode != null and messagingTemplateTmpVo.messagingTemplateCode != ''"> AND MESSAGING_TEMPLATE_CODE = #{messagingTemplateTmpVo.messagingTemplateCode} </if>
+			<if test="messagingTemplateTmpVo.messagingTemplateName != null and messagingTemplateTmpVo.messagingTemplateName != ''"> AND MESSAGING_TEMPLATE_NAME = #{messagingTemplateTmpVo.messagingTemplateName} </if>
+			<if test="messagingTemplateTmpVo.status != null and messagingTemplateTmpVo.status != ''"> AND STATUS = #{messagingTemplateTmpVo.status} </if>
+			<if test="messagingTemplateTmpVo.triggerType != null and messagingTemplateTmpVo.triggerType != ''"> AND TRIGGER_TYPE = #{messagingTemplateTmpVo.triggerType} </if>
+			<if test="messagingTemplateTmpVo.eventType != null and messagingTemplateTmpVo.eventType != ''"> AND EVENT_TYPE = #{messagingTemplateTmpVo.eventType} </if>
+			<if test="messagingTemplateTmpVo.sendType != null and messagingTemplateTmpVo.sendType != ''"> AND SEND_TYPE = #{messagingTemplateTmpVo.sendType} </if>
+			<if test="messagingTemplateTmpVo.sendTime != null and messagingTemplateTmpVo.sendTime != ''"> AND SEND_TIME = #{messagingTemplateTmpVo.sendTime} </if>
+			<if test="messagingTemplateTmpVo.circleType != null and messagingTemplateTmpVo.circleType != ''"> AND CIRCLE_TYPE = #{messagingTemplateTmpVo.circleType} </if>
+			<if test="messagingTemplateTmpVo.circleValue != null and messagingTemplateTmpVo.circleValue != ''"> AND CIRCLE_VALUE = #{messagingTemplateTmpVo.circleValue} </if>
+			<if test="messagingTemplateTmpVo.receiverMode != null and messagingTemplateTmpVo.receiverMode != ''"> AND RECEIVER_MODE = #{messagingTemplateTmpVo.receiverMode} </if>
+			<if test="messagingTemplateTmpVo.messagingSubject != null and messagingTemplateTmpVo.messagingSubject != ''"> AND MESSAGING_SUBJECT = #{messagingTemplateTmpVo.messagingSubject} </if>
+			<if test="messagingTemplateTmpVo.messagingContent != null and messagingTemplateTmpVo.messagingContent != ''"> AND MESSAGING_CONTENT = #{messagingTemplateTmpVo.messagingContent} </if>
+			<if test="messagingTemplateTmpVo.createDate != null"> AND CREATE_DATE = #{messagingTemplateTmpVo.createDate} </if>
+			<if test="messagingTemplateTmpVo.createUser != null and messagingTemplateTmpVo.createUser != ''"> AND CREATE_USER = #{messagingTemplateTmpVo.createUser} </if>
+			<if test="messagingTemplateTmpVo.updateDate != null"> AND UPDATE_DATE = #{messagingTemplateTmpVo.updateDate} </if>
+			<if test="messagingTemplateTmpVo.updateUser != null and messagingTemplateTmpVo.updateUser != ''"> AND UPDATE_USER = #{messagingTemplateTmpVo.updateUser} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND MESSAGING_TEMPLATE_ID = #{messagingTemplateTmpVo.messagingTemplateId}
+		</where>
+	</sql>
+	
+	<!-- include sql: 通信管理TMP查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			TMP.MESSAGING_TEMPLATE_ID
+			,TMP.SYSTEM_ID
+			,TMP.MESSAGING_TEMPLATE_CODE
+			,TMP.MESSAGING_TEMPLATE_NAME
+			,TMP.STATUS
+			,TMP.TRIGGER_TYPE
+			,TMP.EVENT_TYPE
+			,TMP.SEND_TYPE
+			,TMP.SEND_TIME
+			,TMP.CIRCLE_TYPE
+			,TMP.CIRCLE_VALUE
+			,TMP.RECEIVER_MODE
+			,TMP.MESSAGING_SUBJECT
+			,TMP.MESSAGING_CONTENT
+			,TMP.CREATE_DATE
+			,TMP.CREATE_USER
+			,TMP.UPDATE_DATE
+			,TMP.UPDATE_USER
+			,COALESCE((
+				SELECT
+					a.PARAMETER_NAME
+				FROM
+					ESERVICE_ADM.DBO.PARAMETER a
+					,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+				WHERE
+					a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+					AND a.STATUS = b.STATUS
+					AND b.STATUS = 1
+					AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.MESG_TEMP_STATE_PARAMETER_CATEGORY_CODE"/>
+					AND a.PARAMETER_VALUE = TMP.STATUS
+			), ' ') AS STATUS_NAME
+			,COALESCE((
+				SELECT
+					a.PARAMETER_NAME
+				FROM
+					ESERVICE_ADM.DBO.PARAMETER a
+					,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+				WHERE
+					a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+					AND a.STATUS = b.STATUS
+					AND b.STATUS = 1
+					AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.MSG_EVENT_TYPE_PARAMETER_CATEGORY_CODE"/>
+					AND a.PARAMETER_VALUE = TMP.EVENT_TYPE
+			), ' ') AS EVENT_TYPE_NAME
+			,S.SYS_NAME
+		FROM
+			ESERVICE_ADM.DBO.MESSAGING_TEMPLATE_TMP TMP
+			LEFT OUTER JOIN ESERVICE_ADM.DBO.SYSTEMS S ON TMP.SYSTEM_ID = S.SYS_ID
+		<where>
+			<if test="messagingTemplateTmpVo.messagingTemplateId != null"> AND TMP.MESSAGING_TEMPLATE_ID = #{messagingTemplateTmpVo.messagingTemplateId} </if>
+			<if test="messagingTemplateTmpVo.systemId != null and messagingTemplateTmpVo.systemId != ''"> AND TMP.SYSTEM_ID = #{messagingTemplateTmpVo.systemId} </if>
+			<if test="messagingTemplateTmpVo.messagingTemplateCode != null and messagingTemplateTmpVo.messagingTemplateCode != ''"> AND TMP.MESSAGING_TEMPLATE_CODE = #{messagingTemplateTmpVo.messagingTemplateCode} </if>
+			<if test="messagingTemplateTmpVo.messagingTemplateName != null and messagingTemplateTmpVo.messagingTemplateName != ''"> AND TMP.MESSAGING_TEMPLATE_NAME = #{messagingTemplateTmpVo.messagingTemplateName} </if>
+			<if test="messagingTemplateTmpVo.messagingSubject != null and messagingTemplateTmpVo.messagingSubject != ''"> AND TMP.MESSAGING_SUBJECT = #{messagingTemplateTmpVo.messagingSubject} </if>
+			<if test="messagingTemplateTmpVo.status != null and messagingTemplateTmpVo.status != ''"> AND TMP.STATUS = #{messagingTemplateTmpVo.status} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得通信管理TMP查詢結果(分頁) -->
+	<select id="getMessagingTemplateTmpPageList" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY MESSAGING_TEMPLATE_ID) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{messagingTemplateTmpVo.page} * #{messagingTemplateTmpVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{messagingTemplateTmpVo.page} - 1) * #{messagingTemplateTmpVo.rows}	
+	</select>
+	
+	<!-- 取得通信管理TMP查詢結果(總筆數) -->
+	<select id="getMessagingTemplateTmpPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得通信管理TMP查詢結果 -->
+	<select id="getMessagingTemplateTmp" resultMap="MessagingTemplateTmpMap">
+		<include refid="INC1" />
+	</select>
+	
+	<!-- 通信管理TMP-新增 -->
+	<insert id="insertMessagingTemplateTmp">
+		INSERT INTO ESERVICE_ADM.DBO.MESSAGING_TEMPLATE_TMP
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{messagingTemplateTmpVo.messagingTemplateId, jdbcType=NUMERIC},
+			#{messagingTemplateTmpVo.systemId, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.messagingTemplateCode, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.messagingTemplateName, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.status, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.triggerType, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.eventType, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.sendType, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.sendTime, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.circleType, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.circleValue, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.receiverMode, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.messagingSubject, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.messagingContent, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.createDate, jdbcType=TIMESTAMP},
+			#{messagingTemplateTmpVo.createUser, jdbcType=VARCHAR},
+			#{messagingTemplateTmpVo.updateDate, jdbcType=TIMESTAMP},
+			#{messagingTemplateTmpVo.updateUser, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 通信管理TMP-更新 -->
+	<update id="updateMessagingTemplateTmp">
+		UPDATE
+			ESERVICE_ADM.DBO.MESSAGING_TEMPLATE_TMP
+		<set>
+			<if test="messagingTemplateTmpVo.systemId != null"> SYSTEM_ID = #{messagingTemplateTmpVo.systemId}, </if>
+			<if test="messagingTemplateTmpVo.messagingTemplateCode != null"> MESSAGING_TEMPLATE_CODE = #{messagingTemplateTmpVo.messagingTemplateCode}, </if>
+			<if test="messagingTemplateTmpVo.messagingTemplateName != null"> MESSAGING_TEMPLATE_NAME = #{messagingTemplateTmpVo.messagingTemplateName}, </if>
+			<if test="messagingTemplateTmpVo.status != null"> STATUS = #{messagingTemplateTmpVo.status}, </if>
+			<if test="messagingTemplateTmpVo.triggerType != null"> TRIGGER_TYPE = #{messagingTemplateTmpVo.triggerType}, </if>
+			<if test="messagingTemplateTmpVo.eventType != null"> EVENT_TYPE = #{messagingTemplateTmpVo.eventType}, </if>
+			<if test="messagingTemplateTmpVo.sendType != null"> SEND_TYPE = #{messagingTemplateTmpVo.sendType}, </if>
+			<if test="messagingTemplateTmpVo.sendTime != null"> SEND_TIME = #{messagingTemplateTmpVo.sendTime}, </if>
+			<if test="messagingTemplateTmpVo.circleType != null"> CIRCLE_TYPE = #{messagingTemplateTmpVo.circleType}, </if>
+			<if test="messagingTemplateTmpVo.circleValue != null"> CIRCLE_VALUE = #{messagingTemplateTmpVo.circleValue}, </if>
+			<if test="messagingTemplateTmpVo.receiverMode != null"> RECEIVER_MODE = #{messagingTemplateTmpVo.receiverMode}, </if>
+			<if test="messagingTemplateTmpVo.messagingSubject != null"> MESSAGING_SUBJECT = #{messagingTemplateTmpVo.messagingSubject}, </if>
+			<if test="messagingTemplateTmpVo.messagingContent != null"> MESSAGING_CONTENT = #{messagingTemplateTmpVo.messagingContent}, </if>
+			<if test="messagingTemplateTmpVo.createDate != null"> CREATE_DATE = #{messagingTemplateTmpVo.createDate}, </if>
+			<if test="messagingTemplateTmpVo.createUser != null"> CREATE_USER = #{messagingTemplateTmpVo.createUser}, </if>
+			<if test="messagingTemplateTmpVo.updateDate != null"> UPDATE_DATE = #{messagingTemplateTmpVo.updateDate}, </if>
+			<if test="messagingTemplateTmpVo.updateUser != null"> UPDATE_USER = #{messagingTemplateTmpVo.updateUser}, </if>
+		</set>
+		<include refid="wherePkClause" />
+	</update>
+	
+	<!-- 通信管理TMP-刪除 -->
+	<delete id="deleteMessagingTemplateTmp">
+		DELETE ESERVICE_ADM.DBO.MESSAGING_TEMPLATE_TMP 
+		<include refid="wherePkClause" />
+	</delete>
+
+</mapper>
+

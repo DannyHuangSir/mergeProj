@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransLoanDao">
+
+	<resultMap id="TransLoanMap" type="com.twfhclife.eservice.onlineChange.model.TransLoanVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="LOAN_AMOUNT" property="loanAmount"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,LOAN_AMOUNT
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transLoanVo.id != null"> AND ID = #{transLoanVo.id} </if>
+			<if test="transLoanVo.transNum != null and transLoanVo.transNum != ''"> AND TRANS_NUM = #{transLoanVo.transNum} </if>
+			<if test="transLoanVo.loanAmount != null"> AND LOAN_AMOUNT = #{transLoanVo.loanAmount} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transLoanVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得申請保單貸款查詢結果 -->
+	<select id="getTransLoan" resultMap="TransLoanMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_LOAN
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 申請保單貸款-新增 -->
+	<insert id="insertTransLoan">
+		INSERT INTO ESERVICE.DBO.TRANS_LOAN
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_LOAN),
+			#{transLoanVo.transNum, jdbcType=VARCHAR},
+			#{transLoanVo.loanAmount, jdbcType=NUMERIC}
+		)
+	</insert>
+
+</mapper>

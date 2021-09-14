@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.generic.dao.adm.UserDepartmentTitleDao">
+	<resultMap id="UsersMap" type="com.twfhclife.generic.model.UserVo">
+		<result column="user_id" property="userId" />
+		<result column="email" property="email" />
+		<result column="username" property="username" />
+		<result column="first_name" property="firstName" />
+		<result column="last_name" property="lastName" />
+	</resultMap>
+	<resultMap id="DepMap" type="com.twfhclife.eservice.api.adm.model.DepartmentVo">
+		<result column="dep_id" property="depId" />
+		<result column="dep_name" property="depName" />
+		<result column="description" property="description" />
+		<result column="parent_dep" property="parentDep" />
+		<result column="level" property="level" />
+	</resultMap>
+	<resultMap id="TitleMap" type="com.twfhclife.eservice.api.adm.model.JobTitleVo">
+		<result column="title_id" property="titleId" />
+		<result column="title_name" property="titleName" />
+		<result column="description" property="description" />
+<!-- 		<result column="create_date" property="createDate" /> -->
+<!-- 		<result column="create_user" property="createUser" /> -->
+	</resultMap>
+	<resultMap id="UserDepMap" type="com.twfhclife.generic.model.UserVo">
+		<result column="user_id" property="userId" />
+		<result column="email" property="email" />
+		<result column="username" property="username" />
+		<result column="first_name" property="firstName" />
+		<result column="last_name" property="lastName" />
+		<collection property="userDepartment" ofType="com.twfhclife.eservice.api.adm.model.UserDepartmentVo" javaType="list">
+			<result column="DEP_ID"   property="depId"/>
+	     	<result column="DEP_NAME" property="depName"/>
+	     	<result column="DEP_DESCRIPTION" property="depDescription" />
+	     	<result column="PARENT_DEP" property="parentDep" />
+	     	<result column="TITLE_ID"   property="titleId"/>
+	     	<result column="TITLE_NAME" property="titleName"/>
+	     	<result column="TITLE_DESCRIPTION" property="titleDescription" />
+	    </collection>
+	    <collection property="userRole" ofType="com.twfhclife.eservice.api.adm.model.RoleVo" javaType="list">
+			<result column="ROLE_ID"   property="roleId"/>
+	     	<result column="ROLE_NAME" property="roleName"/>
+	     	<result column="DESCRIPTION"   property="description"/>
+	    </collection>
+	</resultMap>
+	
+	
+	<select id="getDepartmentsByUser" resultMap="DepMap" parameterType="java.lang.String">
+		<!-- select 
+			d.DEP_ID DEP_ID, d.DEP_NAME DEP_NAME, d.DESCRIPTION DESCRIPTION, 
+			d.PARENT_DEP PARENT_DEP, 
+			LEVEL
+			from ESERVICE_ADM.DBO.DEPARTMENT d
+			START WITH d.DEP_ID in
+			(select DEP_ID DEP_ID from ESERVICE_ADM.DBO.USER_DEPARTMENT ud where ud.USER_ID=#{userId})
+			CONNECT BY PRIOR d.DEP_ID = d.PARENT_DEP -->			
+		WITH TREE (DEP_ID, DEP_NAME, PARENT_DEP, DESCRIPTION, LEVEL) AS  (
+		  SELECT 
+			DEP_ID, 
+			DEP_NAME, 
+			CASE 
+				WHEN PARENT_DEP = (SELECT D.DEP_ID FROM ESERVICE_ADM.DBO.DEPARTMENT D WHERE UPPER(D.DEP_NAME)='ROOT') THEN ''
+				ELSE PARENT_DEP
+			END AS PARENT_DEP,
+			DESCRIPTION, 
+			1 AS LEVEL
+		  FROM ESERVICE_ADM.DBO.DEPARTMENT
+		  WHERE DEP_ID IN (select DEP_ID DEP_ID from ESERVICE_ADM.DBO.USER_DEPARTMENT ud where ud.USER_ID=#{userId})
+		
+		  UNION ALL
+		
+		  SELECT CHILD.DEP_ID, CHILD.DEP_NAME, CHILD.PARENT_DEP, CHILD.DESCRIPTION, PARENT.LEVEL + 1
+		  FROM ESERVICE_ADM.DBO.DEPARTMENT AS CHILD
+		    JOIN TREE PARENT ON PARENT.DEP_ID = CHILD.PARENT_DEP
+		)
+		SELECT DEP_ID, DEP_NAME, DESCRIPTION, PARENT_DEP, LEVEL 
+		FROM TREE ORDER BY DEP_ID, LEVEL	
+	</select>
+	
+	<select id="getDepartmentsAll" resultMap="DepMap">
+		<!-- select 
+			DEP_ID, DEP_NAME, DESCRIPTION DESCRIPTION, 
+			CASE 
+				WHEN PARENT_DEP = (select d.dep_id from ESERVICE_ADM.DBO.DEPARTMENT d where UPPER(d.dep_name)='ROOT') THEN ''
+				ELSE PARENT_DEP
+			END AS PARENT_DEP,
+			LEVEL
+			from ESERVICE_ADM.DBO.DEPARTMENT
+			START WITH PARENT_DEP = (select DEP_ID from ESERVICE_ADM.DBO.DEPARTMENT where upper(DEP_NAME)=upper('root'))
+			CONNECT BY PRIOR DEP_ID = PARENT_DEP
+			order by DEP_ID -->
+		WITH TREE (DEP_ID, DEP_NAME, PARENT_DEP, DESCRIPTION, LEVEL) AS  (
+		  SELECT 
+			DEP_ID, 
+			DEP_NAME, 
+			CASE 
+				WHEN PARENT_DEP = (SELECT D.DEP_ID FROM ESERVICE_ADM.DBO.DEPARTMENT D WHERE UPPER(D.DEP_NAME)='ROOT') THEN ''
+				ELSE PARENT_DEP
+			END AS PARENT_DEP,
+			DESCRIPTION, 
+			1 AS LEVEL
+		  FROM ESERVICE_ADM.DBO.DEPARTMENT
+		  WHERE DEP_ID != (SELECT D.DEP_ID FROM ESERVICE_ADM.DBO.DEPARTMENT D WHERE UPPER(D.DEP_NAME)='ROOT')
+		
+		  UNION ALL
+		
+		  SELECT CHILD.DEP_ID, CHILD.DEP_NAME, CHILD.PARENT_DEP, CHILD.DESCRIPTION, PARENT.LEVEL + 1
+		  FROM ESERVICE_ADM.DBO.DEPARTMENT AS CHILD
+		    JOIN TREE PARENT ON PARENT.DEP_ID = CHILD.PARENT_DEP
+		)
+		SELECT DEP_ID, DEP_NAME, DESCRIPTION, PARENT_DEP, LEVEL 
+		FROM TREE ORDER BY DEP_ID, LEVEL			
+	</select>
+	
+	<select id="getTitlesAll" resultMap="TitleMap">
+		select 
+			TITLE_ID, TITLE_NAME, DESCRIPTION
+			from ESERVICE_ADM.DBO.JOB_TITLE
+	</select>
+	
+	<select id="getUserByDepTitle" resultMap="UserDepMap" parameterType="java.lang.String">
+		select 
+			ue.ID USER_ID, ue.EMAIL EMAIL, ue.USERNAME USERNAME, ue.FIRST_NAME FIRST_NAME, ue.LAST_NAME LAST_NAME 
+			 ,ud.DEP_ID DEP_ID, d.DEP_NAME DEP_NAME, d.DESCRIPTION DEP_DESCRIPTION
+			 , d.PARENT_DEP PARENT_DEP
+			 , ud.TITLE_ID TITLE_ID, t.TITLE_NAME TITLE_NAME, t.DESCRIPTION TITLE_DESCRIPTION
+			 ,r.ROLE_ID, r.ROLE_NAME, r.DESCRIPTION
+			from ESERVICE_ADM.DBO.USER_ENTITY ue
+			left join ESERVICE_ADM.DBO.USER_DEPARTMENT ud on ud.USER_ID=ue.ID
+			left join ESERVICE_ADM.DBO.DEPARTMENT d on d.DEP_ID=ud.DEP_ID
+			left join ESERVICE_ADM.DBO.JOB_TITLE t on t.TITLE_ID=ud.TITLE_ID
+			left join ESERVICE_ADM.DBO.USER_ROLE ur on ur.USER_ID = ue.ID
+			left join ESERVICE_ADM.DBO.ROLE r on r.ROLE_ID = ur.ROLE_ID
+			where ue.REALM_ID=#{realm}
+			<if test="depId != null and depId != ''">
+			and ud.DEP_ID = #{depId}
+			</if>
+			<if test="titleId != null and titleId != '' and titleId != 'managers'">
+			and ud.TITLE_ID = #{titleId}
+			</if>
+			<if test="userId != null and userId != ''">
+			and ue.ID = #{userId}
+			</if>
+			<if test="titleId != null and titleId == 'managers'">
+			and t.TITLE_NAME in ('主任','副主任','經理','副理','覆核')
+			</if>
+			order by ue.ID
+	</select>
+	
+</mapper>

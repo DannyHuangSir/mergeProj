@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyPayerDao">
+
+	<!-- 付款人資訊(附加資訊請繼承) -->
+	<resultMap id="PolicyPayerMap" type="com.twfhclife.eservice.policy.model.PolicyPayerVo" >
+		<result column="ID" property="id"/>
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="PAYER_NAME" property="payerName"/>
+		<result column="SEX" property="sex"/>
+		<result column="ROC_ID" property="rocId"/>
+		<result column="BANK_NAME" property="bankName"/>
+		<result column="ACCT_NUMBER" property="acctNumber"/>
+		<result column="EXPIRE_DATE" property="expireDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID
+		,POLICY_NO
+		,ESERVICE.DBO.FN_DEBASE64(PAYER_NAME) AS PAYER_NAME
+		,SEX
+		,ESERVICE.DBO.FN_GETHIDDENCODE(1, ROC_ID, '*', 4, 5) AS ROC_ID
+		,BANK_NAME
+		,ESERVICE.DBO.FN_GETHIDDENCODE(1, ESERVICE.DBO.FN_DEBASE64(ACCT_NUMBER), '*', 7, 6) AS ACCT_NUMBER
+		,EXPIRE_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="policyPayerVo.id != null and policyPayerVo.id != ''"> AND ID = #{policyPayerVo.id} </if>
+			<if test="policyPayerVo.policyNo != null and policyPayerVo.policyNo != ''"> AND POLICY_NO = #{policyPayerVo.policyNo} </if>
+			<if test="policyPayerVo.payerName != null and policyPayerVo.payerName != ''"> AND PAYER_NAME = #{policyPayerVo.payerName} </if>
+			<if test="policyPayerVo.sex != null and policyPayerVo.sex != ''"> AND SEX = #{policyPayerVo.sex} </if>
+			<if test="policyPayerVo.rocId != null and policyPayerVo.rocId != ''"> AND ROC_ID = #{policyPayerVo.rocId} </if>
+			<if test="policyPayerVo.bankName != null and policyPayerVo.bankName != ''"> AND BANK_NAME = #{policyPayerVo.bankName} </if>
+			<if test="policyPayerVo.acctNumber != null and policyPayerVo.acctNumber != ''"> AND ACCT_NUMBER = #{policyPayerVo.acctNumber} </if>
+			<if test="policyPayerVo.expireDate != null and policyPayerVo.expireDate != ''"> AND EXPIRE_DATE = #{policyPayerVo.expireDate} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{policyPayerVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得付款人查詢結果 -->
+	<select id="getPolicyPayerList" resultMap="PolicyPayerMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_PAYER
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得付款人查詢結果 -->
+	<select id="getPolicyPayer" resultMap="PolicyPayerMap">
+		SELECT TOP 1 
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_PAYER
+		WHERE
+			POLICY_NO = #{policyNo}
+	</select>
+
+</mapper>

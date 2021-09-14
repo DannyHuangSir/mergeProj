@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.FunctionDailyUsageDao">
+
+    <sql id="whereClause">
+        <where>
+            AND convert(varchar, RECORD_DATE, 112) = convert(varchar, getdate(), 112)
+            AND FUNC_ID = #{funcId}
+            AND SYSTEM_ID = #{systemId}
+        </where>
+    </sql>
+
+    <update id="updateFunctionDailyUsage">
+        UPDATE 
+            ESERVICE_ADM.DBO.FUNCTION_DAILY_USAGE
+        SET 
+            USAGE = USAGE + 1
+        <include refid="whereClause"/>
+    </update>
+    
+    <insert id="insertFunctionDailyUsage">
+        INSERT INTO ESERVICE_ADM.DBO.FUNCTION_DAILY_USAGE (
+            FUNC_ID, SYSTEM_ID, RECORD_DATE, USAGE
+        ) VALUES (
+            #{funcId, jdbcType=NUMERIC},
+            #{systemId, jdbcType=VARCHAR},
+            getdate(),
+            1
+        )
+    </insert>
+</mapper>

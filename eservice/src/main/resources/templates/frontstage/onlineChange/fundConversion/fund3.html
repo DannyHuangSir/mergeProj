@@ -1,0 +1,477 @@
+	<!DOCTYPE html>
+	<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<th:block th:replace="fragments/head"/>
+		<title>已持有投資標的轉換｜臺銀人壽保單網路服務</title>
+	</head>
+
+	<body>
+		<div th:replace="fragments/header :: top"></div>
+		<header th:replace="fragments/header :: header"></header>
+		<th:block th:if="${showUserDataInfo}">
+			<div th:replace="fragments/header :: alert_mobile"></div>
+			<div th:replace="fragments/header :: alert_container"></div>
+			<div th:replace="fragments/header :: compensation_processing"></div>
+			<div th:replace="fragments/header :: compensation_incomplete"></div>
+			<div th:replace="fragments/header :: application_processing"></div>
+			<div th:replace="fragments/header :: application_complete"></div>
+			<div th:replace="fragments/header :: compensation_complete"></div>
+			<div th:replace="fragments/header :: payment_notification"></div>
+			<div th:replace="fragments/header :: payonline_template"></div>
+		</th:block>
+		<!--major 3 tabs-->
+		<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+		<section class="grey applyInner fullContent">
+			<div class="container bg3">
+				<ul class="breadcrumb detail1">
+					<li>
+						<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+					</li>
+					<li class="active">
+						<a href="javascript:;">已持有投資標的轉換</a>
+					</li>
+				</ul>
+			</div>
+			<div class="container bg3 box-border">
+				<div class="tb3 top0 nopd">
+					<i class="fas fa-edit"></i> 已持有投資標的轉換
+				</div>
+				<div class="">
+					<ul class="step">
+						<li class="step1  col-xs-2">
+							1<span class="hid1">. 選擇保單</span>
+						</li>
+						<li class="step2  col-xs-2">
+							2<span class="hid1">. 接受條件</span>
+						</li>
+						<li class="step3b active col-xs-3">
+							3<span class="hid1">. 選擇轉出基金</span>
+						</li>
+						<li class="step3b col-xs-3">
+							4<span class="hid1">. 選擇轉入基金</span>
+						</li> 
+						<li class="step4 col-xs-2">
+							5<span class="hid1">. 確認資料與密碼</span>
+						</li>
+					</ul>
+				</div>
+				<div class="mystyle3 loan1">
+					<h2>請選擇欲轉出基金與比例</h2>
+					<div class="tb3 top0 form-group">
+						<span  class="pull-left chMiddle colorBlack">轉出方式：</span>
+						<div class="col-sm-9">
+							<div class="radio inline" style="padding: 0;margin: 0;font-size: 14px;">
+								<label>
+									<div class="radio-btn checkedRadio" style="margin: 3px;" onclick="$('.company').show().siblings('.percentage').hide();"><i><input type="radio" id="tab_group_1" name="tab_group_2" value="option1" checked="checked" ></i></div> 單位數
+								</label>
+							</div>
+							<div class="radio inline" style="padding: 0;margin: 0;font-size: 14px;">
+								<label>
+									<div class="radio-btn" style="margin: 3px;" onclick="$('.percentage').show().siblings('.company').hide();"><i><input type="radio" name="tab_group_2" value="option2" ></i></div> 比例
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="check-title">轉出基金</div>
+					<div class="grey2">
+						<br>
+						<table   id="gridFund3"   class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+							<thead>
+							<tr class="table2 orange2">
+								<th class="text-left item180" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">單位數<br><span class="enSmall displayNone">A</span></th>
+								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">最近匯率<br><span class="enSmall">(匯率日)</span></th>
+								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">單位淨值<br><span class="enSmall displayNone">(台幣B/原幣D<br>/淨值日)</span><span class="enSmall">(淨值日)</span></th>
+								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">參考帳戶價值<br><span class="enSmall displayNone">(A*D/A*B)</span></th>
+								<th class="item160 company" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出單位數</th>
+								<th class="item160 percentage" style="display: none;" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th>
+							</tr>
+							</thead>
+							<tbody>
+							<!-- <tr class="h65 tr-odd-noEvent">
+								<td class="text-left">百達基金(盧森堡)生物科技<p class="enSmall">(CPES1)</p></td>
+								<td>74.06</td>
+								<td>
+									<p>30.<span class="point">77</span></p>
+									<span class="enSmall">2014/11/10</span>
+								</td>
+								<td>
+									<p>1859.43<i class="my5">NTD</i></p>
+									<p class="marginTop25">653.81<i class="my5">USD</i></p>
+									<span class="enSmall">2014/11/10</span>
+								</td>
+								<td>
+									<p>1,042,899<i class="my5">NTD</i></p>
+									<p class="marginTop25">48,322<i class="my5">USD</i></p>
+								</td>
+								<td width="120" class="company"><input class="item90" max="100" type="number">單位</td>
+								<td style="display: none;" class="percentage"><input class="item90" max="100" type="number">%</td>
+							</tr> -->
+							</tbody>
+						</table>
+
+					</div>
+					<!-- <div class="invst2total"> 總轉出金額 <span class="chNormal">NTD </span><span id="showConutNumber" class="orange">00,000.0000</span></div> -->
+					<div class="statement1 wht">
+						<p class="text-ps">備註：</p>
+						<p class="text-ps" id="parameterValueByProportion">
+							若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。<br/>
+							若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。<br/>
+							若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。<br/>
+							為確保保險商品符合您的投資能力及風險性，投資風險屬性若有變更，本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。<br/>
+						</p>
+					</div>
+					<div class="col-md-12 two-buttons">
+						<a href="javascript:void(0);"><button id="deny" class="btn-signup">上一步</i></button></a>
+						<a href="javascript:void(0);"><button id="go" class="btn-signup">下一步</i></button></a>
+					</div>
+				</div>
+					
+				</div>
+			</div>
+		</section>
+		<footer th:replace="fragments/footer"></footer>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			var investmentsList=[] ;
+			var formDataObj={};
+			var unitMin = /*[[${unitMin}]]*/;
+			var proportionMin = /*[[${proportionMin}]]*/;
+			//回頭上一步
+			var policyList = /*[[${policyListPolicyNo}]]*/;
+			$("#deny").click(function(){
+				formDataObj.policyNo=policyList.policyNo;
+				postWithFormData(/*[[@{/fund2}]]*/, formDataObj);
+			});
+			$(function() {
+				//獲取條款備注信息
+			var parameterValueByProportion = /*[[${parameterValueByProportion}]]*/;
+				if (parameterValueByProportion!= undefined && parameterValueByProportion != null && parameterValueByProportion != ''){
+				$("#parameterValueByProportion").html(parameterValueByProportion);
+				}
+				// 建立保障項目 grid
+			var grid1 = new eserviceGrid();
+			grid1.sGridId = '#gridFund3';
+			grid1.sQueryUrl = /*[[@{/fund3PortfolioList?policyNo=}+${policyListPolicyNo.policyNo}]]*/;
+			//grid1.sQueryUrl = /*[[@{/fund3PortfolioList?policyNo=US10000973}]]*/;
+			grid1.aoColumns = [
+				{
+					// 投資標的
+					'fnRender': function(oRow) {
+						investmentsList.push(oRow);
+						return emptyIfNull(oRow.invtName) + '<P class="enSmall">(' + emptyIfNull(oRow.invtNo) + ')</P>';
+					},
+					'rwdName': '投資標的',
+					'tdClass':'text-left'
+				},
+				{
+					// 單位數
+					'fnRender': function(oRow) {
+						return showNetUnits(oRow);
+					},
+					'rwdName': '單位數/金額'
+				},
+				{
+					// 最近匯率/日期
+					'fnRender': function(oRow) {
+						return showExchRateDate(oRow);
+					},
+					'rwdName': '最近匯率/日期'
+				},
+				{
+					// 單位淨值/日期
+					'fnRender': function(oRow) {
+						return showNetValueDate(oRow);
+					},
+					'rwdName': '單位淨值/日期'
+				},
+				
+				{
+					// 參考帳戶價值
+					'fnRender': function(oRow) {
+						return showAcctValue(oRow);
+					},
+					'rwdName': '參考帳戶價值'
+				},
+				{
+					// 轉出單位數
+					'fnRender': function(oRow) {
+						return showNumberOfOutput(oRow);
+					},
+					'rwdName': '轉出單位數',
+					'tdClass':'item160 company'
+				},
+				{
+					//轉出百分比
+					'fnRender': function(oRow) {
+						return showPercentage(oRow);
+					},	
+					'rwdName': '轉出百分比',
+					'tdClass':'percentage" style="display: none;'
+				}
+			];
+			grid1.fnInitComplete = function() { 
+				//showAcctValueSum(grid1);
+				// if (grid1.sQueryUrl.indexOf('policyNo=UH') != -1) {
+				// 	showTotalAvgPval(grid1);
+				// 	showTotalClupExpeSum(grid1);
+				// 	showScurrency(grid1);
+				// } else {
+				// 	$('#total2').hide();
+				// }
+				if (grid1.rownum() == 0) {
+					/* openAlert('查無資料'); */
+					openAlert($('#E0035').val());
+					return false;
+				}
+			};
+			
+			grid1.createSimple();
+		
+			});
+
+		// 單位數 / 金額  (單位數/金額：FD－小數4位／RT(台幣)－整數；RT(非台幣)－小數2位
+		function showNetUnits(oRow) {
+			var netUnits = 0;
+			var fractionDigits = 0;
+			if (oRow.invtNo.substring(0, 2) == 'RT') {
+				if (oRow.invtExchCurr == 'NTD') {
+					fractionDigits = 0;
+				} else {
+					fractionDigits = 4;
+				}
+				netUnits = oRow.safpNetAmt;
+			}
+			else if (oRow.invtNo.substring(0, 2) == 'FD') {
+				fractionDigits = 4;
+				netUnits = oRow.safpNetUnits;
+			}
+			else{
+				fractionDigits = 4;
+				netUnits = oRow.safpNetUnits;
+			}
+			return '<P class="marginTop26">' + formatNumber(oRow.safpNetUnits, fractionDigits) +'</P>';
+		}
+		
+		// 參考淨值/日期
+		function showNetValueDate(oRow) {
+			var html = '<P>';
+			if (oRow.invtExchCurr== 'NTD') {
+				html += '<p>'+formatNumber(oRow.netValueSell,4)+'<i class="my5">NTD</i></p>';
+			}
+			else{
+				html += '<p class="marginTop25">'+formatNumber(oRow.netValueSell, 4)+'</p>';
+			}
+				html += '<span class="enSmall">'+formatDate(oRow.netValueDate)+'</span>';
+				html+='</P>';
+			return html;
+		}
+		
+		// 參考匯率/日期
+		function showExchRateDate(oRow) {
+			var html = '<P>';
+			html += '<p>'+formatNumber(oRow.exchRateBuy, 4)+'</p>';
+			html += '<span class="enSmall">'+formatDate(oRow.exchRateDate)+'</span>';
+			html +='</P>';
+			return html;
+		}
+		
+		// 轉出單位數
+		function showNumberOfOutput(oRow) {
+			var html = '';
+			if (oRow.invtExchCurr== 'NTD') {
+					//計算臺幣的可輸入的最小的單位書
+					//提參考價值=單位數*淨值*匯率  反推獲取單位書=參考價值/淨值/匯率
+				var NTD_UNIT_MIN= formatNumber(parseInt(unitMin['NTD_UNIT_MIN'])/formatNumber(oRow.netValueSell,4), 4);
+				html+='<P width="120" class="company"><input value="0" onblur="showNumberCompany(\''+oRow.investmentId+'\')" id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="'+NTD_UNIT_MIN+'" max="'+formatNumber(oRow.safpNetUnits,4)+'" type="number">單位</P>';
+			}else{
+				var USD_UNIT_MIN= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(oRow.netValueSell,4), 4);
+				html+='<P width="120" class="company"><input value="0" onblur="showNumberCompany(\''+oRow.investmentId+'\')" id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="'+USD_UNIT_MIN+'" max="'+formatNumber(oRow.safpNetUnits,4)+'" type="number">單位</P>';
+			}
+				return html;
+		}
+		//轉出百分比
+		function showPercentage(oRow) {
+			var html = '';
+			if (oRow.invtExchCurr== 'NTD') {
+				html+='<P style="display: none;" class="percentage"><input value="0" onblur="showNumberPercentage(\''+oRow.investmentId+'\')" id="per'+oRow.investmentId+'"  min="'+proportionMin['NTD_PROPORTION_MIN']+'" class="item90" max="100" type="number">%</P>'
+			}else{
+				html+='<P style="display: none;" class="percentage"><input value="0" onblur="showNumberPercentage(\''+oRow.investmentId+'\')" id="per'+oRow.investmentId+'"  min="'+proportionMin['USD_PROPORTION_MIN']+'" class="item90" max="100" type="number">%</P>'
+			}
+			 return html;
+		}
+		//時間轉換
+		function formatDate(dt) {
+			try {
+				var formattedDate = new Date(dt);
+				var d = formattedDate.getDate();
+				var m =  formattedDate.getMonth();
+				m += 1;  // JavaScript months are 0-11
+				var y = formattedDate.getFullYear();
+				return y + "/" + m + "/" + d;
+			} catch (e) {
+				return "";
+			}
+		}
+
+		
+		// 參考帳戶價值
+		function showAcctValue(oRow) {
+			var html = '<P>';
+				//
+			//var  acctValue=	formatNumber(oRow.acctValue * oRow.exchRateBuy, 4);
+			if (oRow.invtExchCurr== 'NTD') {
+				html += '<p>'+formatNumber(oRow.acctValue, 4)+'<i  class="my5">NTD</i></p>';
+			}
+			else{
+				html += '<p class="marginTop25">'+formatNumber(oRow.acctValue, 4)+'</p>';
+			}
+				html+='</P>';
+			return html;
+		}
+
+		//計算單位數據
+		function showNumberCompany(inId){
+			console.log('-----Output---------',inId);
+			var  showOutputDate=0;
+			investmentsList.forEach(element => {
+				var  investmentId="#"+element.investmentId;
+				//當前比例的方式計算
+				var   outputDate= $(investmentId).val();
+				console.log('-----outputDate---------',outputDate);
+				//獲取幣別的最小單位書
+				var  unitMinNumber=0;
+				if(element.invtExchCurr== 'NTD'){
+					unitMinNumber= formatNumber(parseInt(unitMin['NTD_UNIT_MIN'])/formatNumber(element.netValueSell,4),4);
+				}else{
+					unitMinNumber= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(element.netValueSell,4),4);
+				}
+				if(element.investmentId==inId){
+					if(parseFloat(outputDate)<parseFloat(unitMinNumber)){
+						console.log('-----unitMinNumber---------',unitMinNumber);
+						openAlert("输出單位數不能小於"+unitMinNumber);
+						$(investmentId).val(unitMinNumber);
+						//break;
+					} else  if(outputDate>element.safpNetUnits){
+						console.log('-----outputDate>element.safpNetUnits---------',outputDate,element.safpNetUnits);
+						openAlert("轉出單位數不能大於參考單位數");
+						//break;
+						$(investmentId).val(element.safpNetUnits);
+					}
+				}
+			  var investmentIdNumber= 	$(investmentId).val();
+				//showOutputDate+=investmentIdNumber * 10;
+				showOutputDate+=investmentIdNumber * element.netValueSell;
+				//回傳單位數
+				element.number=parseFloat(formatNumber(investmentIdNumber,4));
+			});
+			$("#showConutNumber").text(formatNumber(showOutputDate, 4));
+			};
+		//計算百分比
+		function showNumberPercentage(inId){
+			console.log('-----Output---------',inId);
+			var  showOutputDate=0;
+			investmentsList.forEach(element => {
+				var  investmentId="#per"+element.investmentId;
+				//當前比例的方式計算
+				var   outputDate= $(investmentId).val();
+				//獲取幣別的最小百分比例
+				var  proportionMinNumber=0;
+				if(element.invtExchCurr== 'NTD'){
+					proportionMinNumber=parseInt(proportionMin['NTD_PROPORTION_MIN']);
+				}else{
+					proportionMinNumber=parseInt(proportionMin['USD_PROPORTION_MIN']);
+				}
+				console.log('-----outputDate---------',outputDate);
+				if("per"+element.investmentId=="per"+inId){
+					if(outputDate<proportionMinNumber){
+						openAlert("输出百分比不能小於"+proportionMinNumber+"%");
+						$(investmentId).val(proportionMinNumber);
+						//break;
+					} else  if(outputDate>100){
+						console.log('-----outputDate>element.safpNetUnits---------',outputDate,element.safpNetUnits);
+						openAlert("轉出百分比不能大於100%");
+						//break;
+						$(investmentId).val(100);
+					}
+				}
+				//showOutputDate+=$(investmentId).val() * element.safpNetAmt;
+				//var  acctValue=element.acctValue;
+				var  perNumber=$(investmentId).val();
+				//if(perNumber !=0){
+				//	showOutputDate+=( perNumber / 100) * acctValue;
+				//}
+				//回傳百分比
+				element.ratio=parseInt(perNumber);
+			});
+			$("#showConutNumber").text(formatNumber(showOutputDate, 4));
+			};
+			//判斷當前輸入的單位和百分比的數據不能0有,必須滿足其中一項即可
+			function  validationNumber(){
+				var  boo=true;
+					if($("input[id='tab_group_1']").prop("checked")){
+						//investmentsList.forEach(element => {
+							for(let i=0;i<investmentsList.length;i++){
+							var  investmentId="#"+investmentsList[i].investmentId;i
+							//當前比例的方式計算
+							var   outputDate= $(investmentId).val();
+								//獲取幣別的最小單位書
+							var  unitMinNumber=0;
+							if(investmentsList[i].invtExchCurr== 'NTD'){
+								unitMinNumber= formatNumber(parseInt(unitMin['NTD_UNIT_MIN'])/formatNumber(investmentsList[i].netValueSell,4),4);
+							}else{
+								unitMinNumber= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(investmentsList[i].netValueSell,4),4);
+							}
+							if(outputDate<unitMinNumber){
+								openAlert("输出單位數不能小於"+unitMinNumber);
+								$(investmentId).val(unitMinNumber);
+								boo= false;
+								break;
+							}
+							//回傳百分比為0
+						 investmentsList[i].ratio=0;
+						}
+					}else{
+						for(let i=0;i<investmentsList.length;i++){
+						var  investmentId="#per"+investmentsList[i].investmentId;
+						//當前比例的方式計算
+						var   outputDate= $(investmentId).val();
+							//獲取幣別的最小百分比例
+						var  proportionMinNumber=0;
+						if(investmentsList[i].invtExchCurr== 'NTD'){
+							proportionMinNumber=parseInt(proportionMin['NTD_PROPORTION_MIN']);
+						}else{
+							proportionMinNumber=parseInt(proportionMin['USD_PROPORTION_MIN']);
+						}
+						if(outputDate<proportionMinNumber){
+							openAlert("输出百分比不能小於"+proportionMinNumber+"%");
+							$(investmentId).val(proportionMinNumber);
+							boo=  false;
+							break;
+						}
+						//回傳單位數為0
+						investmentsList[i].number=0; 
+					}
+				} 
+				return  boo;
+			}
+
+			//提交点击下一步
+			$("#go").click(function(){	
+				var formData = {};
+				if(!validationNumber()){
+					return  false;
+				}
+			//	investmentsList.netValueDate="";
+			//	investmentsList.exchRateDate="";
+				formData.investmentsList = JSON.stringify(investmentsList)
+				postWithFormData(/*[[@{/fund4}]]*/, formData);
+			});
+			
+		/*]]>*/
+		</script>
+	</body>
+
+	</html>

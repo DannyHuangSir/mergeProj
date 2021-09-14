@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransCustInfoDao">
+
+	<resultMap id="TransCustInfoMap" type="com.twfhclife.eservice.onlineChange.model.TransCustInfoVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="MOBILE" property="mobile"/>
+		<result column="EMAIL" property="email"/>
+		<result column="SMS_FLAG" property="smsFlag"/>
+		<result column="MAIL_FLAG" property="mailFlag"/>
+		<result column="MOBILE_OLD" property="mobileOld"/>
+		<result column="EMAIL_OLD" property="emailOld"/>
+		<result column="SMS_FLAG_OLD" property="smsFlagOld"/>
+		<result column="MAIL_FLAG_OLD" property="mailFlagOld"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transCustInfoVo.id != null"> AND ID = #{transCustInfoVo.id} </if>
+			<if test="transCustInfoVo.transNum != null and transCustInfoVo.transNum != ''"> AND TRANS_NUM = #{transCustInfoVo.transNum} </if>
+			<if test="transCustInfoVo.mobile != null and transCustInfoVo.mobile != ''"> AND MOBILE = #{transCustInfoVo.mobile} </if>
+			<if test="transCustInfoVo.email != null and transCustInfoVo.email != ''"> AND EMAIL = #{transCustInfoVo.email} </if>
+			<if test="transCustInfoVo.smsFlag != null and transCustInfoVo.smsFlag != ''"> AND SMS_FLAG = #{transCustInfoVo.smsFlag} </if>
+			<if test="transCustInfoVo.mailFlag != null and transCustInfoVo.mailFlag != ''"> AND MAIL_FLAG = #{transCustInfoVo.mailFlag} </if>
+			<if test="transCustInfoVo.mobileOld != null and transCustInfoVo.mobileOld != ''"> AND MOBILE_OLD = #{transCustInfoVo.mobileOld} </if>
+			<if test="transCustInfoVo.emailOld != null and transCustInfoVo.emailOld != ''"> AND EMAIL_OLD = #{transCustInfoVo.emailOld} </if>
+			<if test="transCustInfoVo.smsFlagOld != null and transCustInfoVo.smsFlagOld != ''"> AND SMS_FLAG_OLD = #{transCustInfoVo.smsFlagOld} </if>
+			<if test="transCustInfoVo.mailFlagOld != null and transCustInfoVo.mailFlagOld != ''"> AND MAIL_FLAG_OLD = #{transCustInfoVo.mailFlagOld} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transCustInfoVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更基本資料查詢結果 -->
+	<select id="getTransCustInfo" resultMap="TransCustInfoMap">
+		SELECT
+			ID,
+			TRANS_NUM,
+			ESERVICE.DBO.FN_DEBASE64(MOBILE) MOBILE,
+			ESERVICE.DBO.FN_DEBASE64(EMAIL) EMAIL,
+			SMS_FLAG,
+			MAIL_FLAG,
+			ESERVICE.DBO.FN_DEBASE64(MOBILE_OLD) MOBILE_OLD,
+			ESERVICE.DBO.FN_DEBASE64(EMAIL_OLD) EMAIL_OLD,
+			SMS_FLAG_OLD,
+			MAIL_FLAG_OLD
+		FROM
+			ESERVICE.DBO.TRANS_CUST_INFO
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 變更基本資料-新增 -->
+	<insert id="insertTransCustInfo">
+		INSERT INTO ESERVICE.DBO.TRANS_CUST_INFO
+		(
+			ID,TRANS_NUM,MOBILE,EMAIL,SMS_FLAG,MAIL_FLAG,MOBILE_OLD,EMAIL_OLD,SMS_FLAG_OLD,MAIL_FLAG_OLD
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_CUST_INFO),
+			#{transCustInfoVo.transNum, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transCustInfoVo.mobile, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{transCustInfoVo.email, jdbcType=VARCHAR}),
+			#{transCustInfoVo.smsFlag, jdbcType=VARCHAR},
+			#{transCustInfoVo.mailFlag, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transCustInfoVo.mobileOld, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{transCustInfoVo.emailOld, jdbcType=VARCHAR}),
+			#{transCustInfoVo.smsFlagOld, jdbcType=VARCHAR},
+			#{transCustInfoVo.mailFlagOld, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,1 @@
+mvn deploy:deploy-file -Dfile=C:/temp/elife-mybatis.jar -DgroupId=com.twfhclife -DartifactId=eservice -Dversion=20181018 -Dpackaging=jar -Durl=file:C:/gitlab/twfhclife/SourceCode/eservice_api/mvn-repo/ -DrepositoryId=maven-repo -DupdateReleaseInfo=true

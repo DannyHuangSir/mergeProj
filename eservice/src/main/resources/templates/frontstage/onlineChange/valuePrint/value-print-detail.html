@@ -1,0 +1,45 @@
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<div class="col-sm-12 hid-title2" id="transDetailTitle"></div>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<th:block th:if="${transValuePrintVo != null}">
+							<tr class="">
+								<th class="hid-th w40p">列印格式：</th>
+								<td>
+									<th:block th:if="${transValuePrintVo.lang eq 'C'}">中文</th:block>
+									<th:block th:if="${transValuePrintVo.lang eq 'E'}">英文</th:block>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">收件方式：</th>
+								<td>
+									<th:block th:if="${transValuePrintVo.deliverType eq 'P'}">紙本</th:block>
+									<th:block th:if="${transValuePrintVo.deliverType eq 'E'}">電子郵件信箱</th:block>
+								</td>
+							</tr>
+							<th:block th:if="${transValuePrintVo.deliverType eq 'P'}">
+								<tr class="">
+									<th class="hid-th w40p">收件地址：</th>
+									<td>
+										<th:block th:text="${transValuePrintVo.deliverAddr}"/>
+									</td>
+								</tr>
+							</th:block>
+							<th:block th:if="${transValuePrintVo.deliverType eq 'E'}">
+								<tr class="">
+									<th class="hid-th w40p">電子郵件信箱：</th>
+									<td>
+										<th:block th:text="${transValuePrintVo.beliverMail}"/>
+									</td>
+								</tr>
+							</th:block>
+						</th:block>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

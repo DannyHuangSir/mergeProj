@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='parameterTypeSearch')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+								參數管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								參數類型維護
+								<i class="my-icon fa fa-angle-double-right"></i>
+								查詢參數類型
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12">
+									<form class="form-horizontal" role="form" id="form1" action="func7-1.html">
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 系統別 </label>
+											<div class="col-sm-5">
+												<select class="chosen-select form-control" id="systemsSelect" data-placeholder="請選擇系統別...">
+													<option value=""></option>
+												</select>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 參數類型 </label>
+											<div class="col-sm-5">
+												<select class="chosen-select form-control" id="categoryNameSelect" data-placeholder="請選擇參數類型...">
+													<option value=""></option>
+												</select>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 是否啟用 </label>
+											<div class="col-sm-5">
+												<select class="chosen-select form-control" id="statusSelect" data-placeholder="請選擇是否啟用...">
+													<option value=""></option>
+													<option value="1">是</option>
+													<option value="0">否</option>
+												</select>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<!-- <div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-4">建立時間起迄</label>
+											<div class="col-sm-5">
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
+													<input class="form-control" type="text" name="date-range-picker" id="dateRange" />
+												</div>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>-->
+										<div class="col-md-offset-3 col-md-9">
+											<button id="qryBtn" class="btn btn-info" type="button">
+												<i class="my-icon fa fa-check bigger-110"></i>
+												查詢
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<button id="resetBtn" class="btn" type="reset">
+												<i class="my-icon fa fa-undo bigger-110"></i>
+												重新輸入
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="hr hr-18 dotted hr-double"></div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div id="show-detail-results" hidden="true">
+										<h3 class="header smaller lighter blue">查詢結果</h3>
+										<div>
+											<div id="showMessage" class="alert alert-info">
+												<i class="my-icon fa fa-hand-o-right"></i>
+												<span id="errorMsg"></span>
+											</div>
+											<div class="row">
+												<div class="col-xs-12">
+													<div id="dynamic-table_filter" class="dataTables_filter"> 
+														<button id="exportBtn" class="btn btn-white btn-purple btn-bold">
+															<i class="my-icon fa fa-cloud-upload bigger-110">匯出CSV</i>
+														</button>
+													</div>
+												</div>
+											</div>
+											<table id="grid"></table>
+											<div id="pager"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<form id="editForm" th:action="@{/parameterTypeUpdate}" method="POST" target="showDetailFrame">
+								<input type="hidden" id="parameterCategoryId" name="parameterCategoryId"/>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var grid;
+		$(function() {
+			// 載入系統功能下拉選單
+			eserviceAdmOption.chosenSystem('#systemsSelect', /*[[@{/common/systemList}]]*/);
+			
+			// 取得參數類型代碼下拉選單
+			//eserviceAdmOption.chosenParameterCategory('#categoryNameSelect', /*[[@{/common/parameterCategoryList}]]*/);
+			getParameterCategory();
+			
+			// 初始 jqGridUtil 物件
+			grid = new jqGridUtil();
+			grid.id = '#grid';
+			grid.url = /*[[@{/parameterType/getParameterCategoryPageList}]]*/;
+			grid.caption = '參數類型查詢';
+			grid.colNames = ['系統別', '參數類型代碼','參數類型名稱','是否啟用','編輯'];
+			grid.colModel = [
+				{name:'sysName',index:'sysName',width:100},
+				{name:'parameterCategoryCode',index:'parameterCategoryCode', width:100},
+				{name:'parameterCategoryName',index:'parameterCategoryName', width:200},
+				{name:'statusName',index:'statusName', width:100},
+				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+					var editHtml = '';
+					editHtml += '<a href="javascript:toEdit(\'' + row.parameterCategoryId + '\')" class="green bigger-140 show-details-btn" title="Edit">';
+					editHtml += '    <i class="my-icon fa fa-pencil bigger-120"></i> <span class="sr-only">Details</span>';
+					editHtml += '</a>';
+					return editHtml;
+				}} 
+			];
+			
+			// 綁定系統別變更時，自動update參數類型選單
+			$('#systemsSelect').chosen().change(function(){
+				console.log("systemsSelect", $(this).val());
+				var sysId =  $(this).val();
+				if(sysId){
+					updateParameterCategoryOptions(sysId);
+				}
+			});
+			
+			// 查詢
+			$('#qryBtn').click(function() {
+				// 設定查詢條件
+				grid.setPostData('systemId', $('#systemsSelect').val());
+				grid.setPostData('parameterCategoryId', $('#categoryNameSelect').val());
+				grid.setPostData('status', $('#statusSelect').val());
+				//grid.setPostData('startDate', $('#dateRange').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+				//grid.setPostData('endDate', $('#dateRange').data('daterangepicker').endDate.format('YYYY-MM-DD'));
+				// 產生grid
+				grid.create();
+				// 顯示查詢結果區域
+				$('#show-detail-results').show();
+			});
+			
+			// 重新輸入
+			$('#resetBtn').click(function() {
+				$('#form1')[0].reset();
+				$('.chosen-select').val('').trigger('chosen:updated'); // 重置下拉選單
+			});
+			
+			// 匯出結果
+			$('#exportBtn').click(function() {
+				if (grid.rownum() > 0) {
+					var exportUrl = '';
+					exportUrl += '/eservice_adm/parameterType/downloadParameterCategoryCsv';
+					//exportUrl += '?stD=' + $('#dateRange').data('daterangepicker').startDate.format('YYYY-MM-DD');
+					//exportUrl += '&enD=' + $('#dateRange').data('daterangepicker').endDate.format('YYYY-MM-DD');
+					exportUrl += '?sy=' + $("#systemsSelect").val();
+					exportUrl += '&co=' + $('#categoryNameSelect').val();
+					exportUrl += '&st=' + $('#statusSelect').val();
+					
+					window.location.href = exportUrl;
+				} else {
+					alertMsg("無結果可以匯出！");
+				}
+			});
+			
+			eserviceAdmEvent.initChosenSelect();
+			//eserviceAdmEvent.initDateRangePicker('#dateRange');
+		});
+		
+		function getParameterCategory() {
+			$.ajax({
+				url : /*[[@{/common/parameterCategoryList}]]*/,
+				type : "POST"
+			}).done(function(data) {
+				if (data.result == 'SUCCESS') {
+					console.log("parameterCategorys=", data.resultData);
+					parameterCategorys = data.resultData;
+					$("#categoryNameSelect").append($('<option>-- 請先選擇系統別 --</option>').attr('value', ''));
+					$("#categoryNameSelect").trigger('chosen:updated');
+//						var sysId = $('#systemsSelect').val();
+//						console.log("ParameterCategorys=", parameterCategorys);
+//						updateParameterCategoryOptions(sysId);
+				}
+			});
+		};
+		
+		function updateParameterCategoryOptions(sysId) {
+			$("#categoryNameSelect").empty();
+			$("#categoryNameSelect").append($('<option></option>').attr('value', ''));
+			$.each(parameterCategorys, function(i, obj) {
+				if(obj.systemId == sysId) {
+					$("#categoryNameSelect").append($('<option></option>').attr('value', obj.parameterCategoryId).text(obj.categoryName));
+				}
+			});
+			$("#categoryNameSelect").trigger('chosen:updated');
+		}
+		
+		function toEdit(parameterCategoryId) {
+			$('#editForm #parameterCategoryId').val(parameterCategoryId);
+			$('#editForm')[0].submit();
+			$('#showDetailModal').modal('show');
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

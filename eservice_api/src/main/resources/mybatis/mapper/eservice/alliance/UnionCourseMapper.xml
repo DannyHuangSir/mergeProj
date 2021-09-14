@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.alliance.dao.UnionCourseDao">
+
+	<resultMap id="ParameterVoMap" type="com.twfhclife.alliance.model.UnionCourseVo" >
+		  <result column="SEQ_ID" property="seqId"/>      
+		  <result column="CASE_ID" property="caseId   "/>   
+		  <result column="TRANS_NUM" property="transNum"/>
+		  <result column="TYPE" property="type"/>
+		  <result column="NAME" property="name"/>
+		  <result column="CREATE_DATE" property="createDate"/>
+		  <result column="COMPLETE_DATE" property="completeDate"/>
+		  <result column="NC_STATUS" property="ncStatus"/>   
+		  <result column="MSG" property="msg"/>
+	</resultMap>
+	
+	<resultMap id="ParameterMap" type="HashMap" >
+		  <result column="SEQ_ID" property="seqId"/>      
+		  <result column="CASE_ID" property="caseId   "/>   
+		  <result column="TRANS_NUM" property="transNum"/>
+		  <result column="TYPE" property="type"/>
+		  <result column="NAME" property="name"/>
+		  <result column="CREATE_DATE" property="createDate"/>
+		  <result column="COMPLETE_DATE" property="completeDate"/>
+		  <result column="NC_STATUS" property="ncStatus"/>   
+		  <result column="MSG" property="msg"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		SEQ_ID,CASE_ID,TRANS_NUM,TYPE,NAME,CREATE_DATE,COMPLETE_DATE,NC_STATUS,MSG
+	</sql>
+	
+	
+	<select id="getUnionCourseList" resultMap="ParameterVoMap">
+		SELECT
+			*
+		FROM ESERVICE.dbo.UNION_COURSE 
+		WHERE 1 = 1
+		<if test="unionCourseVo.transNum != '' and unionCourseVo.transNum != null">
+			AND TRANS_NUM = #{unionCourseVo.transNum}	
+		</if>
+		<if test="unionCourseVo.caseId != '' and unionCourseVo.caseId != null">
+			AND TRANS_NUM = #{unionCourseVo.caseId}	
+		</if>
+		ORDER BY CREATE_DATE
+	</select>
+	
+	
+	<insert id="insertUnionCourseVo">
+		INSERT INTO ESERVICE.DBO.UNION_COURSE
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+	        <choose>
+   				<when test="unionCourseVo.seqId != null and unionCourseVo.seqId > 0">
+   					#{unionCourseVo.seqId, jdbcType=FLOAT},
+   				</when>
+   				<otherwise>
+   					(NEXT VALUE for UNION_COURSE_SEQ),
+   				</otherwise>
+   			</choose>
+		    #{unionCourseVo.caseId, jdbcType=VARCHAR},
+			#{unionCourseVo.transNum, jdbcType=VARCHAR},
+			#{unionCourseVo.type, jdbcType=VARCHAR},
+			#{unionCourseVo.name, jdbcType=VARCHAR},
+			#{unionCourseVo.createDate, jdbcType=TIMESTAMP},
+			#{unionCourseVo.completeDate, jdbcType=TIMESTAMP},
+			#{unionCourseVo.ncStatus, jdbcType=VARCHAR},
+			#{unionCourseVo.msg, jdbcType=VARCHAR}
+		)	
+		
+	</insert>
+	
+	<!-- 找出被保人有效的保單號碼 -->
+	<select id="getPolicyNoByID" resultType="java.lang.String" parameterType="java.lang.String">
+		select LIPI_INSU_NO from ESERVICE.DBO.LILIPI where LIPI_ID = #{id}
+	</select>
+	
+	<!-- 依保單號碼找出商品險種 -->
+	<select id="getProductCodeByPolicyNo" resultType="java.lang.String" parameterType="java.lang.String">
+		select PRODUCT_CODE 
+		from ESERVICE.DBO.COVERAGE c join ESERVICE.DBO.PRODUCT p on c.PRODUCT_ID = p.PRODUCT_ID 
+		where POLICY_NO = #{policyNo}
+	</select>
+	
+</mapper>
+

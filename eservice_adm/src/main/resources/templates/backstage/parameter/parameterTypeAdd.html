@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='parameterTypeAdd')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+								參數管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								參數類型維護
+								<i class="my-icon fa fa-angle-double-right"></i>
+								新增參數類型
+							</li>
+						</ul><!-- /.breadcrumb -->
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">新增參數類型</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form class="form-horizontal" id="parameterTypeAddForm" role="form" action="#">
+													<!-- <legend>Form</legend> -->
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">系統別</label>
+														<div class="col-sm-10" id="leave">
+															<select class="chosen-select form-control" id="systemsSelect" data-placeholder="請選擇系統別..." style="display: none;">
+															</select>
+														</div>
+													</fieldset>
+													
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">參數類型代碼</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="categoryCode" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">參數類型名稱</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="categoryName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">備註</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="remark" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">狀態</label>
+														<div class="col-sm-8">
+															<input name="radioStatus" type="radio" class="my" value="1" checked="true"/>
+															<span class="lbl"> 啟用</span>
+															&nbsp; &nbsp;
+															<input name="radioStatus" type="radio" value="0" class="my" />
+															<span class="lbl"> 停用</span>
+														</div>
+													</fieldset>
+													<div class="form-actions center">
+														<button type="button" id="id-btn-dialog1" class="btn btn-primary" onclick="insertData()">
+															<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+															確定新增 
+														</button>
+														<button class="btn" onclick="location.reload()" type="reset">
+															<i class="my-icon fa fa-undo bigger-110"></i>
+															重新輸入
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			$(function() {
+				// 載入系統功能下拉選單
+				eserviceAdmOption.chosenSystem('#systemsSelect', /*[[@{/common/systemList}]]*/);
+				eserviceAdmEvent.initChosenSelect();
+			});
+			
+			function insertData() {
+				if($('#systemsSelect').val() == '') {
+					alertMsg("請輸入系統別");
+					return false;
+				}
+				if ($('#categoryCode').val() == '') {
+					alertMsg("請輸入參數類型代碼");
+					return false;
+				}
+				if($('#categoryName').val() == '') {
+					alertMsg("請輸入參數類型名稱");
+					return false;
+				}
+				
+				var formData = {
+					systemId : $('#systemsSelect').val(),
+					categoryCode : $('#categoryCode').val(),
+					categoryName : $('#categoryName').val(),
+					remark : $('#remark').val(),
+					status : $('input:radio[name="radioStatus"]:checked').val()
+				};
+				eserviceForm.post(/*[[@{/parameterType/insertParameterCategory}]]*/, formData, function(response) {
+					alertMsg("新增成功");
+				});
+			}
+			
+			function resetForm(){
+				document.getElementById('parameterTypeAddForm').reset();
+			}
+		/*]]>*/
+		</script>
+	</body>
+</html>

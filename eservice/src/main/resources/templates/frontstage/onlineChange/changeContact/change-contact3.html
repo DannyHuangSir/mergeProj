@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>聯絡資料變更暨保全聯盟鏈｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">聯絡資料變更暨保全聯盟鏈</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 聯絡資料變更暨保全聯盟鏈
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-3">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-3">
+						2<span class="hid1">. 接受條款</span>
+					</li>
+					<li class="step3 active col-xs-3">
+						3<span class="hid1">. 填寫申請資料</span>
+					</li>
+					<li class="step4 col-xs-3">
+						4<span class="hid1">. 資料及一次性密碼確認</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請輸入欲變更的聯絡資料</h2>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>要保人姓名：</label>
+					</div>
+					<div class="col-sm-8" id="lipmName1">
+						<th:block th:text="${dataDetail != null} ? ${dataDetail.NAME}"/>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>住家電話：</label>
+					</div>
+					<div class="col-sm-8">
+						<input id="telHome" name="telHome" type="text" class="col-sm-9" placeholder="範例:0223456789"  data-validation="telphone2" maxlength="10"
+						th:value="${dataDetail != null} ? ${dataDetail.TEL_HOME}"/>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>公司電話：</label>
+					</div>
+					<div class="col-sm-8" style="float: left;">
+						<input id="telOffice" type="text" class="item180" placeholder="範例:0223456789" data-validation="telphone2" maxlength="10"
+						th:value="${dataDetail != null} ? ${dataDetail.TEL_OFFICE}"/>
+						分機
+						<input id="telOfficeExt" type="text" class="item100" placeholder="範例:1234" data-validation="integer" maxlength="4"
+						th:value="${dataDetail != null} ? ${dataDetail.TEL_OFFICE_1}"/>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>手機號碼：</label>
+					</div>
+					<div class="col-sm-8">
+						<input id="mobile" type="text" class="col-sm-9" placeholder="範例:0987654321" data-validation="mobile" maxlength="10"
+						th:value="${dataDetail != null} ? ${dataDetail.MOBILE}"/>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>要保人電子信箱：</label>
+					</div>
+					<div class="col-sm-8">
+						<input id="email" type="text" class="col-sm-9" placeholder="範例：test@gmail.com" data-validation="mail" maxlength="50"
+						th:value="${dataDetail.EMAIL != null} ? ${dataDetail.EMAIL}:''"/>
+					</div>
+				</div>
+				 <div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>變更前要保人地址：</label>
+					</div>
+					<div class="col-sm-8">
+						<th:block th:text="${dataDetail != null} ? ${dataDetail.ADDRESS_FULL}:''"/>
+					</div>
+				</div>
+				 <div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>變更前收費地址：</label>
+					</div>
+					<div class="col-sm-8">
+						<th:block th:text="${dataDetail != null} ? ${dataDetail.ADDRESS_CHAR_FULL}:''"/>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>要保人地址：</label>
+					</div>
+					<div class="col-sm-8">
+					<!--	<th:block th:replace="fragments/address"/>-->
+						<div class="item100" style="float: left; margin-right: 4px;line-height: 1em;">
+							<div class="selector-box">
+								<!--<select id="cityOption" class="selector"  data-validation="required" >-->
+								<select id="cityOption" class="selector" >
+									<option value="">請選擇</option>
+								</select>
+							</div>
+						</div>
+						<div class="item100" style="float: left; margin-right: 4px;line-height: 1em;">
+							<div class="selector-box">
+								<select id="regionOption" class="selector" >
+									<option value="">請選擇</option>
+								</select>
+							</div>
+						</div>
+						<div class="item150" style="float: left; margin-right: 4px;line-height: 1em;">
+							<div class="selector-box">
+								<select id="roadOption" class="selector" >
+									<option value="">請選擇</option>
+								</select>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						 <div class="" style="float: left; margin-top: 4px; margin-right: 4px;line-height: 1em;">
+                            <input type="text" id="addr-1" class="item50">巷
+                            <input type="text" id="addr-2" class="item50">弄
+                            <input type="text" id="addr-3" class="item50">號之
+                            <input type="text" id="addr-4" class="item50">，
+                            <input type="text" id="addr-5" class="item50">樓之
+                            <input type="text" id="addr-6" class="item50">
+                            <input type="text" id="addr-7" class="item50 hide">
+                        </div>
+						<!--<div style="float: left;">
+							<input type="text" id="addr" class="" placeholder="請輸入所在路、巷、號、樓層">
+						</div>-->
+						<input type="hidden" id="selectAddress" name="selectAddress"/>
+						<input type="hidden" id="selectAddressFull" name="selectAddress"/>
+						<input type="hidden" id="selectAddressValid" name="selectAddressValid"/>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>收費地址：</label>
+					</div>
+					<div class="col-sm-8">
+						<div class="checkbox" style="margin-top:0">
+							<div class="check-box" id="checkedBoxs">
+								<i class="">
+									<input id="sameAddr" type="checkbox"    style="width:15px; height:15px; cursor:pointer"  >
+								</i>
+							</div>
+							同要保人地址
+						</div>
+						<!--<input type="checkbox" id="sameAddr" style="width:15px; height:15px; cursor:pointer"> 同要保人地址-->
+					</div>
+				</div>
+				<div class="change1 adr">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label></label>
+					</div>
+					<div class="col-sm-8">
+						<th:block th:replace="fragments/addressChar"/>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label><span style="color:red;"></span>保全聯盟説明</label>
+					</div>
+					<div class="col-sm-8" th:inline="text">
+								[[${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_SECURITY_003'] != null} ?
+								${session.PAGE_WORDING['WORDING_SECURITY_003'].parameterValue} :
+								'即日起，使用本公司線上保全申請服務時，可一併授權本公司將您的申請資料，透過「中華民國人壽保險同業公會」
+								建制「保險區塊鏈聯盟科技通用共享平臺」傳送予您有投保之保險公司（該保險公司需有參與聯盟鏈），免除以往需向不同
+								公司分別提出保全申請之不便。']]
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label><span style="color:red;"></span>是否傳送<br/>其他保險公司</label>
+					</div>
+					<div class="col-sm-8" th:inline="text">
+						<th:block th:if="${transContactInfoDtlVo.sendAlliance eq 'Y'}">同意</th:block>
+						<th:block th:if="${transContactInfoDtlVo.sendAlliance eq 'N'}">不同意</th:block>
+						<!--<th:block th:text="${transContactInfoDtlVo.sendAlliance=='N'?'不同意':'同意'}"/>-->
+					</div>
+				</div>
+				<th:block th:if="${transContactInfoDtlVo.toCompany != null && transContactInfoDtlVo.toCompany !='' }">
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label><span style="color:red;"></span>授權傳送公司</label>
+					</div>
+					<div class="col-sm-8" th:inline="text">
+						<th:block th:each="from : ${#strings.arraySplit(transContactInfoDtlVo.toCompany, ',')}">
+							<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
+								<th:block th:if="${from eq vo.value.parameterValue}">
+									<th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+								</th:block>
+							</th:block>
+						</th:block>
+					</div>
+				</div>
+				</th:block>
+				<div class="change1" style="color: red;">
+                	<p>備注</p>
+                	<p>※ 「步驟1.選擇保單」中所勾選的保單將同時被變更為上述新聯絡資料内容。</p>
+                </div>
+				<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_01002'] != null} 
+					? ${session.PAGE_WORDING['WORDING_01002'].parameterValue}"/>
+				<div class="col-md-8 col-md-offset-2 two-buttons">
+					<a href="javascript:void(0);">
+						<button id="deny" class="btn-signup">上一步</button>
+					</a>
+					<th:block th:if="${loginUserType eq 'member'}">
+						<button id="go" class="btn-signup">下一步</button>
+					</th:block>
+				</div>
+			</div>
+		</div>
+
+		<!--  警告 -->
+		<div class="modal fade in" id="modal-container-deleteConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body apply2 center1 grey2">
+						<h3></h3>
+						<p class="item360 text-center" id="warningText" style="margin:auto">
+							請至少填寫一組連絡電話！
+						</p>
+						<p class="marginTop20">
+							<a href="#">
+								<button class="btn-login lock2" id="cancelThisApply">是</button>
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+
+		var formData = /*[[${transContactInfoDtlVo}]]*/;
+		var dataDetail = /*[[${dataDetail}]]*/;
+			$(function () {
+				commonOptions('#cityOption', 'getCityList');
+				/**if($('#cityOption').val()!=null){
+						var cityId=	$('#cityOption').val();
+						$('#cityOption option[selected=selected]').attr("selected",false);
+						$('#cityOption option[value="'+cityId+'"]').attr("selected",true);
+						commonOptions('#regionOption', ('getRegionList?cityId=' + $('#cityOption').val()));
+					}
+				**/
+				$('#cityOption').change(function () {
+					var regionId = $(this).val();
+					commonOptions('#roadOption', 'getCityList');
+					$('#regionOption option[selected=selected]').attr("selected", false);
+					$('#regionOption option[value="' + regionId + '"]').attr("selected", true);
+				});
+				$('#regionOption').change(function () {
+					var regionId = $(this).val();
+					commonOptions('#roadOption', ('getRoadList?regionId=' + $(this).val()));
+					$('#regionOption option[selected=selected]').attr("selected", false);
+					$('#regionOption option[value="' + regionId + '"]').attr("selected", true);
+				});
+				//$('#roadOption').click(function() {
+				//commonOptions('#roadOption', ('getRoadList?regionId=' + $("#regionOption").val()));
+				//});
+				$('#roadOption').change(function () {
+					//commonOptions('#roadOption', ('getRoadList?regionId=' + $("#regionOption").val()));
+					var roadOptionId = $(this).val();
+					$('#roadOption option[selected=selected]').attr("selected", false);
+					$('#roadOption option[value="' + roadOptionId + '"]').attr("selected", true);
+
+				});
+				$('#cityOption').change(function () {
+					var cityId = $(this).val();
+					commonOptions('#regionOption', ('getRegionList?cityId=' + $(this).val()));
+					$('#cityOption option[selected=selected]').attr("selected", false);
+					$('#cityOption option[value="' + cityId + '"]').attr("selected", true);
+				});
+				$('#deny').click(function () {
+					postWithFormData(/*[[@{/changeContact2}]]*/, formData);
+				});
+
+
+				$('div.mystyle3').validation();
+
+
+				$('#sameAddr').click(function () {
+					if ($('#sameAddr').prop('checked') == true) {
+						$('.adr,#addrChar').addClass('disabled');
+						$('.adr,#addrChar').attr('disabled', true);
+					} else {
+						$('.adr,#addrChar').removeClass('disabled');
+						$('.adr,#addrChar').attr('disabled', false);
+					}
+				});
+
+
+				$('#checkedBoxs').click(function () {
+					if (this.className.indexOf('checkedBox') <= 0) {
+						$('#sameAddr').attr('checked', false);
+					}
+					if (this.className.indexOf('checkedBox') > 0) {
+						$('#sameAddr').attr('checked', true);
+					}
+
+					if ($('#sameAddr').prop('checked') == true) {
+						$('.adr,#addrChar').addClass('disabled');
+						$('.adr,#addrChar').attr('disabled', true);
+					} else {
+						$('.adr,#addrChar').removeClass('disabled');
+						$('.adr,#addrChar').attr('disabled', false);
+					}
+				});
+
+				function commonOptions(target, URL) {
+					// 設定同步
+					$.ajaxSetup({ async: false });
+					$(target).html('');
+					$.ajax({
+						url: URL,
+						type: "POST"
+					}).done(function (data) {
+						if (data.result == 'SUCCESS') {
+							var optHtml = '';
+							optHtml += '<option value="" >請選擇</option>';
+							$.each(data.resultData, function (i, obj) {
+								//console.log(obj.VALUE );
+								optHtml += ('<option value="' + obj.KEY + '">' + obj.VALUE + '</option>');
+							});
+							$(target).html(optHtml);
+							$("#bankName").trigger("chosen:updated");
+						}
+
+					});
+					$.ajaxSetup({ async: true });
+				};
+
+				//$('#cityOption,#regionOption,#roadOption,#addr,#addr-1,#addr-2,#addr-3,#addr-4,#addr-5,#addr-6,#addr-7').change(function() {
+				function selectAddress() {
+					var selectAddress = '';
+					var selectAddressFull = '';
+					var selectAddressValid = '';
+					if ($('#cityOption').val() != '') {
+						selectAddressFull += $('#cityOption option:selected').text();
+					}
+					if ($('#regionOption').val() != '') {
+						selectAddressFull += $('#regionOption option:selected').text();
+					}
+					if ($('#roadOption').val() != '') {
+						selectAddress += $('#roadOption option:selected').text();
+						selectAddressFull += $('#roadOption option:selected').text();
+					}
+					//if ($('#addr').val() != '') {
+					//	address += $('#addr').val();
+					//	addressFull += $('#addr').val();
+					//}
+					if ($('#addr-1').val() != '') {
+						selectAddress += $('#addr-1').val() + '巷';
+						selectAddressFull += $('#addr-1').val() + '巷';
+						selectAddressValid += $('#addr-1').val() + '巷';
+					}
+					if ($('#addr-2').val() != '') {
+						selectAddress += $('#addr-2').val() + '弄';
+						selectAddressFull += $('#addr-2').val() + '弄';
+						selectAddressValid += $('#addr-2').val() + '弄';
+					}
+					if ($('#addr-3').val() != '') {
+						selectAddress += $('#addr-3').val() + '號';
+						selectAddressFull += $('#addr-3').val() + '號';
+						selectAddressValid += $('#addr-3').val() + '號';
+					}
+					if ($('#addr-4').val() != '') {
+						selectAddress += '之' + $('#addr-4').val();
+						selectAddressFull += '之' + $('#addr-4').val();
+						selectAddressValid += '之' + $('#addr-4').val();
+					}
+					if ($('#addr-4').val() != '' && $('#addr-5').val() != '') {
+						selectAddress += '，';
+						selectAddressFull += '，';
+						selectAddressValid += '，';
+					}
+					if ($('#addr-5').val() != '') {
+						selectAddress += $('#addr-5').val() + '樓';
+						selectAddressFull += $('#addr-5').val() + '樓';
+						selectAddressValid += $('#addr-5').val() + '樓';
+					}
+					if ($('#addr-6').val() != '') {
+						selectAddress += '之' + $('#addr-6').val();
+						selectAddressFull += '之' + $('#addr-6').val();
+						selectAddressValid += '之' + $('#addr-6').val();
+					}
+					if ($('#addr-6').val() != '' && $('#addr-7').val() != '') {
+						selectAddress += '，';
+						selectAddressFull += '，';
+						selectAddressValid += '，';
+					}
+					// if ($('#addr-7').val() != '') {
+					//selectAddress += $('#addr-7').val() + '室';
+					//selectAddressFull += $('#addr-7').val() + '室';
+					//}
+					$('#selectAddressValid').val(eserviceForm.convertAddressNumber(selectAddressValid));
+					$('#selectAddress').val(eserviceForm.convertAddressNumber(selectAddress));
+					$('#selectAddressFull').val(eserviceForm.convertAddressNumber(selectAddressFull));
+				}
+
+				/*	if(dataDetail != null){
+						if(dataDetail['CITY'] != undefined && dataDetail['CITY'] != null){
+							commonOptions('#regionOption', ('getRegionList?cityId=' + dataDetail['CITY']));
+							$('#regionOption option[selected=selected]').attr("selected",false);
+							$('#regionOption option[value="'+dataDetail['CITY']+'"]').attr("selected",true);
+						}
+						if(dataDetail['REGION'] != undefined && dataDetail['REGION'] != null){
+							$('#regionOption option[selected=selected]').attr("selected",false);
+							$('#regionOption option[value="'+dataDetail['REGION']+'"]').attr("selected",true);
+						//	commonOptions('#roadOption', ('getRoadList?regionId=' + dataDetail['REGION']));
+						}
+					}
+					*/
+				/*setTimeout(function () {
+					if(dataDetail['CITY'] != undefined && dataDetail['CITY'] != null){
+						$('#cityOption').val(dataDetail['CITY']);
+						$('#cityOption option[selected=selected]').attr("selected",false);
+						$('#cityOption option[value="'+dataDetail['CITY']+'"]').attr("selected",true);
+						$('#cityOptionChar option[selected=selected]').attr("selected",false);
+						$('#cityOptionChar option[value="'+dataDetail['CITY']+'"]').attr("selected",true);
+					}
+					if(dataDetail['REGION'] != undefined && dataDetail['REGION'] != null){
+						$('#regionOption').val(dataDetail['REGION']);
+						$('#regionOption option[selected=selected]').attr("selected",false);
+						$('#regionOption option[value="'+dataDetail['REGION']+'"]').attr("selected",true);
+					}
+					if(dataDetail['ROAD'] != undefined && dataDetail['ROAD'] != null){
+						//	$('#roadOption').val(dataDetail['ROAD']);
+					}
+					if(dataDetail['ADDRESS'] != undefined && dataDetail['ADDRESS'] != null){
+						$('#addr').val(dataDetail['ADDRESS']);
+					}
+				}, 1000); // 延时1秒
+				**/
+
+				//請至少填寫一組連絡電話
+				function cancelTrans(warningMessage) {
+					$('#warningText').text(warningMessage);
+					$('#modal-container-deleteConfirm').show();
+					//$('#fadeInBg').show();
+				}
+
+				//關閉
+				function hideDeleteAlert() {
+					$('#modal-container-deleteConfirm').hide();
+					$('#fadeInBg').hide();
+				}
+				$("#cancelThisApply").click(function () {
+					//popupLoading();
+					hideDeleteAlert();
+				});
+
+
+				$('#go').click(function () {
+					selectAddress();
+					selectAddressChar();
+
+					if (!$('div.mystyle3').valid()) {
+						return false;
+					}
+
+					if (($("#telHome").val() == null || $("#telHome").val() == "") &&
+						($("#telOffice").val() == null || $("#telOffice").val() == "") &&
+						($("#mobile").val() == null || $("#mobile").val() == "")) {
+						//alertMsg("請至少填寫一組連絡電話");
+						cancelTrans("請至少填寫一組連絡電話");
+						return false;
+					}
+
+					var telHomeValue = $("#telHome").val();
+					if(telHomeValue != null && telHomeValue != ""){
+						if(telHomeValue.startsWith("01") || telHomeValue.startsWith("09")){
+							cancelTrans("住家電話開頭為01或09,請檢查輸入值");
+							return false;
+						}
+					}
+
+					var telOfficeValue = $("#telOffice").val();
+					if(telOfficeValue != null && telOfficeValue != ""){
+						if(telOfficeValue.startsWith("01") || telOfficeValue.startsWith("09")){
+							cancelTrans("公司電話開頭為01或09,請檢查輸入值");
+							return false;
+						}
+					}
+
+					if (($("#email").val() == null || $("#email").val() == "") &&
+						($("#mobile").val() == null || $("#mobile").val() == "")) {
+						//alertMsg("手機與Email請至少填寫一欄");
+						cancelTrans("手機與Email請至少填寫一欄");
+						return false;
+					}
+
+					/**if($('#sameAddr').prop('checked') == true) {
+							//請要保人地址必填验证
+								if($("#cityOption").val() == null || $("#cityOption").val() == ""
+									||$("#regionOption").val() == null  || $("#regionOption").val() == ""
+									||$("#roadOption").val() == null  || $("#roadOption").val() == ""  ){
+												cancelTrans('請要保人地址必填,不能为空');
+												return false;
+								}
+	
+						} else {
+							//請要保人地址必填验证
+								if($("#cityOption").val() == null || $("#cityOption").val() == ""
+									||$("#regionOption").val() == null  || $("#regionOption").val() == ""
+									||$("#roadOption").val() == null  || $("#roadOption").val() == ""  ){
+												cancelTrans('請要保人地址必填,不能为空');
+												return false;
+								}
+							//收費地址必填验证
+							if($("#cityOptionChar").val() == null || $("#cityOptionChar").val() == ""
+								||$("#regionOptionChar").val() == null  || $("#regionOptionChar").val() == ""
+								||$("#roadOptionChar").val() == null  || $("#roadOptionChar").val() == ""  ){
+											cancelTrans('收費地址必填-不能為空');
+											return false;
+							}
+	
+					}
+				 **/
+
+					var changedFlag = false;
+					if ($('#telHome').val() != '' && emptyIfNull(formData.telHome) != $('#telHome').val()) {
+						//formData.telHome = $('#telHome').val();
+						changedFlag = true;
+					}
+
+					var telOfficeStr = "";
+					if ($('#telOffice').val() != '') {
+
+						if (emptyIfNull(formData.telOffice) != $('#telOffice').val()) {
+							changedFlag = true;
+						}
+
+						var telOfficeExt = $('#telOfficeExt').val();
+						if (telOfficeExt != '') {
+							telOfficeExt = '#' + telOfficeExt;
+						}
+						telOfficeStr = $('#telOffice').val() + telOfficeExt;
+					}
+
+					if ($('#telOfficeExt').val().trim() != "" && $('#telOffice').val().trim() == "") {
+						openAlert("請輸入公司電話");
+						return false;
+					}
+
+					if ($('#mobile').val() != '' && emptyIfNull(formData.mobile) != $('#mobile').val()) {
+						//formData.mobile = $('#mobile').val();
+						changedFlag = true;
+					}
+
+					if ($('#email').val() != '' && emptyIfNull(formData.email) != $('#email').val()) {
+						changedFlag = true;
+					}
+					console.log('changedFlag = ' + changedFlag);
+
+					/* if (!changedFlag) {
+						// 檢查地址是否有異動
+						if ($('#selectAddressFull').val() == '' && $('#selectAddressCharFull').val() == '') {
+							openAlert('住家電話、公司電話、手機、要保人地址、收費地址必須至少輸入一項');
+							openAlert($('#E0062').val());
+							return false;
+						}
+					} */
+					if (!isAddressValid($('#E0063').val())) {
+							return false;
+						}
+						if (!isSelectAddressValid()) {
+							return false;
+						}
+						if (!isAddressCharValid($('#E0063').val())) {
+							return false;
+						}
+						if (!isSelectAddressValidValid()) {
+							return false;
+						}
+
+					// 檢查地址是否有異動
+					if ($('#selectAddressFull').val() != '') {
+						/* if (!isAddressValid('請輸入要保人地址')) {
+							return false;
+						}*/
+						if (!isAddressValid($('#E0063').val())) {
+							return false;
+						}
+
+						formData.city = $('#cityOption option:selected').text();
+						formData.region = $('#regionOption option:selected').text();
+						formData.road = $('#roadOption option:selected').text();
+						//	formData.address = $('#selectAddress').val();
+						formData.addressFull = $('#selectAddressFull').val();
+					} else {
+
+						//formData.city = $('#cityOption option:selected').text();
+						//formData.region = $('#regionOption option:selected').text();
+						//formData.road = $('#roadOption option:selected').text();
+						//formData.address = $('#selectAddress').val();
+						var addressFull = "";
+						if ($('#cityOption option:selected').val() != '') {
+							addressFull = $('#cityOption option:selected').text() + $('#regionOption option:selected').text() + $('#roadOption option:selected').text() + $('#selectAddress').val();
+						} else {
+							addressFull =  dataDetail.ADDRESS_FULL;
+						}
+						formData.addressFull = eserviceForm.convertAddressNumber(addressFull);
+					}
+
+					// 檢查收費地址是否有異動
+					if ($('#sameAddr').prop('checked') == true) {
+						if ($('#cityOption option:selected').val() != '') {
+							formData.cityCharge = $('#cityOption option:selected').text();
+							formData.regionCharge = $('#regionOption option:selected').text();
+							formData.roadCharge = $('#roadOption option:selected').text();
+							//formData.addressCharge = $('#selectAddress').val();
+							if (formData.addressFull == '') {
+								if (!isAddressValid($('#E0063').val())) {
+									return false;
+								}
+							} else {
+								formData.addressFullCharge = formData.addressFull;
+							}
+						} else {
+							formData.addressFullCharge = dataDetail.ADDRESS_FULL;
+						}
+					} else {
+						formData.cityCharge = $('#cityOptionChar option:selected').text();
+						formData.regionCharge = $('#regionOptionChar option:selected').text();
+						formData.roadCharge = $('#roadOptionChar option:selected').text();
+						//formData.addressCharge = $('#selectAddressChar').val();
+						//formData.addressFullCharge = $('#selectAddressCharFull').val();
+						/*if ($('#selectAddressCharFull').val() != '') {
+							 if (!isAddressCharValid('請輸入收費地址')) {
+								return false;
+							} 
+							if (!isAddressCharValid($('#E0114').val())) {
+								return false;
+							}
+						} */
+						if (!isAddressCharValid($('#E0114').val())) {
+							return false;
+						}
+						if ($('#cityOptionChar option:selected').val() != '') {
+							formData.addressFullCharge = $('#selectAddressCharFull').val();
+						} else {
+							var addressCharge =dataDetail.ADDRESS_CHAR_FULL;
+							if (addressCharge == '' || addressCharge == null ) {
+								if($('#selectAddressFull').val()!=''){
+									addressCharge = $('#selectAddressFull').val();
+								}else{
+									addressCharge = dataDetail.ADDRESS_FULL;
+								}
+							}
+							formData.addressFullCharge = addressCharge;
+						}
+					}
+					formData.address = formData.address;
+					formData.addressCharge = formData.addressCharge;
+					formData.idno = dataDetail['LIPM_ID'];
+					formData.lipmName1 = $('#lipmName1').html();
+					formData.telHome = $('#telHome').val();
+					formData.telOffice = telOfficeStr;
+					formData.mobile = $('#mobile').val();
+					formData.email = $('#email').val();
+					console.log('formData = ' + formData);
+
+					if(formData.addressFull=='' || formData.addressFullCharge==''){
+						openAlert("要保人地址/收費地址不能為空");
+						return false;
+					}
+					
+					postWithFormData(/*[[@{/changeContact4}]]*/, formData);
+				});
+			});
+			function isValidCityRegionRoad() {
+				if ($('#cityOption').val() == '') {
+					openAlert("請選擇[要保人地址]都市");
+					return false;
+				}
+				if ($('#regionOption').val() == '') {
+					openAlert("請輸入[要保人地址]區域");
+					return false;
+				}
+				if ($('#roadOption').val() == '') {
+					openAlert("請輸入[要保人地址]街道");
+					return false;
+				}
+				return true;
+			}
+			function isAddressValid(alertMsg) {
+				/**
+				if ($('#cityOption').val() == '') {
+					openAlert(alertMsg);
+					return false;
+				}
+				if ($('#regionOption').val() == '') {
+					openAlert(alertMsg);
+					return false;
+				}
+				if ($('#roadOption').val() == '') {
+					openAlert(alertMsg);
+					return false;
+				}
+				**/
+				if ($('#addr-1').val() != '') {
+					if (!eserviceForm.isNumber($('#addr-1').val())) {
+						/* openAlert("請輸入數字"); */
+						openAlert($('#E0119').val());
+						return false;
+					}
+					return isValidCityRegionRoad();
+				}
+
+				if ($('#addr-2').val() != '') {
+					if (!eserviceForm.isNumber($('#addr-2').val())) {
+						/* openAlert("請輸入數字"); */
+						openAlert($('#E0119').val());
+						return false;
+					}
+					return isValidCityRegionRoad();
+				}
+
+				if ($('#addr-3').val() != '') {
+					if (!eserviceForm.isNumber($('#addr-3').val())) {
+						/* openAlert("請輸入數字"); */
+						openAlert($('#E0119').val());
+						return false;
+					}
+					return isValidCityRegionRoad();
+				}
+				/**else {
+					 openAlert("請輸入號");
+					 $('#addr-3').focus();
+					 return false;
+				}
+				*/
+
+				if ($('#addr-4').val() != '') {
+					if (!eserviceForm.isNumber($('#addr-4').val())) {
+						/* openAlert("請輸入數字"); */
+						openAlert($('#E0119').val());
+						return false;
+					}
+					return isValidCityRegionRoad();
+				}
+
+				if ($('#addr-5').val() != '') {
+					if (!eserviceForm.isNumber($('#addr-5').val())) {
+						openAlert("請輸入數字");
+						return false;
+					}
+					return isValidCityRegionRoad();
+				}
+				return true;
+			}
+			function isSelectAddressValid() {
+				if ($('#cityOption').val() != '') {
+					if($('#regionOption').val() == ''){
+						openAlert("請選擇[要保人地址]區域");
+						return false;
+					}
+					if($('#roadOption').val() == ''){
+						openAlert("請選擇[要保人地址]街道");
+						return false;
+					}
+					//return true;
+				}
+				if ($('#regionOption').val() != '') {
+					if($('#cityOption').val() == ''){
+						openAlert("請選擇[要保人地址]都市");
+						return false;
+					}
+					if($('#roadOption').val() == ''){
+						openAlert("請選擇[要保人地址]街道");
+						return false;
+					}
+					//return true;
+				}
+				if ($('#roadOption').val() != '') {
+					if($('#cityOption').val() == ''){
+						openAlert("請選擇[要保人地址]都市");
+						return false;
+					}
+					if($('#regionOption').val() == ''){
+						openAlert("請選擇[要保人地址]區域");
+						return false;
+					}
+					//return true;
+				}
+
+				console.log('selectAddressValid = ' + $('#selectAddressValid').val());
+				if($('#cityOption').val() != '' && $('#regionOption').val() != ''&& $('#roadOption').val() != ''){
+					if($('#selectAddressValid').val()=='' || $('#selectAddressValid').val()==null || $('#selectAddressValid').val()==undefined){
+						openAlert("請輸入[要保人地址]詳情地址信息");
+							return  false;
+					}else{
+						return true;
+					}
+				}
+				return true;
+			}
+			function isSelectAddressValidValid() {
+				if ($('#cityOptionChar').val() != '') {
+					if($('#regionOptionChar').val() == ''){
+						openAlert("請選擇[收費地址]區域");
+						return false;
+					}
+					if($('#roadOptionChar').val() == ''){
+						openAlert("請選擇[收費地址]街道");
+						return false;
+					}
+					//return true;
+				}
+				if ($('#regionOptionChar').val() != '') {
+					if($('#cityOptionChar').val() == ''){
+						openAlert("請選擇[收費地址]都市");
+						return false;
+					}
+					if($('#roadOptionChar').val() == ''){
+						openAlert("請選擇[收費地址]街道");
+						return false;
+					}
+					//return true;
+				}
+				if ($('#roadOptionChar').val() != '') {
+					if($('#cityOptionChar').val() == ''){
+						openAlert("請選擇[收費地址]都市");
+						return false;
+					}
+					if($('#regionOptionChar').val() == ''){
+						openAlert("請選擇[收費地址]區域");
+						return false;
+					}
+					//return true;
+				}
+				console.log('addressCharValid = ' + $('#addressCharValid').val());
+				if($('#cityOptionChar').val() != ''&& $('#regionOptionChar').val() != '' && $('#roadOptionChar').val() != ''){
+					if($('#addressCharValid').val()=='' || $('#addressCharValid').val()==null || $('#addressCharValid').val()==undefined){
+						openAlert("請輸入[收費地址]詳情地址信息");
+							return  false;
+					}else{
+						return true;
+					}
+				}
+				return true;
+			}
+		</script>
+
+</body>
+
+</html>

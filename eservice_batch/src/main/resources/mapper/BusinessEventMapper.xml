@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.BusinessEventMapper">
+	<resultMap id="BaseResultMap" type="com.twfhclife.eservice_batch.model.BusinessEventVo">
+		<result column="BUSINESS_EVENT_ID" property="businessEventId" />
+		<result column="USER_ID" property="userId" />
+		<result column="EVENT_DATE" property="eventDate" />
+		<result column="SOURCE_IP" property="sourceIp" />
+		<result column="TARGET_IP" property="targetIp" />
+		<result column="TARGET_SYSTEM_ID" property="targetSystemId" />
+		<result column="EVENT_NAME" property="eventName" />
+		<result column="EVENT_CODE" property="eventCode" />
+		<result column="EVENT_STATUS" property="eventStatus" />
+		<result column="EVENT_MSG" property="eventMsg" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="NOTICE_STATUS" property="noticeStatus" />
+	</resultMap>
+	<resultMap id="JoinMsgResultMap" type="com.twfhclife.eservice_batch.model.BusinessEventMsgTmpVo">
+		<result column="BUSINESS_EVENT_ID" property="businessEventId" />
+		<result column="USER_ID" property="userId" />
+		<result column="EVENT_DATE" property="eventDate" />
+		<result column="SOURCE_IP" property="sourceIp" />
+		<result column="TARGET_IP" property="targetIp" />
+		<result column="TARGET_SYSTEM_ID" property="targetSystemId" />
+		<result column="EVENT_NAME" property="eventName" />
+		<result column="EVENT_CODE" property="eventCode" />
+		<result column="EVENT_STATUS" property="eventStatus" />
+		<result column="EVENT_MSG" property="eventMsg" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="NOTICE_STATUS" property="noticeStatus" />
+		<result column="MESSAGING_TEMPLATE_ID" property="messagingTemplateId" />
+		<result column="MESSAGING_TEMPLATE_CODE" property="messagingTemplateCode" />
+		<result column="MESSAGING_TEMPLATE_NAME" property="messagingTemplateName" />
+		<result column="TRIGGER_TYPE" property="triggerType" />
+		<result column="SEND_TYPE" property="sendType" />
+		<result column="SEND_TIME" property="sendTime" />
+		<result column="CIRCLE_TYPE" property="circleType" />
+		<result column="CIRCLE_VALUE" property="circleValue" />
+		<result column="RECEIVER_MODE" property="receiverMode" />
+		<result column="MESSAGING_SUBJECT" property="messagingSubject" />
+		<result column="MESSAGING_CONTENT" property="messagingContent" />
+		<result column="PARAMS" property="params" />
+		<result column="RECEIVERS" property="receivers" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		BUSINESS_EVENT_ID,USER_ID,EVENT_DATE,SOURCE_IP,TARGET_IP,TARGET_SYSTEM_ID,EVENT_CODE,EVENT_NAME,EVENT_STATUS,EVENT_MSG,CREATE_DATE,CREATE_USER,NOTICE_STATUS
+	</sql>
+	<sql id="Join_Msg_Column_List">
+		be.BUSINESS_EVENT_ID,be.USER_ID,be.EVENT_DATE,be.SOURCE_IP,be.TARGET_IP,be.TARGET_SYSTEM_ID,
+		be.EVENT_CODE,be.EVENT_NAME,be.EVENT_STATUS,be.EVENT_MSG,be.CREATE_DATE,be.CREATE_USER,be.NOTICE_STATUS,
+		mt.MESSAGING_TEMPLATE_ID,mt.MESSAGING_TEMPLATE_CODE,mt.MESSAGING_TEMPLATE_NAME,mt.TRIGGER_TYPE,
+		mt.SEND_TYPE,mt.SEND_TIME,mt.CIRCLE_TYPE,mt.CIRCLE_VALUE,mt.RECEIVER_MODE,mt.MESSAGING_SUBJECT,mt.MESSAGING_CONTENT,
+		mt.PARAMS,mt.RECEIVERS
+	</sql>
+	
+	<select id="findUnhandledEvent" resultMap="JoinMsgResultMap">
+		select 
+			<include refid="Join_Msg_Column_List" />
+			from ESERVICE_ADM.DBO.BUSINESS_EVENT be
+			left join (
+				SELECT * FROM ESERVICE_ADM.DBO.MESSAGING_TEMPLATE mt1
+			    left join (select mp1.MESSAGING_TEMPLATE_ID MESSAGING_TEMPLATE_ID_1,
+			            rtrim(xmlagg(xmlelement(e, p.PARAMETER_VALUE, ',') order by p.PARAMETER_ID).extract('//text()'), ',') PARAMS
+			            from ESERVICE_ADM.DBO.MESSAGING_PARAMETER mp1
+			            join ESERVICE_ADM.DBO.PARAMETER p on p.PARAMETER_ID=mp1.PARAMETER_ID
+			            group by mp1.MESSAGING_TEMPLATE_ID
+			    ) mm on mm.MESSAGING_TEMPLATE_ID_1=mt1.MESSAGING_TEMPLATE_ID
+			    left join (select mr.MESSAGING_TEMPLATE_ID MESSAGING_TEMPLATE_ID_1,
+			            rtrim(xmlagg(xmlelement(e, mr.MESSAGING_RECEIVER_VALUE, ',') order by mr.MESSAGING_RECEIVER_ID).extract('//text()'), ',') RECEIVERS
+			            from ESERVICE_ADM.DBO.MESSAGING_RECEIVER mr
+			            group by mr.MESSAGING_TEMPLATE_ID
+			    ) mmr on mmr.MESSAGING_TEMPLATE_ID_1=mt1.MESSAGING_TEMPLATE_ID
+		    ) mt on mt.EVENT_TYPE=be.EVENT_CODE and mt.SYSTEM_ID=be.TARGET_SYSTEM_ID and mt.STATUS='3'
+	        where be.NOTICE_STATUS != 1
+	        order by be.BUSINESS_EVENT_ID
+	</select>
+	<select id="findUnhandledEvent_old" resultMap="JoinMsgResultMap">
+		select 
+			<include refid="Join_Msg_Column_List" />
+			from ESERVICE_ADM.DBO.BUSINESS_EVENT be
+	        left join ESERVICE_ADM.DBO.MESSAGING_TEMPLATE mt on mt.EVENT_TYPE=be.EVENT_CODE and mt.SYSTEM_ID=be.TARGET_SYSTEM_ID and mt.STATUS='2'
+	        where be.NOTICE_STATUS != 1
+	        order by be.BUSINESS_EVENT_ID
+	</select>
+	
+	<select id="getBusinessEventById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ESERVICE_ADM.DBO.BUSINESS_EVENT
+		where business_event_id = #{businessEventId}
+	</select>
+	
+	<update id="updateEventNoticeStatus"  parameterType="java.lang.Integer">
+		update ESERVICE_ADM.DBO.BUSINESS_EVENT set NOTICE_STATUS=#{arg1} 
+			where BUSINESS_EVENT_ID=#{arg0}
+	</update>
+	
+	<insert id="insertMessageRecord" parameterType="com.twfhclife.eservice_batch.model.MessageRecordVo">
+		INSERT INTO ESERVICE_ADM.DBO.MESSAGING_RECORDS VALUES 
+			(
+				(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(MESSAGING_RECORDS_ID) END + 1 FROM ESERVICE_ADM.DBO.DBO.MESSAGING_RECORDS),
+				#{systemId},
+				#{email},
+				#{mobile},
+				#{sendType},
+				getdate(),
+				#{sendSubject},
+				#{sendContent},
+				#{status},
+				getdate(),
+				#{createUser}
+			)
+	</insert>
+
+</mapper>

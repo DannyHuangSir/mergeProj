@@ -1,0 +1,61 @@
+
+	<head th:fragment="common_header(title,links,styles)">
+		<!-- Common styles and scripts -->
+    	<title th:replace="${title}">The awesome application</title>
+    
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>eService後台管理系統</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome/4.5.0/css/font-awesome.min.css}" />
+<!-- 		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome/5.3.1/css/fontawesome.min.css}" /> -->
+<!-- 		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome/5.3.1/css/all.min.css}" /> -->
+<!-- 		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome/5.3.1/css/v4-shims.min.css}" /> -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/daterangepicker.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-timepicker.min.css}" />
+
+		<!-- page specific plugin styles -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/chosen.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/ui.jqgrid.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/jquery-ui.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-tagsinput.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}" />
+		<!-- text fonts -->
+		<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/fonts.googleapis.com.css}" />-->
+
+		<!-- my styles -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/my.min.css}" class="my-main-stylesheet" id="main-my-style"/>
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="assets/css/my-part2.min.css" class="my-main-stylesheet" />
+		<![endif] -->
+		<link rel="stylesheet" th:href="@{/css/my-skins.min.css}" />
+		<link rel="stylesheet" th:href="@{/css/my-rtl.min.css}" />
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="assets/css/my-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- my settings handler -->
+		<script	th:src="@{/js/my-extra.min.js}"></script>
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="assets/js/html5shiv.min.js"></script>
+		<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+		<link rel="shortcut icon" th:href="@{/images/favor-icon.png}" />
+				
+		<!--/* Per-page placeholder for additional links */-->
+    	<th:block th:replace="${links}" />
+    	
+    	<th:block th:replace="${styles}" />
+	</head>

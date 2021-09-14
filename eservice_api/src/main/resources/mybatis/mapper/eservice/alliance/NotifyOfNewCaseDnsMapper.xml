@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.alliance.dao.NotifyOfNewCaseDnsDao">
+
+	<resultMap id="NotifyOfNewCaseDnsResultMap" type="com.twfhclife.alliance.model.NotifyOfNewCaseDnsVo">
+		<result property="seqId"  column="SEQ_ID" />
+		<result property="callId" column="CALL_ID" />
+		<result property="type"   column="TYPE" />
+		<result property="jobId"  column="JOB_ID" />
+		<result property="createDate" column="CREATE_DATE" />
+		<result property="ncStatus"   column="NC_STATUS" />
+		<result property="statusDate" column="STATUS_DATE" />
+		<result property="msg" column="MSG" />
+	</resultMap>
+	
+	<resultMap id="DnsContentResultMap" type="com.twfhclife.alliance.model.DnsContentVo">
+		<result property="seqId"   column="SEQ_ID" />
+		<result property="notifySeqId" column="NOTIFY_SEQ_ID" />
+		<result property="transNum"    column="TRANS_NUM" />
+		<result property="type"    column="TYPE" />
+		<result property="jobId"   column="JOB_ID" />
+		<result property="caseId"  column="CASE_ID" />
+		<result property="idno"    column="IDNO" />
+		<result property="insnom"  column="INSNOM" />
+		<result property="name"    column="NAME" />
+		<result property="birdate" column="BIRDATE" />
+		<result property="sex" column="SEX" />
+		<result property="con" column="CON" />
+		<result property="condate" column="CONDATE" />
+		<result property="adddate" column="ADDDATE" />
+		<result property="status"  column="STATUS" />
+		<result property="sendAlliance"  column="SEND_ALLIANCE" />
+		<result property="createDate"    column="CREATE_DATE" />
+		<result property="code"    column="CODE" />
+		<result property="msg"     column="MSG" />
+	</resultMap>
+	<sql id="DNS_ALLIANCE_ALL">
+		SEQ_ID
+		,NOTIFY_SEQ_ID
+		,TYPE
+		,JOB_ID
+		,CASE_ID
+		,ESERVICE.DBO.FN_DEBASE64(IDNO) IDNO
+		,INSNOM
+		,ESERVICE.DBO.FN_DEBASE64(NAME) NAME
+		,ESERVICE.DBO.FN_DEBASE64(BIRDATE) BIRDATE
+		,SEX
+		,CON
+		,CONDATE
+		,ADDDATE
+		,STATUS
+		,CREATE_DATE
+		,UPDATE_STATUS_DATE
+	</sql>
+	<insert id="addNotifyOfNewCaseDns" parameterType="com.twfhclife.alliance.model.NotifyOfNewCaseDnsVo">
+		INSERT INTO 
+       		ESERVICE.DBO.NOTIFY_OF_NEW_CASE_DNS
+       		(SEQ_ID,CALL_ID, TYPE, JOB_ID) 
+       	VALUES
+       		(
+       			(NEXT VALUE for NOTIFY_OF_NEW_CASE_DNS_SEQ),
+				#{vo.callId, jdbcType=VARCHAR},
+       			#{vo.type,   jdbcType=VARCHAR},
+       			#{vo.jobId,  jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<delete id="deleteNotifyOfNewCaseDnsByCallId" parameterType="java.lang.String">
+		delete from ESERVICE.DBO.NOTIFY_OF_NEW_CASE_DNS 
+		where CALL_ID=#{callId}
+	</delete>
+	
+	<!-- 新增DNS_ALLIANCE -->
+	<insert id="addDnsAlliance" parameterType="com.twfhclife.alliance.model.DnsContentVo">
+		insert into ESERVICE.DBO.DNS_ALLIANCE
+			(SEQ_ID,NOTIFY_SEQ_ID,TYPE,JOB_ID,CASE_ID,
+			IDNO,INSNOM,NAME,BIRDATE,SEX,CON,CONDATE,ADDDATE,STATUS)
+		values
+			(
+				(NEXT VALUE for DNS_ALLIANCE_SEQ),
+				#{vo.notifySeqId, jdbcType=VARCHAR},
+				#{vo.type, jdbcType=VARCHAR},
+				#{vo.jobId, jdbcType=VARCHAR},
+				#{vo.caseId, jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.idno, jdbcType=VARCHAR}),
+				#{vo.insnom, jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.name, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.birdate, jdbcType=VARCHAR}),
+				#{vo.sex, jdbcType=VARCHAR},
+				#{vo.con, jdbcType=VARCHAR},
+				#{vo.condate, jdbcType=VARCHAR},
+				#{vo.adddate, jdbcType=VARCHAR},
+				#{vo.status, jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<delete id="deleteDnsAllianceByNotifySeqId" parameterType="java.lang.Float">
+		delete from ESERVICE.DBO.DNS_ALLIANCE 
+		where NOTIFY_SEQ_ID=#{notifySeqId}
+	</delete>
+
+	<select id="getNofifyOfNewCaseDnsByNcStatus" parameterType="java.lang.String" resultMap="NotifyOfNewCaseDnsResultMap">
+		select * from ESERVICE.DBO.NOTIFY_OF_NEW_CASE_DNS
+		where NC_STATUS = #{ncStatus}
+		order by CREATE_DATE desc
+	</select>
+	
+	<update id="updateNcStatusBySeqId" parameterType="com.twfhclife.alliance.model.NotifyOfNewCaseDnsVo">
+		update ESERVICE.DBO.NOTIFY_OF_NEW_CASE_DNS
+		set NC_STATUS = #{vo.ncStatus},
+		    MSG = #{vo.msg}
+		where SEQ_ID  = #{vo.seqId}
+	</update>
+	
+	<!-- 取得TRANS_DNS資料 -->
+	<select id="getTransDnsByTransStatus" parameterType="java.lang.String" resultMap="DnsContentResultMap">
+		select top(10)
+			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM
+		from ESERVICE.DBO.TRANS t,ESERVICE.DBO.TRANS_DNS td
+		where t.STATUS = #{status}
+		and t.TRANS_TYPE = 'DNS_ALLIANCE'
+		and td.CODE is null
+		and t.TRANS_NUM  = td.TRANS_NUM
+	</select>
+	
+	<!-- 依seqId更新TRANS_DNS -->
+	<update id="updateTransDnsSendAllianceBySeqId" parameterType="com.twfhclife.alliance.model.DnsContentVo">
+		update ESERVICE.DBO.TRANS_DNS
+		set 
+			SEND_ALLIANCE = #{vo.sendAlliance},
+			CODE = #{vo.code},
+			MSG  = #{vo.msg},
+			UPDATE_CODE_DATE = getdate()
+		where SEQ_ID = #{vo.seqId}
+	</update>
+	
+	<!-- 取得未轉存至eservice TRANS/TRANS_DNS的聯盟資料 -->
+	<!-- modify 0221/07/14 只取 TYPE='InsuranceId'　-->
+	<select id="getDnsAllianceByStatus" parameterType="java.lang.String" resultMap="DnsContentResultMap">
+		select top(10)
+		<include refid="DNS_ALLIANCE_ALL"></include>
+		from ESERVICE.DBO.DNS_ALLIANCE 
+		where STATUS = '0'
+		and TYPE='InsuranceId'
+		and JOB_ID is not null
+		and CASE_ID is not null
+	</select>
+	
+	<!-- 以CASE_ID查詢筆數 -->
+	<select id="getDnsAllianceByCaseId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*)
+		from ESERVICE.DBO.DNS_ALLIANCE 
+		where TYPE = 'InsuranceId'
+		and CASE_ID = #{caseId};
+	</select>
+	
+	<!-- 更新DNS_ALLIANCE.STATUS by seqId -->
+	<update id="updateDnsAllianceStatusBySeqId" parameterType="com.twfhclife.alliance.model.DnsContentVo">
+		update ESERVICE.DBO.DNS_ALLIANCE
+		set 
+			STATUS = #{vo.status}, 
+			UPDATE_STATUS_DATE = getdate()
+		where SEQ_ID = #{vo.seqId}
+	</update>
+	
+</mapper>

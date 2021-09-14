@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransRiskLevelDao">
+
+	<resultMap id="TransRiskLevelMap" type="com.twfhclife.eservice.onlineChange.model.TransRiskLevelVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="RISK_LEVEL_OLD" property="riskLevelOld"/>
+		<result column="RISK_LEVEL_NEW" property="riskLevelNew"/>
+		<result column="RISK_SCORE" property="riskScore"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,RISK_LEVEL_OLD,RISK_LEVEL_NEW,RISK_SCORE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transRiskLevelVo.id != null"> AND ID = #{transRiskLevelVo.id} </if>
+			<if test="transRiskLevelVo.transNum != null and transRiskLevelVo.transNum != ''"> AND TRANS_NUM = #{transRiskLevelVo.transNum} </if>
+			<if test="transRiskLevelVo.riskLevelOld != null and transRiskLevelVo.riskLevelOld != ''"> AND RISK_LEVEL_OLD = #{transRiskLevelVo.riskLevelOld} </if>
+			<if test="transRiskLevelVo.riskLevelNew != null and transRiskLevelVo.riskLevelNew != ''"> AND RISK_LEVEL_NEW = #{transRiskLevelVo.riskLevelNew} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transRiskLevelVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更繳別查詢結果 -->
+	<select id="getTransRiskLevelList" resultMap="TransRiskLevelMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_RISK_LEVEL
+		<include refid="whereClause" />
+		ORDER BY ID DESC
+	</select>
+	
+	<!-- 變更繳別-新增 -->
+	<insert id="insertTransRiskLevel">
+		INSERT INTO ESERVICE.DBO.TRANS_RISK_LEVEL
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_RISK_LEVEL),
+			#{transRiskLevelVo.transNum, jdbcType=VARCHAR},
+			#{transRiskLevelVo.riskLevelOld, jdbcType=VARCHAR},
+			#{transRiskLevelVo.riskLevelNew, jdbcType=VARCHAR},
+			#{transRiskLevelVo.riskScore, jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<select id="getRiskLevelCode" resultType="string" parameterType="string">
+		SELECT TOP 1
+			INVT_RISK_BENE_LEVEL 
+		FROM ESERVICE.DBO.POLICY_PORTFOLIO
+		WHERE
+			POLICY_NO = #{policyNo}
+		AND INVT_ST = '00'
+	</select>
+
+</mapper>

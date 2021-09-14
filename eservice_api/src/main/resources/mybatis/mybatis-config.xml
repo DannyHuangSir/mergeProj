@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- <typeAliases>
+		<typeAlias alias="Integer" type="java.lang.Integer" />
+		<typeAlias alias="Long" type="java.lang.Long" />
+		<typeAlias alias="HashMap" type="java.util.HashMap" />
+		<typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap" />
+		<typeAlias alias="ArrayList" type="java.util.ArrayList" />
+		<typeAlias alias="LinkedList" type="java.util.LinkedList" />
+	</typeAliases>-->
+	<!-- 全域參數 -->
+	<settings>
+		<!-- 啟用或禁用快取。 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- 啟用或禁用延遲載入。當禁用時，所有關聯物件都會即時載入。 -->
+		<setting name="lazyLoadingEnabled" value="true" />
+		<!-- 當啟用時，有延遲載入屬性的物件在被調用時將會完全載入任意屬性。否則，每種屬性將會按需要載入。 -->
+		<setting name="aggressiveLazyLoading" value="true" />
+		<!-- 是否允許單條sql返回多個資料集 (取決於驅動的相容性) default:true -->
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<!-- 是否可以使用列的別名 (取決於驅動的相容性) default:true -->
+		<setting name="useColumnLabel" value="true" />
+		<!-- 允許JDBC 生成主鍵。需要驅動器支援。如果設為了true，這個設置將強制使用被生成的主鍵，有一些驅動器不相容不過仍然可以執行。 default:false -->
+		<setting name="useGeneratedKeys" value="true" />
+		<!-- 指定 MyBatis 如何自動映射 資料基表的列 NONE：不隱射 PARTIAL:部分 FULL:全部 -->
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<!-- 這是默認的執行類型 （SIMPLE: 簡單； REUSE: 執行器可能重複使用prepared statements語句；BATCH: 
+			執行器可以重複執行語句和批量更新） -->
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<!-- 使用駝峰命名法轉換欄位。 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<!-- 設置本地緩存範圍 session:就會有資料的共用 statement:語句範圍 (這樣就不會有資料的共用 ) defalut:session -->
+		<setting name="localCacheScope" value="SESSION" />
+		<!-- 設置但JDBC類型為空時,某些驅動程式 要指定值,default:OTHER，插入空值時不需要指定類型 -->
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<setting name="logImpl" value="LOG4J2"/>
+	</settings>
+	<!--
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<property name="dialect" value="mysql" />
+			<property name="offsetAsPageNum" value="false" />
+			<property name="rowBoundsWithCount" value="false" />
+			<property name="pageSizeZero" value="true" />
+			<property name="reasonable" value="false" />
+			<property name="supportMethodsArguments" value="false" />
+			<property name="returnPageInfo" value="none" />
+		</plugin>
+	</plugins>
+	-->
+	<mappers>
+		<mapper resource="mybatis/mapper/eservice/ApConstantsMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/AttitudeMailMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/OptionMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/ParameterMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/UnicodeBaseMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/UserDataMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/UserMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/auth/RoleDivAuthMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/dashboard/EstatmentAttrMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/dashboard/EstatmentMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/BankInfoMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/BeneficiaryMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/LitracEsMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/OnlineChangeMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransAnnuityMethodMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransBankInfoMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransBeneficiaryDtlMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransBeneficiaryMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransBeneficiaryOldMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransBounsMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransCancelContractMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransCertPrintMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransChangeAccountMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransContactInfoDtlMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransContactInfoMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransContactInfoOldMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransCreditCardDateMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransCushionMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransCustInfoMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransExtendAttrMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransFundSwitchMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransFundNotificationDtlMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransFundNotificationMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransLoanMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransPaymethodMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransPaymodeMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransPolicyHolderProfileMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransPolicyMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransReducePolicyDtlMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransReducePolicyMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransReducePolicyOldMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransResendPolicyMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransRewardMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransRiskLevelMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransSurrenderMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransValuePrintMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TravelPolicyMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransInsuranceCliamMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/partner/PartnerMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/AccountValueMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/AgentMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/BenefitMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/CoverageMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/ExchangeRateMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/FundPcoiMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/FundPrdtMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/FundTransactionMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/FundValueMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/PolicyAccountValueMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/PolicyBonusMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/policy/PolicyDividendMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/policy/PolicyExtraMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/policy/PolicyListMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/policy/PolicyPayerMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/policy/PolicyPaymentRecordMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/policy/PortfolioMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/policy/PolicyPaidMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/user/LilipiMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/user/LilipmMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/eservice/CommLogMapper.xml"/>
+
+		<mapper resource="mybatis/mapper/eservice/alliance/NotifyOfNewCaseMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/NewCaseNotifiedMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/InsuranceCliamMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/UnionCourseMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/NotifyOfNewCaseDnsMapper.xml"/>
+
+<mapper resource="mybatis/mapper/eservice/onlineChange/TransDnsMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/ContactInfoMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/NotifyOfNewCaseChangeMapper.xml"/>
+	</mappers>
+</configuration>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:replace="fragments/head" />
+<title>變更受益人｜臺銀人壽保單網路服務</title>
+<style>
+.checkbox, .radio {
+	margin-top: 0px;
+}
+.radio.inline .radio-btn {
+	margin: 5px 4px 0px 0px;
+}
+</style>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner beneficiary2 fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li><a href="apply1">線上申請</a> <i
+					class="fa fa-angle-right fa-lg ble"></i></li>
+				<li class="active"><a href="javascript:;">變更受益人</a></li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border listing-area">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 變更受益人
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-4">2<span class="hid1">.
+							設定受益人</span>
+					</li>
+					<li class="step3 col-xs-4">3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請先選擇受益人類型與分配方式<a data-toggle="popover" title="" data-placement="bottom" data-content="請先選擇本次欲申請的受益人類型及分配方式，每次申請限同一類型受益人，如您需要申請其他類型受益人，請再次提出申請。" data-original-title="申請方法" aria-describedby="popover340567"><span class="marginLeft10 icon-circle" style="padding: 0px 7px 0px 7px;">?</span></a></h2>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">受益人類型：</div>
+					<div class="col-sm-8">
+						<div class="item250">
+							<div class="selector-box">
+								<select id="beneficiaryType">
+									<option th:each="vo : ${beneficiaryTypeList}"
+										th:value="${vo.parameterCode}" th:utext="${vo.parameterName}" />
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>分配方式：</label>
+					</div>
+					<div class="col-sm-8">
+						<div class="radio inline">
+							<label>
+								<div class="radio-btn"><i><input type="radio" name="locateType" onclick="setLocateType(this.value);" value="0" data-validation="required"></i></div><span name="locType">均分</span>
+							</label>
+						</div>
+						<div class="radio inline">
+							<label>
+								<div class="radio-btn"><i><input type="radio" name="locateType" onclick="setLocateType(this.value);" value="1"></i></div><span name="locType">順位</span>
+							</label>
+						</div>
+						<div class="radio inline hide">
+							<label>
+								<div class="radio-btn"><i><input type="radio" name="locateType" onclick="setLocateType(this.value);" value="2"></i></div><span name="locType">比例</span>
+							</label>
+						</div>
+					</div>
+				</div>
+				<h2>請設定欲變更的受益人</h2>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label> 與被保人關係：</label>
+					</div>
+					<div class="col-sm-8">
+						<div class="item160">
+							<div class="selector-box">
+								<select id="kinship" data-validation="required" onchange="relationAControl(this.value);">
+									<option th:each="vo : ${beneficiaryRelationList}"
+										th:value="${vo.parameterCode}"
+										th:utext="${vo.parameterName}" />
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">姓名：</div>
+					<div class="col-sm-8">
+						<input type="text" class="col-sm-9" id="beneficiaryName"
+							data-validation="required|maxlength::10" placeholder="" />
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>身分證字號：</label>
+					</div>
+					<div class="col-sm-8">
+						<input type="text" class="col-sm-9" id="beneficiaryPolicyNo" data-validation="required|rocId" />
+					</div>
+				</div>
+				<div class="change1 hide">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>原因：</label>
+					</div>
+					<div class="col-sm-8">
+						<input type="text" class="col-sm-9" id="reason" placeholder="請輸入非配偶或直系親屬原因" />
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>指定順位：</label>
+					</div>
+					<div class="col-sm-8">
+						<input type="text" class="col-sm-9" id="order" maxlength="3" />
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>受益人電話：</label>
+					</div>
+					<div class="col-sm-8">
+						<input type="text" class="col-sm-9" id="beneficiaryTel"
+							placeholder="" data-validation="required|phone"/>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-2 col-sm-offset-2">
+						<label>受益人地址：</label>
+					</div>
+					<div class="col-sm-8">
+						<th:block th:replace="fragments/address"/>
+					</div>
+				</div>
+				<div class="check-list2 center1">
+					<button class="btn-login invst2btn" id="add-check-list">
+						<i class="fas fa-plus"></i> 新增受益人
+					</button>
+				</div>
+				<table class="tablesaw tablesaw-stack wht w100p"
+					data-tablesaw-mode="stack" id="beneficiaryTable">
+					<thead>
+						<tr class="table2">
+							<th class="text-left" scope="col"
+								data-tablesaw-sortable-col="受益人類型"
+								data-tablesaw-priority="persist">受益人類型</th>
+							<th class="text-left" scope="col"
+								data-tablesaw-sortable-col="姓名" data-tablesaw-priority="">姓名</th>
+							<th class="text-left" scope="col"
+								data-tablesaw-sortable-col="身分證字號" data-tablesaw-priority="">身分證字號</th>
+							<th class="text-left" scope="col"
+								data-tablesaw-sortable-col="與被保險人關係" data-tablesaw-priority="">與被保人關係</th>
+							<th class="text-left hide">非直系原因</th>
+							<th class="text-left" scope="col"
+								data-tablesaw-sortable-col="分配方式" data-tablesaw-priority="">分配方式</th>
+							<th class="text-left" scope="col"
+								data-tablesaw-sortable-col="指定順位" data-tablesaw-priority="">指定順位</th>
+							<th class="text-left" scope="col"
+								data-tablesaw-sortable-col="受益人電話" data-tablesaw-priority="">受益人電話</th>
+							<th class="text-left" scope="col"
+								data-tablesaw-sortable-col="受益人地址" data-tablesaw-priority="">受益人地址</th>
+							<th class="text-left" scope="col" data-tablesaw-sortable-col=""
+								data-tablesaw-priority=""></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_00602'] != null} 
+					? ${session.PAGE_WORDING['WORDING_00602'].parameterValue}"/>
+				<div class="col-md-12 two-buttons">
+					<a href="beneficiary1">
+						<button id="deny" class="btn-signup">上一步</button>
+					</a>
+					<th:block th:if="${loginUserType eq 'member'}">
+						<button id="go" class="btn-signup">下一步</button>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script" />
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var formData = {};
+	formData.policyNoList = /*[[${transBeneficiaryVo.policyNoList}]]*/;
+	
+	var locateTypeVal = "";
+	var $originalKinship = $('#kinship').clone();
+	$(function() {
+		$('div.mystyle3').validation();
+
+		// 受益人類型
+		$('#beneficiaryType').change(function() {
+			// 身故時隱藏本人受益人類型
+			if ($(this).val() == '1') { 
+				$('#kinship').find('option[value="3"]').remove();
+				
+				// 加入檢核條件
+				$('#beneficiaryTel').attr('data-validation', 'required|phone');
+				// 重新收集檢核條件
+				$('div.mystyle3').validation();
+			} else {
+				$('#kinship').html($originalKinship.html());
+
+				// 不需要檢核
+				$('#beneficiaryTel').removeAttr('data-validation');
+				// 確保清空檢核訊息
+				$('#beneficiaryTel_error').remove();				
+				// 重新收集檢核條件
+				$('div.mystyle3').validation();
+			}
+		});
+		$('#beneficiaryType').trigger('change');
+		
+		// 新增受益人事件
+		$("#add-check-list").on('click', function() {
+			if ($("input[name='locateType']:checked").size() == 0) {
+				/* openAlert('請選擇分配方式'); */
+				openAlert($('#E0041').val());
+				return false;
+			}
+			
+			if(!$("div.mystyle3").valid()) {
+				return false;
+			}
+			
+			if ($("#kinship :selected").val() != 'A' && ($("#order").val() == '' && $("input[name='locateType']:checked").val() != '0')) {
+				/* openAlert('請輸入指定順位'); */
+				openAlert($('#E0042').val());
+				return false;
+			}
+
+			//受益人類型限身故時才可以選擇法定繼承人
+			if ($("#beneficiaryType :selected").val() != '1' && $("#kinship :selected").val() == 'A') {
+				/* openAlert('受益人類型限身故時才可以選擇法定繼承人'); */
+				openAlert($('#E0043').val());
+				return false;
+			}
+			
+			// 取得畫面設定參數
+			var beneficiaryType = $("#beneficiaryType :selected").text();
+			var beneficiaryTypeVal = $("#beneficiaryType :selected").val();
+			var beneficiaryName = $("#beneficiaryName").val();
+			var beneficiaryPolicyNo = $("#beneficiaryPolicyNo").val().toUpperCase();
+			var kinship = $("#kinship :selected").text();
+			var kinshipVal = $("#kinship :selected").val();
+			var reason = $("#reason").val();
+			locateTypeVal = $("input[name='locateType']:checked").val();
+			var locateType = locateTypeVal == "0" ? "均分" : locateTypeVal == "1" ? "順位" : "比例"; 
+			var order = $("#order").val();
+			var beneficiaryPhoneNo = $("#beneficiaryTel").val();
+			
+			var cityOptionVal = $("#cityOption :selected").val();
+			var regionOptionVal = $("#regionOption :selected").val();
+			var roadOptionVal = $("#roadOption :selected").val();
+			var cityOption = $("#cityOption :selected").text();
+			var regionOption = $("#regionOption :selected").text();
+			var roadOption = $("#roadOption :selected").text();
+			var address = $("#selectAddress").val();
+			var addressDesc = $("#selectAddressFull").val();
+
+			// 檢查地址是否有異動,非法定繼承人及身故類型才檢查
+			if (//kinshipVal != 'A' && 
+					$("#beneficiaryType :selected").val() == '1') {
+				/* if (!isAddressValid('請輸入受益人地址')) {
+					return false;
+				} */
+				if (!isAddressValid($('#E0046').val())) {
+                    return false;
+                }
+			}
+			
+			if (order != '') {
+				if (!$.isNumeric(order)) {
+					/* openAlert("指定順位請輸入數字"); */
+					openAlert($('#E0113').val());
+					return false;
+				} else{
+					// 取出所有順位值
+					var arrayOrder = new Array();
+					var maxOrder = -1;
+					$('#beneficiaryTable tbody tr').each(function(){
+					    var intOrder = parseInt($(this).find('td:eq(6)').text());
+					    arrayOrder.push(intOrder);
+					    if(maxOrder < intOrder) {
+					    	maxOrder = intOrder;
+					    }
+					});
+					// 從 1 開始檢核所有順位
+					for(var orderIndex = 1; orderIndex < maxOrder; orderIndex++){
+						if(arrayOrder.indexOf(orderIndex) == -1 && parseInt(order) != orderIndex){
+							openAlert($('#E0124').val() + orderIndex);
+							return false;
+						}
+					}
+					// 輸入的順位
+					if(arrayOrder.indexOf(order) == -1 && parseInt(order) < maxOrder){
+						// do nothing
+					} else if(parseInt(order) > (arrayOrder.length) + 1){
+						openAlert($('#E0124').val() + (arrayOrder.length + 1));
+						return false;
+					}
+				}
+			} else{
+				order = "-";
+			}
+			
+			if ($("#beneficiaryTable tbody tr").size() == 0) {
+				$("#beneficiaryTable tbody").append("<tr class='h65 tr-odd-noEvent'></tr>");
+			} else {
+				$("#beneficiaryTable tbody tr:last").after("<tr class='h65 tr-odd-noEvent'></tr>");
+			}
+			
+			
+			
+			// 塞入下面表格
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left'><span>"+beneficiaryType+"</span></td>");
+			$("#beneficiaryTable tbody tr:last td:eq(0)").append("<div style='display:none'>"+beneficiaryTypeVal+"</div>");
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left'>"+beneficiaryName+"</td>");
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left'>"+beneficiaryPolicyNo+"</td>");
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left'><span>"+kinship+"</span></td>");
+			$("#beneficiaryTable tbody tr:last td:eq(3)").append("<div style='display:none'>"+kinshipVal+"</div>");
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left hide'>"+reason+"</td>");
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left'><span>"+locateType+"</span></td>");
+			$("#beneficiaryTable tbody tr:last td:eq(5)").append("<div style='display:none'>"+locateTypeVal+"</div>");
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left' name='nameOfOrder'>"+order+"</td>");
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left'>"+beneficiaryPhoneNo+"</td>");
+			$("#beneficiaryTable tbody tr:last").append("<td class='text-left'>"+addressDesc+"</td>");
+			$("#beneficiaryTable tbody tr:last td:eq(8)").append("<div id='city' style='display:none'>"+cityOptionVal+"</div>");
+			$("#beneficiaryTable tbody tr:last td:eq(8)").append("<div id='region' style='display:none'>"+regionOptionVal+"</div>");
+			$("#beneficiaryTable tbody tr:last td:eq(8)").append("<div id='address' style='display:none'>"+address+"</div>");
+			$("#beneficiaryTable tbody tr:last td:eq(8)").append("<div id='addressDesc' style='display:none'>"+addressDesc+"</div>");
+			$("#beneficiaryTable tbody tr:last").append("<td><img src='img/delete.png' style='cursor:pointer' width='16px' height='16px' onclick='deleteTr(this)'/></td>");
+			
+			// 清除資料
+			//$("#beneficiaryType").val("1");
+			
+			$("#beneficiaryName").val("");
+			$("#beneficiaryPolicyNo").val("");
+			$("#kinship").val("0");
+			$("#reason").val("");
+			$("#order").val("");
+			$("#beneficiaryTel").val("");
+			$("#cityOption").val("");
+			$("#regionOption").val("");
+			$("#roadOption").val("");
+			$("#addr-1,#addr-2,#addr-3,#addr-4,#addr-5,#addr-6,#addr-7").val("");
+			$("#address").val("");
+			$("#addressDesc").val("");
+			
+			if ($("#beneficiaryTable tbody tr").size() > 0) {
+				$('[name=locateType]').attr('disabled', true);
+				$('[name=locateType]').addClass("disabled");
+				$('[name=locType]').addClass("disabled");
+				$('#beneficiaryType').attr('disabled', true);
+				$('#beneficiaryType').addClass("disabled");
+			}
+			/* redmine 180 hidden */
+			/* reRelocateOrder(); */
+			relationAControl($("#kinship :selected").val())
+			setLocateType($("input[name='locateType']:checked").val());
+			
+			//reset timeout second
+			$('#logoutResetBtn').click();
+		});
+
+		$('#go').click(function() {
+			if ($('#beneficiaryTable tbody tr').length == 0) {
+				/* openAlert('未新增受益人!'); */
+				openAlert($('#E0044').val());
+				return false;
+			}
+			
+			if (!checkData()) {
+				return false;
+			}
+			
+			var jsonDataArray = [];
+			$("#beneficiaryTable tbody tr").each(function() {
+				var rowData = {};
+				rowData["beneficiaryType"] = $(this).find("td:eq(0) div").text();
+				rowData["beneficiaryTypeStr"] = $(this).find("td:eq(0) span").text();
+				rowData["beneficiaryName"]  = $(this).find("td:eq(1)").text();
+				rowData["beneficiaryRocid"] = $(this).find("td:eq(2)").text();
+				rowData["beneficiaryRelation"] = $(this).find("td:eq(3) div").text();
+				rowData["beneficiaryRelationStr"] = $(this).find("td:eq(3) span").text();
+				rowData["reason"] = $(this).find("td:eq(4)").text();
+				rowData["allocateType"] = $(this).find("td:eq(5) div").text();
+				rowData["allocateTypeStr"] = $(this).find("td:eq(5) span").text();
+				var allocateSeq = $(this).find("td:eq(6)").text()
+				rowData["allocateSeq"] = "-" == allocateSeq ? null: allocateSeq;
+				rowData["beneficiaryTel"] = $(this).find("td:eq(7)").text();
+				rowData["beneficiaryCity"] = $(this).find("td:eq(8) div#city").text();
+				rowData["beneficiaryRegion"] = $(this).find("td:eq(8) div#region").text();
+				rowData["beneficiaryAddress"] = $(this).find("td:eq(8) div#address").text();
+				rowData["beneficiaryAddressFull"] = $(this).find("td:eq(8) div#addressDesc").text();
+				
+				jsonDataArray.push(rowData);
+			});
+			formData.transBeneficiaryDtlJsonData = JSON.stringify(jsonDataArray);
+			
+			postWithFormData(/*[[@{/beneficiary3}]]*/, formData);
+		});
+	});
+	
+	function reRelocateOrder() {
+		if ($("input[name='locateType']:checked").val() == 0) {
+			//均分時自動重算
+			$('table td').each(function () {
+				if ('nameOfOrder' == $(this).attr('name')) {
+					$(this).text(new Number(100 / $("#beneficiaryTable tbody tr").size()).toFixed(0));
+				}
+			});
+		}
+	}
+	
+	function checkData() {
+		//TODO 檢查分配方式
+		//1.若為均分,送出的一到多個受益人指定順位或比例為100/受益人數
+		//2.若為順位,送出的一到多個受益人指定順位或比例為1開始的流水號
+		//3.若為比例,送出的一到多個受益人指定順位或比例加總應為100
+		if (locateTypeVal == "2") {
+			var count = 0;
+			$("[name='nameOfOrder']").each(function() {
+				count += new Number($(this).text());
+			});
+			if (count != 100) {
+				/* openAlert('分配方式為比例，受益人指定順位或比例合計必需為100!'); */
+				openAlert($('#E0045').val());
+				return false;
+			}
+		} else if(locateTypeVal == "1"){
+			// 順位需要追加檢查每一順位都有設定
+			var beneficiaryCount = $('#beneficiaryTable tbody tr').length;
+			var orderValueList = new Array();
+			$('#beneficiaryTable tbody tr').each(function(){
+				orderValueList.push($(this).find('td:eq(6)').text());
+			});
+			for(var orderValue = 1; orderValue <= beneficiaryCount; orderValue++){
+				if(orderValueList.indexOf('' + orderValue) == -1){
+					openAlert($('#E0125').val() + orderValue);
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+
+	// 法定繼承人下拉選單控制
+	function relationAControl(relVal) {
+		// 需要控制的欄位清單
+		var disabledSelecterIds = [];
+		disabledSelecterIds.push('#beneficiaryName');
+		disabledSelecterIds.push('#beneficiaryPolicyNo');
+		disabledSelecterIds.push('#order');
+		disabledSelecterIds.push('#beneficiaryTel');
+		disabledSelecterIds.push('#cityOption');
+		disabledSelecterIds.push('#regionOption');
+		disabledSelecterIds.push('#roadOption');
+		disabledSelecterIds.push('#addr-1');
+		disabledSelecterIds.push('#addr-2');
+		disabledSelecterIds.push('#addr-3');
+		disabledSelecterIds.push('#addr-4');
+		disabledSelecterIds.push('#addr-5');
+		disabledSelecterIds.push('#addr-6');
+		disabledSelecterIds.push('#addr-7');
+		disabledSelecterIds.push('#addr-7');
+		disabledSelecterIds.push('#selectAddress');
+		disabledSelecterIds.push('#selectAddressFull');
+		
+		if (relVal == 'A') {
+			//受益人類型限身故時才可以選擇法定繼承人
+			if ($("#beneficiaryType :selected").val() != '1') {
+				$('#kinship')[0].selectedIndex = 0;
+				/* openAlert('受益人類型限身故時才可以選擇法定繼承人'); */
+				openAlert($('#E0043').val());
+				return false;
+			}
+			
+			$.each(disabledSelecterIds, function(i, selecterId) {
+				$(selecterId).val('');
+				$(selecterId).attr('disabled', true);
+			});
+			
+			$('#cityOption').addClass('disabled');
+			$('#regionOption').addClass('disabled');
+			$('#roadOption').addClass('disabled');
+			
+			// 不需要檢核
+			$('#beneficiaryName').removeAttr('data-validation');
+			$('#beneficiaryPolicyNo').removeAttr('data-validation');
+			$('#beneficiaryTel').removeAttr('data-validation');
+			// 確保清空檢核訊息
+			$('#beneficiaryName_error').remove();
+			$('#beneficiaryPolicyNo_error').remove();
+			$('#beneficiaryTel_error').remove();
+			
+			// 重新收集檢核條件
+			$('div.mystyle3').validation();
+		} else {
+			$.each(disabledSelecterIds, function(i, selecterId) {
+				$(selecterId).attr('disabled', false);
+			});
+			$('#cityOption').removeClass('disabled');
+			$('#regionOption').removeClass('disabled');
+			$('#roadOption').removeClass('disabled');
+			
+			// 加入檢核條件
+			$('#beneficiaryName').attr('data-validation', 'required|maxlength::10');
+			$('#beneficiaryPolicyNo').attr('data-validation', 'required|rocId');
+			$('#beneficiaryTel').attr('data-validation', 'required|phone');
+			// 重新收集檢核條件
+			$('div.mystyle3').validation();
+		}
+	}
+	
+	function setLocateType(locateTypeVal) {
+		if ($("#kinship :selected").val() != 'A') {
+			if (locateTypeVal == 0) {
+				/* redmine 180 修改 */
+				/* $('#order').attr('placeholder', '分配方式為均分時自動計算不需輸入'); */
+				$('#order').attr('placeholder', '');
+				$('#order').attr('disabled', true);
+			} else {
+				$('#order').attr('placeholder', '分配方式為順位時請輸入數字，如1,2,3');
+				$('#order').attr('disabled', false);
+			}
+		}
+	}
+	
+	function deleteTr(img){
+		$(img).closest("tr").remove();
+		if ($("#beneficiaryTable tbody tr").size() == 0) {
+			$('[name=locateType]').attr('disabled', false);
+			$('[name=locateType]').removeClass("disabled");
+			$('[name=locType]').removeClass("disabled");
+			$('#beneficiaryType').attr('disabled', false);
+			$('#beneficiaryType').removeClass("disabled");
+		}
+		/* redmine 180 hidden */
+		/* reRelocateOrder(); */
+	}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

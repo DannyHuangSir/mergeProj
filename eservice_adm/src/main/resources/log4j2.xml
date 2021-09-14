@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+	<Properties>
+		<!-- 日誌文件根目錄 -->
+		<Property name="LOG_PATH">/ELIFE/logs/ES_ADM</Property>
+		<!-- 日誌文件備份目錄 -->
+		<Property name="lOG_ARCHIVE_PATH">${LOG_PATH}/archive</Property>
+		<!-- 日誌文件名稱 -->
+		<Property name="LOG_FILE_NAME">eservice_adm</Property>
+		<!-- 日誌文件大小 -->
+		<Property name="LOG_SIZE">20 MB</Property>
+		<Property name="LOG_PATTERN">
+			%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName}
+			--- [%15.15t] %-40.40c{1.} : %m%n%ex
+		</Property>
+	</Properties>
+	<Appenders>
+		<Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+		<RollingRandomAccessFile name="ESADM-File-Appender"
+			fileName="${LOG_PATH}/${LOG_FILE_NAME}.log" filePattern="${lOG_ARCHIVE_PATH}/${LOG_FILE_NAME}_%d{yyyyMMddHHmm}.log.gz">
+			<PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8" />
+			<Policies>
+				<!-- 文件最大Size -->
+				<SizeBasedTriggeringPolicy size="${LOG_SIZE}" />
+			</Policies>
+			<!-- 文件最多保存個數 -->
+			<!-- <DefaultRolloverStrategy max="3" /> -->
+			<DefaultRolloverStrategy max="60">
+				<!-- Nested conditions: the inner condition is only evaluated on files 
+					for which the outer conditions are true. -->
+				<Delete basePath="${LOG_PATH}" maxDepth="2">
+					<IfFileName glob="*/${LOG_FILE_NAME}_*.log.gz">
+						<IfLastModified age="30d" />
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingRandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<AsyncLogger name="com.twfhclife" level="debug"
+			additivity="false">
+			<AppenderRef ref="ESADM-File-Appender" />
+		</AsyncLogger>
+
+		<Root level="debug">
+			<AppenderRef ref="ESADM-File-Appender" />
+			<AppenderRef ref="ConsoleAppender" />
+		</Root>
+	</Loggers>
+</Configuration>

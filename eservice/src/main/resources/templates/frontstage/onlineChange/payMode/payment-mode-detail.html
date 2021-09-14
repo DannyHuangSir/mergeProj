@@ -1,0 +1,11 @@
+<div class="check-list col-sm-8 col-sm-offset-2 grey2 center1">
+	<div class="paymode3"><span class="chMiddle">(變更前)繳別：<th:block th:text="${transPaymodeVo != null and transPaymodeVo.paymodeOld != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][transPaymodeVo.paymodeOld] != null} 
+		? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][transPaymodeVo.paymodeOld].parameterValue}"/></div>
+	<div class="paymode3"><span class="chMiddle">(變更後)繳別：<th:block th:text="${transPaymodeVo != null and transPaymodeVo.paymode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][transPaymodeVo.paymode] != null} 
+		? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][transPaymodeVo.paymode].parameterValue}"/></div>
+</div>
+
+<div class="check-list col-sm-8 col-sm-offset-2 grey2 center1" style="margin-top: 20px;">
+		<div class="paymode3"><span class="chMiddle">(變更前)定期繳費：1000</div>
+	<div class="paymode3"><span class="chMiddle">(變更後)定期繳費：3000</div>
+</div>

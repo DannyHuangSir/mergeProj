@@ -1,0 +1,32 @@
+<th:block th:each="vo, rowStat : ${transReducePolicyDtlList}">
+	<table class="hid-body col-sm-12" id="">
+		<tbody>
+			<tr class="">
+				<td>
+					<table class="hid-body col-sm-12" id="">
+						<tbody>
+							<tr class="">
+								<th class="hid-th w40p">契約名稱：</th>
+								<td>
+									<th:block th:text="${vo.productName}"/>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">保險類型：</th>
+								<td>
+									<th:block th:text="${vo.contractType}"/>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">保險金額：</th>
+								<td>
+									<th:block th:text="${vo.contractAmountOld}"/> <i class="fas fa-angle-right orange"></i> <th:block th:text="${vo.contractAmount}"/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</th:block>

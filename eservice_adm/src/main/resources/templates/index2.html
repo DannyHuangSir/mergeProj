@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>angularjs</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<script	th:src="@{/js/angular.min.js}"></script>
+<script type="text/javascript">
+	var app = angular.module('app', []);
+	app.controller('MainController', function($rootScope, $scope, $http) {
+
+		$scope.data = {
+			no : 'No.1234567890',
+			quantity : 100,
+			'date' : '2016-12-20'
+		};
+
+		$scope.postJson = function(url) {
+			$http({
+				url : '/autho/' + url,
+				method : 'POST'
+			}).then(function(response) {
+				// this callback will be called asynchronously
+				// when the response is available
+				$scope.status = response.status;
+				$scope.data = response.data;
+				$scope.responseBody = response;
+			}, function(response) {
+				// called asynchronously if an error occurs
+				// or server returns response with an error status.
+				$scope.data = response.data || 'Request failed';
+				$scope.status = response.status;
+				$scope.responseBody = $scope.data;
+			});
+		}
+	});
+</script>
+</head>
+<body ng-app="app" ng-controller="MainController">
+	Hello Thymeleaf
+	<br /><br />
+	<a href="/eservice_adm/demopage">findRole</a>
+	<br /><br />
+	<a href="/eservice_adm/loginRecord">後台管理</a>
+	<br /><br />
+	<div>{{responseBody}}</div>
+</body>
+</html>

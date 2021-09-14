@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.DepartmentDao">
+	<resultMap id="BaseResultMap" type="com.twfhclife.adm.model.DepartmentVo">
+		<result column="DEP_ID" property="depId" />
+		<result column="DEP_NAME" property="depName" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="PARENT_DEP" property="parentDep" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="MODIFY_USER" property="modifyUser" />
+		<result column="MODIFY_DATE" property="modifyDate" />
+	</resultMap>
+
+	<parameterMap id="DepartmentVo" type="com.twfhclife.adm.model.DepartmentVo"/>
+	
+	<sql id="Base_Column_List">
+		DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE
+	</sql>
+
+	<!-- 取得所有部門 -->
+	<select id="getDepts_old" resultMap="BaseResultMap" parameterType="java.lang.String">
+		WITH DEPARTMENT_AUTH AS (
+			SELECT
+				DEP_ID
+				,DEP_NAME
+				,DESCRIPTION
+				,PARENT_DEP
+			FROM
+				ESERVICE_ADM.DBO.DEPARTMENT
+		)
+		,ALL_DEPARTMENT_SORT (FUNCTION_LEVEL, DEP_ID, DEP_NAME, DESCRIPTION, PARENT_DEP) AS (
+			SELECT
+				CAST(1 				 AS VARCHAR) AS FUNCTION_LEVEL,
+				CAST(b.DEP_ID	 AS VARCHAR),
+				CAST(b.DEP_NAME	 AS VARCHAR),
+				CAST(b.DESCRIPTION	 AS VARCHAR),
+				CAST(b.PARENT_DEP	 AS VARCHAR)
+			FROM DEPARTMENT_AUTH b
+			WHERE b.PARENT_DEP IS NULL 
+
+			UNION ALL
+
+			SELECT
+				CAST(PARENT.FUNCTION_LEVEL + 1	  AS VARCHAR),
+				CAST(CHILD.DEP_ID	 AS VARCHAR),
+				CAST(CHILD.DEP_NAME	 AS VARCHAR),
+				CAST(CHILD.DESCRIPTION	 AS VARCHAR),
+				CAST(CHILD.PARENT_DEP	 AS VARCHAR)
+			FROM DEPARTMENT_AUTH AS CHILD
+			JOIN ALL_DEPARTMENT_SORT PARENT ON CHILD.PARENT_DEP = PARENT.DEP_ID
+		) 
+		SELECT
+			d.DEP_ID
+			,d.DEP_NAME
+			,d.DESCRIPTION
+			,d.PARENT_DEP
+		FROM ALL_DEPARTMENT_SORT d
+		ORDER BY DEP_ID
+	</select>
+	<!-- 取得所有部門 -->
+	<select id="getDepts" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+			d.DEP_ID
+			,d.DEP_NAME
+			,d.DESCRIPTION
+			,d.PARENT_DEP
+		FROM
+			ESERVICE_ADM.DBO.DEPARTMENT d
+		ORDER BY
+			d.DEP_ID
+	</select>
+
+	<!-- 取得部門清單 -->
+	<select id="getDeptList" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+			DEP_ID
+			,DEP_NAME
+			,DESCRIPTION
+			,PARENT_DEP
+		FROM
+			ESERVICE_ADM.DBO.DEPARTMENT
+		WHERE
+			PARENT_DEP IS NOT NULL
+		<if test="adminUserFlag == 'N'.toString()">
+			AND DEP_ID IN (
+				SELECT DEP_ID FROM ESERVICE_ADM.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
+			)
+		</if>
+		ORDER BY
+			DEP_ID
+	</select>
+	
+	<!-- 新增部門節點 -->
+	<insert id="addDepartment">
+		INSERT
+			INTO
+				ESERVICE_ADM.DBO.DEPARTMENT(
+					DEP_ID
+					,DEP_NAME
+					,DESCRIPTION
+					,PARENT_DEP
+					,CREATE_USER
+					,CREATE_DATE
+					,MODIFY_USER
+					,MODIFY_DATE
+				)
+			VALUES
+				(
+					#{departmentVo.depId,jdbcType=VARCHAR}
+					,#{departmentVo.depName,jdbcType=VARCHAR}
+					,#{departmentVo.description,jdbcType=VARCHAR}
+					,#{departmentVo.parentDep,jdbcType=VARCHAR}
+					,#{departmentVo.createUser,jdbcType=VARCHAR}
+					,getdate()
+					,#{departmentVo.modifyUser,jdbcType=VARCHAR}
+					,getdate()
+				)
+	</insert>
+	
+	<!-- 更新部門節點 -->
+	<update id="updateDepartment">
+		UPDATE
+			ESERVICE_ADM.DBO.DEPARTMENT
+		SET
+			DEP_NAME = #{departmentVo.depName,jdbcType=VARCHAR}
+			,DESCRIPTION = #{departmentVo.description,jdbcType=VARCHAR}
+			,PARENT_DEP = #{departmentVo.parentDep,jdbcType=VARCHAR}
+			,MODIFY_USER = #{departmentVo.modifyUser,jdbcType=VARCHAR}
+			,MODIFY_DATE = getdate()
+		WHERE
+			DEP_ID = #{departmentVo.depId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 刪除部門節點 -->
+	<delete id="deleteDepartment">
+		DELETE FROM ESERVICE_ADM.DBO.DEPARTMENT WHERE DEP_ID = #{depId}
+	</delete>
+
+</mapper>

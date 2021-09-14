@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.generic.dao.adm.BusinessEventDao">
+
+	<resultMap type="com.twfhclife.eservice.api.adm.model.BusinessEventVo" id="resultMap">
+		<result column="BUSINESS_EVENT_ID" property="businessEventId"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="EVENT_DATE" property="eventDate"/>
+		<result column="SOURCE_IP" property="sourceIp"/>
+		<result column="TARGET_IP" property="targetIp"/>
+		<result column="TARGET_SYSTEM_ID" property="targetSystemId"/>
+		<result column="EVENT_CODE" property="eventCode"/>
+		<result column="EVENT_NAME" property="eventName"/>
+		<result column="EVENT_STATUS" property="eventStatus"/>
+		<result column="EVENT_MSG" property="eventMsg"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		BUSINESS_EVENT_ID,USER_ID,EVENT_DATE,SOURCE_IP,TARGET_IP,TARGET_SYSTEM_ID,EVENT_CODE,EVENT_NAME,EVENT_STATUS,EVENT_MSG,CREATE_DATE,CREATE_USER
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="businessEventId != null and businessEventId != ''"> AND BUSINESS_EVENT_ID = #{businessEventId} </if>
+			<if test="userId != null and userId != ''"> AND USER_ID = #{userId} </if>
+			<if test="eventDate != null and eventDate != ''"> AND EVENT_DATE = #{eventDate} </if>
+			<if test="sourceIp != null and sourceIp != ''"> AND SOURCE_IP = #{sourceIp} </if>
+			<if test="targetIp != null and targetIp != ''"> AND TARGET_IP = #{targetIp} </if>
+			<if test="targetSystemId != null and targetSystemId != ''"> AND TARGET_SYSTEM_ID = #{targetSystemId} </if>
+			<if test="eventCode != null and eventCode != ''"> AND EVENT_CODE = #{eventCode} </if>
+			<if test="eventName != null and eventName != ''"> AND EVENT_NAME = #{eventName} </if>
+			<if test="eventStatus != null and eventStatus != ''"> AND EVENT_STATUS = #{eventStatus} </if>
+			<if test="eventMsg != null and eventMsg != ''"> AND EVENT_MSG = #{eventMsg} </if>
+			<if test="createDate != null and createDate != ''"> AND CREATE_DATE = #{createDate} </if>
+			<if test="createUser != null and createUser != ''"> AND CREATE_USER = #{createUser} </if>
+		</where>
+	</sql>	
+	
+	
+	<select id="getEventRecordTable" resultMap="resultMap" parameterType="com.twfhclife.eservice.api.adm.model.BusinessEventVo">
+		select
+		<include refid="Base_Column_List" />
+		from ESERVICE_ADM.DBO.BUSINESS_EVENT
+		where 1 = 1
+		<if test="businessEventVo.userId != null and businessEventVo.userId != ''" >
+			and user_id = #{businessEventVo.userId}
+		</if>
+		<if test="businessEventVo.targetSystemId != null and businessEventVo.targetSystemId != ''" >
+			and target_system_id = #{businessEventVo.targetSystemId}
+		</if>
+		<if test="businessEventVo.eventName != null and businessEventVo.eventName != ''" >
+			and event_name = #{businessEventVo.eventName}
+		</if>
+		<if test="businessEventVo.eventCode !=  null and businessEventVo.eventCode != ''" >
+			and event_code = #{businessEventVo.eventCode}
+		</if>
+		<if test="businessEventVo.eventStatus != null and businessEventVo.eventStatus != ''" >
+			and event_status = #{businessEventVo.eventStatus}
+		</if>
+		<if test="startDate != null" >
+			<if test="endDate != null" >
+				and event_date between #{startDate} and #{endDate}
+			</if>
+		</if>
+	</select>
+	
+	<select id="getBusinessEventById" resultMap="resultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ESERVICE_ADM.DBO.BUSINESS_EVENT
+		where business_event_id = #{businessEventId}
+	</select>
+	
+	<!-- ========================================= SELECT ========================================= -->
+	<select id="query" resultMap="resultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM 
+			ESERVICE_ADM.DBO.BUSINESS_EVENT
+		<include refid="whereClause" />
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT COUNT(1) AS AMOUNT FROM ESERVICE_ADM.DBO.BUSINESS_EVENT
+		<include refid="whereClause" />	
+	</select>
+
+	<select id="getNextId" resultType="int">
+		SELECT COALESCE(MAX(BUSINESS_EVENT_ID), 0) + 1 AS AMOUNT FROM ESERVICE_ADM.DBO.BUSINESS_EVENT
+	</select>
+		
+	<!-- ========================================= UPDATE ========================================= -->
+	<update id="update">
+		UPDATE 
+			ESERVICE_ADM.DBO.BUSINESS_EVENT
+		<set>
+			<if test="businessEventId != null"> BUSINESS_EVENT_ID = #{businessEventId}, </if>
+			<if test="userId != null"> USER_ID = #{userId}, </if>
+			<if test="eventDate != null"> EVENT_DATE = #{eventDate}, </if>
+			<if test="sourceIp != null"> SOURCE_IP = #{sourceIp}, </if>
+			<if test="targetIp != null"> TARGET_IP = #{targetIp}, </if>
+			<if test="targetSystemId != null"> TARGET_SYSTEM_ID = #{targetSystemId}, </if>
+			<if test="eventCode != null"> EVENT_CODE = #{eventCode}, </if>
+			<if test="eventName != null"> EVENT_NAME = #{eventName}, </if>
+			<if test="eventStatus != null"> EVENT_STATUS = #{eventStatus}, </if>
+			<if test="eventMsg != null"> EVENT_MSG = #{eventMsg}, </if>
+			<if test="createDate != null"> CREATE_DATE = #{createDate}, </if>
+			<if test="createUser != null"> CREATE_USER = #{createUser}, </if>
+		</set>
+		<include refid="whereClause" />
+	</update>
+	
+	<!-- ========================================= DELETE ========================================= -->
+	<delete id="delete">
+		DELETE ESERVICE_ADM.DBO.BUSINESS_EVENT
+		WHERE
+		<trim prefixOverrides="AND | OR ">
+			<if test="businessEventId != null"> AND BUSINESS_EVENT_ID = #{businessEventId}, </if>
+			<if test="userId != null"> AND USER_ID = #{userId}, </if>
+			<if test="eventDate != null"> AND EVENT_DATE = #{eventDate}, </if>
+			<if test="sourceIp != null"> AND SOURCE_IP = #{sourceIp}, </if>
+			<if test="targetIp != null"> AND TARGET_IP = #{targetIp}, </if>
+			<if test="targetSystemId != null"> AND TARGET_SYSTEM_ID = #{targetSystemId}, </if>
+			<if test="eventCode != null"> AND EVENT_CODE = #{eventCode}, </if>
+			<if test="eventName != null"> AND EVENT_NAME = #{eventName}, </if>
+			<if test="eventStatus != null"> AND EVENT_STATUS = #{eventStatus}, </if>
+			<if test="eventMsg != null"> AND EVENT_MSG = #{eventMsg}, </if>
+			<if test="createDate != null"> AND CREATE_DATE = #{createDate}, </if>
+			<if test="createUser != null"> AND CREATE_USER = #{createUser}, </if>
+		</trim>		
+	</delete>	
+	
+	<!-- ========================================= INSERT ========================================= -->
+	<insert id="add">
+		INSERT INTO ESERVICE_ADM.DBO.BUSINESS_EVENT
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{businessEventVo.businessEventId, jdbcType=NUMERIC},
+			#{businessEventVo.userId, jdbcType=VARCHAR},
+			#{businessEventVo.eventDate, jdbcType=TIMESTAMP},
+			#{businessEventVo.sourceIp, jdbcType=VARCHAR},
+			#{businessEventVo.targetIp, jdbcType=VARCHAR},
+			#{businessEventVo.targetSystemId, jdbcType=VARCHAR},
+			#{businessEventVo.eventCode, jdbcType=VARCHAR},
+			#{businessEventVo.eventName, jdbcType=VARCHAR},
+			#{businessEventVo.eventStatus, jdbcType=VARCHAR},
+			#{businessEventVo.eventMsg, jdbcType=VARCHAR},
+			#{businessEventVo.createDate, jdbcType=TIMESTAMP},
+			#{businessEventVo.createUser, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>
+

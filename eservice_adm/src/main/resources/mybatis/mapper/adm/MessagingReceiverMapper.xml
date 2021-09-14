@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.MessagingReceiverDao">
+
+	<resultMap id="MessagingReceiverMap" type="com.twfhclife.adm.model.MessagingReceiverVo" >
+		<result column="MESSAGING_RECEIVER_ID" property="messagingReceiverId"/>
+		<result column="MESSAGING_RECEIVER_TYPE" property="messagingReceiverType"/>
+		<result column="MESSAGING_RECEIVER_VALUE" property="messagingReceiverValue"/>
+		<result column="MESSAGING_TEMPLATE_ID" property="messagingTemplateId"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		MESSAGING_RECEIVER_ID,MESSAGING_RECEIVER_TYPE,MESSAGING_RECEIVER_VALUE,MESSAGING_TEMPLATE_ID
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="messagingReceiverVo.messagingReceiverId != null"> AND MESSAGING_RECEIVER_ID = #{messagingReceiverVo.messagingReceiverId} </if>
+			<if test="messagingReceiverVo.messagingReceiverType != null and messagingReceiverVo.messagingReceiverType != ''"> AND MESSAGING_RECEIVER_TYPE = #{messagingReceiverVo.messagingReceiverType} </if>
+			<if test="messagingReceiverVo.messagingReceiverValue != null and messagingReceiverVo.messagingReceiverValue != ''"> AND MESSAGING_RECEIVER_VALUE = #{messagingReceiverVo.messagingReceiverValue} </if>
+			<if test="messagingReceiverVo.messagingTemplateId != null"> AND MESSAGING_TEMPLATE_ID = #{messagingReceiverVo.messagingTemplateId} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND MESSAGING_RECEIVER_ID = #{messagingReceiverVo.messagingReceiverId}
+		</where>
+	</sql>
+	
+	<!-- include sql: 模板收件人訊息主表查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.MESSAGING_RECEIVER
+		<include refid="whereClause" />
+	</sql>
+	
+	<!-- 取得模板收件人訊息主表查詢結果(分頁) -->
+	<select id="getMessagingReceiverPageList" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY MESSAGING_RECEIVER_ID) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{messagingReceiverVo.page} * #{messagingReceiverVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{messagingReceiverVo.page} - 1) * #{messagingReceiverVo.rows}	
+	</select>
+	
+	<!-- 取得模板收件人訊息主表查詢結果(總筆數) -->
+	<select id="getMessagingReceiverPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得模板收件人訊息主表查詢結果 -->
+	<select id="getMessagingReceiver" resultMap="MessagingReceiverMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.MESSAGING_RECEIVER
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 模板收件人訊息主表-新增 -->
+	<insert id="insertMessagingReceiver">
+		INSERT INTO ESERVICE_ADM.DBO.MESSAGING_RECEIVER
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{messagingReceiverVo.messagingReceiverId, jdbcType=NUMERIC},
+			#{messagingReceiverVo.messagingReceiverType, jdbcType=VARCHAR},
+			#{messagingReceiverVo.messagingReceiverValue, jdbcType=VARCHAR},
+			#{messagingReceiverVo.messagingTemplateId, jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<!-- 模板收件人訊息主表-更新 -->
+	<update id="updateMessagingReceiver">
+		UPDATE
+			ESERVICE_ADM.DBO.MESSAGING_RECEIVER
+		<set>
+			<if test="messagingReceiverVo.messagingReceiverId != null"> MESSAGING_RECEIVER_ID = #{messagingReceiverVo.messagingReceiverId}, </if>
+			<if test="messagingReceiverVo.messagingReceiverType != null"> MESSAGING_RECEIVER_TYPE = #{messagingReceiverVo.messagingReceiverType}, </if>
+			<if test="messagingReceiverVo.messagingReceiverValue != null"> MESSAGING_RECEIVER_VALUE = #{messagingReceiverVo.messagingReceiverValue}, </if>
+			<if test="messagingReceiverVo.messagingTemplateId != null"> MESSAGING_TEMPLATE_ID = #{messagingReceiverVo.messagingTemplateId}, </if>
+		</set>
+		<include refid="wherePkClause" />
+	</update>
+	
+	<!-- 模板收件人訊息主表-刪除 -->
+	<delete id="deleteMessagingReceiver">
+		DELETE ESERVICE_ADM.DBO.MESSAGING_RECEIVER 
+		WHERE MESSAGING_TEMPLATE_ID = #{messagingReceiverVo.messagingTemplateId}
+	</delete>
+
+</mapper>
+

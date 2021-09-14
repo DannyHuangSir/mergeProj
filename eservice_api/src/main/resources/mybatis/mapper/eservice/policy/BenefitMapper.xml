@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.BenefitDao">
+
+	<resultMap id="BenefitMap" type="com.twfhclife.eservice.policy.model.BenefitVo" >
+		<result column="BENEFIT_CODE" property="benefitCode"/>
+		<result column="PRODUCT_CODE" property="productCode"/>
+		<result column="BENEFIT_NAME" property="benefitName"/>
+		<result column="BENEFIT_DETAIL" property="benefitDetail"/>
+		<result column="DESI_VERSION" property="desiVersion"/>
+		<result column="DESI_SALE_DATE" property="desiSaleDate"/>
+		<result column="DESI_CHAN_VAR_DATE" property="desiChanVarDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		BENEFIT_CODE,PRODUCT_CODE,BENEFIT_NAME,BENEFIT_DETAIL,DESI_VERSION,DESI_SALE_DATE,DESI_CHAN_VAR_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="benefitVo.benefitCode != null and benefitVo.benefitCode != ''"> AND BENEFIT_CODE = #{benefitVo.benefitCode} </if>
+			<if test="benefitVo.productCode != null and benefitVo.productCode != ''"> AND PRODUCT_CODE = #{benefitVo.productCode} </if>
+			<if test="benefitVo.benefitName != null and benefitVo.benefitName != ''"> AND BENEFIT_NAME = #{benefitVo.benefitName} </if>
+			<if test="benefitVo.benefitDetail != null and benefitVo.benefitDetail != ''"> AND BENEFIT_DETAIL = #{benefitVo.benefitDetail} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND BENEFIT_CODE = #{benefitVo.benefitCode}
+			AND PRODUCT_CODE = #{benefitVo.productCode}
+		</where>
+	</sql>
+	
+	<!-- 取得保障項目查詢結果 -->
+	<select id="getBenefitList" resultMap="BenefitMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.BENEFIT
+		<include refid="whereClause" />
+		AND (SELECT LIPM_INSU_BEG_DATE FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = #{policyNo}) BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
+	</select>
+
+</mapper>

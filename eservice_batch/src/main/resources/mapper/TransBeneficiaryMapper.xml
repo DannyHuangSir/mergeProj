@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransBeneficiaryMapper">
+
+	<resultMap id="TransBeneficiaryMap" type="com.twfhclife.eservice_batch.model.TransBeneficiaryVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transBeneficiaryVo.id != null"> AND ID = #{transBeneficiaryVo.id} </if>
+			<if test="transBeneficiaryVo.transNum != null and transBeneficiaryVo.transNum != ''"> AND TRANS_NUM = #{transBeneficiaryVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transBeneficiaryVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransBeneficiaryList" resultMap="TransBeneficiaryMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_BENEFICIARY
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransBeneficiaryMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_BENEFICIARY
+		<include refid="wherePkClause" />
+	</select>
+
+</mapper>
+

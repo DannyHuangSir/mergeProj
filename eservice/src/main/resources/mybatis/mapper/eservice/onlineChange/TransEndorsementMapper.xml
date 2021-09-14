@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransEndorsementDao">
+	
+	<resultMap id="TransEndorsementMap" type="com.twfhclife.eservice.onlineChange.model.TransEndorsementVo" >
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="TEXT_CONTENT" property="textContent"/>
+		<result column="TEXT_ORDER" property="textOrder"/>
+	</resultMap>
+	
+	<select id="getTransEndorsementByTransNum" resultMap="TransEndorsementMap">
+		SELECT
+			TRANS_NUM, ESERVICE.DBO.FN_DEBASE64(TEXT_CONTENT) TEXT_CONTENT, cast(TEXT_ORDER as int) TEXT_ORDER
+		FROM
+			ESERVICE.DBO.TRANS_ENDORSEMENT
+		WHERE TRANS_NUM = #{transNum} OR TRANS_NUM IN (SELECT TRANS_NUM_MERGE FROM TRANS_MERGE WHERE TRANS_NUM = #{transNum})
+		ORDER BY TEXT_ORDER ASC
+	</select>
+</mapper>

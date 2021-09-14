@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="sidebar (funId)" id="sidebar" class="sidebar responsive my-save-state">
+		<script type="text/javascript">
+			try{my.settings.loadState('sidebar')}catch(e){}
+		</script>
+		<ul class="nav nav-list">
+			<th:block th:each="rootFun : ${session.MENU_LIST}">
+				<th:block th:each="mainFun : ${rootFun.subMenuList}">
+					<li class="" th:classappend="${#lists.contains(mainFun.subFuntionUrlList, funId)} ? 'active open'">
+						<a href="#" class="dropdown-toggle">
+							<th:block th:switch="${mainFun.functionName}">
+								<th:block th:case="'報表查詢'">
+									<i class="fa fa-bar-chart" aria-hidden="true"></i>
+								</th:block>
+								<th:block th:case="'權限管理'">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</th:block>
+								<th:block th:case="'紀錄管理'">
+									<i class="fa fa-list" aria-hidden="true"></i>
+								</th:block>
+								<th:block th:case="'參數管理'">
+									<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+								</th:block>
+								<th:block th:case="'通信管理'">
+									<i class="fa fa-signal" aria-hidden="true"></i>
+								</th:block>
+								<th:block th:case="'工作管理'">
+									<i class="fa fa-clock-o" aria-hidden="true"></i>
+								</th:block>
+							</th:block>
+							<span class="menu-text"><th:block th:text="${mainFun.functionName}"/></span>
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+						<b class="arrow"></b>
+						<ul class="submenu">
+							<th:block th:each="leve2Fun : ${mainFun.subMenuList}">
+								<th:block th:if="${#strings.equals(leve2Fun.functionType, 'F')}">
+									<li class="" th:classappend="${#strings.equals(funId, leve2Fun.functionUrl)} ? 'active'">
+										<a th:href="@{'/'+${leve2Fun.functionUrl}}">
+											<i class="menu-icon fa fa-caret-right"></i>
+											<th:block th:text="${leve2Fun.functionName}"/>
+										</a>
+										<b class="arrow"></b>
+									</li>
+								</th:block>
+								<th:block th:if="${#strings.equals(leve2Fun.functionType, 'FG')}">
+									<li class="" th:classappend="${#lists.contains(leve2Fun.subFuntionUrlList, funId)} ? 'active open'">
+										<a href="#" class="dropdown-toggle">
+											<i class="menu-icon fa fa-caret-right"></i>
+											<span class="menu-text"><th:block th:text="${leve2Fun.functionName}"/></span>
+											<b class="arrow fa fa-angle-down"></b>
+										</a>		
+										<b class="arrow"></b>
+										<th:block th:if="${leve2Fun.subMenuList} != null">
+											<ul class="submenu">
+												<th:block th:each="leve3Fun : ${leve2Fun.subMenuList}">
+													<li class="" th:classappend="${#strings.equals(funId, leve3Fun.functionUrl)} ? 'active'">
+														<a th:href="${#strings.equals(leve3Fun.functionType,'FG')} ? '#' : @{'/'+${leve3Fun.functionUrl}}">
+															<i class="menu-icon fa fa-caret-right"></i>
+															<th:block th:text="${leve3Fun.functionName}"/>
+														</a>
+														<b class="arrow"></b>
+													</li>
+												</th:block>
+											</ul>
+											<b class="arrow"></b>
+										</th:block>
+									</li>
+								</th:block>
+							</th:block>	
+						</ul>
+					</li>
+				</th:block>
+			</th:block>
+		</ul>
+		<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+			<i id="sidebar-toggle-icon" class="my-icon fa fa-angle-double-left my-save-state" data-icon1="my-icon fa fa-angle-double-left" data-icon2="my-icon fa fa-angle-double-right"></i>
+		</div>
+	</div>
+</body>
+</html>

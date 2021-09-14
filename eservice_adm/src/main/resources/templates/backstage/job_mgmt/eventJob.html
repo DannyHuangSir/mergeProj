@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <th:block th:replace="fragments/head"/>
+    </head>
+    <body class="no-skin">
+        <th:block th:replace="fragments/navbar"/>
+        <div class="main-container my-save-state" id="main-container">
+            <script type="text/javascript">
+                try{my.settings.loadState('main-container')}catch(e){}
+            </script>
+            <div th:replace="fragments/sidebar :: sidebar (funId='eventJob')"></div>
+            <div class="main-content">
+                <div class="main-content-inner">
+                    <div class="breadcrumbs my-save-state" id="breadcrumbs">
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-signal" aria-hidden="true"></i>
+                                     工作管理
+                                <i class="my-icon fa fa-angle-double-right"></i>
+                                    事件通知排程
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="page-content">
+                        <div class="row">
+                            <!-- 查詢 start -->
+                            <div class="col-xs-12">
+                                <form class="form-horizontal" role="form" id="form1">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right text-right" for="form-field-1">系統別： </label>
+                                        <div class="col-sm-3">
+                                            <select class="form-control" id="systemSelect">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right text-right" for="form-field-1">事件類型： </label>
+                                        <div class="col-sm-3">
+                                            <select class="form-control" id="eventJobSelect">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button type="button" id="qryBtn" class="btn btn-info">
+                                                <i class="my-icon fa fa-check bigger-110" aria-hidden="true"></i>
+                                                                                                                        查詢
+                                            </button>
+                                            <button type="button" id="addBtn" class="btn btn-primary">
+                                                <i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                                                                                                        新增排程
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- 查詢 end -->
+                        </div>
+                        <div class="hr hr-18 dotted hr-double"></div>
+                        <div class="row">
+                            <!-- 查詢結果 start -->
+                            <div class="col-xs-12">
+                                <div id="show-detail-results" hidden="true">
+                                    <h3 class="header smaller lighter blue">查詢結果</h3>
+                                    <div>
+                                        <table id="qryGrid"></table>
+                                        <div id="qryPager"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 查詢結果 end -->
+                            <!-- 新增/修改畫面 start -->
+                            <div id="eventJobDialog" class="hide">
+							    <div class="widget-main no-padding">
+							        <form class="form-horizontal" id="eventJobForm">
+				                        <div class="form-group">
+				                            <label class="col-sm-3 control-label text-right no-padding-right"><span style="color: #FF0000;">*</span>系統別 :</label>
+				                            <div class="col-sm-6">
+				                                <select class="form-control" id="systemSelectDialog"></select>
+				                            </div>
+				                        </div>
+				                        <div class="form-group">
+				                            <label class="col-sm-3 control-label text-right no-padding-right"><span style="color: #FF0000;">*</span>事件類型 :</label>
+				                            <div class="col-sm-6">
+				                                <select class="form-control" id="eventJobSelectDialog"></select>
+				                            </div>
+				                        </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-3 control-label text-right no-padding-right"><span style="color: red;">*</span>排程時間 :</label>
+					                        <div class="col-sm-7 ">
+					                            <div class="form-group">
+					                                <label class="col-sm-2 control-label no-padding-right no-padding-left">每星期</label>
+					                                <div class="col-xs-2 no-padding-right">
+					                                    <input class="form-control" id="weekChooseInput" type="text" maxlength="3" />
+					                                </div>
+					                                <label class="col-sm-1 control-label no-padding-right no-padding-left">,</label>
+					                                <div class="col-xs-2 no-padding-right">
+					                                    <input class="form-control" id="monthChooseInput" type="text" maxlength="5" />
+					                                </div>
+					                                <label class="col-sm-1 control-label no-padding-right no-padding-left">月</label>
+					                                <div class="col-xs-2 no-padding-right">
+					                                    <input class="form-control" id="dayChooseInput" type="text" maxlength="5" />
+					                                </div>
+					                                <label class="col-sm-1 control-label no-padding-right no-padding-left">日</label>
+					                            </div>
+					                            <div class="form-group">
+					                                <div class="col-xs-2 no-padding-right">
+					                                    <input class="form-control" id="hourChooseInput" type="text" maxlength="5" />
+					                                </div>
+					                                <label class="col-sm-1 control-label no-padding-right no-padding-left">時</label>
+					                                <div class="col-xs-2 no-padding-right">
+					                                    <input class="form-control" id="minsChooseInput" type="text" maxlength="5" />
+					                                </div>
+					                                <label class="col-sm-1 control-label no-padding-right no-padding-left">分</label>
+					                            </div>
+					                        </div>
+					                    </div>
+							            <div class="form-group">
+							                <div class="align-center">
+							                    <button type="button" class="btn btn-primary" id="confirmAddEventJobBtn">確定新增</button>
+							                    <button type="button" class="btn btn-primary" id="confirmEditEventJobBtn">確定修改</button>
+							                    <button type="button" class="btn btn-warning" id="cancelEventJobBtn">取消</button>
+							                </div>
+							            </div>
+							            <input hidden="true" id="editEventJobId" />
+							        </form>
+							    </div>
+							</div>
+                            <!-- 新增/修改畫面 end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="fragments/footer"></div>
+            <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+                <i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+            </a>
+        </div>
+        <div th:replace="fragments/commonScript :: common_js(~{::script})">
+            <script th:inline="javascript">
+            /*<![CDATA[*/
+            	var qryGrid;
+                $(document).ready(function(){
+                	
+                	// initialize default setting
+                	initOption();
+                	// initialize grid for event job search 
+                	initGrid();
+                	
+                	// 查詢畫面/新增(修改)畫面使用不同的 event listner 變更事件類型
+                	$('#systemSelect').on('change', function(){
+                		changeEventJobSelect($('#eventJobSelect'), $('#systemSelect').val());
+                	});
+                	$('#systemSelectDialog').on('change', function(){
+                        changeEventJobSelect($('#eventJobSelectDialog'), $('#systemSelectDialog').val());
+                    });
+                	
+                	$('#qryBtn').on('click', function() {
+                        // 設定查詢條件
+                        qryGrid.setPostData('systemId', $('#systemSelect').val());
+                        qryGrid.setPostData('eventCode', $('#eventJobSelect').val());
+                        // 產生grid
+                        qryGrid.create();
+                        // 顯示查詢結果區域
+                        $('#show-detail-results').show();
+                    });
+                	// add event job confirm
+                	$('#confirmAddEventJobBtn').on('click', function(){
+                		confirmMsg('確定新增事件通知', function(r){
+                            if(r){
+                            	addEventJob($('#eventJobForm'));
+                            } else{
+                            	return false;  
+                            }
+                        });
+                	});
+                	// modify event job confirm
+                    $('#confirmEditEventJobBtn').on('click', function(){
+                    	confirmMsg('確定修改事件通知', function(r){
+                            if(r){
+                            	editEventJob($('#eventJobForm'));
+                            } else{
+                            	return false;
+                            }
+                        });
+                    });
+                    // 設定取消按鈕可依關閉 dialog
+                    $('#cancelEventJobBtn').on('click', function(){
+                        $(this.offsetParent).dialog('close');
+                    });
+                    
+                    $('#addBtn').on('click', function(){
+                    	openDialog('add');
+                    });
+                    
+                    // for dialog 可以支援 HTML 設定 Title
+                    eserviceAdmEvent.initDialog();
+                });
+            	function initOption() {
+                    // 取得系統名稱下拉選單
+                    eserviceAdmOption.system('#systemSelect', /*[[@{/common/systemList}]]*/, '', function(){
+	                    $('#systemSelect').val('eservice');
+	                    changeEventJobSelect($('#eventJobSelect'), $('#systemSelect').val());
+                    });
+                }
+            	
+            	function changeEventJobSelect(tarSelect, selectedSystem){
+            		var formData = {};
+                    formData.systemId = selectedSystem;
+                    eserviceForm.post(/*[[@{/eventJob/getEventJobSelect}]]*/
+                            , formData
+                            , function(response){
+                                if(response.result=='SUCCESS'){
+				            		var optHtml = '';
+				                    $.each(response.resultData, function(i, obj) {
+				                        optHtml += ('<option value="' + obj.parameterValue + '">' + obj.parameterName + '</option>');
+				                    });
+				                    $(tarSelect).html(optHtml);
+                                }
+                            }, false
+                    );
+            	}
+            	
+            	function initGrid(){
+                    qryGrid = new jqGridUtil();
+                    qryGrid.id = '#qryGrid';
+                    qryGrid.pager = '#qryPager';
+                    qryGrid.url = /*[[@{/eventJob/getBusinessEventJobList}]]*/;
+                    qryGrid.caption = '事件通知查詢';
+                    qryGrid.colNames = ['事件類型', '系統別', '排程時間', '操作功能'];
+                    qryGrid.colModel = [
+                        {name: 'EVENT_NAME', index: "EVENT_NAME", width: 100},
+                        {name: 'SYSTEM_NAME', index: "SYSTEM_NAME", width: 150},
+                        {width: 100, formatter: function(cellvalue, options, row){
+                            var actionHtml = '';
+                            actionHtml += '每 ' + row.JOB_TIME;
+                            return actionHtml;
+                        }},
+                        {width: 150, formatter: function(cellvalue, options, row){
+                            var actionHtml = '';
+                            actionHtml += '<button type="button" onclick="openEditEventJob('+row.EVENT_KEY+');" class="btn btn-warning">修改</button>&nbsp;&nbsp;'; 
+                            actionHtml += '<button type="button" onclick="delEventJob(' + row.EVENT_KEY+ ');" class="btn btn-danger">刪除</button>&nbsp;&nbsp;'; 
+                            return actionHtml;
+                        }}
+                    ];
+            	}
+            	function openDialog(openStyle){
+            		$('#eventJobForm')[0].reset();
+            		switch(openStyle){
+            			// 新增
+	            		case 'add': 
+	            			editBtnControl($('#confirmAddEventJobBtn'));
+	            			break;
+            			// 修改
+	            		case 'edit':
+	            			editBtnControl($('#confirmEditEventJobBtn'));
+	            			break;
+           				// 沒定義不做事, 跳出
+            			default: 
+            				return false;
+            		}
+            		// 設定新增/修改條件參數
+            		eserviceAdmOption.system('#systemSelectDialog', /*[[@{/common/systemList}]]*/, '', function(){
+                        $('#systemSelectDialog').val('eservice');
+                        changeEventJobSelect($('#eventJobSelectDialog'), $('#systemSelectDialog').val());
+                    });
+                    
+                    $('#eventJobDialog').removeClass('hide').dialog({
+                        modal: true,
+                        title: "<div class='widget-header widget-header-small'><h4 class='smaller'>事件通知設定</h4></div>",
+                        title_html: true,
+                        width: 600,
+                        height: 400
+                    });
+            	}
+            	// 開啟修改事件通知
+            	function openEditEventJob(eventJobId){
+            		openDialog('edit');
+            		$('#editEventJobId').val(eventJobId);
+                    var formData = {
+                    		eventJobId: eventJobId
+                    };
+                    //帶出資料 start 
+                    eserviceForm.post(/*[[@{/eventJob/getBusinessEventJob}]]*/, formData, function(response){
+                        setCondition(response.resultData);
+                    });
+                    // end
+            	}
+            	// 新增事件通知
+            	function addEventJob(paramForm){
+            		var validMsg = validInput(paramForm);
+                    if(validMsg != ''){
+                        alertMsg(validMsg);
+                        return false;
+                    }
+            		eserviceForm.post(/*[[@{/eventJob/addEventJob}]]*/
+            				, createPostFormData(paramForm)
+            				, function(response){
+            			alertMsg('新增成功');
+            			qryGrid.reload();
+            		});
+            	}
+            	// 修改事件通知
+            	function editEventJob(paramForm){
+            		var validMsg = validInput(paramForm);
+                    if(validMsg != ''){
+                        alertMsg(validMsg);
+                        return false;
+                    }
+            		eserviceForm.post(/*[[@{/eventJob/updateEventJob}]]*/
+            				, createPostFormData(paramForm)
+            				, function(response){
+            			alertMsg('更新成功');
+            			qryGrid.reload();
+            		})
+            	}
+                // 刪除事件通知
+            	function delEventJob(eventJobId){
+            		confirmMsg('確定刪除事件通知', function(r){
+                        if(r){
+                        	var formData = {
+                        			eventJobId: eventJobId
+                        	};
+                            eserviceForm.post(/*[[@{/eventJob/delEventJob}]]*/
+                            		, formData
+                            	    , function(response){
+                            	alertMsg('刪除成功');
+                            	qryGrid.reload();
+                            });
+                        } else{
+                            return false;
+                        }
+                    });
+            	}
+                // 控制新增/修改畫面 btn
+            	function editBtnControl(useNow){
+                    $('#confirmAddEventJobBtn').hide();
+                    $('#confirmEditEventJobBtn').hide();
+                    $(useNow).show();
+                }
+                
+                function createPostFormData(paramForm){
+                    var conditionTime = 
+                        paramForm.find('#minsChooseInput').val()
+                        + ' ' + paramForm.find('#hourChooseInput').val()
+                        + ' ' + paramForm.find('#dayChooseInput').val()
+                        + ' ' + paramForm.find('#monthChooseInput').val()
+                        + ' ' + paramForm.find('#weekChooseInput').val();
+                	var formData = {
+                			systemId: paramForm.find("#systemSelectDialog").val(),
+                			eventCode: paramForm.find('#eventJobSelectDialog').val(),
+                			eventName: paramForm.find('#eventJobSelectDialog').text(),
+                			cronExp: conditionTime,
+                			eventJobId: $('#editEventJobId').val()
+                	};
+                	return formData;
+                }
+                
+                function setCondition(data){
+                    var timeList = ['#minsChooseInput', '#hourChooseInput', '#dayChooseInput', '#monthChooseInput','#weekChooseInput'];
+                    var timeSet = data.cronExp.split(" ", 5);
+                    $.each(timeSet, function(index, value){
+                        $(timeList[index]).val(value);
+                    });
+                    $('#eventJobSelectDialog').val(data.eventCode);
+                    $('#systemSelectDialog').val(data.systemId);
+                }
+                
+                function validInput(paramForm){
+                    if(paramForm.find('#systemSelectDialog').val() == ''
+                    		|| paramForm.find('#systemSelectDialog').val() == null){
+                        return '系統別尚未設定';
+                    }
+                    if(paramForm.find('#eventJobSelectDialog').val() == ''
+                    		|| paramForm.find('#eventJobSelectDialog').val() == null){
+                    	return '事件類型尚未設定'
+                    }
+                    if(paramForm.find('#weekChooseInput').val() == ''
+                            || paramForm.find('#monthChooseInput').val() == ''
+                            || paramForm.find('#dayChooseInput').val() == ''
+                            || paramForm.find('#hourChooseInput').val() == ''
+                            || paramForm.find('#minsChooseInput').val() == ''){
+                        return '排程時間設置不完整';
+                    }
+                    return '';
+                }
+            /*]]>*/
+            </script>
+        </div>
+        
+    </body>
+</html>

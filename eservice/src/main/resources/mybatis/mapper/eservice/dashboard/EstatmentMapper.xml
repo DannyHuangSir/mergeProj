@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.dashboard.dao.EstatmentDao">
+
+	<resultMap id="EstatmentMap" type="com.twfhclife.eservice.dashboard.model.EstatmentVo" >
+		<result column="ID" property="id"/>
+		<result column="ESTATMENT_TYPE" property="estatmentType"/>
+		<result column="ESTATMENT_TITLE" property="estatmentTitle"/>
+		<result column="ESTATMENT_SUBTITLE" property="estatmentSubtitle"/>
+		<result column="STATUS" property="status"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="ROC_ID" property="rocId"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,ESTATMENT_TYPE,ESTATMENT_TITLE,ESTATMENT_SUBTITLE,STATUS,CREATE_DATE,CREATE_USER,ROC_ID
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="estatmentVo.id != null"> AND ID = #{estatmentVo.id} </if>
+			<if test="estatmentVo.estatmentType != null and estatmentVo.estatmentType != ''"> AND ESTATMENT_TYPE = #{estatmentVo.estatmentType} </if>
+			<if test="estatmentVo.estatmentTitle != null and estatmentVo.estatmentTitle != ''"> AND ESTATMENT_TITLE = #{estatmentVo.estatmentTitle} </if>
+			<if test="estatmentVo.estatmentSubtitle != null and estatmentVo.estatmentSubtitle != ''"> AND ESTATMENT_SUBTITLE = #{estatmentVo.estatmentSubtitle} </if>
+			<if test="estatmentVo.status != null"> AND STATUS = #{estatmentVo.status} </if>
+			<if test="estatmentVo.createDate != null"> AND CREATE_DATE = #{estatmentVo.createDate} </if>
+			<if test="estatmentVo.createUser != null and estatmentVo.createUser != ''"> AND CREATE_USER = #{estatmentVo.createUser} </if>
+			<if test="estatmentVo.rocId != null and estatmentVo.rocId != ''"> AND ROC_ID = #{estatmentVo.rocId} </if>
+			<if test="estatmentVo.transMonth != null and estatmentVo.transMonth != ''"> AND convert(varchar(7), CREATE_DATE, 111) = #{estatmentVo.transMonth} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{estatmentVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得我的通知主表查詢結果 -->
+	<select id="getEstatment" resultMap="EstatmentMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.ESTATMENT
+		<include refid="whereClause" />
+		ORDER BY
+			CREATE_DATE
+	</select>
+	
+	<!-- 我的通知主表-更新 -->
+	<update id="updateEstatment">
+		UPDATE
+			ESERVICE.DBO.ESTATMENT
+		<set>
+			<if test="estatmentVo.status != null"> STATUS = #{estatmentVo.status}, </if>
+		</set>
+		<include refid="wherePkClause" />
+	</update>
+
+</mapper>

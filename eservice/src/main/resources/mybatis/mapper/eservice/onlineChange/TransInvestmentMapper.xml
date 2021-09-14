@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransInvestmentDao" >
+
+  <resultMap id="BaseResultMap" type="com.twfhclife.eservice.onlineChange.model.TransInvestmentVo" >
+    <id column="ID" property="id" jdbcType="NUMERIC" />
+    <result column="TRANS_NUM" property="transNum" jdbcType="NVARCHAR" />
+    <result column="POLICY_NO" property="policyNo" jdbcType="NVARCHAR" />
+    <result column="INVT_NO" property="invtNo" jdbcType="NVARCHAR" />
+    <result column="DISTRIBUTION_RATIO" property="distributionRatio" jdbcType="NUMERIC" />
+    <result column="PRE_DISTRIBUTION_RATIO" property="preDistributionRatio" jdbcType="NUMERIC" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, TRANS_NUM, POLICY_NO, INVT_NO, DISTRIBUTION_RATIO, PRE_DISTRIBUTION_RATIO
+  </sql>
+
+  <insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransInvestmentVo" >
+    INSERT INTO ESERVICE.dbo.TRANS_INVESTMENT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="transNum != null" >
+        TRANS_NUM,
+      </if>
+      <if test="policyNo != null" >
+        POLICY_NO,
+      </if>
+      <if test="invtNo != null" >
+        INVT_NO,
+      </if>
+      <if test="distributionRatio != null" >
+        DISTRIBUTION_RATIO,
+      </if>
+      <if test="preDistributionRatio != null" >
+        PRE_DISTRIBUTION_RATIO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="transNum != null" >
+        #{transNum,jdbcType=NVARCHAR},
+      </if>
+      <if test="policyNo != null" >
+        #{policyNo,jdbcType=NVARCHAR},
+      </if>
+      <if test="invtNo != null" >
+        #{invtNo,jdbcType=NVARCHAR},
+      </if>
+      <if test="distributionRatio != null" >
+        #{distributionRatio,jdbcType=NUMERIC},
+      </if>
+      <if test="preDistributionRatio != null" >
+        #{preDistributionRatio,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectCompareInvestments" resultType="com.twfhclife.eservice.policy.model.CompareInvestmentVo">
+    SELECT TI.INVT_NO invtNo, TI.DISTRIBUTION_RATIO afterRatio, TI.PRE_DISTRIBUTION_RATIO preRatio, PP.INVT_NAME invtName
+      FROM ESERVICE.dbo.TRANS_INVESTMENT TI LEFT JOIN
+      ESERVICE.dbo.POLICY_PORTFOLIO PP ON TI.POLICY_NO = PP.POLICY_NO AND TI.INVT_NO = PP.INVT_NO
+      WHERE TI.TRANS_NUM = #{transNum}
+  </select>
+
+  <select id="selectProcessInvestment" resultType="java.lang.String">
+    select TOP 1 A.TRANS_TYPE from eservice.dbo.TRANS A
+    where A.STATUS not in ('2','3','7') and A.TRANS_TYPE IN
+    <foreach collection="transTypes" item="t" open="(" close=")" separator=",">
+      #{t}
+    </foreach>
+    AND A.USER_ID = #{userId}
+  </select>
+
+  <select id="getHeldInvestmentTarget" resultType="com.twfhclife.eservice.policy.model.InvestmentPortfolioVo">
+    select PP.POLICY_NO AS policyNo
+    ,PP.INVT_NO AS invtNo
+    ,PP.INVT_NAME AS invtName
+    ,PP.INVT_RISK_BENE_LEVEL AS invtRiskBeneLevel
+    ,PP.SAFP_NET_AMT as safpNetAmt
+    ,PP.SAFP_NET_UNITS AS safpNetUnits
+    ,PP.SAFP_AVG_PNTDVAL AS safpAvgPntdval
+    ,PP.NET_VALUE_SELL AS netValueSell
+    ,PP.NET_VALUE_DATE AS netValueDate
+    ,PP.EXCH_RATE_BUY AS exchRateBuy
+    ,PP.EXCH_RATE_DATE AS exchRateDate
+    ,PP.CLUP_EXPE_NTD_SUM AS clupExpeNtdSum
+    ,PP.INVT_EXCH_CURR AS invtExchCurr
+    ,NEWID() AS investmentId
+    ,PP.EXCH_RATE_DATE AS exchRateDate
+    FROM ESERVICE.dbo.POLICY_PORTFOLIO PP
+    WHERE PP.POLICY_NO =  #{policyNo}
+  </select>
+
+
+  <select id="getOwnInvestment" resultType="com.twfhclife.eservice.policy.model.InvestmentPortfolioVo">
+    select PP.POLICY_NO AS policyNo
+    ,PP.INVT_NO AS invtNo
+    ,PP.INVT_NAME AS invtName
+    ,PP.INVT_RISK_BENE_LEVEL AS invtRiskBeneLevel
+    ,PP.SAFP_NET_AMT as safpNetAmt
+    ,PP.SAFP_NET_UNITS AS safpNetUnits
+    ,PP.SAFP_AVG_PNTDVAL AS safpAvgPntdval
+    ,PP.NET_VALUE_SELL AS netValueSell
+    ,PP.NET_VALUE_DATE AS netValueDate
+    ,PP.EXCH_RATE_BUY AS exchRateBuy
+    ,PP.EXCH_RATE_DATE AS exchRateDate
+    ,PP.CLUP_EXPE_NTD_SUM AS clupExpeNtdSum
+    ,PP.INVT_EXCH_CURR AS invtExchCurr
+    ,PI.INVEST_WEIGHT AS ratio
+    ,NEWID() AS investmentId
+    ,PP.EXCH_RATE_DATE AS exchRateDate
+    FROM ESERVICE.dbo.POLICY_INVEST_FUND PI
+    LEFT JOIN ESERVICE.dbo.POLICY_PORTFOLIO PP ON PI.POLICY_NO = PP.POLICY_NO AND PI.FUND_CODE = PP.INVT_NO
+    WHERE PI.POLICY_NO = #{policyNo}
+  </select>
+
+  <select id="getNewInvestments" resultType="com.twfhclife.eservice.policy.model.InvestmentPortfolioVo">
+    SELECT
+     F.FUND_CODE AS invtNo
+    ,F.FUND_NAME AS invtName
+    ,F.CURRENCY AS invtExchCurr
+    ,F.FUND_ISSUER_CODE AS company
+    FROM ESERVICE.DBO.FUND F
+    <choose>
+      <when test="riskLevel == 'RR1'">
+        WHERE F.RISK_BENE_LEVEL = #{riskLevel}
+      </when>
+      <when test="riskLevel == 'RR2'">
+        WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2')
+      </when>
+      <when test="riskLevel == 'RR3'">
+        WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3')
+      </when>
+      <when test="riskLevel == 'RR4'">
+        WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3', 'RR4')
+      </when>
+      <when test="riskLevel == 'RR5'">
+        WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3', 'RR4', 'RR5')
+      </when>
+      <otherwise>
+        WHERE F.RISK_BENE_LEVEL = #{riskLevel}
+      </otherwise>
+    </choose>
+
+    <if test="ownInvtNos != null">
+      AND F.FUND_CODE NOT IN
+      <foreach collection="ownInvtNos" separator="," open="(" close=")" item="invtNo">
+        #{invtNo}
+      </foreach>
+    </if>
+  </select>
+</mapper>

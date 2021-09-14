@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<header>
+		<div class="container">
+			<div class="row">
+				<th:block th:replace="fragments/logo"/>
+				<div class="n1 inlineBlock float-left">保單網路服務</div>
+				<div class="clearfix visible-xs-block"></div>
+			</div>
+		</div>
+	</header>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='dashboard')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3 box-border marginTop25">
+			<div class="col-sm-8 col-sm-offset-2 col-lg-8 col-lg-offset-2">
+				<div class="activated">
+					<figure><img src="img/alert.jpg" alt="check"/></figure>
+					<h2>ERROR:找不到頁面!</h2>
+				</div>
+			</div>
+			<div class="mystyle3">
+				<div class="col-md-12 two-buttons">
+					<a href="#" onclick="window.history.go(-1); return false;">
+						<button id="deny" class="btn-signup">回上頁
+						</button>
+					</a>
+					<a href="index">
+						<button id="go" class="btn-signup" >首頁
+						</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+</body>
+
+</html>

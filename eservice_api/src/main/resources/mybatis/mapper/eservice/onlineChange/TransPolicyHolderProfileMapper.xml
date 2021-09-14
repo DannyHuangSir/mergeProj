@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransPolicyHolderProfileDao">
+
+	<resultMap id="TransPolicyHolderProfileMap" type="com.twfhclife.eservice.onlineChange.model.TransPolicyHolderProfileVo" >
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="COUNTRY" property="country"/>
+		<result column="COUNTRY_DESC" property="countryDesc"/>
+		<result column="COUNTRY_LIVE" property="countryLive"/>
+		<result column="COUNTRY_LIVE_DESC" property="countryLiveDesc"/>
+		<result column="HAS_ADDRESS_IN_TAIWAN" property="hasAddressInTaiwan"/>
+		<result column="JOB_B" property="jobB"/>
+		<result column="JOB_M" property="jobM"/>
+		<result column="JOB_S" property="jobS"/>
+		<result column="JOB_B_DESC" property="jobBDesc"/>
+		<result column="JOB_M_DESC" property="jobMDesc"/>
+		<result column="JOB_S_DESC" property="jobSDesc"/>
+		<result column="COMPANY_NAME" property="companyName"/>
+		<result column="JOB_TITLE" property="jobTitle"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		TRANS_NUM,COUNTRY,COUNTRY_DESC,COUNTRY_LIVE,COUNTRY_LIVE_DESC,HAS_ADDRESS_IN_TAIWAN,JOB_B,JOB_M,JOB_S,JOB_B_DESC,JOB_M_DESC,JOB_S_DESC,COMPANY_NAME,JOB_TITLE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transPolicyHolderProfileVo.transNum != null and transPolicyHolderProfileVo.transNum != ''"> AND TRANS_NUM = #{transPolicyHolderProfileVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得保戶基本資料更新查詢結果 -->
+	<select id="getPolicyHolderProfileList" resultMap="TransPolicyHolderProfileMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_POLICY_HOLDER_PROFILE
+		<include refid="whereClause" />
+		ORDER BY TRANS_NUM DESC
+	</select>
+	
+	<!-- 保戶基本資料更新-新增 -->
+	<insert id="insertPolicyHolderProfile">
+		INSERT INTO ESERVICE.DBO.TRANS_POLICY_HOLDER_PROFILE
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{transPolicyHolderProfileVo.transNum, jdbcType=VARCHAR},
+			#{transPolicyHolderProfileVo.country, jdbcType=VARCHAR},
+			#{transPolicyHolderProfileVo.countryDesc, jdbcType=VARCHAR},
+			#{transPolicyHolderProfileVo.countryLive, jdbcType=VARCHAR},
+			#{transPolicyHolderProfileVo.countryLiveDesc, jdbcType=VARCHAR},
+			#{transPolicyHolderProfileVo.hasAddressInTaiwan, jdbcType=NUMERIC},
+			#{transPolicyHolderProfileVo.jobB, jdbcType=NUMERIC},
+			#{transPolicyHolderProfileVo.jobM, jdbcType=NUMERIC},
+			#{transPolicyHolderProfileVo.jobS, jdbcType=NUMERIC},
+			#{transPolicyHolderProfileVo.jobBDesc, jdbcType=NUMERIC},
+			#{transPolicyHolderProfileVo.jobMDesc, jdbcType=NUMERIC},
+			#{transPolicyHolderProfileVo.jobSDesc, jdbcType=NUMERIC},
+			#{transPolicyHolderProfileVo.companyName, jdbcType=NUMERIC},
+			#{transPolicyHolderProfileVo.jobTitle, jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<select id="getAddCodeByLipmId" resultType="string" parameterType="string">
+		SELECT DISTINCT LIPA_ADD_CODE
+		FROM ESERVICE.DBO.LILIPA_ES
+		JOIN ESERVICE.DBO.LILIPM ON LIPM_INSU_NO = (LIPA_INSU_TYPE + CONVERT(VARCHAR,LIPA_INSU_GRP_NO) + LIPA_INSU_SEQ_NO) 
+		AND LIPM_ID = #{lipmId}
+		AND CONVERT(VARCHAR(10), GETDATE(), 111) <![CDATA[ < ]]> CONVERT(VARCHAR(10), LIPA_INSU_END_DATE, 111)
+	</select>
+
+</mapper>

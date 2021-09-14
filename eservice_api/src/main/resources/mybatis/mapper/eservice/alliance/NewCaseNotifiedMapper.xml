@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.alliance.dao.NewCaseNotifiedDao">
+
+	<insert id="addNotifyOfNewCase" parameterType="java.lang.String">
+	
+		INSERT INTO ESERVICE.DBO.NOTIFY_OF_NEW_CASE_CHANGE
+       		(SEQ_ID, CASE_ID, MSG) 
+       	VALUES
+       		(
+       			(NEXT VALUE for NOTIFY_OF_NEW_CASE_CHANGE_SEQ),
+       			#{caseId, jdbcType=VARCHAR},
+       			#{msg, jdbcType=VARCHAR}
+			)
+			
+	</insert>
+
+</mapper>

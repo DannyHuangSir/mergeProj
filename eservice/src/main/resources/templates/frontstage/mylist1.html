@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey mylist1 fullContent">
+		<div class="container bg3 marginTop20">
+			<th:block th:if="${session.REJECT_DIV_LIST == null 
+				or (session.REJECT_DIV_LIST != null and !#lists.contains(session.REJECT_DIV_LIST, 'mylist_01'))}">
+				<th:block th:if="${loginUserType == 'member' or loginUserType == 'admin'}">
+					<div class="mystyle3 box-border">
+						<div id="cntDiv1" class="my1">
+							<i class="foo-business_23 foo-lg"></i> 投資型保單 <span id="invtSize" class="my2b">共 <th:block th:text="${invtPolicyList} != null ? ${#lists.size(invtPolicyList)} : 0"/> 張</span>
+						</div>
+						<div class="">
+							<table id="table1" class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+								<thead>
+									<tr class="table2">
+										<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">保單</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">要保人</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">主被保險人</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">保單狀態</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">投保始期</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">保額/單位</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">保價金</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">解約金</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">繳費年期</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">繳別</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="10">支付工具</th>
+									</tr>
+								</thead>
+								<tbody>
+									<th:block th:each="vo, rowStat : ${invtPolicyList}">
+										<tr th:onclick="'postListing1(\'' + ${vo.policyNo} + '\', \'1\')'" th:classappend="${rowStat.odd}? 'tr-odd'">
+											<td class="table3">
+												<th:block th:text="${vo.productName != null} 
+													? ${vo.productName}"/>
+												<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+											</td>
+											<td class="hid1 hid2"><!-- 要保人 -->
+												<div th:switch="${vo.customerNameBase64 != '' } ">
+													<div th:case="${true}">
+														<!--<th:block th:text="${vo.customerName != null}  ? ${vo.customerName}"/>-->
+														<!-- 難字問題待討論-->
+														<img th:width="${vo.customerName != null} ? ${#strings.length(vo.customerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.customerNameBase64}|" />
+
+													</div>
+													<div th:case="${false}">
+														<th:block th:text="${vo.customerName != null}  ? ${vo.customerName}"/>
+													</div>
+												</div>
+											</td>
+											<td class="hid1 hid2"><!-- 被保人 -->
+												<div th:switch="${vo.mainInsuredNameBase64} != '' ">
+													<div th:case="${true}">
+														<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+													</div>
+													<div th:case="${false}">
+														<th:block th:text="${vo.mainInsuredName != null}  ? ${vo.mainInsuredName}"/>
+													</div>
+												</div>
+											</td>
+											<td class="hid1 hid2">
+												<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+													? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
+											</td>
+											<td class="hid1 hid2 enThin">
+												<th:block th:text="${vo.effectiveDate} != null 
+													? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+											</td>
+											<td class="hid1 hid2">
+												<th:block th:text="${vo.mainAmount} != null 
+													? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+												<!-- <i class="my5"><th:block th:text="${vo.currency}"/></i> -->
+											</td>
+											<td class="hid1 hid2">
+												<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.val1ReseAmt} != null ? ${#numbers.formatDecimal(vo.policyExtraVo.val1ReseAmt, 0, 'COMMA', 0, 'POINT')}"/>
+												<i class="my5" style="margin-left: -58px;">
+												<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.modifyDatetime} != null ? ${#dates.format(vo.policyExtraVo.modifyDatetime, 'yyyy/MM/dd')}"/>
+												</i>
+											</td>
+											<td class="hid1 hid2">
+												<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.val1CancAmt} != null ? ${#numbers.formatDecimal(vo.policyExtraVo.val1CancAmt, 0, 'COMMA', 0, 'POINT')}"/>
+												<i class="my5" style="margin-left: -58px;">
+												<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.modifyDatetime} != null ? ${#dates.format(vo.policyExtraVo.modifyDatetime, 'yyyy/MM/dd')}"/>
+												</i>
+											</td>
+											<td class="hid1 hid2">
+												<th:block th:text="${vo.premYear} != null 
+													? ${#numbers.formatDecimal(vo.premYear, 0, 'DEFAULT', 0, 'DEFAULT')}"/>
+											</td>
+											<td class="hid1 hid2">
+												<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
+													? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+											</td>
+											<td class="hid1 hid2">
+												<th:block th:text="${vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
+													? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue}"/>
+											</td>
+										</tr>
+									</th:block>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</th:block>
+			</th:block>
+			<th:block th:if="${session.REJECT_DIV_LIST == null 
+				or (session.REJECT_DIV_LIST != null and !#lists.contains(session.REJECT_DIV_LIST, 'mylist_02'))}">
+				<th:block th:if="${loginUserType == 'member' or loginUserType == 'admin'}">
+					<div class="ptop30 grey">
+						<div class="mystyle3 wht box-border">
+							<div id="cntDiv2" class="my1">
+								<i class="foo-object_27 foo-lg"></i> 保障型商品 <span id="benefitSize" class="my2b">共 <th:block th:text="${benefitPolicyList} != null ? ${#lists.size(benefitPolicyList)} : 0"/> 張</span>
+							</div>
+							<div class="">
+								<table id="table2"  class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">保單</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">要保人</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">主被保險人</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">保單狀態</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">投保始期</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">保額/單位</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">保價金</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">解約金</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">繳費年期</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">繳別</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="10">支付工具</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:each="vo, rowStat : ${benefitPolicyList}">
+											<tr th:onclick="'postListing1(\'' + ${vo.policyNo} + '\', \'2\')'" th:classappend="${rowStat.odd}? 'tr-odd'">
+												<td class="table3">
+													<th:block th:text="${vo.productName != null} 
+														? ${vo.productName}"/>
+													<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+												</td>
+												<td class="hid1 hid2"><!-- 要保人 -->
+													<div th:switch=" ${vo.customerNameBase64  !='' } ">
+														<div th:case="${true}">
+														<!--	<th:block th:text="${vo.customerName != null}  ? ${vo.customerName}"/>-->
+														<!--  難字問題待討論-->
+															<img th:width="${vo.customerName != null} ? ${#strings.length(vo.customerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.customerNameBase64}|" />
+														</div>
+														<div th:case="${false}">
+															<th:block th:text="${vo.customerName != null}  ? ${vo.customerName}"/>
+														</div>
+													</div>
+												</td>
+												<td class="hid1 hid2"><!-- 被保人 -->
+													<div th:switch="${vo.mainInsuredNameBase64} != ''"> 
+														<div th:case="${true}">
+															<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+														</div>
+														<div th:case="${false}">
+															<th:block th:text="${vo.mainInsuredName != null}  ? ${vo.mainInsuredName}"/>
+														</div>
+													</div>
+												</td>
+												<td class="hid1 hid2">
+													<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+														? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
+												</td>
+												<td class="hid1 hid2 enThin">
+													<th:block th:text="${vo.effectiveDate} != null 
+														? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+												</td>
+												<td class="hid1 hid2">
+													<th:block th:text="${vo.mainAmount} != null 
+														? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+													<!-- <i class="my5"><th:block th:text="${vo.currency}"/></i> -->
+												</td>
+												<td class="hid1 hid2">
+													<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.val1ReseAmt} != null ? ${#numbers.formatDecimal(vo.policyExtraVo.val1ReseAmt, 0, 'COMMA', 0, 'POINT')}"/>
+													<i class="my5" style="margin-left: -58px;">
+													<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.modifyDatetime} != null ? ${#dates.format(vo.policyExtraVo.modifyDatetime, 'yyyy/MM/dd')}"/>
+													</i>
+												</td>
+												<td class="hid1 hid2">
+													<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.val1CancAmt} != null ? ${#numbers.formatDecimal(vo.policyExtraVo.val1CancAmt, 0, 'COMMA', 0, 'POINT')}"/>
+													<i class="my5" style="margin-left: -58px;">
+													<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.modifyDatetime} != null ? ${#dates.format(vo.policyExtraVo.modifyDatetime, 'yyyy/MM/dd')}"/>
+													</i>
+												</td>
+												<td class="hid1 hid2">
+													<th:block th:text="${vo.premYear} != null 
+														? ${#numbers.formatDecimal(vo.premYear, 0, 'DEFAULT', 0, 'DEFAULT')}"/>
+												</td>
+												<td class="hid1 hid2">
+													<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
+														? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+												</td>
+												<td class="hid1 hid2">
+													<th:block th:text="${vo.paymentMode != null and vo.paymentMode != 'T' and vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
+														? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue} : '-'"/>
+												</td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20001'] != null} 
+						? ${session.PAGE_WORDING['WORDING_20001'].parameterValue}"/>
+				</th:block>
+			</th:block>
+			<th:block th:if="${session.REJECT_DIV_LIST == null 
+				or (session.REJECT_DIV_LIST != null and !#lists.contains(session.REJECT_DIV_LIST, 'mylist_03'))}">
+				<th:block th:if="${loginUserType == 'member' or loginUserType == 'admin'}">
+					<div class="container grey center1">
+						<div class="col-sm-12 ad1 center1">
+							<div id="adBlockDiv">
+							<a th:href="${session.SYSTEM_PARAMETER['SYSTEM_CONSTANTS']['AD2_URL'].parameterValue}" target="ad_view"><img/></a>
+							</div>
+						</div>
+					</div>
+				</th:block>
+			</th:block>
+		
+			<th:block th:if="${session.REJECT_DIV_LIST == null or session.REJECT_DIV_LIST.size() == 0}">
+				<th:block th:if="${loginUserType == 'normal'}">
+					<div class="container bg3 box-border marginTop25 h300">
+						<div class="col-sm-8 col-sm-offset-2 col-lg-8 col-lg-offset-2">
+							<div class="activated">
+								<figure><img src="img/alert.jpg" alt="check"/></figure>
+								<h2>欲查詢保單資料，請升級保戶會員!</h2>
+							</div>
+						</div>
+					</div>
+				</th:block>
+			</th:block>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/	
+	$(function(){
+		if($.browser.mobile){ 
+			// mobile browser
+			if ($('#adBlockDiv').size() > 0) {
+				$('#adBlockDiv').find('img').attr({
+					'src' : /*[[${session.SYSTEM_PARAMETER['SYSTEM_CONSTANTS']['AD2_IMG_M'].parameterValue}]]*/,
+					'width' : '90%'
+				});
+			}
+		}
+		else {
+			// not mobile browser
+			if ($('#adBlockDiv').size() > 0) {
+				$('#adBlockDiv').find('img').attr({
+					'src' : /*[[${session.SYSTEM_PARAMETER['SYSTEM_CONSTANTS']['AD2_IMG'].parameterValue}]]*/,
+					'width' : '60%'
+				});
+			}
+		}
+	});
+	
+	function postListing1(policyNo, policyListType) {
+		postWithParams(/*[[@{/listing1}]]*/, [
+			{
+				name: 'policyNo',
+				value: policyNo
+			},
+			{
+				name: 'policyListType',
+				value: policyListType
+			}
+		]);
+	}
+	/*]]>*/
+	</script>
+</body>
+</html>

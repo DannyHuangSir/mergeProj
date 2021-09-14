@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="fragments/commonHead :: common_header(~{::title},~{::link},~{::style})">
+		<title>eService工作管理</title>
+		<link  />
+		<style></style>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='realtimeLoginStat')"></div>
+			<div class="main-content">
+				<div class="main-content-inner" height="500">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-signal" aria-hidden="true"></i>
+									工作管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+									即時登入資訊查詢
+							</li>
+						</ul>
+					</div>
+					<div class="col-xs-10 col-sm-4">
+						<div class="widget-box">
+							<div class="widget-header">
+								<h5 class="widget-title">各系統登入人數</h5>
+							</div>
+							<div class="widget-body">
+								<div id="LoginCountDiv" class="widget-main no-padding">
+									<table class="table table-bordered table-striped table-hover table-sm">
+										<thead class="">
+											<tr class="">
+												<th scope="col">#</th>
+												<th scope="col" class="">系統別</th>
+												<th scope="col" class="">Login人數</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr class=""><th scope="row">1</th><td>保戶網路服務系統(eservice)</td><td><span id="es_num">0</span></td></tr>
+											<tr class=""><th scope="row">2</th><td>後台管理系統(eservice_adm)</td><td><span id="adm_num">0</span></td></tr>
+											<tr class=""><th scope="row">3</th><td>電子表單系統(eform)</td><td><span id="eform_num">0</span></td></tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-10 col-sm-6" id="nodeDiv">
+						<div class="widget-box">
+							<div class="widget-header">
+								<h5 class="widget-title"></h5>
+							</div>
+							<div class="widget-body">
+								<div class="widget-main no-padding">
+									<canvas id="chart"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="page-content">
+						保戶網路服務系統(eservice):<span id="es_num">0</span><br/>
+						後台管理系統(eservice_adm):<span id="adm_num">0</span><br/>
+						電子表單系統(eform):<span id="eform_num">0</span><br/>
+					</div>-->
+<!-- 					<div class="chart-container" style="position: relative; height:40vh; width:40vw"> -->
+<!-- 					    <canvas id="chart"></canvas> -->
+<!-- 					</div> -->
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+<!-- 		<th:block th:replace="fragments/script"/> -->
+		<div th:replace="fragments/commonScript :: common_js(~{::script})">
+		    <script	th:src="@{/plugin/Chart.min.js}"></script>
+			<script th:inline="javascript">
+			/*<![CDATA[*/
+			$(document).ready(function() {
+				popupLoading();
+				$.ajax({
+					url : /*[[@{/job/getRealtimeLoginStat}]]*/,
+					type : "POST"
+				}).done(function(data) {
+					if (data.result == 'SUCCESS') {
+						var sessionStats = data.resultData;
+						$("#es_num").html(sessionStats.eservice);
+						$("#adm_num").html(sessionStats.eservice_adm);
+						$("#eform_num").html(sessionStats.eform);
+						setChart(sessionStats);
+					}
+					removeLoading();
+				});
+			});
+			var ctx = document.getElementById('chart').getContext('2d');
+			
+			function setChart(sessionStats) {
+				var chart = new Chart(ctx, {
+					type: 'horizontalBar',
+				    //type: 'bar',
+				    data: {
+				        labels: ["eservice", "eservice_adm", "eform"],
+				        datasets: [{
+				            label: '# of Login Sessions',
+				            data: [sessionStats.eservice, sessionStats.eservice_adm, sessionStats.eform],
+				            backgroundColor: [
+				                'rgba(255, 99, 132, 0.2)',
+				                'rgba(54, 162, 235, 0.2)',
+				                'rgba(255, 206, 86, 0.2)'
+				            ],
+				            borderColor: [
+				                'rgba(255,99,132,1)',
+				                'rgba(54, 162, 235, 1)',
+				                'rgba(255, 206, 86, 1)'
+				            ],
+				            borderWidth: 1
+				        }]
+				    },
+					options: {
+						title: {
+				            display: true
+				        },
+				        scales: {
+				            xAxes: [{
+				                ticks: {
+				                    beginAtZero:true,
+				                    suggestedMin: 1,
+				                    suggestedMax: 10
+				                }
+				            }]
+				        }
+				    }
+				});
+				//chart.canvas.parentNode.style.height = '128px';
+			}
+			
+			
+				
+			/*]]>*/
+			</script>
+		</div>
+		
+	</body>
+</html>

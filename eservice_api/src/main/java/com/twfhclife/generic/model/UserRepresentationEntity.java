@@ -1,0 +1,101 @@
+package com.twfhclife.generic.model;
+
+/**
+ * UserRepresentation entity.
+ * 
+ * @author tcMarcus
+ * @version 1.0
+ */
+public class UserRepresentationEntity {
+
+	private Long createdTimestamp;
+
+	private String email;
+
+	private Integer emailVerified;
+
+	private Integer enabled;
+
+	private String firstName;
+
+	private String lastName;
+
+	private String id;
+
+	private String serviceAccountClientId;
+
+	private String userName;
+
+	public Long getCreatedTimestamp() {
+		return createdTimestamp;
+	}
+
+	public void setCreatedTimestamp(Long createdTimestamp) {
+		this.createdTimestamp = createdTimestamp;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Integer getEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(Integer emailVerified) {
+		this.emailVerified = emailVerified;
+	}
+
+	public Integer getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Integer enabled) {
+		this.enabled = enabled;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getServiceAccountClientId() {
+		return serviceAccountClientId;
+	}
+
+	public void setServiceAccountClientId(String serviceAccountClientId) {
+		this.serviceAccountClientId = serviceAccountClientId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyPaymentRecordDao">
+
+	<!-- 繳費資訊(附加資訊請繼承) -->
+	<resultMap id="PolicyPaymentRecordMap" type="com.twfhclife.eservice.policy.model.PolicyPaymentRecordVo" >
+		<result column="ID" property="id"/>
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="PAID_AMOUNT" property="paidAmount"/>
+		<result column="PLAN_AMOUNT" property="planAmount"/>
+		<result column="PAY_METHOD" property="payMethod"/>
+		<result column="PAY_DATE" property="payDate"/>
+		<result column="PAY_DESC" property="payDesc"/>
+	</resultMap>
+	
+	<!-- 清單附加資訊 -->
+	<resultMap id="PolicyPaymentRecordListMap" type="com.twfhclife.eservice.policy.model.PolicyPaymentRecordVo" extends="PolicyPaymentRecordMap">
+		<result column="CURRENCY" property="policyVo.currency"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		PPR.ID
+		,PPR.POLICY_NO
+		,PPR.PAID_AMOUNT
+		,PPR.PLAN_AMOUNT
+		,PPR.PAY_METHOD
+		,PPR.PAY_METHOD
+		,PPR.PAY_DATE
+		,PPR.PAY_DESC
+	</sql>
+	
+	<!-- 保單其他資訊欄位 -->
+	<sql id="Policy_Column_List">
+		P.CURRENCY
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="policyPaymentRecordVo.id != null"> AND PPR.ID = #{policyPaymentRecordVo.id} </if>
+			<if test="policyPaymentRecordVo.policyNo != null and policyPaymentRecordVo.policyNo != ''"> AND PPR.POLICY_NO = #{policyPaymentRecordVo.policyNo} </if>
+			<if test="policyPaymentRecordVo.paidAmount != null"> AND PPR.PAID_AMOUNT = #{policyPaymentRecordVo.paidAmount} </if>
+			<if test="policyPaymentRecordVo.planAmount != null"> AND PPR.PLAN_AMOUNT = #{policyPaymentRecordVo.planAmount} </if>
+			<if test="policyPaymentRecordVo.payMethod != null and policyPaymentRecordVo.payMethod != ''"> AND PPR.PAY_METHOD = #{policyPaymentRecordVo.payMethod} </if>
+			<if test="policyPaymentRecordVo.payDate != null"> AND PPR.PAY_DATE = #{policyPaymentRecordVo.payDate} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得繳費查詢結果 -->
+	<select id="getPolicyPaymentRecord" resultMap="PolicyPaymentRecordListMap">
+		SELECT
+			<include refid="Base_Column_List" />
+			,<include refid="Policy_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_PAYMENT_RECORD PPR
+				LEFT OUTER JOIN ESERVICE.DBO.POLICY P
+					ON PPR.POLICY_NO = P.POLICY_NO
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得繳費查詢結果(最近一年) -->
+	<select id="getPolicyPaymentRecordLastYear" resultMap="PolicyPaymentRecordListMap">
+		SELECT
+			<include refid="Base_Column_List" />
+			,<include refid="Policy_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_PAYMENT_RECORD PPR
+				LEFT OUTER JOIN ESERVICE.DBO.POLICY P
+					ON PPR.POLICY_NO = P.POLICY_NO
+		WHERE
+			PPR.POLICY_NO = #{policyNo}
+			AND PPR.PAY_DATE > DATEADD(month, -24, getdate()) + 1
+		ORDER BY
+			PPR.PAY_DATE
+	</select>
+
+</mapper>

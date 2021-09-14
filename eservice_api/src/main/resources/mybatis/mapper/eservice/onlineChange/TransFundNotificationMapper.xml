@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransFundNotificationDao">
+
+	<resultMap id="TransFundNotificationMap" type="com.twfhclife.eservice.onlineChange.model.TransFundNotificationVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transFundNotificationVo.id != null"> AND ID = #{transFundNotificationVo.id} </if>
+			<if test="transFundNotificationVo.transNum != null and transFundNotificationVo.transNum != ''"> AND TRANS_NUM = #{transFundNotificationVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transFundNotificationVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得停損停利通知主檔查詢結果 -->
+	<select id="getTransFundNotification" resultMap="TransFundNotificationMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_FUND_NOTIFICATION
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得下一筆序號 -->
+	<select id="getNextTransFundNotificationId" resultType="BigDecimal">
+		SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_FUND_NOTIFICATION
+	</select>
+	
+	<!-- 停損停利通知主檔-新增 -->
+	<insert id="insertTransFundNotification">
+		INSERT INTO ESERVICE.DBO.TRANS_FUND_NOTIFICATION
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{transFundNotificationVo.id, jdbcType=NUMERIC},
+			#{transFundNotificationVo.transNum, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,80 @@
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<th:block th:if="${transPolicyHolderProfileVo != null}">
+							<!-- <tr class="">
+								<th class="hid-th w40p">要保人姓名：</th>
+								<td>
+									<th:block th:text="${transPolicyHolderProfileVo} != null and ${transPolicyHolderProfileVo.name} != null ? ${transPolicyHolderProfileVo.name}"/>
+								</td>
+							</tr> -->
+							
+							<th:block th:if="${transPolicyHolderProfileVo.countryDesc != null}">
+							<tr class="text-left">
+								<th class="hid-th w40p">要保人國籍：</th>
+								<td>
+									[區域]&nbsp;<th:block th:text="${#strings.arraySplit(transPolicyHolderProfileVo.countryDesc, ',')[0]}"/><br/>
+									[國家]&nbsp;<th:block th:text="${#strings.arraySplit(transPolicyHolderProfileVo.countryDesc, ',')[1]}"/>
+								</td>
+							</tr>
+							</th:block>
+							
+							<!-- <th:block th:if="${transPolicyHolderProfileVo.hasAddressInTaiwan != null}">
+							<tr class="text-left">
+								<th class="hid-th w40p">在台有無居住地址：</th>
+								<td>
+									<th:block th:text="${transPolicyHolderProfileVo.hasAddressInTaiwan == '1' ? '有' : '無'}"/>
+								</td>
+							</tr>
+							</th:block>
+							
+							<th:block th:if="${transPolicyHolderProfileVo.countryLiveDesc != null}">
+							<th:block th:if="${transPolicyHolderProfileVo.hasAddressInTaiwan eq '1'}">
+							<tr class="text-left">
+								<th class="hid-th w40p">居住地國別：</th>
+								<td>
+									[區域]&nbsp;<th:block th:text="${#strings.arraySplit(transPolicyHolderProfileVo.countryLiveDesc, ',')[0]}"/><br/>
+									[國家]&nbsp;<th:block th:text="${#strings.arraySplit(transPolicyHolderProfileVo.countryLiveDesc, ',')[1]}"/>
+								</td>
+							</tr>
+							</th:block>
+							</th:block> -->
+							
+							<th:block th:if="${transPolicyHolderProfileVo.jobBDesc != null}">
+							<tr class="text-left">
+								<th class="hid-th w40p">要保人職業：</th>
+								<td>
+								[大分類]&nbsp;<th:block th:text="${transPolicyHolderProfileVo.jobBDesc}"/><br/>
+								[中分類]&nbsp;<th:block th:text="${transPolicyHolderProfileVo.jobMDesc}"/><br/>
+								[小分類]&nbsp;<th:block th:text="${transPolicyHolderProfileVo.jobSDesc}"/>
+								</td>
+							</tr>
+							</th:block>
+							
+							<th:block th:if="${transPolicyHolderProfileVo.companyName != null}">
+							<tr class="text-left">
+								<th class="hid-th w40p">服務單位：</th>
+								<td>
+									<th:block th:text="${transPolicyHolderProfileVo.companyName}"/>
+								</td>
+							</tr>
+							</th:block>
+							
+							<!-- <th:block th:if="${transPolicyHolderProfileVo.jobTitle != null}">
+							<tr class="text-left">
+								<th class="hid-th w40p">職稱：</th>
+								<td>
+									<th:block th:text="${transPolicyHolderProfileVo.jobTitle}"/>
+								</td>
+							</tr>
+							</th:block> -->
+						</th:block>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

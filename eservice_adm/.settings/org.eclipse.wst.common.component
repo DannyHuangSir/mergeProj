@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="eservice_adm_SecurityAlliance-${build.time}">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="keycloak-admin-client-3.4.3.Final.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/keycloak-admin-client/keycloak-admin-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="java-output-path" value="/eservice_adm/target/classes"/>
+        <property name="component.exclusion.patterns" value="WEB-INF/classes/*.properties,WEB-INF/classes/log4j2*.xml"/>
+        <property name="context-root" value="eservice_adm_SecurityAlliance-${build.time}"/>
+    </wb-module>
+</project-modules>

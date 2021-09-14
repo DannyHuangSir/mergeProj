@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransBankInfoMapper">
+
+	<resultMap id="TransBankInfoMap" type="com.twfhclife.eservice_batch.model.TransBankInfoVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="BANK_ID" property="bankId"/>
+		<result column="BRANCH_ID" property="branchId"/>
+		<result column="ACCOUNT_NO" property="accountNo"/>
+		<result column="ACCOUNT_NAME" property="accountName"/>
+		<result column="BANK_NAME" property="bankName"/>
+		<result column="BRANCH_NAME" property="branchName"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		TB.ID,TB.TRANS_NUM,TB.BANK_ID,TB.BRANCH_ID,ESERVICE.DBO.FN_DEBASE64(TB.ACCOUNT_NO) ACCOUNT_NO,ESERVICE.DBO.FN_DEBASE64(TB.ACCOUNT_NAME) ACCOUNT_NAME, B.BANK_NAME, B.BRANCH_NAME
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transBankInfoVo.id != null"> AND ID = #{transBankInfoVo.id} </if>
+			<if test="transBankInfoVo.transNum != null and transBankInfoVo.transNum != ''"> AND TRANS_NUM = #{transBankInfoVo.transNum} </if>
+			<if test="transBankInfoVo.bankId != null and transBankInfoVo.bankId != ''"> AND BANK_ID = #{transBankInfoVo.bankId} </if>
+			<if test="transBankInfoVo.branchId != null and transBankInfoVo.branchId != ''"> AND BRANCH_ID = #{transBankInfoVo.branchId} </if>
+			<if test="transBankInfoVo.accountNo != null and transBankInfoVo.accountNo != ''"> AND ESERVICE.DBO.FN_DEBASE64(ACCOUNT_NO) = #{transBankInfoVo.accountNo} </if>
+			<if test="transBankInfoVo.accountName != null and transBankInfoVo.accountName != ''"> AND ESERVICE.DBO.FN_DEBASE64(ACCOUNT_NAME) = #{transBankInfoVo.accountName} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transBankInfoVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransBankInfoList" resultMap="TransBankInfoMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_BANK_INFO TB
+		JOIN ESERVICE.DBO.BANK_INFO B ON B.BANK_ID = TB.BANK_ID  AND B.BRANCH_ID = TB.BRANCH_ID
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransBankInfoMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_BANK_INFO TB
+		JOIN ESERVICE.DBO.BANK_INFO B ON B.BANK_ID = TB.BANK_ID  AND B.BRANCH_ID = TB.BRANCH_ID
+		<include refid="wherePkClause" />
+	</select>
+
+</mapper>
+

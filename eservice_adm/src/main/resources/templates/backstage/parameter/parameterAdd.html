@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='parameterAdd')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+								參數管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								參數維護
+								<i class="my-icon fa fa-angle-double-right"></i>
+								新增參數
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">新增參數</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form class="form-horizontal" id="parameterTypeAddForm" role="form" action="#">
+													<!-- <legend>Form</legend> -->
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">系統別</label>
+														<div class="col-sm-10" id="leave">
+															<select class="chosen-select form-control" id="systemsSelect" data-placeholder="請選擇系統別..." style="display: none;">
+															</select>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">參數類型</label>
+														<div class="col-sm-10" id="leave">
+															<select class="chosen-select form-control" id="categoryNameSelect" data-placeholder="請選擇參數類型..." style="display: none;">
+															</select>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">所屬參數</label>
+														<div class="col-sm-10" id="leave">
+															<select class="chosen-select form-control" id="parentParameterIdSelect" data-placeholder="請選擇所屬參數..." style="display: none;">
+																<option value=""></option>
+															</select>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">參數代碼</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="parameterCode" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">參數名稱</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="parameterName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">參數值</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="parameterValue" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">排列順序</label>
+														<div class="col-sm-10" id="leave">
+															<input type="number" id="sort" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">備註</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="remark" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">狀態</label>
+														<div class="col-sm-8">
+															<input name="radioStatus" type="radio" class="my" value="1" checked="true"/>
+															<span class="lbl"> 啟用</span>
+															&nbsp; &nbsp;
+															<input name="radioStatus" type="radio" value="0" class="my" />
+															<span class="lbl"> 停用</span>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-1 control-label no-padding-right">是否加密</label>
+														<div class="col-sm-8">
+															<input name="radioEncrypt" type="radio" value="Y" class="my"/>
+															<span class="lbl"> 是</span>
+															&nbsp; &nbsp;
+															<input name="radioEncrypt" type="radio" value="N" class="my" checked="true"/>
+															<span class="lbl"> 否</span>
+														</div>
+													</fieldset>
+													<div class="form-actions center">
+													<button type="button" id="id-btn-dialog1" class="btn btn-primary" onclick="insertData()">
+														<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+														確定新增 
+													</button>
+													<button class="btn" onclick="location.reload()" type="reset">
+														<i class="my-icon fa fa-undo bigger-110"></i>
+														重新輸入
+													</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			var parameterCategorys = [];
+			var parameters = [];
+			$(function() {
+				// 載入系統功能下拉選單
+				eserviceAdmOption.chosenSystem('#systemsSelect', /*[[@{/common/systemList}]]*/);
+				
+				// 取得參數類型代碼下拉選單
+				//eserviceAdmOption.chosenParameterCategory('#categoryNameSelect', /*[[@{/common/parameterCategoryList}]]*/);
+				getParameterCategory();
+				
+				// 取得參數代碼下拉選單
+				//eserviceAdmOption.chosenParameter('#parentParameterIdSelect', /*[[@{/common/parameterList}]]*/);
+				getParentParameters();
+				
+				eserviceAdmEvent.initChosenSelect();
+				
+				// 綁定系統別變更時，自動update參數類型選單
+				$('#systemsSelect').chosen().change(function(){
+					console.log("systemsSelect", $(this).val());
+					var sysId =  $(this).val();
+					if(sysId){
+						updateParameterCategoryOptions(sysId);
+					}
+				});
+				
+				// 綁定參數類型變更時，自動update參數類型選單
+				$('#categoryNameSelect').chosen().change(function(){
+					console.log("categoryNameSelect", $(this).val());
+					var categoryId =  $(this).val();
+					if(categoryId){
+						updateParentParameterOptions(categoryId);
+					}
+				});
+			});
+		
+			function getParameterCategory() {
+				$.ajax({
+					url : /*[[@{/common/parameterCategoryList}]]*/,
+					type : "POST"
+				}).done(function(data) {
+					if (data.result == 'SUCCESS') {
+						console.log("parameterCategorys=", data.resultData);
+						parameterCategorys = data.resultData;
+						$("#categoryNameSelect").append($('<option>-- 請先選擇系統別 --</option>').attr('value', ''));
+						$("#categoryNameSelect").trigger('chosen:updated');
+// 						var sysId = $('#systemsSelect').val();
+// 						console.log("ParameterCategorys=", parameterCategorys);
+// 						updateParameterCategoryOptions(sysId);
+					}
+				});
+			};
+			
+			function updateParameterCategoryOptions(sysId) {
+				$("#categoryNameSelect").empty();
+				$("#categoryNameSelect").append($('<option></option>').attr('value', ''));
+				$.each(parameterCategorys, function(i, obj) {
+					if(obj.systemId == sysId) {
+						$("#categoryNameSelect").append($('<option></option>').attr('value', obj.parameterCategoryId).text(obj.categoryName));
+					}
+				});
+				$("#categoryNameSelect").trigger('chosen:updated');
+			}
+			
+			function getParentParameters() {
+				$.ajax({
+					url : /*[[@{/common/parameterList}]]*/,
+					type : "POST"
+				}).done(function(data) {
+					if (data.result == 'SUCCESS') {
+						console.log("parameters=", data.resultData);
+						parameters = data.resultData;
+						$("#parentParameterIdSelect").append($('<option>-- 請先選擇參數類型 --</option>').attr('value', ''));
+						$("#parentParameterIdSelect").trigger('chosen:updated');
+						
+					}
+				});
+			};
+			
+			function updateParentParameterOptions(categoryId) {
+				$("#parentParameterIdSelect").empty();
+				$("#parentParameterIdSelect").append($('<option></option>').attr('value', "").text("請選擇..."));
+				$.each(parameters, function(i, obj) {
+					if(obj.parameterCategoryId == categoryId) {
+						$("#parentParameterIdSelect").append($('<option></option>').attr('value', obj.parameterId).text(obj.parameterName));
+					}
+				});
+				setInterval(function(){ $("#parentParameterIdSelect").trigger('chosen:updated'); }, 1000);
+			}
+			
+			function insertData() {
+				if($('#systemsSelect').val() == '') {
+					alertMsg("請輸入系統別");
+					return false;
+				}
+				if($('#parameterCode').val() == '') {
+					alertMsg("請輸入參數代碼");
+					return false;
+				}
+				if($('#parameterName').val() == '') {
+					alertMsg("請輸入參數名稱");
+					return false;
+				}
+				if($('#parameterValue').val() == '') {
+					alertMsg("請輸入參數值");
+					return false;
+				}
+				
+				var formData = {
+					systemId : $('#systemsSelect').val(),
+					parameterCategoryId : $('#categoryNameSelect').val(),
+					parentParameterId : $('#parentParameterIdSelect').val(),
+					parameterCode : $('#parameterCode').val(),
+					parameterName : $('#parameterName').val(),
+					parameterValue : $('#parameterValue').val(),
+					sortNo : $('#sort').val(),
+					remark : $('#remark').val(),
+					status : $('input:radio[name="radioStatus"]:checked').val(),
+					encryptType : $('input:radio[name="radioEncrypt"]:checked').val()
+				};
+				eserviceForm.post(/*[[@{/parameter/insertParameter}]]*/, formData, function(response) {
+					alertMsg("新增成功");
+				});
+			}
+		/*]]>*/
+		</script>
+	</body>
+</html>

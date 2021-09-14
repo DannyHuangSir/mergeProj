@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>eService後台管理系統</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+<!-- 		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome/4.5.0/css/font-awesome.min.css}" /> -->
+		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome/5.3.1/css/fontawesome.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome/5.3.1/css/all.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome/5.3.1/css/v4-shims.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/daterangepicker.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datetimepicker.min.css}" />
+
+		<!-- page specific plugin styles -->
+
+		<!-- text fonts -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/fonts.googleapis.com.css}" />
+
+		<!-- my styles -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/my.min.css}" class="my-main-stylesheet" id="main-my-style"/>
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="assets/css/my-part2.min.css" class="my-main-stylesheet" />
+		<![endif] -->
+		<link rel="stylesheet" th:href="@{/css/my-skins.min.css}" />
+		<link rel="stylesheet" th:href="@{/css/my-rtl.min.css}" />
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="assets/css/my-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- my settings handler -->
+		<script	th:src="@{/js/my-extra.min.js}"></script>
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="assets/js/html5shiv.min.js"></script>
+		<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+		<link rel="shortcut icon" th:href="@{/images/favor-icon.png}" />
+	</head>
+
+	<body class="login-layout">
+		<div class="main-container">
+			<div class="main-content">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+						<div class="login-container">
+							<div class="center">
+								<h1>
+									<i class="my-icon fa fa-leaf green"></i>
+									<span class="red">eService</span>
+									<span class="white" id="id-text2">後台管理系統</span>
+								</h1>
+								<h4 class="blue" id="id-company-text">&copy; 臺銀人壽保險股份有限公司</h4>
+							</div>
+
+							<div class="space-6"></div>
+
+							<div class="position-relative">
+								<div id="login-box" class="login-box visible widget-box no-border">
+									<div class="widget-body">
+										<div class="widget-main">
+											<h4 class="header blue lighter bigger">
+												<i class="my-icon fa fa-coffee green"></i>
+												Please Enter Your Information
+											</h4>
+											<div class="space-6"></div>
+											<form id="loginForm" th:action="@{/doLogin}" method="POST">
+												<fieldset>
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" id="username" name="username" class="form-control" placeholder="Username" />
+															<i class="my-icon fa fa-user"></i>
+														</span>
+													</label>
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="password" id="password" name="password" class="form-control" placeholder="Password" />
+															<i class="my-icon fa fa-lock"></i>
+														</span>
+													</label>
+													<div class="space"></div>
+													<div class="clearfix">
+														<button id="loginBtn" class="width-35 pull-right btn btn-sm btn-primary">
+															<i class="my-icon fa fa-key"></i>
+															<span class="bigger-110">Login</span>
+														</button>
+													</div>
+													<div class="space-4"></div>
+												</fieldset>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- basic scripts -->
+		<!--[if !IE]> -->
+		<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+		<script src="js/jquery-1.11.3.min.js"></script>
+		<![endif]-->
+		
+		<script	th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/eservice_adm/actionModal.js}"></script>
+		<script th:src="@{/js/cookie.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			//TODO SSO Check
+			
+			var errorMessage = /*[[${errorMessage}]]*/;
+			errorMessage = (errorMessage == null ? '' : errorMessage);
+			if (errorMessage != '') {
+				alertMsg(errorMessage);
+			}
+			
+			$('#loginBtn').click(function() {
+				if ($('#username').val() == '' || $('#password').val() == '') {
+					alertMsg('請輸入正確的帳號/密碼');
+					return false;
+				}
+				
+				//$('#loginForm').submit();
+			});
+			
+			
+			var accessTokenCookie = getCookie("sso-token");
+			if(accessTokenCookie) {
+				console.log("accessTokenCookie="+accessTokenCookie);
+// 				var formData = '{"clientId":"eservice_adm", "accessToken":"'+accessTokenCookie+'"}';
+// 				$.ajax({
+// 					url : "/checksso",
+// 					contentType: 'application/json',
+// 					type: "POST",
+// 					data:  JSON.stringify(formData)
+// 				}).done(function(response) {
+// 					if (response.result == 'SUCCESS') {
+						
+// 					} else {
+// 						if (response.resultMsg) {
+// 							alertMsg(response.resultMsg);
+// 						}
+// 					}
+// 				}).fail(function (jqXHR, textStatus) {
+// 					alertMsg('系統發生錯誤');
+// 				});
+			}
+		});
+		/*]]>*/
+		</script>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransLoanMapper">
+
+	<resultMap id="TransLoanMap" type="com.twfhclife.eservice_batch.model.TransLoanVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="LOAN_AMOUNT" property="loanAmount"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,LOAN_AMOUNT
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transLoanVo.id != null"> AND ID = #{transLoanVo.id} </if>
+			<if test="transLoanVo.transNum != null and transLoanVo.transNum != ''"> AND TRANS_NUM = #{transLoanVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transLoanVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransLoanList" resultMap="TransLoanMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			TRANS_LOAN
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransLoanMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			TRANS_LOAN
+		<include refid="wherePkClause" />
+	</select>
+
+</mapper>
+

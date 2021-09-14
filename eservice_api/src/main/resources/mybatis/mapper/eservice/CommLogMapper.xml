@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.generic.dao.CommLogDao">
+	
+	<insert id="addCommLog" parameterType="com.twfhclife.generic.domain.CommLogRequest">
+		INSERT INTO ESERVICE_ADM.DBO.COMM_LOG (SYSTEM_ID, COMM_TYPE, COMM_TARGET, COMM_CNT, COMM_DATE) 
+		VALUES (
+			lower(#{vo.systemId}),
+			lower(#{vo.commType}),
+			#{vo.commTarget},
+			#{vo.commCnt},
+			getdate()
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransCancelContractDao">
+
+	<resultMap id="TransCancelContractMap" type="com.twfhclife.eservice.onlineChange.model.TransCancelContractVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transCancelContractVo.id != null"> AND ID = #{transCancelContractVo.id} </if>
+			<if test="transCancelContractVo.transNum != null and transCancelContractVo.transNum != ''"> AND TRANS_NUM = #{transCancelContractVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transCancelContractVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得解約申請書套印查詢結果 -->
+	<select id="getTransCancelContract" resultMap="TransCancelContractMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CANCEL_CONTRACT
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 解約申請書套印-新增 -->
+	<insert id="insertTransCancelContract">
+		INSERT INTO ESERVICE.DBO.TRANS_CANCEL_CONTRACT
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_CANCEL_CONTRACT),
+			#{transCancelContractVo.transNum, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

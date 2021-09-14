@@ -1,0 +1,1 @@
+mvn clean install org.sonarsource.scanner.maven:sonar-maven-plugin:3.0.2:sonar -Dmaven.test.skip=true -Dsonar.host.url=http://localhost:9000  -Dsonar.login=bcfbb83573a5e162026198312ea73f3d16d215f3

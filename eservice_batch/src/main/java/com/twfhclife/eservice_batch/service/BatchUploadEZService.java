@@ -1,0 +1,326 @@
+package com.twfhclife.eservice_batch.service;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.util.Base64;
+import java.util.ResourceBundle;
+
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.tempuri.GetTokenDocument;
+import org.tempuri.GetTokenResponseDocument;
+import org.tempuri.UploadFileDocument;
+import org.tempuri.UploadFileDocument.UploadFile;
+import org.tempuri.UploadFileResponseDocument;
+import org.tempuri.UploadFileResponseDocument.UploadFileResponse;
+
+import tw.com.twfhclife.ezacquire.UploadServiceStub;
+
+import com.google.gson.Gson;
+import com.twfhclife.eservice_batch.dao.TransEndorsementDao;
+import com.twfhclife.eservice_batch.model.EZAcquireVo;
+import com.twfhclife.eservice_batch.model.EZIndexDataVo;
+import com.twfhclife.eservice_batch.model.OnlineChangeInfoVo;
+import com.twfhclife.eservice_batch.model.TransInsuranceClaimFileDataVo;
+import com.twfhclife.eservice_batch.util.TransTypeUtil;
+
+public class BatchUploadEZService {
+
+	private static final Logger logger = LogManager.getLogger(BatchUploadEZService.class);
+	
+	private static String ENVIORMENT;
+	
+	private static String EZ_ACQUIRE_ID;
+	
+	private static String EZ_ACQUIRE_ENDPOINT;
+	
+	private static String EZ_ACQUIRE_ACTION_GET_TOKEN;
+	
+	private static String EZ_ACQUIRE_ACTION_UPLOAD_FILE;
+	
+	private static String EZ_ACQUIRE_ACTION_QUERY_UPLOAD_FILE_STATUS;
+	
+	private static String EZ_INDEXDATA_SCAN_TYPE_ID;
+	
+	private static String EZ_INDEXDATA_BRANCH;
+	
+	private static String EZ_INDEXDATA_FORM_ID_CHANGEINFO;
+	
+	private static String EZ_INDEXDATA_FORM_ID_ENDORSEMENT;
+	
+	public BatchUploadEZService() {
+		ResourceBundle rb = ResourceBundle.getBundle("config");
+		ENVIORMENT = rb.getString("running.enviorment");
+		EZ_ACQUIRE_ID = rb.getString("ez_acquire_id");
+		EZ_ACQUIRE_ENDPOINT = rb.getString("ez_acquire_endpoint_" + ENVIORMENT.toLowerCase());
+		EZ_ACQUIRE_ACTION_GET_TOKEN = rb.getString("ez_acquire_action_get_token");
+		EZ_ACQUIRE_ACTION_UPLOAD_FILE = rb.getString("ez_acquire_action_upload_file");
+		EZ_ACQUIRE_ACTION_QUERY_UPLOAD_FILE_STATUS = rb.getString("ez_acquire_action_query_upload_file_status");
+		EZ_INDEXDATA_SCAN_TYPE_ID = rb.getString("ez_indexdata_scan_type_id");
+		EZ_INDEXDATA_BRANCH = rb.getString("ez_indexdata_branch");
+		EZ_INDEXDATA_FORM_ID_CHANGEINFO = rb.getString("ez_indexdata_form_id_changeinfo");
+		EZ_INDEXDATA_FORM_ID_ENDORSEMENT = rb.getString("ez_indexdata_form_id_endorsement");
+		logger.debug(
+				"ENVIORMENT:{}, EZ_ACQUIRE_ID:{}, EZ_ACQUIRE_ENDPOINT:{}, EZ_ACQUIRE_ACTION_GET_TOKEN:{}, EZ_ACQUIRE_ACTION_UPLOAD_FILE:{}, EZ_ACQUIRE_ACTION_QUERY_UPLOAD_FILE_STATUS:{}, EZ_INDEXDATA_SCAN_TYPE_ID:{}, EZ_INDEXDATA_BRANCH:{},EZ_INDEXDATA_FORM_ID_CHANGEINFO:{},EZ_INDEXDATA_FORM_ID_ENDORSEMENT:{}",
+				ENVIORMENT, EZ_ACQUIRE_ID, EZ_ACQUIRE_ENDPOINT,
+				EZ_ACQUIRE_ACTION_GET_TOKEN, EZ_ACQUIRE_ACTION_UPLOAD_FILE,
+				EZ_ACQUIRE_ACTION_QUERY_UPLOAD_FILE_STATUS,
+				EZ_INDEXDATA_SCAN_TYPE_ID, EZ_INDEXDATA_BRANCH,
+				EZ_INDEXDATA_FORM_ID_CHANGEINFO,
+				EZ_INDEXDATA_FORM_ID_ENDORSEMENT);
+	}
+	
+	public boolean uploadFile(String transNum, String docType, String token, File file, OnlineChangeInfoVo infoVo) throws Exception {
+		logger.debug("Start uploadFile...");
+		
+		boolean result = false;
+		UploadServiceStub stub = new UploadServiceStub(EZ_ACQUIRE_ENDPOINT);
+		UploadFileDocument upploadFileDocument = UploadFileDocument.Factory.newInstance();
+		UploadFile uploadFile = upploadFileDocument.addNewUploadFile();
+
+		if ("".equals(StringUtils.trimToEmpty(token))) {
+			logger.debug("token is null or empty, get a new token!!!");
+			token = this.getEZToken();
+		}
+		
+		EZIndexDataVo indexDataVo = new EZIndexDataVo();
+		indexDataVo.setScanTypeId(EZ_INDEXDATA_SCAN_TYPE_ID);
+		indexDataVo.setBranch(EZ_INDEXDATA_BRANCH);
+		indexDataVo.setBusinessType(TransTypeUtil.getEZBusinessType(infoVo.getTransType()));
+		indexDataVo.setFormId(file.getName().toLowerCase().indexOf("endorsement") != -1 ? EZ_INDEXDATA_FORM_ID_ENDORSEMENT : EZ_INDEXDATA_FORM_ID_CHANGEINFO);
+		indexDataVo.setInsurantId(infoVo.getLipiId());
+		indexDataVo.setPolicyNumber(infoVo.getPolicyNo());
+		indexDataVo.setApplicantId(infoVo.getLipmId());
+		indexDataVo.setScanTypeId(EZ_INDEXDATA_SCAN_TYPE_ID);
+		indexDataVo.setBranch(EZ_INDEXDATA_BRANCH);
+		Gson gson = new Gson();
+		String indexData = gson.toJson(indexDataVo);
+		
+		String sha1 = this.getFileSHA1(file);
+		byte[] fileContent = Files.readAllBytes(file.toPath());
+		uploadFile.setAppId(EZ_ACQUIRE_ID);
+		uploadFile.setTokenInfo(token);
+		uploadFile.setFileType(docType);
+		uploadFile.setFile(fileContent);
+		uploadFile.setChecksum(sha1);
+		uploadFile.setIndexData(indexData);
+		logger.debug("=== uploadFile AppId:{}, TokenInfo:{}, FileType:{}, FileName:{}, Checksum:{}, IndexData:{} ===", EZ_ACQUIRE_ID, token, docType, file.getName(), sha1, indexData);
+		
+		UploadFileResponseDocument resp = stub.uploadFile(upploadFileDocument);
+		UploadFileResponse uploadFileResponse = resp.getUploadFileResponse();
+		String jsonResult = uploadFileResponse.getUploadFileResult();
+		logger.debug("###uploadFile jsonResult:{}" + jsonResult);
+		
+		
+		EZAcquireVo ezVo = gson.fromJson(jsonResult, EZAcquireVo.class);		
+		logger.debug("uploadFile taskId:{}, documentId:{}, status:{}", ezVo.getTaskId(), ezVo.getDocumentId(), ezVo.getStatus());		
+		if (ezVo.getStatus().toUpperCase().startsWith("S")) {
+			ezVo.setTransNum(transNum);
+			ezVo.setDocumentType(docType);
+			int cut = new TransEndorsementDao().insertTransEZ(ezVo);
+			if (cut == 0) {
+				logger.debug("insertTransEZ failed!");
+			}
+			result = true;
+		}
+
+		logger.debug("End uploadFile...");
+		return result;
+	}
+	
+	/**
+	 * 上傳聯盟鏈保險理賠上傳文件至影像系統
+	 * @return
+	 */
+	public String uploadInsuranceClaimFileDatas(TransInsuranceClaimFileDataVo vo) throws Exception{
+		logger.debug("***Start uploadFile***");
+		String result = null;
+		
+		if(vo==null || vo.getPath()==null || vo.getFileName()==null) {
+			return null;
+		}
+		
+		File file = new File(vo.getPath()+"/"+vo.getFileName());
+		//modify:read file from TRANS_INSURANCE_CLAIM_FILEDATAS.FILE_BASE64 Column-start
+		if(vo.getFileBase64()==null) {//嘗試使用實體檔
+			//do nothing.
+		}else {
+			file = base64ToFile(file,vo.getFileBase64());
+		}
+		//modify:read file from TRANS_INSURANCE_CLAIM_FILEDATAS.FILE_BASE64 Column-end
+		
+		if(file!=null && file.exists() && file.canRead()){
+			String fileExtension = FilenameUtils.getExtension(vo.getFileName());
+			
+			UploadServiceStub stub = new UploadServiceStub(EZ_ACQUIRE_ENDPOINT);
+			UploadFileDocument upploadFileDocument = UploadFileDocument.Factory.newInstance();
+			UploadFile uploadFile = upploadFileDocument.addNewUploadFile();
+
+			String token = this.getEZToken();
+			
+			EZIndexDataVo indexDataVo = new EZIndexDataVo();
+			
+			//ScanType永遠設PDF
+			indexDataVo.setScanTypeId("PDF");
+			
+			indexDataVo.setBranch(EZ_INDEXDATA_BRANCH);
+			indexDataVo.setBusinessType("INSURANCE_CLAIM");
+			
+			/**
+			 * E3000101 理賠聯盟鏈-數位同意書
+			 * E3000201 理賠聯盟鏈-診斷證明書
+			 * E3000301 理賠聯盟鏈-事故證明書
+			 * E3000401 理賠聯盟鏈-收據
+			 * E3000501 理賠聯盟鏈-補件
+			 */
+			String formId = "";
+			if("1".equals(vo.getType()) || "DIGI_SERVICE_CONSENT_FORM".equals(vo.getType())) {
+				formId = "E3000101";
+			}else if("2".equals(vo.getType()) || "DIAGNOSIS_CERTIFICATE".equals(vo.getType())){
+				formId = "E3000201";
+			}else if("3".equals(vo.getType()) || "ACCIDENT_FORM".equals(vo.getType())){
+				formId = "E3000301";
+			}else if("4".equals(vo.getType()) || "MEDICAL_RECEIPT".equals(vo.getType())){
+				formId = "E3000401";
+			}else if("C".equals(vo.getType())) {
+				formId = "E3000501";
+			}
+			indexDataVo.setFormId(formId);
+
+			indexDataVo.setInsurantId(vo.getLipiId());
+			indexDataVo.setPolicyNumber(vo.getPolicyNo());
+			indexDataVo.setApplicantId(vo.getLipmId());
+
+			Gson gson = new Gson();
+			String indexData = gson.toJson(indexDataVo);
+			
+			String sha1 = this.getFileSHA1(file);
+			byte[] fileContent = Files.readAllBytes(file.toPath());
+			uploadFile.setAppId(EZ_ACQUIRE_ID);
+			uploadFile.setTokenInfo(token);
+			
+			uploadFile.setFileType(fileExtension.toUpperCase());
+			
+			uploadFile.setFile(fileContent);
+			uploadFile.setChecksum(sha1);
+			uploadFile.setIndexData(indexData);
+			logger.debug("=== uploadFile AppId:{}, TokenInfo:{}, FileType:{}, FileName:{}, Checksum:{}, IndexData:{} ===", 
+					EZ_ACQUIRE_ID, token, fileExtension.toUpperCase(), file.getName(), sha1, indexData);
+			
+			UploadFileResponseDocument resp = null;
+			if(StringUtils.isEmpty(indexDataVo.getFormId())) {
+				//在很極端的狀況下，會突然無法判斷formId給影像系統
+				logger.info("indexDataVo.getFormId() is empty,don't call uploadFile() now.");
+				return null;
+			}else {
+				resp = stub.uploadFile(upploadFileDocument);
+			}
+			
+			UploadFileResponse uploadFileResponse = resp.getUploadFileResponse();
+			String jsonResult = uploadFileResponse.getUploadFileResult();
+			logger.debug("###uploadFile jsonResult:{}" + jsonResult);
+			
+			EZAcquireVo ezVo = gson.fromJson(jsonResult, EZAcquireVo.class);		
+			logger.debug("uploadFile taskId:{}, documentId:{}, status:{}", 
+					ezVo.getTaskId(), ezVo.getDocumentId(), ezVo.getStatus());
+			
+			if (ezVo.getStatus().toUpperCase().startsWith("S")) {
+				ezVo.setTransNum(vo.getTransNum());
+				ezVo.setDocumentType(fileExtension.toUpperCase());
+				int cut = new TransEndorsementDao().insertTransEZ(ezVo);
+				if (cut == 0) {
+					logger.debug("insertTransEZ failed!");
+				}
+				result = ezVo.getTaskId();
+			}
+
+		}else {
+			logger.error("File is not exists.path={},fileName={}", vo.getPath(),vo.getFileName());
+		}
+		
+		logger.debug("***End uploadFile***");
+		return result;
+	}
+	
+	public String getEZToken() throws Exception {
+//		String token = "";
+		logger.debug("Start getEZToken...");
+		
+		UploadServiceStub stub = new UploadServiceStub(EZ_ACQUIRE_ENDPOINT);
+		GetTokenDocument getTokenDocument = GetTokenDocument.Factory.newInstance();
+		GetTokenDocument.GetToken getToken = getTokenDocument.addNewGetToken();
+		
+		getToken.setAction(EZ_ACQUIRE_ACTION_UPLOAD_FILE);
+		getToken.setId(EZ_ACQUIRE_ID);
+		GetTokenResponseDocument resp = stub.getToken(getTokenDocument);
+		GetTokenResponseDocument.GetTokenResponse getTokenResp = resp.getGetTokenResponse();
+		String token = getTokenResp.getGetTokenResult();
+		logger.debug("getEZToken token:{}", token);
+		
+//		Gson gson = new Gson();
+//		EZAcquireVo ezVo = gson.fromJson(jsonResult, EZAcquireVo.class);
+//		logger.debug("getEZToken id:{}, issueDate:{}", ezVo.getId(), ezVo.getIssueDate());
+//		token = ezVo.getId();
+		logger.debug("End getEZToken...");
+		return token;
+	}
+	
+	private String getFileSHA1(File file) throws Exception {
+		MessageDigest digest = MessageDigest.getInstance("SHA-1");
+	    InputStream fis = new FileInputStream(file);
+	    int n = 0;
+	    byte[] buffer = new byte[8192];
+	    while (n != -1) {
+	        n = fis.read(buffer);
+	        if (n > 0) {
+	            digest.update(buffer, 0, n);
+	        }
+	    }
+	    return new HexBinaryAdapter().marshal(digest.digest());
+	}
+	
+	private File base64ToFile(File file,String strBase64) {
+		if(file==null) {
+			return file;
+		}
+		
+		BufferedOutputStream bos = null;
+        java.io.FileOutputStream fos = null;
+		try {
+			byte[] bytes = Base64.getDecoder().decode(strBase64);
+			
+			fos = new java.io.FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bytes);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+		}
+		
+		return file;
+	}
+	
+}

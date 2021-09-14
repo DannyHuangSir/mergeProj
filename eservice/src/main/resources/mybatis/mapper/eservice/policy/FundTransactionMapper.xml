@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.FundTransactionDao">
+
+	<resultMap id="FundTransactionMap" type="com.twfhclife.eservice.policy.model.FundTransactionVo" >
+		<result column="ID" property="id"/>
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="SADP_TR_DATE" property="sadpTrDate"/>
+		<result column="SADP_TR_CODE" property="sadpTrCode"/>
+		<result column="SADP_TR_TYPE" property="sadpTrType"/>
+		<result column="SADP_TR_UNITS" property="sadpTrUnits"/>
+		<result column="SADP_AFEXCH_AMT" property="sadpAfexchAmt"/>
+		<result column="SADP_EXCH_DATE" property="sadpExchDate"/>
+		<result column="SADP_APPLY_AMT" property="sadpApplyAmt"/>
+		<result column="SADP_TRIP_DATE" property="sadpTripDate"/>
+		<result column="SADP_SACNT_LEFBF" property="sadpSacntLefbf"/>
+		<result column="INVT_NO" property="invtNo"/>
+		<result column="INVT_NAME" property="invtName"/>
+		<result column="INVT_EXCH_CURR" property="invtExchCurr"/>
+	</resultMap>
+
+	<!-- 清單附加資訊 -->
+	<resultMap id="FundTransactionListMap" type="com.twfhclife.eservice.policy.model.FundTransactionVo" extends="FundTransactionMap">
+		<result column="NET_VALUE" property="netValue"/>
+		<result column="EXCH_RATE" property="exchRate"/>
+		<result column="TOTAL_ROW" property="totalRow"/>
+		<result column="PAGE_SIZE" property="pageSize"/>
+		<result column="PAGE_NUM" property="pageNum"/>
+		<result column="SADP_TR_NAME" property="sadpTrName"/>
+		<result column="EXCHANGE_RATE" property="exchangeRate"/>
+		<result column="FUND_VALUE" property="fundValue"/>
+	</resultMap>
+	<resultMap id="AccountValueListMap" type="com.twfhclife.eservice.policy.model.FundTransactionVo" extends="FundTransactionMap">
+		<result column="SADP_TR_NAME" property="sadpTrName"/>
+		<result column="EXCHANGE_RATE" property="exchangeRate"/>
+		<result column="FUND_VALUE" property="fundValue"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,POLICY_NO,SADP_TR_DATE,SADP_TR_CODE,SADP_TR_TYPE,SADP_TR_UNITS,SADP_AFEXCH_AMT,SADP_EXCH_DATE,SADP_APPLY_AMT,SADP_TRIP_DATE,SADP_SACNT_LEFBF,INVT_NO,INVT_NAME,INVT_EXCH_CURR
+	</sql>
+	
+	<sql id="Base_Page_Column_List">
+		POLICY_NO,SADP_TR_DATE,SADP_EXCH_DATE,SADP_TR_TYPE,SADP_TR_CODE,SADP_TR_UNITS,SADP_AFEXCH_AMT,INVT_NAME,INVT_NO,INVT_EXCH_CURR,NET_VALUE,EXCH_RATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="fundTransactionVo.id != null and fundTransactionVo.id != ''"> AND ID = #{fundTransactionVo.id} </if>
+			<if test="fundTransactionVo.policyNo != null and fundTransactionVo.policyNo != ''"> AND POLICY_NO = #{fundTransactionVo.policyNo} </if>
+			<if test="fundTransactionVo.sadpTrDate != null"> AND SADP_TR_DATE = #{fundTransactionVo.sadpTrDate} </if>
+			<if test="fundTransactionVo.sadpTrCode != null and fundTransactionVo.sadpTrCode != ''"> AND SADP_TR_CODE = #{fundTransactionVo.sadpTrCode} </if>
+			<if test="fundTransactionVo.sadpTrType != null and fundTransactionVo.sadpTrType != ''"> AND SADP_TR_TYPE = #{fundTransactionVo.sadpTrType} </if>
+			<if test="fundTransactionVo.sadpTrUnits != null"> AND SADP_TR_UNITS = #{fundTransactionVo.sadpTrUnits} </if>
+			<if test="fundTransactionVo.sadpAfexchAmt != null"> AND SADP_AFEXCH_AMT = #{fundTransactionVo.sadpAfexchAmt} </if>
+			<if test="fundTransactionVo.sadpExchDate != null"> AND SADP_EXCH_DATE = #{fundTransactionVo.sadpExchDate} </if>
+			<if test="fundTransactionVo.invtNo != null and fundTransactionVo.invtNo != ''"> AND INVT_NO = #{fundTransactionVo.invtNo} </if>
+			<if test="fundTransactionVo.invtName != null and fundTransactionVo.invtName != ''"> AND INVT_NAME = #{fundTransactionVo.invtName} </if>
+			<if test="fundTransactionVo.invtExchCurr != null and fundTransactionVo.invtExchCurr != ''"> AND INVT_EXCH_CURR = #{fundTransactionVo.invtExchCurr} </if>
+		</where>
+	</sql>
+	
+	<!-- include sql: 交易歷史記錄查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			ROW_NUMBER() OVER (ORDER BY SADP_TR_DATE) AS ROW_NUM
+			,POLICY_NO
+			,SADP_TR_DATE
+			,SADP_EXCH_DATE
+			,SADP_TR_TYPE
+			,case when SADP_TR_CODE in ('INV102','INV103') then 'INV101' else 'INV101' end AS SADP_TR_CODE  
+			<!-- 處理INV101,INV102,INV103, 這些代碼名稱相同(首期投入), 代碼檔(INV102、INV103)以INV101代表 -->
+			,(
+				CASE
+					WHEN SUBSTRING(INVT_NO, 1, 2) = 'RT' THEN SADP_AFEXCH_AMT
+					ELSE SADP_TR_UNITS
+				END
+			) AS SADP_TR_UNITS
+			,SADP_AFEXCH_AMT
+			,INVT_NAME
+			,INVT_NO
+			,INVT_EXCH_CURR
+			<!-- 若為RT沒有淨值，須給1去計算合計 -->
+			<!-- TR_CODE != INV201 date=TR_DATE -->
+			<!-- TR_CODE == INV201 date=EXCH_DATE -->
+			<!-- 交易原因=1, 淨值買價 -->
+			<!-- 交易原因=2, 淨值賣價 -->
+			,(
+				CASE
+					WHEN SUBSTRING(INVT_NO, 1, 2) = 'RT' THEN 1
+					ELSE 
+						case 
+							when SADP_TR_CODE = 'INV201' then (
+					                SELECT CASE WHEN SADP_TR_TYPE = '1' THEN BUY_PRICE WHEN SADP_TR_TYPE = '2' THEN SELL_PRICE END AS NET_VALUE
+					                FROM ESERVICE.DBO.FUND_VALUE
+					                WHERE convert(varchar, EFFECTIVE_DATE, 111) = convert(varchar, SADP_EXCH_DATE, 111) AND FUND_CODE = INVT_NO)
+					     	else (SELECT CASE WHEN SADP_TR_TYPE = '1' THEN BUY_PRICE WHEN SADP_TR_TYPE = '2' THEN SELL_PRICE END AS NET_VALUE
+					                FROM ESERVICE.DBO.FUND_VALUE
+					                WHERE convert(varchar, EFFECTIVE_DATE, 111) = convert(varchar, SADP_TR_DATE, 111) AND FUND_CODE = INVT_NO)
+						end
+				END
+			) AS NET_VALUE
+			<!-- 交易原因=1, 匯率賣價 -->
+			<!-- 交易原因=2, 匯率買價 -->
+			,(
+				SELECT TOP 1 
+					CASE
+						WHEN SADP_TR_TYPE = '1' THEN SELL_PRICE
+						WHEN SADP_TR_TYPE = '2' THEN BUY_PRICE
+					END AS EXCH_RATE
+				FROM
+					ESERVICE.DBO.EXCHANGE_RATE
+				WHERE
+					convert(varchar, EFFECTIVE_DATE, 111) = convert(varchar, SADP_EXCH_DATE, 111)
+					AND EXCHANGE_CODE = INVT_EXCH_CURR
+			) AS EXCH_RATE
+		FROM
+			ESERVICE.DBO.FUND_TRANSACTION
+		WHERE
+			POLICY_NO = #{policyNo}
+		<if test="trCode != null">
+			<choose>
+				<when test="trCode == 'INV101'">
+					AND SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')  <!-- 這些代碼的名稱相同, 故臺銀要求用一個代表, 避免前端頁面中文選單有重複值 -->
+				</when>
+				<otherwise>
+					AND SADP_TR_CODE = #{trCode}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="startDate != null">
+			AND convert(varchar, SADP_TR_DATE, 111) <![CDATA[>=]]> #{startDate}
+		</if>
+		<if test="endDate != null">
+			AND convert(varchar, SADP_TR_DATE, 111) <![CDATA[<=]]> #{endDate}
+		</if>
+	</sql>
+
+	<!-- 取得交易歷史記錄 -->
+	<!-- @param policyNo 保單號碼 -->	
+	<!-- @param trCode 交易類別 -->
+	<!-- @param startDate 開始時間 -->
+	<!-- @param endDate 結束時間 -->
+	<!-- @param pageNum 當前頁數 -->
+	<!-- @param pageSize 每頁幾筆 -->
+	<select id="getFundTransactionPageList" resultMap="FundTransactionListMap">
+		WITH FUND_TRANSACTION_DATE_TMP AS (
+			<include refid="INC1" />
+		)
+		SELECT
+			(SELECT MAX(ROW_NUM) FROM FUND_TRANSACTION_DATE_TMP) AS TOTAL_ROW
+			,#{pageSize} AS PAGE_SIZE
+			,#{pageNum} AS PAGE_NUM
+			,<include refid="Base_Page_Column_List" />
+		FROM
+			FUND_TRANSACTION_DATE_TMP
+		<if test="pageNum != null and pageSize != null">
+		WHERE
+			ROW_NUM <![CDATA[>=]]> ((#{pageNum} - 1) * #{pageSize}) + 1
+			AND ROW_NUM <![CDATA[<=]]> (#{pageNum} * #{pageSize})
+		</if>
+	</select>
+	
+	<!-- 交易歷史記錄-查詢 -->
+	<select id="getFundTransactionList" resultMap="FundTransactionMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.FUND_TRANSACTION
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得保單的投資標的清單 -->
+	<select id="getInvtListByPolicyNo" resultMap="FundTransactionMap">
+		SELECT
+			DISTINCT INVT_NO, INVT_NAME
+		FROM
+			ESERVICE.DBO.FUND_TRANSACTION
+		WHERE 
+			POLICY_NO = #{policyNo}
+	</select>
+	
+	<!-- 期初餘額 -->
+	<select id="getOpeningBalance" resultMap="AccountValueListMap">
+		SELECT TOP 1 
+			POLICY_NO
+			,INVT_NO
+			,INVT_NAME
+			,convert(varchar(10), #{startDate}, 120) SADP_TR_DATE
+			,NULL SADP_TR_CODE
+			,'期初餘額' SADP_TR_NAME
+			,SADP_SACNT_LEFBF SADP_TR_UNITS
+			,convert(varchar(10), #{startDate}, 120) SADP_EXCH_DATE
+			,ER.BUY_PRICE EXCHANGE_RATE
+			,ROUND(SADP_SACNT_LEFBF * ER.BUY_PRICE * FV.SELL_PRICE, 0) SADP_APPLY_AMT
+			,convert(varchar(10), #{startDate}, 120) SADP_TRIP_DATE
+			,FV.SELL_PRICE FUND_VALUE
+			,SADP_SACNT_LEFBF
+		FROM ESERVICE.DBO.FUND_TRANSACTION
+		LEFT JOIN ESERVICE.DBO.EXCHANGE_RATE ER ON convert(varchar(10), ER.EFFECTIVE_DATE, 120) = convert(varchar(10), #{startDate}, 120)
+					AND EXCHANGE_CODE = INVT_EXCH_CURR
+		LEFT JOIN ESERVICE.DBO.FUND_VALUE FV ON convert(varchar(10), FV.EFFECTIVE_DATE, 120) = convert(varchar(10), #{startDate}, 120)
+					AND FUND_CODE = #{invtNo}
+		WHERE
+			POLICY_NO = #{policyNo}
+			AND convert(varchar(10), SADP_TR_DATE, 120) > #{startDate}
+			AND INVT_NO = #{invtNo}
+		ORDER BY
+			SADP_TR_DATE
+	</select>
+	
+	<select id="getInterimBalance" resultMap="AccountValueListMap">
+		SELECT
+			POLICY_NO
+			,INVT_NO
+			,INVT_NAME
+			,SADP_TR_DATE
+			,SADP_TR_CODE
+			,PARAMETER_NAME SADP_TR_NAME
+			,SADP_TR_UNITS
+			,SADP_EXCH_DATE
+			,(	CASE
+					WHEN SADP_TR_CODE = 'INV104' THEN ER.SELL_PRICE
+					ELSE ER.BUY_PRICE
+				END
+			) EXCHANGE_RATE
+			,SADP_APPLY_AMT
+			,SADP_TRIP_DATE
+			,FV.SELL_PRICE FUND_VALUE
+			,SADP_SACNT_LEFBF
+		FROM
+			ESERVICE.DBO.FUND_TRANSACTION
+				LEFT JOIN ESERVICE_ADM.DBO.PARAMETER
+					ON PARAMETER_CATEGORY_ID = 7
+					AND SADP_TR_CODE = PARAMETER_CODE
+				LEFT JOIN ESERVICE.DBO.EXCHANGE_RATE ER
+					ON ER.EFFECTIVE_DATE = SADP_EXCH_DATE
+					AND EXCHANGE_CODE = INVT_EXCH_CURR
+				LEFT JOIN ESERVICE.DBO.FUND_VALUE FV
+					ON FV.EFFECTIVE_DATE = SADP_TRIP_DATE
+					AND FUND_CODE = #{invtNo}
+		WHERE
+			POLICY_NO = #{policyNo}
+			AND convert(varchar(10), SADP_TR_DATE, 126) BETWEEN #{startDate} AND #{endDate}
+			AND INVT_NO = #{invtNo}
+		ORDER BY
+			SADP_TR_DATE
+	</select>
+	
+	<!-- 期末餘額 -->
+	<select id="getEndingBalance" resultMap="AccountValueListMap">
+		SELECT TOP 1 
+			POLICY_NO
+			,INVT_NO
+			,INVT_NAME
+			,convert(varchar(10), #{endDate}, 120) SADP_TR_DATE
+			,NULL SADP_TR_CODE
+			,'期末餘額' SADP_TR_NAME
+			,SADP_SACNT_LEFBF SADP_TR_UNITS
+			,NULL SADP_EXCH_DATE
+			,NULL EXCHANGE_RATE
+			,NULL SADP_APPLY_AMT
+			,NULL SADP_TRIP_DATE
+			,NULL FUND_VALUE
+			,SADP_SACNT_LEFBF
+		FROM
+			ESERVICE.DBO.FUND_TRANSACTION
+		WHERE
+			POLICY_NO = #{policyNo}
+			AND convert(varchar(10), SADP_TR_DATE, 120) > convert(varchar(10), #{endDate}, 120)
+			AND INVT_NO = #{invtNo}
+		ORDER BY
+			SADP_TR_DATE
+	</select>
+
+
+</mapper>

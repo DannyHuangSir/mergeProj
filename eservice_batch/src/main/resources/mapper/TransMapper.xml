@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransMapper">
+
+	<resultMap id="TransMap" type="com.twfhclife.eservice_batch.model.TransVo" >
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="TRANS_DATE" property="transDate"/>
+		<result column="TRANS_TYPE" property="transType"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="STATUS" property="status"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		TRANS_NUM,TRANS_DATE,TRANS_TYPE,USER_ID,STATUS,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transVo.transNum != null and transVo.transNum != ''"> AND TRANS_NUM = #{transVo.transNum} </if>
+			<if test="transVo.transDate != null"> AND TRANS_DATE = #{transVo.transDate} </if>
+			<if test="transVo.transType != null and transVo.transType != ''"> AND TRANS_TYPE = #{transVo.transType} </if>
+			<if test="transVo.userId != null and transVo.userId != ''"> AND USER_ID = #{transVo.userId} </if>
+			<if test="transVo.status != null and transVo.status != ''"> AND STATUS = #{transVo.status} </if>
+			<if test="transVo.createUser != null and transVo.createUser != ''"> AND CREATE_USER = #{transVo.createUser} </if>
+			<if test="transVo.createDate != null"> AND CREATE_DATE = #{transVo.createDate} </if>
+			<if test="transVo.updateUser != null and transVo.updateUser != ''"> AND UPDATE_USER = #{transVo.updateUser} </if>
+			<if test="transVo.updateDate != null"> AND UPDATE_DATE = #{transVo.updateDate} </if>
+		</where>
+	</sql>
+
+	<select id="findById" resultMap="TransMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS
+		WHERE 
+			TRANS_NUM = #{transVo.transNum}
+	</select>
+
+	<select id="getTransList" resultMap="TransMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS
+		<include refid="whereClause" />
+	</select>
+	
+	<update id="updateTrans">
+		UPDATE
+			ESERVICE.DBO.TRANS
+		<set>
+			<if test="transVo.status != null"> STATUS = #{transVo.status}, </if>
+			<if test="transVo.updateUser != null"> UPDATE_USER = #{transVo.updateUser}, </if>
+			<if test="transVo.updateDate != null"> UPDATE_DATE = #{transVo.updateDate}, </if>
+		</set>
+		WHERE
+			TRANS_NUM = #{transVo.transNum}
+	</update>
+	
+	<update id="updateTransMerge">
+		UPDATE
+			ESERVICE.DBO.TRANS
+		<set>
+			<if test="transVo.status != null"> STATUS = #{transVo.status}, </if>
+			<if test="transVo.updateUser != null"> UPDATE_USER = #{transVo.updateUser}, </if>
+			<if test="transVo.updateDate != null"> UPDATE_DATE = #{transVo.updateDate}, </if>
+		</set>
+		WHERE
+			TRANS_NUM IN (SELECT TRANS_NUM FROM ESERVICE.DBO.TRANS_MERGE WHERE TRANS_NUM_MERGE = #{transVo.transNum})
+	</update>
+
+	<insert id="addTransStatusHistory" parameterType="com.twfhclife.eservice_batch.model.TransStatusHistoryVo">
+		INSERT INTO
+		ESERVICE.DBO.TRANS_STATUS_HISTORY
+		(TS_ID,TRANS_NUM,CUSTOMERNAME,USER_IDENTITY,STATUS,REJECT_REASON,CONTENT)
+		VALUES
+		(   (NEXT VALUE FOR ESERVICE.DBO.TRANS_STATUS_HISTORY_SEQ),
+		#{transStatusHistoryVo.transNum,  jdbcType=VARCHAR},
+		#{transStatusHistoryVo.customerName, jdbcType=VARCHAR},
+		#{transStatusHistoryVo.userIdentity, jdbcType=VARCHAR},
+		#{transStatusHistoryVo.status, jdbcType=VARCHAR},
+		#{transStatusHistoryVo.rejectReason, jdbcType=VARCHAR},
+		#{transStatusHistoryVo.content, jdbcType=VARCHAR}
+		)
+	</insert>
+
+
+</mapper>

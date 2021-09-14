@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>jquery sample</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<script th:src="@{/js/jquery-3.1.0.min.js}"></script>
+<script th:src="@{/js/angular.min.js}"></script>
+<script type="text/javascript">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+
+		$("#btnUploadSubmit").click(function(event) {
+			//stop submit the form, we will post it manually.
+			event.preventDefault();
+			uploadSubmit();
+		});
+		
+		
+		$("#btnDownloadSubmit").click(function(event) {
+			downloadCsvFile();
+		});
+		
+
+	});
+
+	function getRole() {
+		console.log("getRole by js");
+		var data = {
+			name : $('#roleName').val()
+		};
+		postJson("/eservice_adm/autho/getRole", data);
+	}
+
+	function postJson(url, data) {
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : url,
+			data : JSON.stringify(data),
+			success : function(response) {
+				console.log(response);
+				$("#responseBody").html(JSON.stringify(response.resultData));
+			},
+			error : function() {
+				alert('error!')
+			}
+		});
+	}
+
+	function uploadSubmit() {
+		// Get form
+		var form = $('#fileUploadForm')[0];
+		var data = new FormData(form);
+		data.append("CustomField", "This is some extra data, testing");
+		$("#btnUploadSubmit").prop("disabled", true);
+		$.ajax({
+			type : "POST",
+			enctype : 'multipart/form-data',
+			url : "/eservice_adm/fileuploaddemo",
+			data : data,
+			processData : false, //prevent jQuery from automatically transforming the data into a query string
+			contentType : false,
+			cache : false,
+			timeout : 600000,
+			success : function(data) {
+				$("#uploadResult").text(data);
+				console.log("SUCCESS : ", data);
+				$("#btnUploadSubmit").prop("disabled", false);
+
+			},
+			error : function(e) {
+
+				$("#uploadResult").text(e.responseText);
+				console.log("ERROR : ", e);
+				$("#btnSubmit").prop("disabled", false);
+
+			}
+		});
+
+	}
+
+	function downloadCsvFile() {
+		window.location.href = "/eservice_adm/downloadCSV?param=123";
+
+	}
+	/*]]>*/
+</script>
+<script type="text/javascript">
+	var app = angular.module('app', []);
+	app.controller('RoleController', function($rootScope, $scope, $http) {
+
+		$scope.getRole = function() {
+			console.log("getRole by angularjs");
+			var data = {
+				name : $('#roleName').val()
+			};
+			$scope.postJson("/eservice_adm/autho/getRole", data);
+		}
+
+		$scope.postJson = function(url, data) {
+			$http({
+				url : url,
+				method : 'POST',
+				data : data
+			}).then(function(response) {
+				// this callback will be called asynchronously
+				// when the response is available
+				$scope.status = response.status;
+				$scope.data = response.data;
+				$scope.responseBody = response;
+				console.log("response=", response);
+				$scope.ng_response = JSON.stringify(response.data.resultData);
+			}, function(response) {
+				// called asynchronously if an error occurs
+				// or server returns response with an error status.
+				$scope.data = response.data || 'Request failed';
+				$scope.status = response.status;
+				$scope.responseBody = $scope.data;
+			});
+		}
+	});
+</script>
+</head>
+<body ng-app="app" ng-controller="RoleController">
+	Demo Page
+	<br />
+	<br /> role name:
+	<input id="roleName" value="admin" />
+	<br />
+	<br /> 腳色查詢範例
+	<input value="jquery查詢" type="button" onclick="getRole()" />
+	<br />
+	<br />
+	<input value="angularjs查詢" type="button" ng-click="getRole()" />
+	<div id="responseBody"></div>
+	<div id="ng-responseBody">{{ng_response}}</div>
+	<br />
+	<br /> 檔案上傳範例:
+	<form id="fileUploadForm" method="POST" enctype="multipart/form-data">
+		<label for="file">File</label> <input id="file" type="file" name="file" />
+		<button type="submit" id="btnUploadSubmit">Upload</button>
+	</form>
+	<br />
+	<pre>
+	    <span id="uploadResult"></span>
+	</pre>
+	CSV檔案匯出範例:
+	<p>
+		<button type="button" id="btnDownloadSubmit">Export File</button>
+	</p>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='loginRecord')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-search-plus" aria-hidden="true"></i>
+								<a href="#">報表查詢</a>
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								報表查詢
+								<small>
+									<i class="my-icon fa fa-angle-double-right"></i>
+									登入記錄查詢
+								</small>
+							</h1>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<h3 class="header smaller lighter blue">查詢結果</h3>
+								<div class="clearfix">
+									<div class="pull-right tableTools-container"></div>
+								</div>
+								<div class="table-header">
+									<span id="showMsg"></span>
+								</div>
+								<div id="showDetail" hidden="true">
+									<table id="grid" class="table table-striped table-bordered table-hover">
+										<thead>
+											<tr>
+												<th>使用者帳號</th>
+												<th>來源IP</th>
+												<th class="hidden-480">登入狀態</th>
+												<th>
+													<i class="my-icon fa fa-clock-o bigger-110 hidden-480"></i>
+													登入時間/登出時間
+												</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script	th:src="@{/js/jquery.dataTables.min.js}"></script>
+		<script	th:src="@{/js/jquery.dataTables.bootstrap.min.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var grid;
+		$(function() {
+			// 建立grid
+			grid = new datatableUtil();
+			grid.sGridId= '#grid';
+			grid.sQueryUrl = /*[[@{/loginRecord/getLoginRecordDetail}]]*/;
+			grid.aoColumns = [
+				{
+					data: 'USERNAME'
+				},
+				{
+					data: 'CLIENT_IP'
+				},
+				{
+					data: 'LOGIN_STATUS'
+				},
+				{
+					render: function(data, type, row, meta) {
+						var loginTimeRecord = row.LOGIN_DATE;
+						if (row.LOGOUT_DATE != null) {
+							loginTimeRecord += (' - ' + row.LOGOUT_DATE);
+						}
+						return loginTimeRecord;
+					}
+				}
+			];
+			
+			grid.setPostData('userName', /*[[${param.userName} != null ? ${param.userName[0]}]]*/);
+			grid.setPostData('loginStatus', /*[[${param.loginStatus} != null ? ${param.loginStatus[0]}]]*/);
+			grid.setPostData('clientIp', /*[[${param.loginIp} != null ? ${param.loginIp[0]}]]*/);
+			grid.setPostData('startDate', /*[[${param.startDate} != null ? ${param.startDate[0]}]]*/);
+			grid.setPostData('endDate', /*[[${param.endDate} != null ? ${param.endDate[0]}]]*/);
+			grid.create();
+		});
+		/*]]>*/
+		</script>
+	</body>
+</html>

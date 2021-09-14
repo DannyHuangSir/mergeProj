@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+<!-- 		<th:block th:replace="fragments/navbar"/> -->
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+<!-- 			<div th:replace="fragments/sidebar :: sidebar (funId='parameterSearch')"></div> -->
+			<div class="main-content">
+				<div class="main-content-inner">
+<!-- 					<div class="breadcrumbs my-save-state" id="breadcrumbs"> -->
+<!-- 						<ul class="breadcrumb"> -->
+<!-- 							<li> -->
+<!-- 								<i class="fa fa-pencil-square-o" aria-hidden="true"></i> -->
+<!-- 								參數管理 -->
+<!-- 								<i class="my-icon fa fa-angle-double-right"></i> -->
+<!-- 								參數維護 -->
+<!-- 								<i class="my-icon fa fa-angle-double-right"></i> -->
+<!-- 								修改參數 -->
+<!-- 							</li> -->
+<!-- 						</ul> -->
+<!-- 					</div> -->
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">修改參數</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">系統別</label>
+														<div class="col-sm-10" id="leave">
+															<label id="systemName"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">參數類型代碼</label>
+														<div class="col-sm-10" id="leave">
+															<label id="categoryCode"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">參數類型名稱</label>
+														<div class="col-sm-10" id="leave">
+															<label id="categoryName"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">參數代碼</label>
+														<div class="col-sm-10" id="leave">
+															<label id="parameterCode"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">參數名稱</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="parameterName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">參數值</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="parameterValue" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">排列順序</label>
+														<div class="col-sm-10" id="leave">
+															<input type="number" id="sort" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">備註</label>
+														<div class="col-sm-10" id="leave">
+															<input type="text" id="remark" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">狀態</label>
+														<div class="col-sm-8">
+															<input id="radioStatus1" name="radioStatus" type="radio" class="my" value="1"/>
+															<span class="lbl"> 啟用</span>
+															&nbsp; &nbsp;
+															<input id="radioStatus0" name="radioStatus" type="radio" class="my" value="0"/>
+															<span class="lbl"> 停用</span>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">是否加密</label>
+														<div class="col-sm-8">
+															<input id="radioEncryptY" name="radioEncrypt" type="radio" class="my" value="Y"/>
+															<span class="lbl"> 是</span>
+															&nbsp; &nbsp;
+															<input id="radioEncryptN" name="radioEncrypt" type="radio" class="my" value="N"/>
+															<span class="lbl"> 否</span>
+														</div>
+													</fieldset>
+													<div class="form-actions center">
+													<button type="button" id="id-btn-dialog1" class="btn btn-success" onclick="updateData()">
+														<i class="ace-icon fa fa-check" aria-hidden="true"></i>
+														更新 
+													</button>
+													<button class="btn" type="reset" onclick="location.reload()">
+														<i class="my-icon fa fa-undo bigger-110"></i>
+														重新輸入
+													</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<!-- 			<div th:replace="fragments/footer"></div> -->
+<!-- 			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> -->
+<!-- 				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i> -->
+<!-- 			</a> -->
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			var formData = {};
+			formData.parameterId = /*[[${param.parameterId} != null ? ${param.parameterId[0]}]]*/;
+			eserviceForm.post(/*[[@{/parameter/getParameterById}]]*/, formData, function(response) {
+				var data = response.resultData;
+				$("#systemName").text(data.sysName);
+				$("#categoryCode").text(data.categoryCode);
+				$("#categoryName").text(data.categoryName);
+				$("#parameterCode").text(data.parameterCode);
+				$("#parameterName").val(data.parameterName);
+				$("#parameterValue").val(data.parameterValue);
+				$("#sort").val(data.sortNo);
+				$("#remark").val(data.remark);
+				$("#radioStatus" + data.status).get(0).checked = true;
+				$("#radioEncrypt" + data.encryptType).get(0).checked = true;
+			});
+			
+			eserviceAdmEvent.initChosenSelect();
+		});
+		
+		function updateData() {
+			if ($('#parameterName').val() == '') {
+				alertMsg("請輸入參數名稱");
+				return false;
+			}
+			
+			if ($('#parameterValue').val() == '') {
+				alertMsg("請輸入參數值");
+				return false;
+			}
+			
+			var formData = {
+				parameterId: /*[[${param.parameterId} != null ? ${param.parameterId[0]}]]*/,
+				parameterName : $('#parameterName').val().trim(),
+				parameterValue : $('#parameterValue').val().trim(),
+				sortNo : $('#sort').val(),
+				remark : $('#remark').val().trim(),
+				status : $('input:radio[name="radioStatus"]:checked').val(),
+				encryptType : $('input:radio[name="radioEncrypt"]:checked').val()
+			};
+			eserviceForm.post(/*[[@{/parameter/updateParameter}]]*/, formData, function(response) {
+				alertMsg("更新成功");
+			});
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

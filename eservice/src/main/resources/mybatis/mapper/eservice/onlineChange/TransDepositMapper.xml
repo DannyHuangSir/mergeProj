@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransDepositDao" >
+  <resultMap id="BaseResultMap" type="com.twfhclife.eservice.onlineChange.model.TransDepositVo" >
+    <id column="ID" property="id" jdbcType="NUMERIC" />
+    <result column="TRANS_NUM" property="transNum" jdbcType="VARCHAR" />
+    <result column="POLICY_NO" property="policyNo" jdbcType="VARCHAR" />
+    <result column="INVT_NO" property="invtNo" jdbcType="NVARCHAR" />
+    <result column="AMOUNT" property="amount" jdbcType="NUMERIC" />
+    <result column="RATIO" property="ratio" jdbcType="NUMERIC" />
+    <result column="DEPOSIT_METHOD" property="depositMethod" jdbcType="VARCHAR" />
+    <result column="PAYMENT_METHOD" property="paymentMethod" jdbcType="VARCHAR" />
+    <result column="SWIFT_CODE" property="swiftCode" jdbcType="VARCHAR" />
+    <result column="ENGLISH_NAME" property="englishName" jdbcType="VARCHAR" />
+    <result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+    <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+    <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR" />
+    <result column="BRANCH_NAME" property="branchName" jdbcType="VARCHAR" />
+    <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+    <result column="BANK_ACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
+    <result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TRANS_NUM, POLICY_NO, INVT_NO, AMOUNT, RATIO, DEPOSIT_METHOD, PAYMENT_METHOD, SWIFT_CODE, ENGLISH_NAME,
+    BANK_CODE, BRANCH_CODE, ACCOUNT_NAME, BANK_ACCOUNT, ZIP_CODE, ADDRESS, BANK_NAME, BRANCH_NAME, CURRENCY
+  </sql>
+  <insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransDepositVo" >
+    insert into ESERVICE.DBO.TRANS_DEPOSIT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="transNum != null" >
+        TRANS_NUM,
+      </if>
+      <if test="invtNo != null" >
+        INVT_NO,
+      </if>
+      <if test="policyNo != null" >
+        POLICY_NO,
+      </if>
+      <if test="amount != null" >
+        AMOUNT,
+      </if>
+      <if test="ratio != null" >
+        RATIO,
+      </if>
+      <if test="depositMethod != null" >
+        DEPOSIT_METHOD,
+      </if>
+      <if test="paymentMethod != null" >
+        PAYMENT_METHOD,
+      </if>
+      <if test="swiftCode != null" >
+        SWIFT_CODE,
+      </if>
+      <if test="englishName != null" >
+        ENGLISH_NAME,
+      </if>
+      <if test="bankCode != null" >
+        BANK_CODE,
+      </if>
+      <if test="branchCode != null" >
+        BRANCH_CODE,
+      </if>
+      <if test="bankName != null" >
+        BANK_NAME,
+      </if>
+      <if test="branchCode != null" >
+        BRANCH_NAME,
+      </if>
+      <if test="accountName != null" >
+        ACCOUNT_NAME,
+      </if>
+      <if test="bankAccount != null" >
+        BANK_ACCOUNT,
+      </if>
+      <if test="zipCode != null" >
+        ZIP_CODE,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="currency != null" >
+        CURRENCY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="transNum != null" >
+        #{transNum,jdbcType=VARCHAR},
+      </if>
+      <if test="invtNo != null" >
+        #{invtNo,jdbcType=VARCHAR},
+      </if><if test="policyNo != null" >
+        #{policyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=NUMERIC},
+      </if>
+      <if test="ratio != null" >
+        #{ratio,jdbcType=NUMERIC},
+      </if>
+      <if test="depositMethod != null" >
+        #{depositMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentMethod != null" >
+        #{paymentMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="swiftCode != null" >
+        #{swiftCode,jdbcType=VARCHAR},
+      </if>
+      <if test="englishName != null" >
+        #{englishName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="branchCode != null" >
+        #{branchCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="branchName != null" >
+        #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null" >
+        #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <resultMap id="transDepositMap" type="com.twfhclife.eservice.onlineChange.model.TransDepositDetailVo">
+    <result column="POLICY_NO" property="policyNo" jdbcType="VARCHAR" />
+    <result column="DEPOSIT_METHOD" property="depositMethod" jdbcType="VARCHAR" />
+    <result column="PAYMENT_METHOD" property="paymentMethod" jdbcType="VARCHAR" />
+    <result column="SWIFT_CODE" property="swiftCode" jdbcType="VARCHAR" />
+    <result column="ENGLISH_NAME" property="englishName" jdbcType="VARCHAR" />
+    <result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+    <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+    <result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR" />
+    <result column="BRANCH_NAME" property="branchName" jdbcType="VARCHAR" />
+    <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+    <result column="BANK_ACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
+    <result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <collection property="details" resultMap="detailMap"/>
+  </resultMap>
+
+  <resultMap id="detailMap" type="map">
+    <result column="INVT_NO" property="invtNo" jdbcType="NVARCHAR" />
+    <result column="AMOUNT" property="amount" jdbcType="NUMERIC" />
+    <result column="RATIO" property="ratio" jdbcType="NUMERIC" />
+    <result column="INVT_NAME" property="invtName" jdbcType="NVARCHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="NVARCHAR" />
+  </resultMap>
+
+  <select id="getAppliedTransDeposits" resultMap="transDepositMap">
+    SELECT A.POLICY_NO, A.INVT_NO, A.AMOUNT
+          , A.RATIO, A.DEPOSIT_METHOD, A.PAYMENT_METHOD, A.SWIFT_CODE
+          , A.ENGLISH_NAME, A.BANK_CODE, A.BRANCH_CODE
+          , A.ACCOUNT_NAME, A.BANK_ACCOUNT, A.ZIP_CODE, A.ADDRESS, A.BANK_NAME, A.BRANCH_NAME, A.CURRENCY
+          , B.FUND_NAME INVT_NAME
+      FROM ESERVICE.DBO.TRANS_DEPOSIT A LEFT JOIN ESERVICE.DBO.FUND B ON A.INVT_NO = B.FUND_CODE WHERE A.TRANS_NUM = #{transNum}
+  </select>
+</mapper>

@@ -1,0 +1,208 @@
+
+
+<th:block th:each="dtl,dtlStat : ${detailData['dtl']}">
+	<th:block th:if="${dtlStat.index == 0}">
+		<tr class="detail-row even open" role="row">
+			<td colspan="8">
+				<div class="table-detail">
+					<div class="row">
+						<div class="col-xs-12 col-sm-11">
+							<div class="space visible-xs"></div>
+							<div class="profile-user-info profile-user-info-striped">
+								<th:block th:if="${dtl['FROM_COMPANY_ID'] == 'L01'}">
+								<div class="profile-info-row">
+                                    <div class="profile-info-name"> 是否已開啟傳送公會聯盟鏈 </div>
+                                    <div class="profile-info-value">
+										<span class="tg-list-item">
+											<input class="checkboxY checkboxY-light"  type="checkbox">
+											<label class="checkboxY-btn"  th:data-tg-on="${dtl['SEND_ALLIANCE']=='Y'?'ON':'OFF'}" ></label>
+										</span>
+                                    </div>
+                                </div>
+								</th:block>
+								<th:block th:if="${dtl['FROM_COMPANY_ID'] == 'L01' && detailData['STATUS_TYPE'] == '5'}">
+									<!--<div class="profile-info-row">
+										<div class="profile-info-name"> 是否開始處理 </div>
+										<div class="profile-info-value">
+											<span class='tg-list-item'>
+												<input class='checkboxY checkboxY-light' id='contact_info_cb7' type='checkbox' th:onclick="'javascript:contactChange();'">
+												<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='contact_info_cb7'></label>
+											</span>
+										</div>
+									</div>-->
+									<!--目前先进行注释掉，后期版本解开-->
+									<!--<div class="profile-info-row">
+										<div class="profile-info-name"> 執行審核 </div>
+										<div class="profile-info-value">
+											<button style="width: 90px;" type="button" disabled id="contactFail"  th:onclick="'javascript:submitContactInfoFail(\'' + ${detailData['TRANS_NUM']} + '\');'">失败</button>
+											<button type="button" disabled id="contactComplete" th:onclick="'javascript:onContactInfoAudit(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">已完成</button>
+										</div>
+									</div>-->
+								</th:block>
+
+								<div class="profile-info-row">
+									<div class="profile-info-name"> 查詢歷程資料 </div>
+									<div class="profile-info-value">
+										<button type="button" class="bgOrange" th:onclick="'javascript:onStatus(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'\');'">狀態歷程</button>
+
+										<button type="button" class="bgOrange" th:onclick="'javascript:onAlliance(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CASE_ID']} + '\',\'' + ${detailData['FROM_COMPANY_ID']} + '\',\'\');'">聯盟鏈歷程</button>
+
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-default profile-user-info">
+								<div class="panel-heading">※ 申請資料</div>
+								<div class="panel-body clear1" id="poliyClaimsDetail">
+
+									<div class="mycigna3">
+										<div class="col-md-12 detailPolicy">
+											<div class="form-horizontal">
+												<div class="form-group">
+													<div class="col-sm-3"> 保單： </div>
+													<div class="col-sm-8"><th:block th:text="${detailData['SHOW_POLICY_NO']}"/></div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3"> 案件編號： </div>
+													<div class="col-sm-8"><th:block th:text="${dtl['CASE_ID']}"/></div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3"> 要保人ID： </div>
+													<div class="col-sm-8">
+														<th:block th:text="${dtl['LIPM_ID']}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3"> 要保人姓名： </div>
+													<div class="col-sm-8">
+														<th:block th:text="${dtl['NAME']}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3"> 住家電話： </div>
+													<div class="col-sm-8">
+														<th:block th:text="${dtl['TEL_HOME']}"/>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="col-sm-3">
+														<label for="" clasee="col-sm-3">公司電話：</label>
+													</div>
+													<div class="col-sm-8">
+														<th:block th:text="${dtl['TEL_OFFICE']}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3">
+														<label for="" clasee="col-sm-3">行動電話：</label>
+													</div>
+													<div class="col-sm-8"><span style="opacity: 0.6;">
+
+												<th:block th:text="${dtl['MOBILE']}"/>
+											</span>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3">
+														<label for="" clasee="col-sm-3">電子信箱：</label>
+													</div>
+													<div class="col-sm-8">
+														<span style="opacity: 0.6;">
+															<th:block th:text="${dtl['EMAIL']}"/>
+														</span>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3" style="padding-right: 20px;">
+														<label for="" clasee="col-sm-3">要保人住所(戶籍)地址：</label>
+													</div>
+													<div class="col-sm-8">
+														<th:block th:text="${dtl['ADDRESS_FULL']}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3" style="padding-right: 10px;">
+														<label for="" clasee="col-sm-3">收費(通訊)地址：</label>
+													</div>
+													<div class="col-sm-8">
+													<span style="opacity: 0.6;">
+														<th:block th:text="${dtl['ADDRESS_FULL_CHARGE']}"/>
+													</span>
+													</div>
+												</div>
+
+												<div class="panel-group" style="border-top: 1px solid #DDDDDD;padding: 20px;width: 70%;margin: 0 15%; color: #009b30;">
+													<i class=""></i>^ 壽險公會保全聯盟鏈授權專區
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3">
+														<label for="" clasee="col-sm-3">保全聯盟説明：</label>
+													</div>
+													<div class="col-sm-8" th:inline="text">
+														[[${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_SECURITY_003'] != null} ?
+														${session.PAGE_WORDING.WORDING_SECURITY_003.parameterValue} :
+														'即日起，使用本公司線上保全申請服務時，可一併授權本公司將您的申請資料，透過「中華民國人壽保險同業工會」
+														建制「保險區塊鏈聯盟科技通用共享平臺」傳送予您有投保之保險公司（該保險公司需有參與聯盟鏈），免除以往需向不同
+														公司分別提出保全申請之不便。']]</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3" style="padding-right: 20px;">
+														<label for="" clasee="col-sm-3">是否傳送其他保險公司：</label>
+													</div>
+													<div class="col-sm-8">
+														<th:block th:if="${dtl['SEND_ALLIANCE'] eq 'Y'}">同意</th:block>
+														<th:block th:if="${dtl['SEND_ALLIANCE'] eq 'N'}">不同意</th:block>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-3">
+														<label for="" clasee="col-sm-3">授權傳送公司：</label>
+													</div>
+													<th:block th:if="${session.SEND_COMPANY_ITEMS != null}">
+														<div class="col-sm-8">
+															<th:block th:each="from : ${#strings.arraySplit(dtl['TO_COMPANY_ID'], ',')}">
+																<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
+																	<th:block th:if="${from eq vo.value.parameterValue}">
+																		<th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+																	</th:block>
+																</th:block>
+															</th:block>
+														</div>
+													</th:block>
+												</div>
+
+
+											</div>
+										</div>
+
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+						<div class="col-xs-12 col-sm-1">
+							<th:block th:if="${detailData['STATUS_TYPE']} == '0'">
+								<button
+										class="pull-right btn btn-sm btn-primary btn-white btn-round"
+										type="button" th:onclick="'javascript:review(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+									已審核<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+								</button>
+								<br/>
+								<br/>
+								<button
+										class="pull-right btn btn-sm btn-primary btn-white btn-round"
+										type="button" th:onclick="'javascript:resend(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+									待補件<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+								</button>
+							</th:block>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</th:block>
+</th:block>
+
+
+

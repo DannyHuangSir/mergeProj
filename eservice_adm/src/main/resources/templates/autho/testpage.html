@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Test</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+
+<link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}" />
+<style type="text/css">
+.pw_prompt {
+    position:fixed;
+    left: 50%;
+    top:50%;
+    margin-left:-100px;
+    padding:15px;
+    width:200px;
+    border:1px solid black;
+}
+.pw_prompt label {
+    display:block; 
+    margin-bottom:5px;
+}
+.pw_prompt input {
+    margin-bottom:10px;
+}
+</style>
+<script th:src="@{/js/jquery-3.1.0.min.js}"></script>
+<script th:src="@{/plugin/loading-modal/loading-modal.js}"></script>
+<script type="text/javascript">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+		//var entry = prompt("input pwd:", "")
+		//unlockme(entry);
+		pw_prompt({
+		    lm:"Please enter password:", 
+		    callback: function(password) {
+		    	unlockme(password);
+		    }
+		});
+	});
+	function unlockme(data) {
+		popupLoading();
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : "/eservice_adm/test/unlockss",
+			data : data,
+			success : function(response) {
+				removeLoading();
+				if(response.result == "SUCCESS") {
+					//console.log("unlock success!");
+					$("#test_area").show();
+					$("#testform").hide();
+				} else {
+					console.log("unlock fail!");
+					alert("unlock fail!");
+					$("#test_area").html("");
+					history.go(-1);
+				}
+				
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				$("#test_area").html("");
+				removeLoading();
+				//console.log(textStatus +":"+ errorThrown, jqXHR)
+				alert('unlock fail!!');
+			}
+		});
+	}
+	
+	function getResult() {
+		popupLoading();
+		var data = $('#ss').val();
+		postJson("/eservice_adm/test/getResult", data);
+	}
+	
+	function getAdmResult() {
+		popupLoading();
+		var data = $('#admss').val();
+		postJson("/eservice_adm/test/getAdmResult", data);
+	}
+	
+	function postJson(url, data) {
+		console.log("post url="+url+", data=" + data);
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : url,
+			data : data,
+			success : function(response) {
+				removeLoading();
+				console.log("Query success");
+				//console.log(response);
+				//$("#responseBody").html("<pre><code>"+JSON.stringify(response.resultData, null, 3)+"</code></pre>");
+				$("#res").val(JSON.stringify(response.resultData, null, 3));
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				removeLoading();
+				console.log(textStatus +":"+ errorThrown, jqXHR)
+				alert('error!');
+			}
+		});
+	}
+	
+	function runShell() {
+		popupLoading();
+		var data = $('#sh').val();
+		postJson("/eservice_adm/test/runshell", data);
+	}
+
+	var promptCount = 0;
+	window.pw_prompt = function(options) {
+	    var lm = options.lm || "Password:",
+	        bm = options.bm || "Submit";
+	    if(!options.callback) { 
+	        alert("No callback function provided! Please provide one.") 
+	    };           
+	    var prompt = document.createElement("div");
+	    prompt.className = "pw_prompt";
+	    var submit = function() {
+	        options.callback(input.value);
+	        document.body.removeChild(prompt);
+	    };
+	    var label = document.createElement("label");
+	    label.textContent = lm;
+	    label.for = "pw_prompt_input" + (++promptCount);
+	    prompt.appendChild(label);
+	    var input = document.createElement("input");
+	    input.id = "pw_prompt_input" + (promptCount);
+	    input.type = "password";
+	    input.addEventListener("keyup", function(e) {
+	        if (e.keyCode == 13) submit();
+	    }, false);
+	    prompt.appendChild(input);
+	    var button = document.createElement("button");
+	    button.textContent = bm;
+	    button.addEventListener("click", submit, false);
+	    prompt.appendChild(button);
+	    document.body.appendChild(prompt);
+	};
+
+	
+	/*]]>*/
+</script>
+
+</head>
+<body>
+	<div id="getback">
+	<font size="4">Test Page</font> &nbsp&nbsp&nbsp&nbsp<a id="backinx" href="/eservice_adm/index">← back</a><br/><br/>
+	</div>
+	<div id="testform" style="display: none;"><input id="upw"/><input type="hidden" id="pw" value="1234" name="pw"/><input value="unlock" type="button" onclick="unlockme()"/></div>
+	<div id="test_area" style="display: none;">
+		SQL:<br />
+		<textarea type="textarea" id="ss" cols="120" rows="5" placeholder="請輸入..."></textarea>
+		<br />
+		<input value="query" type="button" onclick="getResult()" />
+		<br /><br />
+		Result:<br />
+		<textarea type="textarea" id="res" cols="120" rows="23"></textarea>
+		<!-- <div id="responseBody"></div> -->
+		<div class="loading-modal"></div>
+		<br/>
+		<br/>
+		<a href="/eservice_adm/test/logs?sys=es&xx=oxHpuv5fmB6uWIQAlqhPOw==" target="_BLANK">checkeslog</a>||
+		<a href="/eservice_adm/test/logs?sys=adm&xx=oxHpuv5fmB6uWIQAlqhPOw==" target="_BLANK">checkadmlog</a>
+		<br/><br/>
+		<!-- SH:<br />
+		<textarea type="textarea" id="sh" cols="120" rows="3" placeholder="請輸入..."></textarea>
+		<br />
+		<input value="sh" type="button" onclick="runShell()" />
+		<br /><br />
+		Result:<br />
+		<textarea type="textarea" id="resh" cols="120" rows="20"></textarea>-->
+		
+		ADM SQL:<br />
+		<textarea type="textarea" id="admss" cols="120" rows="4" placeholder="請輸入..."></textarea>
+		<br />
+		<input value="query" type="button" onclick="getAdmResult()" />
+		<br /><br />
+
+	</div>
+
+</body>
+
+</html>

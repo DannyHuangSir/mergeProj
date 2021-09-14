@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransChangeAccountMapper">
+
+	<resultMap id="TransChangeAccountMap" type="com.twfhclife.eservice_batch.model.TransChangeAccountVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="CHANGE_TYPE" property="changeType"/>
+		<result column="ACCT_TYPE" property="acctType"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,CHANGE_TYPE,ACCT_TYPE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transChangeAccountVo.id != null"> AND ID = #{transChangeAccountVo.id} </if>
+			<if test="transChangeAccountVo.transNum != null and transChangeAccountVo.transNum != ''"> AND TRANS_NUM = #{transChangeAccountVo.transNum} </if>
+			<if test="transChangeAccountVo.changeType != null and transChangeAccountVo.changeType != ''"> AND CHANGE_TYPE = #{transChangeAccountVo.changeType} </if>
+			<if test="transChangeAccountVo.acctType != null and transChangeAccountVo.acctType != ''"> AND ACCT_TYPE = #{transChangeAccountVo.acctType} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transChangeAccountVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransChangeAccountList" resultMap="TransChangeAccountMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			TRANS_CHANGE_ACCOUNT
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransChangeAccountMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			TRANS_CHANGE_ACCOUNT
+		<include refid="wherePkClause" />
+	</select>
+	
+	<select id="findRocId" resultType="string">
+		SELECT 
+			CASE 
+				WHEN #{changeType} = '2' THEN
+					(SELECT LIPB_ID FROM ESERVICE.DBO.POLICY_BENEFICIARY WHERE POLICY_NO = #{policyNo} AND BENI_CODE = '1')
+				WHEN #{changeType} = '3' THEN
+					(SELECT LIPB_ID FROM ESERVICE.DBO.POLICY_BENEFICIARY WHERE POLICY_NO = #{policyNo} AND BENI_CODE = '5')
+				ELSE
+				(
+					SELECT TOP 1 LIPM_ID FROM (
+						SELECT LIPM_ID FROM ESERVICE.DBO.LILIPM M, ESERVICE.DBO.POLICY_BONUS PB WHERE M.LIPM_INSU_NO = PB.POLICY_NO AND M.LIPM_INSU_NO = #{policyNo}
+						ORDER BY PB.BONUS_START_DATE DESC
+					)
+				)
+			END rocId
+		FROM DUAL
+	</select>
+
+</mapper>
+

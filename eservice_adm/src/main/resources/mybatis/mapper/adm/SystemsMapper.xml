@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.SystemsDao">
+
+	<resultMap id="SystemsMap" type="com.twfhclife.adm.model.SystemsVo" >
+		<result column="SYS_ID" property="sysId"/>
+		<result column="SYS_NAME" property="sysName"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_TIMESTAMP" property="createTimestamp"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="UPDATE_TIMESTAMP" property="updateTimestamp"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		SYS_ID,SYS_NAME,CREATE_USER,CREATE_TIMESTAMP,UPDATE_USER,UPDATE_TIMESTAMP
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="systemsVo.sysId != null and systemsVo.sysId != ''"> AND SYS_ID = #{systemsVo.sysId} </if>
+			<if test="systemsVo.sysName != null and systemsVo.sysName != ''"> AND SYS_NAME = #{systemsVo.sysName} </if>
+			<if test="systemsVo.createUser != null and systemsVo.createUser != ''"> AND CREATE_USER = #{systemsVo.createUser} </if>
+			<if test="systemsVo.createTimestamp != null"> AND CREATE_TIMESTAMP = #{systemsVo.createTimestamp} </if>
+			<if test="systemsVo.updateUser != null and systemsVo.updateUser != ''"> AND UPDATE_USER = #{systemsVo.updateUser} </if>
+			<if test="systemsVo.updateTimestamp != null"> AND UPDATE_TIMESTAMP = #{systemsVo.updateTimestamp} </if>
+		</where>
+	</sql>
+	
+	<select id="getSystems" resultMap="SystemsMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.SYSTEMS
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findAll" resultMap="SystemsMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.SYSTEMS
+	</select>
+	
+	<select id="getAllSysId" resultType="string">
+		SELECT
+			SYS_ID
+		FROM
+			ESERVICE_ADM.DBO.SYSTEMS
+	</select>
+
+</mapper>

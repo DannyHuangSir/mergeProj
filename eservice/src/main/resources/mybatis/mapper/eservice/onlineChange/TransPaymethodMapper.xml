@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransPaymethodDao">
+
+	<resultMap id="TransPaymethodMap" type="com.twfhclife.eservice.onlineChange.model.TransPaymethodVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="PAYMETHOD" property="paymethod"/>
+		<result column="PAYMETHOD_OLD" property="paymethodOld"/>
+		<result column="CARD_TYPE" property="cardType"/>
+		<result column="CARD_NO" property="cardNo"/>
+		<result column="VALID_MM" property="validMm"/>
+		<result column="VALID_YY" property="validYy"/>
+		<result column="CARD_TYPE_OLD" property="cardTypeOld"/>
+		<result column="CARD_NO_OLD" property="cardNoOld"/>
+		<result column="VALID_MM_OLD" property="validMmOld"/>
+		<result column="VALID_YY_OLD" property="validYyOld"/>
+		<result column="POLICY_NO" property="policyNo"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transPaymethodVo.id != null"> AND ID = #{transPaymethodVo.id} </if>
+			<if test="transPaymethodVo.transNum != null and transPaymethodVo.transNum != ''"> AND TRANS_NUM = #{transPaymethodVo.transNum} </if>
+			<if test="transPaymethodVo.paymethod != null and transPaymethodVo.paymethod != ''"> AND PAYMETHOD = #{transPaymethodVo.paymethod} </if>
+			<if test="transPaymethodVo.paymethodOld != null and transPaymethodVo.paymethodOld != ''"> AND PAYMETHOD_OLD = #{transPaymethodVo.paymethodOld} </if>
+			<if test="transPaymethodVo.cardType != null and transPaymethodVo.cardType != ''"> AND CARD_TYPE = #{transPaymethodVo.cardType} </if>
+			<if test="transPaymethodVo.cardNo != null and transPaymethodVo.cardNo != ''"> AND ESERVICE.DBO.FN_DEBASE64(CARD_NO) = #{transPaymethodVo.cardNo} </if>
+			<if test="transPaymethodVo.validMm != null and transPaymethodVo.validMm != ''"> AND VALID_MM = #{transPaymethodVo.validMm} </if>
+			<if test="transPaymethodVo.validYy != null and transPaymethodVo.validYy != ''"> AND VALID_YY = #{transPaymethodVo.validYy} </if>
+			<if test="transPaymethodVo.cardTypeOld != null and transPaymethodVo.cardTypeOld != ''"> AND CARD_TYPE_OLD = #{transPaymethodVo.cardTypeOld} </if>
+			<if test="transPaymethodVo.cardNoOld != null and transPaymethodVo.cardNoOld != ''"> AND ESERVICE.DBO.FN_DEBASE64(CARD_NO_OLD) = #{transPaymethodVo.cardNoOld} </if>
+			<if test="transPaymethodVo.validMmOld != null and transPaymethodVo.validMmOld != ''"> AND VALID_MM_OLD = #{transPaymethodVo.validMmOld} </if>
+			<if test="transPaymethodVo.validYyOld != null and transPaymethodVo.validYyOld != ''"> AND VALID_YY_OLD = #{transPaymethodVo.validYyOld} </if>
+			<if test="transPaymethodVo.policyNo != null and transPaymethodVo.policyNo != ''"> AND POLICY_NO = #{transPaymethodVo.policyNo} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transPaymethodVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更收費管道查詢結果 -->
+	<select id="getTransPaymethod" resultMap="TransPaymethodMap">
+		SELECT
+			ID,
+			TRANS_NUM,
+			PAYMETHOD,
+			PAYMETHOD_OLD,
+			CARD_TYPE,
+			ESERVICE.DBO.FN_DEBASE64(CARD_NO),
+			VALID_MM,
+			VALID_YY,
+			CARD_TYPE_OLD,
+			ESERVICE.DBO.FN_DEBASE64(CARD_NO_OLD),
+			VALID_MM_OLD,
+			VALID_YY_OLD,
+			POLICY_NO
+		FROM
+			ESERVICE.DBO.TRANS_PAYMETHOD
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 變更收費管道-新增 -->
+	<insert id="insertTransPaymethod">
+		INSERT INTO ESERVICE.DBO.TRANS_PAYMETHOD
+		(
+			ID,TRANS_NUM,PAYMETHOD,PAYMETHOD_OLD,CARD_TYPE,CARD_NO,VALID_MM,VALID_YY,CARD_TYPE_OLD,CARD_NO_OLD,VALID_MM_OLD,VALID_YY_OLD,POLICY_NO
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_PAYMETHOD),
+			#{transPaymethodVo.transNum, jdbcType=VARCHAR},
+			#{transPaymethodVo.paymethod, jdbcType=VARCHAR},
+			#{transPaymethodVo.paymethodOld, jdbcType=VARCHAR},
+			#{transPaymethodVo.cardType, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transPaymethodVo.cardNo, jdbcType=VARCHAR}),
+			#{transPaymethodVo.validMm, jdbcType=VARCHAR},
+			#{transPaymethodVo.validYy, jdbcType=VARCHAR},
+			#{transPaymethodVo.cardTypeOld, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transPaymethodVo.cardNoOld, jdbcType=VARCHAR}),
+			#{transPaymethodVo.validMmOld, jdbcType=VARCHAR},
+			#{transPaymethodVo.validYyOld, jdbcType=VARCHAR},
+			#{transPaymethodVo.policyNo, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

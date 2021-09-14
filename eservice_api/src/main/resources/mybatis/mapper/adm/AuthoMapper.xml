@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.generic.dao.AuthoDao">
+
+	<resultMap id="FunctionsResultMap" type="com.twfhclife.eservice.api.adm.model.FunctionVoEntity">
+		<result property="functionId" column="FUNCTION_ID" />
+		<result property="functionName" column="FUNCTION_NAME" />
+		<result property="functionType" column="FUNCTION_TYPE" />
+		<result property="functionUrl" column="FUNCTION_URL" />
+		<result property="sort" column="SORT" />
+		<result property="parentFuncId" column="PARENT_FUNC_ID" />
+		<result property="sysId" column="SYS_ID" />
+		<result property="sysName" column="SYS_NAME" />
+		<result property="autho" column="AUTHO" />
+		<result property="divId" column="DIV_ID" />
+		<result property="divName" column="DIV_NAME" />
+	</resultMap>
+
+	<resultMap id="SystemsResultMap" type="com.twfhclife.eservice.api.adm.domain.Systems">
+		<result property="sysId" column="SYS_ID" />
+		<result property="sysName" column="SYS_NAME" />
+	</resultMap>
+	
+	<!-- 以userId取功能權限(div逗點分隔) -->
+	<resultMap id="FunctionsAuthMap" type="HashMap">
+		<result property="functionId" column="FUNCTION_ID" />
+		<result property="functionName" column="FUNCTION_NAME" />
+		<result property="functionType" column="FUNCTION_TYPE" />
+		<result property="functionUrl" column="FUNCTION_URL" />
+		<result property="sort" column="SORT" />
+		<result property="parentFuncId" column="PARENT_FUNC_ID" />
+		<result property="sysId" column="SYS_ID" />
+		<result property="forbiddenDivs" column="DIVS" />
+	</resultMap>
+	
+	<!-- 以userId取功能權限(div list) -->
+	<resultMap id="FunctionDivAuthMap" type="HashMap">
+		<result property="functionId" column="FUNCTION_ID" />
+		<result property="functionName" column="FUNCTION_NAME" />
+		<result property="functionType" column="FUNCTION_TYPE" />
+		<result property="functionUrl" column="FUNCTION_URL" />
+		<result property="sort" column="SORT" />
+		<result property="parentFuncId" column="PARENT_FUNC_ID" />
+		<result property="sysId" column="SYS_ID" />
+		<collection property="forbiddenDivs" ofType="com.twfhclife.eservice.api.adm.model.FunctionDivVo" javaType="list">
+			<result column="DIV_ID"   property="divId"/>
+	     	<result column="DIV_NAME" property="divName"/>
+	    </collection>
+	</resultMap>
+	
+	<resultMap id="RolesResultMap" type="com.twfhclife.eservice.api.adm.domain.Role">
+		<result property="roleId" column="ROLE_ID" />
+		<result property="roleName" column="ROLE_NAME" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="parentRoleId" column="PARENT_ROLE_ID" />
+		<result property="departmentId" column="DEPARTMENT_ID" />
+		<result property="createUser" column="CREATE_USER" />
+		<result property="createDate" column="CREATE_DATE" />
+		<result property="modifyUser" column="MODIFY_USER" />
+		<result property="modifyDate" column="MODIFY_DATE" />
+	</resultMap>
+	
+	<resultMap id="UserAuthResultMap" type="com.twfhclife.generic.model.UserAuthVoEntity">
+		<result property="userId" column="USER_ID" />
+		<result property="userName" column="USER_NAME" />
+		<result property="firstName" column="FIRST_NAME" />
+		<result property="lastName" column="LAST_NAME" />
+		<result property="functionId" column="FUNCTION_ID" />
+		<result property="functionName" column="FUNCTION_NAME" />
+		<result property="functionType" column="FUNCTION_TYPE" />
+		<result property="functionUrl" column="FUNCTION_URL" />
+		<result property="sort" column="SORT" />
+		<result property="parentFuncId" column="PARENT_FUNC_ID" />
+		<result property="sysId" column="SYS_ID" />
+		<result property="sysName" column="SYS_NAME" />
+		<result property="autho" column="AUTHO" />
+		<result property="divId" column="DIV_ID" />
+		<result property="divName" column="DIV_NAME" />
+	</resultMap>
+	
+	<resultMap id="SystemUsersResultMap" type="com.twfhclife.generic.model.UserRepresentationEntity">
+		<result property="createdTimestamp" column="CREATED_TIMESTAMP" />
+		<result property="email" column="EMAIL" />
+		<result property="emailVerified" column="EMAIL_VERIFIED" />
+		<result property="enabled" column="ENABLED" />
+		<result property="firstName" column="FIRST_NAME" />
+		<result property="lastName" column="LAST_NAME" />
+		<result property="id" column="ID" />
+		<result property="serviceAccountClientId" column="RESERVICE_ACCOUNT_CLIENT_LINKALM" />
+		<result property="userName" column="USERNAME" />
+	</resultMap>
+	
+	<resultMap id="DeputyMap" type="com.twfhclife.generic.model.UserVo">
+		<result column="user_id" property="userId" />
+		<result column="first_name" property="firstName" />
+		<result column="last_name" property="lastName" />
+	</resultMap>
+	
+	<sql id="Functions_Column_List">
+		FI.FUNCTION_ID, FI.FUNCTION_NAME, FI.FUNCTION_TYPE, FI.FUNCTION_URL, FI.SORT, FI.PARENT_FUNC_ID, S.SYS_ID, S.SYS_NAME, FD.DIV_ID, FD.DIV_NAME
+	</sql>
+	
+	<sql id="Systems_Column_List">
+		S.SYS_ID, S.SYS_NAME, S.CREATE_USER, S.CREATE_TIMESTAMP, S.UPDATE_USER, S.UPDATE_TIMESTAMP
+	</sql>
+	
+	<sql id="Roles_Column_List">
+		KR.ID, KR.CLIENT_REALM_CONSTRAINT, KR.CLIENT_ROLE, KR.DESCRIPTION, KR.NAME, KR.REALM_ID, KR.CLIENT, KR.REALM, KR.SCOPE_PARAM_REQUIRED
+	</sql>
+	
+	<sql id="UserAuth_Column_List">
+		UE.USERNAME USER_ID, KR.NAME USER_NAME, UE.FIRST_NAME, UE.LAST_NAME, FI.FUNCTION_ID, FI.FUNCTION_NAME, FI.FUNCTION_TYPE, FI.FUNCTION_URL, FI.PARENT_FUNC_ID, S.SYS_ID, S.SYS_NAME, FD.DIV_ID, FD.DIV_NAME
+	</sql>
+	
+	<sql id="SystemUsers_Column_List">
+		UE.ID, UE.CREATED_TIMESTAMP, UE.EMAIL, UE.EMAIL_VERIFIED, UE.ENABLED, UE.FIRST_NAME, UE.LAST_NAME, UE.USERNAME, UE.SERVICE_ACCOUNT_CLIENT_LINK
+	</sql>
+	
+	<select id="getFuncDivAuthByUser" resultMap="FunctionsAuthMap" parameterType="java.lang.String">
+		SELECT distinct 
+		fi.FUNCTION_ID, fi.FUNCTION_NAME, fi.FUNCTION_TYPE, fi.FUNCTION_URL, 
+		(CASE WHEN fi.PARENT_FUNC_ID in (SELECT CONVERT(VARCHAR(MAX), FUNCTION_ID) FROM ESERVICE_ADM.DBO.FUNCTION_ITEM WHERE PARENT_FUNC_ID IN (select SYS_ID from ESERVICE_ADM.DBO.SYSTEMS)) THEN 0
+		     ELSE TO_NUMBER(fi.PARENT_FUNC_ID)
+		     END) PARENT_FUNC_ID,
+		fi.SYS_ID, fi.SORT, di.DIVS
+			FROM 
+					ESERVICE_ADM.DBO.ROLE_FUNC_AUTH rf 
+		            left join ESERVICE_ADM.DBO.FUNCTION_ITEM fi on fi.FUNCTION_ID=rf.FUNCTION_ID 
+		            left join (
+		                select f.FUNCTION_ID,
+		                    rtrim(xmlagg(xmlelement(e, d.DIV_NAME, ',') order by d.DIV_ID).extract('//text()'), ',') DIVS
+		                    from ESERVICE_ADM.DBO.FUNCTION_ITEM f
+		                    join ESERVICE_ADM.DBO.FUNCTION_DIV d on f.FUNCTION_ID=d.FUNCTION_ID
+		                    join ESERVICE_ADM.DBO.ROLE_DIV_AUTH rd on rd.DIV_ID=d.DIV_ID and rd.ROLE_ID in (select ROLE_ID from ESERVICE_ADM.DBO.USER_ROLE where USER_ID=#{userId})
+		                    group by f.FUNCTION_ID
+		            ) di on di.FUNCTION_ID = fi.FUNCTION_ID
+				WHERE 
+		            fi.ACTIVE='Y' and fi.PARENT_FUNC_ID != fi.SYS_ID
+					and ROLE_ID IN (select ROLE_ID from ESERVICE_ADM.DBO.USER_ROLE where USER_ID=#{userId})
+					<if test="sysId != null and sysId != ''">
+					and fi.SYS_ID = #{sysId}
+					</if>
+		            order by fi.SYS_ID, fi.FUNCTION_ID
+		 
+	</select>
+	
+	<select id="getMenuList" resultMap="FunctionDivAuthMap" parameterType="java.lang.String">
+		WITH USER_FUNC_AUTH AS (
+		
+			<if test="isAdmin == 'Y'.toString()">
+			SELECT CAST(FLOOR(fi.FUNCTION_ID) AS VARCHAR) AS FUNCTION_ID
+			FROM ESERVICE_ADM.DBO.FUNCTION_ITEM fi
+			WHERE fi.SYS_ID = #{sysId}
+			</if>
+			
+			<if test="isAdmin != 'Y'.toString()">
+			SELECT CAST(FLOOR(fi.FUNCTION_ID) AS VARCHAR) AS FUNCTION_ID
+			FROM
+				ESERVICE_ADM.DBO.USER_ROLE ur
+				,ESERVICE_ADM.DBO.ROLE r
+				,ESERVICE_ADM.DBO.ROLE_SYS_AUTH rsa
+				,ESERVICE_ADM.DBO.ROLE_FUNC_AUTH rfa
+				,ESERVICE_ADM.DBO.FUNCTION_ITEM fi
+			WHERE
+				ur.ROLE_ID      = r.ROLE_ID
+				AND r.ROLE_ID   = rsa.ROLE_ID
+				AND rsa.ROLE_ID = rfa.ROLE_ID
+				AND rfa.FUNCTION_ID = fi.FUNCTION_ID
+				AND ur.USER_ID = #{userId}
+				AND rsa.SYS_ID = #{sysId}
+				AND fi.SYS_ID  = #{sysId}
+			</if>
+			
+		),
+		FUNCTION_SORT (LEVEL, FUNCTION_ID, FUNCTION_NAME, FUNCTION_TYPE, FUNCTION_URL, PARENT_FUNC_ID, ACTIVE, SYS_ID,SORT) AS  
+		(
+			SELECT 
+				CAST(1 				      AS VARCHAR) AS LEVEL,
+				CAST(FLOOR(b.FUNCTION_ID) AS VARCHAR),
+				b.FUNCTION_NAME,
+				b.FUNCTION_TYPE,
+				b.FUNCTION_URL,
+				(SELECT SUBSTRING(b.PARENT_FUNC_ID+'.',1,CHARINDEX('.',b.PARENT_FUNC_ID+'.')-1)) AS PARENT_FUNC_ID,
+				b.ACTIVE,
+				b.SYS_ID,
+				ISNULL(b.SORT,0) as SORT
+			FROM ESERVICE_ADM.DBO.FUNCTION_ITEM b
+			WHERE b.ACTIVE   = 'Y'
+				AND b.SYS_ID = #{sysId}
+				AND CAST(FLOOR(b.FUNCTION_ID) AS VARCHAR) IN (SELECT FUNCTION_ID FROM USER_FUNC_AUTH)
+		
+			UNION ALL
+		
+			SELECT 
+				CAST(PARENT.LEVEL + 1	  AS VARCHAR) as LEVEL, 
+				CAST(FLOOR(CHILD.FUNCTION_ID)  AS VARCHAR) AS FUNCTION_ID, 
+				CHILD.FUNCTION_NAME, 
+				CHILD.FUNCTION_TYPE, 
+				CHILD.FUNCTION_URL, 
+				(SELECT SUBSTRING(CHILD.PARENT_FUNC_ID+'.',1,CHARINDEX('.',CHILD.PARENT_FUNC_ID+'.')-1)) AS PARENT_FUNC_ID,
+				CHILD.ACTIVE,
+				CHILD.SYS_ID,
+				ISNULL(CHILD.SORT,0) as SORT
+			FROM ESERVICE_ADM.DBO.FUNCTION_ITEM AS CHILD
+		    JOIN FUNCTION_SORT PARENT ON PARENT.FUNCTION_ID = (SELECT SUBSTRING(CHILD.PARENT_FUNC_ID+'.',1,CHARINDEX('.',CHILD.PARENT_FUNC_ID+'.')-1))
+			where CHILD.FUNCTION_ID IN (SELECT FUNCTION_ID FROM USER_FUNC_AUTH)
+		)
+	SELECT
+		f.FUNCTION_ID,
+		f.FUNCTION_NAME,
+		f.FUNCTION_TYPE,
+		f.FUNCTION_URL,
+		f.PARENT_FUNC_ID,
+		f.SYS_ID,
+		ISNULL(f.SORT,0) as SORT,
+		div.DIV_ID,
+        div.DIV_NAME
+	FROM
+		FUNCTION_SORT f
+        LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_DIV div on CAST(FLOOR(div.FUNCTION_ID) AS VARCHAR) = f.FUNCTION_ID
+    order by PARENT_FUNC_ID,SORT,FUNCTION_ID
+	</select>
+	
+	<select id="getFuncDivAuths" resultMap="FunctionDivAuthMap" parameterType="java.lang.String">
+		SELECT distinct 
+			fi.FUNCTION_ID, fi.FUNCTION_NAME, fi.FUNCTION_TYPE, fi.FUNCTION_URL, 
+			fi.PARENT_FUNC_ID, fi.SYS_ID, fi.SORT, div.DIV_ID, div.DIV_NAME
+		FROM  ESERVICE_ADM.DBO.ROLE_FUNC_AUTH rf 
+            left join ESERVICE_ADM.DBO.FUNCTION_ITEM fi on fi.FUNCTION_ID=rf.FUNCTION_ID 
+            left join ESERVICE_ADM.DBO.FUNCTION_DIV div on div.FUNCTION_ID = fi.FUNCTION_ID
+		WHERE 
+            fi.ACTIVE='Y' 
+            <if test="userId != null and userId != ''">
+			and ROLE_ID IN (select ROLE_ID from ESERVICE_ADM.DBO.USER_ROLE where USER_ID in 
+				(
+				  select #{userId} USER_ID
+				  union
+				  select USER_ID from ESERVICE_ADM.DBO.DEPUTY where DEPUTY_ID=#{userId} and start_date <![CDATA[<=]]> getdate() and end_date <![CDATA[>=]]> getdate()
+				)
+			)
+			</if>
+			<if test="sysId != null and sysId != ''">
+			and fi.SYS_ID = #{sysId}
+			</if>
+            order by fi.SYS_ID, fi.FUNCTION_ID
+	</select>
+	
+	<select id="getFuncDivAuths_bak" resultMap="FunctionDivAuthMap" parameterType="java.lang.String">
+		SELECT distinct 
+		fi.FUNCTION_ID, fi.FUNCTION_NAME, fi.FUNCTION_TYPE, fi.FUNCTION_URL, 
+		(CASE WHEN fi.PARENT_FUNC_ID in (SELECT CONVERT(VARCHAR(MAX), FUNCTION_ID) FROM ESERVICE_ADM.DBO.FUNCTION_ITEM WHERE PARENT_FUNC_ID IN (select SYS_ID from ESERVICE_ADM.DBO.SYSTEMS)) THEN 0
+		     ELSE TO_NUMBER(fi.PARENT_FUNC_ID)
+		     END) PARENT_FUNC_ID, fi.SYS_ID, fi.SORT, div.DIV_ID, div.DIV_NAME
+			FROM ESERVICE_ADM.DBO.ROLE_FUNC_AUTH rf 
+            left join ESERVICE_ADM.DBO.FUNCTION_ITEM fi on fi.FUNCTION_ID=rf.FUNCTION_ID 
+            left join ESERVICE_ADM.DBO.FUNCTION_DIV div on div.FUNCTION_ID = fi.FUNCTION_ID
+		WHERE 
+            fi.ACTIVE='Y' and fi.PARENT_FUNC_ID != fi.SYS_ID
+			and ROLE_ID IN (select ROLE_ID from ESERVICE_ADM.DBO.USER_ROLE where USER_ID=#{userId})
+			<if test="sysId != null and sysId != ''">
+			and fi.SYS_ID = #{sysId}
+			</if>
+            order by fi.SYS_ID, fi.FUNCTION_ID
+	</select>
+	
+	<select id="getAuthInfoByUser" resultMap="FunctionsResultMap" parameterType="java.lang.String">
+		SELECT 
+			<include refid="Functions_Column_List" />
+		FROM ESERVICE_ADM.DBO.USER_ENTITY UE		
+			LEFT JOIN USER_ROLE_MAPPING URM ON URM.USER_ID = UE.ID      
+			LEFT JOIN KEYCLOAK_ROLE KR ON URM.ROLE_ID = KR.ID
+			LEFT JOIN ESERVICE_ADM.DBO.ROLE_FUNC_AUTH RFA ON URM.ROLE_ID = RFA.ROLE_ID
+	      	LEFT JOIN ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA ON URM.ROLE_ID = RSA.ROLE_ID
+	      	LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS S ON RSA.SYS_ID = S.SYS_ID
+			LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_ITEM FI ON RFA.FUNCTION_ID = FI.FUNCTION_ID
+	      	LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_DIV FD ON FI.FUNCTION_ID = FD.FUNCTION_ID
+		WHERE 1 = 1
+		AND KR.REALM = 'twfhclife'
+		<if test="userId != null and userId != ''">
+			AND UE.USERNAME = #{userId}
+		</if>
+		<if test="sysId != null and sysId != ''">
+			AND FI.SYS_ID = #{sysId}
+		</if>
+		
+	</select>
+	
+	<select id="getSysListByUser" resultMap="SystemsResultMap" parameterType="java.lang.String">
+		SELECT
+		    s.SYS_ID, s.SYS_NAME
+		FROM
+		    ESERVICE_ADM.DBO.ROLE_SYS_AUTH rs 
+		    left join ESERVICE_ADM.DBO.SYSTEMS s on s.SYS_ID=rs.SYS_ID
+		    left join ESERVICE_ADM.DBO.USER_ROLE ur on rs.ROLE_ID=ur.ROLE_ID
+		    where ur.USER_ID=#{userId}
+	</select>
+
+	<select id="getFunListBySys" resultMap="FunctionsResultMap" parameterType="java.lang.String">
+		SELECT 
+			<include refid="Functions_Column_List" />
+  		FROM ESERVICE_ADM.DBO.SYSTEMS S
+  			LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_ITEM FI ON S.SYS_ID = FI.SYS_ID
+  			LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_DIV FD ON FI.FUNCTION_ID = FD.FUNCTION_ID
+		WHERE 1 = 1
+		<if test="sysId != null and sysId != ''">
+			AND S.SYS_ID = #{sysId}
+		</if>
+		<if test="parentFuncId != null and parentFuncId != ''">
+			AND FI.PARENT_FUNC_ID = #{parentFuncId}
+		</if>
+		<if test="functionName != null and functionName != ''">
+			AND FI.FUNCTION_NAME = #{functionName}
+		</if>
+		
+	</select>
+	
+	<select id="getRoleListByRoleName" resultMap="RolesResultMap" parameterType="java.lang.String">
+		SELECT
+			ROLE_ID,ROLE_NAME,DESCRIPTION,PARENT_ROLE_ID,DEPARTMENT_ID,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE
+		FROM ESERVICE_ADM.DBO.ROLE 
+		WHERE 1 = 1
+		
+		<if test="roleNameQuery != null and roleNameQuery != ''" >
+			<bind name="roleLike" value="'%' + _parameter.roleNameQuery + '%'" />
+			AND upper(ROLE_NAME) LIKE upper(#{roleLike})
+		</if>
+	
+	</select>
+
+	<select id="getAllFunction" resultMap="FunctionsResultMap">
+	
+		SELECT
+			<include refid="Functions_Column_List" />
+    	FROM ESERVICE_ADM.DBO.FUNCTION_ITEM FI
+    		LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS S ON FI.SYS_ID = S.SYS_ID
+    		LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_DIV FD ON FI.FUNCTION_ID = FD.FUNCTION_ID
+    	
+	</select>
+
+	<select id="getRoleFunctionAuthByRole" resultMap="FunctionsResultMap" parameterType="java.lang.String">
+		SELECT 
+			<include refid="Functions_Column_List" />
+		FROM ESERVICE_ADM.DBO.ROLE KR
+			LEFT JOIN ESERVICE_ADM.DBO.ROLE_FUNC_AUTH RFA ON KR.ROLE_ID = RFA.ROLE_ID
+      		LEFT JOIN ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA ON KR.ROLE_ID = RSA.ROLE_ID
+	    	LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS S ON RSA.SYS_ID = S.SYS_ID
+			LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_ITEM FI ON RFA.FUNCTION_ID = FI.FUNCTION_ID
+      		LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_DIV FD ON FI.FUNCTION_ID = FD.FUNCTION_ID
+		WHERE 1 = 1
+		<if test="roleId != null and roleId != ''" >
+			AND RFA.ROLE_ID = #{roleId}
+		</if>
+		<if test="roleName != null and roleName != ''" >
+			AND KR.ROLE_NAME = #{roleName}
+		</if>
+		<if test="sysId != null and sysId != ''" >
+			AND S.SYS_ID = #{sysId}
+		</if>
+	
+	</select>
+
+	<select id="getSysFunctionAuthByUser" resultMap="FunctionsResultMap" parameterType="java.lang.String">
+
+		SELECT 
+			<include refid="Functions_Column_List" />
+		FROM ESERVICE_ADM.DBO.USER_ENTITY UE		
+			LEFT JOIN USER_ROLE_MAPPING URM ON URM.USER_ID = UE.ID      
+			LEFT JOIN KEYCLOAK_ROLE KR ON URM.ROLE_ID = KR.ID
+			LEFT JOIN ESERVICE_ADM.DBO.ROLE_FUNC_AUTH RFA ON URM.ROLE_ID = RFA.ROLE_ID
+	    	LEFT JOIN ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA ON URM.ROLE_ID = RSA.ROLE_ID
+	    	LEFT JOIN SYSTEMS S ON RSA.SYS_ID = S.SYS_ID
+			LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_ITEM FI ON RFA.FUNCTION_ID = FI.FUNCTION_ID
+	    	LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_DIV FD ON FI.FUNCTION_ID = FD.FUNCTION_ID
+		WHERE 1 = 1
+		AND KR.REALM = 'twfhclife'
+		<if test="userId != null and userId != ''" >
+			AND UE.USERNAME = #{userId}
+		</if>
+		<if test="sysId != null and sysId != ''" >
+			AND S.SYS_ID = #{sysId}
+		</if>
+
+	</select>
+	
+	<insert id="insertFuncItem" parameterType="com.twfhclife.eservice.api.adm.model.FunctionItemEntity">
+	
+		INSERT INTO 
+       		ESERVICE_ADM.DBO.FUNCTION_ITEM
+       		(FUNCTION_NAME, FUNCTION_TYPE, FUNCTION_URL, SORT, PARENT_FUNC_ID, SYS_ID, CREATE_USER) 
+       	VALUES
+       		(
+       			#{entity.functionName, jdbcType=VARCHAR},
+       			#{entity.functionType, jdbcType=VARCHAR}, 
+       			#{entity.functionUrl, jdbcType=VARCHAR},
+       		 	#{entity.sort, jdbcType=NUMERIC}, 
+       		 	#{entity.parentFuncId, jdbcType=VARCHAR}, 
+       		 	#{entity.sysId, jdbcType=VARCHAR}, 
+       		 	#{entity.createUser, jdbcType=VARCHAR}
+			)
+			
+	</insert>
+	
+	<insert id="insertFuncDiv" parameterType="com.twfhclife.eservice.api.adm.model.FunctionDivEntity">
+
+		INSERT INTO 
+       		ESERVICE_ADM.DBO.FUNCTION_DIV
+       		(DIV_NAME, FUNCTION_ID)
+   		VALUES
+   			(
+				#{entity.divName, jdbcType=VARCHAR},
+				#{entity.functionId, jdbcType=NUMERIC}
+   			)
+   			
+	</insert>
+	
+	<update id="updateFunctionItem" parameterType="com.twfhclife.eservice.api.adm.model.FunctionItemEntity">
+	
+		UPDATE 
+			ESERVICE_ADM.DBO.FUNCTION_ITEM 
+		SET
+    		FUNCTION_NAME = #{entity.functionName},
+    		FUNCTION_TYPE = #{entity.functionType},
+    		FUNCTION_URL = #{entity.functionUrl},
+    		SORT = #{entity.sort},
+    		PARENT_FUNC_ID = #{entity.parentFuncId},
+    		SYS_ID = #{entity.sysId},
+    		UPDATE_USER = #{entity.updateUser}
+  		WHERE FUNCTION_ID = #{entity.functionId}
+	
+	</update>
+	
+	<update id="updateFunctionDiv" parameterType="com.twfhclife.eservice.api.adm.model.FunctionDivEntity">
+
+		UPDATE
+			ESERVICE_ADM.DBO.FUNCTION_DIV
+		SET
+			DIV_NAME = #{entity.divName}
+		WHERE FUNCTION_ID = #{entity.functionId}
+
+	</update>
+	
+	<delete id="deleteFuncItem" parameterType="java.lang.Integer">
+		
+		DELETE 
+		FROM ESERVICE_ADM.DBO.FUNCTION_ITEM
+   		WHERE FUNCTION_ID = #{functionId}
+		
+	</delete>
+	
+	<delete id="deleteFuncDiv" parameterType="java.lang.String">
+		
+		DELETE 
+		FROM ESERVICE_ADM.DBO.FUNCTION_DIV
+   		WHERE FUNCTION_ID = #{functionId}
+		
+	</delete>
+	
+	<delete id="deleteRoleFuncAuth" parameterType="java.lang.String">
+		
+		DELETE 
+		FROM ESERVICE_ADM.DBO.ROLE_FUNC_AUTH 
+		WHERE ROLE_ID = #{roleId}
+		
+	</delete>
+	
+	<insert id="insertRoleFuncAuth" parameterType="com.twfhclife.eservice.api.adm.domain.RoleFuncAuthReqObj">
+	
+		INSERT INTO 
+		ESERVICE_ADM.DBO.ROLE_FUNC_AUTH
+			(
+				ROLE_ID, FUNCTION_ID, CREATE_USER, CREATE_DATE
+			) 
+		VALUES
+			(
+				#{entity.roleId,jdbcType=VARCHAR}, 
+				#{entity.functionId,jdbcType=VARCHAR}, 
+				#{entity.createUser,jdbcType=VARCHAR}, 
+				getdate()
+			)
+			
+	</insert>
+
+	<select id="getSystemUsers" resultMap="SystemUsersResultMap" parameterType="java.lang.String">
+
+		SELECT 
+  			<include refid="SystemUsers_Column_List" />
+		FROM ESERVICE_ADM.DBO.USER_ENTITY UE
+  			LEFT JOIN USER_ROLE_MAPPING URM ON URM.USER_ID = UE.ID
+  			LEFT JOIN KEYCLOAK_ROLE KR ON URM.ROLE_ID = KR.ID
+ 			LEFT JOIN ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA ON URM.ROLE_ID = RSA.ROLE_ID
+  			LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS S ON RSA.SYS_ID = S.SYS_ID
+  		WHERE 1 = 1
+  		AND KR.REALM = 'twfhclife'
+  		<if test="sysId != null and sysId != ''" >
+			AND S.SYS_ID = #{sysId}
+		</if>
+
+	</select>
+
+	<select id="getUsersAuthReport" resultMap="UserAuthResultMap" parameterType="java.lang.String">
+	
+		SELECT 
+      		<include refid="UserAuth_Column_List" />
+      	FROM ESERVICE_ADM.DBO.USER_ENTITY UE
+      		LEFT JOIN USER_ROLE_MAPPING URM ON URM.USER_ID = UE.ID
+			LEFT JOIN KEYCLOAK_ROLE KR ON URM.ROLE_ID = KR.ID
+			LEFT JOIN ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA ON URM.ROLE_ID = RSA.ROLE_ID
+			LEFT JOIN ROLE_FUNC_AUTH RFA ON URM.ROLE_ID = RFA.ROLE_ID
+			LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS S ON RSA.SYS_ID = S.SYS_ID
+			LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_ITEM FI ON RFA.FUNCTION_ID = FI.FUNCTION_ID
+        	LEFT JOIN ESERVICE_ADM.DBO.FUNCTION_DIV FD ON FI.FUNCTION_ID = FD.FUNCTION_ID
+		WHERE 1 = 1
+		AND KR.REALM = 'twfhclife'
+		<if test="userId != null and userId != ''">
+			AND UE.USERNAME = #{userId}
+		</if>
+		
+	</select>
+
+	<select  id="getDeputyUser" resultMap="DeputyMap" parameterType="java.lang.String">
+		select ue.ID USER_ID, ue.FIRST_NAME, ue.LAST_NAME from ESERVICE_ADM.DBO.DEPUTY de
+			left join ESERVICE_ADM.DBO.USER_ENTITY ue on ue.ID = de.USER_ID
+			where ue.REALM_ID='twfhclife' and de.DEPUTY_ID= #{userId}
+			and convert(varchar, de.START_DATE, 111) <![CDATA[<=]]> convert(varchar, getdate(), 111) and convert(varchar, de.END_DATE, 111) <![CDATA[>=]]> convert(varchar, getdate(), 111)
+	</select>
+</mapper>

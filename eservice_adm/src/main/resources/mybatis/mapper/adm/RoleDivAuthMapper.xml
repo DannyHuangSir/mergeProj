@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.RoleDivAuthDao">
+
+	<resultMap id="RoleDivAuthMap" type="com.twfhclife.adm.model.RoleDivAuthVo" >
+		<result column="ROLE_ID" property="roleId"/>
+		<result column="DIV_ID" property="divId"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_DATE" property="createDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ROLE_ID,DIV_ID,CREATE_USER,CREATE_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="roleDivAuthVo.roleId != null and roleDivAuthVo.roleId != ''"> AND ROLE_ID = #{roleDivAuthVo.roleId} </if>
+			<if test="roleDivAuthVo.divId != null"> AND DIV_ID = #{roleDivAuthVo.divId} </if>
+			<if test="roleDivAuthVo.createUser != null and roleDivAuthVo.createUser != ''"> AND CREATE_USER = #{roleDivAuthVo.createUser} </if>
+			<if test="roleDivAuthVo.createDate != null"> AND CREATE_DATE = #{roleDivAuthVo.createDate} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得角色DIV REJECT的divId清單 -->
+	<select id="getDivIdByRoleIdList" resultType="string">
+		SELECT 
+			DIV_ID 
+		FROM 
+			ESERVICE_ADM.DBO.ROLE_DIV_AUTH 
+		WHERE 
+			ROLE_ID IN
+		<foreach collection="roleIds" item="roleId" index="index" open="(" close=")" separator="," >
+			#{roleId}
+		</foreach>
+	</select>
+	
+	<!-- 取得角色DIV REJECT權限查詢結果 -->
+	<select id="getRoleDivAuth" resultMap="RoleDivAuthMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.ROLE_DIV_AUTH
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 依USER_ID取得角色DIV REJECT權限查詢結果 -->
+	<select id="getRoleDivAuthByUserId" resultMap="RoleDivAuthMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.ROLE_DIV_AUTH
+		WHERE ROLE_ID in (
+			select ROLE_ID from ESERVICE_ADM.dbo.ROLE r
+			where r.ROLE_ID in (
+				select ROLE_ID from ESERVICE_ADM.dbo.USER_ROLE 
+				where USER_ID = #{userId}
+			)
+		)
+	</select>
+	
+	<!-- 角色DIV REJECT權限-新增 -->
+	<insert id="insertRoleDivAuth">
+		INSERT INTO ESERVICE_ADM.DBO.ROLE_DIV_AUTH
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{roleDivAuthVo.roleId, jdbcType=VARCHAR},
+			#{roleDivAuthVo.divId, jdbcType=NUMERIC},
+			#{roleDivAuthVo.createUser, jdbcType=VARCHAR},
+			getdate()
+		)
+	</insert>
+	
+	<!-- 角色DIV REJECT權限-刪除 -->
+	<delete id="deleteByRoleId">
+		DELETE ESERVICE_ADM.DBO.ROLE_DIV_AUTH WHERE ROLE_ID = #{roleId}
+	</delete>
+
+</mapper>

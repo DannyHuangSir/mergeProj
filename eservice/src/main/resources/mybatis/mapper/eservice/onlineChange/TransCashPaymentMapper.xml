@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransCashPaymentDao" >
+  <resultMap id="BaseResultMap" type="com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo" >
+    <id column="ID" property="id" jdbcType="NUMERIC" />
+    <result column="TRANS_NUM" property="transNum" jdbcType="NVARCHAR" />
+    <result column="POLICY_NO" property="policyNo" jdbcType="NVARCHAR" />
+    <result column="ALLOCATION" property="allocation" jdbcType="NVARCHAR" />
+    <result column="PRE_ALLOCATION" property="preAllocation" jdbcType="NVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, TRANS_NUM, POLICY_NO, ALLOCATION, PRE_ALLOCATION
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ESERVICE.DBO.TRANS_CASH_PAYMENT
+    where ID = #{id,jdbcType=NUMERIC}
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from ESERVICE.DBO.TRANS_CASH_PAYMENT
+    where ID = #{id,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo" >
+    insert into ESERVICE.DBO.TRANS_CASH_PAYMENT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="transNum != null" >
+        TRANS_NUM,
+      </if>
+      <if test="policyNo != null" >
+        POLICY_NO,
+      </if>
+      <if test="allocation != null" >
+        ALLOCATION,
+      </if>
+      <if test="preAllocation != null" >
+        PRE_ALLOCATION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="transNum != null" >
+        #{transNum,jdbcType=NVARCHAR},
+      </if>
+      <if test="policyNo != null" >
+        #{policyNo,jdbcType=NVARCHAR},
+      </if>
+      <if test="allocation != null" >
+        #{allocation,jdbcType=NVARCHAR},
+      </if>
+      <if test="preAllocation != null" >
+        #{preAllocation,jdbcType=NVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo" >
+    update ESERVICE.DBO.TRANS_CASH_PAYMENT
+    set TRANS_NUM = #{transNum,jdbcType=NVARCHAR},
+      POLICY_NO = #{policyNo,jdbcType=NVARCHAR},
+      ALLOCATION = #{allocation,jdbcType=NVARCHAR},
+      PRE_ALLOCATION = #{preAllocation,jdbcType=NVARCHAR}
+    where ID = #{id,jdbcType=NUMERIC}
+  </update>
+
+  <select id="getCashPaymentByPolicyNo" resultMap="BaseResultMap">
+    SELECT TOP 1  TCP.ID, TCP.TRANS_NUM, TCP.POLICY_NO, TCP.ALLOCATION, TCP.PRE_ALLOCATION FROM
+    ESERVICE.DBO.TRANS T
+    INNER JOIN ESERVICE.DBO.TRANS_POLICY TP ON T.TRANS_NUM = TP.TRANS_NUM AND T.STATUS = 2
+    INNER JOIN ESERVICE.DBO.TRANS_CASH_PAYMENT TCP ON TCP.TRANS_NUM = TP.TRANS_NUM
+    WHERE
+    TCP.POLICY_NO = #{policyNo}
+    ORDER BY TCP.TRANS_NUM DESC
+  </select>
+
+  <select id="getTransPaymentByTransNum" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ESERVICE.DBO.TRANS_CASH_PAYMENT
+    where TRANS_NUM = #{transNum}
+  </select>
+
+  <select id="countTransBankInfo" resultType="int">
+    SELECT COUNT(*) FROM TRANS T
+    LEFT JOIN TRANS_BANK_INFO TBI ON T.TRANS_NUM = TBI.TRANS_NUM
+    WHERE T.USER_ID = #{userId} AND TRANS_TYPE = 'CHANGE_PAY_ACCOUNT' AND STATUS = 2
+  </select>
+</mapper>

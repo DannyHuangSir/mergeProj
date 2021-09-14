@@ -1,0 +1,92 @@
+<tr class="detail-row even open" role="row">
+    <td colspan="7">
+        <div class="table-detail">
+            <div class="row" style="background-color: #fff; border-bottom: none">
+                <div class="col-xs-12 col-sm-11">
+                    <div class="space visible-xs"></div>
+                    <div class="profile-user-info profile-user-info-striped">
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請日期</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['TRANS_DATE']}" /></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請項目</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['TRANS_TYPE_NAME']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請狀態</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['STATUS_NAME']}"/></span>
+                            </div>
+                        </div>
+                        <!-- <div class="profile-info-row">
+                            <div class="profile-info-name">保單號碼</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['SHOW_POLICY_NO']}"/></span>
+                            </div>
+                        </div> -->
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">要保書基本內容</div>
+                            <div class="profile-info-value">
+                                <span>
+                                    <table class="table  table-bordered table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <th class="text-left">旅行目的地</th>
+                                                <th class="text-left">要保人</th>
+                                                <th class="text-left">被保人</th>
+                                                <th class="text-left">保險期間</th>
+                                                <th class="text-left">保險金額</th>
+                                                <th class="text-left">意外傷害醫療給付保險金限額</th>
+                                                <th class="text-left">海外突發疾病醫療給付保險金限額</th>
+                                                <th class="text-left">辦理投保事宜之地點為</th>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-left"><th:block th:text="${detailData['TRAVEL_DEST']}"/></td>
+                                                <td class="text-left"><th:block th:text="${detailData['HOLDER_NAME']}"/></td>
+                                                <td class="text-left"><th:block th:text="${detailData['INSURED_NAME']}"/></td>
+                                                <td class="text-left">
+                                                    <th:block th:text="${detailData['BEGIN_DATE']}"/>
+                                                    ~
+                                                    <th:block th:text="${detailData['END_DATE']}"/>
+                                                </td>
+                                                <td class="text-left"><th:block th:text="${detailData['ADDID']+'萬'}"/></td>
+                                                <td class="text-left"><th:block th:text="${detailData['MRID']+'萬'}"/></td>
+                                                <td class="text-left"><th:block th:text="${detailData['ORID']+'萬'}"/></td>
+                                                <td class="text-left"><th:block th:text="${detailData['WNPI_DEPT']}"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-1">
+<!--                     <th:block th:if="${detailData} != null and ${detailData['TRANS_STATUS'] eq '0'}"> -->
+<!--                     <button -->
+<!--                         class="pull-right btn btn-sm btn-primary btn-white btn-round" -->
+<!--                         type="button" th:onclick="'javascript:resend(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'"> -->
+<!--                         待補件<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i> -->
+<!--                     </button> -->
+<!--                     <br/> -->
+<!--                     <br/> -->
+<!--                     </th:block> -->
+<!--                     <th:block th:if="${detailData} != null and ${detailData['UPLOAD_FLAG'] eq 'Y'}"> -->
+<!--                     <button -->
+<!--                         class="pull-right btn btn-sm btn-primary btn-white btn-round" -->
+<!--                         type="button" th:onclick="'javascript:downloadAllFile(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'"> -->
+<!--                         下載檔案<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i> -->
+<!--                     </button> -->
+<!--                     </th:block> -->
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

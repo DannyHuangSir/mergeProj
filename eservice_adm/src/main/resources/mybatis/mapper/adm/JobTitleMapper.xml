@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.JobTitleDao">
+
+	<resultMap id="JobTitleMap" type="com.twfhclife.adm.model.JobTitleVo">
+		<result column="TITLE_ID" property="titleId"/>
+		<result column="TITLE_NAME" property="titleName"/>
+		<result column="DESCRIPTION" property="description"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_USER" property="modifyUser"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		TITLE_ID,TITLE_NAME,DESCRIPTION,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="jobTitleVo.titleId != null and jobTitleVo.titleId != ''"> AND TITLE_ID = #{jobTitleVo.titleId} </if>
+			<if test="jobTitleVo.titleName != null and jobTitleVo.titleName != ''"> AND TITLE_NAME = #{jobTitleVo.titleName} </if>
+			<if test="jobTitleVo.description != null and jobTitleVo.description != ''"> AND DESCRIPTION = #{jobTitleVo.description} </if>
+			<if test="jobTitleVo.createUser != null and jobTitleVo.createUser != ''"> AND CREATE_USER = #{jobTitleVo.createUser} </if>
+			<if test="jobTitleVo.createDate != null"> AND CREATE_DATE = #{jobTitleVo.createDate} </if>
+			<if test="jobTitleVo.modifyUser != null and jobTitleVo.modifyUser != ''"> AND MODIFY_USER = #{jobTitleVo.modifyUser} </if>
+			<if test="jobTitleVo.modifyDate != null"> AND MODIFY_DATE = #{jobTitleVo.modifyDate} </if>
+		</where>
+	</sql>
+	
+	<!-- include sql: 職位管理查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.JOB_TITLE
+	</sql>
+	
+	<!-- 取得職位管理查詢結果(分頁) -->
+	<select id="getJobTitlePageList" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY TITLE_NAME) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{jobTitleVo.page} * #{jobTitleVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{jobTitleVo.page} - 1) * #{jobTitleVo.rows}	
+	</select>
+	
+	<!-- 取得職位管理查詢結果(總筆數) -->
+	<select id="getJobTitlePageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得職位名稱的數量 -->
+	<select id="getCountByTitleName" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM
+			ESERVICE_ADM.DBO.JOB_TITLE
+		WHERE
+			TITLE_NAME = #{jobTitleVo.titleName}
+	</select>
+	
+	<!-- 取得人員管理查詢結果 -->
+	<select id="getJobTitle" resultMap="JobTitleMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.JOB_TITLE
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 新增職位 -->
+	<insert id="insertJobTitle">
+		INSERT INTO ESERVICE_ADM.DBO.JOB_TITLE
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			NEWID(),
+			#{jobTitleVo.titleName, jdbcType=VARCHAR},
+			#{jobTitleVo.description, jdbcType=VARCHAR},
+			#{jobTitleVo.createUser, jdbcType=VARCHAR},
+			getdate(),
+			#{jobTitleVo.modifyUser, jdbcType=VARCHAR},
+			getdate()
+		)
+	</insert>
+	
+	<!-- 更新職位 -->
+	<update id="updateJobTitle">
+		UPDATE
+			ESERVICE_ADM.DBO.JOB_TITLE
+		SET
+			TITLE_NAME = #{jobTitleVo.titleName,jdbcType=VARCHAR}
+			,DESCRIPTION = #{jobTitleVo.description,jdbcType=VARCHAR}
+			,MODIFY_USER = #{jobTitleVo.modifyUser,jdbcType=VARCHAR}
+			,MODIFY_DATE = getdate()
+		WHERE
+			TITLE_ID = #{jobTitleVo.titleId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 刪除職位 -->
+	<delete id="deleteJobTitle">
+		DELETE ESERVICE_ADM.DBO.JOB_TITLE WHERE TITLE_ID = #{jobTitleVo.titleId}
+	</delete>
+
+</mapper>
+

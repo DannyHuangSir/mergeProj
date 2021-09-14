@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.auth.dao.RoleDivAuthDao">
+
+	<!-- 取得拒絕訪問的div 名稱清單 -->
+	<select id="getRejectDivName" resultType="string">
+		SELECT
+			DIV_NAME
+		FROM
+			ESERVICE_ADM.DBO.FUNCTION_DIV
+		WHERE
+			DIV_ID IN (
+				SELECT
+					DIV_ID
+				FROM
+					ESERVICE_ADM.DBO.ROLE_DIV_AUTH
+				WHERE
+					ROLE_ID IN (
+						SELECT
+							ROLE_ID
+						FROM
+							ESERVICE_ADM.DBO.USER_ROLE
+						WHERE
+							USER_ID = #{userId}
+					)
+			)
+	</select>
+
+</mapper>

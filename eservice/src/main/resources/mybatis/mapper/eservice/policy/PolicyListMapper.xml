@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyListDao">
+
+	<!-- 保單資訊(附加資訊請繼承) -->
+	<resultMap id="PolicyMap" type="com.twfhclife.eservice.policy.model.PolicyVo">
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="GROUP_NO" property="groupNo"/>
+		<result column="SEQ_NO" property="seqNo"/>
+		<result column="STATUS" property="status"/>
+		<result column="EFFECTIVE_DATE" property="effectiveDate"/>
+		<result column="EXPIRE_DATE" property="expireDate"/>
+		<result column="PAID_TO_DATE" property="paidToDate"/>
+		<result column="PAYMENT_METHOD" property="paymentMethod"/>
+		<result column="PAYMENT_MODE" property="paymentMode"/>
+		<result column="POLICY_TYPE" property="policyType"/>
+		<result column="MAIN_AMOUNT" property="mainAmount"/>
+		<result column="PREM_YEAR" property="premYear"/>
+		<result column="UNPAID_STATUS" property="unpaidStatus"/>
+		<result column="UNPAID_AMOUNT" property="unpaidAmount"/>
+		<result column="CURRENCY" property="currency"/>
+		<result column="AGENT_CODE" property="agentCode"/>
+		<result column="AGENT_NA_CODE" property="agentNaCode"/>
+		<result column="AGENT_CODE_BRANCH" property="agentCodeBranch"/>
+	</resultMap>
+
+	<!-- 清單附加資訊 -->
+	<resultMap id="PolicyListMap" type="com.twfhclife.eservice.policy.model.PolicyListVo" extends="PolicyMap">
+		<result column="DRAW_DAY" property="drawDay"/>
+		<result column="PAID_AMOUNT" property="paidAmount"/>
+		<result column="MAIN_INSURED_NAME" property="mainInsuredName"/>
+		<result column="PRODUCT_NAME" property="productName"/>
+		<result column="EXPIRED_FLAG" property="expiredFlag"/>
+		<result column="SAME_ID_COUNT" property="sameIdCount"/>
+		<result column="PROD_TYPE" property="prodType"/>
+		<result column="CUSTOMER_NAME" property="customerName"/>
+		<result column="LIPI_ROCID" property="lipiRocId"/>
+		<result column="LIPM_ID" property="rocId"/>
+		<result column="PROD_IS_FATCA" property="prodIsFatca"/>
+		<result column="PROD_TYPE" property="prodType"/>	
+		<result column="MAIN_AMOUNT" property="mainAmount"/>
+		<result column="CURRENCY" property="currency"/>
+	</resultMap>
+
+	<!-- product -->
+	<resultMap id="ProductMap" type="com.twfhclife.eservice.policy.model.ProductVo">
+		<result column="PRODUCT_ID" property="productId"/>
+		<result column="PRODUCT_CODE" property="productCode"/>
+		<result column="PRODUCT_TYPE" property="productType"/>
+		<result column="PRODUCT_NAME" property="productName"/>
+		<result column="PROD_CATE" property="prodCate"/>
+		<result column="DESI_VERSION" property="desiVersion"/>
+		<result column="DESI_SALE_DATE" property="desiSaleDate"/>
+		<result column="DESI_CHAN_VAR_DATE" property="desiChanVarDate"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		P.POLICY_NO
+		,P.GROUP_NO
+		,P.SEQ_NO
+		,CASE WHEN P.EXPIRE_DATE <![CDATA[ < ]]> getdate()+1 THEN '50' ELSE P.STATUS END STATUS <!-- 50:滿期 -->
+		,P.EFFECTIVE_DATE
+		,P.EXPIRE_DATE
+		,P.PAID_TO_DATE
+		,P.PAYMENT_METHOD
+		,P.PAYMENT_MODE
+		,P.POLICY_TYPE
+		,P.MAIN_AMOUNT
+		,P.PREM_YEAR
+		,P.UNPAID_STATUS
+		,P.UNPAID_AMOUNT
+		,P.CURRENCY
+		,P.AGENT_CODE
+		,P.AGENT_NA_CODE
+		,P.AGENT_CODE_BRANCH
+	</sql>
+
+	<!-- 約定扣款日 -->
+	<sql id="DrawDay_Column">
+		(
+			SELECT TOP 1 
+				'' AS DRAW_DAY
+			FROM
+				ESERVICE.DBO.POLICY_PAYER PP
+			WHERE
+				PP.POLICY_NO = P.POLICY_NO
+		) AS DRAW_DAY
+	</sql>
+
+	<!-- 每期保費 -->
+	<sql id="PaidAmount_Column">
+		(select lipi_tabl_prem from ESERVICE.DBO.lilipi where lipi_insu_no=P.POLICY_NO) AS PAID_AMOUNT
+	</sql>
+
+    <!-- 要保人名稱 -->
+	
+	<sql id="CustomerName_Column">
+		(
+			SELECT TOP 1
+				ESERVICE.DBO.FN_DEBASE64(D.LIPM_NAME_1) LIPM_NAME
+			FROM
+				ESERVICE.DBO.LILIPM D
+			WHERE
+				D.LIPM_INSU_NO = P.POLICY_NO
+		) AS CUSTOMER_NAME
+	</sql>
+
+
+	<!-- 主約被保人名稱 -->
+	<sql id="MainInsuredName_Column">
+		(
+			SELECT TOP 1 
+				ESERVICE.DBO.FN_DEBASE64(C.LIPI_NAME) LIPI_NAME
+			FROM
+				ESERVICE.DBO.LILIPI C
+			WHERE
+				C.LIPI_INSU_NO = P.POLICY_NO
+		) AS MAIN_INSURED_NAME
+	</sql>
+	
+	<!-- 要被保人同一人 1:同一人, 0:不同人 -->
+	<sql id="sameIdCount_Column">
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				ESERVICE.DBO.LILIPM PM,
+				ESERVICE.DBO.LILIPI PI
+			WHERE
+				PM.LIPM_INSU_NO = P.POLICY_NO
+				AND PM.LIPM_INSU_NO = PI.LIPI_INSU_NO
+				AND PM.LIPM_ID = PI.LIPI_ID
+		) AS SAME_ID_COUNT
+	</sql>
+
+	<!-- 保單商品名稱 -->
+	<sql id="ProductName_Column">
+		(
+			SELECT TOP 1 
+				REPLACE(RTRIM(a.PRODUCT_NAME), '　', '')
+			FROM
+				ESERVICE.DBO.PRODUCT a 
+			WHERE
+				a.PRODUCT_CODE = P.POLICY_TYPE
+				AND (SELECT LIPM_INSU_BEG_DATE FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = P.POLICY_NO) BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
+		) AS PRODUCT_NAME
+	</sql>
+
+	<!-- PRODUCT COLUMN -->
+	<sql id="Product_Column">
+		PRODUCT_ID,
+		PRODUCT_CODE,
+		PRODUCT_TYPE,
+		REPLACE(RTRIM(PRODUCT_NAME), '　', ''),
+		PROD_CATE,
+		DESI_VERSION,
+		DESI_SALE_DATE,
+		DESI_CHAN_VAR_DATE
+	</sql>
+
+	<!-- 保單超過失效日期(系統日大於到期日) -->
+	<sql id="Expired_Column">
+		(
+			case when P.EXPIRE_DATE is null then 'N' 
+				 else CASE WHEN getdate()+1 <![CDATA[ >= ]]> P.EXPIRE_DATE
+					THEN 'Y'
+					ELSE 'N'
+				END
+			end
+		) AS EXPIRED_FLAG
+	</sql>
+
+	<sql id="whereClause">
+		<where>
+			<if test="vo.policyNo != null and vo.policyNo != ''"> AND P.POLICY_NO = #{vo.policyNo}</if>
+			<if test="vo.groupNo != null and vo.groupNo != ''"> AND P.GROUP_NO = #{vo.groupNo}</if>
+			<if test="vo.seqNo != null and vo.seqNo != ''"> AND P.SEQ_NO = #{vo.seqNo}</if>
+			<if test="vo.status != null and vo.status != ''"> AND P.STATUS = #{vo.status}</if>
+			<if test="vo.effectiveDate != null"> AND P.EFFECTIVE_DATE = #{vo.effectiveDate}</if>
+			<if test="vo.expireDate != null"> AND P.EXPIRE_DATE = #{vo.expireDate}</if>
+			<if test="vo.paidToDate != null"> AND P.PAID_TO_DATE = #{vo.paidToDate}</if>
+			<if test="vo.paymentMethod != null and vo.paymentMethod != ''"> AND P.PAYMENT_METHOD = #{vo.paymentMethod}</if>
+			<if test="vo.paymentMode != null and vo.paymentMode != ''">AND P.PAYMENT_MODE = #{vo.paymentMode}</if>
+			<if test="vo.policyType != null and vo.policyType != ''">AND P.POLICY_TYPE = #{vo.policyType}</if>
+			<if test="vo.mainAmount != null">AND P.MAIN_AMOUNT = #{vo.mainAmount}</if>
+			<if test="vo.premYear != null">AND P.PREM_YEAR = #{vo.premYear}</if>
+			<if test="vo.unpaidStatus != null and vo.unpaidStatus != ''">AND P.UNPAID_STATUS = #{vo.unpaidStatus}</if>
+			<if test="vo.unpaidAmount != null">AND P.UNPAID_AMOUNT = #{vo.unpaidAmount}</if>
+			<if test="vo.currency != null and vo.currency != ''">AND P.CURRENCY = #{vo.currency}</if>
+			<if test="vo.agentCode != null and vo.agentCode != ''">AND P.AGENT_CODE = #{vo.agentCode}</if>
+			<if test="vo.agentNaCode != null and vo.agentNaCode != ''">AND P.AGENT_NA_CODE = #{vo.agentNaCode}</if>
+			<if test="vo.agentCodeBranch != null and vo.agentCodeBranch != ''"> AND P.AGENT_CODE_BRANCH = #{vo.agentCodeBranch} </if>
+		</where>
+	</sql>
+
+	<sql id="wherePkClause">
+		<where>
+			AND P.POLICY_NO = #{vo.policyNo}
+		</where>
+	</sql>
+
+	<!-- 保單清單查詢結果 -->
+	<select id="getPolicyList" resultMap="PolicyListMap">
+		SELECT
+			<include refid="Base_Column_List"/>
+			,<include refid="DrawDay_Column"/>
+			,<include refid="PaidAmount_Column"/>
+			,<include refid="MainInsuredName_Column"/>
+			,<include refid="ProductName_Column"/>
+			,<include refid="Expired_Column"/>
+			,<include refid="sameIdCount_Column"/>
+			,<include refid="CustomerName_Column"/>
+			
+		FROM
+			ESERVICE.DBO.POLICY P
+		<include refid="whereClause"/>
+	</select>
+
+	<!-- 使用者的保單清單查詢結果 -->
+	<select id="getUserPolicyList" resultMap="PolicyListMap">
+		SELECT
+			<include refid="Base_Column_List"/>
+			,<include refid="DrawDay_Column"/>
+			,<include refid="PaidAmount_Column"/>
+			,<include refid="MainInsuredName_Column"/>
+			,<include refid="ProductName_Column"/>
+			,<include refid="Expired_Column"/>
+			,<include refid="sameIdCount_Column"/>
+			,PRODES.PROD_IS_FATCA,PRODES.PROD_TYPE
+		FROM
+			ESERVICE.DBO.POLICY P
+			LEFT JOIN LIPROD_ES PRODES ON SUBSTRING(P.POLICY_NO,1,2) = PRODES.PROD_NO
+		WHERE
+			P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+			<!--  僅提供有效保單及兩年內失效保單之查詢 -->
+			AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
+	</select>
+	
+	<!-- 使用者的保單清單查詢結果(保單理賠) -->
+	<select id="getUserPolicyListByRocId" resultMap="PolicyListMap">
+		SELECT
+			<include refid="Base_Column_List" />
+			,<include refid="DrawDay_Column" />
+			,<include refid="PaidAmount_Column" />
+			,<include refid="MainInsuredName_Column" />
+			,<include refid="ProductName_Column" />
+			,<include refid="Expired_Column" />
+			,<include refid="sameIdCount_Column" />
+			,<include refid="CustomerName_Column"/>
+			,D.LIPI_ID LIPI_ROCID
+		FROM
+			ESERVICE.DBO.POLICY P LEFT JOIN ESERVICE.DBO.LILIPI  D on D.LIPI_INSU_NO = P.POLICY_NO
+		WHERE
+			 (
+	        P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+	        <!-- 增加找被保人保單號碼清單 -->
+	        or
+	        P.POLICY_NO IN (SELECT LIPI_INSU_NO FROM ESERVICE.DBO.LILIPI WHERE LIPI_ID = #{rocId})
+	        )
+			<!--  僅提供有效保單及兩年內失效保單之查詢 -->
+			AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
+	</select>
+	
+	<!-- 取得使用者的所有保單清單(投資型) -->
+	<select id="getInvtPolicyList" resultMap="PolicyListMap">
+		SELECT
+			<include refid="Base_Column_List"/>
+			,<include refid="DrawDay_Column"/>
+			,<include refid="PaidAmount_Column"/>
+			,<include refid="MainInsuredName_Column"/>
+			,<include refid="ProductName_Column"/>
+			,<include refid="Expired_Column"/>
+			,<include refid="sameIdCount_Column"/>
+			,<include refid="CustomerName_Column"/>
+		FROM
+			ESERVICE.DBO.POLICY P
+		WHERE
+			P.POLICY_TYPE IN ('UC','UH','UR','UQ','UP','US','UU')
+        AND
+        (
+        P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+        <!-- 增加找被保人保單號碼清單 -->
+        or
+        P.POLICY_NO IN (SELECT LIPI_INSU_NO FROM ESERVICE.DBO.LILIPI WHERE LIPI_ID = #{rocId})
+        )
+			<!--  僅提供有效保單及兩年內失效保單之查詢 -->
+			AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
+	</select>
+
+	<!-- 取得使用者的所有保單清單(保障型) -->
+	<select id="getBenefitPolicyList" resultMap="PolicyListMap">
+		SELECT
+			<include refid="Base_Column_List"/>
+			,<include refid="DrawDay_Column"/>
+			,<include refid="PaidAmount_Column"/>
+			,<include refid="MainInsuredName_Column"/>
+			,<include refid="ProductName_Column"/>
+			,<include refid="Expired_Column"/>
+			,<include refid="sameIdCount_Column"/>
+			,<include refid="CustomerName_Column"/>
+		FROM
+			ESERVICE.DBO.POLICY P
+		WHERE
+			P.POLICY_TYPE NOT IN ('UC','UH','UR','UQ','UP','US','UU')
+        AND
+        (
+        P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+        <!-- 增加找被保人保單號碼清單 -->or
+        P.
+        POLICY_NO IN (SELECT LIPI_INSU_NO FROM ESERVICE.DBO.LILIPI WHERE LIPI_ID = #{rocId})
+        )
+			<!--  僅提供有效保單及兩年內失效保單之查詢 -->
+			AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
+	</select>
+
+	<!-- 取得我的保單資料 -->
+	<select id="findById" resultMap="PolicyMap">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			ESERVICE.DBO.POLICY P
+		WHERE
+			P.POLICY_NO = #{policyNo}
+	</select>
+
+	<select id="findProductByPolicyNo" resultMap="ProductMap">
+		SELECT TOP 1
+			<include refid="Product_Column"/>
+		FROM ESERVICE.DBO.PRODUCT
+		JOIN ESERVICE.DBO.LILIPM ON LIPM_INSU_TYPE = PRODUCT_CODE
+		WHERE LIPM_INSU_NO = #{policyNo}
+		AND LIPM_INSU_BEG_DATE BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
+	</select>
+
+	<select id="getInvestmentPolicyList" resultMap="PolicyListMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		,<include refid="DrawDay_Column"/>
+		,<include refid="PaidAmount_Column"/>
+		,<include refid="MainInsuredName_Column"/>
+		,<include refid="ProductName_Column"/>
+		,<include refid="Expired_Column"/>
+		,<include refid="sameIdCount_Column"/>
+		,<include refid="CustomerName_Column"/>
+		,PM.LIPM_ID
+		FROM
+		ESERVICE.DBO.POLICY P
+		LEFT JOIN ESERVICE.DBO.LILIPM PM ON PM.LIPM_INSU_NO = P.POLICY_NO
+		LEFT JOIN ESERVICE.DBO.LILIPI PI ON PI.LIPI_INSU_NO = P.POLICY_NO
+		WHERE
+		P.POLICY_TYPE IN ('UC','UH','UR','UQ','UP','US','UU')
+		AND (PM.LIPM_ID =  #{rocId} OR PI.LIPI_ID = #{rocId})
+		<!--  僅提供有效保單及兩年內失效保單之查詢 -->
+		AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
+	</select>
+
+	<resultMap id="DepositPolicyListMap" type="com.twfhclife.eservice.policy.model.DepositPolicyListVo" extends="PolicyListMap">
+		<collection property="portfolioVoList" resultMap="PortfolioMap"/>
+	</resultMap>
+
+	<resultMap id="PortfolioMap" type="com.twfhclife.eservice.policy.model.PortfolioVo">
+		<result column="SAFP_NET_AMT" property="safpNetAmt"/>
+		<result column="SAFP_NET_UNITS" property="safpNetUnits"/>
+		<result column="SAFP_AVG_PNTDVAL" property="safpAvgPntdval"/>
+		<result column="NET_VALUE_SELL" property="netValueSell"/>
+		<result column="EXCH_RATE_BUY" property="exchRateBuy"/>
+		<result column="CLUP_EXPE_NTD_SUM" property="clupExpeNtdSum"/>
+		<result column="INVT_NO" property="invtNo"/>
+		<result column="INVT_NAME" property="invtName"/>
+		<result column="INVT_EXCH_CURR" property="invtExchCurr"/>
+	</resultMap>
+
+	<select id="getDepositList" resultMap="DepositPolicyListMap">
+		SELECT
+		 <include refid="Base_Column_List"/>
+		,<include refid="DrawDay_Column"/>
+		,<include refid="PaidAmount_Column"/>
+		,<include refid="MainInsuredName_Column"/>
+		,<include refid="ProductName_Column"/>
+		,<include refid="Expired_Column"/>
+		,<include refid="sameIdCount_Column"/>
+		,<include refid="CustomerName_Column"/>
+		, PM.LIPM_ID
+		, PP.SAFP_NET_AMT
+		, PP.SAFP_NET_UNITS
+		, PP.SAFP_AVG_PNTDVAL
+		, PP.NET_VALUE_SELL
+		, PP.EXCH_RATE_BUY
+		, PP.CLUP_EXPE_NTD_SUM
+		, PP.INVT_NO
+		, PP.INVT_NAME
+		, PP.INVT_EXCH_CURR
+		FROM
+		ESERVICE.DBO.POLICY P
+		LEFT JOIN ESERVICE.DBO.LILIPM PM ON PM.LIPM_INSU_NO = P.POLICY_NO
+		LEFT JOIN ESERVICE.DBO.LILIPI PI ON PI.LIPI_INSU_NO = P.POLICY_NO
+		LEFT JOIN ESERVICE.DBO.POLICY_PORTFOLIO PP ON PP.POLICY_NO = P.POLICY_NO
+		WHERE
+		P.POLICY_TYPE IN ('UC','UH','UR','UQ','UP','US','UU')
+		AND (PM.LIPM_ID = #{rocId} OR PI.LIPI_ID = #{rocId})
+		<if test="policyNo != null">
+			AND P.POLICY_NO = #{policyNo}
+		</if>
+		<!--  僅提供有效保單及兩年內失效保單之查詢 -->
+		AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
+	</select>
+
+</mapper>

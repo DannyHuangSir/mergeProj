@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>已持有投資標的轉換｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">已持有投資標的轉換</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 已持有投資標的轉換
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1  col-xs-2">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2  col-xs-2">
+						2<span class="hid1">. 接受條件</span>
+					</li>
+					<li class="step3b  col-xs-2">
+						3<span class="hid1">. 選擇轉出基金</span>
+					</li>
+					<li class="step3b  col-xs-3">
+						4<span class="hid1">. 選擇轉入基金</span>
+					</li>
+					<li class="step4 active  col-xs-3">
+						5<span class="hid1">. 確認資料與密碼</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3 loan1">
+				<h2>資料確認</h2>
+
+				<div class="check-title">轉出基金</div>
+				<div class=" grey2">
+					<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+						<thead>
+						<tr class="table2 orange2">
+							<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+							<th:block  th:if="not ${#lists.isEmpty(outInvestmentService)}">	
+								<th:block th:if="${outInvestmentService[0].ratio !=0}" >
+									<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th>
+								</th:block>
+								<th:block th:if="${outInvestmentService[0].value !=0}" >
+									<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出單位數</th>
+								</th:block>
+							</th:block>
+							<!-- <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出金額</th> -->
+						</tr>
+						</thead>
+						<tbody>
+						<th:block  th:if="not ${#lists.isEmpty(outInvestmentService)}">	
+							<th:block th:each="from : ${outInvestmentService}">
+								<tr class="h90 tr-odd-noEvent">
+									<td class="text-left" >
+										<th:block th:text="${from.invtName != null} ?${from.invtName}"  ></th:block>
+										<p class="enSmall"  th:text="(${from.invtNo != null} ?${from.invtNo})"></p></td>
+										<th:block th:if="${from.ratio !=0}" >
+											<td th:text="${from.ratio != null}?${from.ratio} +'%'"></td>
+										</th:block>
+										<th:block th:if="${from.value !=0}" >
+											<td th:text="${from.value != null}?${#numbers.formatDecimal(from.value,0,4)}"></td>
+										</th:block>
+										
+									<!-- <td>1,042,899<i class="my5">NTD</i></td> 
+									</td>-->
+								</tr>
+							</th:block>
+						</th:block>			
+						</tbody>
+					</table>
+					<!-- <div class="invst2total">總轉出金額 <span class="chNormal">NTD </span><span class="orange">50,866.68</span></div> -->
+				</div>
+				<div class="center1 ptop30"><img src="img/arrow-down.png" id="img-trans">
+				</div>
+
+				<div class="check-title">轉入基金</div>
+				<div class=" grey2">
+					<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+						<thead>
+						<tr class="table2 orange2">
+							<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+							<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉入百分比</th>
+							<!-- <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉入金額</th> -->
+						</tr>
+						</thead>
+						<tbody>
+						<th:block  th:if="not ${#lists.isEmpty(inInvestmentService)}">	
+							<th:block th:each="from : ${inInvestmentService}">
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left"  >
+									<th:block 	th:text="${from.invtName != null} ?${from.invtName}"></th:block>
+									<p class="enSmall" th:text="(${from.invtNo != null} ?${from.invtNo})"></p></td>
+								<td th:text="${from.ratio != null} ?${from.ratio}+'%'"></td>
+								<!-- <td>1,042,899<i class="my5">NTD</i></td>
+								</td> -->
+							</tr>
+							</th:block>
+						</th:block>	
+						</tbody>
+					</table>
+					<!-- <div class="invst2total">總轉入金額 <span class="chNormal">NTD </span><span class="orange">50,866.68</span></div> -->
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3" style="line-height: 40px;">選擇驗證方式完成申請：</label>
+					<div class="col-sm-9">
+						<div class="radio inline">
+							<label>
+								<div class="radio-btn checkedRadio" style="margin: 3px;"><i><input type="radio" id="tab_group_1" name="tab_group_2" value="otp" checked="checked" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div> OTP驗證
+							</label>
+						</div>
+						<div class="radio inline">
+							<label>
+								<div class="radio-btn" style="margin: 3px;"><i><input type="radio" name="tab_group_2" value="option2"  value="password"  onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div> 會員登入密碼
+							</label>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<div class="tabs">
+							<!-- TAB 1 -->
+							<article id="tab_2" class="tab">
+								<section id="tab_frame_1" class="tab-frame">
+									<div class="arrow-upleft" style="left: 40%"></div>
+									<div class="grey2">
+										<div class="check-title depo2">請輸入您的用戶密碼以完成變更申請</div>
+										<div class="check-list2 grey2">
+											<div class="form-group text-center">
+												<div class="inlineBlock">
+													<label for="inputEmail3">用戶密碼</label>
+													<!-- <div> -->
+													<input type="password" name="userPassword" class="input-400" placeholder="">
+													<!-- </div> -->
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</article>
+							<!-- TAB 2 -->
+							<article id="tab_1" class="tab  tab-show">
+								<section id="tab_frame_2" class="tab-frame">
+									<div class="arrow-upleft ml37" style="left: 30%"></div>
+									<div class="grey">
+										<div class="check-title depo2">請輸入驗證碼以完成申請</div>
+										<div class="col-md-8 col-md-offset-2  mobile-panel">
+											<div class="cert1 grey2" >
+												<p class="center1">請輸入驗證碼以完成申請</p>
+												<div class="colorBlack chMiddle marginTop20 marginBottom20">
+													驗證碼已傳送至手機號碼
+												</div>
+												<div class="clearFloat ">
+													<input type=""  name="authNum" class="form-control float-left w70p" placeholder="請查看簡訊，並輸入四碼驗證碼">
+													<a  href="javascript:smsTimer.reset()"   class="enSmall colorGreen lineHigh34">重新發送驗證碼</a>
+												</div>
+												<div class="countdown">
+													剩餘時間 <em id="timerDiv" style="color: #DD792E;">5:00</em>
+												</div>
+											</div>
+										</div>
+
+										<div class="clearfix"></div>
+									</div>
+
+								</section>
+							</article>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 two-buttons">
+					<a href="javascript:void(0);"><button id="deny" class="btn-signup">上一步</button></a>
+					<a><button id="go" class="btn-signup"   data-toggle="modal" data-target="#modal-container-locked">確認送出</button></a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="modal fade in" id="modal-container-locked" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 grey2" style="padding: 20px 50px;">
+					此基金轉換申請並不會變更現行的投資標的與分配比例，需至「變更投資標的與分配比例」功能中進行異動！
+					<p class="marginBottom30">是否要繼續變更？</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn-signup" data-dismiss="modal" aria-label="Close">取消</button>
+					<button type="button" class="btn-signup" id="go"  onclick="go()">确定</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
+	<script th:src="@{/js/travelPolicy/moment.js}"></script>
+	<script th:inline="javascript">
+			var outInvestmentServiceList = /*[[${outInvestmentService}]]*/;
+			var inInvestmentServiceList = /*[[${inInvestmentService}]]*/;
+			var investmentsList = /*[[${investmentsList}]]*/;
+			var numInvestment = /*[[${numInvestment}]]*/;
+					 //發生驗證碼
+			var smsRemainTime = /*[[${timeSet}]]*/;
+			$(function() {
+				
+			});		
+			//確定	
+         function go(){
+			 console.log('--------------------------------------');
+				let formData = {};
+				formData.investments = JSON.stringify(outInvestmentServiceList);
+				formData.newInvestments = JSON.stringify(inInvestmentServiceList);
+				formData.investmentsList = investmentsList;
+				formData.numInvestment = numInvestment;
+				formData.authType = $("[name='tab_group_2']:checked").val();
+				formData.userPassword = $.base64.encode($("input[name='userPassword']").val());
+				formData.authenticationNum = $("input[name='authNum']").val();
+				postWithFormData(/*[[@{/fundSuccess}]]*/, formData);
+    	}
+			//回退
+		$("#deny").click(function(){	
+			console.log('---------------------退上上一步-----------------');
+			let formData = {};
+			formData.investmentsList = investmentsList;
+			formData.numInvestment = numInvestment;
+			console.log('---------------------退上上一步-----------------');
+		 	postWithFormData(/*[[@{/fund4}]]*/,formData);
+		 });
+
+
+		var smsOriginRemainTime = smsRemainTime;
+		$(function() {
+			smsTimer.show(1); // 1秒
+		})
+
+		var smsTimer = function() {
+			var timer;
+			function showSmsRemainTime(second) {
+				timer = setInterval(function() {
+					smsRemainTime = smsRemainTime - 1
+					if (smsRemainTime <= 0) {
+						clearInterval(timer);
+						$('#timerDiv').html('0:00');
+						// 20210628 輸入驗證碼連續錯誤達幾次，該驗證碼即失效; 有到後台新增 系統常數(SYSTEM_CONSTANTS) AUTH_CHECK_COUNTS 值設為 5
+						//openAlert("驗證碼已逾時，請重新寄送驗證碼！");
+						//openAlert($('#E0009').val());
+					} else {
+						var showTime = moment.utc(smsRemainTime * 1000).format('m:ss');
+						$('#timerDiv').html(showTime);
+					}
+				}, second * 1000);
+			};
+			function reset() {
+				clearInterval(timer);
+				reSendAuthentication();
+			};
+			return {
+				show : function(second) {
+					showSmsRemainTime(second);
+				},
+				reset : function() {
+					reset();
+				}
+			};
+		}();
+
+		function reSendAuthentication() {
+			popupLoading();
+			$.ajax({
+				type : 'POST',
+				//contentType : 'application/json',
+				dataType : 'json',
+				url : "/eservice/sendAuthentication",
+				data : {
+					authenticationType:"conversion"
+				},
+				success : function(response) {
+					removeLoading();
+					//openAlert("重新寄送完成!");
+					openAlert($('#E0010').val());
+					//TODO： 需要重新設定時間
+					// 20210628 輸入驗證碼連續錯誤達幾次，該驗證碼即失效; 有到後台新增 系統常數(SYSTEM_CONSTANTS) AUTH_CHECK_COUNTS 值設為 5
+					// BaseController->setAuthenticationShow() 原本就有固定寫了300沒有參數化
+					//smsRemainTime = smsOriginRemainTime;
+					smsRemainTime = 300;
+					smsTimer.show(1);
+				},
+				error : function() {
+					removeLoading();
+					openAlert($('#E0011').val());
+					//openAlert("重新寄送失敗，請重新寄送驗證碼！");
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

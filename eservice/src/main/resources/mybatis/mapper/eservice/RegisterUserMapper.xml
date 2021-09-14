@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.web.dao.UsersDao">
+	
+	<select id="getPolicyByRocId" resultType="string" parameterType="string">
+		SELECT
+			LIPM_INSU_NO POLICY_NO
+		FROM
+			ESERVICE.DBO.LILIPM
+		WHERE UPPER(LIPM_ID) = UPPER(#{rocId})
+		AND LIPM_INSU_NO = #{policyNo}
+		UNION
+		SELECT
+			LIPI_INSU_NO POLICY_NO
+		FROM
+			ESERVICE.DBO.LILIPI
+		WHERE UPPER(LIPI_ID) = UPPER(#{rocId})
+		AND LIPI_INSU_NO = #{policyNo}
+	</select>
+
+	<select id="getPolicyExtraByRocId" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT 
+		COUNT(*) 
+		FROM 
+		ESERVICE.DBO.POLICY_EXTRA
+		WHERE POLICY_NO IN (Select LIPM_ID FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId} ) 
+		AND LOAN_AMOUNT <![CDATA[>]]> 0
+	</select>
+	
+	<select id="getBirthDateByPolicyNo" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT CONVERT(VARCHAR(10),LIPM_BIRTH,111) FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = #{policyNo}
+	</select>
+	
+	<select id="getInsByProPolicyNo" resultType="com.twfhclife.eservice.web.model.InsuredVo" parameterType="java.lang.String">
+		SELECT
+      	LIPI_ID identityId,
+      	PROD.PRODUCT_TYPE,
+      	ESERVICE.DBO.FN_DEBASE64(LIPI_NAME) AS insuredName,
+      	LIPI_BIRTH birthday
+		FROM
+			ESERVICE.DBO.LILIPI
+		LEFT OUTER JOIN ESERVICE.DBO.PRODUCT PROD
+			ON LIPI_INSU_TYPE = PROD.PRODUCT_CODE
+		WHERE
+			LIPI_INSU_NO = #{policyNo}
+	</select>
+
+</mapper>

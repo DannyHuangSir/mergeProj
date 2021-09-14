@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransAnnuityMethodDao">
+
+	<resultMap id="TransAnnuityMethodMap" type="com.twfhclife.eservice.onlineChange.model.TransAnnuityMethodVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="ANNUITY_METHOD" property="annuityMethod"/>
+		<result column="ANNUITY_METHOD_OLD" property="annuityMethodOld"/>
+	<result column="GUARANTEE_PERIOD" property="guaranteePeriod"/>
+		<result column="GUARANTEE_PERIOD_OLD" property="guaranteePeriodOld"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,ANNUITY_METHOD,ANNUITY_METHOD_OLD,GUARANTEE_PERIOD,GUARANTEE_PERIOD_OLD
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transAnnuityMethodVo.id != null"> AND ID = #{transAnnuityMethodVo.id} </if>
+			<if test="transAnnuityMethodVo.transNum != null and transAnnuityMethodVo.transNum != ''"> AND TRANS_NUM = #{transAnnuityMethodVo.transNum} </if>
+			<if test="transAnnuityMethodVo.annuityMethod != null and transAnnuityMethodVo.annuityMethod != ''"> AND ANNUITY_METHOD = #{transAnnuityMethodVo.annuityMethod} </if>
+			<if test="transAnnuityMethodVo.annuityMethodOld != null and transAnnuityMethodVo.annuityMethodOld != ''"> AND ANNUITY_METHOD_OLD = #{transAnnuityMethodVo.annuityMethodOld} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transAnnuityMethodVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更年金給付方式查詢結果 -->
+	<select id="getTransAnnuityMethod" resultMap="TransAnnuityMethodMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_ANNUITY_METHOD
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 變更年金給付方式-新增 -->
+	<insert id="insertTransAnnuityMethod">
+		INSERT INTO ESERVICE.DBO.TRANS_ANNUITY_METHOD
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_ANNUITY_METHOD),
+			#{transAnnuityMethodVo.transNum, jdbcType=VARCHAR},
+			#{transAnnuityMethodVo.annuityMethod, jdbcType=VARCHAR},
+			#{transAnnuityMethodVo.annuityMethodOld, jdbcType=VARCHAR},
+			#{transAnnuityMethodVo.guaranteePeriod, jdbcType=VARCHAR},
+			#{transAnnuityMethodVo.guaranteePeriodOld, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 取得舊年金保證期間  -->
+	<select id="getOldGuarTerm" resultType="java.lang.String" parameterType="java.lang.String">
+		select LIPI_GUAR_TERM 
+		FROM ESERVICE.DBO.LILIPI_ES
+		where lipi_insu_type + convert(varchar,lipi_insu_grp_no) + lipi_insu_seq_no = #{policyNo}
+	</select>
+	
+</mapper>

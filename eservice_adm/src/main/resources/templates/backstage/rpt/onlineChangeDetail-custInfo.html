@@ -1,0 +1,71 @@
+<tr class="detail-row even open" role="row">
+	<td colspan="7">
+		<div class="table-detail">
+			<div class="row" style="background-color: #fff; border-bottom: none">
+				<div class="col-xs-12 col-sm-11">
+					<div class="space visible-xs"></div>
+					<div class="profile-user-info profile-user-info-striped">
+						<div class="profile-info-row">
+							<div class="profile-info-name">申請日期</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_DATE']}"/></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">申請項目</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_TYPE_NAME']}"/></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">申請狀態</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['STATUS_NAME']}"/></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">手機號碼</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['MOBILE']}"/></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">原手機號碼</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['MOBILE_OLD']}"/></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">信箱</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['EMAIL']}"/></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">原信箱</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['EMAIL_OLD']}"/></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-1">
+					<th:block th:if="${detailData['STATUS_TYPE']} == '0'">
+					<button
+						class="pull-right btn btn-sm btn-primary btn-white btn-round"
+						type="button" th:onclick="'javascript:review(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+						已審核<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+					</button>
+					<br/>
+					<br/>
+					<button
+						class="pull-right btn btn-sm btn-primary btn-white btn-round"
+						type="button" th:onclick="'javascript:resend(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+						待補件<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+					</button>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</td>
+</tr>

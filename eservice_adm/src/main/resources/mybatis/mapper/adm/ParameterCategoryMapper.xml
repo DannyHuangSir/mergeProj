@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.ParameterCategoryDao">
+
+	<resultMap id="ParameterCategoryMap" type="com.twfhclife.adm.model.ParameterCategoryVo" >
+		<result column="PARAMETER_CATEGORY_ID" property="parameterCategoryId"/>
+		<result column="SYSTEM_ID" property="systemId"/>
+		<result column="CATEGORY_CODE" property="categoryCode"/>
+		<result column="CATEGORY_NAME" property="categoryName"/>
+		<result column="REMARK" property="remark"/>
+		<result column="STATUS" property="status"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<!-- 自定義 -->
+		<result column="SYS_NAME" property="sysName"/>
+		<result column="STATUS_NAME" property="statusName"/>
+	</resultMap>
+	
+	<resultMap id="ParameterCategoryHashMap" type="HashMap" >
+		<result column="PARAMETER_CATEGORY_ID" property="parameterCategoryId"/>
+		<result column="SYSTEM_ID" property="systemId"/>
+		<result column="CATEGORY_CODE" property="parameterCategoryCode"/>
+		<result column="CATEGORY_NAME" property="parameterCategoryName"/>
+		<result column="REMARK" property="remark"/>
+		<result column="STATUS" property="status"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<!-- 自定義 -->
+		<result column="SYS_NAME" property="sysName"/>
+		<result column="STATUS_NAME" property="statusName"/>
+		<result column="ROW_NUM" property="rowNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		PARAMETER_CATEGORY_ID,SYSTEM_ID,CATEGORY_CODE,CATEGORY_NAME,REMARK,STATUS,CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="parameterCategoryVo.parameterCategoryId != null"> AND PARAMETER_CATEGORY_ID = #{parameterCategoryVo.parameterCategoryId} </if>
+			<if test="parameterCategoryVo.systemId != null and parameterCategoryVo.systemId != ''"> AND SYSTEM_ID = #{parameterCategoryVo.systemId} </if>
+			<if test="parameterCategoryVo.categoryCode != null and parameterCategoryVo.categoryCode != ''"> AND CATEGORY_CODE = #{parameterCategoryVo.categoryCode} </if>
+			<if test="parameterCategoryVo.categoryName != null and parameterCategoryVo.categoryName != ''"> AND CATEGORY_NAME = #{parameterCategoryVo.categoryName} </if>
+			<if test="parameterCategoryVo.remark != null and parameterCategoryVo.remark != ''"> AND REMARK = #{parameterCategoryVo.remark} </if>
+			<if test="parameterCategoryVo.status != null"> AND STATUS = #{parameterCategoryVo.status} </if>
+			<if test="parameterCategoryVo.createDate != null"> AND CREATE_DATE = #{parameterCategoryVo.createDate} </if>
+			<if test="parameterCategoryVo.createUser != null and parameterCategoryVo.createUser != ''"> AND CREATE_USER = #{parameterCategoryVo.createUser} </if>
+			<if test="parameterCategoryVo.updateDate != null"> AND UPDATE_DATE = #{parameterCategoryVo.updateDate} </if>
+			<if test="parameterCategoryVo.updateUser != null and parameterCategoryVo.updateUser != ''"> AND UPDATE_USER = #{parameterCategoryVo.updateUser} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND PARAMETER_CATEGORY_ID = #{parameterCategoryVo.parameterCategoryId}
+		</where>
+	</sql>
+	
+	<!-- include sql: 參數類型維護查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			PC.PARAMETER_CATEGORY_ID
+			,PC.CATEGORY_CODE
+			,PC.CATEGORY_NAME
+			,PC.REMARK
+			,PC.STATUS
+			,CASE 
+				WHEN PC.STATUS = '1' THEN CAST('是' AS VARCHAR)
+				WHEN PC.STATUS = '0' THEN CAST('否' AS VARCHAR)
+				ELSE CAST(PC.STATUS AS VARCHAR)
+			END AS STATUS_NAME
+			,PC.SYSTEM_ID
+			,S.SYS_NAME
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER_CATEGORY PC
+			LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS S ON PC.SYSTEM_ID = S.SYS_ID
+		<where>
+			<if test="parameterCategoryVo.systemId != null and parameterCategoryVo.systemId != ''"> AND PC.SYSTEM_ID = #{parameterCategoryVo.systemId} </if>
+			<if test="parameterCategoryVo.parameterCategoryId != null"> AND PARAMETER_CATEGORY_ID = #{parameterCategoryVo.parameterCategoryId} </if>
+			<if test="parameterCategoryVo.status != null"> AND PC.STATUS = #{parameterCategoryVo.status} </if>
+			<if test="parameterCategoryVo.startDate != null and parameterCategoryVo.startDate != ''">
+				<if test="parameterCategoryVo.endDate != null and parameterCategoryVo.endDate != ''">
+					AND convert(varchar(10), PC.CREATE_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{parameterCategoryVo.startDate}, 120)
+					AND convert(varchar(10), PC.CREATE_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{parameterCategoryVo.endDate}, 120)
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 取得參數類型維護查詢結果(分頁) -->
+	<select id="getParameterCategoryPageList" resultMap="ParameterCategoryHashMap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY PARAMETER_CATEGORY_ID) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{parameterCategoryVo.page} * #{parameterCategoryVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{parameterCategoryVo.page} - 1) * #{parameterCategoryVo.rows}	
+	</select>
+	
+	<!-- 取得參數類型維護查詢結果(總筆數) -->
+	<select id="getParameterCategoryPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得參數類型維護查詢結果 -->
+	<select id="getParameterCategory" resultMap="ParameterCategoryMap">
+		<include refid="INC1" />
+	</select>
+	
+	<!-- 參數類型維護-新增 -->
+	<insert id="insertParameterCategory">
+		INSERT INTO ESERVICE_ADM.DBO.PARAMETER_CATEGORY
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN (SELECT COUNT(*) FROM ESERVICE_ADM.DBO.PARAMETER_CATEGORY) = 0 THEN 1 ELSE (SELECT MAX(PARAMETER_CATEGORY_ID) + 1 FROM ESERVICE_ADM.DBO.PARAMETER_CATEGORY) END),
+			#{parameterCategoryVo.systemId, jdbcType=VARCHAR},
+			#{parameterCategoryVo.categoryCode, jdbcType=VARCHAR},
+			#{parameterCategoryVo.categoryName, jdbcType=VARCHAR},
+			#{parameterCategoryVo.remark, jdbcType=VARCHAR},
+			#{parameterCategoryVo.status, jdbcType=NUMERIC},
+			getdate(),
+			#{parameterCategoryVo.createUser, jdbcType=VARCHAR},
+			getdate(),
+			#{parameterCategoryVo.updateUser, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 參數類型維護-更新 -->
+	<update id="updateParameterCategory">
+		UPDATE
+			ESERVICE_ADM.DBO.PARAMETER_CATEGORY
+		<set>
+			<if test="parameterCategoryVo.parameterCategoryId != null"> PARAMETER_CATEGORY_ID = #{parameterCategoryVo.parameterCategoryId}, </if>
+			<if test="parameterCategoryVo.systemId != null"> SYSTEM_ID = #{parameterCategoryVo.systemId}, </if>
+			<if test="parameterCategoryVo.categoryCode != null"> CATEGORY_CODE = #{parameterCategoryVo.categoryCode}, </if>
+			<if test="parameterCategoryVo.categoryName != null"> CATEGORY_NAME = #{parameterCategoryVo.categoryName}, </if>
+			<if test="parameterCategoryVo.remark != null"> REMARK = #{parameterCategoryVo.remark}, </if>
+			<if test="parameterCategoryVo.status != null"> STATUS = #{parameterCategoryVo.status}, </if>
+			<if test="parameterCategoryVo.createDate != null"> CREATE_DATE = #{parameterCategoryVo.createDate}, </if>
+			<if test="parameterCategoryVo.createUser != null"> CREATE_USER = #{parameterCategoryVo.createUser}, </if>
+			<if test="parameterCategoryVo.updateDate != null"> UPDATE_DATE = #{parameterCategoryVo.updateDate}, </if>
+			<if test="parameterCategoryVo.updateUser != null"> UPDATE_USER = #{parameterCategoryVo.updateUser}, </if>
+		</set>
+		<include refid="wherePkClause" />
+	</update>
+	
+	<!-- 參數類型維護-刪除 -->
+	<delete id="deleteParameterCategory">
+		DELETE ESERVICE_ADM.DBO.PARAMETER_CATEGORY 
+		<include refid="wherePkClause" />
+	</delete>
+
+</mapper>

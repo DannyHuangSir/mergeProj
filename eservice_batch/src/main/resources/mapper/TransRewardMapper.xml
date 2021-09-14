@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransRewardMapper">
+
+	<resultMap id="TransRewardMap" type="com.twfhclife.eservice_batch.model.TransRewardVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="REWARD_MODE" property="rewardMode"/>
+		<result column="REWARD_MODE_OLD" property="rewardModeOld"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,REWARD_MODE,REWARD_MODE_OLD
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transRewardVo.id != null"> AND ID = #{transRewardVo.id} </if>
+			<if test="transRewardVo.transNum != null and transRewardVo.transNum != ''"> AND TRANS_NUM = #{transRewardVo.transNum} </if>
+			<if test="transRewardVo.rewardMode != null and transRewardVo.rewardMode != ''"> AND REWARD_MODE = #{transRewardVo.rewardMode} </if>
+			<if test="transRewardVo.rewardModeOld != null and transRewardVo.rewardModeOld != ''"> AND REWARD_MODE_OLD = #{transRewardVo.rewardModeOld} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transRewardVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransRewardList" resultMap="TransRewardMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_REWARD
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransRewardMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_REWARD
+		<include refid="wherePkClause" />
+	</select>
+
+</mapper>
+

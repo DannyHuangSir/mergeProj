@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransPolicyDao">
+
+	<resultMap id="TransPolicyMap" type="com.twfhclife.eservice.web.model.TransPolicyVo" >
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="POLICY_NO" property="policyNo"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		TRANS_NUM,POLICY_NO
+	</sql>
+
+	<!-- 取得交易序號對應的保單號碼 -->
+	<select id="getTransPolicyNoList" resultType="string">
+		SELECT 
+			POLICY_NO 
+		FROM 
+			ESERVICE.DBO.TRANS_POLICY 
+		WHERE 
+			TRANS_NUM = #{transNum}
+	</select>
+	
+	<!-- 查詢現在還在申請處理中的保單 -->
+	<select id="getProgressPolicyNoList" resultType="string">
+		SELECT
+			POLICY_NO
+		FROM
+			ESERVICE.DBO.TRANS_POLICY
+		WHERE
+			TRANS_NUM IN (
+				SELECT
+					TRANS_NUM
+				FROM
+					ESERVICE.DBO.TRANS
+				WHERE
+					USER_ID = #{userId}
+					AND TRANS_TYPE = #{transType}
+					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_COMPLETE"/>
+					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_CANCEL"/>
+					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_FAIL"/>
+					<if test="'CONTACT_INFO' == transType ">
+					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_ABNORMAL"/>
+					</if>
+			)
+	</select>
+	
+	<!-- 線上申請保單號碼-新增 -->
+	<insert id="insertTransPolicy">
+		INSERT INTO ESERVICE.DBO.TRANS_POLICY
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{transPolicyVo.transNum, jdbcType=VARCHAR},
+			#{transPolicyVo.policyNo, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

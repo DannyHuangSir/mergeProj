@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+	<style>
+	.check-body.relax {
+		padding: 15px;
+	}
+	@media screen and (max-width: 767px) {
+		.check-body.relax {
+			padding: 5px;
+		}
+	}
+	</style>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey listing7 fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3 listing-area">
+				<div class="row-offcanvas row-offcanvas-left">
+					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing10')"></div>
+					<div th:replace="fragments/sidebar :: sidebar (funId='listing10')"></div>
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<div class="box-border">
+							<div class="tb3 top0">
+								<i class="fas fa-chevron-down"></i> 交易歷史記錄
+								<div class="tog4 pull-right hide"><i class="fa foo-printer fa-lg orange"></i> <span class="colorBlack">列印此頁</span></div>
+							</div>
+							<div class="wht">
+								<form class="form-inline grey wht" id="collapseSearchBar">
+<!-- 									<div class="col-sm-2"> -->
+<!-- 										<div class="selector-box"> -->
+<!-- 											<select id="trCode" class="selector"> -->
+<!-- 											</select> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 									<div class="col-sm-7 input-inline text-right"> -->
+									<div class="col-sm-7 input-inline">
+										<div>
+											<label>日期</label>
+											<input id="startDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>
+											<br class="hid2"/><span class="dateFix">至</span>
+											<input id="endDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>
+											<button id="searchBtn" type="button" class="btn-form btn-search">搜尋</button>
+											<input id="startDateHistory" type="hidden"/>
+											<input id="endDateHistory" type="hidden"/>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="tb3 top0 mobile-toggle hide" data-toggle="true">
+								<i class="fa hid2 foo-angle-down mobile"></i>
+								<i class="fa foo-angle-up hid1"></i> 交易總覽
+							</div>
+							<div class="mobile-toggle-panel specialHeight toggle-hide hide">
+								<div class="tablesaw-bar mode-stack"></div>
+								<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack" id="table-7335">
+									<thead>
+										<tr class="table2">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist" style="width: 20%;">交易代號</th>
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1" style="width: 50%;">交易類別</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right" style="width: 30%;">累計金額</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="h65 tr-odd-noEvent">
+											<td class="text-left"><b class="tablesaw-cell-label">交易代號</b><span class="tablesaw-cell-content">ADM</span></td>
+											<td class="text-left"><b class="tablesaw-cell-label">交易類別</b><span class="tablesaw-cell-content">保單管理費(保單帳戶費用)</span></td>
+											<td><b class="tablesaw-cell-label">累計金額</b><span class="tablesaw-cell-content">235,000<i class="my5">NTD</i></span></td>
+											<td></td>
+										</tr>
+										<tr class="h65 noEvent">
+											<td class="text-left"><b class="tablesaw-cell-label">交易代號</b><span class="tablesaw-cell-content">DEP</span></td>
+											<td class="text-left"><b class="tablesaw-cell-label">交易類別</b><span class="tablesaw-cell-content">保費</span></td>
+											<td><b class="tablesaw-cell-label">累計金額</b><span class="tablesaw-cell-content">3,000<i class="my5">NTD</i></span></td>
+											<td></td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="ps-area">
+									<p class="text-ps">※累計金額係各項交易於指定日期區間交易金額之加總</p>
+								</div>
+							</div>
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-down hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 交易明細
+							</div>
+							<div class="mobile-toggle-panel specialHeight toggle-hide">
+								<div class="tablesaw-bar mode-stack"></div>
+								<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">日期</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-left">投資標的名稱</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1" class="text-left">交易類別</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3" class="text-right">幣別</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4" class="text-right">單位數<span class="point">(1)</span></th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5" class="text-right">淨值<span class="point">(2)</span></th>
+											<th class="item90" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">匯率<span class="point">(3)</span></th>
+											<th class="item90" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">合計<span class="point">(4)=(1)*(2)*(3)</span></th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-md-12 wht box-border no-borderTop">
+								<div class="col-md-5 col-md-offset-5">
+									<nav>
+										<ul class="pagination center1">
+											<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>
+											<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>
+											<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+						<div class="ps-area">
+							<p class="text-ps">※本畫面僅提供三年內交易歷史資料之查詢，如有其他需求請洽客戶服務專線 0800-011-966
+							</p>
+						</div>
+						<div th:replace="fragments/listingReferOnly"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var grid1;
+	$(function() {
+		$('.datepicker').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'yy/mm/dd'
+		});
+		
+		// 取得交易類別下拉選單
+		eserviceOption.common('#trCode', /*[[@{/getTransactionCodeList}]]*/);
+		
+		// 建立交易歷史 grid
+		grid1 = new eserviceGrid();
+		grid1.sGridId = '#grid1';
+		grid1.sQueryUrl = /*[[@{/getTxLogList?policyNo=} + ${param.policyNo[0]}]]*/;
+		grid1.sRowClass = 'h65';
+		grid1.aoColumns = [
+			{
+				// 日期
+				'fnRender': function(oRow) {
+					return westDate(oRow.sadpTrDate);
+				},
+				'tdClass': 'enThin text-left',
+				'rwdName': '日期'
+			},
+			{
+				// 投資標的名稱
+				'fnRender': function(oRow) {
+					return emptyIfNull(oRow.invtName) + '(' + emptyIfNull(oRow.invtNo) + ')';
+				},
+				'tdClass': 'enThin text-left',
+				'rwdName': '投資標的名稱'
+			},
+			{
+				// 交易類別
+				'fnRender': function(oRow) {
+					return getSadpTrCodeName(oRow.sadpTrCode);
+				},
+				'tdClass': 'enThin text-left',
+				'rwdName': '交易類別'
+			},
+			{
+				// 幣別
+				'fnRender': function(oRow) {
+					return getcurrencyName(oRow.invtExchCurr);
+				},
+				'tdClass': 'colorGray enThin',
+				'rwdName': '幣別'
+			},
+			{
+				// 單位數
+				'fnRender': function(oRow) {
+					var fractionDigits = 0;
+					if (emptyIfNull(oRow.invtNo).indexOf('RT') != -1) {
+						if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
+							fractionDigits = 0;
+						} else {
+							fractionDigits = 2;
+						}
+					} else {
+						fractionDigits = 4;
+					}
+					return formatNumber(oRow.sadpTrUnits, fractionDigits);
+				},
+				'rwdName': '單位數'
+			},
+			{
+				// 淨值
+				'fnRender': function(oRow) {
+					// 交易類別為基金收益投入時，不顯示淨值、匯率、合計
+					if (emptyIfNull(oRow.sadpTrCode) == 'INV109') {
+						return '--';
+					}
+					
+					if (oRow.netValue == null || oRow.netValue == 0) {
+						return '--';
+					} else {
+						return showNumberPointValue(oRow.netValue);
+					}
+				},
+				'rwdName': '淨值'
+			},
+			{
+				// 匯率
+				'fnRender': function(oRow) {
+					// 台幣匯率直接為1
+					if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
+						return '1';
+					} else {
+						return oRow.exchRate;
+					}
+				},
+				'rwdName': '匯率'
+			},
+			{
+				// 合計
+				'fnRender': function(oRow) {
+					var totalValue = 0;
+					try {
+						if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
+							totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.netValue, 0) * 1;
+						} else {
+							totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.netValue, 0) * emptyDefaultValue(oRow.exchRate, 0);
+						}
+					} catch(err) {
+						totalValue = 0;
+					}
+					
+					// 合計部分若為新台幣，請四捨五入至整數位
+					if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
+						return accounting.toFixed(totalValue, 0);
+					} else {
+						return formatNumber(totalValue, 2);
+					}
+				},
+				'rwdName': '合計'
+			}
+		];
+		grid1.fnInitComplete = function() {
+			if (grid1.rownum() == 0) {
+				/* openAlert('查無資料'); */
+				openAlert($('#E0035').val());
+				return false;
+			}
+		};
+		grid1.queryByPage(1);
+		
+		// 查詢
+		$('#searchBtn').click(function() {
+			if ($('#startDate').val() != '' && $('#endDate').val() != '') {
+				if ($('#startDate').val() > $('#endDate').val()) {
+					//openAlert('結束日期不能小於開始日期');
+					openAlert($('#E0003').val());
+					return false;
+				}
+			}
+			
+			grid1.setPostData('startDate', $('#startDate').val());
+			grid1.setPostData('endDate', $('#endDate').val());
+			grid1.setPostData('trCode', $('#trCode').val());
+			grid1.queryByPage(1);
+		});
+	});
+	
+	// 分頁查詢
+	function queryDataByPage(pageNum) {
+		grid1.queryByPage(pageNum);
+	}
+	
+	// 取得幣別名稱
+	function getcurrencyName(currency) {
+		var currencyName = emptyIfNull(currency);
+		$.each(/*[[${session.SYSTEM_PARAMETER['CURRENCY']}]]*/, function(i, obj) {
+			if (obj.parameterCode == currency) {
+				currencyName = emptyIfNull(obj.parameterName);
+				return;
+			}
+		});
+		
+		return currencyName;
+	}
+	
+	// 取得交易類別名稱
+	function getSadpTrCodeName(sadpTrCode) {
+		var sadpTrCodeName = emptyIfNull(sadpTrCode);
+		$.each(/*[[${session.SYSTEM_PARAMETER['TRANSACTION_CODE']}]]*/, function(i, obj) {
+			if (obj.parameterCode == sadpTrCode) {
+				sadpTrCodeName = emptyIfNull(obj.parameterName);
+				return;
+			}
+		});
+		
+		return sadpTrCodeName;
+	}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

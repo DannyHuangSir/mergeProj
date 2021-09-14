@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='onlineChange')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-search-plus" aria-hidden="true"></i>
+								<a href="#">報表查詢</a>
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								報表查詢
+								<small>
+									<i class="my-icon fa fa-angle-double-right"></i>
+									線上申請查詢
+								</small>
+								<small class="pageHeaderCSV" th:if="${param.onlineChange != null}">
+									<button type="button" onclick="exportDnsCSV()" class="bgGreen" th:if="${param.onlineChange[0] == 'DNS_ALLIANCE'}">查詢結果清單匯出</button>
+								</small>
+							</h1>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<h3 class="header smaller lighter blue">查詢結果</h3>
+								<div class="clearfix">
+									<div class="pull-right tableTools-container"></div>
+								</div>
+								<div class="table-header">
+									<span id="showMsg"></span>
+								</div>
+								<div id="showDetail" hidden="true">
+									<table id="grid" class="table  table-bordered table-hover">
+										<thead>
+											<tr>
+												<th class="detail-col">Details</th>
+												<th>
+													<i class="my-icon fa fa-clock-o bigger-110 hidden-480"></i>
+													申請日期
+												</th>
+												<th>申請序號</th>
+												<th>申請項目</th>
+												<th>申請狀態</th>
+												<th class="hidden-480">保單號碼</th>
+												<th class="hidden-480">身分證字號</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+
+		<!--通知補件-->
+		<div class="modal fade in" id="modal-container-supplementConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="noticeForm" class="form-horizontal no-borderBottom marginTop20" role="form" >
+				<div class="modal-dialog">
+					<div class="modal-content lock-up">
+						<div class="modal-header">通知補件
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+						<div class="modal-body clearfix  grey2">
+							<div class="form-horizontal" style="border-bottom: 0;">
+								<div class="form-group">
+									<label class="col-xs-3">申請項目：</label>
+									<div class="col-xs-9" id="notice_application_items"></div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-3">申請序號：</label>
+									<div class="col-xs-9" id="notice_insurance_num" ></div>
+								</div>
+						</div>
+						</div>
+						<div class="modal-body clearfix">
+							<div class="form-horizontal" style="border-bottom: 0;">
+								<div class="mobile-toggle colorGreen" data-toggle="true">
+									<i class="fa hid2 foo-angle-up mobile"></i>
+									<i class="fa foo-angle-up hid1"></i>^ 通知内容
+								</div>
+								<div class="mobile-toggle-panel">
+									<div class="form-group">
+										<label class="col-xs-3">説明内容：</label>
+										<div class="col-xs-9">
+											<textarea rows="5" id="showTransType" name="showTransType"></textarea>
+										</div>
+									</div>
+									<!-- <div class="form-group">
+										<label class="col-xs-3">通知方式：</label>
+										<div class="col-xs-9">
+											<div class="checkbox checkedBox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+												<div class="check-box"><i class=""><input id="checkBox1" type="checkbox" name="aaa" value="1"></i></div>Email
+											</div>
+										</div>
+									</div> -->
+								</div>
+						</div>
+						</div>
+						
+						<div class="modal-footer grey2">
+							<a href="#">
+								<button type="button" class="bgGrey lock2" id="deny_cancel_1"  data-dismiss="modal" aria-label="Close">取消</button>
+							</a>
+							<a href="#">
+								<button type="button" class="bgOrange lock2" id="go_sure" data-dismiss="modal" aria-label="Close" onclick="submitNotice()">確認送出</button>
+							</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--異常件註記-->
+		<div class="modal fade in" id="modal-container-returnConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="returnForm" class="form-horizontal no-borderBottom marginTop20" role="form">
+				<div class="modal-dialog">
+					<div class="modal-content lock-up">
+						<div class="modal-header"> 異常件註記
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+						<div class="modal-body clearfix  grey2">
+							<div class="form-horizontal" style="border-bottom: 0;">
+								<div class="form-group">
+									<label class="col-xs-3">申請項目：</label>
+									<div class="col-xs-9" id="return_application_items"></div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-3">申請序號：</label>
+									<div class="col-xs-9" id="return_insurance_num"></div>
+								</div>
+						</div>
+						</div>
+						<div class="modal-body clearfix">
+							<div class="form-horizontal" style="border-bottom: 0;">
+								<div class="mobile-toggle colorGreen" data-toggle="true">
+									<i class="fa hid2 foo-angle-up mobile"></i>
+									<i class="fa foo-angle-up hid1"></i>^ 填寫異常件註記原因
+								</div>
+								<div class="mobile-toggle-panel">
+									<th:block th:if="${session['ROLE_CODE_02']}">
+										<div id="review_div" class="form-group" style="border: 4px solid #CC7A00;">
+											<label class="col-xs-3" style="line-height: 30px;padding-top: 5px;">複核結果：</label>
+											<div class="col-xs-9">
+												<div class="radio" style="float: left;padding-right: 20px;">
+													<label>
+														<div class="radio-btn"><i><input type="radio" name="review_results" id="options1" value="Y"></i></div>複核通過
+													</label>
+												</div>
+												<div class="radio" style="float: left;padding-right: 20px;">
+													<label>
+														<div class="radio-btn"><i><input type="radio" name="review_results" id="options2" value="N"></i></div>複核不通過
+													</label>
+												</div>
+											</div>
+										</div>
+									</th:block>
+									<div class="form-group">
+										<label class="col-xs-3">異常件註記原因：</label>
+										<div class="col-xs-9">
+											<select class="form-control" id="form-field-select-1" name="return_msg">
+											</select>
+										</div>
+								</div>
+									<div class="form-group">
+										<label class="col-xs-3">異常件註記説明：</label>
+										<div class="col-xs-9">
+											<textarea rows="5" id="reject_trans_type" name="showTransType"></textarea>
+										</div>
+								</div>
+								</div>
+						</div>
+						</div>
+						
+						<div class="modal-footer grey2">
+							<a href="#">
+								<button type="button" class="bgGrey lock2" id="deny_cancel_2"  data-dismiss="modal" aria-label="Close">取消</button>
+							</a>
+							<a href="#">
+								<button type="button" class="bgOrange lock2" id="go_reject_1" data-dismiss="modal" aria-label="Close" onclick="submitReturn()">確認送出</button>
+								<button type="button" class="bgOrange lock2" id="go_reject_2" data-dismiss="modal" aria-label="Close" onclick="submitReturnApproved()">確認送出</button>
+							</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--  已完成     -->
+		<div class="modal fade in" id="modal-container-auditConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="approvedForm" class="form-horizontal no-borderBottom marginTop20" role="form" >
+				<div class="modal-dialog">
+					<div class="modal-content lock-up">
+						<div class="modal-header">已完成
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+						<div class="modal-body center1 grey2" style="border-bottom: 1px solid #DDDDDD;">
+							<h3 style="color: #CC7A00;">確定要將申請狀態變更為【已完成】嗎？</h3>
+							<div class="form-group" style="margin:auto;position: relative;color: #000000;">
+								狀態經變更即無法修改，請再次確認！
+								
+								<div class="checkbox" style="position: absolute;color: #009B30;right: 80px;
+			top: -10px; margin-right: 20px;line-height: 1.5em; cursor: pointer">
+									<input id="checkBox_approved" type="checkbox" name="aaa">
+									<label for="checkBox2" style="padding-left: 0">已確認</label>
+								</div>
+							</div>
+						</div>
+						<div class="modal-body clearfix  grey2" style="border-bottom: 1px solid #DDDDDD;">
+							<div class="form-horizontal" style="border-bottom: 0;">
+								<div class="form-group">
+									<label class="col-xs-3">申請項目：</label>
+									<div class="col-xs-9" id="approved_application_items"></div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-3">申請序號：</label>
+									<div class="col-xs-9" id="approved_insurance_num"></div>
+								</div>
+						</div>
+						</div>
+						<div class="modal-footer grey2">
+							<a href="#">
+								<button type="button" class="bgGrey lock2" id="deny_approved" data-dismiss="modal" aria-label="Close">取消</button>
+							</a>
+							<a href="#">
+								<button type="button" class="bgOrange lock2" id="go_approved_1" onclick="submitApproved()">確認送出</button>
+							</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--狀態歷程-->
+		<div class="modal fade in" id="modal-container-statusConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header"> 狀態歷程
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body clearfix  grey2">
+						<div class="form-horizontal" style="border-bottom: 0;">
+							<div class="form-group" id="div_sastus_app_item">
+								<label class="col-xs-3">申請項目：</label>
+								<div class="col-xs-9" id="status_application_items"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">申請序號：</label>
+								<div class="col-xs-9" id="status_insurance_num"></div>
+							</div>
+					</div>
+					</div>
+					<div class="modal-body clearfix grey2">
+						<div class="tb3 top0 nopd clearfix">
+								<i class="foo-business_15 foo-2x"></i>
+								<a data-toggle="collapse" data-target="#collapseBar" aria-expanded="false" aria-controls="collapseBar" class="btn btn-linl">
+									<i class="fa fa-search gray search1" style="color: #DDDDDD;"></i>
+								</a>
+							</div>
+							<div id="collapseBar" class="collapse">
+								<form class="form-inline wht clearfix" id="status_collapseSearchBar" style="padding: 10px 0;">
+									<div class="col-xs-6 input-inline">
+										<label>申請日期</label>
+										<div>
+											<input type="text" class="datepicker" name="startDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)"> 至
+											<input type="text" class="datepicker" name="endDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)">
+										</div>
+									</div>
+									<div class="col-xs-4">
+										<div class="selector-box w100p">
+											<select class="selector" id="status_select" name="status"> </select>
+										</div>
+									</div>
+									<div class="col-xs-2 text-right">
+										<button type="button" class="bgOrange" style="border: 0;padding: 5PX 10PX;" onclick="onStatus('','','query')">搜尋</button>
+									</div>
+								</form>
+							</div>
+						<table class="tablesaw" style="background: #FFFFFF;">
+							<thead>
+								<tr>
+									<th>狀態</th>
+									<th>異動時間</th>
+									<th>異動人</th>
+									<th>異動人姓名</th>
+									<th>備注説明</th>
+								</tr>
+							</thead>
+							<tbody id="status_body">
+								<!-- <tr>
+									<td>申請中</td>
+									<td>2020/12/22 13:00</td>
+									<td>被保人</td>
+									<td>李小龍</td>
+									<td></td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--補件單歷程-->
+		<div class="modal fade in" id="modal-container-viewsupplementConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header"> 補件單歷程
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body clearfix  grey2">
+						<div class="form-horizontal" style="border-bottom: 0;">
+							<div class="form-group">
+								<label class="col-xs-3">申請項目：</label>
+								<div class="col-xs-9" id="view_application_items"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">申請序號：</label>
+								<div class="col-xs-9" id="view_insurance_num"></div>
+							</div>
+					</div>
+					</div>
+					<div class="modal-body clearfix grey2">
+						<div class="tb3 top0 nopd clearfix">
+								<i class="foo-business_15 foo-2x"></i>
+								<a data-toggle="collapse" data-target="#collapseBar1" aria-expanded="false" aria-controls="collapseBar" class="btn btn-linl">
+									<i class="fa fa-search gray search1" style="color: #DDDDDD;"></i>
+								</a>
+							</div>
+							<div id="collapseBar1" class="collapse">
+								<form class="form-inline wht clearfix" id="view_collapseSearchBar" style="padding: 10px 0;">
+									<div class="col-xs-4">
+										<label style="float: left;">補件單號</label>
+										<div class="selector-box"  style="width: 100px;float: right;">
+											<input type="text" style="width:100%" name="attNum"/>
+										</div>
+									</div>
+									<div class="col-xs-6 input-inline">
+										<label>提出時間</label>
+										<div>
+											<input type="text" class="datepicker" name="startDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)"> 至
+											<input type="text" class="datepicker" name="endDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)">
+										</div>
+									</div>
+									
+									<div class="col-xs-2 text-right">
+										<button type="button" class="bgOrange" style="border: 0;padding: 5PX 10PX;" onclick="viewSupplement('','','query')">搜尋</button>
+									</div>
+								</form>
+							</div>
+						<table class="tablesaw" style="background: #FFFFFF;">
+							<thead>
+								<tr>
+									<th>補件單號</th>
+									<th>提出時間</th>
+									<th>回應時間</th>
+									<th>補件單内容</th>
+									<th>補件審查狀態</th>
+								</tr>
+							</thead>
+							<tbody id="view_body">
+								<!-- <tr>
+									<td>ADD001</td>
+									<td>2020/12/22 13:00</td>
+									<td>2020/12/22 13:20</td>
+									<td>
+										<button type="button" onclick="viewSupplementDetil()" style="position: relative;">
+											查看
+											<i class="foo-warning"></i>
+										</button>
+									</td>
+									<td>處理中</td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--聯盟歷程-->
+		<div class="modal fade in" id="modal-container-allianceConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up"  style="width: 700px;">
+					<div class="modal-header"> 聯盟鏈歷程
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body clearfix  grey2">
+						<div class="form-horizontal" style="border-bottom: 0;">
+							<div class="form-group">
+								<label class="col-xs-3" id="div_allinance_app_item">申請項目：</label>
+								<div class="col-xs-9" id="allinance_application_items"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">申請序號：</label>
+								<div class="col-xs-9" id="allinance_insurance_num"></div>
+							</div>
+					</div>
+					</div>
+					<div class="modal-body clearfix grey2">
+						<div class="tb3 top0 nopd clearfix">
+								<i class="foo-business_15 foo-2x"></i>
+								<a data-toggle="collapse" data-target="#collapseBar2" aria-expanded="false" aria-controls="collapseBar" class="btn btn-linl">
+									<i class="fa fa-search gray search1" style="color: #DDDDDD;"></i>
+								</a>
+							</div>
+							<div id="collapseBar2" class="collapse">
+								<form class="form-inline wht clearfix" id="union_collapseSearchBar" style="padding: 10px 0;">
+									<div class="col-xs-4">
+										<label style="float: left;">動作類型</label>
+										<div class="selector-box"  style="width: 120px;float: right;">
+											<input type="text" style="width:100%" name="type"/>
+											<input type="hidden" id="allinance_case_id" name="caseId"/>
+											<input type="hidden" id="allinance_from_company_id" name="fromCompanyId"/>
+										</div>
+									</div>
+									<div class="col-xs-4">
+										<label style="float: left;">動作名稱</label>
+										<div class="selector-box"  style="width: 120px;float: right;">
+											<input type="text" style="width:100%" name="name"/>
+										</div>
+									</div>
+									<div class="col-xs-4">
+										<div class="selector-box w100p">
+											<select class="selector" style="width: 100%;" name="ncStatus">
+												<option value="">請選擇執行狀態...</option>
+												<option value="1">成功</option>
+												<option value="0">失敗</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-xs-8 input-inline" style="margin-top: 10px;">
+										<label>提出時間</label>
+										<div>
+											<input type="text" class="datepicker" name="startDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)"> 
+											至
+											<input type="text" class="datepicker" name="endDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)">
+										</div>
+									</div>
+									
+									<div class="col-xs-2 text-right" style="margin-top: 10px;">
+										<button type="button" class="bgOrange" style="border: 0;padding: 5px 10px;" onclick="onAlliance('','','','','query')">搜尋</button>
+									</div>
+								</form>
+							</div>
+						<table class="tablesaw" style="background: #FFFFFF;">
+							<thead>
+								<tr>
+									<th>動作類型</th>
+									<th>動作名稱</th>
+									<th>執行時間起</th>
+									<th>執行時間止</th>
+									<th>執行狀態</th>
+									<th>錯誤訊息</th>
+								</tr>
+							</thead>
+							<tbody id="union_course_body">
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  已審核     -->
+		<div class="modal fade in" id="modal-FailureConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">錯誤訊息
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body center1 grey2" style="border-bottom: 1px solid #DDDDDD;">
+						<div class="form-horizontal" style="border-bottom: 0;text-align: left;color: #000000;">
+							<div class="form-group">
+								<label class="col-xs-3">錯誤代碼：</label>
+								<div class="col-xs-9" id="e_code"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">錯誤訊息：</label>
+								<div class="col-xs-9" id="e_message"></div>
+							</div>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>    
+
+		<!--查看補件單-->
+		<div class="modal fade in" id="modal-container-viewsupplementdetilConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">查看補件單
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body clearfix  grey2">
+						<div class="form-horizontal" style="border-bottom: 0;">
+							<div class="form-group">
+								<label class="col-xs-3">補件單號：</label>
+								<div class="col-xs-9" id="rfe_id"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">補件狀態：</label>
+								<div class="col-xs-9" id="rfe_status"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">提出時間：</label>
+								<div class="col-xs-9" id="rfe_s_date"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">回應時間：</label>
+								<div class="col-xs-9" id="rfe_e_date"></div>
+							</div>
+					</div>
+					</div>
+					<div class="modal-body clearfix">
+						<th:block th:if="${session['ROLE_CODE_02']}">
+							<div class="profile-user-info profile-user-info-striped" style="border-bottom: 1px solid #DDDDDD;padding-bottom: 10px;">
+								<div class="profile-info-row">
+									<div class="profile-info-name"> 執行審核 </div>
+
+									<div class="profile-info-value">
+										<button type="button" id="approved_ok" class="bgOrange" onclick="clickApproved('OK')">核可補件</button>
+										<button type="button" id="approved_no" class="bgOrange" onclick="clickApproved('NO')">駁回補件</button>
+									</div>
+								</div>
+							</div>
+						</th:block>
+						<div class="form-horizontal">
+							<div class="mobile-toggle colorGreen" data-toggle="true">
+								<i class="fa hid2 foo-angle-up mobile"></i>
+								<i class="fa foo-angle-up hid1"></i>^ 通知内容
+							</div>
+							<div class="mobile-toggle-panel">
+								<div class="form-group">
+									<label class="col-xs-3">説明内容：</label>
+									<div class="col-xs-9" id="rfe_request_con">
+										
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-3">通知方式：</label>
+									<div class="col-xs-9">
+									E-MAIL
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="form-horizontal">
+							<div class="mobile-toggle colorGreen" data-toggle="true">
+								<i class="fa hid2 foo-angle-up mobile"></i>
+								<i class="fa foo-angle-up hid1"></i>^ 回應説明
+							</div>
+							<div class="mobile-toggle-panel">
+								<div class="form-group">
+									<label class="col-xs-3">説明内容：</label>
+									<div class="col-xs-9" id="rfe_response_con">
+									
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<div class="form-horizontal">
+							<div class="mobile-toggle colorGreen" data-toggle="true">
+								<i class="fa hid2 foo-angle-up mobile"></i>
+								<i class="fa foo-angle-up hid1"></i>^ 上傳補充附件
+							</div>
+							<div class="mobile-toggle-panel" id="ref_file_data">
+							
+							</div>
+						</div>
+					</div>
+					
+					<div class="modal-footer grey2">
+						<a href="#" data-dismiss="modal" aria-label="Close">
+							<button type="button" class="bgGrey lock2" id="close_approved_deny">關閉視窗</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade in" id="modal-container-print-detail" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content lock-up">
+						<div class="modal-header">申請資料
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+						<div class="modal-body clearfix  grey2">
+						<div class="form-horizontal" style="border-bottom: 0;">
+								<div class="form-group">
+									<label class="col-sm-3">列印下列資料：</label>
+									<div class="col-sm-9">
+										<button style="width: 80px;border: 0;padding: 5px 0;" type="button" class="bgOrange" onclick="onPrint()">列印</button>
+									</div>
+								</div>
+						</div>
+						</div>
+						<div class="modal-body clearfix  grey2">
+							<div  id="print_detail" class="panel panel-default profile-user-info">
+
+							</div>								
+						</div>
+					<div class="modal-footer grey2">
+							<a href="#" data-dismiss="modal" aria-label="Close">
+								<button type="button" class="bgGrey lock2" id="deny">關閉視窗</button>
+							</a>
+						</div>
+					</div>
+				</div>
+		</div>
+        <!--聯絡資料變更-已完成-->
+		<div class="modal fade in" id="modal-container-contactInfoConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="approvedContactInfoForm" class="form-horizontal no-borderBottom marginTop20" role="form" >
+				<div class="modal-dialog">
+					<div class="modal-content lock-up">
+						<div class="modal-header">已完成
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+						<div class="modal-body center1 grey2" style="border-bottom: 1px solid #DDDDDD;">
+							<h3 style="color: #CC7A00;">確定要將申請狀態變更為【已完成】嗎？</h3>
+							<div class="form-group" style="margin:auto;position: relative;color: #000000;">
+								狀態經變更即無法修改，請再次確認！
+								
+								<div class="checkbox" style="position: absolute;color: #009B30;right: 80px;
+			top: -10px; margin-right: 20px;line-height: 1.5em; cursor: pointer">
+									<input id="checkBox_contact_info_approved" type="checkbox" name="aaa">
+									<label for="checkBox2" style="padding-left: 0">已確認</label>
+								</div>
+							</div>
+						</div>
+						<div class="modal-body clearfix  grey2" style="border-bottom: 1px solid #DDDDDD;">
+							<div class="form-horizontal" style="border-bottom: 0;">
+								
+								<div class="form-group">
+									<label class="col-xs-3">申請序號：</label>
+									<div class="col-xs-9" id="approved_contact_info_num"></div>
+								</div>
+						</div>
+						</div>
+						<div class="modal-footer grey2">
+							<a href="#">
+								<button type="button" class="bgGrey lock2" id="deny_contact_info_approved" data-dismiss="modal" aria-label="Close">取消</button>
+							</a>
+							<a href="#">
+								<button type="button" class="bgOrange lock2" id="go_contact_info_approved" onclick="submitContactInfoApproved()">確認送出</button>
+							</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--死亡除戶-已完成-->
+		<div class="modal fade in" id="modal-container-dns-Confirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="approvedDnsForm" class="form-horizontal no-borderBottom marginTop20" role="form" >
+				<div class="modal-dialog">
+					<div class="modal-content lock-up">
+						<div class="modal-header">已完成
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+						<div class="modal-body center1 grey2" style="border-bottom: 1px solid #DDDDDD;">
+							<h3 style="color: #CC7A00;">確定要將申請狀態變更為【已完成】嗎？</h3>
+							<div class="form-group" style="margin:auto;position: relative;color: #000000;">
+								狀態經變更即無法修改，請再次確認！
+								
+								<div class="checkbox" style="position: absolute;color: #009B30;right: 80px;
+			top: -10px; margin-right: 20px;line-height: 1.5em; cursor: pointer">
+									<input id="checkBox_dns_approved" type="checkbox" name="aaa">
+									<label for="checkBox2" style="padding-left: 0">已確認</label>
+								</div>
+							</div>
+						</div>
+						<div class="modal-body clearfix  grey2" style="border-bottom: 1px solid #DDDDDD;">
+							<div class="form-horizontal" style="border-bottom: 0;">
+								
+								<div class="form-group">
+									<label class="col-xs-3">申請序號：</label>
+									<div class="col-xs-9" id="approved_dns_num"></div>
+								</div>
+						</div>
+						</div>
+						<div class="modal-footer grey2">
+							<a href="#">
+								<button type="button" class="bgGrey lock2" id="deny_dns_approved" data-dismiss="modal" aria-label="Close">取消</button>
+							</a>
+							<a href="#">
+								<button type="button" class="bgOrange lock2" id="go_dns_approved" onclick="submitDnsApproved()">確認送出</button>
+							</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+        
+		<script	th:src="@{/js/jquery.dataTables.min.js}"></script>
+		<script	th:src="@{/js/jquery.dataTables.bootstrap.min.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var grid;
+		var detailUrlMap = {
+			'PAYMODE': /*[[@{/onlineChange/getTransPaymode}]]*/,
+			'ANNUITY_METHOD': /*[[@{/onlineChange/getTransAnnuityMethod}]]*/,
+			'BONUS': /*[[@{/onlineChange/getTransBonus}]]*/,
+			'REWARD': /*[[@{/onlineChange/getTransReward}]]*/,
+			'CUSHION': /*[[@{/onlineChange/getTransCushion}]]*/,
+			'BENEFICIARY': /*[[@{/onlineChange/getTransBeneficiary}]]*/,
+			'RENEW': /*[[@{/onlineChange/getTransRenew}]]*/,
+			'REDUCE': /*[[@{/onlineChange/getTransReduce}]]*/,
+			'REDUCE_POLICY': /*[[@{/onlineChange/getTransReducePolicy}]]*/,
+			'CONTACT_INFO': /*[[@{/onlineChange/getTransContactInfo}]]*/,
+			'FUND_NOTIFICATION': /*[[@{/onlineChange/getTransFundNotification}]]*/,
+			'PAYMETHOD': /*[[@{/onlineChange/getTransPayMethod}]]*/,
+			'CREDIT_CARD_DATE': /*[[@{/onlineChange/getTransCreditCardInfo}]]*/,
+			'CANCEL_CONTRACT': /*[[@{/onlineChange/getTransCancelContract}]]*/,
+			'SURRENDER': /*[[@{/onlineChange/getTransSurrender}]]*/,
+			'LOAN': /*[[@{/onlineChange/getTransLoan}]]*/,
+			'LOAN_NEW': /*[[@{/onlineChange/getTransLoan}]]*/,
+			'CUST_INFO': /*[[@{/onlineChange/getTransLoanCustInfo}]]*/,
+			'MATURITY': /*[[@{/onlineChange/getTransMaturity}]]*/,
+			'POLICY_RESEND': /*[[@{/onlineChange/getTransResendPolicy}]]*/,
+			'CANCEL_AUTH': /*[[@{/onlineChange/getTransCancelAuth}]]*/,
+			'VALUE_PRINT': /*[[@{/onlineChange/getTransValuePrint}]]*/,
+			'TRAVEL_POLICY': /*[[@{/onlineChange/getTransTravelPolicy}]]*/,
+			'CHANGE_PAY_ACCOUNT': /*[[@{/onlineChange/getTransChangePayAccount}]]*/,
+			'RISK_LEVEL': /*[[@{/onlineChange/getTransRiskLevel}]]*/,
+			'POLICY_HOLDER_PROFILE': /*[[@{/onlineChange/getTransPolicyHolderProfile}]]*/,
+			'FUND_SWITCH': /*[[@{/onlineChange/getTransFundSwitch}]]*/,
+			'INSURANCE_CLAIM': /*[[@{/onlineChange/getTransInsuranceClaim}]]*/,
+			'DNS_ALLIANCE': /*[[@{/onlineChange/getDnsAlliance}]]*/,
+			'CONVERSION':/*[[@{/onlineChange/getConversionDetail}]]*/,
+			'INVESTMENT':/*[[@{/onlineChange/getInvestmentDetail}]]*/,
+			'CASH_PAYMENT':/*[[@{/onlineChange/getCashPaymentDetail}]]*/,
+			'DEPOSIT':/*[[@{/onlineChange/getDepositDetail}]]*/,
+		}
+		$(function() {
+			// 取得線上申請項目下拉選單
+			eserviceAdmOption.common('#status_select', 
+					/*[[@{/common/optionList?categoryCode=ONLINE_CHANGE_STATUS}]]*/, 
+					'請選擇申請狀態...');
+			//異常件註記原因
+			eserviceAdmOption.common('#form-field-select-1', 
+					/*[[@{/common/optionList?categoryCode=ABNORMAL_REASON}]]*/, 
+					'請選擇原因...','VALUE');
+			// 建立grid
+			grid = new datatableUtil();
+			grid.sGridId= '#grid';
+			grid.sQueryUrl = /*[[@{/onlineChange/getOnlineChangeDetail}]]*/;
+			grid.aoColumns = [
+				{
+					// 明細內容按鈕
+					render: function(data, type, row, meta) {
+						var detailBtnHtml = '';
+						detailBtnHtml += '<div class="action-buttons center">';
+						detailBtnHtml += '    <a href="javascript:void(0);" onclick="showDetail(this, \''
+								+ row.STATUS_NAME.trim() + '\', \'' 
+								+ row.STATUS + '\', \'' 
+								+ row.TRANS_TYPE + '\', \'' 
+								+ row.TRANS_NUM + '\', \'' 
+								+ row.POLICY_NO + '\', \'' 
+									+ row.TRANS_DATE + '\');" class="green bigger-140 show-details-btn" title="Show Details">';
+						detailBtnHtml += '        <i class="my-icon fa fa-angle-double-down"></i>';
+						detailBtnHtml += '        <span class="sr-only">Details</span>';
+						detailBtnHtml += '    </a>';
+						detailBtnHtml += '</div>';
+						return detailBtnHtml;
+					}
+				},
+				{
+					// 申請日期
+					data: 'TRANS_DATE'
+				},
+				{
+					data: 'TRANS_NUM'
+				},
+				{
+					// 申請項目
+					data: 'TRANS_TYPE_NAME'
+				},
+				{
+					// 申請狀態
+					data: 'STATUS_NAME'
+				},
+				{
+					// 保單號碼
+					data: 'POLICY_NO'
+				},
+				{
+					// 身分證字號
+					data: 'ROC_ID'
+				}
+			];
+			
+			// 取得上一個頁面傳進的的參數
+			grid.setPostData('startDate', /*[[${param.startDate} != null ? ${param.startDate[0]}]]*/);
+			grid.setPostData('endDate', /*[[${param.endDate} != null ? ${param.endDate[0]}]]*/);
+			grid.setPostData('transType', /*[[${param.onlineChange} != null ? ${param.onlineChange[0]}]]*/);
+			grid.setPostData('status', /*[[${param.status} != null ? ${param.status[0]}]]*/);
+			grid.setPostData('policyNo', /*[[${param.policyNo} != null ? ${param.policyNo[0]}]]*/);
+			grid.setPostData('policyHolderId', /*[[${param.policyHolderId} != null ? ${param.policyHolderId[0]}]]*/);
+
+			grid.setPostData('fromCompanyId', /*[[${param.fromCompanyId} != null ? ${param.fromCompanyId[0]}]]*/);
+			grid.setPostData('dataScope', /*[[${param.dataScope} != null ? ${param.dataScope[0]}]]*/);
+			grid.setPostData('fileReceived', /*[[${param.fileReceived} != null ? ${param.fileReceived[0]}]]*/);
+			grid.setPostData('to', /*[[${param.to} != null ? ${param.to[0]}]]*/);
+			grid.setPostData('sendToAlliance', /*[[${param.sendToAlliance} != null ? ${param.sendToAlliance[0]}]]*/);
+
+			grid.create();
+		});
+		var gridList = [];
+		// 點選顯示Detail區塊
+		function showDetail(detailBtnObj, statusName, status, transType, transNum, policyNo, transDate) {
+			var trObj = $(detailBtnObj).closest('tr');
+			var iObj = $(detailBtnObj).find('i');
+			var data = {
+				transType : transType,
+				transNum : transNum,
+				policyNo : policyNo,
+				status : status
+			};
+			var detailObj = {"transNum":transNum ,"data":data,"detailBtnObj": $(detailBtnObj),"tr": trObj,"i":iObj};
+			var flag = false;
+			gridList.forEach(function(item){
+				if (item.transNum == transNum) {
+					true;
+				}
+			});
+			if (!flag) {
+				gridList.push(detailObj);
+			}
+
+			// 明細按鈕向下時ajax顯示明細內容
+			if (iObj.hasClass('fa-angle-double-down')) {
+				// 設定同步
+				$.ajaxSetup({async: false});
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : detailUrlMap[transType],
+					data : JSON.stringify(data),
+					success : function(detailRow) {
+						$(detailRow).insertAfter(trObj);
+					}
+				});
+				$.ajaxSetup({async: true});
+			
+				iObj.removeClass('fa-angle-double-down');
+				iObj.addClass('fa-angle-double-up');
+			} else if (iObj.hasClass('fa-angle-double-up')) {
+				// 刪除明細內容
+				var detailTr = $(detailBtnObj).closest('tr').next(); // next 代表明細按鈕所在tr的下一個tr
+				if (detailTr.hasClass('detail-row')) {
+					detailTr.remove();
+				}
+				
+				iObj.removeClass('fa-angle-double-up');
+				iObj.addClass('fa-angle-double-down');
+			}
+		}
+		
+		// 審核
+		function review(transType, transNum) {
+			confirmMsg('確認要更新狀態？', function(r){
+				if(r){
+					popupLoading();
+					var data = {
+							transType : transType,
+							transNum : transNum
+						};
+					$.ajax({
+						type : 'POST',
+						contentType : 'application/json',
+						url : "/eservice_adm/onlineChange/getOnlineChangeReview",
+						data : JSON.stringify(data),
+						success : function(response) {
+							if (response.result == 'SUCCESS') {
+								alertMsg("更新成功");
+								grid.reload();
+							} else {
+								alertMsg("更新失敗!");
+							}
+						},
+						error :function() {
+							alertMsg("更新失敗!");
+						},
+                        complete: function(){
+                            removeLoading();
+                        }
+					});
+				}
+			});
+		}
+		
+		// 補件
+		function resend(transType, transNum) {
+			confirmMsg('確認要更新狀態？', function(r){
+				if(r){
+					popupLoading();
+					var data = {
+							transType : transType,
+							transNum : transNum
+						};
+					$.ajax({
+						type : 'POST',
+						contentType : 'application/json',
+						url : "/eservice_adm/onlineChange/getOnlineChangeResend",
+						data : JSON.stringify(data),
+						success : function(response) {
+							if (response.result == 'SUCCESS') {
+								alertMsg("更新成功");
+								grid.reload();
+							} else {
+								alertMsg("更新失敗!");
+							}
+						},
+						error :function() {
+							alertMsg("更新失敗!");
+						},
+                        complete: function(){
+                            removeLoading();
+                        }
+					});
+				}
+			});
+		}
+		
+		// 下載: 借款、旅平險、滿期
+		function downloadAllFile(transType, transNum){
+			url = /*[[@{/onlineChange/getTransUploadZipFile}]]*/;
+			window.open(url + "?transNum="+ transNum);
+		}
+		
+		// 已完成: 借款、旅平險、滿期
+		function completeTrans(transType, transNum){
+			confirmMsg('確認要更新狀態？', function(r){
+				if(r){
+					popupLoading();
+					var data = {
+		                    transType : transType,
+		                    transNum : transNum
+		                };
+		            $.ajax({
+		                type : 'POST',
+		                contentType : 'application/json',
+		                url : /*[[@{/onlineChange/getOnlineChangeComplete}]]*/,
+		                data : JSON.stringify(data),
+		                success : function(response) {
+		                    if (response.result == 'SUCCESS') {
+		                        alertMsg("更新成功");
+		                        grid.reload();
+		                    } else {
+		                        alertMsg("更新失敗!");
+		                    }
+		                },
+		                error :function() {
+		                    alertMsg("更新失敗!");
+		                },
+		                complete: function(){
+		                	removeLoading();
+		                }
+		            });
+				}
+			});
+		}
+		
+		
+			// 彈出保单理赔補件窗口
+			function onSupplement(APPLYITEM, TRANS_NUM){
+				$('#modal-container-supplementConfirm').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				$("#noticeForm")[0].reset();
+				$('#notice_application_items').html($('#label_apply_item').html());
+				$('#notice_insurance_num').html(TRANS_NUM);
+			};
+			// 提交保单理赔補件
+			function submitNotice(){
+				var data = {
+					    transNum : $('#notice_insurance_num').html(),
+						requestContent: $('#showTransType').val()
+					};
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/onlineChange/addTransRFE}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						
+						if (response.result == 'SUCCESS') {
+							alertMsg("更新成功");
+							grid.reload();
+							reloadDetail(data.transNum);
+						} else {
+							alertMsg(response.resultMsg);
+						}
+					},
+					error :function() {
+							alertMsg("更新失敗!");
+						}
+				});
+			}
+			// 彈出保单理赔異常件註記窗口
+			function onReturn(APPLYITEM, TRANS_NUM){
+				var data = {
+						transNum : TRANS_NUM
+					};
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/onlineChange/getOnlineChangeRejection}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						
+						if (response.result == 'SUCCESS') {
+							$('#modal-container-returnConfirm').modal({
+								show: true,
+								backdrop: 'static', 
+								keyboard: false
+							});
+							$("#returnForm")[0].reset();
+							$('#return_application_items').html($('#label_apply_item').html());
+							$('#return_insurance_num').html(TRANS_NUM);
+							
+							if(response.resultData.status == '7C'){
+								$('#form-field-select-1')[0].disabled = true;
+								$('#reject_trans_type')[0].disabled = true;
+								$('#form-field-select-1').val(response.resultData.rejectReason);
+							    $('#reject_trans_type').val(response.resultData.content);
+								$('#review_div')[0].hidden = false;
+								$('#go_reject_1')[0].hidden = true;
+								$('#go_reject_2')[0].hidden = false;
+							}else {
+								var role = /*[[${session['ROLE_CODE_02']}]]*/;
+								if(role) {
+									$('#form-field-select-1')[0].disabled = false;
+								    $('#reject_trans_type')[0].disabled = false;
+									$('#review_div')[0].hidden = true;
+									$('#go_reject_1')[0].hidden = false;
+									$('#go_reject_2')[0].hidden = true;
+								}
+							}
+						} else {
+							alertMsg(response.resultMsg);
+						}
+					},
+					error :function() {
+							alertMsg("更新失敗!");
+					}
+				});
+			};
+			// 提交保单理赔異常件註記
+			function submitReturn(){
+				var data = {
+						transNum : $('#return_insurance_num').html(),
+						status: '7C',
+						rejectReason: $('#form-field-select-1').val(),
+						content: $('#reject_trans_type').val()
+					};
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/onlineChange/getOnlineChangeReject}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						
+						if (response.result == 'SUCCESS') {
+							alertMsg("更新成功");
+							//grid.reload();
+							reloadDetail(data.transNum);
+						} else {
+							alertMsg("更新失敗!");
+						}
+					},
+					error :function() {
+							alertMsg("更新失敗!");
+						}
+				});
+			}
+			// 提交保单理赔異常件註記審核
+			function submitReturnApproved(){
+				var val = $('input[name="review_results"]:checked').val();
+				if (val == undefined) {
+					openAlert('請選擇複核結果。');
+					return;
+				}
+				var data = {
+						transNum : $('#return_insurance_num').html(),
+						rejectReason: $('#form-field-select-1').val(),
+						status: val == 'Y' ? '7' : '0'
+					};
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/onlineChange/getOnlineChangeReject}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						
+						if (response.result == 'SUCCESS') {
+							alertMsg("更新成功");
+							//grid.reload();
+							reloadDetail(data.transNum);
+						} else {
+							alertMsg("更新失敗!");
+						}
+					},
+					error :function() {
+							alertMsg("更新失敗!");
+						}
+				});
+			}
+			// 彈出保单理赔已完成窗口
+			function onAudit(TRANS_TYPE, TRANS_NUM){
+				$('#modal-container-auditConfirm').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				$("#approvedForm")[0].reset();
+				$('#approved_application_items').html($('#label_apply_item').html());
+				$('#approved_insurance_num').html(TRANS_NUM);
+			}
+			// 提交保单理赔已完成
+			function submitApproved() {
+				var checkBox = $('#checkBox_approved')[0].checked;
+				if (checkBox) {
+					var data = {
+							transNum : $('#approved_insurance_num').html()
+						};
+					$.ajax({
+						type : 'POST',
+						contentType : 'application/json',
+						url : /*[[@{/onlineChange/getOnlineChangeCompleted}]]*/,
+						data : JSON.stringify(data),
+						success : function(response) {
+							$('#deny_approved').click();
+							if (response.result == 'SUCCESS') {
+								alertMsg("更新成功");
+								//grid.reload();
+								reloadDetail(data.transNum);
+							} else {
+								alertMsg("更新失敗!");
+							}
+						},
+						error :function() {
+							alertMsg("更新失敗!");
+						}
+					});
+				}else {
+					alertMsg("請勾選已確認!");
+				}
+			}
+			// 狀態歷程
+			function onStatus(TRANS_TYPE, TRANS_NUM, str){
+				//如果是變更保單聯絡資料隱藏申請項目
+				if(TRANS_TYPE == 'CONTACT_INFO'){
+					$('#div_sastus_app_item').hide();
+				}
+				//如果是保險理賠顯示申請項目
+				if(TRANS_TYPE == 'INSURANCE_CLAIM'){
+					$('#div_sastus_app_item').show();
+				}
+				var data = {};
+				var form = $('#status_collapseSearchBar')[0];
+				if (!checkYMD(form.startDate.value)) {
+					return;
+				}
+				if (!checkYMD(form.endDate.value)) {
+					return;
+				}
+				if (str != 'query') {
+					$('#modal-container-statusConfirm').modal({
+						show: true,
+						backdrop: 'static', 
+						keyboard: false
+					});
+					$('#status_application_items').html($('#label_apply_item').html());
+					//如果是死亡除戶通報
+					if(TRANS_TYPE == 'DNS_ALLIANCE'){
+						$('#status_application_items').html('死亡除戶通報');
+					}
+					$('#status_insurance_num').html(TRANS_NUM);
+					data = { transNum : TRANS_NUM };
+					// 刪除查詢條件中的數據
+					form.reset();
+				}else {
+					data = {
+						    transNum : $('#status_insurance_num').html(),
+							status: form.status.value,
+							startDate: form.startDate.value.replaceAll('/','-'),
+							endDate: form.endDate.value.replaceAll('/','-')
+		                   };
+				}
+				$('#status_body').html('');
+				$.ajax({
+		                type : 'POST',
+		                contentType : 'application/json',
+		                url : /*[[@{/onlineChange/getTransStatusHistoryList}]]*/,
+		                data : JSON.stringify(data),
+		                success : function(response) {
+							var html = '';
+							if (response.resultData != null) {
+								response.resultData.forEach(function(item,index){
+									html += '<tr>'+
+												'<td>'+item.status+'</td>'+
+												'<td>'+item.requestDate+'</td>'+
+												'<td>'+item.identity+'</td>'+
+												'<td>'+item.customerName+'</td>'+
+												'<td>'+(item.content != null ? item.content : '')+'</td>'+
+											'</tr>';
+								});
+								$('#status_body').html(html);
+							}
+		                },
+		                error :function() {
+		                }
+		            });
+			}
+			//補件單歷程
+			var fileLogList = [];
+			function viewSupplement(APPLYITEM, TRANS_NUM, str){
+				var data = {};
+				var form = $('#view_collapseSearchBar')[0];
+				if (str != 'query') {
+					$('#modal-container-viewsupplementConfirm').modal({
+						show: true,
+						backdrop: 'static', 
+						keyboard: false
+					});
+					$('#view_application_items').html($('#label_apply_item').html());
+					$('#view_insurance_num').html(TRANS_NUM);
+					// 刪除查詢條件中的數據
+					form.reset();
+					data = {transNum : TRANS_NUM};
+				}else {
+					data = {
+						    transNum : $('#view_insurance_num').html(),
+							rfeId: form.attNum.value,
+							startDate: form.startDate.value.replaceAll('/','-'),
+							endDate: form.endDate.value.replaceAll('/','-')
+		                   };
+				}
+				if (!checkYMD(form.startDate.value)) {
+					return;
+				}
+				if (!checkYMD(form.endDate.value)) {
+					return;
+				}
+				$('#view_body').html('');
+				$.ajax({
+		                type : 'POST',
+		                contentType : 'application/json',
+		                url : /*[[@{/onlineChange/getTransRFEList}]]*/,
+		                data : JSON.stringify(data),
+		                success : function(response) {
+							var html = '';
+							if (response.resultData != null) {
+								fileLogList = response.resultData;
+								response.resultData.forEach(function(item,index){
+									html += '<tr>'+
+												'<td>'+item.rfeId+'</td>'+
+												'<td>'+item.requestDate+'</td>'+
+												'<td>'+item.responseDate+'</td>'+
+												'<td>'+
+													'<button type="button" onclick="viewSupplementDetil(\''+ index +'\')" style="position: relative;">查看<i class="foo-warning"></i></button>'+
+												'</td>';
+										html +=	'<td>'+ item.statusName+'</td>'+
+											'</tr>';
+								});
+								$('#view_body').html(html);
+							}
+		                   
+		                },
+		                error :function() {
+		                  
+		                }
+		            });
+			};
+
+			function viewSupplementDetil(index){
+				$('#modal-container-viewsupplementdetilConfirm').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				var item = fileLogList[index];
+				$('#rfe_id').html(item.rfeId);
+				$('#rfe_status').html(item.statusName);
+				$('#rfe_s_date').html(item.requestDate);
+				$('#rfe_e_date').html(item.responseDate);
+				$('#rfe_request_con').html(item.requestContent);
+				$('#rfe_response_con').html(item.responseContent);
+				if (item.status != 'WAIT') {
+					$('#approved_ok')[0].disabled = true;
+					$('#approved_no')[0].disabled = true;
+				}
+				var rHtml = ''
+				$('#ref_file_data').html(rHtml);
+				item.fileDatas.forEach(function(file, i){  
+					rHtml += '<div class="form-group">'+
+							'<label class="col-xs-3">補充附件'+(i+1)+'：</label>'+
+							'<div class="col-sm-9">'+
+										file.fileName +
+									
+									' <div class="col-sm-12 upload-drop-zone boardDotted">';
+										if (file.fileName.indexOf('.pdf') === -1 && file.fileName.indexOf('.PDF') === -1) {
+											rHtml +='<img src="data:image/png;base64, '+file.fileBase64+'" width=50>';
+										}else{
+											rHtml +='<embed src="data:application/pdf;base64, ' + file.fileBase64+'" type="application/pdf" width=50>';
+										}
+										
+							rHtml +=	'</div>'+
+								'</div>'+
+							'</div>';
+				})
+				
+				$('#ref_file_data').html(rHtml);
+			}
+			//聯盟鏈歷程
+			function onAlliance(TRANS_TYPE, TRANS_NUM, CASE_ID, FROM_COMPANY_ID, str){
+				//如果是變更保單聯絡資料隱藏申請項目
+				if(TRANS_TYPE == 'CONTACT_INFO'){
+					$('#div_allinance_app_item').hide();
+				}
+				//如果是保險理賠顯示申請項目
+				if(TRANS_TYPE == 'INSURANCE_CLAIM'){
+					$('#div_allinance_app_item').show();
+				}
+				var data = {};
+				var form = $('#union_collapseSearchBar')[0];
+				// 舒適化加載對話框
+				if (str != 'query') {
+					$('#modal-container-allianceConfirm').modal({
+						show: true,
+						backdrop: 'static', 
+						keyboard: false
+					});
+					$('#allinance_application_items').html($('#label_apply_item').html());
+					$('#allinance_insurance_num').html(TRANS_NUM);
+					$('#allinance_case_id').val(CASE_ID);
+					$('#allinance_from_company_id').val(FROM_COMPANY_ID);
+					//如果是死亡除戶通報
+					if(TRANS_TYPE == 'DNS_ALLIANCE'){
+						$('#allinance_application_items').html('死亡除戶通報');
+					}
+					// 刪除查詢條件中的數據
+					form.reset();
+					if (FROM_COMPANY_ID != 'L01') {
+						data = {caseId : CASE_ID, transNum: ''};
+					}else {
+						data = {caseId : '', transNum: $('#allinance_insurance_num').html()};
+					}
+					
+				}else {
+					data = {
+		                    caseId : form.fromCompanyId.value != 'L01' ? form.caseId.value : '',
+							transNum : form.fromCompanyId.value == 'L01' ? $('#allinance_insurance_num').html() : '',
+							type: form.type.value,
+							name: form.name.value,
+							createDate: form.startDate.value.replaceAll('/','-'),
+							completeDate: form.endDate.value.replaceAll('/','-'),
+							ncStatus: form.ncStatus.value
+		                   };
+				}
+				if (!checkYMD(form.startDate.value)) {
+					return;
+				}
+				if (!checkYMD(form.endDate.value)) {
+					return;
+				}
+			    $('#union_course_body').html('');
+				$.ajax({
+		                type : 'POST',
+		                contentType : 'application/json',
+		                url : /*[[@{/onlineChange/getUnionCourseList}]]*/,
+		                data : JSON.stringify(data),
+		                success : function(response) {
+							var html = '';
+							if (response.resultData != null) {
+								response.resultData.forEach(function(item,index){
+									html += '<tr>'+
+												'<td>'+item.type+'</td>'+
+												'<td>'+item.name+'</td>'+
+												'<td>'+item.createDate+'</td>'+
+												'<td>'+item.completeDate+'</td>'+
+												'<td>'+ (item.ncStatus == '1'? '成功': '失败') +'</td>'+
+												'<td>';
+													if (item.msg != null) {
+														html += '<button type="button" onclick="viewFailure('+index+')">查看</button>';
+														html += '<label hidden id="view_failure_'+index +'">'+item.msg+'</label>';
+													}
+													
+										html +=	'</td>'+
+											'</tr>';
+								});
+								$('#union_course_body').html(html);
+							}
+						   
+		                },
+		                error :function() {
+		                  
+		                }
+		            });
+			};
+			function viewFailure(index){
+				detail = JSON.parse($('#view_failure_'+index).html());
+				$('#modal-FailureConfirm').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				$('#e_code').html(detail.code);
+				$('#e_message').html(detail.msg);
+			}
+			function clickItems(str, TRANS_NUM) {
+				if ($("#"+str)[0].checked) {
+					var urls = {
+						'cb1': /*[[@{/onlineChange/getOnlineChangeDispose}]]*/,
+						'cb2': /*[[@{/onlineChange/setInsuranceClaimFileReceivedYes}]]*/,
+						'cb3': /*[[@{/onlineChange/updateInsuranceClaimSendAlliance}]]*/
+			        };
+					var data = {
+						fileReceived : str == 'cb2' ? 'C' : null,
+						sendAlliance : str == 'cb3' ? 'C' : null,
+						transNum : TRANS_NUM
+					};
+					$.ajax({
+							type : 'POST',
+							contentType : 'application/json',
+							url : urls[str],
+							data : JSON.stringify(data),
+							success : function(response) {
+								if (response.result == 'SUCCESS') {
+									$("#"+str)[0].disabled = true;
+									alertMsg("更新成功");
+									//grid.reload();
+									reloadDetail(TRANS_NUM);
+								} else {
+									$('#'+str)[0].checked = false;
+									alertMsg("更新失敗!");
+								}
+							},
+							error :function() {
+								$('#'+str)[0].checked = false;
+								alertMsg("更新失敗!");
+							}
+					});
+				}
+				
+			}
+			function approvedItems(str, transNum) {
+				if(str == 'cb2'){
+					$('#checkBox1')[0].checked = false;
+				}
+				if(str == 'cb3'){
+					$('#checkBox2')[0].checked = false;
+				}
+				var urls = {
+					'cb2': /*[[@{/onlineChange/setInsuranceClaimFileReceivedYes}]]*/,
+					'cb3': /*[[@{/onlineChange/updateInsuranceClaimSendAlliance}]]*/,
+				}
+				var msgs ={
+					'cb2' : '是否確認複核-紙本回收?',
+					'cb3' : '是否確認複核-開啓傳送公會聯盟鏈?'
+				} 
+				confirmMsg(msgs[str], function(r){
+					if(r){
+						var data = {
+								fileReceived : str == 'cb2' ? '1' : null,
+								sendAlliance : str == 'cb3' ? 'Y' : null,
+								transNum : transNum
+							};
+						$.ajax({
+							type : 'POST',
+							contentType : 'application/json',
+							url : urls[str],
+							data : JSON.stringify(data),
+							success : function(response) {
+								if (response.result == 'SUCCESS') {
+									if(str == 'cb2'){
+										$('#checkBox1')[0].checked = true;
+									}
+									if(str == 'cb3'){
+										$('#checkBox2')[0].checked = true;
+									}
+									alertMsg("更新成功");
+									//grid.reload();
+									reloadDetail(transNum);
+								} else {
+									alertMsg("更新失敗!");
+								}
+							},
+							error :function() {
+								alertMsg("更新失敗!");
+							},
+							complete: function(){
+								removeLoading();
+							}
+						});
+					}else {
+						if(str == 'cb2'){
+							$('#checkBox1')[0].checked = false;
+						}
+						if(str == 'cb3'){
+							$('#checkBox2')[0].checked = false;
+						}
+					}
+				});
+			}
+			function reloadDetail(TRANS_NUM) {
+				var trObj = null;
+				var iObj = null;
+				var transType = null;
+				var data = null;
+				var m = null;
+				gridList.forEach(function(item){
+					if (item.transNum == TRANS_NUM) {
+						detailBtnObj = item.detailBtnObj;
+						trObj = item.tr;
+						iObj = item.i;
+						transType = item.data.transType;
+						data = item.data;
+					}
+				});
+				if (trObj == null || iObj == null) {
+					return;
+				}
+
+				var detailTr = detailBtnObj.closest('tr').next(); // next 代表明細按鈕所在tr的下一個tr
+				if (detailTr.hasClass('detail-row')) {
+					detailTr.remove();
+				}
+				
+				// 明細按鈕向下時ajax顯示明細內容
+				// 設定同步
+				$.ajaxSetup({async: false});
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : detailUrlMap[transType],
+					data : JSON.stringify(data),
+					success : function(detailRow) {
+						$(detailRow).insertAfter(trObj);
+					}
+				});
+				$.ajaxSetup({async: true});
+			
+				iObj.removeClass('fa-angle-double-down');
+				iObj.addClass('fa-angle-double-up');
+			}
+			function clickApproved(str) {
+				var data = {
+					rfeId : $('#rfe_id').html(),
+					status: str
+				}
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/onlineChange/updateTransRFEStatus}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						if (response.result == 'SUCCESS') {
+							alertMsg("更新成功");
+							$('#close_approved_deny').click();
+						} else {
+							alertMsg("更新失敗!");
+						}
+					},
+					error :function() {
+						alertMsg("更新失敗!");
+					}
+				});
+			}
+			function checkYMD(str){
+				var reg = /^\d{4}\/(0[1-9]|1[1-2])\/(0[1-9]|[1-2][0-9]|3[0-1])$/;
+				if (str != null && str != ''){
+					if(reg.test(str)){
+						return true;
+					}else {
+						alert("日期格式錯誤，重新輸入。")
+						return false;
+					};
+				}else {
+					return true;
+				}
+				
+			}
+			// 詳細資料列印
+			function onDetail(TRANS_NUM){
+				$('#modal-container-print-detail').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				$('#print_detail').html($('#'+TRANS_NUM).html());
+			}
+			function onPrint(){
+				var newHtml = '<html>'
+									+'<body>'
+										+'<style>'
+                                    +'.profile-user-info {margin-bottom: 10px;}.profile-user-info {width: calc(100% - 24px);margin: 0 auto;}.panel {margin-bottom: 20px;background-color: #fff;border: 1px solid #ddd;border-radius: 4px;-webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);box-shadow: 0 1px 1px rgb(0 0 0 / 5%);}.panel-default>.panel-heading {color: #333;background-color: #f5f5f5;border-color: #ddd;}'
+                                    +'.panel-heading {padding: 10px 15px;border-bottom: 1px solid transparent;border-top-right-radius: 3px;border-top-left-radius: 3px;}.panel-body {padding: 15px;}.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {position: relative;min-height: 1px;}'
+                                    +'.form-horizontal .form-group {display: inline-block;width: 100%;}.form-group {margin-bottom: 10px;}.form-group>label[class*=col-] {margin-bottom: 4px;}.col-xs-4 {width: 33.333%;}.col-xs-3 {width: 25%;}.col-xs-9 {width: 75%;}table td, .detailPolicy .col-xs-8, .detailPolicy .col-xs-9 {word-wrap: break-word;word-break: break-all;}.col-xs-8 {width: 66.666%;}'
+                                    +'.col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {float: left;}.mobile-toggle {padding: 20px 0;}.colorGreen {color: #009B30 !important;}.upload-drop-zone {min-height: 50px;color: #DDDDDD;margin: auto;line-height: 50px;}.boardDotted {border: 2px dotted #009b38;}.col-xs-12 {width: 100%;}img {vertical-align: middle;}'
+                                    +'</style>'
+										+ $('#print_detail').html()
+									+'</body>'
+					         +'</html>';
+				// hdhtml=window.document.head.innerHTML;
+				// bdhtml=$('#print_detail').html();
+				newWin= window.open('',' 線上申請-詳細資料列印',null);
+				newWin.document.write(newHtml);
+				newWin.document.close()
+				newWin.focus();
+				newWin.print();
+                newWin.close();
+			}
+//******************************************變更保單聯絡資料****************************************//
+
+function contactChange(){
+	if($('#contact_info_cb7')[0].checked){
+		$('#contactFail')[0].disabled = false;
+		$('#contactComplete')[0].disabled = false;
+		$('#contactFail').addClass('bgOrange');
+		$('#contactComplete').addClass('bgOrange');
+	}else {
+		$('#contactFail')[0].disabled = true;
+		$('#contactComplete')[0].disabled = true;
+		$('#contactFail').removeClass();
+		$('#contactComplete').removeClass();
+	}
+	
+}
+// 彈出聯絡資料變更已完成窗口
+function onContactInfoAudit(TRANS_TYPE, TRANS_NUM){
+	$('#modal-container-contactInfoConfirm').modal({
+		show: true,
+		backdrop: 'static', 
+		keyboard: false
+	});
+	$("#approvedContactInfoForm")[0].reset();
+	$('#approved_contact_info_num').html(TRANS_NUM);
+}
+// 已完成
+function submitContactInfoApproved() {
+	var checkBox = $('#checkBox_contact_info_approved')[0].checked;
+	if (checkBox) {
+		var data = {
+				transNum : $('#approved_contact_info_num').html()
+			};
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : /*[[@{/onlineChange/contactInfoCompleted}]]*/,
+			data : JSON.stringify(data),
+			success : function(response) {
+				$('#deny_contact_info_approved').click();
+				if (response.result == 'SUCCESS') {
+					alertMsg("更新成功");
+					//grid.reload();
+					reloadDetail(data.transNum);
+				} else {
+					alertMsg("更新失敗!");
+				}
+			},
+			error :function() {
+				alertMsg("更新失敗!");
+			}
+		});
+	}else {
+		alertMsg("請勾選已確認!");
+	}
+}
+// 聯絡資料變更-失败
+function submitContactInfoFail(TRANS_NUM) {
+	confirmMsg('是否確認更新失敗？', function(r) {
+		if (r) {
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/onlineChange/contactInfoFail}]]*/,
+				data : JSON.stringify({transNum : TRANS_NUM}),
+				success : function(response) {
+					$('#deny_approved').click();
+					if (response.result == 'SUCCESS') {
+						alertMsg("更新成功");
+						//grid.reload();
+						reloadDetail(data.transNum);
+					} else {
+						alertMsg("更新失敗!");
+					}
+				},
+				error :function() {
+					alertMsg("更新失敗!");
+				}
+			});
+		} else {
+			return false;
+		}
+	});
+	
+}
+/***************************************死亡除戶***************************************/
+function exportDnsCSV() {
+	var data = {
+		    'startDate': /*[[${param.startDate} != null ? ${param.startDate[0]}]]*/,
+			'endDate': /*[[${param.endDate} != null ? ${param.endDate[0]}]]*/,
+			'transType': /*[[${param.onlineChange} != null ? ${param.onlineChange[0]}]]*/,
+			'status': /*[[${param.status} != null ? ${param.status[0]}]]*/,
+			'policyNo': /*[[${param.policyNo} != null ? ${param.policyNo[0]}]]*/,
+			'policyHolderId': /*[[${param.policyHolderId} != null ? ${param.policyHolderId[0]}]]*/,
+			'dataScope': /*[[${param.dataScope} != null ? ${param.dataScope[0]}]]*/,
+			'fileReceived': /*[[${param.fileReceived} != null ? ${param.fileReceived[0]}]]*/,
+			'to': /*[[${param.to} != null ? ${param.to[0]}]]*/,
+			'sendToAlliance': /*[[${param.sendToAlliance} != null ? ${param.sendToAlliance[0]}]]*/
+			};
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/onlineChange/exportDnsCSV}]]*/,
+				data : JSON.stringify(data),
+				success : function(response) {
+					if (response.result == 'SUCCESS') {
+						var CSV =	createCSV(response.aaData);
+						downloadCSV(CSV);
+					}
+				 
+				},
+				error :function() {
+					alertMsg("导出失敗!");
+				},
+				complete: function(){
+					removeLoading();
+				}
+			});
+}
+function createCSV(data){
+			var APPLICATION_ITEMS = /*[[${session.APPLICATION_ITEMS}]]*/;
+			var CSV = '保全-死亡除戶通報 \r\n';
+			// CSV += '申請日期區間：,' + vo.startDate + '~' + vo.endDate + '\r\n';
+			// CSV += '申請項目：,'+ vo.applyItemName +'\r\n\r\n'
+			var row = "【報表內容】\r\n";
+			var title = ['申請日期','申請項目','申請狀態','工作編號','被保險人身分證字號','被保險人姓名',
+			            '出生年月日','主保單號碼','性別','身故原因','身故日期','通知日期與時間'];
+			var column = ['TRANS_DATE','TRANS_TYPE_NAME','STATUS_NAME','TRANS_NUM','IDNO','NAME',
+			            'BIRDATE','INSNOM','SEX_NAME','CON_NAME','CONDATE','ADDDATE'];
+			for (var i = 0; i < title.length; i++) {
+			if(title[i]){
+			row += title[i] + ',';
+			}
+			}
+			row = row.slice(0, -1);
+			CSV += row + '\r\n';
+			
+			for (var i = 0; i < data.length; i++) {
+				var row = "";
+				for (var j = 0; j < column.length; j++) {
+				if(column[j]){
+					if (column[j] == 'DNS_ALLIANCE') {
+						var str = data[i][column[j]].split(',');
+						var strName = []
+						str.forEach(element => {
+							$.each(APPLICATION_ITEMS,function(i,item){
+								if(item.parameterValue == element){
+									strName.push(item.parameterName)
+								}
+							});
+						});
+						row += '"' + strName.toString() + '"\t,';
+					} else{
+						row += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
+					}
+				}
+				}
+				row.slice(0, row.length - 1);
+				CSV += row + '\r\n';
+			}
+			return CSV;
+}
+/**
+ * 导出excel
+ * @param {Object} title  标题列key-val
+ * @param {Object} data   值列key-val
+ * @param {Object} fileName  文件名称
+ */
+	function downloadCSV(CSV) {
+	if (CSV == '') {
+	alert("Invalid data");
+	return;
+	}
+	
+	var fileName = fileName;
+	var uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURI(CSV);
+	var link = document.createElement("a");
+	link.href = uri;
+	
+	link.style = "visibility:hidden";
+	link.download = "保全死亡除戶通報.csv";
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
+}
+// 彈出死亡除戶已完成窗口
+function onDnsAudit(TRANS_TYPE, TRANS_NUM){
+	$('#modal-container-dns-Confirm').modal({
+		show: true,
+		backdrop: 'static', 
+		keyboard: false
+	});
+	$("#approvedDnsForm")[0].reset();
+	$('#approved_dns_num').html(TRANS_NUM);
+}
+// 已完成
+function submitDnsApproved() {
+	var checkBox = $('#checkBox_dns_approved')[0].checked;
+	if (checkBox) {
+		var data = {
+				transNum : $('#approved_dns_num').html()
+			};
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : /*[[@{/onlineChange/contactInfoCompleted}]]*/,
+			data : JSON.stringify(data),
+			success : function(response) {
+				$('#deny_dns_approved').click();
+				if (response.result == 'SUCCESS') {
+					alertMsg("更新成功");
+					//grid.reload();
+					reloadDetail(data.transNum);
+				} else {
+					alertMsg("更新失敗!");
+				}
+			},
+			error :function() {
+				alertMsg("更新失敗!");
+			}
+		});
+	}else {
+		alertMsg("請勾選已確認!");
+	}
+}
+		/*]]>*/
+		</script>
+	</body>
+</html>

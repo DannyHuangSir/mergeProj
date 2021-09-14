@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jboss-web>
+<jboss-web>
+	<context-root>eservice_adm</context-root>
+	<!-- <session-config>
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config> -->
+<!-- 	<session-config> -->
+<!-- 		<session-timeout>15</session-timeout> -->
+<!-- 	</session-config> -->
+</jboss-web>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransChangeAccountDao">
+
+	<resultMap id="TransChangeAccountMap" type="com.twfhclife.eservice.onlineChange.model.TransChangeAccountVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="CHANGE_TYPE" property="changeType"/>
+		<result column="ACCT_TYPE" property="acctType"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,CHANGE_TYPE,ACCT_TYPE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transChangeAccountVo.id != null"> AND ID = #{transChangeAccountVo.id} </if>
+			<if test="transChangeAccountVo.transNum != null and transChangeAccountVo.transNum != ''"> AND TRANS_NUM = #{transChangeAccountVo.transNum} </if>
+			<if test="transChangeAccountVo.changeType != null and transChangeAccountVo.changeType != ''"> AND CHANGE_TYPE = #{transChangeAccountVo.changeType} </if>
+			<if test="transChangeAccountVo.acctType != null and transChangeAccountVo.acctType != ''"> AND ACCT_TYPE = #{transChangeAccountVo.acctType} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transChangeAccountVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得匯款帳號變更查詢結果 -->
+	<select id="getTransChangeAccount" resultMap="TransChangeAccountMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CHANGE_ACCOUNT
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 匯款帳號變更-新增 -->
+	<insert id="insertTransChangeAccount">
+		INSERT INTO ESERVICE.DBO.TRANS_CHANGE_ACCOUNT
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_CHANGE_ACCOUNT),
+			#{transChangeAccountVo.transNum, jdbcType=VARCHAR},
+			#{transChangeAccountVo.changeType, jdbcType=VARCHAR},
+			#{transChangeAccountVo.acctType, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

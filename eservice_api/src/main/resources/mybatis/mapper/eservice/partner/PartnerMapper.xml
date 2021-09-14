@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.partner.dao.PartnerDao">
+
+	<resultMap id="PartnerPolicyListMap" type="com.twfhclife.eservice.partner.model.PartnerVo" >
+		<result column="TOTAL_ROW" property="totalRow"/>
+		<result column="PAGE_SIZE" property="pageSize"/>
+		<result column="PAGE_NUM" property="pageNum"/>
+		<result column="NAME" property="proposer"/>
+		<result column="ROC_ID" property="rocId"/>
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="POLICY_LIST_TYPE" property="policyListType"/>
+		<result column="MAIN_INSURED_NAME" property="insuredName"/>
+		<result column="EFFECTIVE_DATE" property="effectiveDate"/>
+	</resultMap>
+
+	<!-- 取得保代下的使用者的所有保單清單 -->
+	<!-- @param rocId 要保人身份證字號 -->	
+	<!-- @param policyNo 保單號碼 -->	
+	<!-- @param agentCode 代理人代碼 -->	
+	<select id="getPartnerPolicyPageList" resultMap="PartnerPolicyListMap">
+		WITH POLICY_DATA AS (
+			SELECT 
+				EFFECTIVE_DATE
+				,POLICY_NO
+				,POLICY_TYPE
+			FROM 
+				ESERVICE.DBO.POLICY
+			<where>
+				<if test="agentCode != null and agentCode != ''">
+					AND AGENT_CODE = #{agentCode}
+				</if>
+				<if test="policyNo != null and policyNo != ''">
+					AND POLICY_NO = #{policyNo}
+				</if>
+			</where>
+		), POLICY_DATA_USER AS (
+			SELECT 
+				DISTINCT P.EFFECTIVE_DATE
+				,P.POLICY_NO
+				,P.POLICY_TYPE
+				,ESERVICE.DBO.FN_DEBASE64(LM.LIPM_NAME_1) AS NAME
+				,LM.LIPM_ID AS ROC_ID
+			FROM POLICY_DATA P 
+				LEFT OUTER JOIN ESERVICE.DBO.LILIPM LM
+					ON P.POLICY_NO = LM.LIPM_INSU_NO
+			<where>
+				<if test="rocId != null and rocId != ''">
+					AND LM.LIPM_ID = #{rocId}
+				</if>
+			</where>
+		), POLICY_DATA_USER_FINAL AS (
+			SELECT
+				EFFECTIVE_DATE
+				,POLICY_NO
+				,POLICY_TYPE
+				,NAME
+				,ROC_ID
+				,ROW_NUMBER() OVER (ORDER BY POLICY_NO) AS ROW_NUM
+			FROM
+				POLICY_DATA_USER
+		)
+		SELECT
+			(SELECT MAX(ROW_NUM) FROM POLICY_DATA_USER_FINAL) AS TOTAL_ROW
+			,#{pageSize} AS PAGE_SIZE
+			,#{pageNum} AS PAGE_NUM
+			,PDU.POLICY_NO
+			,CASE 
+			    WHEN PDU.POLICY_TYPE IN ('UC','UH','UP','UQ','UR','US') then '1'
+			    ELSE '2'
+			 END AS POLICY_LIST_TYPE
+			,PDU.EFFECTIVE_DATE
+			,PDU.NAME
+			,(
+				SELECT TOP 1 ESERVICE.DBO.FN_DEBASE64(C.INSURED_NAME)
+				FROM ESERVICE.DBO.COVERAGE C
+				LEFT OUTER JOIN ESERVICE.DBO.PRODUCT PROD ON C.PRODUCT_ID = PROD.PRODUCT_ID AND PROD.PRODUCT_TYPE = '1'
+				WHERE C.POLICY_NO = PDU.POLICY_NO
+			) AS MAIN_INSURED_NAME
+			,CASE
+				WHEN PDU.ROC_ID IS NULL THEN ''
+				ELSE ESERVICE.DBO.FN_GETHIDDENCODE(1, PDU.ROC_ID, '*', 4, 5)
+			 END AS ROC_ID
+		FROM 
+			POLICY_DATA_USER_FINAL PDU
+		WHERE
+			PDU.ROW_NUM <![CDATA[>=]]> ((#{pageNum} - 1) * #{pageSize}) + 1
+			AND PDU.ROW_NUM <![CDATA[<=]]> (#{pageNum} * #{pageSize})
+		ORDER BY
+			PDU.POLICY_NO
+	</select>
+	
+</mapper>

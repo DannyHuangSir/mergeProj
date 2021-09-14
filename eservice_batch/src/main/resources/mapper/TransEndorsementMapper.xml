@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransEndorsementMapper">
+	
+	<insert id="insertTransEndorsement" parameterType="com.twfhclife.eservice_batch.model.TransEndorsementVo">
+		INSERT INTO ESERVICE.DBO.TRANS_ENDORSEMENT (TRANS_NUM, TEXT_CONTENT, TEXT_ORDER)
+			VALUES (#{vo.transNum}, ESERVICE.DBO.FN_ENBASE64(#{vo.textContent}), #{vo.textOrder})
+	</insert>
+	
+	<select id="getPolicyHolderName" resultType="string">
+	   select ESERVICE.DBO.FN_DEBASE64(lipm_name_1) lipm_name_1 from lilipm p, trans t, trans_policy tp
+	   where t.TRANS_NUM = tp.TRANS_NUM
+	   and tp.policy_no = p.lipm_insu_no
+	   and (t.TRANS_NUM = #{transNum} OR T.TRANS_NUM = (SELECT TOP 1 TRANS_NUM FROM ESERVICE.DBO.TRANS_MERGE WHERE TRANS_NUM_MERGE = #{transNum}))
+	</select>
+	
+	<insert id="insertTransEZ" parameterType="com.twfhclife.eservice_batch.model.EZAcquireVo">
+		INSERT INTO ESERVICE.DBO.TRANS_EZ (TRANS_NUM, TASK_ID, DOCUMENT_ID, DOCUMENT_TYPE, STATUS)
+			VALUES (#{vo.transNum}, #{vo.taskId}, #{vo.documentId}, #{vo.documentType}, #{vo.status})
+	</insert>
+
+</mapper>

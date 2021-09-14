@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyDividendDao">
+
+	<resultMap id="PolicyDividendMap" type="com.twfhclife.eservice.policy.model.PolicyDividendVo" >
+		<result column="ID" property="id"/>
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="CLUP_TR_DATE" property="clupTrDate"/>
+		<result column="CLUP_EXPE_UNITS" property="clupExpeUnits"/>
+		<result column="CLUP_INPR_RATE" property="clupInprRate"/>
+		<result column="CLUP_EXCH_RATE" property="clupExchRate"/>
+		<result column="CLUP_EXPE_NTD" property="clupExpeNtd"/>
+		<result column="INVT_CURR" property="invtCurr"/>
+		<result column="INPD_INT_COMPU_DATE" property="inpdIntCompuDate"/>
+		<result column="INPD_INT_DIVIDEND_DATE" property="inpdIntDividendDate"/>
+		<result column="INVT_NO" property="invtNo"/>
+		<result column="INVT_NAME" property="invtName"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,POLICY_NO,CLUP_TR_DATE,CLUP_EXPE_UNITS,CLUP_INPR_RATE,CLUP_EXCH_RATE,CLUP_EXPE_NTD,INVT_CURR,INPD_INT_COMPU_DATE,INPD_INT_DIVIDEND_DATE,INVT_NO,INVT_NAME
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="policyDividendVo.id != null and policyDividendVo.id != ''"> AND ID = #{policyDividendVo.id} </if>
+			<if test="policyDividendVo.policyNo != null and policyDividendVo.policyNo != ''"> AND POLICY_NO = #{policyDividendVo.policyNo} </if>
+			<if test="policyDividendVo.clupTrDate != null"> AND CLUP_TR_DATE = #{policyDividendVo.clupTrDate} </if>
+			<if test="policyDividendVo.clupExpeUnits != null"> AND CLUP_EXPE_UNITS = #{policyDividendVo.clupExpeUnits} </if>
+			<if test="policyDividendVo.clupInprRate != null"> AND CLUP_INPR_RATE = #{policyDividendVo.clupInprRate} </if>
+			<if test="policyDividendVo.clupExchRate != null"> AND CLUP_EXCH_RATE = #{policyDividendVo.clupExchRate} </if>
+			<if test="policyDividendVo.clupExpeNtd != null"> AND CLUP_EXPE_NTD = #{policyDividendVo.clupExpeNtd} </if>
+			<if test="policyDividendVo.invtCurr != null and policyDividendVo.invtCurr != ''"> AND INVT_CURR = #{policyDividendVo.invtCurr} </if>
+			<if test="policyDividendVo.inpdIntCompuDate != null"> AND INPD_INT_COMPU_DATE = #{policyDividendVo.inpdIntCompuDate} </if>
+			<if test="policyDividendVo.inpdIntDividendDate != null"> AND INPD_INT_DIVIDEND_DATE = #{policyDividendVo.inpdIntDividendDate} </if>
+			<if test="policyDividendVo.invtNo != null and policyDividendVo.invtNo != ''"> AND INVT_NO = #{policyDividendVo.invtNo} </if>
+			<if test="policyDividendVo.invtName != null and policyDividendVo.invtName != ''"> AND INVT_NAME = #{policyDividendVo.invtName} </if>
+			
+			<!--  僅提供兩年內 -->
+			AND case when CLUP_TR_DATE is null then getdate() else CLUP_TR_DATE end > DATEADD(month, -24, getdate()) + 1
+		</where>
+	</sql>
+	
+	<!-- 取得保單收益分配查詢結果 -->
+	<select id="getPolicyDividend" resultMap="PolicyDividendMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_DIVIDEND
+		<include refid="whereClause" />
+		ORDER BY
+			CLUP_TR_DATE, INVT_NO
+	</select>
+
+</mapper>

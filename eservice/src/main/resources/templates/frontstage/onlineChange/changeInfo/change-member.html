@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>更改基本資料｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+    <div th:replace="fragments/header :: top"></div>
+    <header th:replace="fragments/header :: header"></header>
+    <th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+    <!--major 3 tabs-->
+    <div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+    <section class="grey applyInner has-special-note fullContent">
+        <div class="container bg3">
+            <ul class="breadcrumb detail1">
+                <li>
+                    <a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+                </li>
+                <li class="active">
+                    <a href="javascript:;">升級保戶會員</a>
+                </li>
+            </ul>
+        </div>
+        <div class="container bg3 box-border">
+            <div class="tb3 top0 nopd">
+                <i class="fas fa-edit"></i> 升級保戶會員
+            </div>
+            <section class="grey mobile-nopd firstUse2 fullContent">
+        <div class="container bg3 box-border no-borderTop">
+            <div class="col-md-6 col-md-offset-3 mobile-panel h300">
+                <div class="cert1" id="FirstUseMyData">
+                    <!--  <form action=""> -->
+                    <h2>請輸入保單號碼以確認身份</h2>
+                    <div class="form-group">
+                        <div class="col-lg-12">
+							<div class="input-group">
+							  <input type="text" id="policyNo" class="form-control" placeholder="請輸入保單號碼" aria-label="請輸入保單號碼"/>
+							  <span class="input-group-btn">
+								<button class="btn btn-secondary" onclick="searchPolicyNo()" type="button">查詢保單</button>
+							  </span>
+							</div>
+						  </div>						
+                    </div>
+                </div><br/><br/>
+                <div id="hideQues">
+					<div class="cert1">
+						<h2 class="title tex-center">請回答保單相關問題</h2>
+					</div>
+					<div id="createQuesHtml">
+					</div>
+				</div>
+            </div>
+
+            <div id="hideButton" class="col-md-8 col-md-offset-2 two-buttons">
+                <a>
+                	<button class="go btn-signup" onclick="checkAnswer()" >下一步</button>
+                </a>
+            </div>
+        </div>
+    </section>
+        </div>
+    </section>
+    <footer th:replace="fragments/footer"></footer>
+    <th:block th:replace="fragments/script"/>
+    <script src="js/eservice/form.js"></script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    $(function() {
+    	$('input, textarea').placeholder();
+    	$("#hideQues").hide();
+    	$("#hideButton").hide();
+    });
+    function searchPolicyNo(){
+    	postJson("/eservice/changeMember/getPolicyByRocId", $("#policyNo").val());
+    }
+    
+    function postJson(url, data){
+    	popupLoading();
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : url,
+			data : data,
+			success : function(response) {
+				if(response.resultMsg != ""){
+					openAlert(response.resultMsg);
+					return;
+				}
+				$("#createQuesHtml").empty();
+				
+				$.each(response.resultData, function(idx, obj) {
+					var ins = idx+1;
+					var createHtml = '<div class="errorMsg" id="'+obj.questionNo+'_msg"></div>'+
+					'<div class="cards" id="'+obj.questionNo+'_cards"><div class="cardsTitle">'+
+					'<span class="cardsNum">Q'+ins+' </span><span class="cardsWords">'+
+					obj.questionValue+'</span></div><div class="cardsContent">';
+					
+					if(obj.questionType == "radio"){
+						createHtml = createHtml+'<div class="radio"><label><div class="radio-btn">'+
+						'<i><input type="radio" name="'+obj.questionNo+'" value="Y"/></i></div>'+
+						'</label> 有</div><div class="radio"><label><div class="radio-btn">'+
+						'<i><input type="radio" name="'+obj.questionNo+'" value="N"/></i></div>'+
+						'</label> 無</div>';
+					}else if(obj.questionType == "text"){
+						createHtml = createHtml+''+
+						'<div class="inputext"><input type="text" name="'+obj.questionNo+'"/>'+
+						'</div>';
+					}else if(obj.questionType == "date"){
+						createHtml = createHtml+''+
+						'<div class="inputext">'+
+						'<input type="text" placeholder="YYYY/MM/DD" class="datepicker" readonly name="'+obj.questionNo+'"/>'+
+						'<i class="fa fa-search gray "></i></div>';
+					}else{
+						openAlert("error0!")
+					}
+					createHtml = createHtml + '</div></div>';
+					$("#createQuesHtml").append(createHtml);
+				});
+				$('.datepicker').datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            dateFormat: 'yy/mm/dd',
+		            yearRange: 'c-80:c+80',
+		            maxDate: '-20y'
+		        });
+				
+				$('.radio-btn').on('click', function(e) {
+			        if($(e.target).hasClass('targetPolicy')){
+			            if($(e.target).prop('disabled')){
+			                window['dataCheck'] ? window['dataCheck'].call(this, e.target) : null ;
+			            }
+			        }
+			        var radio = $(this).find('input').attr('name'),
+			            radioID = $(this).find('input').attr('id'),
+			            checkedRadio = $('input[name="' + radio + '"]:checked')[0],
+			            otherRadio = $('input[name="' + radio + '"]'),
+			            otherRadioParent = otherRadio.closest('.radio-btn');
+			            $this = $(this);
+			            
+			        if ( $(this).find('input').prop('disabled') == true ) {
+			            $(this).find('input').prop('checked', false);
+			        }
+			        else {
+			            otherRadioParent.removeClass('checkedRadio');
+			            otherRadio.prop('checked', false);
+			            $this.addClass('checkedRadio');
+			             /***** Add execution @Linus_09/24 *****/
+			            $(this).find(':radio').prop("checked", true);
+			        }
+			    });
+				
+				$("#hideQues").show();
+				$("#hideButton").show();
+			},
+			error : function() {
+				openAlert('error!')
+			},
+	        complete: function(data) {
+	            removeLoading();
+	        }
+		});
+	}
+    
+    function checkAnswer(){
+    	var data = new Array;
+    	$.each($("input[name^='QUESTION']"), function(idx, obj) {
+    		var name = $(this).attr("name");
+    		var value = "";
+    		if($(this).attr("type") == "radio"){
+    			if($("input[type=radio][name="+name+"]:checked").val() == $(this).val()){
+        			//var name = $(this).attr("name");
+        			value = $("input[type=radio][name="+name+"]:checked").val();
+    			}else{
+    				return;
+    			}
+    		}else{
+    			value = $(this).val();
+    		}
+    		
+    		var questionVo = {
+    				questionNo : name,
+    				answer : value
+    				};
+    		data.push(questionVo);
+    	});
+    	postAnswerJson("/eservice/changeMember/checkAnswer", data);
+    }
+    
+    function postAnswerJson(url, data){
+    	$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : url,
+			data : JSON.stringify(data),
+			success : function(response) {
+				var ischeck = true;
+				$.each(response.resultData, function(idx, obj) {
+					$("#"+obj.questionNo+"_msg").text("");
+					$("#"+obj.questionNo+"_cards").removeClass("cardError");
+					if(obj.result != "OK"){
+						ischeck = false;
+						$("#"+obj.questionNo+"_msg").text(obj.result);
+						$("#"+obj.questionNo+"_cards").addClass("cardError");
+					}
+				});
+				if(ischeck){
+					//都對 轉畫面
+					window.location.href = "/eservice/changeMemberSuccess";
+				}
+			},
+			error : function() {
+				openAlert('error!')
+			}
+    	});
+    }
+    /*]]>*/
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.web.dao.OptionDao">
+	
+	<select id="getCityList" resultType="hashmap">
+		SELECT ID AS [key], CITY AS [value] FROM ESERVICE.DBO.CITY ORDER BY ID
+	</select>
+	
+	<select id="getRegionList" resultType="hashmap" parameterType="string">
+		SELECT ID AS [key], REGION AS [value] FROM ESERVICE.DBO.REGION WHERE CITY_ID = #{cityId} ORDER BY REGION
+	</select>
+	
+	<select id="getRoadList" resultType="hashmap" parameterType="string">
+		SELECT ID AS [key], ROAD AS [value] FROM ESERVICE.DBO.ROAD WHERE REGION_ID = #{regionId} ORDER BY ROAD
+	</select>
+	
+	<select id="getBankList" resultType="hashmap">
+		SELECT 
+			BANK_ID AS [key], BANK_NAME AS [value] 
+		FROM 
+			ESERVICE.DBO.BANK_INFO 
+		WHERE BRANCH_ID = 'root'
+		AND DISPLAY = 'Y'
+		ORDER BY BANK_ID 
+	</select>
+	
+	<select id="getBranchesList" resultType="hashmap" parameterType="string">
+		SELECT 
+			BRANCH_ID AS [key], BRANCH_NAME AS [value] 
+		FROM 
+			ESERVICE.DBO.BANK_INFO 
+		WHERE BRANCH_ID != 'root' AND BANK_ID = #{bankId}
+		ORDER BY BRANCH_NAME 
+	</select>
+	
+	<select id="getTransactionCodeList" resultType="hashmap" parameterType="string">
+		SELECT
+			a.PARAMETER_CODE AS [key]
+			,a.PARAMETER_NAME AS [value]
+		FROM ESERVICE_ADM.DBO.PARAMETER a
+		JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b ON a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		WHERE 1 = 1
+			AND a.SYSTEM_ID = b.SYSTEM_ID
+			AND a.STATUS = b.STATUS
+			AND b.STATUS = 1
+			AND b.SYSTEM_ID = #{systemId}
+			AND b.CATEGORY_CODE = #{categoryCode}
+		ORDER BY
+			a.SORT_NO
+	</select>
+	
+	<select id="getAreaList" resultType="hashmap">
+		SELECT DISTINCT NATN_STATE AS [key], NATN_STATE AS [value] FROM ESERVICE.DBO.LINATN_ES
+		WHERE NATN_STATE IS NOT NULL ORDER BY NATN_STATE
+	</select>
+	
+	<select id="getCountryList" resultType="hashmap" parameterType="string">
+		SELECT 
+		    CASE
+		        WHEN NATN_RISK_RANK > 2 OR SUBSTRING(NATN_SP_MK, 2, 3) LIKE '%Y%' THEN 'DENY'
+		        ELSE NATN_CODE
+		    END AS [key], 
+		    NATN_CH_ABBR + '(' || NATN_EN_ABBR + ')' AS [value] 
+		FROM ESERVICE.DBO.LINATN_ES
+		WHERE NATN_STATE = #{areaId} 
+		ORDER BY NATN_CODE
+	</select>
+	
+	<select id="getJobList1" resultType="hashmap" parameterType="string">
+		<![CDATA[
+		SELECT HATB_TJOB_B AS "KEY", HATB_TJOB_NAME AS "VALUE" FROM ESERVICE.DBO.LIHATB_ES 
+		WHERE HATB_TJOB_S = '****' 
+		ORDER BY HATB_TJOB_B
+		]]>
+	</select>
+	
+	<select id="getJobList2" resultType="hashmap" parameterType="string">
+		<![CDATA[
+		SELECT HATB_TJOB_M AS "KEY", HATB_TJOB_NAME AS "VALUE" FROM ESERVICE.DBO.LIHATB_ES 
+		WHERE HATB_TJOB_S = '0000' 
+		AND HATB_TJOB_B = #{jobB}
+		ORDER BY HATB_TJOB_B
+		]]>
+	</select>
+	
+	<select id="getJobList3" resultType="hashmap" parameterType="string">
+		<![CDATA[
+		SELECT HATB_TJOB_S + ',' + COALESCE(HATB_JOB_CODE, '0') AS "KEY", HATB_JOB_ABBR AS "VALUE" FROM ESERVICE.DBO.LIHATB_ES 
+		WHERE HATB_TJOB_B = #{jobB}
+		AND HATB_TJOB_M = #{jobM}
+		AND HATB_JOB_ABBR IS NOT NULL
+		ORDER BY HATB_TJOB_S
+		]]>
+	</select>
+	
+</mapper>

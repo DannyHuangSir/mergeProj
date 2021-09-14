@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransBankInfoDao">
+
+	<resultMap id="TransBankInfoMap" type="com.twfhclife.eservice.onlineChange.model.TransBankInfoVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="BANK_ID" property="bankId"/>
+		<result column="BRANCH_ID" property="branchId"/>
+		<result column="ACCOUNT_NO" property="accountNo"/>
+		<result column="ACCOUNT_NAME" property="accountName"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transBankInfoVo.id != null"> AND ID = #{transBankInfoVo.id} </if>
+			<if test="transBankInfoVo.transNum != null and transBankInfoVo.transNum != ''"> AND TRANS_NUM = #{transBankInfoVo.transNum} </if>
+			<if test="transBankInfoVo.bankId != null and transBankInfoVo.bankId != ''"> AND BANK_ID = #{transBankInfoVo.bankId} </if>
+			<if test="transBankInfoVo.branchId != null and transBankInfoVo.branchId != ''"> AND BRANCH_ID = #{transBankInfoVo.branchId} </if>
+			<if test="transBankInfoVo.accountNo != null and transBankInfoVo.accountNo != ''"> AND ESERVICE.DBO.FN_DEBASE64(ACCOUNT_NO) = #{transBankInfoVo.accountNo} </if>
+			<if test="transBankInfoVo.accountName != null and transBankInfoVo.accountName != ''"> AND ESERVICE.DBO.FN_DEBASE64(ACCOUNT_NAME) = #{transBankInfoVo.accountName} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transBankInfoVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得銀行帳戶資訊查詢結果 -->
+	<select id="getTransBankInfo" resultMap="TransBankInfoMap">
+		SELECT
+			ID,TRANS_NUM,BANK_ID,BRANCH_ID,ESERVICE.DBO.FN_DEBASE64(ACCOUNT_NO) ACCOUNT_NO,ESERVICE.DBO.FN_DEBASE64(ACCOUNT_NAME) ACCOUNT_NAME
+		FROM
+			ESERVICE.DBO.TRANS_BANK_INFO
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 銀行帳戶資訊-新增 -->
+	<insert id="insertTransBankInfo">
+		INSERT INTO ESERVICE.DBO.TRANS_BANK_INFO
+		(
+			ID,TRANS_NUM,BANK_ID,BRANCH_ID,ACCOUNT_NO,ACCOUNT_NAME
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_BANK_INFO),
+			#{transBankInfoVo.transNum, jdbcType=VARCHAR},
+			#{transBankInfoVo.bankId, jdbcType=VARCHAR},
+			#{transBankInfoVo.branchId, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{transBankInfoVo.accountNo, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{transBankInfoVo.accountName, jdbcType=VARCHAR})
+		)
+	</insert>
+
+</mapper>

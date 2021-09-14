@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<link rel="stylesheet" th:href="@{/css/circle.css}"/>
+	<title>保障總覽｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='dashboard')"></div>
+	<section class="grey fullContent" id="dashboardContent">
+		<th:block th:if="${session.REJECT_DIV_LIST == null 
+			or (session.REJECT_DIV_LIST != null and !#lists.contains(session.REJECT_DIV_LIST, 'dashboard_01'))}">
+			<th:block th:if="${loginUserType == 'member' or loginUserType == 'admin'}">
+				<div class="container bg3 bgSpace box-border">
+					<div class="my1">
+						<i class="foo-business_1 foo-2x"></i> 保障總覽
+						<span class="my2">共 <th:block th:text="${benefitPolicyListSize}"/> 張</span>
+						<div class="dropdown pull-right r30">
+							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+								<i class="hidden-xs r31">切換其他被保人</i>
+								<i class="foo-down-dir r32"></i>
+							</button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+								<th:block th:each="insuredData, rowStat : ${insuredProductData}">
+									<li role="presentation">
+										<a th:id="${'insuredMenu' + rowStat.count}" role="menuitem" tabindex="-1" href="#" th:href="'javascript:changeCircle(\'insuredMenu' + ${rowStat.count} + '\')'">
+											<div th:switch="${mapBase64 == null or mapBase64[insuredData['key']] == null}"> 
+												<div th:case="${false}">
+													<img th:width="${insuredData['key'] != null} ? ${#strings.length(insuredData['key']) * 20}" height="23px" th:src="|data:image/svg+xml;base64, ${mapBase64[insuredData['key']]}|" />
+												</div>
+												<div th:case="${true}">
+													<th:block th:text="${insuredData['key']}"/>
+												</div>
+											</div>
+										</a>
+										<th:block th:each="productCode : ${insuredData['value']}"
+											th:with="pdtList1 = ${ {'ER', 'ES'} }
+													,pdtList2 = ${ {'57'} }
+													,pdtList3 = ${ {'07', '28', '39', '56', '5J', 'BM', 'CM', 'DN', 'EM'} }
+													,pdtList4 = ${ {'01', '05', '08', '09', '1C', '1E', '1F', '1P', '1Q', '52', '54', '5A', '5F', '5M', '5N', '5P', '5Q', 'EG', 'EH', 'EJ'} }
+													,pdtList5 = ${ {'10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '1A', '1J', '1K', '1N', '20', '21', '22', '23', '24', '25', '26', '27', '30', '31', '33', '34', '35', '36', '37', '38', '41', '42', '43', '46', '47', '64', '73', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AH', 'AJ', 'AK', 'AM', 'AN', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AY', 'AZ', 'BA', 'BD', 'BE', 'BF', 'BG', 'BH', 'BJ', 'BK', 'BL', 'BN', 'BP', 'BQ', 'BU', 'BV', 'BW', 'BX', 'CA', 'CB', 'CF', 'CG', 'CH', 'CJ', 'CK', 'CL', 'CN', 'CP', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DA', 'DB', 'DC', 'DD', 'DE', 'DF', 'DG', 'DH', 'DJ', 'DK', 'DL', 'DM', 'DP', 'DQ', 'DW', 'DX', 'DY', 'DZ', 'EA', 'EB', 'ED', 'EE', 'EL', 'EN', 'EP', 'EV', 'EW', 'EX', 'EY', 'EZ', 'FA', 'FC', 'FD', 'FE'} }
+													,pdtList6 = ${ {'02', '03', '04', '06', '1G', '1L', '1M', '1S', '51', '53', '55', '58', '59', '5B', '5C', '5D', '5E', '5K', '5L', '60', '61', '69', '70', '72', '74', '75', '76', '83', 'EQ'} }
+													,pdtList7 = ${ {'1B', '49', 'BR', 'CE', 'CR', 'DT', 'EC', 'EF', 'EK', 'ET', 'EU', 'FB'} }">
+											<th:block th:if="${#lists.contains(pdtList1, productCode)}" >
+												<input type="hidden" th:name="${'insuredProduct' + rowStat.count}" th:value="1" />
+											</th:block>
+											<th:block th:if="${#lists.contains(pdtList2, productCode)}" >
+												<input type="hidden" th:name="${'insuredProduct' + rowStat.count}" th:value="2" />
+											</th:block>
+											<th:block th:if="${#lists.contains(pdtList3, productCode)}" >
+												<input type="hidden" th:name="${'insuredProduct' + rowStat.count}" th:value="3" />
+											</th:block>
+											<th:block th:if="${#lists.contains(pdtList4, productCode)}" >
+												<input type="hidden" th:name="${'insuredProduct' + rowStat.count}" th:value="4" />
+											</th:block>
+											<th:block th:if="${#lists.contains(pdtList5, productCode)}" >
+												<input type="hidden" th:name="${'insuredProduct' + rowStat.count}" th:value="5" />
+											</th:block>
+											<th:block th:if="${#lists.contains(pdtList6, productCode)}" >
+												<input type="hidden" th:name="${'insuredProduct' + rowStat.count}" th:value="6" />
+											</th:block>
+											<th:block th:if="${#lists.contains(pdtList7, productCode)}" >
+												<input type="hidden" th:name="${'insuredProduct' + rowStat.count}" th:value="7" />
+											</th:block>
+										</th:block>
+									</li>
+								</th:block>
+							</ul>
+						</div>
+					</div>
+					<div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 blocked">
+						<div id="qtpie-list" class="centered">
+							<div id="circleAll">
+								<svg viewbox="0 0 200 200">
+									<path data-id="svg1" class="product" data-pie="14.285714286" data-desc="長照險" />
+									<path data-id="svg2" class="product " data-pie="14.285714286" data-desc="重大疾病險" />
+									<path data-id="svg3" class="product" data-pie="14.285714286" data-desc="癌症險" />
+									<path data-id="svg4" class="product" data-pie="14.285714286" data-desc="醫療險" />
+									<path data-id="svg5" class="product" data-pie="14.285714286" data-desc="壽險" />
+									<path data-id="svg6" class="product" data-pie="14.285714286" data-desc="傷害險" />
+									<path data-id="svg7" class="product" data-pie="15" data-desc="健康險" />
+								</svg>
+								<div class="circle">
+									<a href="detail1" class="btn-circle"><span>我的保障</span></a>
+								</div>
+							</div>
+							<ul>
+								<li id="pdt1" class="pdt1"><i class="fas fa-procedures fa-2x"></i> 長照險</li>
+								<li id="pdt2" class="pdt2"><i class="fas fa-briefcase-medical fa-2x"></i> 重大疾病險</li>
+								<li id="pdt3" class="pdt3"><i class="fas fa-heartbeat fa-2x"></i> 癌症險</li>
+								<li id="pdt4" class="pdt4"><i class="fas fa-user-md fa-2x"></i> 醫療險</li>
+								<li id="pdt5" class="pdt5"><i class="fas fa-hand-holding-heart fa-2x"></i> 壽險</li>
+								<li id="pdt6" class="pdt6"><i class="fas fa-ambulance fa-2x"></i> 傷害險</li>
+								<li id="pdt7" class="pdt7"><i class="far fa-hospital fa-2x"></i> 健康險</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="container grey text-ps circleNotice">※圖表係依據被保人所持有之保障項目分類，欲瞭解更多，可點選<a href="detail1" class="orange-link underline">我的保障</a></div>
+			</th:block>
+		</th:block>
+		
+		<th:block th:if="${session.REJECT_DIV_LIST == null 
+			or (session.REJECT_DIV_LIST != null and !#lists.contains(session.REJECT_DIV_LIST, 'dashboard_02'))}">
+			<th:block th:if="${loginUserType == 'member' or loginUserType == 'admin'}">
+				<div class="container bg3 box-border">
+					<div class="mystyle2">
+						<div class="my1 mobile-toggle" data-toggle="true">
+							<i class="fas fa-chevron-down mobile hid2"></i>
+							<i class="fas fa-chart-line fa-lg hid1"></i> 投資型保單概況
+							<span class="my6 pull-right hid1">
+								<span class="hidden-xs">參考合計帳戶價值</span> 
+								<span class="enNormal"> NTD </span>
+								<th:block th:text="${policyAcctValueTotal != null}
+									? ${#numbers.formatDecimal(policyAcctValueTotal, 1, 'COMMA', 2, 'DEFAULT')}
+									: 0.00"/>
+							</span>
+						</div>
+					</div>
+					<div class="table1 mobile-toggle-panel bg3 toggle-hide">
+						<table class="tablesaw tablesaw-stack table00 mobile-striped" data-tablesaw-mode="stack">
+							<thead>
+								<tr class="table2">
+									<th class="textFirst item360" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">保單</th>
+									<th class="item360" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">平均報酬率</th>
+									<th class="item360" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">參考帳戶價值</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<th:block th:if="${invtPolicyList} != null">
+								<th:block th:each="vo, rowStat : ${invtPolicyList}">
+									<tr th:class="${rowStat.odd} ? 'tr-odd'" th:classappend="${rowStat.index} > 2 ? 'hide'">
+										<td class="textFirst table3">
+											<th:block th:text="${vo.productName != null} 
+												? ${vo.productName}"/>
+											<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+										</td>
+										<td class="" th:classappend="${vo.avgRoiRate ge 0 ? 'num02' : 'num03'}">
+											<th:block th:if="${vo.avgRoiRate gt 0}">
+												+ <th:block th:text="${#numbers.formatDecimal(vo.avgRoiRate, 1, 'COMMA', 2, 'DEFAULT')}"/>%
+											</th:block>
+											<th:block th:if="${vo.avgRoiRate lt 0}">
+												<th:block th:text="${#numbers.formatDecimal(vo.avgRoiRate, 1, 'COMMA', 2, 'DEFAULT')}"/>%
+											</th:block>
+											<th:block th:if="${vo.avgRoiRate == 0}">
+												0%
+											</th:block>
+										</td>
+										<td class="" th:classappend="${vo.policyAcctValue ge 0 ? 'num02' : 'num01 colorOrange'}">
+											<th:block th:if="${vo.policyAcctValue gt 0}">
+												<th:block th:text="${#numbers.formatDecimal(vo.policyAcctValue, 1, 'COMMA', 2, 'DEFAULT')}"/>
+												<i class="my5"><th:block th:text="${vo.currency} == null ? 'NTD' : ${vo.currency}"/></i>
+											</th:block>
+											<th:block th:if="${vo.policyAcctValue == 0}">
+												0
+												<i class="my5"><th:block th:text="${vo.currency} == null ? 'NTD'"/></i>
+											</th:block>
+											<th:block th:if="${vo.policyAcctValue lt 0}">
+												<span class="tablesaw-cell-content">帳價不足</span>
+											</th:block>
+										</td>
+										<td></td>
+									</tr>
+								</th:block>
+								</th:block>
+							</tbody>
+						</table>
+						<div class="col-md-12 text-right borderBottom bgWhite">
+							<button class="btn btn-link showAllTrigger showAll">顯示全部 <span class="caret"></span></button>
+						</div>
+						<div class="col-md-12 borderBottom mobile pull-right">
+							<div class="total1"><span>參考合計帳戶價值</span>0<i class="my5">NTD</i></div>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</th:block>
+		
+		<th:block th:if="${session.REJECT_DIV_LIST == null 
+			or (session.REJECT_DIV_LIST != null and !#lists.contains(session.REJECT_DIV_LIST, 'dashboard_03'))}">
+			<th:block th:if="${loginUserType == 'member' or loginUserType == 'admin'}">
+				<div class="container bg3 box-border marginTop20">
+					<div class="mystyle3">
+						<div class="my1 mobile-toggle" data-toggle="true">
+							<i class="fas fa-chevron-down mobile hid2"></i>
+							<i class="fas fa-piggy-bank fa-lg hid1"></i> 我的資產＆負債
+						</div>
+						<div class="mobile-toggle-panel toggle-hide">
+							<div class="my3 borderBottom">
+								<i class="fa fa-angle-right fa-lg fa-fw"></i>我的資產
+							</div>
+							<div class="table1 table-mySet">
+								<table class="table00 tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+									<tbody>
+										<tr class="noEvent">
+											<td class="textFirst table3">保單可借金額
+												<button onclick="window.document.location='loan1';" class="btn-login pull-right hid1 applyHide">申請保單貸款 <i class="fas fa-chevron-right"></i></button>
+												<span class="my4 pull-right enBig"><th:block th:text="${loanVo != null and loanVo.remainLoanValue != null} ? ${#numbers.formatDecimal(loanVo.remainLoanValue, 0, 'DEFAULT', 0, 'COMMA')} : '&nbsp;'"/><i class="my5">NTD</i></span>
+											</td>
+											<td class="table4 text-left"></td>
+											<td class="table3 ">參考合計帳戶價值<span class="my4 pull-right enBig">
+												<th:block th:text="${policyAcctValueTotal != null} 
+														? ${#numbers.formatDecimal(policyAcctValueTotal, 1, 'COMMA', 2, 'DEFAULT')}
+														: 0.00"/><i class="my5">NTD</i></span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="my3 borderBottom">
+								<i class="fa fa-angle-right fa-lg fa-fw"></i>我的負債
+							</div>
+							<div class="table1 table-mySet">
+								<table class="table00 tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+									<tbody>
+										<tr class="noEvent">
+											<td class="textFirst table3">累計保單貸款
+												<!--button onclick="window.document.location='apply2.html';" class="btn-login pull-right hid1 applyHide" style="background-color:Transparent;"">保單貸款資料  <i class="fas fa-chevron-right"></i></button-->
+												<span class="my4 pull-right enBig marginRightBtn"><th:block th:text="${loanVo != null and loanVo.loanAmount != null} ? ${#numbers.formatDecimal(loanVo.loanAmount, 0, 'DEFAULT', 0, 'COMMA')} : '&nbsp;'"/><i class="my5">NTD</i></span>
+											</td>
+											<td class="table4 text-left"></td>
+											<!-- <td class="table3 ">墊繳保費
+												<span class="my4 pull-right enBig"><th:block th:text="${loanVo != null and loanVo.aplAmount != null} ? ${#numbers.formatDecimal(loanVo.aplAmount, 0, 'DEFAULT', 0, 'COMMA')} : '&nbsp;'"/><i class="my5">NTD</i></span>
+											</td> -->
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_10001'] != null} 
+					? ${session.PAGE_WORDING['WORDING_10001'].parameterValue}"/>
+			</th:block>
+		</th:block>
+		
+		<th:block th:if="${session.REJECT_DIV_LIST == null 
+			or (session.REJECT_DIV_LIST != null and !#lists.contains(session.REJECT_DIV_LIST, 'dashboard_04'))}">
+			<th:block th:if="${loginUserType == 'member' or loginUserType == 'admin'}">
+				<div class="container grey center1">
+					<div class="col-sm-12 ad1 center1">
+						<div id="adBlockDiv">
+							<a th:href="${session.SYSTEM_PARAMETER['SYSTEM_CONSTANTS']['AD1_URL'].parameterValue}" target="ad_view"><img/></a>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</th:block>
+		
+		<th:block th:if="${session.REJECT_DIV_LIST == null or session.REJECT_DIV_LIST.size() == 0}">
+			<th:block th:if="${loginUserType == 'normal'}">
+				<div class="container bg3 box-border marginTop25 h300">
+					<div class="col-sm-8 col-sm-offset-2 col-lg-8 col-lg-offset-2">
+						<div class="activated">
+							<figure><img src="img/alert.jpg" alt="check"/></figure>
+							<h2>欲查詢保單資料，請升級保戶會員!</h2>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</th:block>
+	</section>
+	
+    <div class="modal fade in" id="modal-login-record-container" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content lock-up">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="$('#modal-login-record-container').hide();" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body center1 grey2 clearfix">
+				    <table class="hid-body col-sm-12">
+				        <thead>
+				            <div class="col-sm-12 hid-title">【您的最近登入紀錄】</div>
+				        </thead>
+				        <tbody>
+				            <tr class="">
+				                <th class="hid-th" style="text-align: left">登入時間</th>
+				                <th class="hid-th" style="text-align: left">登入IP</th>
+				                <th class="hid-th" style="text-align: left">登入狀態</th>
+				            </tr>
+							<th:block th:if="${loginRecordList} != null">
+							<th:block th:each="vo, rowStat : ${loginRecordList}">
+					            <tr class="">
+					                <td style="text-align: left"><th:block th:text="${vo.loginDateStr}"/></td>
+					                <td style="text-align: left"><th:block th:text="${vo.clientIp}"/></td>
+					                <td style="text-align: left"><th:block th:text="${vo.loginStatus == '1' ? '登入成功' : '登入失敗'}"/></td>
+					            </tr>
+							</th:block>
+							</th:block>
+				        </tbody>
+				    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function(){
+		if($.browser.mobile){ 
+			// mobile browser
+			if ($('#adBlockDiv').size() > 0) {
+				$('#adBlockDiv').find('img').attr({
+					'src' : /*[[${session.SYSTEM_PARAMETER['SYSTEM_CONSTANTS']['AD1_IMG_M'].parameterValue}]]*/,
+					'width' : '90%'
+				});
+			}
+		}
+		else {
+			// not mobile browser
+			if ($('#adBlockDiv').size() > 0) {
+				$('#adBlockDiv').find('img').attr({
+					'src' : /*[[${session.SYSTEM_PARAMETER['SYSTEM_CONSTANTS']['AD1_IMG'].parameterValue}]]*/,
+					'width' : '60%'
+				});
+			}
+		}
+		
+		// 取得被保人第一筆顯示保障項目圓形圖
+		if ($('.dropdown-menu').size() > 0) {
+			changeCircle($('.dropdown-menu').find('a:eq(0)').attr('id'));
+		}
+	});
+	
+	function changeCircle(insuredMenuId) {
+		if (insuredMenuId) {
+			var id = insuredMenuId.replace('insuredMenu', '');
+			$('#circleAll path').attr('class', 'product');
+			$('#qtpie-list ul li').removeClass('active');
+			
+			$('input[name="insuredProduct' + id + '"]').each(function(i, inputObject) {
+				var prodId = $(inputObject).val();
+				$('path[data-id=svg' + prodId + ']').attr('class', 'product active');
+				$('#pdt' + prodId).attr('class', 'pdt' +  prodId+ ' active');
+			});
+		} 
+	}
+
+	var loginRecordList = /*[[${loginRecordList}]]*/;
+	if (loginRecordList != null) {
+		$('#modal-login-record-container').show();
+	}
+	
+	/*]]>*/
+	</script>
+</body>
+
+</html>

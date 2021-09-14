@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ApConstantsMapper">
+
+	<!-- 系統別-->
+	<sql id="ESERVICE_SYSTEM_ID">'eservice'</sql>
+
+	<!-- 保單狀態對應-->
+	<sql id="POLICY_STATUS_PARAMETER_CATEGORY_CODE">'POLICY_STATUS'</sql>
+	
+	<!-- 繳別對應-->
+	<sql id="PAYMODE_TYPE_PARAMETER_CATEGORY_CODE">'PAYMODE_TYPE'</sql>
+
+	<!-- 付款方式對應-->
+	<sql id="PAYMENT_METHOD_TYPE_PARAMETER_CATEGORY_CODE">'PAYMENT_METHOD_TYPE'</sql>
+	
+	<!-- 年金給付方式對應-->
+	<sql id="ANNUITY_METHOD_TYPE_PARAMETER_CATEGORY_CODE">'ANNUITY_METHOD_TYPE'</sql>
+	
+	<!-- 紅利選擇權對應-->
+	<sql id="BONUS_TYPE_PARAMETER_CATEGORY_CODE">'BONUS_TYPE'</sql>
+	
+	<!-- 增值回饋對應-->
+	<sql id="REWARD_TYPE_PARAMETER_CATEGORY_CODE">'REWARD_TYPE'</sql>
+	
+	<!-- 性別-->
+	<sql id="SEX_PARAMETER_CATEGORY_CODE">'SEX'</sql>
+	
+	<!-- 幣別-->
+	<sql id="CURRENCY_PARAMETER_CATEGORY_CODE">'CURRENCY'</sql>
+	
+	<!-- 交易類別-->
+	<sql id="TRANSACTION_PARAMETER_CATEGORY_CODE">'TRANSACTION_CODE'</sql>
+	
+	<!-- 保代所屬角色-->
+	<sql id="PARTNER_ROLE_PARAMETER_CATEGORY_CODE">'PARTNER_ROLE'</sql>
+
+	<!-- 線上申請-變更繳別-->
+	<sql id="PAYMODE_PARAMETER_CODE">'PAYMODE'</sql>
+	
+	<!-- 線上申請-變更年金給付方式-->
+	<sql id="ANNUITY_METHOD_PARAMETER_CODE">'ANNUITY_METHOD'</sql>
+	
+	<!-- 線上申請-變更紅利選擇權-->
+	<sql id="BONUS_PARAMETER_CODE">'BONUS'</sql>
+	
+	<!-- 線上申請-變更增值回饋分享金領取方式-->
+	<sql id="REWARD_PARAMETER_CODE">'REWARD'</sql>
+	
+	<!-- 線上申請-自動墊繳選擇權-->
+	<sql id="CUSHION_PARAMETER_CODE">'CUSHION'</sql>
+	
+	<!-- 線上申請-變更受益人-->
+	<sql id="BENEFICIARY_PARAMETER_CODE">'BENEFICIARY'</sql>
+	
+	<!-- 線上申請-展期-->
+	<sql id="RENEW_PARAMETER_CODE">'RENEW'</sql>
+	
+	<!-- 線上申請-減額-->
+	<sql id="REDUCE_PARAMETER_CODE">'REDUCE'</sql>
+	
+	<!-- 線上申請-變更展期定期保險/減額繳清保險-->
+	<!-- sql id="RENEW_REDUCE_PARAMETER_CODE">'RENEW_REDUCE'</sql -->
+	
+	<!-- 線上申請-申請減少保險金額-->
+	<sql id="REDUCE_POLICY_PARAMETER_CODE">'REDUCE_POLICY'</sql>
+	
+	<!-- 線上申請-聯絡資料變更-->
+	<sql id="CONTACT_INFO_PARAMETER_CODE">'CONTACT_INFO'</sql>
+	
+	<!-- 線上申請-設定停損通知-->
+	<sql id="FUND_NOTIFICATION_PARAMETER_CODE">'FUND_NOTIFICATION'</sql>
+	
+	<!-- 線上申請-收費管道-->
+	<sql id="PAYMETHOD_PARAMETER_CODE">'PAYMETHOD'</sql>
+	
+	<!-- 線上申請-變更信用卡期限-->
+	<sql id="CREDIT_CARD_DATE_PARAMETER_CODE">'CREDIT_CARD_DATE'</sql>
+	
+	<!-- 線上申請-解約-->
+	<sql id="CANCEL_CONTRACT_PARAMETER_CODE">'CANCEL_CONTRACT'</sql>
+	
+	<!-- 線上申請-紅利提領-->
+	<sql id="SURRENDER_PARAMETER_CODE">'SURRENDER'</sql>
+	
+	<!-- 線上申請-貸款申請-->
+	<sql id="LOAN_PARAMETER_CODE">'LOAN'</sql>
+	
+	<!-- 線上申請-貸款申請-->
+	<sql id="LOAN_NEW_PARAMETER_CODE">'LOAN_NEW'</sql>
+	
+	<!-- 線上申請-變更基本資料-->
+	<sql id="CUST_INFO_PARAMETER_CODE">'CUST_INFO'</sql>
+
+	<!-- 受益人類型-->
+	<sql id="BENEFICIARY_TYPE_PARAMETER_CATEGORY_CODE">'BENEFICIARY_TYPE'</sql>
+	
+	<!-- 與被保人關係-->
+	<sql id="BENEFICIARY_RELATION_PARAMETER_CATEGORY_CODE">'BENEFICIARY_RELATION'</sql>
+	
+	<!-- 線上申請-申請狀態-->
+	<sql id="ONLINE_CHANGE_STATUS_PARAMETER_CATEGORY_CODE">'ONLINE_CHANGE_STATUS'</sql>
+	
+	<!-- 線上申請-申請項目-->
+	<sql id="ONLINE_CHANGE_PARAMETER_CATEGORY_CODE">'ONLINE_CHANGE'</sql>
+	
+	<!-- 線上申請-申請中狀態-->
+	<sql id="TRANS_STATUS_PROCESSING">'0'</sql>
+	
+	<!-- 線上申請-已完成狀態-->
+	<sql id="TRANS_STATUS_COMPLETE">'2'</sql>
+	
+	<!-- 線上申請-已撤銷狀態-->
+	<sql id="TRANS_STATUS_CANCEL">'3'</sql>
+	
+	<!-- 線上申請-失敗狀態-->
+	<sql id="TRANS_STATUS_FAIL">'6'</sql>
+	
+	<!-- 線上申請-銀行名稱-->
+	<sql id="BANK_NAME_PARAMETER_CATEGORY_CODE">'BANK_NAME'</sql>
+	
+	<!-- 線上申請-銀行分行名稱-->
+	<sql id="BRANCHES_NAME_PARAMETER_CATEGORY_CODE">'BRANCHES_NAME'</sql>
+	
+	<!-- 使用者保單號碼條件-->
+	<sql id="USER_POLICY_NO_LIST">
+		<foreach collection="policyNos" item="policyNo" index="index" open="(" close=")" separator="," >
+			#{policyNo}
+		</foreach>
+	</sql>
+	
+</mapper>

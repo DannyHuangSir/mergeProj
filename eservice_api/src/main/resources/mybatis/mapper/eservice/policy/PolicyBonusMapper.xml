@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyBonusDao">
+
+	<resultMap id="PolicyBonusMap" type="com.twfhclife.eservice.policy.model.PolicyBonusVo" >
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="BONUS_START_DATE" property="bonusStartDate"/>
+		<result column="BONUS_END_DATE" property="bonusEndDate"/>
+		<result column="BONUS" property="bonus"/>
+		<result column="ACCU_BONUS" property="accuBonus"/>
+		<result column="TAKE_CODE" property="takeCode"/>
+		<result column="TAKE_CODE_DESC" property="takeCodeDesc"/>
+		<result column="TAKE_DATE" property="takeDate"/>
+		<result column="BONUS_BALANCE" property="bonusBalance"/>
+		<result column="BONUS_INI" property="bonusIni"/>
+		<result column="BONUS_RIDER" property="bonusRider"/>
+		<result column="PAY_CODE" property="payCode"/>
+		<result column="CURRENCY" property="policyVo.currency"/>
+		<result column="NAME" property="individualVo.name"/>
+		<result column="ROC_ID" property="individualVo.rocId"/>
+	</resultMap>
+	
+	<!-- 清單附加資訊 -->
+	<resultMap id="PolicyBonusListMap" type="com.twfhclife.eservice.policy.model.PolicyBonusVo" extends="PolicyBonusMap">
+		<result column="CURRENCY" property="policyVo.currency"/>
+		<result column="NAME" property="individualVo.name"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		PB.POLICY_NO, PB.BONUS_START_DATE, PB.BONUS_END_DATE, PB.BONUS, PB.ACCU_BONUS, 
+		PB.TAKE_CODE,
+		CASE 
+			WHEN PB.TAKE_CODE = '1' THEN '現金給付' 
+			WHEN PB.TAKE_CODE = '2' THEN '抵繳保費' 
+			WHEN PB.TAKE_CODE = '4' THEN '購買增額繳清保險' 
+			WHEN PB.TAKE_CODE = '3' THEN 
+				CASE 
+					WHEN LIPM_BON_3_CODE = '1' THEN '配合生存金領取紅利'
+				 	WHEN LIPM_BON_3_CODE = '2' THEN '繳費期滿領取紅利'
+					WHEN LIPM_BON_3_CODE = '3' THEN '配合生存金領取紅利'
+					ELSE '儲存生息'
+				END
+			ELSE ''	
+		END TAKE_CODE_DESC
+		, PB.TAKE_DATE, PB.BONUS_BALANCE, PB.BONUS_INI, PB.BONUS_RIDER, PB.PAY_CODE
+	</sql>
+	
+	<!-- 保單其他資訊欄位 -->
+	<sql id="Policy_Column_List">
+		P.CURRENCY
+	</sql>
+	
+	<!-- 個人主體欄位 -->
+	<sql id="Individual_Column_List">
+		LM.LIPM_NAME_1 AS NAME, LM.LIPM_ID AS ROC_ID
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="policyBonusVo.policyNo != null and policyBonusVo.policyNo != ''"> AND PB.POLICY_NO = #{policyBonusVo.policyNo} </if>
+			<if test="policyBonusVo.bonusStartDate != null"> AND PB.BONUS_START_DATE = #{policyBonusVo.bonusStartDate} </if>
+			<if test="policyBonusVo.bonusEndDate != null"> AND PB.BONUS_END_DATE = #{policyBonusVo.bonusEndDate} </if>
+			<if test="policyBonusVo.bonus != null"> AND PB.BONUS = #{policyBonusVo.bonus} </if>
+			<if test="policyBonusVo.accuBonus != null"> AND PB.ACCU_BONUS = #{policyBonusVo.accuBonus} </if>
+			<if test="policyBonusVo.takeCode != null"> AND PB.TAKE_CODE = #{policyBonusVo.takeCode} </if>
+			<if test="policyBonusVo.takeDate != null"> AND PB.TAKE_DATE = #{policyBonusVo.takeDate} </if>
+			<if test="policyBonusVo.bonusBalance != null"> AND PB.BONUS_BALANCE = #{policyBonusVo.bonusBalance} </if>
+			<if test="policyBonusVo.bonusIni != null"> AND PB.BONUS_INI = #{policyBonusVo.bonusIni} </if>
+			<if test="policyBonusVo.bonusRider != null"> AND PB.BONUS_RIDER = #{policyBonusVo.bonusRider} </if>
+			<if test="policyBonusVo.payCode != null and policyBonusVo.payCode != ''"> AND PB.PAY_CODE = #{policyBonusVo.payCode} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得保單紅利查詢結果 -->
+	<select id="getPolicyBonus" resultMap="PolicyBonusMap">
+		SELECT
+			<include refid="Base_Column_List" />
+			,<include refid="Policy_Column_List" />
+			,<include refid="Individual_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_BONUS PB
+				LEFT OUTER JOIN ESERVICE.DBO.POLICY P
+					ON PB.POLICY_NO = P.POLICY_NO
+				LEFT OUTER JOIN ESERVICE.DBO.LILIPM_ES LM
+					ON PB.POLICY_NO = (LM.LIPM_INSU_TYPE + CAST(LM.LIPM_INSU_GRP_NO as varchar(1)) + LM.LIPM_INSU_SEQ_NO)
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得保單紅利查詢結果(根據保單號碼) -->
+	<select id="findByPolicyNo" resultMap="PolicyBonusMap" parameterType="java.lang.String">
+		SELECT
+			<include refid="Base_Column_List" />
+			,<include refid="Policy_Column_List" />
+			,<include refid="Individual_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_BONUS PB
+				LEFT OUTER JOIN ESERVICE.DBO.POLICY P
+					ON PB.POLICY_NO = P.POLICY_NO
+				LEFT OUTER JOIN ESERVICE.DBO.LILIPM_ES LM
+					ON PB.POLICY_NO = (LM.LIPM_INSU_TYPE + CAST(LM.LIPM_INSU_GRP_NO as varchar(1)) + LM.LIPM_INSU_SEQ_NO)
+		WHERE
+			PB.POLICY_NO = #{policyNo}
+		ORDER BY PB.BONUS_START_DATE DESC
+	</select>
+	
+	<!-- 查詢紅利選擇權/增值回饋金方式 -->
+	<select id="getBounsTake" resultType="string">
+		SELECT LIPM_BON_CODE FROM ESERVICE.DBO.LILIPM_ES LM
+		WHERE (LM.LIPM_INSU_TYPE + CAST(LM.LIPM_INSU_GRP_NO as varchar(1)) + LM.LIPM_INSU_SEQ_NO) = #{policyNo}
+	</select>
+
+</mapper>

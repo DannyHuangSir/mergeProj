@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.UserDepartmentDao">
+
+	<resultMap id="UserDepartmentMap" type="com.twfhclife.adm.model.UserDepartmentVo" >
+		<result column="USER_ID" property="userId"/>
+		<result column="DEP_ID" property="depId"/>
+		<result column="TITLE_ID" property="titleId"/>
+	</resultMap>
+
+	<resultMap id="UserDepartmentListMap" type="com.twfhclife.adm.model.UserDepartmentVo" extends="UserDepartmentMap">
+		<result column="DEP_NAME" property="depName"/>
+		<result column="TITLE_NAME" property="titleName"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="userDepartmentVo.userId != null and userDepartmentVo.userId != ''"> AND UD.USER_ID = #{userDepartmentVo.userId} </if>
+			<if test="userDepartmentVo.depId != null and userDepartmentVo.depId != ''"> AND UD.DEP_ID = #{userDepartmentVo.depId} </if>
+			<if test="userDepartmentVo.titleId != null and userDepartmentVo.titleId != ''"> AND UD.TITLE_ID = #{userDepartmentVo.titleId} </if>
+		</where>
+	</sql>
+	
+	<!-- include sql: 人員職位管理查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			UD.USER_ID
+			,UD.DEP_ID
+			,UD.TITLE_ID
+			,D.DEP_NAME
+			,J.TITLE_NAME
+		FROM
+			ESERVICE_ADM.DBO.USER_DEPARTMENT UD
+			LEFT OUTER JOIN ESERVICE_ADM.DBO.DEPARTMENT D ON UD.DEP_ID = d.DEP_ID
+			LEFT OUTER JOIN ESERVICE_ADM.DBO.JOB_TITLE J ON UD.TITLE_ID = J.TITLE_ID
+		<include refid="whereClause" />
+	</sql>
+	
+	<!-- 取得人員職位管理查詢結果(分頁) -->
+	<select id="getUserDepartmentPageList" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY USER_ID) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{userDepartmentVo.page} * #{userDepartmentVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{userDepartmentVo.page} - 1) * #{userDepartmentVo.rows}	
+	</select>
+	
+	<!-- 取得人員職位管理查詢結果(總筆數) -->
+	<select id="getUserDepartmentPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得人員職位管理查詢結果 -->
+	<select id="getUserDepartment" resultMap="UserDepartmentListMap">
+		SELECT
+			UD.USER_ID
+			,UD.DEP_ID
+			,UD.TITLE_ID
+			,D.DEP_NAME
+			,J.TITLE_NAME
+		FROM
+			ESERVICE_ADM.DBO.USER_DEPARTMENT UD
+			LEFT OUTER JOIN ESERVICE_ADM.DBO.DEPARTMENT D ON UD.DEP_ID = d.DEP_ID
+			LEFT OUTER JOIN ESERVICE_ADM.DBO.JOB_TITLE J ON UD.TITLE_ID = J.TITLE_ID
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 人員職位管理-新增 -->
+	<insert id="insertUserDepartment">
+		INSERT INTO ESERVICE_ADM.DBO.USER_DEPARTMENT
+		(
+			USER_ID
+			,DEP_ID
+			,TITLE_ID
+		)
+		VALUES
+		(
+			#{userDepartmentVo.userId, jdbcType=VARCHAR},
+			#{userDepartmentVo.depId, jdbcType=VARCHAR},
+			#{userDepartmentVo.titleId, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 人員職位管理-更新 -->
+	<update id="updateUserDepartment">
+		UPDATE
+			ESERVICE_ADM.DBO.USER_DEPARTMENT UD
+		<set>
+			<if test="userDepartmentVo.userId != null"> UD.USER_ID = #{userDepartmentVo.userId}, </if>
+			<if test="userDepartmentVo.depId != null"> UD.DEP_ID = #{userDepartmentVo.depId}, </if>
+			<if test="userDepartmentVo.titleId != null"> UD.TITLE_ID = #{userDepartmentVo.titleId}, </if>
+		</set>
+		<include refid="whereClause" />
+	</update>
+	
+	<!-- 人員職位管理-刪除 -->
+	<delete id="deleteUserDepartment">
+		DELETE ESERVICE_ADM.DBO.USER_DEPARTMENT
+		WHERE 
+			USER_ID = #{userDepartmentVo.userId}
+			AND DEP_ID = #{userDepartmentVo.depId}
+			<if test="userDepartmentVo.titleId != null and userDepartmentVo.titleId != ''"> 
+			AND TITLE_ID = #{userDepartmentVo.titleId}
+			</if>
+	</delete>
+
+</mapper>

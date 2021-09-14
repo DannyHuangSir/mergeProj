@@ -1,0 +1,40 @@
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<div class="col-sm-12 hid-title2" id="transDetailTitle"></div>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<th:block th:if="${transCertPrintVo != null}">
+							<tr class="">
+								<th class="hid-th w40p">列印格式：</th>
+								<td>
+									<th:block th:if="${transCertPrintVo.lang eq 'C'}">中文</th:block>
+									<th:block th:if="${transCertPrintVo.lang eq 'E'}">英文</th:block>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">要保人護照英文姓名：</th>
+								<td>
+									<th:block th:text="${transCertPrintVo.lipmPassportName}"/>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">被保險人護照英文姓名：</th>
+								<td>
+									<th:block th:text="${transCertPrintVo.passportName}"/>
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">被保險人護照號碼：</th>
+								<td>
+									<th:block th:text="${transCertPrintVo.passportNo}"/>
+								</td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

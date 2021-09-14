@@ -1,0 +1,187 @@
+<tr class="detail-row even open" role="row" xmlns:th="http://www.w3.org/1999/xhtml">
+	<td colspan="8">
+		<div class="table-detail">
+			<div class="row">
+				<div class="col-xs-12 col-sm-11">
+					<div class="space visible-xs"></div>
+					<div class="profile-user-info profile-user-info-striped">
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請日期 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_DATE']!=null}?${detailData['TRANS_DATE']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請項目 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_TYPE_NAME']!=null}?${detailData['TRANS_TYPE_NAME']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請狀態 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['STATUS_NAME']!=null}?${detailData['STATUS_NAME']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 保單號碼 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['POLICY_NO']!=null}?${detailData['POLICY_NO']}"/></span>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default profile-user-info">
+						<div class="panel-heading">※ 申請資料</div>
+						<div class="panel-body clear1" id="poliyClaimsDetail">
+							<div class="mycigna3">
+								<div class="col-md-12  detailPolicy">
+									<div class="col-sm-12" style="text-align: left;">
+										<form class="form-horizontal" role="form" style="border-top: 0;line-height: 20px;padding: 20px 0;">
+											<div class="form-group">
+											  <label for="productID123" class="col-sm-4">提領保單：</label>
+											  <div id="productID123" class="col-sm-8">金彩人生變額萬能壽險乙型VLJ <span class="spandepo4">(TWN232213)</span></div>
+											</div>							
+											<div class="form-group">
+											   <label for="inputPassword3" class="col-sm-4">提領方式：</label>
+											  <div class="col-sm-8">
+												<th:block th:if="${detailData['deposits'].depositMethod == '1'}">	
+													指定總金額
+												</th:block>
+												<th:block th:if="${detailData['deposits'].depositMethod == '2'}">
+													自定投資標的比例
+												</th:block>
+											  </div>
+											</div>  
+											            
+											<div class="form-group">
+											   <label for="inputPassword3" class="col-sm-4">給付方式：</label>
+											  <div class="col-sm-8">
+												<th:block th:if="${detailData['deposits'].paymentMethod == '1'}">
+													匯入要保人帳戶
+												</th:block>
+												<th:block th:if="${detailData['deposits'].paymentMethod == '2'}">
+													郵寄支票
+												</th:block>
+											  </div>
+											</div>
+											<th:block th:if="${detailData['deposits'].paymentMethod == '1'}">
+												<div class="form-group">
+													<label for="inputPassword3" class="col-sm-4">Swift Code：</label>
+													<div class="col-sm-8">
+														<span th:text="${detailData['deposits'].swiftCode}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="inputPassword3" class="col-sm-4">英文戶名：</label>
+													<div class="col-sm-8">
+														<span th:text="${detailData['deposits'].englishName}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="inputPassword3" class="col-sm-4">帳戶名稱：</label>
+													<div class="col-sm-8">
+														<span th:text="${detailData['deposits'].accountName}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="inputPassword3" class="col-sm-4">銀行名稱：</label>
+													<div class="col-sm-8">
+														<span th:text="${detailData['deposits'].bankName}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="inputPassword3" class="col-sm-4">分行名稱：</label>
+													<div class="col-sm-8">
+														<span th:text="${detailData['deposits'].branchName}"/>
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="inputPassword3" class="col-sm-4">帳號：</label>
+													<div class="col-sm-8">
+														<span th:text="${detailData['deposits'].bankAccount}"/>
+													</div>
+												</div>	
+											</th:block>   
+											<th:block th:if="${detailData['deposits'].paymentMethod == '2'}">    
+												<div class="form-group">
+													<label for="inputPassword3" class="col-sm-4">郵遞區號：</label>
+													<div class="col-sm-8">
+														<span th:text="${detailData['deposits'].zipCode}"/>
+													</div>
+												</div>
+											    <div class="form-group">
+													<label for="inputPassword3" class="col-sm-4">郵寄地址：</label>
+													<div class="col-sm-8">
+														<span th:text="${detailData['deposits'].address}"/>
+													</div>
+												</div>
+											</th:block>   
+											<th:block th:if="${detailData['deposits'].depositMethod == '1'}"> 
+												<div class="form-group">
+												<label for="inputEmail3" class="col-sm-4">提領金額：</label>
+												<div class="col-sm-8">
+													<th:block th:if="${detailData['deposits'].depositMethod == '1'}">
+														<div>
+															<th:block th:text="${detailData['deposits'].details[0].currency}"/>
+															<th:block th:if="${detailData['deposits'].details[0].currency != 'NTD'}">
+																<th:block th:text="${detailData['deposits'].details[0].amount != null} ? ${#numbers.formatDecimal(detailData['deposits'].details[0].amount, 0, 'DEFAULT', 2, 'POINT')}"/>
+															</th:block>
+															<th:block th:if="${detailData['deposits'].details[0].currency == 'NTD'}">
+																<th:block th:text="${detailData['deposits'].details[0].amount != null} ? ${#numbers.formatDecimal(detailData['deposits'].details[0].amount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+															</th:block>
+														</div>
+													</th:block>
+												</div>
+												</div> 
+											</th:block>
+											<th:block th:if="${detailData['deposits'].depositMethod == '2'}"> 
+												<div class="check-title">提領金額</div>
+												<table  class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+													<thead>
+													<tr class="table2">
+														<th class="text-left">投資標的</th>
+														<th>提領比例</th>
+														<th>提領金額</th>
+													</tr>
+													</thead>
+													<tbody>
+													<th:block th:if="${detailData['deposits'].details} != null">
+														<th:block th:each="vo, rowStat : ${detailData['deposits'].details}">
+															<tr>
+																<td class="text-left"><th:block th:text="${vo.invtName}"/><p class="enSmall">(<th:block th:text="${vo.invtNo}"/>)</p></td>
+																<td><th:block th:text="${vo.ratio}"/>%</td>
+																<td>
+																	<th:block th:if="${vo.currency != 'NTD'}">
+																		<th:block th:text="${vo.amount != null} ? ${#numbers.formatDecimal(vo.amount, 0, 'DEFAULT', 2, 'POINT')}"/>
+																	</th:block>
+																	<th:block th:if="${vo.currency == 'NTD'}">
+																		<th:block th:text="${vo.amount != null} ? ${#numbers.formatDecimal(vo.amount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+																	</th:block>
+																	<i class="my5" style="color:#666666"><th:block th:text="${vo.currency}"/></i>
+																</td>
+															</tr>
+														</th:block>
+													</th:block>
+													</tbody>
+												</table>
+											</th:block>  
+											
+								  
+										</form>
+										
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</td>
+</tr>

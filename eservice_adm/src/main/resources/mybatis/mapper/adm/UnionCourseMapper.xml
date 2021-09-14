@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.UnionCourseDao">
+
+	<resultMap id="ParameterVoMap" type="com.twfhclife.adm.model.UnionCourseVo" >
+		  <result column="SEQ_ID" property="seqId"/>      
+		  <result column="CASE_ID" property="caseId"/>   
+		  <result column="TRANS_NUM" property="transNum"/>
+		  <result column="TYPE" property="type"/>
+		  <result column="NAME" property="name"/>
+		  <result column="CREATE_DATE" property="createDate"/>
+		  <result column="COMPLETE_DATE" property="completeDate"/>
+		  <result column="NC_STATUS" property="ncStatus"/>   
+		  <result column="MSG" property="msg"/>
+	</resultMap>
+	
+	<resultMap id="ParameterMap" type="HashMap" >
+		  <result column="SEQ_ID" property="seqId"/>      
+		  <result column="CASE_ID" property="caseId"/>   
+		  <result column="TRANS_NUM" property="transNum"/>
+		  <result column="TYPE" property="type"/>
+		  <result column="NAME" property="name"/>
+		  <result column="CREATE_DATE" property="createDate"/>
+		  <result column="COMPLETE_DATE" property="completeDate"/>
+		  <result column="NC_STATUS" property="ncStatus"/>   
+		  <result column="MSG" property="msg"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		SEQ_ID,CASE_ID,TRANS_NUM,TYPE,NAME,CREATE_DATE,COMPLETE_DATE,NC_STATUS,MSG
+	</sql>
+	
+	
+	<select id="getUnionCourseList" resultMap="ParameterVoMap">
+		SELECT
+			*
+		FROM ESERVICE.dbo.UNION_COURSE 
+		WHERE 1=1
+		<if test="unionCourseVo.caseId != '' and unionCourseVo.caseId != null">
+			AND CASE_ID = #{unionCourseVo.caseId}
+		</if>
+		<if test="unionCourseVo.transNum != '' and unionCourseVo.transNum != null">
+			AND TRANS_NUM = #{unionCourseVo.transNum}	
+		</if>
+		<if test="unionCourseVo.type != '' and unionCourseVo.type != null">
+			AND TYPE = #{unionCourseVo.type}
+		</if>
+		<if test="unionCourseVo.name != '' and unionCourseVo.name != null">
+			AND NAME = #{unionCourseVo.name}
+		</if>
+		<if test="unionCourseVo.ncStatus != '' and unionCourseVo.ncStatus != null">
+			AND NC_STATUS = #{unionCourseVo.ncStatus}
+		</if>
+		<if test="unionCourseVo.createDate != null">
+			AND convert(varchar(10), CREATE_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{unionCourseVo.createDate}, 120)
+		</if>
+		<if test="unionCourseVo.completeDate != null">
+			AND convert(varchar(10), COMPLETE_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{unionCourseVo.completeDate}, 120)
+		</if>
+		ORDER BY CREATE_DATE
+	</select>
+	
+	
+	<insert id="insertUnionCourseVo">
+		INSERT INTO ESERVICE.DBO.UNION_COURSE
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+	        <choose>
+   				<when test="unionCourseVo.seqId != null and unionCourseVo.seqId > 0">
+   					#{unionCourseVo.seqId, jdbcType=FLOAT},
+   				</when>
+   				<otherwise>
+   					(NEXT VALUE for UNION_COURSE_SEQ),
+   				</otherwise>
+   			</choose>
+		    #{unionCourseVo.caseId, jdbcType=VARCHAR},
+			#{unionCourseVo.transNum, jdbcType=VARCHAR},
+			#{unionCourseVo.type, jdbcType=VARCHAR},
+			#{unionCourseVo.name, jdbcType=VARCHAR},
+			#{unionCourseVo.createDate, jdbcType=DATE},
+			#{unionCourseVo.completeDate, jdbcType=DATE},
+			#{unionCourseVo.ncStatus, jdbcType=VARCHAR},
+			#{unionCourseVo.msg, jdbcType=VARCHAR}
+		)	
+		
+	</insert>
+	
+</mapper>
+

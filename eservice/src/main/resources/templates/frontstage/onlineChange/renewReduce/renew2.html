@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>變更展期定期保險/減額繳清保險｜臺銀人壽保單網路服務</title>
+	<link th:href="@{/css/tmp-radio.css}" rel="stylesheet"/>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">變更展期定期保險/減額繳清保險</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 變更展期定期保險/減額繳清保險
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-4">
+						2<span class="hid1">. 選擇展期定期保險/減額繳清保險</span>
+					</li>
+					<li class="step3 col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請選擇變更項目</h2>
+				<div class="loan1">
+					<label for="checkBox12" class="col-sm-10 col-sm-offset-2 enNormal">保單號碼：
+						<span id="policyNo" class="colorBlack">
+							<th:block th:if="${transRenewReduceVo != null}">
+								<th:block th:each="policyNo : ${transRenewReduceVo.policyNoList}">
+									<th:block th:text="${policyNo}"/>
+								</th:block>
+							</th:block>
+						</span>
+					</label>
+					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+						<div class="col-sm-11 col-sm-offset-1 mode2select marginTop20">
+							<label for="" class="col-sm-5 col-sm-offset-1 text-right">展期定期保險/減額繳清保險：</label>
+							<label for="" class="col-sm-5 pll pmd">
+								<th:block th:each="key : ${session.SYSTEM_PARAMETER['RENEW_REDUCE_TYPE'].keySet()}">
+									<input type="radio" name="radio-btn" th:value="${key}"
+										th:attr="disabled=${(#strings.equals(renewApplyed,key) or #strings.equals(reduceApplyed,key)) ? 'disabled' : 'false'}"/> 
+									<th:block th:text="${session.SYSTEM_PARAMETER['RENEW_REDUCE_TYPE'].get(key).parameterValue}"/>
+									<br/>
+								</th:block>
+							</label>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_00702'] != null} 
+						? ${session.PAGE_WORDING['WORDING_00702'].parameterValue}"/>
+				</div>
+				<div class="col-md-12 two-buttons">
+					<a href="renew1">
+						<button id="deny" class="btn-signup">上一步</button>
+					</a>
+					<th:block th:if="${loginUserType eq 'member'}">
+						<button id="go" class="btn-signup">下一步</button>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = /*[[${transRenewReduceVo}]]*/;
+		$(function() {
+			// 下一步事件
+			$('#go').click(function() {
+				var transType = $('input[name="radio-btn"]:checked').val();
+				if (transType == null) {
+					/* openAlert("請選擇變更項目"); */
+					openAlert($('#E0085').val());
+					return false;
+				}
+				
+				formData.transType = transType;
+				postWithFormData(/*[[@{/renew3}]]*/, formData);
+			});
+		});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

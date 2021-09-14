@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.web.dao.UnicodeBaseDao">
+	
+	<select id="getUnicodeBaseByName" resultType="com.twfhclife.eservice.web.model.UnicodeBaseVo" parameterType="java.lang.String">
+		SELECT
+		    INTERNALCODE internalCode,
+		    INTERNALNAME internalName,
+		    UTF16CODE utf16Code,
+		    TENCARRY tenCarry
+		FROM
+			ESERVICE.DBO.UNICODE_BASE
+		WHERE
+		    INTERNALNAME = #{internalName}
+	</select>
+	
+</mapper>

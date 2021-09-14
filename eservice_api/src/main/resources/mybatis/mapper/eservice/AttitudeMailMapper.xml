@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.attitudemail.dao.AttitudeMailDao">
+	<!-- 新增意見回復 -->
+	<insert id="insertAttitudeMail" parameterType="com.twfhclife.eservice.web.model.AttitudeMailVo">
+		INSERT INTO ESERVICE.DBO.ATTITUDE_MAIL (
+			ATTITUDE_AUTOID,
+			ATTITUDE_NAME,
+			ATTITUDE_ID,
+			ATTITUDE_OLD,
+			ATTITUDE_INSU_NO,
+			ATTITUDE_TEL_DAY,
+			ATTITUDE_TEL_NIGHT,
+			ATTITUDE_CITY,
+			ATTITUDE_AREA,
+			ATTITUDE_ZIP_CODE,
+			ATTITUDE_ADDR,
+			ATTITUDE_EMAIL,
+			ATTITUDE_CONTENT,
+			ATTITUDE_CONTACE_TYPE,
+			ATTITUDE_SUBMIT_TIME
+		) VALUES (
+			(SELECT COALESCE(MAX(ATTITUDE_AUTOID) + 1, 1) FROM ESERVICE.DBO.ATTITUDE_MAIL),
+			ESERVICE.DBO.FN_ENBASE64(#{attitudeMailVo.attitudeName,jdbcType=VARCHAR}),
+			#{attitudeMailVo.attitudeId,jdbcType=VARCHAR},
+			#{attitudeMailVo.attitudeOld,jdbcType=NUMERIC},
+			#{attitudeMailVo.attitudeInsuNo,jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{attitudeMailVo.attitudeTelDay,jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{attitudeMailVo.attitudeTelNight,jdbcType=VARCHAR}),
+			#{attitudeMailVo.attitudeCity,jdbcType=VARCHAR},
+			#{attitudeMailVo.attitudeArea,jdbcType=VARCHAR},
+			#{attitudeMailVo.attitudeZipCode,jdbcType=NUMERIC},
+			ESERVICE.DBO.FN_ENBASE64(#{attitudeMailVo.attitudeAddr,jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{attitudeMailVo.attitudeEmail,jdbcType=VARCHAR}),
+			#{attitudeMailVo.attitudeContent,jdbcType=VARCHAR},
+			#{attitudeMailVo.attitudeContaceType,jdbcType=VARCHAR},
+			getdate()
+		)
+	</insert>
+	
+	<select id="getZipCode" resultType="string">
+		SELECT 
+			DISTINCT SUBSTRING(ZIP_CODE, 0, 3) AS ZIPCODE
+		FROM 
+			ESERVICE.DBO.ZIP_CITY
+		WHERE 
+			CITY = #{attitudeMailVo.attitudeCity}
+		  AND REGION = #{attitudeMailVo.attitudeArea} 
+	</select>
+</mapper>

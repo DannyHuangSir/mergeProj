@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransContactInfoMapper">
+
+	<resultMap id="TransContactInfoMap" type="com.twfhclife.eservice_batch.model.TransContactInfoVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transContactInfoVo.id != null"> AND ID = #{transContactInfoVo.id} </if>
+			<if test="transContactInfoVo.transNum != null and transContactInfoVo.transNum != ''"> AND TRANS_NUM = #{transContactInfoVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transContactInfoVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransContactInfoList" resultMap="TransContactInfoMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CONTACT_INFO
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransContactInfoMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CONTACT_INFO
+		<include refid="wherePkClause" />
+	</select>
+
+</mapper>
+

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransFundNotificationDao">
+
+	<resultMap id="TransFundNotificationMap" type="com.twfhclife.eservice.onlineChange.model.TransFundNotificationVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transFundNotificationVo.id != null"> AND ID = #{transFundNotificationVo.id} </if>
+			<if test="transFundNotificationVo.transNum != null and transFundNotificationVo.transNum != ''"> AND TRANS_NUM = #{transFundNotificationVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transFundNotificationVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得停損停利通知主檔查詢結果 -->
+	<select id="getTransFundNotification" resultMap="TransFundNotificationMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_FUND_NOTIFICATION
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得下一筆序號 -->
+	<select id="getNextTransFundNotificationId" resultType="BigDecimal">
+		SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_FUND_NOTIFICATION
+	</select>
+	
+	<!-- 停損停利通知主檔-新增 -->
+	<insert id="insertTransFundNotification">
+		INSERT INTO ESERVICE.DBO.TRANS_FUND_NOTIFICATION
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{transFundNotificationVo.id, jdbcType=NUMERIC},
+			#{transFundNotificationVo.transNum, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="getSearchFunds" resultType="com.twfhclife.eservice.policy.model.NotificationFundVo">
+		SELECT
+		 F.FUND_CODE AS invtNo
+		,F.FUND_NAME AS invtName
+		,F.CURRENCY AS invtExchCurr,(
+		SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.SYSTEM_ID = b.SYSTEM_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
+		AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.CURRENCY_PARAMETER_CATEGORY_CODE"/>
+		AND a.PARAMETER_CODE = F.CURRENCY
+		) AS currency
+		,F.FUND_ISSUER_CODE AS company
+		,FV.EFFECTIVE_DATE effectiveDate
+		,FV.SELL_PRICE sellPrice,
+		R.UP_VALUE upValue, R.DOWN_VALUE downValue
+		FROM ESERVICE.DBO.FUND F
+		LEFT JOIN (SELECT FUND_CODE, SELL_PRICE, EFFECTIVE_DATE, RANK() OVER (PARTITION BY FUND_CODE ORDER BY EFFECTIVE_DATE DESC) RN FROM FUND_VALUE ) FV ON F.FUND_CODE = FV.FUND_CODE AND FV.RN = 1
+		LEFT JOIN (
+			SELECT DISTINCT POLICY_NO, UP_VALUE, DOWN_VALUE, FUND_CODE, T.TRANS_NUM, T.STATUS
+			FROM (SELECT TOP 1 * FROM ESERVICE.DBO.TRANS WHERE TRANS_TYPE = 'FUND_NOTIFICATION' AND STATUS = '2' ORDER BY TRANS_NUM DESC) T
+			INNER JOIN ESERVICE.DBO.TRANS_POLICY TP ON T.TRANS_NUM = TP.TRANS_NUM AND T.STATUS = 2
+			INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION TFN ON TFN.TRANS_NUM = TP.TRANS_NUM
+			INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL TFD ON TFN.ID = TFD.TRANS_FUND_NOTIFICATION_ID
+		) R ON F.FUND_CODE = R.FUND_CODE
+		<choose>
+			<when test="riskLevel == 'RR1'">
+				WHERE F.RISK_BENE_LEVEL = #{riskLevel}
+			</when>
+			<when test="riskLevel == 'RR2'">
+				WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2')
+			</when>
+			<when test="riskLevel == 'RR3'">
+				WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3')
+			</when>
+			<when test="riskLevel == 'RR4'">
+				WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3', 'RR4')
+			</when>
+			<when test="riskLevel == 'RR5'">
+				WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3', 'RR4', 'RR5')
+			</when>
+		</choose>
+		<if test="invtNos != null and invtNos.size() > 0">
+			AND F.FUND_CODE NOT IN
+			<foreach collection="invtNos" item="funNo" index="index" open="(" close=")" separator="," >
+				#{funNo}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getNotificationPortfolioList" resultType="com.twfhclife.eservice.policy.model.NotificationPortfolioVo">
+		SELECT
+		 PP.POLICY_NO AS policyNo
+		,PP.INVT_NO AS invtNo
+		,PP.INVT_NAME AS invtName
+		,PP.INVT_RISK_BENE_LEVEL AS invtRiskBeneLevel
+		,PP.SAFP_NET_AMT as safpNetAmt
+		,PP.SAFP_NET_UNITS AS safpNetUnits
+		,PP.SAFP_AVG_PNTDVAL AS safpAvgPntdval
+		,PP.NET_VALUE_SELL AS netValueSell
+		,PP.NET_VALUE_DATE AS netValueDate
+		,PP.EXCH_RATE_BUY AS exchRateBuy
+		,PP.EXCH_RATE_DATE AS exchRateDate
+		,PP.CLUP_EXPE_NTD_SUM AS clupExpeNtdSum
+		,PP.INVT_EXCH_CURR AS invtExchCurr
+		,(
+		SELECT P.CURRENCY FROM ESERVICE.DBO.POLICY P WHERE P.POLICY_NO = PP.POLICY_NO
+		) AS insuCurr
+		,(
+		SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.SYSTEM_ID = b.SYSTEM_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
+		AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.CURRENCY_PARAMETER_CATEGORY_CODE"/>
+		AND a.PARAMETER_CODE = PP.INVT_EXCH_CURR
+		) AS currency
+		, R.PERCENTAGE_UP percentageUp
+		, R.PERCENTAGE_DOWN percentageDown
+		FROM
+		ESERVICE.DBO.POLICY_PORTFOLIO PP
+		LEFT JOIN (
+		SELECT DISTINCT POLICY_NO, PERCENTAGE_UP, PERCENTAGE_DOWN, FUND_CODE,
+		RANK() OVER (PARTITION BY POLICY_NO, FUND_CODE ORDER BY TP.TRANS_NUM DESC) RN
+		FROM ESERVICE.DBO.TRANS T
+		INNER JOIN ESERVICE.DBO.TRANS_POLICY TP ON T.TRANS_NUM = TP.TRANS_NUM AND T.STATUS = 2
+		INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION TFN ON TFN.TRANS_NUM = TP.TRANS_NUM
+		INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL TFD ON TFN.ID = TFD.TRANS_FUND_NOTIFICATION_ID
+		) R ON R.POLICY_NO = PP.POLICY_NO AND PP.INVT_NO = R.FUND_CODE AND R.RN = 1
+		WHERE
+		PP.POLICY_NO = #{policyNo}
+	</select>
+</mapper>

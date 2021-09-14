@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.generic.dao.adm.SystemEventDao">
+
+	<resultMap type="com.twfhclife.eservice.api.adm.model.SystemEventVo" id="resultMap">
+		<result column="SYSTEM_EVENT_ID" property="systemEventId"/>
+		<result column="BUSINESS_EVENT_ID" property="businessEventId"/>
+		<result column="EXEC_DATE" property="execDate"/>
+		<result column="EXEC_METHOD" property="execMethod"/>
+		<result column="EXEC_USER" property="execUser"/>
+		<result column="EXEC_FILE" property="execFile"/>
+		<result column="EXEC_SQL" property="execSql"/>
+		<result column="EXEC_STATUS" property="execStatus"/>
+		<result column="EXEC_COUNT" property="execCount"/>
+		<result column="EXEC_MSG" property="execMsg"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		SYSTEM_EVENT_ID,BUSINESS_EVENT_ID,EXEC_DATE,EXEC_METHOD,EXEC_USER,EXEC_FILE,EXEC_SQL,EXEC_STATUS,EXEC_COUNT,EXEC_MSG,CREATE_DATE,CREATE_USER
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="systemEventId != null and systemEventId != ''"> AND SYSTEM_EVENT_ID = #{systemEventId} </if>
+			<if test="businessEventId != null and businessEventId != ''"> AND BUSINESS_EVENT_ID = #{businessEventId} </if>
+			<if test="execDate != null and execDate != ''"> AND EXEC_DATE = #{execDate} </if>
+			<if test="execMethod != null and execMethod != ''"> AND EXEC_METHOD = #{execMethod} </if>
+			<if test="execUser != null and execUser != ''"> AND EXEC_USER = #{execUser} </if>
+			<if test="execFile != null and execFile != ''"> AND EXEC_FILE = #{execFile} </if>
+			<if test="execSql != null and execSql != ''"> AND EXEC_SQL = #{execSql} </if>
+			<if test="execStatus != null and execStatus != ''"> AND EXEC_STATUS = #{execStatus} </if>
+			<if test="execCount != null and execCount != ''"> AND EXEC_COUNT = #{execCount} </if>
+			<if test="execMsg != null and execMsg != ''"> AND EXEC_MSG = #{execMsg} </if>
+			<if test="createDate != null and createDate != ''"> AND CREATE_DATE = #{createDate} </if>
+			<if test="createUser != null and createUser != ''"> AND CREATE_USER = #{createUser} </if>
+		</where>
+	</sql>	
+	
+	<!-- ========================================= SELECT ========================================= -->
+	<select id="query" resultMap="resultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM 
+			ESERVICE_ADM.DBO.SYSTEM_EVENT
+		<include refid="whereClause" />
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT COUNT(1) AS AMOUNT FROM ESERVICE_ADM.DBO.SYSTEM_EVENT
+		<include refid="whereClause" />	
+	</select>
+		
+	<!-- ========================================= UPDATE ========================================= -->
+	<update id="update">
+		UPDATE 
+			ESERVICE_ADM.DBO.SYSTEM_EVENT
+		<set>
+			<if test="systemEventId != null"> SYSTEM_EVENT_ID = #{systemEventId}, </if>
+			<if test="businessEventId != null"> BUSINESS_EVENT_ID = #{businessEventId}, </if>
+			<if test="execDate != null"> EXEC_DATE = #{execDate}, </if>
+			<if test="execMethod != null"> EXEC_METHOD = #{execMethod}, </if>
+			<if test="execUser != null"> EXEC_USER = #{execUser}, </if>
+			<if test="execFile != null"> EXEC_FILE = #{execFile}, </if>
+			<if test="execSql != null"> EXEC_SQL = #{execSql}, </if>
+			<if test="execStatus != null"> EXEC_STATUS = #{execStatus}, </if>
+			<if test="execCount != null"> EXEC_COUNT = #{execCount}, </if>
+			<if test="execMsg != null"> EXEC_MSG = #{execMsg}, </if>
+			<if test="createDate != null"> CREATE_DATE = #{createDate}, </if>
+			<if test="createUser != null"> CREATE_USER = #{createUser}, </if>
+		</set>
+		<include refid="whereClause" />
+	</update>
+	
+	<!-- ========================================= DELETE ========================================= -->
+	<delete id="delete">
+		DELETE ESERVICE_ADM.DBO.SYSTEM_EVENT
+		WHERE
+		<trim prefixOverrides="AND | OR ">
+			<if test="systemEventId != null"> AND SYSTEM_EVENT_ID = #{systemEventId}, </if>
+			<if test="businessEventId != null"> AND BUSINESS_EVENT_ID = #{businessEventId}, </if>
+			<if test="execDate != null"> AND EXEC_DATE = #{execDate}, </if>
+			<if test="execMethod != null"> AND EXEC_METHOD = #{execMethod}, </if>
+			<if test="execUser != null"> AND EXEC_USER = #{execUser}, </if>
+			<if test="execFile != null"> AND EXEC_FILE = #{execFile}, </if>
+			<if test="execSql != null"> AND EXEC_SQL = #{execSql}, </if>
+			<if test="execStatus != null"> AND EXEC_STATUS = #{execStatus}, </if>
+			<if test="execCount != null"> AND EXEC_COUNT = #{execCount}, </if>
+			<if test="execMsg != null"> AND EXEC_MSG = #{execMsg}, </if>
+			<if test="createDate != null"> AND CREATE_DATE = #{createDate}, </if>
+			<if test="createUser != null"> AND CREATE_USER = #{createUser}, </if>
+		</trim>		
+	</delete>	
+	
+	<!-- ========================================= INSERT ========================================= -->
+	<insert id="add">
+		INSERT INTO ESERVICE_ADM.DBO.SYSTEM_EVENT
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			COALESCE((SELECT MAX(SYSTEM_EVENT_ID) FROM SYSTEM_EVENT), 0) + 1,
+			#{systemEventVo.businessEventId, jdbcType=NUMERIC},
+			#{systemEventVo.execDate, jdbcType=TIMESTAMP},
+			#{systemEventVo.execMethod, jdbcType=VARCHAR},
+			#{systemEventVo.execUser, jdbcType=VARCHAR},
+			#{systemEventVo.execFile, jdbcType=VARCHAR},
+			#{systemEventVo.execSql, jdbcType=VARCHAR},
+			#{systemEventVo.execStatus, jdbcType=VARCHAR},
+			#{systemEventVo.execCount, jdbcType=NUMERIC},
+			#{systemEventVo.execMsg, jdbcType=VARCHAR},
+			#{systemEventVo.createDate, jdbcType=TIMESTAMP},
+			#{systemEventVo.createUser, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>
+

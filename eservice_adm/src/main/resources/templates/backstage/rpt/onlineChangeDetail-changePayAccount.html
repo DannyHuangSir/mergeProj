@@ -1,0 +1,94 @@
+<tr class="detail-row even open" role="row">
+    <td colspan="7">
+        <div class="table-detail">
+            <div class="row" style="background-color: #fff; border-bottom: none">
+                <div class="col-xs-12 col-sm-11">
+                    <div class="space visible-xs"></div>
+                    <div class="profile-user-info profile-user-info-striped">
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請日期</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['TRANS_DATE']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請項目</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['TRANS_TYPE_NAME']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請狀態</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['STATUS_NAME']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">保單號碼</div>
+                            <div class="profile-info-value">
+                                <span><th:block th:text="${detailData} != null ? ${detailData['SHOW_POLICY_NO']}"/></span>
+                            </div>
+                        </div>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">申請資訊</div>
+                            <div class="profile-info-value">
+                                <span>
+                                    <table class="table  table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>受益種類</th>
+                                                <th>戶名</th>
+                                                <th>銀行</th>
+                                                <th>分行</th>
+                                                <th>帳號</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+	                                                <th:block th:switch="${detailData.CHANGE_TYPE}">
+	                                                   <th:block th:case="2">滿期金</th:block>
+	                                                   <th:block th:case="3">生存金</th:block>
+	                                                   <th:block th:case="F">紅利給付</th:block>
+	                                                </th:block>
+                                                </td>
+                                                <td>
+                                                    <th:block th:text="${detailData.ACCOUNT_NAME}"/>
+                                                </td>
+                                                <td>
+                                                    <th:block th:text="${detailData.BANK_NAME}"/>
+                                                </td>
+                                                <td>
+                                                    <th:block th:text="${detailData.BRANCH_NAME}"/>
+                                                </td>
+                                                <td>
+                                                    <th:block th:text="${detailData.ACCOUNT_NO}"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-1">
+                    <th:block th:if="${detailData} != null and ${detailData['STATUS_TYPE']} == '0'">
+                    <button
+                        class="pull-right btn btn-sm btn-primary btn-white btn-round"
+                        type="button" th:onclick="'javascript:review(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+                        已審核<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                    </button>
+                    <br/>
+                    <br/>
+                    <button
+                        class="pull-right btn btn-sm btn-primary btn-white btn-round"
+                        type="button" th:onclick="'javascript:resend(\'' + ${detailData['TRANS_TYPE']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+                        待補件<i class="my-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                    </button>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

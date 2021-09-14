@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.ParameterDao">
+
+	<resultMap id="ParameterMap" type="com.twfhclife.adm.model.ParameterVo" >
+		<result column="PARAMETER_ID" property="parameterId"/>
+		<result column="SYSTEM_ID" property="systemId"/>
+		<result column="PARAMETER_CODE" property="parameterCode"/>
+		<result column="PARAMETER_NAME" property="parameterName"/>
+		<result column="PARAMETER_VALUE" property="parameterValue"/>
+		<result column="PARAMETER_CATEGORY_ID" property="parameterCategoryId"/>
+		<result column="SORT_NO" property="sortNo"/>
+		<result column="REMARK" property="remark"/>
+		<result column="STATUS" property="status"/>
+		<result column="ENCRYPT_TYPE" property="encryptType"/>
+		<result column="PARENT_PARAMETER_ID" property="parentParameterId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<!-- 自定義 -->
+		<result column="SYS_NAME" property="sysName"/>
+		<result column="STATUS_NAME" property="statusName"/>
+		<result column="CATEGORY_CODE" property="categoryCode"/>
+		<result column="CATEGORY_NAME" property="categoryName"/>
+	</resultMap>
+	
+	<resultMap id="ParameterHashMap" type="HashMap" >
+		<result column="PARAMETER_ID" property="parameterId"/>
+		<result column="SYSTEM_ID" property="systemId"/>
+		<result column="PARAMETER_CODE" property="parameterCode"/>
+		<result column="PARAMETER_NAME" property="parameterName"/>
+		<result column="PARAMETER_VALUE" property="parameterValue"/>
+		<result column="PARAMETER_CATEGORY_ID" property="parameterCategoryId"/>
+		<result column="SORT_NO" property="sortNo"/>
+		<result column="REMARK" property="remark"/>
+		<result column="STATUS" property="status"/>
+		<result column="ENCRYPT_TYPE" property="encryptType"/>
+		<result column="PARENT_PARAMETER_ID" property="parentParameterId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<!-- 自定義 -->
+		<result column="SYS_NAME" property="sysName"/>
+		<result column="STATUS_NAME" property="statusName"/>
+		<result column="CATEGORY_CODE" property="parameterCategoryCode"/>
+		<result column="CATEGORY_NAME" property="parameterCategoryName"/>
+		<result column="ROW_NUM" property="rowNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		PARAMETER_ID,SYSTEM_ID,PARAMETER_CODE,PARAMETER_NAME,PARAMETER_VALUE,PARAMETER_CATEGORY_ID,SORT_NO,REMARK,STATUS,ENCRYPT_TYPE,PARENT_PARAMETER_ID,CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="parameterVo.parameterId != null"> AND PARAMETER_ID = #{parameterVo.parameterId} </if>
+			<if test="parameterVo.systemId != null and parameterVo.systemId != ''"> AND SYSTEM_ID = #{parameterVo.systemId} </if>
+			<if test="parameterVo.parameterCode != null and parameterVo.parameterCode != ''"> AND PARAMETER_CODE = #{parameterVo.parameterCode} </if>
+			<if test="parameterVo.parameterName != null and parameterVo.parameterName != ''"> AND PARAMETER_NAME = #{parameterVo.parameterName} </if>
+			<if test="parameterVo.parameterValue != null and parameterVo.parameterValue != ''"> AND PARAMETER_VALUE = #{parameterVo.parameterValue} </if>
+			<if test="parameterVo.parameterCategoryId != null"> AND PARAMETER_CATEGORY_ID = #{parameterVo.parameterCategoryId} </if>
+			<if test="parameterVo.sortNo != null"> AND SORT_NO = #{parameterVo.sortNo} </if>
+			<if test="parameterVo.remark != null and parameterVo.remark != ''"> AND REMARK = #{parameterVo.remark} </if>
+			<if test="parameterVo.status != null"> AND STATUS = #{parameterVo.status} </if>
+			<if test="parameterVo.encryptType != null and parameterVo.encryptType != ''"> AND ENCRYPT_TYPE = #{parameterVo.encryptType} </if>
+			<if test="parameterVo.parentParameterId != null"> AND PARENT_PARAMETER_ID = #{parameterVo.parentParameterId} </if>
+			<if test="parameterVo.createDate != null"> AND CREATE_DATE = #{parameterVo.createDate} </if>
+			<if test="parameterVo.createUser != null and parameterVo.createUser != ''"> AND CREATE_USER = #{parameterVo.createUser} </if>
+			<if test="parameterVo.updateDate != null"> AND UPDATE_DATE = #{parameterVo.updateDate} </if>
+			<if test="parameterVo.updateUser != null and parameterVo.updateUser != ''"> AND UPDATE_USER = #{parameterVo.updateUser} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND PARAMETER_ID = #{parameterVo.parameterId}
+		</where>
+	</sql>
+	
+	<!-- include sql: 參數維護查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			P.PARAMETER_ID
+			,P.PARAMETER_CODE
+			,P.PARAMETER_VALUE
+			,P.PARAMETER_NAME
+			,P.SORT_NO
+			,P.REMARK
+			,P.STATUS
+			,P.ENCRYPT_TYPE
+			,CASE 
+				WHEN PC.STATUS = '1' THEN CAST('是' AS VARCHAR)
+				WHEN PC.STATUS = '0' THEN CAST('否' AS VARCHAR)
+				ELSE CAST(PC.STATUS AS VARCHAR)
+			END AS STATUS_NAME
+			,PC.PARAMETER_CATEGORY_ID
+			,PC.CATEGORY_CODE
+			,PC.CATEGORY_NAME
+			,S.SYS_NAME
+			,P.CREATE_DATE
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER P
+				LEFT JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY PC
+					ON P.PARAMETER_CATEGORY_ID = PC.PARAMETER_CATEGORY_ID
+				LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS S
+					ON PC.SYSTEM_ID = S.SYS_ID
+		<where>
+			<if test="parameterVo.parameterId != null">
+				AND P.PARAMETER_ID = #{parameterVo.parameterId}	
+			</if>
+			<if test="parameterVo.systemId != null and parameterVo.systemId !=''">
+				AND P.SYSTEM_ID = #{parameterVo.systemId}	
+			</if>
+			<if test="parameterVo.parameterCategoryId != null and parameterVo.parameterCategoryId !=''" >
+				AND P.PARAMETER_CATEGORY_ID = #{parameterVo.parameterCategoryId}	
+			</if>
+			<if test="parameterVo.parameterCode != null and parameterVo.parameterCode != ''">
+				<bind name="parameterCodeLike" value="'%' + _parameter.parameterVo.parameterCode + '%'" />
+				AND P.PARAMETER_CODE = #{parameterVo.parameterCode}
+			</if>
+			<if test="parameterVo.parameterName != null and parameterVo.parameterName != ''">
+				<bind name="parameterNameLike" value="'%' + _parameter.parameterVo.parameterName + '%'" />
+				AND upper(P.PARAMETER_NAME) like upper(#{parameterNameLike})
+			</if>
+			<if test="parameterVo.status != null">
+				AND P.STATUS = #{parameterVo.status}
+			</if>
+			<if test="parameterVo.startDate != null and parameterVo.startDate != ''">
+				<if test="parameterVo.endDate != null and parameterVo.endDate != ''">
+					AND convert(varchar(10), P.CREATE_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{parameterVo.startDate}, 120)
+					AND convert(varchar(10), P.CREATE_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{parameterVo.endDate}, 120)
+				</if>
+			</if>
+			<if test="parameterVo.categoryCode != null and parameterVo.categoryCode != ''">
+				AND PC.CATEGORY_CODE = #{parameterVo.categoryCode}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 取得參數維護查詢結果(分頁) -->
+	<select id="getParameterPageList" resultMap="ParameterHashMap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY PARAMETER_ID) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{parameterVo.page} * #{parameterVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{parameterVo.page} - 1) * #{parameterVo.rows}	
+	</select>
+	
+	<!-- 取得參數維護查詢結果(總筆數) -->
+	<select id="getParameterPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得參數維護查詢結果 -->
+	<select id="getParameter" resultMap="ParameterMap">
+		<include refid="INC1" />
+	</select>
+	
+	<!-- 用參數代碼取出參數，回傳應只有一筆 -->
+	<!-- 通常用於顯示指定參數值 例如錯誤訊息 或 郵件內容等 -->
+	<!-- mssql edition -->
+	<!-- <select id="getParameterValueByCode" resultType="string">
+		SELECT TOP 1
+		      parameter_value
+		FROM
+			PARAMETER
+		WHERE
+			PARAMETER_CODE = #{parameterCode}
+			AND STATUS = 1
+		<if test="systemId != '' and systemId != null">
+			AND SYSTEM_ID = #{systemId}	
+		</if>
+		ORDER BY PARAMETER_CODE
+	</select> -->
+	<select id="getParameterValueByCode" resultType="string">
+		SELECT TOP 1 
+			parameter_value
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER
+		WHERE
+			PARAMETER_CODE = #{parameterCode}
+			AND STATUS = 1
+		<if test="systemId != '' and systemId != null">
+			AND SYSTEM_ID = #{systemId}	
+		</if>
+	</select>
+	
+	<!-- 用參數類別代碼取出所有以下的參數 -->
+	<select id="getParameterByCategoryCode" resultMap="ParameterMap">
+		SELECT
+			p.PARAMETER_NAME, 
+			p.PARAMETER_VALUE, 
+			p.PARAMETER_CODE,  
+			p.PARENT_PARAMETER_ID,
+			p.REMARK
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER_CATEGORY PC
+			,ESERVICE_ADM.DBO.PARAMETER P
+		WHERE
+			PC.PARAMETER_CATEGORY_ID = P.PARAMETER_CATEGORY_ID
+			AND PC.STATUS = P.STATUS
+			AND PC.STATUS = 1
+			AND PC.CATEGORY_CODE = #{categoryCode}
+		<if test="systemId != '' and systemId != null">
+			AND PC.SYSTEM_ID = P.SYSTEM_ID
+			AND PC.SYSTEM_ID = #{systemId}	
+		</if>
+	</select>
+	
+	<!-- 參數維護-新增 -->
+	<insert id="insertParameter">
+		INSERT INTO ESERVICE_ADM.DBO.PARAMETER
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN (SELECT COUNT(*) FROM ESERVICE_ADM.DBO.PARAMETER) = 0 THEN 1 ELSE (SELECT MAX(PARAMETER_ID) + 1 FROM ESERVICE_ADM.DBO.PARAMETER) END),
+			#{parameterVo.systemId, jdbcType=VARCHAR},
+			#{parameterVo.parameterCode, jdbcType=VARCHAR},
+			#{parameterVo.parameterName, jdbcType=VARCHAR},
+			#{parameterVo.parameterValue, jdbcType=VARCHAR},
+			#{parameterVo.parameterCategoryId, jdbcType=NUMERIC},
+			#{parameterVo.sortNo, jdbcType=NUMERIC},
+			#{parameterVo.remark, jdbcType=VARCHAR},
+			#{parameterVo.status, jdbcType=NUMERIC},
+			#{parameterVo.encryptType, jdbcType=VARCHAR},
+			#{parameterVo.parentParameterId, jdbcType=NUMERIC},
+			getdate(),
+			#{parameterVo.createUser, jdbcType=VARCHAR},
+			getdate(),
+			#{parameterVo.updateUser, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 參數維護-更新 -->
+	<update id="updateParameter">
+		UPDATE
+			ESERVICE_ADM.DBO.PARAMETER
+		<set>
+			<if test="parameterVo.parameterId != null"> PARAMETER_ID = #{parameterVo.parameterId}, </if>
+			<if test="parameterVo.systemId != null"> SYSTEM_ID = #{parameterVo.systemId}, </if>
+			<if test="parameterVo.parameterCode != null"> PARAMETER_CODE = #{parameterVo.parameterCode}, </if>
+			<if test="parameterVo.parameterName != null"> PARAMETER_NAME = #{parameterVo.parameterName}, </if>
+			<if test="parameterVo.parameterValue != null"> PARAMETER_VALUE = #{parameterVo.parameterValue}, </if>
+			<if test="parameterVo.parameterCategoryId != null"> PARAMETER_CATEGORY_ID = #{parameterVo.parameterCategoryId}, </if>
+			<if test="parameterVo.sortNo != null"> SORT_NO = #{parameterVo.sortNo}, </if>
+			<if test="parameterVo.remark != null"> REMARK = #{parameterVo.remark}, </if>
+			<if test="parameterVo.status != null"> STATUS = #{parameterVo.status}, </if>
+			<if test="parameterVo.encryptType != null"> ENCRYPT_TYPE = #{parameterVo.encryptType}, </if>
+			<if test="parameterVo.parentParameterId != null"> PARENT_PARAMETER_ID = #{parameterVo.parentParameterId}, </if>
+			<if test="parameterVo.createDate != null"> CREATE_DATE = #{parameterVo.createDate}, </if>
+			<if test="parameterVo.createUser != null"> CREATE_USER = #{parameterVo.createUser}, </if>
+			UPDATE_DATE = getdate(),
+			<if test="parameterVo.updateUser != null"> UPDATE_USER = #{parameterVo.updateUser}, </if>
+		</set>
+		<include refid="wherePkClause" />
+	</update>
+	
+	<!-- 參數維護-刪除 -->
+	<delete id="deleteParameter">
+		DELETE ESERVICE_ADM.DBO.PARAMETER 
+		<include refid="wherePkClause" />
+	</delete>	
+	
+	<!-- 取得參數的下拉選單資料 -->
+	<!-- @param systemId 系統代號 -->
+	<!-- @param categoryCode 參數種類類型代碼 -->
+	<select id="getOptionList" resultMap="ParameterMap" parameterType="string">
+		SELECT
+			a.PARAMETER_CODE
+			,a.PARAMETER_NAME
+			,a.PARAMETER_VALUE
+			,a.SYSTEM_ID
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER a
+			,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+			a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+			AND a.STATUS = b.STATUS
+			AND b.STATUS = 1
+			<if test="systemId != '' and systemId != null">
+				AND a.SYSTEM_ID = b.SYSTEM_ID
+				AND b.SYSTEM_ID = #{systemId}
+			</if>
+			AND b.CATEGORY_CODE = #{categoryCode}
+		ORDER BY
+			a.SORT_NO
+	</select>
+	
+	<select id="getParameterVoByCode" resultMap="ParameterMap" parameterType="java.lang.String">
+		SELECT
+			 a.PARAMETER_CODE
+			,a.PARAMETER_NAME
+			,a.PARAMETER_VALUE
+			,a.SYSTEM_ID
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER a
+			,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+			a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+			AND a.STATUS = b.STATUS
+			AND b.STATUS = 1
+		
+			AND a.SYSTEM_ID = b.SYSTEM_ID
+			AND b.SYSTEM_ID = #{systemId}
+			AND a.PARAMETER_CODE = #{parameterCode}
+			AND b.CATEGORY_CODE =  #{categoryCode}
+			
+		ORDER BY
+			a.SORT_NO
+	</select>
+	<!-- 取得參數代碼清單 -->
+	<!-- @param systemId 系統別 -->
+	<select id="getSystemCategoryCode" resultType="string">
+		SELECT
+			CATEGORY_CODE
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER_CATEGORY
+		WHERE
+			SYSTEM_ID = #{systemId}
+			AND STATUS = 1
+		ORDER BY
+			PARAMETER_CATEGORY_ID
+	</select>
+	
+	<select id="getStatusName" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT a.PARAMETER_VALUE FROM ESERVICE_ADM.DBO.PARAMETER a ,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b 
+		WHERE a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID 
+		  AND a.STATUS = b.STATUS 
+		  AND b.STATUS = 1 
+		  AND b.CATEGORY_CODE = #{parentCategoryCode}
+		  AND a.PARAMETER_CODE = #{status}
+	</select>
+</mapper>

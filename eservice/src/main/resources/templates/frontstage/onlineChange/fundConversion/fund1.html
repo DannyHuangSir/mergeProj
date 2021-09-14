@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>已持有投資標的轉換｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">已持有投資標的轉換</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 已持有投資標的轉換
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 active col-xs-3">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-3">
+						2<span class="hid1">. 接受條件</span>
+					</li>
+					<li class="step3b col-xs-2">
+						3<span class="hid1">. 選擇轉出基金</span>
+					</li>
+					<li class="step3b col-xs-2">
+						4<span class="hid1">. 選擇轉入基金</span>
+					</li> 
+					<li class="step4 col-xs-2">
+						5<span class="hid1">. 確認資料與密碼</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請選擇欲申請之保單</h2>
+				<div class="loan1">
+					<table th:replace="fragments/applyPolicyList :: table13 (choseType='radio')"></table>
+					<div class="statement1 wht">
+						<p class="text-ps">備註</p>
+						<p class="text-ps" id="transformationRemarks">
+							變額萬能壽險保單：如於15:00前提出申請，則視當日為申請之生效日，逾時則視次一工作日為申請之生效日。<br/>
+							此次變更將於下一期應繳保費生效，續期保費將依照本次指定之標的的項目及百分比投資。<br/>
+							每一投資標的投資比例不得低於10%，加總需等於100%。<br/>
+							目前僅開放“要保人與被保險人為同一人”之保單於網路變更保單資料。<br/>
+						</p>
+					</div>
+					<div class="col-md-8 col-md-offset-2 two-buttons">
+						<a href="apply1">
+							<button id="deny" class="btn-signup">取消</button>
+						</a>
+						<a href="javascript:void(0);">
+							<button id="go" class="btn-signup">同意並進行變更</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	 /*<![CDATA[*/
+	 $(function() {
+		var transformationRemarks = /*[[${transformationRemarks}]]*/;
+		var riskLevel = /*[[${riskLevel}]]*/;
+				if (transformationRemarks!= undefined && transformationRemarks != null && transformationRemarks != ''){
+					$("#transformationRemarks").html(transformationRemarks);
+				}
+
+		var formData = {};
+		$('#go').click(function() {
+			// 檢核是否有選一筆資料
+			if ($('input[name="chosePolicy"]:checked').val() == null) {
+				/* openAlert("請選擇一筆保單"); */
+				openAlert($('#E0038').val());
+				return false;
+			}
+			
+			var formData = {};
+			var policyNo= $('input[name="chosePolicy"]:checked').val()
+			formData.policyNo = policyNo;
+			formData.invtRiskBeneLevel = riskLevel;
+			console.log('=========',formData);
+			postWithFormData(/*[[@{/fund2}]]*/,formData);
+		});
+	});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

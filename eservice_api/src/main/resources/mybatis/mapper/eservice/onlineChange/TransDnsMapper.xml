@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransDnsDao">
+
+	<resultMap id="TransDnsResultMap" type="com.twfhclife.eservice.onlineChange.model.TransDnsVo">
+		<result property="seqId"   column="SEQ_ID" />
+		<result property="notifySeqId" column="NOTIFY_SEQ_ID" />
+		<result property="type"    column="TYPE" />
+		<result property="jobId"   column="JOB_ID" />
+		<result property="caseId"  column="CASE_ID" />
+		<result property="idno"    column="IDNO" />
+		<result property="insnom"  column="INSNOM" />
+		<result property="name"    column="NAME" />
+		<result property="birdate" column="BIRDATE" />
+		<result property="sex" column="SEX" />
+		<result property="con" column="CON" />
+		<result property="condate" column="CONDATE" />
+		<result property="adddate" column="ADDDATE" />
+		<result property="status"  column="STATUS" />
+		<result property="sendAlliance"   column="SEND_ALLIANCE" />
+		<result property="createDate"     column="CREATE_DATE" />
+		<result property="code"    column="CODE" />
+		<result property="msg"     column="MSG" />
+		<result property="updateCodeDate" column="UPDATE_CODE_DATE" />
+	</resultMap>
+	
+	<insert id="insertTransDns" parameterType="com.twfhclife.eservice.onlineChange.model.TransDnsVo" >
+		insert into ESERVICE.DBO.TRANS_DNS
+			(SEQ_ID,NOTIFY_SEQ_ID,TRANS_NUM,TYPE,JOB_ID,CASE_ID,
+			IDNO,INSNOM,NAME,BIRDATE,SEX,CON,CONDATE,ADDDATE,SEND_ALLIANCE)
+		values
+			(
+				<choose>
+       				<when test="vo.seqId!=null and vo.seqId>0">
+       					#{vo.seqId, jdbcType=FLOAT},
+       				</when>
+       				<otherwise>
+       					(NEXT VALUE for TRANS_DNS_SEQ),
+       				</otherwise>
+       			</choose>
+       			#{vo.notifySeqId, jdbcType=VARCHAR},
+       			#{vo.transNum, jdbcType=VARCHAR},
+				#{vo.type, jdbcType=VARCHAR},
+				#{vo.jobId, jdbcType=VARCHAR},
+				#{vo.caseId, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.idno, jdbcType=VARCHAR}),
+				#{vo.insnom, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.name, jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.birdate, jdbcType=VARCHAR}),
+				#{vo.sex, jdbcType=VARCHAR},
+				#{vo.con, jdbcType=VARCHAR},
+				#{vo.condate, jdbcType=VARCHAR},
+				#{vo.adddate, jdbcType=VARCHAR},
+				#{vo.sendAlliance, jdbcType=VARCHAR}
+			)
+	</insert>
+</mapper>

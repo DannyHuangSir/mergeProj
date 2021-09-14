@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransReducePolicyDao">
+
+	<resultMap id="TransReducePolicyMap" type="com.twfhclife.eservice.onlineChange.model.TransReducePolicyVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transReducePolicyVo.id != null"> AND ID = #{transReducePolicyVo.id} </if>
+			<if test="transReducePolicyVo.transNum != null and transReducePolicyVo.transNum != ''"> AND TRANS_NUM = #{transReducePolicyVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transReducePolicyVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得減少保險金額主檔查詢結果 -->
+	<select id="getTransReducePolicy" resultMap="TransReducePolicyMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_REDUCE_POLICY
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得下一筆序號 -->
+	<select id="getNextTransReducePolicyId" resultType="BigDecimal">
+		SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_REDUCE_POLICY
+	</select>
+	
+	<!-- 減少保險金額主檔-新增 -->
+	<insert id="insertTransReducePolicy">
+		INSERT INTO ESERVICE.DBO.TRANS_REDUCE_POLICY
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{transReducePolicyVo.id, jdbcType=NUMERIC},
+			#{transReducePolicyVo.transNum, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

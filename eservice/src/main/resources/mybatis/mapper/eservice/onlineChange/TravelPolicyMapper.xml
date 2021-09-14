@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TravelPolicyDao">
+
+	<resultMap id="TravelPolicyMap" type="com.twfhclife.eservice.onlineChange.model.TravelPolicyVo" >
+		<result column="travelDest" property="travelDest"/>
+		<result column="beginDate" property="beginDate"/>
+		<result column="beginTime" property="beginTime"/>
+		<result column="endDate" property="endDate"/>
+		<result column="endTime" property="endTime"/>
+		<result column="addid" property="travelPlan.addid"/>
+		<result column="mrid" property="travelPlan.mrid"/>
+		<result column="orid" property="travelPlan.orid"/>
+		<result column="proposerName" property="proposer.proposer"/>
+		<result column="proposerRocId" property="proposer.identityId"/>
+		<result column="proposerBirthDate" property="proposer.birthday"/>
+		<result column="proposerAddress" property="proposer.address"/>
+		<result column="proposerEmail" property="proposer.email"/>
+		<result column="proposerTelOffice" property="proposer.officeTel"/>
+		<result column="proposerTelHome" property="proposer.homeTel"/>
+		<result column="proposerMobile" property="proposer.cellphoneNum"/>
+		<result column="proposerRelationToInsured" property="proposer.relationToInsured"/>
+		<result column="insuredName" property="insured.insuredName"/>
+		<result column="insuredRocId" property="insured.identityId"/>
+		<result column="insuredBirthDate" property="insured.birthday"/>
+		<result column="insuredRelation" property="insured.relation"/>
+		<result column="insuredRelationStr" property="insured.relationStr"/>
+		<result column="insuredJob" property="insured.job"/>
+		<result column="insuredAddress" property="insured.address"/>
+		<result column="insuredTelOffice" property="insured.officeTel"/>
+		<result column="insuredTelHome" property="insured.homeTel"/>
+		<result column="insuredMobile" property="insured.cellphoneNum"/>
+		<result column="beneficiaryName" property="beneficiary.beneficiaryName"/>
+		<result column="beneficiaryRocId" property="beneficiary.beneficiaryRocid"/>
+		<result column="beneficiaryRelation" property="beneficiary.beneficiaryRelation"/>
+		<result column="beneficiaryRelationStr" property="beneficiary.beneficiaryRelationStr"/>
+		<result column="beneficiaryRelaReason" property="beneficiary.reason"/>
+		<result column="beneficiaryAddress" property="beneficiary.beneficiaryAddressFull"/>
+		<result column="beneficiaryTel" property="beneficiary.beneficiaryTel"/>
+		<result column="beneficiaryLegalInherit" property="beneficiary.legalInherit"/>
+		<result column="otherTravel" property="otherTravel"/>
+		<result column="otherTravelCompany" property="otherTravelCompany"/>
+		<result column="otherAmtWrap" property="otherAmtWrap"/>
+		<result column="wnpiDeptId" property="wnpiDeptId"/>
+		<result column="wnpiDeptStr" property="wnpiDeptStr"/>
+	</resultMap>
+	
+	<select id="getPremiumCount" resultType="com.twfhclife.eservice.onlineChange.model.TravelPlanVo" parameterType="java.lang.String">
+		WITH TRIPADD_INFO AS 
+		(SELECT INSUFEE, L15INSUFEE, DAYS, ADDID FROM ESERVICE.DBO.TRIPADD)
+		, TRIPMR_INFO AS 
+		(SELECT INSUFEE, DAYS, MRID FROM ESERVICE.DBO.TRIPMR)
+		, TRIPOD_INFO AS 
+		(SELECT INSUFEE, DAYS, ORID FROM ESERVICE.DBO.TRIPOD)
+		SELECT
+		<if test="age lt 15">
+		T.L15INSUFEE AS addid,
+		</if>
+		<if test="age gt 14 and age lt 81">
+		T.INSUFEE AS addid,
+		</if>
+		<choose>
+		<when test="vo.mrid != null and vo.mrid != 0">
+		M.INSUFEE AS mrid,
+		</when>
+		<otherwise>
+		0 AS mrid,
+		</otherwise>
+		</choose>
+		<choose>
+		<when test="vo.orid != null and vo.orid != 0">
+		O.INSUFEE AS orid
+		</when>
+		<otherwise>
+		0 AS orid
+		</otherwise>
+		</choose>
+		FROM TRIPADD_INFO T
+		LEFT JOIN TRIPMR_INFO M ON T.DAYS = M.DAYS
+		LEFT JOIN TRIPOD_INFO O ON T.DAYS = O.DAYS
+		WHERE T.DAYS = #{days}
+		AND T.ADDID = #{vo.addid}
+		<if test="vo.mrid != null and vo.mrid != 0">
+		AND M.MRID = #{vo.mrid}
+		</if>
+		<if test="vo.orid != null and vo.orid != 0">
+		AND O.ORID = #{vo.orid}
+		</if>
+		
+	</select>
+	
+	<insert id="addTransTravelPolicy" parameterType="com.twfhclife.eservice.onlineChange.model.TransVo">
+		insert into 
+			ESERVICE.DBO.TRANS_TRAVELPOLICY(
+			TRANS_NUM,
+			TRAVEL_DEST,
+			BEGIN_DATE,
+			BEGIN_TIME,
+			END_DATE,
+			END_TIME,
+			ADDID,
+			MRID,
+			ORID) 
+		values (
+				#{vo.transNum,jdbcType=NUMERIC},
+				#{vo.travelPolicy.travelDest,jdbcType=VARCHAR},
+				#{vo.travelPolicy.beginDate,jdbcType=VARCHAR},
+				#{vo.travelPolicy.beginTime,jdbcType=VARCHAR},
+				#{vo.travelPolicy.endDate,jdbcType=VARCHAR},
+				#{vo.travelPolicy.endTime,jdbcType=VARCHAR},
+				#{vo.travelPolicy.travelPlan.addid,jdbcType=NUMERIC},
+				#{vo.travelPolicy.travelPlan.mrid,jdbcType=NUMERIC},
+				#{vo.travelPolicy.travelPlan.orid,jdbcType=NUMERIC}
+			)
+	</insert>
+	
+	<insert id="addTransTravelPolicyHolder" parameterType="com.twfhclife.eservice.onlineChange.model.TransVo">
+		insert into 
+			ESERVICE.DBO.TRANS_TRAVELPOLICY_HOLDER(
+			TRANS_NUM,
+			NAME,
+			ROC_ID,
+			BIRTH_DATE,
+			ADDRESS,
+			EMAIL,
+			TEL_OFFICE,
+			TEL_HOME,
+			MOBILE) 
+		values (
+				#{vo.transNum,jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.proposer.proposer,jdbcType=VARCHAR}),
+				#{vo.travelPolicy.proposer.identityId,jdbcType=VARCHAR},
+				#{vo.travelPolicy.proposer.birthday,jdbcType=DATE},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.proposer.address,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.proposer.email,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.proposer.officeTel,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.proposer.homeTel,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.proposer.cellphoneNum,jdbcType=VARCHAR})
+			)
+	</insert>
+	
+	<insert id="addTransTravelPolicyInsured" parameterType="com.twfhclife.eservice.onlineChange.model.TransVo">
+		insert into 
+			ESERVICE.DBO.TRANS_TRAVELPOLICY_INSURED(
+			TRANS_NUM,
+			NAME,
+			ROC_ID,
+			BIRTH_DATE,
+			RELATION,
+			JOB,
+			ADDRESS,
+			TEL_OFFICE,
+			TEL_HOME,
+			MOBILE) 
+		values (
+				#{vo.transNum,jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.insured.insuredName,jdbcType=VARCHAR}),
+				#{vo.travelPolicy.insured.identityId,jdbcType=VARCHAR},
+				#{vo.travelPolicy.insured.birthday,jdbcType=DATE},
+				#{vo.travelPolicy.insured.relation,jdbcType=VARCHAR},
+				#{vo.travelPolicy.insured.job,jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.insured.address,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.insured.officeTel,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.insured.homeTel,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.insured.cellphoneNum,jdbcType=VARCHAR})
+			)
+	</insert>
+	
+	<insert id="addTransTravelPolicyBene" parameterType="com.twfhclife.eservice.onlineChange.model.TransVo">
+		insert into 
+			ESERVICE.DBO.TRANS_TRAVELPOLICY_BENE(
+			TRANS_NUM,
+			NAME,
+			ROC_ID,
+			RELATION,
+			RELA_REASON,
+			ADDRESS,
+			TEL,
+			LEGAL_INHERIT) 
+		values (
+				#{vo.transNum,jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.beneficiary.beneficiaryName,jdbcType=VARCHAR}),
+				#{vo.travelPolicy.beneficiary.beneficiaryRocid,jdbcType=VARCHAR},
+				#{vo.travelPolicy.beneficiary.beneficiaryRelation,jdbcType=VARCHAR},
+				#{vo.travelPolicy.beneficiary.reason,jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.beneficiary.beneficiaryAddressFull,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.travelPolicy.beneficiary.beneficiaryTel,jdbcType=VARCHAR}),
+				#{vo.travelPolicy.beneficiary.legalInherit,jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<insert id="addTransTravelPolicyExt" parameterType="com.twfhclife.eservice.onlineChange.model.TransVo">
+		insert into 
+			ESERVICE.DBO.TRANS_TRAVELPOLICY_EXT(
+			TRANS_NUM,
+			OTHER_TRAVEL,
+			OTHER_TRAVEL_COMPANY,
+			OTHER_AMT_WRAP,
+			WNPI_DEPT_ID) 
+		values (
+				#{vo.transNum,jdbcType=VARCHAR},
+				#{vo.travelPolicy.otherTravel,jdbcType=VARCHAR},
+				#{vo.travelPolicy.otherTravelCompany,jdbcType=VARCHAR},
+				#{vo.travelPolicy.otherAmtWrap,jdbcType=VARCHAR},
+				#{vo.travelPolicy.wnpiDeptId,jdbcType=VARCHAR}
+			)
+	</insert>
+	
+	<select id="getTravelPolicyDetial" resultMap="TravelPolicyMap" parameterType="java.lang.String">
+		SELECT 
+			tt.TRAVEL_DEST AS travelDest,
+			tt.BEGIN_DATE AS beginDate,
+			tt.BEGIN_TIME AS beginTime,
+			tt.END_DATE AS endDate,
+			tt.END_TIME AS endTime,
+			tt.ADDID AS addid,
+			tt.MRID AS mrid,
+			tt.ORID AS orid,
+			ESERVICE.DBO.FN_DEBASE64(tth.NAME) AS proposerName,
+			tth.ROC_ID AS proposerRocId,
+			tth.BIRTH_DATE AS proposerBirthDate,
+			ESERVICE.DBO.FN_DEBASE64(tth.ADDRESS) AS proposerAddress,
+			ESERVICE.DBO.FN_DEBASE64(tth.EMAIL) AS proposerEmail,
+			ESERVICE.DBO.FN_DEBASE64(tth.TEL_OFFICE) AS proposerTelOffice,
+			ESERVICE.DBO.FN_DEBASE64(tth.TEL_HOME) AS proposerTelHome,
+			ESERVICE.DBO.FN_DEBASE64(tth.MOBILE) AS proposerMobile,
+			RELATION_TO_INSURED AS proposerRelationToInsured,
+			ESERVICE.DBO.FN_DEBASE64(tti.NAME) AS insuredName,
+			tti.ROC_ID AS insuredRocId,
+			tti.BIRTH_DATE AS insuredBirthDate,
+			tti.RELATION AS insuredRelation,
+			COALESCE((
+			SELECT
+				a.PARAMETER_NAME
+			FROM ESERVICE_ADM.DBO.PARAMETER a
+			JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b ON a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+			WHERE
+				1 = 1
+				AND a.STATUS = b.STATUS
+				AND b.STATUS = 1
+				AND b.CATEGORY_CODE = 'INSURED_RELATION'
+				AND a.PARAMETER_CODE = convert(varchar, tti.RELATION)
+			), ' ') AS insuredRelationStr,
+			tti.JOB AS insuredJob,
+			ESERVICE.DBO.FN_DEBASE64(tti.ADDRESS) AS insuredAddress,
+			ESERVICE.DBO.FN_DEBASE64(tti.TEL_OFFICE) AS insuredTelOffice,
+			ESERVICE.DBO.FN_DEBASE64(tti.TEL_HOME) AS insuredTelHome,
+			ESERVICE.DBO.FN_DEBASE64(tti.MOBILE) AS insuredMobile,
+			ESERVICE.DBO.FN_DEBASE64(ttb.NAME) AS beneficiaryName,
+			ttb.ROC_ID AS beneficiaryRocId,
+			ttb.RELATION AS beneficiaryRelation,
+			COALESCE((
+			SELECT
+				a.PARAMETER_NAME
+			FROM ESERVICE_ADM.DBO.PARAMETER a
+			JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b ON a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+			WHERE
+				1 = 1
+				AND a.STATUS = b.STATUS
+				AND b.STATUS = 1
+				AND b.CATEGORY_CODE = 'BENEFICIARY_RELATION'
+				AND a.PARAMETER_CODE = convert(varchar, ttb.RELATION)
+			), ' ') AS beneficiaryRelationStr,
+			ttb.RELA_REASON AS beneficiaryRelaReason,
+			ESERVICE.DBO.FN_DEBASE64(ttb.ADDRESS) AS beneficiaryAddress,
+			ESERVICE.DBO.FN_DEBASE64(ttb.TEL) AS beneficiaryTel,
+			ttb.LEGAL_INHERIT AS beneficiaryLegalInherit,
+			tte.OTHER_TRAVEL AS otherTravel,
+			tte.OTHER_TRAVEL_COMPANY AS otherTravelCompany,
+			tte.OTHER_AMT_WRAP AS otherAmtWrap,
+			tte.WNPI_DEPT_ID AS wnpiDeptId,
+			COALESCE((
+			SELECT
+				a.PARAMETER_VALUE
+			FROM ESERVICE_ADM.DBO.PARAMETER a
+			JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b ON a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+			WHERE
+				1 = 1
+				AND a.STATUS = b.STATUS
+				AND b.STATUS = 1
+				AND b.CATEGORY_CODE = 'RECEIVE_POLICY_LOCATION'
+				AND a.PARAMETER_CODE = convert(varchar, tte.WNPI_DEPT_ID)
+			), ' ') AS wnpiDeptStr
+		FROM 
+			ESERVICE.DBO.TRANS t,
+			ESERVICE.DBO.TRANS_TRAVELPOLICY tt,
+			ESERVICE.DBO.TRANS_TRAVELPOLICY_BENE ttb,
+			ESERVICE.DBO.TRANS_TRAVELPOLICY_EXT tte,
+			ESERVICE.DBO.TRANS_TRAVELPOLICY_HOLDER tth,
+			ESERVICE.DBO.TRANS_TRAVELPOLICY_INSURED tti
+		WHERE
+			t.TRANS_NUM = tt.TRANS_NUM
+			AND tt.TRANS_NUM = ttb.TRANS_NUM
+			AND ttb.TRANS_NUM = tte.TRANS_NUM
+			AND tte.TRANS_NUM = tth.TRANS_NUM
+			AND tth.TRANS_NUM = tti.TRANS_NUM
+			AND t.TRANS_NUM = #{transNum}
+	</select>
+	
+</mapper>

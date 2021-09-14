@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.PartnerUserEntityDao">
+
+	<resultMap id="PartnerUserEntityMap" type="com.twfhclife.adm.model.PartnerUserEntityVo" >
+		<result column="ID" property="id"/>
+		<result column="EMAIL" property="email"/>
+		<result column="EMAIL_CONSTRAINT" property="emailConstraint"/>
+		<result column="EMAIL_VERIFIED" property="emailVerified"/>
+		<result column="ENABLED" property="enabled"/>
+		<result column="FEDERATION_LINK" property="federationLink"/>
+		<result column="FIRST_NAME" property="firstName"/>
+		<result column="LAST_NAME" property="lastName"/>
+		<result column="REALM_ID" property="realmId"/>
+		<result column="USERNAME" property="username"/>
+		<result column="CREATED_TIMESTAMP" property="createdTimestamp"/>
+		<result column="SERVICE_ACCOUNT_CLIENT_LINK" property="serviceAccountClientLink"/>
+		<result column="NOT_BEFORE" property="notBefore"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		UE.ID,UA.VALUE AS EMAIL,UE.EMAIL_CONSTRAINT,UE.EMAIL_VERIFIED,UE.ENABLED,UE.FEDERATION_LINK,UE.FIRST_NAME,UE.LAST_NAME,UE.REALM_ID,UE.USERNAME,UE.CREATED_TIMESTAMP,UE.SERVICE_ACCOUNT_CLIENT_LINK,UE.NOT_BEFORE,U.ONLINE_FLAG
+		, U.ROC_ID AS ROCID, eservice.DBO.FN_DEBASE64(U.MOBILE) MOBILE, U.STATUS
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="partnerUserEntityVo.username != null and partnerUserEntityVo.username != ''"> AND UPPER(UE.USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{partnerUserEntityVo.username}),'%'))</if>
+			<if test="partnerUserEntityVo.lastName != null and partnerUserEntityVo.lastName != ''"> AND UPPER(CONCAT(UE.LAST_NAME, UE.FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{partnerUserEntityVo.lastName}),'%'))</if>
+		</where>
+	</sql>
+	
+	<!-- include sql: 外部人員管理查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.USER_ENTITY UE 
+			LEFT JOIN ESERVICE_ADM.DBO.USER_ATTRIBUTE UA ON UE.ID = UA.USER_ID AND UA.NAME = 'email'
+			,ESERVICE.DBO.USERS U
+		WHERE
+			UPPER(UE.USERNAME) = UPPER(U.USER_ID)
+			AND UE.REALM_ID = #{partnerUserEntityVo.realmId}
+			<if test="partnerUserEntityVo.username != null and partnerUserEntityVo.username != ''"> AND UPPER(UE.USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{partnerUserEntityVo.username}),'%'))</if>
+			<if test="partnerUserEntityVo.lastName != null and partnerUserEntityVo.lastName != ''"> AND UPPER(CONCAT(UE.LAST_NAME, UE.FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{partnerUserEntityVo.lastName}),'%'))</if>
+			<if test="partnerUserEntityVo.rocId != null and partnerUserEntityVo.rocId != ''"> AND UPPER(U.ROC_ID) = #{partnerUserEntityVo.rocId} </if>
+	</sql>
+	
+	<!-- 取得外部人員管理查詢結果(分頁) -->
+	<select id="getPartnerUserEntityPageList" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY USERNAME) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{partnerUserEntityVo.page} * #{partnerUserEntityVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{partnerUserEntityVo.page} - 1) * #{partnerUserEntityVo.rows}	
+	</select>
+	
+	<!-- 取得人員管理查詢結果(總筆數) -->
+	<select id="getPartnerUserEntityPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 外部人員-檢查名稱是否存在 -->
+	<select id="checkUserNameExist" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM
+			ESERVICE_ADM.DBO.USER_ENTITY
+		WHERE
+			REALM_ID = #{partnerUserEntityVo.realmId}
+			AND UPPER(USERNAME) = UPPER(#{partnerUserEntityVo.username})
+	</select>
+	
+	<!-- 外部人員-取得名稱 -->
+	<select id="getNextPartnerUserName" resultType="string">
+		WITH PARTNER_USER_TMP AS (
+			<include refid="INC1" />
+		), PARTNER_USER_NAME_CNT AS (
+			SELECT 
+				COUNT(1) AS AMOUNT
+			FROM
+				PARTNER_USER_TMP
+			WHERE
+				UPPER(USERNAME) LIKE UPPER('%' + #{partnerUserEntityVo.agenCode} + '%')
+		)
+		SELECT
+			LEFT(CAST(#{partnerUserEntityVo.agenCode} as NVARCHAR) + REPLICATE('0', 3), 3) + RIGHT(REPLICATE('0', 4) + CAST(AMOUNT + 1 as NVARCHAR), 4)
+		FROM
+			PARTNER_USER_NAME_CNT
+	</select>
+
+</mapper>

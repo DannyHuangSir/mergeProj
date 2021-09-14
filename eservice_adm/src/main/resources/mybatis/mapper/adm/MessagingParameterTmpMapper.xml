@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.MessagingParameterTmpDao">
+
+	<resultMap id="MessagingParameterTmpMap" type="com.twfhclife.adm.model.MessagingParameterTmpVo" >
+		<result column="MESSAGING_TEMPLATE_ID" property="messagingTemplateId"/>
+		<result column="PARAMETER_ID" property="parameterId"/>
+		<result column="PARAMETER_VALUE" property="parameterValue"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		MESSAGING_TEMPLATE_ID,PARAMETER_ID
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="messagingParameterTmpVo.messagingTemplateId != null"> AND MESSAGING_TEMPLATE_ID = #{messagingParameterTmpVo.messagingTemplateId} </if>
+			<if test="messagingParameterTmpVo.parameterId != null"> AND PARAMETER_ID = #{messagingParameterTmpVo.parameterId} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND MESSAGING_TEMPLATE_ID = #{messagingParameterTmpVo.messagingTemplateId}
+			AND PARAMETER_ID = #{messagingParameterTmpVo.parameterId}
+		</where>
+	</sql>
+	
+	<!-- include sql: 模板變數TMP查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.MESSAGING_PARAMETER_TMP
+		<include refid="whereClause" />
+	</sql>
+	
+	<!-- 取得模板變數TMP查詢結果(分頁) -->
+	<select id="getMessagingParameterTmpPageList" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY MESSAGING_TEMPLATE_ID) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{messagingParameterTmpVo.page} * #{messagingParameterTmpVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{messagingParameterTmpVo.page} - 1) * #{messagingParameterTmpVo.rows}	
+	</select>
+	
+	<!-- 取得模板變數TMP查詢結果(總筆數) -->
+	<select id="getMessagingParameterTmpPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得模板變數TMP查詢結果 -->
+	<select id="getMessagingParameterTmp" resultMap="MessagingParameterTmpMap">
+		SELECT
+			MP.MESSAGING_TEMPLATE_ID,MP.PARAMETER_ID,P.PARAMETER_VALUE
+		FROM
+			ESERVICE_ADM.DBO.MESSAGING_PARAMETER_TMP MP
+            LEFT JOIN ESERVICE_ADM.DBO.PARAMETER P on MP.PARAMETER_ID = P.PARAMETER_ID
+        <where>
+			<if test="messagingParameterTmpVo.messagingTemplateId != null"> AND MP.MESSAGING_TEMPLATE_ID = #{messagingParameterTmpVo.messagingTemplateId} </if>
+			<if test="messagingParameterTmpVo.parameterId != null"> AND MP.PARAMETER_ID = #{messagingParameterTmpVo.parameterId} </if>
+		</where>
+        order by MP.MESSAGING_TEMPLATE_ID
+	</select>
+	
+	<!-- 取得模板變數TMP查詢結果 -->
+	<!-- <select id="getMessagingParameterTmp" resultMap="MessagingParameterTmpMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			MESSAGING_PARAMETER_TMP
+		<include refid="whereClause" />
+	</select> -->
+	
+	<!-- 模板變數TMP-新增 -->
+	<insert id="insertMessagingParameterTmp">
+		INSERT INTO ESERVICE_ADM.DBO.MESSAGING_PARAMETER_TMP
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{messagingParameterTmpVo.messagingTemplateId, jdbcType=NUMERIC},
+			#{messagingParameterTmpVo.parameterId, jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<!-- 模板變數TMP-更新 -->
+	<update id="updateMessagingParameterTmp">
+		UPDATE
+			ESERVICE_ADM.DBO.MESSAGING_PARAMETER_TMP
+		<set>
+			<if test="messagingParameterTmpVo.messagingTemplateId != null"> MESSAGING_TEMPLATE_ID = #{messagingParameterTmpVo.messagingTemplateId}, </if>
+			<if test="messagingParameterTmpVo.parameterId != null"> PARAMETER_ID = #{messagingParameterTmpVo.parameterId}, </if>
+		</set>
+		<include refid="wherePkClause" />
+	</update>
+	
+	<!-- 模板變數TMP-刪除 -->
+	<delete id="deleteMessagingParameterTmp">
+		DELETE ESERVICE_ADM.DBO.MESSAGING_PARAMETER_TMP 
+		WHERE MESSAGING_TEMPLATE_ID = #{messagingParameterTmpVo.messagingTemplateId}
+	</delete>
+
+</mapper>
+

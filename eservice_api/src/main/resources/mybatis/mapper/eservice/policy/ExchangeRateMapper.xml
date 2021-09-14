@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.ExchangeRateDao">
+
+	<resultMap id="ExchangeRateMap" type="com.twfhclife.eservice.policy.model.ExchangeRateVo" >
+		<result column="EFFECTIVE_DATE" property="effectiveDate"/>
+		<result column="EXCHANGE_CODE" property="exchangeCode"/>
+		<result column="CURRENCY_CODE" property="currencyCode"/>
+		<result column="BUY_PRICE" property="buyPrice"/>
+		<result column="SELL_PRICE" property="sellPrice"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		EFFECTIVE_DATE,EXCHANGE_CODE,CURRENCY_CODE,BUY_PRICE,SELL_PRICE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="exchangeRateVo.effectiveDate != null"> AND EFFECTIVE_DATE = #{exchangeRateVo.effectiveDate} </if>
+			<if test="exchangeRateVo.exchangeCode != null and exchangeRateVo.exchangeCode != ''"> AND EXCHANGE_CODE = #{exchangeRateVo.exchangeCode} </if>
+			<if test="exchangeRateVo.currencyCode != null and exchangeRateVo.currencyCode != ''"> AND CURRENCY_CODE = #{exchangeRateVo.currencyCode} </if>
+			<if test="exchangeRateVo.buyPrice != null"> AND BUY_PRICE = #{exchangeRateVo.buyPrice} </if>
+			<if test="exchangeRateVo.sellPrice != null"> AND SELL_PRICE = #{exchangeRateVo.sellPrice} </if>
+			<if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'A'.toString()"> 
+				AND EFFECTIVE_DATE > DATEADD(month, -1, getdate()) + 1
+			</if>
+			<if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'B'.toString()"> 
+				AND EFFECTIVE_DATE > DATEADD(month, -3, getdate()) + 1
+			</if>
+			<if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'C'.toString()"> 
+				AND convert(varchar(7), EFFECTIVE_DATE, 126) = #{exchangeRateVo.queryMonth}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND EFFECTIVE_DATE = #{exchangeRateVo.effectiveDate}
+			AND EXCHANGE_CODE = #{exchangeRateVo.exchangeCode}
+		</where>
+	</sql>
+	
+	<!-- 取得匯率查詢結果 -->
+	<select id="getExchangeRate" resultMap="ExchangeRateMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.EXCHANGE_RATE
+		<include refid="whereClause" />
+		ORDER BY
+			EFFECTIVE_DATE
+	</select>
+	
+	<select id="getNewestExchangeRateByExchangeCode" resultMap="ExchangeRateMap" parameterType="string">
+		select top(1) 
+			<include refid="Base_Column_List" />
+		from ESERVICE.DBO.EXCHANGE_RATE
+		where CURRENCY_CODE='NTD' and EXCHANGE_CODE=#{exchangeCode}
+		order by EFFECTIVE_DATE DESC
+	</select>
+
+</mapper>

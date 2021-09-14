@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+		<style type="text/css">
+		  .tree-container-min{
+				background-color:#FFF;
+				border:1px solid#DDD;
+				border-left-color:#67B2DD;
+				display:block;
+				padding:0;
+				max-width:600px;
+				max-height:500px;
+			}
+		</style>
+	</head>
+
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='eventRecord')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-list" aria-hidden="true"></i>
+									記錄管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+									事件記錄查詢
+							</li>
+						</ul><!-- /.breadcrumb -->
+					</div>
+
+					<div class="page-content">
+
+						<div class="row">
+
+							<div class="row">
+								<div class="col-xs-12">
+									<!-- PAGE CONTENT BEGINS -->
+									<form class="form-horizontal" role="form" id="eventRecord" action="#">
+										<div class="alert alert-info" id="searchError" hidden="true">
+											<i class="my-icon fa fa-hand-o-right"></i>
+											<span id="searchErrorCont"></span>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 系統別 </label>
+											<div class="col-sm-5">
+												<select class="chosen-select form-control" id="systems" data-placeholder="請選擇通系統別..." style="display: none;">
+													<option value=""></option>
+												</select>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 帳號 </label>
+											<div class="col-sm-5">
+												<input type="text" id="userId" placeholder="" class="form-control" />
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 事件代碼 </label>
+
+											<div class="col-sm-5">
+												<input type="text" id="eventCode" placeholder="" class="form-control" onchange="changEventCode()" />
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 事件名稱 </label>
+											<div class="col-sm-5">
+												<select class="chosen-select form-control" id="eventName" data-placeholder="請選擇通事件名稱..." style="display: none;">
+													<option value=""></option>
+												</select>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 事件狀態 </label>
+											<div class="col-sm-5">
+												<select class="chosen-select form-control" id="eventStatus" data-placeholder="請選擇通事件狀態..." style="display: none;">
+													<option value=""></option>
+												</select>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-4">記錄時間起迄</label>
+											<div class="col-sm-5">
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
+													<input class="form-control" type="text" id="eventDate" onchange="changeEventDate()" />
+												</div>
+												<input type="hidden" id="startDate" name="startDate"/> 
+												<input type="hidden" id="endDate" name="endDate"/>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="col-md-offset-3 col-md-9">
+											<button class="btn btn-success" type="button" onClick="selectForm()">
+												<i class="my-icon fa fa-check bigger-110"></i>
+												查詢
+											</button>
+
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" onclick="resetForm()" type="reset">
+												<i class="my-icon fa fa-undo bigger-110"></i>
+												重新輸入
+											</button>
+										</div>
+									</form>
+									<!-- PAGE CONTENT ENDS -->
+								</div><!-- /.col -->
+							</div><!-- /.row -->	
+							
+							<div class="hr hr-18 dotted hr-double"></div>
+							
+							
+							<div class="row">
+							<div class="col-xs-12">
+								<div id="show-detail-results" hidden="true">
+									<h3 class="header smaller lighter blue">查詢結果</h3>
+									<div>
+										<!-- PAGE CONTENT BEGINS -->
+										<div class="alert alert-info" id="showResult">
+											<i class="my-icon fa fa-hand-o-right"></i>
+											<span id="showResultError"></span>
+										</div>
+
+										
+										<div class="row">
+											<div class="col-xs-12">
+												<div id="dynamic-table_filter" class="dataTables_filter">
+										<button class="btn btn-purple" onclick="downloadEventRecord()">
+											<i class="my-icon fa fa-cloud-upload bigger-110"></i>匯出CSV
+										</button>
+									</div>
+											</div>
+										</div>
+										
+										<table id="grid-table"></table>
+										<div style="height:60px">
+											<div id="grid-pager"></div>
+										</div>
+
+										<!-- PAGE CONTENT ENDS -->
+									</div><!-- /.col -->
+								</div>
+							</div>
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+				</div>
+			</div><!-- /.main-content -->
+			<div>
+				
+			</div>
+
+			<div th:replace="fragments/footer"></div>
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+		<th:block th:replace="fragments/script"/>
+
+		<!-- inline scripts related to this page -->
+		<script	th:src="@{/js/eventRecord.js}"></script>
+	</body>
+</html>

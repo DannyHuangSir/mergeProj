@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.alliance.dao.ContactInfoDao">
+
+	<resultMap id="ContactInfoResultMap" type="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		
+		<id property="seqId" column="SEQ_ID" />
+		<id property="caseId" column="CASE_ID" />
+		<id property="batchId" column="BATCH_ID" />
+		<id property="code" column="CODE" />
+		<id property="msg" column="MSG" />
+		<id property="cidNo" column="CIDNO" />
+		<id property="cbirdate" column="CBIRDATE" />
+		<id property="cname" column="CNAME" />
+		<id property="crname" column="CRNAME" />
+		<id property="cename" column="CENAME" />
+		<id property="cPhone" column="CPHONE" />
+		<id property="cMail" column="CMAIL" />
+		<id property="cAddress" column="CADDRESS" />
+		<id property="name" column="NAME" />
+		<id property="rname" column="RNAME" />
+		<id property="ename" column="ENAME" />
+		<id property="idNo" column="IDNO" />
+		<id property="rZipCode" column="RZIPCODE" />
+		<id property="rAddress" column="RADDRESS" />
+		<id property="mZipCode" column="MZIPCODE" />
+		<id property="mAddress" column="MADDRESS" />
+		<id property="phone" column="PHONE" />
+		<id property="homeTel1" column="HOMETEL1" />
+		<id property="homeTelCode1" column="HOMETELCODE1" />
+		<id property="homeTelExt1" column="HOMETELEXT1" />
+		<id property="homeTel2" column="HOMETEL2" />
+		<id property="homeTelCode2" column="HOMETELCODE2" />
+		<id property="homeTelExt2" column="HOMETELEXT2" />
+		<id property="mail" column="MAIL" />
+		<id property="from" column="FROM_COMPANY" />
+		<id property="to" column="TO_COMPANY" />
+		<id property="agreement" column="AGREEMENT" />
+		<id property="logDateTime" column="LOGDATETIME" />
+		<id property="logDesc1" column="LOGDESC1" />
+		<id property="source" column="SOURCE" />
+		<id property="status" column="STATUS" />
+		<id property="sendAlliance" column="SEND_ALLIANCE" />
+		<id property="notifySeqId" column="NOTIFY_SEQ_ID" />
+	</resultMap>
+	<resultMap id="ContactInfoResult" type="com.twfhclife.alliance.model.ContactInfoMapperVo">
+
+		<id property="seqId" column="SEQ_ID" />
+		<id property="caseId" column="CASE_ID" />
+		<id property="batchId" column="BATCH_ID" />
+		<id property="code" column="CODE" />
+		<id property="msg" column="MSG" />
+		<id property="cidNo" column="CIDNO" />
+		<id property="cbirdate" column="CBIRDATE" />
+		<id property="cname" column="CNAME" />
+		<id property="crname" column="CRNAME" />
+		<id property="cename" column="CENAME" />
+		<id property="cPhone" column="CPHONE" />
+		<id property="cMail" column="CMAIL" />
+		<id property="cAddress" column="CADDRESS" />
+		<id property="name" column="NAME" />
+		<id property="rname" column="RNAME" />
+		<id property="ename" column="ENAME" />
+		<id property="idNo" column="IDNO" />
+		<id property="rZipCode" column="RZIPCODE" />
+		<id property="rAddress" column="RADDRESS" />
+		<id property="mZipCode" column="MZIPCODE" />
+		<id property="mAddress" column="MADDRESS" />
+		<id property="phone" column="PHONE" />
+		<id property="homeTel1" column="HOMETEL1" />
+		<id property="homeTelCode1" column="HOMETELCODE1" />
+		<id property="homeTelExt1" column="HOMETELEXT1" />
+		<id property="homeTel2" column="HOMETEL2" />
+		<id property="homeTelCode2" column="HOMETELCODE2" />
+		<id property="homeTelExt2" column="HOMETELEXT2" />
+		<id property="mail" column="MAIL" />
+		<id property="from" column="FROM_COMPANY" />
+		<id property="to" column="TO_COMPANY" />
+		<id property="agreement" column="AGREEMENT" />
+		<id property="logDateTime" column="LOGDATETIME" />
+		<id property="logDesc1" column="LOGDESC1" />
+		<id property="source" column="SOURCE" />
+		<id property="status" column="STATUS" />
+		<id property="sendAlliance" column="SEND_ALLIANCE" />
+		<id property="notifySeqId" column="NOTIFY_SEQ_ID" />
+		<id property="transNum" column="TRANS_NUM" />
+	</resultMap>
+
+	<resultMap id="ContactInfoResultMaps" type="com.twfhclife.alliance.model.ContactInfoMapperVo">
+
+		<id property="seqId" column="SEQ_ID" />
+		<id property="caseId" column="CASE_ID" />
+		<id property="batchId" column="BATCH_ID" />
+		<id property="code" column="CODE" />
+		<id property="msg" column="MSG" />
+		<id property="cidNo" column="CIDNO" />
+		<id property="cbirdate" column="CBIRDATE" />
+		<id property="cname" column="CNAME" />
+		<id property="crname" column="CRNAME" />
+		<id property="cename" column="CENAME" />
+		<id property="cPhone" column="CPHONE" />
+		<id property="cMail" column="CMAIL" />
+		<id property="cAddress" column="CADDRESS" />
+		<id property="name" column="NAME" />
+		<id property="rname" column="RNAME" />
+		<id property="ename" column="ENAME" />
+		<id property="idNo" column="IDNO" />
+		<id property="rZipCode" column="RZIPCODE" />
+		<id property="rAddress" column="RADDRESS" />
+		<id property="mZipCode" column="MZIPCODE" />
+		<id property="mAddress" column="MADDRESS" />
+		<id property="phone" column="PHONE" />
+		<id property="homeTel1" column="HOMETEL1" />
+		<id property="homeTelCode1" column="HOMETELCODE1" />
+		<id property="homeTelExt1" column="HOMETELEXT1" />
+		<id property="homeTel2" column="HOMETEL2" />
+		<id property="homeTelCode2" column="HOMETELCODE2" />
+		<id property="homeTelExt2" column="HOMETELEXT2" />
+		<id property="mail" column="MAIL" />
+		<id property="from" column="FROM_COMPANY" />
+		<id property="to" column="TO_COMPANY" />
+		<id property="agreement" column="AGREEMENT" />
+		<id property="logDateTime" column="LOGDATETIME" />
+		<id property="logDesc1" column="LOGDESC1" />
+		<id property="source" column="SOURCE" />
+		<id property="status" column="STATUS" />
+		<id property="sendAlliance" column="SEND_ALLIANCE" />
+		<id property="notifySeqId" column="NOTIFY_SEQ_ID" />
+		<id property="lipiBirth" column="LIPI_BIRTH" />
+		<id property="transNum" column="TRANS_NUM" />
+		<id property="telOffice" column="TELOFFICE" />
+		<id property="cmAddress" column="CMADDRESS" />
+		<id property="cTelOffice" column="CTELOFFICE" />
+	</resultMap>
+
+	<resultMap id="ContactInfoFileDataResultMap" type="com.twfhclife.alliance.model.ContactInfoFileDataVo">
+		<result property="fdId"         column="FD_ID" />
+		<result property="contactSeqId"   column="CONTACT_SEQ_ID" />
+		<result property="notifySeqId"  column="NOTIFY_SEQ_ID" />
+		<result property="msg"        column="MSG" />
+		<result property="fileId"     column="FILE_ID" />
+		<result property="size"  column="SIZE" />
+		<result property="type"  column="TYPE" />
+		<result property="fileName"    column="FILE_NAME" />
+		<result property="fileStatus"  column="FILE_STATUS" />
+		<result property="path"  column="PATH" />
+		<result property="fileBase64"  column="FILE_BASE64" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		SEQ_ID,
+		CASE_ID,
+		BATCH_ID,
+		CODE,
+		MSG,
+		CIDNO,
+		CBIRDATE,
+		CNAME,
+		CRNAME,
+		CENAME,
+		CPHONE,
+		CMAIL,
+		CADDRESS,
+		NAME,
+		RNAME,
+		ENAME,
+		IDNO,
+		RZIPCODE,
+		RADDRESS,
+		MZIPCODE,
+		MADDRESS,
+		PHONE,
+		HOMETEL1,
+		HOMETELCODE1,
+		HOMETELEXT1,
+		HOMETEL2,
+		HOMETELCODE2,
+		HOMETELEXT2,
+		MAIL,
+		FROM_COMPANY,
+		TO_COMPANY,
+		AGREEMENT,
+		LOGDATETIME,
+		LOGDESC1,
+		SOURCE,
+		STATUS,
+		SEND_ALLIANCE,
+		NOTIFY_SEQ_ID,
+		CREATE_DATE,
+		TRANS_NUM
+	</sql>
+	<sql id="CONTACT_INFO_ALL">
+		SEQ_ID
+		,CASE_ID
+		,BATCH_ID
+		,CODE
+		,MSG
+		,ESERVICE.DBO.FN_DEBASE64(CIDNO) CIDNO
+		,ESERVICE.DBO.FN_DEBASE64(CBIRDATE) CBIRDATE
+		,ESERVICE.DBO.FN_DEBASE64(CNAME)  CNAME
+		,ESERVICE.DBO.FN_DEBASE64(CRNAME) CRNAME
+		,ESERVICE.DBO.FN_DEBASE64(CENAME) CENAME
+		,ESERVICE.DBO.FN_DEBASE64(CPHONE) CPHONE
+		,ESERVICE.DBO.FN_DEBASE64(CMAIL) CMAIL
+		,ESERVICE.DBO.FN_DEBASE64(CADDRESS) CADDRESS
+		,ESERVICE.DBO.FN_DEBASE64(NAME) NAME
+		,RNAME
+		,ENAME
+		,ESERVICE.DBO.FN_DEBASE64(IDNO) IDNO
+		,RZIPCODE
+		,ESERVICE.DBO.FN_DEBASE64(RADDRESS) RADDRESS
+		,MZIPCODE
+		,ESERVICE.DBO.FN_DEBASE64(MADDRESS) MADDRESS
+		,ESERVICE.DBO.FN_DEBASE64(PHONE) PHONE
+		,ESERVICE.DBO.FN_DEBASE64(HOMETEL1) HOMETEL1
+		,HOMETELCODE1
+		,HOMETELEXT1
+		,ESERVICE.DBO.FN_DEBASE64(HOMETEL2) HOMETEL2
+		,HOMETELCODE2
+		,HOMETELEXT2
+		,ESERVICE.DBO.FN_DEBASE64(MAIL)  MAIL
+		,FROM_COMPANY
+		,TO_COMPANY
+		,AGREEMENT
+		,LOGDATETIME
+		,LOGDESC1
+		,SOURCE
+		,STATUS
+		,SEND_ALLIANCE
+		,NOTIFY_SEQ_ID
+		,CREATE_DATE
+	</sql>
+	<select id="getContactInfoByNoCaseId" resultMap="ContactInfoResult">
+		select top(10)
+		 <include refid="CONTACT_INFO_ALL"></include>,TRANS_NUM
+		from ESERVICE.DBO.CONTACT_INFO
+		where NOTIFY_SEQ_ID is null
+		  and CASE_ID is null
+		  and STATUS = 'NOT_UPLOADED'
+		  and SEND_ALLIANCE = 'Y'
+	</select>
+	
+	<!-- 台銀件上傳聯盟後，取得回傳，更新CONTACT_INFO,CASE_ID,CODE,MSG,STATUS -->
+	<update id="updateContactAfterUploadToAlliance" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		update ESERVICE.DBO.CONTACT_INFO
+		   set CASE_ID = #{vo.caseId},
+			   CODE    = #{vo.code},
+			   MSG     = #{vo.msg},
+			   STATUS  = #{vo.status}
+		where  SEQ_ID  = #{vo.seqId}
+	</update>
+	
+	<!-- 內部申請件建立後，將呼叫完API201的回傳取得CaseID，更新回該筆記錄 -->
+	<update id="updateCaseIdByContactSeqId" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		update ESERVICE.DBO.CONTACT_INFO
+		   set CASE_ID   = #{vo.caseId},
+			   CODE      = #{vo.code},
+			   MSG       = #{vo.msg},
+			   STATUS    = #{vo.status}
+		where SEQ_ID  = #{vo.seqId}
+	</update>
+	
+	<select id="getFileDatasByContactSeqId" resultMap="ContactInfoFileDataResultMap" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		select * from ESERVICE.DBO.CONTACT_INFO_FILEDATAS
+		where CONTACT_SEQ_ID = #{vo.seqId}
+		order by CREATE_DATE desc
+	</select>
+	<!--	通过多个SEQID进行查询出多条数据-->
+	<select id="getFileDatasByContactSeqIdList" resultMap="ContactInfoFileDataResultMap" parameterType="java.util.List"  >
+		select * from ESERVICE.DBO.CONTACT_INFO_FILEDATAS
+		where CONTACT_SEQ_ID in
+		<foreach collection="list" index="index" item="item" open="(" close=")"  separator=",">
+			#{item}ContactInfoFileDataMap
+		</foreach>
+		order by CREATE_DATE desc
+	</select>
+
+	<!-- 內部申請件建立後取得檔案後，將呼叫完API201的回傳取得FileId，更新回該筆記錄 -->
+	<update id="updateFileIdByFdId" parameterType="com.twfhclife.alliance.model.ContactInfoFileDataVo">
+		update ESERVICE.DBO.CONTACT_INFO_FILEDATAS
+		set FILE_ID = #{vo.fileId}
+		where FD_ID = #{vo.fdId}
+	</update>
+	
+	
+	<!-- 取得台銀理賠件,上傳未成功之檔案清單 -->
+	<select id="getFileDataToUpload" parameterType="com.twfhclife.alliance.model.ContactInfoFileDataVo" resultMap="ContactInfoFileDataResultMap">
+		select top(10) * from ESERVICE.dbo.CONTACT_INFO_FILEDATAS
+		where NOTIFY_SEQ_ID is null
+		and FILE_ID is not null
+		and (MSG is null or UPPER(MSG)!='SUCCESS')
+	</select>
+	
+	<insert id="addContactInfo" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo" >
+		INSERT INTO 
+       		ESERVICE.DBO.CONTACT_INFO
+       		(
+       		<include refid="Base_Column_List" />
+       		)
+       	VALUES
+       		(
+       			<choose>
+       				<when test="vo.seqId!=null and vo.seqId>0">
+       					#{vo.seqId, jdbcType=FLOAT},
+       				</when>
+       				<otherwise>
+       					(NEXT VALUE for CONTACT_INFO_SEQ),
+       				</otherwise>
+       			</choose>
+       			#{vo.caseId, jdbcType=VARCHAR},    
+       			#{vo.batchId, jdbcType=FLOAT},        
+				#{vo.code, jdbcType=VARCHAR},
+				#{vo.msg, jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.cidNo, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.cbirdate,jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.cname, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.crname, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.cename, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.cPhone, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.cMail, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.cAddress, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.name, jdbcType=VARCHAR}),
+				#{vo.rname, jdbcType=VARCHAR},
+				#{vo.ename, jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.idNo, jdbcType=VARCHAR}),
+				#{vo.rZipCode, jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.rAddress, jdbcType=VARCHAR}),
+				#{vo.mZipCode, jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.mAddress, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.phone, jdbcType=VARCHAR}),
+				ESERVICE.DBO.FN_ENBASE64(#{vo.homeTel1, jdbcType=VARCHAR}),
+				#{vo.homeTelCode1, jdbcType=VARCHAR},
+				#{vo.homeTelExt1, jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.homeTel2, jdbcType=VARCHAR}),
+				#{vo.homeTelCode2, jdbcType=VARCHAR},
+				#{vo.homeTelExt2, jdbcType=VARCHAR},
+				ESERVICE.DBO.FN_ENBASE64(#{vo.mail, jdbcType=VARCHAR}),
+				#{vo.from, jdbcType=VARCHAR},
+				#{vo.to, jdbcType=VARCHAR},
+				#{vo.agreement, jdbcType=VARCHAR},
+				#{vo.logDateTime, jdbcType=VARCHAR},
+				#{vo.logDesc1, jdbcType=VARCHAR},
+				#{vo.source, jdbcType=VARCHAR}, 
+				#{vo.status, jdbcType=VARCHAR},
+				#{vo.sendAlliance, jdbcType=VARCHAR},
+				#{vo.notifySeqId, jdbcType=FLOAT}, 
+       			getdate(),
+				#{vo.transNum, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="getContactInfoSequence" resultType="java.lang.Float">
+		select NEXT VALUE for CONTACT_INFO_SEQ as SEQID;
+	</select>
+	<select id="selectontactInfoFiledatasSeq" resultType="java.lang.Float">
+		select NEXT VALUE for CONTACT_INFO_FILEDATAS_SEQ as SEQID;
+	</select>
+
+	<insert id="addContactInfoFileData" parameterType="com.twfhclife.alliance.model.ContactInfoFileDataVo">
+		INSERT INTO 
+       		ESERVICE.DBO.CONTACT_INFO_FILEDATAS
+       		(FD_ID,CONTACT_SEQ_ID,NOTIFY_SEQ_ID,FILE_ID,SIZE,TYPE,FILE_NAME,FILE_STATUS,PATH,FILE_BASE64)
+       	VALUES
+       		(
+				#{vo.fdId,  jdbcType=FLOAT},
+       			#{vo.contactSeqId,  jdbcType=FLOAT},
+       			#{vo.notifySeqId, jdbcType=FLOAT}, 
+       			#{vo.fileId, jdbcType=VARCHAR},
+       			#{vo.size, jdbcType=VARCHAR},
+       			#{vo.type, jdbcType=VARCHAR},
+       			#{vo.fileName, jdbcType=VARCHAR},
+       			#{vo.fileStatus, jdbcType=VARCHAR},
+       			#{vo.path, jdbcType=VARCHAR},
+				''
+       		)
+	</insert>
+
+	<update id="updateContactInfoFileData" parameterType="com.twfhclife.alliance.model.ContactInfoFileDataVo">
+		update
+		ESERVICE.DBO.CONTACT_INFO_FILEDATAS
+		set  FILE_BASE64.WRITE(#{vo.fileBase64, jdbcType=VARCHAR},0,null)
+		where FD_ID =#{vo.fdId}
+	</update>
+	
+	<!-- 取得聯盟通知件,下載未成功之檔案清單 -->
+	<select id="getFileDataToDownload" parameterType="com.twfhclife.alliance.model.ContactInfoFileDataVo" resultMap="ContactInfoFileDataResultMap">
+		select top(10) * from ESERVICE.dbo.CONTACT_INFO_FILEDATAS
+		where NOTIFY_SEQ_ID is not null
+		and MSG is null
+		and FILE_STATUS='2'
+	</select>
+
+	<!--
+	 模仿将DB数据写出文档
+	    当前用于测试API 204 的文件数据
+	-->
+<!--	<select id="getFileDataToDownloadSuccess" parameterType="com.twfhclife.alliance.model.ContactInfoFileDataVo" resultMap="ContactInfoFileDataResultMap">
+		select top(10) * from ESERVICE.dbo.CONTACT_INFO_FILEDATAS
+		where NOTIFY_SEQ_ID is not null
+		and MSG ='success'
+		and FILE_STATUS='DOWNLOADED'
+	</select>
+	-->
+	<select id="getCaseIdBySeqId" parameterType="java.lang.Float" resultType="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		select CASE_ID from ESERVICE.dbo.CONTACT_INFO where SEQ_ID = #{claimSeqId}
+	</select>
+	
+	<!-- 更新文件上傳/下載成功 -->
+	<update id="updateFileStatusByFileId" parameterType="com.twfhclife.alliance.model.ContactInfoFileDataVo">
+		update ESERVICE.DBO.CONTACT_INFO_FILEDATAS
+		   set FILE_STATUS = #{vo.fileStatus},
+		       FILE_BASE64.WRITE(#{vo.fileBase64},0,null),
+			   MSG = #{vo.msg},
+			   UPDATE_MSG_DATE = getdate()
+		 where FILE_ID   = #{vo.fileId}
+	</update>
+
+	<!-- 取得可上傳但未上傳eservie.TRANS的資料
+	当前查询取消，子查询，因为联盟过来的数据，未必有文件
+	and exists (select 1 from ESERVICE.DBO.CONTACT_INFO_FILEDATAS where CONTACT_SEQ_ID = SEQ_ID and FILE_BASE64 is not null)
+	-->
+	<select id="getContactInfoByHasNotifySeqIdNoBatchId" resultMap="ContactInfoResultMap">
+		select top(10)
+		<include refid="CONTACT_INFO_ALL"></include>
+		from ESERVICE.DBO.CONTACT_INFO
+		where NOTIFY_SEQ_ID is not null
+		and FROM_COMPANY != 'L01'
+		and CASE_ID is not null
+		and BATCH_ID is null
+		and (STATUS is null or STATUS in ( 'RECEIVED'))
+		and MSG is null
+		order by CREATE_DATE desc
+	</select>
+	
+	<!-- 查詢是否為要保人/被保人 -->
+	<select id="countPIPMByIdNo" resultType="java.lang.Integer" parameterType="java.lang.String">
+	select SUM(CNT) from (
+		(select count(LIPM_ID) CNT from ESERVICE.dbo.LILIPM where LIPM_ID=#{idNo}) 
+		union 
+		(select count(LIPI_ID) CNT from ESERVICE.dbo.LILIPI where LIPI_ID=#{idNo}) 
+	) as PIPM
+	</select>
+	<!--  
+	select count(*) CNT from (
+		select top(1) * from ESERVICE.dbo.LILIPI pi,ESERVICE.dbo.LILIPM pm
+		where pi.LIPI_ID=#{idNo} or pm.LIPM_ID=#{idNo}
+	) as PIPM
+	-->
+	
+	<!-- 以身份證字號取得ESERVICE中userId -->
+	<select id="getUserIdByIdNo" resultType="java.lang.String" parameterType="java.lang.String">
+		select top(1) user_id from ESERVICE.dbo.USERS
+  		where ROC_ID = #{idNo}
+	</select>
+	
+	<select id="getContactInfoFileDataByClaimsSequId" parameterType="java.lang.Float" resultMap="ContactInfoFileDataResultMap">
+		select * from ESERVICE.DBO.CONTACT_INFO_FILEDATAS
+		where CONTACT_SEQ_ID = #{seqId}
+	</select>
+
+	<select id="getTransContactInfoFileDataByClaimsSequId" parameterType="java.lang.Float" resultMap="ContactInfoFileDataResultMap">
+		select * from ESERVICE.DBO.TRANS_CONTACT_INFO_FILEDATAS
+		where CONTACT_SEQ_ID = #{seqId}
+	</select>
+	<!-- 更新聯盟通知，表示已上傳eservice.Trans -->
+	<update id="updateContactInfoTransNumByNotifySeqId" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		update ESERVICE.DBO.CONTACT_INFO
+		set BATCH_ID = #{vo.batchId}
+		where NOTIFY_SEQ_ID = #{vo.notifySeqId}
+	</update>
+	
+	<!-- 更新CONTACT_INFO.MSG -->
+	<update id="updateContactInfoMsg" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		update ESERVICE.DBO.CONTACT_INFO
+		set MSG = #{vo.msg}
+		where SEQ_ID = #{vo.seqId}
+	</update>
+	
+	<!--
+	<select id="getInfoTOMail" parameterType="java.lang.String" resultType="java.lang.String">
+		select A.NAME+'|'+CONVERT(varchar(10),  A.CREATE_DATE, 120)+'|'+A.TRANS_NUM+'|'+A.MAIL+'|'+A.ID_NO from ESERVICE.dbo.TRANS_INSURANCE_CLAIM A  where A.TRANS_NUM = #{transNum}
+	</select>
+	-->
+	
+	<select id="getMailByRocid" resultType="com.twfhclife.generic.model.UserVo" parameterType="java.lang.String">
+      select TOP 1 C.email,C.mobile from (
+		select pmda_applicant_email email, pmda_applicant_cellphone mobile from ESERVICE.DBO.lilipm
+		join eservice.dbo.lipmda_es on lipm_insu_no = (PMDA_INSU_TYPE + CONVERT(VARCHAR, PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) 
+		where lipm_id = #{rocId}
+		union all
+	   select pmda_insured_email email, pmda_insured_cellphone mobile from ESERVICE.DBO.lilipi
+       join eservice.dbo.lipmda_es on lipi_insu_no = (PMDA_INSU_TYPE + CONVERT(VARCHAR, PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO)
+       where lipi_id = #{rocId}
+       ) C
+	</select>
+	
+	<select id="getContactInfoByHasNotifySeqIdAndBatchId" resultMap="ContactInfoResultMap">
+		select top(10) 
+		<include refid="CONTACT_INFO_ALL"></include>
+		from ESERVICE.DBO.CONTACT_INFO
+		where FROM_COMPANY!='L01'
+		and NOTIFY_SEQ_ID is not null
+		and CASE_ID is not null
+		and BATCH_ID is not null
+		and STATUS = 'RECEIVED'
+		order by CREATE_DATE desc
+	</select><!-- 只回報聯盟件 -->
+	
+	<select id="getCompletedContactInfoByBatchId" parameterType="java.lang.Float" resultType="java.lang.Integer">
+		select count(*)-(
+			select count(*) from ESERVICE.DBO.TRANS A left join  ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_NUM = B.TRANS_NUM
+		 	where A.TRANS_TYPE = 'CONTACT_INFO' and A.STATUS in('2','7','6') and B.BATCH_ID = #{batchId}
+		)
+		from ESERVICE.DBO.TRANS A left join ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_NUM = B.TRANS_NUM
+		where A.TRANS_TYPE = 'CONTACT_INFO'
+		and B.BATCH_ID = #{batchId}
+	</select>
+
+	<select id="getCompletedContactInfoByBatchIdStatus" parameterType="java.lang.Float" resultType="java.lang.Integer">
+		select count(*)-(
+			select count(*) from ESERVICE.DBO.TRANS A left join  ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_NUM = B.TRANS_NUM
+			where A.TRANS_TYPE = 'CONTACT_INFO' and A.STATUS ='2' and B.BATCH_ID = #{batchId}
+		)
+		from ESERVICE.DBO.TRANS A left join ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_NUM = B.TRANS_NUM
+		where A.TRANS_TYPE = 'CONTACT_INFO'
+		and B.BATCH_ID = #{batchId}
+	</select>
+	
+	<select id="getAbnormlContactInfoCountByBatchIdStatus" parameterType="java.lang.Float" resultType="java.lang.Integer">
+		select count(*)
+		from ESERVICE.DBO.TRANS A left join ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_NUM = B.TRANS_NUM
+		where A.TRANS_TYPE = 'CONTACT_INFO'
+		and A.STATUS = '7'
+		and B.BATCH_ID = #{batchId}
+	</select>
+	
+	<update id="updateStatusByBatchId" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		update ESERVICE.DBO.CONTACT_INFO
+		set STATUS = #{vo.status}
+		where BATCH_ID = #{vo.batchId}
+	</update>
+	
+	<update id="updateStatusByCaseId" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo">
+		update ESERVICE.DBO.CONTACT_INFO
+		set STATUS = #{vo.status}
+		where CASE_ID = #{vo.caseId}
+	</update>
+	
+	<select id="getTransContactInfoByForTask" resultMap="ContactInfoResultMaps">
+			SELECT  TOP 10
+					B.ID AS SEQ_ID,
+			        B.BATCH_ID,		
+				    D.LIPM_ID AS CIDNO,		   
+					D.LIPM_BIRTH AS CBIRDATE,		
+					ESERVICE.DBO.FN_DEBASE64(D.LIPM_NAME_1) CNAME,
+					ESERVICE.DBO.FN_DEBASE64(A.MOBILE) PHONE,
+					ESERVICE.DBO.FN_DEBASE64(A.EMAIL) MAIL,
+					ESERVICE.DBO.FN_DEBASE64(A.ADDRESS_FULL) RADDRESS,
+					ESERVICE.DBO.FN_DEBASE64(A.ADDRESS_FULL_CHARGE) MADDRESS,
+					ESERVICE.DBO.FN_DEBASE64(A.TEL_OFFICE) TELOFFICE,
+					ESERVICE.DBO.FN_DEBASE64(A.NAME) AS NAME,
+					ESERVICE.DBO.FN_DEBASE64(A.IDNO) AS IDNO,
+					A.SEND_ALLIANCE,
+					A.FROM_COMPANY_ID FROM_COMPANY,                                        
+					A.TO_COMPANY_ID TO_COMPANY,         
+				    ESERVICE.DBO.FN_DEBASE64(A.TEL_HOME) HOMETEL1,                              
+					ESERVICE.DBO.FN_DEBASE64(F.MOBILE) CPHONE,
+					ESERVICE.DBO.FN_DEBASE64(F.EMAIL) CMAIL,
+					ESERVICE.DBO.FN_DEBASE64(F.ADDRESS_FULL_CHARGE) CMADDRESS,
+					ESERVICE.DBO.FN_DEBASE64(F.TEL_HOME) HOMETEL2,
+					ESERVICE.DBO.FN_DEBASE64(F.TEL_OFFICE) CTELOFFICE,
+					ESERVICE.DBO.FN_DEBASE64(F.ADDRESS_FULL) CADDRESS,
+					'同意' AGREEMENT,
+				    convert(varchar(8),getDate(),112) + replace(convert(varchar(8),getDate(),114),':','') 	 LOGDATETIME,
+					'PDCA(001)' LOGDESC1,
+					'W' SOURCE ,
+					Q.LIPI_BIRTH  LIPI_BIRTH,
+					E.TRANS_NUM  TRANS_NUM
+			FROM                                         		                               
+					ESERVICE.DBO.TRANS_CONTACT_INFO_DTL A                                       	
+					JOIN ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_CONTACT_ID = B.ID               
+					JOIN ESERVICE.DBO.TRANS_POLICY C on B.TRANS_NUM = C.TRANS_NUM                     
+					JOIN ESERVICE.DBO.LILIPM D ON C.POLICY_NO = D.LIPM_INSU_NO                               
+					JOIN ESERVICE.DBO.TRANS E ON E.TRANS_NUM = B.TRANS_NUM
+					JOIN ESERVICE.DBO.TRANS_CONTACT_INFO_OLD F ON F.TRANS_CONTACT_ID = B.ID
+					JOIN ESERVICE.DBO.LILIPI Q ON Q.LIPI_INSU_NO=D.LIPM_INSU_NO
+			WHERE A.SEND_ALLIANCE = 'Y'
+					AND A.FROM_COMPANY_ID = 'L01'
+					AND B.CASE_ID is null  
+					AND  E.STATUS = '5'  
+					AND NOT  EXISTS (SELECT 	<include refid="CONTACT_INFO_ALL"></include>
+		    FROM ESERVICE.DBO.CONTACT_INFO E WHERE B.BATCH_ID = E.BATCH_ID)
+	</select>
+	
+</mapper>

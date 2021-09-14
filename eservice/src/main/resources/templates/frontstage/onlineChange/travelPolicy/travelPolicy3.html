@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:replace="fragments/head" />
+<link th:href="@{/css/countrySelect.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/demo.css}" rel="stylesheet"/>
+<title>臺銀人壽旅平險</title>
+</head>
+
+<body>
+    <div class="row hid1" id="top1">
+        <div class="container">
+            <button class="btn pull-right user1" type="button">商業 Business</button>
+            <button class="btn pull-right user1 active" type="button">個人 Personal</button>
+        </div>
+    </div>
+    
+    <header>
+        <div class="container">
+            <div class="row">
+                <th:block th:replace="fragments/logo"/>
+                <div class="n1 inlineBlock float-left">旅平險試算與申請</div>
+            </div>
+        </div>
+    </header>
+	
+    <section class="grey applyInner beneficiary2 fullContent">
+        <div class="container bg3 ">
+            <div class="">
+                <ul class="step">
+                    <li class="step1 col-xs-3">
+                        1<span class="hid1">. 輸入旅平險申請資料</span>
+                    </li>
+                    <li class="step2 col-xs-3">
+                        2<span class="hid1">. 選擇您的方案</span>
+                    </li>
+                    <li class="step3b active col-xs-3">
+                        3<span class="hid1">. 輸入保單資料</span>
+                    </li>
+                    <li class="step4 col-xs-3">
+                        4<span class="hid1">. 確認保單資料</span>
+                    </li>
+                </ul>
+            </div>    
+			<div class="mystyle3">
+                <h2 style="padding-bottom:10px;color:#078B37;font-size:26px;"><span style="font-size:36px;"><b>1</b></span> 被保險人資料</h2>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>被保人姓名：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="insuredName" placeholder="請輸入被保人姓名" data-validation="required|maxlength::10"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>被保人身分證字號：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="insuredRocId" placeholder="請輸入被保人身分證字號" data-validation="required|rocId"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">職業：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="insuredJob" placeholder="請輸入被保人職業"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>地址：</div>
+                    <div class="col-sm-7">						
+						<div class="item80" style="float: left; margin-right: 5px">
+							<div class="selector-box">
+								<select class="selector" id="insuredCity">
+								</select>
+							</div>
+						</div>						
+						<div class="item80" style="float: left; margin-right: 5px">
+							<div class="selector-box">
+								<select class="selector" id="insuredRegion">
+								</select>
+							</div>
+						</div>					
+						<div class="item360" style="float: left; margin-right: 5px">
+							<input type="text" class="item360 form-control" id="insuredAddress" placeholder="請輸入被保人所在路、巷、號、樓層"
+							data-validation="optionalRequired::#insuredCity,#insuredRegion,#insuredAddress::請輸入完整地址"/>
+						</div>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">公司電話：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="insuredOfficeTel" placeholder="請輸入被保人公司電話" maxlength="10" />
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">住宅電話：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="insuredHomeTel" placeholder="請輸入被保人住宅電話" maxlength="10" />
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>行動電話：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="insuredMobile" placeholder="請輸入被保人行動電話" maxlength="10"
+						data-validation="optionalRequiredOne::#insuredOfficeTel,#insuredHomeTel,#insuredMobile::住家電話、公司電話、手機必須至少輸入一項|mobile"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>目前是否受有監護宣告：</div>
+                    <div class="col-sm-7">
+						<div class="selector-box" style="width: 400px;">
+							<select id="wnpiAnnounce" data-validation="required" style="width: 400px;">
+								<option value="">請選擇</option>
+								<option value="1">是 (如選擇是者，臨櫃辦理時請提供相關證明文件)</option>
+								<option value="0">否</option>
+							</select>	
+						</div>
+					</div>
+                </div>
+				
+				<h2 class="divider divider88"></h2>
+				
+                <h2 style="padding-bottom:10px;color:#078B37;font-size:26px;"><span style="font-size:36px;"><b>2</b></span> 要保險人資料</h2>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>與被保險人關係：</div>
+                    <div class="col-sm-7">
+						<div class="selector-box" style="width: 300px;">
+						<select class="selector" id="relationToInsured" data-validation="required" onchange="isSameHolder(this.value)" style="width: 300px;">
+							<option value="">請選擇</option>
+							<option value="本人">本人</option>
+							<option value="配偶">配偶</option>
+							<option value="父母">父母</option>
+							<option value="子女">子女</option>
+							<option value="祖父母">祖父母</option>
+							<option value="孫子女">孫子女</option>
+						</select>
+						</div>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>要保人姓名：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="proposerName" placeholder="請輸入要保人姓名" data-validation="required|maxlength::10"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>要保人身分證字號：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="proposerRocId" placeholder="請輸入要保人身分證字號" data-validation="required|rocId"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>生日：</div>
+                    <div class="col-sm-7">
+						<input type='text' class="form-control item180" id='proposerBirthday' data-validation="required|date"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>地址：</div>
+                    <div class="col-sm-7">
+                    	<div class="item130" style="float: left;" >
+                    		<table>
+                    			<tr style="cursor: pointer;">
+                    				<td style="padding:0 0 0 0;">
+                    				<input type="checkbox" name="sameAddr" id="sameAddr" style="width:18px;height:18px;margin-top: 7px"
+                    				onclick="if(this.checked == true){$('#addr1').hide()}else{$('#addr1').show()}" /> 
+                    				</td>
+                    				<td style="padding:0 0 0 0;" onclick="$('#sameAddr').click();">同被保人住所&nbsp;&nbsp;</td>
+                    				<td style="padding:0 0 0 0;" id="addr1">
+										<div class="item80" style="float: left; margin-right: 5px">
+											<div class="selector-box">
+												<select class="selector" id="proposerCity">
+												</select>
+											</div>
+										</div>						
+										<div class="item80" style="float: left; margin-right: 5px">
+											<div class="selector-box">
+												<select class="selector" id="proposerRegion">
+												</select>
+											</div>
+										</div>					
+										<div class="item250" style="float: left; margin-right: 5px">
+											<input type="text" class="item250 form-control" id="proposerAddress" placeholder="請輸入要保人所在路、巷、號、樓層" />
+										</div>
+                    				</td>
+                    			</tr>
+                    		</table>
+						</div>
+					</div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <label for="" clasee="col-sm-2">E-mail信箱：</label>
+                    </div>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="proposerEmail" placeholder="請輸入要保人E-MAIL信箱"
+                        data-validation="mail"/>
+                    </div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">公司電話：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="proposerOfficeTel" placeholder="請輸入要保人公司電話" maxlength="10" />
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">住宅電話：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="proposerHomeTel" placeholder="請輸入要保人住宅電話" maxlength="10" />
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>行動電話：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="proposerMobile" placeholder="請輸入要保人行動電話" maxlength="10"
+						data-validation="optionalRequiredOne::#proposerOfficeTel,#proposerHomeTel,#proposerMobile::住家電話、公司電話、手機必須至少輸入一項|mobile"/>
+					</div>
+                </div>
+				<div class="change2">
+					<div class="col-sm-2 col-sm-offset-1">
+						<span style="color: #ff5300; font-size: 16px">*</span>國籍：
+					</div>
+					<div class="col-sm-7">
+						<div style="float: left; margin-right: 5px">
+							<div class="">
+								<input id="country_selector1" type="text">
+								<label for="country_selector" style="display:none;">Select a country here...</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+				
+			<h2 class="divider divider88"></h2>
+			
+            <h2 style="padding-bottom:10px;color:#078B37;font-size:26px;text-align:center;"><span style="font-size:36px;"><b>3</b></span> 受益人資料</h2>
+            <div class="change2">
+				<div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>是否為法定繼承人</div>
+				<div class="col-sm-7">
+					<div class="selector-box mystyle3" style="width: 300px;">
+						<select class="selector" id="legalInherit" data-validation="required" style="width: 300px;"
+							onchange="changeInherit(this.value)">
+							<option value="">請選擇</option>
+							<option value="Y">是</option>
+							<option value="N">否</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div id="beneDiv" class="beneClass">
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>受益人姓名：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="beneficiaryName" placeholder="請輸入受益人姓名" data-validation="required|maxlength::10"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>受益人身分證字號：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="beneficiaryRocId" placeholder="請輸入受益人身分證字號" data-validation="required|rocId"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>生日：</div>
+                    <div class="col-sm-7">
+						<input type='text' class="form-control item180" id="beniBirthday" data-validation="required|date" />
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>與被保險人關係：</div>
+                    <div class="col-sm-7">
+						<div class="selector-box item450">
+							<select id="beneficiaryRelation" data-validation="required" class="item450">
+								<option value="">請選擇</option>
+								<option value="配偶">配偶</option>
+								<option value="父母">父母</option>
+								<option value="子女">子女</option>
+								<option value="祖父母">祖父母</option>
+								<option value="孫子女">孫子女</option>
+								<option value="兄弟姐妹">兄弟姐妹</option>
+								<option value="其他">其他</option>
+							</select>	
+						</div>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">身故受益人非被保險人之直系血親或配偶，請註明原因：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="beneficiaryReason" placeholder=""
+						data-validation="selectRequired::#beneficiaryRelation,3::請輸入非直系或配偶原因"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>地址：</div>
+                    <div class="col-sm-7">						
+						<div class="item80" style="float: left; margin-right: 5px">
+							<div class="selector-box">
+								<select class="selector" id="beneficiaryCity">
+								</select>
+							</div>
+						</div>						
+						<div class="item80" style="float: left; margin-right: 5px">
+							<div class="selector-box">
+								<select class="selector" id="beneficiaryRegion">
+								</select>
+							</div>
+						</div>					
+						<div class="item280" style="float: left; margin-right: 5px">
+							<input type="text" class="item280 form-control" id="beneficiaryAddress" placeholder="請輸入受益人所在路、巷、號、樓層"
+							data-validation="optionalRequired::#beneficiaryCity,#beneficiaryRegion,#beneficiaryAddress::請輸入完整地址"/>
+						</div>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>聯絡電話：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="beneficiaryTel" placeholder="請輸入受益人聯絡電話" maxlength="10"
+						data-validation="required|phone"/>
+					</div>
+                </div>
+				<div class="change2">
+					<div class="col-sm-2 col-sm-offset-1">
+						<span style="color: #ff5300; font-size: 16px">*</span>國籍：
+					</div>
+					<div class="col-sm-7">
+						<div style="float: left; margin-right: 5px">
+							<div class="">
+								<input id="country_selector2" type="text" data-validation="required">
+								<label for="country_selector" style="display:none;">Select a country here...</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<h2 class="divider divider88"></h2>
+				
+			<div class="mystyle3">
+				<h2 style="padding-top:20px;color:#078B37;font-size:26px;"><span style="font-size:36px;"><b>4</b></span> 其他聲明事項</h2>
+                <div class="change2">
+					<div class="col-sm-6 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>就本次旅程，被保險人是否已投保其它旅行平安保險(包括本公司或其他公司之各種保險)？</div>
+					<div class="col-sm-2">
+						<div class="item120">
+							<div class="selector-box">
+								<select class="selector" id="otherTravel" data-validation="required">
+									<option value="">請選擇</option>
+									<option value="Y">是</option>
+									<option value="N">否</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">保險公司名稱：</div>
+                    <div class="col-sm-7">
+						<input type="text" class="form-control" id="otherTravelCompany" placeholder=""
+						data-validation="selectRequired::#otherTravel,Y::請輸入保險公司名稱"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-2 col-sm-offset-1">保險金額：新台幣(萬)</div>
+                    <div class="col-sm-7">
+						<input type="number" class="form-control" id="otherAmtWrap" placeholder="" min="0"
+						data-validation="selectRequired::#otherTravel,Y::請輸入保險金額|max::0"/>
+					</div>
+                </div>
+                <div class="change2">
+					<div class="col-sm-3 col-sm-offset-1"><span style="color: #ff5300; font-size: 16px">*</span>預計前往辦理投保事宜及領取保單之地點：</div>
+					<div class="col-sm-6">
+						<div>
+							<div class="selector-box item450">
+								<select id="wnpiDeptId" data-validation="required" class="item450">
+									<option value="">請選擇</option>
+									<option th:each="vo : ${receivePolicyLocationList}" th:value="${vo.parameterCode}" th:utext="${vo.parameterName+' '+vo.parameterValue}" />
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 two-buttons">
+	            <a href="#">
+	                <button id="deny" class="btn-signup">上一步</button>
+	            </a>
+	            <a href="#">
+	                <button id="go" class="btn-signup">下一步</button>
+	            </a>
+        	</div>
+		</div>
+    </section>
+    <footer th:replace="fragments/footer"></footer>
+    <th:block th:replace="fragments/script" />
+    <script th:inline="javascript">
+	/*<![CDATA[*/
+	var travelPolicy = /*[[${travelPolicy}]]*/;
+	var transNum = /*[[${transNum}]]*/;
+    $(function(){
+    	//地址下拉選單
+    	var cityUrl = /*[[@{/getCityList}]]*/;
+    	var regionUrl = /*[[@{/getRegionList}]]*/;
+    	//要保人地址
+    	eserviceOption.cityRegion('#proposerCity', cityUrl, '#proposerRegion', regionUrl);
+    	//被保人地址
+    	eserviceOption.cityRegion('#insuredCity', cityUrl, '#insuredRegion', regionUrl);
+    	//受益人地址
+    	eserviceOption.cityRegion('#beneficiaryCity', cityUrl, '#beneficiaryRegion', regionUrl);
+    	
+    	$('div.mystyle3').validation();
+    });
+    //travelPolicy4
+	$("#go").click(function(){
+		if(!$("div.mystyle3").valid()){
+			return false;
+		}else{
+			if($("#legalInherit").val() != "Y" && !$("div.beneClass").valid()){
+				return false;
+			}
+			
+			var proposer = {
+				proposer : $("#proposerName").val(),
+				identityId : $("#proposerRocId").val(),
+				birthday : $("#proposerBirthday").val().replace(/\//g, "\-"),
+				address : $("#proposerCity :selected").text()+$("#proposerRegion :selected").text()+$("#proposerAddress").val(),
+				email : $("#proposerEmail").val(),
+				officeTel : $("#proposerOfficeTel").val(),
+				homeTel : $("#proposerHomeTel").val(),
+				cellphoneNum : $("#proposerMobile").val(),
+				country : $("#country_selector1").val(),
+				sameAddr : $("#sameAddr").prop('checked') ? "1" : "0",
+				relationToInsured : $("#relationToInsured").val()
+			}
+			travelPolicy.proposer = proposer;
+			
+			var insured = {
+				insuredName : $("#insuredName").val(),
+				birthday : travelPolicy.insured.birthday,
+				identityId : $("#insuredRocId").val(),
+				job : $("#insuredJob").val(),
+				address : $("#insuredCity :selected").text()+$("#insuredRegion :selected").text()+$("#insuredAddress").val(),
+				officeTel : $("#insuredOfficeTel").val(),
+				homeTel : $("#insuredHomeTel").val(),
+				cellphoneNum : $("#insuredMobile").val(),
+				wnpiAnnounce : $("#wnpiAnnounce").val()
+			}
+			travelPolicy.insured = insured;
+			
+			var beneficiary = {
+				beneficiaryName : $("#beneficiaryName").val(),
+				beneficiaryRocid : $("#beneficiaryRocId").val(),
+				beneficiaryRelation : $("#beneficiaryRelation").val(),
+				beneficiaryRelationStr : $("#beneficiaryRelation :selected").text(),
+				reason : $("#beneficiaryReason").val(),
+				beneficiaryAddressFull : $("#beneficiaryCity :selected").text()+$("#beneficiaryRegion :selected").text()+$("#beneficiaryAddress").val(),
+				beneficiaryTel : $("#beneficiaryTel").val(),
+				country : $("#country_selector2").val(),
+				beniBirthday : $("#beniBirthday").val().replace(/\//g, "\-"),
+				legalInherit : $("#legalInherit").val()
+			}
+			travelPolicy.beneficiary = beneficiary;
+			
+			travelPolicy.otherTravel = $("#otherTravel").val();
+			
+			if($("#otherTravel").val() == 'Y'){
+				travelPolicy.otherTravelCompany = $("#otherTravelCompany").val();
+				travelPolicy.otherAmtWrap = $("#otherAmtWrap").val();
+			}
+			
+			travelPolicy.wnpiDeptId = $("#wnpiDeptId").val();
+			travelPolicy.wnpiDeptStr = $("#wnpiDeptId :selected").text();
+
+	    	addTravelPolicyTrans(travelPolicy);
+		}
+	});
+    
+    function addTravelPolicyTrans(data){
+    	$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : "/eservice/travelPolicyTransAdd",
+			data : JSON.stringify(data),
+			success : function(response) {
+				if(response.resultMsg == "success"){
+					var params = {
+			            	name : 'travelPolicy',
+			            	value : JSON.stringify(travelPolicy)
+			        };
+					
+					var paramArray = [];
+			    	paramArray.push(params);
+			    	if(response.resultData != null){
+			    		transNum = response.resultData.transNum;
+			    		var transNumData = {
+			    				name: 'transNum',
+			    				value: JSON.stringify(transNum)
+			    		};
+			    		paramArray.push(transNumData);
+			    	}
+			    	postWithParams(/*[[@{/travelPolicy4}]]*/, paramArray);
+				}else{
+					/* openAlert('申請失敗'); */
+					openAlert($('#E0096').val());
+				}
+			},
+			error : function(response) {
+				openAlert('error!');
+			}
+		});
+    }
+    
+    
+	$("#deny").click(function(){
+		var params = {
+            	name : 'travelPolicy',
+            	value : JSON.stringify(travelPolicy)
+        };
+		
+		var paramArray = [];
+    	paramArray.push(params);
+		postWithParams(/*[[@{/travelPolicy2}]]*/, paramArray);
+	});
+
+	$('#proposerBirthday').datepicker({
+		changeMonth : true,
+		changeYear : true,
+		yearRange: 'c-80:c+0',
+		dateFormat : 'yy/mm/dd'
+	});
+
+	$('#beniBirthday').datepicker({
+		changeMonth : true,
+		changeYear : true,
+		yearRange: 'c-80:c+0',
+		dateFormat : 'yy/mm/dd'
+	});
+
+	$("#country_selector1").countrySelect({
+		defaultCountry: "tw",
+		preferredCountries: ['tw','us','ca']
+	});
+
+	$("#country_selector2").countrySelect({
+		defaultCountry: "tw",
+		preferredCountries: ['tw','us','ca']
+	});
+
+	function isSameHolder(rel) {
+		if (rel == '本人') {
+			$("#proposerName").val($("#insuredName").val());
+			$("#proposerBirthday").val(travelPolicy.insured.birthday.split('T')[0].replace(/-/g, "/"));
+			$("#proposerRocId").val($("#insuredRocId").val());
+			$("#sameAddr").prop('checked', true);
+			$("#addr1").hide();
+			$("#proposerOfficeTel").val($("#insuredOfficeTel").val());
+			$("#proposerHomeTel").val($("#insuredHomeTel").val());
+			$("#proposerMobile").val($("#insuredMobile").val());
+		} else {
+			$("#proposerName").val("");
+			$("#proposerBirthday").val("");
+			$("#proposerRocId").val("");
+			$("#proposerOfficeTel").val("");
+			$("#proposerHomeTel").val("");
+			$("#proposerMobile").val("");
+		}
+	}
+
+	function changeInherit(val) {
+		if(val == 'Y'){
+			$('#beneDiv').hide();
+			// 不需要檢核
+			$('#beneficiaryName').removeAttr('data-validation');
+			$('#beneficiaryRocId').removeAttr('data-validation');
+			$('#beniBirthday').removeAttr('data-validation');
+			$('#beneficiaryRelation').removeAttr('data-validation');
+			$('#beneficiaryReason').removeAttr('data-validation');
+			$('#beneficiaryAddress').removeAttr('data-validation');
+			$('#beneficiaryTel').removeAttr('data-validation');
+			$('#country_selector2').removeAttr('data-validation');
+			// 確保清空檢核訊息
+			$('#beneficiaryName_error').remove();
+			$('#beneficiaryRocId_error').remove();
+			$('#beniBirthday_error').remove();
+			$('#beneficiaryRelation_error').remove();
+			$('#beneficiaryReason_error').remove();
+			$('#beneficiaryAddress_error').remove();
+			$('#beneficiaryTel_error').remove();
+			$('#country_selector2_error').remove();
+		} else {
+			$('#beneDiv').show();
+			// 加入檢核條件
+			$('#beneficiaryName').attr('data-validation', 'required|maxlength::10');
+			$('#beneficiaryRocId').attr('data-validation', 'required|rocId');
+			$('#beniBirthday').attr('data-validation', 'required|date');
+			$('#beneficiaryRelation').attr('data-validation', 'required');
+			$('#beneficiaryReason').attr('data-validation', 'selectRequired::#beneficiaryRelation,3::請輸入非直系或配偶原因');
+			$('#beneficiaryAddress').attr('data-validation', 'optionalRequired::#beneficiaryCity,#beneficiaryRegion,#beneficiaryAddress::請輸入完整地址');
+			$('#beneficiaryTel').attr('data-validation', 'required|phone');
+			$('#country_selector2').attr('data-validation', 'required');
+			// 重新收集檢核條件
+			$('div.beneClass').validation();
+		}
+	}
+	/*]]>*/
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.FunctionDivDao">
+
+	<resultMap id="FunctionDivMap" type="com.twfhclife.adm.model.FunctionDivVo" >
+		<result column="DIV_ID" property="divId"/>
+		<result column="DIV_NAME" property="divName"/>
+		<result column="FUNCTION_ID" property="functionId"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_TIMESTAMP" property="createTimestamp"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="UPDATE_TIMESTAMP" property="updateTimestamp"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		DIV_ID,DIV_NAME,FUNCTION_ID,CREATE_USER,CREATE_TIMESTAMP,UPDATE_USER,UPDATE_TIMESTAMP
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="functionDivVo.divId != null"> AND DIV_ID = #{functionDivVo.divId} </if>
+			<if test="functionDivVo.divName != null and functionDivVo.divName != ''"> AND DIV_NAME = #{functionDivVo.divName} </if>
+			<if test="functionDivVo.functionId != null"> AND FUNCTION_ID = #{functionDivVo.functionId} </if>
+			<if test="functionDivVo.createUser != null and functionDivVo.createUser != ''"> AND CREATE_USER = #{functionDivVo.createUser} </if>
+			<if test="functionDivVo.createTimestamp != null"> AND CREATE_TIMESTAMP = #{functionDivVo.createTimestamp} </if>
+			<if test="functionDivVo.updateUser != null and functionDivVo.updateUser != ''"> AND UPDATE_USER = #{functionDivVo.updateUser} </if>
+			<if test="functionDivVo.updateTimestamp != null"> AND UPDATE_TIMESTAMP = #{functionDivVo.updateTimestamp} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND DIV_ID = #{functionDivVo.divId}
+		</where>
+	</sql>
+	
+	<!-- 取得功能 DIV 區塊查詢結果 -->
+	<select id="getFunctionDiv" resultMap="FunctionDivMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			FUNCTION_DIV
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得所有功能 DIV 區塊 -->
+	<select id="findAll" resultMap="FunctionDivMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.FUNCTION_DIV
+	</select>
+	
+	<!-- 功能 DIV 區塊-新增 -->
+	<insert id="insertFunctionDiv">
+		INSERT INTO ESERVICE_ADM.DBO.FUNCTION_DIV
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT MAX(DIV_ID) + 1 FROM ESERVICE_ADM.DBO.FUNCTION_DIV),
+			#{functionDivVo.divName, jdbcType=VARCHAR},
+			#{functionDivVo.functionId, jdbcType=NUMERIC},
+			#{functionDivVo.createUser, jdbcType=VARCHAR},
+			getdate(),
+			#{functionDivVo.updateUser, jdbcType=VARCHAR},
+			#{functionDivVo.updateTimestamp, jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<!-- 功能 DIV 區塊-刪除 -->
+	<delete id="deleteByFunId">
+		DELETE ESERVICE_ADM.DBO.FUNCTION_DIV WHERE FUNCTION_ID = #{functionId}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<footer th:fragment="footer" class="box-border">
+		<div class="row">
+			<div class="container">
+				<div class="pull-right col-xs-12 col-sm-7 col-lg-5 nopd">
+					<button onclick="window.open('https://www.twfhclife.com.tw/')" class="btn btn-link col-sm-2 col-xs-12 nav1" type="button">臺銀人壽</button>
+					<button onclick="window.open('https://www.twfhclife.com.tw/%E5%9F%BA%E9%87%91%E5%85%AC%E9%96%8B%E8%AA%AA%E6%98%8E%E6%9B%B8%E5%8F%8A%E6%8A%95%E8%B3%87%E4%BA%BA%E9%A0%88%E7%9F%A5/')" class="btn btn-link col-sm-2 col-xs-12 nav1" type="button">基金專區</button>
+					<button onclick="window.open('https://www.twfhclife.com.tw/%E8%A1%A8%E5%96%AE%E4%B8%8B%E8%BC%89/')" class="btn btn-link col-sm-2 col-xs-12 nav1" type="button">表單下載</button>
+					<button onclick="window.open('https://www.twfhclife.com.tw/%E4%BF%9D%E6%88%B6%E4%BF%A1%E7%AE%B1/')" class="btn btn-link col-sm-2 col-xs-12 nav1" type="button">聯絡我們</button>
+					<button onclick="window.open('https://www.twfhclife.com.tw/%E5%B8%B8%E8%A6%8B%E5%95%8F%E7%AD%94/')" class="btn btn-link col-sm-2 col-xs-12 nav1" type="button">常見問題</button>
+					<button onclick="window.open('https://www.twfhclife.com.tw/%E4%BF%9D%E5%96%AE%E6%A2%9D%E6%AC%BE%E5%AF%A9%E9%96%B1%E6%9C%9F/')" class="btn btn-link col-sm-2 col-xs-12 nav1" type="button">使用條款</button>
+				</div>
+				<div class="hid1" style="float:right">
+					<img src="img/BSI_Assurance_Mark_ISO_27001_Red.png" width="90" height="45" >
+					<a target="view_window" href="https://ra.publicca.hinet.net/SSLQueryCert/SSLQueryCert.jsp?Domain_name=elife.twfhclife.com.tw"><img src="img/SSLSeal.gif" width="40" height="55" /></a>
+				</div>
+				<div class="info1 col-sm-5 pull-left">
+					<p class="chNormal"><i class="foo-technology_4 foo-2x orange"></i><strong>客戶服務專線</strong> 0800-011-966</p>
+					<p class="chNormal"><i class="foo-object_20 foo-2x orange"></i><strong>資料基準日</strong> <span id="baseDay"></span></p>
+				</div>
+				<div class="col-xs-12 pull-right info2">
+					<p style="margin-top: -25px;">
+						<i class="far fa-copyright"></i> 
+						<th:block th:if="${session.PAGE_WORDING != null}">
+							<th:block th:text="${session.PAGE_WORDING['WORDING_00004'] != null} 
+								? ${session.PAGE_WORDING['WORDING_00004'].parameterValue}"/>
+						</th:block>
+						<th:block th:if="${session.PAGE_WORDING == null}">
+							<th:block th:text="${PAGE_WORDING != null and PAGE_WORDING['WORDING_00004'] != null} 
+								? ${PAGE_WORDING['WORDING_00004'].parameterValue}"/>
+						</th:block>
+					</p>
+				</div>
+			</div>
+		</div>
+	    <div class="hide">
+	        <th:block th:switch="${session.SYSTEM_MSG_PARAMETER != null}">
+               <th:block th:case="${true}">
+                   <input type="hidden" th:each="entry : ${session.SYSTEM_MSG_PARAMETER.entrySet()}" 
+                              th:id="${entry.key}"
+                              th:value="${entry.value.parameterValue}"/>
+	           </th:block>
+	           <th:block th:case="${false}">
+	               <input type="hidden" th:each="entry : ${SYSTEM_MSG_PARAMETER.entrySet()}" 
+                              th:id="${entry.key}"
+                              th:value="${entry.value.parameterValue}"/>
+	           </th:block>
+	        </th:block>
+	    </div>
+	</footer>
+	<div class="loading-modal"></div>
+</body>
+<script>
+var d = new Date();
+d.setDate(d.getDate() - 1);
+var day = d.getDate();
+var month = d.getMonth() + 1;
+var year = d.getFullYear();
+document.getElementById('baseDay').innerHTML = year + '/' + month + '/' + day;
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119780635-2"></script>
+<script>
+  document.addEventListener('contextmenu', event => event.preventDefault());
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119780635-2');
+</script>
+</html>

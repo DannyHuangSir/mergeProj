@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>設定停損停利點｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">設定停損停利點</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 設定停損停利點
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 active col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-4">
+						2<span class="hid1">. 設定停損停利點</span>
+					</li>
+					<li class="step3 col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請選擇欲申請之保單</h2>
+				<div class="loan1">
+					<table th:replace="fragments/applyPolicyList :: table4 (choseType='radio')"></table>
+					<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_01101'] != null} 
+						? ${session.PAGE_WORDING['WORDING_01101'].parameterValue}"/>
+					<div class="col-md-12 two-buttons">
+						<a href="apply1">
+							<button type="button" id="deny" class="btn-signup">取消</button>
+						</a>
+						<button type="button" id="go" class="btn-signup">下一步</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		$('#go').click(function() {
+			// 檢核是否有選一筆資料
+			if ($('input[name="chosePolicy"]:checked').val() == null) {
+				/* openAlert("請選擇一筆保單"); */
+				openAlert($('#E0038').val());
+				return false;
+			}	
+			
+			var policyNoList = [];
+			$('input[name="chosePolicy"]:checked').each(function (i) {
+				policyNoList.push($(this).val());
+			});
+			
+			var formData = {};
+			formData.policyNoList = policyNoList;
+			postWithFormData(/*[[@{/notification2}]]*/, formData);
+		});
+	});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

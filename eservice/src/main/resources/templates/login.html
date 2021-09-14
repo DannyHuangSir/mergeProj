@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EDGE, chrome=1" />
+	    <meta http-equiv="Pragma" content="no-cache"> 
+		<meta http-equiv="Cache-Control" content="no-cache"> 
+		<meta http-equiv="Expires" content="0">
+		
+		<!-- meta http-equiv="Access-Control-Allow-Origin" content="http://localhost:61161"-->
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<title>系統登入頁｜臺銀人壽保單網路服務</title>
+
+		<!-- bootstrap -->
+		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/icon.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/layout.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}" />
+		
+		<!-- basic scripts -->
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script	th:src="@{/plugin/jquery-1.11.3.min.js}"></script>
+		<script	th:src="@{/plugin/bootstrap.min.js}"></script>
+		<script th:src="@{/js/tablepand.js}"></script>
+		<script type="text/javascript"> 
+		<!-- if('ontouchstart' in document.documentElement) document.write("<script src='assets/plugin/jquery.mobile.custom.min.js'>"+"<"+"/script>");-->
+		</script>
+		
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script th:src="@{/plugin/jquery.placeholder.min.js}"></script>
+		<script th:src="@{/plugin/detectmobilebrowser_jquery.js}"></script>
+		<script th:src="@{/plugin/jquery.base64.js}"></script>
+		<script th:src="@{/js/scripts.js}"></script>
+		<script th:src="@{/js/eservice/actionModal.js}"></script>
+		<script th:src="@{/plugin/loading-modal/loading-modal.js}"></script>
+		<script th:src="@{/js/moica_errorcode.js}"></script>
+		<script th:src="@{/js/login.js}"></script>
+	    <script th:src="@{/fontawesome-free-5.1.1-web/js/solid.js}"></script>
+	    <script th:src="@{/fontawesome-free-5.1.1-web/js/regular.js}"></script>
+	    <script th:src="@{/fontawesome-free-5.1.1-web/js/fontawesome.js}"></script>
+	    
+	    <script type="text/javascript">
+	  	//close F12
+	    document.onkeydown = function () {
+	        //f12
+	        if (window.event && window.event.keyCode == 123) {
+	            event.keyCode = 0;
+	            event.returnValue = false;
+	        }
+	        // enter鍵
+	        // if (window.event && window.event.keyCode == 13) {
+	        //     window.event.keyCode = 505;
+	        // }
+	        // backspace鍵
+	        // if (window.event && window.event.keyCode == 8) {
+	        //     alert(str + "\n請使用Del鍵進行字符的刪除操作！");
+	        //     window.event.returnValue = false;
+	        // }
+	    };
+
+	    //close right click 
+	    document.oncontextmenu = function (event) {
+	        if (window.event) {
+	            event = window.event;
+	        }
+	        try {
+	            var the = event.srcElement;
+	            if (!((the.tagName == "INPUT" && the.type.toLowerCase() == "text") || the.tagName == "TEXTAREA")) {
+	                return false;
+	            }
+	            return true;
+	        } catch (e) {
+	            return false;
+	        }
+	    };
+		// clean identity
+		$(function() {
+			sessionStorage.removeItem('identity')
+		});
+	    </script>
+		<!-- page specific plugin styles -->
+
+		<!-- text fonts -->
+
+		<!-- my styles -->
+		
+		<!--[if IE 7]>
+			<link rel="stylesheet" type="text/css" th:href="@{/css/fontello-ie7.css}" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- my settings handler -->
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lt IE 9]>
+			<script	th:src="@{/js/plugin/html5shiv.min.js}"></script>
+			<script	th:src="@{/plugin/respond.min.js}"></script>
+		<![endif]-->		
+		<link rel="shortcut icon" th:href="@{/img/favor-icon.png}" />
+		<style>
+		</style>
+	</head>
+	<body>
+		<span id="httpObject" ></span>
+		<div class="row hid1" id="top1">
+			<div class="container">
+				<button class="btn pull-right user1" type="button">商業 Business</button>
+				<button class="btn pull-right user1 active" type="button">個人 Personal</button>
+			</div>
+		</div>
+		<header>
+			<div class="container">
+				<div class="row">
+					<th:block th:replace="fragments/logo"/>
+					<div class="n1 inlineBlock float-left">保單網路服務</div>
+					<div class="clearfix visible-xs-block"></div>
+				</div>
+			</div>
+		</header>
+		<th:block th:if="${SYSTEM_CONSTANTS} != null and ${SYSTEM_CONSTANTS['MAINTAIN_MSG'] != null} and ${SYSTEM_CONSTANTS['MAINTAIN_MSG'].status = 1}">
+		<div class="row alert1 alert-new">
+			<div class="container">
+				<div class="list"><a><i class="foo-attention"></i><th:block th:text="${SYSTEM_CONSTANTS['MAINTAIN_MSG'].parameterValue}"/></a></div>
+			</div>
+		</div>
+		</th:block>
+		<div class="container-fluid c1 fullContent">
+			<div class="bg1">
+				<!-- <img src="img/bg1.png" class="bg"> -->
+				<div class="index-bg">
+					
+				</div>
+				<div class="">
+					<div id="slogan" class="col-sm-5 col-lg-5 hid1">
+						<h2 class="bg-hero1">
+							<th:block th:text="${PAGE_WORDING != null and PAGE_WORDING['WORDING_00001'] != null}
+								? ${PAGE_WORDING['WORDING_00001'].parameterValue}
+								: '快速便捷的保險服務'"/>
+						</h2>
+						<h2 class="bg-hero2">
+							<a th:href="@{/pdf/會員註冊及登入說明.pdf}" class="none1" target="_blank">
+								<th:block th:text="${PAGE_WORDING != null and PAGE_WORDING['WORDING_00002'] != null}
+									? ${PAGE_WORDING['WORDING_00002'].parameterValue}
+									: '會員註冊與登入說明'"/>
+							</a>
+						</h2>
+						<h2 class="bg-hero3">
+							<a href="https://www.facebook.com/twfhclife" class="none1" target="_blank">
+								<th:block th:text="${PAGE_WORDING != null and PAGE_WORDING['WORDING_00003'] != null}
+									? ${PAGE_WORDING['WORDING_00003'].parameterValue}
+									: '臺銀人壽FB粉絲專頁'"/>  <i class="fas fa-chevron-right"></i>
+							</a>
+						</h2>
+					</div>
+<!-- 					<div id="login_section" class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-3 col-md-4 col-lg-4 col-lg-offset-3 main1 box-shadow"> -->
+			<div id="login_section" class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-3 col-md-4 col-lg-4 col-lg-offset-2 main1 box-shadow">
+						<form id="loginForm" th:action="@{/doLogin}" method="POST" onSubmit="return checkLoginForm()">
+							<h2>會員登入</h2>
+<!-- 							<p style="align-items: center; text-align: center;"><img src="img/BTLI.png" class="login1"></img></p> -->
+							<div class="form-group">
+								<label for="inputName3" class="control-label">用戶名稱</label>
+								<input type="text" id="userId" name="userId" placeholder="如忘記用戶名稱，請聯絡客服中心" class="form-control" autocomplete="off" />
+							</div>
+							<div >
+								<label for="inputPassword3" class="control-label">密碼</label>
+								<input type="password" id="password" name="password" placeholder="輸入英文字母須區分大小寫" class="form-control" autocomplete="off" />
+							</div>
+							<div class="form-group" style="margin: 16px 4px 0 0;">
+								<label for="inputPassword3" class="control-label">驗證碼</label>
+								<div class="">
+									<input type="text" name="validateCode" id="validateCode" autocomplete="off" placeholder="輸入驗證碼" class="form-control  float-left w70p" style="width:50%" maxlength="4" />
+									&nbsp;&nbsp;&nbsp;<img id="validateImage" th:src="'data:image/png;base64, ' + ${validateImageBase64}" style="height:33px;cursor:pointer;" alt="點擊圖片重新讀取驗証碼"></img>
+									<!-- <a href="javascript:reloadValidateImage();" class="enSmall lineHigh34">重新產生</a> -->
+								</div>
+							</div>
+							
+							<!-- GDPR_start -->
+							<div class="form-group">
+								<input type="radio" id="EUN_N" name="euNationality" value="N"/>
+									<th:block th:text="${PAGE_WORDING != null and PAGE_WORDING['WORDING_LOGIN_EU01'] != null}
+								? ${PAGE_WORDING['WORDING_LOGIN_EU01'].parameterValue}
+								: '本人目前未具有歐盟會員國之國籍，且目前未居住於歐盟地區'">
+									</th:block><br>
+								<input type="radio" id="EUN_Y" name="euNationality" value="Y"/>
+									<th:block th:text="${PAGE_WORDING != null and PAGE_WORDING['WORDING_LOGIN_EU02'] != null}
+								? ${PAGE_WORDING['WORDING_LOGIN_EU02'].parameterValue}
+								: '本人目前具有歐盟會員國之國籍，或目前居住於歐盟地區'">
+									</th:block><br>
+								<th:block th:text="${PAGE_WORDING != null and PAGE_WORDING['WORDING_LOGIN_EU03'] != null}
+								? ${PAGE_WORDING['WORDING_LOGIN_EU03'].parameterValue}
+								: '本人同意貴公司蒐集IP且判斷其所在地區是否為歐盟地區IP，註記是否為歐盟自然人'">
+								</th:block><br/>
+								註：本公司現行保險商品與服務，未有意圖針對歐盟市場進行提供與推廣，亦未於歐盟地區設立服務據點，非受GDPR重點影響之對象，僅基於管理需要，鑑別網路用戶來源是否為歐盟地區，
+								並不會利用於影響用戶決策行為之分析使用。
+								
+							</div>
+							<!-- GDPR_end -->
+							
+							
+							
+							<div class="logActionBtn" style="margin:12px 4px 0 0;">
+								<a class="pull-left log1" href="password1">忘記密碼</a>
+								<a class="pull-right log1" href="firstUseStart">加入會員</a>
+							</div>
+							
+							<h5><span id="login-status"></span></h5>
+							
+							<button id="loginBtn" class="col-xs-12 btn-login">登 入</button>
+							<!-- <button type="button" id="icCardBtn" class="col-xs-12 btn-login1" onclick="openIcModal();">使用自然人憑證登入</button>--><!-- disable MOICA login -->
+  							<div class="fb-login-button" id="loginbutton" data-max-rows="1" data-size="large" data-scope="public_profile,email" data-button-type="login_with" 
+  								data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState()"></div>
+							
+							<input type="hidden" id="fbId" name="fbId"/>
+							<input type="hidden" id="email" name="email"/>
+							<input type="hidden" id="fbAccessToken" name="fbAccessToken"/>
+							<input type="hidden" id="cardSN"  name="cardSN"/>
+							<input type="hidden" id="certb64" name="certb64"/>
+							<input type="hidden" id="ret"     name="ret"/>
+							<input type="hidden" id="salt"    name="salt"/>
+							<input type="hidden" id="four"    name="four"/>
+							<input type="hidden" id="euNationality" name="euNationality"/>
+
+							<!-- <img class="fb-login" src="./img/facebook-login.png" width="240" height="48" style="cursor: pointer;"></img>
+							<a class="btn btn-block btn-social btn-facebook" onClick="fb_login()">
+								<i class="fa fa-facebook"></i> Sign in with Facebook
+							</a>-->
+							<!--<div class="ie-only">
+								需要允許IE執行指令檔或ActiveX控制項
+							</div>-->
+							
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade in" id="icCardModal" role="dialog" aria-labelledby="myModalLabelIC" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body apply2 center1 grey2">
+						<h4>*請先插入自然人憑證卡片</h4>
+						<p class="item360 text-center" style="margin:auto">
+							PIN: <input id="icpwd" name="icpwd" type="password" value=""/>
+						</p>
+						<p class="marginTop20">
+							<a><button class="btn-login" onclick="submitCert()">確定</button></a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade in" id="icCardNoticeModal" role="dialog" aria-labelledby="myModalLabelIC" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body apply2 center1 grey2">
+						<h4><b>尚未安裝元件!</b></h4>
+						<h4>*欲使用自然人憑證登入，請先下載並安裝HiCOS Client卡片管理工具</h4>
+						<p class="item360 text-center" style="margin:auto">
+							HiCOS卡片管理工具下載網址<a target="_blank" href="http://moica.nat.gov.tw/download_1.html">(HiCOS卡片管理工具下載)</a>
+						</p>
+						<p>
+							*使用HiCOS卡片管理工具最新版本，方能完整支援自然人憑證之讀取及使用
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade in" data-backdrop="static" id="confirmBindCardSnModal" role="dialog" aria-labelledby="myModalLabelIC" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body apply2 center1 grey2">
+						<h4><b>您的自然人憑證<span id=""></span>未綁定會員帳號</b></h4>
+						<h4>*如果您已經註冊過會員，請輸入帳號及密碼後點擊綁定帳號按鈕</h4>
+						<h4>*如果您尚未註冊過會員，請點擊加入會員按鈕</h4>
+						<form id="bindCardSnForm" th:action="@{/doBindCardSn}" method="POST" >
+							<div class="form-group">
+								<label for="inputName3" class="control-label">用戶名稱</label>
+								<input type="text" id="userId2" name="userId2" placeholder="如忘記用戶名稱，請聯絡客服中心" class="form-control" />
+							</div>
+							<div >
+								<label for="inputPassword3" class="control-label">密碼</label>
+								<input type="password" id="password2" name="password2" placeholder="輸入英文字母須區分大小寫" class="form-control" />
+							</div>
+						</form>
+						<p class="marginTop20">
+							<a href="javascript:void(0)">
+								<button class="btn-login lock2" id="bindCardSnBtn">綁定帳號</button>
+							</a>
+							<a href="firstUseStart">
+								<button class="btn-login lock2" id="joinBtn">加入會員</button>
+							</a>
+						</p>
+						<p>
+							*如您曾經自然人憑證之讀取及使用
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade in" data-backdrop="static" id="confirmBindFbIdModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body apply2 center1 grey2">
+						<h4><b>您的Facebook帳號<span id=""></span>未綁定會員帳號</b></h4>
+						<h4>*如果您已經註冊過會員，請輸入帳號及密碼後點擊綁定帳號按鈕</h4>
+						<h4>*如果您尚未註冊過會員，請點擊加入會員按鈕</h4>
+						<form id="bindFbIdForm" th:action="@{/doBindFbId}" method="POST" >
+							<div class="form-group">
+								<label for="inputName3" class="control-label">用戶名稱</label>
+								<input type="text" id="userId3" name="userId3" placeholder="如忘記用戶名稱，請聯絡客服中心" class="form-control" />
+							</div>
+							<div >
+								<label for="inputPassword3" class="control-label">密碼</label>
+								<input type="password" id="password3" name="password3" placeholder="輸入英文字母須區分大小寫" class="form-control" />
+							</div>
+						</form>
+						<p class="marginTop20">
+							<a href="javascript:void(0)">
+								<button class="btn-login lock2" id="bindFbIdBtn">綁定帳號</button>
+							</a>
+							<a href="firstUseStart">
+								<button class="btn-login lock2" id="joinBtn">加入會員</button>
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<footer th:replace="fragments/footer"></footer>
+		
+		
+		<!-- my scripts -->
+		
+		<!-- inline scripts related to this page -->
+		<script>
+		$(function() {
+			$('input, textarea').placeholder();
+		});
+		</script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			var errorMessage = /*[[${errorMessage}]]*/;
+			errorMessage = (errorMessage == null ? '' : errorMessage);
+			if (errorMessage != '') {
+				openAlert(errorMessage);
+			}
+			
+			var isOldUser = /*[[${isOldUser}]]*/;
+			isOldUser = (isOldUser == null? '': isOldUser);
+			if(isOldUser == true){
+				/* openAlert('因應系統改版以及法規規範，需要您重新檢視與同意相關使用條款與注意事項，並重新註冊與啟用您的帳號，系統將利用您的保單留存的電子郵件信箱或手機號碼進行身分驗證'
+						, "firstUseStart"); 
+				*/
+				message = $('#E0005').val();
+				openAlert(message, "firstUseStart");
+			}
+			
+			var noFbIdUser = /*[[${noFbIdUser}]]*/;
+			if (noFbIdUser) {
+				$('#confirmBindFbIdModal').modal();
+			}
+			
+			var noCardSnUser = /*[[${noCardSnUser}]]*/;
+			if (noCardSnUser) {
+				$('#confirmBindCardSnModal').modal();
+			}
+			
+			$('#loginBtn').click(function() {
+				if ($('#loginForm #userId').val() == '') {
+					//openAlert('請輸入用戶名稱');
+					openAlert($('#E0006').val());
+					return false;
+				}
+				
+				if ($('#loginForm #password').val() == '') {
+					//openAlert('請輸入用戶密碼');
+					openAlert($('#E0007').val());
+					return false;
+				}else{
+					$('#loginForm #password').val($.base64.encode($('#loginForm #password').val()));
+				}
+				
+				if ($('#validateCode').val() == '') {
+					//openAlert('請輸入圖形驗證碼');
+					openAlert($('#E0008').val());
+					return false;
+				}
+
+				//GDPR_start
+				var euNationality = $('input[name="euNationality"]:checked').val();
+				if (euNationality == '' || euNationality == null) {
+					//openAlert('請點選本人是否具有歐盟國會員國之國籍或是否居住於歐盟地區');
+					openAlert($('#E0134').val());
+					return false;
+				}else{
+					loginForm.euNationality = euNationality;
+				}
+				//GDPR_end
+				
+				popupLoading();
+				$('#loginForm').submit();
+			});
+			
+			$('#bindFbIdBtn').click(function() {
+				$('#loginForm #userId').val("");
+				$('#loginForm #password').val("");
+				
+				if ($('#confirmBindFbIdModal #userId3').val() == '') {
+					//openAlert('請輸入用戶名稱');
+					openAlert($('#E0006').val());
+					return false;
+				}
+				if ($('#confirmBindFbIdModal #password3').val() == '') {
+					//openAlert('請輸入用戶密碼');
+					openAlert($('#E0007').val());
+					return false;
+				}
+				
+				$('#confirmBindFbIdModal').modal('hide');
+				popupLoading();
+				$('#bindFbIdForm').submit();
+			});
+
+			/**
+			//disable MOICA register
+			$('#bindCardSnBtn').click(function() {
+				$('#loginForm #userId').val("");
+				$('#loginForm #password').val("");
+				
+				if ($('#confirmBindCardSnModal #userId2').val() == '') {
+					//openAlert('請輸入用戶名稱');
+					openAlert($('#E0006').val());
+					return false;
+				}
+				if ($('#confirmBindCardSnModal #password2').val() == '') {
+					//openAlert('請輸入用戶密碼');
+					openAlert($('#E0007').val());
+					return false;
+				}
+				
+				$('#confirmBindCardSnModal').modal('hide');
+				popupLoading();
+				$('#bindCardSnForm').submit();
+			});
+			**/
+			
+			var validateImageUrl = /*[[@{/getVerify}]]*/;
+			$('#validateImage').click(function() {
+				this.src = validateImageUrl + '?r=' + Math.random();
+			});
+			$('#validateImage').click();
+		});
+		
+		function reloadValidateImage() {
+			$('#validateImage').click();
+		}
+
+		$('#userId').focus();
+
+		setInterval ("reloadValidateImage()", 30*1000);
+		/*]]>*/
+		</script>
+		<div class="loading-modal"></div>
+</html>

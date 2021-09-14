@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.BusinessEventJobMapper">
+    <resultMap type="com.twfhclife.eservice_batch.model.BusinessEventJobVo" id="BaseResultMap">
+        <result column="EVENT_JOB_ID" property="eventJobId"/>
+        <result column="SYSTEM_ID" property="systemId" />
+		<result column="EVENT_CODE" property="eventCode" />
+		<result column="EVENT_NAME" property="eventName" />
+		<result column="MESSAGING_TEMPLATE_ID" property="messagingTemplateId" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="MODIFY_DATE" property="modifyDate" />
+		<result column="MODIFY_USER" property="modifyUser" />
+    </resultMap>
+    
+    <sql id="BaseColumnMap">
+        EVENT_JOB_ID, SYSTEM_ID, EVENT_CODE, EVENT_NAME, CRON_EXP
+        , CREATE_USER, CREATE_DATE, MODIFY_USER, MODIFY_DATE
+    </sql>
+    
+    <select id="queryBusinessEvenJobtList" resultMap="BaseResultMap" parameterType="com.twfhclife.eservice_batch.model.BusinessEventJobVo">
+        SELECT 
+            <include refid="BaseColumnMap"/>
+        FROM 
+            BUSINESS_EVENT_JOB 
+        WHERE 
+            EVENT_JOB_ID = #{eventJobId}
+    </select>
+    
+    <resultMap id="JoinMsgResultMap" type="com.twfhclife.eservice_batch.model.BusinessEventMsgTmpVo">
+        <result column="BUSINESS_EVENT_ID" property="businessEventId" />
+        <result column="USER_ID" property="userId" />
+        <result column="EVENT_DATE" property="eventDate" />
+        <result column="SOURCE_IP" property="sourceIp" />
+        <result column="TARGET_IP" property="targetIp" />
+        <result column="TARGET_SYSTEM_ID" property="targetSystemId" />
+        <result column="EVENT_NAME" property="eventName" />
+        <result column="EVENT_CODE" property="eventCode" />
+        <result column="EVENT_STATUS" property="eventStatus" />
+        <result column="EVENT_MSG" property="eventMsg" />
+        <result column="CREATE_DATE" property="createDate" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="NOTICE_STATUS" property="noticeStatus" />
+        <result column="MESSAGING_TEMPLATE_ID" property="messagingTemplateId" />
+        <result column="MESSAGING_TEMPLATE_CODE" property="messagingTemplateCode" />
+        <result column="MESSAGING_TEMPLATE_NAME" property="messagingTemplateName" />
+        <result column="TRIGGER_TYPE" property="triggerType" />
+        <result column="SEND_TYPE" property="sendType" />
+        <result column="SEND_TIME" property="sendTime" />
+        <result column="CIRCLE_TYPE" property="circleType" />
+        <result column="CIRCLE_VALUE" property="circleValue" />
+        <result column="RECEIVER_MODE" property="receiverMode" />
+        <result column="MESSAGING_SUBJECT" property="messagingSubject" />
+        <result column="MESSAGING_CONTENT" property="messagingContent" />
+        <result column="PARAMS" property="params" />
+        <result column="RECEIVERS" property="receivers" />
+    </resultMap>
+    
+    <sql id="BaseUnTriggerDataColumnMap">
+        be.BUSINESS_EVENT_ID AS BUSINESS_EVENT_ID,
+		be.USER_ID AS USER_ID,
+		be.EVENT_DATE AS EVENT_DATE,
+		be.SOURCE_IP AS SOURCE_IP,
+		be.TARGET_IP AS TARGET_IP,
+		be.TARGET_SYSTEM_ID AS TARGET_SYSTEM_ID,
+		be.EVENT_CODE AS EVENT_CODE,
+		be.EVENT_NAME AS EVENT_NAME,
+		be.EVENT_STATUS AS EVENT_STATUS,
+		be.EVENT_MSG AS EVENT_MSG,
+		be.CREATE_DATE AS CREATE_DATE,
+		be.CREATE_USER AS CREATE_USER,
+		be.NOTICE_STATUS AS NOTICE_STATUS,
+		mt.MESSAGING_TEMPLATE_ID AS MESSAGING_TEMPLATE_ID,
+		mt.MESSAGING_TEMPLATE_CODE AS MESSAGING_TEMPLATE_CODE,
+		mt.MESSAGING_TEMPLATE_NAME AS MESSAGING_TEMPLATE_NAME,
+		mt.TRIGGER_TYPE AS TRIGGER_TYPE,
+		mt.SEND_TYPE AS SEND_TYPE,
+		mt.SEND_TIME AS SEND_TIME,
+		mt.CIRCLE_TYPE AS CIRCLE_TYPE,
+		mt.CIRCLE_VALUE AS CIRCLE_VALUE,
+		mt.RECEIVER_MODE AS RECEIVER_MODE,
+		mt.MESSAGING_SUBJECT AS MESSAGING_SUBJECT,
+		mt.MESSAGING_CONTENT AS MESSAGING_CONTENT,
+		mt.PARAMS AS PARAMS,
+		mt.RECEIVERS AS RECEIVERS
+    </sql>
+    
+    <select id="queryUnTriggerData" resultMap="JoinMsgResultMap" parameterType="com.twfhclife.eservice_batch.model.BusinessEventJobVo">
+        SELECT 
+            <include refid="BaseUnTriggerDataColumnMap" />
+        from ESERVICE_ADM.DBO.BUSINESS_EVENT be
+		left join (
+		    SELECT * FROM ESERVICE_ADM.DBO.MESSAGING_TEMPLATE mt1
+		    left join (
+		        select 
+		            mp1.MESSAGING_TEMPLATE_ID MESSAGING_TEMPLATE_ID_1,
+		            rtrim(xmlagg(xmlelement(e, p.PARAMETER_VALUE, ',') order by p.PARAMETER_ID).extract('//text()'), ',') PARAMS
+		        from ESERVICE_ADM.DBO.MESSAGING_PARAMETER mp1
+		        join ESERVICE_ADM.DBO.PARAMETER p on p.PARAMETER_ID=mp1.PARAMETER_ID
+		        group by mp1.MESSAGING_TEMPLATE_ID
+		    ) mm on mm.MESSAGING_TEMPLATE_ID_1=mt1.MESSAGING_TEMPLATE_ID
+		    left join (
+		        select mr.MESSAGING_TEMPLATE_ID MESSAGING_TEMPLATE_ID_1,
+		        rtrim(xmlagg(xmlelement(e, mr.MESSAGING_RECEIVER_VALUE, ',') order by mr.MESSAGING_RECEIVER_ID).extract('//text()'), ',') RECEIVERS
+		        from ESERVICE_ADM.DBO.MESSAGING_RECEIVER mr
+		        group by mr.MESSAGING_TEMPLATE_ID
+		    ) mmr on mmr.MESSAGING_TEMPLATE_ID_1=mt1.MESSAGING_TEMPLATE_ID
+		) mt on mt.EVENT_TYPE=be.EVENT_CODE and mt.SYSTEM_ID=be.TARGET_SYSTEM_ID and mt.STATUS='3'
+		<where>
+			AND be.NOTICE_STATUS != 1 
+            AND mt.TRIGGER_TYPE='event'
+            AND be.EVENT_CODE = #{eventCode}
+		</where>
+		order by be.BUSINESS_EVENT_ID
+    </select>
+    
+    <update id="updateNoticeStatus">
+        UPDATE 
+            ESERVICE_ADM.DBO.BUSINESS_EVENT
+        SET 
+            NOTICE_STATUS = #{status}
+        <where>
+            AND BUSINESS_EVENT_ID = #{businessEventId}
+            AND NOTICE_STATUS != 1
+        </where>
+    </update>
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyExtraDao">
+
+	<!-- 貸款資訊(附加資訊請繼承) -->
+	<resultMap id="PolicyExtraMap" type="com.twfhclife.eservice.policy.model.PolicyExtraVo" >
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="LOAN_AMOUNT" property="loanAmount"/>
+		<result column="REMAIN_LOAN_VALUE" property="remainLoanValue"/>
+		<result column="ROAN_RATE" property="roanRate"/>
+		<result column="APL_AMOUNT" property="aplAmount"/>
+		<result column="AUTO_RCP_MK" property="autoRcpMk"/>
+		<result column="METH_ANNU_PAY" property="methAnnuPay"/>
+		<result column="INMS_BANK_CODE" property="inmsBankCode"/>
+		<result column="INMS_BANK_BRANCH_CODE" property="inmsBankBranchCode"/>
+		<result column="INMS_ACCOUNT_NO" property="inmsAccountNo"/>
+		<result column="VAL1_RESE_AMT" property="val1ReseAmt"/>
+		<result column="VAL1_CANC_AMT" property="val1CancAmt"/>
+		<result column="MODIFYDATETIME" property="modifyDatetime"/>
+	</resultMap>
+
+	<!-- 清單附加資訊 -->
+	<resultMap id="PolicyExtraListMap" type="com.twfhclife.eservice.policy.model.PolicyExtraVo" extends="PolicyExtraMap">
+		<result column="UNPAID_AMOUNT" property="policyVo.unpaidAmount"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		PE.POLICY_NO,PE.LOAN_AMOUNT,PE.REMAIN_LOAN_VALUE,PE.ROAN_RATE,PE.APL_AMOUNT,PE.AUTO_RCP_MK,PE.METH_ANNU_PAY,PE.INMS_BANK_CODE,PE.INMS_BANK_BRANCH_CODE,PE.INMS_ACCOUNT_NO,
+		PE.VAL1_RESE_AMT,PE.VAL1_CANC_AMT,PE.MODIFYDATETIME
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="policyExtraVo.policyNo != null and policyExtraVo.policyNo != ''"> AND PE.POLICY_NO = #{policyExtraVo.policyNo} </if>
+			<if test="policyExtraVo.loanAmount != null"> AND PE.LOAN_AMOUNT = #{policyExtraVo.loanAmount} </if>
+			<if test="policyExtraVo.remainLoanValue != null"> AND PE.REMAIN_LOAN_VALUE = #{policyExtraVo.remainLoanValue} </if>
+			<if test="policyExtraVo.roanRate != null"> AND PE.ROAN_RATE = #{policyExtraVo.roanRate} </if>
+			<if test="policyExtraVo.aplAmount != null"> AND PE.APL_AMOUNT = #{policyExtraVo.aplAmount} </if>
+			<if test="policyExtraVo.autoRcpMk != null and policyExtraVo.autoRcpMk != ''"> AND PE.AUTO_RCP_MK = #{policyExtraVo.autoRcpMk} </if>
+			<if test="policyExtraVo.methAnnuPay != null and policyExtraVo.methAnnuPay != ''"> AND PE.METH_ANNU_PAY = #{policyExtraVo.methAnnuPay} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得保單貸款查詢結果 -->
+	<select id="getPolicyExtra" resultMap="PolicyExtraMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_EXTRA PE
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得保單貸款查詢結果(根據保單號碼) -->
+	<select id="findByPolicyNo" resultMap="PolicyExtraMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.POLICY_EXTRA PE
+		WHERE
+			PE.POLICY_NO = #{policyNo}
+	</select>
+	
+	<!-- 取得使用者的資產與負債 -->
+	<select id="getUserAllLoanData" resultMap="PolicyExtraMap">
+		SELECT
+			COALESCE(SUM(LOAN_AMOUNT), 0) AS LOAN_AMOUNT
+			,COALESCE(SUM(REMAIN_LOAN_VALUE), 0) AS REMAIN_LOAN_VALUE
+			,COALESCE(SUM(APL_AMOUNT), 0) AS APL_AMOUNT
+		FROM
+			ESERVICE.DBO.POLICY_EXTRA
+		WHERE
+			POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+	</select>
+	
+	<!-- 取得繳費提醒 -->
+	<select id="getPaymentReminderList" resultMap="PolicyExtraListMap">
+		SELECT
+			<include refid="Base_Column_List" />
+			,P.UNPAID_AMOUNT
+		FROM
+			ESERVICE.DBO.POLICY_EXTRA PE
+				LEFT OUTER JOIN ESERVICE.DBO.POLICY P
+					ON PE.POLICY_NO = P.POLICY_NO
+		WHERE
+			PE.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+			AND (COALESCE(P.UNPAID_AMOUNT, 0) + COALESCE(PE.APL_AMOUNT, 0)) > 0
+	</select>
+
+</mapper>

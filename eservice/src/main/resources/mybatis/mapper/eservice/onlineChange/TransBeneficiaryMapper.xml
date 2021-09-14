@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransBeneficiaryDao">
+
+	<resultMap id="TransBeneficiaryMap" type="com.twfhclife.eservice.onlineChange.model.TransBeneficiaryVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transBeneficiaryVo.id != null"> AND ID = #{transBeneficiaryVo.id} </if>
+			<if test="transBeneficiaryVo.transNum != null and transBeneficiaryVo.transNum != ''"> AND TRANS_NUM = #{transBeneficiaryVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transBeneficiaryVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更受益人主檔查詢結果 -->
+	<select id="getTransBeneficiary" resultMap="TransBeneficiaryMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_BENEFICIARY
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得下一筆序號 -->
+	<select id="getNextTransBeneficiaryId" resultType="BigDecimal">
+		SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_BENEFICIARY
+	</select>
+	
+	<!-- 變更受益人主檔-新增 -->
+	<insert id="insertTransBeneficiary">
+		INSERT INTO ESERVICE.DBO.TRANS_BENEFICIARY
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{transBeneficiaryVo.id, jdbcType=NUMERIC},
+			#{transBeneficiaryVo.transNum, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

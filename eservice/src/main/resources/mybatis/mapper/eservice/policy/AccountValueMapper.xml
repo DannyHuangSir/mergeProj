@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.AccountValueDao">
+
+	<!-- 取得帳戶價值通知書清單 -->
+	<!-- @param policyNo 保單號碼 -->	
+	<select id="getAccountValueList" resultType="com.twfhclife.eservice.policy.model.AcctValueVo" parameterType="string">
+		
+	</select>
+	
+</mapper>

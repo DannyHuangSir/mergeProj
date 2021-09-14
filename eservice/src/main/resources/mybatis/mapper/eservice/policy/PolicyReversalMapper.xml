@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyReversalDao">
+
+	<resultMap id="PolicyReversalMap" type="com.twfhclife.eservice.policy.model.PolicyReversalVo" >
+		<result column="CLUP_INSU_NO" property="policyNo"/>
+		<result column="CLUP_TR_DATE" property="trDate"/>
+		<result column="CLUP_TR_CODE" property="trCode"/>
+		<result column="CLUP_EXPE_NTD" property="expeNTD"/>
+		<result column="CLUP_NEW_UNITS" property="newUnits"/>
+		<result column="PATT_DATE" property="pattDate"/>
+		<result column="CLUP_F_PAY_DATE" property="payDate"/>
+	</resultMap>
+
+
+	<!-- 取得保單撥回查詢結果(根據保單號碼) -->
+<!-- 	<select id="findByPolicyNo" resultMap="PolicyReversalMap" parameterType="java.lang.String">
+		SELECT
+			CLUP_INSU_NO, CLUP_TR_DATE, CLUP_TR_CODE, CLUP_EXPE_NTD, CLUP_NEW_UNITS,CLUP_F_PAY_DATE
+		FROM
+			ESERVICE.DBO.LICLUP_ES
+		WHERE
+			CLUP_INSU_NO = #{policyNo}
+		ORDER BY CLUP_TR_DATE DESC, CLUP_F_PAY_DATE	DESC
+	</select> -->
+	
+	<select id="findByPolicyNo" resultMap="PolicyReversalMap" parameterType="java.lang.String">
+ 	SELECT DISTINCT
+			CLUP_INSU_NO, CLUP_TR_DATE, CLUP_TR_CODE, CLUP_EXPE_NTD, CLUP_NEW_UNITS,PATT_DATE,CLUP_F_PAY_DATE
+		FROM
+			ESERVICE.DBO.LICLUP_ES 
+		LEFT JOIN ESERVICE.DBO.LIPAHI_ES 
+		ON	CLUP_INSU_NO = (PAHI_INSU_TYPE + CONVERT(NVARCHAR,PAHI_INSU_GRP_NO) + PAHI_INSU_SEQ_NO)
+		AND	CLUP_DATE =  PAHI_ACCI_DATE
+        AND PAHI_PAY_CODE = '0C'		
+		LEFT JOIN ESERVICE.DBO.LIPATT_ES
+		ON	PAHI_DEP_I_BATCH  = PATT_PAY_BATCH
+		AND PAHI_BATCH_SEQ = PATT_PAY_SEQ
+		WHERE
+			CLUP_INSU_NO = #{policyNo}
+		ORDER BY CLUP_TR_DATE DESC
+	</select>
+	
+
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransCertPrintMapper">
+
+	<resultMap id="TransCertPrintMap" type="com.twfhclife.eservice_batch.model.TransCertPrintVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="LANG" property="lang"/>
+		<result column="PASSPORT_NAME" property="passportName"/>
+		<result column="PASSPORT_NO" property="passportNo"/>
+		<result column="PRINT_CURR" property="printCurr"/>
+		<result column="DELIVER_TYPE" property="deliverType"/>
+		<result column="DELIVER_ADDR" property="deliverAddr"/>
+		<result column="BELIVER_MAIL" property="beliverMail"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,
+		TRANS_NUM,
+		LANG,
+		ESERVICE.DBO.FN_DEBASE64(PASSPORT_NAME) PASSPORT_NAME,
+		ESERVICE.DBO.FN_DEBASE64(PASSPORT_NO) PASSPORT_NO,
+		PRINT_CURR,
+		DELIVER_TYPE,
+		ESERVICE.DBO.FN_DEBASE64(DELIVER_ADDR) DELIVER_ADDR,
+		ESERVICE.DBO.FN_DEBASE64(BELIVER_MAIL) BELIVER_MAIL
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transCertPrintVo.id != null"> AND ID = #{transCertPrintVo.id} </if>
+			<if test="transCertPrintVo.transNum != null and transCertPrintVo.transNum != ''"> AND TRANS_NUM = #{transCertPrintVo.transNum} </if>
+			<if test="transCertPrintVo.lang != null and transCertPrintVo.lang != ''"> AND LANG = #{transCertPrintVo.lang} </if>
+			<if test="transCertPrintVo.passportName != null and transCertPrintVo.passportName != ''"> AND ESERVICE.DBO.FN_DEBASE64(PASSPORT_NAME) = #{transCertPrintVo.passportName} </if>
+			<if test="transCertPrintVo.passportNo != null and transCertPrintVo.passportNo != ''"> AND ESERVICE.DBO.FN_DEBASE64(PASSPORT_NO) = #{transCertPrintVo.passportNo} </if>
+			<if test="transCertPrintVo.printCurr != null and transCertPrintVo.printCurr != ''"> AND PRINT_CURR = #{transCertPrintVo.printCurr} </if>
+			<if test="transCertPrintVo.deliverType != null and transCertPrintVo.deliverType != ''"> AND DELIVER_TYPE = #{transCertPrintVo.deliverType} </if>
+			<if test="transCertPrintVo.deliverAddr != null and transCertPrintVo.deliverAddr != ''"> AND ESERVICE.DBO.FN_DEBASE64(DELIVER_ADDR) = #{transCertPrintVo.deliverAddr} </if>
+			<if test="transCertPrintVo.beliverMail != null and transCertPrintVo.beliverMail != ''"> AND ESERVICE.DBO.FN_DEBASE64(BELIVER_MAIL) = #{transCertPrintVo.beliverMail} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transCertPrintVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransCertPrintList" resultMap="TransCertPrintMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CERT_PRINT
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransCertPrintMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CERT_PRINT
+		<include refid="wherePkClause" />
+	</select>
+
+</mapper>
+

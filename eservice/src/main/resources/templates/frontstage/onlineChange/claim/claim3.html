@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>理賠申請書套印｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">理賠申請書套印</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 理賠申請書套印
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-4">
+						2<span class="hid1">. 填寫申請書</span>
+					</li>
+					<li class="step3 active col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請確認資料</h2>
+				<div class="loan1">
+					<div class="">
+						<label for="checkBox12" class="col-sm-10 col-sm-offset-2">保單：<th:block th:text="${claimVo.policyNo}"/></label>
+					</div>
+					<div class="col-sm-8 col-sm-offset-2 grey2 ptop30 greyBox">
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">申請項目：</label>
+							<p type="text" class="col-sm-7">
+								<th:block th:each="applyItem : ${claimVo.applyItemList}">
+									<th:block th:if="${applyItem eq '01'}">死亡給付</th:block>
+									<th:block th:if="${applyItem eq '02'}">殘廢給付</th:block>
+									<th:block th:if="${applyItem eq '03'}">住院醫療</th:block>
+									<th:block th:if="${applyItem eq '04'}">傷害醫療</th:block>
+									<th:block th:if="${applyItem eq '05'}">癌症醫療</th:block>
+									<th:block th:if="${applyItem eq '06'}">重大疾病</th:block>
+									<th:block th:if="${applyItem eq '07'}">生命末期提前給付</th:block>
+									<th:block th:if="${applyItem eq '08'}"><th:block th:text="${claimVo.itemOther}"/></th:block>
+								</th:block>
+							</p>
+							<br/>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">要保人姓名：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.customerName}"/></p>
+						</div>
+						<br/>
+						<h2>事故者資料</h2>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">被保人姓名：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.insuredName}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">身分證號碼：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.rocId}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">聯絡電話：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.tel1}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">職業：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.tel1}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">聯絡地址：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.addr}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">與主被保險人(員工)之關係：</label>
+							<p type="text" class="col-sm-7">
+								<th:block th:if="${claimVo.relation eq '01'}">本人</th:block>
+								<th:block th:if="${claimVo.relation eq '02'}">父母</th:block>
+								<th:block th:if="${claimVo.relation eq '03'}">配偶</th:block>
+								<th:block th:if="${claimVo.relation eq '04'}">子女</th:block>
+							</p>
+						</div>
+						<br/>
+						<h2>疾病</h2>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">診斷病名：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.diseaseName}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">該疾病初診日：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.diagnosisDate}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">曾就診之醫院：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.hospital}"/></p>
+						</div>
+						<br/>
+						<h2>意外</h2>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">發生時間：</label>
+							<p type="text" class="col-sm-7">
+								<th:block th:text="${claimVo.accidentYear}"/>年
+								<th:block th:text="${claimVo.accidentMonth}"/>月
+								<th:block th:text="${claimVo.accidentDay}"/>日
+								<th:block th:text="${claimVo.accidentHour}"/>時
+							</p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">事故地點：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.accidentLocation}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">事故處理單位：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.accidentHandleUnit}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">承辦員警：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.policeName}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">員警電話：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.policeTel}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">事故原因及送醫經過詳情<br/>（請述明就診醫院名稱）：</label>
+							<p type="text" class="col-sm-7"><th:block th:text="${claimVo.accidentReason}"/></p>
+						</div>
+						<br/><br/><br/>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">被保險人是否投保別家保險公司之保險？</label>
+							<p type="text" class="col-sm-7">
+								<th:block th:if="${claimVo.otherCompanyInsured eq 'Y'}">有</th:block>
+								<th:block th:if="${claimVo.otherCompanyInsured eq 'N'}">沒有</th:block>
+							</p>
+						</div>
+						<br/>
+						<h2>給付方式</h2>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">給付方式：</label>
+							<p type="text" class="col-sm-7">
+								<th:block th:if="${claimVo.paymentMethod eq '01'}">電匯</th:block>
+								<th:block th:if="${claimVo.paymentMethod eq '02'}">郵寄支票</th:block>
+							</p>
+						</div>
+						<th:block th:if="${claimVo.paymentMethod eq '01'}">
+							<div class="check-list3 ">
+								<label for="" class="col-sm-5 orange">匯款帳戶：</label>
+								<p type="text" class="col-sm-7"><th:block th:text="${claimVo.accountName}"/></p>
+							</div>
+							<div class="check-list3 ">
+								<label for="" class="col-sm-5 orange">銀行名稱：</label>
+								<p type="text" class="col-sm-7"><th:block th:text="${claimVo.bankName}"/></p>
+							</div>
+							<div class="check-list3 ">
+								<label for="" class="col-sm-5 orange">分行名稱：</label>
+								<p type="text" class="col-sm-7"><th:block th:text="${claimVo.branchName}"/></p>
+							</div>
+							<div class="check-list3 ">
+								<label for="" class="col-sm-5 orange">帳號：</label>
+								<p type="text" class="col-sm-7"><th:block th:text="${claimVo.accountNumber}"/></p>
+							</div>
+						</th:block>
+						<th:block th:if="${claimVo.paymentMethod eq '02'}">
+							<div class="check-list3 ">
+								<label for="" class="col-sm-5 orange">地址：</label>
+								<p type="text" class="col-sm-7"><th:block th:text="${claimVo.postalCode}"/> <th:block th:text="${claimVo.postalAddr}"/></p>
+							</div>
+						</th:block>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8 col-md-offset-2 ptop30">
+					<div class="marginTop25"></div>
+					<div class="col-md-12 two-buttons">
+						<button type="button" id="deny" class="btn-signup">上一步</button>
+						<button id="go" class="btn-signup">下載PDF</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = /*[[${claimVo}]]*/;
+		$(function() {
+			// 上一步事件
+			$('#deny').click(function() {
+				postWithFormData(/*[[@{/claim2}]]*/, formData);
+			});
+			
+			// 確認送出
+			$('#go').click(function() {
+				var url = '/eservice/downloadClaimPDF?' + $.param(formData);
+				url = url.replace(/%5B/g, '').replace(/%5D/g, '');
+				window.open(url);
+			});
+		});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

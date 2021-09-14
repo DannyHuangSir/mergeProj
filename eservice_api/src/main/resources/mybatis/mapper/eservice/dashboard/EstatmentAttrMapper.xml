@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.dashboard.dao.EstatmentAttrDao">
+
+	<resultMap id="EstatmentAttrMap" type="com.twfhclife.eservice.dashboard.model.EstatmentAttrVo" >
+		<result column="ID" property="id"/>
+		<result column="ESTATMENT_ID" property="estatmentId"/>
+		<result column="ESTATMENT_KEY" property="estatmentKey"/>
+		<result column="ESTATMENT_VALUE" property="estatmentValue"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,ESTATMENT_ID,ESTATMENT_KEY,ESTATMENT_VALUE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="estatmentAttrVo.id != null"> AND ID = #{estatmentAttrVo.id} </if>
+			<if test="estatmentAttrVo.estatmentId != null"> AND ESTATMENT_ID = #{estatmentAttrVo.estatmentId} </if>
+			<if test="estatmentAttrVo.estatmentKey != null and estatmentAttrVo.estatmentKey != ''"> AND ESTATMENT_KEY = #{estatmentAttrVo.estatmentKey} </if>
+			<if test="estatmentAttrVo.estatmentValue != null and estatmentAttrVo.estatmentValue != ''"> AND ESTATMENT_VALUE = #{estatmentAttrVo.estatmentValue} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{estatmentAttrVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得我的通知主表屬性查詢結果 -->
+	<select id="getEstatmentAttr" resultMap="EstatmentAttrMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.ESTATMENT_ATTR
+		<include refid="whereClause" />
+	</select>
+
+</mapper>

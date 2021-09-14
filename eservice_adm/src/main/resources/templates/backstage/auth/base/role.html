@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='role')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-user" aria-hidden="true"></i>
+								權限管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								基本資料管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								角色管理
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form class="form-horizontal" id="form1" role="form" action="#">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">查詢角色：</label>
+										<div class="col-sm-6">
+											<div>
+												<input type="text" name="roleName" id="roleName"/>
+												<button type="button" class="btn btn-success" id="qryBtn">
+													<i class="my-icon fa fa-check bigger-110"></i>
+													查詢
+												</button>&nbsp&nbsp
+												<button type="button" id="addRoleBtn" class="btn btn-primary">
+													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+													新增角色
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="hr hr-18 dotted hr-double"></div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div id="show-detail-results">
+<!-- 									<h3 class="header smaller lighter blue">查詢結果</h3> -->
+									<div>
+<!-- 										<div class="row"> -->
+<!-- 											<div class="col-xs-12"> -->
+<!-- 												<div id="dynamic-table_filter" class="dataTables_filter"> -->
+<!-- 													<button type="button" id="addRoleBtn" class="btn btn-primary"> -->
+<!-- 														<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i> -->
+<!-- 														新增角色 -->
+<!-- 													</button> -->
+<!-- 												</div> -->
+<!-- 											</div> -->
+<!-- 										</div> -->
+										<table id="grid"></table>
+										<div id="pager"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="editDiv" class="hide">
+						<div class="widget-main no-padding">
+							<form id="editForm">
+								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>角色名稱：</label>
+									<div class="col-sm-8">
+										<input type="text" id="roleName" class="form-control" />
+									</div>
+								</fieldset>
+								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>部門名稱：</label>
+									<div class="col-sm-8">
+										<select id="deptSelect"></select>
+									</div>
+								</fieldset>
+								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right">角色描述：</label>
+									<div class="col-sm-8">
+										<input type="text" id="description" class="form-control" />
+									</div>
+								</fieldset>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var grid;
+		$(function() {
+			// 取得部門名稱下拉選單
+			eserviceAdmOption.dept('#deptSelect', /*[[@{/common/deptList}]]*/);
+			
+			// 初始 jqGridUtil 物件
+			grid = new jqGridUtil();
+			grid.id = '#grid';
+			grid.url = /*[[@{/role/getRoleDetail}]]*/;
+			grid.caption = '角色查詢結果';
+			grid.colNames = ['角色名稱', '部門名稱', '角色描述', '操作'];
+			grid.colModel = [
+				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
+				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME', width: 100},
+				{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200},
+				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+					var actionHtml = '';
+					actionHtml += '<a href="javascript:editRole(\'' + row.ROLE_ID + '\',\'' + emptyIfNull(row.ROLE_NAME) + '\',\'' + emptyIfNull(row.DEPARTMENT_ID) + '\',\'' + emptyIfNull(row.DESCRIPTION) + '\');" class="green bigger-140 show-details-btn" title="修改">';
+					actionHtml += '    <i class="my-icon fa fa-pencil bigger-120"></i> <span class="sr-only">Details</span> ';
+					actionHtml += '</a>';
+					actionHtml += '<a href="javascript:deleteRole(\'' + row.ROLE_ID + '\');" class="green bigger-140 show-details-btn" title="刪除">';
+					actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
+					actionHtml += '</a>';
+					
+					return actionHtml;
+				}} 
+			];
+			grid.create();
+			
+			// 查詢
+			$('#qryBtn').click(function() {
+				// 設定查詢條件
+				grid.setPostData('roleName', $('#roleName').val());
+				// 產生grid
+				grid.create();
+			});
+			
+			// 新增
+			$('#addRoleBtn').on('click', function() {
+				$('#editForm #roleName').val('');
+				$('#editForm #description').val('');
+				$('#editForm #deptSelect').val('');
+				var dialog = $('#editDiv').removeClass('hide').dialog({
+					modal: true,
+					title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-check'></i>新增角色</h4></div>",
+					title_html: true,
+					buttons: [ 
+						{
+							text: '取消',
+							'class' : 'btn',
+							click: function() {
+								$(this).dialog('close');
+							} 
+						},
+						{
+							text: '確定',
+							'class' : 'btn btn-primary',
+							click: function() {
+								if ($('#editForm #roleName').val() == '') {
+									alertMsg("請輸入角色名稱");
+									return false;
+								}
+								if ($('#editForm #deptSelect').val() == '') {
+									alertMsg("請輸入部門名稱");
+									return false;
+								}
+								var formData = {
+									departmentId: $('#editForm #deptSelect').val(),
+									roleName : $('#editForm #roleName').val(),
+									description : $('#editForm #description').val()
+								};
+								eserviceForm.post(/*[[@{/role/insertRole}]]*/, formData, function(response) {
+									alertMsg(response.resultMsg);
+									$('#roleName').val('');
+									$('#qryBtn').click();
+								});
+								
+								$(this).dialog('close');
+							} 
+						}
+					],
+					width: 600
+				});
+			});
+			
+			eserviceAdmEvent.initDialog();
+		});
+		
+		// 更新
+		function editRole(roleId, roleName, departmentId, description) {
+			$('#editForm #roleName').val(roleName);
+			if (departmentId) {
+				$('#editForm #deptSelect').val(departmentId);
+			} else {
+				$('#editForm #deptSelect').val('');
+			}
+			$('#editForm #description').val(description);
+			var dialog = $('#editDiv').removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-pencil'></i>修改角色</h4></div>",
+				title_html: true,
+				buttons: [ 
+					{
+						text: '取消',
+						'class' : 'btn',
+						click: function() {
+							$('#editDiv').dialog('close');
+						} 
+					},
+					{
+						text: '確定',
+						'class' : 'btn btn-primary',
+						click: function() {
+							if ($('#editForm #roleName').val() == '') {
+								alertMsg("請輸入角色名稱");
+								return false;
+							}
+							if ($('#editForm #deptSelect').val() == '') {
+								alertMsg("請輸入部門名稱");
+								return false;
+							}
+							confirmMsg('是否確認修改', function(r) {
+								if (r) {
+									var formData = {
+										roleId : roleId,
+										departmentId: $('#editForm #deptSelect').val(),
+										roleName : $('#editForm #roleName').val(),
+										description : $('#editForm #description').val()
+									};
+									eserviceForm.post(/*[[@{/role/updateRole}]]*/, formData, function(response) {
+										alertMsg(response.resultMsg);
+										grid.reload();
+									});
+									$('#editDiv').dialog('close');
+								} else {
+									return false;
+								}
+							});
+						} 
+					}
+				],
+				width: 600
+			});
+		}
+		
+		// 刪除
+		function deleteRole(roleId) {
+			confirmMsg('是否確認刪除', function(r) {
+				if (r) {
+					var formData = {
+							roleId : roleId
+					};
+					eserviceForm.post(/*[[@{/role/deleteRole}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						grid.reload();
+					});
+				} else {
+					return false;
+				}
+			});
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

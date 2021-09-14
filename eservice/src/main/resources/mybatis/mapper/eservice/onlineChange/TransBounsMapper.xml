@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransBounsDao">
+
+	<resultMap id="TransBounsMap" type="com.twfhclife.eservice.onlineChange.model.TransBounsVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="BOUNS_MODE" property="bounsMode"/>
+		<result column="BOUNS_MODE_OLD" property="bounsModeOld"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,BOUNS_MODE,BOUNS_MODE_OLD
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transBounsVo.id != null"> AND ID = #{transBounsVo.id} </if>
+			<if test="transBounsVo.transNum != null and transBounsVo.transNum != ''"> AND TRANS_NUM = #{transBounsVo.transNum} </if>
+			<if test="transBounsVo.bounsMode != null and transBounsVo.bounsMode != ''"> AND BOUNS_MODE = #{transBounsVo.bounsMode} </if>
+			<if test="transBounsVo.bounsModeOld != null and transBounsVo.bounsModeOld != ''"> AND BOUNS_MODE_OLD = #{transBounsVo.bounsModeOld} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transBounsVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更紅利選擇權查詢結果 -->
+	<select id="getTransBouns" resultMap="TransBounsMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_BOUNS
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 變更紅利選擇權-新增 -->
+	<insert id="insertTransBouns">
+		INSERT INTO ESERVICE.DBO.TRANS_BOUNS
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_BOUNS),
+			#{transBounsVo.transNum, jdbcType=VARCHAR},
+			#{transBounsVo.bounsMode, jdbcType=VARCHAR},
+			#{transBounsVo.bounsModeOld, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 紅利選擇權增加第4點條件 -->
+	<select id="checkCondition4" resultType="string" parameterType="string">
+		SELECT
+			CASE WHEN 
+					convert(date,getdate(),111) 
+					<![CDATA[ < ]]> 
+					format(dateadd(month, -2, dateadd(year, LIPI_PREM_YEAR, LIPI_INSU_BEG_DATE)) , 'yyyy-MM-') + '20'
+				 THEN 'Y'
+				 ELSE 'N'
+			END code
+		FROM
+			ESERVICE.DBO.LILIPI 
+		WHERE LIPI_INSU_NO = #{policyNo}
+	</select>
+
+</mapper>

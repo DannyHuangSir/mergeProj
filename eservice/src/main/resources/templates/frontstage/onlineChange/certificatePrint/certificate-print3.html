@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>投保證明列印｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">投保證明列印</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 投保證明列印
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-4">
+						2<span class="hid1">. 設定列印內容</span>
+					</li>
+					<li class="step3 active col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請確認資料並輸入驗證碼</h2>
+				<div class="loan1">
+					<div class="">
+						<label for="checkBox12" class="col-sm-10 col-sm-offset-2">
+							保單：
+							<th:block th:each="policyNo : ${transCertPrintVo.policyNoList}">
+								<th:block th:text="${policyNo}"/>
+							</th:block>
+						</label>
+					</div>
+					<div class="col-sm-8 col-sm-offset-2 grey2 ptop30 greyBox">
+						<div class="check-list3 ">
+							<label for="" class="col-sm-3 orange">列印格式：</label>
+							<p type="text" class="col-sm-9">
+								<th:block th:if="${transCertPrintVo.lang eq 'C'}">中文</th:block>
+								<th:block th:if="${transCertPrintVo.lang eq 'E'}">英文</th:block>
+							</p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-3 orange">護照英文姓名：</label>
+							<p type="text" class="col-sm-9"><th:block th:text="${transCertPrintVo.passportName}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-3 orange">護照號碼：</label>
+							<p type="text" class="col-sm-9"><th:block th:text="${transCertPrintVo.passportNo}"/></p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-3 orange">列印幣別：</label>
+							<p type="text" class="col-sm-9">
+								<th:block th:if="${transCertPrintVo.printCurr eq 'NTD'}">台幣</th:block>
+								<th:block th:if="${transCertPrintVo.printCurr eq 'USD'}">美元</th:block>
+								<th:block th:if="${transCertPrintVo.printCurr eq 'EUR'}">歐元</th:block>
+							</p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-3 orange">收件方式：</label>
+							<p type="text" class="col-sm-9">
+								<th:block th:if="${transCertPrintVo.deliverType eq 'P'}">紙本</th:block>
+								<th:block th:if="${transCertPrintVo.deliverType eq 'E'}">電子郵件信箱</th:block>
+							</p>
+						</div>
+						<th:block th:if="${transCertPrintVo.deliverType eq 'P'}">
+							<div class="check-list3 ">
+								<label for="" class="col-sm-3 orange">收件地址：</label>
+								<p type="text" class="col-sm-9"><th:block th:text="${transCertPrintVo.deliverAddr}"/></p>
+							</div>
+						</th:block>
+						<th:block th:if="${transCertPrintVo.deliverType eq 'E'}">
+							<div class="check-list3 ">
+								<label for="" class="col-sm-3 orange">電子郵件信箱：</label>
+								<p type="text" class="col-sm-9"><th:block th:text="${transCertPrintVo.beliverMail}"/></p>
+							</div>
+						</th:block>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="col-md-8 col-md-offset-2 ptop30">
+					<div class="divider divider88"></div>
+					<p class="center1 gray">請輸入驗證碼以完成申請</p>
+					<th:block th:replace="fragments/sendSMS"/>
+					<div class="marginTop25"></div>
+					<div class="col-md-12 two-buttons">
+						<button type="button" id="deny" class="btn-signup">上一步</button>
+						<button type="button" id="go" class="btn-signup">確認送出</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = /*[[${transCertPrintVo}]]*/;
+		$(function() {
+			// 上一步事件
+			$('#deny').click(function() {
+				postWithFormData(/*[[@{/certificatePrint2}]]*/, formData);
+			});
+			
+			// 確認送出
+			$('#go').click(function() {
+				if ($('#InputCert1').val() == '') {
+					/* openAlert("請輸入驗證碼"); */
+					openAlert($('#E0071').val());
+					return false;
+				}
+				
+				formData.authenticationNum = $('#InputCert1').val();
+				postWithFormData(/*[[@{/certificatePrintSuccess}]]*/, formData);
+			});
+		});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='onlineChange')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-search" aria-hidden="true"></i>
+								<a href="#">報表查詢</a>
+							</li>
+						</ul><!-- /.breadcrumb -->
+					</div>
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								報表查詢
+								<small>
+									<i class="my-icon fa fa-angle-double-right"></i>
+									保單理賠申請統計報表
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+                        <div class="">
+			                <ul class="step">
+			                    <li class="step1 active col-xs-4">
+			                        1<span class="hid1">. 選擇報表條件</span>
+			                    </li>
+			                    <li class="step2 col-xs-4">
+			                        2<span class="hid1">. 選擇匯出資料欄位</span>
+			                    </li>
+			                    <li class="step3 col-xs-4">
+			                        3<span class="hid1">. 下載開啓報表</span>
+			                    </li>
+			                </ul>
+			            </div>
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form class="form-horizontal" role="form" id="form1" action="func2-2.html">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-4">申請日期區間</label>
+
+										<div class="col-sm-9">
+											<div class="input-group">
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+
+												<input class="form-control" type="text" name="date-range-picker" id="id-date-range-picker-1" />
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="fromCompanyIdSelect">申請來源</label>
+
+										<div class="col-sm-9">	
+											<select class="form-control"  id="fromCompanyIdSelect" name="fromCompanyId" multiple='multiple'>
+													<option value="01">臺銀人壽首家</option>
+													<option value="02">聯盟鏈轉收件</option>
+                                              </select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="applyItemListSelect"> 申請項目 </label>
+
+										<div class="col-sm-9">
+											<select class="form-control" id="applyItemListSelect">
+											</select>
+										</div>
+									</div>
+                                    <div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="statusListSelect">申請狀態</label>
+
+										<div class="col-sm-9">	
+											<select class="form-control"  id="statusListSelect" multiple='multiple'>
+												 <th:block th:each="vo, rowStat : ${session.ONLINE_CHANGE_STATUS}">
+													<option th:value="${vo.value.parameterCode}" >
+														<th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+													</option>
+												</th:block>
+                                            </select>
+										</div>
+									</div>
+						
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="policyNoInp"> 保單號碼 </label>
+
+										<div class="col-sm-9">
+											<input type="text" id="policyNoInp" placeholder="輸入欲查詢的保單號碼" class="form-control" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="lilipiIdNoInp"> 被保人身分證字號 </label>
+
+										<div class="col-sm-9">
+											<input type="text" id="lilipiIdNoInp" placeholder="輸入欲查詢的身分證字號" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="lilipmIdNoInp"> 要保人身分證字號 </label>
+
+										<div class="col-sm-9">
+											<input type="text" id="lilipmIdNoInp" placeholder="輸入欲查詢的身分證字號" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="fileReceivedSelect"> 是否已紙本回收 </label>
+
+										<div class="col-sm-9">
+											<select class="form-control" id="fileReceivedSelect"  multiple='multiple'>
+												<option value="1_">是</option>
+												<option value="2_">否</option>
+												<option value="C_">待覆核中</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="sendAllianceSelect"> 是否已開啓歡送公會聯盟鏈 </label>
+
+										<div class="col-sm-9">
+                                            <select class="form-control" id="sendAllianceSelect"  multiple='multiple'>	
+												<option value="Y">是</option>
+												<option value="N">否</option>
+												<option value="C">待覆核中</option>
+											</select>										
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="rejectReasonSelect"> 異常件註記原因  </label>
+
+										<div class="col-sm-9">
+                                            <select class="form-control" id="rejectReasonSelect">
+											</select>										
+										</div>
+									</div>
+
+									<div class="col-md-offset-3 col-md-9" style="text-align: center;margin-top: 20px;">
+										<a class="btn bgGrey" type="button" style="border: 0;margin-right: 20px;" onclick="resetOnlineChange()">
+											取消
+										</a>
+										<a class="btn bgOrange" type="reset" style="border: 0;" onclick="searchOnlineChange()">
+											下一步
+										</a>
+									</div>
+				
+								</form>
+								<!-- PAGE CONTENT ENDS -->
+								<form role="form" id="onlineChangeForm" method="post" action="/eservice_adm/rptInsClaimStatistics/filter">
+									<input type="hidden" id="startDate" name="startDate"/> 
+									<input type="hidden" id="endDate"   name="endDate"/>
+									<input type="hidden" id="fromCompanyId" name="fromCompanyId"/> 
+									<input type="hidden" id="applyItem" name="applyItem">
+									<input type="hidden" id="applyItemName" name="applyItemName">
+									<input type="hidden" id="status"   name="status"/>
+									<input type="hidden" id="policyNo" name="policyNo"/>
+									<input type="hidden" id="lilipiIdNo" name="lilipiIdNo"/>
+									<input type="hidden" id="lilipmIdNo" name="lilipmIdNo"/>
+									<input type="hidden" id="fileReceivedList" name="fileReceivedList"/>
+									<input type="hidden" id="sendAllianceList" name="sendAllianceList"/>
+									<input type="hidden" id="rejectReason" name="rejectReason"/>
+								</form>
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		
+		/*<![CDATA[*/
+		$(function() {
+			// 取得線上申請狀態下拉選單
+			// eserviceAdmOption.common('#statusListSelect', 
+			// 		/*[[@{/common/optionList?categoryCode=ONLINE_CHANGE_STATUS}]]*/, 
+			// 		'請選擇申請狀態...');
+			
+			// 取得線上申請項目下拉選單
+			eserviceAdmOption.common('#applyItemListSelect', 
+					/*[[@{/common/optionList?categoryCode=APPLICATION_ITEMS}]]*/, 
+					'請選擇申請項目...','VALUE');
+			
+			//異常件註記原因
+			eserviceAdmOption.common('#rejectReasonSelect', 
+					/*[[@{/common/optionList?categoryCode=ABNORMAL_REASON}]]*/, 
+					'請選擇原因...','VALUE');
+
+			$('input[name=date-range-picker]').daterangepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				maxDate : new Date(),
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel'
+				}
+			});
+			$("#fromCompanyIdSelect").bsMultiSelect();
+			$("#statusListSelect").bsMultiSelect();
+			$("#fileReceivedSelect").bsMultiSelect();
+			$("#sendAllianceSelect").bsMultiSelect();
+		});
+	
+		function searchOnlineChange() {
+
+			$("#startDate").val($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+			$("#endDate").val($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYY-MM-DD'));
+			var resource = $('#fromCompanyIdSelect').val()
+			if(resource != null){
+				if(resource.length == 1){
+					$("#fromCompanyId").val(resource[0])
+				}
+			}
+			$("#applyItem").val($('#applyItemListSelect').val());
+			if ($('#applyItemListSelect').val() != '') {
+				$("#applyItemName").val($('#applyItemListSelect option:selected').text());
+			}
+			$("#status").val($('#statusListSelect').val());
+			$("#policyNo").val($('#policyNoInp').val().trim());
+			$("#lilipiIdNo").val($('#lilipiIdNoInp').val().trim());
+			$("#lilipmIdNo").val($('#lilipmIdNoInp').val().trim());
+			
+			var rSelect = $('#fileReceivedSelect').val();
+			if(rSelect != null){
+				var rList = [];
+				rSelect.forEach(function(val,i){
+					rList.push(val.replace('_',''));
+				})
+				$("#fileReceivedList").val(rList);
+			}
+		
+			$("#sendAllianceList").val($('#sendAllianceSelect').val());
+			$("#rejectReason").val($('#rejectReasonSelect').val());
+			$('#onlineChangeForm').submit();
+		}
+		function resetOnlineChange(){
+			
+			$('#fromCompanyIdSelect').val('');
+			$('#applyItemListSelect').val('');
+			$('#policyNoInp').val('');
+			$('#lilipiIdNoInp').val('');
+			$('#lilipmIdNoInp').val('');
+			$('#rejectReasonSelect').val('');
+			$('.close').each(function(i,val) {
+				val.click();
+			});
+		}
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransDao">
+
+	<resultMap id="TransMap" type="com.twfhclife.eservice.web.model.TransVo" >
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="TRANS_DATE" property="transDate"/>
+		<result column="TRANS_TYPE" property="transType"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="STATUS" property="status"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="CREATE_DATE" property="createDate"></result>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="UPDATE_DATE" property="updateDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		TRANS_NUM,TRANS_DATE,TRANS_TYPE,USER_ID,STATUS,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transVo.transNum != null and transVo.transNum != ''"> AND TRANS_NUM = #{transVo.transNum} </if>
+			<if test="transVo.transDate != null"> AND TRANS_DATE = #{transVo.transDate} </if>
+			<if test="transVo.transType != null and transVo.transType != ''"> AND TRANS_TYPE = #{transVo.transType} </if>
+			<if test="transVo.userId != null and transVo.userId != ''"> AND USER_ID = #{transVo.userId} </if>
+			<if test="transVo.status != null and transVo.status != ''"> AND STATUS = #{transVo.status} </if>
+			<if test="transVo.createUser != null and transVo.createUser != ''"> AND CREATE_USER = #{transVo.createUser} </if>
+			<if test="transVo.createDate != null"> AND CREATE_DATE = #{transVo.createDate} </if>
+			<if test="transVo.updateUser != null and transVo.updateUser != ''"> AND UPDATE_USER = #{transVo.updateUser} </if>
+			<if test="transVo.updateDate != null"> AND UPDATE_DATE = #{transVo.updateDate} </if>
+			<!-- 申請狀態條件 -->
+			<if test="transVo.transStatusList != null">
+				AND STATUS IN 
+				<foreach collection="transVo.transStatusList" item="status" index="index" open="(" close=")" separator="," >
+					#{status}
+				</foreach>
+			</if>
+			<!-- 使用者保單號碼條件 -->
+			<if test="transVo.rocId != null and transVo.rocId != ''">
+				AND TRANS_NUM IN (
+					SELECT 
+						tp.TRANS_NUM 
+					FROM 
+						ESERVICE.DBO.TRANS_POLICY tp 
+					WHERE 
+						tp.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{transVo.rocId})
+				)
+			</if>
+			<!-- 最近一個月 -->
+			AND TRANS_DATE > DATEADD(month, -1, getdate()) + 1
+		</where>
+	</sql>
+
+	<!-- 取得最近一個月內的案件狀態資料 -->	
+	<select id="getChangeHistoryList" resultMap="TransMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS
+		<include refid="whereClause" />
+		ORDER BY
+			TRANS_DATE
+	</select>
+
+	<!-- 檢查是否已經申請-->	
+	<select id="isTransApplyed" resultType="int">
+		SELECT
+			COALESCE(COUNT(*), 0) AS CNT
+		FROM
+			ESERVICE.DBO.TRANS T, ESERVICE.DBO.TRANS_POLICY TP 
+		WHERE
+			T.TRANS_NUM = TP.TRANS_NUM
+			AND TP.POLICY_NO = #{policyNo}
+			AND T.TRANS_TYPE = #{transType}
+			AND (T.STATUS = #{transStatus} OR T.STATUS = '1' OR T.STATUS = '5')
+	</select>
+
+	<!-- 取得申請資料-->	
+	<select id="findByTransNum" resultMap="TransMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS
+		WHERE
+			TRANS_NUM = #{transNum}
+	</select>
+	
+	<!-- 取線上申請序號 -->
+	<select id="getTransNum" parameterType="java.util.HashMap" statementType="CALLABLE">
+		{CALL ESERVICE.DBO.USP_GETTRANSNUM(#{transNum, mode=OUT, jdbcType=VARCHAR})}
+	</select>
+	
+	<!-- 線上申請保單驗證 -->
+	<select id="verifyPolicyRule" parameterType="java.util.HashMap" statementType="CALLABLE">
+		CALL ESERVICE.DBO.USP_VERIFY_POLICY_RULE(
+			#{policyNo, mode=IN, jdbcType=VARCHAR},
+			#{transType, mode=IN, jdbcType=VARCHAR},
+			#{verifyResult, mode=OUT, jdbcType=VARCHAR},
+			#{verifyMsg, mode=OUT, jdbcType=VARCHAR},
+			#{optionList, mode=OUT, jdbcType=VARCHAR}
+		)
+	</select>
+	
+	<!-- 新增線上申請 -->
+	<insert id="insertTrans">
+		INSERT INTO ESERVICE.DBO.TRANS
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			#{transVo.transNum, jdbcType=VARCHAR},
+			#{transVo.transDate, jdbcType=TIMESTAMP},
+			#{transVo.transType, jdbcType=VARCHAR},
+			#{transVo.userId, jdbcType=VARCHAR},
+			#{transVo.status, jdbcType=VARCHAR},
+			#{transVo.createUser, jdbcType=VARCHAR},
+			#{transVo.createDate, jdbcType=TIMESTAMP},
+			#{transVo.updateUser, jdbcType=VARCHAR},
+			#{transVo.updateDate, jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<select id="getBatchIdSequence" resultType="java.lang.Float">
+		select NEXT VALUE for ESERVICE.DBO.CONTACT_INFO_BATCH_ID_SEQ as BATCH_ID_SEQ;
+	</select>
+
+</mapper>

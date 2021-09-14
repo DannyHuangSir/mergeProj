@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.CommLogDao">
+	<resultMap id="BaseResultMap" type="com.twfhclife.adm.model.CommLogVo">
+		<result column="ID" property="id" />
+		<result column="SYSTEM_ID" property="systemId" />
+		<result column="USER_ID" property="userId"/>
+		<result column="COMM_TYPE" property="commType" />
+		<result column="COMM_TARGET" property="commTarget" />
+		<result column="COMM_CNT" property="commCnt" />
+		<result column="COMM_DATE" property="commDate" />
+	</resultMap>
+
+	<parameterMap id="commLogVo" type="com.twfhclife.adm.model.CommLogVo"/>
+
+	<sql id="Base_Column_List">
+		ID,SYSTEM_ID,COMM_TYPE,COMM_TARGET,COMM_CNT,COMM_DATE
+	</sql>
+
+	<!-- include sql: 取得通知紀錄查詢sql -->
+	<sql id="INC1">
+		SELECT
+			ID,
+			SYSTEM_ID,
+			COMM_TYPE,
+			COMM_TARGET,
+			COMM_CNT,
+			convert(varchar(10), COMM_DATE, 120) COMM_DATE
+		FROM
+			ESERVICE_ADM.DBO.COMM_LOG
+		WHERE
+			ID IS NOT NULL
+		<if test="commLogVo.systemId != null and commLogVo.systemId != ''" >
+			AND SYSTEM_ID = #{commLogVo.systemId}
+		</if>
+		
+		<choose>
+			<when test='commLogVo.userId != null and commLogVo.userId.contains("@")'>
+				AND COMM_TARGET = (select ESERVICE.DBO.fn_debase64(EMAIL) from ESERVICE.DBO.USERS where USER_ID=#{commLogVo.userId})
+			</when>
+			<otherwise>
+				<if test="commLogVo.userId != null and commLogVo.userId != ''" >
+					AND COMM_TARGET = (select ESERVICE.DBO.fn_debase64(MOBILE) from ESERVICE.DBO.USERS where USER_ID=#{commLogVo.userId}) 
+				</if>
+			</otherwise>
+		</choose>
+		
+		<if test="commLogVo.commType != null and commLogVo.commType != ''" >
+			AND COMM_TYPE = #{commLogVo.commType}
+		</if>
+		
+		<if test="commLogVo.commTarget != null and commLogVo.commTarget != ''" >
+			AND COMM_TARGET = #{commLogVo.commTarget}
+		</if>
+		
+		<if test="commLogVo.startDate != null and commLogVo.startDate != ''">
+			<if test="commLogVo.endDate != null and commLogVo.endDate != ''">
+				AND convert(varchar(10), COMM_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{commLogVo.startDate}, 120)
+				AND convert(varchar(10), COMM_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{commLogVo.endDate}, 120)
+			</if>
+		</if>
+	</sql>
+	
+	<!-- 取得通知紀錄查詢結果(分頁) -->
+	<select id="getCommLogDetail" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY ID) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{commLogVo.page} * #{commLogVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{commLogVo.page} - 1) * #{commLogVo.rows}
+	</select>
+	
+	<!-- 取得查詢結果(總筆數) -->
+	<select id="getCommLogDetailPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得所有發送類型 -->
+	<select id="getAllCommType" resultType="string">
+		select
+			DISTINCT COMM_TYPE
+		from
+			ESERVICE_ADM.DBO.COMM_LOG
+		where
+			ID is not null
+	</select>
+	
+	<select id="getCommCntById" resultType="string">
+		select TOP 1
+			COMM_CNT
+		from
+			ESERVICE_ADM.DBO.COMM_LOG
+		where
+			ID is not null
+		<if test="commLogVo.id != null and commLogVo.id != ''" >
+			AND ID = #{commLogVo.id}
+		</if>
+	</select>
+
+</mapper>

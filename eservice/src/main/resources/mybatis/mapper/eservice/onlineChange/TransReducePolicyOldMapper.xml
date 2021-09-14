@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransReducePolicyOldDao">
+
+	<resultMap id="TransReducePolicyOldMap" type="com.twfhclife.eservice.onlineChange.model.TransReducePolicyOldVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_REDUCE_POLICY_ID" property="transReducePolicyId"/>
+		<result column="CONTRACT_TYPE" property="contractType"/>
+		<result column="PRODUCT_NAME" property="productName"/>
+		<result column="CONTRACT_AMOUNT" property="contractAmount"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_REDUCE_POLICY_ID,CONTRACT_TYPE,PRODUCT_NAME,CONTRACT_AMOUNT
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transReducePolicyOldVo.id != null"> AND ID = #{transReducePolicyOldVo.id} </if>
+			<if test="transReducePolicyOldVo.transReducePolicyId != null"> AND TRANS_REDUCE_POLICY_ID = #{transReducePolicyOldVo.transReducePolicyId} </if>
+			<if test="transReducePolicyOldVo.contractType != null and transReducePolicyOldVo.contractType != ''"> AND CONTRACT_TYPE = #{transReducePolicyOldVo.contractType} </if>
+			<if test="transReducePolicyOldVo.productName != null and transReducePolicyOldVo.productName != ''"> AND PRODUCT_NAME = #{transReducePolicyOldVo.productName} </if>
+			<if test="transReducePolicyOldVo.contractAmount != null"> AND CONTRACT_AMOUNT = #{transReducePolicyOldVo.contractAmount} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transReducePolicyOldVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得減少保險金額修改前查詢結果 -->
+	<select id="getTransReducePolicyOld" resultMap="TransReducePolicyOldMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_REDUCE_POLICY_OLD
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 減少保險金額修改前-新增 -->
+	<insert id="insertTransReducePolicyOld">
+		INSERT INTO ESERVICE.DBO.TRANS_REDUCE_POLICY_OLD
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_REDUCE_POLICY_OLD),
+			#{transReducePolicyOldVo.transReducePolicyId, jdbcType=NUMERIC},
+			#{transReducePolicyOldVo.contractType, jdbcType=VARCHAR},
+			#{transReducePolicyOldVo.productName, jdbcType=VARCHAR},
+			#{transReducePolicyOldVo.contractAmount, jdbcType=NUMERIC}
+		)
+	</insert>
+
+</mapper>

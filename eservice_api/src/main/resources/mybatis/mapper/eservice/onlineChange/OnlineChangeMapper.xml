@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.OnlineChangeDao">
+
+	<select id="getTransNum" parameterType="java.util.HashMap" statementType="CALLABLE">
+		 CALL ESERVICE.DBO.USP_GETTRANSNUM(#{transNum, mode=OUT, jdbcType=VARCHAR})
+	</select>
+	
+	<insert id="addTrans" parameterType="com.twfhclife.eservice.onlineChange.model.TransVo">
+		insert into 
+			ESERVICE.DBO.TRANS(TRANS_NUM, TRANS_DATE, TRANS_TYPE, USER_ID, STATUS, CREATE_USER, CREATE_DATE) 
+		values(
+			#{vo.transNum,jdbcType=NUMERIC}, 
+			getdate(),
+			#{vo.transType,jdbcType=VARCHAR}, 
+			#{vo.userId,jdbcType=VARCHAR}, 
+			#{vo.status,jdbcType=VARCHAR}, 
+			#{vo.userId,jdbcType=VARCHAR}, 
+			getdate()
+		)
+	</insert>
+	
+	<select id="getTransByUserId" resultType="com.twfhclife.eservice.onlineChange.model.TransVo" parameterType="java.lang.String">
+	WITH FUND_TRANS_DATE_TMP AS (
+		SELECT 
+			ROW_NUMBER() OVER (ORDER BY ts.TRANS_DATE desc) AS ROW_NUM,
+			ts.TRANS_NUM,
+			ts.TRANS_DATE,
+			ts.USER_ID,
+			(
+			SELECT 
+				COUNT(POLICY_NO) 
+			FROM 
+				ESERVICE.DBO.TRANS_POLICY 
+			WHERE 
+				TRANS_NUM = ts.TRANS_NUM 
+			<if test="policyNo != null">
+				AND POLICY_NO = #{policyNo}
+			</if>
+			) AS POLICY_NO,
+			(
+			select TCI.FROM_COMPANY_ID  FROM_COMPANY_ID   FROM
+			ESERVICE.DBO.TRANS_CONTACT_INFO TC  JOIN  ESERVICE.DBO.TRANS_CONTACT_INFO_DTL  TCI  ON  TC.ID =TCI.TRANS_CONTACT_ID WHERE TC.TRANS_NUM=ts.TRANS_NUM
+			) FROM_COMPANY_ID ,
+			ts.TRANS_TYPE,
+			ts.STATUS,
+			(SELECT COUNT(*) FROM ESERVICE.DBO.TRANS_ENDORSEMENT WHERE TRANS_NUM = ts.TRANS_NUM OR TRANS_NUM IN (SELECT TRANS_NUM_MERGE FROM ESERVICE.DBO.TRANS_MERGE WHERE TRANS_NUM = ts.TRANS_NUM)) ENDORSEMENT_STATUS
+		FROM 
+			ESERVICE.DBO.TRANS ts
+		WHERE 
+			ts.USER_ID = #{userId}
+			<if test="transType != null">
+			AND ts.TRANS_TYPE = #{transType}
+			</if>
+			<if test="status != null">
+			AND ts.STATUS = #{status}
+			</if>
+			<if test="startDate != null">
+				AND convert(varchar(10), ts.TRANS_DATE, 111) <![CDATA[>=]]> #{startDate}
+			</if>
+			<if test="endDate != null">
+				AND convert(varchar(10), ts.TRANS_DATE, 111) <![CDATA[<=]]> #{endDate}
+			</if>
+	)
+		SELECT
+			(SELECT MAX(ROW_NUM) FROM FUND_TRANS_DATE_TMP) AS totalRow,
+			t.FROM_COMPANY_ID,
+			#{pageSize} AS pageSize,
+			#{pageNum} AS pageNum,
+			t.TRANS_NUM AS transNum,
+			t.TRANS_DATE AS transDate,
+			t.USER_ID AS userId,
+			(
+			SELECT
+			    a.PARAMETER_VALUE
+				FROM ESERVICE_ADM.DBO.PARAMETER a
+				JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b on a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+				WHERE 1 = 1
+					AND a.SYSTEM_ID = b.SYSTEM_ID
+					AND a.STATUS = b.STATUS
+					AND b.STATUS = 1
+					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
+					AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE"/>
+					AND a.PARAMETER_CODE = t.TRANS_TYPE
+			) AS transType,
+			(
+			SELECT
+			    a.PARAMETER_NAME
+				FROM ESERVICE_ADM.DBO.PARAMETER a
+				JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b on a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+				WHERE
+					1 = 1
+					AND a.SYSTEM_ID = b.SYSTEM_ID
+					AND a.STATUS = b.STATUS
+					AND b.STATUS = 1
+					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
+					AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE"/>
+					AND a.PARAMETER_CODE = t.TRANS_TYPE
+			) AS transTypeStr,
+			t.STATUS AS status,
+			(
+			SELECT
+			    a.PARAMETER_NAME
+				FROM ESERVICE_ADM.DBO.PARAMETER a
+				JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b on a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+				WHERE
+					1 = 1
+					AND a.SYSTEM_ID = b.SYSTEM_ID
+					AND a.STATUS = b.STATUS
+					AND b.STATUS = 1
+					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
+					AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.ONLINE_CHANGE_STATUS_PARAMETER_CATEGORY_CODE"/>
+					AND a.PARAMETER_CODE = t.STATUS
+			) AS statusStr,
+			t.ENDORSEMENT_STATUS AS endorsementStatus
+		FROM
+			FUND_TRANS_DATE_TMP t
+		WHERE
+			1 = 1
+			<if test="policyNo != null">
+			AND t.POLICY_NO != 0
+			</if>
+			<if test="pageNum != null and pageSize != null">
+			AND t.ROW_NUM <![CDATA[>=]]> ((#{pageNum} - 1) * #{pageSize}) + 1
+			AND t.ROW_NUM <![CDATA[<=]]> (#{pageNum} * #{pageSize})
+			</if>
+	</select>
+	
+	<!-- 取得申請項目的申請保單資訊 -->
+	<select id="getTransPolicy" resultType="com.twfhclife.eservice.onlineChange.model.TransPolicyVo" parameterType="java.lang.String">
+	<!-- SELECT 
+		TP.POLICY_NO AS POLICYNO,
+		TRIM(B.PRODUCT_NAME) AS PRODUCTNAME
+	FROM 
+		ESERVICE.TRANS_POLICY TP, ESERVICE.PRODUCT B, ESERVICE.POLICY P
+	WHERE
+		TP.TRANS_NUM = #{transNum}
+		AND TP.POLICY_NO = P.POLICY_NO
+		AND P.POLICY_TYPE = B.PRODUCT_CODE -->
+	SELECT 
+		TP.POLICY_NO AS POLICYNO,
+		B.PRODUCT_NAME AS PRODUCTNAME
+	FROM ESERVICE.DBO.TRANS_POLICY TP
+	JOIN ESERVICE.DBO.POLICY P ON TP.POLICY_NO = P.POLICY_NO
+	JOIN ESERVICE.DBO.PRODUCT B ON P.POLICY_TYPE = B.PRODUCT_CODE AND (SELECT LIPM_INSU_BEG_DATE FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = P.POLICY_NO) BETWEEN B.DESI_SALE_DATE AND B.DESI_CHAN_VAR_DATE
+	WHERE
+		TP.TRANS_NUM = #{transNum}
+	</select>
+	
+	<update id="updateTransStatus" parameterType="java.lang.String">
+		UPDATE TRANS SET STATUS = #{status} WHERE TRANS_NUM = #{transNum}
+	</update>
+	
+	<insert id="addTransFile">
+		INSERT INTO 
+			ESERVICE.DBO.TRANS_FILE
+			(ID, TRANS_NUM, FILE_NAME, FILE_DATA, CREATE_DATE, CREATE_USER)
+		VALUES
+		(  
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_FILE), 
+			#{transNum,jdbcType=NUMERIC}, 
+			#{fileName,jdbcType=VARCHAR}, 
+			#{transFile,jdbcType=BLOB}, 
+			getdate(), 
+			#{userId,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="getUserIdByTransNum" parameterType="java.lang.String" resultType="java.lang.String">
+		 select user_id from ESERVICE.DBO.TRANS where trans_num=#{transNum} and status='2' and trans_type=#{transType}
+	</select>
+	
+	<insert id="addTransStatusHistory" parameterType="com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo">
+		INSERT INTO 
+       		ESERVICE.DBO.TRANS_STATUS_HISTORY
+       		(TS_ID,TRANS_NUM,CUSTOMERNAME,USER_IDENTITY,STATUS,REJECT_REASON,CONTENT)
+       	VALUES
+       		(   (NEXT VALUE FOR ESERVICE.DBO.TRANS_STATUS_HISTORY_SEQ), 
+       			#{vo.transNum,  jdbcType=VARCHAR},
+       			#{vo.customerName, jdbcType=VARCHAR},
+       			#{vo.identity, jdbcType=VARCHAR},
+       			#{vo.status, jdbcType=VARCHAR},
+       			#{vo.rejectReason, jdbcType=VARCHAR},
+       			#{vo.content, jdbcType=VARCHAR}
+       		)
+	</insert>
+
+	<select id="getContactInfoCompleted" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM
+		ESERVICE.DBO.TRANS_CONTACT_INFO_DTL A
+		JOIN ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_CONTACT_ID = B.ID
+		JOIN ESERVICE.DBO.TRANS_POLICY C on B.TRANS_NUM = C.TRANS_NUM
+		JOIN ESERVICE.DBO.LILIPM D ON C.POLICY_NO = D.LIPM_INSU_NO
+		JOIN ESERVICE.DBO.TRANS E ON C.TRANS_NUM = E.TRANS_NUM
+		WHERE E.STATUS not in ('2','3','6','7')
+		AND E.TRANS_TYPE = 'CONTACT_INFO'
+		AND D.LIPM_ID = #{rocId}
+	</select>
+</mapper>

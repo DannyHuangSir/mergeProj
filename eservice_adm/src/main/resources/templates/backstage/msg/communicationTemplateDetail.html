@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='communicationTemplateSearch')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-signal" aria-hidden="true"></i>
+									通信管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+									通信模板資訊
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="alert alert-info" id="updateError" hidden="true">
+										<i class="my-icon fa fa-hand-o-right"></i>
+										<span id="updateErrorCont"></span>
+									</div>
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">通信模板資訊</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form id="updateCommTemp">
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">系統別</label>
+														<div class="col-sm-10" id="leave">
+															<label id="systems"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">通信模板代碼</label>
+														<div class="col-sm-10" id="leave">
+															<label id="messagingTemplateCode"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">通信模板名稱</label>
+														<div class="col-sm-10" id="leave">
+															<label id="messagingTemplateName"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">狀態</label>
+														<div class="col-sm-10" id="leave">
+															<label id="status"></label>
+														</div>
+													</fieldset>
+													<fieldset style="padding:16px">
+														<label class="col-sm-2 control-label no-padding-right">寄送方式</label>
+														<div class="col-sm-9">
+															<label id="sendType"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">觸發方式</label>
+														<div class="col-sm-8">
+															<label id="triggerType"></label>
+														</div>
+													</fieldset>
+													<fieldset id="showSet">
+														<label class="col-sm-2 control-label no-padding-right"></label>
+														<div class="col-sm-10">
+															<div class="widget-box">
+																<div class="widget-header">
+																	<h4 class="widget-title">事件通知</h4>
+																</div>
+																<div class="widget-body">
+																	<div class="widget-main no-padding">
+																		<fieldset style="padding:16px">
+																			<label class="col-sm-2 control-label no-padding-right">事件類型</label>
+																			<div class="col-sm-9" id="leave">
+																				<label id="eventTypes"></label>
+																			</div>
+																		</fieldset>
+																		<fieldset style="padding:16px">
+																			<label class="col-sm-2 control-label no-padding-right">寄送時間</label>
+																			<div class="col-sm-9">
+																				<label id="sendTime"></label>
+																			</div>
+																		</fieldset>
+																		<fieldset style="padding:16px" id="showTimeList">
+																			<label class="col-sm-2 control-label no-padding-right">寄送週期</label>
+																			<div class="col-sm-10">
+																				<label id="circleType"></label>
+																			</div>
+																		</fieldset>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">收件者</label>
+														<div class="col-sm-9">
+															<label id="receiverMode_d" hidden="true">動態指定</label>
+															<label id="receiverMode_c" hidden="true">
+																<button class="pull-left btn btn-primary" type="button" id="receiverBtn">
+																...</button>
+															</label>
+														</div>
+													</fieldset>
+													<fieldset id="messagingSubjectHide">
+														<label class="col-sm-2 control-label no-padding-right">主旨</label>
+														<div class="col-sm-10" id="leave">
+															<label id="messagingSubject"></label>
+														</div>
+													</fieldset>
+													<fieldset id="showCont1">
+														<label class="col-sm-2 control-label no-padding-right">內容</label>
+														<div class="col-sm-10" id="leave">
+															<textarea class="form-control" id="mailMessagingContent" placeholder="請輸入內容..." disabled="true"></textarea>
+														</div>
+													</fieldset>
+													<fieldset id="showCont2">
+														<label class="col-sm-2 control-label no-padding-right">內容</label>
+														<div class="col-sm-10" id="leave">
+															<label id="mobileMessagingContent"></label>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-2 control-label no-padding-right">引用變數</label>
+														<div class="col-sm-10" id="leave">
+															<select class="chosen-select form-control" id="parameters" data-placeholder="請選擇引用變數..." disabled="disabled" multiple="multiple" style="display: none;">
+																
+															</select>
+														</div>
+													</fieldset>
+													<div class="form-actions center">
+														<button type="button" class="btn btn-success" id="isUpdateCommTemp" onclick="toUpdate()" disabled="true">
+															<i class="my-icon fa fa-check bigger-110"></i><span id="showUpdateCommTemp">修改模版</span>
+														</button>
+														<button type="button" class="btn btn-danger" id="isStopCommTemp" onclick="stopCommTemp()" disabled="true">
+															<i class="my-icon fa fa-times"></i>
+															停用
+														</button>
+													</div>
+												</form>
+												<form id="editForm" th:action="@{/communicationTemplateUpdate}" method="POST">
+													<input type="hidden" id="messagingTemplateId" name="messagingTemplateId"/>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="receiverTipe">
+								<form id="receiverform">
+									<div id="addFieldset"></div>
+								</form>
+								<fieldset style="padding:16px">
+									<div class="col-sm-2" id="addReceiver"></div>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var dext = 0;
+		$(function() {
+			// 取得明細資料
+			var formData = {};
+			formData.messagingTemplateId = /*[[${param.messagingTemplateId} != null ? ${param.messagingTemplateId[0]}]]*/;
+			eserviceForm.post(/*[[@{/communctionTemp/getMessagingTemplateById}]]*/, formData, function(response) {
+				var data = response.resultData;
+				$('#systems').text(data.sysName);
+				$('#messagingTemplateCode').text(data.messagingTemplateCode);
+				$('#messagingTemplateName').text(data.messagingTemplateName);
+				$('#messagingSubject').text(data.messagingSubject);
+				$('#status').text(data.statusName);
+				
+				setBtnStatus(data.tmpStatus); // 設定修改按鈕狀態
+				setSendType(data);            // 設定寄送方式
+				setTriggerType(data);         // 設定觸發方式
+				setReceiverMode(data);        // 設定收件方式
+				setMessagingParameter(data);  // 設定引用變數
+			});
+			
+			// 收件人設定
+			$('#receiverBtn').on('click', function(e) {
+				e.preventDefault();
+				var dialog = $('#receiverTipe').removeClass('hide').dialog({
+					modal: true,
+					title: "<div class='widget-header widget-header-small center'><h4 class='smaller'>收件人設定</h4></div>",
+					title_html: true,
+					buttons: [ 
+						{
+							text: "確定",
+							"class" : "btn btn-primary btn-minier",
+							click: function() {
+								$(this).dialog('close');
+							} 
+						}
+					],
+					width: 600
+				});
+			});
+
+			// 初始化事件
+			$('#receiverTipe').hide();
+			eserviceAdmEvent.initDialog();
+			eserviceAdmEvent.initChosenSelect();
+		});
+		
+		// 設定修改按鈕狀態
+		function setBtnStatus(tmpStatus) {
+			// 0:停用 2:覆核中
+			if (tmpStatus == '0' || tmpStatus == '2') {
+				if (tmpStatus == '0') {
+					$('#updateError').show();
+					$('#updateErrorCont').text('此模版已被停用');
+				} else {
+					$('#updateError').show();
+					$('#updateErrorCont').text('此模版有待審核的修改...');
+				}
+				$('#showUpdateCommTemp').text('查看修改');
+				$('#isUpdateCommTemp').attr('disabled', false);
+				$('#isStopCommTemp').attr('disabled', true);
+			} else {
+				$('#isUpdateCommTemp').attr('disabled', false);
+				$('#isStopCommTemp').attr('disabled', false);
+			}
+		}
+		
+		// 設定寄送方式
+		function setSendType(data) {
+			if (data.sendType == 'email') {
+				$('#sendType').text('電子郵件');
+				$('#showCont2').hide();
+				$('#showCont1').show();
+				$('#mailMessagingContent').val(data.messagingContent);
+				
+				var email = '';
+				email += '<fieldset style="padding:16px" id="mail_0" name="receiverFor">';
+				email += '    <label class="col-sm-2 control-label no-padding-right">電子郵件</label>';
+				email += '    <div class="col-sm-8"><label id="receiver_0" /></label></div>';
+				email += '</fieldset>';
+				
+				$('#addFieldset').append(email);
+			} else if (data.sendType == 'sms') {
+				$('#sendType').text('手機簡訊');
+				$('#showCont2').show();
+				$('#showCont1').hide();
+				$('#messagingSubjectHide').hide();
+				$('#mobileMessagingContent').text(data.messagingContent);
+				
+				var mobile = '';
+				mobile += '<fieldset style="padding:16px" id="mobile_0" name="receiverFor">';
+				mobile += '    <label class="col-sm-2 control-label no-padding-right">手機門號</label>';
+				mobile += '    <div class="col-sm-8"><label id="receiver_0" /></label></div>';
+				mobile += '</fieldset>';
+				
+				$('#addFieldset').append(mobile);
+			}
+		}
+		
+		// 設定觸發方式
+		function setTriggerType(data) {
+			if (data.triggerType == 'api') {
+				$('#triggerType').text('通信API');
+				$('#showSet').hide();
+			} else if (data.triggerType == 'event') {
+				$('#triggerType').text('事件通知');
+				$('#eventTypes').text(data.eventTypeName);
+				
+				// 寄送時間
+				if (data.sendTime == 'now') {
+					$('#sendTime').text('立即執行');
+					$('#showTimeList').hide();
+				} else if (data.sendTime != null) {
+					$('#sendTime').text(data.sendTime);
+					
+					// 寄送週期
+					var circleType = '';
+					var circleDay = data.circleValue;
+					if (data.circleType == 'yearly') {
+						var mon = circleDay.substring(0,circleDay.indexOf('/'));
+						var day = circleDay.substring(circleDay.indexOf('/') + 1);
+						circleType = "每年 " + mon + " 月 " + day + " 日";
+					} else if (data.circleType == "monthly") {
+						circleType = "每月 " + circleDay + " 日";
+					} else if (data.circleType == "weekly") {
+						var arrayPut = ["", "一", "二", "三", "四", "五", "六", "日"];
+						circleType = "每週 " + arrayPut[circleDay];
+					}
+					$('#circleType').text(circleType);
+				}
+			}
+		}
+		
+		// 設定收件方式
+		function setReceiverMode(data) {
+			if (data.receiverMode == "dynamic") {
+				$('#receiverMode_d').show();
+			} else if (data.receiverMode == "customize") {
+				$('#receiverMode_c').show();
+				$.each(data.messagingReceiverList, function(inx, obj) {
+					if (dext == 0) {
+						$('#receiver_0').text(obj.messagingReceiverValue);
+						dext = dext + 1;
+					} else {
+						addReceiver(data.sendType);
+						var oldDext = dext - 1;
+						$('#receiver_'+ oldDext).text(obj.messagingReceiverValue);
+					}
+				});
+			}
+		}
+		
+		// 設定引用變數
+		function setMessagingParameter(data) {
+			var parameters = [];
+			console.log("setMessagingParameter datalist=", data.messagingParameterList);
+			$.each(data.messagingParameterList, function(i, obj) {
+				parameters.push(obj.parameterId+"^"+obj.parameterValue);
+			});
+			eserviceAdmOption.chosenMsgTempParameter('#parameters', /*[[@{/common/msg/parameterList}]]*/, function() {
+				$('#parameters').val(parameters);
+				$('#parameters').trigger("chosen:updated");
+			});
+		}
+		
+		// 至修改頁面
+		function toUpdate() {
+			$('#editForm #messagingTemplateId').val(/*[[${param.messagingTemplateId} != null ? ${param.messagingTemplateId[0]}]]*/);
+			$('#editForm')[0].submit();
+		}
+		
+		function addReceiver(type){
+			var email = '<fieldset style="padding:16px" id="mail_'+dext+'" name="receiverFor">'+
+			'<label class="col-sm-2 control-label no-padding-right">電子郵件</label>'+
+				'<div class="col-sm-8"><label id="receiver_'+dext+'"></label></fieldset>';
+		
+			var mobile = '<fieldset style="padding:16px" id="mobile_'+dext+'" name="receiverFor">'+
+			'<label class="col-sm-2 control-label no-padding-right">手機門號</label>'+
+				'<div class="col-sm-8"><label id="receiver_'+dext+'"></label></fieldset>';
+			
+			if (type == 'sms') {
+				$('#addFieldset').append(mobile);
+			}
+			if (type == 'email') {
+				$('#addFieldset').append(email);
+			}
+			dext = dext + 1;
+		}
+		
+		// 停用模版
+		function stopCommTemp() {
+			var r = confirm("是否確定停用此模板?\n(確認後仍需經過覆核方可生效)");
+			if (r == true) {
+				var formData = {
+					messagingTemplateId: /*[[${param.messagingTemplateId} != null ? ${param.messagingTemplateId[0]}]]*/
+				};
+				eserviceForm.post(/*[[@{/communctionTemp/stopMessagingTemplate}]]*/, formData, function(response) {
+					if (response.result != 'SUCCESS') {
+						alertMsg(response.resultMsg);
+					} else {
+						alertMsg("已寄送通知給管理人員，請等待審核!");
+						location.reload();
+					}
+				});
+			} else {
+				console.log("User canceled!");
+			}
+			
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

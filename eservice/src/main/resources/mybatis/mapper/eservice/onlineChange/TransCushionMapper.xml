@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransCushionDao">
+
+	<resultMap id="TransCushionMap" type="com.twfhclife.eservice.onlineChange.model.TransCushionVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="CUSHION_MODE" property="cushionMode"/>
+		<result column="CUSHION_MODE_OLD" property="cushionModeOld"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,CUSHION_MODE,CUSHION_MODE_OLD
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transCushionVo.id != null"> AND ID = #{transCushionVo.id} </if>
+			<if test="transCushionVo.transNum != null and transCushionVo.transNum != ''"> AND TRANS_NUM = #{transCushionVo.transNum} </if>
+			<if test="transCushionVo.cushionMode != null and transCushionVo.cushionMode != ''"> AND CUSHION_MODE = #{transCushionVo.cushionMode} </if>
+			<if test="transCushionVo.cushionModeOld != null and transCushionVo.cushionModeOld != ''"> AND CUSHION_MODE_OLD = #{transCushionVo.cushionModeOld} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transCushionVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得自動墊繳選擇權查詢結果 -->
+	<select id="getTransCushion" resultMap="TransCushionMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CUSHION
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 自動墊繳選擇權-新增 -->
+	<insert id="insertTransCushion">
+		INSERT INTO ESERVICE.DBO.TRANS_CUSHION
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_CUSHION),
+			#{transCushionVo.transNum, jdbcType=VARCHAR},
+			#{transCushionVo.cushionMode, jdbcType=VARCHAR},
+			#{transCushionVo.cushionModeOld, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+		
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='onlineChange')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-search-plus" aria-hidden="true"></i>
+								報表查詢
+								<i class="my-icon fa fa-angle-double-right"></i>
+								保單理賠申請明細報表
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="">
+			                <ul class="step">
+			                    <li class="step1  col-xs-4">
+			                        1<span class="hid1">. 選擇報表條件</span>
+			                    </li>
+			                    <li class="step2 active col-xs-4">
+			                        2<span class="hid1">. 選擇匯出資料欄位</span>
+			                    </li>
+			                    <li class="step3 col-xs-4">
+			                        3<span class="hid1">. 下載開啓報表</span>
+			                    </li>
+			                </ul>
+			            </div>
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form class="form-horizontal" role="form">
+									<div id="selectTitle" class="list-select ui-draggable">
+										
+										<div class="list-body">
+											<div class="droppable">
+												<h4 style="line-height: 30px;">可選擇欄位</h4>
+												<ul class="item-box left-box  ui-sortable ui-droppable">
+													<li class="item ui-sortable-handle" data-id="FROM_COMPANY_ID">申請來源</li>
+													<li class="item ui-sortable-handle" data-id="APPLYITEM">申請項目</li>
+													<li class="item ui-sortable-handle" data-id="STATUS">申請狀態</li>
+													<li class="item ui-sortable-handle" data-id="CREATE_DATE">申請日期</li>
+													<li class="item ui-sortable-handle" data-id="POLICYNO" >保單號碼</li>
+													<li class="item ui-sortable-handle" data-id="CUSTOMERNAME" >事故人</li>
+													<li class="item ui-sortable-handle" data-id="NAME" >被保人姓名</li>
+													<li class="item ui-sortable-handle" data-id="ID_NO" >被保人身分證字號</li>
+													<li class="item ui-sortable-handle" data-id="LIPM_NAME_1" >要保人姓名</li>
+													<li class="item ui-sortable-handle" data-id="LIPM_ID" >要保人身分證字號</li>
+													<li class="item ui-sortable-handle" data-id="BIRDATE" >出生日期</li>
+													<li class="item ui-sortable-handle" data-id="TEL" >聯絡電話</li>
+													<li class="item ui-sortable-handle" data-id="PHONE" >行動電話</li>
+													<li class="item ui-sortable-handle" data-id="MAIL" >E-MAIL</li>
+													<li class="item ui-sortable-handle" data-id="ADDRESS" >聯絡地址</li>
+													<li class="item ui-sortable-handle" data-id="RELATION" >主被保險人(員工)之關係</li>
+													<li class="item ui-sortable-handle" data-id="OTHERCOMPANYINSURED">被保險人是否有投保別家保險公司之保賠</li>
+													<li class="item ui-sortable-handle" data-id="OTHERCOMPANYINSURED_DETAIL" >被保險人是否有投保別家保險公司之保賠的詳細資料欄位</li>
+
+													<li class="item ui-sortable-handle" data-id="ACCIDENT_CAUSE">保險事故類型</li>
+													<li class="item ui-sortable-handle" data-id="ACCIDENT_CAUSE_DETAIL" >保險事故的詳細資料欄位</li>
+
+													<li class="item ui-sortable-handle" data-id="OTHERINSUCOMMPANY">是否傳送其他保險公司</li>
+													<li class="item ui-sortable-handle" data-id="TO_COMPANY_ID" >傳送其他保險公司的清單</li>
+
+													<li class="item ui-sortable-handle" data-id="PAYMENT_METHOD" >指定給付方式(及相關帳戶資訊)</li>
+													<li class="item ui-sortable-handle" data-id="FIlE_LIST" >已上傳的申請應備文件清單</li>
+
+													<li class="item ui-sortable-handle" data-id="FILE_RECEIVED">是否已紙本回收</li>
+													<li class="item ui-sortable-handle" data-id="SEND_ALLIANCE">是否已開啟轉送公會聯盟鏈</li>
+													<li class="item ui-sortable-handle" data-id="REJECT_REASON">異常件註記原因</li>
+												</ul>
+											</div>
+											<div id="select-column" class="droppable">
+												<h4>已選擇欄位</h4>
+												<ul id="left-box" class="item-box right-box ui-sortable ui-droppable">
+													<!-- 右边框存放已选项 -->
+								
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12" style="text-align: center;margin-top: 20px;">
+										<button class="btn bgGrey" id="lastStep" type="button" style="border: 0;margin-right: 20px;">
+											<a th:href="@{/rptInsClaimDetail}" style="border: 0;">上一步</a>
+										</button>
+										<button class="btn bgOrange" id="go" type="reset" style="border: 0;" >
+											下一步
+										</button>
+									</div>
+									
+								</form>
+								<!-- 要送出的form data -->
+								<form role="form" id=" " method="post" action="">
+									
+									<input type="hidden" id=" " name=" "/>
+									
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		
+		/*<![CDATA[*/
+		var formData = /*[[${claimVo}]]*/;
+		
+		$(function(){
+			// 是否开启选项可拖动，选项可双击
+			$('#selectTitle').initList({
+				openDrag: true,
+				openDblClick: true
+			});
+		});
+	var	lilipiColumn=['OTHERINSUCOMMPANY','OTHERINSUTYPE','OTHERINSUAMOUNT','OTHERINSUCLAIM'];
+	var	lilipiColumnName = ['保險公司名稱','保險種類','保險金額','同時申請理賠'];
+
+	var	accCauseColumn = ['DISEASENAME','DIAGNOSISDATE','HOSPITAL','JOB','ACCIDENT_DATE','ACCIDENT_TIME','ACCIDENT_LOCATION','ACCIDENT_DESCR','CALLPOLICE','POLICE_STATION','POLICE_NAME','POLICE_PHONE','POLICE_DATE','POLICE_TIME'];
+	var	accCauseColumnName = ['診斷病名','該疾病初診日','曾就診之醫院','事故當時職業','發生時間月日','事故地點','事故地點','事故原因及送醫經過詳情（請述明就診醫院名稱）','是否報警','事故處理單位','承辦員警','員警電話','報警時間月日','報警時間時分'];
+
+		$('#go').click(function() {
+			formData.column = [];
+			formData.columnName = [];
+			$('#select-column').find('li').each(function(i,val){
+				var id = val.getAttribute('data-id');
+				if (id == 'OTHERCOMPANYINSURED_DETAIL'){
+					lilipiColumn.forEach(function(val){
+						formData.column.push(val);
+					})
+					lilipiColumnName.forEach(function(val){
+						formData.columnName.push(val);
+					})
+				}else if (id == 'ACCIDENT_CAUSE_DETAIL'){
+					accCauseColumn.forEach(function(val){
+						formData.column.push(val);
+					})
+					accCauseColumnName.forEach(function(val){
+						formData.columnName.push(val);
+					})
+				}else{
+					formData.column.push(val.getAttribute('data-id'));
+					formData.columnName.push(val.innerHTML);
+				}
+			})
+			if(formData.column.length <= 0){
+				alertMsg('請選擇要導出的欄位.');
+				return;
+			}
+			postWithFormData(/*[[@{/rptInsClaimDetail/csv}]]*/, formData);
+		});
+		// $('#lastStep').click(function() {
+		// 	postWithFormData(/*[[@{/rptInsClaimDetail}]]*/, formData);
+		// });
+		/*]]>*/
+		</script>
+	</body>
+</html>

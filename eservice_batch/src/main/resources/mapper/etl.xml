@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.ETLMapper">
+
+	<resultMap id="ETLJobLogMap" type="com.twfhclife.eservice_batch.model.ETLJobLogVo" >
+		<result column="JOB_SEQ" property="jobSeq"/>
+		<result column="JOB_NAME" property="jobName"/>
+		<result column="JOB_COUNT" property="jobCount"/>
+		<result column="START_DATE" property="startDate"/>
+		<result column="END_DATE" property="endDate"/>
+		<result column="SPEND_TIME" property="spendTime"/>
+	</resultMap>
+
+	<select id="callETLProcess" statementType="CALLABLE">
+		 CALL ESERVICE.DBO.USP_ETL_PROCESS()
+	</select>
+
+	<select id="getETLResult" resultMap="ETLJobLogMap">
+		SELECT 
+		 	JOB_SEQ,
+		 	JOB_NAME,
+		 	JOB_COUNT,
+		 	CONVERT(VARCHAR, START_DATE, 120) START_DATE,
+		 	CONVERT(VARCHAR, END_DATE, 120) END_DATE,
+		 	SPEND_TIME
+		 FROM ESERVICE.DBO.ETL_JOB_LOG
+		 WHERE (JOB_SEQ + 1911000000) LIKE CONVERT(VARCHAR, GETDATE(), 112) + '__'
+		 ORDER BY JOB_SEQ ASC
+	</select>
+
+</mapper>

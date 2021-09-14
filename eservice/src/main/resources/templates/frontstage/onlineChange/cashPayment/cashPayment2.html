@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>收益分配或撥回資產分配方式｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">收益分配或撥回資產分配方式</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 收益分配或撥回資產分配方式
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+                        1<span class="hid1">. 選擇保單</span>
+                    </li>
+                    <li class="step2 active col-xs-4">
+                        2<span class="hid1">. 變更給付方式</span>
+                    </li>
+                    <li class="step3 col-xs-4">
+                        3<span class="hid1">. 確認資料</span>
+                    </li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請設定變更給付方式</h2>
+                <div class="loan1">
+                    <label for="checkBox12" class="col-sm-10 col-sm-offset-2 enNormal">保單號碼： <span class="colorBlack"><th:block th:text="${transCashPaymentVo.policyNo}"/></span></label>
+                    <label for="checkBox12" class="col-sm-10 col-sm-offset-2 enNormal">保單名稱： <span class="colorBlack">
+						<th:block th:text="${transCashPaymentVo.policyNo != null and userInfo.productNameMap != null}
+							? ${userInfo.productNameMap[transCashPaymentVo.policyNo]}"/>
+					</span></label>
+					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+                        <div class="col-sm-12 mode2select">
+                            <label for="" class="col-sm-6 colorGreen">收益分配或撥回資產分配方式：</label>
+                            <label>
+								<div class="selector-box col-sm-12">
+									<select class="selector" name="allocation">
+										<option th:selected="${preAllocation eq '' }"></option>
+										<option th:selected="${preAllocation eq '1'}" value="1">現金給付</option>
+										<option th:selected="${preAllocation eq '2'}" value="2">增加投資標的單位數</option>
+									</select>
+								</div>
+                           </label>
+                       </div>
+                    </div>
+                    <div class="clearfix" style="margin-bottom: 30px;"></div>
+                </div>
+				<div class="col-md-8 col-md-offset-2 two-buttons">
+					<a href="cashPayment1"><button id="deny" class="btn-signup">上一步</i></button></a>
+					<button id="go" class="btn-signup">下一步</i></button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			$('#go').click(function() {
+				// 檢核是否有選一筆資料
+				let selected = $("[name='allocation'] option:selected").val()
+				if (selected == null || selected == '') {
+					openAlert("請選擇分配方式");
+					return false;
+				}
+
+				if (selected == '1' && ![[${checkCashPayment}]]) {
+					openAlert("現金給付需先設定匯款帳號，請至[匯款帳號變更]線上申請功能進行設定");
+					return false;
+				}
+
+				var formData = {};
+				formData.policyNo = [[${transCashPaymentVo.policyNo}]]
+				formData.allocation = selected
+				formData.preAllocation = [[${preAllocation}]]
+				postWithFormData(/*[[@{/cashPayment3}]]*/, formData);
+			});
+	    });
+		/*]]>*/
+		</script>
+</body>
+
+</html>

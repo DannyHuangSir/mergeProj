@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransDepositMapper" >
+	<resultMap id="BaseResultMap" type="com.twfhclife.eservice_batch.model.TransDepositVo" >
+		<id column="ID" property="id" jdbcType="NUMERIC" />
+		<result column="TRANS_NUM" property="transNum" jdbcType="VARCHAR" />
+		<result column="POLICY_NO" property="policyNo" jdbcType="VARCHAR" />
+		<result column="INVT_NO" property="invtNo" jdbcType="NVARCHAR" />
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC" />
+		<result column="RATIO" property="ratio" jdbcType="NUMERIC" />
+		<result column="DEPOSIT_METHOD" property="depositMethod" jdbcType="VARCHAR" />
+		<result column="PAYMENT_METHOD" property="paymentMethod" jdbcType="VARCHAR" />
+		<result column="SWIFT_CODE" property="swiftCode" jdbcType="VARCHAR" />
+		<result column="ENGLISH_NAME" property="englishName" jdbcType="VARCHAR" />
+		<result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+		<result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+		<result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR" />
+		<result column="BRANCH_NAME" property="branchName" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
+		<result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		ID, TRANS_NUM, POLICY_NO, INVT_NO, AMOUNT, RATIO, DEPOSIT_METHOD, PAYMENT_METHOD, SWIFT_CODE, ENGLISH_NAME,
+		BANK_CODE, BRANCH_CODE, ACCOUNT_NAME, BANK_ACCOUNT, ZIP_CODE, ADDRESS, BANK_NAME, BRANCH_NAME, CURRENCY
+	</sql>
+
+	<select id="getTransDeposits" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/>
+		FROM  ESERVICE.dbo.TRANS_DEPOSIT
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+</mapper>

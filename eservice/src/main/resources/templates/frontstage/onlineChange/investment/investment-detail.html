@@ -1,0 +1,55 @@
+<div class="col-sm-12">
+	<div class="check-title">新投資標的與比例</div>
+	<div class="plus-list">
+		<div class="col-sm-6">
+			<p>      新投資標的 </p>
+		</div>
+		<div class="col-sm-3">
+			<p>      變更前分配比例與 </p>
+		</div>
+		<div class="col-sm-3">
+			<p>      變更後分配比例 </p>
+		</div>
+	</div>
+	<div class="check-body grey2">
+		<th:block th:each="vo: ${finalInvestments}">
+			<div class="check-list2">
+				<div class="col-sm-6 ">
+					<p><th:block th:text="${vo.invtName}"/><span class="enSmall">(<th:block th:text="${vo.invtNo}"/>)</span></p>
+				</div>
+				<div class="col-sm-3">
+					<th:block th:text="${vo.preRatio}"/>%
+				</div>
+				<div class="col-sm-3">
+					<th:block th:text="${vo.afterRatio}"/>%
+				</div>
+			</div>
+		</th:block>
+	</div>
+	<div class="check-footer" style="background: #FDE3D2;">
+		<div class="check-list2">
+			<div class="col-sm-6">
+				<b>總百分比：</b>
+			</div>
+			<div class="col-sm-3">
+				<b id="preRatio">0%</b>
+			</div>
+			<div class="col-sm-3">
+				<b id="aftRatio">0%</b>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script th:inline="javascript">
+	$(function(){
+		var pre = 0
+		var aft = 0
+		$([[${finalInvestments}]]).each(function(index, e) {
+			pre += parseInt(e.preRatio)
+			aft += parseInt(e.afterRatio)
+		})
+		$("#preRatio").text(pre + '%')
+		$("#aftRatio").text(aft + '%')
+	})
+</script>

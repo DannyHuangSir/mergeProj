@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.UserMapper">
+	<resultMap id="UserMap" type="com.twfhclife.eservice_batch.model.UserVo">
+		<result column="ID" property="userId" />
+		<result column="EMAIL" property="email" />
+		<result column="MOBILE" property="mobile" />
+		<result column="FIRST_NAME" property="firstName" />
+		<result column="LAST_NAME" property="lastName" />
+		<result column="REALM_ID" property="realm" />
+		<result column="USERNAME" property="username" />
+		<result column="ROC_ID" property="rocId"/>
+		<result column="LAST_CHANG_PASSWORD_DATE" property="lastChangPasswordDate"/>
+	</resultMap>
+
+	<sql id="User_Column_List">
+		UE.ID, UE.EMAIL, UE.FIRST_NAME, UE.LAST_NAME, UE.REALM_ID, UE.USERNAME, U.ROC_ID
+	</sql>
+
+	<select id="findById" resultMap="UserMap" parameterType="java.lang.String">
+		SELECT
+		<include refid="User_Column_List" />
+		from ESERVICE_ADM.DBO.USER_ENTITY UE 
+		JOIN ESERVICE.DBO.USERS U 
+		  ON UE.USERNAME=U.USER_ID
+		where USERNAME = #{username}
+	</select>	
+	
+	<select id="findContactByUsername" resultMap="UserMap" parameterType="java.lang.String">
+		select ue.ID ID, ue.USERNAME USERNAME, ua1.VALUE EMAIL, ua2.VALUE MOBILE
+			from ESERVICE_ADM.DBO.USER_ENTITY ue
+			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua1 on ue.ID=ua1.USER_ID and ua1.NAME='email'
+			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua2 on ue.ID=ua2.USER_ID and ua2.NAME='mobile'
+			where ue.REALM_ID=#{arg0} and ue.USERNAME=#{arg1}
+	</select>	
+	
+	<select id="getUserNoticeList" resultMap="UserMap" parameterType="java.lang.String">
+		select 
+			user_id id,  
+			ESERVICE.DBO.fn_debase64(email) email,
+			ESERVICE.DBO.fn_debase64(mobile) mobile,
+			convert(varchar, last_chang_password_date, 111) last_chang_password_date
+		from ESERVICE.DBO.users
+		where last_chang_password_date is not null
+		and convert(varchar, getdate(), 112) <![CDATA[=]]> convert(varchar, DATEADD(month, (#{arg0} - #{arg1}), last_chang_password_date), 112)
+	</select>	
+	
+	<select id="getUserExpiredList" resultMap="UserMap" parameterType="java.lang.String">
+		select 
+			user_id id,  
+			ESERVICE.DBO.fn_debase64(email) email,
+			ESERVICE.DBO.fn_debase64(mobile) mobile,
+			convert(varchar, last_chang_password_date, 111) last_chang_password_date
+		from ESERVICE.DBO.users
+		where last_chang_password_date is not null
+		and convert(varchar, getdate(), 112) <![CDATA[>=]]> convert(varchar, DATEADD(month, (#{arg0}+1), last_chang_password_date), 112)
+	</select>
+	
+	<update id="clearUsersLastChgPwdDate" parameterType="java.lang.String">
+		UPDATE ESERVICE.DBO.USERS
+			set last_chang_password_date = null
+		WHERE
+			LOWER(USER_ID) = LOWER(#{userId})
+	</update>
+	
+	<select id="getMailPhoneByPolicyNo" resultMap="UserMap" parameterType="java.lang.String">
+        SELECT TOP 1 
+            PMDA_APPLICANT_EMAIL AS email, PMDA_APPLICANT_CELLPHONE AS mobile
+        FROM 
+            ESERVICE.DBO.LIPMDA_ES 
+		WHERE 
+            (PMDA_INSU_TYPE + CONVERT(VARCHAR,PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) = #{policyNo}
+	</select>	
+	
+	<select id="getUserLastLoginOverYears" resultMap="UserMap" parameterType="java.lang.String">
+	<![CDATA[
+		select t.user_id id from (
+			select user_id, max(login_date) login_date from eservice.dbo.audit_log
+			where login_status = 1
+			group by user_id
+		) t
+		where DATEADD(month, (12 * #{lastLoginLimitYears}), login_date) <= getdate()
+	]]>
+	</select>	
+	
+	<update id="lockUserStatus" parameterType="java.lang.String">
+		UPDATE ESERVICE.DBO.USERS
+			set status = 'locked'
+		WHERE
+			LOWER(USER_ID) = LOWER(#{userId})
+	</update>
+
+</mapper>

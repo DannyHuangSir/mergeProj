@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransFundNotificationDtlDao">
+
+	<resultMap id="TransFundNotificationDtlMap" type="com.twfhclife.eservice.onlineChange.model.TransFundNotificationDtlVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_FUND_NOTIFICATION_ID" property="transFundNotificationId"/>
+		<result column="FUND_CODE" property="fundCode"/>
+		<result column="PERCENTAGE_UP" property="percentageUp"/>
+		<result column="PERCENTAGE_DOWN" property="percentageDown"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_FUND_NOTIFICATION_ID,FUND_CODE,PERCENTAGE_UP,PERCENTAGE_DOWN,TYPE,UP_VALUE,DOWN_VALUE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transFundNotificationDtlVo.id != null"> AND ID = #{transFundNotificationDtlVo.id} </if>
+			<if test="transFundNotificationDtlVo.transFundNotificationId != null"> AND TRANS_FUND_NOTIFICATION_ID = #{transFundNotificationDtlVo.transFundNotificationId} </if>
+			<if test="transFundNotificationDtlVo.fundCode != null and transFundNotificationDtlVo.fundCode != ''"> AND FUND_CODE = #{transFundNotificationDtlVo.fundCode} </if>
+			<if test="transFundNotificationDtlVo.percentageUp != null"> AND PERCENTAGE_UP = #{transFundNotificationDtlVo.percentageUp} </if>
+			<if test="transFundNotificationDtlVo.percentageDown != null"> AND PERCENTAGE_DOWN = #{transFundNotificationDtlVo.percentageDown} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transFundNotificationDtlVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得停損停利通知明細查詢結果 -->
+	<select id="getTransFundNotificationDtl" resultMap="TransFundNotificationDtlMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 停損停利通知明細-新增 -->
+	<insert id="insertTransFundNotificationDtl">
+		INSERT INTO ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL),
+			#{transFundNotificationDtlVo.transFundNotificationId, jdbcType=NUMERIC},
+			#{transFundNotificationDtlVo.fundCode, jdbcType=VARCHAR},
+			#{transFundNotificationDtlVo.percentageUp, jdbcType=NUMERIC},
+			#{transFundNotificationDtlVo.percentageDown, jdbcType=NUMERIC},
+			#{transFundNotificationDtlVo.type, jdbcType=VARCHAR},
+			#{transFundNotificationDtlVo.upValue, jdbcType=NUMERIC},
+			#{transFundNotificationDtlVo.downValue, jdbcType=NUMERIC}
+		)
+	</insert>
+
+</mapper>

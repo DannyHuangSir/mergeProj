@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.LoginLogDao">
+	<resultMap id="BaseResultMap" type="com.twfhclife.adm.model.LoginLogVo">
+		<result column="ID" property="id" />
+		<result column="USER_ID" property="userId" />
+		<result column="USERNAME" property="userName" />
+		<result column="SYSTEM_ID" property="systemId" />
+		<result column="LOGIN_STATUS" property="loginStatus" />
+		<result column="LOGIN_DATE" property="loginDate" />
+		<result column="LOGOUT_DATE" property="logoutDate" />
+		<result column="CLIENT_IP" property="clientIp" />
+	</resultMap>
+
+	<parameterMap id="LoginLogVo" type="com.twfhclife.adm.model.LoginLogVo"/>
+
+	<sql id="Base_Column_List">
+		ID,USER_ID,USERNAME,SYSTEM_ID,LOGIN_STATUS,LOGIN_DATE,LOGOUT_DATE,CLIENT_IP
+	</sql>
+
+	<!-- include sql: 取得登出登入記錄查詢sql -->
+	<sql id="INC1">
+		SELECT
+			USER_ID
+            ,USERNAME
+            ,SYSTEM_ID
+			,LOGIN_DATE
+			,LOGOUT_DATE
+			,CASE
+				WHEN LOGIN_STATUS = '1' THEN '登入成功'
+				WHEN LOGIN_STATUS = '0' THEN '登入失敗'
+				ELSE LOGIN_STATUS
+			END AS LOGIN_STATUS
+			,CLIENT_IP
+		FROM
+			ESERVICE_ADM.DBO.LOGIN_LOG
+		WHERE
+			ID IS NOT NULL
+		<if test="loginLogVo.userName != null and loginLogVo.userName != ''" >
+			AND USERNAME = #{loginLogVo.userName}
+		</if>
+		<if test="loginLogVo.loginStatus != null and loginLogVo.loginStatus != ''" >
+			AND LOGIN_STATUS = #{loginLogVo.loginStatus}
+		</if>
+		<if test="loginLogVo.clientIp != null and loginLogVo.clientIp != ''" >
+			AND CLIENT_IP LIKE CONCAT(CONCAT('%', #{loginLogVo.clientIp}),'%')
+		</if>
+		<if test="loginLogVo.startDate != null and loginLogVo.startDate != ''">
+			<if test="loginLogVo.endDate != null and loginLogVo.endDate != ''">
+				AND convert(varchar(10), LOGIN_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{loginLogVo.startDate}, 120)
+				AND convert(varchar(10), LOGIN_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{loginLogVo.endDate}, 120)
+			</if>
+		</if>
+	</sql>
+	
+	<!-- 取得登出登入記錄查詢結果(分頁) -->
+	<select id="getLoginRecordDetail" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY LOGIN_DATE) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> (#{loginLogVo.start} + #{loginLogVo.length})
+			AND B.ROW_NUM <![CDATA[>]]> #{loginLogVo.start}
+	</select>
+	
+	<!-- 取得登出登入記錄查詢結果(總筆數) -->
+	<select id="getLoginRecordDetailTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 新增登出登入記錄 -->
+	<insert id="addLoginLog" parameterType="com.twfhclife.adm.model.LoginLogVo">
+		INSERT INTO ESERVICE_ADM.DBO.LOGIN_LOG (
+			ID,USER_ID,USERNAME,SYSTEM_ID
+			,LOGIN_DATE,LOGIN_STATUS,CLIENT_IP
+		) VALUES (
+			#{loginLogVo.id},
+			#{loginLogVo.userId},
+			#{loginLogVo.userName},
+			#{loginLogVo.systemId},
+			getdate(),
+			#{loginLogVo.loginStatus},
+			#{loginLogVo.clientIp}
+		)
+	</insert>
+	
+	<update id="updateLogoutLog">
+		update ESERVICE_ADM.DBO.LOGIN_LOG set LOGOUT_DATE = getdate()
+			where ID = #{loginLogVo.id}
+	</update>
+
+</mapper>

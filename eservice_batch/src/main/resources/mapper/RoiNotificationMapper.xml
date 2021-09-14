@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.RoiNotificationMapper">
+	<resultMap id="baseResultMap" type="com.twfhclife.eservice_batch.model.RoiNotificationVo">
+		<result column="ID" property="id" />
+		<result column="POLICY_NO" property="policyNo" />
+		<result column="FUND_CODE" property="fundCode" />
+		<result column="PERCENTAGE_UP" property="percentageUp" />
+		<result column="PERCENTAGE_DOWN" property="percentageDown" />
+	</resultMap>
+	
+	<resultMap id="investmentMap" type="com.twfhclife.eservice_batch.model.InvestmentVo">
+		<id column="safp_insu_no" property="insuNo" />
+		<id column="invt_no" property="invtNo" />
+		<result column="invt_name" property="name" />
+		<result column="invt_exch_curr" property="invtCurr" />
+		<result column="invt_risk_bene_level" property="riskBeneLevel" />
+		<result column="invt_st" property="stCode" />
+		<result column="invt_investno" property="investNo" />
+		<result column="safp_net_units" property="netUnits" />
+		<result column="safp_net_amt" property="netAmt" />
+		<result column="safp_avg_pval" property="avgPval" />
+		<result column="safp_avg_pntdval" property="avgPNTDval" />
+		<result column="inwg_code" property="inwgCode" />
+		<result column="inwg_invt_weigh" property="invtWeigh" />
+		<result column="inwg_redemp_order" property="redEmpOrder" />
+		<result column="prod_no" property="prodNo" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+	   ID, POLICY_NO, FUND_CODE, PERCENTAGE_UP, PERCENTAGE_DOWN
+	</sql>
+	
+	<update id="updateAllDisable">
+        UPDATE 
+	       ESERVICE.DBO.ROI_NOTIFICATION_JOB 
+        SET 
+            ENABLED = 'N',UPDATE_DATE = getdate()
+        WHERE 
+            ENABLED = 'Y'
+	</update>
+	
+	<insert id="insertRoiNotificationJob" parameterType="com.twfhclife.eservice_batch.model.RoiNotificationVo">
+	   INSERT INTO ESERVICE.DBO.ROI_NOTIFICATION_JOB VALUES
+	   (
+	       (SELECT COALESCE(MAX(ID) + 1, 1) FROM ESERVICE.DBO.ROI_NOTIFICATION_JOB)
+	       ,#{roiNotificationVo.policyNo}
+	       ,#{roiNotificationVo.fundCode}
+	       ,#{roiNotificationVo.percentageUp}
+	       ,#{roiNotificationVo.percentageDown}
+	       ,#{roiNotificationVo.enabled}
+	       ,getdate()
+	       ,null
+		   ,#{roiNotificationVo.upValue}
+		   ,#{roiNotificationVo.downValue}
+	   )
+	</insert>
+	
+	<select id="findEnableAll" resultMap="baseResultMap">
+		SELECT 
+			<include refid="Base_Column_List"/> 
+		FROM 
+			ESERVICE.DBO.ROI_NOTIFICATION_JOB
+		WHERE 
+			ENABLED = 'Y'
+		ORDER BY 
+			POLICY_NO ASC, FUND_CODE ASC 
+	</select>
+	
+	<select id="findFundInfoByInsuNo" resultMap="investmentMap">
+		SELECT
+			<!-- LISAFP -->
+			LISAFP.SAFP_INSU_NO as safp_insu_no,
+			LISAFP.SAFP_NET_UNITS as safp_net_units,
+			LISAFP.SAFP_NET_AMT as safp_net_amt,
+			LISAFP.SAFP_AVG_PVAL as safp_avg_pval,
+			LISAFP.SAFP_AVG_PNTDVAL as safp_avg_pntdval,
+			<!-- LIINVT -->
+			LIINVT.INVT_NO as invt_no,
+			LIINVT.INVT_NAME as invt_name,
+			LIINVT.INVT_EXCH_CURR as invt_exch_curr,
+			LIINVT.INVT_RISK_BENE_LEVEL as invt_risk_bene_level,
+			LIINVT.INVT_ST as invt_st,
+			LIINVT.INVT_INVESTNO as invt_investno,
+			<!-- LIINWG -->
+			LIINWG.INWG_CODE as inwg_code,
+			LIINWG.INWG_INVT_WEIGH as inwg_invt_weigh,
+			LIINWG.INWG_REDEMP_ORDER as inwg_redemp_order
+		FROM
+			LISAFP@db51 LISAFP 
+			left join LIINVT@db51 LIINVT
+				ON LISAFP.SAFP_INVT_NO = LIINVT.INVT_NO
+			left join LIINWG@db51 LIINWG
+				ON LISAFP.SAFP_INSU_NO = LIINWG.INWG_INSU_NO
+				AND LISAFP.SAFP_INVT_NO = LIINWG.INWG_INVT_NO
+		WHERE LISAFP.SAFP_INSU_NO = #{investmentVo.insuNo} 
+		  AND LIINVT.INVT_NO = #{investmentVo.invtNo}
+		ORDER BY LIINVT.INVT_NO, LIINWG.INWG_REDEMP_ORDER
+	</select>
+	
+	<select id="findEmailByPolicyNo" resultType="string">
+		SELECT 
+			ESERVICE.DBO.FN_DEBASE64(USS.EMAIL) EMAIL 
+		FROM 
+			ESERVICE.DBO.USERS USS
+		JOIN 
+			ESERVICE.DBO.LILIPM LIPM ON LIPM.LIPM_ID=USS.ROC_ID
+		JOIN 
+			(
+			  SELECT DISTINCT POLICY_NO FROM ESERVICE.DBO.ROI_NOTIFICATION_JOB 
+			  WHERE POLICY_NO = #{policyNo} 
+			    AND ENAMBLED = 'Y'
+			) ROI ON ROI.POLICY_NO=LIPM.LIPM_INSU_NO
+	</select>
+	
+	<select id="findNetValueLatest" resultType="hashmap">
+		SELECT 
+			LIINPR_VIEW.INPR_INVT_NO,
+			LIINPR_VIEW.INPR_TRAN_DATE,
+			LIINPR_VIEW.INPR_UNIT_PURPRICE,
+			LIINPR_VIEW.INPR_UNIT_SOLPRICE
+		FROM 
+			LIINPR_VIEW@db51 LIINPR_VIEW
+		WHERE 
+			LIINPR_VIEW.INPR_INVT_NO = #{invtNo} 
+  		  AND (LIINPR_VIEW.INPR_TRAN_DATE) =  ( 
+		 	SELECT 
+				MAX(LIINPR_VIEW.INPR_TRAN_DATE) as inpr_tran_date
+	      	FROM 
+	      		LIINPR_VIEW@db51 LIINPR_VIEW
+		 	WHERE 
+		 		LIINPR_VIEW.INPR_INVT_NO = #{invtNo}
+		  )
+	</select>
+	
+	<select id="findExchRateLatest" resultType="hashmap">
+		SELECT
+			LIEXCH_VIEW.EXCH_DATE,
+			LIEXCH_VIEW.EXCH_SPEBK_PURATE,
+			LIEXCH_VIEW.EXCH_SPEBK_SORATE,
+			LIEXCH_VIEW.EXCH_CURR_CODE,
+			LIEXCH_VIEW.EXCH_EXCH_CODE
+		FROM
+			LIEXCH_VIEW@db51 LIEXCH_VIEW
+		WHERE 
+			LIEXCH_VIEW.EXCH_EXCH_CODE = #{exchCode}
+		  AND LIEXCH_VIEW.EXCH_DATE = ( 
+			SELECT 
+				MAX(LIEXCH_VIEW.EXCH_DATE) as exch_date
+			FROM 
+				LIEXCH_VIEW@db51 LIEXCH_VIEW
+			WHERE 
+				LIEXCH_VIEW.EXCH_EXCH_CODE = #{exchCode}
+		  )
+	</select>
+	
+	<select id="findAccumulation" resultType="hashmap">
+		SELECT
+			SUM(LICLUP.CLUP_EXPE_NTD) AS SUM_CLUP_EXPE_NTD 
+		FROM
+			LICLUP@db51 LICLUP
+		WHERE 
+			<!-- 保單號碼 -->
+			LICLUP.CLUP_INSU_NO = #{insuNo} 
+			<!-- 投資標的 -->
+		  AND LICLUP.CLUP_INVT_NO = #{invtNo} 
+		  AND LICLUP.CLUP_PROCESS_MODE != '04'
+	</select>
+
+	<select id="findFundByInvestNo" resultType="com.twfhclife.eservice_batch.model.InvestmentVo">
+		SELECT #{vo.insuNo} insuNo, F.FUND_CODE invtNo, F.CURRENCY invtCurr, R.BUY_PRICE exchRate, FV.SELL_PRICE netValue
+		FROM ESERVICE.DBO.FUND F
+		LEFT JOIN ESERVICE.DBO.EXCHANGE_RATE R ON F.CURRENCY = R.EXCHANGE_CODE AND R.CURRENCY_CODE = 'NTD' AND R.EFFECTIVE_DATE = #{time}
+		LEFT JOIN ESERVICE.DBO.FUND_VALUE FV ON FV.FUND_CODE = F.FUND_CODE
+		WHERE F.FUND_CODE = #{vo.invtNo}
+	</select>
+
+	<select id="findPortfolioByInvestNo" resultType="com.twfhclife.eservice_batch.model.MyPortfolioVo">
+		SELECT
+		 PP.POLICY_NO AS policyNo
+		,PP.INVT_NO AS invtNo
+		,PP.INVT_NAME AS invtName
+		,PP.INVT_RISK_BENE_LEVEL AS invtRiskBeneLevel
+		,PP.SAFP_NET_AMT as safpNetAmt
+		,PP.SAFP_NET_UNITS AS safpNetUnits
+		,PP.SAFP_AVG_PNTDVAL AS safpAvgPntdval
+		,PP.NET_VALUE_SELL AS netValueSell
+		,PP.NET_VALUE_DATE AS netValueDate
+		,PP.EXCH_RATE_BUY AS exchRateBuy
+		,PP.EXCH_RATE_DATE AS exchRateDate
+		,PP.CLUP_EXPE_NTD_SUM AS clupExpeNtdSum
+		,PP.INVT_EXCH_CURR AS invtExchCurr
+		,(
+			SELECT P.CURRENCY FROM ESERVICE.DBO.POLICY P WHERE P.POLICY_NO = PP.POLICY_NO
+		) AS insuCurr
+		,F.RISK_BENE_LEVEL  AS riskBeneLevel
+		FROM
+		ESERVICE.DBO.POLICY_PORTFOLIO PP
+		LEFT JOIN ESERVICE.DBO.FUND F ON F.FUND_CODE = PP.INVT_NO AND F.PRODUCT_NO = SUBSTRING (PP.POLICY_NO, 0, 3)
+		WHERE
+		PP.POLICY_NO = #{vo.insuNo} AND PP.INVT_NO = #{vo.invtNo}
+	</select>
+</mapper>

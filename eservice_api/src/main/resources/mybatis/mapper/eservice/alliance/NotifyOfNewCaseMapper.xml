@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.alliance.dao.NotifyOfNewCaseDao">
+
+	<resultMap id="NotifyOfNewCaseResultMap" type="com.twfhclife.alliance.model.NotifyOfNewCaseVo">
+		<result property="seqId"  column="SEQ_ID" />
+		<result property="caseId" column="CASE_ID" />
+		<result property="type" column="TYPE" />
+		<result property="createDate" column="CREATE_DATE" />
+		<result property="ncStatus"   column="NC_STATUS" />
+		<result property="statusDate" column="STATUS_DATE" />
+		<result property="msg" column="MSG" />
+	</resultMap>
+	
+	<!-- Modify 2021/07/21,if type=2 的資料不向聯盟取用 -->
+	<insert id="addNotifyOfNewCase" parameterType="java.lang.String">
+	
+		INSERT INTO 
+       		ESERVICE.DBO.NOTIFY_OF_NEW_CASE
+       		(SEQ_ID, 
+       		CASE_ID, 
+       		TYPE
+       		<if test="type!=null and type=='2'.toString() ">
+       		 ,NC_STATUS
+       		</if>
+       		) 
+       	VALUES
+       		(
+       			(NEXT VALUE for NOTIFY_OF_NEW_CASE_SEQ),
+       			#{caseId, jdbcType=VARCHAR}, 
+       			#{type, jdbcType=VARCHAR}
+       			<if test="type!=null and type=='2'.toString() ">
+	       		 ,'1'
+	       		</if>
+			)
+			
+	</insert>
+	
+	<select id="getNofifyOfNewCaseByNcStatus" parameterType="java.lang.String" resultMap="NotifyOfNewCaseResultMap">
+		select * from ESERVICE.DBO.NOTIFY_OF_NEW_CASE
+		where NC_STATUS = #{ncStatus}
+		order by CREATE_DATE desc
+	</select>
+	
+	<update id="updateNcStatusBySeqId" parameterType="com.twfhclife.alliance.model.NotifyOfNewCaseVo">
+		update ESERVICE.DBO.NOTIFY_OF_NEW_CASE
+		set NC_STATUS = #{vo.ncStatus},
+		    MSG = #{vo.msg}
+		where SEQ_ID  = #{vo.seqId}
+	</update>
+	
+</mapper>

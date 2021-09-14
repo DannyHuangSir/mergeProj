@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.LoginDao">
+
+	<select id="getMenuList" resultType="com.twfhclife.adm.model.FunctionVo" parameterType="string">
+		WITH USER_FUNC_AUTH AS (
+			<if test="adminUserFlag == 'Y'.toString()">
+			SELECT fi.FUNCTION_ID
+			FROM ESERVICE_ADM.DBO.FUNCTION_ITEM fi
+			WHERE fi.SYS_ID = #{systemId}
+			</if>
+			<if test="adminUserFlag == 'N'.toString()">
+			SELECT fi.FUNCTION_ID
+			FROM ESERVICE_ADM.DBO.USER_ROLE ur
+				,ESERVICE_ADM.DBO.ROLE r
+				,ESERVICE_ADM.DBO.ROLE_SYS_AUTH rsa
+				,ESERVICE_ADM.DBO.ROLE_FUNC_AUTH rfa
+				,ESERVICE_ADM.DBO.FUNCTION_ITEM fi
+			WHERE
+				ur.ROLE_ID = r.ROLE_ID
+				AND r.ROLE_ID = rsa.ROLE_ID
+				AND rsa.ROLE_ID = rfa.ROLE_ID
+				AND rfa.FUNCTION_ID = fi.FUNCTION_ID
+				AND ur.USER_ID = #{keyCloakUserId}
+				AND rsa.SYS_ID = #{systemId}
+				AND fi.SYS_ID = #{systemId}
+			</if>
+		)
+		,FUNCTION_SORT(LEVEL, FUNCTION_ID, FUNCTION_NAME, FUNCTION_TYPE, FUNCTION_URL, PARENT_FUNC_ID, ACTIVE, SYS_ID) AS (
+			SELECT 
+				CAST(1					AS VARCHAR) AS LEVEL,
+				CAST(b.FUNCTION_ID	 	AS VARCHAR),
+				CAST(b.FUNCTION_NAME  	AS VARCHAR),
+				CAST(b.FUNCTION_TYPE  	AS VARCHAR),
+				CAST(b.FUNCTION_URL   	AS VARCHAR),
+				CAST(b.PARENT_FUNC_ID 	AS VARCHAR),
+				CAST(b.ACTIVE		 	AS VARCHAR),
+				CAST(b.SYS_ID         	AS VARCHAR)
+			FROM ESERVICE_ADM.DBO.FUNCTION_ITEM b
+			WHERE b.ACTIVE = 'Y'
+			AND b.FUNCTION_ID IN (SELECT FUNCTION_ID FROM USER_FUNC_AUTH)
+			AND b.SYS_ID = 'eservice_adm'--#{systemId}
+		
+			UNION ALL
+		
+		  	SELECT 
+				CAST(PARENT.LEVEL + 1	  AS VARCHAR), 
+				CAST(CHILD.FUNCTION_ID	  AS VARCHAR), 
+				CAST(CHILD.FUNCTION_NAME  AS VARCHAR), 
+				CAST(CHILD.FUNCTION_TYPE  AS VARCHAR), 
+				CAST(CHILD.FUNCTION_URL   AS VARCHAR),  
+				CAST(CHILD.PARENT_FUNC_ID AS VARCHAR), 
+				CAST(CHILD.ACTIVE		  AS VARCHAR),
+				CAST(CHILD.SYS_ID         AS VARCHAR)
+			FROM ESERVICE_ADM.DBO.FUNCTION_ITEM AS CHILD
+			JOIN FUNCTION_SORT AS PARENT ON PARENT.FUNCTION_ID = CHILD.PARENT_FUNC_ID
+		) 
+		SELECT
+			f.FUNCTION_ID AS functionId
+			,f.FUNCTION_NAME AS functionName
+			,f.FUNCTION_TYPE AS functionType
+			,f.FUNCTION_URL AS functionUrl
+			,f.PARENT_FUNC_ID AS parentFuncId
+		FROM
+			FUNCTION_SORT f
+	</select>
+
+	<select id="getRoleName" resultType="java.lang.String"  parameterType="java.lang.String">
+        select P.PARAMETER_CODE + '|' + P.PARAMETER_NAME
+          from ESERVICE_ADM.DBO.USER_ROLE U , ESERVICE_ADM.DBO.ROLE R , (SELECT a.PARAMETER_CODE,a.PARAMETER_VALUE,a.PARAMETER_NAME
+                    FROM ESERVICE_ADM.DBO.PARAMETER a ,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+                   WHERE a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID AND a.STATUS = b.STATUS
+                     AND b.STATUS = 1 AND b.CATEGORY_CODE = 'ROLE_CODE') P
+         where U.USER_ID = #{userId, jdbcType=VARCHAR} and U.ROLE_ID = R.ROLE_ID and
+		       P.PARAMETER_VALUE = U.ROLE_ID
+	</select>
+</mapper>

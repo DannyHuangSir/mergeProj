@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='userMgnt')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-user" aria-hidden="true"></i>
+								權限管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								基本資料管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								人員管理
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+								<form class="form-horizontal" role="form" id="form1" action="func7-1.html">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者帳號 </label>
+										<div class="col-sm-5">
+											<input type="text" id="username" placeholder="輸入欲查詢的使用者帳號" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者名稱 </label>
+										<div class="col-sm-5">
+											<input type="text" id="lastName" placeholder="輸入欲查詢的使用者名稱" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">部門 </label>
+										<div class="col-sm-5">
+											<input type="text" id="department" placeholder="輸入欲查詢的部門" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">職位 </label>
+										<div class="col-sm-5">
+											<input type="text" id="jobTitle" placeholder="輸入欲查詢的職位" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">角色 </label>
+										<div class="col-sm-5">
+											<input type="text" id="roleName" placeholder="輸入欲查詢的角色" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="col-md-offset-3 col-md-9">
+										<button id="qryBtn" class="btn btn-success" type="button">
+											<i class="my-icon fa fa-check bigger-110"></i>
+											查詢
+										</button>
+										&nbsp; &nbsp; &nbsp;
+										<button id="resetBtn" class="btn" type="reset">
+											<i class="my-icon fa fa-undo bigger-110"></i>
+											重新輸入
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="hr hr-18 dotted hr-double"></div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div id="show-detail-results" hidden="true">
+<!-- 									<h3 class="header smaller lighter blue">查詢結果</h3> -->
+									<div>
+										<table id="qryGrid"></table>
+										<div id="qryPager"></div>
+									</div>
+								</div>
+							</div>
+							<div id="editDeptDialog" class="hide">
+								<div class="widget-main no-padding">
+									<form id="editDeptForm">
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right">使用者帳號 :</label>
+											<div class="col-sm-10">
+												<label id="showUserAcct"></label>
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right">使用者名稱 :</label>
+											<div class="col-sm-10">
+												<label id="showUserName"></label>
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right">部門/職位 :</label>
+											<div class="col-sm-10">
+												<select id="deptSelect"></select>
+												<select id="jobTitleSelect"></select>
+												<button type="button" id="addDeptBtn" class="btn btn-primary">
+													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+													新增
+												</button>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+								<div style="width: 750px">
+									<table id="deptGrid"></table>
+									<div id="deptPager"></div>
+								</div>
+							</div>
+							<div id="editRoleDialog" class="hide">
+								<div class="widget-main no-padding">
+									<form id="editRoleForm">
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right">角色 :</label>
+											<div class="col-sm-10">
+												<select id="roleSelect"></select>
+												<button type="button" id="addRoleBtn" class="btn btn-primary">
+													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+													新增
+												</button>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+								<div style="width: 750px">
+									<table id="roleGrid"></table>
+									<div id="rolePager"></div>
+								</div>
+							</div>
+						    <div id="editDeputyDialog" class="hide">
+						        <div class="widget-main no-padding">
+                                    <form id="editDeputyForm">
+                                        <fieldset>
+                                            <label class="col-sm-2 control-label text-right no-padding-right">使用者帳號 :</label>
+                                            <div class="col-sm-10">
+                                                <label id="showUserAcct"></label>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <label class="col-sm-2 control-label text-right no-padding-right">使用者名稱 :</label>
+                                            <div class="col-sm-10">
+                                                <label id="showUserName"></label>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <label class="col-sm-2 control-label text-right no-padding-right">代理人 :</label>
+                                            <div class="col-sm-10">
+                                                <!-- <select id="deputyDeptSelect"></select> -->
+                                                <select class="col-sm-3" id="deputyUserSelect"></select>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <label class="col-sm-2 control-label text-right no-padding-right">代理期間 :</label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group">
+	                                                <span class="input-group-addon">
+	                                                    <i class="fa fa-calendar bigger-110"></i>
+	                                                </span>
+	                                                <input class="col-sm-5" type="text" name="dateRange" id="dateRange" />&nbsp;
+	                                                <button type="button" id="addUserDeputyBtn" class="btn btn-primary">
+                                                        <i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                                                                                                                            新增
+	                                                </button>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                                <div style="width: 750px">
+                                    <table id="deputyGrid"></table>
+                                    <div id="deputyPager"></div>
+                                </div>
+						    </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var qryGrid, deptGrid, roleGrid, deputyGrid;
+		var selectUserId;
+		$(function() {
+			initOption(); // 初始下拉選單
+			initGrid();   // 初始Grid
+			
+			// 查詢
+			$('#qryBtn').click(function() {
+				// 設定查詢條件
+				qryGrid.setPostData('username', $('#username').val());
+				qryGrid.setPostData('lastName', $('#lastName').val());
+				qryGrid.setPostData('department', $('#department').val());
+				qryGrid.setPostData('jobTitle', $('#jobTitle').val());
+				qryGrid.setPostData('roleName', $('#roleName').val());
+				// 產生grid
+				qryGrid.create();
+				// 顯示查詢結果區域
+				$('#show-detail-results').show();
+			});
+			
+			// 新增人員部門
+			$('#addDeptBtn').click(function() {
+				if ($('#deptSelect').val() == '') {
+					alertMsg("請輸入部門名稱");
+					return false;
+				}
+				
+				/*
+				if ($('#jobTitleSelect').val() == '') {
+					alertMsg("請輸入職位名稱");
+					return false;
+				}
+				*/
+				
+				var formData = {
+					userId : selectUserId,
+					depId : $('#deptSelect').val(),
+					titleId : $('#jobTitleSelect').val()
+				};
+				eserviceForm.post(/*[[@{/userMgnt/insertUserDepartment}]]*/, formData, function(response) {
+					alertMsg(response.resultMsg);
+					deptGrid.reload();
+					qryGrid.reload();
+				});
+			});
+			
+			// 新增人員角色
+			$('#addRoleBtn').click(function() {
+				if ($('#roleSelect').val() == '') {
+					alertMsg("請輸入角色名稱");
+					return false;
+				}
+				
+				var formData = {
+					userId : selectUserId,
+					roleId : $('#roleSelect').val()
+				};
+				eserviceForm.post(/*[[@{/userMgnt/insertUserRole}]]*/, formData, function(response) {
+					alertMsg(response.resultMsg);
+					roleGrid.reload();
+					qryGrid.reload();
+				});
+			});
+			
+			eserviceAdmEvent.initDialog();
+			
+			$('input[id=dateRange]').daterangepicker({
+                'applyClass' : 'btn-sm btn-success',
+                'cancelClass' : 'btn-sm btn-default',
+                maxDate : null,
+                format:'YYYY/MM/DD',
+                locale: {
+                    applyLabel: 'Apply',
+                    cancelLabel: 'Cancel'
+                }
+            });
+			
+			$('#addUserDeputyBtn').click(function(){
+				addUserDeputy(selectUserId);
+			});
+			
+			$('#deputyDeptSelect').on('change', function(){
+				// 可代理人員
+                var formData = {
+                        userId: userId,
+                        dept: $('deputyDeptSelect').val()
+                }
+                eserviceForm.post(url, formData, function(response){
+               		$('#deputyUserSelect').html('');
+               		var optHtml = '';
+                	$.each(data.resultData, function(i, deputyUser) {
+                		optHtml += '<option value="' + deputyUser.ID + '">' + deputyUser.USERNAME + '</option>';
+                	});
+                	$('#deputyUserSelect').html(optHtml);
+                });
+			});
+		});
+		
+		// 初始下拉選單
+		function initOption() {
+			// 取得部門名稱下拉選單
+			eserviceAdmOption.dept('#deptSelect', /*[[@{/common/deptList}]]*/);
+			
+			// 取得職位名稱下拉選單
+			eserviceAdmOption.jobTitle('#jobTitleSelect', /*[[@{/common/jobTitleList}]]*/);
+			
+			// 取得角色名稱下拉選單
+			eserviceAdmOption.role('#roleSelect', /*[[@{/common/roleList}]]*/);
+		}
+		
+		// 初始Grid
+		function initGrid() {
+			// 查詢結果grid
+			qryGrid = new jqGridUtil();
+			qryGrid.id = '#qryGrid';
+			qryGrid.pager = '#qryPager';
+			qryGrid.url = /*[[@{/userMgnt/getUserEntityPageList}]]*/;
+			qryGrid.caption = '人員查詢結果';
+			qryGrid.colNames = ['使用者帳號', '使用者名稱', '角色', '部門', '職位', '操作'];
+			qryGrid.colModel = [
+				{name: 'USERNAME', index: 'USERNAME', width: 100},
+				{width: 90, formatter: function(cellvalue, options, row) {
+					return emptyIfNull(row.FIRST_NAME);
+				}},
+				{width: 120, formatter: function(cellvalue, options, row) {
+					return breakLine(row.ROLE_NAME_LIST);
+				}},
+				{width: 100, formatter: function(cellvalue, options, row) {
+					return breakLine(row.DEP_NAME_LIST);
+				}},
+				{width: 100, formatter: function(cellvalue, options, row) {
+					return breakLine(row.TITLE_NAME_LIST);
+				}},
+				{width: 90, align: 'center', formatter: function(cellvalue, options, row) {
+					var actionHtml = '';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="設定角色">';
+					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">設定角色</span> ';
+					actionHtml += '</a>';
+					actionHtml += '&nbsp;&nbsp;';
+					actionHtml += '<a href="javascript:openDeptDialog(\'' + row.ID + '\', \'' + row.USERNAME  + '\', \'' + (emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME)) +'\');" class="green bigger-140 show-details-btn" title="設定部門">';
+					actionHtml += '<i class="my-icon fa fa-sitemap bigger-120"></i> <span class="sr-only">設定部門</span> ';
+					actionHtml += '</a>';
+					actionHtml += '&nbsp;&nbsp;';
+					actionHtml += '<a href="javascript:openDeputyDialog(\'' + row.ID + '\', \'' + row.USERNAME + '\', \'' + (emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME)) +'\');" class="green bigger-140 show-details-btn" title="設定代理人">';
+					actionHtml += '<i class="my-icon fa fa-user bigger-120"></i><span class="sr-only">設定代理人</span>';
+					actionHtml += '</a>';
+					
+					return actionHtml;
+				}} 
+			];
+			
+			// 部門grid
+			deptGrid = new jqGridUtil();
+			deptGrid.id = '#deptGrid';
+			deptGrid.pager = '#deptPager';
+			deptGrid.rowNum = 3;
+			deptGrid.height = 122;
+			deptGrid.url = /*[[@{/userMgnt/getUserDepartmentPageList}]]*/;
+			deptGrid.caption = '人員部門職位查詢';
+			deptGrid.colNames = ['部門', '職位', '操作'];
+			deptGrid.colModel = [
+				{name: 'DEP_NAME', index: 'DEP_NAME', width: 100},
+				{name: 'TITLE_NAME', index: 'TITLE_NAME', width: 100},
+				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+					var actionHtml = '';
+					actionHtml += '<a href="javascript:deleteUserDepartment(\'' + row.DEP_ID + '\', \'' + emptyIfNull(row.TITLE_ID) + '\');" class="green bigger-140 show-details-btn" title="Edit">';
+					actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
+					actionHtml += '</a>';
+					
+					return actionHtml;
+				}} 
+			];
+			
+			roleGrid = new jqGridUtil();
+			roleGrid.id = '#roleGrid';
+			roleGrid.pager = '#rolePager';
+			roleGrid.rowNum = 3;
+			roleGrid.height = 122;
+			roleGrid.url = /*[[@{/userMgnt/getUserRolePageList}]]*/;
+			roleGrid.caption = '人員角色職位查詢';
+			roleGrid.colNames = ['角色', '角色描述', '操作'];
+			roleGrid.colModel = [
+				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
+				{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 100},
+				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+					var actionHtml = '';
+					actionHtml += '<a href="javascript:deleteUserRole(\'' + row.ROLE_ID + '\');" class="green bigger-140 show-details-btn" title="Edit">';
+					actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
+					actionHtml += '</a>';
+					
+					return actionHtml;
+				}}
+			];
+			
+			deputyGrid = new jqGridUtil();
+			deputyGrid.id = '#deputyGrid';
+			deputyGrid.pager = '#deputyPager';
+			deputyGrid.rowNum = 3;
+			deputyGrid.height = 100;
+			deputyGrid.url = /*[[@{/userMgnt/getUserDeputyPageList}]]*/;
+			deputyGrid.caption = '代理人查詢';
+			deputyGrid.colNames = ['代理人', '起始時間', '結束時間', '操作'];
+			deputyGrid.colModel = [
+				{name: 'USERNAME', index: "USERNAME", width:100},
+				{name: 'START_DATE', index: "START_DATE", width: 80},
+				{name: 'END_DATE', index: "END_DATE", width: 80}, 
+                {width: 60, align: 'left', formatter: function(cellvalue, options, row){
+                    var actionHtml = '';
+                    actionHtml += '<input type="button" onclick="deleteUserDeputy(\'' + row.ID + '\')" class="btn btn-danger" value="刪除"/>'
+                    return actionHtml;
+                }}
+			];
+		}
+		
+		// 部門設定
+		function openDeptDialog(userId, showUserAcct, showUserName) {
+			selectUserId = userId;
+			$('#editDeptForm')[0].reset();
+			
+			$('#editDeptDialog #showUserAcct').html(showUserAcct);
+			$('#editDeptDialog #showUserName').html(showUserName);
+			
+			// 查詢人員部門資料
+			deptGrid.setPostData('userId', userId);
+			deptGrid.create();
+			
+			$('#editDeptDialog').removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>人員部門設定</h4></div>",
+				title_html: true,
+				width: 800,
+				height: 530
+			});
+		}
+		
+		// 角色設定
+		function openRoleDialog(userId) {
+			selectUserId = userId;
+			$('#editRoleForm')[0].reset();
+			
+			// 查詢人員角色資料
+			roleGrid.setPostData('userId', userId);
+			roleGrid.create();
+			
+			$('#editRoleDialog').removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>人員角色設定</h4></div>",
+				title_html: true,
+				width: 800,
+				height: 530
+			});
+		}
+		
+		// 刪除人員部門
+		function deleteUserDepartment(depId, titleId) {
+			confirmMsg('是否確認刪除', function(r) {
+				if (r) {
+					var formData = {
+						userId : selectUserId,
+						depId : depId,
+						titleId : titleId
+					};
+					eserviceForm.post(/*[[@{/userMgnt/deleteUserDepartment}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						deptGrid.reload();
+						qryGrid.reload();
+					});
+				} else {
+					return false;
+				}
+			});
+		}
+
+		// 刪除人員角色
+		function deleteUserRole(roleId) {
+			confirmMsg('是否確認刪除', function(r) {
+				if (r) {
+					var formData = {
+						userId : selectUserId,
+						roleId : roleId
+					};
+					eserviceForm.post(/*[[@{/userMgnt/deleteUserRole}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						roleGrid.reload();
+						qryGrid.reload();
+					});
+				} else {
+					return false;
+				}
+			});
+		}
+		
+		function breakLine(data) {
+			var result = data;
+			if (typeof data === 'string') {
+				result = data.replace(/\,/g, '<div></div>');
+			}
+			return result;
+		}
+		
+		function openDeputyDialog(userId, showUserAcct, showUserName){
+			selectUserId = userId;
+			$('#editDeputyForm')[0].reset();
+			
+			$('#editDeputyDialog #showUserAcct').html(showUserAcct);
+            $('#editDeputyDialog #showUserName').html(showUserName);
+            
+            deputyGrid.setPostData('userId', userId);
+            deputyGrid.create();
+            
+            // 建立代理人查詢結果
+			$('#editDeputyDialog').removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>代理人設定</h4></div>",
+				title_html: true,
+				width: 800,
+				height: 530
+			});
+            // 取得下拉選單 start 
+            // 可使用部門
+            // eserviceAdmOption.dept('#deputyDeptSelect', url);
+            // 取得可以代理人員
+            var formData = {
+            	userId: selectUserId	
+            };
+            $('#deputyUserSelect').html('');
+            eserviceForm.post(/*[[@{/userMgnt/getUserCanDeputy}]]*/, formData, function(response){
+            	if(response.result == 'SUCCESS'){
+	                var optHtml = '';
+	                if(response.resultData.length != 0){
+		                $.each(response.resultData, function(i, deputyUser) {
+		                    optHtml += '<option value="' + deputyUser.ID + '">' + deputyUser.USERNAME + '</option>';
+		                });
+	                } else{
+	                	alertMsg('沒有代理人可以服務');
+	                }
+            	} else{
+            		alertMsg(response.errorMsg);
+            	}
+                $('#deputyUserSelect').html(optHtml);
+            });
+            // 取得下拉選單 end  
+		}
+		
+		function addUserDeputy(userId){
+			confirmMsg('確定新增為代理人？', function(r){
+				if(r){
+					// 使用日期元件取得起始日/結束日
+					var formData = {
+							userId: userId, 
+							deputyId: $('#deputyUserSelect').val(), 
+							startDate: $('#dateRange').data('daterangepicker').startDate.format('YYYY-MM-DD'),
+							endDate: $('#dateRange').data('daterangepicker').endDate.format('YYYY-MM-DD')
+					}
+					eserviceForm.post(/*[[@{/userMgnt/addUserDeputy}]]*/, formData, function(response){
+						alertMsg(response.resultMsg);
+						deputyGrid.reload();
+					});
+				} else{
+					return false;
+				}
+			});
+		}
+		
+		function deleteUserDeputy(removeId){
+			confirmMsg('確定刪除代理人？', function(r){
+				if(r){
+					var formData = {
+						    id : removeId
+					};
+					eserviceForm.post(/*[[@{/userMgnt/deleteUserDeputy}]]*/, formData, function(response){
+						alertMsg(response.resultMsg);
+						deputyGrid.reload();
+					});
+				} else{
+					return false;
+				}
+			});
+		}
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

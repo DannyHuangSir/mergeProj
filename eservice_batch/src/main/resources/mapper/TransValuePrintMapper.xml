@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransValuePrintMapper">
+
+	<resultMap id="TransValuePrintMap" type="com.twfhclife.eservice_batch.model.TransValuePrintVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="LANG" property="lang"/>
+		<result column="DELIVER_TYPE" property="deliverType"/>
+		<result column="DELIVER_ADDR" property="deliverAddr"/>
+		<result column="BELIVER_MAIL" property="beliverMail"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transValuePrintVo.id != null"> AND ID = #{transValuePrintVo.id} </if>
+			<if test="transValuePrintVo.transNum != null and transValuePrintVo.transNum != ''"> AND TRANS_NUM = #{transValuePrintVo.transNum} </if>
+			<if test="transValuePrintVo.lang != null and transValuePrintVo.lang != ''"> AND LANG = #{transValuePrintVo.lang} </if>
+			<if test="transValuePrintVo.deliverType != null and transValuePrintVo.deliverType != ''"> AND DELIVER_TYPE = #{transValuePrintVo.deliverType} </if>
+			<if test="transValuePrintVo.deliverAddr != null and transValuePrintVo.deliverAddr != ''"> AND DELIVER_ADDR = #{transValuePrintVo.deliverAddr} </if>
+			<if test="transValuePrintVo.beliverMail != null and transValuePrintVo.beliverMail != ''"> AND BELIVER_MAIL = #{transValuePrintVo.beliverMail} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transValuePrintVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransValuePrintList" resultMap="TransValuePrintMap">
+		SELECT
+			ID,
+			TRANS_NUM,
+			LANG,
+			DELIVER_TYPE,
+			ESERVICE.DBO.FN_DEBASE64(DELIVER_ADDR) DELIVER_ADDR,
+			ESERVICE.DBO.FN_DEBASE64(BELIVER_MAIL) BELIVER_MAIL
+		FROM
+			ESERVICE.DBO.TRANS_VALUE_PRINT
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransValuePrintMap">
+		SELECT
+			ID,
+			TRANS_NUM,
+			LANG,
+			DELIVER_TYPE,
+			ESERVICE.DBO.FN_DEBASE64(DELIVER_ADDR) DELIVER_ADDR,
+			ESERVICE.DBO.FN_DEBASE64(BELIVER_MAIL) BELIVER_MAIL
+		FROM
+			ESERVICE.DBO.TRANS_VALUE_PRINT
+		<include refid="wherePkClause" />
+	</select>
+	
+	<select id="getTransValuePrintInfoData" resultType="hashmap">
+        SELECT 
+	       LIPM.LIPM_INSU_NO
+	       , ESERVICE.DBO.FN_DEBASE64(LIPM.LIPM_NAME_1) LIPM_NAME_1
+	       , LIPM.LIPM_INSU_BEG_DATE
+	       , P.CURRENCY
+	       , TRANS.CREATE_DATE
+        FROM ESERVICE.DBO.LILIPM LIPM, ESERVICE.DBO.POLICY P, (
+		    SELECT TP.TRANS_NUM, T.CREATE_DATE, TP.POLICY_NO FROM ESERVICE.DBO.TRANS_POLICY TP
+		    JOIN ESERVICE.DBO.TRANS T ON T.TRANS_NUM = TP.TRANS_NUM 
+        ) TRANS
+        <where>
+            AND LIPM.LIPM_INSU_NO=P.POLICY_NO
+            AND LIPM.LIPM_INSU_NO=TRANS.POLICY_NO
+			AND LIPM.LIPM_INSU_NO = #{transPolicyVo.policyNo}
+			AND TRANS.TRANS_NUM = #{transPolicyVo.transNum}
+        </where>
+	</select>
+	
+	<select id="getProductNameByCode" resultType="string">
+	   SELECT 
+	       DISTINCT PRODUCT_NAME 
+	   FROM 
+	       ESERVICE.DBO.PRODUCT 
+	   <where>
+	       AND PRODUCT_CODE = #{productCode}
+	   </where>
+	</select>
+
+</mapper>
+

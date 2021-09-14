@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.UserDeputyDao">
+    
+    <resultMap type="com.twfhclife.adm.model.UserDeputyVo" id="userDeputyMap">
+        <result column="USER_ID" property="userId" />
+        <result column="DEPUTY_ID" property="deputyId" />
+        <result column="START_DATE" property="startDate" />
+        <result column="END_DATE" property="endDate" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        ID, 
+        USER_ID, 
+        DEPUTY_ID, 
+        convert(varchar, START_DATE, 112)+replace(convert(varchar(8), START_DATE, 114), ':','') as START_DATE,
+        convert(varchar, END_DATE, 112)+replace(convert(varchar(8), END_DATE, 114), ':','') as END_DATE
+    </sql>
+    
+    <sql id="whereClause">
+        <where>
+            AND USER_ID = #{userDeputyVo.userId}
+        </where>
+    </sql>
+    
+    <!-- 新增代理人 -->
+    <insert id="insertUserDeputy">
+        INSERT INTO ESERVICE_ADM.DBO.DEPUTY (
+            ID, USER_ID, DEPUTY_ID, START_DATE, END_DATE
+        ) VALUES(
+            (SELECT CASE WHEN (SELECT COUNT(*) FROM ESERVICE_ADM.DBO.DEPUTY) = 0 THEN 1 ELSE (SELECT MAX(ID) + 1 FROM ESERVICE_ADM.DBO.DEPUTY) END), 
+            #{userDeputyVo.userId, jdbcType=VARCHAR},
+            #{userDeputyVo.deputyId, jdbcType=VARCHAR},
+            CONVERT(DATE, #{userDeputyVo.startDate}, 120),
+            CONVERT(DATE, #{userDeputyVo.endDate}, 120)
+        )
+    </insert>
+    
+    <!-- 取得代理人查詢結果 -->
+    <select id="getUserDeputy">
+        SELECT 
+            <include refid="Base_Column_List" />
+        FROM 
+            ESERVICE_ADM.DBO.DEPUTY 
+        <include refid="whereClause" />
+    </select>
+    
+    <!-- 取得代理人分頁總筆數 -->
+    <select id="getUserDeputyPageTotal" resultType="int">
+        SELECT 
+            COUNT(*) AS AMOUNT 
+        FROM 
+            ESERVICE_ADM.DBO.DEPUTY
+        <include refid="whereClause" />
+    </select>
+    
+    <!-- 取得代理人分頁 -->
+    <select id="getUserDeputyPageList" resultType="hashmap">
+        SELECT
+            *
+        FROM (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY A.USERNAME) AS ROW_NUM
+                ,A.*
+            FROM (
+		        SELECT 
+		            DEP.ID AS ID, 
+		            convert(varchar(10), DEP.START_DATE, 120) AS START_DATE, 
+		            convert(varchar(10), DEP.END_DATE, 120) AS END_DATE,
+		            UE.USERNAME AS USERNAME
+		        FROM 
+		            ESERVICE_ADM.DBO.DEPUTY DEP
+		        JOIN 
+		            ( 
+		              SELECT ID, CONCAT(LAST_NAME, FIRST_NAME) USERNAME FROM ESERVICE_ADM.DBO.USER_ENTITY 
+		            ) UE ON UE.ID=DEP.DEPUTY_ID
+		        <include refid="whereClause" />
+            ) A
+        ) B     
+        WHERE
+            B.ROW_NUM <![CDATA[<=]]> #{userDeputyVo.page} * #{userDeputyVo.rows}
+            AND B.ROW_NUM <![CDATA[>]]> (#{userDeputyVo.page} - 1) * #{userDeputyVo.rows}   
+            ORDER BY START_DATE DESC 
+    </select>
+    
+    <sql id="getUserRoleId">
+        SELECT 
+            RO.ROLE_NAME, RO.ROLE_ID, UR.USER_ID
+        FROM 
+            ESERVICE_ADM.DBO.ROLE RO 
+        	JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON RO.ROLE_ID = UR.ROLE_ID
+        WHERE 
+            UR.ROLE_ID IN (SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID=#{userDeputyVo.userId})
+    </sql>
+    
+    <sql id="getUserDeptId">
+        SELECT 
+		    DEPT.DEP_NAME, DEPT.DEP_ID, UDEPT.USER_ID
+		FROM 
+            ESERVICE_ADM.DBO.DEPARTMENT DEPT 
+			JOIN ESERVICE_ADM.DBO.USER_DEPARTMENT UDEPT ON DEPT.DEP_ID=UDEPT.DEP_ID
+		WHERE 
+            UDEPT.DEP_ID IN (SELECT DEP_ID FROM ESERVICE_ADM.DBO.USER_DEPARTMENT WHERE USER_ID=#{userDeputyVo.userId})
+    </sql>
+    
+    <select id="getCanDeputyUser" resultType="hashmap">
+        SELECT 
+            ID, CONCAT(LAST_NAME, FIRST_NAME) USERNAME 
+		FROM ESERVICE_ADM.DBO.USER_ENTITY EN 
+		<!-- JOIN (
+            <include refid="getUserRoleId" />
+		) RO ON RO.USER_ID=EN.ID -->
+		JOIN (
+            <include refid="getUserDeptId" />
+		) DEPT ON DEPT.USER_ID=EN.ID
+		<where>
+            AND EN.REALM_ID = #{admRealm} 
+            AND EN.ID != #{userDeputyVo.userId}
+		</where>
+    </select>
+    
+    <delete id="deleteDeputyById">
+        DELETE 
+            ESERVICE_ADM.DBO.DEPUTY
+        <where>
+            AND ID = #{id}
+        </where>
+    </delete>
+    
+</mapper>

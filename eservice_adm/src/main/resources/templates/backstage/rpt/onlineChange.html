@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='onlineChange')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-search-plus" aria-hidden="true"></i>
+								報表查詢
+								<i class="my-icon fa fa-angle-double-right"></i>
+								線上申請查詢
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form class="form-horizontal" role="form">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-4">申請日期區間</label>
+										<div class="col-sm-9">
+											<div class="input-group">
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+												<input class="form-control" type="text" name="date-range-picker" id="id-date-range-picker-1" />
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 申請項目 </label>
+										<div class="col-sm-9">
+											<select class="form-control" id="onlineChangeSelect" onchange="changeItem()"></select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 申請狀態 </label>
+										<div class="col-sm-9">
+											<select class="form-control" id="statusSelect"></select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 保單號碼 </label>
+										<div class="col-sm-9">
+											<input type="text" id="policyNoTmp" placeholder="輸入欲查詢的保單號碼" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 身分證字號 </label>
+										<div class="col-sm-9">
+											<input type="text" id="policyHolderIdTmp" placeholder="輸入欲查詢的身分證字號" class="form-control" />
+										</div>
+									</div>
+									<div class="policyClaims form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 保單理賠資料範圍 </label>
+
+										<div class="col-sm-9">
+											<select class="form-control" id="dataScopeSelect">
+												<option value="">全部</option>
+												<option value="01">台銀理賠件</option>
+												<option value="02">聯盟通知件</option>
+											</select>
+										</div>
+									</div>
+									<div class="policyClaims form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 是否已紙本回收 </label>
+
+										<div class="col-sm-9">
+											<select class="form-control" id="fileReceivedSelect">
+												<option value=""></option>
+												<option value="1">是</option>
+												<option value="0">否</option>
+											</select>
+										</div>
+									</div>
+									<div class="policyClaims form-group contactInfo">
+										<label class="col-sm-3 control-label no-padding-right"> 聯盟鏈資料範圍 </label>
+
+										<div class="col-sm-9">
+											<select class="form-control"  id="fromCompanyIdSelect">
+												<option value="">全部</option>
+												<option value="01">首家通知件</option>
+												<option value="02">轉收通知件</option>
+											</select>
+										</div>
+									</div>
+									<div class="policyClaims form-group contactInfo">
+										<label class="col-sm-3 control-label no-padding-right"> 是否授權轉送其他公司 </label>
+
+										<div class="col-sm-9">
+                                            <select class="form-control"  id="toSelect">
+												<option value=""></option>
+												<option value="Y">是</option>
+												<option value="N">否</option>
+											</select>										
+										</div>
+									</div>
+									<div class="policyClaims form-group contactInfo">
+										<label class="col-sm-3 control-label no-padding-right"> 是否已開啓傳送公會聯盟鏈 </label>
+
+										<div class="col-sm-9">
+                                            <select class="form-control" id="sendToAllianceSelect">
+												<option value=""></option>
+												<option value="Y">是</option>
+												<option value="N">否</option>
+											</select>										
+										</div>
+									</div>
+
+									<div class="policyClaims form-group dns">
+										<label class="col-sm-3 control-label no-padding-right"> 公會聯盟鏈回報狀態 </label>
+
+										<div class="col-sm-9">
+                                            <select class="form-control"  id="codeSelect"></select>										
+										</div>
+									</div>
+									
+									<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											<button class="btn btn-info" type="button" onclick="searchOnlineChange()">
+												<i class="my-icon fa fa-check bigger-110"></i>
+												查詢
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="reset">
+												<i class="my-icon fa fa-undo bigger-110"></i>
+												重新輸入
+												
+											</button>
+										</div>
+									</div>
+								</form>
+								<!-- 要送出的form data -->
+								<form role="form" id="onlineChangeForm" method="post" action="/eservice_adm/onlineChangeDetail">
+									<input type="hidden" id="startDate" name="startDate"/> 
+									<input type="hidden" id="endDate" name="endDate"/>
+									<input type="hidden" id="onlineChange" name="onlineChange"/> 
+									<input type="hidden" id="status" name="status"/>
+									<input type="hidden" id="policyNo" name="policyNo"/>
+									
+									<input type="hidden" id="dataScope" name="dataScope">
+									<input type="hidden" id="fileReceived" name="fileReceived"/>
+									<input type="hidden" id="to" name="to"/>
+									<input type="hidden" id="sendToAlliance" name="sendToAlliance"/>
+									<input type="hidden" id="fromCompanyId" name="fromCompanyId"/>
+
+									<input type="hidden" id="policyHolderId" name="policyHolderId"/>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			// 取得線上申請項目下拉選單
+			eserviceAdmOption.common('#onlineChangeSelect', 
+					/*[[@{/common/optionList?categoryCode=ONLINE_CHANGE}]]*/,
+					'請選擇申請項目...');
+			// 取得線上申請項目下拉選單
+			eserviceAdmOption.common('#statusSelect', 
+					/*[[@{/common/optionList?categoryCode=ONLINE_CHANGE_STATUS}]]*/,
+					'請選擇申請狀態...');
+			// 取得公會聯盟鏈回報狀態下拉選單
+			eserviceAdmOption.common('#codeSelect', 
+					/*[[@{/common/optionList?categoryCode=ALLIANCE_RETURNS_CODE}]]*/,
+					'請選擇申請狀態...');
+
+			$('input[name=date-range-picker]').daterangepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				maxDate : new Date(),
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel'
+				}
+			});
+
+			$(".policyClaims").hide();
+		
+		});
+		$('#onlineChangeSelect').change(function() {
+			if($("#onlineChangeSelect").val() == "INSURANCE_CLAIM"){
+                $(".policyClaims").show();
+			}else{
+				$(".policyClaims").hide();
+			}
+			if($("#onlineChangeSelect").val() == "CONTACT_INFO"){
+				$(".contactInfo").show();
+			}else{
+				$(".contactInfo").hide();
+			}
+			if($("#onlineChangeSelect").val() == "DNS_ALLIANCE"){
+				$(".dns").show();
+			}else{
+				$(".dns").hide();
+			}
+		});
+		function searchOnlineChange() {
+			$("#startDate").val($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+			$("#endDate").val($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYY-MM-DD'));
+			$("#onlineChange").val($('#onlineChangeSelect').val().trim());
+			$("#status").val($('#statusSelect').val().trim());
+			$("#policyNo").val($('#policyNoTmp').val().trim());
+			$("#policyHolderId").val($('#policyHolderIdTmp').val().trim());
+
+			$("#dataScope").val($('#dataScopeSelect option:checked').val());
+			$("#fileReceived").val($('#fileReceivedSelect option:checked').val());
+			$("#to").val($('#toSelect option:checked').val());
+			$("#fromCompanyId").val($('#fromCompanyIdSelect option:checked').val());
+			$("#sendToAlliance").val($('#sendToAllianceSelect option:checked').val());
+			$("code").val($('#codeSelect option:checked').val());
+			$('#onlineChangeForm').submit();
+		}
+		function changeItem(){
+			// $('#dataScopeSelect option:checked').text('');
+			// $('#fileReceivedSelect option:checked').text('');
+			// $('#toSelect option:checked').text('');
+			// $('#sendToAllianceSelect option:checked').text('');
+			
+			$('#dataScopeSelect').val('');
+			$('#fileReceivedSelect').val('');
+			$('#toSelect').val('');
+			$('#sendToAllianceSelect').val('');
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

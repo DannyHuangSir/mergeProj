@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransContactInfoDao">
+
+	<resultMap id="TransContactInfoMap" type="com.twfhclife.eservice.onlineChange.model.TransContactInfoVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="BATCH_ID" property="batchId"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transContactInfoVo.id != null"> AND ID = #{transContactInfoVo.id} </if>
+			<if test="transContactInfoVo.transNum != null and transContactInfoVo.transNum != ''"> AND TRANS_NUM = #{transContactInfoVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transContactInfoVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更保單聯絡資料主檔查詢結果 -->
+	<select id="getTransContactInfo" resultMap="TransContactInfoMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CONTACT_INFO
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 取得下一筆序號 -->
+	<select id="getNextTransContactInfoId" resultType="BigDecimal">
+		select NEXT VALUE for TRANS_CONTACT_INFO_SEQ as TRANS_CONTACT_INFO_ID_SEQ;
+	</select>
+	
+	<!-- 變更保單聯絡資料主檔-新增 -->
+	<insert id="insertTransContactInfo">
+		INSERT INTO ESERVICE.DBO.TRANS_CONTACT_INFO
+		(
+			<include refid="Base_Column_List" />,BATCH_ID
+		)
+		VALUES
+		(
+			#{transContactInfoVo.id, jdbcType=NUMERIC},
+			#{transContactInfoVo.transNum, jdbcType=VARCHAR},
+			#{transContactInfoVo.batchId, jdbcType=FLOAT}
+		)
+	</insert>
+	
+	<select id="getCIOUserDetailInfoOld" resultType="hashmap" parameterType="java.lang.String">
+		SELECT  TOP 1
+	            ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_NAME_1,'')) AS NAME, 
+				ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_TEL_H,'')) as TEL_HOME,
+				ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_TEL_O,'')) as TEL_OFFICE,
+				COALESCE(PMDA_APPLICANT_CELLPHONE,'') AS MOBILE,
+				COALESCE(PMDA_APPLICANT_EMAIL,'') AS EMAIL,
+				(select id from ESERVICE.DBO.CITY where city = SUBSTRING(ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_ADDR,'')),1,3)) as CITY,
+				SUBSTRING(ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_ADDR,'')),1,3) as  CITY_NAME,
+				'' as REGION,
+				'' as REGION_NAME,
+				ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_ADDR,'')) AS ADDRESS,
+				(select id from ESERVICE.DBO.CITY where city = SUBSTRING(ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_ADDR,'')),1,3)) as CITY_CHAR,
+				SUBSTRING(ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_ADDR,'')),1,3) as  CITY_NAME_CHAR,
+				'' as REGION_CHAR,
+				'' as REGION_NAME_CHAR,
+				ESERVICE.DBO.FN_DEBASE64(COALESCE(LIPM_CHAR_ADDR,'')) AS ADDRESS_CHAR,
+				'old' as TYPE,
+				LIPM_ID  LIPM_ID
+				
+	       FROM 
+	            ESERVICE.DBO.LILIPM LIPM LEFT JOIN 
+	            ESERVICE.DBO.LIPMDA_ES ON LIPM_INSU_NO = (PMDA_INSU_TYPE + CONVERT(VARCHAR, PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) 
+		  WHERE LIPM_ID = #{roc_id} order by LIPM_INSU_BEG_DATE desc
+	</select>
+	
+	<select id="getCIOUserDetailInfoNew" resultType="hashmap" parameterType="java.lang.String">
+		SELECT  TOP 1
+				ESERVICE.DBO.FN_DEBASE64(D.LIPM_NAME_1) NAME, 
+				ESERVICE.DBO.FN_DEBASE64(A.TEL_HOME) TEL_HOME, 
+				ESERVICE.DBO.FN_DEBASE64(A.TEL_OFFICE) TEL_OFFICE, 
+				ESERVICE.DBO.FN_DEBASE64(A.MOBILE) MOBILE, 
+				ESERVICE.DBO.FN_DEBASE64(A.EMAIL) EMAIL,
+				(select id from ESERVICE.DBO.CITY where city = A.CITY) as CITY, 
+				A.CITY as  CITY_NAME,
+				( select R.id from ESERVICE.DBO.REGION R,ESERVICE.DBO.CITY T  where R.CITY_ID = T.id and R.REGION = A.REGION and t.CITY = A.CITY) as REGION, 
+				A.REGION as  REGION_NAME,
+				ESERVICE.DBO.FN_DEBASE64(A.ADDRESS) ADDRESS, 
+				ESERVICE.DBO.FN_DEBASE64(A.ADDRESS_FULL) ADDRESS_FULL, 
+				(select id from ESERVICE.DBO.CITY where city = A.CITY_CHARGE) as CITY_CHAR, 
+				A.CITY_CHARGE as CITY_NAME_CHAR,
+				( select R.id from ESERVICE.DBO.REGION R,ESERVICE.DBO.CITY T  where R.CITY_ID = T.ID and R.REGION = A.REGION_CHARGE and T.CITY = A.CITY_CHARGE) as REGION_CHAR, 
+				A.REGION_CHARGE as  REGION_NAME_CHAR,
+				ESERVICE.DBO.FN_DEBASE64(A.ADDRESS_CHARGE) ADDRESS_CHAR,
+				ESERVICE.DBO.FN_DEBASE64(A.ADDRESS_FULL_CHARGE) ADDRESS_FULL_CHARGE,
+				D.LIPM_ID   LIPM_ID,
+				'new' as TYPE
+		  FROM 
+		        ESERVICE.DBO.TRANS_CONTACT_INFO_DTL A
+				JOIN ESERVICE.DBO.TRANS_CONTACT_INFO B on A.TRANS_CONTACT_ID = B.ID
+				JOIN ESERVICE.DBO.TRANS_POLICY C on B.TRANS_NUM = C.TRANS_NUM
+				JOIN ESERVICE.DBO.LILIPM D ON C.POLICY_NO = D.LIPM_INSU_NO
+				JOIN ESERVICE.DBO.TRANS E ON E.TRANS_NUM = B.TRANS_NUM
+	      WHERE E.STATUS = '2' AND D.LIPM_ID = #{roc_id}  order by E.TRANS_DATE desc
+	</select>
+	<select id="getTransContactInfoTransNum" resultMap="TransContactInfoMap"  parameterType="java.lang.String" >
+		SELECT BATCH_ID,TRANS_NUM  from   ESERVICE.DBO.TRANS_CONTACT_INFO   where  BATCH_ID=(
+		SELECT COALESCE(BATCH_ID,0)  from   ESERVICE.DBO.TRANS_CONTACT_INFO   where TRANS_NUM=#{transNum})
+	</select>
+	<select id="selectTransContactInfoFileDatasId" resultType="java.lang.Float">
+		select 		NEXT VALUE for CONTACT_INFO_FILEDATAS_SEQ  as FDID
+	</select>
+	<!--便於後期UI實現文件上傳功能-->
+	<insert id="addTransContactInfoFileDatas" parameterType="com.twfhclife.eservice.onlineChange.model.ContactInfoFileDataVo">
+		INSERT INTO
+		ESERVICE.DBO.TRANS_CONTACT_INFO_FILEDATAS
+		(FD_ID,CONTACT_SEQ_ID,NOTIFY_SEQ_ID,MSG,FILE_ID,SIZE,TYPE,FILE_NAME,FILE_STATUS,PATH,FILE_BASE64,RFE_ID,UPDATE_MSG_DATE,CREATE_DATE)
+		VALUES
+		(
+		#{vo.fdId, jdbcType=FLOAT},
+		#{vo.contactSeqId,  jdbcType=FLOAT},
+		#{vo.notifySeqId, jdbcType=FLOAT},
+		#{vo.msg, jdbcType=VARCHAR},
+		#{vo.fileId, jdbcType=VARCHAR},
+		#{vo.size, jdbcType=VARCHAR},
+		#{vo.type, jdbcType=VARCHAR},
+		#{vo.fileName, jdbcType=VARCHAR},
+		#{vo.fileStatus, jdbcType=VARCHAR},
+		#{vo.path, jdbcType=VARCHAR},
+		#{vo.fileBase64, jdbcType=VARCHAR},
+		#{vo.rfeId, jdbcType=FLOAT},
+		#{vo.updateMsgDate},
+		#{vo.createDate}
+		)
+	</insert>
+	<update id="updateTransContactInfoFileDatasFileBase64" parameterType="com.twfhclife.eservice.onlineChange.model.ContactInfoFileDataVo">
+		update
+		ESERVICE.DBO.TRANS_CONTACT_INFO_FILEDATAS
+		set  FILE_BASE64.WRITE(#{vo.fileBase64, jdbcType=VARCHAR},0,null)
+		where FD_ID =#{vo.fdId}
+	</update>
+
+	<select id="getTransContactInfoTransNumCheck" resultType="integer"  parameterType="java.lang.String" >
+		SELECT  STATUS  from   ESERVICE.DBO.TRANS   where TRANS_NUM=#{transNum}
+	</select>
+
+	<update id="updateFileBase64ByFileId" parameterType="com.twfhclife.eservice.onlineChange.model.TransContactInfoFileDataVo">
+		update ESERVICE.DBO.TRANS_CONTACT_INFO_FILEDATAS
+		   set FILE_BASE64.WRITE(#{vo.fileBase64},0,null)
+		 where FILE_ID = #{vo.fileId}
+	</update>
+	<update id="updateTransContactInfoCaseId"  >
+		update ESERVICE.DBO.TRANS_CONTACT_INFO
+		set CASE_ID=#{caseId, jdbcType=VARCHAR}
+		where TRANS_NUM = #{transNum, jdbcType=VARCHAR}
+	</update>
+	<select id="getTransContactInfoTransNumByBatchId"  resultType="string"  parameterType="java.lang.Float" >
+		SELECT  TRANS_NUM  from   ESERVICE.DBO.TRANS_CONTACT_INFO   where  BATCH_ID=#{batchId}
+	</select>
+</mapper>

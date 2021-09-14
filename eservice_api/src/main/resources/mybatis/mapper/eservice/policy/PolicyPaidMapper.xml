@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PolicyPaidDao">
+
+	<resultMap id="PolicyPaidMap" type="com.twfhclife.eservice.policy.model.PolicyPaidVo" >
+		<result column="PAYF_INSU_NO" property="policyNo"/>
+		<result column="PAYF_PAY_REAS" property="payReas"/>
+		<result column="PAYF_PAY_AMT" property="payAmount"/>
+		<result column="PAYF_NAME" property="payName"/>
+		<result column="PAYF_PAY_METH" property="payMethod"/>
+		<result column="PAHI_DEP_I_BOOK_DATE" property="payDate"/>
+	</resultMap>
+	
+	<!-- 取得保單給付查詢結果(根據保單號碼) -->
+	<select id="findByPolicyNo" resultMap="PolicyPaidMap" parameterType="java.lang.String">
+		SELECT
+			PAYF_INSU_NO, PAYF_PAY_REAS, PAYF_PAY_AMT, ESERVICE.DBO.FN_DEBASE64(PAYF_NAME) PAYF_NAME, PAYF_PAY_METH, PAHI_DEP_I_BOOK_DATE
+		FROM
+			ESERVICE.DBO.LIPAYF 
+		WHERE
+			PAYF_INSU_NO = #{policyNo}
+		ORDER BY PAHI_DEP_I_BOOK_DATE DESC
+	</select>
+	
+
+</mapper>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+		<style type="text/css">
+		  .tree-container-min{
+				background-color:#FFF;
+				border:1px solid#DDD;
+				border-left-color:#67B2DD;
+				display:block;
+				padding:0;
+				max-width:600px;
+				max-height:500px;
+			}
+		</style>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='downloadUserAuthCSV')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-user" aria-hidden="true"></i>
+									權限管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+									權限查詢與報表
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12">
+									<!-- PAGE CONTENT BEGINS -->
+									<form class="form-horizontal" id="form1" role="form" action="#">
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+												權限資料報表
+											</label>
+											<div class="col-sm-5">
+												<select class="form-control" id="systemsSelect">
+													<option value=""></option>
+												</select>
+											</div>
+											<button class="btn btn-purple" type="button" onClick="downloadUserAuthCSV()">
+												<i class="my-icon fa fa-cloud-upload bigger-110"></i>
+												匯出結果
+											</button>
+											<div class="col-sm-4"></div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div><!-- /.page-content -->
+					</div>
+				</div>
+			</div><!-- /.main-content -->
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			$(function() {
+				// 載入系統功能下拉選單
+				eserviceAdmOption.system('#systemsSelect', /*[[@{/common/systemList}]]*/);
+			});
+		
+			function downloadUserAuthCSV() {
+				var sysId = $('#systemsSelect').val();
+				if (sysId == '') {
+					alertMsg("請輸入系統");
+					return false;
+				}
+				window.location.href = "/eservice_adm/autho/downloadUserAuthCSV?sysId=" + sysId;
+			}
+		/*]]>*/
+		</script>
+	</body>
+</html>

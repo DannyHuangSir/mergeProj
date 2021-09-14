@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransSurrenderDao">
+
+	<resultMap id="TransSurrenderMap" type="com.twfhclife.eservice.onlineChange.model.TransSurrenderVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transSurrenderVo.id != null"> AND ID = #{transSurrenderVo.id} </if>
+			<if test="transSurrenderVo.transNum != null and transSurrenderVo.transNum != ''"> AND TRANS_NUM = #{transSurrenderVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transSurrenderVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得紅利提領申請書查詢結果 -->
+	<select id="getTransSurrender" resultMap="TransSurrenderMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_SURRENDER
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 紅利提領申請書-新增 -->
+	<insert id="insertTransSurrender">
+		INSERT INTO TRANS_SURRENDER
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_SURRENDER),
+			#{transSurrenderVo.transNum, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

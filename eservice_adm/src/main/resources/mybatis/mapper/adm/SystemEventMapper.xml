@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.BusinessEventDao">
+	<resultMap id="SystemResultMap" type="com.twfhclife.adm.model.SystemEventVo">
+		<result column="business_event_id" property="businessEventId" />
+		<result column="exec_date" property="execDate" />
+		<result column="exec_method" property="execMethod" />
+		<result column="exec_user" property="execUser" />
+		<result column="exec_file" property="execFile" />
+		<result column="exec_sql" property="execSql" />
+		<result column="exec_status" property="execStatus" />
+		<result column="exec_count" property="execCount" />
+		<result column="exec_msg" property="execMsg" />
+		<result column="create_date" property="createDate" />
+		<result column="create_user" property="createUser" />
+		
+	</resultMap>
+	
+	<parameterMap id="SystemEventVo" type="com.twfhclife.adm.model.SystemEventVo"/>
+
+	<sql id="System_Column_List">
+		business_event_id,exec_date,exec_method,exec_user,exec_file,exec_sql,exec_status,
+		exec_count,exec_msg,create_date,create_user
+	</sql>
+	
+	<select id="getSystemEventById" resultMap="SystemResultMap" parameterType="java.lang.String">
+		select
+		<include refid="System_Column_List" />
+		from ESERVICE_ADM.DBO.SYSTEM_EVENT
+		where business_event_id = #{businessEventId}
+	</select>
+
+</mapper>

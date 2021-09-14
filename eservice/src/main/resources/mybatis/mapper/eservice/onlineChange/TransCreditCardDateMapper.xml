@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransCreditCardDateDao">
+
+	<resultMap id="TransCreditCardDateMap" type="com.twfhclife.eservice.onlineChange.model.TransCreditCardDateVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="VALID_MM" property="validMm"/>
+		<result column="VALID_YY" property="validYy"/>
+		<result column="VALID_MM_OLD" property="validMmOld"/>
+		<result column="VALID_YY_OLD" property="validYyOld"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,VALID_MM,VALID_YY,VALID_MM_OLD,VALID_YY_OLD
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transCreditCardDateVo.id != null"> AND ID = #{transCreditCardDateVo.id} </if>
+			<if test="transCreditCardDateVo.transNum != null and transCreditCardDateVo.transNum != ''"> AND TRANS_NUM = #{transCreditCardDateVo.transNum} </if>
+			<if test="transCreditCardDateVo.validMm != null and transCreditCardDateVo.validMm != ''"> AND VALID_MM = #{transCreditCardDateVo.validMm} </if>
+			<if test="transCreditCardDateVo.validYy != null and transCreditCardDateVo.validYy != ''"> AND VALID_YY = #{transCreditCardDateVo.validYy} </if>
+			<if test="transCreditCardDateVo.validMmOld != null and transCreditCardDateVo.validMmOld != ''"> AND VALID_MM_OLD = #{transCreditCardDateVo.validMmOld} </if>
+			<if test="transCreditCardDateVo.validYyOld != null and transCreditCardDateVo.validYyOld != ''"> AND VALID_YY_OLD = #{transCreditCardDateVo.validYyOld} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transCreditCardDateVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更信用卡效期查詢結果 -->
+	<select id="getTransCreditCardDate" resultMap="TransCreditCardDateMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CREDIT_CARD_DATE
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 變更信用卡效期-新增 -->
+	<insert id="insertTransCreditCardDate">
+		INSERT INTO ESERVICE.DBO.TRANS_CREDIT_CARD_DATE
+		(
+			<include refid="Base_Column_List" />
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_CREDIT_CARD_DATE),
+			#{transCreditCardDateVo.transNum, jdbcType=VARCHAR},
+			#{transCreditCardDateVo.validMm, jdbcType=VARCHAR},
+			#{transCreditCardDateVo.validYy, jdbcType=VARCHAR},
+			#{transCreditCardDateVo.validMmOld, jdbcType=VARCHAR},
+			#{transCreditCardDateVo.validYyOld, jdbcType=VARCHAR}
+		)
+	</insert>
+
+</mapper>

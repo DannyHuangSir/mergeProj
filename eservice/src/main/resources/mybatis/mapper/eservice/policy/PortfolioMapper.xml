@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.PortfolioDao">
+
+	<!-- 取得投資損益及投報率 -->
+	<!-- @param policyNo 保單號碼 -->	
+	<select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo" parameterType="string">
+		SELECT
+			PP.POLICY_NO AS policyNo
+			,PP.INVT_NO AS invtNo
+			,PP.INVT_NAME AS invtName
+			,PP.INVT_RISK_BENE_LEVEL AS invtRiskBeneLevel
+			,PP.SAFP_NET_AMT as safpNetAmt
+			,PP.SAFP_NET_UNITS AS safpNetUnits
+			,PP.SAFP_AVG_PNTDVAL AS safpAvgPntdval
+			,PP.NET_VALUE_SELL AS netValueSell
+			,PP.NET_VALUE_DATE AS netValueDate
+			,PP.EXCH_RATE_BUY AS exchRateBuy
+			,PP.EXCH_RATE_DATE AS exchRateDate
+			,PP.CLUP_EXPE_NTD_SUM AS clupExpeNtdSum
+			,PP.INVT_EXCH_CURR AS invtExchCurr
+			,(
+				SELECT P.CURRENCY FROM ESERVICE.DBO.POLICY P WHERE P.POLICY_NO = PP.POLICY_NO
+			) AS insuCurr
+			,(
+				SELECT
+					a.PARAMETER_NAME
+				FROM
+					ESERVICE_ADM.DBO.PARAMETER a
+					,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+				WHERE
+					a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+					AND a.SYSTEM_ID = b.SYSTEM_ID
+					AND a.STATUS = b.STATUS
+					AND b.STATUS = 1
+					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
+					AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.CURRENCY_PARAMETER_CATEGORY_CODE"/>
+					AND a.PARAMETER_CODE = PP.INVT_EXCH_CURR
+			) AS currency
+			,F.RISK_BENE_LEVEL  AS riskBeneLevel
+		FROM
+			ESERVICE.DBO.POLICY_PORTFOLIO PP
+		LEFT JOIN ESERVICE.DBO.FUND F ON F.FUND_CODE = PP.INVT_NO AND F.PRODUCT_NO = SUBSTRING (PP.POLICY_NO, 0, 3)
+		WHERE
+			PP.POLICY_NO = #{policyNo}
+		<if test="invtNo != null">
+			AND PP.INVT_NO IN 
+			<foreach collection="invtNo" item="funNo" index="index" open="(" close=")" separator="," >  
+				#{funNo}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 取得投資風險屬性 -->
+	<!-- @param policyNo 保單號碼 -->	
+	<select id="getRiskLevelName" resultType="string" parameterType="string">
+		WITH ALL_INVT_RISK_BENE_LEVEL AS (
+			SELECT
+				DISTINCT INVT_RISK_BENE_LEVEL
+			FROM
+				ESERVICE.DBO.POLICY_PORTFOLIO
+			WHERE
+				POLICY_NO = #{policyNo}
+		)
+		SELECT TOP 1
+			CASE 
+		     WHEN INVT_RISK_BENE_LEVEL IS NULL THEN '待評估'
+		     WHEN INVT_RISK_BENE_LEVEL = 'RR5' THEN '積極型'
+		     WHEN INVT_RISK_BENE_LEVEL = 'RR4' THEN '穩健型'
+		     WHEN INVT_RISK_BENE_LEVEL = 'RR3' THEN 'RR3'
+		     WHEN INVT_RISK_BENE_LEVEL = 'RR2' THEN '保守型'
+		     WHEN INVT_RISK_BENE_LEVEL = 'RR1' THEN '保守型'
+			END AS RISK_NAME
+		FROM
+			ESERVICE.DBO.POLICY_PORTFOLIO
+		WHERE
+			POLICY_NO = #{policyNo}
+		ORDER BY (CASE WHEN [INVT_RISK_BENE_LEVEL] IS NULL THEN 0 ELSE 1 END), [INVT_RISK_BENE_LEVEL]
+	</select>
+	
+	<select id="getInvtOptionList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo" >
+		SELECT DISTINCT
+			PP.INVT_NO AS invtNo
+			,PP.INVT_NAME AS invtName
+			,PP.INVT_RISK_BENE_LEVEL AS invtRiskBeneLevel
+			,PP.INVT_EXCH_CURR AS invtExchCurr
+			,(
+				SELECT P.CURRENCY FROM ESERVICE.DBO.POLICY P WHERE P.POLICY_NO = PP.POLICY_NO
+			) AS insuCurr
+			,COALESCE((
+				SELECT a.PARAMETER_NAME
+				FROM ESERVICE_ADM.DBO.PARAMETER a
+				JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b on a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+				WHERE
+					1 = 1
+					AND a.SYSTEM_ID = b.SYSTEM_ID
+					AND a.STATUS = b.STATUS
+					AND b.STATUS = 1
+					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
+					AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.CURRENCY_PARAMETER_CATEGORY_CODE"/>
+					AND a.PARAMETER_CODE = PP.INVT_EXCH_CURR
+			), '') AS currency
+			,F.RISK_BENE_LEVEL  AS riskBeneLevel
+		FROM ESERVICE.DBO.POLICY_PORTFOLIO PP
+		LEFT JOIN ESERVICE.DBO.FUND F ON F.FUND_CODE = PP.INVT_NO AND F.PRODUCT_NO = SUBSTRING (PP.POLICY_NO, 0, 3)
+		WHERE PP.POLICY_NO = #{policyNo}
+	</select>
+	
+</mapper>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.ReportJobMapper">
+
+    <resultMap type="com.twfhclife.eservice_batch.model.ReportJobVo" id="reportJob">
+        <result column="REPORT_JOB_ID" property="reportJobId"/>
+        <result column="REPORT_ID" property="reportId"/>
+        <result column="REPORT_NAME" property="reportName"/>
+        <result column="DATA_RANGE" property="dataRange"/>
+    </resultMap>
+    
+    <resultMap type="com.twfhclife.eservice_batch.model.ReportJobConditionVo" id="reportJobCondition">
+        <result column="REPORT_JOB_ID" property="reportJobId"/>
+        <result column="CONDITION" property="condition"/>
+        <result column="CONDITION_CHT" property="conditionCht"/>
+        <result column="CONDITION_VALUE" property="conditionValue"/>
+        <result column="CONDITION_VALUE_CHT" property="conditionValueCht" />
+    </resultMap>
+    
+    <resultMap type="Hashmap" id="report01Map">
+        <result column="USERNAME" property="USERNAME"/>
+		<result column="USERNAME_CHT" property="USERNAME_CHT"/>
+		<result column="DEP_NAME" property="DEP_NAME"/>
+		<result column="TITLE_NAME" property="TITLE_NAME"/>
+		<result column="ROLE_NAME" property="ROLE_NAME"/>
+        <result column="COUNT_NO" property="COUNT_NO"/>
+<!-- 		<collection property="COUNT_NO" ofType="int" javaType="list"> -->
+<!-- 		</collection> -->
+    </resultMap>
+    
+    <resultMap type="Hashmap" id="report02Map">
+        <result column="USERNAME" property="USERNAME"/>
+        <result column="USERNAME_CHT" property="USERNAME_CHT"/>
+        <result column="DEP_NAME" property="DEP_NAME"/>
+        <result column="TITLE_NAME" property="TITLE_NAME"/>
+        <result column="ROLE_NAME" property="ROLE_NAME"/>
+    </resultMap>
+    
+    <resultMap type="Hashmap" id="report03Map">
+        <result column="SYS_ID" property="SYS_ID"/>
+        <result column="SYS_NAME" property="SYS_NAME"/>
+        <result column="FUNC_ID" property="FUNC_ID"/>
+        <result column="FUNC_NAME" property="FUNC_NAME"/>
+        <result column="USAGE" property="USAGE"/>
+    </resultMap>
+
+    <sql id="reportJobBaseColumn">
+        REPORT_JOB_ID, REPORT_ID, REPORT_NAME, DATE_RANGE
+    </sql>
+    
+    <sql id="whereClauseReportJob">
+        <where>
+            AND REPORT_JOB_ID = #{reportJobId}
+        </where>
+    </sql>
+    
+    <sql id="whereClauseReportJobCondition">
+        <where>
+            AND REPORT_JOB_ID = #{reportJobVo.reportJobId}
+        </where>
+    </sql>
+    
+    <sql id="reportJobConditionColumn">
+        REPORT_JOB_ID, CONDITION, CONDITION_CHT, CONDITION_VALUE, CONDITION_VALUE_CHT
+    </sql>
+    
+    <select id="getReportJob" resultMap="reportJob">
+        SELECT 
+            <include refid="reportJobBaseColumn"/>
+        FROM 
+            ESERVICE_ADM.DBO.REPORT_JOB
+        <include refid="whereClauseReportJob"/>
+    </select>
+    
+    <select id="getReportCondition" resultMap="reportJobCondition">
+        SELECT 
+            <include refid="reportJobConditionColumn" />
+        FROM 
+            ESERVICE_ADM.DBO.REPORT_JOB_CONDITION
+        <include refid="whereClauseReportJobCondition" />
+    </select>
+    
+    <insert id="insertReportHitory">
+        INSERT INTO ESERVICE_ADM.DBO.REPORT_JOB_HISTORY(
+            REPORT_JOB_ID, EXECUTE_TIME, EXECUTE_STATUS, ERROR_MSG, FILE_NAME, DOWNLOAD_URL, ID
+        )VALUES(
+            #{reportJobHistoryVo.reportJobId, jdbcType=NUMERIC}
+            , #{reportJobHistoryVo.executeTime, jdbcType=VARCHAR}
+            , #{reportJobHistoryVo.executeStatus, jdbcType=VARCHAR}
+            , #{reportJobHistoryVo.errorMsg, jdbcType=VARCHAR}
+            , #{reportJobHistoryVo.fileName, jdbcType=VARCHAR}
+            , #{reportJobHistoryVo.downloadUrl, jdbcType=VARCHAR}
+            , (SELECT COALESCE(MAX(ID), 1)+1 FROM REPORT_JOB_HISTORY)
+        )
+    </insert>
+    
+    <select id="queryReport01" resultMap="report01Map">
+        SELECT 
+		    LOLOG.USERNAME, USER_REL.USERNAME_CHT, USER_REL.DEP_NAME, USER_REL.TITLE_NAME, USER_REL.ROLE_NAME, COUNT(*) COUNT_NO 
+		FROM ESERVICE_ADM.DBO.LOGIN_LOG LOLOG
+		JOIN (
+		    SELECT 
+		        USERNAME, CONCAT(LAST_NAME, FIRST_NAME) AS USERNAME_CHT , DEPT.DEP_NAME, DEPT.TITLE_NAME, ROL.ROLE_NAME 
+		    FROM ESERVICE_ADM.DBO.USER_ENTITY UE
+		    LEFT JOIN (
+		        SELECT 
+		            UD.USER_ID, DEPT.DEP_ID, DEPT.DEP_NAME, JT.TITLE_ID, JT.TITLE_NAME 
+		        FROM 
+		            ESERVICE_ADM.DBO.USER_DEPARTMENT UD
+		        JOIN 
+		            ESERVICE_ADM.DBO.DEPARTMENT DEPT ON DEPT.DEP_ID=UD.DEP_ID
+		        JOIN 
+		            ESERVICE_ADM.DBO.JOB_TITLE JT ON JT.TITLE_ID=UD.TITLE_ID
+		    ) DEPT ON DEPT.USER_ID = UE.ID
+		    LEFT JOIN (
+		        SELECT 
+		            UR.USER_ID, RO.ROLE_ID, RO.ROLE_NAME 
+		        FROM 
+		            ESERVICE_ADM.DBO.USER_ROLE UR
+		        JOIN 
+		            ESERVICE_ADM.DBO.ROLE RO ON RO.ROLE_ID=UR.ROLE_ID
+		    ) ROL ON ROL.USER_ID=UE.ID
+		    <where>
+		      AND UE.REALM_ID = #{realmId}
+		      <if test="roleId != null and roleId != ''"> AND ROL.ROLE_ID = #{roleId} </if>
+		      <if test="titleId != null and titleId != ''"> AND DEPT.TITLE_ID = #{titleId} </if>
+		      <if test="deptId != null and deptId != ''"> AND DEPT.DEP_ID = #{deptId} </if>
+		      <if test="userName != null and userName != ''"> AND UE.USERNAME = #{userName} </if>
+		    </where>
+		) USER_REL ON USER_REL.USERNAME=LOLOG.USERNAME
+		<where>
+    		AND GETDATE()-LOLOG.LOGIN_DATE <![CDATA[<]]> #{dateRange} 
+		</where>
+		GROUP BY 
+		    LOLOG.USERNAME, USER_REL.USERNAME_CHT, USER_REL.DEP_NAME, USER_REL.TITLE_NAME, USER_REL.ROLE_NAME
+    </select>
+    
+    <select id="queryReport02" resultMap="report02Map">
+        SELECT 
+		    USERNAME, CONCAT(LAST_NAME, FIRST_NAME) AS USERNAME_CHT , DEPT.DEP_NAME, DEPT.TITLE_NAME, ROL.ROLE_NAME 
+		FROM ESERVICE_ADM.DBO.USER_ENTITY UE
+		LEFT JOIN (
+		    SELECT 
+		        UD.USER_ID, DEPT.DEP_ID, DEPT.DEP_NAME, JT.TITLE_ID, JT.TITLE_NAME 
+		    FROM 
+		        ESERVICE_ADM.DBO.USER_DEPARTMENT UD
+		    JOIN 
+		        ESERVICE_ADM.DBO.DEPARTMENT DEPT ON DEPT.DEP_ID=UD.DEP_ID
+		    JOIN 
+		        ESERVICE_ADM.DBO.JOB_TITLE JT ON JT.TITLE_ID=UD.TITLE_ID
+		) DEPT ON DEPT.USER_ID = UE.ID
+		LEFT JOIN (
+		    SELECT 
+		        UR.USER_ID, RO.ROLE_ID, RO.ROLE_NAME 
+		    FROM 
+		        ESERVICE_ADM.DBO.USER_ROLE UR
+		    JOIN 
+		        ROLE RO ON RO.ROLE_ID=UR.ROLE_ID
+		) ROL ON ROL.USER_ID=UE.ID
+		<where>
+          AND UE.REALM_ID = #{realmId}
+          <if test="roleId != null and roleId != ''"> AND ROL.ROLE_ID = #{roleId} </if>
+          <if test="titleId != null and titleId != ''"> AND DEPT.TITLE_ID = #{titleId} </if>
+          <if test="deptId != null and deptId != ''"> AND DEPT.DEP_ID = #{deptId} </if>
+          <if test="userName != null and userName != ''"> AND UE.USERNAME = #{userName} </if>
+        </where>
+    </select>
+    
+    <select id="queryReport03" resultMap="report03Map">
+        SELECT 
+            FUNC_USAGE.SYSTEM_ID AS SYS_ID, 
+            SYSS.SYS_NAME AS SYS_NAME, 
+            FUNC_USAGE.FUNC_ID AS FUNC_ID, 
+            FUNC_ITEM.FUNCTION_NAME AS FUNC_NAME, 
+            SUM(FUNC_USAGE.USAGE) AS USAGE
+        FROM ESERVICE_ADM.DBO.FUNCTION_DAILY_USAGE FUNC_USAGE
+        JOIN 
+            (
+	           SELECT DISTINCT FUNCTION_ID, FUNCTION_NAME FROM ESERVICE_ADM.DBO.FUNCTION_ITEM 
+	           <where>
+	               AND SYS_ID = #{systemId}
+               </where>
+	        ) FUNC_ITEM ON FUNC_ITEM.FUNCTION_ID=FUNC_USAGE.FUNC_ID
+	    JOIN ESERVICE_ADM.DBO.SYSTEMS SYSS ON SYSS.SYS_ID=FUNC_USAGE.SYSTEM_ID
+        <where>
+            AND GETDATE()-FUNC_USAGE.RECORD_DATE <![CDATA[<]]> #{dateRange} 
+            AND SYSTEM_ID = #{systemId}
+        </where>
+        GROUP BY FUNC_USAGE.SYSTEM_ID, SYSS.SYS_NAME, FUNC_USAGE.FUNC_ID, FUNC_ITEM.FUNCTION_NAME
+    </select>
+    
+</mapper>

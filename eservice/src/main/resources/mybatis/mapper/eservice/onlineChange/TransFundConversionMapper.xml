@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransFundConversionDao" >
+
+  <resultMap id="BaseResultMap" type="com.twfhclife.eservice.onlineChange.model.TransFundConversionVo" >
+    <id column="ID" property="id" jdbcType="NUMERIC" />
+    <result column="TRANS_NUM" property="transNum" jdbcType="NVARCHAR" />
+    <result column="POLICY_NO" property="policyNo" jdbcType="NVARCHAR" />
+    <result column="INVT_NO" property="invtNo" jdbcType="NVARCHAR" />
+    <result column="INVT_NAME" property="invtName" jdbcType="NVARCHAR" />
+    <result column="INVESTMENT_TYPE" property="investmentType" jdbcType="NVARCHAR" />
+    <result column="RATIO" property="ratio" jdbcType="NUMERIC" />
+    <result column="VALUE" property="value" jdbcType="NUMERIC" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, TRANS_NUM, POLICY_NO, INVT_NO, INVESTMENT_TYPE, RATIO, VALUE
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from TRANS_FUND_CONVERSION
+    where ID = #{id,jdbcType=NUMERIC}
+  </select>
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from TRANS_FUND_CONVERSION
+    where ID = #{id,jdbcType=NUMERIC}
+  </delete>
+
+  <insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransFundConversionVo" >
+    insert into TRANS_FUND_CONVERSION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="transNum != null" >
+        TRANS_NUM,
+      </if>
+      <if test="policyNo != null" >
+        POLICY_NO,
+      </if>
+      <if test="invtNo != null" >
+        INVT_NO,
+      </if>
+      <if test="investmentType != null" >
+        INVESTMENT_TYPE,
+      </if>
+      <if test="ratio != null" >
+        RATIO,
+      </if>
+      <if test="value != null" >
+        VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="transNum != null" >
+        #{transNum,jdbcType=NVARCHAR},
+      </if>
+      <if test="policyNo != null" >
+        #{policyNo,jdbcType=NVARCHAR},
+      </if>
+      <if test="invtNo != null" >
+        #{invtNo,jdbcType=NVARCHAR},
+      </if>
+      <if test="investmentType != null" >
+        #{investmentType,jdbcType=NVARCHAR},
+      </if>
+      <if test="ratio != null" >
+        #{ratio,jdbcType=NUMERIC},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=NUMERIC},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.twfhclife.eservice.onlineChange.model.TransFundConversionVo" >
+    update TRANS_FUND_CONVERSION
+    set TRANS_NUM = #{transNum,jdbcType=NVARCHAR},
+    POLICY_NO = #{policyNo,jdbcType=NVARCHAR},
+    INVT_NO = #{invtNo,jdbcType=NVARCHAR},
+    INVESTMENT_TYPE = #{investmentType,jdbcType=NVARCHAR},
+    RATIO = #{ratio,jdbcType=NUMERIC},
+    VALUE = #{value,jdbcType=NUMERIC}
+    where ID = #{id,jdbcType=NUMERIC}
+  </update>
+
+  <select id="transInvestmentConversionDetail"  resultMap="BaseResultMap" >
+    SELECT TF.INVT_NO INVT_NO,  PP.INVT_NAME INVT_NAME,  TF.INVESTMENT_TYPE INVESTMENT_TYPE,TF.RATIO RATIO,TF.VALUE VALUE
+    FROM ESERVICE.dbo.TRANS_FUND_CONVERSION TF LEFT JOIN
+    ESERVICE.dbo.POLICY_PORTFOLIO PP ON TF.POLICY_NO = PP.POLICY_NO AND TF.INVT_NO = PP.INVT_NO
+    WHERE TF.TRANS_NUM =#{transNum}
+  </select>
+</mapper>

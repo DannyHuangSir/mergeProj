@@ -1,0 +1,123 @@
+    <script th:src="@{/plugin/jquery-1.11.3.min.js}"></script>
+    <script th:src="@{/plugin/jquery.placeholder.min.js}"></script>
+    <script th:src="@{/plugin/detectmobilebrowser_jquery.js}"></script>
+    <script th:src="@{/js/circle.js}"></script>
+    <script th:src="@{/plugin/scrollbar.js}"></script>
+    <script th:src="@{/plugin/jquery-ui.min.js}"></script>
+    <script th:src="@{/plugin/datepicker-zh-TW.js}"></script>
+    <script th:src="@{/plugin/bootstrap.min.js}"></script>
+    <script th:src="@{/plugin/tablesaw.stackonly.js}"></script>
+    <script th:src="@{/js/according.js}"></script>
+    <script th:src="@{/js/onlinechange/accounting.min.js}"></script>
+    <script th:src="@{/js/popover.js}"></script>
+    <script th:src="@{/plugin/jquery.sliderTabs.min.js}"></script>
+    <script th:src="@{/plugin/bootstrap-multiselect.js}"></script>
+    <script th:src="@{/js/travelPolicy/moment.js}"></script>
+    <script th:src="@{/plugin/bootstrap-datetimepicker.js}"></script>
+    <script th:src="@{/js/chosen.jquery.js}"></script>
+    <script th:src="@{/js/scripts.js}"></script>
+    <script th:src="@{/js/tablepand.js}"></script>
+    <script th:src="@{/js/fileinput.js}"></script><!-- 上傳文件圖片 -->
+    <script th:src="@{/fontawesome-free-5.1.1-web/js/solid.js}"></script>
+    <script th:src="@{/fontawesome-free-5.1.1-web/js/regular.js}"></script>
+    <script th:src="@{/fontawesome-free-5.1.1-web/js/fontawesome.js}"></script>
+    <!-- eservice common-->
+    <script th:src="@{/js/eservice/placeholder.js}"></script>
+    <script th:src="@{/js/eservice/render.js}"></script>
+    <script th:src="@{/js/eservice/noticeBoard.js}"></script>
+    <script th:src="@{/js/eservice/option.js}"></script>
+    <script th:src="@{/js/eservice/form.js}"></script>
+    <script th:src="@{/js/eservice/pagebar.js}"></script>
+    <script th:src="@{/js/eservice/grid.js}"></script>
+    <script th:src="@{/js/eservice/applyGrid.js}"></script>
+    <script th:src="@{/js/eservice/actionModal.js}"></script>
+    <script th:src="@{/js/eservice/timer.js}"></script>
+    <script th:src="@{/plugin/timer.jquery.js}"></script>
+    <script th:src="@{/js/eservice/validate.js}"></script>
+    <script th:src="@{/js/offcanvas.js}"></script>
+    <script th:src="@{/js/countrySelect.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}" />
+	<script th:src="@{/plugin/loading-modal/loading-modal.js}"></script>
+    <!-- display system error-->
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    $(function() {
+        var errorMessage = /*[[${errorMessage}]]*/;
+        errorMessage = (errorMessage == null ? '' : errorMessage);
+        if (errorMessage != '') {
+            openAlert(errorMessage);
+        }
+
+        var USER_DETAIL = /*[[${session.USER_DETAIL}]]*/;
+        if(USER_DETAIL != undefined){
+            var identity = USER_DETAIL.identity;
+            if(identity != null && document.getElementById("insured") != null && document.getElementById("proposer") != null){
+                if(sessionStorage.getItem('identity') == null){
+                    document.getElementById("insured").checked = identity.lilipi;
+                    document.getElementById("proposer").checked = identity.lilipm;
+                    sessionStorage.setItem('identity',JSON.stringify(identity))
+                }else{
+                    document.getElementById("insured").checked = JSON.parse(sessionStorage.getItem('identity')).lilipi;
+                    document.getElementById("proposer").checked = JSON.parse(sessionStorage.getItem('identity')).lilipm;
+                }
+            
+            }
+        }
+        
+    });
+
+    //切換角色
+    function toggleRole(){
+        $("#members").toggle();
+    }
+
+
+    function insured(obj){
+        openAlert("不可取消！");
+        $("#insured").prop("checked","checked");
+    }
+    function proposer(obj){
+        openAlert("不可取消！");
+        $("#proposer").prop("checked","checked");
+    }
+    function identity(obj){
+         var insured=document.getElementById("insured").checked;
+         var proposer=document.getElementById("proposer").checked;
+         sessionStorage.setItem('identity',JSON.stringify({'lilipi': insured,'lilipm':proposer}));
+        if(obj.checked==true && obj.id == 'proposer'){
+            $("#preservationCategory").show();
+            $("#premiumCategory").show();
+            $("#investmientCategory").show();
+            $("#benefitCategory").find('.benefitCategory').show();
+            $("#travelCategory").show();
+            $("#baseInfoCategory").show();
+        }else if(obj.checked==false && obj.id == 'proposer'){
+            $("#preservationCategory").hide();
+            $("#premiumCategory").hide();
+            $("#investmientCategory").hide();
+            $("#benefitCategory").find('.benefitCategory').hide();
+            $("#travelCategory").hide();
+            $("#baseInfoCategory").show();
+            if(insured == false){
+                openAlert("至少勾選一個！");
+                $("#proposer").prop("checked","checked");
+                $("#preservationCategory").show();
+                $("#premiumCategory").show();
+                $("#investmientCategory").show();
+                $("#benefitCategory").find('.benefitCategory').show();
+            }
+        }else if(obj.checked==true && obj.id == 'insured'){
+            $("a[name='policyClaims']").show();
+            $("#button_update_base_info").show();
+        }else if(obj.checked==false && obj.id == 'insured'){
+            $("a[name='policyClaims'").hide();
+            $("#button_update_base_info").hide()
+            if(proposer == false){
+                openAlert("至少勾選一個！");
+                $("#insured").prop("checked","checked");
+                $("a[name='policyClaims'").show();
+            }
+        }
+    }
+    /*]]>*/
+    </script>

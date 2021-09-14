@@ -1,0 +1,59 @@
+<div class="col-sm-12" style="text-align: left;">
+	<div class="check-title" style="background: #20B657;">設定停利停損通知</div>
+	<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+	<thead>
+		<tr class="table2 orange2">
+			<th style="background-color: #DFFFDF;" class="text-left ">類型</th>
+			<th style="background-color: #DFFFDF;" class="text-left ">投資標的</th>
+			<th style="background-color: #DFFFDF;" class="item">幣別</th>
+			<th style="background-color: #DFFFDF;"scope="col">投資收益等級</th>
+			<th style="background-color: #DFFFDF;"scope="col">幣別參考價值</th>
+			<th style="background-color: #DFFFDF;"scope="col">參考報酬率百分比</th>
+			<th style="background-color: #DFFFDF;" class="item100">停利點</th>
+			<th style="background-color: #DFFFDF;" class="item100">停損點</th>
+		</tr>
+	</thead>
+	<tbody>
+		<th:block th:each="vo, rowStat : ${transFundNotificationDtlList}">
+			<tr class="h65 tr-odd-noEvent">
+				<td>
+					<th:block th:if="${vo.type == '1'}">
+						已持有
+					</th:block>
+					<th:block th:if="${vo.type == '2'}">
+						觀查中
+					</th:block>
+				</td>
+				<td class="text-left"><th:block th:text="${vo.invtName}"/>
+					<p class="enSmall"><th:block th:text="${vo.fundCode}"/></p>
+				</td>
+				<td><th:block th:text="${vo.currency}"/></td>
+				<td><th:block th:text="${vo.riskBeneLevel}"/></td>
+				<td>
+					<p>1,042,899<i class="my5">NTD</i></p>
+				</td>
+				<td>- 16.<span class="point">44</span>%</td>
+				<td>
+					<th:block th:if="${vo.percentageUp != null}">
+						<th:block th:text="${vo.percentageUp}"/>%
+					</th:block>
+					<th:block th:if="${vo.percentageUp == null}">
+						--
+					</th:block>
+
+		        </td>
+				<td>
+				<div>
+					<th:block th:if="${vo.percentageDown != null}">
+						<th:block th:text="${vo.percentageDown}"/>%
+					</th:block>
+					<th:block th:if="${vo.percentageDown == null}">
+						--
+					</th:block>
+				</div>
+				</td>
+		    </tr>
+		</th:block>
+</tbody>
+</table>
+</div>

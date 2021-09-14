@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.FundPrdtDao">
+
+	<resultMap id="FundPrdtMap" type="com.twfhclife.eservice.policy.model.FundPrdtVo" >
+		<result column="ID" property="id"/>
+		<result column="PRDT_INSU_NO" property="prdtInsuNo"/>
+		<result column="PRDT_BOOK_DATE" property="prdtBookDate"/>
+		<result column="PRDT_RCP_AMT" property="prdtRcpAmt"/>
+		<result column="PRDT_INVEST_AMT" property="prdtInvestAmt"/>
+		<result column="PRDT_INCRE_LOADING" property="prdtIncreLoading"/>
+		<result column="PRDT_TARGET_LOADING" property="prdtTargetLoading"/>
+	</resultMap>
+
+	<!-- 清單附加資訊 -->
+	<resultMap id="FundPrdtListMap" type="com.twfhclife.eservice.policy.model.FundPrdtVo" extends="FundPrdtMap">
+		<result column="COST" property="cost"/>
+		<result column="MAINTENANCE_FEE" property="maintenanceFee"/>
+		<result column="INTEREST" property="interest"/>
+	<result column="ROW_NUM" property="rowNum"/>		
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,PRDT_INSU_NO,PRDT_BOOK_DATE,PRDT_RCP_AMT,PRDT_INVEST_AMT,PRDT_INCRE_LOADING
+	</sql>
+	
+	<sql id="Base_Page_Column_List">
+		PRDT_INSU_NO
+		,PRDT_BOOK_DATE
+		,COALESCE(PRDT_RCP_AMT, 0) PRDT_RCP_AMT
+		,COALESCE(PRDT_INVEST_AMT, 0) PRDT_INVEST_AMT
+		,COALESCE(PRDT_TARGET_LOADING, 0) PRDT_TARGET_LOADING
+		,COALESCE(PRDT_INCRE_LOADING, 0) PRDT_INCRE_LOADING
+		,COALESCE(COST, 0) COST
+		,COALESCE(MAINTENANCE_FEE, 0) MAINTENANCE_FEE
+		,COALESCE(INTEREST, 0) INTEREST
+		,MAX(ROW_NUM) ROW_NUM
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="fundPrdtVo.id != null and fundPrdtVo.id != ''"> AND ID = #{fundPrdtVo.id} </if>
+			<if test="fundPrdtVo.prdtInsuNo != null and fundPrdtVo.prdtInsuNo != ''"> AND PRDT_INSU_NO = #{fundPrdtVo.prdtInsuNo} </if>
+			<if test="fundPrdtVo.prdtBookDate != null"> AND PRDT_BOOK_DATE = #{fundPrdtVo.prdtBookDate} </if>
+			<if test="fundPrdtVo.prdtRcpAmt != null"> AND PRDT_RCP_AMT = #{fundPrdtVo.prdtRcpAmt} </if>
+			<if test="fundPrdtVo.prdtInvestAmt != null"> AND PRDT_INVEST_AMT = #{fundPrdtVo.prdtInvestAmt} </if>
+			<if test="fundPrdtVo.prdtIncreLoading != null"> AND PRDT_INCRE_LOADING = #{fundPrdtVo.prdtIncreLoading} </if>
+			<if test="fundPrdtVo.startDate != null and fundPrdtVo.startDate != ''">
+				<if test="fundPrdtVo.endDate != null and fundPrdtVo.endDate != ''">
+					AND convert(varchar(10), PRDT_BOOK_DATE, 126) <![CDATA[>=]]> #{fundPrdtVo.startDate}
+					AND convert(varchar(10), PRDT_BOOK_DATE, 126) <![CDATA[<=]]> #{fundPrdtVo.endDate}
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	<select id="getFundPrdt" resultMap="FundPrdtMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.FUND_PRDT
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- include sql: 保費費用查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			ROW_NUMBER() OVER (ORDER BY F.PRDT_BOOK_DATE ) AS ROW_NUM
+			,PREMIUM_SEQ
+			,P.PREMIUM_CODE
+			,PREMIUM_DATE				
+			,F.PRDT_INSU_NO
+			,F.PRDT_BOOK_DATE
+			,F.PRDT_RCP_AMT
+			,F.PRDT_TARGET_LOADING
+			,F.PRDT_INCRE_LOADING
+			,P.APPLY_AMOUNT AS PRDT_INVEST_AMT
+			,CASE
+				WHEN SUBSTRING(P.POLICY_NO, 1, 2) = 'UC' THEN CASE
+					WHEN P.CHARGE_2ND IS NOT NULL
+					AND P.CHARGE_2ND != 0 THEN P.POLICY_PREMIUM + (P.CHARGE_2ND - 100)
+					ELSE P.POLICY_PREMIUM + P.CHARGE_2ND
+				END
+				WHEN SUBSTRING(P.POLICY_NO, 1, 2) = 'UH' THEN P.POLICY_PREMIUM + (P.CHARGE_2ND -3)
+			END AS COST
+			,CASE
+				WHEN SUBSTRING(P.POLICY_NO, 1, 2) = 'UC' THEN CASE
+					WHEN P.CHARGE_2ND IS NOT NULL
+					AND P.CHARGE_2ND != 0 THEN (P.FEE_AMOUNT + 100)
+					ELSE P.FEE_AMOUNT
+				END
+				WHEN SUBSTRING(P.POLICY_NO, 1, 2) = 'UH' THEN CASE
+					WHEN P.CHARGE_2ND IS NOT NULL
+					AND P.CHARGE_2ND != 0 THEN (P.FEE_AMOUNT + 3)
+					ELSE P.FEE_AMOUNT
+				END
+			END AS MAINTENANCE_FEE
+			,P.INT_AMOUNT AS INTEREST
+		FROM ESERVICE.DBO.FUND_PRDT F
+		LEFT JOIN ESERVICE.DBO.PREMIUM_TRANSACTION P ON P.POLICY_NO = F.PRDT_INSU_NO
+			AND P.PREMIUM_SEQ = 0			 
+			AND P.PREMIUM_CODE in ('INV102','INV104','INV105','INV106','INV110')
+		WHERE
+			F.PRDT_INSU_NO = #{policyNo}
+			AND
+			( PREMIUM_CODE = case when PRDT_TARGET_LOADING > 0 then 'INV102' end 
+			or 
+			 (PREMIUM_CODE in ('INV104','INV105','INV106','INV110') AND  PRDT_TARGET_LOADING = 0 )
+			)
+		
+		<!-- 若有輸入查詢日期，以輸入的為準 -->
+		<if test="startDate != null and endDate != null">
+			AND convert(varchar, F.PRDT_BOOK_DATE, 111) <![CDATA[>=]]> #{startDate}
+			AND convert(varchar, F.PRDT_BOOK_DATE, 111) <![CDATA[<=]]> #{endDate}
+		</if>
+		<!-- 沒有輸入查詢日期，預設2年內 -->
+		<if test="startDate == null and endDate == null">
+			AND case when F.PRDT_BOOK_DATE is null then getdate() else F.PRDT_BOOK_DATE end > DATEADD(month, -24, getdate()) + 1
+		</if>
+	</sql>
+	
+	<!-- 取得保單的保費費用記錄(分頁) -->
+	<select id="getFundPrdtPageList" resultMap="FundPrdtListMap">
+		WITH FUND_PRDT_DATA_TMP AS (
+			<include refid="INC1" />
+		)
+		SELECT		
+			(SELECT MAX(ROW_NUM) FROM FUND_PRDT_DATA_TMP) AS TOTAL_ROW
+			,#{pageSize} AS PAGE_SIZE
+			,#{pageNum} AS PAGE_NUM
+			,<include refid="Base_Page_Column_List" />
+		FROM
+			FUND_PRDT_DATA_TMP
+<!-- 		<if test="pageNum != null and pageSize != null"> -->
+<!-- 		WHERE -->
+<!-- 			ROW_NUM <![CDATA[>=]]> ((#{pageNum} - 1) * #{pageSize}) + 1 -->
+<!-- 			AND ROW_NUM <![CDATA[<=]]> (#{pageNum} * #{pageSize}) -->
+<!-- 		</if> -->
+		GROUP BY 
+		    PRDT_INSU_NO
+		   ,PRDT_BOOK_DATE
+           ,PRDT_RCP_AMT
+           ,PRDT_INVEST_AMT
+           ,PRDT_TARGET_LOADING
+           ,PRDT_INCRE_LOADING
+           ,COST
+		   ,MAINTENANCE_FEE
+		   ,INTEREST
+	</select>
+
+</mapper>

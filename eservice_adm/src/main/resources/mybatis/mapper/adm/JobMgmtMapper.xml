@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.JobMgmtDao">
+    
+    <sql id="baseReportJobColumn">
+        REPORT_JOB_ID, REPORT_ID, REPORT_NAME, 
+        CRON_EXP, EXECUTE_CMD, DATE_RANGE, 
+        CREATE_DATE, CREATE_USER, MODIFY_DATE, MODIFY_USER
+    </sql>
+    
+    <sql id="baseReportJobConditionColumn">
+        REPORT_JOB_ID, CONDITION, CONDITION_CHT, CONDITION_VALUE, CONDITION_VALUE_CHT, 
+        CREATE_DATE, CREATE_USER, MODIFY_DATE, MODIFY_USER
+    </sql>
+    
+    <sql id="baseReportJobHistoryColumn">
+        ID AS REPORT_ID, REPORT_JOB_ID AS JOB_ID
+        , EXECUTE_TIME AS TIME, EXECUTE_STATUS AS STATUS
+        , FILE_NAME AS FILENAME, DOWNLOAD_URL AS URL
+    </sql>
+    
+    <resultMap type="com.twfhclife.adm.model.ReportJobScheduleVo" id="baseReportJobResult">
+        <result property="reportJobId" column="REPORT_JOB_ID" />
+		<result property="reportId" column="REPORT_ID" />
+		<result property="reportName" column="REPORT_NAME" />
+		<result property="cronExp" column="CRON_EXP" />
+		<result property="executeCmd" column="EXECUTE_CMD" />
+		<result property="dateRange" column="DATE_RANGE" />
+		<result property="createDate" column="CREATE_DATE" />
+		<result property="createUser" column="CREATE_USER" />
+		<result property="modifyDate" column="MODIFY_DATE" />
+		<result property="modifyUser" column="MODIFY_USER" />
+    </resultMap>
+    
+    <resultMap type="com.twfhclife.adm.model.ReportJobConditionVo" id="baseReportJobConditionResult">
+        <result property="reportJobId" column="REPORT_JOB_ID" />
+		<result property="condition" column="CONDITION" />
+		<result property="conditionCht" column="CONDITION_CHT" />
+		<result property="conditionValue" column="CONDITION_VALUE" />
+		<result property="conditionValueCht" column="CONDITION_VALUE_CHT" />
+		<result property="createDate" column="CREATE_DATE" />
+		<result property="createUser" column="CREATE_USER" />
+		<result property="modifyUser" column="MODIFY_USER" />
+		<result property="modifyDate" column="MODIFY_DATE" />
+    </resultMap>
+    
+    <resultMap type="com.twfhclife.adm.model.ReportJobHistoryVo" id="baseReportJobHistoryResult">
+        <result property="reportJobId" column="REPORT_JOB_ID" />
+		<result property="executeTime" column="EXECUTE_TIME" />
+		<result property="executeStatus" column="EXECUTE_STATUS" />
+		<result property="errorMsg" column="ERROR_MSG" />
+		<result property="fileName" column="FILE_NAME" />
+		<result property="downloadUrl" column="DOWNLOAD_URL" />
+    </resultMap>
+    
+    <sql id="whereClauseReportJob">
+        <where>
+            <if test="reportJobScheduleVo.reportJobId != null and reportJobScheduleVo.reportJobId != ''"> AND REPORT_JOB_ID = #{reportJobScheduleVo.reportJobId} </if>
+            <if test="reportJobScheduleVo.reportId != null and reportJobScheduleVo.reportId != ''"> AND REPORT_ID = #{reportJobScheduleVo.reportId} </if>
+        </where>
+    </sql>
+    
+    <sql id="whereClauseReportJobHistory">
+        <where>
+            AND REPORT_JOB_ID = #{reportJobHistoryVo.reportJobId}
+        </where>
+    </sql>
+    
+    <select id="getReportJobSeq" resultType="int">
+        SELECT REPORT_JOB_SEQ.NEXTVAL FROM DUAL
+        <!-- SELECT CASE WHEN (SELECT COUNT(*) FROM ESERVICE_ADM.DBO.REPORT_JOB) = 0 THEN 1 ELSE (SELECT MAX(REPORT_JOB_ID) + 1 FROM ESERVICE_ADM.DBO.REPORT_JOB) END -->
+    </select>
+    
+    <insert id="insertReportJob">
+        INSERT INTO 
+            ESERVICE_ADM.DBO.REPORT_JOB(
+                REPORT_JOB_ID, REPORT_ID, REPORT_NAME, 
+		        CRON_EXP, EXECUTE_CMD, DATE_RANGE, 
+		        CREATE_DATE, CREATE_USER
+            ) VALUES (
+                #{reportJobScheduleVo.reportJobId, jdbcType=NUMERIC}
+                , #{reportJobScheduleVo.reportId, jdbcType=VARCHAR}
+                , #{reportJobScheduleVo.reportName, jdbcType=VARCHAR}
+                , #{reportJobScheduleVo.cronExp, jdbcType=VARCHAR}
+                , #{reportJobScheduleVo.executeCmd, jdbcType=VARCHAR}
+                , #{reportJobScheduleVo.dateRange, jdbcType=NUMERIC}
+                , getdate()
+                , #{reportJobScheduleVo.createUser, jdbcType=VARCHAR}
+            )
+    </insert>
+    
+    <insert id="insertReportJobCondition">
+        INSERT INTO 
+            ESERVICE_ADM.DBO.REPORT_JOB_CONDITION (
+               REPORT_JOB_ID, CONDITION, CONDITION_CHT, CONDITION_VALUE, CONDITION_VALUE_CHT, 
+               CREATE_DATE, CREATE_USER
+            ) VALUES (
+	            #{reportJobScheduleVo.reportJobId, jdbcType=NUMERIC}
+	            , #{reportJobConditionVo.condition, jdbcType=VARCHAR}
+	            , #{reportJobConditionVo.conditionCht, jdbcType=VARCHAR}
+	            , #{reportJobConditionVo.conditionValue, jdbcType=VARCHAR}
+	            , #{reportJobConditionVo.conditionValueCht, jdbcType=VARCHAR}
+	            , getdate()
+	            , #{reportJobScheduleVo.createUser, jdbcType=VARCHAR}
+            )
+    </insert>
+    
+    <select id="getReportJobScheduleList" resultMap="baseReportJobResult">
+        SELECT 
+            <include refid="baseReportJobColumn" />
+        FROM 
+            ESERVICE_ADM.DBO.REPORT_JOB
+        <include refid="whereClauseReportJob" />
+    </select>
+    
+    <sql id="reportJobSrc">
+        SELECT 
+            REPORT_JOB_ID AS REPORT_KEY
+          , REPORT_NAME, CRON_EXP, DATE_RANGE
+        FROM 
+            REPORT_JOB
+        <include refid="whereClauseReportJob" />
+        ORDER BY REPORT_JOB_ID 
+    </sql>
+    
+    <!-- 取得報表排程查詢結果(分頁) -->
+    <select id="getReportJobList" resultType="hashmap">
+        SELECT
+            *
+        FROM (
+            SELECT 
+                ROW_NUMBER() OVER (ORDER BY A.REPORT_KEY) AS ROW_NUM, 
+                A.* 
+            FROM (
+		        <include refid="reportJobSrc"/>
+            ) A
+        ) B
+        WHERE
+            B.ROW_NUM <![CDATA[<=]]> #{reportJobScheduleVo.page} * #{reportJobScheduleVo.rows}
+            AND B.ROW_NUM <![CDATA[>]]> (#{reportJobScheduleVo.page} - 1) * #{reportJobScheduleVo.rows}
+    </select>
+    
+    <!-- 取得報表排程分頁總筆數 -->
+    <select id="getReportJobPageTotal" resultType="int">
+        SELECT 
+            COUNT(*) AS AMOUNT 
+        FROM 
+            REPORT_JOB
+        <include refid="whereClauseReportJob" />
+    </select>
+    
+    <select id="getReportJobConditionByReportJobId" resultMap="baseReportJobConditionResult">
+        SELECT 
+            <include refid="baseReportJobConditionColumn" />
+        FROM
+            REPORT_JOB_CONDITION
+        WHERE 
+            REPORT_JOB_ID = #{reportJobId}
+    </select>
+    
+    <update id="updateReportJob">
+        UPDATE 
+            REPORT_JOB 
+          SET CRON_EXP = #{reportJobScheduleVo.cronExp}
+            , DATE_RANGE = #{reportJobScheduleVo.dateRange}
+            , MODIFY_DATE = getdate()
+            , MODIFY_USER = #{reportJobScheduleVo.modifyUser}
+            , EXECUTE_CMD = #{reportJobScheduleVo.executeCmd}
+        <include refid="whereClauseReportJob" />
+    </update>
+    
+    <update id="updateReportJobCondition">
+        UPDATE 
+            REPORT_JOB_CONDITION 
+          SET CONDITION_VALUE = #{reportJobConditionVo.conditionValue}
+            , CONDITION_VALUE_CHT = #{reportJobConditionVo.conditionValueCht}
+            , MODIFY_DATE = getdate()
+            , MODIFY_USER = #{reportJobConditionVo.modifyUser}
+        <where>
+            AND REPORT_JOB_ID = #{reportJobConditionVo.reportJobId}
+            AND CONDITION = #{reportJobConditionVo.condition}
+        </where>
+    </update>
+    
+    <delete id="deleteReportJobByReportJobId">
+        DELETE 
+            REPORT_JOB
+        WHERE 
+            REPORT_JOB_ID = #{reportJobId}
+    </delete>
+    
+    <delete id="deleteReportJobConditionByReportJobId">
+        DELETE 
+            REPORT_JOB_CONDITION
+        WHERE 
+            REPORT_JOB_ID = #{reportJobId}
+    </delete>
+    
+    <select id="querySettingConditionKeyByReportJobId" resultType="string">
+        SELECT 
+            CONDITION
+        FROM 
+            REPORT_JOB_CONDITION
+        WHERE 
+            REPORT_JOB_ID = #{reportJobId}
+    </select>
+    
+    <select id="getReportJobHistory" resultType="hashmap">
+        SELECT 
+            * 
+        FROM (
+            SELECT 
+                ROW_NUMBER() OVER (ORDER BY A.TIME) AS ROW_NUM, 
+                A.* 
+            FROM (
+		        SELECT 
+		            <include refid="baseReportJobHistoryColumn" />
+		        FROM
+		            REPORT_JOB_HISTORY
+		        <include refid="whereClauseReportJobHistory" />
+	        ) A
+        ) B
+        WHERE 
+            B.ROW_NUM <![CDATA[<=]]> #{reportJobHistoryVo.page} * #{reportJobHistoryVo.rows}
+            AND B.ROW_NUM <![CDATA[>]]> (#{reportJobHistoryVo.page} - 1) * #{reportJobHistoryVo.rows}
+    </select>
+    
+    <select id="getReportJobHistoryPageTotal" resultType="int">
+        SELECT 
+            COUNT(*) AMOUNT
+        FROM 
+            REPORT_JOB_HISTORY
+        <include refid="whereClauseReportJobHistory" />
+    </select>
+    
+    <select id="queryAllSettingReportJobCmd" resultType="string">
+        SELECT 
+            EXECUTE_CMD
+        FROM 
+            REPORT_JOB
+        WHERE 
+            TRIM(EXECUTE_CMD) IS NOT NULL
+    </select>
+    
+    <select id="queryDownloadUrlById" resultType="string">
+        SELECT 
+            DOWNLOAD_URL
+        FROM 
+            REPORT_JOB_HISTORY
+        WHERE 
+            ID = #{reportId}
+    </select>
+    
+    <delete id="deleteCondition">
+        DELETE 
+            REPORT_JOB_CONDITION 
+        <where>
+            AND REPORT_JOB_ID = #{reportJobConditionVo.reportJobId}
+            AND CONDITION = #{reportJobConditionVo.condition}
+        </where>
+    </delete>
+    
+    <!-- BusinessEventJob Start -->
+    <!-- BusinessEventJob OBJ -->
+    <resultMap type="com.twfhclife.adm.model.BusinessEventJobVo" id="BusinessEventJobMap">
+        <result column="EVENT_JOB_ID" property="eventJobId"/>
+		<result column="SYSTEM_ID" property="systemId"/>
+		<result column="EVENT_CODE" property="eventCode"/>
+		<result column="EVENT_NAME" property="eventName"/>
+		<result column="CRON_EXP" property="cronExp"/>
+		<result column="EXECUTE_CMD" property="executeCmd"/>
+		<result column="MESSAGING_TEMPLATE_ID" property="messagingTemplageId"/>
+    </resultMap>
+    <!-- 事件類型參數使用 OBJ -->
+    <resultMap type="com.twfhclife.adm.model.ParameterVo" id="ParameterMap">
+        <result column="PARAMETER_NAME" property="parameterName"/>
+        <result column="PARAMETER_VALUE" property="parameterValue"/>
+    </resultMap>
+    <!-- 事件類型參數 script -->
+    <select id="getEvenJobSelect" resultMap="ParameterMap">
+        SELECT 
+            PARAMETER_NAME, PARAMETER_VALUE 
+        FROM 
+            PARAMETER P
+        INNER JOIN ESERVICE_ADM.MESSAGING_TEMPLATE MT 
+            ON MT.EVENT_TYPE=P.PARAMETER_CODE 
+           AND MT.SYSTEM_ID=P.SYSTEM_ID 
+           AND MT.STATUS='3'
+        <where>
+            AND P.SYSTEM_ID = #{systemId} 
+        </where>
+    </select>
+    <!-- BusinessEventJob 查詢條件 -->
+    <sql id="whereClauseBusinessEventJob">
+        <where>
+            AND BEJ.SYSTEM_ID = #{businessEventJobVo.systemId}
+            AND BEJ.EVENT_CODE = #{businessEventJobVo.eventCode}
+        </where>
+    </sql>
+    <!-- BusinessEventJob 基本查詢 -->
+    <sql id="businessEventJobSrc">
+        SELECT 
+            BEJ.EVENT_JOB_ID AS EVENT_KEY, SYSS.SYS_ID AS SYSTEM_ID, SYSS.SYS_NAME AS SYSTEM_NAME, BEJ.EVENT_NAME, BEJ.CRON_EXP
+        FROM 
+            BUSINESS_EVENT_JOB BEJ 
+        INNER JOIN 
+            SYSTEMS SYSS
+                ON SYSS.SYS_ID = BEJ.SYSTEM_ID
+        <include refid="whereClauseBusinessEventJob" />
+    </sql>
+    <!-- BusinessEventJob detail select -->
+    <select id="getBusinessEventJobData" resultMap="BusinessEventJobMap">
+        SELECT 
+            EVENT_JOB_ID, SYSTEM_ID, EVENT_CODE, CRON_EXP
+        FROM 
+            BUSINESS_EVENT_JOB 
+        <where>
+            AND EVENT_JOB_ID = #{businessEventJobVo.eventJobId}
+        </where>
+    </select>
+    <!-- BusinessEventJob 頁面 grid 使用 -->
+    <select id="getBusinessEventJobList" resultType="hashmap">
+        SELECT
+            *
+        FROM (
+            SELECT 
+                ROW_NUMBER() OVER (ORDER BY A.EVENT_KEY) AS ROW_NUM, 
+                A.* 
+            FROM (
+                <include refid="businessEventJobSrc"/>
+            ) A
+        ) B
+        WHERE
+            B.ROW_NUM <![CDATA[<=]]> #{businessEventJobVo.page} * #{businessEventJobVo.rows}
+            AND B.ROW_NUM <![CDATA[>]]> (#{businessEventJobVo.page} - 1) * #{businessEventJobVo.rows}
+    </select>
+    
+    <!-- 取得事件通知分頁總筆數 -->
+    <select id="getBusinessEventJobPageTotal" resultType="int">
+        SELECT 
+            COUNT(*) AS AMOUNT 
+        FROM 
+            BUSINESS_EVENT_JOB BEJ
+        <include refid="whereClauseBusinessEventJob" />
+    </select>
+    <!-- BusinessEventJob insert column -->
+    <sql id="BusinessEventJobColumn">
+        EVENT_JOB_ID, SYSTEM_ID, EVENT_CODE, EVENT_NAME
+        , CRON_EXP, EXECUTE_CMD, MESSAGING_TEMPLATE_ID
+        , CREATE_DATE, CREATE_USER
+    </sql>
+    <select id="getEventJobSeq" resultType="int">
+        SELECT MAX(BUSINESS_EVENT_ID) + 1 FROM ESERVICE_ADM.DBO.BUSINESS_EVENT
+    </select>
+    <sql id="getMessagingTemplateByEventCode">
+	    SELECT 
+		   MT.MESSAGING_TEMPLATE_ID
+		FROM 
+		    PARAMETER P
+		INNER JOIN ESERVICE_ADM.MESSAGING_TEMPLATE MT 
+		    ON MT.EVENT_TYPE=P.PARAMETER_CODE 
+		   AND MT.SYSTEM_ID=P.SYSTEM_ID 
+		   AND MT.STATUS='3'
+        WHERE 
+            PARAMETER_CODE = #{businessEventJobVo.eventCode}
+    </sql>
+    
+    <!-- BusinessEventJob insert script  -->
+    <insert id="insertBusinessEventJob">
+        INSERT INTO 
+            BUSINESS_EVENT_JOB(
+                <include refid="BusinessEventJobColumn" />
+            )
+            VALUES(
+                #{businessEventJobVo.eventJobId}
+                , #{businessEventJobVo.systemId}
+                , #{businessEventJobVo.eventCode}
+                , #{businessEventJobVo.eventName}
+                , #{businessEventJobVo.cronExp}
+                , #{businessEventJobVo.executeCmd}
+                , (<include refid="getMessagingTemplateByEventCode"/>)<!-- #{businessEventJobVo.messagingTemplateId} -->
+                , getdate()
+                , #{businessEventJobVo.createUser}
+            )
+    </insert>
+    <!-- BusinessEventJob Update where clause -->
+    <sql id="BusinessEventJobWhereClause">
+        <where>
+            AND EVENT_JOB_ID = #{businessEventJobVo.eventJobId}
+        </where>
+    </sql>
+    <!-- BusinessEventJob delete script -->
+    <delete id="delBusinessEventJob">
+        DELETE 
+            BUSINESS_EVENT_JOB
+        <include refid="BusinessEventJobWhereClause"/>
+    </delete>
+    <!-- BusinessEventJob update script -->
+    <update id="updBusinessEventJob">
+        UPDATE 
+            BUSINESS_EVENT_JOB
+        SET 
+            EXECUTE_CMD = #{businessEventJobVo.executeCmd}
+          , CRON_EXP = #{businessEventJobVo.cronExp}
+          , MODIFY_DATE = getdate()
+          , MODIFY_USER = #{businessEventJobVo.modifyUser}
+        <include refid="BusinessEventJobWhereClause"/>
+    </update>
+    
+    <select id="queryAllSettingBusinessEventJobCmd" resultType="string">
+        SELECT 
+            EXECUTE_CMD
+        FROM 
+            BUSINESS_EVENT_JOB 
+        WHERE 
+            TRIM(EXECUTE_CMD) IS NOT NULL
+    </select>
+    <!-- BusinessEventJob End -->
+    
+</mapper>

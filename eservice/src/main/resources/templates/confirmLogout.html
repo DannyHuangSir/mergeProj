@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>臺銀人壽保單網路服務</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<script	th:src="@{/plugin/jquery-1.11.3.min.js}"></script>
+	</head>
+
+	<body class="login-layout">
+		<form id="abortLoginForm" th:action="@{/abortLogin}"></form>
+		<form id="logoutOtherUserForm" th:action="@{/logoutOtherUser}" method="post"></form>
+		<script th:inline="javascript">
+			if (confirm('您已在別的瀏覽器登入本系統，是否踢出其他登入? 若選"取消"則會放棄本次登入')) {
+				$('#logoutOtherUserForm').submit();
+			} else {
+				$('#abortLoginForm').submit();
+			}
+		</script>
+	</body>
+</html>

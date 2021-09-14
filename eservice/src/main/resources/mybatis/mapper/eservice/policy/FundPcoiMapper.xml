@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.policy.dao.FundPcoiDao">
+
+	<resultMap id="FundPcoiMap" type="com.twfhclife.eservice.policy.model.FundPcoiVo" >
+		<result column="ID" property="id"/>
+		<result column="PCOI_BOOK_DATE" property="pcoiBookDate"/>
+		<result column="PCOI_INSU_NO" property="pcoiInsuNo"/>
+		<result column="PCOI_AMOUNT" property="pcoiAmount"/>
+		<result column="PCOI_INSU_COST" property="pcoiInsuCost"/>
+		<result column="PCOI_MONTH_CHARGE" property="pcoiMonthCharge"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,PCOI_BOOK_DATE,PCOI_INSU_NO,PCOI_AMOUNT,PCOI_INSU_COST,PCOI_MONTH_CHARGE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="fundPcoiVo.id != null and fundPcoiVo.id != ''"> AND ID = #{fundPcoiVo.id} </if>
+			<if test="fundPcoiVo.pcoiBookDate != null"> AND PCOI_BOOK_DATE = #{fundPcoiVo.pcoiBookDate} </if>
+			<if test="fundPcoiVo.pcoiInsuNo != null and fundPcoiVo.pcoiInsuNo != ''"> AND PCOI_INSU_NO = #{fundPcoiVo.pcoiInsuNo} </if>
+			<if test="fundPcoiVo.pcoiAmount != null"> AND PCOI_AMOUNT = #{fundPcoiVo.pcoiAmount} </if>
+			<if test="fundPcoiVo.pcoiInsuCost != null"> AND PCOI_INSU_COST = #{fundPcoiVo.pcoiInsuCost} </if>
+			<if test="fundPcoiVo.pcoiMonthCharge != null"> AND PCOI_MONTH_CHARGE = #{fundPcoiVo.pcoiMonthCharge} </if>
+		</where>
+	</sql>
+	
+	<!-- 續期扣收 Dao -->
+	<select id="getFundPcoi" resultMap="FundPcoiMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.FUND_PCOI
+		<include refid="whereClause" />
+	</select>
+
+</mapper>

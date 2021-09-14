@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.BusinessEventDao">
+	<resultMap id="BaseResultMap" type="com.twfhclife.adm.model.BusinessEventVo">
+		<result column="business_event_id" property="businessEventId" />
+		<result column="user_id" property="userId" />
+		<result column="event_date" property="eventDate" />
+		<result column="source_ip" property="sourceIp" />
+		<result column="target_ip" property="targetIp" />
+		<result column="target_system_id" property="targetSystemId" />
+		<result column="event_name" property="eventName" />
+		<result column="event_code" property="eventCode" />
+		<result column="event_status" property="eventStatus" />
+		<result column="event_msg" property="eventMsg" />
+		<result column="create_date" property="createDate" />
+		<result column="create_user" property="createUser" />
+	</resultMap>
+	<resultMap id="ConditionResultMap" type="com.twfhclife.adm.model.EventConditionVo">
+		<result column="business_event_id" property="businessEventId" />
+		<result column="event_condition_name" property="eventConditionName" />
+		<result column="event_condition_key" property="eventConditionKey" />
+		<result column="event_condition_value" property="eventConditionValue" />
+	</resultMap>
+	<resultMap id="ParameterResultMap" type="com.twfhclife.adm.model.EventParameterVo">
+		<result column="business_event_id" property="businessEventId" />
+		<result column="event_parameter_name" property="eventParameterName" />
+		<result column="event_parameter_code" property="eventParameterCode" />
+		<result column="event_parameter_value" property="eventParameterValue" />
+	</resultMap>
+
+	<parameterMap id="BusinessEventVo" type="com.twfhclife.adm.model.BusinessEventVo"/>
+	<parameterMap id="EventConditionVo" type="com.twfhclife.adm.model.EventConditionVo"/>
+	<parameterMap id="EventParameterVo" type="com.twfhclife.adm.model.EventParameterVo"/>
+
+	<sql id="Base_Column_List">
+		business_event_id,user_id,event_date,source_ip,target_ip,target_system_id,event_name,
+		event_code,event_status,event_msg,create_date,create_user
+	</sql>
+	
+	<sql id="Condition_Column_List">
+		business_event_id,event_condition_name,event_condition_key,event_condition_value
+	</sql>
+	
+	<sql id="Parameter_Column_List">
+		business_event_id,event_parameter_name,event_parameter_code,event_parameter_value
+	</sql>
+	
+	<select id="getEventRecordTable" resultMap="BaseResultMap" parameterType="com.twfhclife.adm.model.BusinessEventVo">
+		select
+		<include refid="Base_Column_List" />
+		from ESERVICE_ADM.DBO.BUSINESS_EVENT
+		where 1 = 1
+		<if test="businessEventVo.userId != ''" >
+			and user_id = #{businessEventVo.userId}
+		</if>
+		<if test="businessEventVo.targetSystemId != ''" >
+			and target_system_id = #{businessEventVo.targetSystemId}
+		</if>
+		<!-- 
+		<if test="businessEventVo.eventName != ''" >
+			and event_name = #{businessEventVo.eventName}
+		</if>
+		 -->
+		<if test="businessEventVo.eventCode != ''" >
+			and event_code = #{businessEventVo.eventCode}
+		</if>
+		<if test="businessEventVo.eventStatus != ''" >
+			and event_status = #{businessEventVo.eventStatus}
+		</if>
+		<if test="startDate != null" >
+			<if test="endDate != null" >
+				and event_date between #{startDate} and #{endDate}
+			</if>
+		</if>
+	</select>
+	
+	<select id="getBusinessEventById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ESERVICE_ADM.DBO.BUSINESS_EVENT
+		where business_event_id = #{businessEventId}
+	</select>
+	
+	<select id="getEventCondition" resultMap="ConditionResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Condition_Column_List" />
+		from ESERVICE_ADM.DBO.EVENT_CONDITION
+		where business_event_id = #{businessEventId}
+	</select>
+	
+	<select id="getEventParameter" resultMap="ParameterResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Parameter_Column_List" />
+		from ESERVICE_ADM.DBO.EVENT_PARAMETER
+		where business_event_id = #{businessEventId}
+	</select>
+
+</mapper>

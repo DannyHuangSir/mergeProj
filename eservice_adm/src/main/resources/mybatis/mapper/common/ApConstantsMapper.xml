@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ApConstantsMapper">
+
+	<!-- 系統別 -->
+	<sql id="ESERVICE_ADM_SYSTEM_ID">'eservice_adm'</sql>
+	
+	<!-- 線上申請-申請狀態 -->
+	<sql id="ONLINE_CHANGE_STATUS_PARAMETER_CATEGORY_CODE">'ONLINE_CHANGE_STATUS'</sql>
+	
+	<!-- 線上申請-申請項目 -->
+	<sql id="ONLINE_CHANGE_PARAMETER_CATEGORY_CODE">'ONLINE_CHANGE'</sql>
+	
+	<!-- 受益人類型 -->
+	<sql id="BENEFICIARY_TYPE_PARAMETER_CATEGORY_CODE">'BENEFICIARY_TYPE'</sql>
+	
+	<!-- 與被保人關係 -->
+	<sql id="BENEFICIARY_RELATION_PARAMETER_CATEGORY_CODE">'BENEFICIARY_RELATION'</sql>
+	
+	<!-- 分配方式 -->
+	<sql id="BENEFICIARY_ALLOCATE_TYPE_PARAMETER_CATEGORY_CODE">'BENEFICIARY_ALLOCATE_TYPE'</sql>
+	
+	<!-- 付款方式對應 -->
+	<sql id="PAYMENT_METHOD_TYPE_PARAMETER_CATEGORY_CODE">'PAYMENT_METHOD_TYPE'</sql>
+	
+	<!-- 通信模版狀態 -->
+	<sql id="MESG_TEMP_STATE_PARAMETER_CATEGORY_CODE">'MESG_TEMP_STATE'</sql>
+	
+	<!-- 通訊事件類型 -->
+	<sql id="MSG_EVENT_TYPE_PARAMETER_CATEGORY_CODE">'MSG_EVENT_TYPE'</sql>
+	
+</mapper>

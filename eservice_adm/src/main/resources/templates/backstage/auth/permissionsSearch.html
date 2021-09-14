@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/css/jstree-themes/default/style.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/css/jstree-themes/default/style.min.css}" />
+		<style type="text/css">
+		.jstree-default .jstree-clicked > .jstree-checkbox2 {
+			background-position: -36px -66px;
+		}
+		
+		.jstree-default .jstree-checkbox2 {
+			background-position: -164px -4px;
+		}
+		
+		.jstree-anchor2 {
+			display: inline-block;
+			color: black;
+			white-space: nowrap;
+			padding: 0 4px 0 1px;
+			margin: 0;
+			vertical-align: top;
+		}
+		.jstree-anchor2:focus {
+			outline: 0;
+		}
+		.jstree-anchor2, .jstree-anchor2:link, .jstree-anchor2:visited, .jstree-anchor2:hover, .jstree-anchor2:active {
+			text-decoration: none;
+			color: inherit;
+		}
+		.jstree-anchor2 > .jstree-themeicon {
+			background-position: -260px -4px
+		}
+		</style>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='permissionsSearch')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-user" aria-hidden="true"></i>
+								權限管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								權限查詢與報表
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12">
+									<form class="form-horizontal" id="form1" role="form" action="#">
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 系統功能 </label>
+											<div class="col-sm-5">
+												<select class="form-control" id="systemsSelect"></select>
+											</div>
+											<div class="col-sm-4">
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 使用者帳號 </label>
+											<div class="col-sm-5">
+												<input type="text" id="username" name="username" placeholder="輸入欲查詢的使用者帳號" class="form-control" />
+											</div>
+											<div class="col-sm-4">
+											</div>
+										</div>
+										<div class="clearfix form-actions">
+											<div class="col-md-offset-3 col-md-9">
+												<button id="qryBtn" class="btn btn-success" type="button">
+													<i class="my-icon fa fa-check bigger-110"></i>
+													查詢
+												</button>
+												&nbsp; &nbsp; &nbsp;
+												<button id="resetBtn" class="btn" type="reset">
+													<i class="my-icon fa fa-undo bigger-110"></i>
+													重新輸入
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>	
+							<div class="hr hr-18 dotted hr-double"></div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div id="show-detail-results" hidden="true">
+										<h3 class="header smaller lighter blue">查詢結果</h3>
+										<div>
+											<div id="showMessage" class="alert alert-info">
+												<i class="my-icon fa fa-hand-o-right"></i>
+												<span id="errorMsg">error!</span>
+											</div>
+											<table id="grid"></table>
+											<div style="height:60px">
+												<div id="pager"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="dialog-message" class="hide">
+								<div class="widget-main no-padding">
+									<div class="row">
+										<div class="col-xs-12 col-sm-5">
+											<div class="row">
+												<h4 class="blue smaller" id="showRoleLocation">
+													<i class="fa fa-u"></i>
+													角色 : <b id="showRoleName"><th:block th:text="${param.roleNames != null} ? ${param.roleNames[0]}"/></b>
+													<br/>
+													<i class='fa fa-u'></i>
+													帳號 : <b id="showUserAcct"><th:block th:text="${param.username != null} ? ${param.username[0]}"/></b>
+												</h4>
+												<div class="space-4"></div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12 col-sm-5">
+											<div class="row">
+												<h4 class="blue smaller">
+													<i class="fa fa-u"></i>
+													系統功能功能權限
+												</h4>
+												<!-- Tree Start -->
+												<div id="treeDiv">
+													<ul id="cat-tree"></ul>
+												</div>
+												<!-- Tree End -->
+												<div class="space-4"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script	th:src="@{/js/jstree/jstree.min.js}"></script>
+		<script th:src="@{/js/eservice_adm/tree.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			// 載入系統功能下拉選單
+			eserviceAdmOption.system('#systemsSelect', /*[[@{/common/systemList}]]*/);
+			
+			// 初始 jqGridUtil 物件
+			grid = new jqGridUtil();
+			grid.id = '#grid';
+			grid.url = /*[[@{/autho/getUserAuthDetail}]]*/;
+			grid.caption = '系統帳號查詢';
+			grid.colNames = ['系統功能', '使用者角色','使用者名稱','使用者帳號','狀態', '權限設定'];
+			grid.colModel = [
+				{width: 150, formatter: function(cellvalue, options, row) {
+					return breakLine(row.SYS_NAME_LIST);
+				}},
+				{width: 150, formatter: function(cellvalue, options, row) {
+					return breakLine(row.ROLE_NAME_LIST);
+				}},
+				{width: 200, formatter: function(cellvalue, options, row) {
+					return emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME);
+				}},
+				{name: 'USERNAME', index: 'USERNAME', width: 100},
+				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+					var statusName = '停用';
+					if (row.ENABLED == '1') {
+						statusName = '啟用';
+					}
+					return statusName;
+				}},
+				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+					var editHtml = '';
+					editHtml += '<a href="javascript:openRoleTree(\'' + row.USERNAME + '\', \'' + row.ROLE_ID_LIST  + '\', \'' + row.ROLE_NAME_LIST  +'\')" class="green bigger-140 show-details-btn" title="Edit">';
+					editHtml += '<i class="my-icon fa fa-angle-double-down"></i> <span class="sr-only">Details</span>';
+					editHtml += '</a>';
+					return editHtml;
+				}}
+			];
+			grid.create();
+			
+			// 查詢
+			$('#qryBtn').click(function() {
+				// 設定查詢條件
+				grid.setPostData('systemId', $('#systemsSelect').val());
+				grid.setPostData('username', $('#username').val());
+				// 產生grid
+				grid.create();
+				// 顯示查詢結果區域
+				$('#show-detail-results').show();
+			});
+			
+			// 重新輸入
+			$('#resetBtn').click(function() {
+				$('#form1')[0].reset();
+			});
+			
+			eserviceAdmEvent.initDialog();
+		});
+		
+		function breakLine(data) {
+			var result = data;
+			if (typeof data === 'string') {
+				result = data.replace(/\,/g, '<div></div>');
+			}
+			return result;
+		}
+		
+		// 開啟角色權限設定 Dialog
+		function openRoleTree(username, roleIds, roleNames) {
+			$('#showRoleName').html(roleNames);
+			$('#showUserAcct').html(username);
+			
+			// 顯示角色功能 tree
+			showRoleFunctionTree(roleIds);
+			
+			$('#dialog-message').removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>角色(" + roleNames + ")權限設定</h4></div>",
+				title_html: true,
+				width: 800,
+				height: 500
+			});
+		}
+		
+		// 顯示角色功能 tree
+		function showRoleFunctionTree(roleIds) {
+			// 清空角色功能 tree
+			$('#treeDiv').html('<ul id="cat-tree"></ul>');
+			
+			// 建立jsTreeUtil工具類別
+			var actionUrl = /*[[@{/common/getUserFunctionAuth}]]*/
+			var treeUtil = new jsTreeUtil();
+			treeUtil.sTreeId = '#cat-tree';
+			treeUtil.sQueryUrl = actionUrl + '?roleIds=' + roleIds;
+			treeUtil.fnReady = function() {
+				$(".jstree-anchor").removeClass("jstree-disabled");
+				treeUtil.removeDivItemSelect();
+			};
+			treeUtil.fnAfterOpen = function() {
+				$(".jstree-anchor").removeClass("jstree-disabled");
+				treeUtil.removeDivItemSelect();
+				
+				$.each($('li[id^=div]'), function(i, e) {
+					// 處理 div 勾選
+					$.each(treeUtil.getDataList(), function(i, obj) {
+						if($(e).attr("id") == obj.id) {
+							if (obj.state.selected) {
+								$(e).find('.jstree-anchor2').addClass('jstree-clicked');
+							}
+						}
+					 });
+				});
+			};
+			treeUtil.show();
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

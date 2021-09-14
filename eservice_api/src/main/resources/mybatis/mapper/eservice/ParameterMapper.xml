@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.web.dao.ParameterDao">
+
+	<resultMap id="ParameterMap" type="com.twfhclife.eservice.web.model.ParameterVo">
+		<result column="parameter_id" property="parameterId" />
+		<result column="system_id" property="systemId" />
+		<result column="parameter_code" property="parameterCode" />
+		<result column="parameter_name" property="parameterName" />
+		<result column="parameter_value" property="parameterValue" />
+		<result column="parameter_category_id" property="parameterCategoryId" />
+		<result column="sort_no" property="sortNo" />
+		<result column="remark" property="remark" />
+		<result column="status" property="status" />
+		<result column="encrypt_type" property="encryptType" />
+		<result column="parent_parameter_id" property="parentParameterId" />
+		<result column="sys_name" property="sysName" />
+		<result column="category_code" property="categoryCode" />
+		<result column="category_Name" property="categoryName" />
+	</resultMap>
+	
+	<!-- 取得參數代碼清單 -->
+	<!-- @param systemId 系統別 -->
+	<!-- @param categoryCode 參數分類類型代碼 -->
+	<select id="getParameterList" resultType="hashmap">
+		SELECT
+			pc.CATEGORY_NAME
+			,p.PARAMETER_NAME
+			,p.PARAMETER_CODE
+		FROM ESERVICE_ADM.DBO.PARAMETER p
+		JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY pc ON p.PARAMETER_CATEGORY_ID = pc.PARAMETER_CATEGORY_ID
+		WHERE
+			1 = 1
+			AND p.SYSTEM_ID = pc.SYSTEM_ID
+			AND p.STATUS = pc.STATUS
+			AND pc.STATUS = 1
+			AND p.SYSTEM_ID = #{systemId}
+			AND pc.CATEGORY_CODE = #{categoryCode}
+		ORDER BY
+			p.SORT_NO
+	</select>
+	
+	<!-- 取得參數代碼清單 -->
+	<!-- @param systemId 系統別 -->
+	<select id="getSystemCategoryCode" resultType="string">
+		SELECT
+			CATEGORY_CODE
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER_CATEGORY
+		WHERE
+			SYSTEM_ID = #{systemId}
+			AND STATUS = 1
+		ORDER BY
+			PARAMETER_CATEGORY_ID
+	</select>
+	
+	<!-- 用參數代碼取出參數 回傳應只有一筆 -->
+	<!-- 通常用於顯示指定參數值 例如錯誤訊息 或 郵件內容等 -->
+	<select id="getParameterValueByCode" resultType="java.lang.String" parameterType="java.lang.String">
+		select
+		parameter_value
+		from ESERVICE_ADM.DBO.PARAMETER 
+		where parameter_code = #{parameterCode}
+		and status = 1
+		<if test="systemId != '' and systemId != null">
+			and SYSTEM_ID = #{systemId}	
+		</if>
+	</select>
+	
+	<!-- 用參數類別代碼取出所有以下的參數 -->
+	<select id="getParameterByCategoryCode" resultMap="ParameterMap" parameterType="java.lang.String">
+		select 
+			p.PARAMETER_NAME, 
+			p.PARAMETER_VALUE, 
+			p.PARAMETER_CODE,  
+			p.PARENT_PARAMETER_ID,
+			p.REMARK
+		from ESERVICE_ADM.DBO.PARAMETER_CATEGORY pc
+		JOIN ESERVICE_ADM.DBO.PARAMETER p ON pc.parameter_category_id = p.parameter_category_id
+		where 1 = 1
+			and pc.STATUS = p.STATUS
+			and pc.STATUS = 1
+			and pc.CATEGORY_CODE = #{categoryCode}
+			and pc.PARAMETER_CATEGORY_ID = p.PARAMETER_CATEGORY_ID
+		<if test="systemId != '' and systemId != null">
+			and pc.SYSTEM_ID = p.SYSTEM_ID
+			and pc.SYSTEM_ID = #{systemId}	
+		</if>
+		ORDER BY p.SORT_NO
+	</select>
+	
+	<!-- 階層式取參數 -->
+	<!-- 取出該類別指定參數下的第二層參數列 -->
+	<!-- @param categoryCode 副類別的CODE -->
+	<!-- @param parentCategoryCode 主類別的CODE -->
+	<!-- @param parameterCode 第一層參數的CODE -->
+	<select id="getSecondFloorParameter" resultMap="ParameterMap" parameterType="java.lang.String">
+		Select p.PARAMETER_NAME, p.PARAMETER_VALUE
+		From ESERVICE_ADM.DBO.PARAMETER_CATEGORY pc
+		JOIN ESERVICE_ADM.DBO.PARAMETER p ON pc.PARAMETER_CATEGORY_ID = p.PARAMETER_CATEGORY_ID
+		Where 1 = 1
+		and pc.STATUS = p.STATUS
+		and pc.STATUS = 1
+		<if test="sysId != '' or sysId != null">
+			and pc.SYSTEM_ID = p.SYSTEM_ID
+			and pc.SYSTEM_ID = #{sysId}	
+		</if>
+		and pc.CATEGORY_CODE = #{categoryCode}
+		and p.PARENT_PARAMETER_ID = (
+			Select p.PARAMETER_ID 
+			From ESERVICE_ADM.DBO.PARAMETER_CATEGORY pc
+			JOIN ESERVICE_ADM.DBO.PARAMETER p ON pc.PARAMETER_CATEGORY_ID = p.PARAMETER_CATEGORY_ID
+			Where pc.STATUS = p.STATUS
+			and pc.STATUS = 1
+			<if test="sysId != '' or sysId != null">
+				and pc.SYSTEM_ID = p.SYSTEM_ID
+				and pc.SYSTEM_ID = #{sysId}	
+			</if>
+			and pc.CATEGORY_CODE = #{parentCategoryCode}
+			and p.PARAMETER_CODE = #{parameterCode}
+			)
+	</select>
+	<select id="getStatusName" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT a.PARAMETER_VALUE FROM ESERVICE_ADM.DBO.PARAMETER a ,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b 
+		WHERE a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID 
+		  AND a.STATUS = b.STATUS 
+		  AND b.STATUS = 1 
+		  AND b.CATEGORY_CODE = #{parentCategoryCode}
+		  AND a.PARAMETER_CODE = #{status}
+	
+</select>
+
+	<select id="getSendSYSMailInfo" resultMap="ParameterMap" parameterType="java.util.List">
+		select * from ESERVICE_ADM.dbo.PARAMETER
+		<if test = "pubstates != null and pubstates.size > 0" >
+			where PARAMETER_CODE in 
+			<foreach collection="pubstates" index="index" item="state" open="(" separator="," close=")">
+			    #{state}
+			</foreach>
+		</if>
+	</select>
+</mapper>

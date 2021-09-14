@@ -1,0 +1,29 @@
+<div class="col-sm-12" style="text-align: left;">
+	<div class="check-title" style="background: #20B657;">設定收益分配或撥回資產分配方式</div>
+	<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+	<thead>
+		<tr class="table2 orange2">
+			<th style="background-color: #DFFFDF;" class="text-left " scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+			<th style="background-color: #DFFFDF;" class="item text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">收益分配或撥回資產分配方式</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="h65 tr-odd-noEvent">
+			<td class="text-left"><th:block th:text="${cashPaymentDetail.policyNo != null and userInfo.productNameMap != null}
+							? ${userInfo.productNameMap[cashPaymentDetail.policyNo]}"/>
+				<p class="enSmall">(<th:block th:text="${cashPaymentDetail.policyNo}"/>)</p>
+			</td>
+			<th:block th:if="${cashPaymentDetail.allocation != null && cashPaymentDetail.allocation == '1'}">
+				<td>
+					現金給付
+				</td>
+			</th:block>
+			<th:block th:if="${cashPaymentDetail.allocation != null && cashPaymentDetail.allocation == '2'}">
+				<td>
+					增加投資標的單位數
+				</td>
+			</th:block>
+	</tr>
+</tbody>
+</table>
+</div>

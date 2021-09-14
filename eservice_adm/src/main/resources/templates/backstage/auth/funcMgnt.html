@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+		<style type="text/css">
+			.tree-container-min{
+				background-color:#FFF;
+				border:0px solid#DDD;
+				border-left-color:#67B2DD;
+				display:block;
+				padding:0;
+				max-width:600px;
+				max-height:500px;
+			}
+			.bootstrap-tagsinput input {
+				border: none!important;
+				width:400px;
+			}
+		</style>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='funcMgnt')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-user" aria-hidden="true"></i>
+								權限管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								功能維護
+							</li>
+						</ul><!-- /.breadcrumb -->
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form class="form-horizontal" id="form1" role="form" action="#">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 系統功能 </label>
+										<div class="col-sm-5">
+											<select class="form-control" id="systemsSelect"></select>
+										</div>
+										<button type="button" id="exportBtn" class="btn btn-sm btn-purple" onclick="downloadFunctionsCsv()" disabled="disabled">
+											<i class="my-icon fa fa-cloud-upload bigger-110"></i>
+											匯出
+										</button>
+										<button type="button" id="addSysBtn" class="btn btn-sm btn-primary">
+											<i class="my-icon fa fa-plus-circle bigger-110"></i>
+											新增系統
+										</button>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-5">
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="hr hr-18 dotted hr-double"></div>
+							<div id="show-detail-results" hidden="true">
+								<div class="col-xs-10 col-sm-5">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">功能樹</h4>
+										</div>
+										<div class="widget-body">
+											<div id="aceTreeDiv" class="widget-main no-padding">
+												<div class="tree-container-min">
+													<ul id="aceTree"></ul>
+												</div>
+												<div class="space-4"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-5" id="nodeDiv" hidden="true">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">項目屬性設定</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form id="nodeForm">
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">上層項目名稱：</label>
+														<div class="col-sm-8" id="leave">
+														</div>
+														<input type="hidden" id="funId" class="form-control" />
+														<input type="hidden" id="oriFuncType" class="form-control" />
+													</fieldset>
+													<fieldset>
+													<label class="col-sm-4 control-label no-padding-right">
+														<label class="red">*</label>項目類別：</label>
+														<div class="col-sm-8">
+															<input name="funcType" type="radio" class="my" value="FG" disabled="true"/>
+															<span class="lbl"> 分類項目</span>
+															&nbsp; &nbsp;
+															<input name="funcType" type="radio" class="my" value="F" disabled="true"/>
+															<span class="lbl"> 功能</span>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">
+														<label class="red">*</label>功能名稱：</label>
+														<div class="col-sm-8">
+															<input type="text" id="itemName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset id="item-url-block">
+														<label class="col-sm-4 control-label no-padding-right">功能URL：</label>
+														<div class="col-sm-8">
+															<input type="text" id="itemPath" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset id="item-div-block">
+														<label class="col-sm-4 control-label no-padding-right">DIV區塊：</label>
+														<div class="col-sm-8">
+															<input type="text" id="itemDiv" data-role="tagsinput" class="form-control" placeholder="Enter your div" />
+														</div>
+													</fieldset>	
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">排序：</label>
+														<div class="col-sm-8">
+															<input type="number" id="sort" class="form-control" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+															<input type="text" id="notify" hidden="true"/>
+														</div>
+													</fieldset>												
+													<div class="form-actions center">
+														<button type="button" id="addFunBtn" class="btn btn-primary">
+															<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+															新增節點 
+														</button>
+														<button type="button" id="delFunBtn" class="btn">
+															<i class="ace-icon fa fa-trash-o bigger-120" aria-hidden="true"></i>
+															刪除節點
+														</button>
+														<button type="button" id="updFunBtn" class="btn btn-success">
+															<i class="ace-icon fa fa-check" aria-hidden="true"></i>
+															更新節點
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- 第一次新增節點Start -->
+								<div class="col-xs-12 col-sm-5" id="rootDiv" hidden="true">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">功能管理</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">上層項目名稱：</label>
+														<div class="col-sm-8" id="leave"></div>
+														<input type="hidden" id="firstFunId" class="form-control" />
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>功能名稱：</label>
+														<div class="col-sm-8">
+															<input type="text" id="firstItemName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset id="first-item-add-url-block">
+														<label class="col-sm-4 control-label no-padding-right">功能URL：</label>
+														<div class="col-sm-8">
+															<input type="text" id="firstItemPath" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset id="first-item-add-div-block">
+														<label class="col-sm-4 control-label no-padding-right">DIV區塊：</label>
+														<div class="col-sm-8">
+															<input type="text" id="firstItemDiv" data-role="tagsinput" placeholder="Enter your div"/>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">排序：</label>
+														<div class="col-sm-8">
+															<input type="number" id="firstItemSort" class="form-control" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+														</div>
+													</fieldset>
+													<div class="form-actions center">
+														<button id="addSystemBtn" type="button" class="btn btn-primary">
+															<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+															新增節點 
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- 第一次新增節點End -->
+							</div>
+							<!-- 新增節點視窗Start -->
+							<div id="dialog-message" class="hide">
+								<div class="widget-main no-padding">
+									<form id="addForm">
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right">上層項目名稱：</label>
+											<div class="col-sm-8" id="leave-add"></div>
+											<input type="hidden" id="funId-add" class="form-control" />
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right">
+												<label class="red">*</label>項目類別：</label>
+											<div class="col-sm-8">
+												<input name="funcTypeAdd" type="radio" class="my" value="FG" onchange="changeRadioAdd(this.value)"/>
+												<span class="lbl"> 分類項目</span>
+													&nbsp; &nbsp;
+												<input name="funcTypeAdd" type="radio" class="my" value="F" onchange="changeRadioAdd(this.value)"/>
+												<span class="lbl"> 功能</span>
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right">
+											<label class="red">*</label>功能名稱：</label>
+											<div class="col-sm-8">
+												<input type="text" id="itemName-add" class="form-control" />
+											</div>
+										</fieldset>
+										<fieldset id="item-add-url-block">
+											<label class="col-sm-4 control-label no-padding-right">功能URL：</label>
+											<div class="col-sm-8">
+												<input type="text" id="itemPath-add" class="form-control" />
+											</div>
+										</fieldset>
+										<fieldset id="item-add-div-block">
+											<label class="col-sm-4 control-label no-padding-right">DIV區塊：</label>
+											<div class="col-sm-8">
+												<input type="text" id="itemDiv-add" data-role="tagsinput" placeholder="請先新增功能後再設定div" disabled="disabled"/>
+											</div>
+										</fieldset>	
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right">排序：</label>
+											<div class="col-sm-8">
+												<input type="number" id="sort-add" class="form-control" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+							</div>
+							<!-- 新增節點視窗End -->
+							<!-- 新增系統視窗Start -->
+							<div id="dialog-message-sys" class="hide">
+								<div class="widget-main no-padding">
+									<form id="addSysForm">
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right">
+											<label class="red">*</label>系統代號：</label>
+											<div class="col-sm-8">
+												<input type="text" id="sysId-add" class="form-control" />
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right">
+											<label class="red">*</label>系統名稱：</label>
+											<div class="col-sm-8">
+												<input type="text" id="sysName-add" class="form-control" />
+											</div>
+										</fieldset>
+									</form>
+								</div>
+							</div>
+							<!-- 新增系統視窗End -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+	</body>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/js/eservice_adm/tree.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		// 載入系統功能下拉選單
+		eserviceAdmOption.system('#systemsSelect', /*[[@{/common/systemList}]]*/, '請選擇功能...', function() {
+			$("#exportBtn").removeAttr("disabled");
+		});
+		
+		// 選擇系統別功能下拉事件
+		$('#systemsSelect').change(function() {
+			initFunction();
+			changeSystem($(this).val());
+		});
+		
+		// 功能管理-新增節點事件(一開始只有系統沒有根目錄時須新增根目錄)
+		$('#addSystemBtn').click(function() {
+			if ($('#firstItemName').val() == '') {
+				alertMsg("請輸入功能名稱");
+				return false;
+			}
+			
+			var formData = {
+				sysId : $('#systemsSelect').val(),
+				functionName : $('#firstItemName').val(),
+				sort : $('#firstItemSort').val(),
+				functionType : 'FG',
+				functionUrl : $('#firstItemPath').val(),
+				parentFuncId : $('#systemsSelect').val(),
+				divArr : $('#firstItemDiv').val()
+			};
+			eserviceForm.post(/*[[@{/funcMgnt/insertFunctions}]]*/, formData, function(response) {
+				alertMsg(response.resultMsg);
+				initFunction();
+				changeSystem($('#systemsSelect').val());
+			});
+		});
+		
+		// 新增系統事件
+		$('#addSysBtn').on('click', function() {
+			var dialog = $('#dialog-message-sys').removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-check'></i>新增系統</h4></div>",
+				title_html: true,
+				close: function() {
+					$('#sysId-add').val("");
+					$('#sysName-add').val("");
+				},
+				buttons: [ 
+					{
+						text: '取消',
+						'class' : 'btn',
+						click: function() {
+							console.log("this=", $(this));
+							$(this).dialog('close');
+							$('#sysId-add').val("");
+							$('#sysName-add').val("");
+						} 
+					},
+					{
+						text: '確定',
+						'class' : 'btn btn-primary',
+						id: 'addSysConfirmBtn',
+						click: function() {
+							var d = $(this);
+							if ($('#sysId-add').val() == "") {
+								alertMsg('請輸入系統代號');
+								return false;
+							}
+							if ($('#sysName-add').val() == "") {
+								alertMsg('請輸入系統名稱');
+								return false;
+							}
+							var formData = {
+								sysId : $('#sysId-add').val(),
+								sysName : $('#sysName-add').val()
+							};
+							$('#addSysConfirmBtn').attr("disabled", "disabled");
+							$.ajax({
+								url : /*[[@{/funcMgnt/insertSystem}]]*/,
+								contentType: 'application/json',
+								type: "POST",
+								data:  JSON.stringify(formData)
+							}).done(function(response) {
+								if (response.result == 'SUCCESS') {
+									console.log("#resultMsg="+response.resultMsg);
+									$('#addSysConfirmBtn').removeAttr("disabled");
+									alert(response.resultMsg);
+									// 載入系統功能下拉選單
+									eserviceAdmOption.system('#systemsSelect', /*[[@{/common/systemList}]]*/, '請選擇功能...', function() {
+										$("#exportBtn").removeAttr("disabled");
+									});
+									
+									 //$('#dialog-message-sys').dialog('close'); 
+									d.dialog('close');
+									$('#sysId-add').val("");
+									$('#sysName-add').val("");
+								} else {
+									if (response.resultMsg) {
+										$('#addSysConfirmBtn').removeAttr("disabled");
+										alertMsg(response.resultMsg);
+									}
+								}
+							}).fail(function (jqXHR, textStatus) {
+								alertMsg('系統發生錯誤');
+							});
+							
+						} 
+					}
+				],
+				width: 600
+			});	
+		});
+		
+		// 項目屬性設定-新增節點事件
+		$('#addFunBtn').on('click', function() {
+			var dialog = $('#dialog-message').removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-check'></i>新增節點</h4></div>",
+				title_html: true,
+				close: function() {
+					cleanAddForm();
+				},
+				buttons: [ 
+					{
+						text: '取消',
+						'class' : 'btn',
+						click: function() {
+							$(this).dialog('close');
+							cleanAddForm();
+						} 
+					},
+					{
+						text: '確定',
+						'class' : 'btn btn-primary',
+						click: function() {
+							if ($('#itemName-add').val() == "") {
+								alertMsg('請輸入功能名稱');
+								return false;
+							}
+							var formData = {
+								sysId : $('#systemsSelect').val(),
+								functionName : $('#itemName-add').val(),
+								sort : $('#sort-add').val(),
+								functionType : $('input:radio[name="funcTypeAdd"]:checked').val(),
+								functionUrl : $('#itemPath-add').val(),
+								parentFuncId : $('#funId-add').val(),
+								divArr : $('#itemDiv-add').val()
+							};
+							eserviceForm.post(/*[[@{/funcMgnt/insertFunctions}]]*/, formData, function(response) {
+								alertMsg(response.resultMsg);
+								initFunction();
+								changeSystem($('#systemsSelect').val());
+							});
+							
+							$(this).dialog('close'); 
+							cleanAddForm();
+						} 
+					}
+				],
+				width: 600
+			});	
+		});
+		
+		// 項目屬性設定-刪除節點事件
+		$('#delFunBtn').on('click', function() {
+			var notify = $('#notify').val();
+			if ("R" == notify || "Y" == notify) {
+				alertMsg('此目錄下還有其它子項目，故不可刪除');
+				return false;
+			}
+			confirmMsg('是否確認刪除', function(r) {
+				if (r) {
+					var formData = {
+						functionId : $('#funId').val(),
+						functionType : $('#oriFuncType').val()
+					};
+					eserviceForm.post(/*[[@{/funcMgnt/deleteFunctions}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						initFunction();
+						changeSystem($('#systemsSelect').val());
+					});
+				} else {
+					return false;
+				}
+			})
+		});
+		
+		// 項目屬性設定-更新節點事件
+		$('#updFunBtn').on('click', function(e) {
+			if ($('#itemName').val() == ''){
+				alertMsg('請輸入功能名稱');
+				return false;
+			}
+			confirmMsg('是否確認修改', function(r) {
+				if (r) {
+					var formData = {
+						sysId : $('#systemsSelect').val(),
+						functionName : $('#itemName').val(),
+						sort : $('#sort').val(),
+						functionType : $('input:radio[name="funcType"]:checked').val(),
+						functionUrl : $('#itemPath').val(),
+						functionId : $('#funId').val(),
+						divArr : $('#itemDiv').val()
+					};
+					eserviceForm.post(/*[[@{/funcMgnt/updateFunctions}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						initFunction();
+						changeSystem($('#systemsSelect').val());
+					});
+				} else {
+					return false;
+				}
+			})
+		});
+		
+		eserviceAdmEvent.initDialog();
+	});
+
+	// 功能樹、項目屬性設定、功能管理初始化
+	function initFunction() {
+		// 功能樹初始化
+		$('#aceTreeDiv').empty();
+		$('#aceTreeDiv').append('<div class="tree-container-min"><ul id="aceTree"></ul></div>');
+		$('#aceTreeDiv').append('<div class="space-4"></div>');
+		$('#show-detail-results').hide();
+		// 項目屬性設定初始化
+		$('#nodeForm')[0].reset();
+		$('#nodeDiv').hide();
+		// 功能管理初始化
+		$('#rootDiv').hide();
+	}
+	
+	// 切換系統別
+	function changeSystem(systemId) {
+		if (systemId == '') {
+			return false;
+		}
+		popupLoading();
+		// 建立aceTreeUtil工具類別
+		var actionUrl = /*[[@{/funcMgnt/getFunctions}]]*/ 
+			+ '?sysId=' + systemId;
+		var treeUtil = new aceTreeUtil();
+		treeUtil.sTreeId = '#aceTree';
+		treeUtil.sQueryUrl = actionUrl;
+		
+		// 根節點初始化的function
+		treeUtil.fnInitRoot = function(response) {
+			alertMsg(response.resultMsg);
+			$('#firstItemDiv').tagsinput('removeAll');
+			$('#firstFunId').val(systemId);
+			$('#first-item-add-url-block').hide();
+			$('#first-item-add-div-block').hide();
+			$('#rootDiv').show();
+			removeLoading();
+		};
+		// 節點選擇function
+		treeUtil.fnNodeSelected = function(nodeData) {
+			$('#leave').html(nodeData.target.par);
+			$('#itemName').val(nodeData.target.text);
+			$('#sort').val(nodeData.target.sort);
+			$('#notify').val(nodeData.target.notify);
+			$('#itemPath').val(nodeData.target.url);
+			$('#funId').val(nodeData.target.id);
+			$('#oriFuncType').val(nodeData.target.id);
+			if ("item" == nodeData.target.type) {
+				$('#oriFuncType').val("F");
+				$('input:radio[name=funcType]').get(1).checked = true;
+				$('#item-url-block').show();
+				$('#item-div-block').show();
+				$('#id-btn-dialog1').hide();
+				$('#addFunBtn').attr('disabled', true);//功能不可再有下層功能
+			} else {
+				$('#oriFuncType').val("FG");
+				$('input:radio[name=funcType]').get(0).checked = true;
+				$('#item-url-block').hide();
+				$('#item-div-block').hide();
+				$('#id-btn-dialog1').show();
+				$('#addFunBtn').attr('disabled', false);
+			}
+			$('#itemDiv').tagsinput('removeAll');
+			$('#itemDiv').tagsinput('add', nodeData.target.divArr);
+
+			$('#leave-add').html(nodeData.target.par);
+			$('#funId-add').val(nodeData.target.id);
+			$('input:radio[name=funcTypeAdd]').get(1).checked = true;
+			$('#nodeDiv').show();
+			removeLoading();
+		};
+		// 節點反選function
+		treeUtil.fnNodeDeselected = function() {
+			$('#nodeDiv').hide();
+		};
+		treeUtil.show();
+		
+		// 顯示功能樹結果
+		$('#show-detail-results').show();
+	}
+	
+	function addSystem() {
+		
+	}
+	
+	// 新增若改變radio button，顯示內容不相同
+	function changeRadioAdd(value) {
+		if ("F" == value) {
+			// 選功能
+			$('#item-add-url-block').show();
+			$('#item-add-div-block').show();
+		} else {
+			// 選分類
+			$('#itemPath-add').val("");
+			$('#itemDiv-add').tagsinput('removeAll');
+			$('#item-add-url-block').hide();
+			$('#item-add-div-block').hide();
+		}
+	}
+	
+	// 清空新增視窗的內容
+	function cleanAddForm(){
+		$('input:radio[name=funcTypeAdd]').get(1).checked = true;
+		$('#itemName-add').val("");
+		$('#sort-add').val("");
+		$('#itemPath-add').val("");
+		$('#itemDiv-add').val("");
+		$('#itemPath-add').val("");
+		$('#itemDiv-add').tagsinput('removeAll');
+		$('#item-add-url-block').show();
+		$('#item-add-div-block').show();
+	}
+	
+	// 新增根目錄節點若改變radio button，顯示內容不相同
+	function changeRadioFirstAdd(value){
+		if ("F" == value) {
+			// 選功能
+			$('#first-item-add-url-block').show();
+			$('#first-item-add-div-block').show();
+		} else {
+			// 選分類
+			$('#firstItemDiv').val("");
+			$('#firstItemDiv').tagsinput('removeAll');
+			$('#first-item-add-url-block').hide();
+			$('#first-item-add-div-block').hide();
+		}
+	}
+	
+	// 匯出功能權限CSV檔
+	function downloadFunctionsCsv(){
+		var sysId = $('#systemsSelect').val();
+		if (sysId == '') {
+			alertMsg("請先選擇系統功能");
+			return;
+		}
+		window.location.href = "/eservice_adm/funcMgnt/downloadFunctionsCsv?param="+sysId;
+	}
+	
+	/*]]>*/
+	</script>
+</html>

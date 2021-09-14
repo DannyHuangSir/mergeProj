@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransFundSwitchDao">
+
+	<resultMap id="TransFundSwitchMap" type="com.twfhclife.eservice.onlineChange.model.TransFundSwitchVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+	</resultMap>
+	
+	<resultMap id="FundSwitchListMap" type="com.twfhclife.eservice.policy.model.FundSwitchVo" extends="TransFundSwitchMap" >
+		<result column="FUND_CODE" property="fundCode"/>
+		<result column="FUND_NAME" property="fundName"/>
+		<result column="BUY_PRICE" property="fundValueVo.buyPrice"/>
+		<result column="SELL_PRICE" property="fundValueVo.sellPrice"/>
+		<result column="SWITCH_PERCENTAGE" property="switchPercentage"/>
+		<result column="SWITCH_AMOUNT" property="switchAmount"/>
+	</resultMap>
+	
+	<select id="getTransFundSwitchOut" resultMap="FundSwitchListMap">
+		SELECT TRANS_NUM,FUND_CODE,FUND_NAME,SWITCH_PERCENTAGE,SWITCH_AMOUNT
+		FROM ESERVICE.DBO.TRANS_FUND_SWITCH_OUT
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+	
+	<select id="getTransFundSwitchIn" resultMap="FundSwitchListMap">
+		SELECT TRANS_NUM,FUND_CODE,FUND_NAME,SWITCH_PERCENTAGE,SWITCH_AMOUNT
+		FROM ESERVICE.DBO.TRANS_FUND_SWITCH_IN
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+	
+	<insert id="insertTransFundSwitchOut">
+		INSERT INTO ESERVICE.DBO.TRANS_FUND_SWITCH_OUT
+			(TRANS_NUM,FUND_CODE,FUND_NAME,SWITCH_PERCENTAGE,SWITCH_AMOUNT)
+		VALUES
+		(
+			#{fundSwitchVo.transNum, jdbcType=VARCHAR},
+			#{fundSwitchVo.fundCode, jdbcType=VARCHAR},
+			#{fundSwitchVo.fundName, jdbcType=VARCHAR},
+			#{fundSwitchVo.switchPercentage, jdbcType=NUMERIC},
+			#{fundSwitchVo.switchAmount, jdbcType=NUMERIC}
+		)
+	</insert> 
+	
+	<insert id="insertTransFundSwitchIn">
+		INSERT INTO ESERVICE.DBO.TRANS_FUND_SWITCH_IN
+			(TRANS_NUM,FUND_CODE,FUND_NAME,SWITCH_PERCENTAGE,SWITCH_AMOUNT)
+		VALUES
+		(
+			#{fundSwitchVo.transNum, jdbcType=VARCHAR},
+			#{fundSwitchVo.fundCode, jdbcType=VARCHAR},
+			#{fundSwitchVo.fundName, jdbcType=VARCHAR},
+			#{fundSwitchVo.switchPercentage, jdbcType=NUMERIC},
+			#{fundSwitchVo.switchAmount, jdbcType=NUMERIC}
+		)
+	</insert> 
+	
+	<!-- <select id="getOptionFundList" resultMap="FundSwitchListMap">
+	<![CDATA[
+	select fv.fund_code, f.fund_name, f.currency, fv.effective_date, fv.buy_price, fv.sell_price from fund f
+	join fund_value fv on f.fund_code = fv.fund_code
+	join (select fund_code, max(effective_date) effective_date from fund_value group by fund_code) fj on fj.fund_code = fv.fund_code and fj.effective_date = fv.effective_date
+	join fund f on f.fund_code = fv.fund_code
+	where f.product_no = #{policyType}
+	and substr(f.fund_code,1,2) <> 'RT'
+	]]>
+	</select> -->
+	
+	<select id="getOptionFundList" resultMap="FundSwitchListMap">
+	<![CDATA[
+	select fund_code, fund_name from eservice.dbo.fund
+	where product_no = #{policyType}
+	and substring(fund_code,1,2) <> 'RT'
+	]]>
+	</select>
+
+</mapper>

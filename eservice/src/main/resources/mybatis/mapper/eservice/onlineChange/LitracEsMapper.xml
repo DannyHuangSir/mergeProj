@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.LitracEsDao">
+
+	<resultMap id="LitracEsMap" type="com.twfhclife.eservice.onlineChange.model.LitracEsVo" >
+		<result column="TRAC_RECO_CODE" property="tracRecoCode"/>
+		<result column="TRAC_INSU_NO" property="tracInsuNo"/>
+		<result column="TRAC_SEQ" property="tracSeq"/>
+		<result column="TRAC_BANK_CODE" property="tracBankCode"/>
+		<result column="TRAC_BRANCH_CODE" property="tracBranchCode"/>
+		<result column="TRAC_CHAR_AT" property="tracCharAt"/>
+		<result column="TRAC_CHAR_ID" property="tracCharId"/>
+		<result column="TRAC_NAME" property="tracName"/>
+		<result column="TRAC_TR_AMT" property="tracTrAmt"/>
+		<result column="TRAC_CREDIT_CARD_NO" property="tracCreditCardNo"/>
+		<result column="TRAC_CD_DUE_DATE" property="tracCdDueDate"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		TRAC_RECO_CODE
+		,TRAC_INSU_NO
+		,TRAC_SEQ
+		,TRAC_BANK_CODE
+		,TRAC_BRANCH_CODE
+		,TRAC_CHAR_AT
+		,TRAC_CHAR_ID
+		,TRAC_NAME
+		,TRAC_TR_AMT
+		,ESERVICE.DBO.FN_GETHIDDENCODE(1, TRAC_CREDIT_CARD_NO, '*', 7, 6) AS TRAC_CREDIT_CARD_NO
+		,TRAC_CD_DUE_DATE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="litracEsVo.tracRecoCode != null"> AND TRAC_RECO_CODE = #{litracEsVo.tracRecoCode} </if>
+			<if test="litracEsVo.tracInsuNo != null"> AND TRAC_INSU_NO = #{litracEsVo.tracInsuNo} </if>
+			<if test="litracEsVo.tracSeq != null"> AND TRAC_SEQ = #{litracEsVo.tracSeq} </if>
+			<if test="litracEsVo.tracBankCode != null"> AND TRAC_BANK_CODE = #{litracEsVo.tracBankCode} </if>
+			<if test="litracEsVo.tracBranchCode != null"> AND TRAC_BRANCH_CODE = #{litracEsVo.tracBranchCode} </if>
+			<if test="litracEsVo.tracCharAt != null"> AND TRAC_CHAR_AT = #{litracEsVo.tracCharAt} </if>
+			<if test="litracEsVo.tracCharId != null"> AND TRAC_CHAR_ID = #{litracEsVo.tracCharId} </if>
+			<if test="litracEsVo.tracName != null"> AND TRAC_NAME = #{litracEsVo.tracName} </if>
+			<if test="litracEsVo.tracTrAmt != null"> AND TRAC_TR_AMT = #{litracEsVo.tracTrAmt} </if>
+			<if test="litracEsVo.tracCreditCardNo != null"> AND TRAC_CREDIT_CARD_NO = #{litracEsVo.tracCreditCardNo} </if>
+			<if test="litracEsVo.tracCdDueDate != null"> AND TRAC_CD_DUE_DATE = #{litracEsVo.tracCdDueDate} </if>
+		</where>
+	</sql>
+	
+	<!-- 取得滿期生存匯款資訊查詢結果 -->
+	<select id="getLitracEs" resultMap="LitracEsMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.LITRAC_ES
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 滿期生存匯款資訊-依照保單號碼查詢 -->
+	<select id="getLitracEsBypolicyNo" resultMap="LitracEsMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.LITRAC_ES
+		WHERE
+			TRAC_INSU_NO = #{policyNo}
+			AND TRAC_RECO_CODE IN ('05', '01', 'F1')
+			AND TRAC_SEQ = 0
+	</select>
+
+</mapper>

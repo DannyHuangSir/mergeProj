@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransContactInfoOldMapper">
+
+	<resultMap id="TransContactInfoOldMap" type="com.twfhclife.eservice_batch.model.TransContactInfoOldVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_CONTACT_ID" property="transContactId"/>
+		<result column="TEL_HOME" property="telHome"/>
+		<result column="TEL_OFFICE" property="telOffice"/>
+		<result column="MOBILE" property="mobile"/>
+		<result column="CITY" property="city"/>
+		<result column="REGION" property="region"/>
+		<result column="ADDRESS" property="address"/>
+		<result column="ADDRESS_FULL" property="addressFull"/>
+		<result column="CITY_CHARGE" property="cityCharge"/>
+		<result column="REGION_CHARGE" property="regionCharge"/>
+		<result column="ADDRESS_CHARGE" property="addressCharge"/>
+		<result column="ADDRESS_FULL_CHARGE" property="addressFullCharge"/>
+		<result column="POLICY_NO" property="policyNo"/>
+		<result column="EMAIL" property="email"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transContactInfoOldVo.id != null"> AND ID = #{transContactInfoOldVo.id} </if>
+			<if test="transContactInfoOldVo.transContactId != null"> AND TRANS_CONTACT_ID = #{transContactInfoOldVo.transContactId} </if>
+			<if test="transContactInfoOldVo.telHome != null and transContactInfoOldVo.telHome != ''"> AND TEL_HOME = #{transContactInfoOldVo.telHome} </if>
+			<if test="transContactInfoOldVo.telOffice != null and transContactInfoOldVo.telOffice != ''"> AND TEL_OFFICE = #{transContactInfoOldVo.telOffice} </if>
+			<if test="transContactInfoOldVo.mobile != null and transContactInfoOldVo.mobile != ''"> AND MOBILE = #{transContactInfoOldVo.mobile} </if>
+			<if test="transContactInfoOldVo.city != null and transContactInfoOldVo.city != ''"> AND CITY = #{transContactInfoOldVo.city} </if>
+			<if test="transContactInfoOldVo.region != null and transContactInfoOldVo.region != ''"> AND REGION = #{transContactInfoOldVo.region} </if>
+			<if test="transContactInfoOldVo.address != null and transContactInfoOldVo.address != ''"> AND ADDRESS = #{transContactInfoOldVo.address} </if>
+			<if test="transContactInfoOldVo.addressFull != null and transContactInfoOldVo.addressFull != ''"> AND ADDRESS_FULL = #{transContactInfoOldVo.addressFull} </if>
+			<if test="transContactInfoOldVo.cityCharge != null and transContactInfoOldVo.cityCharge != ''"> AND CITY_CHARGE = #{transContactInfoOldVo.cityCharge} </if>
+			<if test="transContactInfoOldVo.regionCharge != null and transContactInfoOldVo.regionCharge != ''"> AND REGION_CHARGE = #{transContactInfoOldVo.regionCharge} </if>
+			<if test="transContactInfoOldVo.addressCharge != null and transContactInfoOldVo.addressCharge != ''"> AND ADDRESS_CHARGE = #{transContactInfoOldVo.addressCharge} </if>
+			<if test="transContactInfoOldVo.addressFullCharge != null and transContactInfoOldVo.addressFullCharge != ''"> AND ADDRESS_FULL_CHARGE = #{transContactInfoOldVo.addressFullCharge} </if>
+			<if test="transContactInfoOldVo.policyNo != null and transContactInfoOldVo.policyNo != ''"> AND POLICY_NO = #{transContactInfoOldVo.policyNo} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transContactInfoOldVo.id}
+		</where>
+	</sql>
+	
+	<!-- 取得變更保單聯絡資料修改前查詢結果 -->
+	<select id="getTransContactInfoOldList" resultMap="TransContactInfoOldMap">
+		SELECT
+			ID,
+			TRANS_CONTACT_ID,
+			ESERVICE.DBO.FN_DEBASE64(TEL_HOME) TEL_HOME,
+			ESERVICE.DBO.FN_DEBASE64(TEL_OFFICE) TEL_OFFICE,
+			ESERVICE.DBO.FN_DEBASE64(MOBILE) MOBILE,
+			CITY,
+			REGION,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS) ADDRESS,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_FULL) ADDRESS_FULL,
+			CITY_CHARGE,
+			REGION_CHARGE,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_CHARGE) ADDRESS_CHARGE,
+			ESERVICE.DBO.FN_DEBASE64(ADDRESS_FULL_CHARGE) ADDRESS_FULL_CHARGE,
+			POLICY_NO,
+			ESERVICE.DBO.FN_DEBASE64(EMAIL) EMAIL
+		FROM
+			ESERVICE.DBO.TRANS_CONTACT_INFO_OLD
+		<include refid="whereClause" />
+	</select>
+
+</mapper>
