@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.twfhclife</groupId>
-	<artifactId>eservice_api_SecurityAlliance</artifactId>
+	<artifactId>eservice_api_mergeProj</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>api</name>
@@ -197,7 +197,7 @@
 		<dependency>
 			<groupId>com.twfhclife</groupId>
 			<artifactId>eservice</artifactId>
-			<version>20210603</version>
+			<version>mergeProj</version>
 		</dependency>
 				<dependency>
 			<groupId>com.twfhclife</groupId>
