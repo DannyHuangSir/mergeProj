@@ -270,5 +270,11 @@ public interface ContactInfoDao {
 	 * */
    // List<ContactInfoFileDataVo> getFileDataToDownloadSuccess();
 
-
+	/**
+	 * 計算batchId已存在筆數
+	 * @param vo
+	 * @return Integer
+	 * @throws Exception
+	 */
+	Integer getCountByBatchId(@Param("vo")ContactInfoMapperVo vo) throws Exception;
 }

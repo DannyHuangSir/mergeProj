@@ -841,5 +841,46 @@ GO
   		   )
   GO
 
+--modify 20210913-start
+insert into ESERVICE_ADM.dbo.PARAMETER
+	(PARAMETER_ID,SYSTEM_ID,PARAMETER_CODE,PARAMETER_NAME,PARAMETER_VALUE,PARAMETER_CATEGORY_ID,STATUS,ENCRYPT_TYPE,CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER,REMARK)
+values
+	(
+		(select max(PARAMETER_ID)+1 from ESERVICE_ADM.dbo.PARAMETER),
+		'eservice_adm',
+		'API_NO_MAIL_012',
+		'聯盟IT通知人員',
+		'202712@twfhclife.com.tw;203990@twfhclife.com.tw',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SECURITY_ALLIANCE_ALERT_MAIL'),
+		'1',
+		'N',
+		getdate(),
+		'admin',
+		getdate(),
+		'admin',
+		'聯盟相關API調不通【無回應】管理人員'
+	);
+go
+
+insert into ESERVICE_ADM.dbo.PARAMETER
+	(PARAMETER_ID,SYSTEM_ID,PARAMETER_CODE,PARAMETER_NAME,PARAMETER_VALUE,PARAMETER_CATEGORY_ID,STATUS,ENCRYPT_TYPE,CREATE_DATE,CREATE_USER,UPDATE_DATE,UPDATE_USER,REMARK)
+values
+	(
+		(select max(PARAMETER_ID)+1 from ESERVICE_ADM.dbo.PARAMETER),
+		'eservice_adm',
+		'TRANSFER_MAIL_013',
+		'聯盟IT通知人員',
+		'202712@twfhclife.com.tw;203990@twfhclife.com.tw',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SECURITY_ALLIANCE_ALERT_MAIL'),
+		'1',
+		'N',
+		getdate(),
+		'admin',
+		getdate(),
+		'admin',
+		'保全聯盟轉收件-【進件失敗】管理人員'
+	);
+go
+--modify 20210913-end
 
 

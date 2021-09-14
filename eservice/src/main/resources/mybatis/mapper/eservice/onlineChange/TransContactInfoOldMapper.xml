@@ -110,12 +110,12 @@
 	
 	<select id="getPmdaMobile" resultType="java.lang.String" parameterType="java.lang.String">
 		select pmda_applicant_cellphone from ESERVICE.DBO.lipmda_es
-		where (pmda_insu_type + pmda_insu_grp_no + pmda_insu_seq_no) = #{policyNo}
+		where (PMDA_INSU_TYPE + CONVERT(VARCHAR, PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) = #{policyNo}
 	</select>
 	
 	<select id="getPmdaEmail" resultType="java.lang.String" parameterType="java.lang.String">
 		select pmda_applicant_email from eservice.dbo.lipmda_es
-		where (pmda_insu_type + convert(varchar, pmda_insu_grp_no) + pmda_insu_seq_no) = #{policyNo}
+		where (PMDA_INSU_TYPE + CONVERT(VARCHAR, PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) = #{policyNo}
 	</select>
 
 </mapper>

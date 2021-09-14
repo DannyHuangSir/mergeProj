@@ -864,20 +864,48 @@ public class CIOAllianceServiceTask {
 									log.info("listFileData is null.");
 								}
 								
-								//以是否有可用保單用以判定保戶資格-modify2021/09/10
-								List<String> policyNos = getUsableUserPolicyListByRocId(mapperVo.getCidNo());
-							    log.info("CIOAllianceServcieTask 以是否有可用保單用以判定保戶資格,policyNos="+policyNos.toString());
+								int k = iLilipmService.getInsuredUsersByRocId(mapperVo.getCidNo());
+								log.info("判斷是否為保戶,count="+k);
 								
-								if (policyNos!=null && policyNos.size()>0) {
+								if (k > 0) {
+									
+									// BEGIN: update by 203990 at 20210910
+									// 追加判別該用戶所屬的全部保單是否為有效保單, 若全部為無效保單, 就不落地直接回覆聯盟為失敗, 留訊:'不存在有效保單'
+									List<PolicyListVo> policyList = policyListService.getUserPolicyList(mapperVo.getCidNo());
+									log.info("判斷是否不存在有效保單,policyList.size()="+policyList.size());
+									if (policyList!=null && policyList.size() > 0) {
+										
+										int non_policys = policyList.size();
+										for(PolicyListVo pVo : policyList) {
+											if("Y".equals(pVo.getApplyLockedFlag())) {
+												non_policys--;
+											}
+										}
+	
+										if (non_policys <= 0) {
+											//不存在有效保單，資料不落地
+											vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+											vo.setMsg(NotifyOfNewCaseChangeVo.MSG);
+											contactInfoService.updateNcStatusBySeqId(vo);
+								
+											log.info("-----------------不存在有效保單--调用206接口---");
+											//不存在有效保單，
+											unParams.put("name", "API206");
+											params.put("status", ContactInfoVo.STATUS_3);
+											params.put("msg", ContactInfoVo.NON_POLICYS);
+											log.info("----------调用206接口,参数---"+params);
+											String api206Response = cioService.postForEntity(URL_API206, params, unParams);
+											log.info("call URL_API206,strResponse="+api206Response);
 
+										}else {	
 									int iRtn = contactInfoService.addContactInfo(mapperVo);
 									if(iRtn>0) {//如果有查詢且儲存成功
 										vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
 										int ncupdate = contactInfoService.updateNcStatusBySeqId(vo);
 										log.info("状态已经修改为保戶："+ncupdate);
-
+				
 									}
-
+			
 									/**
 									 * 修改姓名或ID視為「異常件」，回報案件狀態為“Y” msg=已轉為人工處理
 									 * 当新名稱和ID有數據,為需要修改
@@ -887,11 +915,29 @@ public class CIOAllianceServiceTask {
 										params.put("status", NotifyOfNewCaseChangeVo.NC_STATUS_Y);
 										params.put("msg", NotifyOfNewCaseChangeVo.GO_WORK_AHEAD_MSG);
 										log.info("----------修改姓名或ID視為「異常件」，回報案件狀態為“Y” msg=已轉為人工處理 调用206接口,参数---"+params);
-
+		
 										//聯盟鏈歷程參數
 										unParams.put("name", "API206");
 										cioService.postForEntity(URL_API206, params, unParams);
 									}
+										}
+
+									}else {
+										//不存在有效保單，資料不落地
+										vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+										vo.setMsg(NotifyOfNewCaseChangeVo.MSG);
+										contactInfoService.updateNcStatusBySeqId(vo);
+										
+										log.info("-----------------不存在有效保單--调用206接口---");
+										//不存在有效保單，
+										unParams.put("name", "API206");
+										params.put("status", ContactInfoVo.STATUS_3);
+										params.put("msg", ContactInfoVo.NON_POLICYS);
+										log.info("----------调用206接口,参数---"+params);
+										String api206Response = cioService.postForEntity(URL_API206, params, unParams);
+										log.info("call URL_API206,strResponse="+api206Response);
+									}
+									// END: update by 203990 at 20210910
 									
 								}else {
 									//非保戶，資料不落地
@@ -1807,9 +1853,18 @@ public class CIOAllianceServiceTask {
 			paramMap.put("NUMBER", new String().valueOf(stackTraceElement.getLineNumber()));
 			paramMap.put("CODE", code);
 			paramMap.put("DATA", CallApiDateFormatUtil.getCurrentTimeString());
+			
 			//發送系統管理員
 			List<String> receivers = new ArrayList<String>();
-			receivers = (List)mailInfo.get("receivers");
+			//receivers = (List)mailInfo.get("receivers");
+			//聯盟相關API調不通【無回應】管理人員
+			String mailTo = parameterService.getParameterValueByCode("eservice_adm", "API_NO_MAIL_012");
+			if(StringUtils.isNotEmpty(mailTo)) {
+				String[] mails = mailTo.split(";");
+				for(String mail : mails) {
+					receivers.add(mail);
+				}
+			}
 
 			MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
 			vo.setMessagingTemplateCode(ApConstants.API_NO_MAIL_012);

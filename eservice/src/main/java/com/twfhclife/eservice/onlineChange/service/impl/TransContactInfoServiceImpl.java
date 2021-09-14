@@ -99,7 +99,6 @@ public class TransContactInfoServiceImpl implements ITransContactInfoService {
 	 */
 	@Override
 	public HashMap getUserCurrentNetworkData(String policyNo) {
-		// TODO Auto-generated method stub
 		return transDao.getUserCurrentNetworkData(policyNo);
 	}
 	
@@ -216,31 +215,32 @@ public class TransContactInfoServiceImpl implements ITransContactInfoService {
 						transContactInfoOldVo.setAddressCharge(lilipmVo.getLipmCharAddr());
 						transContactInfoOldVo.setAddressFullCharge(lilipmVo.getLipmCharAddr());
 					}
-	//				String mobile = transContactInfoOldDao.getPmdaMobile(policyNo);
+					
+					//transContactInfoOldVo取用LIPMDA_ES的MOBLIE,EMAIL
+					String mobileOld = transContactInfoOldDao.getPmdaMobile(policyNo);
 					String emailOld = transContactInfoOldDao.getPmdaEmail(policyNo);
-					String mobile = transContactInfoDtlVo.getMobile();
-					String emailNew = transContactInfoDtlVo.getEmail();
-					logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@ mobile={}, emailOld={}, emailNew={}", mobile, emailOld, emailNew);
+					logger.debug("Old mobile,email : LIPMDA_ES mobileOld={}, emailOld={}", mobileOld, emailOld);
+					
+					if (mobileOld != null) {
+						transContactInfoOldVo.setMobile(mobileOld);
+					}
+					if (emailOld != null) {
+						transContactInfoOldVo.setEmail(emailOld);
+					}
+					
+					/**
 					UsersVo usersVo = hisVo.getUsersVo();
 					String email = usersVo.getEmail();
 					String mobile1 = usersVo.getMobile();
-					//获取当前保户ID
 					logger.debug("獲取當前保戶email{},mobile1{}",email,mobile1);
+					
 					 if (email!=null) {
 					 	transContactInfoOldVo.setEmail(email);
 					 }
 					 if (mobile1!=null) {
 					 	transContactInfoOldVo.setMobile(mobile1);
 					 }
-					/*if (mobile != null) {
-						transContactInfoOldVo.setMobile(mobile);
-					}
-					if (emailOld != null) {
-						transContactInfoOldVo.setEmail(emailOld);
-					}
-					if (emailNew != null) {
-						transContactInfoOldVo.setEmail(emailNew);
-					}*/
+					 **/
 					
 					 transContactInfoOldDao.insertTransContactInfoOld(transContactInfoOldVo);
 					 logger.info("after insertTransContactInfoOld(),transContactInfoOldVo="+transContactInfoOldVo);
@@ -361,13 +361,11 @@ public class TransContactInfoServiceImpl implements ITransContactInfoService {
 
 	@Override
 	public Map<String, Object> getCIOUserDetailInfoOld(String roc_id) {
-		// TODO Auto-generated method stub
 		return transContactInfoDao.getCIOUserDetailInfoOld(roc_id);
 	}
 
 	@Override
 	public Map<String, Object> getCIOUserDetailInfoNew(String roc_id) {
-		// TODO Auto-generated method stub
 		return transContactInfoDao.getCIOUserDetailInfoNew(roc_id);
 	}
 
@@ -404,7 +402,6 @@ public class TransContactInfoServiceImpl implements ITransContactInfoService {
 
 	@Override
 	public List<String> getTransContactInfoTransNumByBatchId(Float batchId) {
-
 		return transContactInfoDao.getTransContactInfoTransNumByBatchId(batchId);
 	}
 

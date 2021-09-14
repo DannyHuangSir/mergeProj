@@ -151,6 +151,17 @@ public class ContactInfoServiceImpl implements IContactInfoService{
 							icvo.setCbirdate("19801115");
 						}
 					}
+					
+					//Modify 2021/09/13
+					//START-台銀首家件-同batchId時,只有第一筆的STATUS=NOT_UPLOAD,因為同batchId只上傳聯盟一筆就好
+					if("L01".equals(icvo.getFrom())) {
+						int countByBatchId = contactInfoDao.getCountByBatchId(icvo);
+						if(countByBatchId>0){
+							icvo.setStatus(ContactInfoVo.STATUS_UPLOADED);//此筆將不會上傳
+						}
+					}
+					//END-台銀首家件-同batchId時,只有第一筆的STATUS=NOT_UPLOAD,因為同batchId只上傳聯盟一筆就好
+					
 					logger.info("寫入CONTACT_INFO的資料cbidate欄位  icvo.getCbirdate()="+icvo.getCbirdate());
 					rtnValue = contactInfoDao.addContactInfo(icvo);
 					logger.info("after contactInfoDao.addContactInfo()="+rtnValue);
@@ -200,6 +211,7 @@ public class ContactInfoServiceImpl implements IContactInfoService{
 							}
 						}
 					}
+					
 					/**用於類型判斷防止首家件與聯盟件，發送郵件*/
 					/*logger.info("用於類型判斷防止首家件與聯盟件，發送郵件	---保單單號"+	icvo.getPolicyNo());
 					logger.info("icvo.getPieceType()"+	icvo.getPieceType());
@@ -212,6 +224,7 @@ public class ContactInfoServiceImpl implements IContactInfoService{
 							forwardingCaseImageSuccessMail(icvo.getPolicyNo());
 						}
 					}*/
+
 				}else {
 					rtnVo.setCode(ClaimResponseVo.CODE_ERROR);
 					throw new Exception("contactInfoDao.addContactInfo() error.");

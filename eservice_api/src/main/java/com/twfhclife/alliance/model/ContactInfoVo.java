@@ -26,7 +26,8 @@ public class ContactInfoVo {
 	
 	public static final String STATUS_Y = "Y";//處理成功
 	
-	public static final String NON_INSURED = "非本公司保 戶";
+	public static final String NON_INSURED = "非本公司保戶";
+	public static final String NON_POLICYS = "不存在有效保單"; // set by 203990 at 20210910
 	
 	public static final String MSG_SUCCESS = "處理成功";
 	
@@ -36,6 +37,7 @@ public class ContactInfoVo {
 	private Float  claimSeqId;
 	private String seqId;
 	private String caseId;
+	private String batchId;
 	private String code;
 	private String msg;
 	private String cidNo;
@@ -91,6 +93,12 @@ public class ContactInfoVo {
 	}
 	public void setCaseId(String caseId) {
 		this.caseId = caseId;
+	}
+	public String getBatchId() {
+		return batchId;
+	}
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
 	}
 	public String getCode() {
 		return code;

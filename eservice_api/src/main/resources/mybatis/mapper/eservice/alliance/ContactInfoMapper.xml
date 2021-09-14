@@ -592,4 +592,9 @@
 		    FROM ESERVICE.DBO.CONTACT_INFO E WHERE B.BATCH_ID = E.BATCH_ID)
 	</select>
 	
+	<!-- 2021/09/13 計算batch_id已存在筆數 -->
+	<select id="getCountByBatchId" parameterType="com.twfhclife.alliance.model.ContactInfoMapperVo" resultType="java.lang.Integer">
+		select count(BATCH_ID) from ESERVICE.dbo.CONTACT_INFO where BATCH_ID=#{vo.batchId};
+	</select>
+	
 </mapper>

@@ -764,9 +764,18 @@ public class TransAddServiceImpl implements ITransAddService {
 			paramMap.put("NUMBER", new String().valueOf(stackTraceElement.getLineNumber()));
 			paramMap.put("DATA", CallApiDateFormatUtil.getCurrentTimeString());
 			paramMap.put("EXCEPTION_LOG", e.getMessage());
+			
 			//發送系統管理員
 			List<String> receivers = new ArrayList<String>();
-			receivers = (List)mailInfo.get("receivers");
+			//receivers = (List)mailInfo.get("receivers");
+			//保全聯盟轉收件 - 進件失敗管理人員
+			String mailTo = parameterDao.getParameterValueByCode("eservice_adm", "TRANSFER_MAIL_013");
+			if(StringUtils.isNotEmpty(mailTo)) {
+				String[] mails = mailTo.split(";");
+				for(String mail : mails) {
+					receivers.add(mail);
+				}
+			}
 
 			MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
 			vo.setMessagingTemplateCode(ApConstants.TRANSFER_MAIL_013);
