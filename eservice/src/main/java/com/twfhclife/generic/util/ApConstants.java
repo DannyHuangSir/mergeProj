@@ -126,7 +126,7 @@ public interface ApConstants {
 	public static final String SEND_COMPANY_ITEMS = "SEND_COMPANY_ITEMS";
 	
 	public static final String PAYMENT_METHOD = "PAYMENT_METHOD";
-	
+
 	public static final String INSURANCE_ACCIDENT = "INSURANCE_ACCIDENT";
 	
 	public static final String INS_CLAIM_POLICY_2 = "ESERVICE_ONLINECHANGE_ODM_URL";
@@ -140,6 +140,21 @@ public interface ApConstants {
 	public static final String INSURANCE_CLAIM_TRANS_REMARK = "INSURANCE_CLAIM_TRANS_REMARK";
 	
 	public static final String CONTACT_INFO_TRANS_REMARK = "CONTACT_INFO_TRANS_REMARK";
+
+	/**
+	 *  保單理賠醫起通請閱讀並同意以下條款
+	 * */
+	public static final String MEDICAL_TREATMENT_CONSENT = "MEDICAL_TREATMENT_CONSENT";
+
+	/** 保單理賠醫起通上傳申請應備文件 */
+	public static final String MEDICAL_TREATMENT_UPLOADFILE = "MEDICAL_TREATMENT_UPLOADFILE";
+
+	/** 保單理賠醫起通  畫面文案 */
+	final String MEDICAL_TREATMENT_PAGE = "MEDICAL_TREATMENT_PAGE";
+	/** 保單理賠醫起通  醫院集合 */
+	public static final String MEDICAL_COMPANY_ITEMS = "MEDICAL_COMPANY_ITEMS";
+	/**保單理賠醫起通  保單產品  */
+	public static final String MEDICAL_TREATMENT_ITEMS = "MEDICAL_TREATMENT_ITEMS";
 
 	public static final String INVESTMENT_TRANS_REMARK = "INVESTMENT_TRANS_REMARK";
 

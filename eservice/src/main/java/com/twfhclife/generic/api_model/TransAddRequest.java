@@ -77,6 +77,15 @@ public class TransAddRequest implements Serializable {
 	private TransFundSwitchVo transFundSwitchVo;
 	
 	private TransInsuranceClaimVo transInsuranceClaimVo;
+	private TransMedicalTreatmentClaimVo transMedicalTreatmentClaimVo;
+
+	public TransMedicalTreatmentClaimVo getTransMedicalTreatmentClaimVo() {
+		return transMedicalTreatmentClaimVo;
+	}
+
+	public void setTransMedicalTreatmentClaimVo(TransMedicalTreatmentClaimVo transMedicalTreatmentClaimVo) {
+		this.transMedicalTreatmentClaimVo = transMedicalTreatmentClaimVo;
+	}
 
 	public String getSysId() {
 		return sysId;

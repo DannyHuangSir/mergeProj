@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.HospitalInsuranceCompanyDao">
+
+	<resultMap id="HospitalInsuranceCompanyMap" type="com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo" >
+		<result column="ID" property="id"/>
+		<result column="INSURANCE_ID" property="insuranceId"/>
+		<result column="INSURANCE_NAME" property="insuranceName"/>
+		<result column="FUNCTION_NAME" property="functionName"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+	<insert id="insertHospitalInsuranceCompanyVo" parameterType="com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo" >
+		insert into  ESERVICE.dbo.HOSPITAL_INSURANCE_COMPANY
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				ID,
+			</if>
+			<if test="insuranceId != null" >
+				INSURANCE_ID,
+			</if>
+			<if test="insuranceName != null" >
+				INSURANCE_NAME,
+			</if>
+			<if test="functionName != null" >
+				FUNCTION_NAME,
+			</if>
+			<if test="status != null" >
+				STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=FLOAT},
+			</if>
+			<if test="insuranceId != null" >
+				#{insuranceId,jdbcType=NVARCHAR},
+			</if>
+			<if test="insuranceName != null" >
+				#{insuranceName,jdbcType=NVARCHAR},
+			</if>
+			<if test="functionName != null" >
+				#{functionName,jdbcType=NVARCHAR},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=NVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="getHospitalInsuranceCompanyVoList" resultMap="HospitalInsuranceCompanyMap" parameterType="com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo" >
+		select
+		ID,INSURANCE_ID,INSURANCE_NAME,FUNCTION_NAME,CREATE_DATE,STATUS
+		from ESERVICE.dbo.HOSPITAL_INSURANCE_COMPANY
+		where 1=1
+		<if test="id != null  and id != 0" >
+			AND ID= #{id,jdbcType=FLOAT}
+		</if>
+		<if test="insuranceId != null  and insuranceId != '' " >
+			AND INSURANCE_ID= #{insuranceId,jdbcType=NVARCHAR}
+		</if>
+		<if test="insuranceName != null  and insuranceName != '' " >
+			AND INSURANCE_NAME= #{insuranceName,jdbcType=NVARCHAR}
+		</if>
+		<if test="functionName != null  and functionName != ''" >
+			AND FUNCTION_NAME= #{functionName,jdbcType=NVARCHAR}
+		</if>
+		<if test="status != null  and status != '' " >
+			AND STATUS= #{status,jdbcType=NVARCHAR}
+		</if>
+	</select>
+	<update id="updateHospitalInsuranceCompanyVo" parameterType="com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo" >
+		update  ESERVICE.dbo.HOSPITAL_INSURANCE_COMPANY
+		set STATUS = #{status,jdbcType=NVARCHAR},
+		<if test="insuranceName != null and insuranceName != ''  " >
+			INSURANCE_NAME = #{insuranceName,jdbcType=NVARCHAR},
+		</if>
+		where INSURANCE_ID = #{insuranceId,jdbcType=NVARCHAR}
+	</update>
+	<select id="getHospitalInsuranceCompanyIdSequence" resultType="java.lang.Float">
+		select NEXT VALUE for ESERVICE.DBO.HOSPITAL_INSURANCE_COMPANY_CLAIM_SEQ as BATCH_ID_SEQ;
+	</select>
+	<update id="updateHospitalInsuranceCompanyVoList">
+		update  ESERVICE.dbo.HOSPITAL_INSURANCE_COMPANY
+		set STATUS = #{status,jdbcType=NVARCHAR}
+		where
+		INSURANCE_ID    IN
+		<foreach collection="hospitalInsuranceCompanyVo" item="vo" separator="," open="(" close=")">
+			#{vo.insuranceId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<update id="updateNotHospitalInsuranceCompanyVoIdList">
+		update  ESERVICE.dbo.HOSPITAL_INSURANCE_COMPANY
+		set STATUS = #{status,jdbcType=NVARCHAR}
+		where
+		INSURANCE_ID NOT  IN
+		<foreach collection="hospitalInsuranceCompanyVo" item="vo" separator="," open="(" close=")">
+			#{vo.insuranceId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+</mapper>

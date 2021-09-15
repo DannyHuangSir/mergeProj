@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransMedicalTreatmentClaimDao">
+
+	<resultMap id="TransInsuranceClaimResultMap" type="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo">
+		<id property="claimSeqId"  column="CLAIMS_SEQ_ID" />
+		<result property="caseId" column="CASE_ID" />
+		<result property="transNum"      column="TRANS_NUM" />
+		<result property="fileReceived"  column="FILE_RECEIVED" />
+		<result property="name"   column="NAME" />
+		<result property="idNo"   column="ID_NO" />
+		<result property="birdate"   column="BIRDATE" />
+		<result property="phone"     column="PHONE" />
+		<result property="zipCode"   column="ZIP_CODE" />
+		<result property="address"   column="ADDRESS" />
+		<result property="mail"      column="MAIL" />
+		<result property="paymentMethod" column="PAYMENT_METHOD" />
+		<result property="bankCode"    column="BANK_CODE" />
+		<result property="branchCode"  column="BRANCH_CODE" />
+		<result property="bankAccount" column="BANK_ACCOUNT" />
+		<result property="applicationDate" column="APPLICATION_DATE" />
+		<result property="applicationTime" column="APPLICATION_TIME" />
+		<result property="applicationItem" column="APPLICATION_ITEM" />
+		<result property="job"             column="JOB" />
+		<result property="jobDescr" column="JOB_DESCR" />
+		<result property="accidentDate"  column="ACCIDENT_DATE" />
+		<result property="accidentTime"  column="ACCIDENT_TIME" />
+		<result property="accidentCause" column="ACCIDENT_CAUSE" />
+		<result property="accidentLocation" column="ACCIDENT_LOCATION" />
+		<result property="accidentDescr" column="ACCIDENT_DESCR" />
+		<result property="policeStation" column="POLICE_STATION" />
+		<result property="policeName"    column="POLICE_NAME" />
+		<result property="policePhone" column="POLICE_PHONE" />
+		<result property="policeDate"  column="POLICE_DATE" />
+		<result property="policeTime"  column="POLICE_TIME" />
+		<result property="from"        column="FROM_COMPANY_ID" />
+		<result property="to"            column="TO_COMPANY_ID" />
+		<result property="sendAlliance"  column="SEND_ALLIANCE" />
+		<result property="applyItem"  column="APPLYITEM" />
+		<result property="policyNo"  column="POLICYNO" />
+		<result property="customerName"  column="CUSTOMERNAME" />
+		<result property="relation"  column="RELATION" />
+		<result property="tel"  column="TEL" />
+		<result property="diseaseName"  column="DISEASENAME" />
+		<result property="hospital"  column="HOSPITAL" />
+		<result property="otherCompanyInsured"  column="OTHERCOMPANYINSURED" />
+		<result property="otherInsuCompany"  column="OTHERINSUCOMMPANY" />
+		<result property="otherInsuType"  column="OTHERINSUTYPE" />
+		<result property="otherInsuAmout"  column="OTHERINSUAMOUNT" />
+		<result property="otherInsuClaim"  column="OTHERINSUCLAIM" />
+		<result property="accountName" column="ACCOUNTNAME" />
+		<result property="callPolice" column="CALLPOLICE" />
+		<result property="callPolice" column="CALLPOLICE" />
+		<result property="callPolice" column="CALLPOLICE" />
+		<result property="authorizationFileType" column="AUTHORIZATION_FILE_TYPE" />
+		<result property="authorizationStartDate" column="AUTHORIZATION_START_DATE" />
+		<result property="authorizationEndDate" column="AUTHORIZATION_END_DATE" />
+		<result property="fromHospitalId" column="FROM_HOSPITAL_ID" />
+		<result property="toHospitalId" column="TO_HOSPITAL_ID" />
+		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
+	</resultMap>
+	
+	<resultMap id="TransInsuranceCliamFileDataResultMap" type="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimFileDataVo">
+		<result property="claimSeqId" column="CLAIMS_SEQ_ID" />
+		<result property="type"  column="TYPE" />
+		<result property="fileName"    column="FILE_NAME" />
+		<result property="filePath"  column="PATH" />
+		<result property="fileBase64"  column="FILE_BASE64" />
+	</resultMap>
+	<resultMap id="HospitalResultMap" type="com.twfhclife.eservice.onlineChange.model.Hospital">
+		<result property="id" column="ID" />
+		<result property="hpid"  column="HP_ID" />
+		<result property="hpName"    column="HP_NAME" />
+		<result property="functionName"  column="FUNCTION_NAME" />
+	</resultMap>
+	<resultMap id="HospitalInsuranceCompanyResultMap" type="com.twfhclife.eservice.onlineChange.model.HospitalInsuranceCompany">
+		<result property="id" column="ID" />
+		<result property="insuranceId"  column="INSURANCE_ID" />
+		<result property="insuranceName"    column="INSURANCE_NAME" />
+		<result property="functionName"  column="FUNCTION_NAME" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		CLAIMS_SEQ_ID,
+		CASE_ID,TRANS_NUM,FILE_RECEIVED,NAME,ID_NO,BIRDATE,PHONE,ZIP_CODE,ADDRESS,
+		MAIL,PAYMENT_METHOD,BANK_CODE,BRANCH_CODE,BANK_ACCOUNT,APPLICATION_DATE,APPLICATION_TIME,APPLICATION_ITEM,
+		JOB,JOB_DESCR,ACCIDENT_DATE,ACCIDENT_TIME,ACCIDENT_CAUSE,ACCIDENT_LOCATION,ACCIDENT_DESCR,POLICE_STATION,
+		POLICE_NAME,POLICE_PHONE,POLICE_DATE,POLICE_TIME,FROM_COMPANY_ID,TO_COMPANY_ID,SEND_ALLIANCE,APPLYITEM,POLICYNO,
+		CUSTOMERNAME,RELATION,TEL,DISEASENAME,HOSPITAL,OTHERCOMPANYINSURED,OTHERINSUCOMMPANY,OTHERINSUTYPE,OTHERINSUAMOUNT,
+		OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE,AUTHORIZATION_FILE_TYPE,AUTHORIZATION_START_DATE,AUTHORIZATION_END_DATE,FROM_HOSPITAL_ID,TO_HOSPITAL_ID
+	</sql>
+	
+	<select id="getInsuranceClaimSequence" resultType="java.lang.Float">
+		select NEXT VALUE for TRANS_MEDICAL_TREATMENT_CLAIM_SEQ as CLAIMS_SEQ_ID;
+	</select>
+	
+	<select id="getTransInsuranceClaimByTransNum" resultMap="TransInsuranceClaimResultMap" parameterType="java.lang.String">
+		select
+			CLAIMS_SEQ_ID,
+			CASE_ID,TRANS_NUM,FILE_RECEIVED,
+		ESERVICE.DBO.FN_DEBASE64(NAME) NAME,
+		ESERVICE.DBO.FN_DEBASE64(ID_NO) ID_NO,
+		ESERVICE.DBO.FN_DEBASE64(BIRDATE) BIRDATE,
+		ESERVICE.DBO.FN_DEBASE64(PHONE) PHONE,
+			ZIP_CODE,
+		ESERVICE.DBO.FN_DEBASE64(ADDRESS) ADDRESS,
+		ESERVICE.DBO.FN_DEBASE64(MAIL) MAIL,
+			PAYMENT_METHOD,BANK_CODE,BRANCH_CODE,
+		ESERVICE.DBO.FN_DEBASE64(BANK_ACCOUNT) BANK_ACCOUNT,
+			APPLICATION_DATE,APPLICATION_TIME,APPLICATION_ITEM,
+			JOB,JOB_DESCR,ACCIDENT_DATE,ACCIDENT_TIME,ACCIDENT_CAUSE,ACCIDENT_LOCATION,ACCIDENT_DESCR,POLICE_STATION,
+		ESERVICE.DBO.FN_DEBASE64(POLICE_NAME) POLICE_NAME,
+		ESERVICE.DBO.FN_DEBASE64(POLICE_PHONE) POLICE_PHONE,
+			POLICE_DATE,POLICE_TIME,FROM_COMPANY_ID,TO_COMPANY_ID,SEND_ALLIANCE,
+			APPLYITEM,
+			POLICYNO,
+		ESERVICE.DBO.FN_DEBASE64(CUSTOMERNAME) CUSTOMERNAME,
+			RELATION,
+		ESERVICE.DBO.FN_DEBASE64(TEL) TEL,
+			DISEASENAME,HOSPITAL,OTHERCOMPANYINSURED,OTHERINSUCOMMPANY,OTHERINSUTYPE,OTHERINSUAMOUNT,
+			OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE,
+			AUTHORIZATION_FILE_TYPE,AUTHORIZATION_START_DATE,AUTHORIZATION_END_DATE,FROM_HOSPITAL_ID,TO_HOSPITAL_ID
+		from ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		where TRANS_NUM = #{transNum}
+		order by CREATE_DATE desc
+	</select>
+	
+	<select id="getTransTypeByTransNum" resultType="java.lang.String" parameterType="java.lang.String">
+		select TRANS_TYPE from ESERVICE.DBO.TRANS
+		where TRANS_NUM = #{transNum}
+		order by CREATE_DATE desc
+	</select>
+
+	<select id="getFileDatasByClaimSeqId" resultMap="TransInsuranceCliamFileDataResultMap" parameterType="java.lang.Float">
+		select * from ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
+		where CLAIMS_SEQ_ID = #{claimSeqId}
+		order by CREATE_DATE desc
+	</select>
+
+	<insert id="addInsuranceClaim" parameterType="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo" >
+		INSERT INTO 
+       		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+       		(
+       		<include refid="Base_Column_List" />
+       		)
+       	VALUES
+       		(
+       			<choose>
+       				<when test="vo.claimSeqId!=null and vo.claimSeqId>0">
+       					#{vo.claimSeqId, jdbcType=FLOAT},
+       				</when>
+       				<otherwise>
+       					(NEXT VALUE for TRANS_MEDICAL_TREATMENT_CLAIM_SEQ),
+       				</otherwise>
+       			</choose>
+       			#{vo.caseId, jdbcType=VARCHAR}, 
+       			#{vo.transNum,jdbcType=VARCHAR},
+       			#{vo.fileReceived, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.name, jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.idNo, jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.birdate, jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.phone, jdbcType=VARCHAR}),
+       			#{vo.zipCode, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.address, jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.mail, jdbcType=VARCHAR}),
+       			#{vo.paymentMethod, jdbcType=VARCHAR},
+       			#{vo.bankCode, jdbcType=VARCHAR},
+       			#{vo.branchCode, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.bankAccount, jdbcType=VARCHAR}),
+       			(select convert(varchar, getdate(), 112)),
+       			(select REPLACE(CONVERT(varchar(5), GETDATE(), 108), ':', '')),
+       			#{vo.applicationItem, jdbcType=VARCHAR},
+       			#{vo.job, jdbcType=VARCHAR},
+       			#{vo.jobDescr, jdbcType=VARCHAR},
+       			#{vo.accidentDate, jdbcType=VARCHAR},
+       			#{vo.accidentTime, jdbcType=VARCHAR},
+       			#{vo.accidentCause, jdbcType=VARCHAR},
+       			#{vo.accidentLocation, jdbcType=VARCHAR},
+       			#{vo.accidentDescr, jdbcType=VARCHAR},
+       			#{vo.policeStation, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.policeName, jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.policePhone, jdbcType=VARCHAR}),
+       			#{vo.policeDate, jdbcType=VARCHAR},
+       			#{vo.policeTime, jdbcType=VARCHAR},
+       			#{vo.from, jdbcType=VARCHAR},
+       			#{vo.to, jdbcType=VARCHAR},
+       			#{vo.sendAlliance, jdbcType=VARCHAR},
+       			#{vo.applyItem, jdbcType=VARCHAR},
+       			#{vo.policyNo, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.customerName, jdbcType=VARCHAR}),
+       			#{vo.relation, jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.tel, jdbcType=VARCHAR}),
+       			#{vo.diseaseName, jdbcType=VARCHAR},
+       			#{vo.hospital, jdbcType=VARCHAR},
+       			#{vo.otherCompanyInsured, jdbcType=VARCHAR},
+       			#{vo.otherInsuCompany, jdbcType=VARCHAR},
+       			#{vo.otherInsuType, jdbcType=VARCHAR},
+       			#{vo.otherInsuAmout, jdbcType=VARCHAR},
+       			#{vo.otherInsuClaim, jdbcType=VARCHAR},
+       			#{vo.accountName, jdbcType=VARCHAR},
+       			#{vo.callPolice, jdbcType=VARCHAR},
+       			#{vo.authorizationFileType, jdbcType=VARCHAR},
+       			#{vo.authorizationStartDate, jdbcType=VARCHAR},
+       			#{vo.authorizationEndDate, jdbcType=VARCHAR},
+       			#{vo.fromHospitalId, jdbcType=VARCHAR},
+       			#{vo.toHospitalId, jdbcType=VARCHAR}
+			)
+	</insert>
+	<select id="selectInsuranceClaimFileDataId" resultType="java.lang.Float">
+		select 	NEXT VALUE for TRANS_MEDICAL_TREATMENT_CLAIM_FD_SEQ  as FDID
+	</select>
+	<insert id="addInsuranceClaimFileData" parameterType="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimFileDataVo">
+		INSERT INTO 
+       		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
+       		(FD_ID,CLAIMS_SEQ_ID,TYPE,FILE_NAME,PATH,RFE_ID,FILE_BASE64)
+       	VALUES
+       		(
+				#{vo.fdId,  jdbcType=FLOAT},
+       			#{vo.claimSeqId,  jdbcType=FLOAT},
+       			#{vo.type, jdbcType=VARCHAR},
+       			#{vo.fileName, jdbcType=VARCHAR},
+       			#{vo.filePath, jdbcType=VARCHAR},
+       			#{vo.rfeId, jdbcType=FLOAT},
+				#{vo.fileBase64, jdbcType=VARCHAR}
+       		)
+	</insert>
+	<update id="updateInsuranceClaimFileDataFileBase64" parameterType="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimFileDataVo">
+			update
+			ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
+			set  FILE_BASE64.WRITE(#{vo.fileBase64, jdbcType=VARCHAR},0,null)
+			where FD_ID =#{vo.fdId}
+	</update>
+
+	<select id="getRefId" resultType="java.lang.Float" parameterType="java.lang.String">
+		select RFE_ID 
+		  from  ESERVICE.dbo.TRANS_RFE 
+		 where STATUS = 'NON' 
+		   and TRANS_NUM = #{transNum}
+	</select>
+	
+	<update id="updateSatusByRefId">
+		update ESERVICE.dbo.TRANS_RFE 
+		   set  RESPONSE_DATE = getDate(),
+		        STATUS = 'WAIT'
+		 where STATUS = 'NON' 
+		   and RFE_ID = #{rfeId}
+	</update>
+	
+	<!-- 依保單號碼找出商品險種 -->
+	<select id="getProductCodeByPolicyNo" resultType="java.lang.String" parameterType="java.lang.String">
+		select PRODUCT_CODE 
+		from ESERVICE.DBO.COVERAGE c join ESERVICE.DBO.PRODUCT p on c.PRODUCT_ID = p.PRODUCT_ID 
+		where POLICY_NO = #{policyNo}
+	</select>
+	<!--查詢當前功能的醫院,是API407存儲的-->
+	<select id="getHospitalList" resultMap="HospitalResultMap" parameterType="java.lang.String">
+		select  ID,HP_ID,HP_NAME,FUNCTION_NAME
+		from ESERVICE.DBO.HOSPITAL
+		where FUNCTION_NAME =#{functionName}
+	<if test="status != null and status!=''" >
+		AND STATUS=#{status}
+		</if>
+	</select>
+	<!--查詢當前功能的保險公司,是API408存儲的-->
+	<select id="getHospitalInsuranceCompanyList" resultMap="HospitalInsuranceCompanyResultMap"  parameterType="java.lang.String">
+		select 	ID,INSURANCE_ID,INSURANCE_NAME,FUNCTION_NAME
+		from ESERVICE.DBO.HOSPITAL_INSURANCE_COMPANY
+		where FUNCTION_NAME = #{functionName}
+	<if test="status != null and status!=''" >
+			AND STATUS=#{status}
+		</if>
+	</select>
+	<!--查詢當前保單是否有文件存在-->
+	<select id="getMedicalTreatmentWhetherFirst" resultType="int"  parameterType="java.lang.String">
+		select COUNT(*) number    from  ESERVICE.DBO.TRANS T
+		JOIN    [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM]  TMT  ON  T.TRANS_NUM=TMT.TRANS_NUM
+		JOIN    [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS]  TMTF  ON  TMT.CLAIMS_SEQ_ID=TMTF.CLAIMS_SEQ_ID
+		where
+		T.TRANS_TYPE=#{functionName}  AND  TMT.POLICYNO=#{policyNo}
+	</select>
+</mapper>

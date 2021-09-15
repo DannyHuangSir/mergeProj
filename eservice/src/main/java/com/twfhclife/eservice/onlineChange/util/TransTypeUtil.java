@@ -110,6 +110,11 @@ public interface TransTypeUtil {
 	 */
 	final String DNS_PARAMETER_CODE = "DNS_ALLIANCE";
 
+	/**
+	 *保單醫起通
+	 * */
+	final String MEDICAL_TREATMENT_PARAMETER_CODE = "MEDICAL_TREATMENT";
+
 	/** 線上申請-未來保費投資標的與分配比例 */
 	final String INVESTMENT_PARAMETER_CODE = "INVESTMENT";
 	/** 線上申請-申請保單提領(贖回) */

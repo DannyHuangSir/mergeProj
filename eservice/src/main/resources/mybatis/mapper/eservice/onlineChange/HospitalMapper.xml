@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.HospitalDao">
+
+	<resultMap id="HospitalMap" type="com.twfhclife.eservice.web.model.HospitalVo" >
+		<result column="ID" property="id"/>
+		<result column="HP_ID" property="hpId"/>
+		<result column="HP_NAME" property="hpName"/>
+		<result column="FUNCTION_NAME" property="functionName"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+	<insert id="insertHospitalVo" parameterType="com.twfhclife.eservice.web.model.HospitalVo" >
+		insert into  ESERVICE.dbo.HOSPITAL
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				ID,
+			</if>
+			<if test="hpId != null" >
+				HP_ID,
+			</if>
+			<if test="hpName != null" >
+				HP_NAME,
+			</if>
+			<if test="functionName != null" >
+				FUNCTION_NAME,
+			</if>
+			<if test="status != null" >
+				STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=FLOAT},
+			</if>
+			<if test="hpId != null" >
+				#{hpId,jdbcType=NVARCHAR},
+			</if>
+			<if test="hpName != null" >
+				#{hpName,jdbcType=NVARCHAR},
+			</if>
+			<if test="functionName != null" >
+				#{functionName,jdbcType=NVARCHAR},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=NVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="getHospitalVoList" resultMap="HospitalMap" parameterType="com.twfhclife.eservice.web.model.HospitalVo" >
+		select
+		ID,HP_ID,HP_NAME,FUNCTION_NAME,CREATE_DATE,STATUS
+		from ESERVICE.dbo.HOSPITAL
+		where 1=1
+		<if test="id != null  and id != 0" >
+			AND ID= #{id,jdbcType=FLOAT}
+		</if>
+		<if test="hpId != null  and hpId != '' " >
+			AND HP_ID= #{hpId,jdbcType=NVARCHAR}
+		</if>
+		<if test="hpName != null  and hpName != '' " >
+			AND HP_NAME= #{hpName,jdbcType=NVARCHAR}
+		</if>
+		<if test="functionName != null  and functionName != ''" >
+			AND FUNCTION_NAME= #{functionName,jdbcType=NVARCHAR}
+		</if>
+		<if test="status != null  and status != '' " >
+			AND STATUS= #{status,jdbcType=NVARCHAR}
+		</if>
+	</select>
+	<update id="updateHospitalVo" parameterType="com.twfhclife.eservice.web.model.HospitalVo" >
+		update  ESERVICE.dbo.HOSPITAL
+		set STATUS = #{status,jdbcType=NVARCHAR},
+		<if test="hpName != null" >
+			HP_NAME = #{hpName,jdbcType=NVARCHAR},
+		</if>
+		where HP_ID = #{hpId,jdbcType=NVARCHAR}
+	</update>
+	<select id="getHospitalIdSequence" resultType="java.lang.Float">
+		select NEXT VALUE for ESERVICE.DBO.HOSPITAL_CLAIM_FD_SEQ as BATCH_ID_SEQ;
+	</select>
+	<update id="updateHospitalVoList">
+		update  ESERVICE.dbo.HOSPITAL
+		set STATUS = #{status,jdbcType=NVARCHAR}
+		where
+		HP_ID    IN
+		<foreach collection="hospitalVos" item="vo" separator="," open="(" close=")">
+			#{vo.hpId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<update id="updateNotHospitalVoIdList">
+		update  ESERVICE.dbo.HOSPITAL
+		set STATUS = #{status,jdbcType=NVARCHAR}
+		where
+		HP_ID NOT  IN
+		<foreach collection="hospitalVos" item="vo" separator="," open="(" close=")">
+			#{vo.hpId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+</mapper>

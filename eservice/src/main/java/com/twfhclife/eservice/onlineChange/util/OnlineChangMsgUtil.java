@@ -84,6 +84,13 @@ public interface OnlineChangMsgUtil {
 	final String CONTACT_INFO_APPLYING = "有申請中的聯絡資料變更,則不可再申請。";
 
 	/**
+	 * 保單醫起通
+	 * */
+	final String MEDICAL_TREATMENT_CLAIM_APPLYING = "有申請中的保單醫起通,則不可再申請。";
+
+	final String MEDICAL_TREATMENT_CLAIM_PLAN = "此張保單不可申辦保單醫起通。";
+
+	/**
 	 *投資型保單商品發送保戶人員參數-申請通知
 	 * */
 	final String INVESTMENT_POLICY_APPLY_TITLE = "變更申請通知";

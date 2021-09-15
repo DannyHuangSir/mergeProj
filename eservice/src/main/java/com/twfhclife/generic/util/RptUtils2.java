@@ -3,6 +3,7 @@ package com.twfhclife.generic.util;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 
+import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -142,8 +143,84 @@ public class RptUtils2 {
 		document.close();
 		return baos.toByteArray();
 	}
- 
- 
+
+	// 生成PDF文件
+	public byte[] generatePDF(TransMedicalTreatmentClaimVo claimVo) throws Exception {
+		// 1.新建document對象
+		Document document = new Document(PageSize.A4);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		PdfWriter  writer = PdfWriter.getInstance(document, baos);
+		document.open();
+
+		// 段落
+		Paragraph paragraph = new Paragraph("紙本文件寄回檢核表 ", titlefont);
+		paragraph.setAlignment(1); // 設置文字居中 0靠左   1，居中     2，靠右
+		paragraph.setIndentationLeft(12); // 設置左縮進
+		paragraph.setIndentationRight(12); // 設置右縮進
+		paragraph.setFirstLineIndent(24); // 設置首行縮進
+		paragraph.setLeading(20f); // 行间距
+		paragraph.setSpacingBefore(5f); // 設置段落上空白
+		paragraph.setSpacingAfter(10f); // 設置段落下空白
+
+
+
+		BarcodeUtil butil = new BarcodeUtil();
+		PdfContentByte cb = writer.getDirectContent();
+		Barcode39 code39 = butil.create("E1100101");
+
+		// 表格
+		PdfPTable table = createTable(new float[] {90, 80,40});
+
+		table.addCell(createCell("檢核表條碼 :", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell(code39.createImageWithBarcode(cb, null, null),keyfont,Element.ALIGN_CENTER,1,false));
+		table.addCell(createCell("", keyfont, Element.ALIGN_CENTER,1,false));
+
+		code39 = butil.create(claimVo.getTransNum());
+		table.addCell(createCell("理賠申請書代號條碼 :", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell(code39.createImageWithBarcode(cb, null, null),keyfont,Element.ALIGN_CENTER,1,false));
+		table.addCell(createCell("", keyfont, Element.ALIGN_CENTER,1,false));
+
+
+		table.addCell(createCell("申請項目 :", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell(claimVo.getApplicationItem(),keyfont,Element.ALIGN_LEFT,2,false));
+
+
+		table.addCell(createCell("申請日期 :", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell(claimVo.getApplicationDate(),keyfont,Element.ALIGN_LEFT,2,false));
+
+
+		table.addCell(createCell("申請序號 :", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell(claimVo.getTransNum(),keyfont,Element.ALIGN_LEFT,2,false));
+
+		table.addCell(createCell("保單編號 :", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell(claimVo.getPolicyNo(),keyfont,Element.ALIGN_LEFT,2,false));
+
+		table.addCell(createCell("保單需寄回的附件清單 :", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell("",keyfont,Element.ALIGN_LEFT,2,false));
+
+		if(claimVo.getFileDataList() != null) {
+			String[] fileDatas = claimVo.getFileDataList().split(",");
+			for (String name : fileDatas) {
+				table.addCell(createCell("", keyfont, Element.ALIGN_RIGHT,1,false));
+				table.addCell(createCell(name,keyfont,Element.ALIGN_LEFT,2,false));
+			}
+		}
+
+		table.addCell(createCell("寄回資訊-收件人 :", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell("臺銀人壽 理賠科",keyfont,Element.ALIGN_LEFT,2,false));
+
+		table.addCell(createCell("寄回咨詢-收件地址 : ", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell("106 台北市大安區敦化南路二段 69 號 2 樓",keyfont,Element.ALIGN_LEFT,2,false));
+
+		document.add(paragraph);
+		document.add(table);
+		document.close();
+		return baos.toByteArray();
+	}
+
+
 /**------------------------創建表格單元格的方法start----------------------------*/
     /**
      * 創建單元格(指定字體)

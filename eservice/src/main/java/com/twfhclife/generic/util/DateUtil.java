@@ -1,5 +1,6 @@
 package com.twfhclife.generic.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +62,7 @@ public class DateUtil {
 	/**
 	 * 根據商品開賣日, 取回年字串.
 	 * 
-	 * @param date 開賣日
+	 * @param effectDate 開賣日
 	 * @return 回傳系統日至開賣日的民國年字串
 	 */
 	public static List<String> getYearOpitonByEffectDate(String effectDate) {
@@ -77,4 +78,26 @@ public class DateUtil {
 
 		return rocYearList;
 	}
+
+	/**
+	 * 字符串轉換為時間類型的字符串
+	 * @param dateFormat  時間類型的字符串  yyyyMMdd
+	 * @param returnDateFormat  返回的時間類型的字符串  yyyy-MM-dd
+	 * @param args  需要格式化的字符串 20201205
+	 * @return  返回格式化之後的字符串 2020-12-05
+	 */
+	public  static String  getStringToDateString(String dateFormat,String  args,String returnDateFormat){
+		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+			Date parse =simpleDateFormat.parse(args);
+			SimpleDateFormat format = new SimpleDateFormat(returnDateFormat);
+			String formatStr = format.format(parse);
+			return   formatStr;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return args;
+	}
+
+
 }

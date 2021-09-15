@@ -41,6 +41,10 @@ public interface IOnlineChangeService {
 	 * 檢查是否進入進入黑名單
 	 */
 	public Map<String, String> checkBackList(@Param("blackListVo")BlackListVo blackListVo);
+
+	//進行取消 已持有醫療保單的轉換保單
+        void cancelMedicalTreatmentApplyTrans(String transNum, TransStatusHistoryVo hisVo);
+
 	//取消已持有投資標的轉換
 	void cancelApplyTransConversion(String transNum, TransStatusHistoryVo hisVo);
 }

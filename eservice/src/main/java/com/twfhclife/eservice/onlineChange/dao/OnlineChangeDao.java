@@ -76,7 +76,10 @@ public interface OnlineChangeDao {
 	 * 檢查保單理賠是否完成
 	 */
 	public int getPolicyClaimCompleted(@Param("rocId") String rocId);
-	
+	/**
+	 * 檢查保單理賠是否完成
+	 */
+	public int getMedicalTreatmentClaimCompleted(@Param("rocId") String rocId);
 	/**
 	 * 添加狀態歷程
 	 * @param vo

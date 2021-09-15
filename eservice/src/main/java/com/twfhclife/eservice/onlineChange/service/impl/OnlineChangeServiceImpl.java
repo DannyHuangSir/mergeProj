@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.eservice.onlineChange.dao.*;
+import com.twfhclife.eservice.onlineChange.model.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -66,6 +68,9 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	
 	@Autowired
 	private TransInsuranceClaimDao transInsuranceClaimDao;
+
+	@Autowired
+	private  TransMedicalTreatmentClaimDao transMedicalTreatmentClaimDao;
 	
 	/** 各功能service */
 	
@@ -140,6 +145,11 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 				rfeId = transInsuranceClaimDao.getRefId(transNum);
 				transInsuranceClaimDao.updateSatusByRefId(rfeId);
 			}
+			//進行判斷是否為醫起通
+			if (TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transType)) {
+				rfeId = transMedicalTreatmentClaimDao.getRefId(transNum);
+				transMedicalTreatmentClaimDao.updateSatusByRefId(rfeId);
+			}
 			List<File> mailFiles = new ArrayList<>();
 			for (MultipartFile transFile : uploadFiles) {
 				String fileName = transFile.getOriginalFilename();
@@ -187,10 +197,60 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 
 					}
 				}
-				
+
+
+				// 判斷是否線上申請-保單醫起通
+				if (TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transType)) {
+					// 通過transNum獲取對象
+					List<TransMedicalTreatmentClaimVo> transMedicalClaimVoList =  transMedicalTreatmentClaimDao.getTransInsuranceClaimByTransNum(transNum);
+					if (transMedicalClaimVoList != null && transMedicalClaimVoList.size() > 0) {
+						TransMedicalTreatmentClaimVo medicalClaimVo = transMedicalClaimVoList.get(0);
+						// 上传文件
+						String filepath = FILE_SAVE_PATH;
+						File localFile = new File(filepath);
+						if (!localFile.exists()) {
+							localFile.mkdirs();
+						}
+						File server_file = new File(filepath + fileName);
+						if (server_file.exists()) {
+							SimpleDateFormat fmdate = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+							fileName = fileName.split("\\.")[0]+fmdate.format(new Date())+"."+fileName.split("\\.")[1];
+							server_file = new File(filepath + fileName);
+						}
+						transFile.transferTo(server_file);
+						TransMedicalTreatmentClaimFileDataVo fileData = new TransMedicalTreatmentClaimFileDataVo();
+						fileData.setClaimSeqId(medicalClaimVo.getClaimSeqId());//獲取ClaimSeqId
+						fileData.setFilePath(filepath);
+						fileData.setFileName(fileName);
+						fileData.setType("C");
+						fileData.setRfeId(rfeId);
+						fileData.setFileBase64(this.converFileToBase64Str(filepath+'/'+fileName));
+
+						//获取文件的id编号
+						Float aFloat = transMedicalTreatmentClaimDao.selectInsuranceClaimFileDataId();
+						fileData.setFdId(aFloat);
+						String fileBase64 = fileData.getFileBase64();
+						logger.info("========保單醫起通:補件==========獲取檔案的ID編號=================={}", aFloat);
+						fileData.setFileBase64("");
+						int i = transMedicalTreatmentClaimDao.addInsuranceClaimFileData(fileData);
+						logger.info("========保單醫起通:補件==========INSERT  InsuranceClaimFileData==================   響應行數----{}", i);
+						fileData.setFileBase64(fileBase64);
+						if (i>0) {
+							int J = transMedicalTreatmentClaimDao.updateInsuranceClaimFileDataFileBase64(fileData);
+							logger.info("========保單醫起通:補件==========UPDATE   InsuranceClaimFileData   FileBase64==================   響應行數----{}", J);
+						}
+
+					}
+				}
+
+
 				if (fileBytes.length > 0) {
 					if (!TransTypeUtil.INSURANCE_CLAIM_PARAMETER_CODE.equals(transType)) {
 					onlineChangeDao.addTransFile(transNum, fileName, fileBytes, userId);
+					}
+
+					if (!TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transType)) {
+						onlineChangeDao.addTransFile(transNum, fileName, fileBytes, userId);
 					}
 					File sendFile = new File(fileName);
 					FileUtils.writeByteArrayToFile(sendFile, fileBytes);
@@ -305,6 +365,12 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 		rMap.put("detailInfo", detailInfo);
 		rMap.put("errMsg", errMsg);
 		return rMap;
+	}
+
+	@Override
+	public void cancelMedicalTreatmentApplyTrans(String transNum, TransStatusHistoryVo hisVo) {
+		onlineChangeDao.updateTransStatus(transNum, OnlineChangeUtil.TRANS_STATUS_CANCEL);
+		onlineChangeDao.addTransStatusHistory(hisVo);
 	}
 
 	@Override

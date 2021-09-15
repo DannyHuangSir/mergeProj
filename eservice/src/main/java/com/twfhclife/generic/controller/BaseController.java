@@ -573,7 +573,7 @@ public class BaseController extends BaseMvcController {
 	}
 
 	protected String checkAuthCode(String authenticationType, String authenticationNum) {
-		//紀錄 驗證碼與時間
+		//紀錄驗證碼與時間
 		String message = "";
 		try {
 			if(getSession(authenticationType+"Authentication") == null){
