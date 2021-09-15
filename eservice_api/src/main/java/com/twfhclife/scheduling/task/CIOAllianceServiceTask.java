@@ -1473,7 +1473,7 @@ public class CIOAllianceServiceTask {
 										tic.setStatus(OnlineChangeUtil.TRANS_STATUS_ABNORMAL);
 									}
 								}
-								log.info("判斷異常件:" + tic.getStatus());
+								log.info("判斷異常件(status=7為異常件):tic.getStatus()=" + tic.getStatus());
 							}
 
 							//目前沒有文件暫時屏蔽

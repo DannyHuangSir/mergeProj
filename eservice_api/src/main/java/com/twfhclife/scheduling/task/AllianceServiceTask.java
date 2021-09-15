@@ -405,13 +405,13 @@ public class AllianceServiceTask {
 								log.info("***Try to update INSURANCE_CLAIM.FILE_RECEIVED="+fileReceived+",CASE_ID="+vo.getCaseId()+"***");
 								log.info("***update rtn="+rtn+"***");
 								
-								if(rtn>0 && InsuranceClaimMapperVo.FILE_RECEIVED_YES.equals(fileReceived)) {
+								if(InsuranceClaimMapperVo.FILE_RECEIVED_YES.equals(fileReceived)) {
 									//1.try to update TRANS_INSURANCE_CLAIM,set FILE_RECEIVED='1' by CASE_ID
 									vo.setFileReceived(InsuranceClaimMapperVo.FILE_RECEIVED_YES);
-									rtn = claimChainService.updateTransInsuranceClaimFileReceived(vo);
+									int updateTICcount = claimChainService.updateTransInsuranceClaimFileReceived(vo);
 									log.info("***Try to update TRANS_INSURANCE_CLAIM.FILE_RECEIVED=1,CASE_ID="+vo.getCaseId()+"***");
-									log.info("***update rtn="+rtn+"***");
-									//TOTO 2.update successed, send mail to systemAdmin.
+									log.info("***update updateTICcount="+updateTICcount+"***");
+									//2.update successed, send mail to systemAdmin.
 								}
 							}
 							

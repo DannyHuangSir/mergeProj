@@ -107,4 +107,15 @@ public interface ApConstants {
 	public static final String ELIFE_MAIL_025="ELIFE_MAIL_025";
 	/**內部人員通知	轉收件通知	理賠聯盟鏈轉收申請通知*/
 	public static final String ELIFE_MAIL_026="ELIFE_MAIL_026";
+
+	/** 醫療日程安排-系統屬性 */
+	public static final String SYS_MEDICAL_SCH = "SYS_MEDICAL_SCH";
+
+	/** 醫療資源定位地址-系統屬性 */
+	public static final String SYS_MEDICAL_API_URL = "SYS_MEDICAL_API_URL";
+	/**
+	 *保單醫起通
+	 * */
+	final String MEDICAL_TREATMENT_PARAMETER_CODE = "MEDICAL_TREATMENT";
+
 }

@@ -298,7 +298,7 @@
 	<update id="updateTransInsuranceClaimFileReceived" parameterType="com.twfhclife.alliance.model.InsuranceClaimMapperVo">
 		update ESERVICE.DBO.TRANS_INSURANCE_CLAIM
 		set FILE_RECEIVED   = #{vo.fileReceived}
-		where CASE_ID = #{vo.claimSeqId}
+		where CASE_ID = #{vo.caseId}
 	</update>
 	
 	<!-- 聯盟通知件，更新FileReceived -->

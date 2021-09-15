@@ -25,29 +25,29 @@ public class EserviceApiApplication extends SpringBootServletInitializer {
 	/**
 	 * 保險理賠
 	 * @return
-	 */
+	 
 	@Bean
 	public  AllianceServiceTask allianTask() {
 		return new AllianceServiceTask();
-	}
+	}*/
 
 	/**
 	 * 死亡除戶
 	 * @return
-	 */
+	
 	@Bean
 	public DnsAllianceServiceTask dnsTask() {
 		return new DnsAllianceServiceTask();
-	}
+	}*/
 	
 	/**
 	 * 資料變更
 	 * @return
-	 */
+	 
 	@Bean
 	public CIOAllianceServiceTask cioTask() {
 		return new CIOAllianceServiceTask();
-	}
+	}*/
 	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
