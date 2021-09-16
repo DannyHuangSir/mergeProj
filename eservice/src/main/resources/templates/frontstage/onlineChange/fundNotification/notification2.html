@@ -428,6 +428,7 @@
 				type : 'POST',
 				contentType : 'application/json',
 				url : /*[[@{/getInvestmentSearchItem}]]*/,
+				async: false,
 				success : function(response) {
 					if(response.result == "ERROR") {
 						openAlert(response.resultMsg);
@@ -453,6 +454,7 @@
 					type : 'POST',
 					contentType : 'application/json',
 					url : /*[[@{/getSearchPortfolio}]]*/,
+					async: false,
 					data : JSON.stringify(data),
 					success : function(response) {
 						if(response.result == "ERROR") {

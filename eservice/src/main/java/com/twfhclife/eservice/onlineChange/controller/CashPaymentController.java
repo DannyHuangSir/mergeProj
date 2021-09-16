@@ -142,7 +142,7 @@ public class CashPaymentController extends BaseUserDataController {
         }
         try {
             boolean applyed = transService.isTransApplyed(vo.getPolicyNo(),
-                    TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE, OnlineChangeUtil.TRANS_STATUS_PROCESSING);
+                    TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE, OnlineChangeUtil.TRANS_STATUS_APPLYING);
             // 沒有申請過才新增
             if (!applyed) {
                 if (!StringUtils.isEmpty(msg)) {

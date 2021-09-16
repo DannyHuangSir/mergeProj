@@ -78,5 +78,4 @@ public class TransHistoryListClient extends BaseRestClient {
 		}
 		return transHistoryListResponse;
 	}
-
 }

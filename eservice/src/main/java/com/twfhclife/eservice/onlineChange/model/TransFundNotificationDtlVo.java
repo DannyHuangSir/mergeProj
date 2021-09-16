@@ -40,6 +40,8 @@ public class TransFundNotificationDtlVo extends AbstractOnlineChangeModelBean {
 
 	private BigDecimal downValue;
 
+	private String inCurr;
+
 	public Date getEffectiveDate() {
 		return effectiveDate;
 	}
@@ -163,5 +165,13 @@ public class TransFundNotificationDtlVo extends AbstractOnlineChangeModelBean {
 
 	public void setDownValue(BigDecimal downValue) {
 		this.downValue = downValue;
+	}
+
+	public String getInCurr() {
+		return inCurr;
+	}
+
+	public void setInCurr(String inCurr) {
+		this.inCurr = inCurr;
 	}
 }

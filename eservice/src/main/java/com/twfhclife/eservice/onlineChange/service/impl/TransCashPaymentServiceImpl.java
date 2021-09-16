@@ -51,7 +51,7 @@ public class TransCashPaymentServiceImpl implements ITransCashPaymentService {
             transVo.setTransNum(transNum);
             transVo.setTransDate(new Date());
             transVo.setTransType(TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
-            transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_PROCESSING);
+            transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
             transVo.setUserId(userId);
             transVo.setCreateUser(userId);
             transVo.setCreateDate(new Date());

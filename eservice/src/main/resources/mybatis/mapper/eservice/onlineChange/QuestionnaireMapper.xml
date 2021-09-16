@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.QuestionnaireDao">
+
+
+  <resultMap id="QuestionnaireMap" type="com.twfhclife.eservice.onlineChange.model.QuestionVo">
+    <result column="QUESTION" property="question" jdbcType="NVARCHAR" />
+    <result column="TITLE" property="title" jdbcType="NVARCHAR" />
+    <result column="IS_MULTI" property="isMulti" jdbcType="NVARCHAR" />
+    <collection property="options" resultMap="OptionMap"></collection>
+  </resultMap>
+
+  <resultMap id="OptionMap" type="com.twfhclife.eservice.onlineChange.model.OptionVo">
+    <id column="ID" property="id" jdbcType="NUMERIC" />
+    <result column="ITEM" property="item" jdbcType="NVARCHAR" />
+    <result column="SCORE" property="score" jdbcType="NUMERIC" />
+  </resultMap>
+
+  <select id="selectQuestionnaire" resultMap="QuestionnaireMap">
+    SELECT O.ID, QUESTION, TITLE, ITEM, SCORE, IS_MULTI
+    FROM ESERVICE.DBO.QUESTION Q LEFT JOIN ESERVICE.DBO.OPTIONS O ON Q.ID = O.QUESTION_ID ORDER BY Q.SEQUENCE, O.SEQUENCE
+  </select>
+</mapper>

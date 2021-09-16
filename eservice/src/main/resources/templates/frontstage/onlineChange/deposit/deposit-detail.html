@@ -2,7 +2,12 @@
 	<form class="form-horizontal" role="form" style="border-top: 0;line-height: 20px;padding: 20px 0;">
 		<div class="form-group">
 		<label for="productID123" class="col-sm-4">提領保單：</label>
-		<div id="productID123" class="col-sm-8">金彩人生變額萬能壽險乙型VLJ <span class="spandepo4">(TWN232213)</span></div>
+		<div id="productID123" class="col-sm-8">
+			<th:block th:text="${depositDetail.policyNo != null and userInfo.productNameMap != null}
+							? ${userInfo.productNameMap[depositDetail.policyNo]}"/>
+			<span class="spandepo4">
+			(<th:block th:text="${depositDetail.policyNo}"/>)
+			</span></div>
 		</div>
 
 		<div class="form-group">

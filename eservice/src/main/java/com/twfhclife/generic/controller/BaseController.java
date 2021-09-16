@@ -623,7 +623,7 @@ public class BaseController extends BaseMvcController {
 		} catch (Exception e) {
 			message = ApConstants.SYSTEM_ERROR;
 			logger.error("checkAuthentication: {}", ExceptionUtils.getStackTrace(e));
-		}
+		}	
 		return message;
 	}
 	

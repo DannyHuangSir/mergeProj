@@ -95,9 +95,8 @@
     WHERE PP.POLICY_NO =  #{policyNo}
   </select>
 
-
   <select id="getOwnInvestment" resultType="com.twfhclife.eservice.policy.model.InvestmentPortfolioVo">
-    select PP.POLICY_NO AS policyNo
+    SELECT PP.POLICY_NO AS policyNo
     ,PP.INVT_NO AS invtNo
     ,PP.INVT_NAME AS invtName
     ,PP.INVT_RISK_BENE_LEVEL AS invtRiskBeneLevel
@@ -110,12 +109,14 @@
     ,PP.EXCH_RATE_DATE AS exchRateDate
     ,PP.CLUP_EXPE_NTD_SUM AS clupExpeNtdSum
     ,PP.INVT_EXCH_CURR AS invtExchCurr
-    ,PI.INVEST_WEIGHT AS ratio
+    ,TI.DISTRIBUTION_RATIO AS ratio
     ,NEWID() AS investmentId
     ,PP.EXCH_RATE_DATE AS exchRateDate
-    FROM ESERVICE.dbo.POLICY_INVEST_FUND PI
-    LEFT JOIN ESERVICE.dbo.POLICY_PORTFOLIO PP ON PI.POLICY_NO = PP.POLICY_NO AND PI.FUND_CODE = PP.INVT_NO
-    WHERE PI.POLICY_NO = #{policyNo}
+    FROM (SELECT TOP 1 * FROM ESERVICE.DBO.TRANS WHERE TRANS_TYPE = 'INVESTMENT' AND STATUS = '2' ORDER BY TRANS_NUM DESC) T
+    INNER JOIN ESERVICE.DBO.TRANS_POLICY TP ON T.TRANS_NUM = TP.TRANS_NUM AND T.STATUS = 2
+    INNER JOIN ESERVICE.DBO.TRANS_INVESTMENT TI ON TI.TRANS_NUM = TP.TRANS_NUM
+    LEFT JOIN ESERVICE.dbo.POLICY_PORTFOLIO PP ON TI.POLICY_NO = PP.POLICY_NO AND TI.INVT_NO = PP.INVT_NO
+    WHERE TI.POLICY_NO = #{policyNo}
   </select>
 
   <select id="getNewInvestments" resultType="com.twfhclife.eservice.policy.model.InvestmentPortfolioVo">

@@ -13,47 +13,87 @@
 			<th style="background-color: #DFFFDF;" class="item100">停損點</th>
 		</tr>
 	</thead>
-	<tbody>
-		<th:block th:each="vo, rowStat : ${transFundNotificationDtlList}">
-			<tr class="h65 tr-odd-noEvent">
-				<td>
-					<th:block th:if="${vo.type == '1'}">
-						已持有
-					</th:block>
-					<th:block th:if="${vo.type == '2'}">
-						觀查中
-					</th:block>
-				</td>
-				<td class="text-left"><th:block th:text="${vo.invtName}"/>
-					<p class="enSmall"><th:block th:text="${vo.fundCode}"/></p>
-				</td>
-				<td><th:block th:text="${vo.currency}"/></td>
-				<td><th:block th:text="${vo.riskBeneLevel}"/></td>
-				<td>
-					<p>1,042,899<i class="my5">NTD</i></p>
-				</td>
-				<td>- 16.<span class="point">44</span>%</td>
-				<td>
-					<th:block th:if="${vo.percentageUp != null}">
-						<th:block th:text="${vo.percentageUp}"/>%
-					</th:block>
-					<th:block th:if="${vo.percentageUp == null}">
-						--
-					</th:block>
 
-		        </td>
-				<td>
-				<div>
-					<th:block th:if="${vo.percentageDown != null}">
-						<th:block th:text="${vo.percentageDown}"/>%
-					</th:block>
-					<th:block th:if="${vo.percentageDown == null}">
-						--
-					</th:block>
-				</div>
-				</td>
-		    </tr>
-		</th:block>
-</tbody>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${transFundNotificationDtlList}">
+				<th:block th:if="${vo.type == '1'}">
+					<tr class="h65 tr-odd-noEvent">
+						<td>
+							已持有
+						</td>
+						<td class="text-left"><th:block th:text="${vo.invtName}"/>
+							<p class="enSmall"><th:block th:text="${vo.fundCode}"/></p>
+						</td>
+						<td><th:block th:text="${vo.currency}"/></td>
+						<td><th:block th:text="${vo.riskBeneLevel}"/></td>
+						<td>
+							<p><th:block th:text="${vo.acctValue}"/><i class="my5"><th:block th:text="${vo.inCurr}"/></i></p>
+						</td>
+						<td><th:block th:text="${vo.roiRate}"/>%</td>
+						<td>
+							<th:block th:if="${vo.percentageUp != null}">
+								<th:block th:text="${vo.percentageUp}"/>%
+							</th:block>
+							<th:block th:if="${vo.percentageUp == null}">
+								--
+							</th:block>
+
+						</td>
+						<td>
+						<div>
+							<th:block th:if="${vo.percentageDown != null}">
+								<th:block th:text="${vo.percentageDown}"/>%
+							</th:block>
+							<th:block th:if="${vo.percentageDown == null}">
+								--
+							</th:block>
+						</div>
+						</td>
+					</tr>
+				</th:block>
+			</th:block>
+	</tbody>
 </table>
+	<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+		<thead>
+		<tr class="table2 orange2">
+			<th style="background-color: #DFFFDF;" class="text-left ">類型</th>
+			<th style="background-color: #DFFFDF;" class="text-left ">投資標的</th>
+			<th style="background-color: #DFFFDF;" class="item100">現行淨值上限	</th>
+			<th style="background-color: #DFFFDF;" class="item100">現行淨值下限</th>
+		</tr>
+		</thead>
+		<th:block th:each="vo, rowStat : ${transFundNotificationDtlList}">
+				<tbody>
+					<th:block th:if="${vo.type == '2'}">
+						<tr class="h65 tr-odd-noEvent">
+							<td>
+								觀查中
+							</td>
+							<td class="text-left"><th:block th:text="${vo.invtName}"/>
+								<p class="enSmall"><th:block th:text="${vo.fundCode}"/></p>
+							</td>
+							<td>
+								<th:block th:if="${vo.upValue != null}">
+									<th:block th:text="${vo.upValue}"/>%
+								</th:block>
+								<th:block th:if="${vo.upValue == null}">
+									--
+								</th:block>
+							</td>
+							<td>
+								<div>
+									<th:block th:if="${vo.downValue != null}">
+										<th:block th:text="${vo.downValue}"/>
+									</th:block>
+									<th:block th:if="${vo.downValue == null}">
+										--
+									</th:block>
+								</div>
+							</td>
+						</tr>
+					</th:block>
+				</tbody>
+		</th:block>
+	</table>
 </div>
