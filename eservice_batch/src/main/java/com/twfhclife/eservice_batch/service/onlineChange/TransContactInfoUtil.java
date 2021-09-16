@@ -95,7 +95,19 @@ public class TransContactInfoUtil {
 					qryOldVo.setTransContactId(transContactId);
 					List<TransContactInfoOldVo> dataOldList = oldDao.getTransContactInfoOldList(qryOldVo);
 					if (dataDtlList != null && dataDtlList.size() > 0 && dataOldList != null && dataOldList.size() > 0) {
-						TransContactInfoDtlVo dtlVo = checkChange(dataDtlList.get(0),dataOldList.get(0));
+						// BEGIN: update by 203990 at 20210910
+						// 聯盟轉收申請 不做新舊資料比對, 直送收到的內容給核心
+						TransContactInfoDtlVo dtlVo = new TransContactInfoDtlVo();
+						
+						if("L01".equals(dataDtlList.get(0).getFromCompanyId())) {
+							fromCompantIdTag = "0";//線上申請
+							dtlVo = checkChange(dataDtlList.get(0),dataOldList.get(0));
+						}else {
+							fromCompantIdTag = "1";//聯盟轉收申請
+							dtlVo = dataDtlList.get(0);
+						}
+						// END: update by 203990 at 20210910
+
 						telHome = StringUtils.trimToEmpty(dtlVo.getTelHome());
 						telOffice = StringUtils.trimToEmpty(dtlVo.getTelOffice());
 						if (telOffice.indexOf("#") != -1) {
@@ -133,14 +145,6 @@ public class TransContactInfoUtil {
 //						if(addressFullCharge.lastIndexOf("）",addressFullCharge.length())==-1) {
 //							addressFullCharge = getReplaceUrl(addressFullCharge);
 //						}
-						
-						//保全聯盟鏈-start
-						if("L01".equals(dataDtlList.get(0).getFromCompanyId())) {
-							fromCompantIdTag = "0";//線上申請
-						}else {
-							fromCompantIdTag = "1";//聯盟轉收申請
-						}
-						//保全聯盟鏈-end
 						
 					}
 				}
