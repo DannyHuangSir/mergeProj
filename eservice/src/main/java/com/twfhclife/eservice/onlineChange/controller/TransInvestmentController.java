@@ -91,7 +91,7 @@ public class TransInvestmentController extends BaseUserDataController  {
             }
 
             String userRocId = getUserRocId();
-            String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
+            String riskLevel = riskLevelService.getUserRiskAttr(getUserId());
             if(StringUtils.isBlank(riskLevel)) {
                 String message = "請先變更風險屬性！";
                 addSystemError(message);
@@ -139,7 +139,7 @@ public class TransInvestmentController extends BaseUserDataController  {
             addAttribute("transformationRemark", parameterValueByCodeConsent);
         }
         UsersVo user = getUserDetail();
-        String riskLevel = riskLevelService.getUserRiskAttr(user.getRocId());
+        String riskLevel = riskLevelService.getUserRiskAttr(user.getUserId());
         addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));
         //查询已有投资标
         List<InvestmentPortfolioVo> investments = transInvestmentService.getOwnInvestment(transInvestmentVo.getPolicyNo());

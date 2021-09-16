@@ -116,7 +116,7 @@ public class FundConversionController extends BaseUserDataController  {
             String userRocId = getUserRocId();
             UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
 
-            String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
+            String riskLevel = riskLevelService.getUserRiskAttr(userDetail.getUserId());
             if(StringUtils.isBlank(riskLevel)) {
                 String message = "請先變更風險屬性！";
                 addSystemError(message);
@@ -260,7 +260,7 @@ public class FundConversionController extends BaseUserDataController  {
     @PostMapping("/fund4NewInvestments")
     @ResponseBody
     public ResponseEntity<ResponseObj> getNewInvestments(@RequestBody TransInvestmentVo vo) {
-        List<InvestmentPortfolioVo> investments = transInvestmentService.getNewInvestments(vo.getPolicyNo(), vo.getOwnInvestments(), getUserRocId());
+        List<InvestmentPortfolioVo> investments = transInvestmentService.getNewInvestments(vo.getPolicyNo(), vo.getOwnInvestments(), getUserId());
         processSuccess(investments);
         return processResponseEntity();
     }

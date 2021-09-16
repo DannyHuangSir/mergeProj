@@ -197,6 +197,9 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 					dtlVo.setInvtName(portfolioVo.getInvtName());
 					dtlVo.setCurrency(portfolioVo.getCurrency());
 					dtlVo.setRiskBeneLevel(portfolioVo.getInvtRiskBeneLevel());
+					dtlVo.setAcctValue(String.valueOf(portfolioVo.getAcctValue()));
+					dtlVo.setRoiRate(String.valueOf(portfolioVo.getRoiRate()));
+					dtlVo.setInCurr(portfolioVo.getInvtExchCurr());
 				}
 			}
 		}
@@ -205,8 +208,8 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 	}
 
 	@Override
-	public List<NotificationFundVo> getSearchPortfolio(String userRocId, List<String> invtNos) {
-		String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
+	public List<NotificationFundVo> getSearchPortfolio(String userId, List<String> invtNos) {
+		String riskLevel = riskLevelService.getUserRiskAttr(userId);
 		return transFundNotificationDao.getSearchFunds(riskLevel, invtNos);
 	}
 

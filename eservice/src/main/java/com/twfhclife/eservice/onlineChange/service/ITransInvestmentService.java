@@ -17,7 +17,7 @@ public interface ITransInvestmentService {
 
     List<InvestmentPortfolioVo> getOwnInvestment(String policyNo);
 
-    List<InvestmentPortfolioVo> getNewInvestments(String policyNo, List<InvestmentPortfolioVo> portfolioVos, String userRocId);
+    List<InvestmentPortfolioVo> getNewInvestments(String policyNo, List<InvestmentPortfolioVo> portfolioVos, String userId);
 
     List<CompareInvestmentVo> compareNew(List<InvestmentPortfolioVo> ownInvts, List<InvestmentPortfolioVo> newInvts);
 

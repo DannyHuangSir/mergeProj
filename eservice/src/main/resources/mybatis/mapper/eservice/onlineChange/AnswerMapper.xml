@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.AnswerDao" >
+  <resultMap id="BaseResultMap" type="com.twfhclife.eservice.onlineChange.model.AnswerVo" >
+    <id column="ID" property="id" jdbcType="NUMERIC" />
+    <result column="ANSWERS" property="answers" jdbcType="NVARCHAR" />
+    <result column="TRANS_NUM" property="transNum" jdbcType="NVARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+  </resultMap>
+  <insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.AnswerVo" >
+    insert into ANSWER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="answers != null" >
+        ANSWERS,
+      </if>
+      <if test="transNum != null" >
+        TRANS_NUM,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="questions != null" >
+        QUESTIONS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NUMERIC},
+      </if>
+      <if test="answers != null" >
+        #{answers,jdbcType=NVARCHAR},
+      </if>
+      <if test="transNum != null" >
+        #{transNum,jdbcType=NUMERIC},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="questions != null" >
+        #{questions,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

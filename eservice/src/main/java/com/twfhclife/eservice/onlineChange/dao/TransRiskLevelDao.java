@@ -39,8 +39,8 @@ public interface TransRiskLevelDao {
 
 	/***
 	 * 获取风险属性
-	 * @param rocId
+	 * @param userId
 	 * @return
 	 */
-    String getRiskAttr(String rocId);
+    String getRiskAttr(@Param("userId") String userId);
 }

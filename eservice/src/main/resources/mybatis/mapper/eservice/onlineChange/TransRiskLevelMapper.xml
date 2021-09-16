@@ -57,7 +57,7 @@
 	
 	<select id="getRiskLevelCode" resultType="string" parameterType="string">
 		SELECT TOP 1
-			ESERVICE.DBO.INVT_RISK_BENE_LEVEL
+			INVT_RISK_BENE_LEVEL
 		FROM ESERVICE.DBO.POLICY_PORTFOLIO
 		WHERE
 			POLICY_NO = #{policyNo}
@@ -65,7 +65,9 @@
 	</select>
 
 	<select id="getRiskAttr" resultType="string">
-		SELECT RISK_ATTR FROM INDIVIDUAL WHERE ROC_ID = #{rocId}
+		SELECT TOP 1 RL.RISK_LEVEL_NEW RISK_ATTR FROM ESERVICE.DBO.TRANS T
+		LEFT JOIN ESERVICE.DBO.TRANS_RISK_LEVEL RL ON T.TRANS_NUM = RL.TRANS_NUM
+		WHERE T.USER_ID = #{userId} and T.STATUS = '2' ORDER BY T.TRANS_NUM DESC
 	</select>
 
 </mapper>

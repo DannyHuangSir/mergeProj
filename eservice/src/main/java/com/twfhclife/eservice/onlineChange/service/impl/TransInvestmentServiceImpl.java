@@ -79,6 +79,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             .put(DEPOSIT_PARAMETER_CODE, "保單提領(贖回)正在進行中")
             .put(FUND_NOTIFICATION_PARAMETER_CODE, "設定停利停損通知正在進行中")
             .put(CASH_PAYMENT_PARAMETER_CODE, "收益分配或撥回資產分配方式正在進行中")
+            .put(RISK_LEVEL_PARAMETER_CODE, "變更風險屬性正在進行中")
             .build();
 
     @Override
@@ -160,7 +161,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
     }
 
     @Override
-    public List<InvestmentPortfolioVo> getNewInvestments(String policyNo, List<InvestmentPortfolioVo> portfolioVos, String userRocId) {
+    public List<InvestmentPortfolioVo> getNewInvestments(String policyNo, List<InvestmentPortfolioVo> portfolioVos, String userId) {
         List<String> ownInvtNos = null;
         if (!CollectionUtils.isEmpty(portfolioVos)) {
             ownInvtNos = Lists.newArrayList();
@@ -168,7 +169,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
                 ownInvtNos.add(String.valueOf(e.getInvtNo()));
             }
         }
-        String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
+        String riskLevel = riskLevelService.getUserRiskAttr(userId);
         return transInvestmentDao.getNewInvestments(policyNo, riskLevel, ownInvtNos);
     }
 

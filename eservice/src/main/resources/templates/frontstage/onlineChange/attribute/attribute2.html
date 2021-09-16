@@ -40,8 +40,8 @@
 			<div class="mystyle3 attribute1">
 				<div class="score1">    
 					<h2>你的風險屬性類型</h2>
-					<h1>積極型</h1>
-					<h3>總分：65分</h3>
+					<h1><th:block th:text="${transAnswerVo.desc}"/></h1>
+					<h3>總分：<th:block th:text="${transAnswerVo.score}"/>分</h3>
 				</div>
 				<div class="attr2 col-sm-6 col-sm-offset-3">為確保保險商品符合您的投資能力及風險屬性，投資風險屬性若有變更，<br/>本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。</div>
 				<div class="col-sm-10 col-sm-offset-1">		  
@@ -54,13 +54,13 @@
 					  </div>     
 					  <div class="check-list inlineBlock">
 						<div class="col-sm-2">20 分以下</div>
-						<div class="col-sm-2"><p class="orange chMiddle">保守型</p><p>(RR1~RR2)</p></div>
+						<div class="col-sm-2"><p class="orange chMiddle">保守型</p><p>(RR1)</p></div>
 						<div class="col-sm-8">您的投資態度偏向保守，可承擔的投資風險亦較低，建議選擇風險較低或能提供
 			  穩定收益的投資工具，如債券、貨幣型基金等較為安全。</div>
 					  </div>
 					  <div class="check-list inlineBlock">
 						<div class="col-sm-2">21~49 分</div>
-						<div class="col-sm-2"><p class="orange chMiddle">穩健型</p><p>(RR1~RR2)</p></div>
+						<div class="col-sm-2"><p class="orange chMiddle">穩健型</p><p>(RR3)</p></div>
 						<div class="col-sm-8">您希望自己的資產可以穩定成長，所以願意承擔適度的風險去賺取適度的報酬。
 						  投資的重點應注意適度分散，以成長型基金為主，收益型基金為輔，並避免投資
 						  過度集中。
@@ -68,14 +68,13 @@
 					  </div>
 					  <div class="check-list inlineBlock">
 						<div class="col-sm-2">50 分以上</div>
-						<div class="col-sm-2"><p class="orange chMiddle">積極型型</p><p>(RR1~RR2)</p></div>
+						<div class="col-sm-2"><p class="orange chMiddle">積極型型</p><p>(RR5)</p></div>
 						<div class="col-sm-8">您希望自己的資產可以穩定成長，所以願意承擔適度的風險去賺取適度的報酬。
 						投資的重點應注意適度分散，以成長型基金為主，收益型基金為輔，並避免投資
 						過度集中。
 					  </div>
 					  </div>
-			  
-					</div>				
+					</div>
 				  </div>
 				  <div class="col-md-8 col-md-offset-2 two-buttons">
 					<a href="investment1"><button id="deny" class="btn-signup">上一步</i></button></a>
@@ -90,8 +89,8 @@
 		/*<![CDATA[*/
 		$(function() {
 		$('#go').click(function() {
-			// 檢核是否有選一筆資料
-			window.location.href="/eservice/attributeSuccess";
+					var formData = [[${transAnswerVo}]];
+					postWithFormData(/*[[@{/attributeSuccess}]]*/, formData);
 		});
 	});
 		/*]]>*/

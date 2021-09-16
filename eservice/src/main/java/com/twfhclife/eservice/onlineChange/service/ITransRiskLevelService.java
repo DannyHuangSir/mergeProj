@@ -45,8 +45,10 @@ public interface ITransRiskLevelService {
 
 	/***
 	 * 获取用户风险属性
-	 * @param rocId
+	 * @param userId
 	 * @return
 	 */
-	public String getUserRiskAttr(String rocId);
+	public String getUserRiskAttr(String userId);
+
+	String computeRiskLevel(Integer score);
 }

@@ -113,7 +113,7 @@
 		    })
 			var formData = {};
 			formData.questions = JSON.stringify([[${questions}]])
-			formData.answers =  JSON.stringify(answers)
+			formData.answers =  answers
 			formData.score = score
 			postWithFormData(/*[[@{/attribute2}]]*/, formData);
 		});
