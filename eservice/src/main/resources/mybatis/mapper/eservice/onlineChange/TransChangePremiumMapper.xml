@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransChangePremiumDao">
+
+	<resultMap id="TransPaymodeMap" type="com.twfhclife.eservice.onlineChange.model.TransChangePremiumVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="AMOUNT" property="amount"/>
+		<result column="OLD_AMOUNT" property="oldAmount"/>
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		ID, TRANS_NUM, AMOUNT, OLD_AMOUNT
+	</sql>
+
+	<select id="getActiveDate" resultType="java.util.Date">
+		SELECT
+		CASE
+			WHEN PAYMENT_MODE = 'A' THEN DATEADD(month, 12, EFFECTIVE_DATE)
+			WHEN PAYMENT_MODE = 'S' THEN DATEADD(month, 6, EFFECTIVE_DATE)
+			WHEN PAYMENT_MODE = 'Q' THEN DATEADD(month, 3, EFFECTIVE_DATE)
+			WHEN PAYMENT_MODE = 'M' THEN DATEADD(month, 1, EFFECTIVE_DATE)
+		END activeDate
+		FROM
+		ESERVICE.DBO.POLICY
+		WHERE POLICY_NO = #{policyNo}
+	</select>
+
+	<insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransChangePremiumVo" >
+		insert into ESERVICE.DBO.TRANS_CHANGE_PREMIUM
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				ID,
+			</if>
+			<if test="transNum != null" >
+				TRANS_NUM,
+			</if>
+			<if test="amount != null" >
+				AMOUNT,
+			</if>
+			<if test="oldAmount != null" >
+				OLD_AMOUNT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=NUMERIC},
+			</if>
+			<if test="transNum != null" >
+				#{transNum,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null" >
+				#{amount,jdbcType=NUMERIC},
+			</if>
+			<if test="oldAmount != null" >
+				#{oldAmount,jdbcType=NUMERIC},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="getTransChangePremium" resultMap="TransPaymodeMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		ESERVICE.DBO.TRANS_CHANGE_PREMIUM
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+
+</mapper>
