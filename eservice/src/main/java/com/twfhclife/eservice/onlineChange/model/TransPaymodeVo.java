@@ -15,6 +15,10 @@ public class TransPaymodeVo extends AbstractOnlineChangeModelBean {
 	private String paymode;
 	/**  */
 	private String paymodeOld;
+
+	private BigDecimal amount;
+
+	private BigDecimal oldAmount;
 	
 	public BigDecimal getId() {
 		return this.id;
@@ -46,6 +50,22 @@ public class TransPaymodeVo extends AbstractOnlineChangeModelBean {
 	
 	public void setPaymodeOld(String paymodeOld) {
 		this.paymodeOld = paymodeOld;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public BigDecimal getOldAmount() {
+		return oldAmount;
+	}
+
+	public void setOldAmount(BigDecimal oldAmount) {
+		this.oldAmount = oldAmount;
 	}
 
 	@Override

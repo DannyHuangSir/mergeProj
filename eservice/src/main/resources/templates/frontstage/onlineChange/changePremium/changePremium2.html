@@ -53,12 +53,26 @@
 			<div class="mystyle3">
 				<h2>請修改保費</h2>
                 <div class="loan1">
-					<label class="col-sm-10 col-sm-offset-2 enNormal">保單號碼： <span class="colorBlack">TRK1213330</span></label>
-					<label class="col-sm-10 col-sm-offset-2 enNormal">投保日期： <span class="colorBlack">2016-02-12</span></label>
-					<label class="col-sm-10 col-sm-offset-2 enNormal">下次應繳日： <span class="colorBlack">2021-02-12</span></label>
-					<label class="col-sm-10 col-sm-offset-2 enNormal">繳費年限： <span class="colorBlack">88</span></label>
-					<label class="col-sm-10 col-sm-offset-2 enNormal">繳別： <span class="colorBlack">月繳</span></label>
-					<label class="col-sm-10 col-sm-offset-2" style="color: #009b30;font-size: 16px;line-height: 20px;">(變更前)定期繳費： <span class="colorBlack">2000</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">保單號碼： <span class="colorBlack">
+						<span id="policyNo" class="colorBlack">
+							<th:block th:if="${transPaymodeVo != null}">
+								<th:block th:each="policyNo : ${transPaymodeVo.policyNoList}">
+									<th:block th:text="${policyNo}"/>
+								</th:block>
+							</th:block>
+						</span>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">投保日期： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.paidToDate}"/>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">下次應繳日： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.nextPayDate}"/>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">繳費年限： <span class="colorBlack"><th:block th:text="${transPaymodeVo.premYear}"/></span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">繳別： <span class="colorBlack"><th:block th:text="${session.SYSTEM_PARAMETER['PAYMODE_TYPE'].get(transPaymodeVo.paymodeOld).parameterValue}"/></span></label>
+					<label class="col-sm-10 col-sm-offset-2" style="color: #009b30;font-size: 16px;line-height: 20px;">(變更前)定期繳費： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.oldAmount != null} ? ${#numbers.formatDecimal(transPaymodeVo.oldAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+					</span></label>
 					
 					
 					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
@@ -66,7 +80,7 @@
 						  <label for="" class="col-sm-4 text-right" style="font-size: 20px; color: #009b30;">(變更後)定期繳費：</label>
 						 
 							<div class="col-sm-8" style="padding: 5px;">
-								<input type="text" class="col-sm-8" placeholder="請輸入欲更改後的保費" style="line-height: 30px;">
+								<input type="text" name="amount" class="col-sm-8" placeholder="請輸入欲更改後的保費" style="line-height: 30px;">
 							</div>
 						</div>
 					</div>
@@ -94,7 +108,14 @@
 		$(function() {
 			$('#go').click(function() {
 				// 檢核是否有選一筆資料
-				window.location.href="/eservice/changePremium3";
+				amount = $("input[name='amount']").val()
+				if (amount == null || amount == '') {
+					openAlert('請輸入變更金額');
+					return false;
+				}
+				var formData = [[${transPaymodeVo}]];
+				formData.amount = amount
+				postWithFormData(/*[[@{/changePremium3}]]*/, formData);
 			});
 	    });
 		/*]]>*/

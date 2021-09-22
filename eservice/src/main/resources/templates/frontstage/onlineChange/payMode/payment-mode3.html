@@ -70,11 +70,12 @@
 							</span>
 						</div>
 					</div>
-
-					<div class="check-list col-sm-8 col-sm-offset-2 grey2 center1" style="margin-top: 20px;">
-						<div class="paymode3"><span class="chMiddle">(變更前)定期繳費：1000</div>
-					   <div class="paymode3"><span class="chMiddle">(變更後)定期繳費：3000</div>
-				    </div>
+					<th:block th:if="${showAmount}">
+						<div class="check-list col-sm-8 col-sm-offset-2 grey2 center1" style="margin-top: 20px;">
+							<div class="paymode3"><span class="chMiddle">(變更前)定期繳費：<th:block th:text="${transPaymodeVo.oldAmount}"/></span></div>
+							<div class="paymode3"><span class="chMiddle">(變更後)定期繳費：<th:block th:text="${transPaymodeVo.amount}"/></span></div>
+						</div>
+					</th:block>
 				</div>
 				<div class="clearfix"></div>
 				<div class="col-md-8 col-md-offset-2 ptop30">
@@ -94,8 +95,10 @@
 	</section>
 	<footer th:replace="fragments/footer"></footer>
 	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
 	<script th:inline="javascript">
 	/*<![CDATA[*/
+		var smsRemainTime = [[${paymodeTimeSet}]];
 		var formData = /*[[${transPaymodeVo}]]*/;
 		$(function() {
 			// 上一步事件
@@ -110,11 +113,66 @@
 					openAlert($('#E0071').val());
 					return false;
 				}
-				
-				formData.authenticationNum = $('#InputCert1').val();
+
+				formData.authType = $("[name='tab_group_2']:checked").val()
+				formData.userPassword = $.base64.encode($("input[name='userPassword']").val())
+				formData.authenticationNum = $("input[name='authNum']").val()
 				postWithFormData(/*[[@{/paymentModeSuccess}]]*/, formData);
 			});
+
+			smsTimer.show(1); // 1秒
 		});
+
+		var smsTimer = function() {
+			var timer;
+			function showSmsRemainTime(second) {
+				timer = setInterval(function() {
+					smsRemainTime = smsRemainTime - 1
+					if (smsRemainTime <= 0) {
+						clearInterval(timer);
+						$('#timerDiv').html('0:00');
+					} else {
+						var showTime = moment.utc(smsRemainTime * 1000).format('m:ss');
+						$('#timerDiv').html(showTime);
+					}
+				}, second * 1000);
+			};
+			function reset() {
+				clearInterval(timer);
+				reSendAuthentication();
+			};
+			return {
+				show : function(second) {
+					showSmsRemainTime(second);
+				},
+				reset : function() {
+					reset();
+				}
+			};
+		}();
+
+		function reSendAuthentication() {
+			popupLoading();
+			$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				url : "/eservice/sendAuthentication",
+				data : {
+					authenticationType: "payMode"
+				},
+				success : function(response) {
+					removeLoading();
+					openAlert($('#E0010').val());
+					smsRemainTime = 300;
+					smsTimer.show(1);
+				},
+				error : function() {
+					removeLoading();
+					openAlert($('#E0011').val());
+					//openAlert("重新寄送失敗，請重新寄送驗證碼！");
+				}
+			});
+		}
 	/*]]>*/
 	</script>
 </body>

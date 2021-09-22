@@ -18,6 +18,10 @@ public abstract class AbstractOnlineChangeModelBean implements Serializable {
 	
 	@JsonIgnore
 	private String userId;
+
+	private String authType;
+
+	private String userPassword;
 	
 	public List<String> getPolicyNoList() {
 		return policyNoList;
@@ -41,6 +45,22 @@ public abstract class AbstractOnlineChangeModelBean implements Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getAuthType() {
+		return authType;
+	}
+
+	public void setAuthType(String authType) {
+		this.authType = authType;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.twfhclife.eservice.onlineChange.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.ITransContactInfoService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
@@ -237,6 +238,12 @@ public class OnlineChangeController extends BaseController {
 	}
 
 
+	private static final List<String> INVSETMENT_TYPES = Lists.newArrayList(
+			TransTypeUtil.INVESTMENT_CONVERSION_CODE,
+			TransTypeUtil.INVESTMENT_PARAMETER_CODE,
+			TransTypeUtil.DEPOSIT_PARAMETER_CODE,
+			TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE
+	);
 
 	/**
 	 * 取消申請

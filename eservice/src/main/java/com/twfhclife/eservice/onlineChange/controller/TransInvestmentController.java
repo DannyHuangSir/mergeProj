@@ -76,7 +76,7 @@ public class TransInvestmentController extends BaseUserDataController  {
         try {
             if(!checkCanUseOnlineChange()) {
                 String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
-                addSystemError(message);
+                redirectAttributes.addFlashAttribute("errorMessage", message);
                 return "redirect:apply1";
             }
 
@@ -91,10 +91,9 @@ public class TransInvestmentController extends BaseUserDataController  {
             }
 
             String userRocId = getUserRocId();
-            String riskLevel = riskLevelService.getUserRiskAttr(getUserId());
+            String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
             if(StringUtils.isBlank(riskLevel)) {
-                String message = "請先變更風險屬性！";
-                addSystemError(message);
+                redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
                 return "redirect:apply1";
             }
 
@@ -139,7 +138,7 @@ public class TransInvestmentController extends BaseUserDataController  {
             addAttribute("transformationRemark", parameterValueByCodeConsent);
         }
         UsersVo user = getUserDetail();
-        String riskLevel = riskLevelService.getUserRiskAttr(user.getUserId());
+        String riskLevel = riskLevelService.getUserRiskAttr(user.getRocId());
         addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));
         //查询已有投资标
         List<InvestmentPortfolioVo> investments = transInvestmentService.getOwnInvestment(transInvestmentVo.getPolicyNo());

@@ -209,6 +209,7 @@
         var maxValue = [[${maxValue}]];
         var minValue = [[${minValue}]];
         var surplusValue = 0;
+        var currency = [[${depositVo.currency}]]
 
 		/*<![CDATA[*/
 		function go(){   	
@@ -267,9 +268,11 @@
 		    $("#ok").on("click", function(){
 		        acctValue = /*[[${depositVo.policyAcctValue}]]*/
 		        var invtDeposits = []
+		        let depositAmount = 0
 		        $("input[name='amount']").each(function(index, e){
 		            if ($(this).val() != null && $(this).val() != "") {
 		                context = $(this).parent().parent()
+		                depositAmount += parseFloat($(this).val())
 		                invtDeposits.push({
 		                    invtNo: $(context).find("[name='invtNo']").val(),
 		                    invtName: $(context).find("[name='invtName']").val(),
@@ -280,10 +283,22 @@
                         })
 		            }
 		        })
+
 		        if (invtDeposits.length <= 0) {
 		            openAlert("提領項不能為空")
 		            return
 		        }
+
+		        if (depositAmount > maxValue || depositAmount < minValue) {
+		            openAlert("提領金額只能為" + minValue + "~" + maxValue)
+		            return
+		        }
+
+		        if ((acctValue - depositAmount) < surplusValue) {
+		            openAlert("剩余金額必須大於" + surplusValue)
+		            return
+		        }
+
 		        var formData = {
 		            depositMethod: "2",
 		            currency: [[${depositVo.currency}]],
@@ -298,7 +313,12 @@
                  context = $(this).parent().parent()
                  if (percent <= maxPercent && percent >= minPercent) {
                      val = $(context).find("[name='acctValue']").val()
+                     //百分比换算金额
+                     if (currency == 'NTD') {
                      $(context).find("[name='amount']").val(Math.round((val * percent)/100))
+                     } else {
+                          $(context).find("[name='amount']").val(Math.round(val * percent) / 100)
+                     }
                     return
                  }
                  openAlert("提領比例只能輸入" + minPercent + "-" + maxPercent)
@@ -310,6 +330,14 @@
 
 		         context = $(this).parent().parent()
 		         val = $(context).find("[name='acctValue']").val()
+
+                 if (currency == 'NTD' && !checkDecimal($(this).val())) {
+                     openAlert("保单不支持输入小数")
+                     $(this).val("")
+                     $(context).find("[name='percent']").val("")
+                     return false;
+                 }
+
 		         currency = $(context).find("[name='currency']").val()
                  let percent = Math.round($(this).val() / val * 100)
 
@@ -324,6 +352,24 @@
                  return
 		    })
 		})
+
+		function checkDecimal2(str) {
+            var re =/^[0-9]+(\.[0-9]{1,2})?$/;
+            if(!re.test(str ))
+             {
+                return false
+             }
+             return true;
+        }
+
+        function checkDecimal(str) {
+            var re1 =/^[0-9]+(\.[0-9]{n})?$/;
+            if(!re1.test(str))
+             {
+                return false
+             }
+             return true;
+        }
 		/*]]>*/
 		</script>
 </body>

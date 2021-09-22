@@ -75,7 +75,7 @@ public class TransDepositController extends BaseUserDataController {
     public String deposit1(RedirectAttributes redirectAttributes) {
         if (!checkCanUseOnlineChange()) {
             String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
-            addSystemError(message);
+            redirectAttributes.addFlashAttribute("errorMessage", message);
             return "redirect:apply1";
         }
 
@@ -191,13 +191,14 @@ public class TransDepositController extends BaseUserDataController {
     }
 
     private Boolean checkPostShow(String policyNo) {
+        String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DEPOST_POST_SHOW");
         if (!StringUtils.isEmpty(policyNo)) {
             if (policyNo.length() >= 2) {
                 String substring = policyNo.substring(0, 2);
-                return "UC,UH".contains(substring);
+                return StringUtils.isBlank(types) || types.contains(substring);
             }
         }
-        return true;
+        return false;
     }
 
     //keycloak驗證密碼

@@ -9,7 +9,10 @@ public interface TransTypeUtil {
 	
 	/** 線上申請-繳別 */
 	final String PAYMODE_PARAMETER_CODE = "PAYMODE";
-	
+
+	/** 線上申請-定期超額保費 */
+	final String CHANGE_PREMIUM_CODE = "CHANGE_PREMIUM";
+
 	/** 線上申請-年金給付方式 */
 	final String ANNUITY_METHOD_PARAMETER_CODE = "ANNUITY_METHOD";
 	

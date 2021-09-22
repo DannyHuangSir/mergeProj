@@ -78,12 +78,38 @@
 	<th:block th:replace="fragments/script"/>
 	<script th:inline="javascript">
 	/*<![CDATA[*/
-	 $(function() {
-		$('#go').click(function() {
-			// 檢核是否有選一筆資料
-			window.location.href="/eservice/changePremium2";
+		$(function() {
+				$('#go').click(function() {
+					// 檢核是否有選一筆資料
+				if ($('input[name="chosePolicy"]:checked').val() == null) {
+					/* openAlert("請選擇一筆保單"); */
+					openAlert($('#E0038').val());
+					return false;
+				}
+
+				var formData = {};
+				var policyNo = $('input[name="chosePolicy"]:checked').val();
+				formData.policyNoList = [policyNo];
+				formData.paymodeOld = $('#paymentMode_' + policyNo).val();
+				formData.oldAmount = $('#paymentAcctValue_' + policyNo).val();
+				formData.paidToDate = formatDate($('#paidToDate_' + policyNo).val());
+				formData.premYear = $('#premYear_' + policyNo).val();
+				postWithFormData(/*[[@{/changePremium2}]]*/, formData);
+			});
 		});
-	});
+
+		function formatDate(dt) {
+			try {
+				var formattedDate = new Date(dt);
+				var d = formattedDate.getDate();
+				var m =  formattedDate.getMonth();
+				m += 1;  // JavaScript months are 0-11
+				var y = formattedDate.getFullYear();
+				return y + "-" + m + "-" + d;
+			} catch (e) {
+				return "";
+			}
+		}
 	/*]]>*/
 	</script>
 </body>

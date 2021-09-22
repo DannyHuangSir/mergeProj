@@ -208,8 +208,8 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 	}
 
 	@Override
-	public List<NotificationFundVo> getSearchPortfolio(String userId, List<String> invtNos) {
-		String riskLevel = riskLevelService.getUserRiskAttr(userId);
+	public List<NotificationFundVo> getSearchPortfolio(String rocId, List<String> invtNos) {
+		String riskLevel = riskLevelService.getUserRiskAttr(rocId);
 		return transFundNotificationDao.getSearchFunds(riskLevel, invtNos);
 	}
 

@@ -56,7 +56,7 @@ public interface ITransFundNotificationService {
 	public void handlePolicyStatusLocked(List<PolicyListVo> policyList);
 
 
-	List<NotificationFundVo> getSearchPortfolio(String policyNo, List<String> invtNos);
+	List<NotificationFundVo> getSearchPortfolio(String rocId, List<String> invtNos);
 
 	List<NotificationPortfolioVo> getOwnNotifications(String policyNo);
 }

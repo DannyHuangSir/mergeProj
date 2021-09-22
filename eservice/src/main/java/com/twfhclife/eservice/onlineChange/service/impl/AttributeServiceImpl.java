@@ -81,7 +81,7 @@ public class AttributeServiceImpl implements IAttributeService {
             TransRiskLevelVo transRiskLevelVo = new TransRiskLevelVo();
             transRiskLevelVo.setTransNum(transNum);
             transRiskLevelVo.setRiskLevelDesc(vo.getDesc());
-            transRiskLevelVo.setRiskLevelOld(transRiskLevelService.getUserRiskAttr(user.getUserId()));
+            transRiskLevelVo.setRiskLevelOld(transRiskLevelService.getUserRiskAttr(user.getRocId()));
             transRiskLevelVo.setRiskLevelNew(vo.getLevel());
             transRiskLevelVo.setRiskScore(vo.getScore());
             transRiskLevelDao.insertTransRiskLevel(transRiskLevelVo);

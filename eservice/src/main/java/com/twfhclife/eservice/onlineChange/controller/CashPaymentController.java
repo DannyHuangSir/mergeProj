@@ -74,7 +74,7 @@ public class CashPaymentController extends BaseUserDataController {
             if (!checkCanUseOnlineChange()) {
                 /*addSystemError("目前無法使用此功能，請臨櫃申請線上服務。");*/
                 String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
-                addSystemError(message);
+                redirectAttributes.addFlashAttribute("errorMessage", message);
                 return "redirect:apply1";
             }
 
@@ -102,7 +102,7 @@ public class CashPaymentController extends BaseUserDataController {
                 addAttribute("policyList", handledPolicyList);
             }
         } catch (Exception e) {
-            logger.error("Unable to init from notification1: {}", ExceptionUtils.getStackTrace(e));
+            logger.error("Unable to init from cashPayment1: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
         }
         return "frontstage/onlineChange/cashPayment/cashPayment1";
@@ -157,7 +157,7 @@ public class CashPaymentController extends BaseUserDataController {
                 int result = transCashPaymentService.insertCashPayment(vo, getUserId());
                 if (result <= 0) {
                     addDefaultSystemError();
-                    return "forward:notification3";
+                    return "forward:cashPayment3";
                 }
                 sendNotification(vo, getUserDetail());
             }

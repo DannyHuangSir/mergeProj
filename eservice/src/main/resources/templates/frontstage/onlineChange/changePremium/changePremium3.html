@@ -53,17 +53,23 @@
 			<div class="mystyle3">
 				<h2>請修改保費</h2>
                 <div class="loan1">
-					<label class="col-sm-10 col-sm-offset-2 enNormal">保單號碼： <span class="colorBlack">TRK1213330</span></label>
-					<label class="col-sm-10 col-sm-offset-2 enNormal">投保日期： <span class="colorBlack">2016-02-12</span></label>
-					<label class="col-sm-10 col-sm-offset-2 enNormal">下次應繳日： <span class="colorBlack">2021-02-12</span></label>
-					<label class="col-sm-10 col-sm-offset-2 enNormal">繳費年限： <span class="colorBlack">88</span></label>
-					<label class="col-sm-10 col-sm-offset-2 enNormal">繳別： <span class="colorBlack">月繳</span></label>
-					<label class="col-sm-10 col-sm-offset-2" style="color: #009b30;font-size: 16px;line-height: 20px;">(變更前)定期繳費： <span class="colorBlack">2000</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">投保日期： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.paidToDate}"/>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">下次應繳日： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.nextPayDate}"/>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">繳費年限： <span class="colorBlack"><th:block th:text="${transPaymodeVo.premYear}"/></span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">繳別： <span class="colorBlack"><th:block th:text="${session.SYSTEM_PARAMETER['PAYMODE_TYPE'].get(transPaymodeVo.paymodeOld).parameterValue}"/></span></label>
+					<label class="col-sm-10 col-sm-offset-2" style="color: #009b30;font-size: 16px;line-height: 20px;">(變更前)定期繳費： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.oldAmount != null} ? ${#numbers.formatDecimal(transPaymodeVo.oldAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+					</span></label>
 					
 					
 					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
 						<div class="col-sm-12 mode2select marginTop20">
-						  <label for="" class="col-sm-12 text-center" style="font-size: 20px; color: #009b30;">(變更後)定期繳費：10,000</label>
+						  <label for="" class="col-sm-12 text-center" style="font-size: 20px; color: #009b30;">(變更後)定期繳費：<th:block th:text="${transPaymodeVo.amount != null}
+							? ${#numbers.formatDecimal(transPaymodeVo.amount, 0, 'DEFAULT', 0, 'COMMA')}"/></label>
 						</div>
 					</div>
 					<div class="clearfix"></div>
@@ -88,14 +94,73 @@
 	</section>
 	<footer th:replace="fragments/footer"></footer>
 	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
 	<script th:inline="javascript">
 		/*<![CDATA[*/
+		var smsRemainTime = [[${changePremiumTimeSet}]];
+
 		$(function() {
 			$('#go').click(function() {
 				// 檢核是否有選一筆資料
-				window.location.href="/eservice/changePremiumSuccess";
+				let formData = [[${transPaymodeVo}]];
+				formData.authType = $("[name='tab_group_2']:checked").val()
+				formData.userPassword = $.base64.encode($("input[name='userPassword']").val())
+				formData.authenticationNum = $("input[name='authNum']").val()
+				postWithFormData(/*[[@{/changePremiumSuccess}]]*/, formData);
 			});
+			smsTimer.show(1); // 1秒
 		});
+
+		var smsTimer = function() {
+			var timer;
+			function showSmsRemainTime(second) {
+				timer = setInterval(function() {
+					smsRemainTime = smsRemainTime - 1
+					if (smsRemainTime <= 0) {
+						clearInterval(timer);
+						$('#timerDiv').html('0:00');
+					} else {
+						var showTime = moment.utc(smsRemainTime * 1000).format('m:ss');
+						$('#timerDiv').html(showTime);
+					}
+				}, second * 1000);
+			};
+			function reset() {
+				clearInterval(timer);
+				reSendAuthentication();
+			};
+			return {
+				show : function(second) {
+					showSmsRemainTime(second);
+				},
+				reset : function() {
+					reset();
+				}
+			};
+		}();
+
+		function reSendAuthentication() {
+			popupLoading();
+			$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				url : "/eservice/sendAuthentication",
+				data : {
+					authenticationType: "changePremium"
+				},
+				success : function(response) {
+					removeLoading();
+					openAlert($('#E0010').val());
+					smsRemainTime = 300;
+					smsTimer.show(1);
+				},
+				error : function() {
+					removeLoading();
+					openAlert($('#E0011').val());
+					//openAlert("重新寄送失敗，請重新寄送驗證碼！");
+				}
+			});
+		}
 		/*]]>*/
 		</script>
 </body>

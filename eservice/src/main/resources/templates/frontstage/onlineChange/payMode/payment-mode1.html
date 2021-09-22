@@ -90,6 +90,7 @@
 			var policyNo = $('input[name="chosePolicy"]:checked').val();
 			formData.policyNoList = [policyNo];
 			formData.paymodeOld = $('#paymentMode_' + policyNo).val();
+			formData.oldAmount = $('#paymentAcctValue_' + policyNo).val();
 			postWithFormData(/*[[@{/paymentMode2}]]*/, formData);
 		});
 	});

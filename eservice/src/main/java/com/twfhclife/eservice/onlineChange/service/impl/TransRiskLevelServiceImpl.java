@@ -94,8 +94,8 @@ public class TransRiskLevelServiceImpl implements ITransRiskLevelService {
 	}
 
 	@Override
-	public String getUserRiskAttr(String userId) {
-		return transRiskLevelDao.getRiskAttr(userId);
+	public String getUserRiskAttr(String rocId) {
+		return transRiskLevelDao.getRiskAttr(rocId);
 	}
 
 	@Override

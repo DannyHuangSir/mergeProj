@@ -84,6 +84,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 
     @Override
     public void handlePolicyStatusLocked(String userRocId, List<PolicyListVo> policyList) {
+        String INVESTMENT_TYPES = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, "INVESTMENT_TYPE");
         if (!CollectionUtils.isEmpty(policyList)) {
             for (PolicyListVo e: policyList) {
                 if (StringUtils.equals(e.getApplyLockedFlag(), "Y")) {
@@ -93,7 +94,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
                     for (PolicyListVo vo : policyList) {
                         if ("N".equals(vo.getExpiredFlag())) {
                             String policyType = vo.getPolicyType();
-                            if (!("UC".equals(policyType) || "UH".equals(policyType))) {
+                            if (StringUtils.isNotBlank(INVESTMENT_TYPES) && !INVESTMENT_TYPES.contains(policyType)) {
                                 vo.setApplyLockedFlag("Y");
                                 vo.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_N_INVESTMENT_MSG);
                                 continue;
@@ -101,7 +102,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
                         }
                     }
                 }
-                if (!StringUtils.equals(userRocId, e.getRocId())) {
+                if (StringUtils.isNotBlank(userRocId) && !StringUtils.equals(userRocId, e.getRocId())) {
                     e.setApplyLockedFlag("Y");
                     e.setApplyLockedMsg("被保人無法申請保單");
                     continue;
@@ -161,7 +162,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
     }
 
     @Override
-    public List<InvestmentPortfolioVo> getNewInvestments(String policyNo, List<InvestmentPortfolioVo> portfolioVos, String userId) {
+    public List<InvestmentPortfolioVo> getNewInvestments(String policyNo, List<InvestmentPortfolioVo> portfolioVos, String rocId) {
         List<String> ownInvtNos = null;
         if (!CollectionUtils.isEmpty(portfolioVos)) {
             ownInvtNos = Lists.newArrayList();
@@ -169,7 +170,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
                 ownInvtNos.add(String.valueOf(e.getInvtNo()));
             }
         }
-        String riskLevel = riskLevelService.getUserRiskAttr(userId);
+        String riskLevel = riskLevelService.getUserRiskAttr(rocId);
         return transInvestmentDao.getNewInvestments(policyNo, riskLevel, ownInvtNos);
     }
 

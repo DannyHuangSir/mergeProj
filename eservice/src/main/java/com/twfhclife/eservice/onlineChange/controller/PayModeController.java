@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.eservice.web.model.LoginRequestVo;
+import com.twfhclife.eservice.web.model.LoginResultVo;
+import com.twfhclife.eservice.web.model.UsersVo;
+import com.twfhclife.eservice.web.service.ILoginService;
+import com.twfhclife.eservice.web.service.IParameterService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +38,7 @@ import com.twfhclife.generic.api_model.TransHistoryDetailResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.MyJacksonUtil;
+import sun.misc.BASE64Decoder;
 
 /**
  * 線上申請-變更繳別(保單為單選)
@@ -56,6 +62,12 @@ public class PayModeController extends BaseUserDataController {
 	
 	@Autowired
 	private FunctionUsageClient functionUsageClient;
+
+	@Autowired
+	private ILoginService loginService;
+
+	@Autowired
+	private IParameterService parameterService;
 
 	/**
 	 * 保單清單頁面.
@@ -134,6 +146,7 @@ public class PayModeController extends BaseUserDataController {
 			mapPaymode.put("A", paymodeA);
 			mapPaymode.put("S", paymodeS);
 			mapPaymode.put("Q", paymodeQ);
+			addAttribute("showAmount", checkShowAmount(transPaymodeVo));
 			addAttribute("paymodeCanChange", mapPaymode);
 			addAttribute("transPaymodeVo", transPaymodeVo);
 		} catch (Exception e) {
@@ -141,6 +154,15 @@ public class PayModeController extends BaseUserDataController {
 			addDefaultSystemError();
 		}
 		return "frontstage/onlineChange/payMode/payment-mode2";
+	}
+
+	private boolean checkShowAmount(TransPaymodeVo transPaymodeVo) {
+		String INVESTMENT_TYPES = parameterService.getParameterValueByCode("eservice", "INVESTMENT_TYPE");
+		if (StringUtils.isNotBlank(INVESTMENT_TYPES) && INVESTMENT_TYPES.contains(transPaymodeVo.getPolicyNoList().get(0).substring(0,2))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -154,8 +176,10 @@ public class PayModeController extends BaseUserDataController {
 	public String paymentMode3(TransPaymodeVo transPaymodeVo) {
 		try {
 			// 發送驗證碼
+			addAttribute("paymodeTimeSet", 300);
 			sendAuthCode("payMode");
 			addAttribute("transPaymodeVo", transPaymodeVo);
+			addAttribute("showAmount", checkShowAmount(transPaymodeVo));
 		} catch (Exception e) {
 			logger.error("Unable to init from paymentMode3: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -172,6 +196,18 @@ public class PayModeController extends BaseUserDataController {
 	@RequestLog
 	@PostMapping("/paymentModeSuccess")
 	public String paymentModeSuccess(TransPaymodeVo transPaymodeVo) {
+
+		String msg;
+		if (StringUtils.equals(transPaymodeVo.getAuthType(), "password")) {
+			msg = checkPassword(transPaymodeVo.getUserPassword());
+		} else {
+			msg = checkAuthCode("cashPayment", transPaymodeVo.getAuthenticationNum());
+		}
+		if (!StringUtils.isEmpty(msg)) {
+			addSystemError(msg);
+			return "forward:paymentMode3";
+		}
+
 		try {
 			boolean isTransApplyed = false;
 			List<String> policyNos = transPaymodeVo.getPolicyNoList();
@@ -186,14 +222,7 @@ public class PayModeController extends BaseUserDataController {
 			
 			// 沒有申請過才新增
 			if (!isTransApplyed) {
-				// 驗證驗證碼
-				String authNum = transPaymodeVo.getAuthenticationNum();
-				String msg = checkAuthCode("payMode", authNum);
-				if (!StringUtils.isEmpty(msg)) {
-					addSystemError(msg);
-					return "forward:paymentMode3";
-				}
-				
+
 				// 設定使用者
 				String userId = getUserId();
 				transPaymodeVo.setUserId(userId);
@@ -271,10 +300,47 @@ public class PayModeController extends BaseUserDataController {
 			}
 			
 			addAttribute("transPaymodeVo", transPaymodeVo);
+			addAttribute("showAmount", checkShowAmount(transPaymodeVo));
 		} catch (Exception e) {
 			logger.error("Unable to getTransPaymodeDetail: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
 		return "frontstage/onlineChange/payMode/payment-mode-detail";
+	}
+
+	private String checkPassword(String authenticationNum) {
+		try {
+			UsersVo userDetail = getUserDetail();
+			if(StringUtils.isEmpty(userDetail.getUserId())){
+				return "密碼驗證失敗！";
+			}
+			LoginRequestVo loginRequestVo = new LoginRequestVo();
+			String decodePasswd = decodeBase64(authenticationNum);
+			loginRequestVo.setUserId(userDetail.getUserId());
+			loginRequestVo.setPassword(decodePasswd);
+			LoginResultVo restLogin = loginService.doLogin(loginRequestVo);
+			if(restLogin!=null && StringUtils.equals("SUCCESS", restLogin.getReturnCode())){
+				return  null;
+			}else{
+				return "密碼驗證失敗！";
+			}
+		} catch (Exception ex) {
+			logger.error("==========密碼驗證失敗=========== {}", ExceptionUtils.getStackTrace(ex));
+			return "密碼驗證失敗！";
+		}
+	}
+
+	private String decodeBase64(String mi) {
+		String mingwen = "";
+		if (StringUtils.isNotBlank(mi)) {
+			BASE64Decoder decoder = new BASE64Decoder();
+			try {
+				byte[] by = decoder.decodeBuffer(mi);
+				mingwen = new String(by);
+			} catch (Exception ex) {
+				logger.error("==========密碼加密失敗=========== {}", ExceptionUtils.getStackTrace(ex));
+			}
+		}
+		return mingwen;
 	}
 }

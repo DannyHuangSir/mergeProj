@@ -1,5 +1,7 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
+import com.twfhclife.eservice.onlineChange.model.OptionVo;
+import com.twfhclife.eservice.onlineChange.model.QuestionVo;
 import com.twfhclife.eservice.onlineChange.model.TransAnswerVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.onlineChange.service.IAttributeService;
@@ -24,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -53,7 +56,7 @@ public class AttributeController extends BaseUserDataController  {
 
         if(!checkCanUseOnlineChange()) {
             String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
-            addSystemError(message);
+            redirectAttributes.addFlashAttribute("errorMessage", message);
             return "redirect:apply1";
         }
         /**
@@ -71,7 +74,15 @@ public class AttributeController extends BaseUserDataController  {
 
     @RequestLog
     @PostMapping("/attribute2")
-    public String attribute2(TransAnswerVo vo) {
+    public String attribute2(RedirectAttributes redirectAttributes, TransAnswerVo vo) {
+
+        List<QuestionVo> questions = attributeService.getQuestions();
+        boolean flag = checkChoose(questions, vo.getAnswers());
+        if (!flag) {
+            redirectAttributes.addFlashAttribute("errorMessage", "请回答完整问卷！");
+            return "redirect:attribute1";
+        }
+
         String riskLevel = riskLevelService.computeRiskLevel(vo.getScore());
         vo.setLevel(riskLevel);
         vo.setDesc(transInvestmentService.transRiskLevelToName(riskLevel));
@@ -94,5 +105,22 @@ public class AttributeController extends BaseUserDataController  {
             return "forward:attribute2";
         }
         return "frontstage/onlineChange/attribute/attribute-success";
+    }
+
+    private boolean checkChoose(List<QuestionVo> questions, List<String> answers) {
+        if (CollectionUtils.isEmpty(answers)) {
+            return false;
+        }
+        if (!CollectionUtils.isEmpty(questions)) {
+            a: for (QuestionVo question : questions) {
+                for (OptionVo option : question.getOptions()) {
+                    if (answers.contains(String.valueOf(option.getId()))) {
+                        continue a;
+                    }
+                }
+                return false;
+            }
+        }
+        return true;
     }
 }

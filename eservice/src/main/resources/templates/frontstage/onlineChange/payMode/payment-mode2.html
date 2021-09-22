@@ -81,15 +81,17 @@
 						</div>
 					</div>
 					<div class="clearfix" style="margin-bottom: 30px;"></div>
-					<label class="col-sm-10 col-sm-offset-2 enNormal colorGreen">(變更前)定期繳費： <span class="colorBlack">2000</span></label>
-					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
-                        <div class="col-sm-11 col-sm-offset-1 mode2select marginTop20">
-                            <label class="col-sm-4 col-sm-offset-1 colorGreen">(變更後)定期繳費：</label>
-                            <label class="col-sm-5 pll pmd" >
-			        			<input type="text" name="radio-btn" placeholder="請輸入欲更改後的保費"/>
-			        		</label>
-                        </div>
-                    </div>
+					<th:block th:if="${showAmount}">
+						<label class="col-sm-10 col-sm-offset-2 enNormal colorGreen">(變更前)定期繳費： <span class="colorBlack"><th:block th:text="${transPaymodeVo.oldAmount}"/></span></label>
+						<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+							<div class="col-sm-11 col-sm-offset-1 mode2select marginTop20">
+								<label class="col-sm-4 col-sm-offset-1 colorGreen">(變更後)定期繳費：</label>
+								<label class="col-sm-5 pll pmd" >
+									<input type="text" name="amount" placeholder="請輸入欲更改後的保費"/>
+								</label>
+							</div>
+						</div>
+					</th:block>
 					<div class="clearfix" style="margin-bottom: 30px;"></div>
 					<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_00102'] != null} 
 						? ${session.PAGE_WORDING['WORDING_00102'].parameterValue}"/>
@@ -125,8 +127,15 @@
 					openAlert($('#E0081').val());
 					return false;
 				}
+
+				var amount = $('input[name="amount"]').val();
+				if ([[${showAmount}]] && (amount == null || amount == "" || parseInt(amount) <=0)) {
+					openAlert("請輸入大於0的繳別金額");
+					return false;
+				}
 				
 				formData.paymode = paymode;
+				formData.amount = amount;
 				postWithFormData(/*[[@{/paymentMode3}]]*/, formData);
 			});
 		});

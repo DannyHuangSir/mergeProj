@@ -87,7 +87,7 @@ public class FundConversionController extends BaseUserDataController  {
             //1.验证功能
              if(!checkCanUseOnlineChange()) {
                  String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
-                 addSystemError(message);
+                 redirectAttributes.addFlashAttribute("errorMessage", message);
                  return "redirect:apply1";
              }
             /**
@@ -116,10 +116,10 @@ public class FundConversionController extends BaseUserDataController  {
             String userRocId = getUserRocId();
             UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
 
-            String riskLevel = riskLevelService.getUserRiskAttr(userDetail.getUserId());
+            String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
             if(StringUtils.isBlank(riskLevel)) {
                 String message = "請先變更風險屬性！";
-                addSystemError(message);
+                redirectAttributes.addFlashAttribute("errorMessage", message);
                 return "redirect:apply1";
             }
 
@@ -260,7 +260,7 @@ public class FundConversionController extends BaseUserDataController  {
     @PostMapping("/fund4NewInvestments")
     @ResponseBody
     public ResponseEntity<ResponseObj> getNewInvestments(@RequestBody TransInvestmentVo vo) {
-        List<InvestmentPortfolioVo> investments = transInvestmentService.getNewInvestments(vo.getPolicyNo(), vo.getOwnInvestments(), getUserId());
+        List<InvestmentPortfolioVo> investments = transInvestmentService.getNewInvestments(vo.getPolicyNo(), vo.getOwnInvestments(), getUserRocId());
         processSuccess(investments);
         return processResponseEntity();
     }

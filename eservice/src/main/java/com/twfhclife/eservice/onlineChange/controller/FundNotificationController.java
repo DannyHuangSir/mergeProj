@@ -98,7 +98,7 @@ public class FundNotificationController extends BaseUserDataController {
 			if(!checkCanUseOnlineChange()) {
 				/*addSystemError("目前無法使用此功能，請臨櫃申請線上服務。");*/
 				String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
-				addSystemError(message);
+				redirectAttributes.addFlashAttribute("errorMessage", message);
 				return "redirect:apply1";
 			}
 
@@ -335,7 +335,7 @@ public class FundNotificationController extends BaseUserDataController {
 	@PostMapping("/getSearchPortfolio")
 	@ResponseBody
 	public ResponseEntity<ResponseObj> getSearchPortfolio(@RequestBody TransNotificationVo vo) {
-		processSuccess(transFundNotificationService.getSearchPortfolio(getUserId(), vo.getInvtNos()));
+		processSuccess(transFundNotificationService.getSearchPortfolio(getUserRocId(), vo.getInvtNos()));
 		return processResponseEntity();
 	}
 
