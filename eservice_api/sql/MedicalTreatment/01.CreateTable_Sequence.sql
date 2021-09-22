@@ -120,7 +120,7 @@ create table ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM_FILEDATAS
 	[EZ_ACQUIRE_TASK_ID] [varchar](100) NULL,
 	[FILE_BASE64] [varchar](max) NULL,
 	[FILE_ID] [varchar](50) NULL,
-	[FILESTATUS][varchar](1000) NULL,
+	[FILE_STATUS][varchar](1000) NULL,
 );
 alter table ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM_FILEDATAS
   add constraint MTCFD_PK primary key (FD_ID);

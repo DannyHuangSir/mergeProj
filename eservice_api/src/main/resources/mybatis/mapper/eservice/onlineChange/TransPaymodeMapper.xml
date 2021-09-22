@@ -7,10 +7,12 @@
 		<result column="TRANS_NUM" property="transNum"/>
 		<result column="PAYMODE" property="paymode"/>
 		<result column="PAYMODE_OLD" property="paymodeOld"/>
+	<result column="AMOUNT" property="amount"/>
+		<result column="OLD_AMOUNT" property="oldAmount"/>
 	</resultMap>
 	
 	<sql id="Base_Column_List">
-		ID,TRANS_NUM,PAYMODE,PAYMODE_OLD
+		ID,TRANS_NUM,PAYMODE,PAYMODE_OLD,AMOUNT,OLD_AMOUNT
 	</sql>
 	
 	<sql id="whereClause">
@@ -48,7 +50,9 @@
 			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_PAYMODE),
 			#{transPaymodeVo.transNum, jdbcType=VARCHAR},
 			#{transPaymodeVo.paymode, jdbcType=VARCHAR},
-			#{transPaymodeVo.paymodeOld, jdbcType=VARCHAR}
+			#{transPaymodeVo.paymodeOld, jdbcType=VARCHAR},
+			#{transPaymodeVo.amount, jdbcType=NUMERIC},
+			#{transPaymodeVo.oldAmount, jdbcType=NUMERIC}
 		)
 	</insert>
 
