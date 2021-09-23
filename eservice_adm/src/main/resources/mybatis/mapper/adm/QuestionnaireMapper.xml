@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.QuestionaireDao">
+
+    <resultMap id="BaseResultMap" type="com.twfhclife.adm.model.QuestionVo">
+        <id column="ID" property="id" jdbcType="NUMERIC"/>
+        <result column="QUESTION" property="question" jdbcType="NVARCHAR"/>
+        <result column="TITLE" property="title" jdbcType="NVARCHAR"/>
+        <result column="IS_MULTI" property="isMulti" jdbcType="NVARCHAR"/>
+        <result column="SEQUENCE" property="sequence" jdbcType="NUMERIC"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="DATE"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE"/>
+        <result column="EFFECTIVE_TIME" property="effectiveTime" jdbcType="DATE"/>
+        <result column="STOP_TIME" property="stopTime" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID, QUESTION, TITLE, IS_MULTI, SEQUENCE, CREATE_TIME, UPDATE_TIME, EFFECTIVE_TIME,
+        STOP_TIME
+    </sql>
+
+    <select id="selectPageQuestions" resultType="hashmap">
+        SELECT
+        *
+        FROM (
+        SELECT
+        ROW_NUMBER() OVER (ORDER BY SEQUENCE) AS ROW_NUM
+        ,A.*
+        FROM (
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ESERVICE.DBO.QUESTION
+        <include refid="pageWhere"/>
+        ) A
+        ) B
+        WHERE
+        B.ROW_NUM <![CDATA[<=]]> #{vo.page} * #{vo.rows}
+        AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows}
+    </select>
+
+    <select id="countQuestions" resultType="int">
+     SELECT COUNT(*) FROM ESERVICE.DBO.QUESTION <include refid="pageWhere"/>
+    </select>
+
+    <sql id="pageWhere">
+        <where>
+            <if test="vo.attributeName != null and vo.attributeName != ''">
+                AND QUESTION like CONCAT('%', #{vo.attributeName}, '%')
+            </if>
+            <if test="vo.answerMethod != null and vo.answerMethod != ''">
+                AND IS_MULTI = #{vo.answerMethod}
+            </if>
+            <if test="vo.effectiveStart != null and vo.effectiveEnd != null">
+                AND EFFECTIVE_TIME between #{vo.effectiveStart} and #{vo.effectiveEnd}
+            </if>
+            <if test="vo.stopStart != null and vo.stopEnd != null">
+                AND STOP_TIME between #{vo.effectiveStart} and #{vo.stopEnd}
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="QuestionnaireMap" type="com.twfhclife.adm.model.QuestionVo">
+        <result column="QUESTION" property="question" jdbcType="NVARCHAR" />
+        <result column="TITLE" property="title" jdbcType="NVARCHAR" />
+        <result column="IS_MULTI" property="isMulti" jdbcType="NVARCHAR" />
+        <result column="QSEQUENCE" property="sequence" jdbcType="NUMERIC" />
+        <result column="EFFECTIVE_TIME" property="effectiveTime" jdbcType="DATE" />
+        <result column="STOP_TIME" property="stopTime" jdbcType="DATE" />
+        <collection property="options" resultMap="OptionMap"></collection>
+    </resultMap>
+
+    <resultMap id="OptionMap" type="com.twfhclife.adm.model.OptionVo">
+        <id column="ID" property="id" jdbcType="NUMERIC" />
+        <result column="ITEM" property="item" jdbcType="NVARCHAR" />
+        <result column="SCORE" property="score" jdbcType="NUMERIC" />
+        <result column="OSEQUENCE" property="sequence" jdbcType="NUMERIC" />
+    </resultMap>
+
+    <select id="getQuestionById" resultMap="QuestionnaireMap">
+        SELECT EFFECTIVE_TIME, STOP_TIME, O.ID, QUESTION, TITLE, ITEM, SCORE, IS_MULTI, Q.SEQUENCE QSEQUENCE, O.SEQUENCE OSEQUENCE
+        FROM ESERVICE.DBO.QUESTION Q LEFT JOIN ESERVICE.DBO.OPTIONS O ON Q.ID = O.QUESTION_ID
+        WHERE Q.ID = #{questionId}
+        ORDER BY Q.SEQUENCE, O.SEQUENCE
+    </select>
+
+
+    <insert id="insertQuestion" parameterType="com.twfhclife.adm.model.QuestionVo" useGeneratedKeys="true" keyProperty="id">
+        insert into ESERVICE.DBO.QUESTION
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="question != null">
+                QUESTION,
+            </if>
+            <if test="title != null">
+                TITLE,
+            </if>
+            <if test="isMulti != null">
+                IS_MULTI,
+            </if>
+            <if test="sequence != null">
+                SEQUENCE,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+            <if test="effectiveTime != null">
+                EFFECTIVE_TIME,
+            </if>
+            <if test="stopTime != null">
+                STOP_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=NUMERIC},
+            </if>
+            <if test="question != null">
+                #{question,jdbcType=NVARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=NVARCHAR},
+            </if>
+            <if test="isMulti != null">
+                #{isMulti,jdbcType=NVARCHAR},
+            </if>
+            <if test="sequence != null">
+                #{sequence,jdbcType=NUMERIC},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=DATE},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=DATE},
+            </if>
+            <if test="effectiveTime != null">
+                #{effectiveTime,jdbcType=DATE},
+            </if>
+            <if test="stopTime != null">
+                #{stopTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertOption" parameterType="com.twfhclife.adm.model.OptionVo">
+        insert into ESERVICE.DBO.OPTIONS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="questionId != null" >
+                QUESTION_ID,
+            </if>
+            <if test="item != null" >
+                ITEM,
+            </if>
+            <if test="sequence != null" >
+                SEQUENCE,
+            </if>
+            <if test="score != null" >
+                SCORE,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=NUMERIC},
+            </if>
+            <if test="questionId != null" >
+                #{questionId,jdbcType=NUMERIC},
+            </if>
+            <if test="item != null" >
+                #{item,jdbcType=NVARCHAR},
+            </if>
+            <if test="sequence != null" >
+                #{sequence,jdbcType=NUMERIC},
+            </if>
+            <if test="score != null" >
+                #{score,jdbcType=NUMERIC},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=DATE},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteQuestion">
+        delete from ESERVICE.DBO.QUESTION WHERE ID = #{questionId}
+    </delete>
+
+    <delete id="deleteOptions">
+        delete from ESERVICE.DBO.OPTIONS WHERE QUESTION_ID = #{questionId}
+    </delete>
+
+</mapper>

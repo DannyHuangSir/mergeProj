@@ -38,11 +38,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.ParameterVo;
 import com.twfhclife.adm.model.TransInsuranceClaimVo;
+import com.twfhclife.adm.model.TransMedicalTreatmentClaimVo;
 import com.twfhclife.adm.model.TransRFEVo;
 import com.twfhclife.adm.model.TransStatusHistoryVo;
 import com.twfhclife.adm.model.TransVo;
@@ -124,6 +126,8 @@ public class OnlineChangeController extends BaseController {
 				pageResp.setiTotalDisplayRecords(onlineChangeService.getOnlineChangeCIODetailTotal(transVo));
 			}else if(ApConstants.TRANS_TYPE_DNS_ALLIANCE.equals(transVo.getTransType())) {
 				pageResp.setiTotalDisplayRecords(onlineChangeService.getOnlineChangeDnsDetailTotal(transVo));
+			}else if(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transVo.getTransType())) {
+				pageResp.setiTotalDisplayRecords(onlineChangeService.getOnlineChangeMedicalTreatmentDetailTotal(transVo));
 			}else {
 				pageResp.setiTotalDisplayRecords(onlineChangeService.getOnlineChangeDetailTotal(transVo));
 			}
@@ -148,7 +152,15 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransPaymode")
 	public String getTransPaymode(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransPaymode(transVo));
+			Map<String, Object> detail = onlineChangeService.getTransPaymode(transVo);
+			addAttribute("detailData", detail);
+			String INVESTMENT_TYPES = parameterService.getParameterValueByCode("eservice", "INVESTMENT_TYPE");
+			if (StringUtils.isNotBlank(INVESTMENT_TYPES) &&
+					INVESTMENT_TYPES.contains(detail.get("SHOW_POLICY_NO").toString().substring(0, 2))) {
+				addAttribute("showAmount", true);
+			} else {
+				addAttribute("showAmount", false);
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransPaymode: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -170,6 +182,61 @@ public class OnlineChangeController extends BaseController {
 			addDefaultSystemError();
 		}
 		return "backstage/rpt/onlineChangeDetail-policyClaims";
+	}
+
+	/**
+	 * 保單醫療獲取明顯
+	 * @param transVo
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_029,
+			sqlId = EventCodeConstants.ONLINECHANGE_029_SQL_ID,
+			daoVoParamKey = "transVo"))
+	@PostMapping("/onlineChange/getMedicalTreatmentClaim")
+	public String getMedicalTreatmentClaim(@RequestBody TransVo transVo) {
+		try {
+			//授權醫療單位名稱
+			addAttribute("hospitalList", onlineChangeService.getHospitalList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
+			//授權醫療保險公司名稱
+			addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
+			addAttribute("detailData", onlineChangeService.getMedicalTreatmentClaim(transVo));
+		} catch (Exception e) {
+			logger.error("Unable to getTransInsuranceClaim: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return "backstage/rpt/onlineChangeDetail-medicalTreatment";
+	}
+	/**
+	 * 醫療
+	 * 開啟傳送聯盟/傳送聯盟覆核.
+	 *
+	 * @param TransInsuranceClaimVo vo
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.MEDICAL_TREATMENT_39,
+			sqlId = EventCodeConstants.MEDICAL_TREATMENT_39_SQL_ID,
+			daoVoParamKey = "transVo"))
+	@PostMapping("/onlineChange/updateMedicalTreatmentSendAlliance")
+	public ResponseEntity<ResponseObj> updateMedicalTreatmentSendAlliance(@RequestBody TransMedicalTreatmentClaimVo vo) {
+		try {
+			int result = -1;
+			if(vo!=null && vo.getTransNum()!=null) {
+				result = onlineChangeService.updateOrAddMedicalTreatment(vo);
+			}
+			if (result > 0) {
+				processSuccess(result);
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getOnlineChangeReview: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
 	}
 
 	/**
@@ -940,7 +1007,7 @@ public class OnlineChangeController extends BaseController {
 	
 	/**
 	 * 查詢聯盟鏈歷程
-	 * 
+	 *
 	 * @return
 	 */
 	@PostMapping("/onlineChange/getUnionCourseList")
@@ -1060,7 +1127,7 @@ public class OnlineChangeController extends BaseController {
 		}
 		return processResponseEntity();
 	}
-	
+
 	/**
 	 * 已完成
 	 * 
@@ -1208,6 +1275,188 @@ public class OnlineChangeController extends BaseController {
 		}
 		return processResponseEntity();
 	}
+	
+	/**
+	 * 更新補件單歷程
+	 * 
+	 * @param transVo TransVo
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/onlineChange/updateTransRFEStatus")
+	public ResponseEntity<ResponseObj> updateTransRFEStatus(@RequestBody TransRFEVo vo) {
+		try {
+			int result = onlineChangeService.updateTransRFEStatus(vo);
+			if (result > 0) {
+				processSuccess(result);
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to updateTransRFEStatus: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+	/**
+	 * 保單醫療-通知補件.
+	 *
+	 * @param transVo TransVo
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_033,
+			sqlId = EventCodeConstants.ONLINECHANGE_033_SQL_ID,
+			daoVoParamKey = "vo"))
+	@PostMapping("/onlineChange/addMedicalTransRFE")
+	public ResponseEntity<ResponseObj> addMedicalTransRFE(@RequestBody TransRFEVo vo) {
+		// 檢查補件流程是否完成
+		List<TransRFEVo> rlist = onlineChangeService.getMedicalTreatmentTransRFEList(vo);
+		boolean flag = false;
+		for (TransRFEVo transRFEVo : rlist) {
+			if("NON".equals(transRFEVo.getStatus()) || "WAIT".equals(transRFEVo.getStatus())) {
+				flag = true;
+				break;
+			}
+		}
+		if(flag) {
+			processError("補件流程還未完結，不能發起新的補件。");
+			return processResponseEntity();
+		}
+		try {
+			TransVo transVo = new TransVo();
+			transVo.setTransNum(vo.getTransNum());
+			transVo.setStatus("4");
+			transVo.setUpdateUser(getUserId());
+
+			int result = onlineChangeService.updateTransStatus(transVo);
+
+			vo.setStatus("NON");
+			result = onlineChangeService.addTransRFE(vo);
+
+			if (result > 0) {
+				processSuccess(result);
+				TransStatusHistoryVo transStatusHistoryVo = new TransStatusHistoryVo();
+				transStatusHistoryVo.setTransNum(vo.getTransNum());
+				transStatusHistoryVo.setStatus("4");
+				transStatusHistoryVo.setCustomerName(getUserId());
+				transStatusHistoryVo.setIdentity((String) getSession(ApConstants.LOGIN_USER_ROLE_NAME));
+				transStatusHistoryVo.setContent(vo.getRequestContent());
+				result = onlineChangeService.addTransStatusHistory(transStatusHistoryVo);
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getOnlineChangeRFE: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	/**
+	 * 保單醫療   補件單歷程.
+	 *
+	 * @param transVo TransVo
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_035,
+			sqlId = EventCodeConstants.ONLINECHANGE_035_SQL_ID,
+			daoVoParamKey = "vo"))
+	@PostMapping("/onlineChange/getMedicalTreatmentTransRFEList")
+	public ResponseEntity<ResponseObj> getMedicalTreatmentTransRFEList(@RequestBody TransRFEVo vo) {
+		try {
+			List<TransRFEVo> result = onlineChangeService.getMedicalTreatmentTransRFEList(vo);
+			if (result != null && result.size() != 0) {
+				processSuccess(result);
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getMedicalTreatmentTransRFEList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	/**
+	 * 醫療保單異常件註記彈窗
+	 *
+	 * @param TransStatusHistoryVo vo
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.MEDICAL_TREATMENT_37,
+			sqlId = EventCodeConstants.MEDICAL_TREATMENT_37_SQL_ID,
+			daoVoParamKey = "vo"))
+	@PostMapping("/onlineChange/getMedicalTreatmentOnlineChangeReject")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> getMedicalTreatmentOnlineChangeReject(@RequestBody TransStatusHistoryVo vo) {
+		try {
+			//查詢當前保單序號是否存在為異常案件
+			int num = onlineChangeService.getMedicalTreatmentCaseIDNum(vo.getTransNum());
+			TransStatusHistoryVo historyVo = new TransStatusHistoryVo();
+			if (num > 0) {
+				//查詢當前申請序號的追進的狀態并且是為異常狀態7
+				 historyVo = onlineChangeService.getTransStatusHis(vo);
+			}
+			processSuccess(historyVo);
+		} catch (Exception e) {
+			logger.error("Unable to getOnlineChangeReject: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	/**
+	 * 醫療保單標記異常件註記  提交數據信息
+	 *
+	 * @param TransStatusHistoryVo vo
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.MEDICAL_TREATMENT_38,
+			sqlId = EventCodeConstants.MEDICAL_TREATMENT_38_SQL_ID,
+			daoVoParamKey = "vo"))
+	@PostMapping("/onlineChange/getMedicalTreatmentOnlineChangeRejectSubmit")
+	public ResponseEntity<ResponseObj> getMedicalTreatmentOnlineChangeRejectSubmit(@RequestBody TransStatusHistoryVo vo) {
+		try {
+			int num = onlineChangeService.checkMedicalTreatmentIdNoExist(vo.getTransNum());
+			logger.info("=======================================",num);
+			if (num == 0) {
+				TransVo transVo = new TransVo();
+				transVo.setTransNum(vo.getTransNum());
+				transVo.setStatus(vo.getStatus());
+				transVo.setUpdateUser(getUserId());
+				int result = onlineChangeService.updateTransStatus(transVo);
+				if (result > 0) {
+					processSuccess(result);
+					//vo.setStatus("7");
+					vo.setCustomerName(getUserId());
+					vo.setIdentity((String) getSession(ApConstants.LOGIN_USER_ROLE_NAME));
+					result = onlineChangeService.addTransStatusHistory(vo);
+					// 加入黑名單
+					if (ApConstants.REJECT_REASON_01.equals(vo.getRejectReason()) && ApConstants.STATUS_7.equals(vo.getStatus())) {
+						result = onlineChangeService.addMedicalTreatmentBlackList(vo);
+					}
+					// 發送郵件
+					onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(), vo.getRejectReason(), vo.getStatus());
+				} else {
+					processError("更新失敗");
+				}
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getOnlineChangeReject: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
 
 	/***
 	 * 查詢申請明細-已持有投資標的轉換查詢
@@ -1270,38 +1519,31 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getDepositDetail")
 	public String getDepositDetail(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getDepositDetail(transVo));
+			Map<String, Object> depositDetail = onlineChangeService.getDepositDetail(transVo);
+			addAttribute("detailData", depositDetail);
 		} catch (Exception e) {
 			logger.error("Unable to getDepositDetail: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
 		return "backstage/rpt/onlineChangeDetail-deposit";
 	}
-	
-	/**
-	 * 更新補件單歷程
-	 * 
-	 * @param transVo TransVo
-	 * @return
-	 */
+
 	@RequestLog
-	@PostMapping("/onlineChange/updateTransRFEStatus")
-	public ResponseEntity<ResponseObj> updateTransRFEStatus(@RequestBody TransRFEVo vo) {
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_040,
+			sqlId = EventCodeConstants.ONLINECHANGE_040_SQL_ID,
+			daoVoParamKey = "transVo"))
+	@PostMapping("/onlineChange/getTransChangePremiumDetail")
+	public String getTransChangePremium(@RequestBody TransVo transVo) {
 		try {
-			int result = onlineChangeService.updateTransRFEStatus(vo);
-			if (result > 0) {
-				processSuccess(result);
-			} else {
-				processError("更新失敗");
-			}
+			addAttribute("detailData", onlineChangeService.getTransChangePremiumDetail(transVo));
 		} catch (Exception e) {
-			logger.error("Unable to updateTransRFEStatus: {}", ExceptionUtils.getStackTrace(e));
-			processSystemError();
+			logger.error("Unable to getTransChangePremiumDetail: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
 		}
-		return processResponseEntity();
+		return "backstage/rpt/onlineChangeDetail-changePremium";
 	}
-	
-	
+
 	/**
 	 * 聯絡資料變更-失败
 	 * 

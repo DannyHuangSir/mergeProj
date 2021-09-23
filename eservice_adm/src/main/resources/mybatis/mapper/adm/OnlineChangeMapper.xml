@@ -39,6 +39,27 @@
 		<result property="filePath"  column="PATH" />
 		<result property="fileBase64"  column="FILE_BASE64" />
 	</resultMap>
+	<resultMap id="medicalTreatmentClaimFileDataResultMap" type="com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo">
+		<result property="claimSeqId"   column="CLAIMS_SEQ_ID" />
+		<result property="type"  column="TYPE" />
+		<result property="fileName"    column="FILE_NAME" />
+		<result property="filePath"  column="PATH" />
+		<result property="fileBase64"  column="FILE_BASE64" />
+	</resultMap>
+
+<resultMap id="hospitalResultMap" type="com.twfhclife.adm.model.Hospital">
+		<result property="id" column="ID" />
+		<result property="hpid"  column="HP_ID" />
+		<result property="hpName"    column="HP_NAME" />
+		<result property="functionName"  column="FUNCTION_NAME" />
+	</resultMap>
+
+<resultMap id="hospitalInsuranceCompanyResultMap" type="com.twfhclife.adm.model.HospitalInsuranceCompany">
+		<result property="id" column="ID" />
+		<result property="insuranceId"  column="INSURANCE_ID" />
+		<result property="insuranceName"    column="INSURANCE_NAME" />
+		<result property="functionName"  column="FUNCTION_NAME" />
+	</resultMap>
 	<resultMap id="transFundConversionMap" type="com.twfhclife.adm.model.TransFundConversionVo">
 		<result property="invtNo"   column="INVT_NO" />
 		<result property="invtName"  column="INVT_NAME" />
@@ -125,6 +146,66 @@
 		,A.TO_COMPANY_ID
 		,A.SEND_ALLIANCE
 		,A.CREATE_DATE
+	</sql>
+	<!--保單醫療-->
+	<sql id="MEDICAL_TREATMENT_CLAIM_ALL">
+		A.CLAIMS_SEQ_ID
+		,A.CASE_ID
+		,A.TRANS_NUM
+		,A.FILE_RECEIVED
+		,A.APPLYITEM
+		,A.POLICYNO
+		,ESERVICE.DBO.FN_DEBASE64(CUSTOMERNAME)  CUSTOMERNAME
+		,ESERVICE.DBO.FN_DEBASE64(NAME)  NAME
+		,A.RELATION
+		,ESERVICE.DBO.FN_DEBASE64(ID_NO)  ID_NO
+		,ESERVICE.DBO.FN_DEBASE64(BIRDATE)  BIRDATE
+		,ESERVICE.DBO.FN_DEBASE64(TEL) TEL
+		,ESERVICE.DBO.FN_DEBASE64(PHONE) PHONE
+		,A.ZIP_CODE
+		,ESERVICE.DBO.FN_DEBASE64(ADDRESS) ADDRESS
+		,ESERVICE.DBO.FN_DEBASE64(MAIL) MAIL
+		,A.DISEASENAME
+		,A.DIAGNOSISDATE
+		,A.HOSPITAL
+		,A.OTHERCOMPANYINSURED
+		,A.OTHERINSUCOMMPANY
+		,A.OTHERINSUTYPE
+		,A.OTHERINSUAMOUNT
+		,A.OTHERINSUCLAIM
+		,A.PAYMENT_METHOD
+		,A.BANK_CODE
+		,A.BRANCH_CODE
+		,ESERVICE.DBO.FN_DEBASE64(BANK_ACCOUNT) BANK_ACCOUNT
+		,A.ACCOUNTNAME
+		,A.APPLICATION_DATE
+		,A.APPLICATION_TIME
+		,A.APPLICATION_ITEM
+		,A.JOB
+		,A.JOB_DESCR
+		,A.ACCIDENT_DATE
+		,A.ACCIDENT_TIME
+		,A.ACCIDENT_CAUSE
+		,A.ACCIDENT_LOCATION
+		,A.ACCIDENT_DESCR
+		,A.POLICE_STATION
+		,ESERVICE.DBO.FN_DEBASE64(POLICE_NAME) POLICE_NAME
+		,ESERVICE.DBO.FN_DEBASE64(POLICE_PHONE) POLICE_PHONE
+		,A.POLICE_DATE
+		,A.POLICE_TIME
+		,A.CALLPOLICE
+		,A.FROM_COMPANY_ID
+		,A.TO_COMPANY_ID
+		,A.SEND_ALLIANCE
+		,A.CREATE_DATE
+		,A.AUTHORIZATION_FILE_TYPE
+		,A.AUTHORIZATION_START_DATE
+		,A.AUTHORIZATION_END_DATE
+		,A.FROM_HOSPITAL_ID
+		,A.TO_HOSPITAL_ID
+		,A.ALLIANCE_STATUS
+		,A.HP_UID
+		,A.CPOA
 	</sql>
 	<!-- include sql: 取得線上申請 -->
 	<sql id="INC1">
@@ -388,6 +469,205 @@
 			</if>
 	</sql>
 	
+<!-- include sql: 醫療 -->
+	<sql id="MEDICAL01">
+		SELECT
+		T.TRANS_NUM
+		,T.TRANS_DATE
+		,T.TRANS_TYPE
+		,COALESCE((
+		SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE"/>
+		AND a.PARAMETER_CODE = T.TRANS_TYPE
+		), ' ') AS TRANS_TYPE_NAME
+		,T.STATUS
+		,COALESCE((
+		SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.ONLINE_CHANGE_STATUS_PARAMETER_CATEGORY_CODE"/>
+		AND a.PARAMETER_CODE = T.STATUS
+		), ' ') AS STATUS_NAME
+		,T.CREATE_DATE
+		,U.ROC_ID
+		,F.FROM_COMPANY_ID
+		FROM
+		ESERVICE.DBO.TRANS T
+		LEFT JOIN ESERVICE.DBO.USERS U ON T.USER_ID = U.USER_ID
+		LEFT JOIN ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM F ON T.TRANS_NUM = F.TRANS_NUM
+		inner join
+		(select temp.*
+		from (
+		SELECT *,Row_Number() OVER (partition by TRANS_NUM ORDER BY REQUEST_DATE desc) as rank FROM ESERVICE.DBO.TRANS_STATUS_HISTORY   where 1=1
+		) temp
+		where rank = 1
+		)   TH  ON F.TRANS_NUM = TH.TRANS_NUM
+		inner  join  ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS  FD  ON    F.CLAIMS_SEQ_ID=FD.CLAIMS_SEQ_ID
+		WHERE
+		convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{transVo.startDate}, 120)
+		AND convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{transVo.endDate}, 120)
+		<if test="transVo.transType != null and transVo.transType != ''" >
+			AND T.TRANS_TYPE = #{transVo.transType}
+		</if>
+		<if test="transVo.policyNo != null and transVo.policyNo != ''" >
+			<!-- 一筆序號可能會對應多筆保單號碼，join TRANS_POLICY 會造成序號資料會多筆顯示，所以查詢保單號碼需要單獨判斷 -->
+				AND (
+				SELECT
+				COUNT(1)
+				FROM ESERVICE.DBO.TRANS_POLICY TP
+				WHERE
+				TP.TRANS_NUM = T.TRANS_NUM
+				AND TP.POLICY_NO = #{transVo.policyNo}) <![CDATA[>=]]> 1
+		</if>
+		<if test="transVo.status != null and transVo.status != ''" >
+			AND T.STATUS = #{transVo.status}
+		</if>
+		<if test="transVo.policyHolderId != null and transVo.policyHolderId != ''" >
+			AND U.ROC_ID = #{transVo.policyHolderId}
+		</if>
+		<if test="transVo.dataScope == '01'" >
+			AND F.FROM_COMPANY_ID = 'L01'
+		</if>
+		<if test="transVo.dataScope == '02'" >
+			AND F.FROM_COMPANY_ID != 'L01'
+		</if>
+		<if test="transVo.fileReceived != null and transVo.fileReceived != ''" >
+			AND F.FILE_RECEIVED = #{transVo.fileReceived}
+		</if>
+		<if test="transVo.to != null and transVo.to != ''" >
+			AND F.TO_COMPANY_ID is not null
+		</if>
+		<if test="transVo.sendToAlliance != null and transVo.sendToAlliance != ''" >
+			AND F.SEND_ALLIANCE = #{transVo.sendToAlliance}
+		</if>
+		<if test="transVo.sendToHospitalIdItem != null and transVo.sendToHospitalIdItem != ''" >
+			AND F.SEND_ALLIANCE = #{transVo.sendToHospitalIdItem}
+		</if>
+		<if test="transVo.medicalCaseStatus != null and transVo.medicalCaseStatus != ''" >
+			AND F.ALLIANCE_STATUS = #{transVo.medicalCaseStatus}
+		</if>
+		<if test="transVo.abnormalReason != null and transVo.abnormalReason != ''" >
+			AND TH.REJECT_REASON  = #{transVo.abnormalReason}
+		</if>
+		<if test="transVo.fromHospitalId != null and transVo.fromHospitalId != ''" >
+			AND FD.FILE_STATUS = #{transVo.fromHospitalId}
+		</if>
+	</sql>
+	<!-- include sql: 取得醫療線上申請 -->
+	<sql id="MEDICAL02">
+		SELECT
+		T.TRANS_NUM
+		,T.TRANS_DATE
+		,T.TRANS_TYPE
+		,COALESCE((
+		SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE"/>
+		AND a.PARAMETER_CODE = T.TRANS_TYPE
+		), ' ') AS TRANS_TYPE_NAME
+		,T.STATUS
+		,COALESCE((
+		SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.ONLINE_CHANGE_STATUS_PARAMETER_CATEGORY_CODE"/>
+		AND a.PARAMETER_CODE = T.STATUS
+		), ' ') AS STATUS_NAME
+		,T.CREATE_DATE
+		,U.ROC_ID
+		,F.FROM_COMPANY_ID
+		FROM
+		ESERVICE.DBO.TRANS T
+		LEFT JOIN ESERVICE.DBO.USERS U ON T.USER_ID = U.USER_ID
+		LEFT JOIN ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM F ON T.TRANS_NUM = F.TRANS_NUM
+		inner join
+		(select temp.*
+		from (
+		SELECT *,Row_Number() OVER (partition by TRANS_NUM ORDER BY REQUEST_DATE desc) as rank FROM ESERVICE.DBO.TRANS_STATUS_HISTORY   where 1=1
+		) temp
+		where rank = 1
+		)   TH  ON F.TRANS_NUM = TH.TRANS_NUM
+		inner  join  ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS  FD  ON    F.CLAIMS_SEQ_ID=FD.CLAIMS_SEQ_ID
+		WHERE
+		convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{transVo.startDate}, 120)
+		AND convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{transVo.endDate}, 120)
+		<if test="transVo.transType != null and transVo.transType != ''" >
+			AND T.TRANS_TYPE = #{transVo.transType}
+		</if>
+		<if test="transVo.policyNo != null and transVo.policyNo != ''" >
+			<!-- 一筆序號可能會對應多筆保單號碼，join TRANS_POLICY 會造成序號資料會多筆顯示，所以查詢保單號碼需要單獨判斷 -->
+			AND (
+			SELECT
+			COUNT(1)
+			FROM ESERVICE.DBO.TRANS_POLICY TP
+			WHERE
+			TP.TRANS_NUM = T.TRANS_NUM
+			AND TP.POLICY_NO = #{transVo.policyNo}) <![CDATA[>=]]> 1
+		</if>
+		<if test="transVo.status != null and transVo.status != ''" >
+			AND T.STATUS = #{transVo.status}
+		</if>
+		<if test="transVo.policyHolderId != null and transVo.policyHolderId != ''" >
+			AND U.ROC_ID = #{transVo.policyHolderId}
+		</if>
+		<if test="transVo.dataScope == '01'" >
+			AND F.FROM_COMPANY_ID = 'L01'
+		</if>
+		<if test="transVo.dataScope == '02'" >
+			AND F.FROM_COMPANY_ID != 'L01'
+		</if>
+		<if test="transVo.fileReceived != null and transVo.fileReceived != ''" >
+			AND F.FILE_RECEIVED = #{transVo.fileReceived}
+		</if>
+		<if test="transVo.to != null and transVo.to != ''" >
+			AND F.TO_COMPANY_ID is not null
+		</if>
+		<if test="transVo.sendToAlliance != null and transVo.sendToAlliance != ''" >
+			AND F.SEND_ALLIANCE = #{transVo.sendToAlliance}
+		</if>
+
+		<if test="transVo.sendToHospitalIdItem != null and transVo.sendToHospitalIdItem != ''" >
+			AND F.SEND_ALLIANCE = #{transVo.sendToHospitalIdItem}
+		</if>
+		<if test="transVo.medicalCaseStatus != null and transVo.medicalCaseStatus != ''" >
+			AND F.ALLIANCE_STATUS = #{transVo.medicalCaseStatus}
+		</if>
+		<if test="transVo.abnormalReason != null and transVo.abnormalReason != ''" >
+			AND TH.REJECT_REASON  = #{transVo.abnormalReason}
+		</if>
+		<if test="transVo.fromHospitalId != null and transVo.fromHospitalId != ''" >
+			AND FD.FILE_STATUS = #{transVo.fromHospitalId}
+		</if>
+
+	</sql>
+
 	<!-- 取得線上申請查詢結果(分頁) -->
 	<select id="getOnlineChangeDetailForPageable" resultType="hashmap">
 		SELECT
@@ -569,6 +849,44 @@
 			A.TRANS_NUM = #{transVo.transNum}
 	</select>
 	
+<!-- 取得線上申請-保單醫療 -->
+	<select id="getMedicalTreatmentClaim" resultType="hashmap">
+		SELECT TOP 1
+		<include refid="MEDICAL_TREATMENT_CLAIM_ALL"></include>
+		,COALESCE((SELECT
+		a1.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a1
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b1
+		WHERE
+		a1.PARAMETER_CATEGORY_ID = b1.PARAMETER_CATEGORY_ID
+		AND a1.STATUS = b1.STATUS
+		AND b1.STATUS = 1
+		AND b1.CATEGORY_CODE = 'RELATION_ITEMS'
+		AND a1.PARAMETER_VALUE =  A.RELATION), ' ')  AS RELATION_NAME
+		,COALESCE((SELECT
+		BANK_NAME
+		FROM
+		ESERVICE.DBO.BANK_INFO
+		WHERE BRANCH_ID = 'root'
+		AND DISPLAY = 'Y'
+		AND BANK_ID = A.BANK_CODE), ' ')  AS BANK_NAME
+		,COALESCE((SELECT
+		BRANCH_NAME
+		FROM
+		ESERVICE.DBO.BANK_INFO
+		WHERE BRANCH_ID != 'root'
+		AND BANK_ID = A.BANK_CODE
+		AND BRANCH_ID = A.BRANCH_CODE
+		), ' ')  AS BRANCH_NAME
+		,<include refid="INC2" />
+		FROM
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM  A
+		LEFT JOIN ESERVICE.DBO.TRANS T ON A.TRANS_NUM = T.TRANS_NUM
+		WHERE
+		A.TRANS_NUM = #{transVo.transNum}
+	</select>
+
 	<!-- 取得線上申請資料-年金給付方式 -->
 	<select id="getTransAnnuityMethod" resultType="hashmap">
 		SELECT TOP 1 
@@ -857,7 +1175,8 @@
 	<!-- 取得設定停損停利通知明細資料 -->
 	<select id="getTransFundNotificationDetailList" resultType="hashmap">
 		SELECT 
-			f.FUND_CODE, f.FUND_NAME, tfnd.PERCENTAGE_UP, tfnd.PERCENTAGE_DOWN
+			f.FUND_CODE, f.FUND_NAME, tfnd.PERCENTAGE_UP, tfnd.PERCENTAGE_DOWN,
+			tfnd.UP_VALUE, tfnd.DOWN_VALUE, tfnd.TYPE
 		FROM 
 			ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL tfnd, 
 			ESERVICE.DBO.FUND f
@@ -1319,6 +1638,13 @@
 		  and B.RFE_ID  =  #{vo.rfeId} 
 	</select>
 
+<!--保單醫療附件-->
+	<select id="getTransMedicalTreatmentClaimFiledatas" resultMap="medicalTreatmentClaimFileDataResultMap">
+		select B.CLAIMS_SEQ_ID,B.TYPE,B.PATH,B.FILE_NAME,B.FILE_BASE64
+		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS B
+		where B.TYPE = 'C'
+		and B.RFE_ID  =  #{vo.rfeId}
+	</select>
 	<update id="updateTransRFEStatus">
 		update ESERVICE.dbo.TRANS_RFE 
 		   set  RESPONSE_DATE = getDate(),
@@ -1387,7 +1713,70 @@
 		<result property="callPolice" column="CALLPOLICE" />
 		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
 	</resultMap>
+
+	<resultMap id="TransMedicalTreatmentClaimResultMap" type="com.twfhclife.adm.model.TransMedicalTreatmentClaimVo">
+		<id property="claimSeqId"  column="CLAIMS_SEQ_ID" />
+		<result property="caseId" column="CASE_ID" />
+		<result property="transNum"      column="TRANS_NUM" />
+		<result property="fileReceived"  column="FILE_RECEIVED" />
+		<result property="name"   column="NAME" />
+		<result property="idNo"   column="ID_NO" />
+		<result property="birdate"   column="BIRDATE" />
+		<result property="phone"     column="PHONE" />
+		<result property="zipCode"   column="ZIP_CODE" />
+		<result property="address"   column="ADDRESS" />
+		<result property="mail"      column="MAIL" />
+		<result property="paymentMethod" column="PAYMENT_METHOD" />
+		<result property="bankCode"    column="BANK_CODE" />
+		<result property="branchCode"  column="BRANCH_CODE" />
+		<result property="bankAccount" column="BANK_ACCOUNT" />
+		<result property="applicationDate" column="APPLICATION_DATE" />
+		<result property="applicationTime" column="APPLICATION_TIME" />
+		<result property="applicationItem" column="APPLICATION_ITEM" />
+		<result property="job"             column="JOB" />
+		<result property="jobDescr" column="JOB_DESCR" />
+		<result property="accidentDate"  column="ACCIDENT_DATE" />
+		<result property="accidentTime"  column="ACCIDENT_TIME" />
+		<result property="accidentCause" column="ACCIDENT_CAUSE" />
+		<result property="accidentLocation" column="ACCIDENT_LOCATION" />
+		<result property="accidentDescr" column="ACCIDENT_DESCR" />
+		<result property="policeStation" column="POLICE_STATION" />
+		<result property="policeName"    column="POLICE_NAME" />
+		<result property="policePhone" column="POLICE_PHONE" />
+		<result property="policeDate"  column="POLICE_DATE" />
+		<result property="policeTime"  column="POLICE_TIME" />
+		<result property="from"        column="FROM_COMPANY_ID" />
+		<result property="to"            column="TO_COMPANY_ID" />
+		<result property="sendAlliance"  column="SEND_ALLIANCE" />
+		<result property="applyItem"  column="APPLYITEM" />
+		<result property="policyNo"  column="POLICYNO" />
+		<result property="customerName"  column="CUSTOMERNAME" />
+		<result property="relation"  column="RELATION" />
+		<result property="tel"  column="TEL" />
+		<result property="diseaseName"  column="DISEASENAME" />
+		<result property="hospital"  column="HOSPITAL" />
+		<result property="otherCompanyInsured"  column="OTHERCOMPANYINSURED" />
+		<result property="otherInsuCompany"  column="OTHERINSUCOMMPANY" />
+		<result property="otherInsuType"  column="OTHERINSUTYPE" />
+		<result property="otherInsuAmout"  column="OTHERINSUAMOUNT" />
+		<result property="otherInsuClaim"  column="OTHERINSUCLAIM" />
+		<result property="accountName" column="ACCOUNTNAME" />
+		<result property="callPolice" column="CALLPOLICE" />
+		<result property="authorizationFileType" column="AUTHORIZATION_FILE_TYPE" />
+		<result property="authorizationStartDate" column="AUTHORIZATION_START_DATE" />
+		<result property="authorizationEndDate" column="AUTHORIZATION_END_DATE" />
+		<result property="fromHospitalId" column="FROM_HOSPITAL_ID" />
+		<result property="toHospitalId" column="TO_HOSPITAL_ID" />
+		<result property="allianceStatus" column="ALLIANCE_STATUS" />
+		<result property="hpUid" column="HP_UID" />
+		<result property="cpOa" column="CPOA" />
+		<result property="allianceFileStatus" column="ALLIANCE_FILE_STATUS" />
 	
+<result property="diagnosisDate" column="DIAGNOSISDATE" />
+		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
+	</resultMap>
+
+
 	<resultMap id="TransInsuranceCliamFileDataResultMap" type="com.twfhclife.adm.model.TransInsuranceClaimFileDataVo">
 		<result property="claimSeqId" column="CLAIMS_SEQ_ID" />
 		<result property="type"  column="TYPE" />
@@ -1401,7 +1790,22 @@
        	ACCIDENT_LOCATION,ACCIDENT_DESCR,POLICE_STATION,POLICE_NAME,POLICE_PHONE,POLICE_DATE,POLICE_TIME,FROM_COMPANY_ID,
        	TO_COMPANY_ID,FILE_RECEIVED,SEND_ALLIANCE
 	</sql>
+
+	<sql id="Base_Medical_Column_List">
+		CLAIMS_SEQ_ID,TRANS_NUM,FILE_RECEIVED,APPLYITEM,POLICYNO
+		,CUSTOMERNAME,NAME,RELATION,ID_NO,BIRDATE
+		,TEL,PHONE,ZIP_CODE,ADDRESS,MAIL
+		,DISEASENAME,DIAGNOSISDATE,HOSPITAL,OTHERCOMPANYINSURED
+		,OTHERINSUCOMMPANY,OTHERINSUTYPE,OTHERINSUAMOUNT,OTHERINSUCLAIM,PAYMENT_METHOD
+		,BANK_CODE,BRANCH_CODE,BANK_ACCOUNT,ACCOUNTNAME,APPLICATION_DATE
+		,APPLICATION_TIME,APPLICATION_ITEM,JOB,JOB_DESCR
+		,ACCIDENT_DATE,ACCIDENT_TIME,ACCIDENT_CAUSE,ACCIDENT_LOCATION,ACCIDENT_DESCR
+		,POLICE_STATION,POLICE_NAME,POLICE_PHONE,POLICE_DATE,POLICE_TIME
+		,CALLPOLICE,SEND_ALLIANCE,FROM_COMPANY_ID,TO_COMPANY_ID
+		,AUTHORIZATION_FILE_TYPE,AUTHORIZATION_START_DATE,AUTHORIZATION_END_DATE,TO_HOSPITAL_ID,FROM_HOSPITAL_ID
+		,ALLIANCE_STATUS,HPUID,CPOA
 	
+</sql>
 	<select id="getInsuranceClaimSequence" resultType="java.lang.Float">
 		select NEXT VALUE for ESERVICE.DBO.INSURANCE_CLAIM_SEQ as CLAIMS_SEQ_ID;
 	</select>
@@ -1560,7 +1964,50 @@
    where T.CLAIMS_SEQ_ID = #{claimSeqId}
    order by T.CREATE_DATE asc
    </select>
-   <!-- -->
+   <!--獲取保單醫療文件數據-->
+	<select id="getMedicalTreatmentFileDatasDetailByClaimSeqId" resultType="hashmap" parameterType="java.lang.Float">
+		select  T.FD_ID,
+		T.CLAIMS_SEQ_ID,
+		T.TYPE,
+		COALESCE(( SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND a.SYSTEM_ID = b.SYSTEM_ID
+		AND b.SYSTEM_ID = 'eservice'
+		AND b.CATEGORY_CODE = 'MEDICAL_TREATMENT_UPLOADFILE'
+		AND a.PARAMETER_CODE = T.TYPE ), '')  as TYPE_NAME,
+		T.FILE_NAME,
+		T.PATH,
+		T.CREATE_DATE,
+		T.RFE_ID,
+		T.FILE_BASE64,
+		T.EZ_ACQUIRE_TASK_ID,
+		T.FILE_STATUS+':'+
+		COALESCE(( SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND a.SYSTEM_ID = b.SYSTEM_ID
+		AND b.SYSTEM_ID = 'eservice_api'
+		AND b.CATEGORY_CODE = 'MEDICAL_INTERFACE_STATUS'
+		AND a.PARAMETER_VALUE = T.FILE_STATUS ), '')  AS  FILE_STATUS
+		from ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS T
+		where T.CLAIMS_SEQ_ID = #{claimSeqId}
+		order by T.CREATE_DATE asc
+	</select>
+
+	<!-- -->
    <select id="getMailByRocid" resultType="java.lang.String" parameterType="java.lang.String">
       select TOP 1 C.email from (
 		select pmda_applicant_email email from ESERVICE.DBO.lilipm
@@ -2022,6 +2469,305 @@
 				  
 				)  C
 	</select>
+	
+	<select id="getMedicalTreatmentDetailReport" resultType="hashmap" parameterType="com.twfhclife.adm.model.MedicalTreatmentStatisticsVo" statementType="STATEMENT">
+		select ${columnItem} from (
+		select
+		CONVERT(varchar(100), A.CREATE_DATE, 120) AS CREATE_DATE,
+		(CASE B.FROM_COMPANY_ID
+		WHEN 'L01' THEN '臺銀人壽首家'
+		ELSE '聯盟鏈轉收件' END) AS FROM_COMPANY_ID,
+		(select a1.parameter_name from ESERVICE_ADM.DBO.PARAMETER a1
+		where a1.parameter_code like 'APPLICATION_ITEMS_%'
+		and a1.parameter_value = B.APPLYITEM ) as APPLYITEM,
+		COALESCE((SELECT
+		a1.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a1
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b1
+		WHERE
+		a1.PARAMETER_CATEGORY_ID = b1.PARAMETER_CATEGORY_ID
+		AND a1.STATUS = b1.STATUS
+		AND b1.STATUS = 1
+		AND b1.CATEGORY_CODE = 'ONLINE_CHANGE_STATUS'
+		AND a1.PARAMETER_CODE = A.STATUS), ' ')  AS STATUS,
+		(CASE B.FILE_RECEIVED
+		WHEN '1' THEN '是'
+		WHEN '2' THEN '否'
+		WHEN 'C' THEN '待覆核中'
+		ELSE '' END) AS FILE_RECEIVED,
+		(CASE B.SEND_ALLIANCE
+		WHEN 'Y' THEN '是'
+		WHEN 'N' THEN '否'
+		WHEN 'C' THEN '待覆核中'
+		ELSE '' END) AS SEND_ALLIANCE,
+		B.POLICYNO,
+		ESERVICE.DBO.FN_DEBASE64(B.ID_NO) ID_NO,
+		'會員本人' AS CUSTOMERNAME,
+		ESERVICE.DBO.FN_DEBASE64(B.NAME) NAME,
+		cast(ESERVICE.DBO.FN_DEBASE64(B.BIRDATE) as date) AS  BIRDATE,
+		ESERVICE.DBO.FN_DEBASE64(B.TEL) TEL,
+		ESERVICE.DBO.FN_DEBASE64(B.PHONE) PHONE,
+		ESERVICE.DBO.FN_DEBASE64(B.ADDRESS) ADDRESS,
+		(select a1.parameter_name from ESERVICE_ADM.DBO.PARAMETER a1
+		where a1.parameter_code like 'WORDING_POLICYCLAIM_%'
+		and a1.parameter_value = B.RELATION ) as RELATION,
+		ESERVICE.DBO.FN_DEBASE64(B.MAIl) MAIl,
+		(CASE B.OTHERCOMPANYINSURED
+		WHEN 'Y' THEN '是'
+		WHEN 'N' THEN '否'
+		ELSE '' END) AS OTHERCOMPANYINSURED,
+		(CASE B.TO_COMPANY_ID
+		WHEN NULL THEN '不同意'
+		ELSE '同意' END) AS OTHERINSUCOMMPANY,
+		B.OTHERINSUTYPE,
+		B.OTHERINSUAMOUNT,
+		(CASE B.OTHERINSUCLAIM        WHEN 'Y' THEN '是'        WHEN 'N' THEN '否'        ELSE '' END) AS OTHERINSUCLAIM,
+		(select a1.parameter_name from ESERVICE_ADM.DBO.PARAMETER a1
+		where a1.parameter_code like 'INS_ACCIDENT_%'
+		and a1.parameter_value = B.ACCIDENT_CAUSE ) as ACCIDENT_CAUSE,
+		B.DISEASENAME,
+		cast(B.DIAGNOSISDATE as date) AS  DIAGNOSISDATE,
+		B.HOSPITAL,
+		B.JOB,
+		cast(B.ACCIDENT_DATE as date) AS  ACCIDENT_DATE,
+		B.ACCIDENT_TIME,
+		B.ACCIDENT_LOCATION,
+		B.ACCIDENT_DESCR,
+		(CASE B.CALLPOLICE WHEN 'Y' THEN '是' WHEN 'N' THEN '否' ELSE '' END) AS CALLPOLICE,
+		B.POLICE_STATION,
+		ESERVICE.DBO.FN_DEBASE64(B.POLICE_NAME) POLICE_NAME,
+		ESERVICE.DBO.FN_DEBASE64(B.POLICE_PHONE) POLICE_PHONE,
+		cast(B.POLICE_DATE as date) AS  POLICE_DATE,
+		B.POLICE_TIME,
+		B.TO_COMPANY_ID,
+		B.TO_HOSPITAL_ID,
+		(CASE B.FROM_HOSPITAL_ID WHEN 'Y' THEN '是' WHEN 'N' THEN '否' ELSE '' END) AS FROM_HOSPITAL_ID,
+		(select B.ALLIANCE_STATUS+'('+a1.parameter_name+')' from ESERVICE_ADM.DBO.PARAMETER a1
+		where a1.parameter_code like 'MEDICAL_INTERFACE_STATUS_%' and a1.parameter_value = B.ALLIANCE_STATUS ) ALLIANCE_STATUS,
+		(select a1.parameter_name from ESERVICE_ADM.DBO.PARAMETER a1
+		where a1.parameter_code like 'TRANS_MDOE_%'
+		and a1.parameter_value = B.PAYMENT_METHOD ) as PAYMENT_METHOD,
+		D.FIlE_LIST,
+		COALESCE((SELECT
+		a1.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a1
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b1
+		WHERE
+		a1.PARAMETER_CATEGORY_ID = b1.PARAMETER_CATEGORY_ID
+		AND a1.STATUS = b1.STATUS
+		AND b1.STATUS = 1
+		AND b1.CATEGORY_CODE = 'ABNORMAL_REASON'
+		AND a1.PARAMETER_VALUE = E.REJECT_REASON), ' ')  AS REJECT_REASON,
+		ESERVICE.DBO.FN_DEBASE64(M.LIPM_NAME_1) as LIPM_NAME_1,
+		M.LIPM_ID
+		from ESERVICE.dbo.TRANS A left join  ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B on  A.TRANS_NUM = B.TRANS_NUM
+		left join (SELECT  CLAIMS_SEQ_ID ,
+		FIlE_LIST = ( STUFF(( SELECT      FILE_NAME + '; '
+		FROM      ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
+		WHERE     CLAIMS_SEQ_ID = F.CLAIMS_SEQ_ID
+		FOR
+		XML PATH('')
+		), 1, 1, '') )
+		FROM    ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS AS F
+		GROUP BY CLAIMS_SEQ_ID) D on B.CLAIMS_SEQ_ID = D.CLAIMS_SEQ_ID
+		left join (select TRANS_NUM,REJECT_REASON from ESERVICE.dbo.TRANS_STATUS_HISTORY where status = '7') E
+		on A.TRANS_NUM = E.TRANS_NUM
+		left join ESERVICE.dbo.LILIPM M on M.LIPM_INSU_NO = B.POLICYNO
+		where A.TRANS_TYPE = 'MEDICAL_TREATMENT'
+		<if test="vo.fromCompanyId =='01'">
+			and  B.FROM_COMPANY_ID = 'L01'
+		</if>
+		<if test="vo.fromCompanyId =='02'">
+			and  B.FROM_COMPANY_ID != 'L01'
+		</if>
+		<if test="vo.applyItem != null and vo.applyItem != ''">
+			and  B.APPLYITEM = '${vo.applyItem}'
+		</if>
+		<if test="vo.policyNo != null and vo.policyNo != ''">
+			and  B.POLICYNO = '${vo.policyNo}'
+		</if>
+		<if test="vo.lilipiIdNo != null and vo.lilipiIdNo != ''">
+			and  B.ID_NO =   ESERVICE.DBO.FN_ENBASE64('${vo.lilipiIdNo}')
+		</if>
+		<if test="vo.lilipmIdNo != null and vo.lilipmIdNo != ''">
+			and  M.LIPM_ID = '${vo.lilipmIdNo}'
+		</if>
+		<if test="vo.rejectReason != null and vo.rejectReason != ''">
+			and  E.REJECT_REASON = '${vo.rejectReason}'
+		</if>
+		<if test="vo.allianceStatusList !=null and vo.allianceStatusList.size() &gt; 0">
+			and B.ALLIANCE_STATUS in
+			<foreach collection="vo.allianceStatusList" item="item" index="index" open="(" separator="," close=")">
+				'${item}'
+			</foreach>
+
+		</if>
+		<if test="status !=null and status.size() &gt; 0">
+			and A.STATUS in
+			<foreach collection="status" item="item" index="index" open="(" separator="," close=")">
+				'${item}'
+			</foreach>
+
+		</if>
+		<if test="fileReceivedList !=null and fileReceivedList.size() &gt; 0">
+			and B.FILE_RECEIVED in
+			<foreach collection="fileReceivedList" item="item" index="index" open="(" separator="," close=")">
+				'${item}'
+			</foreach>
+
+		</if>
+		<if test="sendAllianceList !=null and sendAllianceList.size() &gt; 0">
+			and B.SEND_ALLIANCE in
+			<foreach collection="sendAllianceList" item="item" index="index" open="(" separator="," close=")">
+				'${item}'
+			</foreach>
+
+		</if>
+		<if test="vo.startDate != null and vo.startDate != ''">
+			AND convert(varchar(10), A.CREATE_DATE, 120) <![CDATA[>=]]> '${vo.startDate}'
+		</if>
+		<if test="vo.endDate != null and vo.endDate != ''">
+			AND convert(varchar(10), A.CREATE_DATE, 120) <![CDATA[<=]]> '${vo.endDate}'
+		</if>
+
+		)  C
+	</select>
+
+
+	<select id="getMedicalTreatmentStatisticsReport" resultType="hashmap" parameterType="com.twfhclife.adm.model.MedicalTreatmentStatisticsVo" statementType="STATEMENT">
+		select ${columnItem},count(C.ID_NO) AS COUN from (
+
+		select
+		CONVERT(varchar(100), A.CREATE_DATE, 120) AS CREATE_DATE,
+		(CASE B.FROM_COMPANY_ID
+		WHEN 'L01' THEN '臺銀人壽首家'
+		ELSE '聯盟鏈轉收件' END) AS FROM_COMPANY_ID,
+		B.APPLYITEM,
+		COALESCE((SELECT
+		a1.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a1
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b1
+		WHERE
+		a1.PARAMETER_CATEGORY_ID = b1.PARAMETER_CATEGORY_ID
+		AND a1.STATUS = b1.STATUS
+		AND b1.STATUS = 1
+		AND b1.CATEGORY_CODE = 'ONLINE_CHANGE_STATUS'
+		AND a1.PARAMETER_CODE = A.STATUS), ' ')  AS STATUS,
+		(CASE B.OTHERCOMPANYINSURED
+		WHEN 'Y' THEN '是'
+		WHEN 'N' THEN '否'
+		ELSE '' END) AS OTHERCOMPANYINSURED,
+		(select a1.parameter_name from ESERVICE_ADM.DBO.PARAMETER a1
+		where a1.parameter_code like 'INS_ACCIDENT_%'
+		and a1.parameter_value = B.ACCIDENT_CAUSE ) as ACCIDENT_CAUSE,
+		(CASE WHEN   B.TO_COMPANY_ID is null THEN '否'  WHEN   B.TO_COMPANY_ID ='' THEN '否' WHEN  B.TO_COMPANY_ID is not null THEN '是' ELSE '' END) AS TO_COMPANY_ID,
+		(CASE B.FROM_HOSPITAL_ID WHEN 'Y' THEN '是' WHEN 'N' THEN '否' ELSE '' END) AS FROM_HOSPITAL_ID,
+		(select B.ALLIANCE_STATUS+'('+a1.parameter_name+')' from ESERVICE_ADM.DBO.PARAMETER a1
+		where a1.parameter_code like 'MEDICAL_INTERFACE_STATUS_%' and a1.parameter_value = B.ALLIANCE_STATUS ) ALLIANCE_STATUS,
+		(CASE B.FILE_RECEIVED
+		WHEN '1' THEN '是'
+		WHEN '2' THEN '否'
+		WHEN 'C' THEN '待覆核中'
+		ELSE '' END) AS FILE_RECEIVED,
+		(CASE B.SEND_ALLIANCE
+		WHEN 'Y' THEN '是'
+		WHEN 'N' THEN '否'
+		WHEN 'C' THEN '待覆核中'
+		ELSE '' END) AS SEND_ALLIANCE,
+		COALESCE((SELECT
+		a1.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a1
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b1
+		WHERE
+		a1.PARAMETER_CATEGORY_ID = b1.PARAMETER_CATEGORY_ID
+		AND a1.STATUS = b1.STATUS
+		AND b1.STATUS = 1
+		AND b1.CATEGORY_CODE = 'ABNORMAL_REASON_SUB'
+		AND a1.PARAMETER_CODE = D.REJECT_REASON), ' ')  AS REJECT_REASON,
+		B.POLICYNO,
+		ESERVICE.DBO.FN_DEBASE64(B.ID_NO) ID_NO
+		from ESERVICE.dbo.TRANS A left join  ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B on  A.TRANS_NUM = B.TRANS_NUM
+		left join (select TRANS_NUM,REJECT_REASON from ESERVICE.dbo.TRANS_STATUS_HISTORY where status = '7') D
+		on A.TRANS_NUM = D.TRANS_NUM
+		left join ESERVICE.dbo.LILIPM M on M.LIPM_INSU_NO = B.POLICYNO
+		where A.TRANS_TYPE = 'MEDICAL_TREATMENT'
+		<if test="vo.fromCompanyId =='01'">
+			and  B.FROM_COMPANY_ID = 'L01'
+		</if>
+		<if test="vo.fromCompanyId =='02'">
+			and  B.FROM_COMPANY_ID != 'L01'
+		</if>
+		<if test="vo.applyItem != null and vo.applyItem != ''">
+			and  B.APPLYITEM = '${vo.applyItem}'
+		</if>
+		<if test="vo.policyNo != null and vo.policyNo != ''">
+			and  B.POLICYNO = '${vo.policyNo}'
+		</if>
+		<if test="vo.lilipiIdNo != null and vo.lilipiIdNo != ''">
+			and  B.ID_NO =   ESERVICE.DBO.FN_ENBASE64('${vo.lilipiIdNo}')
+		</if>
+		<if test="vo.lilipmIdNo != null and vo.lilipmIdNo != ''">
+			and  M.LIPM_ID = '${vo.lilipmIdNo}'
+		</if>
+		<if test="vo.rejectReason != null and vo.rejectReason != ''">
+			and  D.REJECT_REASON = '${vo.rejectReason}'
+		</if>
+		<if test="status !=null and status.size() &gt; 0">
+			and A.STATUS in
+			<foreach collection="status" item="item" index="index" open="(" separator="," close=")">
+				'${item}'
+			</foreach>
+
+		</if>
+		<if test="fileReceivedList !=null and fileReceivedList.size() &gt; 0">
+			and B.FILE_RECEIVED in
+			<foreach collection="fileReceivedList" item="item" index="index" open="(" separator="," close=")">
+				'${item}'
+			</foreach>
+
+		</if>
+		<if test="sendAllianceList !=null and sendAllianceList.size() &gt; 0">
+			and B.SEND_ALLIANCE in
+			<foreach collection="sendAllianceList" item="item" index="index" open="(" separator="," close=")">
+				'${item}'
+			</foreach>
+
+		</if>
+		<if test="vo.allianceStatusList !=null and vo.allianceStatusList.size() &gt; 0">
+			and B.ALLIANCE_STATUS in
+			<foreach collection="vo.allianceStatusList" item="item" index="index" open="(" separator="," close=")">
+				'${item}'
+			</foreach>
+
+		</if>
+		<if test="vo.startDate != null and vo.startDate != ''">
+			AND convert(varchar(10), B.CREATE_DATE, 120) <![CDATA[>=]]> '${vo.startDate}'
+		</if>
+		<if test="vo.endDate != null and vo.endDate != ''">
+			AND convert(varchar(10), B.CREATE_DATE, 120) <![CDATA[<=]]> '${vo.endDate}'
+		</if>
+
+		)  C
+		group by ${columnItem}
+	</select>
+	
+	<!--查詢當前功能的醫院,是API407存儲的-->
+	<select id="getHospitalList" resultMap="hospitalResultMap" parameterType="java.lang.String">
+		select  ID,HP_ID,HP_NAME,FUNCTION_NAME
+		from ESERVICE.DBO.HOSPITAL
+		where FUNCTION_NAME =#{functionName}
+	</select>
+	<!--查詢當前功能的保險公司,是API408存儲的-->
+	<select id="getHospitalInsuranceCompanyList" resultMap="hospitalInsuranceCompanyResultMap"  parameterType="java.lang.String">
+		select 	ID,INSURANCE_ID,INSURANCE_NAME,FUNCTION_NAME
+		from ESERVICE.DBO.HOSPITAL_INSURANCE_COMPANY
+		where FUNCTION_NAME = #{functionName}
+	</select>
+
 	<!--查詢申請明細-已持有投資標的轉換查詢-->
 	<select id="getConversionDetail" resultMap="transFundConversionMap"  parameterType="com.twfhclife.adm.model.TransVo">
 		SELECT TF.INVT_NO INVT_NO,  PP.INVT_NAME INVT_NAME,  TF.INVESTMENT_TYPE INVESTMENT_TYPE,TF.RATIO RATIO,TF.VALUE VALUE
@@ -2029,6 +2775,7 @@
 		ESERVICE.dbo.POLICY_PORTFOLIO PP ON TF.POLICY_NO = PP.POLICY_NO AND TF.INVT_NO = PP.INVT_NO
 		WHERE TF.TRANS_NUM =#{transVo.transNum}
 	</select>
+
 	<!--查詢申請保單的基本明細-->
 	<select id="getOnlineChangeDetailByTransNum" parameterType="string" resultType="map">
 			SELECT ROW_NUMBER() OVER (ORDER BY CREATE_DATE) AS ROW_NUM ,A.*
@@ -2058,6 +2805,176 @@
 		WHERE TI.TRANS_NUM = #{transNum}
 	</select>
 
+	<!--醫療保單加入黑名單	-->
+	<insert id="addMedicalTreatmentBlackList" parameterType="com.twfhclife.adm.model.BlackListVo">
+		INSERT INTO ESERVICE_ADM.DBO.BLACK_LIST
+		(BL_ID,TRANS_NUM,TRANS_TYPE,ID_NO,CREATE_DATE)
+		select
+		(NEXT VALUE FOR ESERVICE_ADM.DBO.BLACK_LIST_SEQ),
+		B.TRANS_NUM,
+		A.TRANS_TYPE,
+		ESERVICE.DBO.FN_DEBASE64(B.ID_NO),
+		getDate()
+		from ESERVICE.DBO.TRANS A,ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM B
+		where A.TRANS_NUM = B.TRANS_NUM
+		and B.TRANS_NUM =  #{vo.transNum}
+	</insert>
+
+	<!--	查詢當前醫療保單的名稱\郵件-->
+	<select id="getInfoMedicalTreatmentTOMail" parameterType="java.lang.String" resultType="java.lang.String">
+		select name+DA FROM  (
+		select A.TRANS_NUM,'|'+(CONVERT(varchar(10),  A.CREATE_DATE, 120))+'|'+A.TRANS_NUM+'|'+ESERVICE.DBO.FN_DEBASE64(A.MAIL)+'|'+ESERVICE.DBO.FN_DEBASE64(A.ID_NO) DA from
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A where A.TRANS_NUM = #{transNum}
+		) A1,( select A.TRANS_NUM,ESERVICE.DBO.FN_DEBASE64(A.NAME) name  from
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A where A.TRANS_NUM = #{transNum}
+		) A2 where  A1.TRANS_NUM=A2.TRANS_NUM
+	</select>
+
+	<!-- 取得醫療查詢結果(總筆數) -->
+	<select id="getOnlineChangeMedicalTreatmentDetailTotal" resultType="int">
+		SELECT
+		COUNT(1) AS AMOUNT
+		FROM (
+		<include refid="MEDICAL01" />
+		) t
+	</select>
+
+	<!-- 取得線上申請醫療查詢結果(分頁) -->
+	<select id="getOnlineChangeMedicalTreatmentDetail" resultType="hashmap">
+		SELECT
+		*
+		FROM (
+		SELECT
+		ROW_NUMBER() OVER (ORDER BY CREATE_DATE) AS ROW_NUM
+		,A.*
+		FROM (
+		<include refid="MEDICAL02" />
+		) A
+		) B
+		WHERE
+		B.ROW_NUM <![CDATA[<=]]> (#{transVo.start} + #{transVo.length})
+		AND B.ROW_NUM <![CDATA[>]]> #{transVo.start}
+	</select>
+
+	<!-- 取得醫療文件圖片數據 -->
+	<select id="getMedicalTreatmentDetailBase64" resultMap="medicalTreatmentClaimFileDataResultMap" parameterType="float">
+		select B.CLAIMS_SEQ_ID,B.TYPE,B.PATH,B.FILE_NAME,B.FILE_BASE64
+		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS B
+		where B.FD_ID  =  #{fdId}
+	</select>
+	<select id="getMedicalTreatmentFromCompanyId" parameterType="string" resultType="string">
+		select B.FROM_COMPANY_ID FROM_COMPANY_ID
+		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B
+		where B.TRANS_NUM= #{trans_num}
+	</select>
+
+<!-- 更新保單醫療傳送聯盟鏈狀態 -->
+	<update id="updateMedicalTreatmentSendAlliance" parameterType="com.twfhclife.adm.model.TransMedicalTreatmentClaimVo">
+		UPDATE
+		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		SET
+		SEND_ALLIANCE = #{vo.sendAlliance,jdbcType=VARCHAR}
+		WHERE
+		TRANS_NUM = #{vo.transNum,jdbcType=VARCHAR}
+	</update>
+	<select id="getTransMedicalTreatmentByTransNum" resultMap="TransMedicalTreatmentClaimResultMap" parameterType="java.lang.String">
+		select
+		<include refid="MEDICAL_TREATMENT_CLAIM_ALL"></include>
+		from ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM A
+		where A.TRANS_NUM = #{transNum}
+		order by A.CREATE_DATE desc
+	</select>
+	<select id="getMedicalTreatmentClaimSequence" resultType="float">
+		select NEXT VALUE for ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_SEQ as CLAIMS_SEQ_ID;
+	</select>
+	<insert id="addMedicalTreatmentClaim" parameterType="com.twfhclife.adm.model.TransMedicalTreatmentClaimVo" >
+		INSERT INTO
+		ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
+		(
+		<include refid="Base_Medical_Column_List" />
+		)
+		VALUES
+		(
+		<choose>
+			<when test="vo.claimSeqId!=null and vo.claimSeqId>0">
+				#{vo.claimSeqId, jdbcType=FLOAT},
+			</when>
+			<otherwise>
+				(NEXT VALUE for MEDICAL_TREATMENT_CLAIM_SEQ),
+			</otherwise>
+		</choose>
+		#{vo.transNum,jdbcType=VARCHAR},
+		#{vo.fileReceived,jdbcType=VARCHAR},
+		#{vo.applyItem,jdbcType=VARCHAR},
+		#{vo.policyNo,jdbcType=VARCHAR},
+
+		#{vo.customerName,jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.name,jdbcType=VARCHAR}),
+		#{vo.relation,jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.idNo,jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.birdate,jdbcType=VARCHAR}),
+
+		#{vo.tel,jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.phone,jdbcType=VARCHAR}),
+		#{vo.zipCode,jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.address,jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.mail,jdbcType=VARCHAR}),
+
+		#{vo.diseaseName,jdbcType=VARCHAR},
+		#{vo.diagnosisDate,jdbcType=VARCHAR},
+		#{vo.hospital,jdbcType=VARCHAR},
+		#{vo.otherCompanyInsured,jdbcType=VARCHAR},
+
+
+		#{vo.otherInsuCompany,jdbcType=VARCHAR},
+		#{vo.otherInsuType,jdbcType=VARCHAR},
+		#{vo.otherInsuAmout,jdbcType=VARCHAR},
+		#{vo.otherInsuClaim,jdbcType=VARCHAR},
+		#{vo.paymentMethod,jdbcType=VARCHAR},
+
+		#{vo.bankCode,jdbcType=VARCHAR},
+		#{vo.branchCode,jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.bankAccount,jdbcType=VARCHAR}),
+		#{vo.accountName,jdbcType=VARCHAR},
+		#{vo.applicationDate,jdbcType=VARCHAR},
+
+		#{vo.applicationTime,jdbcType=VARCHAR},
+		#{vo.applicationItem,jdbcType=VARCHAR},
+		#{vo.job,jdbcType=VARCHAR},
+		#{vo.jobDescr,jdbcType=VARCHAR},
+
+		#{vo.accidentDate,jdbcType=VARCHAR},
+		#{vo.accidentTime ,jdbcType=VARCHAR},
+		#{vo.accidentCause,jdbcType=VARCHAR},
+		#{vo.accidentLocation,jdbcType=VARCHAR},
+		#{vo.accidentDescr,jdbcType=VARCHAR},
+
+
+		#{vo.policeStation,jdbcType=VARCHAR},
+		ESERVICE.DBO.FN_ENBASE64(#{vo.policeName,jdbcType=VARCHAR}),
+		ESERVICE.DBO.FN_ENBASE64(#{vo.policePhone,jdbcType=VARCHAR}),
+		#{vo.policeDate,jdbcType=VARCHAR},
+		#{vo.policeTime,jdbcType=VARCHAR},
+
+
+		#{vo.callPolice,jdbcType=VARCHAR},
+		#{vo.sendAlliance ,jdbcType=VARCHAR},
+		#{vo.from,jdbcType=VARCHAR},
+		#{vo.to,jdbcType=VARCHAR},
+
+
+		#{vo.authorizationFileType,jdbcType=VARCHAR},
+		#{vo.authorizationStartDate,jdbcType=VARCHAR},
+		#{vo.authorizationEndDate,jdbcType=VARCHAR},
+		#{vo.toHospitalId,jdbcType=VARCHAR},
+		#{vo.fromHospitalId,jdbcType=VARCHAR},
+
+		#{vo.allianceStatus,jdbcType=VARCHAR},
+		#{vo.hpUid,jdbcType=VARCHAR},
+		#{vo.cpOa,jdbcType=VARCHAR}
+		)
+	</insert>
+	
 	<resultMap id="transDepositMap" type="com.twfhclife.adm.model.TransDepositDetailVo">
 		<result column="POLICY_NO" property="policyNo" jdbcType="VARCHAR" />
 		<result column="DEPOSIT_METHOD" property="depositMethod" jdbcType="VARCHAR" />
@@ -2072,6 +2989,7 @@
 		<result column="BANK_ACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
 		<result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
 		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
 		<collection property="details" resultMap="detailMap"/>
 	</resultMap>
 
@@ -2088,7 +3006,14 @@
 		, A.RATIO, A.DEPOSIT_METHOD, A.PAYMENT_METHOD, A.SWIFT_CODE
 		, A.ENGLISH_NAME, A.BANK_CODE, A.BRANCH_CODE
 		, A.ACCOUNT_NAME, A.BANK_ACCOUNT, A.ZIP_CODE, A.ADDRESS, A.BANK_NAME, A.BRANCH_NAME, A.CURRENCY
-		, B.FUND_NAME INVT_NAME
+		, B.FUND_NAME INVT_NAME,
+		(
+		SELECT TOP 1
+		REPLACE(RTRIM(B.PRODUCT_NAME), '　', '')
+		FROM
+		ESERVICE.DBO.PRODUCT B
+		WHERE (SELECT LIPM_INSU_BEG_DATE FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = A.POLICY_NO) BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
+		) AS PRODUCT_NAME
 		FROM ESERVICE.DBO.TRANS_DEPOSIT A LEFT JOIN ESERVICE.DBO.FUND B ON A.INVT_NO = B.FUND_CODE WHERE A.TRANS_NUM = #{transNum}
 	</select>
 
@@ -2104,6 +3029,14 @@
 		) AS productName
 		from ESERVICE.DBO.TRANS_CASH_PAYMENT P
 		where TRANS_NUM = #{transNum}
+	</select>
+
+	<select id="getTransChangePremium" resultType="map">
+		SELECT
+		ID, TRANS_NUM, AMOUNT, OLD_AMOUNT
+		FROM
+		ESERVICE.DBO.TRANS_CHANGE_PREMIUM
+		WHERE TRANS_NUM = #{transNum}
 	</select>
 
 </mapper>

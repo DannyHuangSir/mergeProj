@@ -92,7 +92,12 @@ public interface OnlineChangeDao {
 	 * @return Map<String, Object>
 	 */
 	Map<String, Object> getTransInsuranceClaim(@Param("transVo") TransVo transVo);
-	
+	/**
+	 * 取得線上申請-保單醫療
+	 * @param transVo
+	 * @return Map<String, Object>
+	 */
+	Map<String, Object> getMedicalTreatmentClaim(@Param("transVo") TransVo transVo);
 	/**
 	 * 取得線上申請資料-年金給付方式.
 	 * 
@@ -460,8 +465,13 @@ public interface OnlineChangeDao {
 	 * @param params
 	 */
 	List getFileDatasDetailByClaimSeqId(@Param("claimSeqId") Float claimSeqId);
-	
-	
+	/**
+	 * 保單醫療文件數據
+	 *
+	 * @param claimSeqId
+	 */
+	List getMedicalTreatmentFileDatasDetailByClaimSeqId(@Param("claimSeqId") Float claimSeqId);
+
 	/**
 	 * 添加狀態歷程
 	 * @param vo
@@ -562,6 +572,52 @@ public interface OnlineChangeDao {
 	
 	public Map<String, Object> getDnsDetailInfo(@Param("transNum") String transNum);
 
+	/**
+	 * 獲取查詢條件
+	 *   保單理賠申請統計報表
+	 *
+	 * @return
+	 */
+	List getMedicalTreatmentStatisticsReport(@Param("vo") MedicalTreatmentStatisticsVo var1, @Param("columnItem") String var2, @Param("status") List<String> var3, @Param("fileReceivedList") List<String> var4, @Param("sendAllianceList") List<String> var5);
+	/**
+	 * 獲取查詢條件
+	 *   保單理賠明顯統計報表
+	 *
+	 * @return
+	 */
+	List getMedicalTreatmentDetailReport(@Param("vo") MedicalTreatmentStatisticsVo var1, @Param("columnItem") String var2, @Param("status") List<String> var3, @Param("fileReceivedList") List<String> var4, @Param("sendAllianceList") List<String> var5);
+	//獲取保險公司明顯
+	List<Hospital> getHospitalList(@Param("functionName")String medicalTreatmentParameterCode);
+	//獲取醫院明顯
+	List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(@Param("functionName") String medicalTreatmentParameterCode);
+	//保單醫療   補件單歷程.
+	List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFiledatas(@Param("vo") TransRFEVo tVo);
+
+	//查詢醫療保單
+	int getMedicalTreatmentCaseIDNum(@Param("transNum")String transNum);
+	//醫療保單查詢是否存在黑名单
+	int checkMedicalTreatmentIdNoExist(@Param("transNum")String transNum);
+	//醫療保單加入黑名單
+	int addMedicalTreatmentBlackList(@Param("vo")TransStatusHistoryVo vo);
+	//查詢當前醫療保單的名稱\郵件
+	String getInfoMedicalTreatmentTOMail(@Param("transNum")String transNum);
+	//進行查詢醫療條數
+	int getOnlineChangeMedicalTreatmentDetailTotal(@Param("transVo") TransVo transVo);
+	//進行查詢醫療明顯
+	List<Map<String, Object>> getOnlineChangeMedicalTreatmentDetail(@Param("transVo")TransVo transVo);
+	//進行查詢Base64的數據
+	MedicalTreatmentClaimFileDataVo getMedicalTreatmentDetailBase64(@Param("fdId") Float fdId)throws Exception;
+	//通過編號查詢醫療保單類別
+	String getMedicalTreatmentFromCompanyId(@Param("trans_num")String trans_num);
+	//更新是否傳送聯盟鏈
+	public int updateMedicalTreatmentSendAlliance(@Param("vo") TransMedicalTreatmentClaimVo vo);
+	 //獲取當前保單需要推送聯盟的數據
+	List<TransMedicalTreatmentClaimVo> getTransMedicalTreatmentByTransNum(@Param("transNum") String transNum);
+	//編號
+	Float getMedicalTreatmentClaimSequence();
+	//添加MedicalTreatmentClaim數據,便於後續推送給聯盟
+	int addMedicalTreatmentClaim(@Param("vo")TransMedicalTreatmentClaimVo voTemp);
+
 	/***
 	 * 查詢申請明細-已持有投資標的轉換查詢
 	 * @param transVo
@@ -580,4 +636,6 @@ public interface OnlineChangeDao {
 	TransDepositDetailVo getAppliedTransDeposits(@Param("transNum") String transNum);
 
 	Map<String, Object> getTransPaymentByTransNum(@Param("transNum") String transNum);
+
+    List<Map<String, Object>> getTransChangePremium(@Param("transNum") String transNum);
 }

@@ -35,6 +35,14 @@
 								<span><th:block th:text="${detailData['PAYMODE']}"/></span>
 							</div>
 						</div>
+						<th:block th:if="${showAmount}">
+							<div class="profile-info-row">
+								<div class="profile-info-name">定期繳費</div>
+								<div class="profile-info-value">
+									<span><th:block th:text="${detailData['AMOUNT']}"/></span>
+								</div>
+							</div>
+						</th:block>
 					</div>
 				</div>
 				<div class="col-xs-12 col-sm-1">

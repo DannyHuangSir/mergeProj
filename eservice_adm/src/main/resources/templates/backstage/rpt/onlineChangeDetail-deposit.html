@@ -46,20 +46,21 @@
 										<form class="form-horizontal" role="form" style="border-top: 0;line-height: 20px;padding: 20px 0;">
 											<div class="form-group">
 											  <label for="productID123" class="col-sm-4">提領保單：</label>
-											  <div id="productID123" class="col-sm-8">金彩人生變額萬能壽險乙型VLJ <span class="spandepo4">(TWN232213)</span></div>
-											</div>							
+											  <div id="productID123" class="col-sm-8"><th:block th:text="${detailData['deposits'].productName!=null}?${detailData['deposits'].productName}"/> <span class="spandepo4">
+												  (<th:block th:text="${detailData['deposits'].policyNo!=null}?${detailData['deposits'].policyNo}"/>)</span></div>
+											</div>
 											<div class="form-group">
 											   <label for="inputPassword3" class="col-sm-4">提領方式：</label>
 											  <div class="col-sm-8">
-												<th:block th:if="${detailData['deposits'].depositMethod == '1'}">	
+												<th:block th:if="${detailData['deposits'].depositMethod == '1'}">
 													指定總金額
 												</th:block>
 												<th:block th:if="${detailData['deposits'].depositMethod == '2'}">
 													自定投資標的比例
 												</th:block>
 											  </div>
-											</div>  
-											            
+											</div>
+
 											<div class="form-group">
 											   <label for="inputPassword3" class="col-sm-4">給付方式：</label>
 											  <div class="col-sm-8">
@@ -107,9 +108,9 @@
 													<div class="col-sm-8">
 														<span th:text="${detailData['deposits'].bankAccount}"/>
 													</div>
-												</div>	
-											</th:block>   
-											<th:block th:if="${detailData['deposits'].paymentMethod == '2'}">    
+												</div>
+											</th:block>
+											<th:block th:if="${detailData['deposits'].paymentMethod == '2'}">
 												<div class="form-group">
 													<label for="inputPassword3" class="col-sm-4">郵遞區號：</label>
 													<div class="col-sm-8">
@@ -122,8 +123,8 @@
 														<span th:text="${detailData['deposits'].address}"/>
 													</div>
 												</div>
-											</th:block>   
-											<th:block th:if="${detailData['deposits'].depositMethod == '1'}"> 
+											</th:block>
+											<th:block th:if="${detailData['deposits'].depositMethod == '1'}">
 												<div class="form-group">
 												<label for="inputEmail3" class="col-sm-4">提領金額：</label>
 												<div class="col-sm-8">
@@ -139,9 +140,9 @@
 														</div>
 													</th:block>
 												</div>
-												</div> 
+												</div>
 											</th:block>
-											<th:block th:if="${detailData['deposits'].depositMethod == '2'}"> 
+											<th:block th:if="${detailData['deposits'].depositMethod == '2'}">
 												<div class="check-title">提領金額</div>
 												<table  class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
 													<thead>
@@ -171,11 +172,9 @@
 													</th:block>
 													</tbody>
 												</table>
-											</th:block>  
-											
-								  
+											</th:block>
 										</form>
-										
+								</div>
 								</div>
 							</div>
 						</div>

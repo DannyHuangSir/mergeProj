@@ -81,6 +81,8 @@
 		<mapper resource="mybatis/mapper/common/ApConstantsMapper.xml"/>
 		<mapper resource="mybatis/mapper/keycloak/KeyCloakUserMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/CommLogMapper.xml"/>
-	<mapper resource="mybatis/mapper/adm/UnionCourseMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/MedicalTreatmentClaimFileDataDaoMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/UnionCourseMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/QuestionnaireMapper.xml"/>
 	</mappers>
 </configuration>

@@ -6,11 +6,13 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.google.common.collect.Maps;
 import com.twfhclife.adm.model.*;
+import com.twfhclife.generic.util.DateFormatUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -31,6 +33,8 @@ import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_model.MessageTriggerRequestVo;
 import com.twfhclife.generic.service.IMailService;
 import com.twfhclife.generic.util.ApConstants;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
@@ -80,6 +84,8 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			}else if(ApConstants.TRANS_TYPE_DNS_ALLIANCE.equals(transVo.getTransType())) {
 				dataPageList = onlineChangeDao.getOnlineChangeDnsDetail(transVo);
 				return dataPageList;
+			}else if(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transVo.getTransType())) {
+				dataPageList = onlineChangeDao.getOnlineChangeMedicalTreatmentDetail(transVo);
 			}else {
 				dataPageList = onlineChangeDao.getOnlineChangeDetailForPageable(transVo);
 			}
@@ -115,7 +121,15 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 						rowMap.put("TRANS_TYPE_NAME", rowMap.get("TRANS_TYPE_NAME")+"(聯盟件)");
 					}
 				}
-			}else {
+			}else if(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE.equals((String)rowMap.get("TRANS_TYPE"))) {
+				//	醫療保單單獨處理
+				String companyId = onlineChangeDao.getMedicalTreatmentFromCompanyId((String)rowMap.get("TRANS_NUM"));
+				if(companyId != null && !ApConstants.FROM_COMPANY_L01.equals(companyId)) {
+					if(rowMap.get("TRANS_TYPE_NAME") != null) {
+						rowMap.put("TRANS_TYPE_NAME", rowMap.get("TRANS_TYPE_NAME")+"(聯盟件)");
+					}
+				}
+			}else{
 				if(rowMap.get("FROM_COMPANY_ID") != null && !ApConstants.FROM_COMPANY_L01.equals(rowMap.get("FROM_COMPANY_ID"))) {
 					if(rowMap.get("TRANS_TYPE_NAME") != null) {
 						rowMap.put("TRANS_TYPE_NAME", rowMap.get("TRANS_TYPE_NAME")+"(聯盟件)");
@@ -909,7 +923,17 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		String base64= Base64.getEncoder().encodeToString(fileContent);
 		return  base64;
 	}
-
+	/**
+	 * 原始大小Base64數據
+	 * @param
+	 * @param baos
+	 * @return  base64数据
+	 * @throws IOException
+	 */
+	private  String   imgOriginalBase64(byte[] bytes ) throws IOException {
+		String base64= Base64.getEncoder().encodeToString(bytes);
+		return  base64;
+	}
 	/**
 	 * PPT转换图片50*50的base64数据
 	 * @param filePath  PPT转换图片50*50地址
@@ -1089,6 +1113,339 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	}
 
 	@Override
+	public int getOnlineChangeDnsDetailTotal(TransVo transVo) {
+		return onlineChangeDao.getOnlineChangeDnsDetailTotal(transVo);
+	}
+	public List getMedicalTreatmentStatisticsReport(MedicalTreatmentStatisticsVo claimVo) {
+		List<String> columns = claimVo.getColumn();
+		String str = "";
+		int k = columns.size();
+
+		for(int i = 0; i < k; ++i) {
+			str = str + "C." + (String)columns.get(i);
+			if (i != k - 1) {
+				str = str + ",";
+			}
+		}
+
+		return this.onlineChangeDao.getMedicalTreatmentStatisticsReport(claimVo, str, claimVo.getStatus(), claimVo.getFileReceivedList(), claimVo.getSendAllianceList());
+	}
+
+	public List getMedicalTreatmentDetailReport(MedicalTreatmentStatisticsVo claimVo) {
+		List<String> columns = claimVo.getColumn();
+		String str = "";
+		int k = columns.size();
+
+		for(int i = 0; i < k; ++i) {
+			str = str + "C." + (String)columns.get(i);
+			if (i != k - 1) {
+				str = str + ",";
+			}
+		}
+
+		List detailList = this.onlineChangeDao.getMedicalTreatmentDetailReport(claimVo, str, claimVo.getStatus(), claimVo.getFileReceivedList(), claimVo.getSendAllianceList());
+		return detailList;
+	}
+
+	@Override
+	public Map<String, Object> getMedicalTreatmentClaim(TransVo transVo) {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		rMap = onlineChangeDao.getMedicalTreatmentClaim(transVo);
+		List fileDatas = onlineChangeDao.getMedicalTreatmentFileDatasDetailByClaimSeqId(Float.parseFloat(rMap.get("CLAIMS_SEQ_ID").toString()));
+		List newfileDatas = new ArrayList();
+		if (fileDatas != null && fileDatas.size() > 0) {
+			for (int i = 0; i < fileDatas.size(); i++) {
+				Map map = (Map) fileDatas.get(i);
+				String PATH = (String) map.get("PATH");
+				String FILE_NAME  = (String)map.get("FILE_NAME");
+				String fileBase64 = (String)map.get("FILE_BASE64");
+				if ((PATH!=null && FILE_NAME!=null)||fileBase64!=null) {
+					String filePath = PATH+File.separator+FILE_NAME;
+
+					String substring = filePath.substring(filePath.lastIndexOf("."), filePath.length());
+					//pdf文档进行单独处理，抓取缩略图
+					if(".pdf".equalsIgnoreCase(substring)) {
+						String  letName=filePath.substring(0,filePath.lastIndexOf("."))+".png";
+						map.put("fileOrPng",letName);
+					}else{
+						//获取图片的地址
+						map.put("fileOrPng",filePath);
+					}
+
+					if(fileBase64!=null && !"".equals(fileBase64)){
+						//直接将原文件base64 转为 缩图的 base64
+						byte[] decode = Base64.getDecoder().decode(fileBase64);
+						//获取类型
+						String base64Type = this.checkBase64ImgOrPdf(decode);
+						logger.info("--------------------------------------------------PDF Base64  文件的类型="+base64Type);
+						ByteArrayInputStream input = new ByteArrayInputStream(decode);
+						ByteArrayOutputStream baos = new ByteArrayOutputStream();//io流
+
+						if (base64Type!=null &&  !"".equals(base64Type)) {
+							PDDocument doc = null;
+							try {
+								if ("png".equals(base64Type) || "jpg".equals(base64Type)) {
+									String miniatureBase64 = imgBase64(input, baos);
+									map.put("FileBase64",miniatureBase64);
+								}else{
+									doc = PDDocument.load(input);
+									String miniatureBase64 = this.imgBase64(doc, baos);
+									logger.info("--------------------------------------------------PDF Base64转换为缩图="+miniatureBase64);
+									map.put("FileBase64",miniatureBase64);
+									doc.close();
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}finally {
+								try {
+									baos.flush();
+									baos.close();
+									input.close();
+									if(doc!=null) {
+										doc.close();
+									}
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}else{
+						File file = new File(filePath);
+						if (file.exists()) {
+							//通过路径,获取图片
+							map.put("FileBase64", this.converFileToBase64Str(filePath));
+						}
+					}
+					newfileDatas.add(map);
+				}
+			}
+		}
+		//進行獲取聯盟的數據信息類型
+		List<ParameterVo> parameters = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_TREATMENT_FEDERATION_FILE_TYPE);
+		List<ParameterVo> medicalUploadfile = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID_ESERVICE, ApConstants.MEDICAL_TREATMENT_UPLOADFILE);
+
+		rMap.put("Parameters", parameters);
+		rMap.put("medicalUploadfile", medicalUploadfile);
+		rMap.put("FileDatas", newfileDatas);
+		logger.info("1======获取的保单图片数据-----------====== : " + rMap.toString() + "============1");
+		/**
+		 * 對時間的進行處理
+		 * */
+		String birdate = (String) rMap.get("BIRDATE");
+		if (!org.apache.commons.lang3.StringUtils.isEmpty(birdate)) {
+			String yyyyMMdd = DateFormatUtil.getStringToDateString("yyyyMMdd", birdate, "yyyy/MM/dd");
+			rMap.put("BIRDATE", yyyyMMdd);
+		}
+		String accident_date = (String) rMap.get("ACCIDENT_DATE");
+		if (!org.apache.commons.lang3.StringUtils.isEmpty(accident_date)) {
+			String yyyyMMdd = DateFormatUtil.getStringToDateString("yyyyMMdd", accident_date, "yyyy/MM/dd");
+			rMap.put("ACCIDENT_DATE", yyyyMMdd);
+		}
+		String accident_time = (String) rMap.get("ACCIDENT_TIME");
+		if (!org.apache.commons.lang3.StringUtils.isEmpty(accident_time)) {
+			String yyyyMMdd = DateFormatUtil.getStringToDateString("HHmm", accident_time, "HH:mm");
+			rMap.put("ACCIDENT_TIME", yyyyMMdd);
+		}
+		String police_date = (String) rMap.get("POLICE_DATE");
+		if (!org.apache.commons.lang3.StringUtils.isEmpty(police_date)) {
+			String yyyyMMdd = DateFormatUtil.getStringToDateString("yyyyMMdd", police_date, "yyyy/MM/dd");
+			rMap.put("POLICE_DATE", yyyyMMdd);
+		}
+
+		String police_time = (String) rMap.get("POLICE_TIME");
+		if (!org.apache.commons.lang3.StringUtils.isEmpty(police_time)) {
+			String yyyyMMdd = DateFormatUtil.getStringToDateString("HHmm", police_time, "HH:mm");
+			rMap.put("POLICE_TIME", yyyyMMdd);
+		}
+		String authorization_start_date = (String) rMap.get("AUTHORIZATION_START_DATE");
+		if (!org.apache.commons.lang3.StringUtils.isEmpty(authorization_start_date)) {
+			String yyyyMMdd = DateFormatUtil.getStringToDateString("yyyyMMdd", authorization_start_date, "yyyy/MM/dd");
+			rMap.put("AUTHORIZATION_START_DATE", yyyyMMdd);
+		}
+		String authorization_end_date = (String) rMap.get("AUTHORIZATION_END_DATE");
+		if (!org.apache.commons.lang3.StringUtils.isEmpty(authorization_end_date)) {
+			String yyyyMMdd = DateFormatUtil.getStringToDateString("yyyyMMdd", authorization_end_date, "yyyy/MM/dd");
+			rMap.put("AUTHORIZATION_END_DATE", yyyyMMdd);
+		}
+
+		return rMap;
+	}
+
+	@Override
+	public List<Hospital> getHospitalList(String medicalTreatmentParameterCode) {
+		return onlineChangeDao.getHospitalList(medicalTreatmentParameterCode);
+	}
+
+	@Override
+	public List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(String medicalTreatmentParameterCode) {
+		return onlineChangeDao.getHospitalInsuranceCompanyList(medicalTreatmentParameterCode);
+	}
+
+	@Override
+	public List<TransRFEVo> getMedicalTreatmentTransRFEList(TransRFEVo vo) {
+		List<TransRFEVo> transRFEVos = onlineChangeDao.getTransRFEList(vo);
+		for (int i = 0; i < transRFEVos.size(); i++) {
+			TransRFEVo tVo = transRFEVos.get(i);
+
+			List<MedicalTreatmentClaimFileDataVo> fileDataVoList = onlineChangeDao.getTransMedicalTreatmentClaimFiledatas(tVo);
+			for (MedicalTreatmentClaimFileDataVo fileDataVo : fileDataVoList) {
+				//String filePath = fileDataVo.getFilePath()+"/"+fileDataVo.getFileName();
+				String filePath = fileDataVo.getFilePath()+File.separator+fileDataVo.getFileName();
+				fileDataVo.setFileBase64(this.converFileToBase64Str(filePath));
+			}
+			tVo.setMedicalTreatmentFileDatas(fileDataVoList);
+		}
+		return transRFEVos;
+	}
+
+	@Override
+	public int getMedicalTreatmentCaseIDNum(String transNum) {
+		return onlineChangeDao.getMedicalTreatmentCaseIDNum(transNum);
+	}
+
+	@Override
+	public int checkMedicalTreatmentIdNoExist(String transNum) {
+		int i = onlineChangeDao.checkMedicalTreatmentIdNoExist(transNum);
+		return i;
+	}
+
+	@Override
+	public int addMedicalTreatmentBlackList(TransStatusHistoryVo vo) {
+		return onlineChangeDao.addMedicalTreatmentBlackList(vo);
+	}
+
+	@Override
+	public void sendMedicalTreatmentMailTO(String transNum, String rejectReason, String status) {
+		// TODO Auto-generated method stub
+		String detailInfo = onlineChangeDao.getInfoMedicalTreatmentTOMail(transNum);
+		String[] strs = detailInfo.split("\\|");
+		String mail = strs[3];
+		if(StringUtils.isEmpty(mail) && !StringUtils.isEmpty(strs[4])) {
+			mail = onlineChangeDao.getMailByRocid(strs[4]);
+		}
+		if(!StringUtils.isEmpty(mail)) {
+			String statusName = parameterDao.getStatusName(ApConstants.ONLINE_CHANGE_STATUS, status);
+			SimpleDateFormat formater = new SimpleDateFormat("yyyy年MM月dd日 HH時mm分ss秒");
+			String loginTime = formater.format(new Date());
+			List<String> receivers = new ArrayList<String>();
+			receivers.add(mail);
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put("TransNum", transNum);
+			paramMap.put("TransStatus", statusName);
+			paramMap.put("LoginTime", loginTime);
+			if("2".equals(status)) {// 已完成
+				String transRemark = parameterDao.getStatusName(ApConstants.MESSAGING_PARAMETER, ApConstants.INSURANCE_CLAIM_TRANS_REMARK);
+				paramMap.put("TransRemark", transRemark);
+				messageTemplateClient.msgApi(getMessageTriggerRequestVo(ApConstants.ELIFE_MAIL_005,receivers,paramMap,"email"));
+				logger.info("發送保戶MAIL : " + mail);
+			}else {// 異常件註記
+//				List<ParameterVo> pList = parameterDao.getOptionList(ApConstants.SYSTEM_ID,ApConstants.ABNORMAL_REASON);
+//				for (ParameterVo pVo : pList) {
+//					if(code.equals(pVo.getParameterValue())) {
+//						code = pVo.getParameterCode();
+//					}
+//				}
+				String transRemark = parameterDao.getStatusName(ApConstants.MESSAGING_PARAMETER, ApConstants.INSURANCE_CLAIM_ABNORMAL_TRANS_REMARK);
+				paramMap.put("TransRemark", transRemark);
+				messageTemplateClient.msgApi(getMessageTriggerRequestVo(ApConstants.ELIFE_MAIL_006,receivers,paramMap,"email"));
+				logger.info("發送保戶MAIL : " + mail);
+
+			}
+		}
+	}
+
+	@Override
+	public int getOnlineChangeMedicalTreatmentDetailTotal(TransVo transVo) {
+		return onlineChangeDao.getOnlineChangeMedicalTreatmentDetailTotal(transVo);
+	}
+
+	@Override
+	public MedicalTreatmentClaimFileDataVo getMedicalTreatmentDetailBase64FileSize(Float fdId) throws Exception {
+		MedicalTreatmentClaimFileDataVo medicalVo=null;
+		if (fdId!=null && fdId!=0) {
+			medicalVo=	onlineChangeDao.getMedicalTreatmentDetailBase64(fdId);
+			String fileBase64 = medicalVo.getFileBase64();
+			if (fileBase64 != null && fileBase64 != "") {
+				byte[] decode = Base64.getDecoder().decode(fileBase64);
+				//获取文件类型
+				String base64Type = this.checkBase64ImgOrPdf(decode);
+				if (base64Type != null && !"".equals(base64Type)){
+					try {
+						if ("png".equals(base64Type) || "jpg".equals(base64Type)) {
+							int length = decode.length;//转换成字节
+							if(length<2097152) {
+								String miniatureBase64 = this.imgOriginalBase64(decode);
+								medicalVo.setFileBase64(miniatureBase64);
+								medicalVo.setType("png");
+							}else{
+								medicalVo.setFileBase64("");
+							}
+						} else {
+							int length = decode.length;//转换成字节
+							if(length<2097152) {
+								String miniatureBase64 = this.imgOriginalBase64(decode);
+								medicalVo.setFileBase64(miniatureBase64);
+								medicalVo.setType("pdf");
+							}else{
+								medicalVo.setFileBase64("");
+							}
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}else{
+			medicalVo.setFileSize(0F);
+			medicalVo.setFileBase64("");
+		}
+		return medicalVo;
+	}
+
+	@Override
+	public int updateMedicalTreatmentSendAlliance(TransMedicalTreatmentClaimVo vo) {
+		int rtn = -1;
+		if(vo!=null && vo.getTransNum()!=null) {
+			rtn = onlineChangeDao.updateMedicalTreatmentSendAlliance(vo);
+		}
+		return rtn;
+	}
+
+	@Override
+	public int addMedicalTreatmentClaim(TransMedicalTreatmentClaimVo vo) {
+		int rtn = -1;
+		if(vo!=null && vo.getTransNum()!=null) {
+		 List<TransMedicalTreatmentClaimVo> voList = onlineChangeDao.getTransMedicalTreatmentByTransNum(vo.getTransNum());
+			if (voList != null && voList.size() != 0) {
+				for (TransMedicalTreatmentClaimVo voTemp : voList) {
+					Float seq = onlineChangeDao.getMedicalTreatmentClaimSequence();
+					voTemp.setClaimSeqId(seq);
+					rtn = onlineChangeDao.addMedicalTreatmentClaim(voTemp);
+				}
+			}
+		}
+		return rtn;
+	}
+
+	@Override
+	@Transactional
+	public int updateOrAddMedicalTreatment(TransMedicalTreatmentClaimVo vo) {
+		int result = -1;
+		if(vo!=null && vo.getTransNum()!=null) {
+			if (ApConstants.SEND_ALLIANCE.equals(vo.getFileReceived())) {
+				vo.setOldFileReceived("C");
+			}
+			result = updateMedicalTreatmentSendAlliance(vo);
+
+			if("Y".equals(vo.getSendAlliance())) {//審核通過才insert MedicalTreatment
+				result = addMedicalTreatmentClaim(vo);
+			}
+
+		}
+		return result;
+	}
+
+	@Override
 	public Map<String, Object> getConversionDetail(TransVo transVo) {
 		List<TransFundConversionVo> conversionDetail = onlineChangeDao.getConversionDetail(transVo);
 		Map<String, Object> map = new HashMap<>();
@@ -1157,12 +1514,24 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	}
 
 	@Override
+    public Map<String, Object> getTransChangePremiumDetail(TransVo transVo) {
+		Map<String, Object> map = Maps.newHashMap();
+		if (!org.apache.commons.lang3.StringUtils.isEmpty(transVo.getTransNum())) {
+			map = onlineChangeDao.getOnlineChangeDetailByTransNum(transVo.getTransNum());
+
+		}
+		List<Map<String, Object>> detailList = onlineChangeDao.getTransChangePremium(transVo.getTransNum());
+		Map<String, Object> detailVo = Maps.newHashMap();
+		if (detailList != null && detailList.size() > 0) {
+			detailVo = detailList.get(0);
+		}
+		map.put("changePremium", detailVo);
+		return map;
+    }
+
+    @Override
 	public int getOnlineChangeCIODetailTotal(TransVo transVo) {
 		return onlineChangeDao.getOnlineChangeCIODetailTotal(transVo);
 	}
 
-	@Override
-	public int getOnlineChangeDnsDetailTotal(TransVo transVo) {
-		return onlineChangeDao.getOnlineChangeDnsDetailTotal(transVo);
-	}
 }

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='attributeSearch')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+								變更風險屬性問卷管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								變更風險屬性問卷維護 
+								<i class="my-icon fa fa-angle-double-right"></i>
+								問卷題目查詢
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12">
+									<!-- PAGE CONTENT BEGINS -->
+									<form class="form-horizontal" role="form" id="form1">
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 题目 </label>
+											<div class="col-sm-5">
+												<input type="text" placeholder="" class="form-control" id="attributeName"/>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 作答方式 </label>
+											<div class="col-sm-5">
+												<select class="chosen-select form-control" id="answerMethod" data-placeholder="請選擇作答方式...">
+													<option value="">全部</option>
+													<option value="N">單選</option>
+													<option value="Y">多選</option>
+												</select>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-4">生效日期</label>
+											<div class="col-sm-5">
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
+													<input class="form-control" type="text" id="effectiveDate" />
+												</div>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-4">停用日期</label>
+											<div class="col-sm-5">
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
+													<input class="form-control" type="text" id="stopDate" />
+												</div>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="col-md-offset-3 col-md-9">
+											<button id="qryBtn" class="btn btn-info" type="button">
+												<i class="my-icon fa fa-check bigger-110"></i>
+												查詢
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<!-- <button id="resetBtn" class="btn" type="reset">
+												<i class="my-icon fa fa-undo bigger-110"></i>
+												重新輸入
+											</button> -->
+											<button class="btn" type="button" onClick="deleteResults()">
+												<i class="my-icon fa fa-undo bigger-110"></i>
+												刪除
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="button" onClick="modifyResults()">
+												<i class="my-icon fa fa-undo bigger-110"></i>
+												作答設定
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<a href="attributeAdd">
+											<button class="btn" type="button">
+												<i class="my-icon fa fa-undo bigger-110"></i>
+												新增題目
+											</button></a>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="hr hr-18 dotted hr-double"></div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div id="show-detail-results" hidden="true">
+										<h3 class="header smaller lighter blue">查詢結果</h3>
+										<div>
+											<div id="showMessage" class="alert alert-info">
+												<i class="my-icon fa fa-hand-o-right"></i>
+												<span id="errorMsg"></span>
+											</div>
+											<table id="grid"></table>
+											<div id="pager"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<form id="editForm" th:action="@{/AttributeUpdate}" target="showDetailFrame" method="POST">
+								<input type="hidden" id="AttributeId" name="AttributeId"/>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<div class="modal fade in" id="modal-container-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body center1 grey2">
+						<h3 style="color: #CC7A00;">是否確定刪除？</h3>
+					</div>
+					<div class="modal-footer grey2">
+						<a href="#">
+							<button type="button" class="bgGrey lock2" id="deny" data-dismiss="modal" aria-label="Close">取消</button>
+						</a>
+						<a href="#">
+							<button type="button" class="bgOrange lock2" id="go" data-dismiss="modal" aria-label="Close">確認</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>   
+		<div class="modal fade in" id="modal-container-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body center1 grey2">
+						<h3 style="color: #CC7A00;">请选择問卷題目清單？</h3>
+					</div>
+					<div class="modal-footer grey2">
+						<a href="#">
+							<button type="button" class="bgOrange" id="go" data-dismiss="modal" aria-label="Close">確認</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var grid;
+		$(function() {
+			
+			// 載入系統功能下拉選單
+			eserviceAdmOption.chosenSystem('#systemsSelect', /*[[@{/common/systemList}]]*/);
+			
+			// 取得參數類型代碼下拉選單
+			//eserviceAdmOption.chosenAttributeCategory('#categoryNameSelect', /*[[@{/common/AttributeCategoryList}]]*/);
+			getAttributeCategory();
+
+			//日期
+			$('#effectiveDate, #stopDate').daterangepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				startDate: new Date(),
+				endDate: moment("20991230", "YYYYMMDD").toDate(),
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel'
+				}
+			});
+
+			// 初始 jqGridUtil 物件
+			grid = new jqGridUtil();
+			grid.id = '#grid';
+			grid.url = /*[[@{/Attribute/getQuestionPageList}]]*/;
+			grid.caption = '問卷題目清單';
+			grid.colNames = ['','題目', '作答方式','題目順序','生效日期', '停用日期'];
+			grid.colModel = [
+				{name:'editBut', index:'editBut', width:60, sortable:false, align:'center',formatter: function(cellvalue, options, row) {
+					var editHtml = '';
+					editHtml += "<input name='form-field-radio' type='radio' value='" + row.ID + "'>";
+					return editHtml;
+				}},
+				{name:'QUESTION',index:'question',width:100, editable:true},
+				{index:'isMulti', width:100, editable: true, formatter: function(cellvalue, options, row) {
+					if (row.IS_MULTI == 'Y') {
+						return '多选'
+					} else {
+						return '单选'
+					}
+				}},
+				{name:'SEQUENCE',index:'sequence',width:100, editable:true},
+				{name:'EFFECTIVE_TIME',index:'effectiveTime', width:100, editable:true},
+				{name:'STOP_TIME',index:'stopTime', width:100, editable:true}
+			];
+			
+			// 綁定系統別變更時，自動update參數類型選單
+			$('#systemsSelect').chosen().change(function(){
+				console.log("systemsSelect", $(this).val());
+				var sysId =  $(this).val();
+				if(sysId){
+					updateAttributeCategoryOptions(sysId);
+				}
+			});
+			
+			// 查詢
+			$('#qryBtn').click(function() {
+				// 設定查詢條件
+				grid.setPostData('attributeName', $('#attributeName').val());
+				grid.setPostData('answerMethod', $('#answerMethod').val());
+				if ($('#effectiveDate').data('daterangepicker') != undefined && $('#effectiveDate').data('daterangepicker') != null) {
+					grid.setPostData('effectiveStart', $('#effectiveDate').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+					grid.setPostData('effectiveEnd', $('#effectiveDate').data('daterangepicker').endDate.format('YYYY-MM-DD'));
+				}
+				if ($('#stopDate').data('daterangepicker') != undefined && $('#stopDate').data('daterangepicker') != null) {
+					grid.setPostData('stopStart', $('#stopDate').data('daterangepicker').startDate.format('YYYY-MM-DD'));
+					grid.setPostData('stopEnd', $('#stopDate').data('daterangepicker').endDate.format('YYYY-MM-DD'));
+				}
+				// 產生grid
+				grid.create();
+				// 顯示查詢結果區域
+				$('#show-detail-results').show();
+			});
+			
+			// 重新輸入
+			$('#resetBtn').click(function() {
+				$('#form1')[0].reset();
+				$('.chosen-select').val('').trigger('chosen:updated'); // 重置下拉選單
+			});
+			
+			// 匯出結果
+			$('#exportBtn').click(function() {
+
+			});
+			
+			eserviceAdmEvent.initChosenSelect();
+		});
+		
+		function getAttributeCategory() {
+			
+		};
+		
+		function updateAttributeCategoryOptions(sysId) {
+			
+		}
+		
+		function toEdit(AttributeId) {
+			$('#editForm #AttributeId').val(AttributeId);
+			$('#editForm')[0].submit();
+			$('#showDetailModal').modal('show');
+		}
+
+		function deleteResults(){
+				if($('input:radio[name="form-field-radio"]:checked').val() == null){
+					
+					$('#modal-container-1').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				}else{
+					let formData = {id: $('input:radio[name="form-field-radio"]:checked').val()}
+					eserviceForm.post(/*[[@{/attributeDelete}]]*/, formData, function(response) {
+						if (response.result != 'SUCCESS') {
+							alertMsg(response.resultMsg);
+						} else {
+							alertMsg("刪除成功");
+						}
+					});
+				}
+		}
+		function modifyResults(){
+				if($('input:radio[name="form-field-radio"]:checked').val() == null){
+
+					$('#modal-container-1').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				}else{
+					window.open('attributeAdd?questionId=' + $('input:radio[name="form-field-radio"]:checked').val());
+				}
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

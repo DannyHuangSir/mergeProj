@@ -1,0 +1,71 @@
+<tr class="detail-row even open" role="row" xmlns:th="http://www.w3.org/1999/xhtml">
+	<td colspan="8">
+		<div class="table-detail">
+			<div class="row">
+				<div class="col-xs-12 col-sm-11">
+					<div class="space visible-xs"></div>
+					<div class="profile-user-info profile-user-info-striped">
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請日期 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_DATE']!=null}?${detailData['TRANS_DATE']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請項目 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_TYPE_NAME']!=null}?${detailData['TRANS_TYPE_NAME']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 申請狀態 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['STATUS_NAME']!=null}?${detailData['STATUS_NAME']}"/></span>
+							</div>
+						</div>
+
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 保單號碼 </div>
+
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['POLICY_NO']!=null}?${detailData['POLICY_NO']}"/></span>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default profile-user-info">
+						<div class="panel-heading">※ 申請資料</div>
+						<div class="panel-body clear1" id="poliyClaimsDetail">
+							<div class="mycigna3">
+								<div class="col-md-12  detailPolicy">
+									<div class="col-sm-12" style="text-align: left;">
+										<div class=" grey2">
+											<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+												<thead>
+												<tr class="table2 orange2">
+													<th style="background-color: #DFFFDF;" class="text-left " scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">(變更前)定期保費</th>
+													<th style="background-color: #DFFFDF;" class="item" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">(變更後)定期保費</th>
+												</tr>
+												</thead>
+												<tbody>
+												<tr class="h65 tr-odd-noEvent">
+													<td th:text="${detailData['changePremium'].OLD_AMOUNT}"></td>
+													<td th:text="${detailData['changePremium'].AMOUNT}"></td>
+												</tr>
+											</table>
+										</div>
+										<div class="center1 ptop30" style="background: #FFFFFF;"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</td>
+</tr>

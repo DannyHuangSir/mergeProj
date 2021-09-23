@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.MedicalTreatmentClaimFileDataDao">
+
+
+	<resultMap id="medicalTreatmentClaimFileDataResultMap" type="com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo">
+		<result property="claimSeqId"   column="CLAIMS_SEQ_ID" />
+		<result property="type"  column="TYPE" />
+		<result property="fileName"    column="FILE_NAME" />
+		<result property="filePath"  column="PATH" />
+		<result property="fileBase64"  column="FILE_BASE64" />
+		<result property="fdId"  column="FILE_ID" />
+		<result property="fileStatus"  column="FILESTATUS" />
+	</resultMap>
+
+	<update id="updaetMedicalTreatmentClaimFileDataFileStatusCases" parameterType="com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo"  >
+		UPDATE
+		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		SET
+		ALLIANCE_STATUS = #{vo.allianceStatus,jdbcType=VARCHAR}
+		<if test="vo.reUpload !=null  and vo.reUpload !='' ">
+			, RE_UPLOAD = #{vo.reUpload,jdbcType=VARCHAR}
+		</if>
+		WHERE
+		TRANS_NUM = #{vo.transNum,jdbcType=VARCHAR}
+	</update>
+
+</mapper>
+

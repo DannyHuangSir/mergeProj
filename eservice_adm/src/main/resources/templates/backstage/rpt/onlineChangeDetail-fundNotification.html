@@ -44,10 +44,36 @@
 										</tbody>
 										<tbody>
 											<tr th:each="dtl : ${detailData['dtl']}">
+												<th:block th:if=" ${dtl['TYPE'] == '1'}">
 												<td><th:block th:text="${dtl['FUND_CODE']}"/></td>
 												<td><th:block th:text="${dtl['FUND_NAME']}"/></td>
 												<td><th:block th:text="${dtl['PERCENTAGE_UP']}"/></td>
 												<td><th:block th:text="${dtl['PERCENTAGE_DOWN']}"/></td>
+												</th:block>
+											</tr>
+										</tbody>
+									</table>
+								</span>
+							</div>
+							<div class="profile-info-value">
+								<span>
+									<table class="table  table-bordered table-hover">
+										<tbody>
+											<tr>
+												<th>基金代碼</th>
+												<th>基金名稱</th>
+												<th>現行淨值上限</th>
+												<th>現行淨值下限</th>
+											</tr>
+										</tbody>
+										<tbody>
+											<tr th:each="dtl : ${detailData['dtl']}">
+												<th:block th:if=" ${dtl['TYPE'] == '2'}">
+													<td><th:block th:text="${dtl['FUND_CODE']}"/></td>
+													<td><th:block th:text="${dtl['FUND_NAME']}"/></td>
+													<td><th:block th:text="${dtl['UP_VALUE']}"/></td>
+													<td><th:block th:text="${dtl['DOWN_VALUE']}"/></td>
+												</th:block>
 											</tr>
 										</tbody>
 									</table>

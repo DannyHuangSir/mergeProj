@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='attribute')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+								變更風險屬性問卷管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								變更風險屬性問卷維護 
+								<i class="my-icon fa fa-angle-double-right"></i>
+								新增問卷題目
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">新增問卷題目</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form class="form-horizontal" id="parameterTypeAddForm" role="form" action="#">
+													<!-- <legend>Form</legend> -->
+													<br/>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 题目 </label>
+														<div class="col-sm-10">
+															<input type="text" placeholder="" class="form-control" name="attributeName"/>
+														</div>
+														<div class="col-sm-4"></div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 作答方式 </label>
+														<div class="col-sm-10">
+															<select class="chosen-select form-control" name="answerMethod" data-placeholder="請選擇作答方式...">
+																<option value="N">單選</option>
+																<option value="Y">多選</option>
+															</select>
+														</div>
+														<div class="col-sm-4"></div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right">題目順序</label>
+														<div class="col-sm-10">
+															<input type="text" class="form-control" name="sequence"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right" >生效日期</label>
+														<div class="col-sm-10">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+															</span>
+																<input class="form-control" type="text" name="effectiveTime"/>
+															</div>
+														</div>
+														<div class="col-sm-4"></div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right">停用日期</label>
+														<div class="col-sm-10">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+															</span>
+																<input class="form-control" type="text"  name="stopTime"/>
+															</div>
+														</div>
+														<div class="col-sm-4"></div>
+													</div>
+													<div class="form-actions center">
+													<button type="button" id="id-btn-dialog1" class="btn btn-primary" onclick="insertData()">
+														<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+														儲存 
+													</button>
+													<button class="btn" onclick="location.reload()" type="reset">
+														<i class="my-icon fa fa-undo bigger-110"></i>
+														重設
+													</button>
+													</div>
+
+													<div class="widget-box">
+														<div class="widget-header">
+															<h4 class="widget-title">選項總覽</h4>
+														</div>
+				
+														<div class="widget-body">
+															<div class="widget-main no-padding">
+																<form>
+																	<div class="widget-list">
+																		<fieldset>
+																			<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項名稱 </label>
+																			<div class="col-sm-5">
+																				<input class="form-control" data-placeholder="有..." name="item"/>
+																			</div>
+																			<div class="col-sm-5">
+																				<button class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">
+																					<i class="my-icon fa fa-undo bigger-110"></i>
+																					移除選項
+																				</button>
+																			</div>
+																		</fieldset>
+																		<fieldset>
+																			<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項順序 </label>
+																			<div class="col-sm-5">
+																				<input class="form-control" data-placeholder="2..." name="sequence"/>
+																			</div>
+																			<div class="col-sm-5">
+																			</div>
+																		</fieldset>
+																		<fieldset>
+																			<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項積分 </label>
+																			<div class="col-sm-5">
+																				<input class="form-control" data-placeholder="12..." name="score"/>
+																			</div>
+																			<div class="col-sm-5">
+																			</div>
+																		</fieldset>
+																	</div>
+																	<div class="widget-foot">
+																	<button class="">
+																		<i class="my-icon fa fa-add bigger-110"></i>
+																		新增選項
+																	</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			$(function() {
+				$("input[name='effectiveTime'],input[name='stopTime']").datepicker({
+					'applyClass' : 'btn-sm btn-success',
+					'cancelClass' : 'btn-sm btn-default',
+					format:'YYYY-MM-DD',
+					locale: {
+						applyLabel: 'Apply',
+						cancelLabel: 'Cancel',
+					}
+				})
+			})
+
+			function insertData() {
+				let formData = {
+					question: $("input[name='attributeName']").val(),
+					isMulti: $("[name='answerMethod'] option:selected").val(),
+					sequence: $("input[name='sequence']").val(),
+					effectiveTime: moment($("[name='effectiveTime']").datepicker("getDate")).format('YYYY-MM-DD'),
+					stopTime: moment($("[name='stopTime']").datepicker("getDate")).format('YYYY-MM-DD'),
+				}
+				var options = []
+				$("[class='widget-list']").each(function(index, e){
+					options.push({
+						sequence: $(this).find("[name='sequence']").val(),
+						item: $(this).find("[name='item']").val(),
+						score: $(this).find("[name='score']").val(),
+					})
+				})
+				formData.options = options
+				eserviceForm.post(/*[[@{/attributeUpdate}]]*/, formData, function(response) {
+					if (response.result != 'SUCCESS') {
+						alertMsg(response.resultMsg);
+					} else {
+						alertMsg("更新成功!");
+						toEdit();
+					}
+				});
+			}
+		/*]]>*/
+		</script>
+	</body>
+</html>

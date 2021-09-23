@@ -40,6 +40,46 @@ public class TransVo extends Pagination {
 
 	//畫面顯示申請項目的中文
 	private String showTransType;
+	//异常件注記原因
+	private String abnormalReason;
+	//是否授權取得醫療資料
+	private String fromHospitalId;
+	//是否已開啟歡送醫療資料介接
+	private String sendToHospitalIdItem;
+	//醫療資料介接案件狀態
+	private String medicalCaseStatus;
+
+	public String getAbnormalReason() {
+		return abnormalReason;
+	}
+
+	public void setAbnormalReason(String abnormalReason) {
+		this.abnormalReason = abnormalReason;
+	}
+
+	public String getFromHospitalId() {
+		return fromHospitalId;
+	}
+
+	public void setFromHospitalId(String fromHospitalId) {
+		this.fromHospitalId = fromHospitalId;
+	}
+
+	public String getSendToHospitalIdItem() {
+		return sendToHospitalIdItem;
+	}
+
+	public void setSendToHospitalIdItem(String sendToHospitalIdItem) {
+		this.sendToHospitalIdItem = sendToHospitalIdItem;
+	}
+
+	public String getMedicalCaseStatus() {
+		return medicalCaseStatus;
+	}
+
+	public void setMedicalCaseStatus(String medicalCaseStatus) {
+		this.medicalCaseStatus = medicalCaseStatus;
+	}
 
 	public String getFromCompanyId() {
 		return fromCompanyId;

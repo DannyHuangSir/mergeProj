@@ -1,5 +1,7 @@
 package com.twfhclife.generic.util;
 
+import com.twfhclife.adm.dao.OnlineChangeDao;
+
 /**
  * 業務事件代碼.
  * 
@@ -143,6 +145,9 @@ public interface EventCodeConstants {
 	public static final String ONLINECHANGE_039 = "ONLINECHANGE_039";
 	public static final String ONLINECHANGE_039_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getAppliedTransDeposits";
 
+	public static final String ONLINECHANGE_040 = "ONLINECHANGE_040";
+	public static final String ONLINECHANGE_040_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getTransChangePremium";
+
 	/** 功能維護-查詢 */
 	public static final String FUNCMGT_001 = "FUNCMGT_001";
 	public static final String FUNCMGT_001_SQL_ID = "com.twfhclife.adm.dao.FunctionItemDao.getAllFuncBySysId";
@@ -234,5 +239,18 @@ public interface EventCodeConstants {
 	/** 職位管理-刪除 */
 	public static final String JOBTITLEMGT_004 = "JOBTITLEMGT_004";
 	public static final String JOBTITLEMGT_004_SQL_ID = "com.twfhclife.adm.dao.JobTitleDao.deleteJobTitle";
+
+	/** 保單醫療理賠標記異常 */
+	public static final String MEDICAL_TREATMENT_37 = "MEDICAL_TREATMENT_37";
+	public static final String MEDICAL_TREATMENT_37_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getMedicalTreatmentCaseIDNum";
+
+
+	/** 保單醫療理賠標記異常描述的添加 */
+	public static final String MEDICAL_TREATMENT_38 = "MEDICAL_TREATMENT_38";
+	public static final String MEDICAL_TREATMENT_38_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.checkMedicalTreatmentIdNoExist";
+
+	/** 保單醫療理賠件-是否傳送聯盟鏈 */
+	public static final String MEDICAL_TREATMENT_39 = "MEDICAL_TREATMENT_39";
+	public static final String MEDICAL_TREATMENT_39_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.updateMedicalTreatmentSendAlliance";
 
 }

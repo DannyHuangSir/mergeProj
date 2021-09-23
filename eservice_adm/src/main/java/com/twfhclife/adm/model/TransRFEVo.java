@@ -39,6 +39,19 @@ public class TransRFEVo {
 	 * 此案件的上傳檔案狀態清單
 	 */
 	private List<TransInsuranceClaimFileDataVo> fileDatas;
+	/**
+	 * 保單醫療
+	 * 此案件的上傳檔案狀態清單
+	 */
+	private List<MedicalTreatmentClaimFileDataVo> medicalTreatmentFileDatas;
+
+	public List<MedicalTreatmentClaimFileDataVo> getMedicalTreatmentFileDatas() {
+		return medicalTreatmentFileDatas;
+	}
+
+	public void setMedicalTreatmentFileDatas(List<MedicalTreatmentClaimFileDataVo> medicalTreatmentFileDatas) {
+		this.medicalTreatmentFileDatas = medicalTreatmentFileDatas;
+	}
 
 	public String getTransNum() {
 		return transNum;

@@ -12,7 +12,9 @@ public interface ApConstants {
 	final String KEYCLOAK_REALM = "twfhclife";
 	
 	final String SYSTEM_ID = "eservice_adm";
-	
+
+	final String SYSTEM_API_ID = "eservice_api";
+
 	final String SYSTEM_ID_ESERVICE = "eservice";
 	
 	/** 系統錯誤訊息 */
@@ -181,6 +183,23 @@ public interface ApConstants {
 	
 	/** 保單理賠MAIL-異常件 */
 	public static final String ELIFE_MAIL_006 = "ELIFE_MAIL-006";
+
+	/**
+	 *保單醫起通
+	 * */
+	final String MEDICAL_TREATMENT_PARAMETER_CODE = "MEDICAL_TREATMENT";
+
+	/**
+	 *保單醫起通醫療資料介接案件狀態 組
+	 * */
+	final String MEDICAL_INTERFACE_STATUS = "MEDICAL_INTERFACE_STATUS";
+	/** 保單理賠醫起通上傳申請應備文件 */
+	public String MEDICAL_TREATMENT_UPLOADFILE = "MEDICAL_TREATMENT_UPLOADFILE";
+	/***
+	 * 聯盟醫起通醫療文件類型組
+	 **/
+	final String MEDICAL_TREATMENT_FEDERATION_FILE_TYPE = "MEDICAL_TREATMENT_FEDERATION_FILE_TYPE";
+
 	/** 線上申請-未持有投資標的轉換 狀態 */
 	final String INVESTMENT_STATUS_OUT = "OUT";
 	/** 線上申請-未持有投資標的轉換 狀態 */

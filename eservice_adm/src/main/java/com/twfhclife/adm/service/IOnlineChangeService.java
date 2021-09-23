@@ -7,9 +7,14 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.adm.model.ContactInfoReportVo;
+import com.twfhclife.adm.model.Hospital;
+import com.twfhclife.adm.model.HospitalInsuranceCompany;
 import com.twfhclife.adm.model.InsClaimStatisticsVo;
+import com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo;
+import com.twfhclife.adm.model.MedicalTreatmentStatisticsVo;
 import com.twfhclife.adm.model.TransExtendAttrVo;
 import com.twfhclife.adm.model.TransInsuranceClaimVo;
+import com.twfhclife.adm.model.TransMedicalTreatmentClaimVo;
 import com.twfhclife.adm.model.TransRFEVo;
 import com.twfhclife.adm.model.TransStatusHistoryVo;
 import com.twfhclife.adm.model.TransVo;
@@ -455,6 +460,52 @@ public interface IOnlineChangeService {
 	 * @return 回傳死亡除戶查詢結果
 	 */
 	List<Map<String, Object>> getDNS_CSV(@Param("transVo") TransVo transVo);
+
+	/**
+	 * 獲取查詢條件
+	 *   保單理賠申請統計報表
+	 *
+	 * @return
+	 */
+	List getMedicalTreatmentStatisticsReport(MedicalTreatmentStatisticsVo var1);
+	/**
+	 * 獲取查詢條件
+	 *   保單理賠明顯明顯統計報表
+	 *
+	 * @return
+	 */
+	List getMedicalTreatmentDetailReport(MedicalTreatmentStatisticsVo var1);
+	/**
+	 * 取得線上申請-保單醫療理賠
+	 * @param transVo
+	 * @return Map<String, Object>
+	 */
+	public Map<String, Object>  getMedicalTreatmentClaim(TransVo transVo);
+	//獲取醫院明顯
+	List<Hospital> getHospitalList(String medicalTreatmentParameterCode);
+	//獲取保險公司明顯
+	List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(String medicalTreatmentParameterCode);
+	//醫療保險公司附件按鈕歷程
+	List<TransRFEVo> getMedicalTreatmentTransRFEList(TransRFEVo vo);
+	//查詢醫療保單是否是異常案件
+	int getMedicalTreatmentCaseIDNum(String transNum);
+	//醫療保單查詢是否存在黑名单
+	int checkMedicalTreatmentIdNoExist(String transNum);
+	//醫療保單加入黑名單
+	int addMedicalTreatmentBlackList(TransStatusHistoryVo vo);
+	//當前保單標記為異常件的時候,進行發生郵件
+	void sendMedicalTreatmentMailTO(String transNum, String rejectReason, String status);
+	//進行查詢醫療條數
+	int getOnlineChangeMedicalTreatmentDetailTotal(TransVo transVo);
+	//獲取文件的大小與數據
+	MedicalTreatmentClaimFileDataVo getMedicalTreatmentDetailBase64FileSize(Float fdId)throws Exception;
+	//更新醫療保單是否推送聯盟
+    int updateMedicalTreatmentSendAlliance(TransMedicalTreatmentClaimVo vo);
+	//醫療復審核通過,進行推送給TransMedicalTreatment
+	int addMedicalTreatmentClaim(TransMedicalTreatmentClaimVo vo);
+	//是否已開啓傳送公會聯盟鏈-覆核人員審核
+	int updateOrAddMedicalTreatment(TransMedicalTreatmentClaimVo vo);
+
 	/***
 	 * 查詢申請明細-已持有投資標的轉換查詢
 	 * @param transVo
@@ -467,4 +518,6 @@ public interface IOnlineChangeService {
 	Map<String, Object> getDepositDetail(TransVo transVo);
 
 	Map<String, Object> getCashPaymentDetail(TransVo transVo);
+
+	Map<String, Object> getTransChangePremiumDetail(TransVo transVo);
 }

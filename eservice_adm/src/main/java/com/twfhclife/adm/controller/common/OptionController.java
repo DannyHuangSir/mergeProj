@@ -3,7 +3,9 @@ package com.twfhclife.adm.controller.common;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,6 +63,51 @@ public class OptionController extends BaseController {
 
 	@Autowired
 	private IMessagingTemplateService messagingTemplateService;
+	/**
+	 * 下拉選單資料-醫療資料介接案件狀態
+	 *
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/common/optionMedicalStatusList")
+	public ResponseEntity<ResponseObj> optionMedicalStatusList(@RequestParam("categoryCode") String categoryCode) {
+		try {
+			processSuccess(parameterService.getOptionList(ApConstants.SYSTEM_API_ID, categoryCode));
+		} catch (Exception e) {
+			logger.error("Unable to optionList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+	/**
+	 * 下拉選單資料-醫療申請狀態
+	 *
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/common/optionMedicalApplyForStatusList")
+	public ResponseEntity<ResponseObj> optionMedicalApplyForStatusList(@RequestParam("categoryCode") String categoryCode) {
+		try {
+			//獲取申請狀態數據信息
+			List<ParameterVo> applyForOptionStatusList = parameterService.getOptionList(ApConstants.SYSTEM_ID_ESERVICE,categoryCode);
+			/*0	處理中 1	已審核  5	已上傳 6	失敗*/
+			String [] str = {"0","1","5","6"};
+			List<ParameterVo> collect = applyForOptionStatusList.stream().filter((x) -> {
+				for (String s : str) {
+					if (s.equals(x.getParameterCode())) {
+						return false;
+					}
+				}
+				return true;
+			}).collect(Collectors.toList());
+			processSuccess(applyForOptionStatusList);
+		} catch (Exception e) {
+			logger.error("Unable to optionList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
 
 	/**
 	 * 下拉選單資料-根據參數類別代碼取得.

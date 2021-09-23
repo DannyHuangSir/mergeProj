@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+<!-- 		<th:block th:replace="fragments/navbar"/> -->
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+<!-- 			<div th:replace="fragments/sidebar :: sidebar (funId='parameterSearch')"></div> -->
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="page-content">
+						<div class="row">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">修改問卷題目</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form class="form-horizontal" role="form" >
+													<br/>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 题目 </label>
+														<div class="col-sm-10">
+															<input type="text" placeholder="" class="form-control" id="attributeName" th:value="${questionVo.question}"/>
+														</div>
+														<div class="col-sm-4"></div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 作答方式 </label>
+														<div class="col-sm-10">
+															<select class="chosen-select form-control" id="answerMethod" data-placeholder="請選擇作答方式...">
+																<option value="N" th:attr="selected=${questionVo.isMulti  == 'N' ? true : false}">單選</option>
+																<option value="Y" th:attr="selected=${questionVo.isMulti == 'Y' ? true : false}">多選</option>
+															</select>
+														</div>
+														<div class="col-sm-4"></div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right">題目順序</label>
+														<div class="col-sm-10">
+															<input type="text" class="form-control" th:value="${questionVo.sequence}"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right" >生效日期</label>
+														<div class="col-sm-10">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+															</span>
+																<input class="form-control" type="text" name="effectiveTime"
+																	   th:value="${questionVo.effectiveTime} != null ? ${#dates.format(questionVo.effectiveTime, 'yyyy-MM-dd')}"/>
+															</div>
+														</div>
+														<div class="col-sm-4"></div>
+													</div>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right">停用日期</label>
+														<div class="col-sm-10">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+															</span>
+																<input class="form-control" type="text"  name="stopTime"
+																	   th:value="${questionVo.stopTime} != null ? ${#dates.format(questionVo.stopTime, 'yyyy-MM-dd')}"/>
+															</div>
+														</div>
+														<div class="col-sm-4"></div>
+													</div>
+
+													<div class="form-actions center">
+													<button type="button" id="id-btn-dialog1" class="btn btn-success" onclick="updateData()">
+														<i class="ace-icon fa fa-check" aria-hidden="true"></i>
+														更新 
+													</button>
+													<button class="btn" type="reset" onclick="location.reload()">
+														<i class="my-icon fa fa-undo bigger-110"></i>
+														重新輸入
+													</button>
+													</div>
+
+													<div class="widget-box">
+														<div class="widget-header">
+															<h4 class="widget-title">選項總覽</h4>
+														</div>
+				
+														<div class="widget-body">
+															<div class="widget-main no-padding">
+																<form>
+																	<th:block th:each="vo : ${questionVo.options}">
+																		<div class="widget-list">
+																			<fieldset>
+																				<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項名稱 </label>
+																				<div class="col-sm-5">
+																					<input class="form-control" data-placeholder="有..." th:value="${vo.item}"/>
+																				</div>
+																				<div class="col-sm-5">
+																					<button class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">
+																						<i class="my-icon fa fa-undo bigger-110"></i>
+																						移除選項
+																					</button>
+																				</div>
+																			</fieldset>
+																			<fieldset>
+																				<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項順序 </label>
+																				<div class="col-sm-5">
+																					<input class="form-control" data-placeholder="2..." th:value="${vo.sequence}"/>
+																				</div>
+																				<div class="col-sm-5">
+																				</div>
+																			</fieldset>
+																			<fieldset>
+																				<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項積分 </label>
+																				<div class="col-sm-5">
+																					<input class="form-control" data-placeholder="12..." th:value="${vo.score}"/>
+																				</div>
+																				<div class="col-sm-5">
+																				</div>
+																			</fieldset>
+																		</div>
+																	</th:block>
+																	<div class="widget-foot">
+																	<button class="">
+																		<i class="my-icon fa fa-add bigger-110"></i>
+																		新增選項
+																	</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			var formData = {};
+
+			$("input[name='effectiveTime'],input[name='stopTime']").datepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				format:'YYYY-MM-DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel',
+				}
+			})
+		});
+		
+		function updateData() {			
+			eserviceForm.post(/*[[@{/attribute/updateAttribute}]]*/, formData, function(response) {
+				alertMsg("更新成功");
+			});
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

@@ -1,0 +1,914 @@
+<tr class="detail-row even open" role="row">
+	<td colspan="7">
+		<div class="table-detail">
+			<div class="row" style="background-color: #fff; border-bottom: none">
+				<div class="col-xs-12 col-sm-11">
+					<div class="space visible-xs"></div>
+					<div class="profile-user-info profile-user-info-striped">
+						<th:block th:if="${session.ROLE_CODE_00}">
+							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+								<div class="profile-info-row">
+									<div class="profile-info-name"> 是否開始處理 </div>
+									<div class="profile-info-value">
+										<span class='tg-list-item'>
+											<th:block th:if="${detailData['STATUS_TYPE'] == '-1'}">
+												<input class='checkboxY checkboxY-light' id='medical1' type='checkbox' th:onclick="'javascript:medicalClickItems(\'medical1\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+											</th:block>
+											<th:block th:if="${detailData['STATUS_TYPE'] != '-1'}">
+												<input class='checkboxY checkboxY-light' id='medical1' type='checkbox' checked disabled>
+											</th:block>
+											<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='medical1'></label>
+										</span>
+									</div>
+								</div>
+							</th:block>
+
+							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+								<div class="profile-info-row">
+									<div class="profile-info-name"> 是否已開啓傳送公會聯盟鏈 </div>
+
+									<div class="profile-info-value" style="position: relative;">
+										<span class='tg-list-item'>
+											<th:block th:if="${detailData['STATUS_TYPE'] == '0'}">
+												<th:block th:if="${detailData['SEND_ALLIANCE'] != 'C' && detailData['SEND_ALLIANCE'] != 'Y'}">
+													<input class='checkboxY checkboxY-light' id='medical3' type='checkbox' th:onclick="'javascript:medicalClickItems(\'medical3\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+												</th:block>
+												<th:block th:if="${detailData['SEND_ALLIANCE'] == 'C' || detailData['SEND_ALLIANCE'] == 'Y'}">
+													<input class='checkboxY checkboxY-light' id='medical3' type='checkbox' checked disabled>
+												</th:block>
+											</th:block>
+											<th:block th:if="${detailData['STATUS_TYPE'] != '0'}">
+												<th:block th:if="${detailData['SEND_ALLIANCE'] != 'C' && detailData['SEND_ALLIANCE'] != 'Y'}">
+													<input class='checkboxY checkboxY-light' id='medical3' type='checkbox' disabled>
+												</th:block>
+												<th:block th:if="${detailData['SEND_ALLIANCE'] == 'C' || detailData['SEND_ALLIANCE'] == 'Y'}">
+													<input class='checkboxY checkboxY-light' id='medical3' type='checkbox' checked disabled>
+												</th:block>
+											</th:block>
+											<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='medical3'></label>
+										</span>
+										<!-- 覆核 -->
+										<th:block th:if="${detailData['SEND_ALLIANCE'] == 'C'}">
+											<label class="checkboxY-3"> 待覆核</label>
+											<th:block th:if="${session['ROLE_CODE_02']}">
+												<div class="checkbox" style="margin-right: 20px;line-height: 23px; cursor: pointer;position: absolute;top: 13px;right: 130px;">
+													<div class="check-box-1 pop02" style="float: left;margin-right: 5px;" id="pop02"><i class="">
+														<input id="medicalCheckBox2" type="checkbox" th:onclick="'javascript:medicalApprovedItems(\'medical3\',\'' + ${detailData['TRANS_NUM']} + '\');'" name="checkBox2">
+													</i></div>覆核人員審核
+												</div>
+											</th:block>
+										</th:block>
+										<th:block th:if="${detailData['SEND_ALLIANCE'] == 'Y'}">
+											<div class="checkbox" style="margin-right: 20px;line-height: 23px; cursor: pointer;position: absolute;top: 13px;right: 130px;">
+												<div class="check-box-1 pop02" style="float: left;margin-right: 5px;" id="pop02"><i class="">
+													<input id="medicalCheckBox2" type="checkbox" checked disabled name="medicalCheckBox2">
+												</i></div>覆核人員審核
+											</div>
+										</th:block>
+									</div>
+								</div>
+							</th:block>
+							<div class="profile-info-row">
+								<div class="profile-info-name"> 執行醫療資料介接 </div>
+
+								<div class="profile-info-value">
+									<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'PQHF_END' || detailData['SEND_ALLIANCE'] ne 'Y'}">
+										<button style="width: 120px;" type="button" id="GetMedicalCases" class="bgGrey" disabled >取用醫療資料</button>
+										<button style="width: 120px;" type="button" id="NotTakeMedicalCases" class="bgGrey" disabled >不取用醫療資料</button>
+										<button style="width: 130px;" type="button"  id="UploadMedicalCases"   class="bgGrey" disabled >醫療資料重新上傳</button>
+										<button style="width: 120px;" type="button"  class="bgGrey" disabled >更新案件狀態</button>
+									</th:block>
+									<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'PQHF_END' && detailData['SEND_ALLIANCE'] eq 'Y'}">
+										<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPS_END'}">
+											<button style="width: 120px;" type="button" id="GetMedicalCases"   class="bgGrey" disabled >取用醫療資料</button>
+											<button style="width: 120px;" type="button"  id="NotTakeMedicalCases"  class="bgGrey" disabled >不取用醫療資料</button>
+											<button style="width: 130px;" type="button"  id="UploadMedicalCases"   class="bgGrey" disabled >醫療資料重新上傳</button>
+										</th:block>
+										<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPS_PTHG'}">
+											<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgGrey" disabled >取用醫療資料</button>
+											<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+											<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>	
+										</th:block>
+										<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPR'}">
+											<button style="width: 130px;" type="button"  id="UploadMedicalCases"  class="bgGrey" disabled >醫療資料重新上傳</button>
+											<button	button style="width: 120px;" type="button" class="bgOrange" id="GetMedicalCases" onclick="medicalOnWorde('取用醫療病例','GetMedicalCases')">取用醫療資料</button>
+											<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+										</th:block>
+										<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPR' && detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPS_END'  }">
+											<button	button style="width: 120px;" type="button" class="bgOrange" id="GetMedicalCases" onclick="medicalOnWorde('取用醫療病例','GetMedicalCases')">取用醫療資料</button>
+											<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+											<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
+										</th:block>
+										<button style="width: 120px;" type="button" class="bgOrange" id="SuccessMedicalCases" onclick="medicalOnWorde('案件調查已完成','SuccessMedicalCases')">更新案件狀態</button>
+									</th:block>
+								</div>
+							</div>
+
+						<!--  醫療資料介接     -->
+						 <div class="modal fade in" id="modal-medical-container-auditConfirm1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content lock-up">
+									<div class="modal-header">醫療資料介接
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+									</div>
+									<div class="modal-body center1 grey2" style="border-bottom: 1px solid #DDDDDD;">
+										<h3 style="color: #CC7A00;">確定要將執行狀態變更為【<label id="htmltext3" style="font-size: 20px;"></label>】嗎？</h3>
+										<div class="form-group" style="margin:auto;position: relative;color: #000000;">
+											狀態經變更即無法修改，請再次確認！
+											<div class="checkbox" style="position: absolute;color: #009B30;right: -70px;
+												top: -1px; margin-right: 5px;line-height: 1.5em; cursor: pointer">
+																		<input id="medical-checkBox_info_approved" type="checkbox" name="aaa">
+																		<label for="medical-checkBox_info_approved" style="padding-left: 0; margin-left: 5px;
+																		margin-top: 1px;float: inherit;">已確認</label>
+                              				  </div>
+										</div>
+									</div>
+									<div class="modal-body clearfix  grey2" style="border-bottom: 1px solid #DDDDDD;">
+										<div class="form-horizontal" style="border-bottom: 0;">
+											<div class="form-group">
+												<label class="col-xs-3">申請項目：</label>
+												<div class="col-xs-9" id="showMedicalParameterName"></div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-3">申請序號：</label>
+												<div class="col-xs-9" id="showMedicalTransNum"></div>
+												<input type="hidden" id="medicalButtonType" />
+											</div>
+									</div>
+									</div>
+									<div id="reasonUpload" class="modal-body clearfix  grey2" style="border-bottom: 1px solid #DDDDDD;display: none;">
+										<div class="form-horizontal" style="border-bottom: 0;">
+											<div class="form-group">
+												<label class="col-xs-3"><span style="color: red;">*</span>重新上傳原因：</label>
+												<div class="col-xs-9">
+													<textarea rows="5" maxlength="1000" id="againUploadReason"></textarea>
+												</div>
+											</div>
+									</div>
+									</div>
+									<div class="modal-footer grey2">
+										<a href="#">
+											<button type="button" class="bgGrey lock2" data-dismiss="modal" aria-label="Close" id="deny">取消</button>
+										</a>
+										<a href="javascript:void(0);">
+											<button type="button" class="bgOrange lock2" data-dismiss="modal" aria-label="Close" id="modal-medical-go">確認送出</button>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>     
+
+
+							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+								<div class="profile-info-row">
+									<div class="profile-info-name"> 執行審核 </div>
+									<div class="profile-info-value">
+										<th:block th:if="${detailData['STATUS_TYPE'] != '7C'}">
+											<th:block th:if="${detailData['STATUS_TYPE'] != '0'}">
+												<button type="button" class="bgGrey" disabled>通知補件</button>
+											</th:block>
+											<th:block th:if="${detailData['STATUS_TYPE'] == '0'}">
+												<button type="button" class="bgOrange" th:onclick="'javascript:medicalOnSupplement(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">通知補件</button>
+											</th:block>
+
+											<th:block th:if="${detailData['STATUS_TYPE'] != '0' && detailData['STATUS_TYPE'] != '4' && detailData['STATUS_TYPE'] != '5' && detailData['STATUS_TYPE'] != '7C'}">
+												<button type="button" class="bgGrey" disabled>異常件註記</button>
+											</th:block>
+											<th:block th:if="${detailData['STATUS_TYPE'] == '0' || detailData['STATUS_TYPE'] == '4' || detailData['STATUS_TYPE'] == '5'}">
+												<button type="button" class="bgOrange" th:onclick="'javascript:medicalOnReturn(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">異常件註記</button>
+											</th:block>
+
+											<th:block th:if="${detailData['STATUS_TYPE'] == '-1' || detailData['STATUS_TYPE'] == '2' || detailData['STATUS_TYPE'] == '3' ||detailData['STATUS_TYPE'] == '7'}">
+												<button type="button" class="bgGrey" disabled>已完成</button>
+											</th:block>
+											<th:block th:if="${detailData['STATUS_TYPE'] != '-1' && detailData['STATUS_TYPE'] != '2' && detailData['STATUS_TYPE'] != '3' && detailData['STATUS_TYPE'] != '7'}">
+												<button type="button" class="bgOrange" th:onclick="'javascript:onAudit(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">已完成</button>
+											</th:block>
+										</th:block>
+										<th:block th:if="${detailData['STATUS_TYPE'] == '7C'}">
+											<button type="button" style="width: 120px;" class="bgOrange" th:onclick="'javascript:medicalOnReturn(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">異常件註記覆核</button>
+										</th:block>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<div class="profile-info-row">
+							<div class="profile-info-name"> 查詢歷程資料 </div>
+							<div class="profile-info-value">
+								<button type="button" class="bgOrange" th:onclick="'javascript:medicalOnStatus(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'\');'">狀態歷程</button>
+								<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+									<button type="button" class="bgOrange" th:onclick="'javascript:medicalViewSupplement(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'\');'" style="position: relative;">
+										補件單歷程<i class="foo-warning"></i>
+									</button>
+								</th:block>
+								<button type="button" class="bgOrange" th:onclick="'javascript:medicalOnAlliance(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CASE_ID']} + '\',\'' + ${detailData['FROM_COMPANY_ID']} + '\',\'\');'">醫療介接歷程</button>
+								<!-- <button type="button" class="bgOrange" onclick="onPrint()">詳細資料列印</button> -->
+								<button style="width: 100px;" type="button" class="bgOrange" th:onclick="'javascript:onDetail(\'' + ${detailData['TRANS_NUM']} + '\');'">詳細資料列印</button>
+							</div>
+						</div>
+						<div class="modal fade in" id="modal-container-imgConfirm" role="dialog" aria-labelledby="myModalLabel" 
+							aria-hidden="true" style="z-index: 1200;">
+							<div class="modal-dialog">
+								<div class="modal-content lock-up">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+									</div>
+									<div class="modal-body clearfix center1" id="imgOnPrint" style="max-height: 500px;overflow: auto;height: 500px;">
+										<img id="imgsrc" width="500" alt=""/>
+									</div>
+									<div class="modal-footer grey2">
+										<a href="javascript:void(0);">
+											<!-- <button type="button" class="bgOrange" onclick="window.open($('#imgsrc').attr('src'))" id="go">列印</button> -->
+											<button type="button" class="bgOrange" onclick="onPrint();" id="go">列印</button>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-11">
+					<div class="panel panel-default profile-user-info" >
+						<div class="panel-heading">※ 保險科技共享平台醫療資料</div>
+						<div class="panel-body clear1" id="poliyClaimsDetail">
+							<div class="mycigna3">
+							<div class="col-md-12 detailPolicy">
+								<th:block th:if="${not #lists.isEmpty(detailData.FileDatas)}">
+									<th:block th:if="${not #lists.isEmpty(detailData.Parameters)}">
+										<th:block th:each="vo, rowStat : ${detailData.FileDatas}">
+											<th:block th:each="po, rpo : ${detailData.Parameters}">
+												<th:block th:if="${vo.TYPE eq po.parameterValue}">		
+													<div class="form-horizontal">
+														<div class="form-group">
+															<label class="col-xs-4">醫療資料介接案件狀態：</label>
+															<div class="col-xs-8">
+																<th:block th:if="${vo.FILE_STATUS != ''}">
+																	<th:block th:inline="text">[[${vo.FILE_STATUS}]]</th:block>
+																</th:block>
+															</div>
+														</div>
+														<div class="form-group">
+																<label class="col-xs-4">已取回的醫療資料：</label>
+																<div class="col-xs-8">
+																		<th:block th:if="${po.parameterName != ''}">
+																			<th:block th:inline="text">[[${po.parameterName}]]</th:block>
+																		</th:block>
+																		<br/>
+																		<th:block th:text="${vo.FILE_NAME}"/>
+																		<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
+																			<embed   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:application/pdf;base64, '+${vo.FileBase64}" type="application/pdf" width="50">
+																		</div>
+																		<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.jpg')}">
+																			<img   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'" th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+																		</div>
+																		<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
+																			<img  th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+																		</div>
+																</div>
+															</div>
+													</div>
+												</th:block>	
+											</th:block>
+										</th:block>
+									</th:block>
+								</th:block>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div th:id="${detailData['TRANS_NUM']}" class="col-xs-12 col-sm-11">				
+					<div class="panel panel-default profile-user-info">
+
+						<div class="panel-heading">※ 申請資料</div>
+						<div class="panel-body clear1" id="poliyClaimsDetail">
+ 
+						<div class="mycigna3">
+							<div class="col-md-12 detailPolicy">
+								<div class="form-horizontal">
+									<div class="form-group">
+										<label class="col-xs-3">申請項目：</label>
+										<div class="col-xs-9" id="medical_label_apply_item">
+											<th:block th:each="from : ${#strings.arraySplit(detailData['APPLYITEM'], ',')}">
+												<th:block th:each="vo : ${session.APPLICATION_ITEMS}">
+													<th:block th:if="${from eq vo.value.parameterValue}"> 
+														<th:block th:inline="text" >[[${ vo.value.parameterName}]]</th:block>
+														<input type="hidden"  id="medicalParameterName" th:value="${vo.value.parameterName}"/>
+													</th:block>
+												</th:block>
+											</th:block>
+										</div>
+									</div>
+									<!-- <div class="form-group">
+										<label class="col-xs-3">要保人姓名：</label>
+										<div class="col-xs-9">
+											<b><span><th:block th:text="${detailData['CUSTOMERNAME']}"/></span></b>
+										</div>
+									</div> -->
+									<div class="form-group">
+										<label class="col-xs-3">保單號碼：</label>
+										<div class="col-xs-9">
+											<span><th:block th:text="${detailData['POLICYNO']}"/></span>
+											<input type="hidden"  id="medicalTransNum" th:value="${detailData['TRANS_NUM']}"/>
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i>  ^ 事故者質料
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">事故人：</label>
+											<div class="col-xs-9">會員本人</div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">被保險人姓名：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">身份證字號：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ID_NO']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">出生年月日：</label>
+											<div class="col-xs-9">
+												<span>
+													<th:block th:text="${detailData['BIRDATE']} "/>
+												</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">聯絡電話：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['TEL']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">行動電話：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['PHONE']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">E-MAIL：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['MAIL']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">聯絡地址：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ADDRESS']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3">與主被保險人(員工關係)：</label>
+											<div class="col-sm-9"><span><th:block th:text="${detailData['RELATION_NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3">被保險人是否投保別家保險公司之保險：</label>
+											<div class="col-sm-9"><span>
+												<!-- <th:block th:text="${detailData['OTHERCOMPANYINSURED']}"/> -->
+												<th:block th:if="${detailData['OTHERCOMPANYINSURED'] eq 'Y'}">有</th:block>
+											    <th:block th:if="${detailData['OTHERCOMPANYINSURED'] eq 'N'}">沒有</th:block>
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">保險公司名稱：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['OTHERINSUCOMMPANY']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">保險種類：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['OTHERINSUTYPE']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">保險金額：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['OTHERINSUAMOUNT']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">同時申請理賠：</label>
+											<div class="col-xs-9"><span>
+												<!-- <th:block th:text="${detailData['OTHERINSUCLAIM']}"/> -->
+												<th:block th:if="${detailData['OTHERINSUCLAIM'] eq 'Y'}">是</th:block>
+												<th:block th:if="${detailData['OTHERINSUCLAIM'] eq 'N'}">否</th:block>
+											</span></div>
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  保險事故
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">事故種類：</label>
+											<!-- <div class="col-xs-9">意外</div> -->
+											<th:block th:if="${session['PAGE_WORDING'] == null}">
+												<div class="col-sm-8">
+													<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '1'}">疾病</th:block>
+													<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '2'}">意外</th:block>
+												</div>
+											</th:block>
+											<th:block th:if="${session['PAGE_WORDING'] != null}">
+												<div class="col-sm-8">
+													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_01'] == null}">
+														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '1'}">疾病</th:block>
+													</th:block>
+													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_01'] != null}">
+														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq session.PAGE_WORDING['INS_ACCIDENT_01'].parameterValue}">
+														<label th:inline="text">[[${session.PAGE_WORDING['INS_ACCIDENT_01'].parameterName}]] </label></th:block>
+													</th:block>
+													
+													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_02'] == null}">
+														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '2'}">意外</th:block>
+													</th:block>
+													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_02'] != null}">
+														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq session.PAGE_WORDING['INS_ACCIDENT_02'].parameterValue}">
+														<label th:inline="text">[[${session.PAGE_WORDING['INS_ACCIDENT_02'].parameterName}]] </label></th:block>
+													</th:block>
+												</div>
+											</th:block>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">事故當時職業：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['JOB']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">發生時間：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCIDENT_DATE']+' ' +detailData['ACCIDENT_TIME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">事故地點：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCIDENT_LOCATION']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">事故原因及送醫經過詳情:<br/> (請述明就診醫院名稱)</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCIDENT_DESCR']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">是否報警：</label>
+											<div class="col-xs-9"><span>
+												<th:block th:if="${detailData['CALLPOLICE'] eq 'Y'}">是</th:block>
+                                    			<th:block th:if="${detailData['CALLPOLICE'] eq 'N'}">否</th:block>
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">事故處理單位：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['POLICE_STATION']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">承辦警員：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['POLICE_NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">警方電話：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['POLICE_PHONE']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">報案日期：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['POLICE_DATE'] +' ' +detailData['POLICE_TIME']}"/></span></div>
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  醫療資料介接聯盟鏈授權專區
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">醫療聯盟説明:</label>
+											<div class="col-xs-9">
+												[[${session.PAGE_WORDING != null and session.PAGE_WORDING['MEDICAL_TREATMENT_PAGE'] != null} ? ${session.PAGE_WORDING['MEDICAL_TREATMENT_PAGE'].parameterValue} : '
+												即日起，使用本公司線上理賠申請服務時，可一併授權本公司將您的理賠申請資料，透過「中華民國人壽保險商業同業公會」建制之「理賠醫起通」服務傳送予您有投保之保險公司（該保險公司須有參與理賠醫起通），免除以往須向不同保險公司分別提出理賠申請之不便。
+												']]
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">是否傳送其他醫療單位:</label>
+											<div class="col-xs-9"><span>
+												<th:block th:if="${detailData['FROM_HOSPITAL_ID'] eq 'Y'}">同意</th:block>
+                                				<th:block th:if="${detailData['FROM_HOSPITAL_ID'] eq 'N'}">不同意</th:block>
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">授權時間區間:</label>
+											<div class="col-xs-9"><span>
+												 <th:block th:text="${detailData['AUTHORIZATION_START_DATE']}"></th:block> 
+												~
+                                				<th:block th:text="${detailData['AUTHORIZATION_END_DATE']}"></th:block>
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">授權文件類型:</label>
+											<div class="col-xs-9"><span>
+												<th:block th:if="${detailData['AUTHORIZATION_FILE_TYPE'] != null}">
+													<th:block th:each="from : ${#strings.arraySplit(detailData['AUTHORIZATION_FILE_TYPE'], ',')}">
+														<th:block th:if="${from eq '1'}">
+															<span>診斷證明書</span>
+														</th:block>
+														<th:block th:if="${from eq '2'}">
+															<span>收據</span>
+														</th:block>
+													</th:block>
+												</th:block>   
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">同意轉送的醫療單位:</label>
+											<th:block th:if="${hospitalList != null}">
+												<div class="col-sm-9">
+													<th:block th:each="from : ${#strings.arraySplit(detailData['TO_HOSPITAL_ID'], ',')}">
+														<th:block th:each="vo : ${hospitalList}">
+															<th:block th:if="${from eq vo.hpid}">
+																<th:block th:inline="text">[[${vo.hpName}]]</th:block>
+														</th:block>
+															</th:block>
+														</th:block>
+												</div>
+											</th:block>
+											
+										</div>
+									</div>
+								</div>							
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  壽險公會理賠聯盟鏈授權專區
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">理賠聯盟説明：</label>
+											<div class="col-xs-9">[[${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_POLICYCLAIM_015'] != null} ? ${session.PAGE_WORDING['WORDING_POLICYCLAIM_015'].parameterValue} : '即日起，使用本公司線上理賠申請服務時，可一併授權本公司將您的理賠申請資料，透過「中華民國人壽保險同業公會」
+												建制「保險區塊鏈聯盟科技通用共享平臺」傳送予您有投保之保險公司（該保險公司需有參與聯盟鏈），免除以往需向不同
+												公司分別提出理賠申請之不便。']]</div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">是否傳送其他保險公司：</label>
+											<div class="col-xs-9"><span>
+												<th:block th:if="${detailData['TO_COMPANY_ID'] != null}">同意</th:block>
+                                				<th:block th:unless="${detailData['TO_COMPANY_ID'] != null }">不同意</th:block>
+											</span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">授權傳送公司：</label>
+											<th:block th:if="${hospitalInsuranceCompanyList != null}">
+												<div class="col-sm-9">
+													<th:block th:if="${detailData['TO_COMPANY_ID'] != null}">
+														<th:block th:each="from : ${#strings.arraySplit(detailData['TO_COMPANY_ID'], ',')}">
+															<th:block th:each="vo : ${hospitalInsuranceCompanyList}">
+																<th:block th:if="${from eq vo.insuranceId}">
+																	<th:block th:inline="text">[[${vo.insuranceName}]]</th:block>
+																</th:block>
+															</th:block>
+														</th:block>
+													</th:block>
+												</div>
+											</th:block>
+											
+										</div>
+									</div>
+								</div>							
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  給付方式
+									</div>
+									<div class="mobile-toggle-panel">
+										<div class="form-group">
+											<label class="col-xs-3">指定給付方式：</label>
+											<!-- <div class="col-xs-9"><span>
+												<th:block th:if="${detailData['PAYMENT_METHOD'] eq '1'}">電匯</th:block>
+                                				<th:block th:if="${detailData['PAYMENT_METHOD'] eq '2'}">郵寄支票</th:block>
+											</span></div> -->
+											<th:block th:if="${session['PAGE_WORDING'] == null}">
+												<div class="col-xs-9"><span>
+													<th:block th:if="${detailData['PAYMENT_METHOD'] eq '1'}">電匯</th:block>
+													<th:block th:if="${detailData['PAYMENT_METHOD'] eq '2'}">郵寄支票</th:block>
+												</span></div>
+											</th:block>
+											<th:block th:if="${session['PAGE_WORDING'] != null}">
+												<div class="col-xs-9"><span>
+													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_01'] == null}">
+														<th:block th:if="${detailData['PAYMENT_METHOD'] eq '1'}">電匯</th:block>
+													</th:block>
+													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_01'] != null}">
+														<th:block th:if="${detailData['PAYMENT_METHOD'] eq session.PAGE_WORDING['TRANS_MDOE_01'].parameterValue}">
+														<label th:inline="text">[[${session.PAGE_WORDING['TRANS_MDOE_01'].parameterName}]] </label></th:block>
+													</th:block>
+													
+													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_02'] == null}">
+														<th:block th:if="${detailData['PAYMENT_METHOD'] eq '2'}">郵寄支票</th:block>
+													</th:block>
+													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_02'] != null}">
+														<th:block th:if="${detailData['PAYMENT_METHOD'] eq session.PAGE_WORDING['TRANS_MDOE_02'].parameterValue}">
+														<label th:inline="text">[[${session.PAGE_WORDING['TRANS_MDOE_02'].parameterName}]] </label></th:block>
+													</th:block>
+												</span></div>
+											</th:block>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">匯款賬戶：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCOUNTNAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">銀行名稱：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['BANK_NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">分行名稱：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['BRANCH_NAME']}"/></span></div>
+										</div>
+										<div class="form-group">
+											<label class="col-xs-3">賬號：</label>
+											<div class="col-xs-9"><span><th:block th:text="${detailData['BANK_ACCOUNT']}"/></span></div>
+										</div>
+									</div>
+								</div>
+								<div class="form-horizontal">
+									<div class="colorGreen mobile-toggle" data-toggle="true">
+										<i class="fa hid2 foo-angle-up mobile"></i>
+										<i class="fa foo-angle-up hid1"></i> ^  上傳申請應備文件
+									</div>
+									<div class="mobile-toggle-panel">
+										<th:block th:if="${not #lists.isEmpty(detailData.FileDatas)}">
+											<th:block th:if="${not #lists.isEmpty(detailData.medicalUploadfile)}">
+												<th:block th:each="vo, rowStat : ${detailData.FileDatas}">
+													<th:block th:each="po, rpo : ${detailData.medicalUploadfile}">
+														<th:block th:if="${vo.TYPE eq po.parameterCode}">
+															<div class="form-group">
+															<label class="col-sm-3">
+																<th:block th:if="${vo.TYPE_NAME != ''}">
+																	<th:block th:inline="text">[[${vo.TYPE_NAME}]]：</th:block>
+																</th:block>
+																<th:block th:if="${vo.TYPE_NAME == ''}">
+																	補件：
+																</th:block>
+															</label>
+															<div class="col-sm-9">
+																<th:block th:text="${vo.FILE_NAME}"/>
+																<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
+																	<embed   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:application/pdf;base64, '+${vo.FileBase64}" type="application/pdf" width="50">
+																</div>
+																<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.jpg')}">
+																	<img   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'" th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+																</div>
+																<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
+																	<img  th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+																</div>
+															</div>
+															</div>
+														</th:block>	
+													</th:block>
+												</th:block>
+											</th:block>
+										</th:block>
+									 </div>
+									
+								</div>
+							</div>
+						</div>
+
+					</div>			
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</td>
+</tr>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        // var fileDatas = /*[[${detailData.FileDatas}]]*/;
+        // if (fileDatas != null) {
+        //     for(var i=0; i < fileDatas.length ; i++){
+		// 		if (fileDatas[i].FILE_NAME.indexOf('.pdf') >= 0 || fileDatas[i].FILE_NAME.indexOf('.PDF') >= 0) {
+		// 			var A = document.createElement("a");  
+		// 			A.setAttribute("href","/images/" + fileDatas[i].FILE_NAME);
+		// 			A.setAttribute("target","_blank");
+		// 			document.body.appendChild(A);
+		// 			A.click();
+		// 		}
+		// 	}
+        // }
+		function imgConfirm(obj){
+			  $.ajaxSetup({async: false});
+				var data = {
+					fdId:obj
+				}
+				$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				contentType : 'application/json',
+				data : JSON.stringify(data),
+				url : /*[[@{/medicalTreatmentDetail/base64FileSize}]]*/,
+				success : function(response) {
+				   console.log(response.result);
+				   if(response.result=="SUCCESS"){
+					if(response.resultData.fileBase64!=null && response.resultData.fileBase64!="" ){
+							$('#modal-container-imgConfirm').modal({
+								show: true,
+								backdrop: 'static', 
+								keyboard: false
+							});
+							if(response.resultData.type=="pdf"){
+								$("#imgsrc").attr('src','data:application/pdf;base64, '+response.resultData.fileBase64);
+								$("#imgsrc").attr('type','application/pdf');
+							}else{
+								$("#imgsrc").attr('src','data:image/png;base64, '+response.resultData.fileBase64);
+								$('#print_detail').html($('#imgOnPrint').html());
+							}
+						}else{
+							alertMsg("「檔案過大無法於畫面呈現，請至影像系統查詢」");
+						}
+				   }else{
+					alertMsg("「檔案過大無法於畫面呈現，請至影像系統查詢」");
+				   }
+				},
+				error :function() {
+					alertMsg("「檔案過大無法於畫面呈現，請至影像系統查詢」");
+				}
+			});
+			$.ajaxSetup({async: true});
+			}
+			//醫院執行醫療資料介接 button事件
+			function medicalOnWorde(obj,agrs){
+				let parameterName=$('#medicalParameterName').val();
+				let transNum=$('#medicalTransNum').val();
+				$('#modal-medical-container-auditConfirm1').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				$("#htmltext3").text(obj);
+				$("#medicalButtonType").val(agrs);
+				$("#showMedicalParameterName").text(parameterName);	
+				$("#showMedicalTransNum").text(transNum);	
+				if(obj == '醫療病例重新上傳'){
+					$("#reasonUpload").show();
+				}else{
+					$("#reasonUpload").hide();
+				}
+			}
+			//醫院執行醫療資料介接 button-確認送出事件信息
+			$("#modal-medical-go").click(function(){
+					//獲取button提交類型
+				let  	medicalButtonType=$("#medicalButtonType").val();
+				//獲取申請序號
+				let transNum=$('#medicalTransNum').val();
+				//進行判斷是否進行選中
+				var checkBox =$("#medical-checkBox_info_approved")[0].checked;
+				if(!checkBox){
+					 alertMsg("請勾選已確認!");
+					  return false;
+					}
+				//取用醫療病例
+				if("GetMedicalCases"==medicalButtonType){
+						$.ajaxSetup({async: false});
+						var data = {
+							transNum:transNum,
+							allianceStatus:'ITPS_PTHG'
+						}
+						$.ajax({
+						type : 'POST',
+						dataType : 'json',
+						contentType : 'application/json',
+						data : JSON.stringify(data),
+						url : /*[[@{/medicalTreatmentDetail/getMedicalFileCases}]]*/,
+						success : function(response) {
+							console.log(response.result);
+							if(response.result=="SUCCESS"){
+								if(response.resultData>0){
+									$("#GetMedicalCases").attr("disabled",true);
+									$("#GetMedicalCases").addClass("bgGrey");
+									$("#NotTakeMedicalCases").attr("disabled",false);
+									$("#NotTakeMedicalCases").removeClass("bgGrey");	
+									$("#NotTakeMedicalCases").addClass("bgOrange");			
+									$("#UploadMedicalCases").attr("disabled",false);
+									$("#UploadMedicalCases").removeClass("bgGrey");	
+									$("#UploadMedicalCases").addClass("bgOrange");
+									$("#UploadMedicalCases").attr("onclick","medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')");				
+								}else{
+									alertMsg("網絡異常,請稍後再試");
+								}
+							}
+						},
+						error :function() {
+							alertMsg("網絡異常,請稍後再試");
+						}
+					});
+					$.ajaxSetup({async: true});
+				}else if("NotTakeMedicalCases"==medicalButtonType){
+					//不取用醫療病例
+					$.ajaxSetup({async: false});
+						var data = {
+							transNum:transNum,
+							allianceStatus:'ITPS_END'
+						}
+						$.ajax({
+						type : 'POST',
+						dataType : 'json',
+						contentType : 'application/json',
+						data : JSON.stringify(data),
+						url : /*[[@{/medicalTreatmentDetail/getMedicalFileCases}]]*/,
+						success : function(response) {
+							console.log(response.result);
+							if(response.result=="SUCCESS"){
+								if(response.resultData>0){
+									$("#NotTakeMedicalCases").attr("disabled",true);
+									$("#NotTakeMedicalCases").addClass("bgGrey");	
+									$("#UploadMedicalCases").attr("disabled",true);
+									$("#UploadMedicalCases").addClass("bgGrey");			
+									$("#GetMedicalCases").attr("disabled",true);
+									$("#GetMedicalCases").addClass("bgGrey");			
+								}else{
+									alertMsg("網絡異常,請稍後再試");
+								}
+							}
+						},
+						error :function() {
+							alertMsg("網絡異常,請稍後再試");
+						}
+					});
+					$.ajaxSetup({async: true});
+				}else if("UploadMedicalCases"==medicalButtonType){
+					//醫療病例重新上傳
+					//進行驗證重新上傳原因是否填寫數據
+				let  againUploadReason=	$("#againUploadReason").val();
+					if(againUploadReason=='' || againUploadReason==undefined){
+							alertMsg("請輸入,重新上傳原因");
+							return  false
+					}
+					$.ajaxSetup({async: false});
+						var data = {
+							transNum:transNum,
+							allianceStatus:'ITPR',
+							reUpload:againUploadReason
+						}
+						$.ajax({
+						type : 'POST',
+						dataType : 'json',
+						contentType : 'application/json',
+						data : JSON.stringify(data),
+						url : /*[[@{/medicalTreatmentDetail/getMedicalFileCases}]]*/,
+						success : function(response) {
+							console.log(response.result);
+							if(response.result=="SUCCESS"){
+								if(response.resultData>0){
+									$("#UploadMedicalCases").attr("disabled",true);
+									$("#UploadMedicalCases").addClass("bgGrey");
+									$("#NotTakeMedicalCases").attr("disabled",false);
+									$("#NotTakeMedicalCases").removeClass("bgGrey");	
+									$("#NotTakeMedicalCases").addClass("bgOrange");			
+									$("#GetMedicalCases").attr("disabled",false);
+									$("#GetMedicalCases").removeClass("bgGrey");	
+									$("#GetMedicalCases").addClass("bgOrange");		
+									$("#GetMedicalCases").attr("onclick","medicalOnWorde('取用醫療病例','GetMedicalCases')");	
+								}else{
+									alertMsg("網絡異常,請稍後再試");
+								}
+							}
+						},
+						error :function() {
+							alertMsg("網絡異常,請稍後再試");
+						}
+					});
+					$.ajaxSetup({async: true});
+				}else if("SuccessMedicalCases"==medicalButtonType){
+					//案件調查已完成	
+					$.ajaxSetup({async: false});
+						var data = {
+							transNum:transNum,
+							allianceStatus:'PQHF_END',
+						}
+						$.ajax({
+						type : 'POST',
+						dataType : 'json',
+						contentType : 'application/json',
+						data : JSON.stringify(data),
+						url : /*[[@{/medicalTreatmentDetail/getMedicalFileCases}]]*/,
+						success : function(response) {
+							console.log(response.result);
+							if(response.result=="SUCCESS"){
+								if(response.resultData>0){
+									$("#SuccessMedicalCases").attr("disabled",true);
+									$("#SuccessMedicalCases").addClass("bgGrey");	
+									$("#GetMedicalCases").attr("disabled",true);
+									$("#GetMedicalCases").addClass("bgGrey");		
+									$("#NotTakeMedicalCases").attr("disabled",true);
+									$("#NotTakeMedicalCases").addClass("bgGrey");		
+									$("#UploadMedicalCases").attr("disabled",true);
+									$("#UploadMedicalCases").addClass("bgGrey");		
+								}else{
+									alertMsg("網絡異常,請稍後再試");
+								}
+							}
+						},
+						error :function() {
+							alertMsg("網絡異常,請稍後再試");
+						}
+					});
+					$.ajaxSetup({async: true});
+				}
+			});
+
+    /*]]>*/
+</script>
