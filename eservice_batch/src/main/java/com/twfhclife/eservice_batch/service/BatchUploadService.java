@@ -62,7 +62,7 @@ public class BatchUploadService {
 		String applyItemText = "";
 		try {
 			// 2019.01.10 修改 by Ken: 為了上傳明細表紀錄取出的 trans object
-			processList.addAll(new TransPaymodeUtil().appendApplyItems(txtSb, systemTwDate));        // 繳別:001
+			processList.addAll(new TransPaymodeUtil().appendApplyItems(txtSb, systemTwDate));        // 繳別:001 | 035
 			processList.addAll(new TransAnnuityMethodUtil().appendApplyItems(txtSb, systemTwDate));  // 年金給付方式:002
 			processList.addAll(new TransBounsUtil().appendApplyItems(txtSb, systemTwDate));          // 紅利選擇權:003
 			processList.addAll(new TransRewardUtil().appendApplyItems(txtSb, systemTwDate));         // 增值回饋金領取方式:004
@@ -81,9 +81,11 @@ public class BatchUploadService {
 			processList.addAll(new TransChangeAccountUtil().appendApplyItems(txtSb, systemTwDate));  // 匯款帳號變更 (CS17):023
 			processList.addAll(new TransLoanUtil().appendApplyItems(txtSb, systemTwDate));  		 // 保單借款(線上):026
 			processList.addAll(new TransPolicyHolderProfileUtil().appendApplyItems(txtSb, systemTwDate));// 保戶基本資料更新:027
-			processList.addAll(new TransInvestmentUtil().appendApplyItems(txtSb, systemTwDate));// 未來保費投資標的與分配比例:029
 			processList.addAll(new TransDepositUtil().appendApplyItems(txtSb, systemTwDate));// 申請保單提領(贖回):028
+			processList.addAll(new TransInvestmentUtil().appendApplyItems(txtSb, systemTwDate));// 未來保費投資標的與分配比例:029
+			processList.addAll(new TransConversionUtil().appendApplyItems(txtSb, systemTwDate));// 變更投資標的與分配比例:030
 			processList.addAll(new TransCashPaymentUtil().appendApplyItems(txtSb, systemTwDate));// 收益分配或撥回資產分配方式:033
+			processList.addAll(new TransChangePremiumUtil().appendApplyItems(txtSb, systemTwDate));// 定期定額保費變更:034
 
 			applyItemText = txtSb.toString();
 			if (StringUtils.isEmpty(applyItemText)) {

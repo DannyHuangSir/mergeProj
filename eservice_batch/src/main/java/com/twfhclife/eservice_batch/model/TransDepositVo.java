@@ -34,6 +34,8 @@ public class TransDepositVo {
 
     private String invtNo;
 
+    private String currency;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -162,5 +164,13 @@ public class TransDepositVo {
 
     public void setInvtNo(String invtNo) {
         this.invtNo = invtNo;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

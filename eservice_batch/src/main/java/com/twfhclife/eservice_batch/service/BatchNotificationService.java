@@ -214,6 +214,7 @@ public class BatchNotificationService {
 			if(investmentVo == null) {
 				continue;
 			}
+			if (vo.getPortfolioVo() != null) {
 			MyPortfolioVo portfolioVo = vo.getPortfolioVo();
 			BigDecimal netAmt = portfolioVo.getSafpNetAmt(); // 目前金額
 			BigDecimal netUnits = portfolioVo.getSafpNetUnits(); // 目前單位數
@@ -258,6 +259,7 @@ public class BatchNotificationService {
 			portfolioVo.setAcctValue(acctValue);
 			portfolioVo.setAvgPval(avgPval);
 			vo.setPortfolioVo(portfolioVo);
+			}
 			tmpList.add(vo);
 		}
 		list.clear();
@@ -338,8 +340,8 @@ public class BatchNotificationService {
 	private boolean checkAssetValue(RoiNotificationVo vo) {
 		BigDecimal netValue = vo.getInvestmentVo().getNetValue();
 		logger.info(vo.getPolicyNo() + "標的 " + vo.getFundCode()+ " 净值: " + netValue);
-		BigDecimal upValue = new BigDecimal(vo.getPercentageUp()==null? "99999": vo.getPercentageUp().toString());
-		BigDecimal downValue = new BigDecimal(vo.getPercentageDown()==null? "99999": vo.getPercentageDown().toString());
+		BigDecimal upValue = new BigDecimal(vo.getUpValue()==null? "99999": vo.getUpValue().toString());
+		BigDecimal downValue = new BigDecimal(vo.getDownValue()==null? "99999": vo.getDownValue().toString());
 		return this.doCompare(upValue, downValue.multiply(new BigDecimal(-1)), netValue);
 	}
 
@@ -474,7 +476,6 @@ public class BatchNotificationService {
 			portfolio = vo.getPortfolioVo();
 			investmentVo = vo.getInvestmentVo();
 			
-			String insuCurr = StringUtils.trimToEmpty(investmentVo.getInvtCurr());
 			String insuCurrName = StringUtils.trimToEmpty(investmentVo.getInvtCurr());
 			String prodName = StringUtils.trimToEmpty(investmentVo.getName());
 			
@@ -487,6 +488,7 @@ public class BatchNotificationService {
 			}
 			
 			// 表頭
+			if (portfolio != null) {
 			if (firstInvt) {
 				sb.append("<tr align=\"center\" class=\"table_th\">");
 				sb.append("<th rowspan=\"2\">投資標的代碼</th>");
@@ -507,11 +509,31 @@ public class BatchNotificationService {
 			sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\" align=\"left\">" + investmentVo.getName() + "</td>");
 			sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + investmentVo.getInvtCurr() + "</td>");
 			sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + (StringUtils.trimToEmpty(investmentVo.getRiskBeneLevel()).length() == 0 ? "--" : investmentVo.getRiskBeneLevel()) + "</td>");
-			sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + ("NTD".equals(investmentVo.getInvtCurr()) ? investmentVo.getNetAmt().setScale(0, BigDecimal.ROUND_HALF_UP) : investmentVo.getNetAmt().setScale(2, BigDecimal.ROUND_HALF_UP)) + "</td>");
+				sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + ("NTD".equals(investmentVo.getInvtCurr()) ? portfolio.getSafpNetAmt().setScale(0, BigDecimal.ROUND_HALF_UP) : portfolio.getSafpNetAmt().setScale(2, BigDecimal.ROUND_HALF_UP)) + "</td>");
 			sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + MathUtil.mul(portfolio.getRoiRate(), new BigDecimal(100)) + "</td>");
 			sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + (StringUtils.trimToEmpty(vo.getPercentageUp().toString()).length() == 0 ? "--" : " +(正)&nbsp;" + vo.getPercentageUp() + "%") + "</td>");
 			sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + (StringUtils.trimToEmpty(vo.getPercentageDown().toString()).length() == 0 ? "--" : "-(負)&nbsp;" + vo.getPercentageDown() + "%") + "</td>");
 			sb.append("</tr>");
+			} else {
+				if (firstInvt) {
+					sb.append("<tr align=\"center\" class=\"table_th\">");
+					sb.append("<th rowspan=\"2\">投資標的代碼</th>");
+					sb.append("<th rowspan=\"2\">投資標的名稱</th>");
+					sb.append("<th rowspan=\"2\">投資標的<br>幣別</th>");
+					sb.append("</tr>");
+					sb.append("<tr align=\"center\" class=\"table_th2\">");
+					sb.append("<th width=\"8%\">現行淨值上限</th>");
+					sb.append("<th width=\"8%\">現行淨值下限</th>");
+					sb.append("</tr>");
+				}
+				sb.append("<tr align=\"center\">");
+				sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + investmentVo.getInvestNo() + "</td>");
+				sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\" align=\"left\">" + investmentVo.getName() + "</td>");
+				sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + investmentVo.getInvtCurr() + "</td>");
+				sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + (StringUtils.trimToEmpty(vo.getUpValue().toString()).length() == 0 ? "--" : " +(正)&nbsp;" + vo.getUpValue()) + "</td>");
+				sb.append("<td bgcolor=\"#ffffff\" class=\"txt12\">" + (StringUtils.trimToEmpty(vo.getDownValue().toString()).length() == 0 ? "--" : "-(負)&nbsp;" + vo.getDownValue()) + "</td>");
+				sb.append("</tr>");
+			}
 
 			firstInvt = false; // 設定非每個商品的第一個投資標的
 			lastInsuNo = vo.getPolicyNo(); // 設定這次的商品代碼

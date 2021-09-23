@@ -1,11 +1,11 @@
 package com.twfhclife.eservice_batch.service.onlineChange;
 
+import com.twfhclife.eservice_batch.dao.TransCashPaymentDao;
+import com.twfhclife.eservice_batch.dao.TransChangePremiumDao;
 import com.twfhclife.eservice_batch.dao.TransDao;
-import com.twfhclife.eservice_batch.dao.TransDepositDao;
-import com.twfhclife.eservice_batch.dao.TransInvestmentDao;
 import com.twfhclife.eservice_batch.dao.TransPolicyDao;
-import com.twfhclife.eservice_batch.model.TransDepositVo;
-import com.twfhclife.eservice_batch.model.TransInvestmentVo;
+import com.twfhclife.eservice_batch.model.TransCashPaymentVo;
+import com.twfhclife.eservice_batch.model.TransChangePremiumVo;
 import com.twfhclife.eservice_batch.model.TransPolicyVo;
 import com.twfhclife.eservice_batch.model.TransVo;
 import com.twfhclife.eservice_batch.util.StringUtil;
@@ -16,19 +16,19 @@ import org.apache.logging.log4j.Logger;
 import java.util.Collections;
 import java.util.List;
 
-public class TransDepositUtil {
+public class TransChangePremiumUtil {
 
-    private static final Logger logger = LogManager.getLogger(TransDepositUtil.class);
-    private static final String TRANS_TYPE = "DEPOSIT";
-    private static final String TRANS_STATUS = "-1";  // 申請中
-    private static final String UPLOAD_CODE = "028"; // 介接代碼
+    private static final Logger logger = LogManager.getLogger(TransChangePremiumUtil.class);
+    private static final String TRANS_TYPE = "CHANGE_PREMIUM";
+    private static final String TRANS_STATUS = "-1";   // 申請中
+    private static final String UPLOAD_CODE = "034"; // 介接代碼
 
     public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate) {
         logger.info("Start running generate apply file: {}", TRANS_TYPE);
 
         TransDao transDao = new TransDao();
         TransPolicyDao transPolicyDao = new TransPolicyDao();
-        TransDepositDao transDepositDao = new TransDepositDao();
+        TransChangePremiumDao transChangePremiumDao = new TransChangePremiumDao();
 
         // 申請資料條件
         TransVo transVo = new TransVo();
@@ -43,9 +43,9 @@ public class TransDepositUtil {
                 logger.info("TransNum: {}", transNum);
 
                 // 取得資料
-                TransDepositVo transDepositVo = new TransDepositVo();
-                transDepositVo.setTransNum(transNum);
-                List<TransDepositVo> list = transDepositDao.getTransDeposits(transDepositVo);
+                TransChangePremiumVo transChangePremiumVo = new TransChangePremiumVo();
+                transChangePremiumVo.setTransNum(transNum);
+                List<TransChangePremiumVo> list = transChangePremiumDao.getTransChangePremium(transChangePremiumVo);
                 if (list != null && list.size() > 0) {
                     // 取得保單號碼
                     TransPolicyVo tpQryVo = new TransPolicyVo();
@@ -54,24 +54,14 @@ public class TransDepositUtil {
                     if (transPolicyList != null) {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
-                            for (TransDepositVo vo : list) {
-                                // 介接代碼(3),申請序號(12),保單號碼(10),投資標的(10),轉出單位（18）,匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60),
-                                //收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
-                                String line = String.format(StringUtils.repeat("%s", 14),
+                            for (TransChangePremiumVo vo : list) {
+                                // 介接代碼(3),申請序號(12),保單號碼(10),新定期繳費(10),P(1),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                String line = String.format(StringUtils.repeat("%s", 7),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
-                                        StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.lpad(String.valueOf(vo.getAmount()), 18, "0"),
-                                        StringUtil.rpadBlank(String.valueOf(vo.getAccountName()), 18),
-                                        StringUtil.rpadBlank(vo.getAccountName(), 20),
-                                        StringUtil.rpadBlank(vo.getBankName(), 10),
-                                        StringUtil.rpadBlank(vo.getBranchName(), 10),
-                                        StringUtil.rpadBlank(vo.getBankCode(), 3),
-                                        StringUtil.rpadBlank(vo.getBranchCode(), 4),
-                                        StringUtil.rpadBlank(vo.getBankCode(), 16),
-                                        StringUtil.rpadBlank(vo.getSwiftCode(), 16),
-                                        StringUtil.rpadBlank(vo.getEnglishName(), 60),
+                                        StringUtil.lpad(String.valueOf(vo.getAmount()), 10, "0"),
+                                        "1",
                                         systemTwDate,
                                         systemTwDate
                                 );

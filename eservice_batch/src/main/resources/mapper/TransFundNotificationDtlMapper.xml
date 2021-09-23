@@ -11,7 +11,7 @@
     </resultMap>
     
     <sql id="Base_Column_List">
-        ID,TRANS_FUND_NOTIFICATION_ID,FUND_CODE,PERCENTAGE_UP,PERCENTAGE_DOWN,TYPE
+        ID,TRANS_FUND_NOTIFICATION_ID,FUND_CODE,PERCENTAGE_UP,PERCENTAGE_DOWN,TYPE,UP_VALUE,DOWN_VALUE
     </sql>
     
     <sql id="whereCondition">

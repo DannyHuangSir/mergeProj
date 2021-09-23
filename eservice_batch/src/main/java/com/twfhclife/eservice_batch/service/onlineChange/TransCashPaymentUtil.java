@@ -20,7 +20,7 @@ public class TransCashPaymentUtil {
 
     private static final Logger logger = LogManager.getLogger(TransCashPaymentUtil.class);
     private static final String TRANS_TYPE = "CASH_PAYMENT";
-    private static final String TRANS_STATUS = "1";  // 1:已審核
+    private static final String TRANS_STATUS = "-1";   // 申請中
     private static final String UPLOAD_CODE = "033"; // 介接代碼
 
     public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate) {
@@ -56,7 +56,7 @@ public class TransCashPaymentUtil {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransCashPaymentVo vo : list) {
                                 // 介接代碼(3),申請序號(12),保單號碼(10),新收益分配或撥回資產分配方式(2),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
-                                String line = String.format(StringUtils.repeat("%s", 9),
+                                String line = String.format(StringUtils.repeat("%s", 6),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),

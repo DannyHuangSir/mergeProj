@@ -7,6 +7,8 @@
 		<result column="FUND_CODE" property="fundCode" />
 		<result column="PERCENTAGE_UP" property="percentageUp" />
 		<result column="PERCENTAGE_DOWN" property="percentageDown" />
+	<result column="UP_VALUE" property="upValue" />
+		<result column="DOWN_VALUE" property="downValue" />
 	</resultMap>
 	
 	<resultMap id="investmentMap" type="com.twfhclife.eservice_batch.model.InvestmentVo">
@@ -28,7 +30,7 @@
 	</resultMap>
 	
 	<sql id="Base_Column_List">
-	   ID, POLICY_NO, FUND_CODE, PERCENTAGE_UP, PERCENTAGE_DOWN
+	   ID, POLICY_NO, FUND_CODE, PERCENTAGE_UP, PERCENTAGE_DOWN,UP_VALUE, DOWN_VALUE
 	</sql>
 	
 	<update id="updateAllDisable">
@@ -109,7 +111,7 @@
 			(
 			  SELECT DISTINCT POLICY_NO FROM ESERVICE.DBO.ROI_NOTIFICATION_JOB 
 			  WHERE POLICY_NO = #{policyNo} 
-			    AND ENAMBLED = 'Y'
+			    AND ENABLED = 'Y'
 			) ROI ON ROI.POLICY_NO=LIPM.LIPM_INSU_NO
 	</select>
 	
@@ -168,7 +170,7 @@
 	</select>
 
 	<select id="findFundByInvestNo" resultType="com.twfhclife.eservice_batch.model.InvestmentVo">
-		SELECT #{vo.insuNo} insuNo, F.FUND_CODE invtNo, F.CURRENCY invtCurr, R.BUY_PRICE exchRate, FV.SELL_PRICE netValue
+		SELECT TOP 1 #{vo.insuNo} insuNo, F.FUND_CODE invtNo, F.CURRENCY invtCurr, R.BUY_PRICE exchRate, FV.SELL_PRICE netValue
 		FROM ESERVICE.DBO.FUND F
 		LEFT JOIN ESERVICE.DBO.EXCHANGE_RATE R ON F.CURRENCY = R.EXCHANGE_CODE AND R.CURRENCY_CODE = 'NTD' AND R.EFFECTIVE_DATE = #{time}
 		LEFT JOIN ESERVICE.DBO.FUND_VALUE FV ON FV.FUND_CODE = F.FUND_CODE

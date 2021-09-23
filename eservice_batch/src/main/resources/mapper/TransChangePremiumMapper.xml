@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransChangePremiumMapper" >
+	<resultMap id="BaseResultMap" type="com.twfhclife.eservice_batch.model.TransChangePremiumVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="AMOUNT" property="amount"/>
+		<result column="OLD_AMOUNT" property="oldAmount"/>
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		ID, TRANS_NUM, AMOUNT, OLD_AMOUNT
+	</sql>
+
+	<select id="getTransChangePremiums" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/>
+		FROM  ESERVICE.dbo.TRANS_CHANGE_PREMIUM
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+</mapper>

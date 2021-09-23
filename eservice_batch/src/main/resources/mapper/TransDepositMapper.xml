@@ -8,8 +8,6 @@
 		<result column="INVT_NO" property="invtNo" jdbcType="NVARCHAR" />
 		<result column="AMOUNT" property="amount" jdbcType="NUMERIC" />
 		<result column="RATIO" property="ratio" jdbcType="NUMERIC" />
-		<result column="DEPOSIT_METHOD" property="depositMethod" jdbcType="VARCHAR" />
-		<result column="PAYMENT_METHOD" property="paymentMethod" jdbcType="VARCHAR" />
 		<result column="SWIFT_CODE" property="swiftCode" jdbcType="VARCHAR" />
 		<result column="ENGLISH_NAME" property="englishName" jdbcType="VARCHAR" />
 		<result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR" />

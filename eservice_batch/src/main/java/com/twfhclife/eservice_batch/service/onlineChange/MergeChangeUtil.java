@@ -43,7 +43,7 @@ public class MergeChangeUtil {
 	//	014:「補發保單」: 申請值(1), 寄送地址(50)
 	//  027:「保戶基本資料更新」：國籍代碼(2),職業代碼大(2),職業代碼中(2),職業代碼小(4)
 	//  002:「年金給付」變更: 保證期間申請值(2)
-	private List<String> mergeChangeCodeList = Arrays.asList("001", "002", "003", "004", "005", "006", "009", "010", "014", "027");
+	private List<String> mergeChangeCodeList = Arrays.asList("001", "002", "003", "004", "005", "006", "009", "010", "014", "027", "028", "029", "030");
 
 	public List<String> getMergePolicyNoList(String applyItemText) {
 		String[] lines = applyItemText.split("\r\n");
@@ -123,7 +123,10 @@ public class MergeChangeUtil {
 		String resendPolicyFlag = "";
 		String resendPolicyAdress = "";
 		String policyHolderProfile = "";
-		
+		String conversion = "";
+		String investment = "";
+		String deposit = "";
+
 		StringBuilder mergeSb = new StringBuilder();
 		for (String policyNo : mergePolicyNoList) {
 			String transNumMerge = transMergeDao.getTodayNextTransMergeNum();
@@ -305,6 +308,33 @@ public class MergeChangeUtil {
 							removeLineKeyList.add(lineKey);
 						}
 					}
+
+					if (line.startsWith("028") && policyNo.equals(linePolicyNo) && line.length() > 25) {
+						deposit = line.substring(25);
+						insertTransMerge(transMergeVo);
+
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
+
+					if (line.startsWith("029") && policyNo.equals(linePolicyNo) && line.length() > 25) {
+						investment = line.substring(25);
+						insertTransMerge(transMergeVo);
+
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
+
+					if (line.startsWith("030") && policyNo.equals(linePolicyNo) && line.length() > 25) {
+						investment = line.substring(25);
+						insertTransMerge(transMergeVo);
+
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
 				}
 			}
 			
@@ -325,7 +355,10 @@ public class MergeChangeUtil {
 					StringUtil.rpadBlank(resendPolicyFlag, 1),
 					StringUtil.rpadBlank(resendPolicyAdress, 50),
 					StringUtil.rpadBlank(policyHolderProfile, 10),
-					StringUtil.rpadBlank(guaranteePeriod, 2)
+					StringUtil.rpadBlank(guaranteePeriod, 2),
+					StringUtil.rpadBlank(investment, 1 + 10 + 18 + 1),
+					StringUtil.rpadBlank(conversion, 10 + 18 + 10 + 1),
+					StringUtil.rpadBlank(deposit, 10 + 18 + 20 + 10 + 10 + 3 + 4 + 16 + 16 + 60)
 			));
 			mergeSb.append("\r\n");
 		}

@@ -1,9 +1,12 @@
 package com.twfhclife.eservice_batch.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.math.BigDecimal;
 
-public class TransPaymodeVo {
+public class TransChangePremiumVo {
 	
+	private static final long serialVersionUID = 1L;
 	/**  */
 	private BigDecimal id;
 	/**  */
@@ -12,11 +15,11 @@ public class TransPaymodeVo {
 	private String paymode;
 	/**  */
 	private String paymodeOld;
-	/** 生效日*/
-	private String activeDate;
 
 	private BigDecimal amount;
-	
+
+	private BigDecimal oldAmount;
+
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -49,14 +52,6 @@ public class TransPaymodeVo {
 		this.paymodeOld = paymodeOld;
 	}
 
-	public String getActiveDate() {
-		return activeDate;
-	}
-
-	public void setActiveDate(String activeDate) {
-		this.activeDate = activeDate;
-	}
-
 	public BigDecimal getAmount() {
 		return amount;
 	}
@@ -64,5 +59,17 @@ public class TransPaymodeVo {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-}
 
+	public BigDecimal getOldAmount() {
+		return oldAmount;
+	}
+
+	public void setOldAmount(BigDecimal oldAmount) {
+		this.oldAmount = oldAmount;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+}

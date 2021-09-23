@@ -1,16 +1,5 @@
 package com.twfhclife.eservice_batch.service.onlineChange;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.twfhclife.eservice_batch.dao.ParameterDao;
 import com.twfhclife.eservice_batch.dao.TransDao;
 import com.twfhclife.eservice_batch.dao.TransPaymodeDao;
@@ -21,6 +10,13 @@ import com.twfhclife.eservice_batch.model.TransPolicyVo;
 import com.twfhclife.eservice_batch.model.TransVo;
 import com.twfhclife.eservice_batch.util.MyStringUtil;
 import com.twfhclife.eservice_batch.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 繳別:001
@@ -46,6 +42,7 @@ public class TransPaymodeUtil {
 		TransDao transDao = new TransDao();
 		TransPolicyDao transPolicyDao = new TransPolicyDao();
 		TransPaymodeDao paymodeDao = new TransPaymodeDao();
+		ParameterDao parameterDao = new ParameterDao();
 		
 		// 申請資料條件
 		TransVo transVo = new TransVo();
@@ -62,7 +59,8 @@ public class TransPaymodeUtil {
 				// 取得新的變更保單資訊
 				String paymode = "";
 				String activeDate = "";
-				
+				BigDecimal amount = BigDecimal.valueOf(0);
+
 				TransPaymodeVo qryVo = new TransPaymodeVo();
 				qryVo.setTransNum(transNum);
 				List<TransPaymodeVo> paymodeList = paymodeDao.getTransPaymodeList(qryVo);
@@ -82,16 +80,30 @@ public class TransPaymodeUtil {
 						activeDate = paymodeDao.getActiveDate(policyNo);//下一應繳日
 						logger.info("TransNum's policyNo : {}", policyNo);
 						logger.info("TransNum's activeDate : {}", activeDate);
-						
+						String INVESTMENT_TYPES = parameterDao.getParameterValueByCode("eservice", "INVESTMENT_TYPE");
+						if (StringUtils.isNotBlank(INVESTMENT_TYPES) && INVESTMENT_TYPES.contains(policyNo.substring(0,2))) {
+							// 介接代碼(3),申請序號(12),保單號碼(10),新繳別(1),新定期繳費(10),P(1),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+							txtSb.append(String.format(StringUtils.repeat("%s", 8),
+									"035",
+									StringUtil.rpadBlank(transNum, 12),
+									StringUtil.rpadBlank(policyNo, 10),
+									paymode,
+									StringUtil.lpad(String.valueOf(amount), 10, "0"),
+									"1",
+									systemTwDate,
+									activeDate
+							));
+						} else {
 						// 介接代碼(3),申請序號(12),保單號碼(10),收文日(7),生效日(7),申請值(1)
-						txtSb.append(String.format(StringUtils.repeat("%s", 6), 
+							txtSb.append(String.format(StringUtils.repeat("%s", 6),
 								UPLOAD_CODE,
-								StringUtil.rpadBlank(transNum, 12), 
+									StringUtil.rpadBlank(transNum, 12),
 								StringUtil.rpadBlank(policyNo, 10),
 								systemTwDate,
 								activeDate,
 								paymode
 						));
+						}
 						txtSb.append("\r\n");
 					}
 				}
@@ -106,7 +118,7 @@ public class TransPaymodeUtil {
 	 * onlinechange_info 使用的文字內容
 	 * @param beforeSb
 	 * @param afterSb
-	 * @param transDetailList
+	 * @param transPaymodeVo
 	 */
 	public void getChangeContent(StringBuilder beforeSb, StringBuilder afterSb, TransPaymodeVo transPaymodeVo) {
 		if (transPaymodeVo != null) {
