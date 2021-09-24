@@ -19,7 +19,7 @@ from ESERVICE_ADM.[dbo].[FUNCTION_ITEM] where FUNCTION_ID  = 570.0000
 
 insert ESERVICE_ADM.[dbo].[FUNCTION_ITEM] select
 (select max(FUNCTION_ID)+1 from ESERVICE_ADM.[dbo].[FUNCTION_ITEM]),
-N' 理賠醫起通申請明細報表',
+N'理賠醫起通申請明細報表',
 FUNCTION_TYPE,
 'medicalTreatmentDetail',
 PARENT_FUNC_ID,

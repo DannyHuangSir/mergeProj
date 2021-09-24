@@ -2107,7 +2107,9 @@
 										if (file.fileName.indexOf('.pdf') === -1 && file.fileName.indexOf('.PDF') === -1) {
 											rHtml +='<img src="data:image/png;base64, '+file.fileBase64+'" width=50>';
 										}else{
-											rHtml +='<embed src="data:application/pdf;base64, ' + file.fileBase64+'" type="application/pdf" width=50>';
+											//縮圖顯示
+											rHtml +='<img src="data:image/png;base64, '+file.fileBase64+'" width=50>';
+											//rHtml +='<embed src="data:application/pdf;base64, ' + file.fileBase64+'" type="application/pdf" width=50>';
 										}
 										
 							rHtml +=	'</div>'+
@@ -2515,7 +2517,17 @@
 			}
 		
 
-
+		// 彈出保单理醫療已完成窗口
+		function medicalOnAudit(TRANS_TYPE, TRANS_NUM){
+				$('#modal-container-auditConfirm').modal({
+					show: true,
+					backdrop: 'static', 
+					keyboard: false
+				});
+				$("#approvedForm")[0].reset();
+				$('#approved_application_items').html($('#medical_label_apply_item').html());
+				$('#approved_insurance_num').html(TRANS_NUM);
+			}
 
 
 //******************************************變更保單聯絡資料****************************************//

@@ -1113,6 +1113,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	}
 
 	@Override
+	public int getOnlineChangeCIODetailTotal(TransVo transVo) {
+		return onlineChangeDao.getOnlineChangeCIODetailTotal(transVo);
+	}
+
+	@Override
 	public int getOnlineChangeDnsDetailTotal(TransVo transVo) {
 		return onlineChangeDao.getOnlineChangeDnsDetailTotal(transVo);
 	}
@@ -1529,9 +1534,5 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		return map;
     }
 
-    @Override
-	public int getOnlineChangeCIODetailTotal(TransVo transVo) {
-		return onlineChangeDao.getOnlineChangeCIODetailTotal(transVo);
-	}
 
 }
