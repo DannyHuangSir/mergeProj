@@ -21,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.twfhclife.alliance.dao.InsuranceClaimDao;
 import com.twfhclife.alliance.dao.NotifyOfNewCaseDao;
 import com.twfhclife.alliance.dao.NotifyOfNewCaseDnsDao;
+import com.twfhclife.alliance.dao.NotifyOfNewCaseMedicalDao;
 import com.twfhclife.alliance.dao.NewCaseNotifiedDao;
+import com.twfhclife.alliance.domain.BaseRequestVo;
 import com.twfhclife.alliance.domain.ClaimRequestVo;
 import com.twfhclife.alliance.domain.ClaimResponseVo;
 import com.twfhclife.alliance.domain.DnsRequestVo;
@@ -29,7 +31,9 @@ import com.twfhclife.alliance.domain.DnsResponseVo;
 import com.twfhclife.alliance.model.InsuranceClaimFileDataVo;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.InsuranceClaimVo;
+import com.twfhclife.alliance.model.MedicalRequestVo;
 import com.twfhclife.alliance.model.NotifyOfNewCaseDnsVo;
+import com.twfhclife.alliance.model.NotifyOfNewCaseMedicalVo;
 import com.twfhclife.alliance.model.NotifyOfNewCaseVo;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.generic.dao.adm.ParameterDao;
@@ -58,7 +62,10 @@ public class ClaimChainServiceImpl implements IClaimChainService{
 	
 	@Autowired
 	private NotifyOfNewCaseDnsDao notifyOfNewCaseDnsDao;
-	
+
+	@Autowired
+	private NotifyOfNewCaseMedicalDao notifyOfNewCaseMedicalDao;
+
 	@Autowired
 	private InsuranceClaimDao insuranceClaimDao;
 	
@@ -167,6 +174,42 @@ public class ClaimChainServiceImpl implements IClaimChainService{
 		}
 		
 		logger.info("End ClaimChainServiceImpl.addInsuranceCliam().");
+		return rtnValue;
+	}
+
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int addNotifyOfNewCaseMedical(MedicalRequestVo vo) throws Exception{
+		int rtnValue = -1;
+		logger.info("Start ClaimChainServiceImpl.addNotifyOfNewCaseMedical().");
+		logger.info("input vo="+ReflectionToStringBuilder.toString(vo));
+
+		MedicalRequestVo rtnVo = new MedicalRequestVo();
+
+		if(vo==null) {
+			rtnVo.setCode(ClaimResponseVo.CODE_ERROR);
+		}else {
+			try {
+				//get sequence
+				Float seqId = notifyOfNewCaseMedicalDao.getNotifyOfNewCaseMedicalSeq();
+				logger.info("after insuranceCliamDao.getInsuranceClaimSequence()seqId="+seqId);
+				if(seqId!=null && seqId>0) {
+					NotifyOfNewCaseMedicalVo notifyOfNewCaseMedicalVo = new NotifyOfNewCaseMedicalVo();
+					notifyOfNewCaseMedicalVo.setSeqId(seqId);
+					notifyOfNewCaseMedicalVo.setCaseId(vo.getCaseId());
+					notifyOfNewCaseMedicalVo.setNcStatus(NotifyOfNewCaseMedicalVo.STATUS_DEFAULT);
+					notifyOfNewCaseMedicalVo.setType(BaseRequestVo.TYPE_NEW);
+					notifyOfNewCaseMedicalVo.setMsg(NotifyOfNewCaseMedicalVo.STATUS_MESS);
+					rtnValue = notifyOfNewCaseMedicalDao.addNotifyOfNewCaseMedical(notifyOfNewCaseMedicalVo);
+					logger.info("after insuranceCliamDao.addNotifyOfNewCaseMedical()="+rtnValue);
+				}
+			}catch (Exception e) {
+				rtnVo.setCode(ClaimResponseVo.CODE_ERROR);
+				throw e;
+			}
+		}
+		logger.info("End ClaimChainServiceImpl.addNotifyOfNewCaseMedical().");
 		return rtnValue;
 	}
 

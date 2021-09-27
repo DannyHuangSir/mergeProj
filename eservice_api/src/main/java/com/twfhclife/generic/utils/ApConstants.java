@@ -13,7 +13,8 @@ public interface ApConstants {
 	
 	/** 系統別 */
 	final String SYSTEM_ID = "eservice_api";
-	
+	final String SYSTEM_ID_ESERVICE = "eservice";
+
 	final String SYSTEM_ID_AMD = "eservice_adm";
 	
 	/** 系統錯誤訊息 */
@@ -117,5 +118,12 @@ public interface ApConstants {
 	 *保單醫起通
 	 * */
 	final String MEDICAL_TREATMENT_PARAMETER_CODE = "MEDICAL_TREATMENT";
-
+	/**
+	 *  保單理賠醫起通請閱讀並同意以下條款
+	 * */
+	public static final String MEDICAL_TREATMENT_CONSENT = "MEDICAL_TREATMENT_CONSENT";
+	/***
+	 * 聯盟醫起通醫療文件類型組
+	 **/
+	final String MEDICAL_TREATMENT_FEDERATION_FILE_TYPE = "MEDICAL_TREATMENT_FEDERATION_FILE_TYPE";
 }

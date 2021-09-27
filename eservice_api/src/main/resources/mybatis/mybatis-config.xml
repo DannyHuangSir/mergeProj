@@ -126,7 +126,10 @@
 		<mapper resource="mybatis/mapper/eservice/alliance/InsuranceCliamMapper.xml"/>
 		<mapper resource="mybatis/mapper/eservice/alliance/UnionCourseMapper.xml"/>
 		<mapper resource="mybatis/mapper/eservice/alliance/NotifyOfNewCaseDnsMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/NotifyOfNewCaseMedicalDaoMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/MedicalDaoMapper.xml"/>
 		<mapper resource="mybatis/mapper/eservice/onlineChange/HospitalMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransMedicalTreatmentClaimMapper.xml"/>
 		<mapper resource="mybatis/mapper/eservice/onlineChange/HospitalInsuranceCompanyMapper.xml"/>
 
 <mapper resource="mybatis/mapper/eservice/onlineChange/TransDnsMapper.xml"/>

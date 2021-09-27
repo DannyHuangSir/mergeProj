@@ -34,6 +34,28 @@
 		<result property="code"    column="CODE" />
 		<result property="msg"     column="MSG" />
 	</resultMap>
+	<resultMap id="DnsResultMap" type="com.twfhclife.alliance.model.DnsContentVo">
+		<result property="seqId"   column="SEQ_ID" />
+		<result property="notifySeqId" column="NOTIFY_SEQ_ID" />
+		<result property="transNum"    column="TRANS_NUM" />
+		<result property="type"    column="TYPE" />
+		<result property="jobId"   column="JOB_ID" />
+		<result property="caseId"  column="CASE_ID" />
+		<result property="idno"    column="IDNO" />
+		<result property="insnom"  column="INSNOM" />
+		<result property="name"    column="NAME" />
+		<result property="birdate" column="BIRDATE" />
+		<result property="sex" column="SEX" />
+		<result property="con" column="CON" />
+		<result property="condate" column="CONDATE" />
+		<result property="adddate" column="ADDDATE" />
+		<result property="status"  column="STATUS" />
+		<result property="sendAlliance"  column="SEND_ALLIANCE" />
+		<result property="createDate"    column="CREATE_DATE" />
+		<result property="code"    column="CODE" />
+		<result property="msg"     column="MSG" />
+		<result property="policyNo"     column="POLICY_NO" />
+	</resultMap>
 	<sql id="DNS_ALLIANCE_ALL">
 		SEQ_ID
 		,NOTIFY_SEQ_ID
@@ -122,7 +144,24 @@
 		and td.CODE is null
 		and t.TRANS_NUM  = td.TRANS_NUM
 	</select>
-	
+
+
+	<!-- 取得TRANS_DNS資料 -->
+	<select id="getTransDnsByStatus" parameterType="java.lang.String" resultMap="DnsResultMap">
+		select top(10)
+		td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,edp.POLICY_NO,td.NAME
+		,td.CON,td.CONDATE,td.ADDDATE
+		from ESERVICE.DBO.TRANS t inner  join ESERVICE.DBO.TRANS_DNS td on  t.TRANS_TYPE = 'DNS_ALLIANCE'
+		inner  join ESERVICE.DBO.TRANS_POLICY edp  on edp.TRANS_NUM=td.TRANS_NUM
+		where  td.CODE is null
+		and t.TRANS_NUM  = td.TRANS_NUM
+		and edp.POLICY_NO is not  null
+		and td.DETAIL_MESSAGE is  null
+		and  td.FSZ1_PI_ST='55'
+		and t.STATUS = #{status}
+	</select>
+
+
 	<!-- 依seqId更新TRANS_DNS -->
 	<update id="updateTransDnsSendAllianceBySeqId" parameterType="com.twfhclife.alliance.model.DnsContentVo">
 		update ESERVICE.DBO.TRANS_DNS
@@ -153,7 +192,20 @@
 		where TYPE = 'InsuranceId'
 		and CASE_ID = #{caseId};
 	</select>
-	
+	<select id="getTransDnsByStatusAndFsz1PiSt" resultMap="DnsResultMap">
+		select top(10)
+		td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,edp.POLICY_NO,td.NAME
+		,td.CON,td.CONDATE,td.ADDDATE,td.IDNO
+		from ESERVICE.DBO.TRANS t inner  join ESERVICE.DBO.TRANS_DNS td on  t.TRANS_TYPE = 'DNS_ALLIANCE'
+		inner  join ESERVICE.DBO.TRANS_POLICY edp  on edp.TRANS_NUM=td.TRANS_NUM
+		where  td.CODE is null
+		and t.TRANS_NUM  = td.TRANS_NUM
+		and edp.POLICY_NO is not  null
+		and td.DETAIL_MESSAGE is  null
+		and  td.FSZ1_PI_ST  is  null
+		and t.STATUS = #{status}
+	</select>
+
 	<!-- 更新DNS_ALLIANCE.STATUS by seqId -->
 	<update id="updateDnsAllianceStatusBySeqId" parameterType="com.twfhclife.alliance.model.DnsContentVo">
 		update ESERVICE.DBO.DNS_ALLIANCE
@@ -162,5 +214,25 @@
 			UPDATE_STATUS_DATE = getdate()
 		where SEQ_ID = #{vo.seqId}
 	</update>
-	
+	<update id="updateTransDnsSDetailMessageByTransNum"  parameterType="com.twfhclife.alliance.model.DnsContentVo">
+		update ESERVICE.DBO.TRANS_DNS
+		set
+		DETAIL_MESSAGE = #{vo.detailMessage}
+		where TRANS_NUM = #{vo.transNum}
+	</update>
+	<update id="updateTransDnssfsz1PiStByPolicyNo"  parameterType="com.twfhclife.alliance.model.DnsContentVo">
+		update ESERVICE.DBO.TRANS_DNS
+		set
+		FSZ1_PI_ST = #{vo.fsz1PiSt},
+		FSZ1_ID = #{vo.fsz1Id},
+		TOKEN = #{vo.token}
+		where TRANS_NUM
+		in  (
+		select
+		TRANS_NUM
+			from
+			ESERVICE.DBO.TRANS_POLICY WHERE POLICY_NO=#{vo.policyNo}
+		)
+	</update>
+
 </mapper>

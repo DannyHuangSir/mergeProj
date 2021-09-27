@@ -3,6 +3,7 @@ package com.twfhclife.alliance.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.alliance.model.MedicalRequestVo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,5 +173,40 @@ public class ClaimChainController{
 		return rtnVo;
 		
 	}
-	
+
+
+	/**
+	 * API-491 案件通知(CallBack 到保險公司)
+	 * @return ClaimResponseVo
+	 */
+	@ApiRequest
+	@RequestMapping("/api491")
+	public MedicalRequestVo addNotifyOfNewCaseMedical(@RequestBody MedicalRequestVo vo){
+		logger.info("Start ClaimChainController.addNotifyOfNewCaseMedical().");
+		MedicalRequestVo mdVo = new MedicalRequestVo();
+		try {
+			if(vo!=null) {
+				int rtnValue = claimChainService.addNotifyOfNewCaseMedical(vo);
+				if(rtnValue>=1) {
+					mdVo.setCode(ClaimResponseVo.CODE_SUCCESS);
+					mdVo.setMsg(ClaimResponseVo.MSG_SUCCESS);
+				}else {
+					mdVo.setCode(ClaimResponseVo.CODE_ERROR);
+					mdVo.setMsg("claimChainService.addNotifyOfNewCaseMedical error.");
+				}
+			}else {
+
+				mdVo.setCode(ClaimResponseVo.CODE_ERROR);
+				String msg = "input params is null.";
+				mdVo.setMsg(msg);
+				logger.error(msg);
+			}
+		}catch(Exception e) {
+			mdVo.setCode(ClaimResponseVo.CODE_ERROR);
+			mdVo.setMsg(ClaimResponseVo.MSG_ERROR_S001);
+			logger.error(e);
+		}
+		logger.info("End ClaimChainController.addNotifyOfNewCaseMedical().");
+		return mdVo;
+	}
 }

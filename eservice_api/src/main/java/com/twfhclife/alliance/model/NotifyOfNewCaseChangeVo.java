@@ -16,6 +16,7 @@ public class NotifyOfNewCaseChangeVo {
 	 * 已取得查詢理賠資料
 	 */
 	public static final String NC_STATUS_ONE  = "1";//已取得查詢理賠資料
+	public static final String SUCCESS_MSG  = "此案件已取資料";//此案件已取資料
 	public static final String NC_STATUS_Y  = "Y";
 
 	/**

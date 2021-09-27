@@ -88,9 +88,10 @@ CREATE TABLE [ESERVICE].[dbo].[MEDICAL_TREATMENT_CLAIM](
 	[FROM_HOSPITAL_ID] [varchar](100) NULL,
 	[TO_HOSPITAL_ID] [varchar](1000) NULL,
 	[ALLIANCE_STATUS] [varchar](100) NULL,
-	[HPUID] [varchar](20) NULL,
+	[HP_UID] [varchar](20) NULL,
 	[CPOA] [varchar](max) NULL,
 	[FILE_STATUS] [varchar](5) NULL,
+	[STATUS] [varchar](20) NULL,
 );
 alter table ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM
   add constraint MTC_PK primary key (CLAIMS_SEQ_ID);

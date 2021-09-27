@@ -19,7 +19,18 @@ public interface IDnsExternalService {
 	 * @throws Exception
 	 */
 	String postForEntity(String url,Map<String, String> params,Map<String, String> unParams) throws Exception;
-	
+
+	/**
+	 * 推送核心
+	 * @param url
+	 * @param params
+	 * @param unParams
+	 * @return
+	 * @throws Exception
+	 */
+
+	String postCoreEntity(String url,Map<String, String> params,Map<String, String> unParams) throws Exception;
+
 	/**
 	 * 檢查http response status
 	 * @param responseEntity

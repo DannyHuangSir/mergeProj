@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.alliance.dao.IMedicalDao">
+
+	<resultMap id="MedicalTreatmentResultMap" type="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
+		<id property="claimSeqId"  column="CLAIMS_SEQ_ID" />
+		<result property="caseId"  column="CASE_ID" />
+		<result property="transNum" column="TRANS_NUM" />
+		<result property="name" column="NAME" />
+		<result property="idNo"   column="ID_NO" />
+		<result property="birdate"    column="BIRDATE" />
+		<result property="phone"      column="PHONE" />
+		<result property="zipCode"  column="ZIP_CODE" />
+		<result property="address"   column="ADDRESS" />
+		<result property="mail"   column="MAIL" />
+		<result property="paymentMethod"   column="PAYMENT_METHOD" />
+		<result property="bankCode"     column="BANK_CODE" />
+		<result property="branchCode"   column="BRANCH_CODE" />
+		<result property="bankAccount"   column="BANK_ACCOUNT" />
+		<result property="applicationDate"      column="APPLICATION_DATE" />
+		<result property="applicationTime" column="APPLICATION_TIME" />
+		<result property="applicationItem"    column="APPLICATION_ITEM" />
+		<result property="job"  column="JOB" />
+		<result property="jobDescr" column="JOB_DESCR" />
+		<result property="accidentDate" column="ACCIDENT_DATE" />
+		<result property="accidentTime" column="ACCIDENT_TIME" />
+		<result property="accidentCause" column="ACCIDENT_CAUSE" />
+		<result property="accidentLocation"     column="ACCIDENT_LOCATION" />
+		<result property="accidentDescr" column="ACCIDENT_DESCR" />
+		<result property="policeStation"  column="POLICE_STATION" />
+		<result property="policeName"  column="POLICE_NAME" />
+		<result property="policePhone" column="POLICE_PHONE" />
+		<result property="policeDate" column="POLICE_DATE" />
+		<result property="policeTime" column="POLICE_TIME" />
+
+		<result property="fromCompanyId" column="FROM_COMPANY_ID" />
+		<result property="toCompanyId"    column="TO_COMPANY_ID" />
+		<result property="authorizationFileType" column="AUTHORIZATION_FILE_TYPE" />
+		<result property="authorizationStartDate"  column="AUTHORIZATION_START_DATE" />
+		<result property="authorizationEndDate"  column="AUTHORIZATION_END_DATE" />
+		<result property="toHospitalId"        column="TO_HOSPITAL_ID" />
+		<result property="allianceStatus"            column="ALLIANCE_STATUS" />
+		<result property="hpUid"        column="HP_UID" />
+		<result property="cpoa"  column="CPOA" />
+
+		<result property="fileReceived"  column="FILE_RECEIVED" />
+		<result property="applyItem"  column="APPLYITEM" />
+		<result property="policyNo"  column="POLICYNO" />
+		<result property="customerName"  column="CUSTOMERNAME" />
+		<result property="relation"  column="RELATION" />
+		<result property="tel"  column="TEL" />
+		<result property="diseaseName"  column="DISEASENAME" />
+		<result property="diagnosisDate"  column="DIAGNOSISDATE" />
+		<result property="hospital"  column="HOSPITAL" />
+		<result property="otherCompanyInsured"  column="OTHERCOMPANYINSURED" />
+		<result property="otherInsuType"  column="OTHERINSUTYPE" />
+		<result property="otherInsuClaim"  column="OTHERINSUCLAIM" />
+		<result property="accountName"  column="ACCOUNTNAME" />
+		<result property="callPolice"  column="CALLPOLICE" />
+
+		<result property="otherInsucommpany"  column="OTHERINSUCOMMPANY" />
+		<result property="otherInsuamount"  column="OTHERINSUAMOUNT" />
+		<result property="sendAlliance"  column="SEND_ALLIANCE" />
+		<result property="fromHospitalId"  column="FROM_HOSPITAL_ID" />
+		<result property="fileStatus"  column="FILE_STATUS" />
+		<result property="fileStatus"  column="CREATE_DATE" />
+		<result property="stauts"  column="STATUS" />
+	</resultMap>
+	<resultMap id="TransMedicalTreatmentResultMap" type="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
+		<id property="claimSeqId"  column="CLAIMS_SEQ_ID" />
+		<result property="caseId"  column="CASE_ID" />
+		<result property="transNum" column="TRANS_NUM" />
+		<result property="name" column="NAME" />
+		<result property="idNo"   column="ID_NO" />
+		<result property="birdate"    column="BIRDATE" />
+		<result property="phone"      column="PHONE" />
+		<result property="zipCode"  column="ZIP_CODE" />
+		<result property="address"   column="ADDRESS" />
+		<result property="mail"   column="MAIL" />
+		<result property="paymentMethod"   column="PAYMENT_METHOD" />
+		<result property="bankCode"     column="BANK_CODE" />
+		<result property="branchCode"   column="BRANCH_CODE" />
+		<result property="bankAccount"   column="BANK_ACCOUNT" />
+		<result property="applicationDate"      column="APPLICATION_DATE" />
+		<result property="applicationTime" column="APPLICATION_TIME" />
+		<result property="applicationItem"    column="APPLICATION_ITEM" />
+		<result property="job"  column="JOB" />
+		<result property="jobDescr" column="JOB_DESCR" />
+		<result property="accidentDate" column="ACCIDENT_DATE" />
+		<result property="accidentTime" column="ACCIDENT_TIME" />
+		<result property="accidentCause" column="ACCIDENT_CAUSE" />
+		<result property="accidentLocation"     column="ACCIDENT_LOCATION" />
+		<result property="accidentDescr" column="ACCIDENT_DESCR" />
+		<result property="policeStation"  column="POLICE_STATION" />
+		<result property="policeName"  column="POLICE_NAME" />
+		<result property="policePhone" column="POLICE_PHONE" />
+		<result property="policeDate" column="POLICE_DATE" />
+		<result property="policeTime" column="POLICE_TIME" />
+
+		<result property="fromCompanyId" column="FROM_COMPANY_ID" />
+		<result property="toCompanyId"    column="TO_COMPANY_ID" />
+		<result property="authorizationFileType" column="AUTHORIZATION_FILE_TYPE" />
+		<result property="authorizationStartDate"  column="AUTHORIZATION_START_DATE" />
+		<result property="authorizationEndDate"  column="AUTHORIZATION_END_DATE" />
+		<result property="toHospitalId"        column="TO_HOSPITAL_ID" />
+		<result property="allianceStatus"            column="ALLIANCE_STATUS" />
+		<result property="hpUid"        column="HP_UID" />
+		<result property="cpoa"  column="CPOA" />
+
+		<result property="fileReceived"  column="FILE_RECEIVED" />
+		<result property="applyItem"  column="APPLYITEM" />
+		<result property="policyNo"  column="POLICYNO" />
+		<result property="customerName"  column="CUSTOMERNAME" />
+		<result property="relation"  column="RELATION" />
+		<result property="tel"  column="TEL" />
+		<result property="diseaseName"  column="DISEASENAME" />
+		<result property="diagnosisDate"  column="DIAGNOSISDATE" />
+		<result property="hospital"  column="HOSPITAL" />
+		<result property="otherCompanyInsured"  column="OTHERCOMPANYINSURED" />
+		<result property="otherInsuType"  column="OTHERINSUTYPE" />
+		<result property="otherInsuClaim"  column="OTHERINSUCLAIM" />
+		<result property="accountName"  column="ACCOUNTNAME" />
+		<result property="callPolice"  column="CALLPOLICE" />
+
+		<result property="otherInsucommpany"  column="OTHERINSUCOMMPANY" />
+		<result property="otherInsuamount"  column="OTHERINSUAMOUNT" />
+		<result property="sendAlliance"  column="SEND_ALLIANCE" />
+		<result property="fromHospitalId"  column="FROM_HOSPITAL_ID" />
+		<result property="allianceFileStatus"  column="ALLIANCE_FILE_STATUS" />
+		<result property="reUpload"  column="RE_UPLOAD" />
+	</resultMap>
+	<resultMap id="TransMedicalFileDataResultMap" type="com.twfhclife.alliance.model.MedicalTreatmentClaimFileDataVo">
+		<id property="fdId"  column="FD_ID" />
+		<result property="claimsSeqId"  column="CLAIMS_SEQ_ID" />
+		<result property="type" column="TYPE" />
+		<result property="fileName" column="FILE_NAME" />
+		<result property="rfeId"   column="RFE_ID" />
+		<result property="ezAcquireTaskId"    column="EZ_ACQUIRE_TASK_ID" />
+		<result property="fileBase64"    column="FILE_BASE64" />
+		<result property="fileId"    column="FILE_ID" />
+		<result property="fileStatus"    column="FILE_STATUS" />
+		<result property="path"    column="PATH" />
+
+	</resultMap>
+
+	<sql id="MEDICAL_CLAIM_ALL">
+		CLAIMS_SEQ_ID
+		,CASE_ID
+		,TRANS_NUM
+		,ESERVICE.DBO.FN_DEBASE64(NAME)  NAME
+		,ESERVICE.DBO.FN_DEBASE64(ID_NO)  ID_NO
+		,ESERVICE.DBO.FN_DEBASE64(BIRDATE)  BIRDATE
+		,ESERVICE.DBO.FN_DEBASE64(PHONE)  PHONE
+		,ZIP_CODE
+		,ESERVICE.DBO.FN_DEBASE64(ADDRESS)  ADDRESS
+		,ESERVICE.DBO.FN_DEBASE64(MAIL)  MAIL
+		,PAYMENT_METHOD
+		,BANK_CODE
+		,BRANCH_CODE
+		,ESERVICE.DBO.FN_DEBASE64(BANK_ACCOUNT)  BANK_ACCOUNT
+		,APPLICATION_DATE
+		,APPLICATION_TIME
+		,APPLICATION_ITEM
+		,JOB
+		,JOB_DESCR
+		,ACCIDENT_DATE
+		,ACCIDENT_TIME
+		,ACCIDENT_CAUSE
+		,ACCIDENT_LOCATION
+		,ACCIDENT_DESCR
+		,POLICE_STATION
+		,ESERVICE.DBO.FN_DEBASE64(POLICE_NAME)  POLICE_NAME
+		,ESERVICE.DBO.FN_DEBASE64(POLICE_PHONE)  POLICE_PHONE
+		,POLICE_DATE
+		,POLICE_TIME
+
+		,FROM_COMPANY_ID
+		,TO_COMPANY_ID
+		,AUTHORIZATION_FILE_TYPE
+		,AUTHORIZATION_START_DATE
+		,AUTHORIZATION_END_DATE
+		,TO_HOSPITAL_ID
+		,ALLIANCE_STATUS
+		,HP_UID
+		,CPOA
+
+		,FILE_RECEIVED
+		,APPLYITEM
+		,POLICYNO
+		,CUSTOMERNAME
+		,RELATION
+		,TEL
+		,DISEASENAME
+		,DIAGNOSISDATE
+		,HOSPITAL
+		,OTHERCOMPANYINSURED
+		,OTHERINSUCOMMPANY
+		,OTHERINSUTYPE
+		,OTHERINSUAMOUNT
+		,OTHERINSUCLAIM
+		,ACCOUNTNAME
+		,CALLPOLICE
+		,SEND_ALLIANCE
+		,CREATE_DATE
+		,FROM_HOSPITAL_ID
+		,FILE_STATUS
+		,STATUS
+
+
+	</sql>
+	<sql id="TRANS_MEDICAL_CLAIM_ALL">
+		CLAIMS_SEQ_ID
+		,CASE_ID
+		,TRANS_NUM
+		,ESERVICE.DBO.FN_DEBASE64(NAME)  NAME
+		,ESERVICE.DBO.FN_DEBASE64(ID_NO)  ID_NO
+		,ESERVICE.DBO.FN_DEBASE64(BIRDATE)  BIRDATE
+		,ESERVICE.DBO.FN_DEBASE64(PHONE)  PHONE
+		,ZIP_CODE
+		,ESERVICE.DBO.FN_DEBASE64(ADDRESS)  ADDRESS
+		,ESERVICE.DBO.FN_DEBASE64(MAIL)  MAIL
+		,PAYMENT_METHOD
+		,BANK_CODE
+		,BRANCH_CODE
+		,ESERVICE.DBO.FN_DEBASE64(BANK_ACCOUNT)  BANK_ACCOUNT
+		,APPLICATION_DATE
+		,APPLICATION_TIME
+		,APPLICATION_ITEM
+		,JOB
+		,JOB_DESCR
+		,ACCIDENT_DATE
+		,ACCIDENT_TIME
+		,ACCIDENT_CAUSE
+		,ACCIDENT_LOCATION
+		,ACCIDENT_DESCR
+		,POLICE_STATION
+		,ESERVICE.DBO.FN_DEBASE64(POLICE_NAME)  POLICE_NAME
+		,ESERVICE.DBO.FN_DEBASE64(POLICE_PHONE)  POLICE_PHONE
+		,POLICE_DATE
+		,POLICE_TIME
+
+		,FROM_COMPANY_ID
+		,TO_COMPANY_ID
+		,AUTHORIZATION_FILE_TYPE
+		,AUTHORIZATION_START_DATE
+		,AUTHORIZATION_END_DATE
+		,TO_HOSPITAL_ID
+		,ALLIANCE_STATUS
+		,HP_UID
+		,CPOA
+
+		,FILE_RECEIVED
+		,APPLYITEM
+		,POLICYNO
+		,CUSTOMERNAME
+		,RELATION
+		,TEL
+		,DISEASENAME
+		,DIAGNOSISDATE
+		,HOSPITAL
+		,OTHERCOMPANYINSURED
+		,OTHERINSUCOMMPANY
+		,OTHERINSUTYPE
+		,OTHERINSUAMOUNT
+		,OTHERINSUCLAIM
+		,ACCOUNTNAME
+		,CALLPOLICE
+		,SEND_ALLIANCE
+		,CREATE_DATE
+		,FROM_HOSPITAL_ID
+		,ALLIANCE_FILE_STATUS
+		,RE_UPLOAD
+	</sql>
+	<sql id="MEDICAL_CLAIM_FILEDATA_ALL">
+		FD_ID,
+		CLAIMS_SEQ_ID,
+		FILE_NAME,
+		TYPE,
+		RFE_ID,
+		EZ_ACQUIRE_TASK_ID,
+		FILE_BASE64,
+		FILE_ID,
+		FILE_STATUS,
+		PATH
+	</sql>
+	<sql id="ADD_MEDICAL_CLAIM_ALL">
+		 [CLAIMS_SEQ_ID]
+		,[CASE_ID]
+		,[TRANS_NUM]
+		,[POLICYNO]
+		,[CUSTOMERNAME]
+		,[NAME]
+		,[RELATION]
+		,[ID_NO]
+		,[BIRDATE]
+		,[TEL]
+		,[PHONE]
+		,[ZIP_CODE]
+		,[ADDRESS]
+		,[MAIL]
+		,[DISEASENAME]
+		,[DIAGNOSISDATE]
+		,[HOSPITAL]
+		,[OTHERCOMPANYINSURED]
+		,[OTHERINSUCOMMPANY]
+		,[OTHERINSUTYPE]
+		,[OTHERINSUAMOUNT]
+		,[OTHERINSUCLAIM]
+		,[ACCOUNTNAME]
+		,[JOB]
+		,[JOB_DESCR]
+		,[ACCIDENT_DATE]
+		,[ACCIDENT_TIME]
+		,[ACCIDENT_CAUSE]
+		,[CALLPOLICE]
+		,[HP_UID]
+		,[CPOA]
+		,[PAYMENT_METHOD]
+		,[BANK_CODE]
+		,[BRANCH_CODE]
+		,[BANK_ACCOUNT]
+		,[APPLICATION_DATE]
+		,[APPLICATION_TIME]
+		,[APPLICATION_ITEM]
+		,[ACCIDENT_LOCATION]
+		,[ACCIDENT_DESCR]
+		,[POLICE_STATION]
+		,[POLICE_NAME]
+		,[POLICE_PHONE]
+		,[POLICE_DATE]
+		,[POLICE_TIME]
+		,[TO_HOSPITAL_ID]
+		,[AUTHORIZATION_START_DATE]
+		,[AUTHORIZATION_END_DATE]
+		,[FROM_COMPANY_ID]
+		,[TO_COMPANY_ID]
+		,[AUTHORIZATION_FILE_TYPE]
+		,[STATUS]
+	</sql>
+	<!-- 取得可上傳但未上傳聯盟的資料 -->
+	<select id="getMedicalTreatmentByNoCaseId" resultMap="MedicalTreatmentResultMap">
+		select top(10)
+		<include refid="MEDICAL_CLAIM_ALL"></include>
+		from ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM
+		where  CASE_ID is null
+		and SEND_ALLIANCE='Y'
+		and ALLIANCE_STATUS is  null
+	</select>
+
+	<!-- 上傳聯盟後，取得回傳，更新CASE_ID,CODE,MSG,STATUS -->
+	<update id="updateMedicalTreatmentClaimToAllianceAndCaseId" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
+		update ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
+		set
+		CASE_ID = #{vo.caseId},
+		ALLIANCE_STATUS  = #{vo.allianceStatus}
+		where TRANS_NUM = #{vo.transNum}
+	</update>
+	<update id="updateTransMedicalTreatmentClaimToAllianceAndCaseId" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		set
+		CASE_ID = #{vo.caseId},
+		ALLIANCE_STATUS  = #{vo.allianceStatus}
+		where TRANS_NUM = #{vo.transNum}
+	</update>
+	<!-- 獲取,取用/不取用醫院資料 -->
+	<select id="getTransMedicalTreatmentByCaseIdAndAllinaceStatus" resultMap="TransMedicalTreatmentResultMap">
+		select top(10)
+		<include refid="TRANS_MEDICAL_CLAIM_ALL"></include>
+		from   ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		where  (CASE_ID is not  null AND CASE_ID!='' )
+		and (ALLIANCE_STATUS =  #{itpsPthg}  OR   ALLIANCE_STATUS =  #{itpsEnd})
+		and  (ALLIANCE_FILE_STATUS is  null OR ALLIANCE_FILE_STATUS='' )
+	</select>
+	<update id="updateTarnsMedicalTreatmentClaimToAllianceFileStatus" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		set
+		ALLIANCE_FILE_STATUS = #{vo.allianceFileStatus}
+		where CASE_ID = #{vo.caseId}
+	</update>
+	<!--進行獲取流程結束和不進行取用資料的數據-->
+	<select id="getTransMedicalTreatmentByAllinaceStatusIsItpsEnd" resultMap="TransMedicalTreatmentResultMap">
+		select top(10)
+			<include refid="TRANS_MEDICAL_CLAIM_ALL"></include>
+		from   ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		where  (CASE_ID is not  null AND CASE_ID!='' )
+		and  ALLIANCE_STATUS = #{itpsEnd}
+		and   ALLIANCE_FILE_STATUS ='success'
+	</select>
+	<select id="getTransMedicalTreatmentByAllinaceStatusIsPqhfEnd" resultMap="TransMedicalTreatmentResultMap">
+		select top(10)
+		<include refid="TRANS_MEDICAL_CLAIM_ALL"></include>
+		from   ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		where  (CASE_ID is not  null AND CASE_ID!='')
+		and ALLIANCE_STATUS = #{pqhfEnd}
+		and (ALLIANCE_FILE_STATUS is  not  null  or  ALLIANCE_FILE_STATUS='')
+	</select>
+	<update id="updateTarnsMedicalTreatmentClaimToAllianceStatusAndMsg" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		set
+		ALLIANCE_STATUS = #{vo.allianceStatus},
+		ALLIANCE_FILE_STATUS = #{vo.allianceFileStatus}
+		where CASE_ID = #{vo.caseId}
+	</update>
+	<update id="updateTarnsMedicalTreatmentFileDataStatus" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimFileDataVo">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
+		set
+		FILE_STATUS = #{vo.fileStatus}
+		<if test="vo.fileBase64 !=null and  vo.fileBase64!='' ">
+		, FILE_BASE64 = #{vo.fileBase64}
+		</if>
+		where FILE_ID = #{vo.fileId}
+	</update>
+
+	<select id="getTransMedicalTreatmentFileDataByClaimSeqId" resultMap="TransMedicalFileDataResultMap" >
+		select
+		*
+		from   ESERVICE.[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS]
+		where  CLAIMS_SEQ_ID = #{claimSeqId}
+		and FILE_ID  is not  null
+		and TYPE IN
+		<foreach collection="parameterByCategoryCode"   index="index"  item="status" open="(" close=")" separator="," >
+			#{status}
+		</foreach>
+	</select>
+
+	<!--進行獲取重新上傳的數據信息-->
+	<select id="getTransMedicalTreatmentAgainUploadFileid" resultMap="TransMedicalTreatmentResultMap">
+		select top(10)
+		<include refid="TRANS_MEDICAL_CLAIM_ALL"></include>
+		from   ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		where  (CASE_ID is not  null AND CASE_ID!='' )
+		and   ALLIANCE_STATUS = #{pqhfEnd}
+		and   ALLIANCE_FILE_STATUS ='success'
+		and   RE_UPLOAD is not  null AND RE_UPLOAD!=''
+	</select>
+	<!--獲取到聯盟的數據信息-->
+	<select id="getMedicalTreatmentClaimVoBySeqIdNoTransNum" resultMap="MedicalTreatmentResultMap">
+		select top(10)
+		<include refid="MEDICAL_CLAIM_ALL"></include>
+		from ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
+		where CASE_ID is not null
+		and STATUS is null  or STATUS ='7'   or STATUS ='-1'
+		and FROM_COMPANY_ID  !='L01'
+		and exists (select 1 from ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_FILEDATAS where CLAIMS_SEQ_ID = CLAIMS_SEQ_ID and FILE_BASE64 is  null)
+		order by CREATE_DATE desc
+	</select>
+
+	<!--進行獲取重新上傳的數據信息-->
+	<select id="getMedicalTreatmentFileDataByClaimSeqId" resultMap="TransMedicalFileDataResultMap">
+		select top(10)
+		<include refid="MEDICAL_CLAIM_FILEDATA_ALL"></include>
+		from   ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_FILEDATAS
+		where  (FILE_ID is not  null AND FILE_ID!='' )
+		and  CLAIMS_SEQ_ID=#{claimSeqId}
+	</select>
+    <select id="getTransMedicalTreatmentByCaseId" resultType="java.lang.String">
+		select TOP 1  TRANS_NUM
+		FROM   [ESERVICE].[dbo].TRANS_MEDICAL_TREATMENT_CLAIM
+		where
+		ALLIANCE_STATUS  not  in
+		<foreach collection="listStatus"   index="index"  item="status" open="(" close=")" separator="," >
+			#{status}
+		</foreach>
+		and
+		CASE_ID=#{caseId}
+	</select>
+    <select id="getTransMedicalTreatmentByTransNum"
+            resultType="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo">
+		select TOP 1  <include refid="TRANS_MEDICAL_CLAIM_ALL"></include>
+		FROM   [ESERVICE].[dbo].TRANS_MEDICAL_TREATMENT_CLAIM
+		where
+		CASE_ID  is  not  null
+		and  TRANS_NUM=#{transNum}
+	</select>
+    <select id="getMedicalTreatmentSequence" resultType="java.lang.Float">
+		select NEXT VALUE for MEDICAL_TREATMENT_CLAIM_SEQ as SEQID;
+	</select>
+	<select id="getTransMedicalTreatmentFiledatasByFileId" resultType="java.lang.Integer">
+		select  COUNT(FILE_ID)
+		FROM   [ESERVICE].[dbo].TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
+		where  FILE_ID=#{fileId}
+	</select>
+	<select id="getTransMedicalTreatmentByClaimsSeqId" resultType="java.lang.Float">
+		select  CLAIMS_SEQ_ID
+		FROM   [ESERVICE].[dbo].TRANS_MEDICAL_TREATMENT_CLAIM
+		where  TRANS_NUM=#{transNum}
+	</select>
+	<insert id="addMedicalTreatment" >
+		INSERT INTO  [ESERVICE].[dbo].[MEDICAL_TREATMENT_CLAIM]
+		(
+		 <include refid="ADD_MEDICAL_CLAIM_ALL"></include>
+		)
+		VALUES
+		(#{medicalVo.claimSeqId}
+		,#{medicalVo.caseId}
+		,#{medicalVo.transNum}
+		,#{medicalVo.policyNo}
+		,#{medicalVo.customerName}
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.name})
+		,#{medicalVo.relation}
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.idNo})
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.birdate})
+		,#{medicalVo.tel}
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.phone})
+		,#{medicalVo.zipCode}
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.address})
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.mail})
+		,#{medicalVo.diseaseName}
+		,#{medicalVo.diagnosisDate}
+		,#{medicalVo.hospital}
+		,#{medicalVo.otherCompanyInsured}
+		,#{medicalVo.otherInsucommpany}
+		,#{medicalVo.otherInsuType}
+		,#{medicalVo.otherInsuamount}
+		,#{medicalVo.otherInsuClaim}
+		,#{medicalVo.accountName}
+		,#{medicalVo.job}
+		,#{medicalVo.jobDescr}
+		,#{medicalVo.accidentDate}
+		,#{medicalVo.accidentTime}
+		,#{medicalVo.accidentCause}
+		,#{medicalVo.callPolice}
+		,#{medicalVo.hpUid}
+		,#{medicalVo.cpoa}
+		,#{medicalVo.paymentMethod}
+		,#{medicalVo.bankCode}
+		,#{medicalVo.branchCode}
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.bankAccount})
+		,#{medicalVo.applicationDate}
+		,#{medicalVo.applicationTime}
+		,#{medicalVo.applicationItem}
+		,#{medicalVo.accidentLocation}
+		,#{medicalVo.accidentDescr}
+		,#{medicalVo.policeStation}
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.policeName})
+		,ESERVICE.dbo.FN_ENBASE64(#{medicalVo.policePhone})
+		,#{medicalVo.policeDate}
+		,#{medicalVo.policeTime}
+		,#{medicalVo.toHospitalId}
+		,#{medicalVo.authorizationStartDate}
+		,#{medicalVo.authorizationEndDate}
+		,#{medicalVo.fromCompanyId}
+		,#{medicalVo.toCompanyId}
+		,#{medicalVo.authorizationFileType}
+		,#{medicalVo.stauts}
+			)
+	</insert>
+	<insert id="addMedicalTreatmentFileData">
+		INSERT INTO [ESERVICE].[dbo].[MEDICAL_TREATMENT_CLAIM_FILEDATAS]
+		([FD_ID]
+		,[CLAIMS_SEQ_ID]
+		,[TYPE]
+		,[FILE_BASE64]
+		,[FILE_ID]
+		,[FILE_NAME]
+		,[FILE_STATUS])
+		VALUES
+		((NEXT VALUE for MEDICAL_TREATMENT_CLAIM_FD_SEQ)
+		,#{fileDataVo.claimsSeqId}
+		,#{fileDataVo.dtype}
+		,#{fileDataVo.fileBase64}
+		,#{fileDataVo.fileId}
+		,#{fileDataVo.fileName}
+		,#{fileDataVo.fileStatus}
+		)
+	</insert>
+	<insert id="addTarnsMedicalTreatmentFile" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimFileDataVo">
+		INSERT INTO [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS]
+		(
+		[FD_ID]
+		,[CLAIMS_SEQ_ID]
+		,[TYPE]
+		,[FILE_NAME]
+		,[FILE_BASE64]
+		,[FILE_ID]
+		,[FILE_STATUS]
+		)
+		VALUES
+		((NEXT VALUE for  TRANS_MEDICAL_TREATMENT_CLAIM_FD_SEQ)
+		,#{fileData.claimsSeqId}
+		,#{fileData.dtype}
+		,#{fileData.fileName}
+		,#{fileData.fileBase64}
+		,#{fileData.fileId}
+		,#{fileData.fileStatus}
+		)
+	</insert>
+	<update id="updateMedicalTreatmentClaimToStatusByTransNum">
+		update ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
+		set
+		STATUS = #{saveTrans}
+		where TRANS_NUM = #{transNum}
+	</update>
+	<update id="updateTransMedicalTreatmentByTransNum">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		set
+		ALLIANCE_STATUS = #{allianceStatus}
+		where TRANS_NUM = #{transNum}
+	</update>
+	<update id="updateTarnsMedicalTreatmentFileStatus">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
+		set
+		FILE_STATUS = #{fileStatus}
+		where FILE_ID = #{fileId}
+	</update>
+</mapper>

@@ -41,7 +41,8 @@ public class DnsServiceImpl implements IDnsExternalService {
 	 */
 	//@Value("${alliance.api.dns101.accessToken}")
 	public String ACCESS_TOKEN_DNS101;
-	
+	//死亡出戶推送給核心TOKENZ值
+	public String ACCESS_TOKEN_DNS_AUTHORIZATION;
 
 	private RestTemplate restTemplate;
 	
@@ -137,6 +138,63 @@ public class DnsServiceImpl implements IDnsExternalService {
 	}
 
 	@Override
+	public String postCoreEntity(String url, Map<String, String> params, Map<String, String> unParams) throws Exception {
+
+		String strRes = null;
+
+		//呼叫記錄object
+		UnionCourseVo uc = new UnionCourseVo();
+		uc.setCaseId(unParams.get("caseId"));
+		uc.setTransNum(unParams.get("transNum"));
+		uc.setType(UnionCourseVo.TYPE);
+		uc.setName(unParams.get("name"));
+
+		if(url!=null) {
+			ResponseEntity<String> responseEntity = null;
+
+			HttpHeaders headers = new HttpHeaders();
+				headers.set("Authorization", this.ACCESS_TOKEN_DNS_AUTHORIZATION);
+				headers.set("call_user",unParams.get("call_user") );
+				headers.setContentType(MediaType.APPLICATION_JSON);
+
+			//org.json.JSONObject jsonObj = new org.json.JSONObject(params);
+			Gson gson = new Gson();
+			String json = gson.toJson(params);
+			logger.info("request json={}",json);
+
+			HttpEntity<String> entity = new HttpEntity<String>(json,headers);
+			uc.setCreateDate(new Date());
+			responseEntity = restTemplate.postForEntity(url, entity, String.class);
+			uc.setCompleteDate(new Date());
+
+			boolean checkResp = this.checkResponseStatus(responseEntity);
+
+			if(checkResp) {
+				uc.setNcStatus(UnionCourseVo.NC_STATUS_S);
+			}else {
+				uc.setNcStatus(UnionCourseVo.NC_STATUS_F);
+			}
+			uc.setMsg(getResInfo(strRes));
+
+			try {
+				//歷程錯誤不能影響聯盟response
+				unionCourseDao.insertUnionCourseVo(uc);
+			}catch(Exception e) {
+				//do nothing.
+			}
+
+			if (!checkResp) {
+				return null;
+			}
+
+			strRes= responseEntity.getBody();
+			logger.info("responseEntity.getBody()="+strRes);
+		}
+
+		return strRes;
+	}
+
+	@Override
 	public boolean checkResponseStatus(ResponseEntity<?> responseEntity) {
 		logger.info("http status=" + responseEntity.getStatusCodeValue());
 		if(responseEntity.getStatusCodeValue() == HttpStatus.SC_OK) {
@@ -163,6 +221,14 @@ public class DnsServiceImpl implements IDnsExternalService {
 			e.printStackTrace();
 		}
 		return str;
+	}
+
+	public String getACCESS_TOKEN_DNS_AUTHORIZATION() {
+		return ACCESS_TOKEN_DNS_AUTHORIZATION;
+	}
+
+	public void setACCESS_TOKEN_DNS_AUTHORIZATION(String ACCESS_TOKEN_DNS_AUTHORIZATION) {
+		this.ACCESS_TOKEN_DNS_AUTHORIZATION = ACCESS_TOKEN_DNS_AUTHORIZATION;
 	}
 
 	public String getACCESS_TOKEN() {

@@ -13,6 +13,7 @@ import com.twfhclife.alliance.domain.DnsResponseVo;
 import com.twfhclife.alliance.model.InsuranceClaimFileDataVo;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.InsuranceClaimVo;
+import com.twfhclife.alliance.model.MedicalRequestVo;
 import com.twfhclife.alliance.model.NotifyOfNewCaseVo;
 
 public interface IClaimChainService {
@@ -64,7 +65,15 @@ public interface IClaimChainService {
 	 * @throws Exception
 	 */
 	int addInsuranceCliam(InsuranceClaimMapperVo icvo) throws Exception;
-	
+
+	/**
+	 * 儲存醫療申請
+	 * @param icvo
+	 * @return int
+	 * @throws Exception
+	 */
+	int addNotifyOfNewCaseMedical(MedicalRequestVo vo) throws Exception;
+
 	/**
 	 * 依ncStatus(ex:0,1...etc.)傳入值取得資料
 	 * @param ncStatus

@@ -7,6 +7,12 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
+import com.twfhclife.generic.utils.CallApiCode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
@@ -33,6 +39,7 @@ import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.utils.ApConstants;
 import com.twfhclife.generic.utils.MyJacksonUtil;
+import org.springframework.util.StringUtils;
 
 /**
  * 死亡除戶
@@ -67,7 +74,9 @@ public class DnsAllianceServiceTask {
 	
 	//@Value("${alliance.dns201.url}")
 	public String URL_DNS201;
-	
+	public String URL_DNSFSZ1;
+	public String URL_DNSFS62;
+
 	@Autowired
 	@Qualifier("apiParameterService")
 	private IParameterService parameterService;
@@ -92,6 +101,7 @@ public class DnsAllianceServiceTask {
 		List<ParameterVo> resultSchList = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "SYS_DNS_SCHEDULE");
     	List<ParameterVo> resultUrlList = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "SYS_DNS_API_URL");
     	List<ParameterVo> resultBaseLList = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "SYS_PRO_BASE_URL");
+    	List<ParameterVo> resultBaseLListAuthorization = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, CallApiCode.SYS_DNS_HEADER);
     	if (resultBaseLList != null) {
     		resultBaseLList.forEach(parameterItem ->{
         		if ("alliance.api.accessToken".equals(parameterItem.getParameterName())) {
@@ -102,7 +112,14 @@ public class DnsAllianceServiceTask {
         			//do nothing.
         		}
         	});
-    	} 
+    	}
+		if (resultBaseLListAuthorization!=null) {
+			resultBaseLListAuthorization.forEach(parameterItem->{
+				if (CallApiCode.ALLIANCE_API_AUTHORIZATION.equals(parameterItem.getParameterName())) {
+					dnsServiceImpl.setACCESS_TOKEN_DNS_AUTHORIZATION(parameterItem.getParameterValue());
+				}
+			});
+		}
     	if (resultUrlList != null) {
     		resultUrlList.forEach(parameterItem -> {
 	    		switch (parameterItem.getParameterName()){
@@ -110,6 +127,10 @@ public class DnsAllianceServiceTask {
 	    				this.setURL_DNS101(parameterItem.getParameterValue());
 	    			case "alliance.dns201.url":
 	    				this.setURL_DNS201(parameterItem.getParameterValue());
+					case "alliance.apiFS62.url":
+						this.setURL_DNSFS62(parameterItem.getParameterValue());
+					case "alliance.apiFSZ1.url":
+						this.setURL_DNSFSZ1(parameterItem.getParameterValue());
 	    			default:
 	    				log.info("set dns url error,parameterItem.getParameterName()="+parameterItem.getParameterName()
 	    				+",parameterItem.getParameterValue(){}="+parameterItem.getParameterValue());
@@ -129,7 +150,162 @@ public class DnsAllianceServiceTask {
             });
     	}
 	}
-	
+
+
+	/**
+	 * DNS-FS62供死亡除戶通報通知寫入FS62相關通報訊息
+	 */
+	@Scheduled(cron = "${cron.dnsFS62.expression}")
+	public void callDNSFS62() {
+		log.info("Start DNS-FS62 Task.");
+		log.info("API_DNS_DISABLE="+API_DNS_DISABLE);
+
+		if("N".equals(API_DNS_DISABLE)){
+			try {
+				//A.取得TRANS中除戶案件的STATUS標示為已完成(STATUS=2)
+				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatus("2");
+				if(listContent!=null && listContent.size()>0) {
+					for(DnsContentVo contentVo : listContent) {
+						if(contentVo!=null) {
+							//B.LOOP案件回報聯盟
+							//all DNS-101
+							String apiCode = null;
+							Map<String,String> params = new HashMap<>();
+							params.put("FS62-SCN-NAME","FS62");//必填：固定用”FS62”
+							params.put("FS62-FUNC-CODE","IN");//必填：固定用”IN”
+							params.put("FS62-INSU-NO",contentVo.getPolicyNo());//必填：保單號碼
+							params.put("FS62-date",contentVo.getAdddate());//必填：辦理日(yyyyMMdd)
+							params.put("FS62-PAY-CODE","30");//必填：種類/固定”30”
+							params.put("FS62-ACCI-DATE",contentVo.getCondate());//必填：事故日
+							//進行查詢事故的原因
+							StringBuffer reason = new StringBuffer();
+							reason.append("批註除戶回報系統通報");
+							reason.append(contentVo.getCondate());
+							reason.append(contentVo.getName());
+							reason.append("身故");
+							params.put("FS62-ACCI-REASON",reason.toString());//必填：事故原因，長度44
+							params.put("FS62-ACCI-REASON2","");//必填：事故原因2，長度78
+
+							//聯盟鏈歷程參數
+							Map<String,String> unParams = new HashMap<>();
+							unParams.put("name", "DNS-FS62報通知核心");
+							unParams.put("caseId", contentVo.getCaseId());
+							unParams.put("transNum", contentVo.getTransNum());
+							unParams.put("call_user", "Fs62 related notification information");
+
+							String strResponse = this.dnsServiceImpl.postCoreEntity(URL_DNSFS62, params, unParams);
+							//String strResponse = "{\"success\":true,\"data\":{\"token\":\"20210830_00000001\",\"detail_status\":\"0\",\"detail_message\":\"〔寫入完成〕\"}}";
+							log.info("call URL_dnsFS62,strResponse="+strResponse);
+
+							String callRtncode = MyJacksonUtil.readValue(strResponse, "/success");//0代表成功,1代表查無資料
+							Boolean aBoolean = Boolean.valueOf(callRtncode);
+							if(aBoolean) {//聯盟回傳成功
+								String strContent = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
+								String msg = MyJacksonUtil.readValue(strResponse, "/data/detail_message");
+								if("0".equals(strContent)) {
+									contentVo.setDetailMessage(msg!=null?msg:"寫入完成");
+									dnsDao.updateTransDnsSDetailMessageByTransNum(contentVo);
+								}//end-if
+							} else {
+								//do nothing.
+							}
+						}//end-if(contentVo!=null)
+					}//end-for
+				}//end-if
+
+			}catch(Exception e) {
+				e.printStackTrace();
+				log.error(e.toString());
+			}
+		}
+
+		log.info("End DNS-FS62 Task.");
+	}
+
+
+	/**
+	 * DNS-FSZ1供死亡除戶通報取得最新契況
+	 */
+	@Scheduled(cron = "${cron.dnsFSZ1.expression}")
+	public void callDNSFSZ1() {
+		log.info("Start DNS-FSZ1 Task.");
+		log.info("API_DNS_DISABLE=" + API_DNS_DISABLE);
+
+		if ("N".equals(API_DNS_DISABLE)) {
+			try {
+				//A.取得TRANS中除戶案件的STATUS標示為已完成(STATUS=2)
+				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatusAndFsz1PiSt("2");
+				if (listContent != null && listContent.size() > 0) {
+					for (DnsContentVo contentVo : listContent) {
+						if (contentVo != null) {
+							//B.LOOP案件回報聯盟
+							//all DNS-101
+							String apiCode = null;
+							Map<String, String> params = new HashMap<>();
+							params.put("FSZ1-SCN-NAME", "FSZ1");//必填：固定用”FSZ1
+							params.put("FSZ1-FUNC-CODE", "IN");//必填：固定用”IN”
+							params.put("FSZ1-INSU-NO", contentVo.getPolicyNo());//必填：保單號碼
+							params.put("FSZ1-ID", contentVo.getIdno());//必填：主被保人ID
+
+							//聯盟鏈歷程參數
+							Map<String, String> unParams = new HashMap<>();
+							unParams.put("name", "DNS-FSZ1取得最新契況");
+							unParams.put("caseId", contentVo.getCaseId());
+							unParams.put("transNum", contentVo.getTransNum());
+							unParams.put("call_user", "Fsz1 obtains the latest lease");
+							String strResponse = this.dnsServiceImpl.postCoreEntity(URL_DNSFSZ1, params, unParams);
+							//String strResponse = "{\"success\":true,\"data\":{\"token\":\"20210902_00000004\",\"detail_status\":\"0\",\"detail_message\":\"〔查詢完成〕\",\"values\":[{\"FSZ1-SCN-NAME\":\"FSZ1\",\"FSZ1-FUNC-CODE\":\"IN\",\"FSZ1-INSU-NO\":\"US10000014\",\"FSZ1-ID\":\"M299999897\",\"FSZ1-PI-ST\":\"00\"}]}}";
+							log.info("call URL_DNSFSZ1,strResponse=" + strResponse);
+
+							String callRtncode = MyJacksonUtil.readValue(strResponse, "/success");//true代表成功,其他代表查無資料
+							Boolean aBoolean = Boolean.valueOf(callRtncode);
+							if (aBoolean) {//聯盟回傳成功
+									String strContent = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
+									String token = MyJacksonUtil.readValue(strResponse, "/data/token");
+									String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+									String values = MyJacksonUtil.getNodeString(dataString, "values");
+									ObjectMapper objectMapper = new ObjectMapper();
+									JsonNode rootNode = objectMapper.readTree(values);
+									values = rootNode.toString();
+									List<HashMap<String, String>> contentVoList = new Gson().fromJson(values, new TypeToken<List<HashMap<String, String>>>() {
+									}.getType());
+									if (contentVoList != null && contentVoList.size() > 0) {
+										contentVoList.stream().forEach(X -> {
+											String fsz1Id = X.get("FSZ1-ID");
+											String fsz1PiSt = X.get("FSZ1-PI-ST");
+											if (!StringUtils.isEmpty(fsz1Id) &&
+													!StringUtils.isEmpty(fsz1PiSt)) {
+												contentVo.setFsz1PiSt(fsz1PiSt);
+												contentVo.setFsz1Id(fsz1Id);
+												contentVo.setToken(token);
+												try {
+													dnsDao.updateTransDnssfsz1PiStByPolicyNo(contentVo);
+												} catch (Exception e) {
+													e.printStackTrace();
+												}
+											}
+										});
+									}
+							}//end-if
+						} else {
+							//do nothing.
+						}
+					}//end-if(contentVo!=null)
+				}//end-for
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error(e.toString());
+		}
+	}
+		log.info("End DNS-FS62 Task.");
+}
+
+
+
+
+
+
+
 	/**
 	 * DNS-101案件回報
 	 */
@@ -477,4 +653,19 @@ public class DnsAllianceServiceTask {
 		task.callDNS201();;
 	}
 
+	public String getURL_DNSFSZ1() {
+		return URL_DNSFSZ1;
+	}
+
+	public void setURL_DNSFSZ1(String URL_DNSFSZ1) {
+		this.URL_DNSFSZ1 = URL_DNSFSZ1;
+	}
+
+	public String getURL_DNSFS62() {
+		return URL_DNSFS62;
+	}
+
+	public void setURL_DNSFS62(String URL_DNSFS62) {
+		this.URL_DNSFS62 = URL_DNSFS62;
+	}
 }

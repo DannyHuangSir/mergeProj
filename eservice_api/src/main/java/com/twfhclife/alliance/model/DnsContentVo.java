@@ -113,6 +113,53 @@ public class DnsContentVo {
 	private String code;
 	
 	private String msg;
+	//單號
+	private String policyNo;
+	private String detailMessage;
+	private String token;
+	private String fsz1Id;
+	private String fsz1PiSt;
+
+
+	public String getDetailMessage() {
+		return detailMessage;
+	}
+
+	public void setDetailMessage(String detailMessage) {
+		this.detailMessage = detailMessage;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getFsz1Id() {
+		return fsz1Id;
+	}
+
+	public void setFsz1Id(String fsz1Id) {
+		this.fsz1Id = fsz1Id;
+	}
+
+	public String getFsz1PiSt() {
+		return fsz1PiSt;
+	}
+
+	public void setFsz1PiSt(String fsz1PiSt) {
+		this.fsz1PiSt = fsz1PiSt;
+	}
+
+	public String getPolicyNo() {
+		return policyNo;
+	}
+
+	public void setPolicyNo(String policyNo) {
+		this.policyNo = policyNo;
+	}
 
 	public String getCaseId() {
 		return caseId;

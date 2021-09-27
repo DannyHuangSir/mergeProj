@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.alliance.dao.NotifyOfNewCaseMedicalDao">
+
+	<resultMap id="NotifyOfNewCaseMedicalResultMap" type="com.twfhclife.alliance.model.NotifyOfNewCaseMedicalVo">
+		<result property="seqId"  column="SEQ_ID" />
+		<result property="caseId"   column="CASE_ID" />
+		<result property="type" column="TYPE" />
+		<result property="ncStatus" column="NC_STATUS" />
+		<result property="msg" column="MSG" />
+		<result property="caseStatus" column="CASE_STATUS" />
+		<result property="caseMessage" column="CASE_MESSAGE" />
+	</resultMap>
+	<update id="updateNotifyOfNewCaseMedicalNcStatusBySeqId" parameterType="com.twfhclife.alliance.model.NotifyOfNewCaseMedicalVo">
+		update
+		[ESERVICE].[dbo].NOTIFY_OF_NEW_CASE_MEDICAL
+		set  NC_STATUS=#{vo.ncStatus}
+		,MSG=#{vo.msg}
+		where CASE_ID=#{vo.caseId}
+	</update>
+	<select id="getNotifyOfNewCaseMedicalSeq" resultType="java.lang.Float">
+		select NEXT VALUE for NOTIFY_OF_NEW_CASE_MEDICAL_SEQ as SEQID;
+	</select>
+
+	<select id="getNotifyOfNewCaseMedicalByNcStatus" resultMap="NotifyOfNewCaseMedicalResultMap">
+		select
+		SEQ_ID,CASE_ID,TYPE,NC_STATUS,MSG,CASE_STATUS,CASE_MESSAGE
+		FROM   [ESERVICE].[dbo].NOTIFY_OF_NEW_CASE_MEDICAL
+		where CASE_ID IS  NOT  NULL AND  NC_STATUS=#{statusDefault}
+	</select>
+
+	<insert id="addNotifyOfNewCaseMedical"   parameterType="com.twfhclife.alliance.model.NotifyOfNewCaseMedicalVo">
+		INSERT INTO 
+       		ESERVICE.DBO.NOTIFY_OF_NEW_CASE_MEDICAL
+       		(SEQ_ID,CASE_ID,NC_STATUS,TYPE,MSG)
+       	VALUES
+       		(
+		   	    #{vo.seqId, jdbcType=FLOAT},
+				#{vo.caseId, jdbcType=VARCHAR},
+				#{vo.ncStatus,  jdbcType=VARCHAR},
+       			#{vo.type,   jdbcType=VARCHAR},
+       			#{vo.msg,   jdbcType=VARCHAR}
+			)
+	</insert>
+
+	
+</mapper>
