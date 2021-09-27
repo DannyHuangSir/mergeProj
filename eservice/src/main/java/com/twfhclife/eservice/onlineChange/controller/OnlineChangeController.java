@@ -11,6 +11,8 @@ import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.generic.annotation.EventRecordLog;
+import com.twfhclife.generic.annotation.EventRecordParam;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -431,6 +433,29 @@ public class OnlineChangeController extends BaseController {
 			processSystemError();
 		}
 		
+		return processResponseEntity();
+	}
+
+	/**
+	 * 補件單歷程.
+	 *
+	 * @param transVo TransVo
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/getTransRFEList")
+	public ResponseEntity<ResponseObj> getTransRFEList(@RequestBody TransRFEVo vo) {
+		try {
+			List<TransRFEVo> result = onlineChangeService.getTransRFEList(vo);
+			if (result != null && result.size() != 0) {
+				processSuccess(result);
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getTransRFEList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
 		return processResponseEntity();
 	}
 

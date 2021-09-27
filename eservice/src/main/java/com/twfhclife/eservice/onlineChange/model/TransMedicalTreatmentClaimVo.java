@@ -286,6 +286,15 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	private String hpUid;
 	//保⼾同意條款(純文字)
 	private String cpOa;
+	private String stauts;
+
+	public String getStauts() {
+		return stauts;
+	}
+
+	public void setStauts(String stauts) {
+		this.stauts = stauts;
+	}
 
 	public String getAllianceStatus() {
 		return allianceStatus;

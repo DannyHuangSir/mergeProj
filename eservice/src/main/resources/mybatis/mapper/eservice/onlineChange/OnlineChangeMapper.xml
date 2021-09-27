@@ -11,7 +11,24 @@
 		<result column="CONTENT" property="content"/>
 		<result column="REQUEST_DATE" property="requestDate"/>
 	</resultMap>
-
+	<resultMap id="transRFE" type="com.twfhclife.eservice.onlineChange.model.TransRFEVo" >
+		<result column="RFE_ID" property="rfeId"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="FD_ID" property="fdID"/>
+		<result column="STATUS" property="status"/>
+		<result column="STATUS_NAME" property="statusName"/>
+		<result column="REQUEST_CONTENT" property="requestContent"/>
+		<result column="RESPONSE_CONTENT" property="responseContent"/>
+		<result column="REQUEST_DATE" property="requestDate"/>
+		<result column="RESPONSE_DATE" property="responseDate"/>
+	</resultMap>
+	<resultMap id="TransInsCliamFileDataResultMap" type="com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo">
+		<result property="claimSeqId"   column="CLAIMS_SEQ_ID" />
+		<result property="type"  column="TYPE" />
+		<result property="fileName"    column="FILE_NAME" />
+		<result property="filePath"  column="PATH" />
+		<result property="fileBase64"  column="FILE_BASE64" />
+	</resultMap>
 	<select id="getTransNum" parameterType="java.util.HashMap" statementType="CALLABLE">
 		 CALL ESERVICE.DBO.USP_GETTRANSNUM(#{transNum, mode=OUT, jdbcType=VARCHAR})
 	</select>
@@ -170,7 +187,7 @@
 	<update id="updateInsClaimStatus" parameterType="java.lang.String">
 		UPDATE ESERVICE.DBO.INSURANCE_CLAIM SET STATUS = #{status} WHERE TRANS_NUM = #{transNum} and CASE_ID is null
 	</update>
-	
+
 	<insert id="addTransFile">
 		INSERT INTO 
 			ESERVICE.DBO.TRANS_FILE
@@ -207,8 +224,8 @@
 		select count(*) from eservice.dbo.TRANS A left join eservice.dbo.TRANS_INSURANCE_CLAIM B on a.TRANS_NUM = B.TRANS_NUM 
 		where A.STATUS not in ('2','3','7','8') and A.TRANS_TYPE = 'INSURANCE_CLAIM'  and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{rocId})
 	</select>
-	
-<select id="getMedicalTreatmentClaimCompleted" parameterType="java.lang.String" resultType="java.lang.Integer">
+
+	<select id="getMedicalTreatmentClaimCompleted" parameterType="java.lang.String" resultType="java.lang.Integer">
 		select count(*) from eservice.dbo.TRANS A left join eservice.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B on a.TRANS_NUM = B.TRANS_NUM
 		where A.STATUS not in ('2','3','7','8') and A.TRANS_TYPE = 'MEDICAL_TREATMENT'  and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{rocId})
 	</select>
@@ -274,6 +291,41 @@
 			AND T.REQUEST_DATE &lt; #{vo.endDate, jdbcType=DATE}
 		</if>
 		order by T.REQUEST_DATE desc
+	</select>
+
+	<select id="getTransRFEList"   resultMap="transRFE" >
+		select
+		T.RFE_ID,
+		T.TRANS_NUM,
+		T.REQUEST_CONTENT,
+		T.RESPONSE_CONTENT,
+		T.STATUS,
+		( SELECT a.PARAMETER_NAME
+		FROM ESERVICE_ADM.DBO.PARAMETER a ,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID AND a.STATUS = b.STATUS
+		AND b.STATUS = 1 AND b.CATEGORY_CODE = 'REVIEW_STATUS_CODE'
+		AND a.PARAMETER_VALUE = T.STATUS) as STATUS_NAME,
+		T.REQUEST_DATE,
+		T.RESPONSE_DATE
+		from ESERVICE.DBO.TRANS_RFE T
+		where T.TRANS_NUM = #{vo.transNum}
+		<if test="vo.rfeId != null and vo.rfeId != ''" >
+			AND T.RFE_ID = #{vo.rfeId, jdbcType=VARCHAR}
+		</if>
+		<if test="vo.startDate != null and vo.startDate != ''" >
+			AND T.REQUEST_DATE &gt; #{vo.startDate, jdbcType=DATE}
+		</if>
+		<if test="vo.endDate != null and vo.endDate != ''" >
+			AND T.REQUEST_DATE &lt; #{vo.endDate, jdbcType=DATE}
+		</if>
+		order by T.REQUEST_DATE desc
+	</select>
+
+	<select id="getTransInsCliamFileData"  resultMap="TransInsCliamFileDataResultMap">
+		select B.CLAIMS_SEQ_ID,B.TYPE,B.PATH,B.FILE_NAME,B.FILE_BASE64
+		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS B
+		where B.TYPE = 'C'
+		and B.RFE_ID  =  #{vo.rfeId}
 	</select>
 
 </mapper>

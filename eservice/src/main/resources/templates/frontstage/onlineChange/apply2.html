@@ -297,6 +297,70 @@
 			</div>
 		</div>
 	</div>
+	<!--醫療補件單歷程-->
+	<div class="modal fade in" id="modal-medical-viewsupplementConfirm" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;"  aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header"> 補件單歷程
+					<button type="button" class="close"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body clearfix  grey2">
+					<div class="form-horizontal" style="border-bottom: 0;">
+						<div class="form-group">
+							<label class="col-xs-3">申請項目：</label>
+							<div class="col-xs-9" id="view_medical_application_items"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-3">申請序號：</label>
+							<div class="col-xs-9" id="view_medical_insurance_num"></div>
+						</div>
+				</div>
+				</div>
+				<div class="modal-body clearfix grey2">
+					<div class="tb3 top0 nopd clearfix">
+							<i class="foo-business_15 foo-2x"></i>
+							<a data-toggle="collapse" data-target="#collapseBar1" aria-expanded="false" aria-controls="collapseBar" class="btn btn-linl">
+								<i class="fa fa-search gray search1" style="color: #DDDDDD;"></i>
+							</a>
+						</div>
+						<div id="collapseBar1" class="collapse">
+							<form class="form-inline wht clearfix" id="view_medical_collapseSearchBar" style="padding: 10px 0;">
+								<div class="col-xs-4">
+									<label style="float: left;">補件單號</label>
+									<div class="selector-box"  style="width: 100px;float: right;">
+										<input type="text" style="width:100%" name="attNum"/>
+									</div>
+								</div>
+								<div class="col-xs-6 input-inline">
+									<label>提出時間</label>
+									<div>
+										<input type="text" class="datepicker" name="startDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)"> 至
+										<input type="text" class="datepicker" name="endDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)">
+									</div>
+								</div>
+								
+								<div class="col-xs-2 text-right">
+									<button type="button" class="bgGrey" style="border: 0;padding: 5PX 10PX;" onclick="viewSupplement('','','query')">搜尋</button>
+								</div>
+							</form>
+						</div>
+					<table class="tablesaw" style="background: #FFFFFF;">
+						<thead>
+							<tr>
+								<th>補件單號</th>
+								<th>提出時間</th>
+								<th>回應時間</th>
+								<th>補件單内容</th>
+								<th>補件審查狀態</th>
+							</tr>
+						</thead>
+						<tbody id="view_medical_body">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>	
 	<!--補件單歷程-->
 	<div class="modal fade in" id="modal-container-viewsupplementConfirm" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;"  aria-hidden="true">
 		<div class="modal-dialog">
@@ -542,7 +606,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>	
 	<th:block th:replace="fragments/script"/>
 	<script src="js/tablepand.js"></script>
 	<script th:inline="javascript">
@@ -1022,9 +1086,9 @@
 							
 							' <div class="col-sm-12 upload-drop-zone boardDotted">';
 								if (file.fileName.indexOf('.pdf') === -1 && file.fileName.indexOf('.PDF') === -1) {
-									rHtml +='<img src="/images/'+file.fileName+'" width=50>';
+									rHtml +='<img src="data:image/png;base64,'+file.fileBase64+'" width=50>';
 								}else{
-									rHtml +='<embed src="/images/' + file.fileName+'" type="application/pdf" width=50>';
+									rHtml +='<embed src="data:application/pdf;base64,' + file.fileBase64+'" type="application/pdf" width=50>';
 								}
 								
 					rHtml +=	'</div>'+

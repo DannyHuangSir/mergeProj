@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.twfhclife.eservice.onlineChange.model.BlackListVo;
 import com.twfhclife.eservice.onlineChange.model.TableGetVo;
+import com.twfhclife.eservice.onlineChange.model.TransRFEVo;
 import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.model.TransVo;
 
@@ -41,7 +42,8 @@ public interface IOnlineChangeService {
 	 * 檢查是否進入進入黑名單
 	 */
 	public Map<String, String> checkBackList(@Param("blackListVo")BlackListVo blackListVo);
-
+	//進行取消 已持有醫療保單的轉換保單
+    void cancelMedicalTreatmentApplyTrans(String transNum, TransStatusHistoryVo hisVo);
 	/**
 	 * 查詢狀態歷程
 	 * @param vo
@@ -49,8 +51,12 @@ public interface IOnlineChangeService {
 	 */
 	List<TransStatusHistoryVo> getTransStatusHistoryList(TransStatusHistoryVo vo);
 
-	//進行取消 已持有醫療保單的轉換保單
-        void cancelMedicalTreatmentApplyTrans(String transNum, TransStatusHistoryVo hisVo);
+	/**
+	 * 查詢補件單歷程
+	 * @param vo
+	 * @return
+	 */
+	List<TransRFEVo> getTransRFEList(TransRFEVo vo);
 
 	//取消已持有投資標的轉換
 	void cancelApplyTransConversion(String transNum, TransStatusHistoryVo hisVo);

@@ -1,6 +1,9 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -13,10 +16,13 @@ import java.util.Map;
 
 import com.twfhclife.eservice.onlineChange.dao.*;
 import com.twfhclife.eservice.onlineChange.model.*;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -382,6 +388,183 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	public void cancelApplyTransConversion(String transNum, TransStatusHistoryVo hisVo) {
 		onlineChangeDao.updateTransStatus(transNum, OnlineChangeUtil.TRANS_STATUS_CANCEL);
 		onlineChangeDao.addTransStatusHistory(hisVo);
+	}
+
+	@Override
+	public List<TransRFEVo> getTransRFEList(TransRFEVo vo) {
+		List<TransRFEVo> transRFEVos = onlineChangeDao.getTransRFEList(vo);
+		for (int i = 0; i < transRFEVos.size(); i++) {
+			TransRFEVo tVo = transRFEVos.get(i);
+
+			List<TransInsuranceClaimFileDataVo> fileDataVoList = onlineChangeDao.getTransInsCliamFileData(tVo);
+			for (TransInsuranceClaimFileDataVo fileDataVo : fileDataVoList) {
+				//String filePath = fileDataVo.getFilePath()+"/"+fileDataVo.getFileName();
+				String filePath = fileDataVo.getFilePath()+File.separator+fileDataVo.getFileName();
+				fileDataVo.setFileBase64(this.fileDataToBase64Str(filePath));
+			}
+			tVo.setFileDatas(fileDataVoList);
+		}
+		return transRFEVos;
+	}
+
+
+	public String fileDataToBase64Str(String filePath) {
+		String encodedString = null;
+		try {
+			if(filePath!=null) {
+				logger.info("--------------------------------------------------input filePath="+filePath);
+				File file = new File(filePath);
+				long length = file.length();
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();//io流
+				String substring = filePath.substring(filePath.lastIndexOf("."), filePath.length());
+				//pdf获取缩略图
+				if(".pdf".equals(substring) || ".PDF".equals(substring)){
+					logger.info("--------------------------------------------------input filePath pdf=>Image="+filePath);
+					PDDocument doc = PDDocument.load(file);
+					encodedString =this.imgBase64(doc,baos);
+					logger.error("--------------------------------------------------Thumbnails  PDF=>img Base64 {}", encodedString);
+					doc.close();
+				}else {
+					//<=50KB
+					if (length<=51200) {
+						logger.info("--------------------------------------------------input filePath length<=51200{}"+filePath);
+						encodedString =this.imgBase64(file);
+						logger.error("--------------------------------------------------Thumbnails  Base64 length<=51200{}", encodedString);
+					}else{
+						logger.info("--------------------------------------------------input filePath length>51200{}"+filePath);
+						//进行抓取缩略图
+						encodedString =this.imgBase64(file,baos);
+						logger.error("--------------------------------------------------Thumbnails  Base64 length>51200{}", encodedString);
+					}
+				}
+				logger.error("--------------------------------------------------Thumbnails  Base64 {}", encodedString);
+			}
+		}catch(Exception e) {
+			logger.error("input filePath is null.");
+			logger.error(e);
+		}
+
+		return encodedString;
+	}
+	/**
+	 * 抓取PDF第一张转换为缩略图
+	 * @param path   pdf 地址
+	 * @return  缩略图
+	 */
+	private BufferedImage pdfBufferedImage(PDDocument doc ) {
+		//File file = null;
+		//PDDocument doc = null;
+		PDFRenderer renderer = null;
+		BufferedImage bufferedImage = null;
+		try {
+			//file = new File(path);
+			//String imgPDFPath = file.getParent();
+			//int dot = file.getName().lastIndexOf('.');
+			//String imagePDFName = file.getName().substring(0, dot); // 获取图片文件名
+			//doc = PDDocument.load(file);
+			renderer = new PDFRenderer(doc);
+			//int pageCount = doc.getNumberOfPages();
+			List<BufferedImage> piclist = new ArrayList<>();
+			for (int i = 0; i < 1; i++) {
+				/* dpi越大转换后144越清晰，相对转换速度越慢 */
+				BufferedImage image = renderer.renderImageWithDPI(i, 144);
+				//ImageIO.write(image, "png", new File("));
+				piclist.add(image);
+			}
+			bufferedImage = listBufferedImage(piclist);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return bufferedImage;
+	}
+	/**
+	 * 生产图片
+	 * @param piclist
+	 * @return
+	 */
+	private  BufferedImage listBufferedImage(List<BufferedImage> picList) {
+		// 纵向处理图片
+		if (picList == null || picList.size() <= 0) {
+			logger.error("input filePath is null.图片数组为空!");
+			return null;
+		}
+		try {
+			int height = 0,
+					width = 0,
+					newHeight = 0,
+					newLastHeight = 0,
+					picNumber = picList.size();
+			int[] heightArray = new int[picNumber];
+			BufferedImage newImage = null;
+			List<int[]> imgRGB = new ArrayList<int[]>();
+			// 保存一张图片中的RGB数据
+			int[] newImgRGB;
+			for (int i = 0; i < picNumber; i++) {
+				newImage = picList.get(i);
+				heightArray[i] = newHeight = newImage.getHeight();
+				if (i == 0) {
+					width = newImage.getWidth();
+				}
+				height += newHeight;
+				newImgRGB = new int[width * newHeight];
+				newImgRGB = newImage.getRGB(0, 0, width, newHeight, newImgRGB, 0, width);
+				imgRGB.add(newImgRGB);
+			}
+			newHeight = 0;
+			// 生成新图片
+			BufferedImage imageResult = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+			for (int i = 0; i < picNumber; i++) {
+				newLastHeight = heightArray[i];
+				// 计算偏移高度
+				if (i != 0) newHeight += newLastHeight;
+				// 写入流中
+				imageResult.setRGB(0, newHeight, width, newLastHeight, imgRGB.get(i), 0, width);
+			}
+			return imageResult;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * PPT转换图片50*50的base64数据
+	 * @param filePath  PPT转换图片50*50地址
+	 * @param baos
+	 * @return  base64数据
+	 * @throws IOException
+	 */
+	private  String   imgBase64(PDDocument doc,ByteArrayOutputStream baos) throws IOException {
+		BufferedImage bufferedImage = pdfBufferedImage(doc);
+		Thumbnails.of(bufferedImage). size(50, 50).outputQuality(0.25f).outputFormat("png").toOutputStream(baos);
+		byte[] bytes = baos.toByteArray();//转换成字节
+		String base64= Base64.getEncoder().encodeToString(bytes);
+		return  base64;
+	}
+	/**
+	 * 获取图片50*50的的base64数据
+	 * @param file  获取图片50*50地址
+	 * @param baos
+	 * @return   base64数据
+	 * @throws IOException
+	 */
+	private  String   imgBase64(File file,ByteArrayOutputStream baos) throws IOException {
+		Thumbnails.of(file). size(50, 50).outputQuality(0.25f).outputFormat("png").toOutputStream(baos);
+		byte[] bytes = baos.toByteArray();//转换成字节
+		String base64= Base64.getEncoder().encodeToString(bytes);
+		return  base64;
+	}
+
+	/**
+	 * 获取小于51200的图片的base64数据
+	 * @param file  小于51200的图片地址
+	 * @return  base64数据
+	 * @throws IOException
+	 */
+	private  String   imgBase64(File file) throws IOException {
+		byte[] fileContent = FileUtils.readFileToByteArray(file);
+		String base64= Base64.getEncoder().encodeToString(fileContent);
+		return  base64;
 	}
 
 	public String converFileToBase64Str(String filePath) {

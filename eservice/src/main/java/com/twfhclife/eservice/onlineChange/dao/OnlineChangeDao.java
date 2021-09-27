@@ -6,7 +6,9 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.eservice.onlineChange.model.BlackListVo;
+import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
 import com.twfhclife.eservice.onlineChange.model.TransPolicyVo;
+import com.twfhclife.eservice.onlineChange.model.TransRFEVo;
 import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.model.TransVo;
 
@@ -108,4 +110,17 @@ public interface OnlineChangeDao {
 	 * @return
 	 */
     List<TransStatusHistoryVo> getTransStatusHistoryList(@Param("vo") TransStatusHistoryVo vo);
+
+	/**
+	 * 查詢補件單歷程
+	 * @param vo
+	 * @return
+	 */
+	List<TransRFEVo> getTransRFEList(@Param("vo")TransRFEVo vo);
+	/**
+	 * 查詢補件
+	 * @param vo
+	 * @return
+	 */
+	List<TransInsuranceClaimFileDataVo> getTransInsCliamFileData(@Param("vo")TransRFEVo tVo);
 }
