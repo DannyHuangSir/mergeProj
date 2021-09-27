@@ -169,7 +169,6 @@ public class TransDepositController extends BaseUserDataController {
             UsersVo user = getUserDetail();
             try {
                 transDepositService.addNewDepositApply(vo, user);
-                sendNotification(vo, user);
             } catch (Exception e) {
                 logger.error(e);
                 return "forward:deposit4";
@@ -232,64 +231,6 @@ public class TransDepositController extends BaseUserDataController {
             }
         }
         return mingwen;
-    }
-
-    public void sendNotification(TransDepositVo vo, UsersVo user) {
-        try {
-            Map<String, Object> mailInfo = transInvestmentService.getSendMailInfo();
-            Map<String, String> paramMap = new HashMap<String, String>();
-            paramMap.put("TransNum", vo.getTransNum());
-            paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
-            paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
-            logger.info("Trans Num : {}", vo.getTransNum());
-            logger.info("Status Name : {}", mailInfo.get("statusName"));
-            logger.info("Trans Remark : {}", mailInfo.get("transRemark"));
-            logger.info("receivers={}", mailInfo.get("receivers"));
-            logger.info("user phone : {}", user.getMobile());
-            logger.info("user mail : {}", user.getEmail());
-            //获取保单编号
-            paramMap.put("POLICY_NO", vo.getPolicyNo());
-            logger.info("POLICY_NO : {}", vo.getPolicyNo());
-
-            List<String> receivers = new ArrayList<String>();
-
-            String applyDate = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
-            paramMap.put("DATA", applyDate);
-            //申請狀態-申請中
-            paramMap.put("TransStatus","申請中");
-            //申請功能
-            ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
-                    ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, TransTypeUtil.DEPOSIT_PARAMETER_CODE);
-            paramMap.put("APPLICATION_FUNCTION", parameterValueByCode.getParameterName());
-
-
-            //發送系統管理員
-            receivers = (List) mailInfo.get("receivers");
-            //推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
-            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_027, receivers, paramMap, "email");
-
-            //發送保戶SMS
-            //receivers = new ArrayList<String>();
-            receivers.clear();//清空
-            paramMap.clear();//清空模板參數
-            //設置模板參數
-            paramMap.put("TITLE", OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_TITLE);
-            paramMap.put("MESSAGE",OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CAPACITY);
-            receivers.add(user.getMobile());
-            logger.info("user phone : {}", user.getMobile());
-            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "sms");
-            //發送保戶MAIL
-            //receivers = new ArrayList<String>();
-            if (user.getEmail() != null) {
-                receivers.clear();//清空
-                receivers.add(user.getEmail());
-                logger.info("user mail : {}", user.getEmail());
-                messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "email");
-            }
-        } catch (Exception e) {
-            logger.info("insertTransInvestment() success, but send notify mail/sms error.");
-        }
-        logger.info("End send mail");
     }
 
     private void computeMaxAcctValue(List<PolicyListVo> policyList) {

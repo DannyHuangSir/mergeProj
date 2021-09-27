@@ -30,7 +30,7 @@ public interface OptionDao {
 	
 	public List<Map<String, Object>> getJobList3(@Param("jobB") String jobB, @Param("jobM") String jobM);
 
-	List<Map<String, String>> getCompanysList();
+	List<Map<String, String>> getCompanysList(@Param("policyNo") String policyNo);
 
-	List<Map<String, String>> getCurrencysList();
+	List<Map<String, String>> getCurrencysList(@Param("policyNo") String policyNo);
 }

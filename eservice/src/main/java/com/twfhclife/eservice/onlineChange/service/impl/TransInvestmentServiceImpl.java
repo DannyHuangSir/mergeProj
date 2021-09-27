@@ -21,6 +21,7 @@ import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.util.FormulaUtil;
 import com.twfhclife.eservice.web.dao.OptionDao;
 import com.twfhclife.eservice.web.dao.ParameterDao;
+import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.model.UsersVo;
@@ -171,9 +172,13 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             }
         }
         String riskLevel = riskLevelService.getUserRiskAttr(rocId);
-        return transInvestmentDao.getNewInvestments(policyNo, riskLevel, ownInvtNos);
+        String listRR = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, "RISK_LEVEL_TO_RR_" + riskLevel);
+        List<String> rrs = null;
+        if (StringUtils.isNotBlank(listRR)) {
+            rrs = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(listRR);
+        }
+        return transInvestmentDao.getNewInvestments(policyNo, ownInvtNos, rrs);
     }
-
 
     @Override
     public  List<List<TransFundConversionVo>>  transInvestmentConversionDetail(String transNum) throws Exception {
@@ -422,35 +427,31 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 
 
     @Override
-    public Map<String, List<Map<String, String>>> getCompanyAndCurrencyList() {
+    public Map<String, List<Map<String, String>>> getCompanyAndCurrencyList(String policyNo) {
         Map<String, List<Map<String, String>>> map = Maps.newHashMap();
-        map.put("companys",  optionDao.getCompanysList());
-        map.put("currencys",  optionDao.getCurrencysList());
+        map.put("companys",  optionDao.getCompanysList(policyNo));
+        map.put("currencys",  optionDao.getCurrencysList(policyNo));
         return map;
     }
 
 
     @Override
     public String transRiskLevelToName(String riskLevel) {
-        switch (riskLevel) {
-            case "RR1":
-            case "RR2":
-                return "保守型";
-            case "RR3":
-            case "RR4":
-                return "穩健型";
-            case "RR5":
-                return "積極型";
+       List<ParameterVo> list = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "RISK_LEVEL_TO_RR");
+       if (!CollectionUtils.isEmpty(list)) {
+           for (ParameterVo vo : list) {
+               if (StringUtils.equals(vo.getParameterCode(), "RISK_LEVEL_TO_RR_" + riskLevel)) {
+                   return vo.getParameterName();
         }
-        return null;
+           }
+       }
+       return "";
     }
 
     @Override
     public List<CompareInvestmentVo> getAppliedInvestments(String transNum) {
         return transInvestmentDao.selectCompareInvestments(transNum);
     }
-
-
 
     @Override
     public List<TransFundConversionVo> outransFundConversionDate (

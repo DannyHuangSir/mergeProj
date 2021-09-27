@@ -57,8 +57,9 @@ public interface ITransInvestmentService {
     /***
      * 獲取選項
      * @return
+     * @param policyNo
      */
-    Map<String, List<Map<String, String>>> getCompanyAndCurrencyList();
+    Map<String, List<Map<String, String>>> getCompanyAndCurrencyList(String policyNo);
 
 
     //查詢投資轉換詳情

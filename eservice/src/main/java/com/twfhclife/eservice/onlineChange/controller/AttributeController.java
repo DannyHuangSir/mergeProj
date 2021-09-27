@@ -4,6 +4,7 @@ import com.twfhclife.eservice.onlineChange.model.OptionVo;
 import com.twfhclife.eservice.onlineChange.model.QuestionVo;
 import com.twfhclife.eservice.onlineChange.model.TransAnswerVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
+import com.twfhclife.eservice.onlineChange.model.TransRiskLevelVo;
 import com.twfhclife.eservice.onlineChange.service.IAttributeService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
@@ -18,10 +19,12 @@ import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.PortfolioClient;
+import com.twfhclife.generic.api_model.TransHistoryDetailResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -105,6 +110,20 @@ public class AttributeController extends BaseUserDataController  {
             return "forward:attribute2";
         }
         return "frontstage/onlineChange/attribute/attribute-success";
+    }
+
+    @RequestLog
+    @PostMapping("/getNewTransRiskLevelDetail")
+    public String getNewTransRiskLevelDetail(@RequestParam("transNum") String transNum) {
+        try {
+            TransRiskLevelVo transRiskLevelVo = attributeService.getTransRiskLevelDetail(transNum);
+            addAttribute("before", transInvestmentService.transRiskLevelToName(transRiskLevelVo.getRiskLevelOld()));
+            addAttribute("after", transInvestmentService.transRiskLevelToName(transRiskLevelVo.getRiskLevelNew()));
+        } catch (Exception e) {
+            logger.error("Unable to getNewTransRiskLevelDetail: {}", ExceptionUtils.getStackTrace(e));
+            addDefaultSystemError();
+        }
+        return "frontstage/onlineChange/attribute/attribute-detail";
     }
 
     private boolean checkChoose(List<QuestionVo> questions, List<String> answers) {

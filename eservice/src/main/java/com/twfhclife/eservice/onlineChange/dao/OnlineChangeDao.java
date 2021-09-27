@@ -102,4 +102,10 @@ public interface OnlineChangeDao {
 	 * 檢查聯絡資料變更是否完成
 	 */
 	public int getContactInfoCompleted(@Param("rocId") String rocId);
+	/**
+	 * 查詢狀態歷程
+	 * @param vo
+	 * @return
+	 */
+    List<TransStatusHistoryVo> getTransStatusHistoryList(@Param("vo") TransStatusHistoryVo vo);
 }

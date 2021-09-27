@@ -96,7 +96,9 @@
 	</select>
 
 	<select id="getCompanysList" resultType="map">
-		SELECT DISTINCT FUND_ISSUER [KEY], FUND_ISSUER_CODE [VALUE] FROM ESERVICE.DBO.FUND
+		SELECT DISTINCT FUND_ISSUER [KEY], FUND_ISSUER_CODE [VALUE] FROM ESERVICE.DBO.FUND f
+		WHERE SUBSTRING(#{policyNo}, 0, 3) = f.product_no
+		and status = '00' and (getdate() between (case when START_DATE is null then getdate() else START_DATE end) and (case when END_DATE is null then getdate() else END_DATE end))
 	</select>
 
 	<select id="getCurrencysList" resultType="map">
@@ -115,6 +117,8 @@
 			AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.CURRENCY_PARAMETER_CATEGORY_CODE"/>
 			AND a.PARAMETER_CODE = f.CURRENCY
 		) [KEY], CURRENCY [VALUE] FROM ESERVICE.DBO.FUND f
+		WHERE SUBSTRING(#{policyNo}, 0, 3) = f.product_no
+		and status = '00' and (getdate() between (case when START_DATE is null then getdate() else START_DATE end) and (case when END_DATE is null then getdate() else END_DATE end))
 	</select>
 	
 </mapper>

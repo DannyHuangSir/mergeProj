@@ -1,9 +1,43 @@
-
-<form class="form-horizontal" role="form" style="border-top: 0;line-height: 20px;padding: 20px 0;">
-	<div class="form-group">
-		<label class="col-sm-12" style="font-size: 20px;line-height: 30px;">(變更前)風險屬性：保守型</label>
-	</div>
-	<div class="form-group">
-		<label- class="col-sm-12" style="font-size: 20px;line-height: 30px;">(變更後)風險屬性： 積極型</label>			 
-	</div>            
-</form>
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<tr class="">
+							<th class="hid-th w40p">風險屬性：</th>
+							<td>
+								<div>
+									<span th:text="${before}"></span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div class="col-sm-12 hid-title3">
+	<i class="fas fa-chevron-down fa orange"></i>
+</div>
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<tr class="">
+							<th class="hid-th w40p">風險屬性：</th>
+							<td>
+								<div>
+								  <span th:text="${after}"></span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

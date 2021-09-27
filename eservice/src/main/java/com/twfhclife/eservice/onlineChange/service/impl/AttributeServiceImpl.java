@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +52,11 @@ public class AttributeServiceImpl implements IAttributeService {
 
     @Override
     public List<QuestionVo> getQuestions() {
-        return questionnaireDao.selectQuestionnaire();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return questionnaireDao.selectQuestionnaire(calendar.getTime());
     }
 
     @Override
@@ -101,5 +106,18 @@ public class AttributeServiceImpl implements IAttributeService {
             throw e;
         }
         return result;
+    }
+
+    @Override
+    public TransRiskLevelVo getTransRiskLevelDetail(String transNum) {
+        TransRiskLevelVo qryVo = new TransRiskLevelVo();
+        qryVo.setTransNum(transNum);
+        List<TransRiskLevelVo> transRiskLevelVoList = transRiskLevelDao.getTransRiskLevelList(qryVo);
+
+        TransRiskLevelVo detailVo = new TransRiskLevelVo();
+        if (transRiskLevelVoList != null && transRiskLevelVoList.size() > 0) {
+            detailVo = transRiskLevelVoList.get(0);
+        }
+        return detailVo;
     }
 }

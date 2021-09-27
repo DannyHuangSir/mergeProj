@@ -6,7 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.twfhclife.eservice.odm.OnlineChangeModel;
 import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
+import com.twfhclife.eservice.onlineChange.service.IOnlineChangeService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
@@ -22,6 +24,8 @@ import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.generic.annotation.EventRecordLog;
+import com.twfhclife.generic.annotation.EventRecordParam;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
@@ -49,6 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 線上申請-醫起通申請書套印(保單為單選)
@@ -76,7 +81,8 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 	@Autowired
 	private IParameterService parameterSerivce;
-
+	@Autowired
+	private IInsuranceClaimService insuranceClaimService;
 
 	@Autowired
 	private ILilipiService lilipiService;
@@ -84,6 +90,9 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 	@Autowired
 	private MessageTemplateClient messageTemplateClient;
+
+	@Autowired
+	private IOnlineChangeService onlineChangeService;
 
 	@RequestLog
 	@GetMapping("/medicalTreatment1")
@@ -113,9 +122,20 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.BACK_LIST_MSG);
 				return "redirect:apply1";
 			}
+			/**
+			 * 進行判斷是否有保單理賠的申請
+			 *  ps :保單理賠有申請,則醫療不可進行申請
+			 */
+			int resultInsurance = insuranceClaimService.getPolicyClaimCompleted(getUserRocId());
+			if (resultInsurance > 0) {
+//				String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
+				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INSURANCE_CLAIM_APPLYING);
+				return "redirect:apply1";
+			}
+
 
 			/**
-			 * 3.有申請中的保單理賠,則不可再申請
+			 * 3.有申請中的保單,則不可再申請
 			 * TRANS中transType=INSURANCE_TYPE,status=-1,0,4
 			 */
 			int result = iMedicalTreatmentService.getPolicyClaimCompleted(getUserRocId());
@@ -137,7 +157,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				userRocId = (String)getSession("ADMIN_QUERY_ROCID");
 				logger.info("get session ADMIN_QUERY_ROCID={}",userRocId);
 			}
-			policyList = getUserOnlineChangePolicyListByRocId(userId, userRocId);
+			policyList = getUserOnlineChangePolicyMedicalListByRocId(userId, userRocId);
 
 			List<String> insClaimsPlans = iMedicalTreatmentService.getInsClaimPlan();
 			for (PolicyListVo policyListVo : policyList) {
@@ -613,4 +633,57 @@ public class MedicalTreatmentController extends BaseUserDataController {
 		}
 		return "frontstage/onlineChange/medicalTreatment/medicalTreatment-detail";
 	}
+
+	/**
+	 * 狀態歷程.
+	 *
+	 * @param transVo TransVo
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/getTransStatusHistoryList")
+	public ResponseEntity<ResponseObj> getTransStatusHistoryList(@RequestBody TransStatusHistoryVo vo) {
+		try {
+			List<TransStatusHistoryVo> result = onlineChangeService.getTransStatusHistoryList(vo);
+			if (result != null && result.size() != 0) {
+				processSuccess(result);
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getTransStatusHistoryList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	/**
+	 * 下拉選單資料-醫療申請狀態
+	 *
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/optionMedicalApplyForStatusList")
+	public ResponseEntity<ResponseObj> optionMedicalApplyForStatusList() {
+		try {
+			//獲取申請狀態數據信息
+			List<ParameterVo> applyForOptionStatusList = parameterSerivce.getParameterByCategoryCode(ApConstants.SYSTEM_ID,ApConstants.ONLINE_CHANGE_STATUS);
+			/*0	處理中 1	已審核  5	已上傳 6	失敗*/
+			String [] str = {"0","1","5","6"};
+			List<ParameterVo> collect = applyForOptionStatusList.stream().filter((x) -> {
+				for (String s : str) {
+					if (s.equals(x.getParameterCode())) {
+						return false;
+					}
+				}
+				return true;
+			}).collect(Collectors.toList());
+			processSuccess(applyForOptionStatusList);
+		} catch (Exception e) {
+			logger.error("Unable to optionList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
 }

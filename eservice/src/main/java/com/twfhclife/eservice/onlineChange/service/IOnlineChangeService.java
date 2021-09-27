@@ -42,6 +42,13 @@ public interface IOnlineChangeService {
 	 */
 	public Map<String, String> checkBackList(@Param("blackListVo")BlackListVo blackListVo);
 
+	/**
+	 * 查詢狀態歷程
+	 * @param vo
+	 * @return
+	 */
+	List<TransStatusHistoryVo> getTransStatusHistoryList(TransStatusHistoryVo vo);
+
 	//進行取消 已持有醫療保單的轉換保單
         void cancelMedicalTreatmentApplyTrans(String transNum, TransStatusHistoryVo hisVo);
 

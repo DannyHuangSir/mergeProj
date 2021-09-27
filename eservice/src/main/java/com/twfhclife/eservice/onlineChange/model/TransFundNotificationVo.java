@@ -17,10 +17,6 @@ public class TransFundNotificationVo extends AbstractOnlineChangeModelBean {
 	
 	private List<TransFundNotificationDtlVo> transFundNotificationDtlList;
 
-	private String authType;
-
-	private String userPassword;
-	
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -51,22 +47,6 @@ public class TransFundNotificationVo extends AbstractOnlineChangeModelBean {
 
 	public void setTransFundNotificationDtlList(List<TransFundNotificationDtlVo> transFundNotificationDtlList) {
 		this.transFundNotificationDtlList = transFundNotificationDtlList;
-	}
-
-	public String getAuthType() {
-		return authType;
-	}
-
-	public void setAuthType(String authType) {
-		this.authType = authType;
-	}
-
-	public String getUserPassword() {
-		return userPassword;
-	}
-
-	public void setUserPassword(String userPassword) {
-		this.userPassword = userPassword;
 	}
 
 	@Override

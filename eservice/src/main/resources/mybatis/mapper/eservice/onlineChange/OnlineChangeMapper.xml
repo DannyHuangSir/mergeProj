@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.twfhclife.eservice.onlineChange.dao.OnlineChangeDao">
+	<resultMap id="transHIS" type="com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo" >
+		<result column="TS_ID" property="tsId"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="USER_IDENTITY" property="identity"/>
+		<result column="CUSTOMERNAME" property="customerName"/>
+		<result column="REJECT_REASON" property="rejectReason"/>
+		<result column="STATUS" property="status"/>
+		<result column="CONTENT" property="content"/>
+		<result column="REQUEST_DATE" property="requestDate"/>
+	</resultMap>
 
 	<select id="getTransNum" parameterType="java.util.HashMap" statementType="CALLABLE">
 		 CALL ESERVICE.DBO.USP_GETTRANSNUM(#{transNum, mode=OUT, jdbcType=VARCHAR})
@@ -238,5 +248,32 @@
 		    AND E.TRANS_TYPE = 'CONTACT_INFO'
 			AND D.LIPM_ID = #{rocId}
 	</select>
-	
+	<select id="getTransStatusHistoryList"
+			resultMap="transHIS">
+		select
+		T.TS_ID,
+		T.TRANS_NUM,
+		T.USER_IDENTITY,
+		T.CUSTOMERNAME,
+		T.CONTENT,
+		COALESCE(( SELECT a.PARAMETER_NAME
+		FROM ESERVICE_ADM.DBO.PARAMETER a ,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID AND a.STATUS = b.STATUS
+		AND b.STATUS = 1 AND b.CATEGORY_CODE = 'ONLINE_CHANGE_STATUS'
+		AND a.PARAMETER_CODE = T.STATUS),'') as STATUS,
+		T.REQUEST_DATE
+		from ESERVICE.DBO.TRANS_STATUS_HISTORY T
+		where T.TRANS_NUM = #{vo.transNum}
+		<if test="vo.status != null and vo.status != ''" >
+			AND T.STATUS = #{vo.status, jdbcType=VARCHAR}
+		</if>
+		<if test="vo.startDate != null and vo.startDate != ''" >
+			AND T.REQUEST_DATE &gt; #{vo.startDate, jdbcType=DATE}
+		</if>
+		<if test="vo.endDate != null and vo.endDate != ''" >
+			AND T.REQUEST_DATE &lt; #{vo.endDate, jdbcType=DATE}
+		</if>
+		order by T.REQUEST_DATE desc
+	</select>
+
 </mapper>

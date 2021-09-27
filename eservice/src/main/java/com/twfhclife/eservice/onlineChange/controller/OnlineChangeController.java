@@ -242,7 +242,8 @@ public class OnlineChangeController extends BaseController {
 			TransTypeUtil.INVESTMENT_CONVERSION_CODE,
 			TransTypeUtil.INVESTMENT_PARAMETER_CODE,
 			TransTypeUtil.DEPOSIT_PARAMETER_CODE,
-			TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE
+			TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE,
+			TransTypeUtil.PAYMODE_PARAMETER_CODE
 	);
 
 	/**
@@ -275,7 +276,7 @@ public class OnlineChangeController extends BaseController {
 			}else if(transType !=null && TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transType)){
 				//進行取消 已持有醫療保單的轉換保單
 				onlineChangeService.cancelMedicalTreatmentApplyTrans(transNum, hisVo);
-                        }else if(transType !=null && TransTypeUtil.INVESTMENT_CONVERSION_CODE.equals(transType)){
+            }else if(transType !=null && INVSETMENT_TYPES.contains(transType)){
 				//進行查詢數據當前批次的保單號
 				String  policyNo =transContactInfoService.getHistoryPolicyNo(transNum);
 				//進行取消 已持有投資標的轉換保單
@@ -286,7 +287,7 @@ public class OnlineChangeController extends BaseController {
 				transInvestmentVo.setTransNum(transNum);
 				//申請功能名稱
 				ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
-						ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, TransTypeUtil.INVESTMENT_CONVERSION_CODE);
+						ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
 				transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
 				transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
 				transInvestmentVo.setMessage(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY);

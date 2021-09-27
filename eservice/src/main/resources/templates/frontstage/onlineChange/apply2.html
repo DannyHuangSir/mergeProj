@@ -473,7 +473,7 @@
 						<span aria-hidden="true">×</span>
 					</button>
 				</div>
-				<div class="modal-body center1 grey2 clearfix">
+				<div class="modal-body apply2 center1 grey2 clearfix">
 					<div id="transDetailScroll" style="overflow-y: scroll">
 						<div id="transDetailDiv"></div>
 					</div>
@@ -481,6 +481,68 @@
 			</div>
 		</div>
 	</div>
+		<!--醫療狀態歷程-->
+		<div class="modal fade in" id="modal-medical-statusConfirm" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header"> 狀態歷程
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body clearfix  grey2">
+						<div class="form-horizontal" style="border-top: 0;">
+							<div class="form-group">
+								<label class="col-xs-3">申請項目：</label>
+								<div class="col-xs-9" id="status_medical_application_items"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">申請序號：</label>
+								<div class="col-xs-9" id="status_medical_insurance_num"></div>
+							</div>
+					</div>
+					</div>
+					<div class="modal-body clearfix grey2">
+						<div class="tb3 top0 nopd clearfix" style="padding: 5px 0;">
+								<i class="foo-business_15 foo-2x"></i>
+								<a data-toggle="collapse" data-target="#collapseBar3" aria-expanded="false" aria-controls="collapseBar2" class="btn btn-linl">
+									<i class="fa fa-search gray search1" style="color: #DDDDDD;"></i>
+								</a>
+							</div>
+							<div id="collapseBar3" class="collapse">
+								<form class="form-inline wht clearfix" id="status_medica_collapseSearchBar" style="padding: 10px 0;">
+									<div class="col-xs-6 input-inline">
+										<label>申請日期</label>
+										<div style="float: right;">
+											<input style="width: 130px;" type="text" class="datepicker" name="startDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)"> 至
+											<input style="width: 130px;" type="text" class="datepicker" name="endDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)">
+										</div>
+									</div>
+									<div class="col-xs-4">
+										<div class="selector-box w100p">
+											<select class="selector" id="status_medical_select" name="status"> </select>
+										</div>
+									</div>
+									<div class="col-xs-2 text-right">
+										<button type="button" class="btn-cancel orange-bg" onclick="onMedicalStatus('','','query')">搜尋</button>
+									</div>
+								</form>
+							</div>
+						<table class="tablesaw" style="background: #FFFFFF;">
+							<thead>
+								<tr>
+									<th>狀態</th>
+									<th>異動時間</th>
+									<th>異動人</th>
+									<th>異動人姓名</th>
+									<th>備注説明</th>
+								</tr>
+							</thead>
+							<tbody id="status_medical_body">						
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 	<th:block th:replace="fragments/script"/>
 	<script src="js/tablepand.js"></script>
 	<script th:inline="javascript">
@@ -505,7 +567,7 @@
 		'CREDIT_CARD_DATE': /*[[@{/getTransCreditCardDateDetail}]]*/,
 		'REDUCE_POLICY': /*[[@{/getTransReducePolicyDetail}]]*/,
 		'POLICY_RESEND':  /*[[@{/getTransPolicyResendDetail}]]*/,
-		'RISK_LEVEL': /*[[@{/getTransRiskLevelDetail}]]*/,
+		'RISK_LEVEL': /*[[@{/getNewTransRiskLevelDetail}]]*/,
 		'POLICY_HOLDER_PROFILE': /*[[@{/getPolicyHolderProfileDetail}]]*/,
 		'FUND_SWITCH': /*[[@{/getTransFundSwitchDetail}]]*/,
 		'INSURANCE_CLAIM':/*[[@{/getTransInsuranceClaimDetail}]]*/,

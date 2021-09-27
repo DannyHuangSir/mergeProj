@@ -86,6 +86,34 @@ public class BaseUserDataController extends BaseController {
 		}
 		return policyList;
 	}
+
+
+	/**
+	 * 取得用戶線上申請 醫療
+	 *
+	 * @param userId 使用者代號
+	 * @param rocId 使用者證號
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PolicyListVo> getUserOnlineChangePolicyMedicalListByRocId(String userId, String rocId) {
+		// 為保證保單理賠加取的被保人保單清單正確，不再嘗試從session取得
+		List<PolicyListVo> policyList = null;
+		// Call api 取得資料
+		OnlineChangePolicyListResponse policyListResponse = onlineChangePolicyListClient
+				.getUserOnlineChangePolicyToMedicalListByRocId(userId, rocId);
+		// 若無資料，嘗試由內部服務取得資料
+		if (policyListResponse != null) {
+			logger.info("Get user[{}] data from eservice_api[getOnlineChangePolicyList]", userId);
+			policyList = policyListResponse.getUserPolicyList();
+		} else {
+			logger.info("Call internal service policyListService.getUserPolicyListByRocId(rocId{}) to get policyList.", rocId);
+			policyList = policyListService.getUserPolicyListByRocId(rocId);
+		}
+		return policyList;
+	}
+
+
 	
 	/**
 	 * 取得用戶投資、保障型保單清單.

@@ -374,6 +374,11 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	}
 
 	@Override
+	public List<TransStatusHistoryVo> getTransStatusHistoryList(TransStatusHistoryVo vo) {
+		return onlineChangeDao.getTransStatusHistoryList(vo);
+	}
+
+	@Override
 	public void cancelApplyTransConversion(String transNum, TransStatusHistoryVo hisVo) {
 		onlineChangeDao.updateTransStatus(transNum, OnlineChangeUtil.TRANS_STATUS_CANCEL);
 		onlineChangeDao.addTransStatusHistory(hisVo);

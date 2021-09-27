@@ -30,9 +30,6 @@ public class TransInvestmentVo extends AbstractOnlineChangeModelBean {
 
     private String finalInputInvestments;
 
-    private String authType;
-
-    private String userPassword;
     //申請日期
     private Date applyDate;
     //投資保單郵件發送頭部參數
@@ -136,22 +133,6 @@ public class TransInvestmentVo extends AbstractOnlineChangeModelBean {
 
     public void setNewInvestments(String newInvestments) {
         this.newInvestments = newInvestments;
-    }
-
-    public String getAuthType() {
-        return authType;
-    }
-
-    public void setAuthType(String authType) {
-        this.authType = authType;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
     }
 
     public String getFinalInvestments() {

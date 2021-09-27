@@ -38,10 +38,6 @@ public class TransDepositVo extends AbstractOnlineChangeModelBean {
 
     private String branchName;
 
-    private String authType;
-
-    private String userPassword;
-
     private String invtNo;
 
     private String currency;
@@ -198,22 +194,6 @@ public class TransDepositVo extends AbstractOnlineChangeModelBean {
 
     public void setBranchName(String branchName) {
         this.branchName = branchName;
-    }
-
-    public String getAuthType() {
-        return authType;
-    }
-
-    public void setAuthType(String authType) {
-        this.authType = authType;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
     }
 
     public String getInvtNo() {

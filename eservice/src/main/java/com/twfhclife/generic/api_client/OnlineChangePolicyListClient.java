@@ -1,5 +1,6 @@
 package com.twfhclife.generic.api_client;
 
+import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,6 +80,26 @@ public class OnlineChangePolicyListClient extends BaseRestClient {
 		apiReq.setUserId(userId);
 		apiReq.setPolicyHolderId(rocId);
 		apiReq.setTypeName(ApConstants.INSURANCE_CLAIM);
+		OnlineChangePolicyListResponse onlineChangePolicyListResponse = null;
+		try {
+			onlineChangePolicyListResponse = this.postApi(MyJacksonUtil.object2Json(apiReq), es015Url,
+					OnlineChangePolicyListResponse.class);
+		} catch (Exception e) {
+			logger.error("Unable to get data from eservice_api[getUserOnlineChangePolicyListByRocId]: {}",
+					ExceptionUtils.getStackTrace(e));
+		}
+		return onlineChangePolicyListResponse;
+	}
+
+
+
+	public OnlineChangePolicyListResponse getUserOnlineChangePolicyToMedicalListByRocId(String userId, String rocId) {
+
+		OnlineChangePolicyListRequest apiReq = new OnlineChangePolicyListRequest();
+		apiReq.setSysId(ApConstants.SYSTEM_ID);
+		apiReq.setUserId(userId);
+		apiReq.setPolicyHolderId(rocId);
+		apiReq.setTypeName(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
 		OnlineChangePolicyListResponse onlineChangePolicyListResponse = null;
 		try {
 			onlineChangePolicyListResponse = this.postApi(MyJacksonUtil.object2Json(apiReq), es015Url,

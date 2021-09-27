@@ -17,7 +17,7 @@ public interface TransInvestmentDao {
 
     List<InvestmentPortfolioVo> getOwnInvestment(String policyNo);
 
-    List<InvestmentPortfolioVo> getNewInvestments(@Param("policyNo") String policyNo, @Param("riskLevel") String riskLevel, @Param("ownInvtNos") List<String> ownInvtNos);
+    List<InvestmentPortfolioVo> getNewInvestments(@Param("policyNo") String policyNo, @Param("ownInvtNos")  List<String> invtNos, @Param("rrs") List<String> ownInvtNos);
 
     List<InvestmentPortfolioVo> getHeldInvestmentTarget(@Param("policyNo") String policyNo);
 }

@@ -61,15 +61,14 @@
 					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
                         <div class="col-sm-12 mode2select">
                             <label for="" class="col-sm-6 colorGreen">收益分配或撥回資產分配方式：</label>
-                            <label>
-								<div class="selector-box col-sm-12">
+                           
+							<div class="selector-box col-sm-6">
 									<select class="selector" name="allocation">
 										<option th:selected="${preAllocation eq '' }"></option>
 										<option th:selected="${preAllocation eq '1'}" value="1">現金給付</option>
 										<option th:selected="${preAllocation eq '2'}" value="2">增加投資標的單位數</option>
 									</select>
 								</div>
-                           </label>
                        </div>
                     </div>
                     <div class="clearfix" style="margin-bottom: 30px;"></div>

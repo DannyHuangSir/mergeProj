@@ -278,6 +278,48 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	 * */
 	private String toHospitalId;
 
+	//創建的時間
+	private Timestamp createDate;
+	//聯盟狀態
+	private String allianceStatus;
+	//與醫院對接的序號
+	private String hpUid;
+	//保⼾同意條款(純文字)
+	private String cpOa;
+
+	public String getAllianceStatus() {
+		return allianceStatus;
+	}
+
+	public void setAllianceStatus(String allianceStatus) {
+		this.allianceStatus = allianceStatus;
+	}
+
+	public String getHpUid() {
+		return hpUid;
+	}
+
+	public void setHpUid(String hpUid) {
+		this.hpUid = hpUid;
+	}
+
+	public String getCpOa() {
+		return cpOa;
+	}
+
+	public void setCpOa(String cpOa) {
+		this.cpOa = cpOa;
+	}
+
+	public Timestamp getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Timestamp createDate) {
+		this.createDate = createDate;
+	}
+
+
 	public List<String> getToHospitalIdItem() {
 		return toHospitalIdItem;
 	}

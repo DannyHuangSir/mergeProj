@@ -49,6 +49,7 @@
 								<th:block th:if="${vo.isMulti == 'N'}">
 						<div class="radio attr1">
 										<th:block th:each="vo1, rowStat1 : ${vo.options}">
+											<li style="list-style: none;">
 											<label for="answerB-1" id="answerB-1-1" class="col-sm-8">
 												<th:block th:if="${vo.isMulti == 'N'}">
 													<input th:attr="qid=${vo1.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
@@ -59,12 +60,14 @@
 												<th:block th:text="${vo1.item}"/>
 											</label>
 											<span class="col-sm-4 pull-right">(<th:block th:text="${vo1.score}"/>分)</span>
+											</li>
 										</th:block>
 					  </div>
 								</th:block>
 								<th:block th:if="${vo.isMulti == 'Y'}">
 						<div class="checkbox attr1">
 										<th:block th:each="vo1, rowStat : ${vo.options}">
+											<li style="list-style: none;">
 											<label for="answerB-1" class="col-sm-8">
 												<th:block th:if="${vo.isMulti == 'N'}">
 													<input th:attr="qid=${vo1.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
@@ -75,6 +78,7 @@
 												<th:block th:text="${vo1.item}"/>
 			   </label>
 											<span class="col-sm-4 pull-right">(<th:block th:text="${vo1.score}"/>分)</span>
+										</li>
 										</th:block>
 					  </div>
 								</th:block>

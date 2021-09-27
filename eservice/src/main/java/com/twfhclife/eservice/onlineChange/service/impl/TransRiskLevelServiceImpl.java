@@ -101,11 +101,11 @@ public class TransRiskLevelServiceImpl implements ITransRiskLevelService {
 	@Override
 	public String computeRiskLevel(Integer score) {
 		if (score <= 20) {
-			return "RR1";
+			return "A";
 		} else if (score >= 50) {
-			return "RR5";
+			return "B";
 		} else {
-			return "RR3";
+			return "C";
 		}
 	}
 }

@@ -41,6 +41,9 @@ import sun.misc.BASE64Decoder;
 
 import java.util.*;
 
+/***
+ * 線上申請-未來保費投資標的與分配比例
+ */
 @Controller
 public class TransInvestmentController extends BaseUserDataController  {
 
@@ -197,8 +200,8 @@ public class TransInvestmentController extends BaseUserDataController  {
     @RequestLog
     @PostMapping("/getInvestmentSearchItem")
     @ResponseBody
-    public ResponseEntity<ResponseObj> getInvestmentSearchItem() {
-        Map<String, List<Map<String, String>>> map = transInvestmentService.getCompanyAndCurrencyList();
+    public ResponseEntity<ResponseObj> getInvestmentSearchItem(@RequestBody TransInvestmentVo vo) {
+        Map<String, List<Map<String, String>>> map = transInvestmentService.getCompanyAndCurrencyList(vo.getPolicyNo());
         processSuccess(map);
         return processResponseEntity();
     }

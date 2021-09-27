@@ -245,40 +245,11 @@ public class FundNotificationController extends BaseUserDataController {
 				// 設定使用者
 				String userId = getUserId();
 				transFundNotificationVo.setUserId(userId);
-				
-				// Call api 送出線上申請資料
-				logger.info("Send user[{}] trans data to eservice_api[addTransRequest]", userId);
-				
-				String transAddResult = "";
-				TransAddRequest apiReq = new TransAddRequest();
-				apiReq.setSysId(ApConstants.SYSTEM_ID);
-				apiReq.setTransType(TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
-				apiReq.setTransFundNotificationVo(transFundNotificationVo);
-				apiReq.setUserId(userId);
-				
-				TransAddResponse transAddResponse = transAddClient.addTransRequest(apiReq);
-				if (transAddResponse != null) {
-					logger.info("Get user[{}] transAddResponse from eservice_api[addTransRequest]: {}", userId,
-							MyJacksonUtil.object2Json(transAddResponse));
-					transAddResult = transAddResponse.getTransResult();
-				} else {
-					// 若無資料，嘗試由內部服務取得資料
-					logger.info("Call internal service to get user[{}] insertTransFundNotification data", userId);
-					
-					// 設定交易序號
 					String transNum = transService.getTransNum();
 					transFundNotificationVo.setTransNum(transNum);
-					
+
 					int result = transFundNotificationService.insertTransFundNotification(transFundNotificationVo);
 					if (result <= 0) {
-						transAddResult = ReturnHeader.FAIL_CODE;
-					} else {
-						transAddResult = ReturnHeader.SUCCESS_CODE;
-					}
-				}
-				
-				if (!StringUtils.equals(transAddResult, ReturnHeader.SUCCESS_CODE)) {
-					addDefaultSystemError();
 					return "forward:notification3";
 				}
 			}

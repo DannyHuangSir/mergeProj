@@ -1,7 +1,7 @@
 <div class="form-group detailClaims">
     <label class="col-sm-3">查詢歷程資料</label>
     <div class="col-sm-9" style="text-align: left;">
-        <button th:onclick="'javascript:onStatus(\'' + ${claimVo.applyItem} + '\',\'' + ${claimVo.transNum} + '\');'">狀態歷程</button>
+        <button th:onclick="'javascript:onMedicalStatus(\'' + ${claimVo.applyItem} + '\',\'' + ${claimVo.transNum} + '\');'">狀態歷程</button>
         <button th:onclick="'javascript:viewSupplement(\'' + ${claimVo.applyItem} + '\',\'' + ${claimVo.transNum} + '\');'">補件單歷程</button>
         <button onclick="downloadPolicyClaimsPDF()">下載紙本文件寄回檢核表</button>
     </div>
@@ -446,6 +446,11 @@
     /*<![CDATA[*/
         var claimVo = /*[[${claimVo}]]*/;
         var fileDataList = "";
+        		//進行獲取醫療的申請狀態信息下拉選單
+		 $.ajaxSetup({async: false});
+		 commonOptionsParameter( /*[[@{/optionMedicalApplyForStatusList}]]*/);		
+			$.ajaxSetup({async: true});	
+
         if (claimVo != null) {
             var fileDatas = claimVo.fileDatas;
              if(fileDatas != null){
@@ -458,7 +463,7 @@
                     //     document.body.appendChild(A);
                     //     A.click();
                     // }
-                    var fileTypeNames = /*[[ ${session.INSURANCE_CLAIM_UPLOADFILE}]]*/;
+                    var fileTypeNames = /*[[ ${session.MEDICAL_TREATMENT_UPLOADFILE}]]*/;
                     if(fileTypeNames != null){
                         $.each( fileTypeNames, function( prop, value ) {
                             if(value.parameterCode == fileDatas[i].type){
@@ -503,5 +508,77 @@
             // window.open(url);
             // return false;
         }
+
+        	// 狀態歷程
+	function onMedicalStatus(APPLYITEM, TRANS_NUM, str){
+		var data = {};
+		var form = $('#status_medica_collapseSearchBar')[0];
+		if (!checkYMD(form.startDate.value)) {
+			return;
+		}
+		if (!checkYMD(form.endDate.value)) {
+			return;
+		}
+		if (str != 'query') {
+			$('#modal-medical-statusConfirm').modal({
+				show: true,
+				backdrop: 'static', 
+				keyboard: false
+			});
+			$('#status_medical_application_items').html($('#div-app-item').html());
+			$('#status_medical_insurance_num').html(TRANS_NUM);
+			data = { transNum : TRANS_NUM };
+			// 刪除查詢條件中的數據
+			form.reset();
+		}else {
+			data = {
+					transNum : $('#status_medical_insurance_num').html(),
+					status: form.status.value,
+					startDate: form.startDate.value.replaceAll('/','-'),
+					endDate: form.endDate.value.replaceAll('/','-')
+					};
+		}
+		$('#status_medical_body').html('');
+		$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : '/eservice/getTransStatusHistoryList',
+				data : JSON.stringify(data),
+				success : function(response) {
+					var html = '';
+					if (response.resultData != null) {
+						response.resultData.forEach(function(item,index){
+							html += '<tr>'+
+										'<td>'+item.status+'</td>'+
+										'<td>'+item.requestDate+'</td>'+
+										'<td>'+item.identity+'</td>'+
+										'<td>'+item.customerName+'</td>'+
+										'<td>'+(item.content != null ? item.content : '')+'</td>'+
+									'</tr>';
+						});
+						$('#status_medical_body').html(html);
+					}
+				},
+				error :function() {
+				}
+			});
+	}
+
+    function commonOptionsParameter(url) {
+           $('#status_medical_select').html('');
+    		$.ajax({
+    			url : url,
+    			type : "POST"
+    		}).done(function(data) {
+    			if (data.result == 'SUCCESS') {
+    				var optHtml = '<option value="">請選擇</option>';
+    				$.each(data.resultData, function(i, obj) {
+    					//console.log(obj.VALUE );
+    					optHtml += ('<option value="' + obj.parameterCode + '">' + obj.parameterValue + '</option>');
+    				});
+                    $('#status_medical_select').html(optHtml);
+    			}
+    		});
+    	};
     /*]]>*/
 </script>

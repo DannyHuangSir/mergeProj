@@ -151,8 +151,8 @@
                                                       <input name="currency" type="hidden" th:value="${vo.invtExchCurr}"/>
                                                       <input name="invtName" type="hidden" th:value="${vo.invtName}"/>
                                                       <input name="invtNo" type="hidden" th:value="${vo.invtNo}"/>
-                                                      <td><input class="item90" name="percent" type="number">%</td>
-                                                      <td><input class="item90" name="amount" type="number"><i class="my5" style="color:#666666"><th:block th:text="${vo.invtExchCurr}"/></i></td>
+                                                      <td><b class="tablesaw-cell-label">提領比例</b><span class="tablesaw-cell-content"><input class="item90" name="percent" type="number">%</span></td>
+                                                      <td><b class="tablesaw-cell-label">提領金額</b><span class="tablesaw-cell-content"><input class="item90" name="amount" type="number"><i class="my5" style="color:#666666"><th:block th:text="${vo.invtExchCurr}"/></i></span></td>
                                                   </tr>
                                               </th:block>
                                           </th:block>
@@ -222,6 +222,12 @@
 		            openAlert("提領金額只能為" + minValue + "~" + maxValue)
 		            return
 		        }
+
+                 if (currency == 'NTD' && !checkDecimal(depositAmount)) {
+                     openAlert("保单不支持输入小数")
+                     $("input[name='depositAmount']").val("")
+                     return false;
+                 }
 
 		        if ((acctValue - depositAmount) < surplusValue) {
 		            openAlert("剩余金額必須大於" + surplusValue)

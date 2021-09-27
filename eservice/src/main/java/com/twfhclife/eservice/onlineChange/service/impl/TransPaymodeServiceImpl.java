@@ -150,6 +150,7 @@ public class TransPaymodeServiceImpl implements ITransPaymodeService {
 		TransPaymodeVo detailVo = new TransPaymodeVo();
 		if (detailList != null && detailList.size() > 0) {
 			detailVo = detailList.get(0);
+			detailVo.setPolicyNoList(transPolicyDao.getTransPolicyNoList(transNum));
 		}
 		return detailVo;
 	}

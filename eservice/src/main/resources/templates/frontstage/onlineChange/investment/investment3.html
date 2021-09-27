@@ -368,6 +368,7 @@
 			type : 'POST',
 			contentType : 'application/json',
 			url : /*[[@{/getInvestmentSearchItem}]]*/,
+			data : JSON.stringify({policyNo: [[${transInvestmentVo.policyNo}]]}),
 			async: false,
 			success : function(response) {
 				if(response.result == "ERROR") {

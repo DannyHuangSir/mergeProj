@@ -33,6 +33,7 @@ import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
 import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
@@ -103,8 +104,10 @@ public class InsuranceClaimController extends BaseUserDataController {
 	
 	@Autowired
 	private ILoginService loginService;
-	
 
+
+	@Autowired
+	private IMedicalTreatmentService iMedicalTreatmentService;
 	@RequestLog
 	@GetMapping("/policyClaims1")
 	public String policyClaims1(RedirectAttributes redirectAttributes) {
@@ -133,7 +136,17 @@ public class InsuranceClaimController extends BaseUserDataController {
 				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.BACK_LIST_MSG);
 				return "redirect:apply1";
 			}
-			
+			/**
+			 * 進行判斷是否有醫療保單的申請
+			 *  ps :醫療有申請,則保單理賠不可進行申請
+			 */
+			int resultMedical = iMedicalTreatmentService.getPolicyClaimCompleted(getUserRocId());
+			if (resultMedical > 0) {
+//				String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
+				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.MEDICAL_TREATMENT_CLAIM_APPLYING);
+				return "redirect:apply1";
+			}
+
 			/**
 			 * 3.有申請中的保單理賠,則不可再申請
 			 * TRANS中transType=INSURANCE_TYPE,status=-1,0,4

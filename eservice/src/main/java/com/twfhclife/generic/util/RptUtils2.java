@@ -127,8 +127,26 @@ public class RptUtils2 {
 		if(claimVo.getFileDataList() != null) {
 			String[] fileDatas = claimVo.getFileDataList().split(",");
 			for (String name : fileDatas) {
+				if (name.length()>20) {
+					String[] split = name.split("");
+					StringBuffer stringBuffer = new StringBuffer();
+					for (int i = 1; i <= split.length; i++) {
+						stringBuffer.append(split[i-1]);
+						if (i%20==0) {
 				table.addCell(createCell("", keyfont, Element.ALIGN_RIGHT,1,false));
-				table.addCell(createCell(name,keyfont,Element.ALIGN_LEFT,2,false));
+							table.addCell(createCell(stringBuffer.toString(), keyfont, Element.ALIGN_LEFT, 2, false));
+							stringBuffer.delete(0,stringBuffer.length());
+						}
+						if(i >= split.length && stringBuffer.length()>0 && stringBuffer.length()<20){
+							table.addCell(createCell("", keyfont, Element.ALIGN_RIGHT,1,false));
+							table.addCell(createCell(stringBuffer.toString(), keyfont, Element.ALIGN_LEFT, 2, false));
+							stringBuffer.delete(0,stringBuffer.length());
+						}
+					}
+				}else {
+					table.addCell(createCell("", keyfont, Element.ALIGN_RIGHT,1,false));
+					table.addCell(createCell(name, keyfont, Element.ALIGN_LEFT, 2, false));
+				}
 			}
 		}
 
@@ -203,8 +221,26 @@ public class RptUtils2 {
 		if(claimVo.getFileDataList() != null) {
 			String[] fileDatas = claimVo.getFileDataList().split(",");
 			for (String name : fileDatas) {
+				if (name.length()>20) {
+					String[] split = name.split("");
+					StringBuffer stringBuffer = new StringBuffer();
+					for (int i = 1; i <= split.length; i++) {
+						stringBuffer.append(split[i-1]);
+						if (i%20==0) {
 				table.addCell(createCell("", keyfont, Element.ALIGN_RIGHT,1,false));
-				table.addCell(createCell(name,keyfont,Element.ALIGN_LEFT,2,false));
+							table.addCell(createCell(stringBuffer.toString(), keyfont, Element.ALIGN_LEFT, 2, false));
+							stringBuffer.delete(0,stringBuffer.length());
+						}
+						if(i >= split.length && stringBuffer.length()>0 && stringBuffer.length()<20){
+							table.addCell(createCell("", keyfont, Element.ALIGN_RIGHT,1,false));
+							table.addCell(createCell(stringBuffer.toString(), keyfont, Element.ALIGN_LEFT, 2, false));
+							stringBuffer.delete(0,stringBuffer.length());
+						}
+					}
+				}else {
+					table.addCell(createCell("", keyfont, Element.ALIGN_RIGHT,1,false));
+					table.addCell(createCell(name, keyfont, Element.ALIGN_LEFT, 2, false));
+				}
 			}
 		}
 

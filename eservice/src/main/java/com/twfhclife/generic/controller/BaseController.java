@@ -502,7 +502,7 @@ public class BaseController extends BaseMvcController {
 			logger.info("sendAuthentication authentication(otp code)="+authentication);
 			
 			// 紀錄驗證碼與時間
-				addSession(authenticationType+"Authentication", authentication);
+			addSession(authenticationType+"Authentication", authentication);
 			addSession(authenticationType+"AuthenticationTime", new Date());
 			addSession(authenticationType+"AuthenticationCheckCounts", getParameterValue(ApConstants.SYSTEM_CONSTANTS, "AUTH_CHECK_COUNTS"));
 			}

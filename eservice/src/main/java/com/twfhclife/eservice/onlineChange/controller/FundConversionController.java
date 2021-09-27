@@ -226,8 +226,9 @@ public class FundConversionController extends BaseUserDataController  {
             List<InvestmentPortfolioVo> investmentPortfolioVo = builderTime.fromJson(investmentsList, new TypeToken<List<InvestmentPortfolioVo>>(){}.getType());
             logger.error("--------Unable to init from FundConversionController - fund4--------: {}", investmentPortfolioVo);
 
+            String riskLevel = riskLevelService.getUserRiskAttr(getUserRocId());
+            String s = transInvestmentService.transRiskLevelToName(riskLevel);
              investmentPortfolioVo = investmentPortfolioVo.stream().map((x) -> {
-                String s = transInvestmentService.transRiskLevelToName(x.getInvtRiskBeneLevel());
                     x.setInvtRiskBeneLevel(s);
                     return x;
                 }).collect(Collectors.toList());
@@ -249,8 +250,8 @@ public class FundConversionController extends BaseUserDataController  {
     @RequestLog
     @PostMapping("/getInvestmentConversionSearchItem")
     @ResponseBody
-    public ResponseEntity<ResponseObj> getInvestmentSearchItem() {
-        Map<String, List<Map<String, String>>> map = transInvestmentService.getCompanyAndCurrencyList();
+    public ResponseEntity<ResponseObj> getInvestmentSearchItem(@RequestBody TransInvestmentVo vo) {
+        Map<String, List<Map<String, String>>> map = transInvestmentService.getCompanyAndCurrencyList(vo.getPolicyNo());
         processSuccess(map);
         return processResponseEntity();
     }

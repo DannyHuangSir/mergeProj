@@ -124,26 +124,15 @@
     ,F.CURRENCY AS invtExchCurr
     ,F.FUND_ISSUER_CODE AS company
     FROM ESERVICE.DBO.FUND F
-    <choose>
-      <when test="riskLevel == 'RR1'">
-        WHERE F.RISK_BENE_LEVEL = #{riskLevel}
-      </when>
-      <when test="riskLevel == 'RR2'">
-        WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2')
-      </when>
-      <when test="riskLevel == 'RR3'">
-        WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3')
-      </when>
-      <when test="riskLevel == 'RR4'">
-        WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3', 'RR4')
-      </when>
-      <when test="riskLevel == 'RR5'">
-        WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3', 'RR4', 'RR5')
-      </when>
-      <otherwise>
-        WHERE F.RISK_BENE_LEVEL = #{riskLevel}
-      </otherwise>
-    </choose>
+    WHERE
+    SUBSTRING(#{policyNo}, 0, 3) = F.PRODUCT_NO
+    AND status = '00' and (getdate() between (case when START_DATE is null then getdate() else START_DATE end) and (case when END_DATE is null then getdate() else END_DATE end))
+    <if test="rrs != null">
+      AND F.RISK_BENE_LEVEL IN
+      <foreach collection="rrs" separator="," open="(" close=")" item="rr">
+        #{rr}
+      </foreach>
+    </if>
 
     <if test="ownInvtNos != null">
       AND F.FUND_CODE NOT IN
