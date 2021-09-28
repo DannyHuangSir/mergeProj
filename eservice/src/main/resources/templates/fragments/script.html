@@ -108,14 +108,17 @@
             }
         }else if(obj.checked==true && obj.id == 'insured'){
             $("a[name='policyClaims']").show();
+            $("a[name='medicalTreatment']").show();
             $("#button_update_base_info").show();
         }else if(obj.checked==false && obj.id == 'insured'){
             $("a[name='policyClaims'").hide();
+            $("a[name='medicalTreatment']").hide();
             $("#button_update_base_info").hide()
             if(proposer == false){
                 openAlert("至少勾選一個！");
                 $("#insured").prop("checked","checked");
                 $("a[name='policyClaims'").show();
+                $("a[name='medicalTreatment']").show();
             }
         }
     }

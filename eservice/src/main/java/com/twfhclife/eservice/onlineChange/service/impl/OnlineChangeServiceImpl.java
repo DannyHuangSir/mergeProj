@@ -55,6 +55,8 @@ import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.HttpUtil;
 import com.twfhclife.generic.util.RptUtils;
 
+import javax.print.DocFlavor;
+
 @Service
 public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineChangeService {
 	
@@ -405,6 +407,16 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 			tVo.setFileDatas(fileDataVoList);
 		}
 		return transRFEVos;
+	}
+
+	@Override
+	public Map<String, String> checkMedicalBackList(BlackListVo blackListVo) {
+		Map<String, String> rMap = new HashMap<String, String>();
+		String detailInfo = onlineChangeDao.getMedicalBlackList(blackListVo);
+		String errMsg = parameterDao.getParameterValueByCode( ApConstants.SYSTEM_ID, ApConstants.INSURANCEC_CLAIM_BLACKLIST_ALERT01);
+		rMap.put("detailInfo", detailInfo);
+		rMap.put("errMsg", errMsg);
+		return   rMap;
 	}
 
 

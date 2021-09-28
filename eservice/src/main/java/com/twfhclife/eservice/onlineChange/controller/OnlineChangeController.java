@@ -98,6 +98,9 @@ public class OnlineChangeController extends BaseController {
             if (key.substring(0, 9).equals(OnlineChangeUtil.ONLINE_CHANGE_HOME_PARAMETER_CATEGORY_CODE)) {
 				map.put(key, parameterList.get(key).getParameterValue());
 			}
+			if (key.startsWith(OnlineChangeUtil.ONLINE_CHANGE_HOME_PARAMETER_INVESTMENT_CATEGORY_CODE)) {
+				map.put(key, parameterList.get(key).getParameterValue());
+			}
 		}
 
 
@@ -433,6 +436,34 @@ public class OnlineChangeController extends BaseController {
 			processSystemError();
 		}
 		
+		return processResponseEntity();
+	}
+	/**
+	 * 檢查醫療是否進入進入黑名單
+	 * @param blackListVo
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/checkMedicalBackList")
+	public ResponseEntity<ResponseObj> checkMedicalBackList(@RequestBody BlackListVo blackListVo) {
+		try{
+			Map<String, String> rMap = onlineChangeService.checkMedicalBackList(blackListVo);
+			String detailInfo = rMap.get("detailInfo");
+			String errMsg = rMap.get("errMsg");
+			if (detailInfo != null) {
+				String[] infos = detailInfo.split("\\|");
+				errMsg = errMsg.replace("${NAME}", infos[0]);
+				errMsg = errMsg.replace("${TRANS_CREATEDATE}", infos[2]);
+				errMsg = errMsg.replace("${TRANS_NUM}", infos[1]);
+				processError(errMsg);
+			}else {
+				processSuccess(1);
+			}
+		} catch (Exception e) {
+			logger.error("checkBackList error! {}", e);
+			processSystemError();
+		}
+
 		return processResponseEntity();
 	}
 

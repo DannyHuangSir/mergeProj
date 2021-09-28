@@ -73,7 +73,7 @@ public class AttributeServiceImpl implements IAttributeService {
             transVo.setTransType(TransTypeUtil.RISK_LEVEL_PARAMETER_CODE);
             transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
             transVo.setUserId(user.getUserId());
-            transVo.setCreateUser(user.getCreateUser());
+            transVo.setCreateUser(user.getUserId());
             transVo.setCreateDate(new Date());
             transDao.insertTrans(transVo);
 

@@ -329,7 +329,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 	@RequestLog
 	@PostMapping("/medicalTreatment3")
-	public String medicalTreatment3(TransMedicalTreatmentClaimVo claimVo) {
+	public String medicalTreatment3(TransMedicalTreatmentClaimVo claimVo,BindingResult bindingResult) {
 		try {
 			// 要保人
 			LilipmVo lilipmVo = lilipmService.findByPolicyNo(claimVo.getPolicyNo());

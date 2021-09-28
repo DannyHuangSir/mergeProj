@@ -44,40 +44,9 @@
 					<h3>總分：<th:block th:text="${transAnswerVo.score}"/>分</h3>
 				</div>
 				<div class="attr2 col-sm-6 col-sm-offset-3">為確保保險商品符合您的投資能力及風險屬性，投資風險屬性若有變更，<br/>本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。</div>
-				<div class="col-sm-10 col-sm-offset-1">		  
-					<div class="check-title">風險屬性分析表</div>
-					<div class="check-body grey2">
-					  <div class="plus-list">
-						<div class="col-sm-2 text-left">總 分</div>
-						<div class="col-sm-2 text-left">投資組合類型</div>
-						<div class="col-sm-8 text-left">風險屬性說明</div>
-					  </div>     
-					  <div class="check-list inlineBlock">
-						<div class="col-sm-2">20 分以下</div>
-						<div class="col-sm-2"><p class="orange chMiddle">保守型</p><p>(RR1)</p></div>
-						<div class="col-sm-8">您的投資態度偏向保守，可承擔的投資風險亦較低，建議選擇風險較低或能提供
-			  穩定收益的投資工具，如債券、貨幣型基金等較為安全。</div>
-					  </div>
-					  <div class="check-list inlineBlock">
-						<div class="col-sm-2">21~49 分</div>
-						<div class="col-sm-2"><p class="orange chMiddle">穩健型</p><p>(RR3)</p></div>
-						<div class="col-sm-8">您希望自己的資產可以穩定成長，所以願意承擔適度的風險去賺取適度的報酬。
-						  投資的重點應注意適度分散，以成長型基金為主，收益型基金為輔，並避免投資
-						  過度集中。
-						</div>
-					  </div>
-					  <div class="check-list inlineBlock">
-						<div class="col-sm-2">50 分以上</div>
-						<div class="col-sm-2"><p class="orange chMiddle">積極型型</p><p>(RR5)</p></div>
-						<div class="col-sm-8">您希望自己的資產可以穩定成長，所以願意承擔適度的風險去賺取適度的報酬。
-						投資的重點應注意適度分散，以成長型基金為主，收益型基金為輔，並避免投資
-						過度集中。
-					  </div>
-					  </div>
-					</div>
-				  </div>
+				<div class="col-sm-10 col-sm-offset-1" id="analysisStatement"></div>
 				  <div class="col-md-8 col-md-offset-2 two-buttons">
-					<a href="attribute1"><button id="deny" class="btn-signup">上一步</i></button></a>
+					<a><button id="deny" class="btn-signup">上一步</i></button></a>
 					<button id="go" class="btn-signup">確定變更</i></button>
 				</div>
 			</div>
@@ -87,12 +56,20 @@
 	<th:block th:replace="fragments/script"/>
 	<script th:inline="javascript">
 		/*<![CDATA[*/
-		$(function() {
-		$('#go').click(function() {
+			 $(function() {
+				$('#go').click(function() {
 					var formData = [[${transAnswerVo}]];
 					postWithFormData(/*[[@{/attributeSuccess}]]*/, formData);
-		});
-	});
+				});
+
+				$('#deny').click(function(){
+					let formData = {
+						answers: [[${transAnswerVo.answers}]]
+					}
+					postWithFormData(/*[[@{/attribute1}]]*/, formData);
+				})
+				$("#analysisStatement").html([[${analysisStatement}]])
+			});
 		/*]]>*/
 		</script>
 </body>

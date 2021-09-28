@@ -73,7 +73,13 @@ public interface OnlineChangeDao {
 	 * @param blackListVo
 	 */
 	public String getBlackList(@Param("blackListVo")BlackListVo blackListVo);
-	
+
+	/**
+	 * 檢查是否進入進入黑名單
+	 * @param blackListVo
+	 */
+	public String getMedicalBlackList(@Param("blackListVo")BlackListVo blackListVo);
+
 	/**
 	 * 檢查保單理賠是否完成
 	 */

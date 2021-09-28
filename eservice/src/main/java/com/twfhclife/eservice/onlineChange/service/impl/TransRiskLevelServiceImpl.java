@@ -3,6 +3,10 @@ package com.twfhclife.eservice.onlineChange.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.twfhclife.eservice.web.model.ParameterVo;
+import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.generic.util.ApConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +38,9 @@ public class TransRiskLevelServiceImpl implements ITransRiskLevelService {
 
 	@Autowired
 	private TransRiskLevelDao transRiskLevelDao;
+
+	@Autowired
+	private IParameterService parameterService;
 
 	@Override
 	public List<TransRiskLevelVo> getTransRiskLevelList(TransRiskLevelVo transRiskLevelVo) {
@@ -100,12 +107,29 @@ public class TransRiskLevelServiceImpl implements ITransRiskLevelService {
 
 	@Override
 	public String computeRiskLevel(Integer score) {
-		if (score <= 20) {
-			return "A";
-		} else if (score >= 50) {
-			return "B";
-		} else {
-			return "C";
+		List<ParameterVo> parameterVos = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "RISK_SCORE_TO_LEVEL");
+		ParameterVo maxMinVo = null;
+		for (ParameterVo parameterVo : parameterVos) {
+			if (parameterVo.getParameterCode().contains("MIN")) {
+				Integer paramScore = Integer.valueOf(parameterVo.getParameterValue());
+				if (paramScore < score && (maxMinVo == null || paramScore > Integer.valueOf(maxMinVo.getParameterValue()))) {
+					maxMinVo = parameterVo;
+				}
+			}
 		}
+
+		if (maxMinVo != null) {
+			for (ParameterVo parameterVo : parameterVos) {
+				if (parameterVo.getParameterCode().contains("MAX")) {
+					Integer paramScore = Integer.valueOf(parameterVo.getParameterValue());
+					if (paramScore > score && StringUtils.equals(parameterVo.getParameterName(), maxMinVo.getParameterName())) {
+						return parameterVo.getParameterName();
+		}
+	}
+			}
+			return maxMinVo.getParameterName();
+		}
+		logger.warn("配置計算風險屬性評分有誤");
+		return "A";
 	}
 }

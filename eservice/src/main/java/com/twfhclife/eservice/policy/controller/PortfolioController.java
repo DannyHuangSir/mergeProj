@@ -74,7 +74,7 @@ public class PortfolioController extends BaseController {
 				ParameterVo vo = (ParameterVo) paraMap.get("INVEST_CODE");
 				ParameterVo vo2 = (ParameterVo) paraMap.get("DOWN_LISTING_2");
 				String[] investCode = vo.getParameterValue().split(",");
-				String[] downListing = vo.getParameterValue().split(",");
+				String[] downListing = vo2.getParameterValue().split(",");
 				for (String insuType : investCode) {
 					if (policyNo.startsWith(insuType)) {
 						return "frontstage/listing2-1";

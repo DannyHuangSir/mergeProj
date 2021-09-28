@@ -580,5 +580,65 @@
     			}
     		});
     	};
+        	//補件單歷程
+	var fileLogList = [];
+	function viewSupplement(APPLYITEM, TRANS_NUM, str){
+		var data = {};
+		var form = $('#view_medical_collapseSearchBar')[0];
+		if (str != 'query') {
+			$('#modal-medical-viewsupplementConfirm').modal({
+				show: true,
+				backdrop: 'static', 
+				keyboard: false
+			});
+			$('#view_medical_application_items').html($('#div-app-item').html());
+			$('#view_medical_insurance_num').html(TRANS_NUM);
+			// 刪除查詢條件中的數據
+			form.reset();
+			data = {transNum : TRANS_NUM};
+		}else {
+			data = {
+					transNum : $('#view_medical_insurance_num').html(),
+					claimSeqId: form.attNum.value,
+					startDate: form.startDate.value.replaceAll('/','-'),
+					endDate: form.endDate.value.replaceAll('/','-')
+					};
+		}
+		if (!checkYMD(form.startDate.value)) {
+			return;
+		}
+		if (!checkYMD(form.endDate.value)) {
+			return;
+		}
+		$('#view_medical_body').html('');
+		$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : '/eservice/getTransRFEList',
+				data : JSON.stringify(data),
+				success : function(response) {
+					var html = '';
+					if (response.resultData != null) {
+						fileLogList = response.resultData;
+						response.resultData.forEach(function(item,index){
+							html += '<tr>'+
+										'<td>'+item.rfeId+'</td>'+
+										'<td>'+item.requestDate+'</td>'+
+										'<td>'+item.responseDate+'</td>'+
+										'<td>'+
+											'<button type="button" onclick="viewSupplementDetil(\''+ index +'\')" style="position: relative;">查看<i class="foo-warning"></i></button>'+
+										'</td>';
+								html +=	'<td>'+ item.statusName+'</td>'+
+									'</tr>';
+						});
+					
+					}
+                    $('#view_medical_body').html(html);
+				},
+				error :function() {
+					
+				}
+			});
+	};
     /*]]>*/
 </script>

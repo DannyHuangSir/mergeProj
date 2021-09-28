@@ -95,6 +95,9 @@ public interface OnlineChangMsgUtil {
 	 * */
 	final String INVESTMENT_POLICY_APPLY_TITLE = "變更申請通知";
 	final String INVESTMENT_POLICY_APPLY_CAPACITY = "本公司已收受您的線上辦理已持有投資標的轉換申請案，本公司將為您辦理。";
+	final String INVESTMENT_POLICY_APPLY_CAPACITY1 = "本公司已收受您的線上辦理未來保費投資標的與分配比例申請案，本公司將為您辦理。";
+	final String INVESTMENT_POLICY_APPLY_CAPACITY3 = "本公司已收受您的線上辦理收益分配或撥回資產分配方式申請案，本公司將為您辦理。";
+	final String INVESTMENT_POLICY_APPLY_CAPACITY4 = "本公司已收受您的線上辦理定期超額保費變更申請案，本公司將為您辦理。";
 	final String INVESTMENT_POLICY_APPLY_CANCEL_TITLE = "取消申請通知";
 	final String INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY = "您已經取消已持有投資標的轉換申請案。";
 

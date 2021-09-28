@@ -731,7 +731,7 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 	 */
 	@Override
 	public String checkBackList(BlackListVo blackListVo) {
-		String detailInfo = onlineChangeDao.getBlackList(blackListVo);
+		String detailInfo = onlineChangeDao.getMedicalBlackList(blackListVo);
 		return detailInfo;
 	}
 

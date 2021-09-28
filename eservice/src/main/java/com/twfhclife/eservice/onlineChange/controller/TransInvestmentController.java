@@ -291,7 +291,7 @@ public class TransInvestmentController extends BaseUserDataController  {
             paramMap.clear();//清空模板參數
             //設置模板參數
             paramMap.put("TITLE", OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_TITLE);
-            paramMap.put("MESSAGE",OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CAPACITY);
+            paramMap.put("MESSAGE",OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CAPACITY1);
             receivers.add(user.getMobile());
             logger.info("user phone : {}", user.getMobile());
             messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "sms");

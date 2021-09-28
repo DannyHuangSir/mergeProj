@@ -327,5 +327,13 @@
 		where B.TYPE = 'C'
 		and B.RFE_ID  =  #{vo.rfeId}
 	</select>
-
+	<select id="getMedicalBlackList" parameterType="java.lang.String" resultType="java.lang.String">
+		select name+DA FROM  (
+		select A.TRANS_NUM,'|'+A.TRANS_NUM+'|'+CONVERT(varchar(10),A.CREATE_DATE, 120) DA from
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A, ESERVICE_ADM.DBO.BLACK_LIST B  where A.TRANS_NUM = B.TRANS_NUM 	and B.ID_NO = #{blackListVo.idNo}
+		) A1,(
+		select A.TRANS_NUM,ESERVICE.DBO.FN_DEBASE64(A.NAME) name from
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A, ESERVICE_ADM.DBO.BLACK_LIST B  where A.TRANS_NUM = B.TRANS_NUM 	and B.ID_NO = #{blackListVo.idNo}
+		) A2 WHERE A1.TRANS_NUM=A2.TRANS_NUM
+	</select>
 </mapper>

@@ -129,7 +129,8 @@ public interface OnlineChangeUtil {
 	
 	/** 線上申請-首頁類型 */
 	final String ONLINE_CHANGE_HOME_PARAMETER_CATEGORY_CODE = "WORDING_3";
-	
+	final String ONLINE_CHANGE_HOME_PARAMETER_INVESTMENT_CATEGORY_CODE = "WORDING_INVESTMENT";
+
 	/** 不屬可申請聯盟理賠的商品 */
 	final String NOT_UNION_CLAIMS = "04";
 	

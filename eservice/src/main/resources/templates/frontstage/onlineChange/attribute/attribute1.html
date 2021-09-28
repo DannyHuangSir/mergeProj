@@ -44,45 +44,45 @@
 					<div class="check-title">投資風險屬性 評估</div>
 					<div class="check-body grey2">
 						<th:block th:each="vo, rowStat : ${questions}">
-					  <div class="check-list col-sm-6 attr1-padding">
+							<div class="check-list col-sm-6 attr1-padding">
 								<p class="marginBottom20"><th:block th:text="${vo.question}"/></p>
 								<th:block th:if="${vo.isMulti == 'N'}">
-						<div class="radio attr1">
+									<div class="radio attr1">
 										<th:block th:each="vo1, rowStat1 : ${vo.options}">
 											<li style="list-style: none;">
 											<label for="answerB-1" id="answerB-1-1" class="col-sm-8">
-												<th:block th:if="${vo.isMulti == 'N'}">
-													<input th:attr="qid=${vo1.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+												<th:block th:if="${vo1.checked}">
+													<input th:attr="qid=${vo1.id}" checked type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
 												</th:block>
-												<th:block th:if="${vo.isMulti == 'Y'}">
-													<input th:attr="qid=${vo1.id}" type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+												<th:block th:if="${!vo1.checked}">
+													<input th:attr="qid=${vo1.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
 												</th:block>
 												<th:block th:text="${vo1.item}"/>
 											</label>
 											<span class="col-sm-4 pull-right">(<th:block th:text="${vo1.score}"/>分)</span>
 											</li>
 										</th:block>
-					  </div>
+									</div>
 								</th:block>
 								<th:block th:if="${vo.isMulti == 'Y'}">
-						<div class="checkbox attr1">
+									<div class="checkbox attr1">
 										<th:block th:each="vo1, rowStat : ${vo.options}">
 											<li style="list-style: none;">
 											<label for="answerB-1" class="col-sm-8">
-												<th:block th:if="${vo.isMulti == 'N'}">
-													<input th:attr="qid=${vo1.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+												<th:block th:if="${vo1.checked}">
+													<input th:attr="qid=${vo1.id}" checked type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
 												</th:block>
-												<th:block th:if="${vo.isMulti == 'Y'}">
+												<th:block th:if="${!vo1.checked}">
 													<input th:attr="qid=${vo1.id}" type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
 												</th:block>
 												<th:block th:text="${vo1.item}"/>
-			   </label>
+											</label>
 											<span class="col-sm-4 pull-right">(<th:block th:text="${vo1.score}"/>分)</span>
 										</li>
 										</th:block>
-					  </div>
+									</div>
 								</th:block>
-					  </div>
+							</div>
 						</th:block>
 					  <div class="clearfix"></div>
 					</div>

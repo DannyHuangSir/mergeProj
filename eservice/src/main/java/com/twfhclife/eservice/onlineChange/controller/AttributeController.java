@@ -33,6 +33,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -55,9 +56,12 @@ public class AttributeController extends BaseUserDataController  {
     @Autowired
     private ITransRiskLevelService riskLevelService;
 
+    @Autowired
+    private IParameterService parameterService;
+
     @RequestLog
-    @GetMapping("/attribute1")
-    public String attribute1(RedirectAttributes redirectAttributes) {
+    @RequestMapping("/attribute1")
+    public String attribute1(RedirectAttributes redirectAttributes, @RequestParam(name = "answers", required = false) List<String> answers) {
 
         if(!checkCanUseOnlineChange()) {
             String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
@@ -73,7 +77,15 @@ public class AttributeController extends BaseUserDataController  {
             redirectAttributes.addFlashAttribute("errorMessage", msg);
             return "redirect:apply1";
         }
-        addAttribute("questions", attributeService.getQuestions());
+        List<QuestionVo> questions = attributeService.getQuestions();
+        if (!CollectionUtils.isEmpty(questions) && !CollectionUtils.isEmpty(answers)) {
+            for (QuestionVo question : questions) {
+                for (OptionVo option : question.getOptions()) {
+                    option.setChecked(answers.contains(String.valueOf(option.getId())));
+                }
+            }
+        }
+        addAttribute("questions", questions);
         return "frontstage/onlineChange/attribute/attribute1";
     }
 
@@ -92,6 +104,7 @@ public class AttributeController extends BaseUserDataController  {
         vo.setLevel(riskLevel);
         vo.setDesc(transInvestmentService.transRiskLevelToName(riskLevel));
         addAttribute("transAnswerVo", vo);
+        addAttribute("analysisStatement", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "RISK_ATTRIBUTE_ANALYSIS_STATEMENT"));
         return "frontstage/onlineChange/attribute/attribute2";
     }
 

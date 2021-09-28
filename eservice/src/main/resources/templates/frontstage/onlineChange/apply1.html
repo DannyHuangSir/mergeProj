@@ -141,7 +141,7 @@
                     <div class="col-sm-6 center1 gradient">
                         <h3>未來保費投資標的與分配比例</h3>
                         <p>
-                        <th:block th:text="${onlineChangeHome['WORDING_30029']}"/>
+                        <th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_001']}"/>
                         </p>
                     </div>
                 </a>
@@ -149,7 +149,7 @@
                     <div class="col-sm-6 center1 gradient">
                         <h3>已持有投資標的轉換</h3>
                         <p>
-                            <th:block th:text="${onlineChangeHome['WORDING_30030']}"/>
+                            <th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_002']}"/>
                         </p>
                     </div>
                 </a>
@@ -157,7 +157,7 @@
                      <div class="col-sm-6 center1 gradient">
                          <h3>變更風險屬性</h3>
                          <p>
-                              <th:block th:text="${onlineChangeHome['WORDING_30031']}"/>
+                              <th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_005']}"/>
                          </p>
                      </div>
                 </a>
@@ -165,21 +165,21 @@
                     <div class="col-sm-6 center1 gradient">
                         <h3>保單提領(贖回)</h3>
                         <p>
-                            <th:block th:text="${onlineChangeHome['WORDING_30028']}"/>
+                            <th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_003']}"/>
                         </p>
                     </div>
                 </a>
                 <a href="notification1" id="useControl">
                     <div class="col-sm-6 center1 gradient">
                         <h3>設定停利停損通知</h3>
-                        <p><th:block th:text="${onlineChangeHome['WORDING_30011']}"/></p>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_007']}"/></p>
                     </div>
                 </a>
                 <a href="cashPayment1">
                     <div class="col-sm-6 center1 gradient">
                         <h3>收益分配或撥回資產分配方式</h3>
                         <p>
-                            <th:block th:text="${onlineChangeHome['WORDING_30032']}"/>
+                            <th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_004']}"/>
                         </p>
                     </div>
                 </a>
@@ -210,7 +210,7 @@
                 <a href="changePremium1" id="useControl">
                     <div class="col-sm-6 center1 gradient">
                         <h3>定期超額保費</h3>
-                        <p><th:block th:text="${onlineChangeHome['WORDING_30033']}"/></p>
+                        <p><th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_006']}"/></p>
                     </div>
                 </a>
                 
@@ -270,7 +270,7 @@
                         <p>本公司理賠及轉送其它公司</p>
                     </div>
                 </a>
-                <a href="medicalTreatment1" id="useControl" name="medicalTreatment">
+                <a href="medicalTreatment1" id="useControl" name="medicalTreatment"  onclick="checkMedicalUsed();return false;">
                     <div class="col-sm-6 center1 gradient">
                         <h3>保險理賠醫起通</h3>
                         <p>授權取得醫療資料，加速理賠審查流程</p>
@@ -371,7 +371,8 @@
         $(function(){
             var identity = JSON.parse(sessionStorage.getItem('identity'));
             if (identity != null && identity.lilipi == false) {
-                $("a[name='policyClaims']")[0].hidden = true
+                $("a[name='policyClaims']")[0].hidden = true;
+                $("a[name='medicalTreatment']")[0].hidden = true
             }
             if (identity != null && identity.lilipm == false) {
                 $("#preservationCategory").hide();
@@ -406,6 +407,34 @@
         		popupLoading();
         	});
         });
+        function checkMedicalUsed(){
+            var data = {
+					idNo :  /*[[${session.KEYCLOAK_USER.rocId}]]*/,
+				}
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/checkMedicalBackList}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						if (response.result == 'SUCCESS') {
+                            window.location.href="/eservice/medicalTreatment1";
+						} else {
+							$('#confirmPoPModal').modal({
+                                show: true,
+                                backdrop: 'static', 
+                                keyboard: false
+                            });
+                            if (response.resultMsg != null) {
+                                $('#popMsg').html(response.resultMsg);
+                            }
+						}
+					},
+					error :function() {
+						alertMsg("更新失敗!");
+					}
+				});
+        }
         function checkUsed(){
             var data = {
 					idNo :  /*[[${session.KEYCLOAK_USER.rocId}]]*/,

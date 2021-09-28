@@ -58,6 +58,11 @@ public interface IOnlineChangeService {
 	 */
 	List<TransRFEVo> getTransRFEList(TransRFEVo vo);
 
+	/**
+	 * 檢查醫療是否進入進入黑名單
+	 */
+	Map<String, String> checkMedicalBackList(BlackListVo blackListVo);
+
 	//取消已持有投資標的轉換
 	void cancelApplyTransConversion(String transNum, TransStatusHistoryVo hisVo);
 }
