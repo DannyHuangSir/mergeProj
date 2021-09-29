@@ -516,7 +516,6 @@
 		) temp
 		where rank = 1
 		)   TH  ON F.TRANS_NUM = TH.TRANS_NUM
-		inner  join  ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS  FD  ON    F.CLAIMS_SEQ_ID=FD.CLAIMS_SEQ_ID
 		WHERE
 		convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{transVo.startDate}, 120)
 		AND convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{transVo.endDate}, 120)
@@ -564,7 +563,9 @@
 			AND TH.REJECT_REASON  = #{transVo.abnormalReason}
 		</if>
 		<if test="transVo.fromHospitalId != null and transVo.fromHospitalId != ''" >
-			AND FD.FILE_STATUS = #{transVo.fromHospitalId}
+			AND  F.CLAIMS_SEQ_ID  IN  (
+			select  distinct  CLAIMS_SEQ_ID  FROM  ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS FD  WHERE  FD.FILE_STATUS  = #{transVo.fromHospitalId}
+			)
 		</if>
 	</sql>
 	<!-- include sql: 取得醫療線上申請 -->
@@ -614,7 +615,6 @@
 		) temp
 		where rank = 1
 		)   TH  ON F.TRANS_NUM = TH.TRANS_NUM
-		inner  join  ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS  FD  ON    F.CLAIMS_SEQ_ID=FD.CLAIMS_SEQ_ID
 		WHERE
 		convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{transVo.startDate}, 120)
 		AND convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{transVo.endDate}, 120)
@@ -1802,9 +1802,8 @@
 		,POLICE_STATION,POLICE_NAME,POLICE_PHONE,POLICE_DATE,POLICE_TIME
 		,CALLPOLICE,SEND_ALLIANCE,FROM_COMPANY_ID,TO_COMPANY_ID
 		,AUTHORIZATION_FILE_TYPE,AUTHORIZATION_START_DATE,AUTHORIZATION_END_DATE,TO_HOSPITAL_ID,FROM_HOSPITAL_ID
-		,ALLIANCE_STATUS,HPUID,CPOA
-	
-</sql>
+		,ALLIANCE_STATUS,HP_UID,CPOA
+	</sql>
 	<select id="getInsuranceClaimSequence" resultType="java.lang.Float">
 		select NEXT VALUE for ESERVICE.DBO.INSURANCE_CLAIM_SEQ as CLAIMS_SEQ_ID;
 	</select>

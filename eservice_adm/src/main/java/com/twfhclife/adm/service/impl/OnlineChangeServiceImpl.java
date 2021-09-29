@@ -1135,7 +1135,6 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 
 		return this.onlineChangeDao.getMedicalTreatmentStatisticsReport(claimVo, str, claimVo.getStatus(), claimVo.getFileReceivedList(), claimVo.getSendAllianceList());
 	}
-
 	public List getMedicalTreatmentDetailReport(MedicalTreatmentStatisticsVo claimVo) {
 		List<String> columns = claimVo.getColumn();
 		String str = "";
@@ -1442,9 +1441,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			}
 			result = updateMedicalTreatmentSendAlliance(vo);
 
+			/*
+			 不進行手動推送,使用api  cron.saveTransToMedical.expression 定時推送
 			if("Y".equals(vo.getSendAlliance())) {//審核通過才insert MedicalTreatment
 				result = addMedicalTreatmentClaim(vo);
-			}
+			}*/
 
 		}
 		return result;
