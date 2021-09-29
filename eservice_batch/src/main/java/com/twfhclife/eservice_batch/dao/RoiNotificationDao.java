@@ -125,11 +125,11 @@ public class RoiNotificationDao extends BaseDao {
 		return result;
 	}
 
-	public InvestmentVo findFundByInvestNo(InvestmentVo investmentVo, Date time) {
+	public InvestmentVo findFundByInvestNo(InvestmentVo investmentVo) {
 		InvestmentVo vo = null;
 		try {
 			RoiNotificationMapper roiNotificationMapper = this.getSqlSession().getMapper(RoiNotificationMapper.class);
-			vo = roiNotificationMapper.findFundByInvestNo(investmentVo, time);
+			vo = roiNotificationMapper.findFundByInvestNo(investmentVo);
 		} catch(Exception e) {
 			logger.error("findFundByInvestNo error: {}", e);
 		} finally {

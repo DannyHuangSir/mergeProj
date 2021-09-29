@@ -170,11 +170,13 @@
 	</select>
 
 	<select id="findFundByInvestNo" resultType="com.twfhclife.eservice_batch.model.InvestmentVo">
-		SELECT TOP 1 #{vo.insuNo} insuNo, F.FUND_CODE invtNo, F.CURRENCY invtCurr, R.BUY_PRICE exchRate, FV.SELL_PRICE netValue
+		SELECT TOP 1 #{vo.insuNo} insuNo, F.FUND_CODE invtNo, F.CURRENCY invtCurr, R.BUY_PRICE exchRate, FV.SELL_PRICE netValue,
+		FV.EFFECTIVE_DATE inNetValueDate
 		FROM ESERVICE.DBO.FUND F
-		LEFT JOIN ESERVICE.DBO.EXCHANGE_RATE R ON F.CURRENCY = R.EXCHANGE_CODE AND R.CURRENCY_CODE = 'NTD' AND R.EFFECTIVE_DATE = #{time}
+		LEFT JOIN ESERVICE.DBO.EXCHANGE_RATE R ON F.CURRENCY = R.EXCHANGE_CODE AND R.CURRENCY_CODE = 'NTD'
 		LEFT JOIN ESERVICE.DBO.FUND_VALUE FV ON FV.FUND_CODE = F.FUND_CODE
 		WHERE F.FUND_CODE = #{vo.invtNo}
+		ORDER BY R.EFFECTIVE_DATE DESC, FV.EFFECTIVE_DATE DESC
 	</select>
 
 	<select id="findPortfolioByInvestNo" resultType="com.twfhclife.eservice_batch.model.MyPortfolioVo">

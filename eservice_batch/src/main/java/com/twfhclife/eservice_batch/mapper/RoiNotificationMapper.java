@@ -28,7 +28,7 @@ public interface RoiNotificationMapper {
 	
 	public int updateAllDisable();
 
-	InvestmentVo findFundByInvestNo(@Param("vo") InvestmentVo investmentVo, @Param("time") Date time);
+	InvestmentVo findFundByInvestNo(@Param("vo") InvestmentVo investmentVo);
 
 	MyPortfolioVo findPortfolioByInvestNo(@Param("vo") InvestmentVo investmentVo);
 }

@@ -1,6 +1,7 @@
 package com.twfhclife.eservice_batch.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class InvestmentVo {
 	// LISAFP
@@ -26,6 +27,7 @@ public class InvestmentVo {
 	private String overRisk; // 保戶風險屬性是否超過風險等級(用於投資輔助,商品查淨值&匯率)
 	private BigDecimal netValue; // 頁面顯示淨值
 	private BigDecimal exchRate; // 頁面顯示匯率
+	private Date inNetValueDate; // 凈值日
 	public String getInsuNo() {
 		return insuNo;
 	}
@@ -135,4 +137,11 @@ public class InvestmentVo {
 		this.exchRate = exchRate;
 	}
 
+	public Date getInNetValueDate() {
+		return inNetValueDate;
+	}
+
+	public void setInNetValueDate(Date inNetValueDate) {
+		this.inNetValueDate = inNetValueDate;
+	}
 }

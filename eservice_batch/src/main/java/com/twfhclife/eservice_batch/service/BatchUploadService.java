@@ -86,6 +86,7 @@ public class BatchUploadService {
 			processList.addAll(new TransConversionUtil().appendApplyItems(txtSb, systemTwDate));// 變更投資標的與分配比例:030
 			processList.addAll(new TransCashPaymentUtil().appendApplyItems(txtSb, systemTwDate));// 收益分配或撥回資產分配方式:033
 			processList.addAll(new TransChangePremiumUtil().appendApplyItems(txtSb, systemTwDate));// 定期定額保費變更:034
+			processList.addAll(new TransRiskLevelUtil().appendApplyItems(txtSb, systemTwDate));// 變更風險屬性:031
 
 			applyItemText = txtSb.toString();
 			if (StringUtils.isEmpty(applyItemText)) {

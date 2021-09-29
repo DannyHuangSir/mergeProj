@@ -16,7 +16,17 @@ public class TransPaymodeVo {
 	private String activeDate;
 
 	private BigDecimal amount;
-	
+
+	private String mk;
+
+	public String getMk() {
+		return mk;
+	}
+
+	public void setMk(String mk) {
+		this.mk = mk;
+	}
+
 	public BigDecimal getId() {
 		return this.id;
 	}

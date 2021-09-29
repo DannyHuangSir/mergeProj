@@ -16,4 +16,6 @@ public class CallApiMailCode {
     public static final String  TRANSFER_MAIL_021="TRANSFER_MAIL_021";
     /**首家不同意轉送聯盟鏈*/
     public static final String  TRANSFER_MAIL_022="TRANSFER_MAIL_022";
+
+    public static final String  TRANSFER_MAIL_FUND_NOTIFICATION="ELIFE_MAIL_FN";
 }

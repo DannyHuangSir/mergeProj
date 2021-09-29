@@ -22,8 +22,8 @@ import java.util.Vector;
 
 import com.twfhclife.eservice_batch.dao.*;
 import com.twfhclife.eservice_batch.model.*;
+import com.twfhclife.eservice_batch.service.onlineChange.TransRiskLevelUtil;
 import com.twfhclife.eservice_batch.util.*;
-import jdk.nashorn.internal.ir.IfNode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -346,6 +346,11 @@ public class BatchDownloadService {
 							logger.error("Create Value_Print pdf error: ", e);
 						}
 					}
+
+					if (StringUtils.equals("031", transCode)) {
+						TransRiskLevelUtil.updateIndividual(transNum);
+					}
+
 				} else {
 					updateTransStatus(transNum, transType, "6"); // 6:失敗
 					logger.info("updateTransStatus: {}={}", "6","失敗");
@@ -733,6 +738,13 @@ public class BatchDownloadService {
 		transTypeMap.put("018", "CANCEL_AUTH");
 		// 匯款帳號變更 (CS17)
 		transTypeMap.put("023", "CHANGE_PAY_ACCOUNT");
+
+		transTypeMap.put("031", "RISK_LEVEL");
+		transTypeMap.put("033", "CHANGE_PREMIUM");
+		transTypeMap.put("032", "CASH_PAYMENT");
+		transTypeMap.put("030", "CONVERSION");
+		transTypeMap.put("029", "INVESTMENT");
+		transTypeMap.put("028", "DEPOSIT");
 		return transTypeMap;
 	}
 	
