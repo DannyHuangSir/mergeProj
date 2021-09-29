@@ -219,9 +219,10 @@ public class MedicalServiceImpl implements IMedicalService {
     @Override
     public List<MedicalTreatmentClaimVo> getTransMedicalTreatmentByAllinaceStatus(String pqhfEnd, String itpsEnd) throws Exception {
 
-        List<MedicalTreatmentClaimVo> itpsEndList = iMedicalDao.getTransMedicalTreatmentByAllinaceStatusIsItpsEnd(itpsEnd);
-        List<MedicalTreatmentClaimVo> pqhfEndList = iMedicalDao.getTransMedicalTreatmentByAllinaceStatusIsPqhfEnd(itpsEnd);
-        itpsEndList.addAll(pqhfEndList);
+        ArrayList<String> lists = new ArrayList<>();
+        lists.add(pqhfEnd);
+        lists.add(itpsEnd);
+        List<MedicalTreatmentClaimVo> itpsEndList   = iMedicalDao.getTransMedicalTreatmentAndTransByAllinaceStatus(lists);
         return  itpsEndList;
     }
 
@@ -491,6 +492,45 @@ public class MedicalServiceImpl implements IMedicalService {
                 }
             }
         }
+        /**
+         * 進行發送郵件信息
+         */
+        if(j>0){
+            MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
+            List<String> receivers = new ArrayList<String>();
+            Map<String, String> paramMap = new HashMap<String, String>();
+            logger.info("Start send mail");
+            String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_AMD, ApConstants.MEDICAL_ALLIANCE_MAIL_TWFHCLIFE_ADM);
+            String[] mails = mailTo.split(";");
+            if(mails.length > 0) {
+                for (String mail : mails) {
+                    receivers.add(mail);
+                    logger.info("Mail Address : " + mail);
+                }
+            }
+            //發送系統管理員
+            logger.info("***發送系統管理員 _start");
+            paramMap.put("CODE", "403");
+            String allianceStatus = medicalVo.getAllianceStatus();
+            String statusMessage="";
+            paramMap.put("STATUS",allianceStatus);
+            //獲取對於狀態的描述信息
+            List<ParameterVo> parameterByCategoryCode = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS);
+            for (ParameterVo parameterVo : parameterByCategoryCode) {
+                String parameterValue = parameterVo.getParameterValue();
+                if (parameterValue!=null  && parameterValue.equals(allianceStatus)) {
+                    statusMessage=parameterVo.getParameterName();
+                }
+            }
+            paramMap.put("STATUS_MESSAGE", statusMessage);
+            paramMap.put("HOSPITAL_CODE", medicalVo.getToHospitalId());
+            paramMap.put("INSURED_ID", medicalVo.getIdNo());
+            //使用郵件範本
+            vo = getMessageTriggerRequestVo(ApConstants.MEDICAL_MAIL_034, receivers, paramMap, "email");
+            String resultSYS_MailMsg = messagingTemplateService.triggerMessageTemplate(vo);
+            logger.info("***發送系統管理員 : " + resultSYS_MailMsg);
+            logger.info("end mail");
+        }
         return j;
     }
 
@@ -528,6 +568,46 @@ public class MedicalServiceImpl implements IMedicalService {
                 }
             }
         }
+        /**
+         * 進行發送郵件信息
+         */
+        if(j>0){
+            MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
+            List<String> receivers = new ArrayList<String>();
+            Map<String, String> paramMap = new HashMap<String, String>();
+            logger.info("Start send mail");
+            String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_AMD, ApConstants.MEDICAL_ALLIANCE_MAIL_TWFHCLIFE_ADM);
+            String[] mails = mailTo.split(";");
+            if(mails.length > 0) {
+                for (String mail : mails) {
+                    receivers.add(mail);
+                    logger.info("Mail Address : " + mail);
+                }
+            }
+            //發送系統管理員
+            logger.info("***發送系統管理員 _start");
+            paramMap.put("CODE", "403");
+            String alliance_status = claimVo.getAllianceStatus();
+            String statusMessage="";
+            paramMap.put("STATUS",alliance_status);
+            //獲取對於狀態的描述信息
+            List<ParameterVo> parameterByCategoryCode = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS);
+            for (ParameterVo parameterVo : parameterByCategoryCode) {
+                String parameterValue = parameterVo.getParameterValue();
+                if (parameterValue!=null  && parameterValue.equals(alliance_status)) {
+                    statusMessage=parameterVo.getParameterName();
+                }
+            }
+            paramMap.put("STATUS_MESSAGE", statusMessage);
+            paramMap.put("HOSPITAL_CODE", claimVo.getToHospitalId());
+            paramMap.put("INSURED_ID", claimVo.getIdNo());
+            //使用郵件範本
+            vo = getMessageTriggerRequestVo(ApConstants.MEDICAL_MAIL_034, receivers, paramMap, "email");
+            String resultSYS_MailMsg = messagingTemplateService.triggerMessageTemplate(vo);
+            logger.info("***發送系統管理員 : " + resultSYS_MailMsg);
+            logger.info("end mail");
+        }
+
         return j;
     }
 

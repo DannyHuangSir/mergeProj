@@ -603,7 +603,7 @@ public class MedicalAllianceServiceTask {
         log.info("API_DISABLE="+API_DISABLE);
         if("N".equals(API_DISABLE)){
             try {
-                String pqhfEnd = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PQHS_PTIS);
+                String pqhfEnd = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_HTPS_PTIS);
                 List<MedicalTreatmentClaimVo> listMedical = iMedicalService.getTransMedicalTreatmentUploadFileid(pqhfEnd);
                 //2.call api-406
                 if(listMedical!=null && !listMedical.isEmpty() && listMedical.size()>0) {
@@ -744,7 +744,7 @@ public class MedicalAllianceServiceTask {
                             //3-1.get api-402 response
                             if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
                                 String msg = MyJacksonUtil.readValue(strResponse, "/msg");
-                                vo.setSendAlliance(pqhfEnd);
+                                vo.setAllianceStatus(pqhfEnd);
                                 //進行回應狀態醫院資料信息描述
                                 vo.setAllianceFileStatus(msg);
                                 iMedicalService.updateTarnsMedicalTreatmentClaimToAllianceStatus(vo);

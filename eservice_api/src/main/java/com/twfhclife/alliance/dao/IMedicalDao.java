@@ -7,6 +7,7 @@ import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
 import org.apache.ibatis.annotations.Param;
 import org.jgroups.protocols.EXAMPLE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,4 +63,6 @@ public interface IMedicalDao {
     int addTarnsMedicalTreatmentFile(@Param("fileData")MedicalTreatmentClaimFileDataVo fileData)throws  Exception;
     //進行查詢出對應的ClaimsSeqId
     float getTransMedicalTreatmentByClaimsSeqId(@Param("transNum")String transNum)throws Exception;
+    //查詢狀態
+    List<MedicalTreatmentClaimVo> getTransMedicalTreatmentAndTransByAllinaceStatus(@Param("lists")ArrayList<String> lists)throws Exception;
 }

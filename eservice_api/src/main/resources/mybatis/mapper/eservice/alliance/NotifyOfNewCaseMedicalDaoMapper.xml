@@ -24,7 +24,7 @@
 
 	<select id="getNotifyOfNewCaseMedicalByNcStatus" resultMap="NotifyOfNewCaseMedicalResultMap">
 		select
-		SEQ_ID,CASE_ID,TYPE,NC_STATUS,MSG,CASE_STATUS,CASE_MESSAGE
+		SEQ_ID,CASE_ID,TYPE,NC_STATUS,MSG
 		FROM   [ESERVICE].[dbo].NOTIFY_OF_NEW_CASE_MEDICAL
 		where CASE_ID IS  NOT  NULL AND  NC_STATUS=#{statusDefault}
 	</select>

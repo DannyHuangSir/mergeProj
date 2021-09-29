@@ -54,6 +54,8 @@ public interface CallApiCode {
     final  static  String SYS_DNS_HEADER = "SYS_DNS_HEADER";
     //死亡除戶通報-Header參數值
     final  static  String ALLIANCE_API_AUTHORIZATION = "alliance.api.dnsFS62.Authorization";
+    //API返回狀態組
+    final  static  String MEDICAL_INTERFACE_STATUS = "MEDICAL_INTERFACE_STATUS";
 
 
 }

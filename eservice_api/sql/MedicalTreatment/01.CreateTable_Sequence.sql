@@ -14,9 +14,7 @@ create table ESERVICE.dbo.NOTIFY_OF_NEW_CASE_MEDICAL
   CREATE_DATE   DATETIME    default CURRENT_TIMESTAMP not null,
   NC_STATUS     VARCHAR(5)  default '0' not null,
   STATUS_DATE   DATETIME    default CURRENT_TIMESTAMP not null,
-  MSG           varchar(255) NULL,
-  CASE_STATUS   varchar(25) NULL,
-  CASE_MESSAGE		varchar(1000) NULL,
+  MSG           varchar(255) NULL
 );
 alter table ESERVICE.dbo.NOTIFY_OF_NEW_CASE_MEDICAL
   add constraint NONCM_PK primary key (SEQ_ID,CASE_ID);

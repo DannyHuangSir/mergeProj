@@ -46,7 +46,11 @@ public interface ApConstants {
 	public static final String ABNORMAL_REASON_MSG = "ABNORMAL_REASON_MSG";
 	
     public static final String TWFHCLIFE_ADM = "TWFHCLIFE_ADM";
-	
+	/**
+	 * 醫療作業人員
+	 */
+	public static final String MEDICAL_ALLIANCE_MAIL_TWFHCLIFE_ADM = "MEDICAL_ALLIANCE_MAIL_TWFHCLIFE_ADM";
+
 	public static final String ONLINE_CHANGE_STATUS = "ONLINE_CHANGE_STATUS";
 	
 	public static final String MESSAGING_PARAMETER = "MessagingParameter";
@@ -126,4 +130,6 @@ public interface ApConstants {
 	 * 聯盟醫起通醫療文件類型組
 	 **/
 	final String MEDICAL_TREATMENT_FEDERATION_FILE_TYPE = "MEDICAL_TREATMENT_FEDERATION_FILE_TYPE";
+	/**內部人員通知  醫療 醫療保單查詢案件資訊取得案件通知MAIL模版*/
+	public static final String MEDICAL_MAIL_034="MEDICAL_MAIL_034";
 }
