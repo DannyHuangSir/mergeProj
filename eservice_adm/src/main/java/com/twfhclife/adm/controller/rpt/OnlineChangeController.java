@@ -1439,8 +1439,17 @@ public class OnlineChangeController extends BaseController {
 					vo.setCustomerName(getUserId());
 					vo.setIdentity((String) getSession(ApConstants.LOGIN_USER_ROLE_NAME));
 					result = onlineChangeService.addTransStatusHistory(vo);
+					String rejectReason = vo.getRejectReason();
+					boolean contains=false;
+					if (!StringUtils.isEmpty(rejectReason)) {
+						//獲取所有醫療異常的數據code
+						String  parameterValueList=	parameterService.getParameterValueByCategoryCodeAndSystemId(ApConstants.SYSTEM_ID,ApConstants.MEDICAL_ABNORMAL_REASON_MSG,rejectReason);
+						if (!StringUtils.isEmpty(parameterValueList)) {
+							contains=true;
+						}
+					}
 					// 加入黑名單
-					if (ApConstants.REJECT_REASON_01.equals(vo.getRejectReason()) && ApConstants.STATUS_7.equals(vo.getStatus())) {
+					if (contains && ApConstants.STATUS_7.equals(vo.getStatus())) {
 						result = onlineChangeService.addMedicalTreatmentBlackList(vo);
 					}
 					// 發送郵件

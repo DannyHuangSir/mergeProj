@@ -200,6 +200,11 @@ public interface ApConstants {
 	 **/
 	final String MEDICAL_TREATMENT_FEDERATION_FILE_TYPE = "MEDICAL_TREATMENT_FEDERATION_FILE_TYPE";
 
+	/**
+	 * 醫療異常件異常件通知訊息  組
+	 */
+	final String MEDICAL_ABNORMAL_REASON_MSG = "MEDICAL_ABNORMAL_REASON_MSG";
+
 	/** 線上申請-未持有投資標的轉換 狀態 */
 	final String INVESTMENT_STATUS_OUT = "OUT";
 	/** 線上申請-未持有投資標的轉換 狀態 */

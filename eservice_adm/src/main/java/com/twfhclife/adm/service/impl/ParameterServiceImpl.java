@@ -166,4 +166,14 @@ public class ParameterServiceImpl implements IParameterService {
 		sysParamCacheMap.put(systemId, sysParamMap);
 		return sysParamMap;
 	}
+	/**
+	 * 查詢醫療異常描述id值
+	 * @param systemId
+	 * @param medicalAbnormalReasonMsg
+	 * @return
+	 */
+	@Override
+	public String getParameterValueByCategoryCodeAndSystemId(String systemId, String medicalAbnormalReasonMsg,String rejectReason) {
+		return parameterDao.getParameterValueByCategoryCodeAndSystemId(systemId,medicalAbnormalReasonMsg,rejectReason);
+	}
 }
