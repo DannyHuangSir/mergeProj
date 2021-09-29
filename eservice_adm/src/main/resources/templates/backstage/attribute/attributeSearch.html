@@ -282,12 +282,19 @@
 					keyboard: false
 				});
 				}else{
-					let formData = {id: $('input:radio[name="form-field-radio"]:checked').val()}
-					eserviceForm.post(/*[[@{/attributeDelete}]]*/, formData, function(response) {
-						if (response.result != 'SUCCESS') {
-							alertMsg(response.resultMsg);
+					confirmMsg('是否確認刪除', function(r) {
+						if (r) {
+							let formData = {id: $('input:radio[name="form-field-radio"]:checked').val()}
+							eserviceForm.post(/*[[@{/attributeDelete}]]*/, formData, function(response) {
+								if (response.result != 'SUCCESS') {
+									alertMsg(response.resultMsg);
+								} else {
+									alertMsg("刪除成功");
+									grid.reload();
+								}
+							});
 						} else {
-							alertMsg("刪除成功");
+							return false;
 						}
 					});
 				}

@@ -101,7 +101,7 @@
 														</div>
 				
 														<div class="widget-body">
-															<div class="widget-main no-padding">
+															<div class="widget-main no-padding Overview">
 																<form>
 																	<div class="widget-list">
 																		<fieldset>
@@ -110,7 +110,7 @@
 																				<input class="form-control" data-placeholder="有..." name="item"/>
 																			</div>
 																			<div class="col-sm-5">
-																				<button class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">
+																				<button name="removeBtn" class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">
 																					<i class="my-icon fa fa-undo bigger-110"></i>
 																					移除選項
 																				</button>
@@ -134,7 +134,7 @@
 																		</fieldset>
 																	</div>
 																	<div class="widget-foot">
-																	<button class="">
+																	<button name="addBtn" class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">
 																		<i class="my-icon fa fa-add bigger-110"></i>
 																		新增選項
 																	</button>
@@ -161,19 +161,58 @@
 		<th:block th:replace="fragments/script"/>
 		<script th:inline="javascript">
 		/*<![CDATA[*/
+			var reg = /^(\-|\+)?(\d{1,8})?([\.]\d*)?$/;
 			$(function() {
 				$("input[name='effectiveTime'],input[name='stopTime']").datepicker({
 					'applyClass' : 'btn-sm btn-success',
 					'cancelClass' : 'btn-sm btn-default',
-					format:'YYYY-MM-DD',
+					format:'YYYY/MM/DD',
 					locale: {
 						applyLabel: 'Apply',
 						cancelLabel: 'Cancel',
 					}
 				})
+
+				$("body [name='addBtn']").on('click', function(e){
+					e.stopPropagation();
+					e.preventDefault()
+					addItem(this)
+				})
+
+				$("body [name='removeBtn']").on('click', function(e){
+					removeItem(e, this)
+				})
 			})
 
 			function insertData() {
+				if ($("[class='widget-list']").length <= 0 ) {
+					alertMsg("請至少填一個選項!");
+					return
+				}
+
+				let checked = true
+				if ($("[class='widget-list']").length <= 0 ) {
+					alertMsg("請至少填一個選項!");
+					return
+				}
+
+				let question = $("input[name='attributeName']").val()
+				if (question == null || question == '') {
+					alertMsg("问题不能为空!");
+					return
+				}
+
+				let sequence = $("input[name='sequence']").val()
+				if (sequence == null || sequence == '') {
+					alertMsg("序列不能为空!");
+					return
+				}
+
+				if (!reg.test(sequence)) {
+					alertMsg("序列只能为整数!");
+					return
+				}
+
 				let formData = {
 					question: $("input[name='attributeName']").val(),
 					isMulti: $("[name='answerMethod'] option:selected").val(),
@@ -183,10 +222,42 @@
 				}
 				var options = []
 				$("[class='widget-list']").each(function(index, e){
+					let optionSequence = $(this).find("[name='sequence']").val();
+					if (optionSequence == null || optionSequence == '') {
+						checked = false;
+						alertMsg("序列不能为空!");
+						return
+					}
+
+					if (!reg.test(optionSequence)) {
+						checked = false;
+						alertMsg("序列只能为整数!");
+						return
+					}
+
+					let item = $(this).find("[name='item']").val();
+					if (item == null || item == '') {
+						checked = false;
+						alertMsg("選項名稱不能為空!");
+						return
+					}
+
+					let optionScore = $(this).find("[name='score']").val();
+					if (optionScore == null || optionScore == '') {
+						checked = false;
+						alertMsg("分数不能为空!");
+						return
+					}
+					if (!reg.test(optionScore)) {
+						checked = false;
+						alertMsg("分数只能为整数!");
+						return
+					}
+
 					options.push({
-						sequence: $(this).find("[name='sequence']").val(),
-						item: $(this).find("[name='item']").val(),
-						score: $(this).find("[name='score']").val(),
+						sequence: optionSequence,
+						item: item,
+						score: optionScore,
 					})
 				})
 				formData.options = options
@@ -194,10 +265,57 @@
 					if (response.result != 'SUCCESS') {
 						alertMsg(response.resultMsg);
 					} else {
-						alertMsg("更新成功!");
-						toEdit();
+						alertMsg("新增成功!");
+						setInterval(function() {
+							window.open('attribute')
+						}, 1000);
 					}
 				});
+			}
+
+			function addItem(vm) {
+				html = '<div class="widget-list">' +
+						'<fieldset>' +
+							'<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項名稱 </label>' +
+							'<div class="col-sm-5">' +
+								'<input name="item" class="form-control" data-placeholder="有..."/>' +
+							'</div>' +
+							'<div class="col-sm-5">' +
+								'<button name="removeBtn" class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">' +
+									'<i class="my-icon fa fa-undo bigger-110"></i>' +
+									'移除選項' +
+								'</button>' +
+							'</div>' +
+						'</fieldset>' +
+						'<fieldset>' +
+							'<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項順序 </label>' +
+							'<div class="col-sm-5">' +
+								'<input name="sequence" class="form-control" data-placeholder="2..."/>' +
+							'</div>' +
+							'<div class="col-sm-5">' +
+							'</div>' +
+						'</fieldset>' +
+						'<fieldset>' +
+							'<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項積分 </label>' +
+							'<div class="col-sm-5">' +
+								'<input name="score" class="form-control" data-placeholder="12..."/>' +
+							'</div>' +
+							'<div class="col-sm-5">' +
+							'</div>' +
+						'</fieldset>' +
+					'</div>'
+				item = $(html)
+				$(item).find("[name='removeBtn']").click(function(e) {
+					removeItem(e, this)
+				})
+				$(vm).parent().before(item)
+			}
+
+			function removeItem(e, vm) {
+				e.stopPropagation()
+				e.preventDefault()
+				context = $(vm).parent().parent().parent()
+				context.remove()
 			}
 		/*]]>*/
 		</script>

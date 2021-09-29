@@ -346,4 +346,21 @@
 		  AND b.CATEGORY_CODE = #{parentCategoryCode}
 		  AND a.PARAMETER_CODE = #{status}
 	</select>
+	<select id="getParameterValueByCategoryCodeAndSystemId" resultType="java.lang.String">
+		SELECT
+		a.PARAMETER_VALUE
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND a.SYSTEM_ID = b.SYSTEM_ID
+		AND b.SYSTEM_ID =#{systemId}
+		AND b.CATEGORY_CODE =#{medicalAbnormal}
+		AND a.PARAMETER_VALUE=#{rejectReason}
+		ORDER BY
+		a.SORT_NO
+	</select>
 </mapper>

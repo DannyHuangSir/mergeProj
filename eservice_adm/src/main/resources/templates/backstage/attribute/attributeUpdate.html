@@ -27,14 +27,14 @@
 													<div class="form-group">
 														<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 题目 </label>
 														<div class="col-sm-10">
-															<input type="text" placeholder="" class="form-control" id="attributeName" th:value="${questionVo.question}"/>
+															<input type="text" placeholder="" class="form-control" name="attributeName" th:value="${questionVo.question}"/>
 														</div>
 														<div class="col-sm-4"></div>
 													</div>
 													<div class="form-group">
 														<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 作答方式 </label>
 														<div class="col-sm-10">
-															<select class="chosen-select form-control" id="answerMethod" data-placeholder="請選擇作答方式...">
+															<select class="chosen-select form-control" name="answerMethod" data-placeholder="請選擇作答方式...">
 																<option value="N" th:attr="selected=${questionVo.isMulti  == 'N' ? true : false}">單選</option>
 																<option value="Y" th:attr="selected=${questionVo.isMulti == 'Y' ? true : false}">多選</option>
 															</select>
@@ -44,7 +44,7 @@
 													<div class="form-group">
 														<label class="col-sm-2 control-label no-padding-right">題目順序</label>
 														<div class="col-sm-10">
-															<input type="text" class="form-control" th:value="${questionVo.sequence}"/>
+															<input type="text" name="sequence" class="form-control" th:value="${questionVo.sequence}"/>
 														</div>
 													</div>
 													<div class="form-group">
@@ -54,8 +54,7 @@
 															<span class="input-group-addon">
 																<i class="fa fa-calendar bigger-110"></i>
 															</span>
-																<input class="form-control" type="text" name="effectiveTime"
-																	   th:value="${questionVo.effectiveTime} != null ? ${#dates.format(questionVo.effectiveTime, 'yyyy-MM-dd')}"/>
+																<input class="form-control" type="text" name="effectiveTime"/>
 															</div>
 														</div>
 														<div class="col-sm-4"></div>
@@ -67,8 +66,7 @@
 															<span class="input-group-addon">
 																<i class="fa fa-calendar bigger-110"></i>
 															</span>
-																<input class="form-control" type="text"  name="stopTime"
-																	   th:value="${questionVo.stopTime} != null ? ${#dates.format(questionVo.stopTime, 'yyyy-MM-dd')}"/>
+																<input class="form-control" type="text"  name="stopTime"/>
 															</div>
 														</div>
 														<div class="col-sm-4"></div>
@@ -91,17 +89,17 @@
 														</div>
 				
 														<div class="widget-body">
-															<div class="widget-main no-padding">
+															<div class="widget-main no-padding Overview">
 																<form>
 																	<th:block th:each="vo : ${questionVo.options}">
 																		<div class="widget-list">
 																			<fieldset>
 																				<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項名稱 </label>
 																				<div class="col-sm-5">
-																					<input class="form-control" data-placeholder="有..." th:value="${vo.item}"/>
+																					<input class="form-control" name="item" data-placeholder="有..." th:value="${vo.item}"/>
 																				</div>
 																				<div class="col-sm-5">
-																					<button class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">
+																					<button name="removeBtn" class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">
 																						<i class="my-icon fa fa-undo bigger-110"></i>
 																						移除選項
 																					</button>
@@ -110,7 +108,7 @@
 																			<fieldset>
 																				<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項順序 </label>
 																				<div class="col-sm-5">
-																					<input class="form-control" data-placeholder="2..." th:value="${vo.sequence}"/>
+																					<input class="form-control" name="sequence" data-placeholder="2..." th:value="${vo.sequence}"/>
 																				</div>
 																				<div class="col-sm-5">
 																				</div>
@@ -118,23 +116,25 @@
 																			<fieldset>
 																				<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項積分 </label>
 																				<div class="col-sm-5">
-																					<input class="form-control" data-placeholder="12..." th:value="${vo.score}"/>
+																					<input class="form-control" name="score" data-placeholder="12..." th:value="${vo.score}"/>
 																				</div>
 																				<div class="col-sm-5">
 																				</div>
 																			</fieldset>
+																			<input name="id" type="hidden" th:value="${vo.id}">
 																		</div>
 																	</th:block>
 																	<div class="widget-foot">
-																	<button class="">
-																		<i class="my-icon fa fa-add bigger-110"></i>
-																		新增選項
-																	</button>
+																		<button name="addBtn" class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">
+																			<i class="my-icon fa fa-add bigger-110"></i>
+																			新增選項
+																		</button>
 																	</div>
 																</form>
 															</div>
 														</div>
 													</div>
+													<input type="hidden" id="id" th:value="${questionVo.id}">
 												</form>
 											</div>
 										</div>
@@ -149,24 +149,191 @@
 		<th:block th:replace="fragments/script"/>
 		<script th:inline="javascript">
 		/*<![CDATA[*/
+		var removeIds = []
+		var reg = /^(\-|\+)?(\d{1,8})?([\.]\d*)?$/;
 		$(function() {
 			var formData = {};
-
-			$("input[name='effectiveTime'],input[name='stopTime']").datepicker({
+			$("input[name='effectiveTime']").datepicker({
 				'applyClass' : 'btn-sm btn-success',
 				'cancelClass' : 'btn-sm btn-default',
-				format:'YYYY-MM-DD',
+				format:'YYYY/MM/DD',
 				locale: {
 					applyLabel: 'Apply',
 					cancelLabel: 'Cancel',
 				}
+			}).datepicker("setDate", moment([[${#dates.format(questionVo.effectiveTime, 'yyyyMMdd')}]], 'YYYYMMDD').toDate())
+
+			$("input[name='stopTime']").datepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel',
+				}
+			}).datepicker("setDate", moment([[${#dates.format(questionVo.stopTime, 'yyyyMMdd')}]], 'YYYYMMDD').toDate())
+
+			$("body [name='removeBtn']").on('click', function(e){
+				removeItem(e, this)
+			})
+
+			$("body [name='addBtn']").on('click', function(e){
+				e.stopPropagation();
+				e.preventDefault()
+				addItem(this)
 			})
 		});
 		
-		function updateData() {			
-			eserviceForm.post(/*[[@{/attribute/updateAttribute}]]*/, formData, function(response) {
-				alertMsg("更新成功");
+		function updateData() {
+			if ($("[class='widget-list']").length <= 0 ) {
+				alertMsg("請至少填一個選項!");
+				return
+			}
+
+			let checked = true
+			if ($("[class='widget-list']").length <= 0 ) {
+				alertMsg("請至少填一個選項!");
+				return
+			}
+
+			let question = $("input[name='attributeName']").val()
+			if (question == null || question == '') {
+				alertMsg("问题不能为空!");
+				return
+			}
+
+			let sequence = $("input[name='sequence']").val()
+			if (sequence == null || sequence == '') {
+				alertMsg("序列不能为空!");
+				return
+			}
+
+			if (!reg.test(sequence)) {
+				alertMsg("序列只能为整数!");
+				return
+			}
+
+			let formData = {
+				question: question,
+				isMulti: $("[name='answerMethod'] option:selected").val(),
+				sequence:sequence,
+				effectiveTime: moment($("[name='effectiveTime']").datepicker("getDate")).format('YYYY-MM-DD'),
+				stopTime: moment($("[name='stopTime']").datepicker("getDate")).format('YYYY-MM-DD'),
+				id: $("#id").val(),
+			}
+			var options = []
+			$("[class='widget-list']").each(function(index, e){
+				let optionSequence = $(this).find("[name='sequence']").val();
+				if (optionSequence == null || optionSequence == '') {
+					checked = false;
+					alertMsg("序列不能为空!");
+					return
+				}
+
+				if (!reg.test(optionSequence)) {
+					checked = false;
+					alertMsg("序列只能为整数!");
+					return
+				}
+
+				let item = $(this).find("[name='item']").val();
+				if (item == null || item == '') {
+					checked = false;
+					alertMsg("選項名稱不能為空!");
+					return
+				}
+
+				let optionScore = $(this).find("[name='score']").val();
+				if (optionScore == null || optionScore == '') {
+					checked = false;
+					alertMsg("分数不能为空!");
+					return
+				}
+				if (!reg.test(optionScore)) {
+					checked = false;
+					alertMsg("分数只能为整数!");
+					return
+				}
+
+				options.push({
+					id: $(this).find("input[name='id']").val(),
+					sequence: optionSequence,
+					item: item,
+					score: optionScore,
+				})
+			})
+
+			if (!checked) {
+				return
+			}
+
+			formData.options = options
+			formData.removeIds = removeIds
+			confirmMsg('是否確認更新', function(r) {
+				if (r) {
+					eserviceForm.post(/*[[@{/attributeUpdate}]]*/, formData, function(response) {
+						if (response.result != 'SUCCESS') {
+							alertMsg(response.resultMsg);
+						} else {
+							alertMsg("更新成功");
+							setInterval(function() {
+								window.open('attribute')
+							}, 1000);
+						}
+					});
+				} else {
+					return false;
+				}
 			});
+		}
+
+		function addItem(vm) {
+			html = '<div class="widget-list">' +
+					'<fieldset>' +
+						'<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項名稱 </label>' +
+						'<div class="col-sm-5">' +
+							'<input name="item" class="form-control" data-placeholder="有..."/>' +
+						'</div>' +
+						'<div class="col-sm-5">' +
+							'<button name="removeBtn" class="btn btn-white btn-default btn-sm" style="margin-top: 5px;">' +
+								'<i class="my-icon fa fa-undo bigger-110"></i>' +
+								'移除選項' +
+							'</button>' +
+						'</div>' +
+					'</fieldset>' +
+					'<fieldset>' +
+						'<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項順序 </label>' +
+						'<div class="col-sm-5">' +
+							'<input name="sequence" class="form-control" data-placeholder="2..."/>' +
+						'</div>' +
+						'<div class="col-sm-5">' +
+						'</div>' +
+					'</fieldset>' +
+					'<fieldset>' +
+						'<label class="col-sm-2 control-label no-padding-right" for="form-field-1-1"> 選項積分 </label>' +
+						'<div class="col-sm-5">' +
+							'<input name="score" class="form-control" data-placeholder="12..."/>' +
+						'</div>' +
+						'<div class="col-sm-5">' +
+						'</div>' +
+					'</fieldset>' +
+				'</div>'
+			item = $(html)
+			$(item).find("[name='removeBtn']").click(function(e) {
+				removeItem(e, this)
+			})
+			$(vm).parent().before(item)
+		}
+
+		function removeItem(e, vm) {
+			e.stopPropagation()
+			e.preventDefault()
+			context = $(vm).parent().parent().parent()
+			let id = $(context).find("input[name='id']").val()
+			if (id != undefined && id != null && id != '') {
+				removeIds.push(id)
+			}
+			context.remove()
 		}
 		/*]]>*/
 		</script>

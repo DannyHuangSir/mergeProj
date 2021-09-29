@@ -96,4 +96,12 @@ public interface IParameterService {
 	 * @return
 	 */
 	public Map<String, Map<String, ParameterVo>> getSystemParameter(String systemId);
+
+	/**
+	 * 查詢醫療異常描述id值
+	 * @param systemId
+	 * @param medicalAbnormalReasonMsg
+	 * @return
+	 */
+    String getParameterValueByCategoryCodeAndSystemId(String systemId, String medicalAbnormalReasonMsg, String  rejectReason);
 }

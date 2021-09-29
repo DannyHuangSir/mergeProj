@@ -2767,6 +2767,20 @@
 		where FUNCTION_NAME = #{functionName}
 	</select>
 
+	<!--查詢醫療保單是否存在異常案件	-->
+	<select id="getMedicalTreatmentCaseIDNum" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select COUNT(*) from
+		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM TMT
+		left  join   ESERVICE.DBO.TRANS T   ON TMT.TRANS_NUM=T.TRANS_NUM
+		where TMT.TRANS_NUM = #{transNum} and T.STATUS='7C' and TMT.CASE_ID IS NOT NULL
+	</select>
+	
+	<!--醫療保單查詢是否存在黑名单-->
+	<select id="checkMedicalTreatmentIdNoExist" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select COUNT(A.ID_NO) from ESERVICE_ADM.DBO.BLACK_LIST A,ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM  B
+		where A.ID_NO = ESERVICE.DBO.FN_DEBASE64(B.ID_NO) and B.TRANS_NUM = #{transNum}
+	</select>
+	
 	<!--查詢申請明細-已持有投資標的轉換查詢-->
 	<select id="getConversionDetail" resultMap="transFundConversionMap"  parameterType="com.twfhclife.adm.model.TransVo">
 		SELECT TF.INVT_NO INVT_NO,  PP.INVT_NAME INVT_NAME,  TF.INVESTMENT_TYPE INVESTMENT_TYPE,TF.RATIO RATIO,TF.VALUE VALUE

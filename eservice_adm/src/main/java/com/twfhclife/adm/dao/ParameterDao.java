@@ -107,4 +107,13 @@ public interface ParameterDao {
 	 */
 	public String getStatusName(@Param("parentCategoryCode") String parentCategoryCode, @Param("status") String status);
 	
+	/**
+	 * 查詢醫療異常描述id值
+	 * @param systemId
+	 * @param medicalAbnormalReasonMsg
+	 * @param rejectReason
+	 * @return String
+	 */
+	String getParameterValueByCategoryCodeAndSystemId(@Param("systemId") String systemId, @Param("medicalAbnormal") String medicalAbnormalReasonMsg,@Param("rejectReason") String rejectReason);
+
 }
