@@ -277,7 +277,7 @@
 		        let depositAmount = 0
 		        $("input[name='amount']").each(function(index, e){
 		            if ($(this).val() != null && $(this).val() != "") {
-		                context = $(this).parent().parent()
+		                context = $(this).parent().parent().parent()
 		                depositAmount += parseFloat($(this).val())
 		                invtDeposits.push({
 		                    invtNo: $(context).find("[name='invtNo']").val(),
@@ -316,12 +316,12 @@
 
 		    $("input[name='percent']").on('change', function(){
                  percent = parseInt($(this).val())
-                 context = $(this).parent().parent()
+                 context = $(this).parent().parent().parent()
                  if (percent <= maxPercent && percent >= minPercent) {
                      val = $(context).find("[name='acctValue']").val()
                      //百分比换算金额
                      if (currency == 'NTD') {
-                     $(context).find("[name='amount']").val(Math.round((val * percent)/100))
+                        $(context).find("[name='amount']").val(Math.round((val * percent)/100))
                      } else {
                           $(context).find("[name='amount']").val(Math.round(val * percent) / 100)
                      }
@@ -334,7 +334,7 @@
 
 		    $("input[name='amount']").on('change', function(){
 
-		         context = $(this).parent().parent()
+		         context = $(this).parent().parent().parent()
 		         val = $(context).find("[name='acctValue']").val()
 
                  if (currency == 'NTD' && !checkDecimal($(this).val())) {

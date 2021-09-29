@@ -83,29 +83,20 @@
 			INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION TFN ON TFN.TRANS_NUM = TP.TRANS_NUM
 			INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL TFD ON TFN.ID = TFD.TRANS_FUND_NOTIFICATION_ID
 		) R ON F.FUND_CODE = R.FUND_CODE
-		<choose>
-			<when test="riskLevel == 'RR1'">
-				WHERE F.RISK_BENE_LEVEL = #{riskLevel}
-			</when>
-			<when test="riskLevel == 'RR2'">
-				WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2')
-			</when>
-			<when test="riskLevel == 'RR3'">
-				WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3')
-			</when>
-			<when test="riskLevel == 'RR4'">
-				WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3', 'RR4')
-			</when>
-			<when test="riskLevel == 'RR5'">
-				WHERE F.RISK_BENE_LEVEL IN ('RR1', 'RR2', 'RR3', 'RR4', 'RR5')
-			</when>
-		</choose>
-		<if test="invtNos != null and invtNos.size() > 0">
-			AND F.FUND_CODE NOT IN
-			<foreach collection="invtNos" item="funNo" index="index" open="(" close=")" separator="," >
-				#{funNo}
-			</foreach>
-		</if>
+		<where>
+			<if test="rrs != null">
+				AND F.RISK_BENE_LEVEL IN
+				<foreach collection="rrs" separator="," open="(" close=")" item="rr">
+					#{rr}
+				</foreach>
+			</if>
+			<if test="invtNos != null and invtNos.size() > 0">
+				AND F.FUND_CODE NOT IN
+				<foreach collection="invtNos" item="funNo" index="index" open="(" close=")" separator="," >
+					#{funNo}
+				</foreach>
+			</if>
+		</where>
 	</select>
 
 	<select id="getNotificationPortfolioList" resultType="com.twfhclife.eservice.policy.model.NotificationPortfolioVo">
@@ -149,8 +140,8 @@
 			SELECT POLICY_NO, PERCENTAGE_UP, PERCENTAGE_DOWN, FUND_CODE
 			FROM (SELECT TOP 1 * FROM ESERVICE.DBO.TRANS WHERE STATUS = '2' AND TRANS_TYPE = 'FUND_NOTIFICATION' ORDER BY TRANS_NUM DESC) T
 			INNER JOIN ESERVICE.DBO.TRANS_POLICY TP ON T.TRANS_NUM = TP.TRANS_NUM
-		INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION TFN ON TFN.TRANS_NUM = TP.TRANS_NUM
-		INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL TFD ON TFN.ID = TFD.TRANS_FUND_NOTIFICATION_ID
+			INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION TFN ON TFN.TRANS_NUM = TP.TRANS_NUM
+			INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL TFD ON TFN.ID = TFD.TRANS_FUND_NOTIFICATION_ID
 		) R ON R.POLICY_NO = PP.POLICY_NO AND PP.INVT_NO = R.FUND_CODE
 		WHERE
 		PP.POLICY_NO = #{policyNo}

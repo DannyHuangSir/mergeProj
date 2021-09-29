@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
+import com.google.common.base.Splitter;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.dao.TransFundNotificationDao;
 import com.twfhclife.eservice.onlineChange.dao.TransFundNotificationDtlDao;
@@ -16,7 +17,9 @@ import com.twfhclife.eservice.policy.service.IPortfolioService;
 import com.twfhclife.eservice.util.FormulaUtil;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
+import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -58,6 +61,9 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 
 	@Autowired
 	private ITransRiskLevelService riskLevelService;
+
+	@Autowired
+	private IParameterService parameterService;
 
 	/**
 	 * 處理保單狀態是否鎖定.
@@ -210,7 +216,12 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 	@Override
 	public List<NotificationFundVo> getSearchPortfolio(String rocId, List<String> invtNos) {
 		String riskLevel = riskLevelService.getUserRiskAttr(rocId);
-		return transFundNotificationDao.getSearchFunds(riskLevel, invtNos);
+		String listRR = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "RISK_LEVEL_TO_RR_" + riskLevel);
+		List<String> rrs = null;
+		if (StringUtils.isNotBlank(listRR)) {
+			rrs = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(listRR);
+		}
+		return transFundNotificationDao.getSearchFunds(rrs, invtNos);
 	}
 
 	@Override
