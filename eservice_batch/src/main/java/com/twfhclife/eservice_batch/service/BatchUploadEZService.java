@@ -31,6 +31,7 @@ import com.twfhclife.eservice_batch.model.EZAcquireVo;
 import com.twfhclife.eservice_batch.model.EZIndexDataVo;
 import com.twfhclife.eservice_batch.model.OnlineChangeInfoVo;
 import com.twfhclife.eservice_batch.model.TransInsuranceClaimFileDataVo;
+import com.twfhclife.eservice_batch.model.TransMedicalTreatmentClaimFileDatasVo;
 import com.twfhclife.eservice_batch.util.TransTypeUtil;
 
 public class BatchUploadEZService {
@@ -250,7 +251,122 @@ public class BatchUploadEZService {
 		logger.debug("***End uploadFile***");
 		return result;
 	}
-	
+
+	/**
+	 * 上傳聯盟鏈醫療保單上傳文件至影像系統
+	 * @return
+	 */
+	public String uploadTransMedicalTreatmentClaimFiledatas(TransMedicalTreatmentClaimFileDatasVo vo) throws Exception{
+		logger.debug("***Start uploadFile***");
+		String result = null;
+
+		if(vo==null || vo.getPath()==null || vo.getFileName()==null) {
+			return null;
+		}
+
+		File file = new File(vo.getPath()+"/"+vo.getFileName());
+		//modify:read file from TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS.FILE_BASE64 Column-start
+		if(vo.getFileBase64()==null) {//嘗試使用實體檔
+			//do nothing.
+		}else {
+			file = base64ToFile(file,vo.getFileBase64());
+		}
+		//modify:read file from TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS.FILE_BASE64 Column-end
+
+		if(file!=null && file.exists() && file.canRead()){
+			String fileExtension = FilenameUtils.getExtension(vo.getFileName());
+
+			UploadServiceStub stub = new UploadServiceStub(EZ_ACQUIRE_ENDPOINT);
+			UploadFileDocument upploadFileDocument = UploadFileDocument.Factory.newInstance();
+			UploadFile uploadFile = upploadFileDocument.addNewUploadFile();
+
+			String token = this.getEZToken();
+
+			EZIndexDataVo indexDataVo = new EZIndexDataVo();
+
+			//ScanType永遠設PDF
+			indexDataVo.setScanTypeId("PDF");
+
+			indexDataVo.setBranch(EZ_INDEXDATA_BRANCH);
+			indexDataVo.setBusinessType("MEDICAL_DOCUMENT_CONTENT");
+
+			/**
+			 * E3000101 醫療聯盟鏈-數位同意書
+			 * E3000201 醫療聯盟鏈-診斷證明書
+			 * E3000301 醫療聯盟鏈-事故證明書
+			 * E3000401 醫療聯盟鏈-收據
+			 * E3000501 醫療聯盟鏈-補件
+			 */
+			String formId = "";
+			if("1".equals(vo.getType()) || "MEDICAL_DOCUMENT_CONTENT".equals(vo.getType())) {
+				formId = "E3000101";
+			}else if("2".equals(vo.getType()) || "CertificateDiagnosis".equals(vo.getType())){
+				formId = "E3000201";
+			}else if("3".equals(vo.getType()) || "ACCIDENT_FORM".equals(vo.getType())){
+				formId = "E3000301";
+			}else if("4".equals(vo.getType()) || "Receipt".equals(vo.getType())){
+				formId = "E3000401";
+			}else if("C".equals(vo.getType())) {
+				formId = "E3000501";
+			}
+			indexDataVo.setFormId(formId);
+
+			indexDataVo.setInsurantId(vo.getLipiId());
+			indexDataVo.setPolicyNumber(vo.getPolicyNo());
+			indexDataVo.setApplicantId(vo.getLipmId());
+
+			Gson gson = new Gson();
+			String indexData = gson.toJson(indexDataVo);
+			logger.info("=====獲取到的醫療數據信息===={}",indexData);
+			String sha1 = this.getFileSHA1(file);
+			byte[] fileContent = Files.readAllBytes(file.toPath());
+			uploadFile.setAppId(EZ_ACQUIRE_ID);
+			uploadFile.setTokenInfo(token);
+
+			uploadFile.setFileType(fileExtension.toUpperCase());
+
+			uploadFile.setFile(fileContent);
+			uploadFile.setChecksum(sha1);
+			uploadFile.setIndexData(indexData);
+			logger.debug("=== uploadFile AppId:{}, TokenInfo:{}, FileType:{}, FileName:{}, Checksum:{}, IndexData:{} ===",
+					EZ_ACQUIRE_ID, token, fileExtension.toUpperCase(), file.getName(), sha1, indexData);
+
+			UploadFileResponseDocument resp = null;
+			if(StringUtils.isEmpty(indexDataVo.getFormId())) {
+				//在很極端的狀況下，會突然無法判斷formId給影像系統
+				logger.info("indexDataVo.getFormId() is empty,don't call uploadFile() now.");
+				return null;
+			}else {
+				resp = stub.uploadFile(upploadFileDocument);
+			}
+
+			UploadFileResponse uploadFileResponse = resp.getUploadFileResponse();
+			String jsonResult = uploadFileResponse.getUploadFileResult();
+			logger.debug("###uploadFile jsonResult:{}" + jsonResult);
+
+			EZAcquireVo ezVo = gson.fromJson(jsonResult, EZAcquireVo.class);
+			logger.debug("uploadFile taskId:{}, documentId:{}, status:{}",
+					ezVo.getTaskId(), ezVo.getDocumentId(), ezVo.getStatus());
+
+			if (ezVo.getStatus().toUpperCase().startsWith("S")) {
+				ezVo.setTransNum(vo.getTransNum());
+				ezVo.setDocumentType(fileExtension.toUpperCase());
+				int cut = new TransEndorsementDao().insertTransEZ(ezVo);
+				if (cut == 0) {
+					logger.debug("insertTransEZ failed!");
+				}
+				result = ezVo.getTaskId();
+			}
+
+		}else {
+			logger.error("File is not exists.path={},fileName={}", vo.getPath(),vo.getFileName());
+		}
+
+		logger.debug("***End uploadFile***");
+		return result;
+	}
+
+
 	public String getEZToken() throws Exception {
 //		String token = "";
 		logger.debug("Start getEZToken...");

@@ -101,6 +101,8 @@
 		<mapper resource="mapper/TransPolicyHolderProfileMapper.xml" />
 		<mapper resource="mapper/TransInsuranceClaimFileDataMapper.xml" />
 		<mapper resource="mapper/MessageTemplateMapper.xml" />
+
+<mapper resource="mapper/TransMedicalTreatmentClaimFileDatasMapper.xml" />
 	<mapper resource="mapper/TransCashPaymentMapper.xml" />
 		<mapper resource="mapper/TransDepositMapper.xml" />
 		<mapper resource="mapper/TransInvestmentMapper.xml" />

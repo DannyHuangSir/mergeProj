@@ -25,6 +25,7 @@ import com.twfhclife.eservice_batch.service.BatchReport01Service;
 import com.twfhclife.eservice_batch.service.BatchReport02Service;
 import com.twfhclife.eservice_batch.service.BatchReport03Service;
 import com.twfhclife.eservice_batch.service.BatchUploadInsuranceClaimFileDataService;
+import com.twfhclife.eservice_batch.service.BatchUploadMedicalTreatmentFileDataService;
 import com.twfhclife.eservice_batch.service.BatchUploadOnlineChangeSheetService;
 import com.twfhclife.eservice_batch.service.BatchUploadService;
 import com.twfhclife.eservice_batch.util.MailService;
@@ -161,6 +162,11 @@ public class BatchMain {
 			logger.info("Start running batch #insuranceClaim: Upload InsuranceClaimFileData to EZ_ACQUIRE..");
 			BatchUploadInsuranceClaimFileDataService icService = new BatchUploadInsuranceClaimFileDataService();
 			icService.process();
+			break;
+		case "medicalDocumentContent":
+			logger.info("Start running batch #medicalDocumentContent: Upload InsuranceClaimFileData to EZ_ACQUIRE..");
+			BatchUploadMedicalTreatmentFileDataService medicalTreatmentService = new BatchUploadMedicalTreatmentFileDataService();
+			medicalTreatmentService.process();
 			break;
 		default:
 			logger.info("Invalid BatchId: " + batchId + ", batch job stopped.");
