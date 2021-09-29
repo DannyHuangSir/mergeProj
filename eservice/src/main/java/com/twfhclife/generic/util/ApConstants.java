@@ -156,6 +156,15 @@ public interface ApConstants {
 	/**保單理賠醫起通  保單產品  */
 	public static final String MEDICAL_TREATMENT_ITEMS = "MEDICAL_TREATMENT_ITEMS";
 
+	/**
+	 * 醫療保單查詢驗證年齡
+	 */
+	public static final String ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL = "ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL";
+	/**
+	 * 醫療保單黑名單提示信息
+	 */
+	public static final String MEDICAL_BLACKLIST_ALERT01 = "MEDICAL_BLACKLIST_ALERT01";
+
 	public static final String INVESTMENT_TRANS_REMARK = "INVESTMENT_TRANS_REMARK";
 
 	public static final String DEPOSIT_TRANS_REMARK = "DEPOSIT_TRANS_REMARK";

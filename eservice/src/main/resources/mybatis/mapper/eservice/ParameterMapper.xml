@@ -158,4 +158,21 @@
 			</foreach>
 		</if>
 	</select>
+	<select id="getParameterByCategoryCodeParameterValue" resultType="java.lang.String">
+		SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND a.SYSTEM_ID = b.SYSTEM_ID
+		AND b.SYSTEM_ID =#{systemId}
+		AND b.CATEGORY_CODE =#{medicalAbnormal}
+		AND a.PARAMETER_VALUE=#{reject}
+		ORDER BY
+		a.SORT_NO
+	</select>
 </mapper>

@@ -618,7 +618,7 @@
 				data : JSON.stringify(data),
 				success : function(response) {
 					var html = '';
-					if (response.resultData != null) {
+					if (response.resultData != null && response.result!='ERROR') {
 						fileLogList = response.resultData;
 						response.resultData.forEach(function(item,index){
 							html += '<tr>'+

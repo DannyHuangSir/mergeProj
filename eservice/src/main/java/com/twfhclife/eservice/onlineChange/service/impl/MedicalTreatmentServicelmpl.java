@@ -617,18 +617,18 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 			}
 			//格式化時間出生年月日： 1992/02/02
 			String birdate = transInsuranceClaimVo.getBirdate();
-			if (!StringUtils.isEmpty(policeTime)) {
+			if (!StringUtils.isEmpty(birdate)) {
 				String yyyyMMdd = DateUtil.getStringToDateString("yyyyMMdd", birdate, "yyyy/MM/dd");
 				transInsuranceClaimVo.setBirdate(yyyyMMdd);
 			}
 			//格式化時間發生時間
 			String accidentDate = transInsuranceClaimVo.getAccidentDate();
 			String accidentTime = transInsuranceClaimVo.getAccidentTime();
-			if (!StringUtils.isEmpty(policeTime)) {
+			if (!StringUtils.isEmpty(accidentDate)) {
 				String yyyyMMdd = DateUtil.getStringToDateString("yyyyMMdd", accidentDate, "yyyy/MM/dd");
 				transInsuranceClaimVo.setAccidentDate(yyyyMMdd);
 			}
-			if (!StringUtils.isEmpty(policeTime)) {
+			if (!StringUtils.isEmpty(accidentTime)) {
 				String yyyyMMdd = DateUtil.getStringToDateString("HHmm", accidentTime, "HH:mm");
 				transInsuranceClaimVo.setAccidentTime(yyyyMMdd);
 			}
@@ -636,11 +636,11 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 
 			String authorizationStartDate = transInsuranceClaimVo.getAuthorizationStartDate();
 			String authorizationEndDate = transInsuranceClaimVo.getAuthorizationEndDate();
-			if (!StringUtils.isEmpty(policeTime)) {
+			if (!StringUtils.isEmpty(authorizationStartDate)) {
 				String yyyyMMdd = DateUtil.getStringToDateString("yyyyMMdd", authorizationStartDate, "yyyy/MM/dd");
 				transInsuranceClaimVo.setAuthorizationStartDate(yyyyMMdd);
 			}
-			if (!StringUtils.isEmpty(policeTime)) {
+			if (!StringUtils.isEmpty(authorizationEndDate)) {
 				String yyyyMMdd = DateUtil.getStringToDateString("yyyyMMdd", authorizationEndDate, "yyyy/MM/dd");
 				transInsuranceClaimVo.setAuthorizationEndDate(yyyyMMdd);
 			}

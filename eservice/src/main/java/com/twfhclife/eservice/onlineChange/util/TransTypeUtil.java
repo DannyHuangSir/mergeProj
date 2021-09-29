@@ -118,6 +118,11 @@ public interface TransTypeUtil {
 	 * */
 	final String MEDICAL_TREATMENT_PARAMETER_CODE = "MEDICAL_TREATMENT";
 
+	/**
+	 * 醫療異常件異常件通知訊息  組
+	 */
+	final String MEDICAL_ABNORMAL_REASON_MSG = "MEDICAL_ABNORMAL_REASON_MSG";
+
 	/** 線上申請-未來保費投資標的與分配比例 */
 	final String INVESTMENT_PARAMETER_CODE = "INVESTMENT";
 	/** 線上申請-申請保單提領(贖回) */

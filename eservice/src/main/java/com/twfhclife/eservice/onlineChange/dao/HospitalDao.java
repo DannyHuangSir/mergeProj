@@ -47,4 +47,12 @@ public interface HospitalDao {
     int updateHospitalVoList(@Param("hospitalVos") List<HospitalVo> hospitalVos,@Param("status") String  status)throws Exception;
 
     int updateNotHospitalVoIdList(@Param("hospitalVos") List<HospitalVo> hospitalVos,@Param("status") String  status)throws Exception;
+    /**
+     * 進行查詢異常描述信息id
+     * @param transNum
+     * @param transStatusAbnormal
+     * @return
+     */
+    String getTransStatusHistoryByRejectReason(@Param("transNum")String transNum,@Param("transStatus") String transStatusAbnormal);
+
 }

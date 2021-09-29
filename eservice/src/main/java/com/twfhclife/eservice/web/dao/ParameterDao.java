@@ -70,5 +70,12 @@ public interface ParameterDao {
 	 */
 	public List<ParameterVo> getSendSYSMailInfo(@Param("pubstates") List<String> pubstates);
 
-
+	/**
+	 * 查詢名稱
+	 * @param systemIdAdm
+	 * @param medicalAbnormalReasonMsg
+	 * @param reject_reason
+	 * @return
+	 */
+    String getParameterByCategoryCodeParameterValue(@Param("systemId") String systemIdAdm, @Param("medicalAbnormal") String medicalAbnormalReasonMsg,@Param("reject")  String reject_reason);
 }

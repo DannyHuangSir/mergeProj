@@ -46,4 +46,13 @@ public interface IHospitalServcie {
      * @return
      */
     List<HospitalVo> getHospitalVoList(HospitalVo hospitalVo)throws Exception;
+
+
+    /**
+     * 進行查詢異常描述信息id
+     * @param transNum
+     * @param transStatusAbnormal
+     * @return
+     */
+    String getTransStatusHistoryByRejectReason(String transNum, String transStatusAbnormal);
 }

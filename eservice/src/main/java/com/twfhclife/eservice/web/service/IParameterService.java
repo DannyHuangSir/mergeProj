@@ -68,5 +68,13 @@ public interface IParameterService {
 	 * @return List<ParameterVo>	所有第二層參數下的參數值(ex:List<D>)
 	 */
 	public List<ParameterVo> getSecondFloorParameter(String systemId, String categoryCode, String parentCategoryCode, String parameterCode);
-			
+
+	/**
+	 * 查詢名稱
+	 * @param systemIdAdm
+	 * @param medicalAbnormalReasonMsg
+	 * @param reject_reason
+	 * @return
+	 */
+	String getParameterByCategoryCodeParameterValue(String systemIdAdm, String medicalAbnormalReasonMsg, String reject_reason);
 }

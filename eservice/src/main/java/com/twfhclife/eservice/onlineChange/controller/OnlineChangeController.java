@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.onlineChange.service.IHospitalServcie;
 import com.twfhclife.eservice.onlineChange.service.ITransContactInfoService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
@@ -71,10 +72,14 @@ public class OnlineChangeController extends BaseController {
 	private ITransContactInfoService transContactInfoService;
 
 	@Autowired
-	private ITransInvestmentService transInvestmentService;
+	private IHospitalServcie iHospitalServcie;
+
 	@Autowired
 	private IParameterService parameterService;
+
 	@Autowired
+	private ITransInvestmentService transInvestmentService;
+
 	private MessageTemplateClient messageTemplateClient;
 
 	/**
@@ -452,9 +457,27 @@ public class OnlineChangeController extends BaseController {
 			String errMsg = rMap.get("errMsg");
 			if (detailInfo != null) {
 				String[] infos = detailInfo.split("\\|");
+				String transNum = infos[1];
 				errMsg = errMsg.replace("${NAME}", infos[0]);
 				errMsg = errMsg.replace("${TRANS_CREATEDATE}", infos[2]);
-				errMsg = errMsg.replace("${TRANS_NUM}", infos[1]);
+				errMsg = errMsg.replace("${TRANS_NUM}", transNum);
+				/**
+				 * 獲取TRANS_NUM查詢異常原因
+				 */
+				if (transNum!=null &&!"".equals(transNum)) {
+					//查詢
+					String reject_reason= iHospitalServcie.getTransStatusHistoryByRejectReason(transNum,OnlineChangeUtil.TRANS_STATUS_ABNORMAL);
+					/**
+					 * 查詢異常的名稱
+					 */
+					String parameterName= parameterService.getParameterByCategoryCodeParameterValue(ApConstants.SYSTEM_ID_ADM,TransTypeUtil.MEDICAL_ABNORMAL_REASON_MSG,reject_reason);
+					if (org.springframework.util.StringUtils.isEmpty(parameterName)) {
+						parameterName= OnlineChangMsgUtil.BACK_LIST_MSG;
+					}
+					errMsg = errMsg.replace("${MEDICAL_ABNORMAL_MESSAGE}", parameterName);
+				}else {
+					errMsg = errMsg.replace("${MEDICAL_ABNORMAL_MESSAGE}", OnlineChangMsgUtil.BACK_LIST_MSG);
+				}
 				processError(errMsg);
 			}else {
 				processSuccess(1);

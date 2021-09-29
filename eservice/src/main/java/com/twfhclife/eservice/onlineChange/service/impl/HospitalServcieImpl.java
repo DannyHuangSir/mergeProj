@@ -49,4 +49,10 @@ public class HospitalServcieImpl implements IHospitalServcie {
     public List<HospitalVo> getHospitalVoList(HospitalVo hospitalVo)throws Exception {
         return hospitalDao.getHospitalVoList(hospitalVo);
     }
+
+    @Override
+    public String getTransStatusHistoryByRejectReason(String transNum, String transStatusAbnormal) {
+
+        return hospitalDao.getTransStatusHistoryByRejectReason(transNum,transStatusAbnormal);
+    }
 }

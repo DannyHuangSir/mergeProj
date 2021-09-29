@@ -97,4 +97,8 @@
 			#{vo.hpId,jdbcType=VARCHAR}
 		</foreach>
 	</update>
+	<select id="getTransStatusHistoryByRejectReason" resultType="java.lang.String">
+		select  top  1  REJECT_REASON   from   ESERVICE.dbo.TRANS_STATUS_HISTORY  where  TRANS_NUM=#{transNum} and  STATUS=#{transStatus}
+		order by  REQUEST_DATE  desc
+	</select>
 </mapper>
