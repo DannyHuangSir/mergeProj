@@ -7,6 +7,7 @@
 		<result column="TRANS_NUM" property="transNum"/>
 		<result column="PAYMODE" property="paymode"/>
 		<result column="PAYMODE_OLD" property="paymodeOld"/>
+	<result column="LIPM_FLEX_RCP_MK" property="mk"/>
 	</resultMap>
 	
 	<sql id="Base_Column_List">
@@ -30,9 +31,11 @@
 	
 	<select id="getTransPaymodeList" resultMap="TransPaymodeMap">
 		SELECT
-			<include refid="Base_Column_List" />
+			P.ID, P.TRANS_NUM, P.PAYMODE, P.PAYMODE_OLD, D.LIPM_FLEX_RCP_MK
 		FROM
-			ESERVICE.DBO.TRANS_PAYMODE
+			ESERVICE.DBO.TRANS_PAYMODE P
+			LEFT JOIN ESERVICE.DBO.TRANS_POLICY C on P.TRANS_NUM = C.TRANS_NUM
+			LEFT JOIN ESERVICE.DBO.LILIPM D ON C.POLICY_NO = D.LIPM_INSU_NO
 		<include refid="whereClause" />
 	</select>
 	

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransRiskLevelMapper" >
+	<resultMap id="BaseResultMap" type="com.twfhclife.eservice_batch.model.TransRiskLevelVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="RISK_LEVEL_OLD" property="riskLevelOld"/>
+		<result column="RISK_LEVEL_NEW" property="riskLevelNew"/>
+		<result column="RISK_SCORE" property="riskScore"/>
+		<result column="ROC_ID" property="rocId"/>
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		ID, TRANS_NUM, RISK_LEVEL_OLD, RISK_LEVEL_NEW, RISK_SCORE
+	</sql>
+
+	<select id="getTransLevel" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/>
+		FROM  ESERVICE.dbo.TRANS_RISK_LEVEL
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+
+	<select id="getEffectUserTransRiskLevel" resultMap="BaseResultMap">
+		SELECT r.RISK_LEVEL_NEW, u.ROC_ID FROM ESERVICE.dbo.TRANS_RISK_LEVEL r
+		LEFT JOIN ESERVICE.dbo.TRANS t ON r.TRANS_NUM = t.TRANS_NUM
+		LEFT JOIN ESERVICE.dbo.USERS u on t.USER_ID = u.USER_ID
+		WHERE r.TRANS_NUM = #{transNum}
+	</select>
+
+	<update id="updateIndividual">
+		update ESERVICE.dbo.INDIVIDUAL SET RISK_ATTR = #{riskLevelNew}
+		where ROC_ID = #{rocId}
+	</update>
+</mapper>

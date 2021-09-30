@@ -108,5 +108,6 @@
 		<mapper resource="mapper/TransInvestmentMapper.xml" />
 		<mapper resource="mapper/TransFundConversionMapper.xml" />
 		<mapper resource="mapper/TransChangePremiumMapper.xml" />
+	<mapper resource="mapper/TransRiskLevelMapper.xml" />
 	</mappers>
 </configuration>
