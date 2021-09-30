@@ -827,8 +827,8 @@
 										<div class="profile-info-name"> 執行審核 </div>
 	
 										<div class="profile-info-value">
-											<button type="button" id="approved_ok" class="bgOrange" onclick="medicalClickApproved('OK')">核可補件</button>
-											<button type="button" id="approved_no" class="bgOrange" onclick="medicalClickApproved('NO')">駁回補件</button>
+											<button type="button" id="medical_approved_ok" class="bgOrange" onclick="medicalClickApproved('OK')">核可補件</button>
+											<button type="button" id="medical_approved_no" class="bgOrange" onclick="medicalClickApproved('NO')">駁回補件</button>
 										</div>
 									</div>
 								</div>
@@ -2089,11 +2089,22 @@
 				$('#medical_rfe_status').html(item.statusName);
 				$('#medical_rfe_s_date').html(item.requestDate);
 				$('#medical_rfe_e_date').html(item.responseDate);
-				$('#medical_rfe_request_con').html(item.requestContent);
+				$('#medical_rfe_request_con').text(item.requestContent);
 				$('#medical_rfe_response_con').html(item.responseContent);
 				if (item.status != 'WAIT') {
-					$('#approved_ok')[0].disabled = true;
-					$('#approved_no')[0].disabled = true;
+					$('#medical_approved_ok')[0].disabled = true;
+					$('#medical_approved_no')[0].disabled = true;
+					$('#medical_approved_ok').removeClass("bgOrange");
+					$('#medical_approved_no').removeClass("bgOrange");
+					$('#medical_approved_ok').addClass("bgGrey");	
+					$('#medical_approved_no').addClass("bgGrey");	
+				}else{
+					$('#medical_approved_ok')[0].disabled = false;
+					$('#medical_approved_no')[0].disabled = false;
+					$('#medical_approved_ok').removeClass("bgGrey");
+					$('#medical_approved_no').removeClass("bgGrey");
+					$('#medical_approved_ok').addClass("bgOrange");	
+					$('#medical_approved_no').addClass("bgOrange");	
 				}
 				var rHtml = ''
 				$('#medical_ref_file_data').html(rHtml);
@@ -2172,6 +2183,13 @@
 						if (response.result == 'SUCCESS') {
 							alertMsg("更新成功");
 							$('#medical_close_approved_deny').click();
+							$("#medical_attachment").removeClass("bgGrey");
+							$("#medical_attachment").addClass("bgOrange");
+							$("#medical_attachment").addClass("bgOrange");
+							$('#medical_attachment').attr("disabled",false);
+						let applyitem=	$("#applyitem_attachment").val();
+						let trans_num=	$("#trans_num_attachment").val();
+							$("#medical_attachment").attr("onclick","medicalOnSupplement('" + applyitem + "','" + trans_num + "')");		
 						} else {
 							alertMsg("更新失敗!");
 						}
@@ -2234,7 +2252,7 @@
 												'<td>'+item.requestDate+'</td>'+
 												'<td>'+item.identity+'</td>'+
 												'<td>'+item.customerName+'</td>'+
-												'<td>'+(item.content != null ? item.content : '')+'</td>'+
+												'<td><xmp>'+(item.content != null ? item.content : '')+'</xmp></td>'+
 											'</tr>';
 								});
 								$('#medical_status_body').html(html);
@@ -2427,7 +2445,7 @@
 								$('#medical-form-field-select-1').attr("disabled",true);
 								$('#medical_reject_trans_type').attr("disabled",true);
 								$('#medical-form-field-select-1').val(response.resultData.rejectReason);
-							    $('#medical_reject_trans_type').val(response.resultData.content);
+							    $('#medical_reject_trans_type').text(response.resultData.content);
 								$('#medical_review_div').attr("hidden",false);
 								$('#medical_go_reject_1').attr("hidden",true);
 								$('#medical_go_reject_2').attr("hidden",false);
@@ -2442,6 +2460,8 @@
 									$('#medical_review_div').attr("hidden",true);
 									$('#medical_go_reject_1').attr("hidden",false);
 									$('#medical_go_reject_2').attr("hidden",true);
+									$('#medical-form-field-select-1').attr("disabled",false);
+									$('#medical_reject_trans_type').attr("disabled",false);
 									$('#medical-exception-marke').text("異常件註記");
 									$('#medical-exception-marke-title').text("異常件註記");
 								}

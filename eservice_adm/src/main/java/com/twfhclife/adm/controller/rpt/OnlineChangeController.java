@@ -1451,9 +1451,9 @@ public class OnlineChangeController extends BaseController {
 					// 加入黑名單
 					if (contains && ApConstants.STATUS_7.equals(vo.getStatus())) {
 						result = onlineChangeService.addMedicalTreatmentBlackList(vo);
+						onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(), vo.getRejectReason(), vo.getStatus());
 					}
 					// 發送郵件
-					onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(), vo.getRejectReason(), vo.getStatus());
 				} else {
 					processError("更新失敗");
 				}
