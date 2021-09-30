@@ -318,9 +318,10 @@ public class MedicalAllianceServiceTask {
         log.info("End saveToMedicalTrans.");
 
     }
+
     /**
-     * API-401 回覆是否向醫院取資料
-     * */
+     * API-401理賠申請上傳
+     */
      @Scheduled(cron = "${cron.medical401.expression}")
     public void callAPI401() {
         log.info("-----------Start API-401 Task.-----------");
@@ -334,7 +335,7 @@ public class MedicalAllianceServiceTask {
                     for (MedicalTreatmentClaimVo vo : listMedical) {
                         if(vo!=null) {
                             //3.call api-401 to upload.
-                            String strResponse = iMedicalService.postForEntity(URL_API401, vo, "API-401醫療申請上傳");
+                            String strResponse = iMedicalService.postForEntity(URL_API401, vo, "API-401理賠申請上傳");
                             log.info("call URL_API401,strResponse="+strResponse);
                             //3-1.get api-401 response, update caseId, fileId to db.
                             if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
