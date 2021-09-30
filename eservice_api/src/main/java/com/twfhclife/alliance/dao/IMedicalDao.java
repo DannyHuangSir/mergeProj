@@ -65,4 +65,29 @@ public interface IMedicalDao {
     float getTransMedicalTreatmentByClaimsSeqId(@Param("transNum")String transNum)throws Exception;
     //查詢狀態
     List<MedicalTreatmentClaimVo> getTransMedicalTreatmentAndTransByAllinaceStatus(@Param("lists")ArrayList<String> lists)throws Exception;
+
+    /**
+     *   //進行查詢出對於已開啓傳送公會聯盟鏈并且覆核人員審核的案件數據
+     * @param code
+     * @param code1
+     * @return
+     * @throws Exception
+     */
+    List<TransMedicalTreatmentClaimVo> getTransMedicalTreatmentBySendAlliance(@Param("code")String code)throws Exception;
+
+    /**
+     * 添加新的案件信息,推送給聯盟的數據
+     * @param voTemp
+     * @return
+     * @throws Exception
+     */
+    int  addTransMedicalToMedicalTreatment(@Param("vo")TransMedicalTreatmentClaimVo voTemp)throws Exception;
+
+    /**
+     * 回寫是否推送到聯盟專場表中
+     * @param voTemp
+     * @return
+     * @throws Exception
+     */
+    int updetaTransMedicalTreatmentClaimBySendAlliancePush(@Param("vo")TransMedicalTreatmentClaimVo voTemp,@Param("code")String  code)throws Exception;
 }

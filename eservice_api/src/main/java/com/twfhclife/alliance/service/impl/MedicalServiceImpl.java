@@ -20,6 +20,7 @@ import com.twfhclife.generic.dao.adm.ParameterDao;
 import com.twfhclife.generic.utils.ApConstants;
 import com.twfhclife.generic.utils.CallApiCode;
 import com.twfhclife.generic.utils.MyJacksonUtil;
+import com.twfhclife.generic.utils.StatuCode;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -611,6 +612,24 @@ public class MedicalServiceImpl implements IMedicalService {
         return j;
     }
 
+    @Override
+    @Transactional
+    public int getTransMedicalTreatmentBySendAlliance() throws Exception {
+        //進行查詢出對於已開啓傳送公會聯盟鏈并且覆核人員審核的案件數據
+        List<TransMedicalTreatmentClaimVo>  voList=   iMedicalDao.getTransMedicalTreatmentBySendAlliance(StatuCode.AUDIT_CODE_Y.code);
+          int  rtn=0;
+        if (voList != null && voList.size() != 0) {
+            for (TransMedicalTreatmentClaimVo voTemp : voList) {
+                Float seq = iMedicalDao.getMedicalTreatmentSequence();
+                voTemp.setClaimSeqId(seq);
+                rtn = iMedicalDao.addTransMedicalToMedicalTreatment(voTemp);
+                if(rtn>0){
+                    iMedicalDao.updetaTransMedicalTreatmentClaimBySendAlliancePush(voTemp,StatuCode.AUDIT_CODE_Y.code);
+                }
+            }
+        }
+        return rtn;
+    }
 
 
     private MessageTriggerRequestVo getMessageTriggerRequestVo(String msgCode, List<String> receivers, Map<String, String> paramMap,String type) {

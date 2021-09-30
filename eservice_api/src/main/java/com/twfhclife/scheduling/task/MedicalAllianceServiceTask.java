@@ -181,6 +181,28 @@ public class MedicalAllianceServiceTask {
         }
     }
 
+    /**
+     * cron.saveToMedicalTrans.expression
+     * 數據轉存到tarns表中
+     */
+    @Scheduled(cron = "${cron.saveTransToMedical.expression}")
+    public  void  saveTransToMedical(){
+        log.info("Start saveTransToMedical.");
+        log.info("API_DISABLE="+API_DISABLE);
+
+        if("N".equals(API_DISABLE)){
+            try {
+                int  listVo = iMedicalService.getTransMedicalTreatmentBySendAlliance();
+            }catch(Exception e) {
+                e.printStackTrace();
+                log.error(e);
+            }
+        }
+
+        log.info("End saveTransToMedical.");
+
+    }
+
 
 
     /**
