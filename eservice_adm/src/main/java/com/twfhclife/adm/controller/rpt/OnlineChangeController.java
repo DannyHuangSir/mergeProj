@@ -1128,6 +1128,47 @@ public class OnlineChangeController extends BaseController {
 		return processResponseEntity();
 	}
 
+
+
+	/**
+	 * 醫療已完成
+	 *
+	 * @param TransStatusHistoryVo vo
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_022,
+			sqlId = EventCodeConstants.ONLINECHANGE_022_SQL_ID,
+			daoVoParamKey = "transVo"))
+	@PostMapping("/onlineChange/getOnlineChangeMedicalCompleted")
+	public ResponseEntity<ResponseObj> getOnlineChangeMedicalCompleted(@RequestBody TransStatusHistoryVo vo) {
+		try {
+			TransVo transVo = new TransVo();
+			transVo.setTransNum(vo.getTransNum());
+			transVo.setStatus("2");
+			transVo.setUpdateUser(getUserId());
+
+			int result = onlineChangeService.updateTransStatus(transVo);
+			if (result > 0) {
+				processSuccess(result);
+				vo.setStatus("2");
+				vo.setCustomerName(getUserId());
+				vo.setIdentity((String) getSession(ApConstants.LOGIN_USER_ROLE_NAME));
+				result = onlineChangeService.addTransStatusHistory(vo);
+				// 發送郵件
+				onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(),ApConstants.INS_CLAIM_COMPLETED ,vo.getStatus());
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Unable to getOnlineChangeComplete: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
 	/**
 	 * 已完成
 	 * 
