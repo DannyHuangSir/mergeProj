@@ -306,17 +306,17 @@
 
 		//公司选项变更
 		$("body").on('change', "[name='companysItem']", function(){
-			filterAndRestItems($(this).parent().parent().parent().parent())
+			filterAndRestItems($(this).parent().parent().parent().parent().parent())
 		})
 
 		//币别选项变更
 		$("body").on('change', "[name='currencysItem']", function(){
-			filterAndRestItems($(this).parent().parent().parent().parent())
+			filterAndRestItems($(this).parent().parent().parent().parent().parent())
 		})
 
 		//公司选项变更
 		$("body").on('change', "[name='invSelect']", function(){
-			setItemVals($(this).parent().parent().parent().parent())
+			setItemVals($(this).parent().parent().parent().parent().parent())
 		})
 
 		var transformationRemark = /*[[${transformationRemark}]]*/;
@@ -359,7 +359,7 @@
     			    +'<td style="padding-top: 70px !important;"><b class="tablesaw-cell-label">類型</b><span class="tablesaw-cell-content">觀查中</span></td>'
                     +'<td class="text-left">'
                     +'	<b class="tablesaw-cell-label">投資標的</b> <span class="tablesaw-cell-content"> <div class="col-sm-6" style="padding-left: 0;">'
-                    +'        <div class="selector-box">'
+                    +'      <div class="selector-box">'
                     +'          <select class="selector" name="companysItem">'
 
 					$(companysItems).each(function(index, e){

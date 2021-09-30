@@ -71,6 +71,7 @@ CREATE TABLE [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM](
 	[CPOA] [varchar](MAX) NULL,
 	[ALLIANCE_FILE_STATUS] [varchar](20) NULL,
 	[RE_UPLOAD] [varchar](2000) NULL,
+	[SEND_ALLIANCE_PUSH] [varchar](10) NULL,
 );
 alter table ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM
   add constraint TMTC_PK primary key (CLAIMS_SEQ_ID);

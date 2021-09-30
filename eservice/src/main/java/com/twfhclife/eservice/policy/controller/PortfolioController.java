@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -68,21 +69,11 @@ public class PortfolioController extends BaseController {
 			
 			// 投資型保單畫面UP UQ UR 畫面顯示修改 
 			//DOWN_LISTING_2 投資損益及投報率修改
-			Map<String, Map<String, ParameterVo>> sysParamMap = (Map<String, Map<String, ParameterVo>>) getSession(ApConstants.SYSTEM_PARAMETER);
-			if (sysParamMap.containsKey("SYSTEM_CONSTANTS")) {
-				Map<String, ParameterVo> paraMap = sysParamMap.get("SYSTEM_CONSTANTS");
-				ParameterVo vo = (ParameterVo) paraMap.get("INVEST_CODE");
-				ParameterVo vo2 = (ParameterVo) paraMap.get("DOWN_LISTING_2");
-				String[] investCode = vo.getParameterValue().split(",");
-				String[] downListing = vo2.getParameterValue().split(",");
-				for (String insuType : investCode) {
-					if (policyNo.startsWith(insuType)) {
-						return "frontstage/listing2-1";
-					}
-				}
-				for (String insuType2 : downListing) {
-					if (policyNo.startsWith(insuType2)) {
-						return "frontstage/listing2-2";
+			List<ParameterVo> parameterVos = getParameterList("LISTING_MAP_TEMPLATE");
+			if (!CollectionUtils.isEmpty(parameterVos)) {
+				for (ParameterVo parameterVo : parameterVos) {
+					if (parameterVo.getParameterCode().endsWith(policyNo.substring(0, 2))) {
+						return parameterVo.getParameterValue();
 					}
 				}
 			}

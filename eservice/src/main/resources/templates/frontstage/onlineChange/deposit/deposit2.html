@@ -214,7 +214,7 @@
 		/*<![CDATA[*/
 		function go(){   	
 			if($('input:radio[name="tab_group_2"]:checked').val() == 'option1'){
-				acctValue = Math.round(/*[[${depositVo.policyAcctValue}]]*/)
+				acctValue = Math.floor(/*[[${depositVo.policyAcctValue}]]*/)
 		        currency = [[${depositVo.currency}]]
 		        depositAmount = $("input[name='depositAmount']").val()
 
@@ -315,15 +315,22 @@
 		    })
 
 		    $("input[name='percent']").on('change', function(){
-                 percent = parseInt($(this).val())
+		          if (!checkDecimal2($(this).val())) {
+                     openAlert("只能輸入兩位小數")
+                     $(this).val("");
+                     $(context).find("[name='amount']").val("")
+                     return false;
+                 }
+
+		         percent = Math.floor($(this).val() * 100) / 100
                  context = $(this).parent().parent().parent()
                  if (percent <= maxPercent && percent >= minPercent) {
                      val = $(context).find("[name='acctValue']").val()
                      //百分比换算金额
                      if (currency == 'NTD') {
-                        $(context).find("[name='amount']").val(Math.round((val * percent)/100))
+                        $(context).find("[name='amount']").val(Math.floor((val * percent)/100))
                      } else {
-                          $(context).find("[name='amount']").val(Math.round(val * percent) / 100)
+                        $(context).find("[name='amount']").val(Math.floor(val * percent) / 100)
                      }
                     return
                  }
@@ -345,7 +352,7 @@
                  }
 
 		         currency = $(context).find("[name='currency']").val()
-                 let percent = Math.round($(this).val() / val * 100)
+                 let percent = Math.floor($(this).val() / val * 10000) / 100
 
 		         if (percent <= maxPercent && percent >= minPercent) {
                    $(context).find("[name='percent']").val(percent)

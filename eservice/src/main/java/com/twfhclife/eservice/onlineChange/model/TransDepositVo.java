@@ -10,7 +10,7 @@ public class TransDepositVo extends AbstractOnlineChangeModelBean {
 
     private Double amount;
 
-    private Long ratio;
+    private Double ratio;
 
     private String depositMethod;
 
@@ -84,11 +84,11 @@ public class TransDepositVo extends AbstractOnlineChangeModelBean {
         this.amount = amount;
     }
 
-    public Long getRatio() {
+    public Double getRatio() {
         return ratio;
     }
 
-    public void setRatio(Long ratio) {
+    public void setRatio(Double ratio) {
         this.ratio = ratio;
     }
 
