@@ -88,7 +88,7 @@ public class TransDepositServiceImpl implements ITransDepositService {
         transVo.setTransNum(transNum);
         transVo.setTransDate(new Date());
         transVo.setTransType(TransTypeUtil.DEPOSIT_PARAMETER_CODE);
-        transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+        transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_AUDITED);
         transVo.setUserId(user.getUserId());
         transVo.setCreateUser(user.getUserId());
         transVo.setCreateDate(new Date());
@@ -100,7 +100,7 @@ public class TransDepositServiceImpl implements ITransDepositService {
         hisVo.setUsersVo(user);
         //寫入狀態歷程
         hisVo.setTransNum(transNum);
-        hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+        hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_AUDITED);
         onlineChangeDao.addTransStatusHistory(hisVo);
 
         TransPolicyVo transPolicyVo = new TransPolicyVo();

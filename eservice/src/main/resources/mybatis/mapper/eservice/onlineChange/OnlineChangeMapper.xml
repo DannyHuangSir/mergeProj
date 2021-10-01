@@ -336,4 +336,8 @@
 		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A, ESERVICE_ADM.DBO.BLACK_LIST B  where A.TRANS_NUM = B.TRANS_NUM 	and B.ID_NO = #{blackListVo.idNo}
 		) A2 WHERE A1.TRANS_NUM=A2.TRANS_NUM
 	</select>
+
+	<select id="getBirdateByPolicyNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select LIPI_BIRTH from ESERVICE.dbo.LILIPI where LIPI_INSU_NO = #{policyNo}
+	</select>
 </mapper>

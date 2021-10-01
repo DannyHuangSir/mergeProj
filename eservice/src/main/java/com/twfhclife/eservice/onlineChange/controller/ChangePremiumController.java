@@ -173,7 +173,7 @@ public class ChangePremiumController extends BaseUserDataController  {
         }
         try {
             boolean applyed = transService.isTransApplyed(vo.getPolicyNoList().get(0),
-                    TransTypeUtil.CHANGE_PREMIUM_CODE, OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                    TransTypeUtil.CHANGE_PREMIUM_CODE, OnlineChangeUtil.TRANS_STATUS_AUDITED);
             // 沒有申請過才新增
             if (!applyed) {
                 if (!StringUtils.isEmpty(msg)) {

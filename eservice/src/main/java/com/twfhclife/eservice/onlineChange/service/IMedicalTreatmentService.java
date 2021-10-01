@@ -147,5 +147,6 @@ public interface IMedicalTreatmentService {
 	 * 當前保單是否為地一次提交,是否有對於的文件數據信息
 	 * */
     Integer getMedicalTreatmentWhetherFirst(String policyNo, String medicalTreatmentParameterCode)throws Exception;
-
+	//獲取生日
+	public String  getBirdateByPolicyNo(String policyNo);
 }

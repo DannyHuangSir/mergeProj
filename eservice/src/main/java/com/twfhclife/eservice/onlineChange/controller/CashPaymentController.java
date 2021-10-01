@@ -111,7 +111,7 @@ public class CashPaymentController extends BaseUserDataController {
     @RequestLog
     @PostMapping("/cashPayment2")
     public String cashPayment2(TransCashPaymentVo vo) {
-        addAttribute("checkCashPayment", transCashPaymentService.checkHasBankInfo(getUserDetail().getUserId()));
+        addAttribute("checkCashPayment", transCashPaymentService.checkHasBankInfo(vo.getPolicyNo()));
         addAttribute("transCashPaymentVo", vo);
         addAttribute("preAllocation", transCashPaymentService.getPreAllocation(vo.getPolicyNo()));
         return "frontstage/onlineChange/cashPayment/cashPayment2";
@@ -142,7 +142,7 @@ public class CashPaymentController extends BaseUserDataController {
         }
         try {
             boolean applyed = transService.isTransApplyed(vo.getPolicyNo(),
-                    TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE, OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                    TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE, OnlineChangeUtil.TRANS_STATUS_AUDITED);
             // 沒有申請過才新增
             if (!applyed) {
                 if (!StringUtils.isEmpty(msg)) {

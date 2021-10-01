@@ -18,5 +18,5 @@ public interface TransCashPaymentDao {
 
     TransCashPaymentVo getTransPaymentByTransNum(@Param("transNum")  String transNum);
 
-    int countTransBankInfo(@Param("userId") String userId);
+    int countTransBankInfo(@Param("policyNo") String userId);
 }

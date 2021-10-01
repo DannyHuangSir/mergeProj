@@ -877,6 +877,35 @@
 						openAlert("請選擇被保人生日");
 						return false;
 					}
+					var  boobirdate=true;
+						var  dataBirdate={
+							birdate:$('#birdate').val(),
+							policyNo:$('#policyNo').val()
+						};
+						//$.ajaxSetup({async: false});		
+						$.ajax({
+								type : 'POST',
+								contentType : 'application/json',
+								url : '/eservice/getMedicalVerifyAge',
+								async: false,
+								data : JSON.stringify(dataBirdate),
+								success : function(response) {
+									if (response.resultData == null ||  response.resultData == '') {
+										boobirdate= false;
+										openAlert('請正確輸入出生日期');
+									}
+								},
+								error :function() {
+									boobirdate= false;
+									openAlert('網絡異常請稍等在試');
+								}
+							});
+						//$.ajaxSetup({async: true});	
+					if(!boobirdate){
+						return 	boobirdate;
+					}
+
+
 					var objApplyItemList = $("input[name='applyItemList']"); //选择所有name="'applyItemList'"
 					//循环检测是不是被选中
 					var applyItemALL='';

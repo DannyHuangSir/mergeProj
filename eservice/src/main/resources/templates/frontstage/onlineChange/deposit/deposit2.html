@@ -224,7 +224,7 @@
 		        }
 
                  if (currency == 'NTD' && !checkDecimal(depositAmount)) {
-                     openAlert("保单不支持输入小数")
+                     openAlert("保單不允許輸入小數")
                      $("input[name='depositAmount']").val("")
                      return false;
                  }
@@ -345,7 +345,7 @@
 		         val = $(context).find("[name='acctValue']").val()
 
                  if (currency == 'NTD' && !checkDecimal($(this).val())) {
-                     openAlert("保单不支持输入小数")
+                     openAlert("保單不允許輸入小數")
                      $(this).val("")
                      $(context).find("[name='percent']").val("")
                      return false;

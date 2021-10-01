@@ -53,7 +53,7 @@ public class TransChangePremiumServiceImpl implements ITransChangePremiumService
             transVo.setTransNum(transNum);
             transVo.setTransDate(new Date());
             transVo.setTransType(TransTypeUtil.CHANGE_PREMIUM_CODE);
-            transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+            transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_AUDITED);
             transVo.setUserId(userId);
             transVo.setCreateUser(userId);
             transVo.setCreateDate(new Date());

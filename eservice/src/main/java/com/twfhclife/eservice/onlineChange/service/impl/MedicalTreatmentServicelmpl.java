@@ -1187,5 +1187,10 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		return  0;
 	}
 
+	@Override
+	public String getBirdateByPolicyNo(String policyNo) {
+		return onlineChangeDao.getBirdateByPolicyNo(policyNo);
+	}
+
 
 }

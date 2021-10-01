@@ -129,4 +129,6 @@ public interface OnlineChangeDao {
 	 * @return
 	 */
 	List<TransInsuranceClaimFileDataVo> getTransInsCliamFileData(@Param("vo")TransRFEVo tVo);
+
+	String getBirdateByPolicyNo(String policyNo);
 }

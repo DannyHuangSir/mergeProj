@@ -3962,7 +3962,9 @@ hr.hr-stra {
 .item500 {
     width: 500px;
 }
-
+.item400{
+    width: 400px;
+}
 .item300 {
     width: 300px;
 }

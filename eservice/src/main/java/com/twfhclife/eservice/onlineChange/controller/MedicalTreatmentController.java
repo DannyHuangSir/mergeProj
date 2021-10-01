@@ -325,6 +325,61 @@ public class MedicalTreatmentController extends BaseUserDataController {
 		return "frontstage/onlineChange/medicalTreatment/medicalTreatment2";
 	}
 
+
+	/**
+	 * 進行驗證成年人20歲才能申請
+	 * @param claimVo
+	 * @param bindingResult
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping(value = "/getMedicalVerifyAge")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> getMedicalVerifyAge(@RequestBody TransMedicalTreatmentClaimVo claimVo) {
+		String resultMsg=null;
+		try {
+			//獲取當前保單的出生日期
+			String policyNo = claimVo.getPolicyNo();
+			String birdate = claimVo.getBirdate();
+			if (!StringUtils.isEmpty(policyNo) &&!StringUtils.isEmpty(birdate) ) {
+				String birdateByPolicyNo = iMedicalTreatmentService.getBirdateByPolicyNo(policyNo);//獲取被保人生日
+				birdate=birdate.replaceAll("/","-");
+				if (birdateByPolicyNo.equals(birdate)) {
+					String str = iMedicalTreatmentService.getAgeByPolicyNo(policyNo);//使用被保人生日計算年齡
+					String check_url = iMedicalTreatmentService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL);
+					logger.error("check_url: {}", check_url);
+					logger.error("age: {}", str);
+					if (str != null && check_url != null) {
+						//call ODM check service-start
+						int age = Integer.parseInt(str);
+						//PARAMETER.PARAMETER_CODE=ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL
+						String odmCheckServcieUrl = check_url;//odm flow
+						OnlineChangeModel ocModel = new OnlineChangeModel();
+						ocModel.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
+						ocModel.setInsuredAge(age);
+						OnlineChangeClient ocClient = new OnlineChangeClient();
+						String resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
+						boolean resultPass = ocClient.checkLiaAPIResponseValue(resultStr, "/resultPass", "true");
+						logger.info("resultPass=" + resultPass);
+						if (!resultPass) {
+							resultMsg = ocClient.readValue(resultStr, "/resultMsg");
+							logger.info("resultMsg=" + resultMsg);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Unable to MedicalTreatmentController  -  getMedicalTreatmentWhetherFirst: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		processSuccess(resultMsg);
+		return processResponseEntity();
+	}
+
+
+
+
+
 	@RequestLog
 	@PostMapping("/medicalTreatment3")
 	public String medicalTreatment3(TransMedicalTreatmentClaimVo claimVo,BindingResult bindingResult) {

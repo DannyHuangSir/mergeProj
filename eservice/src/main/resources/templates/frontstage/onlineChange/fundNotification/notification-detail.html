@@ -3,14 +3,14 @@
 	<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
 	<thead>
 		<tr class="table2 orange2">
-			<th style="background-color: #DFFFDF;" class="text-left ">類型</th>
-			<th style="background-color: #DFFFDF;" class="text-left ">投資標的</th>
-			<th style="background-color: #DFFFDF;" class="item">幣別</th>
-			<th style="background-color: #DFFFDF;"scope="col">投資收益等級</th>
-			<th style="background-color: #DFFFDF;"scope="col">幣別參考價值</th>
-			<th style="background-color: #DFFFDF;"scope="col">參考報酬率百分比</th>
-			<th style="background-color: #DFFFDF;" class="item100">停利點</th>
-			<th style="background-color: #DFFFDF;" class="item100">停損點</th>
+			<th style="background-color: #DFFFDF;padding:3px 10px;" class="text-left item90">類型</th>
+			<th style="background-color: #DFFFDF;padding:3px 10px;" class="text-left item120">投資標的</th>
+			<th style="background-color: #DFFFDF;padding:3px 10px;" class="item item90">幣別</th>
+			<th style="background-color: #DFFFDF;padding:3px 10px;" class="item120">投資收益等級</th>
+			<th style="background-color: #DFFFDF;padding:3px 10px;" class="item120">幣別參考價值</th>
+			<th style="background-color: #DFFFDF;padding:3px 10px;" class="item140">參考報酬率百分比</th>
+			<th style="background-color: #DFFFDF;padding:3px 10px;" class="item90">停利點</th>
+			<th style="background-color: #DFFFDF;padding:3px 10px;" class="item90">停損點</th>
 		</tr>
 	</thead>
 
@@ -18,19 +18,22 @@
 			<th:block th:each="vo, rowStat : ${transFundNotificationDtlList}">
 				<th:block th:if="${vo.type == '1'}">
 					<tr class="h65 tr-odd-noEvent">
-						<td>
+						<td style="padding:3px 10px;">
 							已持有
 						</td>
-						<td class="text-left"><th:block th:text="${vo.invtName}"/>
+						<td style="padding:3px 10px;" class="text-left"><th:block th:text="${vo.invtName}"/>
 							<p class="enSmall"><th:block th:text="${vo.fundCode}"/></p>
 						</td>
-						<td><th:block th:text="${vo.currency}"/></td>
-						<td><th:block th:text="${vo.riskBeneLevel}"/></td>
-						<td>
-							<p><th:block th:text="${vo.acctValue}"/><i class="my5"><th:block th:text="${vo.inCurr}"/></i></p>
+						<td style="padding:3px 10px;"><th:block th:text="${vo.currency}"/></td>
+						<td style="padding:3px 10px;"><th:block th:text="${vo.riskBeneLevel}"/></td>
+						<td style="padding:3px 10px;">
+							<p>
+								<th:block th:text="${vo.acctValue != null}
+												? ${#numbers.formatDecimal(vo.acctValue, 0, 'DEFAULT', 0, 'COMMA')}
+												: '&nbsp;'"/><i class="my5"><th:block th:text="${vo.inCurr}"/></i></p>
 						</td>
-						<td><th:block th:text="${vo.roiRate}"/>%</td>
-						<td>
+						<td style="padding:3px 10px;"><th:block th:text="${vo.roiRate}"/>%</td>
+						<td style="padding:3px 10px;">
 							<th:block th:if="${vo.percentageUp != null}">
 								<th:block th:text="${vo.percentageUp}"/>%
 							</th:block>
@@ -39,7 +42,7 @@
 							</th:block>
 
 						</td>
-						<td>
+						<td style="padding:3px 10px;">
 						<div>
 							<th:block th:if="${vo.percentageDown != null}">
 								<th:block th:text="${vo.percentageDown}"/>%
@@ -57,10 +60,10 @@
 	<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
 		<thead>
 		<tr class="table2 orange2">
-			<th style="background-color: #DFFFDF;" class="text-left ">類型</th>
-			<th style="background-color: #DFFFDF;" class="text-left ">投資標的</th>
-			<th style="background-color: #DFFFDF;" class="item100">現行淨值上限	</th>
-			<th style="background-color: #DFFFDF;" class="item100">現行淨值下限</th>
+			<th style="background: #FDE3D2;" class="text-left ">類型</th>
+			<th style="background: #FDE3D2;" class="text-left ">投資標的</th>
+			<th style="background: #FDE3D2;" class="item180">現行淨值上限	</th>
+			<th style="background: #FDE3D2;" class="item180">現行淨值下限</th>
 		</tr>
 		</thead>
 		<th:block th:each="vo, rowStat : ${transFundNotificationDtlList}">
@@ -75,7 +78,7 @@
 							</td>
 							<td>
 								<th:block th:if="${vo.upValue != null}">
-									<th:block th:text="${vo.upValue}"/>%
+									<th:block th:text="${vo.upValue}"/>
 								</th:block>
 								<th:block th:if="${vo.upValue == null}">
 									--

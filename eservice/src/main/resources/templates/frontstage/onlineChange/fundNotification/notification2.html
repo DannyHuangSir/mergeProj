@@ -43,7 +43,7 @@
 </th:block>
 <!--major 3 tabs-->
 <div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
-<section class="grey applyInner has-special-note fullContent">
+<section class="grey applyInner has-special-note notification2 fullContent">
 	<div class="container bg3">
 		<ul class="breadcrumb detail1">
 			<li>
@@ -108,9 +108,9 @@
 					<thead>
 					<tr class="table2 orange2" style="background: #FDE3D2;">
 						<th class="item90"  style="background: #FDE3D2;">類型</th>
-						<th class="item400"  style="background: #FDE3D2;">投資標的</th>
+						<th class="item230"  style="background: #FDE3D2;">投資標的</th>
 						<th class="item100"  style="background: #FDE3D2;">淨值日</th>
-						<th  style="background: #FDE3D2;">單位淨值</th>
+						<th class="item100"  style="background: #FDE3D2;">單位淨值</th>
 						<th  style="background: #FDE3D2;">現行淨值上限</th>
 						<th  style="background: #FDE3D2;">現行淨值下限</th>
 						<th class="item90"  style="background: #FDE3D2;"></th>
@@ -363,11 +363,14 @@
                     +'          <select class="selector" name="companysItem">'
 
 					$(companysItems).each(function(index, e){
-						  item = item + '<option'
-						  if (vm.company != null && vm.company == e.VALUE) {
-						  	item = item + ' selected'
+						  if (e != null) {
+						  	  item = item + '<option'
+							  if (vm.company != null && vm.company == e.VALUE) {
+								item = item + ' selected'
+							  }
+							  item = item +  ' value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
 						  }
-						  item = item +  ' value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+
 					})
 
                      item = item +  '</select>'
@@ -378,11 +381,13 @@
                      +'        <select class="selector" name="currencysItem">'
 
                      $(currencysItems).each(function(index, e){
-                     	  item = item + '<option'
-						  if (vm.company != null && vm.invtExchCurr == e.VALUE) {
-						  	item = item + ' selected'
-						  }
-						  item = item +  ' value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+                     	  if (e != null) {
+                     	  	 item = item + '<option'
+							  if (vm.company != null && vm.invtExchCurr == e.VALUE) {
+								item = item + ' selected'
+							  }
+							  item = item +  ' value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+                     	  }
 					 })
 
                      item = item +  '</select>'
@@ -404,12 +409,12 @@
                     item = item + ' <td style="padding-top: 70px !important;"><b class="tablesaw-cell-label">單位淨值</b><span class="tablesaw-cell-content"  name="sellPrice">' + (vm.sellPrice == null ? '' : vm.sellPrice) + '</span></td>'
 
                     item = item + ' <td style="padding-top: 65px !important;"><b class="tablesaw-cell-label">現行淨值上限</b>'
-                    item = item +'   <span class="tablesaw-cell-content"> <input type="text" class="col-sm-8 lineHigh28" name="upValue" value="' + (vm.upValue == null ? '' : vm.upValue) + '"><span class="sub1"></span></span>'
+                    item = item +'   <span class="tablesaw-cell-content"> <input type="text" class="col-sm-8 lineHigh28" name="upValue" value="' + (vm.upValue == null ? '' : vm.upValue) + '"> </span>'
 
                     item = item +' </td>'
 
                     item = item + ' <td style="padding-top: 65px !important;"><b class="tablesaw-cell-label">現行淨值下限</b>'
-                    item = item +' 		<span class="tablesaw-cell-content"><input type="text" class="col-sm-8 lineHigh28" name="downValue" value="' + (vm.downValue == null ? '' : vm.downValue) + '"><span class="sub1"></span></span>'
+                    item = item +' 		<span class="tablesaw-cell-content"><input type="text" class="col-sm-8 lineHigh28" name="downValue" value="' + (vm.downValue == null ? '' : vm.downValue) + '"> </span>'
                     item = item +' </td>'
                     +' <td style="padding-top: 70px !important;"><a class="btn-cancel" onclick="removeInvestmentList(this)">删除</a></td>'
                 +' </tr>'

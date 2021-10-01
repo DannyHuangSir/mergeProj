@@ -50,7 +50,7 @@ public class TransCashPaymentServiceImpl implements ITransCashPaymentService {
             transVo.setTransNum(transNum);
             transVo.setTransDate(new Date());
             transVo.setTransType(TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
-            transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+            transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_AUDITED);
             transVo.setUserId(userId);
             transVo.setCreateUser(userId);
             transVo.setCreateDate(new Date());
@@ -88,7 +88,7 @@ public class TransCashPaymentServiceImpl implements ITransCashPaymentService {
     }
 
     @Override
-    public Boolean checkHasBankInfo(String userId) {
-        return transCashPaymentDao.countTransBankInfo(userId) > 0;
+    public Boolean checkHasBankInfo(String policyNo) {
+        return transCashPaymentDao.countTransBankInfo(policyNo) > 0;
     }
 }

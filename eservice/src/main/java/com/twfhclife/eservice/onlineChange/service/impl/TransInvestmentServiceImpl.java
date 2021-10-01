@@ -386,7 +386,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
         transVo.setTransDate(date);
         //注意:未來保費投資標的與分配比例  是方法addNewInvestmentApply
         transVo.setTransType(INVESTMENT_CONVERSION_CODE);
-        transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+        transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_AUDITED);
         transVo.setUserId(user.getUserId());
         transVo.setCreateUser(user.getUserId());
         transVo.setCreateDate(date);
@@ -398,7 +398,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
         hisVo.setUsersVo(user);
         //寫入狀態歷程
         hisVo.setTransNum(transNum);
-        hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+        hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_AUDITED);
         onlineChangeDao.addTransStatusHistory(hisVo);
 
         TransPolicyVo transPolicyVo = new TransPolicyVo();
@@ -553,7 +553,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
         transVo.setTransNum(transNum);
         transVo.setTransDate(new Date());
         transVo.setTransType(INVESTMENT_PARAMETER_CODE);
-        transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+        transVo.setStatus(OnlineChangeUtil.TRANS_STATUS_AUDITED);
         transVo.setUserId(user.getUserId());
         transVo.setCreateUser(user.getUserId());
         transVo.setCreateDate(new Date());
@@ -565,7 +565,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
         hisVo.setUsersVo(user);
         //寫入狀態歷程
         hisVo.setTransNum(transNum);
-        hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+        hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_AUDITED);
         onlineChangeDao.addTransStatusHistory(hisVo);
 
         TransPolicyVo transPolicyVo = new TransPolicyVo();

@@ -173,7 +173,7 @@ public class TransDepositController extends BaseUserDataController {
                 logger.error(e);
                 return "forward:deposit4";
             }
-            return "frontstage/onlineChange/investment/investment-success";
+            return "frontstage/onlineChange/deposit/deposit-success";
         }
     }
 

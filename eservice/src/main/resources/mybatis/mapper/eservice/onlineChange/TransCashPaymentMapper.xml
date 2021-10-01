@@ -86,8 +86,6 @@
   </select>
 
   <select id="countTransBankInfo" resultType="int">
-    SELECT COUNT(*) FROM TRANS T
-    LEFT JOIN TRANS_BANK_INFO TBI ON T.TRANS_NUM = TBI.TRANS_NUM
-    WHERE T.USER_ID = #{userId} AND TRANS_TYPE = 'CHANGE_PAY_ACCOUNT' AND STATUS = 2
+    SELECT COUNT(*) FROM ESERVICE.DBO.POLICY_PAYER WHERE POLICY_NO = #{policyNo}
   </select>
 </mapper>
