@@ -20,7 +20,7 @@ public class TransInvestmentUtil {
 
     private static final Logger logger = LogManager.getLogger(TransInvestmentUtil.class);
     private static final String TRANS_TYPE = "INVESTMENT";
-    private static final String TRANS_STATUS = "-1";   // 申請中
+    private static final String TRANS_STATUS = "1";   // 申請中
     private static final String UPLOAD_CODE = "029"; // 介接代碼
 
     public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate) {

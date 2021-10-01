@@ -18,7 +18,7 @@ public class TransRiskLevelUtil {
 
     private static final Logger logger = LogManager.getLogger(TransRiskLevelUtil.class);
     private static final String TRANS_TYPE = "RISK_LEVEL";
-    private static final String TRANS_STATUS = "-1";   // 申請中
+    private static final String TRANS_STATUS = "1";   // 申請中
     private static final String UPLOAD_CODE = "031"; // 介接代碼
 
     public static void updateIndividual(String transNum) {

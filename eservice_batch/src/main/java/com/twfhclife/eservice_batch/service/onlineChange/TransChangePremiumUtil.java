@@ -20,7 +20,7 @@ public class TransChangePremiumUtil {
 
     private static final Logger logger = LogManager.getLogger(TransChangePremiumUtil.class);
     private static final String TRANS_TYPE = "CHANGE_PREMIUM";
-    private static final String TRANS_STATUS = "-1";   // 申請中
+    private static final String TRANS_STATUS = "1";   // 申請中
     private static final String UPLOAD_CODE = "034"; // 介接代碼
 
     public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate) {

@@ -180,7 +180,7 @@ public class BatchUploadOnlineChangeSheetService {
 					// 保單狀態 policy status
 					listPrintVo.add(new ReportPrintListVo(paramMap.get("POLICY_STATUS").get(infoVo.getStatus()), textOrder++));
 					// 投保始期 policy effective_date
-					listPrintVo.add(new ReportPrintListVo(sdf.format(infoVo.getEffectiveDate()), textOrder++));
+					listPrintVo.add(new ReportPrintListVo(infoVo.getEffectiveDate() == null ? null : sdf.format(infoVo.getEffectiveDate()), textOrder++));
 					// 繳費年期 policy premYear
 					listPrintVo.add(new ReportPrintListVo(MyStringUtil.objToStr(infoVo.getPremYear()), textOrder++));
 					// 繳別 policy paymentMode

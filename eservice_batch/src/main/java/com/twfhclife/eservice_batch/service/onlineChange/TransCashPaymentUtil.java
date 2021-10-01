@@ -20,7 +20,7 @@ public class TransCashPaymentUtil {
 
     private static final Logger logger = LogManager.getLogger(TransCashPaymentUtil.class);
     private static final String TRANS_TYPE = "CASH_PAYMENT";
-    private static final String TRANS_STATUS = "-1";   // 申請中
+    private static final String TRANS_STATUS = "1";   // 申請中
     private static final String UPLOAD_CODE = "033"; // 介接代碼
 
     public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate) {
