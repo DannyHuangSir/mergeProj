@@ -116,7 +116,6 @@ create table ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM_FILEDATAS
 	[PATH] [varchar](200) NULL,
 	[CREATE_DATE] [datetime]  default CURRENT_TIMESTAMP not null,
 	[RFE_ID] [float] NULL,
-	[EZ_ACQUIRE_TASK_ID] [varchar](100) NULL,
 	[FILE_BASE64] [varchar](max) NULL,
 	[FILE_ID] [varchar](50) NULL,
 	[FILE_STATUS][varchar](1000) NULL,
