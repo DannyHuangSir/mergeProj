@@ -123,6 +123,7 @@ public class MedicalAllianceServiceTask {
 
     @Autowired
     private MailService mailService;
+    
     @Autowired
     private  IMedicalService iMedicalService;
     /***
@@ -332,7 +333,7 @@ public class MedicalAllianceServiceTask {
                 List<MedicalTreatmentClaimVo> listMedical = iMedicalService.getMedicalTreatmentByNoCaseId();
                 //2.call api-401
                 if(listMedical!=null && !listMedical.isEmpty() && listMedical.size()>0) {
-                    log.info("取得醫療申請上傳資料  條數-----="+listMedical.size());
+                    log.info("取得醫療申請上傳資料條數="+listMedical.size());
                     for (MedicalTreatmentClaimVo vo : listMedical) {
                     	try {
                             if(vo!=null) {

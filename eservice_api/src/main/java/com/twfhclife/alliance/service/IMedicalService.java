@@ -22,13 +22,13 @@ public interface IMedicalService {
     List<MedicalTreatmentClaimVo> getMedicalTreatmentByNoCaseId()throws Exception;
     //進行會寫CaseID與聯盟狀態
     int updateMedicalTreatmentClaimToAlliance(MedicalTreatmentClaimVo vo)throws  Exception;
-    //491 推送給聯盟資料
-    String postForEntity(String url_api401, MedicalTreatmentClaimVo vo, String s)throws Exception;
+    //401 推送給聯盟資料
+    String postForEntity(String url_api401, MedicalTreatmentClaimVo vo, String s);
     //獲取需要進行取/不取醫院資料數據
     List<MedicalTreatmentClaimVo> getTransMedicalTreatmentByCaseIdAndAllinaceStatus(String itpsPthg,String  itpsEnd)throws Exception;
     //進行回應狀態醫院資料信息描述
     int updateTarnsMedicalTreatmentClaimToAllianceFileStatus(MedicalTreatmentClaimVo vo)throws  Exception;
-//進行獲取流程結束和不進行取用資料的數據
+    //進行獲取流程結束和不進行取用資料的數據
     List<MedicalTreatmentClaimVo> getTransMedicalTreatmentByAllinaceStatus(String pqhfEnd, String itpsEnd)throws  Exception;
     //進行回壓聯盟結束流程狀態
     int updateTarnsMedicalTreatmentClaimToAllianceStatus(MedicalTreatmentClaimVo vo)throws  Exception;
