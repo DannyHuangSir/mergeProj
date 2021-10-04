@@ -15,6 +15,7 @@ import java.util.List;
  * 醫療
  */
 public interface IMedicalService {
+
     /**
      * 取得醫療申請上傳資料
      * @return
@@ -22,8 +23,7 @@ public interface IMedicalService {
     List<MedicalTreatmentClaimVo> getMedicalTreatmentByNoCaseId()throws Exception;
     //進行會寫CaseID與聯盟狀態
     int updateMedicalTreatmentClaimToAlliance(MedicalTreatmentClaimVo vo)throws  Exception;
-    //401 推送給聯盟資料
-    String postForEntity(String url_api401, MedicalTreatmentClaimVo vo, String s);
+
     //獲取需要進行取/不取醫院資料數據
     List<MedicalTreatmentClaimVo> getTransMedicalTreatmentByCaseIdAndAllinaceStatus(String itpsPthg,String  itpsEnd)throws Exception;
     //進行回應狀態醫院資料信息描述

@@ -4,22 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.twfhclife.alliance.model.*;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.alliance.service.IExternalService;
 import com.twfhclife.alliance.service.IMedicalService;
-import com.twfhclife.alliance.service.impl.AllianceServiceImpl;
+import com.twfhclife.alliance.service.impl.MedicalServiceImpl;
+import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
-import com.twfhclife.eservice.api.elife.domain.TransAddRequest;
-import com.twfhclife.eservice.api.elife.domain.TransAddResponse;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimFileDataVo;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
 import com.twfhclife.eservice.onlineChange.service.*;
-import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
 import com.twfhclife.eservice.web.model.HospitalVo;
@@ -33,7 +28,6 @@ import com.twfhclife.generic.utils.StatuCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bouncycastle.voms.VOMSAttribute;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -84,7 +78,7 @@ public class MedicalAllianceServiceTask {
     @Autowired
     IHospitalInsuranceCompanyServcie iHospitalInsuranceCompanyServcie;
 
-    //@Value("${medicalAlliance.api401.url}")
+	//@Value("${medicalAlliance.api401.url}")
     public String URL_API401;
 
     //@Value("${medicalAlliance.api402.url}")
@@ -101,10 +95,13 @@ public class MedicalAllianceServiceTask {
 
     //@Value("${medicalAlliance.api406.url}")
     public String URL_API406;
+    
     //@Value("${medicalAlliance.api407.url}")
     public String URL_API407;
+    
     //@Value("${medicalAlliance.api408.url}")
     public String URL_API408;
+    
     //@Value("${cron.api.disable}")
     public String API_DISABLE;
 
@@ -113,10 +110,10 @@ public class MedicalAllianceServiceTask {
     private IParameterService parameterService;
 
     @Autowired
-    private AllianceServiceImpl allianceServiceImpl;
-
-    @Autowired
     private IMedicalTreatmentService iMedicalTreatmentService;
+    
+    @Autowired
+    private MedicalTreatmentExternalServiceImpl medicalExternalServiceImpl;
 
     @Autowired
     private SmsService smsService;
@@ -125,7 +122,8 @@ public class MedicalAllianceServiceTask {
     private MailService mailService;
     
     @Autowired
-    private  IMedicalService iMedicalService;
+    private IMedicalService iMedicalService;
+    
     /***
      * 獲取API對於的數據信息信息
      */
@@ -137,7 +135,7 @@ public class MedicalAllianceServiceTask {
         if (resultBASELList != null) {
             resultBASELList.forEach(parameterItem ->{
                 if ("alliance.api.accessToken".equals(parameterItem.getParameterName())) {
-                    allianceServiceImpl.setACCESS_TOKEN(parameterItem.getParameterValue());
+                	medicalExternalServiceImpl.setACCESS_TOKEN(parameterItem.getParameterValue());
                 }
             });
         }
@@ -193,7 +191,7 @@ public class MedicalAllianceServiceTask {
 
         if("N".equals(API_DISABLE)){
             try {
-                int  listVo = iMedicalService.getTransMedicalTreatmentBySendAlliance();
+                int listVo = iMedicalService.getTransMedicalTreatmentBySendAlliance();
             }catch(Exception e) {
                 e.printStackTrace();
                 log.error(e);
@@ -338,9 +336,10 @@ public class MedicalAllianceServiceTask {
                     	try {
                             if(vo!=null) {
                                 //3.call api-401 to upload.
-                                String strResponse = iMedicalService.postForEntity(URL_API401, vo, "API-401理賠申請上傳");
+                                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API401, vo, "API-401理賠申請上傳");
                                 //String  strResponse="{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"caseId\":\"20210125153001-45c17f68e615-L01\"}}";
                                 log.info("call URL_API401,strResponse="+strResponse);
+                                
                                 //3-1.get api-401 response, update caseId, fileId to db.
                                 if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
                                     String caseId = MyJacksonUtil.readValue(strResponse, "/data/caseId");
@@ -443,8 +442,8 @@ public class MedicalAllianceServiceTask {
         if ("N".equals(API_DISABLE)) {
             try {
                 //1.查詢案件資訊資料
-                    //1.1 查詢案件的CaseId  未取得查詢理賠資料
-            List<NotifyOfNewCaseMedicalVo> notifyList=   iMedicalService.getNotifyOfNewCaseMedicalByNcStatus(NotifyOfNewCaseMedicalVo.STATUS_DEFAULT);
+                //1.1 查詢案件的CaseId  未取得查詢理賠資料
+            	List<NotifyOfNewCaseMedicalVo> notifyList = iMedicalService.getNotifyOfNewCaseMedicalByNcStatus(NotifyOfNewCaseMedicalVo.STATUS_DEFAULT);
                 //2.call api-403
                 if(notifyList!=null && !notifyList.isEmpty() && notifyList.size()>0) {
                     for (NotifyOfNewCaseMedicalVo vo : notifyList) {
@@ -462,7 +461,7 @@ public class MedicalAllianceServiceTask {
                              *  1.新案件進行創建
                              *  2.已有的案件進行查詢出
                              * */
-                            String transNum= iMedicalService.getTransMedicalTreatmentByCaseId(caseId);
+                            String transNum = iMedicalService.getTransMedicalTreatmentByCaseId(caseId);
                             if (!org.springframework.util.StringUtils.isEmpty(transNum)) {
                                 unParams.put("transNum", transNum);
                             }else{
@@ -995,61 +994,6 @@ public class MedicalAllianceServiceTask {
         }
         log.info("-----------checkLiaAPIResponseValue-----return  ------"+b);
         return b;
-    }
-
-
-    public static void main(String[] args) {
-            try {
-                Map<String, String> params = new HashMap<>();
-                //聯盟鏈歷程參數
-                Map<String, String> unParams = new HashMap<>();
-                unParams.put("name", "API-407查詢醫療醫院清單");
-                unParams.put("caseId", null);
-                unParams.put("transNum", null);
-                // String strResponse = allianceService.postForEntity(URL_API407, params, unParams);
-                //模仿返回的json數據
-                String strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":[{\"hpId\":\"0101090517\",\"hpName\":\"臺北市立聯合醫院\"},{\"hpId\":\" 0401180014\",\"hpName\":\"國立台灣⼤學醫學院附設醫院\"}]}";
-                System.out.println("API407-查詢醫療醫院清單參數  " + strResponse);
-                List<HospitalVo> hospitalVos = new ArrayList<>();
-                if (new MedicalAllianceServiceTask().checkLiaAPIResponseValue(strResponse, "/code", "0")) {
-                    String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
-                    //parser "to"-start
-                    ObjectMapper mapper = new ObjectMapper();
-                    java.util.List<JsonNode> listNode = mapper.readTree(dataString).findPath("to").findValues("companyId");
-                    List<CompanyVo> listTo = null;
-                    if(listNode!=null && listNode.size()>0) {
-                        listTo = new java.util.ArrayList<CompanyVo>();
-                        for(JsonNode jn : listNode) {
-                            CompanyVo tempCvo = new CompanyVo();
-                            tempCvo.setCompanyId(jn.asText());
-                            listTo.add(tempCvo);
-                        }
-
-                    }else {
-                        System.out.println("to/company is null or empty.");
-                    }
-                    //remove "TO:[]"
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    JsonNode rootNode  = objectMapper.readTree(dataString);
-                    dataString = rootNode.toString();
-                   // List<HospitalVo> obj = (List<HospitalVo>) MyJacksonUtil.json2Object(dataString, HospitalVo.class);
-                    //Gson builderTime = (new GsonBuilder()).setDateFormat("yyyy/MM/dd HH:mm:ss").create();
-                    List<HospitalVo> obj = new Gson().fromJson(dataString, new TypeToken<List<HospitalVo>>(){}.getType());
-                    if(obj!=null) {
-                        //log.info("obj is not null.");
-                        hospitalVos = (List)obj;
-                    }else {
-                        System.out.println("-----------obj!=null----------------");
-                    }
-
-                }
-
-                if(!CollectionUtils.isEmpty(hospitalVos)) {
-                    System.out.println("CollectionUtils.isEmpty=="+hospitalVos);
-                }
-            } catch (Exception e) {
-            e.printStackTrace();
-            }
     }
 
 
