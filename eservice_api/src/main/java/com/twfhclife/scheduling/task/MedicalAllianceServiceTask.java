@@ -334,30 +334,35 @@ public class MedicalAllianceServiceTask {
                 if(listMedical!=null && !listMedical.isEmpty() && listMedical.size()>0) {
                     log.info("取得醫療申請上傳資料  條數-----="+listMedical.size());
                     for (MedicalTreatmentClaimVo vo : listMedical) {
-                        if(vo!=null) {
-                            //3.call api-401 to upload.
-                            String strResponse = iMedicalService.postForEntity(URL_API401, vo, "API-401理賠申請上傳");
-                            //String  strResponse="{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"caseId\":\"20210125153001-45c17f68e615-L01\"}}";
-                            log.info("call URL_API401,strResponse="+strResponse);
-                            //3-1.get api-401 response, update caseId, fileId to db.
-                            if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
-                                String caseId = MyJacksonUtil.readValue(strResponse, "/data/caseId");
-                                log.info("caseId="+caseId);
-                                String msg = MyJacksonUtil.readValue(strResponse, "/msg");
-                                vo.setCaseId(caseId);
+                    	try {
+                            if(vo!=null) {
+                                //3.call api-401 to upload.
+                                String strResponse = iMedicalService.postForEntity(URL_API401, vo, "API-401理賠申請上傳");
+                                //String  strResponse="{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"caseId\":\"20210125153001-45c17f68e615-L01\"}}";
+                                log.info("call URL_API401,strResponse="+strResponse);
+                                //3-1.get api-401 response, update caseId, fileId to db.
+                                if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+                                    String caseId = MyJacksonUtil.readValue(strResponse, "/data/caseId");
+                                    log.info("caseId="+caseId);
+                                    String msg = MyJacksonUtil.readValue(strResponse, "/msg");
+                                    vo.setCaseId(caseId);
                                     //更新TRANS_MEDICAL_TREATMENT_CLAIM  與  MEDICAL_TREATMENT_CLAIM
                                     //進行回應CaseId  與  allianceStatus
-                                //進行獲取聯盟的狀態信息
-                                String parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_FTPS_PQHG);
-                                vo.setAllianceStatus(parameterValueByCode);
-                                log.info("updateMedicalTreatmentClaimToAlliance 的參數-----="+vo);
-                                iMedicalService.updateMedicalTreatmentClaimToAlliance(vo);
+                                    //進行獲取聯盟的狀態信息
+                                    String parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_FTPS_PQHG);
+                                    vo.setAllianceStatus(parameterValueByCode);
+                                    log.info("updateMedicalTreatmentClaimToAlliance 的參數-----="+vo);
+                                    iMedicalService.updateMedicalTreatmentClaimToAlliance(vo);
+                                }
+
                             }
+                    	}catch(Exception e) {
+                    		log.info(e.toString());
+                    	}
+                    	
+                    }//end-for
 
-                        }
-                    }
-
-                }
+                }//end-if
             } catch (Exception e) {
                 log.error(e);
             }

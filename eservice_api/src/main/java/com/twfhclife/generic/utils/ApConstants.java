@@ -125,7 +125,7 @@ public interface ApConstants {
 	/**
 	 *  保單理賠醫起通請閱讀並同意以下條款
 	 * */
-	public static final String MEDICAL_TREATMENT_CONSENT = "MEDICAL_TREATMENT_CONSENT";
+	public static final String MEDICAL_TREATMENT_CONTENT = "MEDICAL_TREATMENT_CONTENT";
 	/***
 	 * 聯盟醫起通醫療文件類型組
 	 **/

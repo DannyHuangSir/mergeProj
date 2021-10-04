@@ -118,8 +118,8 @@ public class MedicalServiceImpl implements IMedicalService {
             stringBuffer.append("/");
             stringBuffer.append(vo.getIdNo());
             //查詢同意條款
-            String parameterValueByCode = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_ESERVICE, ApConstants.MEDICAL_TREATMENT_CONSENT);
-            StringBuffer str= new StringBuffer();
+            String parameterValueByCode = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_ESERVICE, ApConstants.MEDICAL_TREATMENT_CONTENT);
+            StringBuffer str = new StringBuffer();
             str.append(parameterValueByCode);
             String replace = str.toString().replaceAll("<([^>]*)>", "").replace("\r", "").replace("\t", "").replace("\n", "");
             stringBuffer.append(replace);
@@ -173,15 +173,15 @@ public class MedicalServiceImpl implements IMedicalService {
             String json = gson.toJson(medicalTreatmentClaimVo);
             logger.info("resquest json="+json);
 
-           HttpEntity<String> entity = new HttpEntity<String>(json,headers);
+            HttpEntity<String> entity = new HttpEntity<String>(json,headers);
 
-           restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-           responseEntity = restTemplate.postForEntity(url_api401, entity, String.class);
+            restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+            responseEntity = restTemplate.postForEntity(url_api401, entity, String.class);
 
             strRes= responseEntity.getBody();
             // strRes= "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"caseId\":\"20210125153001-45c17f68e615-L01\"}}";
             logger.info("responseEntity.getBody()="+strRes);
-           boolean checkRes = this.checkResponseStatus(responseEntity);
+            boolean checkRes = this.checkResponseStatus(responseEntity);
             // boolean checkRes =true;
 
             if(checkRes) {
