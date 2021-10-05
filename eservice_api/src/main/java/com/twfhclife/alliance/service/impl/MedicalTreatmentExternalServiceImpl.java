@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
@@ -194,6 +195,64 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
         
         return strRes;
     }
+	
+	@Override
+	public String postForEntity(String url, Map<String, String> params,Map<String, String> unParams) throws Exception {
+		String strRes = null;
+		UnionCourseVo uc = new UnionCourseVo();
+		uc.setCaseId(unParams.get("caseId"));
+		uc.setTransNum(unParams.get("transNum"));
+		uc.setType(uc.TYPE);
+		uc.setName(unParams.get("name"));
+		uc.setCreateDate(new Date());
+		if(url!=null) {
+			ResponseEntity<String> responseEntity = null;
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Access-token", ACCESS_TOKEN);
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			
+			//org.json.JSONObject jsonObj = new org.json.JSONObject(params);
+			Gson gson = new Gson(); 
+	        String json = gson.toJson(params);
+	        logger.info("resquest json="+json);
+			
+	        HttpEntity<String> entity = new HttpEntity<String>(json,headers);
+	        
+	        //聯盟API千萬不要用restTemplate.exchange()方式呼叫,Bad request.
+	        responseEntity = restTemplate.postForEntity(url, entity, String.class);
+	        //logger.info("(restTemplate.postForEntity(url, entity, String.class))=" + MyJacksonUtil.object2Json(responseEntity));
+	        
+//	        responseEntity = restTemplate.postForEntity(url, entity, String.class, json);//useful client code.
+	        
+	        boolean checkResp = this.checkResponseStatus(responseEntity);
+	        if(checkResp) {
+	        	uc.setNcStatus(uc.NC_STATUS_S);
+	        }else {
+	        	uc.setNcStatus(uc.NC_STATUS_F);
+	        }
+	        uc.setCompleteDate(new Date());
+			uc.setMsg(getResInfo(strRes));
+			unionCourseDao.insertUnionCourseVo(uc);
+	        
+	        if (!checkResp) {
+				return null;
+			}
+	        
+			strRes= responseEntity.getBody();
+			logger.info("responseEntity.getBody()="+strRes);
+			//System.out.println("responseEntity.getBody()="+strRes);
+			
+//			Object obj = responseEntity.getBody();
+//			if (obj == null) {
+//				return null;
+//			}
+//			return ((ApiResponseObj<T>) obj).getResult();
+			
+		}
+		
+		return strRes;
+	}
 
 	@Override
 	public boolean checkResponseStatus(ResponseEntity<?> responseEntity) {

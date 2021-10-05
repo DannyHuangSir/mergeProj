@@ -16,7 +16,15 @@ import java.util.List;
  * 醫療
  */
 public interface IMedicalDao {
-    List<MedicalTreatmentClaimVo> getMedicalTreatmentByNoCaseId()throws Exception;;
+    List<MedicalTreatmentClaimVo> getMedicalTreatmentByNoCaseId()throws Exception;
+    
+    /**
+     * 以caseId查詢MEDICAL_TREATMENT_CLAIM
+     * @param caseId
+     * @return MedicalTreatmentClaimVo
+     * @throws Exception
+     */
+    MedicalTreatmentClaimVo getMedicalTreatmentByCaseId(@Param("caseId")String caseId) throws Exception;
 
     int  updateMedicalTreatmentClaimToAllianceAndCaseId(@Param("vo") MedicalTreatmentClaimVo vo)throws  Exception;
 
@@ -42,7 +50,7 @@ public interface IMedicalDao {
     //獲取對應的文件數據-聯盟
     List<MedicalTreatmentClaimFileDataVo> getMedicalTreatmentFileDataByClaimSeqId(@Param("claimSeqId")  Float claimSeqId)throws Exception;
    // 更新該筆Medical_Claim,表示已送到eservice.TRANS
-    int updateMedicalTreatmentClaimToStatusByTransNum(@Param("transNum") String transNum,@Param("saveTrans")  String saveTrans)throws Exception;
+    int updateMedicalTreatmentClaimToStatusByTransNum(@Param("transNum") String transNum,@Param("saveTrans") String saveTrans,@Param("caseId") String caseId)throws Exception;
     //進行查詢出transNum
     String getTransMedicalTreatmentByCaseId(@Param("caseId")String caseId,@Param("listStatus")List listStatus)throws Exception;
     //進行查詢案件的數據

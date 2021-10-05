@@ -1,5 +1,7 @@
 package com.twfhclife.alliance.service;
 
+import java.util.Map;
+
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -19,6 +21,16 @@ public interface IMedicalTreatmentExternalService {
 	 * @return String
 	 */
     String postForEntity(String url_api401, MedicalTreatmentClaimVo vo, String s) throws Exception;
+    
+    /**
+     * 
+     * @param url
+     * @param params
+     * @param unParams
+     * @return String
+     * @throws Exception
+     */
+    String postForEntity(String url, Map<String, String> params,Map<String, String> unParams) throws Exception;
     
     
     /**

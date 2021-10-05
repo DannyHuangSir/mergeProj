@@ -56,13 +56,11 @@ public class MedicalServiceImpl implements IMedicalService {
     @Qualifier("apiParameterDao")
     private ParameterDao parameterDao;
 
-    private RestTemplate restTemplate;
-
 	@Autowired
     private IMedicalTreatmentService iMedicalTreatmentService;
 
     @Autowired
-    private  IMessagingTemplateService messagingTemplateService;
+    private IMessagingTemplateService messagingTemplateService;
 
     @Autowired
     private NotifyOfNewCaseMedicalDao notifyOfNewCaseMedicalDao;
@@ -186,7 +184,8 @@ public class MedicalServiceImpl implements IMedicalService {
             TransStatusHistoryVo hisVo = new TransStatusHistoryVo();
             hisVo.setCustomerName("系統日程");
             hisVo.setIdentity("SYS_TASK");
-        System.out.println(tvo);
+            //System.out.println(tvo);
+            
             int result = 0;
             Map<String, Object> rMap = iMedicalTreatmentService.inserttransMedicalTreatmentClaimVo(tvo,hisVo);
             logger.info("***after IMedicalTreatmentService.inserttransMedicalTreatmentClaimVo()***");
@@ -310,8 +309,8 @@ public class MedicalServiceImpl implements IMedicalService {
     }
 
     @Override
-    public int updateMedicalTreatmentClaimToStatusByTransNum(MedicalTreatmentClaimVo vo) throws Exception {
-        return iMedicalDao.updateMedicalTreatmentClaimToStatusByTransNum(vo.getTransNum(),vo.getStauts());
+    public int updateMedicalTreatmentClaimToStatusTransNumByCaseId(MedicalTreatmentClaimVo vo) throws Exception {
+        return iMedicalDao.updateMedicalTreatmentClaimToStatusByTransNum(vo.getTransNum(),vo.getStauts(),vo.getCaseId());
     }
 
     @Override
@@ -321,14 +320,14 @@ public class MedicalServiceImpl implements IMedicalService {
 
     @Override
     public String getTransMedicalTreatmentByCaseId(String caseId) throws Exception {
-        ArrayList<String> list = new ArrayList<>();
-            //獲取聯盟回傳類型
-           String pqhf_end = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PQHF_END);
-           String itps_end = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_ITPS_END);
-           String status_pqhf = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PQHF);
-            list.add(pqhf_end);
-            list.add(itps_end);
-            list.add(status_pqhf);
+    	ArrayList<String> list = new ArrayList<>();
+    	//獲取聯盟回傳類型
+    	String pqhf_end = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PQHF_END);
+        String itps_end = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_ITPS_END);
+        String status_pqhf = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PQHF);
+        list.add(pqhf_end);
+        list.add(itps_end);
+        list.add(status_pqhf);
         return iMedicalDao.getTransMedicalTreatmentByCaseId(caseId,list);
     }
 
@@ -346,13 +345,13 @@ public class MedicalServiceImpl implements IMedicalService {
     public int addMedicalRequest(MedicalTreatmentClaimVo medicalVo) throws Exception {
         /**
          * 進行添加上新案件的數據資料
-         * */
-          int j=0;
-            //獲取到SequenceId數據
-        Float seqId =    iMedicalDao.getMedicalTreatmentSequence();
+         */
+    	int j=0;
+        //獲取到SequenceId數據
+        Float seqId = iMedicalDao.getMedicalTreatmentSequence();
         medicalVo.setClaimSeqId(seqId);
         logger.info("添加的數據信息===",medicalVo);
-       int i = iMedicalDao.addMedicalTreatment(medicalVo);
+        int i = iMedicalDao.addMedicalTreatment(medicalVo);
         if (i > 0) {
             j = i;
             List<MedicalTreatmentClaimFileDataVo> fileDatas = medicalVo.getFileDatas();
@@ -414,11 +413,11 @@ public class MedicalServiceImpl implements IMedicalService {
     @Override
     @Transactional
     public int updateTransMedicalTreatmentByTransNum(MedicalTreatmentClaimVo claimVo) throws Exception {
-        /**
-         * 1.更新之前保單的  聯盟狀態
-         *   2.更新當前保單的文件狀態(存在更新),不存在新增
-         * */
-        int  j=0;
+    	/**
+    	 * 1.更新之前保單的  聯盟狀態
+    	 * 2.更新當前保單的文件狀態(存在更新),不存在新增
+    	 */
+        int j = 0;
         String transNum = claimVo.getTransNum();
         String allianceStatus = claimVo.getAllianceStatus();
         j=iMedicalDao.updateTransMedicalTreatmentByTransNum(transNum,allianceStatus);
@@ -427,13 +426,13 @@ public class MedicalServiceImpl implements IMedicalService {
             for (MedicalTreatmentClaimFileDataVo fileData : fileDatas) {
                 String fileId = fileData.getFileId();
                 if (!StringUtils.isEmpty(fileId)) {
-                  int i=  iMedicalDao.getTransMedicalTreatmentFiledatasByFileId(fileId);
+                  int i = iMedicalDao.getTransMedicalTreatmentFiledatasByFileId(fileId);
                     String fileStatus = fileData.getFileStatus();
                     if (!StringUtils.isEmpty(fileStatus)) {
                         if (i>0) {
                             j = iMedicalDao.updateTarnsMedicalTreatmentFileStatus(fileId,fileStatus);
                         }else {
-                            float claimsSeqId=  iMedicalDao.getTransMedicalTreatmentByClaimsSeqId(transNum);
+                            float claimsSeqId= iMedicalDao.getTransMedicalTreatmentByClaimsSeqId(transNum);
                             fileData.setClaimsSeqId(claimsSeqId);
                             fileData.setFileBase64("");
                             String fileName = fileData.getFileName();
@@ -445,6 +444,7 @@ public class MedicalServiceImpl implements IMedicalService {
                 }
             }
         }
+
         /**
          * 進行發送郵件信息
          */
@@ -492,8 +492,8 @@ public class MedicalServiceImpl implements IMedicalService {
     @Transactional
     public int getTransMedicalTreatmentBySendAlliance() throws Exception {
         //進行查詢出對於已開啓傳送公會聯盟鏈并且覆核人員審核的案件數據
-        List<TransMedicalTreatmentClaimVo>  voList=   iMedicalDao.getTransMedicalTreatmentBySendAlliance(StatuCode.AUDIT_CODE_Y.code);
-          int  rtn=0;
+        List<TransMedicalTreatmentClaimVo> voList = iMedicalDao.getTransMedicalTreatmentBySendAlliance(StatuCode.AUDIT_CODE_Y.code);
+        int rtn=0;
         if (voList != null && voList.size() != 0) {
             for (TransMedicalTreatmentClaimVo voTemp : voList) {
                 Float seq = iMedicalDao.getMedicalTreatmentSequence();
@@ -516,5 +516,14 @@ public class MedicalServiceImpl implements IMedicalService {
         vo.setSystemId(ApConstants.SYSTEM_ID);
         return vo;
     }
+
+	@Override
+	public MedicalTreatmentClaimVo getMedicalTreatmentByCaseId(String caseId) throws Exception {
+		MedicalTreatmentClaimVo vo = null;
+		if(org.apache.commons.lang3.StringUtils.isNotBlank(caseId)) {
+			vo = iMedicalDao.getMedicalTreatmentByCaseId(caseId);
+		}
+		return vo;
+	}
 
 }

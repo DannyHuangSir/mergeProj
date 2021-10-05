@@ -449,6 +449,7 @@
 		,[TO_COMPANY_ID]
 		,[AUTHORIZATION_FILE_TYPE]
 		,[STATUS]
+		,ALLIANCE_STATUS
 	</sql>
 
 	<sql id="Base_Medical_Column_List">
@@ -474,6 +475,15 @@
 		where  CASE_ID is null
 		and SEND_ALLIANCE='Y'
 		and ALLIANCE_STATUS is  null
+	</select>
+	
+	<!-- 以caseId查詢MEDICAL_TREATMENT_CLAIM -->
+	<select id="getMedicalTreatmentByCaseId" resultType="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
+		select top(1)
+		<include refid="MEDICAL_CLAIM_ALL"></include>
+		from ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM
+		where  CASE_ID = #{caseId}
+		order by CREATE_DATE asc
 	</select>
 
 	<!-- 上傳聯盟後，取得回傳，更新CASE_ID,CODE,MSG,STATUS -->
@@ -699,6 +709,7 @@
 		,#{medicalVo.toCompanyId}
 		,#{medicalVo.authorizationFileType}
 		,#{medicalVo.stauts}
+		,#{medicalVo.allianceStatus}
 			)
 	</insert>
 	<insert id="addMedicalTreatmentFileData">
@@ -833,8 +844,9 @@
 	<update id="updateMedicalTreatmentClaimToStatusByTransNum">
 		update ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
 		set
-		STATUS = #{saveTrans}
-		where TRANS_NUM = #{transNum}
+			STATUS = #{saveTrans},
+			TRANS_NUM = #{transNum}
+		where CASE_ID = #{caseId}
 	</update>
 	<update id="updateTransMedicalTreatmentByTransNum">
 		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
