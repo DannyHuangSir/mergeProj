@@ -268,7 +268,7 @@ VALUES
 	, N'eservice'
 	, N'ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL'
 	, N'ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL'
-	, N'http://10.7.128.151:9060/DecisionService/rest/eserviceChecker/InsuranceClaimPolicyClaim2'
+	, N'http://10.7.168.104:9080/DecisionService/rest/eserviceChecker/InsuranceClaimPolicyClaim2'
 	, (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SYSTEM_CONSTANTS')
 	, NULL
 	, NULL

@@ -276,45 +276,60 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				return "redirect:apply1";
 			}
 
-
-			//TODO
 			/**
 			 * ODM
 			 * 1.成年人20歲才能申請
 			 *
 			 */
-			String str = iMedicalTreatmentService.getAgeByPolicyNo(policyList.getPolicyNo());//使用被保人生日計算年齡
+			boolean odmResultPass = false;
+			String strAge = iMedicalTreatmentService.getAgeByPolicyNo(policyList.getPolicyNo());//使用被保人生日計算年齡
 			String check_url = iMedicalTreatmentService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL);
 			logger.error("check_url: {}", check_url);
-			logger.error("age: {}", str);
-			if(str != null && check_url != null) {
+			logger.error("strAge: {}", strAge);
+			OnlineChangeClient ocClient = new OnlineChangeClient();
+			String resultStr = "";
+			if(strAge != null && check_url != null) {
 				//call ODM check service-start
-				int age = Integer.parseInt(str);
-				//PARAMETER.PARAMETER_CODE=ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL
-				String odmCheckServcieUrl = check_url;//odm flow
-				OnlineChangeModel ocModel = new OnlineChangeModel();
-				ocModel.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
-				ocModel.setInsuredAge(age);
-				OnlineChangeClient ocClient = new OnlineChangeClient();
-				String resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
-				boolean resultPass = ocClient.checkLiaAPIResponseValue(resultStr, "/resultPass", "true");
-				logger.info("resultPass="+resultPass);
-				if(!resultPass) {
-					String resultMsg = ocClient.readValue(resultStr, "/resultMsg");
-					logger.info("resultMsg="+resultMsg);
-					redirectAttributes.addFlashAttribute("errorMessage", resultMsg);
-					return "redirect:apply1";
+				int age = -1;
+				try {
+					age = Integer.parseInt(strAge);
+				}catch(NumberFormatException nfe) {
+					logger.info("Can't get age by policy={}",policyList.getPolicyNo());
+					logger.error(nfe.toString());
 				}
-				//call ODM check service-end
+				
+				if(age>=0) {
+					//PARAMETER.PARAMETER_CODE=ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL
+					String odmCheckServcieUrl = check_url;//odm flow
+					OnlineChangeModel ocModel = new OnlineChangeModel();
+					ocModel.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
+					ocModel.setInsuredAge(age);
+					
+					resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
+					odmResultPass = ocClient.checkLiaAPIResponseValue(resultStr, "/resultPass", "true");
+				}
+				
 			}
-
+			logger.info("resultPass="+odmResultPass);
+			
+			if(!odmResultPass) {
+				String resultMsg = "";
+				if(org.apache.commons.lang3.StringUtils.isNotBlank(resultStr)) {
+					resultMsg = ocClient.readValue(resultStr, "/resultMsg");
+				}else {
+					resultMsg = "Can't check age by ODM.";
+				}
+				logger.info("resultMsg="+resultMsg);
+				redirectAttributes.addFlashAttribute("errorMessage", resultMsg);
+				return "redirect:apply1";
+			}
+			//call ODM check service-end
 
 			TransInsuranceClaimVo claimVo = new TransInsuranceClaimVo();
 			claimVo.setPolicyNo(policyList.getPolicyNo());
 
 			//獲取同意條款數據信息
-			String medicalTreatmentConsent = parameterSerivce.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_TREATMENT_CONSENT);
-
+			String medicalTreatmentConsent = parameterSerivce.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_TREATMENT_CONTENT);
 
 			addAttribute("medicalTreatmentConsent", medicalTreatmentConsent);
 			addAttribute("claimVo", claimVo);

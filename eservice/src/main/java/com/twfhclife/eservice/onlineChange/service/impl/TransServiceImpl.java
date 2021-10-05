@@ -241,9 +241,9 @@ public class TransServiceImpl implements ITransService {
 			if (!"Y".equals(vo.getApplyLockedFlag())) {
 				VerifyPolicyResult verifyPolicyResult = verifyPolicyRule(policyNo, transType);
 				
-				if(verifyPolicyResult!=null) {//for log.
-					logger.debug("verifyPolicyResult="+com.twfhclife.generic.util.MyJacksonUtil.object2Json(vo));
-				}
+//				if(verifyPolicyResult!=null) {//for log.
+//					logger.debug("verifyPolicyResult="+com.twfhclife.generic.util.MyJacksonUtil.object2Json(vo));
+//				}
 				
 				if ("N".equals(verifyPolicyResult.getVerifyResult())) {
 					vo.setApplyLockedFlag("Y");

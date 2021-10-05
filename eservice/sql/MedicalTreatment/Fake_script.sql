@@ -1,0 +1,14 @@
+--fake script,do not insert into production.
+insert into ESERVICE.dbo.PRODUCT
+(PRODUCT_ID,PRODUCT_CODE,PRODUCT_TYPE,PRODUCT_NAME,PROD_CATE,DESI_VERSION,DESI_SALE_DATE,DESI_CHAN_VAR_DATE)
+values
+(
+	'9271D09E-E537-435C-86F9-58767E736263',
+	'US',
+	'1',
+	'鑫富利變額年金保險',
+	null,
+	'00',
+	CAST(N'1961-01-01T00:00:00.000' AS DateTime),
+	GETDATE()
+);
