@@ -9,7 +9,7 @@ go
 
 --- 醫療保險-条款项
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
-VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'MEDICAL_TREATMENT_CONSENT', N' 醫起通接受條款',
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'MEDICAL_TREATMENT_CONTENT', N' 醫起通接受條款',
 		N'	<h2 class="text-left">一、	授權個人申請醫療理賠相關資料傳送</h2>
 		<p>本人（即立同意書人）為申請醫療保險理賠所需，爰同意並授權貴公司經由「理賠醫起通」服務傳輸以下事項：</p>
 		<p>1.	本人同意授權貴公司得將本人之個人資料 (包括姓名、出生日、身分證字號)傳輸予經本人指定之醫療院所，以取得本人已同意授權傳輸之就醫相關資料。</p>
