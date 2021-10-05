@@ -285,7 +285,8 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	//與醫院對接的序號
 	private String hpUid;
 	//保⼾同意條款(純文字)
-	private String cpOa;
+	private String cpoa;
+	
 	private String stauts;
 
 	public String getStauts() {
@@ -310,14 +311,6 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 
 	public void setHpUid(String hpUid) {
 		this.hpUid = hpUid;
-	}
-
-	public String getCpOa() {
-		return cpOa;
-	}
-
-	public void setCpOa(String cpOa) {
-		this.cpOa = cpOa;
 	}
 
 	public Timestamp getCreateDate() {
@@ -848,6 +841,14 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 //	public void setCreateDate(Timestamp createDate) {
 //		this.createDate = createDate;
 //	}
+
+	public String getCpoa() {
+		return cpoa;
+	}
+
+	public void setCpoa(String cpoa) {
+		this.cpoa = cpoa;
+	}
 
 	@Override
 	public String toString() {

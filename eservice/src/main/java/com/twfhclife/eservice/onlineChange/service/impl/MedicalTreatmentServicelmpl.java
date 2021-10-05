@@ -3,6 +3,7 @@ package com.twfhclife.eservice.onlineChange.service.impl;
 import com.twfhclife.eservice.onlineChange.dao.*;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
+import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
@@ -48,6 +49,9 @@ import java.util.stream.Collectors;
 public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 
 	private static final Logger logger = LogManager.getLogger(MedicalTreatmentServicelmpl.class);
+	
+	@Autowired
+	ITransService transService;
 
 	@Autowired
 	private BankInfoDao bankInfoDao;
@@ -69,8 +73,6 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 	
 	@Autowired
 	private IOptionService optionService;
-	
-
 	
 	@Autowired
 	private IMailService mailService;
@@ -104,7 +106,6 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 	}
 	
 	private void appendMsg(PolicyListVo policyListVo, String msg) {
-		// TODO Auto-generated method stub
 		if(policyListVo.getApplyLockedMsg() != null) {
 			String eStr = policyListVo.getApplyLockedMsg();
 			if(!eStr.contains(msg)) {
@@ -393,7 +394,12 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 	@Override
 	@Transactional
 	public Map<String,Object> inserttransMedicalTreatmentClaimVo(TransMedicalTreatmentClaimVo transMedicalTreatmentClaimVo, TransStatusHistoryVo hisVo) {
+		
 		String transNum = transMedicalTreatmentClaimVo.getTransNum();
+		if(StringUtils.isBlank(transNum)) {
+			transNum = transService.getTransNum();
+		}
+		
 		String userId = transMedicalTreatmentClaimVo.getUserId();
 		String status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
 		String mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_1;
@@ -412,10 +418,11 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 				if(transMedicalTreatmentClaimVo.getStauts() !=null  && OnlineChangeUtil.TRANS_STATUS_ABNORMAL.equals(transMedicalTreatmentClaimVo.getStauts())){
 					status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
 				}else {
-				status = OnlineChangeUtil.TRANS_STATUS_RECEIVED;
+					status = OnlineChangeUtil.TRANS_STATUS_RECEIVED;
+				}
 			}
 		}
-		}
+		
 		int result = 0;
 		try {
 			// 新增線上申請主檔
@@ -424,7 +431,6 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 			transVo.setTransNum(transNum);
 			transVo.setTransDate(toDay);
 			transVo.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
-		//	transVo.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
 			transVo.setStatus(status);
 			transVo.setUserId(userId);
 			transVo.setCreateUser(userId);
