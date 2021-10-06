@@ -578,8 +578,9 @@
 		<include refid="MEDICAL_CLAIM_ALL"></include>
 		from ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
 		where CASE_ID is not null
-		and STATUS is null or STATUS ='7' or STATUS ='-1'
-		and FROM_COMPANY_ID is null or FROM_COMPANY_ID !='L01'
+		and TRANS_NUM is null
+		and (STATUS is null or STATUS ='7' or STATUS ='-1')
+		and (FROM_COMPANY_ID is null or FROM_COMPANY_ID !='L01')
 		order by CREATE_DATE
 	</select>
 
