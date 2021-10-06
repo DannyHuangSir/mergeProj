@@ -16,6 +16,7 @@
 		[ESERVICE].[dbo].NOTIFY_OF_NEW_CASE_MEDICAL
 		set  NC_STATUS=#{vo.ncStatus}
 		,MSG=#{vo.msg}
+		,STATUS_DATE = getdate()
 		where CASE_ID=#{vo.caseId}
 	</update>
 	<select id="getNotifyOfNewCaseMedicalSeq" resultType="java.lang.Float">

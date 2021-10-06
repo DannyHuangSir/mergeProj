@@ -18,6 +18,8 @@ public class NotifyOfNewCaseChangeVo {
 	public static final String NC_STATUS_ONE  = "1";//已取得查詢理賠資料
 	public static final String SUCCESS_MSG  = "此案件已取資料";//此案件已取資料
 	public static final String NC_STATUS_Y  = "Y";
+	public static final String MSG_NOT_FOR_TWFHCLIFE = "非傳送給台銀的案件,資料不落地";//非傳送給台銀的案件,資料不落地
+	public static final String MSG_TWFHCLIFE_NO_THIS_CASE = "台銀首家件無此資料";//台銀首家件無此資料
 
 	/**
 	 * 非台銀保戶

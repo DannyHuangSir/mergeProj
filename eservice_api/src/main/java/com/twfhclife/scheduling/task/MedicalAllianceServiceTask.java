@@ -478,23 +478,19 @@ public class MedicalAllianceServiceTask {
                             if(medicalTCVo==null) {
                             	isAllNewCase = true;
                             } else {
-                            	//TODO
                             	//非全新案件，則以查得的STATUS更新TRANS_MEDICAL_TREATMENT_CLAIM.ALLIANCE_STATUS
                             	//更新成功,則此NotifyOfNewCaseMedicalVo.NC_STATUS更新為1
                             	//更新不成功則忽略，下次重作
                             }
                             
                             /**
-                             *
                              * 此時不一定有TRANS_NUM,因為可能尚未轉到TRANS
                              */
                             String transNum = iMedicalService.getTransMedicalTreatmentByCaseId(caseId);
                             if (org.apache.commons.lang3.StringUtils.isNotBlank(transNum)) {
                                 unParams.put("transNum", transNum);
                             }else{
-                                //創建一個新的交易序號
-//                            	transNum = transService.getTransNum();
-//                                unParams.put("transNum", transNum);
+                                //do not create new TRANS_NUM here.
                             }
                             
                             String strResponse = medicalExternalServiceImpl.postForEntity(URL_API403, params, unParams);
@@ -513,6 +509,39 @@ public class MedicalAllianceServiceTask {
                                 log.info("after new Gson().fromJson................."+medicalVo);
 
                                 if (medicalVo != null) {
+                                	medicalVo.setCaseId(caseId);
+                                    /**
+                                     * 判斷是否台銀該接收的資料-start
+                                     * 1.fromData.from=L01時,表示為台銀首家件,只取用status做為更新聯盟案件狀態
+                                     * 2.toData.to不含L01時,表示並非傳送給台銀,此案件不落地
+                                     */
+                                    //fromData
+                                    String fromValue = this.getFromDataToValue(strResponse);
+                                    String fromDataStatus = this.getFromDataStatus(strResponse);
+                                    
+                                    //toData
+                                    String toValue = this.getToDataToValue(strResponse);
+                                    String allianceStatus = this.getToDataStatus(strResponse);
+                                    
+                                    if("L01".equals(fromValue)) {//台銀首家件資料
+                                    	isAllNewCase = false;
+                                    	medicalVo.setAllianceStatus(fromDataStatus);
+                                    }else {//非台銀首家件資料
+                                    	if(StringUtils.isNotBlank(toValue) && toValue.indexOf("L01")>=0) {
+                                    		//do nothing.
+                                    	}else {
+                                    		//非傳送給台銀的案件,此案件不落地
+                                    		vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+                                            vo.setMsg(NotifyOfNewCaseChangeVo.MSG_NOT_FOR_TWFHCLIFE);
+                                            int updateCnt = iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
+                                            log.info("NotifyOfNewCaseChangeVo.MSG_NOT_FOR_TWFHCLIFE,caseId="+vo.getCaseId());
+                                            continue;
+                                    	}
+                                    }
+                                    /**
+                                     * 判斷是否台銀該接收的資料-end
+                                     */
+                                    
                                     //ID在本公司僅為要保人視為非本公司保戶方式，不接收資料)
                                     List<String> policyNos = allianceService.getPolicyNoByID(medicalVo.getIdNo());
                                     boolean isInsured = false;//是否為保戶
@@ -520,13 +549,12 @@ public class MedicalAllianceServiceTask {
                                         isInsured = true;
                                     }
                                     log.info("=================API403-查詢查詢案件資訊-當前是否為保戶:"+isInsured);
-                                    
+
                                     if(isAllNewCase) {
                                     	if(isInsured){
                                             /**
                                              * 存儲數據的組合
                                              */
-                                            medicalVo.setCaseId(caseId);
                                             medicalVo.setFromCompanyId(medicalVo.getFrom());
                                             medicalVo.setToCompanyId(medicalVo.getTo());
                                             medicalVo.setAuthorizationEndDate(medicalVo.getHeTime());
@@ -534,14 +562,14 @@ public class MedicalAllianceServiceTask {
                                             medicalVo.setToHospitalId(medicalVo.getHpId());
                                             medicalVo.setFileDatas(medicalVo.getFileData());
 
-                                            //toata
-                                            String toValue = this.getToDataToValue(strResponse);
+                                            //toData
+                                            //String toValue = this.getToDataToValue(strResponse);
                                             medicalVo.setToCompanyId(toValue);
-                                            String allianceStatus = getToDataStatus(strResponse);
+                                            //String allianceStatus = getToDataStatus(strResponse);
                                             medicalVo.setAllianceStatus(allianceStatus);
                                             
                                             //fromData
-                                            String fromValue = this.getFromDataToValue(strResponse);
+                                            //String fromValue = this.getFromDataToValue(strResponse);
                                             medicalVo.setFromCompanyId(fromValue);
 
                                             /**
@@ -607,18 +635,26 @@ public class MedicalAllianceServiceTask {
                                         }//end-if(isInsured)
                                     }else {
                                     	//非全新案件
-                                    	//進行更新最新的狀態信息數據
-                                        int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo);
-                                        //更新是否已經取得資料
-                                        if(iRtn>0) {//如果有查詢且儲存成功
-                                            vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
-                                            vo.setMsg(NotifyOfNewCaseChangeVo.SUCCESS_MSG);
+                                    	if(StringUtils.isNotBlank(transNum)) {//台銀首家件且已有CASEID故transNum不會為空
+                                    		//進行更新最新的狀態信息數據
+                                            int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo);
+                                            //更新是否已經取得資料
+                                            if(iRtn>0) {//如果有查詢且儲存成功
+                                                vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+                                                vo.setMsg(NotifyOfNewCaseChangeVo.SUCCESS_MSG+",update ALLIANE_STATUS="+medicalVo.getAllianceStatus());
+                                                iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
+                                                log.info("案件／檔案狀態更新結束");
+                                            }else {
+                                            	//狀態未更新成功，則忽略此案件下次重作
+                                            	log.info("案件／檔案狀態更新結束未更新成功，則忽略此案件下次重作,seqId="+vo.getSeqId());
+                                            }
+                                    	}else {
+                                    		vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+                                            vo.setMsg(NotifyOfNewCaseChangeVo.MSG_TWFHCLIFE_NO_THIS_CASE);
                                             iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
-                                            log.info("案件／檔案狀態更新結束");
-                                        }else {
-                                        	//狀態未更新成功，則忽略此案件下次重作
-                                        	log.info("案件／檔案狀態更新結束未更新成功，則忽略此案件下次重作,seqId="+vo.getSeqId());
-                                        }
+                                            log.info("台銀首家件查無此案件,caseId="+vo.getCaseId());
+                                    	}
+                                    	
                                     }
  
                                 } else {
