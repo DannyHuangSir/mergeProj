@@ -215,7 +215,7 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
 			//org.json.JSONObject jsonObj = new org.json.JSONObject(params);
 			Gson gson = new Gson(); 
 	        String json = gson.toJson(params);
-	        logger.info("resquest json="+json);
+	        logger.info("CALL API:"+url+",resquest json="+json);
 			
 	        HttpEntity<String> entity = new HttpEntity<String>(json,headers);
 	        

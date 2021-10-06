@@ -378,13 +378,12 @@ public class MedicalAllianceServiceTask {
         }
     }
 
-
     /**
-     *  API-402 回覆是否向醫院取資料
-     * */
-   @Scheduled(cron = "${cron.medical402.expression}")
-    public void callAPI402() {
-        log.info("-----------Start API-402 Task.-----------");
+     * API-402 回覆是否向醫院取資料
+     */
+    @Scheduled(cron = "${cron.medical402.expression}")
+	public void callAPI402() {
+    	log.info("-----------Start API-402 Task.-----------");
         log.info("API_DISABLE=" + API_DISABLE);
         if ("N".equals(API_DISABLE)) {
             try {
@@ -397,15 +396,16 @@ public class MedicalAllianceServiceTask {
                 if(listMedical!=null && !listMedical.isEmpty() && listMedical.size()>0) {
                     for (MedicalTreatmentClaimVo vo : listMedical) {
                         if(vo!=null) {
-                            //3.call api-402 to
-                           /* Y=取資料
-                            N=不取資料*/
-                              String  action;
-                              if(itpsPthg.equals(vo.getAllianceStatus())){
-                                  action=StatuCode.ACTION_CODE_Y.code;
-                              }else {
-                                action=StatuCode.ACTION_CODE_N.code;
-                               }
+							// 3.call api-402 to
+							/*
+							 * Y=取資料 N=不取資料
+							 */
+							String action;
+							if (itpsPthg.equals(vo.getAllianceStatus())) {
+								action = StatuCode.ACTION_CODE_Y.code;
+							} else {
+								action = StatuCode.ACTION_CODE_N.code;
+							}
                             Map<String, String> params = new HashMap<>();
                             String caseId = vo.getCaseId();
                             String transNum = vo.getTransNum();
@@ -424,7 +424,7 @@ public class MedicalAllianceServiceTask {
                             //3-1.get api-402 response
                             if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
                                 String msg = MyJacksonUtil.readValue(strResponse, "/msg");
-                                    //進行回應狀態醫院資料信息描述
+                                //進行回應狀態醫院資料信息描述
                                 vo.setAllianceFileStatus(msg);
                                 iMedicalService.updateTarnsMedicalTreatmentClaimToAllianceFileStatus(vo);
                             }
