@@ -418,7 +418,8 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 				if(transMedicalTreatmentClaimVo.getStauts() !=null  && OnlineChangeUtil.TRANS_STATUS_ABNORMAL.equals(transMedicalTreatmentClaimVo.getStauts())){
 					status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
 				}else {
-					status = OnlineChangeUtil.TRANS_STATUS_RECEIVED;
+					//status = OnlineChangeUtil.TRANS_STATUS_RECEIVED;
+					status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
 				}
 			}
 		}

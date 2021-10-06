@@ -152,7 +152,7 @@ public interface OnlineChangeUtil {
 	
 	final String MAIL_INFO_TYPE_1 = "台銀首家件";
 	
-	final String MAIL_INFO_TYPE_2 = "聯盟鍵";
+	final String MAIL_INFO_TYPE_2 = "聯盟件";
 	
 	/** 保單理賠MAIL */
 	final String ELIFE_MAIL_005 = "ELIFE_MAIL-005";
