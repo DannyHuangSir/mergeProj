@@ -20,6 +20,8 @@ import com.twfhclife.generic.utils.ApConstants;
 import com.twfhclife.generic.utils.CallApiCode;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import com.twfhclife.generic.utils.StatuCode;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +37,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -361,7 +362,7 @@ public class MedicalServiceImpl implements IMedicalService {
                         fileData.setClaimsSeqId(seqId);
                         fileData.setFileBase64("");
                         String fileName = fileData.getFileName();
-                        fileName=StringUtils.isEmpty(fileName)?fileData.getDtype():fileName;
+                        fileName = StringUtils.isBlank(fileName)?fileData.getDtype():fileName;
                         fileData.setFileName(fileName);
                         j = iMedicalDao.addMedicalTreatmentFileData(fileData);
                     }
@@ -420,15 +421,15 @@ public class MedicalServiceImpl implements IMedicalService {
         int j = 0;
         String transNum = claimVo.getTransNum();
         String allianceStatus = claimVo.getAllianceStatus();
-        j=iMedicalDao.updateTransMedicalTreatmentByTransNum(transNum,allianceStatus);
+        j = iMedicalDao.updateTransMedicalTreatmentByTransNum(transNum,allianceStatus);
         List<MedicalTreatmentClaimFileDataVo> fileDatas = claimVo.getFileDatas();
         if (fileDatas!=null && fileDatas.size()>0) {
             for (MedicalTreatmentClaimFileDataVo fileData : fileDatas) {
                 String fileId = fileData.getFileId();
-                if (!StringUtils.isEmpty(fileId)) {
+                if (StringUtils.isNotBlank(fileId)) {
                   int i = iMedicalDao.getTransMedicalTreatmentFiledatasByFileId(fileId);
                     String fileStatus = fileData.getFileStatus();
-                    if (!StringUtils.isEmpty(fileStatus)) {
+                    if (StringUtils.isNotBlank(fileStatus)) {
                         if (i>0) {
                             j = iMedicalDao.updateTarnsMedicalTreatmentFileStatus(fileId,fileStatus);
                         }else {
@@ -436,7 +437,7 @@ public class MedicalServiceImpl implements IMedicalService {
                             fileData.setClaimsSeqId(claimsSeqId);
                             fileData.setFileBase64("");
                             String fileName = fileData.getFileName();
-                            fileName=StringUtils.isEmpty(fileName)?fileData.getDtype():fileName;
+                            fileName = StringUtils.isBlank(fileName)?fileData.getDtype():fileName;
                             fileData.setFileName(fileName);
                             j = iMedicalDao.addTarnsMedicalTreatmentFile(fileData);
                         }
@@ -520,7 +521,7 @@ public class MedicalServiceImpl implements IMedicalService {
 	@Override
 	public MedicalTreatmentClaimVo getMedicalTreatmentByCaseId(String caseId) throws Exception {
 		MedicalTreatmentClaimVo vo = null;
-		if(org.apache.commons.lang3.StringUtils.isNotBlank(caseId)) {
+		if(StringUtils.isNotBlank(caseId)) {
 			vo = iMedicalDao.getMedicalTreatmentByCaseId(caseId);
 		}
 		return vo;
