@@ -578,10 +578,9 @@
 		<include refid="MEDICAL_CLAIM_ALL"></include>
 		from ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
 		where CASE_ID is not null
-		and STATUS is null  or STATUS ='7'   or STATUS ='-1'
-		and FROM_COMPANY_ID  !='L01'
-		and exists (select 1 from ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_FILEDATAS where CLAIMS_SEQ_ID = CLAIMS_SEQ_ID and FILE_BASE64 is  null)
-		order by CREATE_DATE desc
+		and STATUS is null or STATUS ='7' or STATUS ='-1'
+		and FROM_COMPANY_ID is null or FROM_COMPANY_ID !='L01'
+		order by CREATE_DATE
 	</select>
 
 	<!--進行獲取重新上傳的數據信息-->
@@ -619,10 +618,10 @@
 		FROM   [ESERVICE].[dbo].TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
 		where  FILE_ID=#{fileId}
 	</select>
-	<select id="getTransMedicalTreatmentByClaimsSeqId" resultType="java.lang.Float">
+	<select id="getTransMedicalTreatmentClaimsSeqIdByCaseId" resultType="java.lang.Float">
 		select  CLAIMS_SEQ_ID
 		FROM   [ESERVICE].[dbo].TRANS_MEDICAL_TREATMENT_CLAIM
-		where  TRANS_NUM=#{transNum}
+		where  CASE_ID = #{caseID}
 	</select>
 	<select id="getTransMedicalTreatmentAndTransByAllinaceStatus"
 			resultMap="TransMedicalTreatmentResultMap">
@@ -848,11 +847,10 @@
 			TRANS_NUM = #{transNum}
 		where CASE_ID = #{caseId}
 	</update>
-	<update id="updateTransMedicalTreatmentByTransNum">
+	<update id="updateTransMedicalTreatmentByCaseId">
 		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
-		set
-		ALLIANCE_STATUS = #{allianceStatus}
-		where TRANS_NUM = #{transNum}
+		set	ALLIANCE_STATUS = #{allianceStatus}
+		where CASE_ID = #{caseId}
 	</update>
 	<update id="updateTarnsMedicalTreatmentFileStatus">
 		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS

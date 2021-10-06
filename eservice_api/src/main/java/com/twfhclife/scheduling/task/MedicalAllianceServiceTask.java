@@ -527,16 +527,22 @@ public class MedicalAllianceServiceTask {
                                              * 存儲數據的組合
                                              */
                                             medicalVo.setCaseId(caseId);
-                                            //medicalVo.setTransNum(transNum);
                                             medicalVo.setFromCompanyId(medicalVo.getFrom());
                                             medicalVo.setToCompanyId(medicalVo.getTo());
                                             medicalVo.setAuthorizationEndDate(medicalVo.getHeTime());
                                             medicalVo.setAuthorizationStartDate(medicalVo.getHsTime());
                                             medicalVo.setToHospitalId(medicalVo.getHpId());
                                             medicalVo.setFileDatas(medicalVo.getFileData());
-                                           
+
+                                            //toata
+                                            String toValue = this.getToDataToValue(strResponse);
+                                            medicalVo.setToCompanyId(toValue);
                                             String allianceStatus = getToDataStatus(strResponse);
                                             medicalVo.setAllianceStatus(allianceStatus);
+                                            
+                                            //fromData
+                                            String fromValue = this.getFromDataToValue(strResponse);
+                                            medicalVo.setFromCompanyId(fromValue);
 
                                             /**
                                              * disease=疾病,1
@@ -602,15 +608,16 @@ public class MedicalAllianceServiceTask {
                                     }else {
                                     	//非全新案件
                                     	//進行更新最新的狀態信息數據
-                                        int i = iMedicalService.updateTransMedicalTreatmentByTransNum(medicalVo);
+                                        int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo);
                                         //更新是否已經取得資料
-                                        if(i >0) {//如果有查詢且儲存成功
+                                        if(iRtn>0) {//如果有查詢且儲存成功
                                             vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
                                             vo.setMsg(NotifyOfNewCaseChangeVo.SUCCESS_MSG);
                                             iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
-                                            log.info("狀態已修改為保戶");
+                                            log.info("案件／檔案狀態更新結束");
                                         }else {
                                         	//狀態未更新成功，則忽略此案件下次重作
+                                        	log.info("案件／檔案狀態更新結束未更新成功，則忽略此案件下次重作,seqId="+vo.getSeqId());
                                         }
                                     }
  
@@ -1078,6 +1085,46 @@ public class MedicalAllianceServiceTask {
     }
     
     /**
+     * 取得toData nodeString.
+     * @param strResponse
+     * @return
+     */
+    private String getToDataNodeString(String strResponse) {
+    	String nodeString = null;
+    	try {
+    		if(StringUtils.isNotBlank(strResponse)) {
+        		String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+        		//System.out.println("dataString="+dataString);
+    	       	dataString = MyJacksonUtil.getNodeString(dataString, "toData");
+    	       	
+    	       	if(StringUtils.isNotBlank(dataString)) {
+    	       		nodeString = dataString;
+    	       	}
+        	}
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return nodeString;
+    }
+    
+    /**
+     * 取得toData裡的to value.
+     * @param strResponse
+     * @return
+     */
+    private String getToDataToValue(String strResponse) {
+    	String toValue = null;
+    	try {
+    		String dataString = getToDataNodeString(strResponse);
+    		toValue = MyJacksonUtil.readValue(dataString.replace("[", "").replace("]", ""), "/to");
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	return toValue;
+    }
+    
+    /**
      * 取得data下的toData裡的status
      * @param strResponse
      * @return String
@@ -1085,10 +1132,7 @@ public class MedicalAllianceServiceTask {
     private String getToDataStatus(String strResponse) {
     	String status = null; 
     	try{
-    		String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
-    		//System.out.println("dataString="+dataString);
-	       	dataString = MyJacksonUtil.getNodeString(dataString, "toData");
-	       	//System.out.println("dataString="+dataString);
+    		String dataString = getToDataNodeString(strResponse);
 	       	
 	       	status = MyJacksonUtil.readValue(dataString.replace("[", "").replace("]", ""), "/status");
 	       	//System.out.println("status="+status);
@@ -1098,6 +1142,70 @@ public class MedicalAllianceServiceTask {
     	
     	return status;
     }
+    
+    /**
+     * 取得fromData nodeString
+     * @param strResponse
+     * @return
+     */
+    private String getFromDataNodeString(String strResponse) {
+    	String nodeString = null;
+    	try {
+    		if(StringUtils.isNotBlank(strResponse)) {
+        		String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+        		//System.out.println("dataString="+dataString);
+    	       	dataString = MyJacksonUtil.getNodeString(dataString, "fromData");
+    	       	
+    	       	if(StringUtils.isNotBlank(dataString)) {
+    	       		nodeString = dataString;
+    	       	}
+        	}
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return nodeString;
+    }
+    
+    /**
+     * 取得fromData裡的from value
+     * @param strResponse
+     * @return
+     */
+    private String getFromDataToValue(String strResponse) {
+    	String status = null; 
+    	try{
+    		String dataString = getFromDataNodeString(strResponse);
+	       	
+	       	status = MyJacksonUtil.readValue(dataString.replace("[", "").replace("]", ""), "/from");
+	       	//System.out.println("status="+status);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return status;
+    }
+    
+    /**
+     * 取得fromData裡的status value
+     * @param strResponse
+     * @return
+     */
+    private String getFromDataStatus(String strResponse) {
+    	String status = null; 
+    	try{
+    		String dataString = getFromDataNodeString(strResponse);
+	       	
+	       	status = MyJacksonUtil.readValue(dataString.replace("[", "").replace("]", ""), "/status");
+	       	//System.out.println("status="+status);
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return status;
+    }
+    
+    
     
     public static void main(String[] args) {
     	System.out.println("MAIN()");

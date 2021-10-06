@@ -27,7 +27,8 @@
 		SEQ_ID,CASE_ID,TYPE,NC_STATUS,MSG
 		FROM   [ESERVICE].[dbo].NOTIFY_OF_NEW_CASE_MEDICAL
 		where CASE_ID IS  NOT  NULL AND  NC_STATUS=#{statusDefault}
-	</select>
+		order by CREATE_DATE asc
+	</select><!-- 先進先出(FIFO) -->
 
 	<insert id="addNotifyOfNewCaseMedical"   parameterType="com.twfhclife.alliance.model.NotifyOfNewCaseMedicalVo">
 		INSERT INTO 

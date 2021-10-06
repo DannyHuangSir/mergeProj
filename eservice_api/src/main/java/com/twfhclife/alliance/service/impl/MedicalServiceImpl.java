@@ -165,8 +165,7 @@ public class MedicalServiceImpl implements IMedicalService {
         List<MedicalTreatmentClaimVo> collect=null;
         if (!CollectionUtils.isEmpty(medical)) {
             collect= medical.stream().map(x -> {
-                List<MedicalTreatmentClaimFileDataVo> medicalFilData
-                        = null;
+                List<MedicalTreatmentClaimFileDataVo> medicalFilData = null;
                 try {
                     medicalFilData = iMedicalDao.getMedicalTreatmentFileDataByClaimSeqId(x.getClaimSeqId());
                 } catch (Exception e) {
@@ -347,16 +346,19 @@ public class MedicalServiceImpl implements IMedicalService {
         /**
          * 進行添加上新案件的數據資料
          */
-    	int j=0;
+    	int iRtn = -1;
+    	
         //獲取到SequenceId數據
         Float seqId = iMedicalDao.getMedicalTreatmentSequence();
         medicalVo.setClaimSeqId(seqId);
         logger.info("添加的數據信息===",medicalVo);
-        int i = iMedicalDao.addMedicalTreatment(medicalVo);
-        if (i > 0) {
-            j = i;
+        int addMedicalCountResult = iMedicalDao.addMedicalTreatment(medicalVo);
+        if (addMedicalCountResult > 0) {
+        	iRtn = addMedicalCountResult;
             List<MedicalTreatmentClaimFileDataVo> fileDatas = medicalVo.getFileDatas();
             if (fileDatas != null && fileDatas.size() > 0) {
+            	int addFileCountResult = 0;
+
                 for (MedicalTreatmentClaimFileDataVo fileData : fileDatas) {
                     if (fileData != null) {
                         fileData.setClaimsSeqId(seqId);
@@ -364,14 +366,19 @@ public class MedicalServiceImpl implements IMedicalService {
                         String fileName = fileData.getFileName();
                         fileName = StringUtils.isBlank(fileName)?fileData.getDtype():fileName;
                         fileData.setFileName(fileName);
-                        j = iMedicalDao.addMedicalTreatmentFileData(fileData);
+                        addFileCountResult = iMedicalDao.addMedicalTreatmentFileData(fileData);
                     }
+                }
+                
+                if(addFileCountResult>0) {
+                	iRtn = addFileCountResult;
                 }
             }
         }
+
         /**
          * 進行發送郵件信息
-         */
+         
         if(j>0){
             MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
             List<String> receivers = new ArrayList<String>();
@@ -408,33 +415,39 @@ public class MedicalServiceImpl implements IMedicalService {
             logger.info("***發送系統管理員 : " + resultSYS_MailMsg);
             logger.info("end mail");
         }
-        return j;
+        */
+
+        return iRtn;
     }
 
     @Override
     @Transactional
-    public int updateTransMedicalTreatmentByTransNum(MedicalTreatmentClaimVo claimVo) throws Exception {
+    public int updateTransMedicalTreatmentByCaseId(MedicalTreatmentClaimVo claimVo) throws Exception {
     	/**
     	 * 1.更新之前保單的  聯盟狀態
     	 * 2.更新當前保單的文件狀態(存在更新),不存在新增
     	 */
+    	//update TRANS_MEDICAL_TREATMENT_CLAIM.ALLIANCE_STATUS
         int j = 0;
-        String transNum = claimVo.getTransNum();
+        //String transNum = claimVo.getTransNum();
+        String caseId = claimVo.getCaseId();
         String allianceStatus = claimVo.getAllianceStatus();
-        j = iMedicalDao.updateTransMedicalTreatmentByTransNum(transNum,allianceStatus);
+        j = iMedicalDao.updateTransMedicalTreatmentByCaseId(caseId,allianceStatus);
+        
+        //update TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
         List<MedicalTreatmentClaimFileDataVo> fileDatas = claimVo.getFileDatas();
         if (fileDatas!=null && fileDatas.size()>0) {
             for (MedicalTreatmentClaimFileDataVo fileData : fileDatas) {
                 String fileId = fileData.getFileId();
                 if (StringUtils.isNotBlank(fileId)) {
-                  int i = iMedicalDao.getTransMedicalTreatmentFiledatasByFileId(fileId);
+                	int hasFileCnt = iMedicalDao.getTransMedicalTreatmentFiledatasByFileId(fileId);
                     String fileStatus = fileData.getFileStatus();
                     if (StringUtils.isNotBlank(fileStatus)) {
-                        if (i>0) {
+                        if (hasFileCnt>0) {//有filedata就更新file_status.
                             j = iMedicalDao.updateTarnsMedicalTreatmentFileStatus(fileId,fileStatus);
-                        }else {
-                            float claimsSeqId= iMedicalDao.getTransMedicalTreatmentByClaimsSeqId(transNum);
-                            fileData.setClaimsSeqId(claimsSeqId);
+                        }else {//無filedata就新增filedata record.
+                            float claimsSeqId = iMedicalDao.getTransMedicalTreatmentClaimsSeqIdByCaseId(caseId);
+                        	fileData.setClaimsSeqId(claimsSeqId);
                             fileData.setFileBase64("");
                             String fileName = fileData.getFileName();
                             fileName = StringUtils.isBlank(fileName)?fileData.getDtype():fileName;
@@ -447,7 +460,7 @@ public class MedicalServiceImpl implements IMedicalService {
         }
 
         /**
-         * 進行發送郵件信息
+         * 更新狀態訊息後,進行發送郵件信息
          */
         if(j>0){
             MessageTriggerRequestVo vo = new MessageTriggerRequestVo();

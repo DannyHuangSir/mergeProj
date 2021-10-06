@@ -61,8 +61,10 @@ public interface IMedicalDao {
     int addMedicalTreatment(@Param("medicalVo")MedicalTreatmentClaimVo medicalVo)throws Exception;
     //添加文件
     int addMedicalTreatmentFileData(@Param("fileDataVo")MedicalTreatmentClaimFileDataVo fileDataVo)throws Exception;
+    
     //更新當前已有保單的狀態
-    int updateTransMedicalTreatmentByTransNum(@Param("transNum")String transNum, @Param("allianceStatus")String allianceStatus)throws  Exception;
+    int updateTransMedicalTreatmentByCaseId(@Param("caseId")String caseId, @Param("allianceStatus")String allianceStatus) throws Exception;
+    
     //查詢當前的數據是否有
     int getTransMedicalTreatmentFiledatasByFileId(@Param("fileId")String fileId)throws Exception;
     //進行修改文件的狀態
@@ -70,7 +72,7 @@ public interface IMedicalDao {
     //進行添加新的文件數據
     int addTarnsMedicalTreatmentFile(@Param("fileData")MedicalTreatmentClaimFileDataVo fileData)throws  Exception;
     //進行查詢出對應的ClaimsSeqId
-    float getTransMedicalTreatmentByClaimsSeqId(@Param("transNum")String transNum)throws Exception;
+    float getTransMedicalTreatmentClaimsSeqIdByCaseId(@Param("transNum")String transNum)throws Exception;
     //查詢狀態
     List<MedicalTreatmentClaimVo> getTransMedicalTreatmentAndTransByAllinaceStatus(@Param("lists")ArrayList<String> lists)throws Exception;
 
