@@ -65,7 +65,7 @@ public class BatchUploadMedicalTreatmentFileDataService {
 						} else {
 							logger.info("上傳聯盟醫療保單文件到影像系統失敗, transNum: " + vo.getTransNum());
 						}
-				}//end-if
+					}//end-if
 				}//end-for
 			}
 

@@ -163,8 +163,8 @@ public class BatchMain {
 			BatchUploadInsuranceClaimFileDataService icService = new BatchUploadInsuranceClaimFileDataService();
 			icService.process();
 			break;
-		case "medicalDocumentContent":
-			logger.info("Start running batch #medicalDocumentContent: Upload InsuranceClaimFileData to EZ_ACQUIRE..");
+		case "medicalTreatment":
+			logger.info("Start running batch #medicalTreatment: Upload MedicalTreatmentClaimFileData to EZ_ACQUIRE..");
 			BatchUploadMedicalTreatmentFileDataService medicalTreatmentService = new BatchUploadMedicalTreatmentFileDataService();
 			medicalTreatmentService.process();
 			break;

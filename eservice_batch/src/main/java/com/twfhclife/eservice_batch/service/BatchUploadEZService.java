@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.util.Base64;
@@ -264,7 +265,7 @@ public class BatchUploadEZService {
 			return null;
 		}
 
-		File file = new File(vo.getPath()+"/"+vo.getFileName());
+		File file = new File(vo.getPath()+File.pathSeparator+vo.getFileName());
 		//modify:read file from TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS.FILE_BASE64 Column-start
 		if(vo.getFileBase64()==null) {//嘗試使用實體檔
 			//do nothing.
