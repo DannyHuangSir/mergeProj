@@ -35,8 +35,10 @@ public class TransDepositVo {
     private String invtNo;
 
     private String currency;
+    
+    private Double ratio;
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -173,4 +175,12 @@ public class TransDepositVo {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+    
+    public Double getRatio() {
+		return ratio;
+	}
+
+	public void setRatio(Double ratio) {
+		this.ratio = ratio;
+	}
 }
