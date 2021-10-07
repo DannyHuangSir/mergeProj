@@ -26,24 +26,23 @@ public class NotifyOfNewCaseMedicalVo {
     public static final String STATUS_3 = "3";//非保护或處理失敗
     public static final String MSG  = "非本公司保戶";//非台銀保戶
     public static final String GO_WORK_AHEAD_MSG  = "已轉為人工處理";//已有案件進行中
-    //編號
-    private  Float        seqId;
-    //聯盟回壓案件編號
-    private  String     caseId;
-    //案件類型
-    private  String      type;
-    //觸發狀態類型
-    private  String     ncStatus;
-    //觸發描述信息
-    private  String      msg;
-    //案件狀態
-    private  String     caseStatus;
-    //案件狀態描述
-    private  String     caseMessage;
 
+	// 編號
+	private Float seqId;
+	// 聯盟回壓案件編號
+	private String caseId;
+	// 案件類型
+	private String type;
+	// 觸發狀態類型
+	private String ncStatus;
+	// 觸發描述信息
+	private String msg;
+	// 案件狀態
+	private String caseStatus;
+	// 案件狀態描述
+	private String caseMessage;
 
     private Timestamp createDate;
-
 
     private Timestamp statusDate;
 
