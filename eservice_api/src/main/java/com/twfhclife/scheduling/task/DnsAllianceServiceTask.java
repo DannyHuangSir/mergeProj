@@ -66,6 +66,11 @@ public class DnsAllianceServiceTask {
 	 */
 	public static final String DNS101_REQUEST_TYPE_ID_NO = "IdNo";
 	
+	/**
+	 * 呼叫核心CSP PROVIDE的傳入參數call_user,長度不可超過7位元
+	 */
+	public static final String CSP_PROVIDE_CALL_USER = "ES-API";
+	
 	//@Value("${cron.api.dns.disable}")
 	public String API_DNS_DISABLE;
 	
@@ -74,7 +79,9 @@ public class DnsAllianceServiceTask {
 	
 	//@Value("${alliance.dns201.url}")
 	public String URL_DNS201;
+	
 	public String URL_DNSFSZ1;
+	
 	public String URL_DNSFS62;
 
 	@Autowired
@@ -191,7 +198,7 @@ public class DnsAllianceServiceTask {
 							unParams.put("name", "DNS-FS62報通知核心");
 							unParams.put("caseId", contentVo.getCaseId());
 							unParams.put("transNum", contentVo.getTransNum());
-							unParams.put("call_user", "Fs62 related notification information");
+							unParams.put("call_user", CSP_PROVIDE_CALL_USER);
 
 							String strResponse = this.dnsServiceImpl.postCoreEntity(URL_DNSFS62, params, unParams);
 							//String strResponse = "{\"success\":true,\"data\":{\"token\":\"20210830_00000001\",\"detail_status\":\"0\",\"detail_message\":\"〔寫入完成〕\"}}";
@@ -200,9 +207,9 @@ public class DnsAllianceServiceTask {
 							String callRtncode = MyJacksonUtil.readValue(strResponse, "/success");//0代表成功,1代表查無資料
 							Boolean aBoolean = Boolean.valueOf(callRtncode);
 							if(aBoolean) {//聯盟回傳成功
-								String strContent = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
+								String dataDetailStatus = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
 								String msg = MyJacksonUtil.readValue(strResponse, "/data/detail_message");
-								if("0".equals(strContent)) {
+								if("0".equals(dataDetailStatus)) {
 									contentVo.setDetailMessage(msg!=null?msg:"寫入完成");
 									dnsDao.updateTransDnsSDetailMessageByTransNum(contentVo);
 								}//end-if
@@ -239,7 +246,7 @@ public class DnsAllianceServiceTask {
 					for (DnsContentVo contentVo : listContent) {
 						if (contentVo != null) {
 							//B.LOOP案件回報聯盟
-							//all DNS-101
+							//all DNS-FSZ1
 							String apiCode = null;
 							Map<String, String> params = new HashMap<>();
 							params.put("FSZ1-SCN-NAME", "FSZ1");//必填：固定用”FSZ1
@@ -252,7 +259,8 @@ public class DnsAllianceServiceTask {
 							unParams.put("name", "DNS-FSZ1取得最新契況");
 							unParams.put("caseId", contentVo.getCaseId());
 							unParams.put("transNum", contentVo.getTransNum());
-							unParams.put("call_user", "Fsz1 obtains the latest lease");
+							unParams.put("call_user", CSP_PROVIDE_CALL_USER);
+							
 							String strResponse = this.dnsServiceImpl.postCoreEntity(URL_DNSFSZ1, params, unParams);
 							//String strResponse = "{\"success\":true,\"data\":{\"token\":\"20210902_00000004\",\"detail_status\":\"0\",\"detail_message\":\"〔查詢完成〕\",\"values\":[{\"FSZ1-SCN-NAME\":\"FSZ1\",\"FSZ1-FUNC-CODE\":\"IN\",\"FSZ1-INSU-NO\":\"US10000014\",\"FSZ1-ID\":\"M299999897\",\"FSZ1-PI-ST\":\"00\"}]}}";
 							log.info("call URL_DNSFSZ1,strResponse=" + strResponse);
@@ -260,7 +268,8 @@ public class DnsAllianceServiceTask {
 							String callRtncode = MyJacksonUtil.readValue(strResponse, "/success");//true代表成功,其他代表查無資料
 							Boolean aBoolean = Boolean.valueOf(callRtncode);
 							if (aBoolean) {//聯盟回傳成功
-									String strContent = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
+								String dataDetailStatus = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
+								if("0".equals(dataDetailStatus)) {//表示核心系統執行成功
 									String token = MyJacksonUtil.readValue(strResponse, "/data/token");
 									String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
 									String values = MyJacksonUtil.getNodeString(dataString, "values");
@@ -286,25 +295,20 @@ public class DnsAllianceServiceTask {
 											}
 										});
 									}
+								}//end-if("0".equals(dataDetailStatus))
 							}//end-if
 						} else {
 							//do nothing.
 						}
 					}//end-if(contentVo!=null)
 				}//end-for
-		}catch(Exception e){
-			e.printStackTrace();
-			log.error(e.toString());
+			}catch(Exception e){
+				e.printStackTrace();
+				log.error(e.toString());
+			}
 		}
+		log.info("End DNS-FSZ1 Task.");
 	}
-		log.info("End DNS-FS62 Task.");
-}
-
-
-
-
-
-
 
 	/**
 	 * DNS-101案件回報

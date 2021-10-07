@@ -41,7 +41,8 @@ public class DnsServiceImpl implements IDnsExternalService {
 	 */
 	//@Value("${alliance.api.dns101.accessToken}")
 	public String ACCESS_TOKEN_DNS101;
-	//死亡出戶推送給核心TOKENZ值
+	
+	//死亡除戶推送給核心TOKENZ值
 	public String ACCESS_TOKEN_DNS_AUTHORIZATION;
 
 	private RestTemplate restTemplate;
@@ -143,24 +144,26 @@ public class DnsServiceImpl implements IDnsExternalService {
 		String strRes = null;
 
 		//呼叫記錄object
+		String apiName = unParams.get("name");
+		
 		UnionCourseVo uc = new UnionCourseVo();
 		uc.setCaseId(unParams.get("caseId"));
 		uc.setTransNum(unParams.get("transNum"));
 		uc.setType(UnionCourseVo.TYPE);
-		uc.setName(unParams.get("name"));
+		uc.setName(apiName);
 
 		if(url!=null) {
 			ResponseEntity<String> responseEntity = null;
 
 			HttpHeaders headers = new HttpHeaders();
-				headers.set("Authorization", this.ACCESS_TOKEN_DNS_AUTHORIZATION);
-				headers.set("call_user",unParams.get("call_user") );
-				headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer "+this.ACCESS_TOKEN_DNS_AUTHORIZATION);
+			headers.set("call_user",unParams.get("call_user") );
+			headers.setContentType(MediaType.APPLICATION_JSON);
 
 			//org.json.JSONObject jsonObj = new org.json.JSONObject(params);
 			Gson gson = new Gson();
 			String json = gson.toJson(params);
-			logger.info("request json={}",json);
+			logger.info(apiName+",request json={}",json);
 
 			HttpEntity<String> entity = new HttpEntity<String>(json,headers);
 			uc.setCreateDate(new Date());

@@ -149,16 +149,15 @@
 	<!-- 取得TRANS_DNS資料 -->
 	<select id="getTransDnsByStatus" parameterType="java.lang.String" resultMap="DnsResultMap">
 		select top(10)
-		td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,edp.POLICY_NO,td.NAME
-		,td.CON,td.CONDATE,td.ADDDATE
-		from ESERVICE.DBO.TRANS t inner  join ESERVICE.DBO.TRANS_DNS td on  t.TRANS_TYPE = 'DNS_ALLIANCE'
-		inner  join ESERVICE.DBO.TRANS_POLICY edp  on edp.TRANS_NUM=td.TRANS_NUM
-		where  td.CODE is null
-		and t.TRANS_NUM  = td.TRANS_NUM
-		and edp.POLICY_NO is not  null
-		and td.DETAIL_MESSAGE is  null
-		and  td.FSZ1_PI_ST='55'
-		and t.STATUS = #{status}
+			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,td.INSNOM POLICYNO,td.NAME
+			,td.CON,td.CONDATE,td.ADDDATE
+		from ESERVICE.DBO.TRANS t 
+		inner join ESERVICE.DBO.TRANS_DNS td on t.TRANS_TYPE = 'DNS_ALLIANCE'
+		where td.CODE is null
+			and t.TRANS_NUM = td.TRANS_NUM
+			and td.DETAIL_MESSAGE is null
+			and td.FSZ1_PI_ST='55'
+			and t.STATUS = #{status}
 	</select>
 
 
@@ -194,16 +193,15 @@
 	</select>
 	<select id="getTransDnsByStatusAndFsz1PiSt" resultMap="DnsResultMap">
 		select top(10)
-		td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,edp.POLICY_NO,td.NAME
-		,td.CON,td.CONDATE,td.ADDDATE,td.IDNO
-		from ESERVICE.DBO.TRANS t inner  join ESERVICE.DBO.TRANS_DNS td on  t.TRANS_TYPE = 'DNS_ALLIANCE'
-		inner  join ESERVICE.DBO.TRANS_POLICY edp  on edp.TRANS_NUM=td.TRANS_NUM
-		where  td.CODE is null
-		and t.TRANS_NUM  = td.TRANS_NUM
-		and edp.POLICY_NO is not  null
-		and td.DETAIL_MESSAGE is  null
-		and  td.FSZ1_PI_ST  is  null
-		and t.STATUS = #{status}
+			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,td.INSNOM POLICY_NO,td.NAME
+			,td.CON,td.CONDATE,td.ADDDATE,td.IDNO
+		from ESERVICE.DBO.TRANS t inner 
+		join ESERVICE.DBO.TRANS_DNS td on t.TRANS_TYPE = 'DNS_ALLIANCE'
+		where td.CODE is null
+			and t.TRANS_NUM = td.TRANS_NUM
+			and td.DETAIL_MESSAGE is null
+			and td.FSZ1_PI_ST is null
+			and t.STATUS = #{status}
 	</select>
 
 	<!-- 更新DNS_ALLIANCE.STATUS by seqId -->

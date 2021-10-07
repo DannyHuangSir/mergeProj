@@ -73,7 +73,7 @@ INSERT ESERVICE_ADM.DBO.PARAMETER (
      CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES (
      (select max(PARAMETER_ID)+1 from ESERVICE_ADM.DBO.PARAMETER), N'eservice_api',
-     N'alliance.apiFSZ1.url', N'alliance.apiFSZ1.url',  N'http://10.7.168.66:8280/csp/api/provide/v1.0.0/LIF-FSZ1',
+     N'alliance.apiFSZ1.url', N'alliance.apiFSZ1.url',  N'http://10.7.168.66:8280/csp/api/provide/v1.0.0/ESRV-FSZ1',
      (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.DBO.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_DNS_API_URL'), 0, NULL, 1,
      NULL, NULL,
      GETDATE(), N'admin', NULL, NULL)
@@ -88,7 +88,7 @@ INSERT ESERVICE_ADM.DBO.PARAMETER (
      CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES (
      (select max(PARAMETER_ID)+1 from ESERVICE_ADM.DBO.PARAMETER), N'eservice_api',
-     N'alliance.apiFS62.url', N'alliance.apiFS62.url',  N'http://10.7.168.66:8280/csp/api/provide/v1.0.0/LIF-FS62',
+     N'alliance.apiFS62.url', N'alliance.apiFS62.url',  N'http://10.7.168.66:8280/csp/api/provide/v1.0.0/ESRV-FS62',
      (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.DBO.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_DNS_API_URL'), 0, NULL, 1,
      NULL, NULL,
      GETDATE(), N'admin', NULL, NULL)
