@@ -49,7 +49,12 @@ public class BatchUploadMedicalTreatmentFileDataService {
 						BatchUploadEZService batchUploadEZService = new BatchUploadEZService();
 						
 						String rtnTaskId = null;
-						rtnTaskId = batchUploadEZService.uploadTransMedicalTreatmentClaimFiledatas(vo);
+						try {
+							rtnTaskId = batchUploadEZService.uploadTransMedicalTreatmentClaimFiledatas(vo);
+						}catch(Exception e) {
+							logger.info(e.toString());
+						}
+						
 						if (rtnTaskId!=null) {
 							//3.get task_id from EZ_Acquire, update to  TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS.EZ_ACQUIRE_TASK_ID
 							vo.setEzAcquireTaskId(rtnTaskId);

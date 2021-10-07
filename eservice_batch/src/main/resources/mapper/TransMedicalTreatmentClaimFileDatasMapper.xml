@@ -13,10 +13,11 @@
 		<result property="policyNo"    column="POLICY_NO" />
 		<result property="lipiId"      column="LIPI_ID" />
 		<result property="lipmId"      column="LIPM_ID" />
+		<result property="fileBase64"  column="FILE_BASE64" />
 	</resultMap>
 	
 	<select id="queryTransMedicalTreatmentClaimFileDatasVo" resultMap="TransMedicalTreatmentClaimFileDatasResultMap" parameterType="com.twfhclife.eservice_batch.model.TransMedicalTreatmentClaimFileDatasVo">
-		select a.FD_ID,a.CLAIMS_SEQ_ID,a.TYPE,a.FILE_NAME,a.PATH,a.RFE_ID,b.TRANS_NUM, b.POLICYNO, ESERVICE.DBO.FN_DEBASE64(b.ID_NO) as LIPI_ID
+		select a.FD_ID,a.CLAIMS_SEQ_ID,a.TYPE,a.FILE_NAME,a.PATH,a.RFE_ID,b.TRANS_NUM, b.POLICYNO, ESERVICE.DBO.FN_DEBASE64(b.ID_NO) as LIPI_ID,a.FILE_BASE64
 		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS as a,
 			ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM as b,
 			ESERVICE.dbo.TRANS c

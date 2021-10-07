@@ -50,7 +50,12 @@ public class BatchUploadInsuranceClaimFileDataService {
 						BatchUploadEZService batchUploadEZService = new BatchUploadEZService();
 						
 						String rtnTaskId = null;
-						rtnTaskId = batchUploadEZService.uploadInsuranceClaimFileDatas(vo);
+						try {
+							rtnTaskId = batchUploadEZService.uploadInsuranceClaimFileDatas(vo);
+						}catch(Exception e) {
+							logger.info(e.toString());
+						}
+						
 						if (rtnTaskId!=null) {
 							logger.info("上傳聯盟保單理賠文件到影像系統完成");
 							
@@ -67,7 +72,7 @@ public class BatchUploadInsuranceClaimFileDataService {
 						} else {
 							logger.info("上傳聯盟保單理賠文件到影像系統失敗, transNum: " + vo.getTransNum());
 						}
-				}//end-if
+					}//end-if
 				}//end-for
 			}
 

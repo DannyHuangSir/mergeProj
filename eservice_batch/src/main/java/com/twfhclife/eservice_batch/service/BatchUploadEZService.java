@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.util.Base64;
@@ -151,18 +150,19 @@ public class BatchUploadEZService {
 			return null;
 		}
 		
-		File file = new File(vo.getPath()+"/"+vo.getFileName());
+		File file = null;
+		String fileExtension = FilenameUtils.getExtension(vo.getFileName());
 		//modify:read file from TRANS_INSURANCE_CLAIM_FILEDATAS.FILE_BASE64 Column-start
-		if(vo.getFileBase64()==null) {//嘗試使用實體檔
-			//do nothing.
+		if(StringUtils.isBlank(vo.getFileBase64())) {//嘗試使用實體檔
+			file = new File(vo.getPath()+"/"+vo.getFileName());
+			logger.info("vo.getFileBase64() is null.");
 		}else {
+			file = File.createTempFile(vo.getFileName(), fileExtension);
 			file = base64ToFile(file,vo.getFileBase64());
 		}
 		//modify:read file from TRANS_INSURANCE_CLAIM_FILEDATAS.FILE_BASE64 Column-end
 		
-		if(file!=null && file.exists() && file.canRead()){
-			String fileExtension = FilenameUtils.getExtension(vo.getFileName());
-			
+		if(file!=null){			
 			UploadServiceStub stub = new UploadServiceStub(EZ_ACQUIRE_ENDPOINT);
 			UploadFileDocument upploadFileDocument = UploadFileDocument.Factory.newInstance();
 			UploadFile uploadFile = upploadFileDocument.addNewUploadFile();
@@ -246,7 +246,7 @@ public class BatchUploadEZService {
 			}
 
 		}else {
-			logger.error("File is not exists.path={},fileName={}", vo.getPath(),vo.getFileName());
+			logger.error("File is null.path={},fileName={}", vo.getPath(),vo.getFileName());
 		}
 		
 		logger.debug("***End uploadFile***");
@@ -265,17 +265,19 @@ public class BatchUploadEZService {
 			return null;
 		}
 
-		File file = new File(vo.getPath()+File.pathSeparator+vo.getFileName());
+		File file = null;
+		String fileExtension = FilenameUtils.getExtension(vo.getFileName());
 		//modify:read file from TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS.FILE_BASE64 Column-start
-		if(vo.getFileBase64()==null) {//嘗試使用實體檔
-			//do nothing.
+		if(StringUtils.isBlank(vo.getFileBase64())) {//嘗試使用實體檔
+			file = new File(vo.getPath() + File.pathSeparator + vo.getFileName());
+			logger.info("vo.getFileBase64() is null.");
 		}else {
+			file = File.createTempFile(vo.getFileName(), fileExtension);
 			file = base64ToFile(file,vo.getFileBase64());
 		}
 		//modify:read file from TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS.FILE_BASE64 Column-end
 
-		if(file!=null && file.exists() && file.canRead()){
-			String fileExtension = FilenameUtils.getExtension(vo.getFileName());
+		if(file!=null){
 
 			UploadServiceStub stub = new UploadServiceStub(EZ_ACQUIRE_ENDPOINT);
 			UploadFileDocument upploadFileDocument = UploadFileDocument.Factory.newInstance();
@@ -360,7 +362,7 @@ public class BatchUploadEZService {
 			}
 
 		}else {
-			logger.error("File is not exists.path={},fileName={}", vo.getPath(),vo.getFileName());
+			logger.error("File is null.path={},fileName={}", vo.getPath(),vo.getFileName());
 		}
 
 		logger.debug("***End uploadFile***");
