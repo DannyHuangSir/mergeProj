@@ -116,7 +116,8 @@ public class DnsAllianceServiceTask {
         		}else if("alliance.api.dns101.accessToken".equals(parameterItem.getParameterName())) {
         			dnsServiceImpl.setACCESS_TOKEN_DNS101(parameterItem.getParameterValue());
         		}else {
-        			//do nothing.
+        			log.info("set accessToken error,parameterItem.getParameterName()="+parameterItem.getParameterName()
+    				+",parameterItem.getParameterValue(){}="+parameterItem.getParameterValue());
         		}
         	});
     	}
@@ -129,19 +130,20 @@ public class DnsAllianceServiceTask {
 		}
     	if (resultUrlList != null) {
     		resultUrlList.forEach(parameterItem -> {
-	    		switch (parameterItem.getParameterName()){
-	    			case "alliance.dns101.url":
-	    				this.setURL_DNS101(parameterItem.getParameterValue());
-	    			case "alliance.dns201.url":
-	    				this.setURL_DNS201(parameterItem.getParameterValue());
-					case "alliance.apiFS62.url":
-						this.setURL_DNSFS62(parameterItem.getParameterValue());
-					case "alliance.apiFSZ1.url":
-						this.setURL_DNSFSZ1(parameterItem.getParameterValue());
-	    			default:
-	    				log.info("set dns url error,parameterItem.getParameterName()="+parameterItem.getParameterName()
-	    				+",parameterItem.getParameterValue(){}="+parameterItem.getParameterValue());
-	    		}
+    			String parameterCode = parameterItem.getParameterCode();
+    			
+    			if("alliance.dns101.url".equals(parameterCode)) {
+    				this.setURL_DNS101(parameterItem.getParameterValue());
+    			}else if("alliance.dns201.url".equals(parameterCode)) {
+    				this.setURL_DNS201(parameterItem.getParameterValue());
+    			}else if("alliance.apiFS62.url".equals(parameterCode)) {
+    				this.setURL_DNSFS62(parameterItem.getParameterValue());
+    			}else if("alliance.apiFSZ1.url".equals(parameterCode)) {
+    				this.setURL_DNSFSZ1(parameterItem.getParameterValue());
+    			}else {
+    				log.info("set dns url error,parameterItem.getParameterCode()="+parameterCode
+    				+",parameterItem.getParameterValue(){}="+parameterItem.getParameterValue());
+    			} 
 	    	});
     	}
     	if (resultSchList != null) {

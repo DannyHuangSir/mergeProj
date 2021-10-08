@@ -149,7 +149,9 @@
 	<!-- 取得TRANS_DNS資料 -->
 	<select id="getTransDnsByStatus" parameterType="java.lang.String" resultMap="DnsResultMap">
 		select top(10)
-			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,td.INSNOM POLICYNO,td.NAME
+			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,
+			td.INSNOM POLICYNO,
+			ESERVICE.dbo.FN_DEBASE64(td.NAME) NAME
 			,td.CON,td.CONDATE,td.ADDDATE
 		from ESERVICE.DBO.TRANS t 
 		inner join ESERVICE.DBO.TRANS_DNS td on t.TRANS_TYPE = 'DNS_ALLIANCE'
@@ -193,8 +195,11 @@
 	</select>
 	<select id="getTransDnsByStatusAndFsz1PiSt" resultMap="DnsResultMap">
 		select top(10)
-			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,td.INSNOM POLICY_NO,td.NAME
-			,td.CON,td.CONDATE,td.ADDDATE,td.IDNO
+			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,
+			td.INSNOM POLICY_NO,
+			ESERVICE.dbo.FN_DEBASE64(td.NAME) NAME
+			,td.CON,td.CONDATE,td.ADDDATE,
+			ESERVICE.dbo.FN_DEBASE64(td.IDNO) IDNO
 		from ESERVICE.DBO.TRANS t inner 
 		join ESERVICE.DBO.TRANS_DNS td on t.TRANS_TYPE = 'DNS_ALLIANCE'
 		where td.CODE is null
