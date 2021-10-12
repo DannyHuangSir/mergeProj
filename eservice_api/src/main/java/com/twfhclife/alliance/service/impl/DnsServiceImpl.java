@@ -206,7 +206,7 @@ public class DnsServiceImpl implements IDnsExternalService {
 		    //Response
 		    HttpResponse response = httpClient.execute(request);
 		    org.apache.http.HttpEntity apachHttpEntity = response.getEntity();
-		    logger.info("apachHttpEntity="+apachHttpEntity);
+		    logger.info("apacheHttpEntity="+apachHttpEntity);
 
 		    BufferedReader rd = new BufferedReader(new InputStreamReader(apachHttpEntity.getContent()));
 		    StringBuffer result = new StringBuffer();

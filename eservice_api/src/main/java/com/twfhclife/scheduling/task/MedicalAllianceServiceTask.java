@@ -289,6 +289,7 @@ public class MedicalAllianceServiceTask {
                                         tvo.setType(ivo.getType());
                                         tvo.setFileBase64(ivo.getFileBase64());
                                         tvo.setFileId(ivo.getFileId());
+                                        tvo.setFileStatus(ivo.getFileStatus());
                                         transFileDatas.add(tvo);
                                     }
                                     transMedicalTreatmentClaimVo.setFileDatas(transFileDatas);
@@ -773,11 +774,12 @@ public class MedicalAllianceServiceTask {
                                         fileDataVo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_RE_FILE);
                                         fileDataVo.setFileBase64("");
                                         //進行回應狀態
-                                        iMedicalService.updateTarnsMedicalTreatmentFileDataStatus(fileDataVo);
+                                        int i = iMedicalService.updateTarnsMedicalTreatmentFileDataStatus(fileDataVo);
                                     }
 
                                 }
                             }
+                            int i = iMedicalService.updaetNotifyOfNewCaseMedicalStatus(vo.getCaseId(),vo.getTransNum());
                         }
                     }
                 }

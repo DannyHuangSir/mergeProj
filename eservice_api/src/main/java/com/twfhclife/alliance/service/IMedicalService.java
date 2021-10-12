@@ -89,4 +89,11 @@ public interface IMedicalService {
     //查詢是否需要進行推送給聯盟的數據
     int getTransMedicalTreatmentBySendAlliance() throws Exception;
 
+    /**
+     * 進行修改狀態信息
+     * @param caseId
+     * @return
+     * @throws Exception
+     */
+    int updaetNotifyOfNewCaseMedicalStatus(String caseId,String transNum)throws Exception;
 }

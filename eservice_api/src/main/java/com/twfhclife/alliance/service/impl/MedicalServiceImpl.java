@@ -521,6 +521,13 @@ public class MedicalServiceImpl implements IMedicalService {
         return rtn;
     }
 
+    @Override
+    public int updaetNotifyOfNewCaseMedicalStatus(String caseId,String transNum) throws Exception {
+                String pths = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PTHS);
+        int   i= iMedicalDao.updateTarnsMedicalTreatmentClaimToAllianceStatus(transNum,pths);
+        return i;
+    }
+
     private MessageTriggerRequestVo getMessageTriggerRequestVo(String msgCode, List<String> receivers, Map<String, String> paramMap,String type) {
         MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
         vo.setMessagingTemplateCode(msgCode);

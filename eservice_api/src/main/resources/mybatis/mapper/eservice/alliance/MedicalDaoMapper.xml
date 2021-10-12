@@ -474,7 +474,6 @@
 		from ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM
 		where  CASE_ID is null
 		and SEND_ALLIANCE='Y'
-		and ALLIANCE_STATUS is  null
 	</select>
 	
 	<!-- 以caseId查詢MEDICAL_TREATMENT_CLAIM -->
@@ -836,7 +835,7 @@
 
 		#{vo.allianceStatus,jdbcType=VARCHAR},
 		#{vo.hpUid,jdbcType=VARCHAR},
-		#{vo.cpOa,jdbcType=VARCHAR}
+		#{vo.cpoa,jdbcType=VARCHAR}
 		)
 	</insert>
 
@@ -865,4 +864,19 @@
 		SEND_ALLIANCE_PUSH = #{code}
 		where TRANS_NUM = #{vo.transNum}
 	</update>
+	<update id="updateNotifyOfNewCaseMedicalIsCaseId">
+		UPDATE  [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL] SET  NC_STATUS = #{ncStatus},MSG = #{msg} where  CASE_ID = #{caseId}
+	</update>
+	<update id="updateTarnsMedicalTreatmentClaimToAllianceStatus">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		set
+		ALLIANCE_STATUS = #{pths}
+		where TRANS_NUM = #{transNum}
+	</update>
+
+	<select id="getNotifyOfNewCaseMedicalIsCaseId" resultType="java.lang.String">
+		select  CASE_ID  from [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL]
+		WHERE  CASE_ID = #{caseID,jdbcType=VARCHAR}
+	</select>
+
 </mapper>

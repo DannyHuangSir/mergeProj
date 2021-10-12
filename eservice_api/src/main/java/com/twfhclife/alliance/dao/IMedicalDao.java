@@ -100,4 +100,11 @@ public interface IMedicalDao {
      * @throws Exception
      */
     int updetaTransMedicalTreatmentClaimBySendAlliancePush(@Param("vo")TransMedicalTreatmentClaimVo voTemp,@Param("code")String  code)throws Exception;
+
+    String getNotifyOfNewCaseMedicalIsCaseId(@Param("caseID")String caseId)throws Exception;
+
+    int updateNotifyOfNewCaseMedicalIsCaseId(@Param("caseId")String caseID,@Param("ncStatus")String ncStatus,@Param("msg")String msg)throws Exception;
+    //修改當前保單為重新獲取醫院端已接收到此次查調資
+    //訊，待醫院端回覆資料
+    int updateTarnsMedicalTreatmentClaimToAllianceStatus(@Param("transNum")String transNum, @Param("pths")String medicalInterfaceStatusPths)throws Exception;;
 }
