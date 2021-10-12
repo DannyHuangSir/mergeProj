@@ -226,16 +226,10 @@
 	<update id="updateTransDnssfsz1PiStByPolicyNo"  parameterType="com.twfhclife.alliance.model.DnsContentVo">
 		update ESERVICE.DBO.TRANS_DNS
 		set
-		FSZ1_PI_ST = #{vo.fsz1PiSt},
-		FSZ1_ID = #{vo.fsz1Id},
-		TOKEN = #{vo.token}
-		where TRANS_NUM
-		in  (
-		select
-		TRANS_NUM
-			from
-			ESERVICE.DBO.TRANS_POLICY WHERE POLICY_NO=#{vo.policyNo}
-		)
+			FSZ1_PI_ST = #{vo.fsz1PiSt},
+			FSZ1_ID = #{vo.fsz1Id},
+			TOKEN = #{vo.token}
+		where TRANS_NUM = #{vo.transNum} and INSNOM = #{vo.policyNo}
 	</update>
 
 </mapper>

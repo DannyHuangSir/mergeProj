@@ -149,7 +149,7 @@ public class DnsServiceImpl implements IDnsExternalService {
 	}
 
 	@Override
-	public String postCoreEntity(String url, Map<String, String> params, Map<String, String> unParams) throws Exception {
+	public String postForHttpURLConnection(String url, Map<String, String> params, Map<String, String> unParams) throws Exception {
 
 		String strRes = null;
 
@@ -163,71 +163,64 @@ public class DnsServiceImpl implements IDnsExternalService {
 		uc.setName(apiName);
 
 		if(url!=null) {
-			ResponseEntity<String> responseEntity = null;
-
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Authorization", "Bearer "+this.ACCESS_TOKEN_DNS_AUTHORIZATION);
-			headers.set("call_user",unParams.get("call_user") );
-			headers.setAccept(java.util.Arrays.asList(MediaType.APPLICATION_JSON));
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			
-//			MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-//	        requestBody.add("FSZ1-SCN-NAME","FSZ1");
-//	        requestBody.add("FSZ1-FUNC-CODE","IN");
-//	        requestBody.add("FSZ1-INSU-NO",params.get("FSZ1-INSU-NO"));
-//	        requestBody.add("FSZ1-ID",params.get("FSZ1-ID"));
-	        //HttpEntity<MultiValueMap> entity = new HttpEntity<MultiValueMap>(requestBody, headers);
 
 			//org.json.JSONObject jsonObj = new org.json.JSONObject(params);
 			Gson gson = new Gson();
 			String json = gson.toJson(params);
 			logger.info(apiName+",request json={}",json);
 
-			HttpEntity<String> entity = new HttpEntity<String>(json,headers);
 			uc.setCreateDate(new Date());
 			
-			//responseEntity = restTemplate.postForEntity(url, entity, String.class);//HttpClientErrorException 400
-			//Fsz1 fsz1 = restTemplate.postForObject(url, entity, Fsz1.class);//HttpClientErrorException 400
-			//logger.info("apiName={}"+apiName+",response Fsz1 Object={}"+fsz1);
-			//responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);//HttpClientErrorException 400
-			//String rtnAfterPost = restTemplate.postForObject(url, entity, String.class);//HttpClientErrorException 400
-			//logger.info("rtnAfterPost={}",rtnAfterPost);
-			
-			String postRequest = "POST format";
-			HttpClient httpClient = HttpClientBuilder.create().build();
-			HttpPost request = new HttpPost(url);
-			request.setHeader("Content-Type", "application/json");
-			request.setHeader("Authorization", "Bearer "+this.ACCESS_TOKEN_DNS_AUTHORIZATION);
-			request.setHeader("call_user",unParams.get("call_user") );
-			//Request body
-		    StringEntity reqEntity = new StringEntity(postRequest,"UTF-8");
-		    request.setEntity(reqEntity);
-		    logger.info("call url="+url+",request.toString()="+request.toString());
-		    //Response
-		    HttpResponse response = httpClient.execute(request);
-		    org.apache.http.HttpEntity apachHttpEntity = response.getEntity();
-		    logger.info("apacheHttpEntity="+apachHttpEntity);
-
-		    BufferedReader rd = new BufferedReader(new InputStreamReader(apachHttpEntity.getContent()));
-		    StringBuffer result = new StringBuffer();
-			String line1 = "";
-			while ((line1 = rd.readLine()) != null) {
-				result.append(line1);
+			//建立連線
+			java.net.URL netUrl = new java.net.URL(url);
+			java.net.HttpURLConnection httpConn=(java.net.HttpURLConnection)netUrl.openConnection();
+			//設定引數
+			httpConn.setDoOutput(true);//需要輸出
+			httpConn.setDoInput(true);//需要輸入
+			httpConn.setUseCaches(false);//不允許快取
+			httpConn.setRequestMethod("POST");//設定POST方式連線
+			//設定請求屬性
+			httpConn.setRequestProperty("Content-Type", "application/json");
+			//httpConn.setRequestProperty("Connection", "Keep-Alive");// 維持長連線
+			httpConn.setRequestProperty("Charset", "UTF-8");
+			httpConn.setRequestProperty("Authorization", "Bearer "+this.ACCESS_TOKEN_DNS_AUTHORIZATION);
+			httpConn.setRequestProperty("call_user",unParams.get("call_user") );
+			//連線
+			httpConn.connect();
+			//建立輸入流，向指向的URL傳入引數
+			java.io.DataOutputStream dos = new java.io.DataOutputStream(httpConn.getOutputStream());
+			dos.write(json.toString().getBytes("UTF-8"));
+			dos.flush();
+			dos.close();
+			//獲得響應狀態
+			int resultCode = httpConn.getResponseCode();
+			boolean checkResp = false;
+			if(java.net.HttpURLConnection.HTTP_OK == resultCode) {
+				checkResp = true;
 			}
-			String resultString = result.toString();
-			logger.info("resultString="+resultString);
-			
-		    
-			uc.setCompleteDate(new Date());
+			if(checkResp){
+				StringBuffer sb = new StringBuffer();
+				String readLine = new String();
+				BufferedReader responseReader = 
+						new BufferedReader(new InputStreamReader(httpConn.getInputStream(),"UTF-8"));
+				while((readLine = responseReader.readLine())!=null){
+					sb.append(readLine).append("\n");
+				}
+				responseReader.close();
+				strRes = sb.toString();
+				logger.info("response string="+strRes);
+			}else {
+				logger.info("HttpURLConnection is not OK.");
+			}
 
-			boolean checkResp = this.checkResponseStatus(responseEntity);
+			uc.setCompleteDate(new Date());
 
 			if(checkResp) {
 				uc.setNcStatus(UnionCourseVo.NC_STATUS_S);
 			}else {
 				uc.setNcStatus(UnionCourseVo.NC_STATUS_F);
 			}
-			uc.setMsg(getResInfo(strRes));
+			uc.setMsg(getDnsApiResponseDetail(strRes));
 
 			try {
 				//歷程錯誤不能影響聯盟response
@@ -240,7 +233,7 @@ public class DnsServiceImpl implements IDnsExternalService {
 				return null;
 			}
 
-			strRes= responseEntity.getBody();
+			//strRes= responseEntity.getBody();
 			logger.info("responseEntity.getBody()="+strRes);
 		}
 
@@ -273,7 +266,26 @@ public class DnsServiceImpl implements IDnsExternalService {
 				str = "{\"code\":"+MyJacksonUtil.getNodeString(strRes, "code")+",\"msg\":"+MyJacksonUtil.getNodeString(strRes, "msg")+"}";
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return str;
+	}
+	
+	/**
+	 * 取得核心DNS API responst
+	 * @param strRes
+	 * @return
+	 */
+	private String getDnsApiResponseDetail(String strRes) {
+		String str = "";
+		try {
+			if (strRes != null) {
+				String detailStatus  = MyJacksonUtil.readValue(strRes, "/data/detail_status");
+				String detailMessage = MyJacksonUtil.readValue(strRes, "/data/detail_message");
+				str = "detailStatus:"+detailStatus + ",detail_message:"+detailMessage;
+				//str = "{\"detail_status\":"+MyJacksonUtil.getNodeString(strRes, "data/detail_status")+",\"detail_message\":"+MyJacksonUtil.getNodeString(strRes, "data/detail_message")+"}";
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return str;
@@ -310,100 +322,16 @@ public class DnsServiceImpl implements IDnsExternalService {
 	public void setACCESS_TOKEN_DNS101(String aCCESS_TOKEN_DNS101) {
 		ACCESS_TOKEN_DNS101 = aCCESS_TOKEN_DNS101;
 	}
+	
+	public static void main(String[] args) throws Exception{
+		String rtn = "{\"success\": true,\"data\": {\"detail_status\": \"0\",\"detail_message\": \"〔查詢完成〕\",\"values\": [{\"FSZ1-ID\": \"Z1234567\",\"FSZ1-PI-ST\": \"00\"}]}}\r\n" + 
+				"";
+		
+		DnsServiceImpl impl = new DnsServiceImpl();
+		String output = impl.getDnsApiResponseDetail(rtn);
+		System.out.println("output="+output);
+		
+		//String id = MyJacksonUtil.readValue(rtn, "/data/values/FSZ1-ID");
+	}
 
-}
-
-/**
- * 核心系統API回傳物件
- *
- */
-class Fsz1{
-	private String success;
-	private Data data;
-	public String getSuccess() {
-		return success;
-	}
-	public void setSuccess(String success) {
-		this.success = success;
-	}
-	public Data getData() {
-		return data;
-	}
-	public void setData(Data data) {
-		this.data = data;
-	}
-	
-}
-
-class Data{
-	private String token;
-	private String detailSuccess;
-	private String detailMessage;
-	private Values values;
-	
-	public Values getValues() {
-		return values;
-	}
-	public void setValues(Values values) {
-		this.values = values;
-	}
-	public String getToken() {
-		return token;
-	}
-	public void setToken(String token) {
-		this.token = token;
-	}
-	public String getDetailSuccess() {
-		return detailSuccess;
-	}
-	public void setDetailSuccess(String detailSuccess) {
-		this.detailSuccess = detailSuccess;
-	}
-	public String getDetailMessage() {
-		return detailMessage;
-	}
-	public void setDetailMessage(String detailMessage) {
-		this.detailMessage = detailMessage;
-	}
-	
-}
-
-class Values{
-	private String fsz1ScnName;
-	private String fsz1FuncCode;
-	private String fsz1InsuNo;
-	private String fsz1Id;
-	private String fsz1PiSt;
-	
-	public String getFsz1ScnName() {
-		return fsz1ScnName;
-	}
-	public void setFsz1ScnName(String fsz1ScnName) {
-		this.fsz1ScnName = fsz1ScnName;
-	}
-	public String getFsz1FuncCode() {
-		return fsz1FuncCode;
-	}
-	public void setFsz1FuncCode(String fsz1FuncCode) {
-		this.fsz1FuncCode = fsz1FuncCode;
-	}
-	public String getFsz1InsuNo() {
-		return fsz1InsuNo;
-	}
-	public void setFsz1InsuNo(String fsz1InsuNo) {
-		this.fsz1InsuNo = fsz1InsuNo;
-	}
-	public String getFsz1Id() {
-		return fsz1Id;
-	}
-	public void setFsz1Id(String fsz1Id) {
-		this.fsz1Id = fsz1Id;
-	}
-	public String getFsz1PiSt() {
-		return fsz1PiSt;
-	}
-	public void setFsz1PiSt(String fsz1PiSt) {
-		this.fsz1PiSt = fsz1PiSt;
-	}
-	
 }

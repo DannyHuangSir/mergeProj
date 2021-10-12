@@ -183,7 +183,7 @@ public class DnsAllianceServiceTask {
 							params.put("FS62-SCN-NAME","FS62");//必填：固定用”FS62”
 							params.put("FS62-FUNC-CODE","IN");//必填：固定用”IN”
 							params.put("FS62-INSU-NO",contentVo.getPolicyNo());//必填：保單號碼
-							params.put("FS62-date",contentVo.getAdddate());//必填：辦理日(yyyyMMdd)
+							params.put("FS62-ACC-DATE",contentVo.getAdddate());//必填：辦理日(yyyyMMdd)年份為民國年
 							params.put("FS62-PAY-CODE","30");//必填：種類/固定”30”
 							params.put("FS62-ACCI-DATE",contentVo.getCondate());//必填：事故日
 							//進行查詢事故的原因
@@ -202,20 +202,24 @@ public class DnsAllianceServiceTask {
 							unParams.put("transNum", contentVo.getTransNum());
 							unParams.put("call_user", CSP_PROVIDE_CALL_USER);
 
-							String strResponse = this.dnsServiceImpl.postCoreEntity(URL_DNSFS62, params, unParams);
+							String strResponse = this.dnsServiceImpl.postForHttpURLConnection(URL_DNSFS62, params, unParams);
 							//String strResponse = "{\"success\":true,\"data\":{\"token\":\"20210830_00000001\",\"detail_status\":\"0\",\"detail_message\":\"〔寫入完成〕\"}}";
 							log.info("call URL_dnsFS62,strResponse="+strResponse);
 
 							String callRtncode = MyJacksonUtil.readValue(strResponse, "/success");//0代表成功,1代表查無資料
 							Boolean aBoolean = Boolean.valueOf(callRtncode);
-							if(aBoolean) {//聯盟回傳成功
+							if(aBoolean) {//核心回傳成功
 								String dataDetailStatus = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
 								String msg = MyJacksonUtil.readValue(strResponse, "/data/detail_message");
 								if("0".equals(dataDetailStatus)) {
 									contentVo.setDetailMessage(msg!=null?msg:"寫入完成");
-									dnsDao.updateTransDnsSDetailMessageByTransNum(contentVo);
+									int rtnCnt = dnsDao.updateTransDnsSDetailMessageByTransNum(contentVo);
+									log.info("dnsDao.updateTransDnsSDetailMessageByTransNum rtnCnt="+rtnCnt);
+								}else{
+									log.info("Call URL_DNSFS62 return detail_status is not '0'.");
 								}//end-if
 							} else {
+								log.info("Call URL_DNSFS62 return is false.");
 								//do nothing.
 							}
 						}//end-if(contentVo!=null)
@@ -263,40 +267,37 @@ public class DnsAllianceServiceTask {
 							unParams.put("transNum", contentVo.getTransNum());
 							unParams.put("call_user", CSP_PROVIDE_CALL_USER);
 							
-							String strResponse = this.dnsServiceImpl.postCoreEntity(URL_DNSFSZ1, params, unParams);
+							String strResponse = this.dnsServiceImpl.postForHttpURLConnection(URL_DNSFSZ1, params, unParams);
 							//String strResponse = "{\"success\":true,\"data\":{\"token\":\"20210902_00000004\",\"detail_status\":\"0\",\"detail_message\":\"〔查詢完成〕\",\"values\":[{\"FSZ1-SCN-NAME\":\"FSZ1\",\"FSZ1-FUNC-CODE\":\"IN\",\"FSZ1-INSU-NO\":\"US10000014\",\"FSZ1-ID\":\"M299999897\",\"FSZ1-PI-ST\":\"00\"}]}}";
 							log.info("call URL_DNSFSZ1,strResponse=" + strResponse);
 
 							String callRtncode = MyJacksonUtil.readValue(strResponse, "/success");//true代表成功,其他代表查無資料
 							Boolean aBoolean = Boolean.valueOf(callRtncode);
-							if (aBoolean) {//聯盟回傳成功
+							if (aBoolean) {//核心回傳成功
 								String dataDetailStatus = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
 								if("0".equals(dataDetailStatus)) {//表示核心系統執行成功
-									String token = MyJacksonUtil.readValue(strResponse, "/data/token");
-									String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
-									String values = MyJacksonUtil.getNodeString(dataString, "values");
-									ObjectMapper objectMapper = new ObjectMapper();
-									JsonNode rootNode = objectMapper.readTree(values);
-									values = rootNode.toString();
-									List<HashMap<String, String>> contentVoList = new Gson().fromJson(values, new TypeToken<List<HashMap<String, String>>>() {
-									}.getType());
-									if (contentVoList != null && contentVoList.size() > 0) {
-										contentVoList.stream().forEach(X -> {
-											String fsz1Id = X.get("FSZ1-ID");
-											String fsz1PiSt = X.get("FSZ1-PI-ST");
-											if (!StringUtils.isEmpty(fsz1Id) &&
-													!StringUtils.isEmpty(fsz1PiSt)) {
-												contentVo.setFsz1PiSt(fsz1PiSt);
-												contentVo.setFsz1Id(fsz1Id);
-												contentVo.setToken(token);
-												try {
-													dnsDao.updateTransDnssfsz1PiStByPolicyNo(contentVo);
-												} catch (Exception e) {
-													e.printStackTrace();
-												}
-											}
-										});
+									String token    = MyJacksonUtil.readValue(strResponse, "/data/token");
+									//String fsz1Name = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-SCN-NAME");
+									//String fsz1Code = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-FUNC-CODE");
+									//String fsz1No   = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-INSU-NO");
+									String fsz1Id   = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-ID");
+									String fsz1PiSt = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-PI-ST");
+									
+									contentVo.setToken(token);
+									contentVo.setFsz1PiSt(fsz1PiSt);
+									contentVo.setFsz1Id(fsz1Id);
+									
+									if("55".equals(fsz1PiSt)) {//表示取得身故值
+										try {
+											dnsDao.updateTransDnssfsz1PiStByPolicyNo(contentVo);
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+									}else {
+										
 									}
+									
+
 								}//end-if("0".equals(dataDetailStatus))
 							}//end-if
 						} else {

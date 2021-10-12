@@ -28,8 +28,15 @@ public interface IDnsExternalService {
 	 * @return
 	 * @throws Exception
 	 */
-
-	String postCoreEntity(String url,Map<String, String> params,Map<String, String> unParams) throws Exception;
+	/**
+	 * 呼叫核心API(請勿使用spring boot RestTemplate or HttpClient)
+	 * @param url
+	 * @param params
+	 * @param unParams
+	 * @return String
+	 * @throws Exception
+	 */
+	String postForHttpURLConnection(String url,Map<String, String> params,Map<String, String> unParams) throws Exception;
 
 	/**
 	 * 檢查http response status
