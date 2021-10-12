@@ -140,6 +140,8 @@ public class TransInvestmentController extends BaseUserDataController  {
         if (parameterValueByCodeConsent != null) {
             addAttribute("transformationRemark", parameterValueByCodeConsent);
         }
+
+        addAttribute("uri", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_URI));
         UsersVo user = getUserDetail();
         String riskLevel = riskLevelService.getUserRiskAttr(user.getRocId());
         addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));
@@ -167,6 +169,7 @@ public class TransInvestmentController extends BaseUserDataController  {
     public String investmentSuccess(TransInvestmentVo vo) {
         // 驗證驗證碼或者密码
         String msg;
+        addAttribute("transInvestmentVo", vo);
         if (StringUtils.equals(vo.getAuthType(), "password")) {
             msg = checkPassword(vo.getUserPassword());
         } else {

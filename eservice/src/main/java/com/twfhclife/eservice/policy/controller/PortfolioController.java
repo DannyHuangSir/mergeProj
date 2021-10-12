@@ -3,6 +3,8 @@ package com.twfhclife.eservice.policy.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
+import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,6 +44,12 @@ public class PortfolioController extends BaseController {
 	@Autowired
 	private PortfolioClient portfolioClient;
 
+	@Autowired
+	private ITransRiskLevelService riskLevelService;
+
+	@Autowired
+	private ITransInvestmentService transInvestmentService;
+
 	/**
 	 * 投資損益及投報率.
 	 * 
@@ -52,22 +60,10 @@ public class PortfolioController extends BaseController {
 	@PostMapping("/listing2")
 	public String listing2(@RequestParam("policyNo") String policyNo) {
 		try {
-			String userId = getUserId();
-			String riskLevelName = "";
-			
-			// Call api 取得資料
-			PortfolioResponse portfolioResponse = portfolioClient.getPolicyRateOfReturn(userId, policyNo);
-			// 若無資料，嘗試由內部服務取得資料
-			if (portfolioResponse != null) {
-				logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);
-				riskLevelName = portfolioResponse.getRiskLevelName();
-			} else {
-				logger.info("Call internal service to get user[{}] getPolicyloanByPolicyNo data", userId);
-				riskLevelName = portfolioService.getRiskLevelName(policyNo);
-			}
-			addAttribute("riskLevelName", riskLevelName);
-			
-			// 投資型保單畫面UP UQ UR 畫面顯示修改 
+
+			String riskLevel = riskLevelService.getUserRiskAttr(getUserRocId());
+			addAttribute("riskLevelName", transInvestmentService.transRiskLevelToName(riskLevel));
+			// 投資型保單畫面UP UQ UR 畫面顯示修改
 			//DOWN_LISTING_2 投資損益及投報率修改
 			List<ParameterVo> parameterVos = getParameterList("LISTING_MAP_TEMPLATE");
 			if (!CollectionUtils.isEmpty(parameterVos)) {

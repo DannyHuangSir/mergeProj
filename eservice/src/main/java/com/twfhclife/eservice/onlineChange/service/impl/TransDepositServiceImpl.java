@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,21 +12,19 @@ import com.twfhclife.eservice.onlineChange.model.TransDepositDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransDepositVo;
 import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.service.ITransDepositService;
+import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.DepositPolicyListVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
+import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.web.dao.ParameterDao;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.model.UsersVo;
-import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.util.ApConstants;
-import com.twfhclife.generic.util.DateUtil;
-import com.twfhclife.generic.util.StatuCode;
-import javafx.scene.control.TextInputControl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +34,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TransDepositServiceImpl implements ITransDepositService {
@@ -59,6 +61,9 @@ public class TransDepositServiceImpl implements ITransDepositService {
 
     @Autowired
     private TransDepositDao transDepositDao;
+
+    @Autowired
+    private ITransInvestmentService transInvestmentService;
 
     private static final String DEPOST_PARAMETER_CATEGORY_CODE = "DEPOST_PARAMETER_CATEGORY";
 
@@ -130,5 +135,111 @@ public class TransDepositServiceImpl implements ITransDepositService {
     @Override
     public TransDepositDetailVo getAppliedTransDeposits(String transNum) {
         return transDepositDao.getAppliedTransDeposits(transNum);
+    }
+
+    @Override
+    public void distributionDepositFund(String rocId, TransDepositVo vo) {
+
+        DepositPolicyListVo depositPolicy = (DepositPolicyListVo) getDepositPolicy(rocId, vo.getPolicyNo());
+        BigDecimal eachMinValue = BigDecimal.valueOf(0);
+        BigDecimal eachSurplusValue = BigDecimal.valueOf(0);
+        BigDecimal amount = BigDecimal.valueOf(vo.getAmount());
+        String stopAccount = "";
+        List<ParameterVo> parameterVos = getDepositConfigs(depositPolicy.getPolicyNo());
+        if (!CollectionUtils.isEmpty(parameterVos)) {
+            for (ParameterVo parameterVo : parameterVos) {
+                if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_MIN_VALUE")) {
+                    eachMinValue = new BigDecimal(parameterVo.getParameterValue());
+                }
+                if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_SURPLUS_VALUE")) {
+                    eachSurplusValue = new BigDecimal(parameterVo.getParameterValue());
+                }
+                if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_STOP_ACCOUNT")) {
+                    stopAccount = parameterVo.getParameterValue();
+                }
+            }
+        }
+
+        List<TransDepositVo> newDeposits = Lists.newArrayList();
+        if (depositPolicy != null && !CollectionUtils.isEmpty(depositPolicy.getPortfolioVoList())) {
+            //1.每個基金先減去固定最小金額
+            for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
+                if (amount.doubleValue() >= 0 && portfolioVo.getAcctValue() != null) {
+                    if (!stopAccount.contains(portfolioVo.getInvtNo())) {
+                        BigDecimal ratio = transInvestmentService.getDistributeRationByInvtNo(depositPolicy.getPolicyNo(), portfolioVo.getInvtNo());
+                        if (ratio == null && portfolioVo.getAcctValue().subtract(eachMinValue).compareTo(eachSurplusValue) > 0) {
+                            amount = amount.subtract(eachMinValue);
+                        }
+                    }
+                }
+            }
+            //2.分配含有保單中有分配比例的基金
+            for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
+                if (amount.doubleValue() >= 0 && portfolioVo.getAcctValue() != null) {
+                    if (!stopAccount.contains(portfolioVo.getInvtNo())) {
+                        BigDecimal ratio = transInvestmentService.getDistributeRationByInvtNo(depositPolicy.getPolicyNo(), portfolioVo.getInvtNo());
+                        if (ratio != null) {
+                            BigDecimal fundValue = amount.multiply(ratio).divide(BigDecimal.valueOf(100), 4, BigDecimal.ROUND_DOWN);
+                            BigDecimal surplusValue = portfolioVo.getAcctValue().subtract(eachSurplusValue);
+                            if (fundValue.compareTo(eachMinValue) < 0) {
+                                continue;
+                            }
+                            if (fundValue.compareTo(surplusValue) > 0) {
+                                fundValue = surplusValue;
+                            }
+                            TransDepositVo transDepositVo = new TransDepositVo();
+                            transDepositVo.setInvtNo(portfolioVo.getInvtNo());
+                            transDepositVo.setRatio(fundValue.multiply(BigDecimal.valueOf(100)).divide(portfolioVo.getAcctValue(), 4, BigDecimal.ROUND_DOWN).doubleValue());
+                            transDepositVo.setAmount(fundValue.doubleValue());
+                            transDepositVo.setCurrency(portfolioVo.getInvtExchCurr());
+                            newDeposits.add(transDepositVo);
+                            amount = amount.subtract(fundValue);
+                        }
+                    }
+                }
+            }
+            //3.分配含无保單中有分配比例的基金
+            for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
+                if (amount.doubleValue() >= 0 && portfolioVo.getAcctValue() != null) {
+                    if (!stopAccount.contains(portfolioVo.getInvtNo())) {
+                        BigDecimal ratio = transInvestmentService.getDistributeRationByInvtNo(depositPolicy.getPolicyNo(), portfolioVo.getInvtNo());
+                        if (ratio == null) {
+                            BigDecimal tmpMinValue = portfolioVo.getAcctValue().subtract(eachSurplusValue);
+                            if (tmpMinValue.compareTo(eachMinValue) < 0) {
+                                continue;
+                            }
+                            BigDecimal tmpAmount = amount.add(eachMinValue);
+                            BigDecimal fundValue = tmpAmount.compareTo(tmpMinValue) > 0 ? tmpMinValue : tmpAmount;
+                            TransDepositVo transDepositVo = new TransDepositVo();
+                            transDepositVo.setInvtNo(portfolioVo.getInvtNo());
+                            transDepositVo.setRatio(fundValue.multiply(BigDecimal.valueOf(100)).divide(portfolioVo.getAcctValue(), 4, BigDecimal.ROUND_DOWN).doubleValue());
+                            transDepositVo.setAmount(fundValue.doubleValue());
+                            transDepositVo.setCurrency(portfolioVo.getInvtExchCurr());
+                            newDeposits.add(transDepositVo);
+                            amount = amount.subtract(fundValue);
+                        }
+                    }
+                }
+            }
+            //4.最後分配停泊賬戶提領基金
+            for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
+                if (amount.doubleValue() >= 0 && portfolioVo.getAcctValue() != null) {
+                    if (stopAccount.contains(portfolioVo.getInvtNo())) {
+                        BigDecimal fundValue = amount;
+                        if (fundValue.compareTo(amount) > 0) {
+                            fundValue = amount;
+                        }
+                        TransDepositVo transDepositVo = new TransDepositVo();
+                        transDepositVo.setInvtNo(portfolioVo.getInvtNo());
+                        transDepositVo.setRatio(fundValue.multiply(BigDecimal.valueOf(100)).divide(portfolioVo.getAcctValue(), 4, BigDecimal.ROUND_DOWN).doubleValue());
+                        transDepositVo.setAmount(fundValue.doubleValue());
+                        transDepositVo.setCurrency(portfolioVo.getInvtExchCurr());
+                        newDeposits.add(transDepositVo);
+                        amount = amount.subtract(fundValue);
+                    }
+                }
+            }
+            vo.setInvtDeposits(new Gson().toJson(newDeposits));
+        }
     }
 }

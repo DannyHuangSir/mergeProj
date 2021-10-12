@@ -8,6 +8,7 @@ import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import javafx.util.Pair;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -87,4 +88,6 @@ public interface ITransInvestmentService {
     Map<String, String> getNtdAndUsdUnitMin();
     //查詢臺幣與美元的比例大小
     Map<String, String> getNtdAndUsdProportionMin();
+
+    BigDecimal getDistributeRationByInvtNo(String policyNo, String invtNo);
 }

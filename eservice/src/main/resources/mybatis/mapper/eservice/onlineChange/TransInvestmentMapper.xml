@@ -114,7 +114,7 @@
     ,PP.EXCH_RATE_DATE AS exchRateDate
     FROM ESERVICE.dbo.POLICY_INVEST_FUND PI
     LEFT JOIN ESERVICE.dbo.POLICY_PORTFOLIO PP ON PI.POLICY_NO = PP.POLICY_NO AND PI.FUND_CODE = PP.INVT_NO
-    WHERE PI.POLICY_NO = #{policyNo}
+    WHERE PI.POLICY_NO = #{policyNo} AND PI.EFFECTIVE_DATE &gt; #{date}
   </select>
 
   <select id="getNewInvestments" resultType="com.twfhclife.eservice.policy.model.InvestmentPortfolioVo">
@@ -140,5 +140,10 @@
         #{invtNo}
       </foreach>
     </if>
+  </select>
+
+  <select id="getDistributeRationByInvtNo" resultType="java.math.BigDecimal">
+    SELECT INVEST_WEIGHT FROM ESERVICE.dbo.POLICY_INVEST_FUND
+    WHERE POLICY_NO = #{policyNo} AND FUND_CODE = #{invtNo} AND EFFECTIVE_DATE &gt; #{date}
   </select>
 </mapper>

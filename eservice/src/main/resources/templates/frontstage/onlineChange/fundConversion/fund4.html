@@ -178,6 +178,10 @@
 			$("body").on('change', "[name='currencysItem']", function(){
 				filterAndRestItems($(this).parent().parent().parent().parent())
 			})
+			//基金选项变更
+			$("body").on('change', "[name='invSelect']", function(){
+				$(this).parent().parent().parent().parent().find("[name='toUri']").attr("href", [[${uri}]] + $(this).val())
+			})
 		});
 	//獲取當前保單的新投資標的數據	
 	var newInvestments
@@ -267,7 +271,9 @@
                            +' <div class="selector-box">'
                             +'  <select name="companysItem" class="selector">'
 								$(companysItems).each(function(index, e){
-							item += '<option value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+								if (e != null) {
+									item += '<option value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+								}
 								})
 							item = item +' </select>'
                             +'</div>'
@@ -276,7 +282,9 @@
                           +'  <div class="selector-box">'
                           +'    <select  name="currencysItem" class="selector">'
 								$(currencysItems).each(function(index, e){
-							item += '<option value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+								 if (e != null) {
+									item += '<option value="' + e.VALUE +  '"> ' + e.KEY + '</option>'
+								 }
 						 		})
 							 item = item + '    </select>'
                           +'  </div>'
@@ -286,12 +294,14 @@
                          +'   <div class="selector-box">'
                          +'     <select class="selector" name="invSelect">'
 						$(newInvestments).each(function(index, e){
-							item += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '"> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
+							if (e != null) {
+								item += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '"> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
+							}
 						})
 						item = item +'</select>'
                          +'  </div>'
                          +' </div>'
-                         +'       <div class="col-sm-3"><a href="#" class="inv2">我要瞭解基金內容</a></div>'
+                         +'       <div class="col-sm-3"><a target="_blank" name="toUri" href="#" class="inv2">我要瞭解基金內容</a></div>'
 
                          +'       <div class="col-sm-2"><input type="text" onblur="showNumberPercentage(this)"  name="ratio" max="'+investmentInputSize.ratioMaxSize+'" min="'+investmentInputSize.ratioMinSize+'" class="col-sm-10" value="0">%</div>'
                          
@@ -300,7 +310,7 @@
 						 +'       </div>'
                          +'       <div class="clearfix"></div>'
                          +' </div> '
-    		$('#fundContent').append(item);
+    		$('#fundContent').append(filterAndRestItems($(item)));
     	}
 	
 		function filterAndRestItems(vm) {
@@ -312,7 +322,12 @@
 				}
 			)
 			let html = ''
+			var isFirst = true
 			$(arr).each(function(index, e){
+				if (isFirst) {
+					$(vm).find("[name='toUri']").attr("href", [[${uri}]] + e.invtNo)
+					isFirst = false
+				}
 				html += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '"> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
 			})
 			$(vm).find("[name='invSelect']").html(html)

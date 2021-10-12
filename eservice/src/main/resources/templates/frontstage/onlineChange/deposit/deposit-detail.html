@@ -80,12 +80,12 @@
 				<div class="col-sm-8">
 					<th:block th:text="${depositDetail.details[0].currency}"/>
 					<th:block th:if="${depositDetail.details[0].currency != 'NTD'}">
-						<th:block th:text="${depositDetail.details[0].amount != null}
-							? ${#numbers.formatDecimal(depositDetail.details[0].amount, 0, 'DEFAULT', 2, 'POINT')}"/>
+						<th:block th:text="${depositDetail.amount != null}
+							? ${#numbers.formatDecimal(depositDetail.amount, 0, 'DEFAULT', 2, 'POINT')}"/>
 					</th:block>
 					<th:block th:if="${depositDetail.details[0].currency == 'NTD'}">
-						<th:block th:text="${depositDetail.details[0].amount != null}
-							? ${#numbers.formatDecimal(depositDetail.details[0].amount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<th:block th:text="${depositDetail.amount != null}
+							? ${#numbers.formatDecimal(depositDetail.amount, 0, 'DEFAULT', 0, 'COMMA')}"/>
 					</th:block>
 				</div>
 			</div>

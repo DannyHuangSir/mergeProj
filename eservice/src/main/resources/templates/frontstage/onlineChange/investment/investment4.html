@@ -142,6 +142,8 @@
 		function go(){
 				let formData = {};
 				formData.finalInvestments = JSON.stringify([[${finalInvestments}]])
+				formData.newInvestments = [[${transInvestmentVo.newInvestments}]]
+				formData.investments = [[${transInvestmentVo.investments}]]
 				formData.policyNo = $("#policyNo").val()
 				formData.authType = $("[name='tab_group_2']:checked").val()
 				formData.userPassword = $.base64.encode($("input[name='userPassword']").val())

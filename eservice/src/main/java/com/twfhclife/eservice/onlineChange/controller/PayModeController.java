@@ -146,6 +146,17 @@ public class PayModeController extends BaseUserDataController {
 			mapPaymode.put("A", paymodeA);
 			mapPaymode.put("S", paymodeS);
 			mapPaymode.put("Q", paymodeQ);
+
+			String policyNo = transPaymodeVo.getPolicyNoList().get(0);
+			String type = policyNo.substring(0,2);
+			String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
+			if (StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) &&
+				types.contains(type)) {
+				mapPaymode.put("A", false);
+				mapPaymode.put("S", false);
+				mapPaymode.put("Q", false);
+				mapPaymode.put("M", true);
+			}
 			addAttribute("showAmount", checkShowAmount(transPaymodeVo));
 			addAttribute("paymodeCanChange", mapPaymode);
 			addAttribute("transPaymodeVo", transPaymodeVo);

@@ -6,13 +6,7 @@ import org.springframework.security.access.method.P;
 
 public interface TransCashPaymentDao {
 
-    int delete(Long id);
-
     int insert(TransCashPaymentVo record);
-
-    TransCashPaymentVo selectByPrimaryKey(Long id);
-
-    int update(TransCashPaymentVo record);
 
     TransCashPaymentVo getCashPaymentByPolicyNo(@Param("policyNo") String policyNo);
 

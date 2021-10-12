@@ -80,10 +80,19 @@
           <div class="form-group">
              <label for="inputPassword3" class="col-sm-2">可提領金額：</label>
             <div class="col-sm-10">
-                <th:block th:text="${depositVo.currency}"/>
-                <th:block th:text="${#numbers.formatDecimal((minValue) , 0, 'DEFAULT', 0, 'COMMA')}"/> ~
-                <th:block th:text="${depositVo.currency}"/>
-                <th:block th:text="${#numbers.formatDecimal((maxValue) , 0, 'DEFAULT', 0, 'COMMA')}"/>
+                <th:block th:if="${depositVo.currency != 'NTD'}">
+                    <th:block th:text="${depositVo.currency}"/>
+                    <th:block th:text="${#numbers.formatDecimal((minValue) , 0, 'DEFAULT', 0, 'COMMA')}"/> ~
+                    <th:block th:text="${depositVo.currency}"/>
+                    <th:block th:text="${#numbers.formatDecimal((maxValue), 0, 'DEFAULT', 2, 'POINT')}"/>
+                </th:block>
+                <th:block th:if="${depositVo.currency == 'NTD'}">
+                    <th:block th:text="${depositVo.currency}"/>
+                    <th:block th:text="${#numbers.formatDecimal((minValue) , 0, 'DEFAULT', 0, 'COMMA')}"/> ~
+                    <th:block th:text="${depositVo.currency}"/>
+                    <th:block th:text="${#numbers.formatDecimal((maxValue) , 0, 'DEFAULT', 0, 'COMMA')}"/>
+                </th:block>
+
             </div>
           </div>
           <div class="form-group">
@@ -165,7 +174,7 @@
                                    </div>
                                   </section>
                                 </article>
-                          </div>
+                      </div>
                       </div>
           </div> 
 
@@ -204,33 +213,25 @@
 	</div>
 	<th:block th:replace="fragments/script"/>
 	<script th:inline="javascript">
-	    var maxPercent = 90;
-        var minPercent = 10;
-        var maxValue = [[${maxValue}]];
-        var minValue = [[${minValue}]];
+        var minValue = 0;
         var surplusValue = 0;
         var currency = [[${depositVo.currency}]]
+        var stopAccount;
 
 		/*<![CDATA[*/
 		function go(){   	
 			if($('input:radio[name="tab_group_2"]:checked').val() == 'option1'){
+
 				acctValue = Math.floor(/*[[${depositVo.policyAcctValue}]]*/)
-		        currency = [[${depositVo.currency}]]
 		        depositAmount = $("input[name='depositAmount']").val()
-
-		        if (depositAmount > maxValue || depositAmount < minValue) {
-		            openAlert("提領金額只能為" + minValue + "~" + maxValue)
-		            return
-		        }
-
-                 if (currency == 'NTD' && !checkDecimal(depositAmount)) {
+                if (currency == 'NTD' && !checkDecimal(depositAmount)) {
                      openAlert("保單不允許輸入小數")
                      $("input[name='depositAmount']").val("")
                      return false;
-                 }
+                }
 
-		        if ((acctValue - depositAmount) < surplusValue) {
-		            openAlert("剩余金額必須大於" + surplusValue)
+		        if (depositAmount < [[${minValue}]] || depositAmount > [[${maxValue}]]) {
+		            openAlert("提領金額只能為" + [[${minValue}]] + "~" + [[${maxValue}]])
 		            return
 		        }
 
@@ -250,35 +251,33 @@
 			}
 		}
 		$(function(){
-
             $([[${depositPercent}]]).each(function(index, e){
                policyType = /*[[${depositVo.policyType}]]*/
-               currency = /*[[${depositVo.currency}]]*/
-               if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + currency + "_MAX_PERCENT") {
-                    maxPercent = parseInt(e.parameterValue)
-               }
-               if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + currency + "_MIN_PERCENT") {
-                    minPercent = parseInt(e.parameterValue)
-               }
                if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + currency + "_SURPLUS_VALUE") {
                     surplusValue = parseInt(e.parameterValue)
+               }
+
+               if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + currency + "_MIN_VALUE") {
+                    minValue = parseInt(e.parameterValue)
+               }
+
+               if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + "STOP_ACCOUNT") {
+                    stopAccount = e.parameterValue
                }
             })
 
             $("[name='tips']").text(
                 '僅顯示帳價>0之基金。提領金額會依使用者輸入的提領比例自動計算。提領比例只能輸入'
-                                        + minPercent + '-' + maxPercent +
+                                        + 0 + '-' + 100 +
                                         '整數數字，若不符合規則則無法輸入。'
             )
 
 		    $("#ok").on("click", function(){
 		        acctValue = /*[[${depositVo.policyAcctValue}]]*/
 		        var invtDeposits = []
-		        let depositAmount = 0
 		        $("input[name='amount']").each(function(index, e){
 		            if ($(this).val() != null && $(this).val() != "") {
 		                context = $(this).parent().parent().parent()
-		                depositAmount += parseFloat($(this).val())
 		                invtDeposits.push({
 		                    invtNo: $(context).find("[name='invtNo']").val(),
 		                    invtName: $(context).find("[name='invtName']").val(),
@@ -292,16 +291,6 @@
 
 		        if (invtDeposits.length <= 0) {
 		            openAlert("提領項不能為空")
-		            return
-		        }
-
-		        if (depositAmount > maxValue || depositAmount < minValue) {
-		            openAlert("提領金額只能為" + minValue + "~" + maxValue)
-		            return
-		        }
-
-		        if ((acctValue - depositAmount) < surplusValue) {
-		            openAlert("剩余金額必須大於" + surplusValue)
 		            return
 		        }
 
@@ -324,45 +313,63 @@
 
 		         percent = Math.floor($(this).val() * 100) / 100
                  context = $(this).parent().parent().parent()
-                 if (percent <= maxPercent && percent >= minPercent) {
-                     val = $(context).find("[name='acctValue']").val()
-                     //百分比换算金额
-                     if (currency == 'NTD') {
-                        $(context).find("[name='amount']").val(Math.floor((val * percent)/100))
-                     } else {
-                        $(context).find("[name='amount']").val(Math.floor(val * percent) / 100)
+                 amount = $(context).find("[name='acctValue']").val()
+                 percentVal = amount * percent /100
+
+                 if (stopAccount.indexOf($(context).find("[name='invtNo']").val()) == -1) {
+                    if (percentVal < minValue) {
+                         openAlert("提領金額必須大於：" + minValue)
+                         $(this).val("");
+                         $(context).find("[name='amount']").val("")
+                         return
                      }
-                    return
+
+                     if ((amount - percentVal) < surplusValue) {
+                         openAlert("剩余金額必須大於" + surplusValue)
+                         $(this).val("");
+                         $(context).find("[name='amount']").val("")
+                         return
+                     }
                  }
-                 openAlert("提領比例只能輸入" + minPercent + "-" + maxPercent)
-                 $(this).val("");
-                 $(context).find("[name='amount']").val("")
+
+                 //百分比换算金额
+                 if (currency == 'NTD') {
+                    $(context).find("[name='amount']").val(Math.floor((amount * percent)/100))
+                 } else {
+                    $(context).find("[name='amount']").val(Math.floor(amount * percent) / 100)
+                 }
 		    })
 
 		    $("input[name='amount']").on('change', function(){
 
 		         context = $(this).parent().parent().parent()
-		         val = $(context).find("[name='acctValue']").val()
+		         amount = $(context).find("[name='acctValue']").val()
 
                  if (currency == 'NTD' && !checkDecimal($(this).val())) {
                      openAlert("保單不允許輸入小數")
                      $(this).val("")
                      $(context).find("[name='percent']").val("")
-                     return false;
+                     return
                  }
 
-		         currency = $(context).find("[name='currency']").val()
-                 let percent = Math.floor($(this).val() / val * 10000) / 100
+                 if (stopAccount.indexOf($(context).find("[name='invtNo']").val()) == -1) {
+                      if ($(this).val() < minValue) {
+                         openAlert("提領金額必須大於：" + minValue)
+                         $(this).val("");
+                         $(context).find("[name='percent']").val("")
+                         return
+                     }
 
-		         if (percent <= maxPercent && percent >= minPercent) {
-                   $(context).find("[name='percent']").val(percent)
-                   return
+                     if ((amount - $(this).val()) < surplusValue) {
+                         openAlert("剩余金額必須大於" + surplusValue)
+                         $(this).val("");
+                         $(context).find("[name='percent']").val("")
+                         return
+                     }
                  }
 
-                 openAlert("提領金額比例只能" + minPercent + "-" + maxPercent)
-                 $(this).val("");
-                 $(context).find("[name='percent']").val("")
-                 return
+                 let percent = Math.floor($(this).val() / amount * 10000) / 100
+                 $(context).find("[name='percent']").val(percent)
 		    })
 		})
 

@@ -172,6 +172,7 @@ public class FundNotificationController extends BaseUserDataController {
 	@PostMapping("/notification3")
 	public String notification3(TransFundNotificationVo transFundNotificationVo) {
 		try {
+			logger.info("trans notification3 params:{}", transFundNotificationVo);
 			List<TransFundNotificationDtlVo> transFundNotificationDtlList = new ArrayList<>();
 			ObjectMapper mapper = new ObjectMapper();
 			transFundNotificationDtlList = mapper.readValue(
@@ -306,7 +307,7 @@ public class FundNotificationController extends BaseUserDataController {
 	@PostMapping("/getSearchPortfolio")
 	@ResponseBody
 	public ResponseEntity<ResponseObj> getSearchPortfolio(@RequestBody TransNotificationVo vo) {
-		processSuccess(transFundNotificationService.getSearchPortfolio(getUserRocId(), vo.getInvtNos()));
+		processSuccess(transFundNotificationService.getSearchPortfolio(vo.getInvtNos()));
 		return processResponseEntity();
 	}
 

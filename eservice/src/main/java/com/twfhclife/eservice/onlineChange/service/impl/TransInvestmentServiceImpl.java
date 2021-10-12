@@ -114,7 +114,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 
     @Override
     public List<InvestmentPortfolioVo> getOwnInvestment(String policyNo) {
-        List<InvestmentPortfolioVo> investmentList = transInvestmentDao.getOwnInvestment(policyNo);
+        List<InvestmentPortfolioVo> investmentList = transInvestmentDao.getOwnInvestment(policyNo, new Date());
         for (InvestmentPortfolioVo vo : investmentList) {
             BigDecimal netAmt = vo.getSafpNetAmt(); // 目前金額
             BigDecimal netUnits = vo.getSafpNetUnits(); // 目前單位數
@@ -625,5 +625,10 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
         stringHashMap.put(OnlineChangeUtil.NTD_PROPORTION_MIN,ntdProportionMin);
         stringHashMap.put(OnlineChangeUtil.USD_PROPORTION_MIN,usdProportionMin);
         return stringHashMap;
+    }
+
+    @Override
+    public BigDecimal getDistributeRationByInvtNo(String policyNo, String invtNo) {
+        return transInvestmentDao.getDistributeRationByInvtNo(policyNo, invtNo, new Date());
     }
 }

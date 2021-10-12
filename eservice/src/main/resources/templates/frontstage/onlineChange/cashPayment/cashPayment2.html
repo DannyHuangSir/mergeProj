@@ -63,15 +63,68 @@
                             <label for="" class="col-sm-6 colorGreen">收益分配或撥回資產分配方式：</label>
                            
 							<div class="selector-box col-sm-6">
-									<select class="selector" name="allocation">
-										<option th:selected="${preAllocation eq '' }"></option>
-										<option th:selected="${preAllocation eq '1'}" value="1">現金給付</option>
-										<option th:selected="${preAllocation eq '2'}" value="2">增加投資標的單位數</option>
-									</select>
-								</div>
+								<select class="selector" name="allocation" onchange="allocation()">
+									<option th:selected="${preAllocation eq '' }"></option>
+									<option th:selected="${preAllocation eq '1'}" value="1">現金給付</option>
+									<option th:selected="${preAllocation eq '2'}" value="2">增加投資標的單位數</option>
+								</select>
+							</div>
                        </div>
                     </div>
                     <div class="clearfix" style="margin-bottom: 30px;"></div>
+					<div class="col-sm-8 col-sm-offset-2">
+						<div class="tabs">
+							<!-- TAB 1 -->
+							<article id="tab_3" class="tab">
+
+							</article>
+							<!-- TAB 2 -->
+							<article class="tab" id="tab_4"th:attr="style=${preAllocation eq '1' ? 'display: block' : 'display: none' }">
+								<section id="tab_frame_print1" class="tab-frame">
+									<div class="arrow-upleft"></div>
+									<div class="grey2">
+										<div class="check-title depo2">帳戶內容</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">Swift Code</label>
+											<div class="col-sm-9"><input id="swiftCode" type="text" class="col-sm-6"> </div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">英文戶名</label>
+											<div class="col-sm-9"><input id="englishName" type="text" class="col-sm-6"> </div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">帳戶名稱</label>
+											<div class="col-sm-8 gray">
+												<th:block th:text="${proposer}"/>
+												<input type="hidden" id="accountName" name="accountName" th:value="${proposer}"/>
+											</div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">銀行名稱</label>
+											<div class="col-sm-3">
+												<div class="selector-box">
+													<select class="selector" id="bankOpt" name="bankOpt">
+													</select>
+												</div>
+											</div>
+											<label for="" class="col-sm-2">分行名稱</label>
+											<div class="col-sm-3">
+												<div class="selector-box">
+													<select class="selector" id="brancheOpt" name="brancheOpt" >
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">帳號</label>
+											<div class="col-sm-9"><input type="text" id="bankAccount" class="col-sm-11"> </div>
+										</div>
+									</div>
+								</section>
+								<p class="text-ps">帳戶名稱由系統帶出，且無法更改。</p>
+							</article>
+						</div>
+					</div>
                 </div>
 				<div class="col-md-8 col-md-offset-2 two-buttons">
 					<a href="cashPayment1"><button id="deny" class="btn-signup">上一步</i></button></a>
@@ -93,18 +146,62 @@
 					return false;
 				}
 
-				if (selected == '1' && ![[${checkCashPayment}]]) {
-					openAlert("現金給付需先設定匯款帳號，請至[匯款帳號變更]線上申請功能進行設定");
-					return false;
-				}
-
 				var formData = {};
 				formData.policyNo = [[${transCashPaymentVo.policyNo}]]
 				formData.allocation = selected
 				formData.preAllocation = [[${preAllocation}]]
+
+				if ($("#tab_4").is(':visible')) {
+					if ($('#swiftCode').val() == '') {
+						openAlert("請輸入Swift Code");
+						return false;
+					}
+					if ($('#englishName').val() == '') {
+						openAlert("請輸入英文戶名");
+						return false;
+					}
+					if ($('#bankOpt').val() == '') {
+						openAlert("請選擇銀行");
+						return false;
+					}
+					if ($('#brancheOpt').val() == '') {
+						openAlert("請選擇分行");
+						return false;
+					}
+					if ($('#bankAccount').val() == '') {
+						openAlert("請輸入帳號");
+						return false;
+					}
+					if (!/^\d+$/.test($('#bankAccount').val())) {
+						openAlert('銀行帳號僅為數字');
+						openAlert($('#E0053').val());
+						return false;
+					}
+					formData.bankAccount = $('#bankAccount').val()
+					formData.bankName = $('#bankOpt option:selected').text()
+					formData.bankCode = $('#bankOpt option:selected').val()
+					formData.branchName = $('#brancheOpt option:selected').text()
+					formData.branchCode = $('#brancheOpt option:selected').val()
+					formData.englishName = $('#englishName').val()
+					formData.swiftCode = $('#swiftCode').val()
+					formData.accountName = $('#accountName').val()
+				}
 				postWithFormData(/*[[@{/cashPayment3}]]*/, formData);
 			});
+
+			//銀行下拉選單
+			var bankUrl = /*[[@{/getBankList}]]*/;
+			var branchesUrl = /*[[@{/getBranchesList}]]*/;
+			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
 	    });
+
+	    function allocation(){
+			if($('select[name="allocation"]').val() == '1'){
+				$("#tab_4").show()
+			}else{
+				$("#tab_4").hide()
+			}
+		}
 		/*]]>*/
 		</script>
 </body>

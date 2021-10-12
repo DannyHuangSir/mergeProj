@@ -239,6 +239,7 @@ public class FundConversionController extends BaseUserDataController  {
                 addAttribute("parameterValueByProportion", parameterValueByProportion);
             }
             //進行查詢
+            addAttribute("uri", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_URI));
             addAttribute("investmentPortfolioVo", investmentPortfolioVo);
         } catch (Exception ex) {
             logger.error("--------Unable to init from FundConversionController - fund4--------: {}", ExceptionUtils.getStackTrace(ex));

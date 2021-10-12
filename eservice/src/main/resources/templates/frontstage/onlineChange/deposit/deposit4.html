@@ -242,7 +242,7 @@
 		            paymentMethod: $("#paymentMethod").val(),
 		            amount: $("#amount").val(),
 		            policyNo: $('#policyNo').val(),
-		            invtDeposits: JSON.stringify(invtDeposits)
+		            invtDeposits: JSON.stringify([[${invtDeposits}]])
 		        }
                 postWithFormData(/*[[@{/deposit3}]]*/, formData);
             });

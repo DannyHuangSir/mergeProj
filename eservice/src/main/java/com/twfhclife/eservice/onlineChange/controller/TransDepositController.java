@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo;
+import com.twfhclife.eservice.onlineChange.model.TransDepositDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransDepositVo;
 import com.twfhclife.eservice.onlineChange.service.ITransDepositService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
@@ -11,7 +12,9 @@ import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
+import com.twfhclife.eservice.policy.model.DepositPolicyListVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
+import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
@@ -25,6 +28,7 @@ import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import com.twfhclife.generic.util.StatuCode;
+import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -91,8 +95,14 @@ public class TransDepositController extends BaseUserDataController {
 
         String userRocId = getUserRocId();
         List<PolicyListVo> policyList = policyListService.getDepositList(userRocId, null);
-        computeMaxAcctValue(policyList);
+
         if (policyList != null) {
+
+            for (PolicyListVo policyListVo : policyList) {
+                Pair<BigDecimal, BigDecimal> pair = computeMinAndMax((DepositPolicyListVo) policyListVo);
+                policyListVo.setPolicyAcctValue(pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getValue() : BigDecimal.valueOf(0));
+            }
+
             List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
                     getUserId(), TransTypeUtil.DEPOSIT_PARAMETER_CODE);
             transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList);
@@ -107,36 +117,25 @@ public class TransDepositController extends BaseUserDataController {
     @PostMapping("/deposit2")
     public String deposit2(TransDepositVo vo) {
         String userRocId = getUserRocId();
-        addAttribute("depositPercent", transDepositService.getDepositConfigs(vo.getPolicyNo()));
-        PolicyListVo depositPolicy = transDepositService.getDepositPolicy(userRocId, vo.getPolicyNo());
-        List<ParameterVo> parameterVos = transDepositService.getDepositConfigs(vo.getPolicyNo());
-        BigDecimal max = depositPolicy.getPolicyAcctValue();
-        BigDecimal min = BigDecimal.valueOf(0);
-        if (!CollectionUtils.isEmpty(parameterVos)) {
-            for (ParameterVo parameterVo : parameterVos) {
-                if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_MAX_VALUE")) {
-                    max = new BigDecimal(parameterVo.getParameterValue());
-                    if (depositPolicy.getPolicyAcctValue().compareTo(max) < 0) {
-                        max = depositPolicy.getPolicyAcctValue();
-                    }
-                }
-                if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_MIN_VALUE")) {
-                    min = new BigDecimal(parameterVo.getParameterValue());
-                }
-            }
-        }
-        addAttribute("maxValue", max);
-        addAttribute("minValue", min);
+        DepositPolicyListVo depositPolicy = (DepositPolicyListVo) transDepositService.getDepositPolicy(userRocId, vo.getPolicyNo());
+        Pair<BigDecimal, BigDecimal> pair = computeMinAndMax(depositPolicy);
+
+        addAttribute("minValue", pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getKey() : 0);
+        addAttribute("maxValue", pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getValue() : 0);
         addAttribute("depositVo", depositPolicy);
+        addAttribute("depositPercent", transDepositService.getDepositConfigs(vo.getPolicyNo()));
         return "frontstage/onlineChange/deposit/deposit2";
     }
 
     @RequestLog
     @PostMapping("/deposit3")
     public String deposit3(TransDepositVo vo) {
-        addAttribute("depositVo", vo);
         addAttribute("userName", getUserDetail().getUserName());
         addAttribute("showPost", checkPostShow(vo.getPolicyNo()));
+        if (StringUtils.equals(vo.getDepositMethod(), "1")) {
+            transDepositService.distributionDepositFund(getUserRocId(), vo);
+        }
+        addAttribute("depositVo", vo);
         return "frontstage/onlineChange/deposit/deposit3";
     }
 
@@ -181,7 +180,16 @@ public class TransDepositController extends BaseUserDataController {
     @PostMapping("/getTransDepositDetail")
     public String getTransDepositDetail(@RequestParam("transNum") String transNum) {
         try {
-            addAttribute("depositDetail", transDepositService.getAppliedTransDeposits(transNum));
+            TransDepositDetailVo vo = transDepositService.getAppliedTransDeposits(transNum);
+            if (!CollectionUtils.isEmpty(vo.getDetails())) {
+                for (Map<String, Object> detail : vo.getDetails()) {
+                    if (vo.getAmount() == null) {
+                        vo.setAmount(0D);
+                    }
+                    vo.setAmount(BigDecimal.valueOf(vo.getAmount()).add((BigDecimal)detail.get("amount")).doubleValue());
+                }
+            }
+            addAttribute("depositDetail", vo);
         } catch (Exception e) {
             logger.error("Unable to getTransDepositDetail: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -190,7 +198,7 @@ public class TransDepositController extends BaseUserDataController {
     }
 
     private Boolean checkPostShow(String policyNo) {
-        String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DEPOST_POST_SHOW");
+        String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DEPOSIT_POST_SHOW");
         if (!StringUtils.isEmpty(policyNo)) {
             if (policyNo.length() >= 2) {
                 String substring = policyNo.substring(0, 2);
@@ -233,23 +241,48 @@ public class TransDepositController extends BaseUserDataController {
         return mingwen;
     }
 
-    private void computeMaxAcctValue(List<PolicyListVo> policyList) {
-        if (!CollectionUtils.isEmpty(policyList)) {
-            for (PolicyListVo depositPolicyListVo : policyList) {
-                BigDecimal max = depositPolicyListVo.getPolicyAcctValue();
-                List<ParameterVo> parameterVos = transDepositService.getDepositConfigs(depositPolicyListVo.getPolicyNo());
+    private Pair<BigDecimal, BigDecimal> computeMinAndMax(DepositPolicyListVo depositPolicy) {
+        BigDecimal max = depositPolicy.getPolicyAcctValue();
+        BigDecimal min = BigDecimal.valueOf(0);
+        BigDecimal minValue = BigDecimal.valueOf(0);
+        BigDecimal surplusValue = BigDecimal.valueOf(0);
+        String stopAccount = "";
+        List<ParameterVo> parameterVos = transDepositService.getDepositConfigs(depositPolicy.getPolicyNo());
                 if (!CollectionUtils.isEmpty(parameterVos)) {
                     for (ParameterVo parameterVo : parameterVos) {
-                        if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicyListVo.getPolicyType() + "_" + depositPolicyListVo.getCurrency() + "_MAX_VALUE")) {
-                            max = new BigDecimal(parameterVo.getParameterValue());
-                            if (depositPolicyListVo.getPolicyAcctValue().compareTo(max) < 0) {
-                                max = depositPolicyListVo.getPolicyAcctValue();
+                if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_MIN_VALUE")) {
+                    minValue = new BigDecimal(parameterVo.getParameterValue());
                             }
+                if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_SURPLUS_VALUE")) {
+                    surplusValue = new BigDecimal(parameterVo.getParameterValue());
                         }
+                if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_STOP_ACCOUNT")) {
+                    stopAccount = parameterVo.getParameterValue();
                     }
                 }
-                depositPolicyListVo.setPolicyAcctValue(max);
+            }
+
+        if (depositPolicy != null && !CollectionUtils.isEmpty(depositPolicy.getPortfolioVoList())) {
+            for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
+                if (!stopAccount.contains(portfolioVo.getInvtNo())) {
+                    BigDecimal ratio = transInvestmentService.getDistributeRationByInvtNo(depositPolicy.getPolicyNo(), portfolioVo.getInvtNo());
+                    BigDecimal tmpValue = BigDecimal.valueOf(0);
+                    if (ratio != null) {
+                        //分配比例轉換提領最小金額
+                        tmpValue = minValue.multiply(BigDecimal.valueOf(100)).divide(ratio, 4, BigDecimal.ROUND_DOWN);
+                    } else {
+                        tmpValue = minValue;
+                    }
+
+                    if (tmpValue.compareTo(minValue) < 0 || portfolioVo.getAcctValue() == null || portfolioVo.getAcctValue().subtract(tmpValue).compareTo(surplusValue) < 0) {
+                        continue;
+        }
+                    min = min.add(tmpValue);
+                    max = max.subtract(surplusValue);
+    }
             }
         }
+        return new Pair<>(min, max);
     }
+
 }

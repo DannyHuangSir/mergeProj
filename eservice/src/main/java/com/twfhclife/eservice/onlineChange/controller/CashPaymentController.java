@@ -111,7 +111,7 @@ public class CashPaymentController extends BaseUserDataController {
     @RequestLog
     @PostMapping("/cashPayment2")
     public String cashPayment2(TransCashPaymentVo vo) {
-        addAttribute("checkCashPayment", transCashPaymentService.checkHasBankInfo(vo.getPolicyNo()));
+        addAttribute("proposer", getProposerName());
         addAttribute("transCashPaymentVo", vo);
         addAttribute("preAllocation", transCashPaymentService.getPreAllocation(vo.getPolicyNo()));
         return "frontstage/onlineChange/cashPayment/cashPayment2";

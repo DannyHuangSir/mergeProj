@@ -7,21 +7,20 @@
     <result column="POLICY_NO" property="policyNo" jdbcType="NVARCHAR" />
     <result column="ALLOCATION" property="allocation" jdbcType="NVARCHAR" />
     <result column="PRE_ALLOCATION" property="preAllocation" jdbcType="NVARCHAR" />
+    <result column="SWIFT_CODE" property="swiftCode" jdbcType="NVARCHAR" />
+    <result column="ENGLISH_NAME" property="englishName" jdbcType="NVARCHAR" />
+    <result column="BANK_CODE" property="bankCode" jdbcType="NVARCHAR" />
+    <result column="BRANCH_CODE" property="branchCode" jdbcType="NVARCHAR" />
+    <result column="ACCOUNT_NAME" property="accountName" jdbcType="NVARCHAR" />
+    <result column="BANK_ACCOUNT" property="bankAccount" jdbcType="NVARCHAR" />
+    <result column="BANK_NAME" property="bankName" jdbcType="NVARCHAR" />
+    <result column="BRANCH_NAME" property="branchName" jdbcType="NVARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
     ID, TRANS_NUM, POLICY_NO, ALLOCATION, PRE_ALLOCATION
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from ESERVICE.DBO.TRANS_CASH_PAYMENT
-    where ID = #{id,jdbcType=NUMERIC}
-  </select>
-  <delete id="delete" parameterType="java.lang.Long" >
-    delete from ESERVICE.DBO.TRANS_CASH_PAYMENT
-    where ID = #{id,jdbcType=NUMERIC}
-  </delete>
+
   <insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo" >
     insert into ESERVICE.DBO.TRANS_CASH_PAYMENT
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -40,6 +39,30 @@
       <if test="preAllocation != null" >
         PRE_ALLOCATION,
       </if>
+      <if test="swiftCode != null" >
+        SWIFT_CODE,
+      </if>
+      <if test="englishName != null" >
+        ENGLISH_NAME,
+      </if>
+      <if test="bankCode != null" >
+        BANK_CODE,
+      </if>
+      <if test="branchCode != null" >
+        BRANCH_CODE,
+      </if>
+      <if test="accountName != null" >
+        ACCOUNT_NAME,
+      </if>
+      <if test="bankAccount != null" >
+        BANK_ACCOUNT,
+      </if>
+      <if test="bankName != null" >
+        BANK_NAME,
+      </if>
+      <if test="branchName != null" >
+        BRANCH_NAME,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -57,16 +80,32 @@
       <if test="preAllocation != null" >
         #{preAllocation,jdbcType=NVARCHAR},
       </if>
+      <if test="swiftCode != null" >
+        #{swiftCode,jdbcType=NVARCHAR},
+      </if>
+      <if test="englishName != null" >
+        #{englishName,jdbcType=NVARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=NVARCHAR},
+      </if>
+      <if test="branchCode != null" >
+        #{branchCode,jdbcType=NVARCHAR},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=NVARCHAR},
+      </if>
+      <if test="bankAccount != null" >
+        #{bankAccount,jdbcType=NVARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=NVARCHAR},
+      </if>
+      <if test="branchName != null" >
+        #{branchName,jdbcType=NVARCHAR},
+      </if>
     </trim>
   </insert>
-  <update id="update" parameterType="com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo" >
-    update ESERVICE.DBO.TRANS_CASH_PAYMENT
-    set TRANS_NUM = #{transNum,jdbcType=NVARCHAR},
-      POLICY_NO = #{policyNo,jdbcType=NVARCHAR},
-      ALLOCATION = #{allocation,jdbcType=NVARCHAR},
-      PRE_ALLOCATION = #{preAllocation,jdbcType=NVARCHAR}
-    where ID = #{id,jdbcType=NUMERIC}
-  </update>
 
   <select id="getCashPaymentByPolicyNo" resultMap="BaseResultMap">
     SELECT TOP 1  TCP.ID, TCP.TRANS_NUM, TCP.POLICY_NO, TCP.ALLOCATION, TCP.PRE_ALLOCATION FROM
