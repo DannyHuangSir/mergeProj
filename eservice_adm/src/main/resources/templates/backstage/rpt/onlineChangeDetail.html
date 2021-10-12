@@ -2103,13 +2103,13 @@
 								medicalFileLogList = response.resultData;
 								response.resultData.forEach(function(item,index){
 									html += '<tr>'+
-												'<td>'+item.rfeId+'</td>'+
+												'<td><input type="hidden"  id="rfeId'+item.rfeId+'" value=""></input>'+item.rfeId+'</td>'+
 												'<td>'+item.requestDate+'</td>'+
 												'<td>'+item.responseDate+'</td>'+
 												'<td>'+
 													'<button type="button" onclick="medicalFileViewSupplementDetil(\''+ index +'\')" style="position: relative;">查看<i class="foo-warning"></i></button>'+
 												'</td>';
-										html +=	'<td>'+ item.statusName+'</td>'+
+										html +=	'<td id="statusName'+item.rfeId+'">'+ item.statusName+'</td>'+
 											'</tr>';
 								});
 								$('#medical_view_body').html(html);
@@ -2131,11 +2131,17 @@
 				});
 				var item = medicalFileLogList[index];
 				$('#medical_rfe_id').html(item.rfeId);
+				var statusName= $('#statusName'+item.rfeId).html();
+				if(statusName!=null && statusName!=""){
+					$('#medical_rfe_status').html(statusName);
+				}else{
 				$('#medical_rfe_status').html(item.statusName);
+				}
 				$('#medical_rfe_s_date').html(item.requestDate);
 				$('#medical_rfe_e_date').html(item.responseDate);
 				$('#medical_rfe_request_con').text(item.requestContent);
 				$('#medical_rfe_response_con').html(item.responseContent);
+				var rfeIdVal =$('#rfeId'+item.rfeId).val();
 				if (item.status != 'WAIT') {
 					$('#medical_approved_ok')[0].disabled = true;
 					$('#medical_approved_no')[0].disabled = true;
@@ -2144,12 +2150,21 @@
 					$('#medical_approved_ok').addClass("bgGrey");	
 					$('#medical_approved_no').addClass("bgGrey");	
 				}else{
+					if(rfeIdVal =='OK' || rfeIdVal =='NO'){
+						$('#medical_approved_ok')[0].disabled = true;
+						$('#medical_approved_no')[0].disabled = true;
+						$('#medical_approved_ok').removeClass("bgOrange");
+						$('#medical_approved_no').removeClass("bgOrange");
+						$('#medical_approved_ok').addClass("bgGrey");	
+						$('#medical_approved_no').addClass("bgGrey");	
+					}else{
 					$('#medical_approved_ok')[0].disabled = false;
 					$('#medical_approved_no')[0].disabled = false;
 					$('#medical_approved_ok').removeClass("bgGrey");
 					$('#medical_approved_no').removeClass("bgGrey");
 					$('#medical_approved_ok').addClass("bgOrange");	
 					$('#medical_approved_no').addClass("bgOrange");	
+				}
 				}
 				var rHtml = ''
 				$('#medical_ref_file_data').html(rHtml);
@@ -2232,6 +2247,14 @@
 							$("#medical_attachment").addClass("bgOrange");
 							$("#medical_attachment").addClass("bgOrange");
 							$('#medical_attachment').attr("disabled",false);
+							var id=$('#medical_rfe_id').html();
+							$('#rfeId'+id).val(str);
+							console.log("str==OK",str=="OK");
+							if(str=="OK"){
+								$('#statusName'+id).html("覆核通過");
+							}else{
+								$('#statusName'+id).html("覆核拒絕");
+							}
 						let applyitem=	$("#applyitem_attachment").val();
 						let trans_num=	$("#trans_num_attachment").val();
 							$("#medical_attachment").attr("onclick","medicalOnSupplement('" + applyitem + "','" + trans_num + "')");		
