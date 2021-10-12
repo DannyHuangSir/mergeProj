@@ -132,10 +132,10 @@
 														<div>
 															<th:block th:text="${detailData['deposits'].details[0].currency}"/>
 															<th:block th:if="${detailData['deposits'].details[0].currency != 'NTD'}">
-																<th:block th:text="${detailData['deposits'].details[0].amount != null} ? ${#numbers.formatDecimal(detailData['deposits'].details[0].amount, 0, 'DEFAULT', 2, 'POINT')}"/>
+																<th:block th:text="${detailData['deposits'].amount != null} ? ${#numbers.formatDecimal(detailData['deposits'].amount, 0, 'DEFAULT', 2, 'POINT')}"/>
 															</th:block>
 															<th:block th:if="${detailData['deposits'].details[0].currency == 'NTD'}">
-																<th:block th:text="${detailData['deposits'].details[0].amount != null} ? ${#numbers.formatDecimal(detailData['deposits'].details[0].amount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+																<th:block th:text="${detailData['deposits'].amount != null} ? ${#numbers.formatDecimal(detailData['deposits'].amount, 0, 'DEFAULT', 0, 'COMMA')}"/>
 															</th:block>
 														</div>
 													</th:block>

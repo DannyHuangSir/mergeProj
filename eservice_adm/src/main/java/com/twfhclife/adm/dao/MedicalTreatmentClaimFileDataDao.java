@@ -15,4 +15,10 @@ public interface MedicalTreatmentClaimFileDataDao {
      * @throws Exception
      */
   int updaetMedicalTreatmentClaimFileDataFileStatusCases(@Param("vo") MedicalTreatmentClaimFileDataVo medicalTreatmentClaimFileDataVo)throws Exception;
+
+    String getTreatmentClaimCaseId(@Param("vo") MedicalTreatmentClaimFileDataVo medicalTreatmentClaimFileDataVo)throws Exception;
+
+   String  getNotifyOfNewCaseMedicalIsCaseId(@Param("caseID")String caseID)throws Exception;
+
+    int updateNotifyOfNewCaseMedicalIsCaseId(@Param("caseId")String caseId,@Param("ncStatus")String ncStatus,@Param("msg")String msg)throws Exception;
 }

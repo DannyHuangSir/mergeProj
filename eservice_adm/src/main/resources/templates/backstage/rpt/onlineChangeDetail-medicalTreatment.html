@@ -6,27 +6,41 @@
 					<div class="space visible-xs"></div>
 					<div class="profile-user-info profile-user-info-striped">
 						<th:block th:if="${session.ROLE_CODE_00}">
-							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
 								<div class="profile-info-row">
 									<div class="profile-info-name"> 是否開始處理 </div>
-									<div class="profile-info-value">
-										<span class='tg-list-item'>
-											<th:block th:if="${detailData['STATUS_TYPE'] == '-1'}">
-												<input class='checkboxY checkboxY-light' id='medical1' type='checkbox' th:onclick="'javascript:medicalClickItems(\'medical1\',\'' + ${detailData['TRANS_NUM']} + '\');'">
-											</th:block>
-											<th:block th:if="${detailData['STATUS_TYPE'] != '-1'}">
-												<input class='checkboxY checkboxY-light' id='medical1' type='checkbox' checked disabled>
-											</th:block>
-											<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='medical1'></label>
-										</span>
-									</div>
+									<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+										<div class="profile-info-value">
+											<span class='tg-list-item'>
+												<th:block th:if="${detailData['STATUS_TYPE'] == '-1'}">
+													<input class='checkboxY checkboxY-light' id='medical1' type='checkbox' th:onclick="'javascript:medicalClickItems(\'medical1\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+												</th:block>
+												<th:block th:if="${detailData['STATUS_TYPE'] != '-1'}">
+													<input class='checkboxY checkboxY-light' id='medical1' type='checkbox' checked disabled>
+												</th:block>
+												<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='medical1'></label>
+											</span>
+										</div>
+									</th:block>
+									<th:block th:if="${detailData['FROM_COMPANY_ID'] != 'L01'}">
+										<div class="profile-info-value">
+											<span class='tg-list-item'>
+												<th:block th:if="${detailData['STATUS_TYPE'] == '-1'}">
+													<input class='checkboxY checkboxY-light' id='medical4' type='checkbox' th:onclick="'javascript:medicalClickItems(\'medical4\',\'' + ${detailData['TRANS_NUM']} + '\');'">
+												</th:block>
+												<th:block th:if="${detailData['STATUS_TYPE'] != '-1'}">
+													<input class='checkboxY checkboxY-light' id='medical4' type='checkbox' checked disabled>
+												</th:block>
+												<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='medical4'></label>
+											</span>
+										</div>
+									</th:block>
 								</div>
-							</th:block>
+							
 
-							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+							
 								<div class="profile-info-row">
 									<div class="profile-info-name"> 是否已開啓傳送公會聯盟鏈 </div>
-
+									<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
 									<div class="profile-info-value" style="position: relative;">
 										<span class='tg-list-item'>
 											<th:block th:if="${detailData['STATUS_TYPE'] == '0'}">
@@ -66,42 +80,83 @@
 											</div>
 										</th:block>
 									</div>
+									</th:block>
+									<th:block th:if="${detailData['FROM_COMPANY_ID'] != 'L01'}">
+										<div class="profile-info-value" style="position: relative;">
+											<span class='tg-list-item'>
+												<input class='checkboxY checkboxY-light' id='medical3' type='checkbox' checked disabled>
+												<label class='checkboxY-btn' data-tg-off='ON' data-tg-on='OFF' for='medical3'></label>
+											</span>	
+										</div>
+									</th:block>
 								</div>
-							</th:block>
+							
 							<div class="profile-info-row">
 								<div class="profile-info-name"> 執行醫療資料介接 </div>
-
-								<div class="profile-info-value">
-									<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'PQHF_END' || detailData['SEND_ALLIANCE'] ne 'Y'}">
-										<button style="width: 120px;" type="button" id="GetMedicalCases" class="bgGrey" disabled >取用醫療資料</button>
-										<button style="width: 120px;" type="button" id="NotTakeMedicalCases" class="bgGrey" disabled >不取用醫療資料</button>
-										<button style="width: 130px;" type="button"  id="UploadMedicalCases"   class="bgGrey" disabled >醫療資料重新上傳</button>
-										<button style="width: 120px;" type="button"  class="bgGrey" disabled >更新案件狀態</button>
+								<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">	
+									<th:block th:if="${detailData['STATUS_TYPE'] != '2' && detailData['STATUS_TYPE'] != '3' && detailData['STATUS_TYPE'] != '7'}">
+										<div class="profile-info-value">
+											<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'PQHF_END' ||  detailData['ALLIANCE_STATUS'] eq 'ITPS_END' || detailData['SEND_ALLIANCE'] ne 'Y'}">
+												<button style="width: 120px;" type="button" id="GetMedicalCases" class="bgGrey" disabled >取用醫療資料</button>
+												<button style="width: 120px;" type="button" id="NotTakeMedicalCases" class="bgGrey" disabled >不取用醫療資料</button>
+												<button style="width: 130px;" type="button"  id="UploadMedicalCases"   class="bgGrey" disabled >醫療資料重新上傳</button>
+												<button style="width: 120px;" type="button"  class="bgGrey" disabled >更新案件狀態</button>
+											</th:block>
+											<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'PQHF_END' && detailData['ALLIANCE_STATUS'] ne 'ITPS_END' && detailData['SEND_ALLIANCE'] eq 'Y'}">
+												<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPS_PTHG' || detailData['ALLIANCE_STATUS'] eq 'ITPR'  }">
+													<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgGrey" disabled >取用醫療資料</button>
+													<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+												</th:block>
+												<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG'  && detailData['ALLIANCE_STATUS'] ne 'ITPR'} ">
+													<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgOrange"  onclick="medicalOnWorde('取用醫療病例','GetMedicalCases')">取用醫療資料</button>
+													<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+												</th:block>
+												<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
+												<button style="width: 120px;" type="button" class="bgOrange" id="SuccessMedicalCases" onclick="medicalOnWorde('案件調查已完成','SuccessMedicalCases')">更新案件狀態</button>
+											</th:block>
+										</div>
 									</th:block>
-									<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'PQHF_END' && detailData['SEND_ALLIANCE'] eq 'Y'}">
-										<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPS_END'}">
-											<button style="width: 120px;" type="button" id="GetMedicalCases"   class="bgGrey" disabled >取用醫療資料</button>
-											<button style="width: 120px;" type="button"  id="NotTakeMedicalCases"  class="bgGrey" disabled >不取用醫療資料</button>
+									<th:block th:if="${detailData['STATUS_TYPE'] == '2' || detailData['STATUS_TYPE'] == '3' || detailData['STATUS_TYPE'] == '7' }">
+										<div class="profile-info-value">
+												<button style="width: 120px;" type="button" id="GetMedicalCases" class="bgGrey" disabled >取用醫療資料</button>
+												<button style="width: 120px;" type="button" id="NotTakeMedicalCases" class="bgGrey" disabled >不取用醫療資料</button>
+												<button style="width: 130px;" type="button"  id="UploadMedicalCases"   class="bgGrey" disabled >醫療資料重新上傳</button>
+												<button style="width: 120px;" type="button"  class="bgGrey" disabled >更新案件狀態</button>
+										</div>	
+									</th:block>
+								</th:block>	
+								<th:block th:if="${detailData['FROM_COMPANY_ID'] != 'L01'}">
+									<th:block th:if="${detailData['STATUS_TYPE'] != '2' && detailData['STATUS_TYPE'] != '3' && detailData['STATUS_TYPE'] != '7'}">
+									<div class="profile-info-value">
+										<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'PQHF_END' || detailData['ALLIANCE_STATUS'] eq 'ITPS_END'  }">
+											<button style="width: 120px;" type="button" id="GetMedicalCases" class="bgGrey" disabled >取用醫療資料</button>
+											<button style="width: 120px;" type="button" id="NotTakeMedicalCases" class="bgGrey" disabled >不取用醫療資料</button>
 											<button style="width: 130px;" type="button"  id="UploadMedicalCases"   class="bgGrey" disabled >醫療資料重新上傳</button>
+											<button style="width: 120px;" type="button"  class="bgGrey" disabled >更新案件狀態</button>
 										</th:block>
-										<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPS_PTHG'}">
-											<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgGrey" disabled >取用醫療資料</button>
-											<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
-											<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>	
-										</th:block>
-										<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPR'}">
-											<button style="width: 130px;" type="button"  id="UploadMedicalCases"  class="bgGrey" disabled >醫療資料重新上傳</button>
-											<button	button style="width: 120px;" type="button" class="bgOrange" id="GetMedicalCases" onclick="medicalOnWorde('取用醫療病例','GetMedicalCases')">取用醫療資料</button>
-											<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
-										</th:block>
-										<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPR' && detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPS_END'  }">
-											<button	button style="width: 120px;" type="button" class="bgOrange" id="GetMedicalCases" onclick="medicalOnWorde('取用醫療病例','GetMedicalCases')">取用醫療資料</button>
-											<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+										<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'PQHF_END' && detailData['ALLIANCE_STATUS'] ne 'ITPS_END'}">
+											<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPS_PTHG'  || detailData['ALLIANCE_STATUS'] eq 'ITPR' }">
+												<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgGrey" disabled >取用醫療資料</button>
+												<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+											</th:block>
+											<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPR' } ">
+												<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgOrange"  onclick="medicalOnWorde('取用醫療病例','GetMedicalCases')">取用醫療資料</button>
+												<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+											</th:block>
 											<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
+											<button style="width: 120px;" type="button" class="bgOrange" id="SuccessMedicalCases" onclick="medicalOnWorde('案件調查已完成','SuccessMedicalCases')">更新案件狀態</button>
 										</th:block>
-										<button style="width: 120px;" type="button" class="bgOrange" id="SuccessMedicalCases" onclick="medicalOnWorde('案件調查已完成','SuccessMedicalCases')">更新案件狀態</button>
+									</div>
 									</th:block>
-								</div>
+									<th:block th:if="${detailData['STATUS_TYPE'] == '2' || detailData['STATUS_TYPE'] == '3' || detailData['STATUS_TYPE'] == '7'}">
+										<div class="profile-info-value">
+												<button style="width: 120px;" type="button" id="GetMedicalCases" class="bgGrey" disabled >取用醫療資料</button>
+												<button style="width: 120px;" type="button" id="NotTakeMedicalCases" class="bgGrey" disabled >不取用醫療資料</button>
+												<button style="width: 130px;" type="button"  id="UploadMedicalCases"   class="bgGrey" disabled >醫療資料重新上傳</button>
+												<button style="width: 120px;" type="button"  class="bgGrey" disabled >更新案件狀態</button>
+										</div>	
+									</th:block>
+								</th:block>
 							</div>
 
 						<!--  醫療資料介接     -->
@@ -159,27 +214,28 @@
 						</div>     
 
 
-							<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+							
 								<div class="profile-info-row">
 									<div class="profile-info-name"> 執行審核 </div>
 									<div class="profile-info-value">
 										<th:block th:if="${detailData['STATUS_TYPE'] != '7C'}">
-											<th:block th:if="${detailData['STATUS_TYPE'] != '0' || detailData['RFE_STATUS'] == 'WAIT'}">
-												<button type="button" class="bgGrey" id="medical_attachment" disabled>通知補件</button>
-												<input type="hidden" id="applyitem_attachment" th:value="${detailData['APPLYITEM']}" ></input>
-												<input type="hidden"  id="trans_num_attachment" th:value="${detailData['TRANS_NUM']}"></input>
-											</th:block>
-											<th:block th:if="${detailData['STATUS_TYPE'] == '0' && detailData['RFE_STATUS'] != 'WAIT' }">
-												<button type="button" class="bgOrange" th:onclick="'javascript:medicalOnSupplement(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">通知補件</button>
-											</th:block>
+											<th:block th:if="${detailData['FROM_COMPANY_ID'] == 'L01'}">
+												<th:block th:if="${detailData['STATUS_TYPE'] != '0' || detailData['RFE_STATUS'] == 'WAIT'}">
+													<button type="button" class="bgGrey" id="medical_attachment" disabled>通知補件</button>
+													<input type="hidden" id="applyitem_attachment" th:value="${detailData['APPLYITEM']}" ></input>
+													<input type="hidden"  id="trans_num_attachment" th:value="${detailData['TRANS_NUM']}"></input>
+												</th:block>
+												<th:block th:if="${detailData['STATUS_TYPE'] == '0' && detailData['RFE_STATUS'] != 'WAIT' }">
+													<button type="button" class="bgOrange" th:onclick="'javascript:medicalOnSupplement(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">通知補件</button>
+												</th:block>
 
-											<th:block th:if="${detailData['STATUS_TYPE'] != '0' && detailData['STATUS_TYPE'] != '4' && detailData['STATUS_TYPE'] != '5' && detailData['STATUS_TYPE'] != '7C'}">
-												<button type="button" class="bgGrey" disabled>異常件註記</button>
-											</th:block>
-											<th:block th:if="${detailData['STATUS_TYPE'] == '0' || detailData['STATUS_TYPE'] == '4' || detailData['STATUS_TYPE'] == '5'}">
-												<button type="button" class="bgOrange" th:onclick="'javascript:medicalOnReturn(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">異常件註記</button>
-											</th:block>
-
+												<th:block th:if="${detailData['STATUS_TYPE'] != '0' && detailData['STATUS_TYPE'] != '4' && detailData['STATUS_TYPE'] != '5' && detailData['STATUS_TYPE'] != '7C'}">
+													<button type="button" class="bgGrey" disabled>異常件註記</button>
+												</th:block>
+												<th:block th:if="${detailData['STATUS_TYPE'] == '0' || detailData['STATUS_TYPE'] == '4' || detailData['STATUS_TYPE'] == '5'}">
+													<button type="button" class="bgOrange" th:onclick="'javascript:medicalOnReturn(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\');'">異常件註記</button>
+												</th:block>
+											</th:block>			
 											<th:block th:if="${detailData['STATUS_TYPE'] == '-1' || detailData['STATUS_TYPE'] == '2' || detailData['STATUS_TYPE'] == '3' ||detailData['STATUS_TYPE'] == '7'}">
 												<button type="button" class="bgGrey" disabled>已完成</button>
 											</th:block>
@@ -192,7 +248,7 @@
 										</th:block>
 									</div>
 								</div>
-							</th:block>
+							
 						</th:block>
 						<div class="profile-info-row">
 							<div class="profile-info-name"> 查詢歷程資料 </div>
@@ -245,7 +301,7 @@
 														<div class="form-group">
 															<label class="col-xs-4">醫療資料介接案件狀態：</label>
 															<div class="col-xs-8">
-																<th:block th:if="${vo.FILE_STATUS != ''}">
+																<th:block th:if="${ vo.FILE_STATUS != null && vo.FILE_STATUS != ''}">
 																	<th:block th:inline="text">[[${vo.FILE_STATUS}]]</th:block>
 																</th:block>
 															</div>
@@ -292,6 +348,7 @@
 									<div class="form-group">
 										<label class="col-xs-3">申請項目：</label>
 										<div class="col-xs-9" id="medical_label_apply_item">
+											<th:block th:if="${detailData['APPLYITEM']!=null}"> 
 											<th:block th:each="from : ${#strings.arraySplit(detailData['APPLYITEM'], ',')}">
 												<th:block th:each="vo : ${session.APPLICATION_ITEMS}">
 													<th:block th:if="${from eq vo.value.parameterValue}"> 
@@ -299,6 +356,13 @@
 														<input type="hidden"  id="medicalParameterName" th:value="${vo.value.parameterName}"/>
 													</th:block>
 												</th:block>
+											</th:block>
+											</th:block>
+											<th:block th:if="${detailData['APPLYITEM']==null}"> 
+												<div class="col-xs-9" id="medical_label_apply_item">
+													醫療保險金
+													<input type="hidden" id="medicalParameterName" value="醫療保險金">	
+												</div>
 											</th:block>
 										</div>
 									</div>
@@ -839,7 +903,9 @@
 									$("#UploadMedicalCases").attr("disabled",true);
 									$("#UploadMedicalCases").addClass("bgGrey");			
 									$("#GetMedicalCases").attr("disabled",true);
-									$("#GetMedicalCases").addClass("bgGrey");			
+									$("#GetMedicalCases").addClass("bgGrey");
+									$("#SuccessMedicalCases").attr("disabled",true);
+									$("#SuccessMedicalCases").addClass("bgGrey");				
 								}else{
 									alertMsg("網絡異常,請稍後再試");
 								}
@@ -873,16 +939,15 @@
 						success : function(response) {
 							console.log(response.result);
 							if(response.result=="SUCCESS"){
-								if(response.resultData>0){
-									$("#UploadMedicalCases").attr("disabled",true);
-									$("#UploadMedicalCases").addClass("bgGrey");
+								if(response.resultData!=null  && response.resultData!="" ){
+									//$("#UploadMedicalCases").attr("disabled",true);
+									//$("#UploadMedicalCases").addClass("bgGrey");
 									$("#NotTakeMedicalCases").attr("disabled",false);
 									$("#NotTakeMedicalCases").removeClass("bgGrey");	
-									$("#NotTakeMedicalCases").addClass("bgOrange");			
-									$("#GetMedicalCases").attr("disabled",false);
-									$("#GetMedicalCases").removeClass("bgGrey");	
-									$("#GetMedicalCases").addClass("bgOrange");		
-									$("#GetMedicalCases").attr("onclick","medicalOnWorde('取用醫療病例','GetMedicalCases')");	
+									$("#NotTakeMedicalCases").addClass("bgOrange");	
+									if(response.resultData!=1 && response.resultData!=0){
+										alertMsg(response.resultData);	
+									}
 								}else{
 									alertMsg("網絡異常,請稍後再試");
 								}
@@ -894,30 +959,30 @@
 					});
 					$.ajaxSetup({async: true});
 				}else if("SuccessMedicalCases"==medicalButtonType){
-					//案件調查已完成	
+					//更新案件狀態	
 					$.ajaxSetup({async: false});
 						var data = {
-							transNum:transNum,
-							allianceStatus:'PQHF_END',
+							transNum:transNum
 						}
 						$.ajax({
 						type : 'POST',
 						dataType : 'json',
 						contentType : 'application/json',
 						data : JSON.stringify(data),
-						url : /*[[@{/medicalTreatmentDetail/getMedicalFileCases}]]*/,
+						url : /*[[@{/medicalTreatmentDetail/getMedicalUpdateCaseStatus}]]*/,
 						success : function(response) {
 							console.log(response.result);
 							if(response.result=="SUCCESS"){
-								if(response.resultData>0){
-									$("#SuccessMedicalCases").attr("disabled",true);
-									$("#SuccessMedicalCases").addClass("bgGrey");	
-									$("#GetMedicalCases").attr("disabled",true);
-									$("#GetMedicalCases").addClass("bgGrey");		
-									$("#NotTakeMedicalCases").attr("disabled",true);
-									$("#NotTakeMedicalCases").addClass("bgGrey");		
-									$("#UploadMedicalCases").attr("disabled",true);
-									$("#UploadMedicalCases").addClass("bgGrey");		
+								if(response.resultData!=null  && response.resultData!=""){
+									$("#SuccessMedicalCases").attr("disabled",false);
+									$("#SuccessMedicalCases").addClass("bgOrange");	
+									$("#GetMedicalCases").attr("disabled",false);
+									$("#GetMedicalCases").addClass("bgOrange");		
+									$("#NotTakeMedicalCases").attr("disabled",false);
+									$("#NotTakeMedicalCases").addClass("bgOrange");		
+									$("#UploadMedicalCases").attr("disabled",false);
+									$("#UploadMedicalCases").addClass("bgOrange");
+									alertMsg(response.resultData);	
 								}else{
 									alertMsg("網絡異常,請稍後再試");
 								}

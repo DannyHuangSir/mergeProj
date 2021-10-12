@@ -572,6 +572,27 @@ public interface OnlineChangeDao {
 	
 	public Map<String, Object> getDnsDetailInfo(@Param("transNum") String transNum);
 
+	/***
+	 * 查詢申請明細-已持有投資標的轉換查詢
+	 * @param transVo
+	 * @return
+	 */
+	List<TransFundConversionVo>  getConversionDetail(@Param("transVo")TransVo transVo);
+	/***
+	 * 查詢申請保單的基本明細
+	 * @param transVo
+	 * @return
+	 */
+	Map<String, Object> getOnlineChangeDetailByTransNum(@Param("transNum")String transNum);
+
+	List<Map<String, Object>> selectCompareInvestments(@Param("transNum") String transNum);
+
+	TransDepositDetailVo getAppliedTransDeposits(@Param("transNum") String transNum);
+
+	Map<String, Object> getTransPaymentByTransNum(@Param("transNum") String transNum);
+
+    List<Map<String, Object>> getTransChangePremium(@Param("transNum") String transNum);
+
 	/**
 	 * 獲取查詢條件
 	 *   保單理賠申請統計報表
@@ -617,25 +638,6 @@ public interface OnlineChangeDao {
 	Float getMedicalTreatmentClaimSequence();
 	//添加MedicalTreatmentClaim數據,便於後續推送給聯盟
 	int addMedicalTreatmentClaim(@Param("vo")TransMedicalTreatmentClaimVo voTemp);
-
-	/***
-	 * 查詢申請明細-已持有投資標的轉換查詢
-	 * @param transVo
-	 * @return
-	 */
-	List<TransFundConversionVo>  getConversionDetail(@Param("transVo")TransVo transVo);
-	/***
-	 * 查詢申請保單的基本明細
-	 * @param transVo
-	 * @return
-	 */
-	Map<String, Object> getOnlineChangeDetailByTransNum(@Param("transNum")String transNum);
-
-	List<Map<String, Object>> selectCompareInvestments(@Param("transNum") String transNum);
-
-	TransDepositDetailVo getAppliedTransDeposits(@Param("transNum") String transNum);
-
-	Map<String, Object> getTransPaymentByTransNum(@Param("transNum") String transNum);
-
-    List<Map<String, Object>> getTransChangePremium(@Param("transNum") String transNum);
+	//查詢當前保單狀態碼
+    String getTransMedicalTreatmentByAllianceStatus(@Param("transNum")String transNum)throws Exception;
 }

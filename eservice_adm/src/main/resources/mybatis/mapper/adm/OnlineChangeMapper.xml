@@ -2901,6 +2901,10 @@
 	<select id="getMedicalTreatmentClaimSequence" resultType="float">
 		select NEXT VALUE for ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_SEQ as CLAIMS_SEQ_ID;
 	</select>
+	<select id="getTransMedicalTreatmentByAllianceStatus" resultType="java.lang.String">
+		SELECT ALLIANCE_STATUS
+		FROM [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM] where TRANS_NUM=#{transNum}
+	</select>
 	<insert id="addMedicalTreatmentClaim" parameterType="com.twfhclife.adm.model.TransMedicalTreatmentClaimVo" >
 		INSERT INTO
 		ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM

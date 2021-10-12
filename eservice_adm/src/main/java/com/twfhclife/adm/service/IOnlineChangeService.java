@@ -461,6 +461,21 @@ public interface IOnlineChangeService {
 	 */
 	List<Map<String, Object>> getDNS_CSV(@Param("transVo") TransVo transVo);
 
+	/***
+	 * 查詢申請明細-已持有投資標的轉換查詢
+	 * @param transVo
+	 * @return
+	 */
+	Map<String, Object> getConversionDetail(TransVo transVo);
+
+	Map<String, Object> getInvestmentDetail(TransVo transVo);
+
+	Map<String, Object> getDepositDetail(TransVo transVo);
+
+	Map<String, Object> getCashPaymentDetail(TransVo transVo);
+
+	Map<String, Object> getTransChangePremiumDetail(TransVo transVo);
+
 	/**
 	 * 獲取查詢條件
 	 *   保單理賠申請統計報表
@@ -505,19 +520,6 @@ public interface IOnlineChangeService {
 	int addMedicalTreatmentClaim(TransMedicalTreatmentClaimVo vo);
 	//是否已開啓傳送公會聯盟鏈-覆核人員審核
 	int updateOrAddMedicalTreatment(TransMedicalTreatmentClaimVo vo);
-
-	/***
-	 * 查詢申請明細-已持有投資標的轉換查詢
-	 * @param transVo
-	 * @return
-	 */
-	Map<String, Object> getConversionDetail(TransVo transVo);
-
-	Map<String, Object> getInvestmentDetail(TransVo transVo);
-
-	Map<String, Object> getDepositDetail(TransVo transVo);
-
-	Map<String, Object> getCashPaymentDetail(TransVo transVo);
-
-	Map<String, Object> getTransChangePremiumDetail(TransVo transVo);
+	//查詢當前保單的聯盟狀態
+    String getTransMedicalTreatmentByAllianceStatus(String transNum)throws Exception;
 }

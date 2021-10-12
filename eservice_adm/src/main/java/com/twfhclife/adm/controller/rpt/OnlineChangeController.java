@@ -2,6 +2,7 @@ package com.twfhclife.adm.controller.rpt;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -32,6 +33,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -1148,7 +1150,17 @@ public class OnlineChangeController extends BaseController {
 			transVo.setTransNum(vo.getTransNum());
 			transVo.setStatus("2");
 			transVo.setUpdateUser(getUserId());
-
+			/**
+			 * 進行驗證當前案件的聯盟狀態是否為結束狀態
+			 */
+			//查詢聯盟結束狀態碼
+			String itpsEnd = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS_ITPS_END);
+			String pqhfEnd = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS_PQHF_END);
+			String notFinishedWindowMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_NOT_FINISHED_WINDOW_MSG);
+			//查詢當前保單狀態碼
+			String AllianceStatus = onlineChangeService.getTransMedicalTreatmentByAllianceStatus(vo.getTransNum());
+			if (!StringUtils.isEmpty(AllianceStatus)) {
+				if (AllianceStatus.equals(itpsEnd) ||AllianceStatus.equals(pqhfEnd) ){
 			int result = onlineChangeService.updateTransStatus(transVo);
 			if (result > 0) {
 				processSuccess(result);
@@ -1161,6 +1173,13 @@ public class OnlineChangeController extends BaseController {
 			} else {
 				processError("更新失敗");
 			}
+				}else{
+					processError(notFinishedWindowMsg);
+				}
+			}else{
+				processError(notFinishedWindowMsg);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Unable to getOnlineChangeComplete: {}", ExceptionUtils.getStackTrace(e));
@@ -1317,28 +1336,6 @@ public class OnlineChangeController extends BaseController {
 		return processResponseEntity();
 	}
 	
-	/**
-	 * 更新補件單歷程
-	 * 
-	 * @param transVo TransVo
-	 * @return
-	 */
-	@RequestLog
-	@PostMapping("/onlineChange/updateTransRFEStatus")
-	public ResponseEntity<ResponseObj> updateTransRFEStatus(@RequestBody TransRFEVo vo) {
-		try {
-			int result = onlineChangeService.updateTransRFEStatus(vo);
-			if (result > 0) {
-				processSuccess(result);
-			} else {
-				processError("更新失敗");
-			}
-		} catch (Exception e) {
-			logger.error("Unable to updateTransRFEStatus: {}", ExceptionUtils.getStackTrace(e));
-			processSystemError();
-		}
-		return processResponseEntity();
-	}
 	/**
 	 * 保單醫療-通知補件.
 	 *
@@ -1569,8 +1566,8 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getDepositDetail")
 	public String getDepositDetail(@RequestBody TransVo transVo) {
 		try {
-			Map<String, Object> depositDetail = onlineChangeService.getDepositDetail(transVo);
-			addAttribute("detailData", depositDetail);
+			Map<String, Object> vo = onlineChangeService.getDepositDetail(transVo);
+			addAttribute("detailData", vo);
 		} catch (Exception e) {
 			logger.error("Unable to getDepositDetail: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -1593,7 +1590,31 @@ public class OnlineChangeController extends BaseController {
 		}
 		return "backstage/rpt/onlineChangeDetail-changePremium";
 	}
-
+	
+	/**
+	 * 更新補件單歷程
+	 * 
+	 * @param transVo TransVo
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/onlineChange/updateTransRFEStatus")
+	public ResponseEntity<ResponseObj> updateTransRFEStatus(@RequestBody TransRFEVo vo) {
+		try {
+			int result = onlineChangeService.updateTransRFEStatus(vo);
+			if (result > 0) {
+				processSuccess(result);
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to updateTransRFEStatus: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+	
+	
 	/**
 	 * 聯絡資料變更-失败
 	 * 

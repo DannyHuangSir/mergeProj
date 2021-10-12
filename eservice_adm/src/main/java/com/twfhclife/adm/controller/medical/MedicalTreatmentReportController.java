@@ -200,13 +200,47 @@ public class MedicalTreatmentReportController extends BaseController {
 			System.out.println(medicalTreatmentClaimFileDataVo);
 			//進行查詢修改文件的狀態
 			int  i=iMedicalTreatmentClaimFileDataService.updaetMedicalTreatmentClaimFileDataFileStatusCases(medicalTreatmentClaimFileDataVo);
+
+			if(i>0 ){
+				String allianceStatus = medicalTreatmentClaimFileDataVo.getAllianceStatus();
+				String	itpr = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID,ApConstants.MEDICAL_INTERFACE_STATUS_ITPR);
+				if (allianceStatus!=null && itpr.equals(allianceStatus)){
+					String	parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID,ApConstants.MEDICAL_ITPR_WINDOW_MSG);
+					processSuccess(parameterValueByCode);
+				}else{
 			processSuccess(i);
+				}
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getMedicalFileCases: {}", ExceptionUtils.getStackTrace(e));
 			processSystemError();
 		}
 		return processResponseEntity();
 	}
-
+	/**
+	 * 執行醫療資料介接	-更新案件狀態
+	 * @param medicalTreatmentClaimFileDataVo
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/medicalTreatmentDetail/getMedicalUpdateCaseStatus")
+	public ResponseEntity<ResponseObj> getMedicalUpdateCaseStatus(@RequestBody MedicalTreatmentClaimFileDataVo  medicalTreatmentClaimFileDataVo) {
+		try {
+			System.out.println(medicalTreatmentClaimFileDataVo);
+			//進行查詢獲取到當前保單的caseID
+		  String caseID=		iMedicalTreatmentClaimFileDataService.getTreatmentClaimCaseId(medicalTreatmentClaimFileDataVo);
+			//進行修改狀態信息[NOTIFY_OF_NEW_CASE_MEDICAL]
+			int  i=iMedicalTreatmentClaimFileDataService.updaetNotifyOfNewCaseMedicalStatus(caseID);
+			String parameterValueByCode=null;
+			if(i>0){
+				 parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID,ApConstants.MEDICAL_UPDATE_WINDOW_MSG);
+			}
+			processSuccess(parameterValueByCode);
+		} catch (Exception e) {
+			logger.error("Unable to getMedicalUpdateCaseStatus: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
 
 }

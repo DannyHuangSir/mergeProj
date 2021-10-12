@@ -2386,6 +2386,7 @@
 				if ($("#"+str)[0].checked) {
 					var urls = {
 						'medical1': /*[[@{/onlineChange/getOnlineChangeDispose}]]*/,
+						'medical4': /*[[@{/onlineChange/getOnlineChangeDispose}]]*/,
 						'medical3': /*[[@{/onlineChange/updateMedicalTreatmentSendAlliance}]]*/
 			        };
 					var data = {
@@ -2611,7 +2612,9 @@
 								alertMsg("更新成功");
 								//grid.reload();
 								reloadDetail(data.transNum);
-							} else {
+							} else if(response.result == 'ERROR'){
+								alertMsg(response.resultMsg);
+							}else {
 								alertMsg("更新失敗!");
 							}
 						},

@@ -30,4 +30,20 @@ public class MedicalTreatmentClaimFileDataServiceImpl  implements IMedicalTreatm
         }
         return  i;
     }
+
+    @Override
+    public String getTreatmentClaimCaseId(MedicalTreatmentClaimFileDataVo medicalTreatmentClaimFileDataVo) throws Exception {
+
+        return medicalTreatmentClaimFileDataDao.getTreatmentClaimCaseId(medicalTreatmentClaimFileDataVo);
+    }
+
+    @Override
+    public int updaetNotifyOfNewCaseMedicalStatus(String caseID) throws Exception {
+      String caseId=  medicalTreatmentClaimFileDataDao.getNotifyOfNewCaseMedicalIsCaseId(caseID);
+       int  i=0;
+            if(!StringUtils.isEmpty(caseId)){
+                i= medicalTreatmentClaimFileDataDao.updateNotifyOfNewCaseMedicalIsCaseId(caseId,"0","更新案件狀態");
+            }
+        return i;
+    }
 }

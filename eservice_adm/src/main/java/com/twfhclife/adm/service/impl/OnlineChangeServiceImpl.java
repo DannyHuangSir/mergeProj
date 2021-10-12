@@ -498,7 +498,21 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 
 	@Override
 	public Map<String, Object> getTransRiskLevel(TransVo transVo) {
-		return onlineChangeDao.getTransRiskLevel(transVo);
+		Map<String, Object> map = onlineChangeDao.getTransRiskLevel(transVo);
+		List<ParameterVo> list = parameterDao.getParameterByCategoryCode("eservice", "RISK_LEVEL_TO_RR");
+		if (!CollectionUtils.isEmpty(list)) {
+			for (ParameterVo vo : list) {
+				Object val = map.get("RISK_LEVEL_OLD");
+				Object newVal = map.get("RISK_LEVEL_NEW");
+				if (val != null && org.apache.commons.lang3.StringUtils.equals("RISK_LEVEL_TO_RR_" + val, vo.getParameterCode())) {
+					map.put("BEFORE", vo.getParameterName());
+				}
+				if (newVal != null && org.apache.commons.lang3.StringUtils.equals("RISK_LEVEL_TO_RR_" + val, vo.getParameterCode())) {
+					map.put("AFTER", vo.getParameterName());
+				}
+			}
+		}
+		return map;
 	}
 
 	@Override
@@ -547,7 +561,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 
 					if(fileBase64!=null && !"".equals(fileBase64)){
 						//直接将原文件base64 转为 缩图的 base64
-						//TODO 进行考虑大文件的的处理
+						//进行考虑大文件的的处理
 						byte[] decode = Base64.getDecoder().decode(fileBase64);
 						//获取类型
 						String base64Type = this.checkBase64ImgOrPdf(decode);
@@ -564,9 +578,14 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 								}else{
 									doc = PDDocument.load(input);
 									String miniatureBase64 = this.imgBase64(doc, baos);
-									logger.info("--------------------------------------------------PDF Base64转换为缩图="+miniatureBase64);
 									map.put("FileBase64",miniatureBase64);
 									doc.close();
+									
+									if(miniatureBase64!=null) {//modify log, do not print base64 string.
+										logger.info("PDF Base64轉換為縮圖字串長度="+miniatureBase64.length());
+									}else {
+										logger.info("PDF Base64轉換為縮圖字串長度 is null.");
+									}
 								}
 							} catch (IOException e) {
 								e.printStackTrace();
@@ -908,7 +927,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		} else if (0xFFD8 == ((b[0] & 0xff) << 8 | (b[1] & 0xff))) {
 			type = "jpg";
 		}else{
-			type = "dpf";
+			type = "pdf";
 		}
 		return type;
 	}
@@ -975,7 +994,6 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		return  base64;
 	}
 	private MessageTriggerRequestVo getMessageTriggerRequestVo(String msgCode, List<String> receivers, Map<String, String> paramMap,String type) {
-		// TODO Auto-generated method stub
 		MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
 		vo.setMessagingTemplateCode(msgCode);
 		vo.setSendType(type);
@@ -1113,11 +1131,6 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	}
 
 	@Override
-	public int getOnlineChangeCIODetailTotal(TransVo transVo) {
-		return onlineChangeDao.getOnlineChangeCIODetailTotal(transVo);
-	}
-
-	@Override
 	public int getOnlineChangeDnsDetailTotal(TransVo transVo) {
 		return onlineChangeDao.getOnlineChangeDnsDetailTotal(transVo);
 	}
@@ -1164,18 +1177,23 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 				String FILE_NAME  = (String)map.get("FILE_NAME");
 				String fileBase64 = (String)map.get("FILE_BASE64");
 				if ((PATH!=null && FILE_NAME!=null)||fileBase64!=null) {
-					String filePath = PATH+File.separator+FILE_NAME;
-
-					String substring = filePath.substring(filePath.lastIndexOf("."), filePath.length());
-					//pdf文档进行单独处理，抓取缩略图
-					if(".pdf".equalsIgnoreCase(substring)) {
-						String  letName=filePath.substring(0,filePath.lastIndexOf("."))+".png";
-						map.put("fileOrPng",letName);
-					}else{
-						//获取图片的地址
-						map.put("fileOrPng",filePath);
+					String filePath="";
+					String substring="";
+					if(!org.springframework.util.StringUtils.isEmpty(PATH)
+							&&  !org.springframework.util.StringUtils.isEmpty(FILE_NAME)) {
+						filePath= PATH + File.separator + FILE_NAME;
+						if (filePath.lastIndexOf(".")!=-1) {
+							substring = filePath.substring(filePath.lastIndexOf("."), filePath.length());
+						}
 					}
-
+					//pdf文档进行单独处理，抓取缩略图
+					if (".pdf".equalsIgnoreCase(substring)) {
+						String letName = filePath.substring(0, filePath.lastIndexOf(".")) + ".png";
+						map.put("fileOrPng", letName);
+					} else {
+						//获取图片的地址
+						map.put("fileOrPng", filePath);
+					}
 					if(fileBase64!=null && !"".equals(fileBase64)){
 						//直接将原文件base64 转为 缩图的 base64
 						byte[] decode = Base64.getDecoder().decode(fileBase64);
@@ -1188,14 +1206,17 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 						if (base64Type!=null &&  !"".equals(base64Type)) {
 							PDDocument doc = null;
 							try {
+								filePath= PATH + File.separator + FILE_NAME;
 								if ("png".equals(base64Type) || "jpg".equals(base64Type)) {
 									String miniatureBase64 = imgBase64(input, baos);
 									map.put("FileBase64",miniatureBase64);
+									map.put("fileOrPng", filePath+".png");
 								}else{
 									doc = PDDocument.load(input);
 									String miniatureBase64 = this.imgBase64(doc, baos);
 									logger.info("--------------------------------------------------PDF Base64转换为缩图="+miniatureBase64);
 									map.put("FileBase64",miniatureBase64);
+									map.put("fileOrPng",filePath+ ".pdf");
 									doc.close();
 								}
 							} catch (IOException e) {
@@ -1214,11 +1235,13 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 							}
 						}
 					}else{
+						if(!org.springframework.util.StringUtils.isEmpty(PATH)) {
 						File file = new File(filePath);
 						if (file.exists()) {
 							//通过路径,获取图片
 							map.put("FileBase64", this.converFileToBase64Str(filePath));
 						}
+					}
 					}
 					newfileDatas.add(map);
 				}
@@ -1231,7 +1254,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		rMap.put("Parameters", parameters);
 		rMap.put("medicalUploadfile", medicalUploadfile);
 		rMap.put("FileDatas", newfileDatas);
-		logger.info("1======获取的保单图片数据-----------====== : " + rMap.toString() + "============1");
+		//logger.info("1======获取的保单图片数据-----------====== : " + rMap.toString() + "============1");
 		/**
 		 * 對時間的進行處理
 		 * */
@@ -1452,6 +1475,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	}
 
 	@Override
+	public String getTransMedicalTreatmentByAllianceStatus(String transNum) throws Exception {
+		return onlineChangeDao.getTransMedicalTreatmentByAllianceStatus(transNum);
+	}
+
+	@Override
 	public Map<String, Object> getConversionDetail(TransVo transVo) {
 		List<TransFundConversionVo> conversionDetail = onlineChangeDao.getConversionDetail(transVo);
 		Map<String, Object> map = new HashMap<>();
@@ -1504,7 +1532,16 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			map = onlineChangeDao.getOnlineChangeDetailByTransNum(transVo.getTransNum());
 
 		}
-		map.put("deposits", onlineChangeDao.getAppliedTransDeposits(transVo.getTransNum()));
+		TransDepositDetailVo vo = onlineChangeDao.getAppliedTransDeposits(transVo.getTransNum());
+		if (!CollectionUtils.isEmpty(vo.getDetails())) {
+			for (Map<String, Object> detail : vo.getDetails()) {
+				if (vo.getAmount() == null) {
+					vo.setAmount(0D);
+				}
+				vo.setAmount(BigDecimal.valueOf(vo.getAmount()).add((BigDecimal)detail.get("amount")).doubleValue());
+			}
+		}
+		map.put("deposits", vo);
 		return map;
     }
 
@@ -1535,5 +1572,9 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		return map;
     }
 
+    @Override
+	public int getOnlineChangeCIODetailTotal(TransVo transVo) {
+		return onlineChangeDao.getOnlineChangeCIODetailTotal(transVo);
+	}
 
 }
