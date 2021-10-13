@@ -435,7 +435,7 @@ public class MedicalServiceImpl implements IMedicalService {
         j = iMedicalDao.updateTransMedicalTreatmentByCaseId(caseId,allianceStatus);
         
         //update TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
-        List<MedicalTreatmentClaimFileDataVo> fileDatas = claimVo.getFileDatas();
+        List<MedicalTreatmentClaimFileDataVo> fileDatas = claimVo.getFileData();
         if (fileDatas!=null && fileDatas.size()>0) {
             for (MedicalTreatmentClaimFileDataVo fileData : fileDatas) {
                 String fileId = fileData.getFileId();
@@ -450,7 +450,7 @@ public class MedicalServiceImpl implements IMedicalService {
                         	fileData.setClaimsSeqId(claimsSeqId);
                             fileData.setFileBase64("");
                             String fileName = fileData.getFileName();
-                            fileName = StringUtils.isBlank(fileName)?fileData.getDtype():fileName;
+                            fileName = StringUtils.isBlank(fileName)?fileData.getFileId():fileName;
                             fileData.setFileName(fileName);
                             j = iMedicalDao.addTarnsMedicalTreatmentFile(fileData);
                         }

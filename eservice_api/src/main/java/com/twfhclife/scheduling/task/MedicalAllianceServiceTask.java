@@ -637,8 +637,9 @@ public class MedicalAllianceServiceTask {
                                     }else {
                                     	//非全新案件
                                     	if(StringUtils.isNotBlank(transNum)) {//台銀首家件且已有CASEID故transNum不會為空
-                                    		//進行更新最新的狀態信息數據
+                                    		//1.進行更新最新的狀態信息數據
                                             int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo);
+
                                             //更新是否已經取得資料
                                             if(iRtn>0) {//如果有查詢且儲存成功
                                                 vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);

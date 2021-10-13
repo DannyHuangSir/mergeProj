@@ -72,7 +72,7 @@ public interface IMedicalDao {
     //進行添加新的文件數據
     int addTarnsMedicalTreatmentFile(@Param("fileData")MedicalTreatmentClaimFileDataVo fileData)throws  Exception;
     //進行查詢出對應的ClaimsSeqId
-    float getTransMedicalTreatmentClaimsSeqIdByCaseId(@Param("transNum")String transNum)throws Exception;
+    float getTransMedicalTreatmentClaimsSeqIdByCaseId(@Param("caseID")String caseID)throws Exception;
     //查詢狀態
     List<MedicalTreatmentClaimVo> getTransMedicalTreatmentAndTransByAllinaceStatus(@Param("lists")ArrayList<String> lists)throws Exception;
 
