@@ -130,7 +130,7 @@
 								</div>
 								<span class="col-sm-10" style="color: red;">(申請完成將以電子郵件通知，若未填寫則系統不會發送通知)</span>
 								<div class="clearfix"></div>
-								<label class="col-sm-3">聯絡地址：</label>
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>聯絡地址：</label>
 								<div class="col-sm-9">
 									<input type="text"  name="address" th:value="${claimVo.address}" class="col-sm-9" maxlength="200" style="padding: 6px 12px;line-height: 1em;" >
 								</div>
@@ -924,6 +924,10 @@
 					}else{
 						$("input[name='applyItem']").val(applyItemALL+$("#itemOther").val());
 						//return true;
+					}
+					if($("input[name='address']").val() == undefined || $("input[name='address']").val() == '' ){
+							openAlert('請輸入聯絡地址');
+							return false;
 					}
 					//與主被保險人(員工)之關係
 					if($("input[name='relation']:checked").val() == undefined){

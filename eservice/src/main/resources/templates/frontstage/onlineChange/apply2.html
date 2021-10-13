@@ -1088,7 +1088,7 @@
 								if (file.fileName.indexOf('.pdf') === -1 && file.fileName.indexOf('.PDF') === -1) {
 									rHtml +='<img src="data:image/png;base64,'+file.fileBase64+'" width=50>';
 								}else{
-									rHtml +='<embed src="data:application/pdf;base64,' + file.fileBase64+'" type="application/pdf" width=50>';
+									rHtml +='<embed src="data:image/png;base64,' + file.fileBase64+'" type="image/png" width=50>';
 								}
 								
 					rHtml +=	'</div>'+
