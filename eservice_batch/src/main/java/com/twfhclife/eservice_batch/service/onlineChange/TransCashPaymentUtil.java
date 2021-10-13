@@ -21,7 +21,7 @@ public class TransCashPaymentUtil {
     private static final Logger logger = LogManager.getLogger(TransCashPaymentUtil.class);
     private static final String TRANS_TYPE = "CASH_PAYMENT";
     private static final String TRANS_STATUS = "1";   // 申請中
-    private static final String UPLOAD_CODE = "033"; // 介接代碼
+    private static final String UPLOAD_CODE = "032"; // 介接代碼
 
     public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate) {
         logger.info("Start running generate apply file: {}", TRANS_TYPE);
@@ -55,12 +55,21 @@ public class TransCashPaymentUtil {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransCashPaymentVo vo : list) {
-                                // 介接代碼(3),申請序號(12),保單號碼(10),新收益分配或撥回資產分配方式(2),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
-                                String line = String.format(StringUtils.repeat("%s", 6),
+                                //介接代碼(3),申請序號(12),保單號碼(10),新收益分配或撥回資產分配方式(2) ,受益類別(1),匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                String line = String.format(StringUtils.repeat("%s", 15),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
                                         StringUtil.rpadBlank(vo.getAllocation(), 2),
+                                        "5",
+                                        StringUtil.rpadBlank(vo.getAccountName(), 20),
+                                        StringUtil.rpadBlank(vo.getBankName(), 10),
+                                        StringUtil.rpadBlank(vo.getBranchName(), 10),
+                                        StringUtil.rpadBlank(vo.getBankCode(), 3),
+                                        StringUtil.rpadBlank(vo.getBranchCode(), 4),
+                                        StringUtil.rpadBlank(vo.getBankAccount(), 16),
+                                        StringUtil.rpadBlank(vo.getSwiftCode(), 16),
+                                        StringUtil.rpadBlank(vo.getEnglishName(), 60),
                                         systemTwDate,
                                         systemTwDate
                                 );

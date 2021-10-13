@@ -7,10 +7,19 @@
 		<result column="POLICY_NO" property="policyNo" jdbcType="NVARCHAR" />
 		<result column="ALLOCATION" property="allocation" jdbcType="NVARCHAR" />
 		<result column="PRE_ALLOCATION" property="preAllocation" jdbcType="NVARCHAR" />
+	<result column="SWIFT_CODE" property="swiftCode" jdbcType="NVARCHAR" />
+		<result column="ENGLISH_NAME" property="englishName" jdbcType="NVARCHAR" />
+		<result column="BANK_CODE" property="bankCode" jdbcType="NVARCHAR" />
+		<result column="BRANCH_CODE" property="branchCode" jdbcType="NVARCHAR" />
+		<result column="ACCOUNT_NAME" property="accountName" jdbcType="NVARCHAR" />
+		<result column="BANK_ACCOUNT" property="bankAccount" jdbcType="NVARCHAR" />
+		<result column="BANK_NAME" property="bankName" jdbcType="NVARCHAR" />
+		<result column="BRANCH_NAME" property="branchName" jdbcType="NVARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List" >
-		ID, TRANS_NUM, POLICY_NO, ALLOCATION, PRE_ALLOCATION
+		ID, TRANS_NUM, POLICY_NO, ALLOCATION, PRE_ALLOCATION, SWIFT_CODE, ENGLISH_NAME, BANK_CODE,
+		BRANCH_CODE, ACCOUNT_NAME, BANK_ACCOUNT, BANK_NAME, BRANCH_NAME
 	</sql>
 
 	<select id="getTransCashPayments" resultMap="BaseResultMap">
