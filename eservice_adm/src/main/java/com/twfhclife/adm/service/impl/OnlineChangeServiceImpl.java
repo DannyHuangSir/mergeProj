@@ -614,7 +614,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			}
 		}
 		rMap.put("FileDatas", newfileDatas);
-		logger.info("1======获取的保单图片数据-----------====== : " + rMap.toString() + "============1");
+		//logger.info("1======获取的保单图片数据-----------====== : " + rMap.toString() + "============1");
 		return rMap;
 	}
 
@@ -1196,8 +1196,12 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 						String letName = filePath.substring(0, filePath.lastIndexOf(".")) + ".png";
 						map.put("fileOrPng", letName);
 					} else {
+						if(filePath.lastIndexOf(".png")!=-1 || filePath.lastIndexOf(".jpg")!=-1){
 						//获取图片的地址
 						map.put("fileOrPng", filePath);
+						}else{
+							map.put("fileOrPng", filePath+".png");
+						}
 					}
 					if(fileBase64!=null && !"".equals(fileBase64)){
 						//直接将原文件base64 转为 缩图的 base64
@@ -1215,15 +1219,14 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 								if ("png".equals(base64Type) || "jpg".equals(base64Type)) {
 									String miniatureBase64 = imgBase64(input, baos);
 									map.put("FileBase64",miniatureBase64);
-									map.put("fileOrPng", filePath+".png");
 								}else{
 									doc = PDDocument.load(input);
 									String miniatureBase64 = this.imgBase64(doc, baos);
 									logger.info("--------------------------------------------------PDF Base64转换为缩图="+miniatureBase64);
 									map.put("FileBase64",miniatureBase64);
-									map.put("fileOrPng",filePath+ ".pdf");
 									doc.close();
 								}
+							//	map.put("fileOrPng", filePath+".png");
 							} catch (IOException e) {
 								e.printStackTrace();
 							}finally {

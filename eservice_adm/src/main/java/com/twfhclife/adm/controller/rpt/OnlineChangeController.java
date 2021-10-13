@@ -1335,6 +1335,29 @@ public class OnlineChangeController extends BaseController {
 		}
 		return processResponseEntity();
 	}
+
+	/**
+	 * 更新補件單歷程
+	 * 
+	 * @param transVo TransVo
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/onlineChange/updateTransRFEStatus")
+	public ResponseEntity<ResponseObj> updateTransRFEStatus(@RequestBody TransRFEVo vo) {
+		try {
+			int result = onlineChangeService.updateTransRFEStatus(vo);
+			if (result > 0) {
+				processSuccess(result);
+			} else {
+				processError("更新失敗");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to updateTransRFEStatus: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
 	
 	/**
 	 * 保單醫療-通知補件.
@@ -1589,31 +1612,7 @@ public class OnlineChangeController extends BaseController {
 			addDefaultSystemError();
 		}
 		return "backstage/rpt/onlineChangeDetail-changePremium";
-	}
-	
-	/**
-	 * 更新補件單歷程
-	 * 
-	 * @param transVo TransVo
-	 * @return
-	 */
-	@RequestLog
-	@PostMapping("/onlineChange/updateTransRFEStatus")
-	public ResponseEntity<ResponseObj> updateTransRFEStatus(@RequestBody TransRFEVo vo) {
-		try {
-			int result = onlineChangeService.updateTransRFEStatus(vo);
-			if (result > 0) {
-				processSuccess(result);
-			} else {
-				processError("更新失敗");
-			}
-		} catch (Exception e) {
-			logger.error("Unable to updateTransRFEStatus: {}", ExceptionUtils.getStackTrace(e));
-			processSystemError();
-		}
-		return processResponseEntity();
-	}
-	
+	}	
 	
 	/**
 	 * 聯絡資料變更-失败
