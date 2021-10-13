@@ -18,5 +18,5 @@ public interface ITransDepositService {
 
     TransDepositDetailVo getAppliedTransDeposits(String transNum);
 
-    void distributionDepositFund(String userRocId, TransDepositVo vo);
+    void distributionDepositFund(String userRocId, TransDepositVo vo) throws Exception;
 }

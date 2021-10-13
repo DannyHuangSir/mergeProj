@@ -6,7 +6,6 @@ import com.twfhclife.eservice.policy.model.CompareInvestmentVo;
 import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.model.UsersVo;
-import javafx.util.Pair;
 
 import java.math.BigDecimal;
 import java.util.List;

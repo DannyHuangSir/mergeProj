@@ -26,11 +26,9 @@ import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
-import com.twfhclife.generic.util.DateUtil;
-import com.twfhclife.generic.util.StatuCode;
-import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +41,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /***
  * 線上申請 - 申請保單提領(贖回)
@@ -99,7 +98,7 @@ public class TransDepositController extends BaseUserDataController {
         if (policyList != null) {
 
             for (PolicyListVo policyListVo : policyList) {
-                Pair<BigDecimal, BigDecimal> pair = computeMinAndMax((DepositPolicyListVo) policyListVo);
+                MutablePair<BigDecimal, BigDecimal> pair = computeMinAndMax((DepositPolicyListVo) policyListVo);
                 policyListVo.setPolicyAcctValue(pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getValue() : BigDecimal.valueOf(0));
             }
 
@@ -118,7 +117,7 @@ public class TransDepositController extends BaseUserDataController {
     public String deposit2(TransDepositVo vo) {
         String userRocId = getUserRocId();
         DepositPolicyListVo depositPolicy = (DepositPolicyListVo) transDepositService.getDepositPolicy(userRocId, vo.getPolicyNo());
-        Pair<BigDecimal, BigDecimal> pair = computeMinAndMax(depositPolicy);
+        MutablePair<BigDecimal, BigDecimal> pair = computeMinAndMax(depositPolicy);
 
         addAttribute("minValue", pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getKey() : 0);
         addAttribute("maxValue", pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getValue() : 0);
@@ -129,11 +128,16 @@ public class TransDepositController extends BaseUserDataController {
 
     @RequestLog
     @PostMapping("/deposit3")
-    public String deposit3(TransDepositVo vo) {
+    public String deposit3(TransDepositVo vo, RedirectAttributes redirectAttributes) {
         addAttribute("userName", getUserDetail().getUserName());
         addAttribute("showPost", checkPostShow(vo.getPolicyNo()));
         if (StringUtils.equals(vo.getDepositMethod(), "1")) {
+            try {
             transDepositService.distributionDepositFund(getUserRocId(), vo);
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+                return "forward:deposit2";
+            }
         }
         addAttribute("depositVo", vo);
         return "frontstage/onlineChange/deposit/deposit3";
@@ -241,7 +245,7 @@ public class TransDepositController extends BaseUserDataController {
         return mingwen;
     }
 
-    private Pair<BigDecimal, BigDecimal> computeMinAndMax(DepositPolicyListVo depositPolicy) {
+    private MutablePair<BigDecimal, BigDecimal> computeMinAndMax(DepositPolicyListVo depositPolicy) {
         BigDecimal max = depositPolicy.getPolicyAcctValue();
         BigDecimal min = BigDecimal.valueOf(0);
         BigDecimal minValue = BigDecimal.valueOf(0);
@@ -261,10 +265,11 @@ public class TransDepositController extends BaseUserDataController {
                     }
                 }
             }
-
+        boolean allStopAccount = true;
         if (depositPolicy != null && !CollectionUtils.isEmpty(depositPolicy.getPortfolioVoList())) {
             for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
                 if (!stopAccount.contains(portfolioVo.getInvtNo())) {
+                    allStopAccount = false;
                     BigDecimal ratio = transInvestmentService.getDistributeRationByInvtNo(depositPolicy.getPolicyNo(), portfolioVo.getInvtNo());
                     BigDecimal tmpValue = BigDecimal.valueOf(0);
                     if (ratio != null) {
@@ -274,15 +279,17 @@ public class TransDepositController extends BaseUserDataController {
                         tmpValue = minValue;
                     }
 
-                    if (tmpValue.compareTo(minValue) < 0 || portfolioVo.getAcctValue() == null || portfolioVo.getAcctValue().subtract(tmpValue).compareTo(surplusValue) < 0) {
+                    if (tmpValue.compareTo(minValue) < 0 || portfolioVo.getAcctValue() == null || portfolioVo.getAcctValue().subtract(tmpValue).doubleValue() < 0) {
                         continue;
         }
-                    min = min.add(tmpValue);
-                    max = max.subtract(surplusValue);
+                    min = min.add(minValue);
     }
             }
         }
-        return new Pair<>(min, max);
+        if (!allStopAccount) {
+            max = max.subtract(surplusValue);
+        }
+        return MutablePair.of(min, max);
     }
 
 }
