@@ -107,4 +107,6 @@ public interface IMedicalDao {
     //修改當前保單為重新獲取醫院端已接收到此次查調資
     //訊，待醫院端回覆資料
     int updateTarnsMedicalTreatmentClaimToAllianceStatus(@Param("transNum")String transNum, @Param("pths")String medicalInterfaceStatusPths)throws Exception;;
+   // 查詢需要進行下載的檔案數據數據信息
+    List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFileData(@Param("hasFile")String has_file);
 }

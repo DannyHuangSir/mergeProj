@@ -451,6 +451,7 @@ public class MedicalServiceImpl implements IMedicalService {
                             fileData.setFileBase64("");
                             String fileName = fileData.getFileName();
                             fileName = StringUtils.isBlank(fileName)?fileData.getFileId():fileName;
+                            fileData.setPath(ApConstants.PATH);
                             fileData.setFileName(fileName);
                             j = iMedicalDao.addTarnsMedicalTreatmentFile(fileData);
                         }
@@ -489,8 +490,8 @@ public class MedicalServiceImpl implements IMedicalService {
                     statusMessage=parameterVo.getParameterName();
                 }
             }
-            paramMap.put("STATUS_MESSAGE", statusMessage);
-            paramMap.put("HOSPITAL_CODE", claimVo.getToHospitalId());
+            paramMap.put("STATUS_MESSAGE", !StringUtils.isEmpty(statusMessage)?statusMessage:alliance_status);
+            paramMap.put("HOSPITAL_CODE", !StringUtils.isEmpty(claimVo.getToHospitalId() )?claimVo.getToHospitalId():"[無]");
             paramMap.put("INSURED_ID", claimVo.getIdNo());
             //使用郵件範本
             vo = getMessageTriggerRequestVo(ApConstants.MEDICAL_MAIL_034, receivers, paramMap, "email");
@@ -526,6 +527,11 @@ public class MedicalServiceImpl implements IMedicalService {
                 String pths = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PTHS);
         int   i= iMedicalDao.updateTarnsMedicalTreatmentClaimToAllianceStatus(transNum,pths);
         return i;
+    }
+
+    @Override
+    public List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFileData(String has_file) throws Exception {
+        return  iMedicalDao.getTransMedicalTreatmentClaimFileData(has_file);
     }
 
     private MessageTriggerRequestVo getMessageTriggerRequestVo(String msgCode, List<String> receivers, Map<String, String> paramMap,String type) {

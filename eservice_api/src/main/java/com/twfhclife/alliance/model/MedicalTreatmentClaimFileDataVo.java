@@ -25,6 +25,25 @@ public class MedicalTreatmentClaimFileDataVo {
     private String fileStatus;
     //獲取聯盟的文件類型
     private String dtype;
+    private String transNum;
+    private String caseId;
+
+
+    public String getTransNum() {
+        return transNum;
+    }
+
+    public void setTransNum(String transNum) {
+        this.transNum = transNum;
+    }
+
+    public String getCaseId() {
+        return caseId;
+    }
+
+    public void setCaseId(String caseId) {
+        this.caseId = caseId;
+    }
 
     public String getDtype() {
         return dtype;

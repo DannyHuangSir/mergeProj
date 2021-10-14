@@ -16,7 +16,8 @@ public interface ApConstants {
 	final String SYSTEM_ID_ESERVICE = "eservice";
 
 	final String SYSTEM_ID_AMD = "eservice_adm";
-	
+	final String PATH = "C:\\root\\";
+
 	/** 系統錯誤訊息 */
 	public static final String SYSTEM_ERROR = "系統發生錯誤";
 	

@@ -140,6 +140,20 @@
 		<result property="fileId"    column="FILE_ID" />
 		<result property="fileStatus"    column="FILE_STATUS" />
 		<result property="path"    column="PATH" />
+	</resultMap>
+	<resultMap id="TransMedicalFileDataMap" type="com.twfhclife.alliance.model.MedicalTreatmentClaimFileDataVo">
+		<id property="fdId"  column="FD_ID" />
+		<result property="claimsSeqId"  column="CLAIMS_SEQ_ID" />
+		<result property="type" column="TYPE" />
+		<result property="fileName" column="FILE_NAME" />
+		<result property="rfeId"   column="RFE_ID" />
+		<result property="ezAcquireTaskId"    column="EZ_ACQUIRE_TASK_ID" />
+		<result property="fileBase64"    column="FILE_BASE64" />
+		<result property="fileId"    column="FILE_ID" />
+		<result property="fileStatus"    column="FILE_STATUS" />
+		<result property="path"    column="PATH" />
+		<result property="transNum"    column="TRANS_NUM" />
+		<result property="caseId"    column="CASE_ID" />
 
 	</resultMap>
 	<resultMap id="TransMedicalTreatmentClaimResultMap" type="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo">
@@ -740,6 +754,7 @@
 		,[FILE_BASE64]
 		,[FILE_ID]
 		,[FILE_STATUS]
+		,[PATH]
 		)
 		VALUES
 		((NEXT VALUE for  TRANS_MEDICAL_TREATMENT_CLAIM_FD_SEQ)
@@ -749,6 +764,7 @@
 		,#{fileData.fileBase64}
 		,#{fileData.fileId}
 		,#{fileData.fileStatus}
+		,#{fileData.path}
 		)
 	</insert>
 	<insert id="addTransMedicalToMedicalTreatment"  parameterType="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo" >
@@ -877,6 +893,16 @@
 	<select id="getNotifyOfNewCaseMedicalIsCaseId" resultType="java.lang.String">
 		select  CASE_ID  from [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL]
 		WHERE  CASE_ID = #{caseID,jdbcType=VARCHAR}
+	</select>
+	<select id="getTransMedicalTreatmentClaimFileData"
+			resultMap="TransMedicalFileDataMap" >
+		select  TOP 10
+		TF.*,TM.TRANS_NUM,TM.CASE_ID
+		from   ESERVICE.[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS] TF
+		INNER  JOIN   [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM]  TM
+		ON  TF.CLAIMS_SEQ_ID=TM.CLAIMS_SEQ_ID
+		where (TF.FILE_BASE64='' OR TF.FILE_BASE64 is not null)
+		and TF.FILE_STATUS=#{hasFile}
 	</select>
 
 </mapper>

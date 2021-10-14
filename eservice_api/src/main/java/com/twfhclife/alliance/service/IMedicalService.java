@@ -96,4 +96,6 @@ public interface IMedicalService {
      * @throws Exception
      */
     int updaetNotifyOfNewCaseMedicalStatus(String caseId,String transNum)throws Exception;
+    //查詢需要進行發送下載的案件信息
+    List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFileData(String has_file)throws Exception;
 }

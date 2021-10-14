@@ -493,7 +493,7 @@ public class MedicalAllianceServiceTask {
                             }else{
                                 //do not create new TRANS_NUM here.
                             }
-                            
+
                             String strResponse = medicalExternalServiceImpl.postForEntity(URL_API403, params, unParams);
                             // strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"hpUid\":\"202101030900001-JQ\",\"idNo\":\"A123456789\",\"dtype\":\"Receipt,CertificateDiagnosis\",\"name\":\"王⼤明\",\"birdate\":\"19910415\",\"hpId\":\"0101090517\",\"cpoa\":\"本⼈王⼤明/A123456789…\",\"hsTime\":\"20210120\",\"heTime\":\"20210125\",\"phone\":\"0912345678\",\"zipCode\":\"70157\",\"address\":\"台北市中正區信義路⼀段 21-3 號\",\"mail\":\" abc@test.com.tw \",\"paymentMethod\":\"1\",\"bankCode\":\"004\",\"branchCode\":\"0107\",\"bankAccount\":\"12345678901234\",\"applicationDate\":\"20190105\",\"applicationTime\":\"1520\",\"applicationItem\":\"1\",\"job\":\"老師\",\"jobDescr\":\"⼯作的描述內容\",\"accidentDate\":\"20190101\",\"accidentTime\":\"1520\",\"accidentCause\":\"disease\",\"accidentLocation\":\"台北市中正區信義路⼀段\",\"accidentDescr\":\"遭計程⾞追撞\",\"policeStation\":\"臺北市政府警察局⼤安分局安和路派出所\",\"policeName\":\"王⼩明\",\"policePhone\":\"0987654321\",\"policeDate\":\"20190101\",\"policeTime\":\"1530\",\"stauts\":\"ITPS\",\"to\":\"L01,L02,L03\",\"from\":\"L01\",\"fromData\":{\"from\":\"L01\",\"status\":\"PTIG\"},\"toData\":[{\"to\":\"L02\",\"status\":\"PTHS\"},{\"to\":\"L03\",\"status\":\"PTHS\"}],\"fileData\":[{\"dtype\":\"CertificateDiagnosis\",\"fileId\":\"45c17f68e615-L02-c-123\",\"fileStatus\":\"HAS_FILE\"},{\"dtype\":\"CertificateDiagnosis\",\"fileId\":\"45c17f68e615-L02-c-133\",\"fileStatus\":\"NO_FILE\"},{\"dtype\":\"Receipt\",\"fileId\":\"45c17f68e615-L02-c-789\",\"fileStatus\":\"RE_FILE\"}]}}";
                             log.info("call URL_API403,strResponse="+strResponse);
@@ -637,7 +637,7 @@ public class MedicalAllianceServiceTask {
                                     }else {
                                     	//非全新案件
                                     	if(StringUtils.isNotBlank(transNum)) {//台銀首家件且已有CASEID故transNum不會為空
-                                    		//1.進行更新最新的狀態信息數據
+                                    	//進行更新最新的狀態信息數據
                                             int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo);
 
                                             //更新是否已經取得資料
@@ -687,44 +687,31 @@ public class MedicalAllianceServiceTask {
         log.info("API_DISABLE="+API_DISABLE);
         if("N".equals(API_DISABLE)){
             try {
-                String pqhfEnd = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_HTPS_PTIS);
-                List<MedicalTreatmentClaimVo> listMedical = iMedicalService.getTransMedicalTreatmentUploadFileid(pqhfEnd);
-                //2.call api-406
+                List<MedicalTreatmentClaimFileDataVo> listMedical = iMedicalService.getTransMedicalTreatmentClaimFileData( CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
+                //2.call api-404
                 if(listMedical!=null && !listMedical.isEmpty() && listMedical.size()>0) {
-                    for (MedicalTreatmentClaimVo vo : listMedical) {
-                        List<MedicalTreatmentClaimFileDataVo> fileDatas = vo.getFileDatas();
-                        if(fileDatas!=null && !fileDatas.isEmpty() && fileDatas.size()>0) {
-                            for (MedicalTreatmentClaimFileDataVo fileDataVo : fileDatas) {
-	                            if(vo!=null && fileDataVo !=null) {
+                    for (MedicalTreatmentClaimFileDataVo vo : listMedical) {
 	                                //3.call api-404 to
 	                                Map<String, String> params = new HashMap<>();
 	                                String caseId = vo.getCaseId();
 	                                String transNum = vo.getTransNum();
-	                                params.put("fileId",fileDataVo.getFileId());
+	                                params.put("fileId",vo.getFileId());
 	                                //聯盟鏈歷程參數
 	                                Map<String, String> unParams = new HashMap<>();
 	                                unParams.put("name", "API-404 檔案下載");
 	                                unParams.put("caseId", caseId);
 	                                unParams.put("transNum", transNum);
-	
+
 	                                 String strResponse = medicalExternalServiceImpl.postForEntity(URL_API404, params, unParams);
 	                                //String strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"content\":\"kbiefw3i8n3oi493nf…\"}}";
 	                                log.info("call URL_API404,strResponse="+strResponse);
 		                            //3-1.get api-404 response
 		                            if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
 		                                String content = MyJacksonUtil.readValue(strResponse, "/data/content");
-		                                fileDataVo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
-		                                fileDataVo.setFileBase64(content);
+                                        vo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_RE_FILE);
+                                        vo.setFileBase64(content);
 		                                //進行回應狀態
-		                                iMedicalService.updateTarnsMedicalTreatmentFileDataStatus(fileDataVo);
-		                            }
-	
-	                            }
-                            }
-                            //再次進行回壓保單案件狀態
-                            String itps = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_ITPS);
-                            vo.setAllianceStatus(itps);
-                            iMedicalService.updateMedicalTreatmentClaimToAlliance(vo);
+		                                iMedicalService.updateTarnsMedicalTreatmentFileDataStatus(vo);
                         }
                     }
                 }
@@ -766,7 +753,7 @@ public class MedicalAllianceServiceTask {
                                     unParams.put("name", "API-405 申請醫療資料重新上傳");
                                     unParams.put("caseId", caseId);
                                     unParams.put("transNum", transNum);
-                                    
+
                                     String strResponse = medicalExternalServiceImpl.postForEntity(URL_API405, params, unParams);
                                     //String strResponse = "{\"code\":\"0\",\"msg\":\"success\"}";
                                     log.info("call URL_API405,strResponse="+strResponse);
