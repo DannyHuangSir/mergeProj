@@ -84,6 +84,12 @@
 			INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL TFD ON TFN.ID = TFD.TRANS_FUND_NOTIFICATION_ID
 		) R ON F.FUND_CODE = R.FUND_CODE
 		<where>
+			<if test="rrs != null">
+				AND F.RISK_BENE_LEVEL IN
+				<foreach collection="rrs" separator="," open="(" close=")" item="rr">
+					#{rr}
+				</foreach>
+			</if>
 			<if test="invtNos != null and invtNos.size() > 0">
 				AND F.FUND_CODE NOT IN
 				<foreach collection="invtNos" item="funNo" index="index" open="(" close=")" separator="," >

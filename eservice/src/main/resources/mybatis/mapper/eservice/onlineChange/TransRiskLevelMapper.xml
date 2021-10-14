@@ -8,10 +8,11 @@
 		<result column="RISK_LEVEL_OLD" property="riskLevelOld"/>
 		<result column="RISK_LEVEL_NEW" property="riskLevelNew"/>
 		<result column="RISK_SCORE" property="riskScore"/>
+	<result column="ROC_ID" property="rocId"/>
 	</resultMap>
 	
 	<sql id="Base_Column_List">
-		ID,TRANS_NUM,RISK_LEVEL_OLD,RISK_LEVEL_NEW,RISK_SCORE
+		ID,TRANS_NUM,RISK_LEVEL_OLD,RISK_LEVEL_NEW,RISK_SCORE,ROC_ID
 	</sql>
 	
 	<sql id="whereClause">
@@ -51,7 +52,8 @@
 			#{transRiskLevelVo.transNum, jdbcType=VARCHAR},
 			#{transRiskLevelVo.riskLevelOld, jdbcType=VARCHAR},
 			#{transRiskLevelVo.riskLevelNew, jdbcType=VARCHAR},
-			#{transRiskLevelVo.riskScore, jdbcType=NUMERIC}
+			#{transRiskLevelVo.riskScore, jdbcType=NUMERIC},
+			#{transRiskLevelVo.rocId, jdbcType=VARCHAR}
 		)
 	</insert>
 	

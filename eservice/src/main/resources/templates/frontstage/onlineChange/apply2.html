@@ -718,7 +718,8 @@
 						'<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>';
 					}else if(oRow.status == '2' && oRow.endorsementStatus > 0){
 						botton = '<button class="btn-cancel" id="endorsement_'+oRow.transNum+'" onclick="downloadEndorsement(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">下載批註單  <i class="fas fa-chevron-right"></i></button>';
-					}else if(oRow.transType == 'CONTACT_INFO' && oRow.status == '1'){
+					}else if((oRow.transType == 'CONTACT_INFO' || oRow.transType == 'INVESTMENT' || oRow.transType == 'CONVERSION'
+							|| oRow.transType == 'DEPOSIT' || oRow.transType == 'CASH_PAYMENT' || oRow.transType == 'CHANGE_PREMIUM' || oRow.transType == 'RISK_LEVEL') && oRow.status == '1'){
 						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTransCheck(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>';
 					}
 					return botton;

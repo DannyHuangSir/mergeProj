@@ -251,9 +251,10 @@ public class OnlineChangeController extends BaseController {
 	private static final List<String> INVSETMENT_TYPES = Lists.newArrayList(
 			TransTypeUtil.INVESTMENT_CONVERSION_CODE,
 			TransTypeUtil.INVESTMENT_PARAMETER_CODE,
-			TransTypeUtil.DEPOSIT_PARAMETER_CODE,
 			TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE,
-			TransTypeUtil.PAYMODE_PARAMETER_CODE
+			TransTypeUtil.RISK_LEVEL_PARAMETER_CODE,
+			TransTypeUtil.CHANGE_PREMIUM_CODE,
+			TransTypeUtil.DEPOSIT_PARAMETER_CODE
 	);
 
 	/**

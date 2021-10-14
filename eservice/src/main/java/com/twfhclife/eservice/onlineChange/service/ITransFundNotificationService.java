@@ -48,15 +48,8 @@ public interface ITransFundNotificationService {
 	public List<TransFundNotificationDtlVo> getTransFundNotificationDtlDetail(String transNum,
 			BigDecimal transFundNotificationId);
 
-	/**
-	 * 處理保單狀態是否鎖定.
-	 * 
-	 * @param policyList 保單清單資料
-	 */
-	public void handlePolicyStatusLocked(List<PolicyListVo> policyList);
 
-
-	List<NotificationFundVo> getSearchPortfolio(List<String> invtNos);
+	List<NotificationFundVo> getSearchPortfolio(List<String> invtNos, String userRocId);
 
 	List<NotificationPortfolioVo> getOwnNotifications(String policyNo);
 }

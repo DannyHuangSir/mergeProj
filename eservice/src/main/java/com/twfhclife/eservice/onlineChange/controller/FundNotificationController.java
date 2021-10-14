@@ -9,6 +9,7 @@ import com.twfhclife.eservice.onlineChange.model.TransFundNotificationVo;
 import com.twfhclife.eservice.onlineChange.model.TransNotificationVo;
 import com.twfhclife.eservice.onlineChange.service.ITransFundNotificationService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
+import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
@@ -86,6 +87,9 @@ public class FundNotificationController extends BaseUserDataController {
 	@Autowired
 	private IParameterService parameterService;
 
+	@Autowired
+	private ITransRiskLevelService riskLevelService;
+
 	/**
 	 * 保單清單頁面.
 	 * 
@@ -102,6 +106,13 @@ public class FundNotificationController extends BaseUserDataController {
 				return "redirect:apply1";
 			}
 
+			String userRocId = getUserRocId();
+			String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
+			if(StringUtils.isBlank(riskLevel)) {
+				redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+				return "redirect:apply1";
+			}
+
 			/**
 			 * 有申請中的保單理賠,則不可再申請
 			 * TRANS  status=-1,0,4
@@ -112,7 +123,6 @@ public class FundNotificationController extends BaseUserDataController {
 				return "redirect:apply1";
 			}
 
-			String userRocId = getUserRocId();
 			String userId = getUserId();
 			List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(userRocId);
 			
@@ -307,7 +317,7 @@ public class FundNotificationController extends BaseUserDataController {
 	@PostMapping("/getSearchPortfolio")
 	@ResponseBody
 	public ResponseEntity<ResponseObj> getSearchPortfolio(@RequestBody TransNotificationVo vo) {
-		processSuccess(transFundNotificationService.getSearchPortfolio(vo.getInvtNos()));
+		processSuccess(transFundNotificationService.getSearchPortfolio(vo.getInvtNos(), getUserRocId()));
 		return processResponseEntity();
 	}
 

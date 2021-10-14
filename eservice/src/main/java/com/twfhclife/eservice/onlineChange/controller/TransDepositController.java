@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo;
 import com.twfhclife.eservice.onlineChange.model.TransDepositDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransDepositVo;
+import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.onlineChange.service.ITransDepositService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
@@ -26,6 +27,7 @@ import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
+import com.twfhclife.generic.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -172,6 +174,7 @@ public class TransDepositController extends BaseUserDataController {
             UsersVo user = getUserDetail();
             try {
                 transDepositService.addNewDepositApply(vo, user);
+                sendNotification(vo, user);
             } catch (Exception e) {
                 logger.error(e);
                 return "forward:deposit4";
@@ -247,7 +250,7 @@ public class TransDepositController extends BaseUserDataController {
 
     private MutablePair<BigDecimal, BigDecimal> computeMinAndMax(DepositPolicyListVo depositPolicy) {
         BigDecimal max = depositPolicy.getPolicyAcctValue();
-        BigDecimal min = BigDecimal.valueOf(0);
+        BigDecimal min = BigDecimal.valueOf(1);
         BigDecimal minValue = BigDecimal.valueOf(0);
         BigDecimal surplusValue = BigDecimal.valueOf(0);
         String stopAccount = "";
@@ -266,30 +269,81 @@ public class TransDepositController extends BaseUserDataController {
                 }
             }
         boolean allStopAccount = true;
+        boolean hasStopAccount = false;
         if (depositPolicy != null && !CollectionUtils.isEmpty(depositPolicy.getPortfolioVoList())) {
             for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
                 if (!stopAccount.contains(portfolioVo.getInvtNo())) {
                     allStopAccount = false;
-                    BigDecimal ratio = transInvestmentService.getDistributeRationByInvtNo(depositPolicy.getPolicyNo(), portfolioVo.getInvtNo());
-                    BigDecimal tmpValue = BigDecimal.valueOf(0);
-                    if (ratio != null) {
-                        //分配比例轉換提領最小金額
-                        tmpValue = minValue.multiply(BigDecimal.valueOf(100)).divide(ratio, 4, BigDecimal.ROUND_DOWN);
                     } else {
-                        tmpValue = minValue;
+                    hasStopAccount = true;
                     }
-
-                    if (tmpValue.compareTo(minValue) < 0 || portfolioVo.getAcctValue() == null || portfolioVo.getAcctValue().subtract(tmpValue).doubleValue() < 0) {
-                        continue;
-        }
-                    min = min.add(minValue);
     }
             }
+        if (!hasStopAccount && minValue.doubleValue() >= 1) {
+            min = min.add(minValue).subtract(BigDecimal.valueOf(1));
         }
         if (!allStopAccount) {
             max = max.subtract(surplusValue);
         }
         return MutablePair.of(min, max);
+    }
+
+    public void sendNotification(TransDepositVo vo, UsersVo user) {
+        try {
+            Map<String, Object> mailInfo = transInvestmentService.getSendMailInfo();
+            Map<String, String> paramMap = new HashMap<String, String>();
+            paramMap.put("TransNum", vo.getTransNum());
+            paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+            paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+            logger.info("Trans Num : {}", vo.getTransNum());
+            logger.info("Status Name : {}", mailInfo.get("statusName"));
+            logger.info("Trans Remark : {}", mailInfo.get("transRemark"));
+            logger.info("receivers={}", mailInfo.get("receivers"));
+            logger.info("user phone : {}", user.getMobile());
+            logger.info("user mail : {}", user.getEmail());
+            //获取保单编号
+            paramMap.put("POLICY_NO", vo.getPolicyNo());
+            logger.info("POLICY_NO : {}", vo.getPolicyNo());
+
+            List<String> receivers = new ArrayList<String>();
+
+            String applyDate = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+            paramMap.put("DATA", applyDate);
+            //申請狀態-申請中
+            paramMap.put("TransStatus","申請中");
+            //申請功能
+            ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
+                    ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, TransTypeUtil.DEPOSIT_PARAMETER_CODE);
+            paramMap.put("APPLICATION_FUNCTION", parameterValueByCode.getParameterName());
+
+
+            //發送系統管理員
+            receivers = (List) mailInfo.get("receivers");
+            //推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
+            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_027, receivers, paramMap, "email");
+
+            //發送保戶SMS
+            //receivers = new ArrayList<String>();
+            receivers.clear();//清空
+            paramMap.clear();//清空模板參數
+            //設置模板參數
+            paramMap.put("TITLE", OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_TITLE);
+            paramMap.put("MESSAGE",OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CAPACITY5);
+            receivers.add(user.getMobile());
+            logger.info("user phone : {}", user.getMobile());
+            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "sms");
+            //發送保戶MAIL
+            //receivers = new ArrayList<String>();
+            if (user.getEmail() != null) {
+                receivers.clear();//清空
+                receivers.add(user.getEmail());
+                logger.info("user mail : {}", user.getEmail());
+                messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "email");
+            }
+        } catch (Exception e) {
+            logger.info("depositSuccess() success, but send notify mail/sms error.");
+        }
+        logger.info("End send mail");
     }
 
 }

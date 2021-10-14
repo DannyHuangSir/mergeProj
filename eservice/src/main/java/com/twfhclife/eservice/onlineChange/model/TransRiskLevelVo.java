@@ -20,6 +20,8 @@ public class TransRiskLevelVo extends AbstractOnlineChangeModelBean {
 	
 	private String riskLevelDesc;
 
+	private String rocId;
+
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -71,5 +73,13 @@ public class TransRiskLevelVo extends AbstractOnlineChangeModelBean {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public String getRocId() {
+		return rocId;
+	}
+
+	public void setRocId(String rocId) {
+		this.rocId = rocId;
 	}
 }
