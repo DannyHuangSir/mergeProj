@@ -235,6 +235,10 @@ public class MedicalTreatmentReportController extends BaseController {
 			if(i>0){
 				 parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID,ApConstants.MEDICAL_UPDATE_WINDOW_MSG);
 			}
+
+			if(i<1){
+				parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID,ApConstants.MEDICAL_UPDATE_STATUS_WINDOW_MSG);
+			}
 			processSuccess(parameterValueByCode);
 		} catch (Exception e) {
 			logger.error("Unable to getMedicalUpdateCaseStatus: {}", ExceptionUtils.getStackTrace(e));

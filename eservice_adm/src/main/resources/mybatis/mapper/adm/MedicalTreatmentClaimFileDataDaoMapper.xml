@@ -28,11 +28,11 @@
 		UPDATE  [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL] SET  NC_STATUS = #{ncStatus},MSG = #{msg} where  CASE_ID = #{caseId}
 	</update>
 	<select id="getTreatmentClaimCaseId"  resultType="java.lang.String"  parameterType="com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo"  >
-		select  CASE_ID  from [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM]
+		select TOP 1  CASE_ID  from [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM]
 		WHERE  TRANS_NUM = #{vo.transNum,jdbcType=VARCHAR}
 	</select>
 	<select id="getNotifyOfNewCaseMedicalIsCaseId" resultType="java.lang.String">
-		select  CASE_ID  from [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL]
+		select  TOP 1   CASE_ID  from [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL]
 		WHERE  CASE_ID = #{caseID,jdbcType=VARCHAR}
 	</select>
 

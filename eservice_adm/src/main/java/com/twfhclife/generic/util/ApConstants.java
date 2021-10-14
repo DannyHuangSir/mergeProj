@@ -204,9 +204,10 @@ public interface ApConstants {
 	 * 醫療異常件異常件通知訊息  組
 	 */
 	final String MEDICAL_ABNORMAL_REASON_MSG = "MEDICAL_ABNORMAL_REASON_MSG";
-
-	//更新案件提升信息
+	//更新案件提示信息
 	final String MEDICAL_UPDATE_WINDOW_MSG = "MEDICAL_UPDATE_WINDOW_MSG";
+	//更新案件提示信息,案件還未推送至聯盟
+	final String MEDICAL_UPDATE_STATUS_WINDOW_MSG = "MEDICAL_UPDATE_STATUS_WINDOW_MSG";
 	//醫療病例重新上傳提升信息
 	final String MEDICAL_ITPR_WINDOW_MSG = "MEDICAL_ITPR_WINDOW_MSG";
 	//保險公司發送醫療資料重送
