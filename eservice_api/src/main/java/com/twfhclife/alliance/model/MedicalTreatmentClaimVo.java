@@ -725,13 +725,13 @@ public class MedicalTreatmentClaimVo {
 		this.sendAlliance = sendAlliance;
 	}
 
-	public List<MedicalTreatmentClaimFileDataVo> getFileDatas() {
+/*	public List<MedicalTreatmentClaimFileDataVo> getFileDatas() {
 		return fileDatas;
 	}
 
 	public void setFileDatas(List<MedicalTreatmentClaimFileDataVo> fileDatas) {
 		this.fileDatas = fileDatas;
-	}
+	}*/
 
 	public String getTransNum() {
 		return transNum;

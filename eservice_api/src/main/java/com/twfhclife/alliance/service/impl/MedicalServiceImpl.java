@@ -122,7 +122,7 @@ public class MedicalServiceImpl implements IMedicalService {
                 List<MedicalTreatmentClaimFileDataVo> fileList
                         = iMedicalDao.getTransMedicalTreatmentFileDataByClaimSeqId(claimSeqId, parameterByCategoryCode);
                 System.out.println(fileList);
-                X.setFileDatas(fileList);
+                X.setFileData(fileList);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -152,7 +152,7 @@ public class MedicalServiceImpl implements IMedicalService {
                 List<MedicalTreatmentClaimFileDataVo> fileList
                         = iMedicalDao.getTransMedicalTreatmentFileDataByClaimSeqId(claimSeqId, parameterByCategoryCode);
                 System.out.println(fileList);
-                X.setFileDatas(fileList);
+                X.setFileData(fileList);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -173,7 +173,7 @@ public class MedicalServiceImpl implements IMedicalService {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                x.setFileDatas(medicalFilData);
+                x.setFileData(medicalFilData);
                 return x;
             }).collect(Collectors.toList());
         }
@@ -357,7 +357,7 @@ public class MedicalServiceImpl implements IMedicalService {
         int addMedicalCountResult = iMedicalDao.addMedicalTreatment(medicalVo);
         if (addMedicalCountResult > 0) {
         	iRtn = addMedicalCountResult;
-            List<MedicalTreatmentClaimFileDataVo> fileDatas = medicalVo.getFileDatas();
+            List<MedicalTreatmentClaimFileDataVo> fileDatas = medicalVo.getFileData();
             if (fileDatas != null && fileDatas.size() > 0) {
             	int addFileCountResult = 0;
 

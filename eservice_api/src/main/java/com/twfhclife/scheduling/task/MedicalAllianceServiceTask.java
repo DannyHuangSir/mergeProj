@@ -281,7 +281,7 @@ public class MedicalAllianceServiceTask {
                                 transMedicalTreatmentClaimVo.setTo(toCompanyId);
                                 
                                 //3.1.塞好FILEDATAS
-                                List<MedicalTreatmentClaimFileDataVo> fileDatas = vo.getFileDatas();
+                                List<MedicalTreatmentClaimFileDataVo> fileDatas = vo.getFileData();
                                 if(fileDatas!=null && fileDatas.size()>0) {
                                     List<TransMedicalTreatmentClaimFileDataVo> transFileDatas = new ArrayList<TransMedicalTreatmentClaimFileDataVo>();
                                     for(MedicalTreatmentClaimFileDataVo ivo : fileDatas) {
@@ -590,7 +590,7 @@ public class MedicalAllianceServiceTask {
                                             medicalVo.setAuthorizationStartDate(medicalVo.getHsTime());
                                             medicalVo.setToHospitalId(medicalVo.getHpId());
                                             
-                                            medicalVo.setFileDatas(medicalVo.getFileData());
+                                            medicalVo.setFileData(medicalVo.getFileData());
 
                                             //toData
                                             //String toValue = this.getToDataToValue(strResponse);
@@ -737,7 +737,7 @@ public class MedicalAllianceServiceTask {
 		                            //3-1.get api-404 response
 		                            if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
 		                                String content = MyJacksonUtil.readValue(strResponse, "/data/content");
-                                        vo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_RE_FILE);
+                                        vo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
                                         vo.setFileBase64(content);
 		                                //進行回應狀態
 		                                iMedicalService.updateTarnsMedicalTreatmentFileDataStatus(vo);
@@ -767,7 +767,7 @@ public class MedicalAllianceServiceTask {
                 //2.call api-405
                 if(listMedical!=null && !listMedical.isEmpty() && listMedical.size()>0) {
                     for (MedicalTreatmentClaimVo vo : listMedical) {
-                        List<MedicalTreatmentClaimFileDataVo> fileDatas = vo.getFileDatas();
+                        List<MedicalTreatmentClaimFileDataVo> fileDatas = vo.getFileData();
                         if(fileDatas!=null && !fileDatas.isEmpty() && fileDatas.size()>0) {
                             for (MedicalTreatmentClaimFileDataVo fileDataVo : fileDatas) {
                                 if(vo!=null && fileDataVo !=null) {
