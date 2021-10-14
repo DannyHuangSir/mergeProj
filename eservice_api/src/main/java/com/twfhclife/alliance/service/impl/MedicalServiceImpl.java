@@ -365,9 +365,7 @@ public class MedicalServiceImpl implements IMedicalService {
                     if (fileData != null) {
                         fileData.setClaimsSeqId(seqId);
                         fileData.setFileBase64("");
-                        String fileName = fileData.getFileName();
-                        fileName = StringUtils.isBlank(fileName)?fileData.getDtype():fileName;
-                        fileData.setFileName(fileName);
+
                         addFileCountResult = iMedicalDao.addMedicalTreatmentFileData(fileData);
                     }
                 }
@@ -452,16 +450,6 @@ public class MedicalServiceImpl implements IMedicalService {
                         	fileData.setClaimsSeqId(claimsSeqId);
                             fileData.setFileBase64("");
                             
-                            //聯盟未回傳filename
-                            String fileName = fileData.getFileName();
-                            fileName = StringUtils.isBlank(fileName)?fileData.getFileId():fileName;
-                            String fileExtension = FilenameUtils.getExtension(fileName);
-                            if(StringUtils.isBlank(fileExtension)) {
-                            	fileName += ".pdf";
-                            }
-                            
-                            fileData.setPath(ApConstants.PATH);
-                            fileData.setFileName(fileName);
                             j = iMedicalDao.addTarnsMedicalTreatmentFile(fileData);
                         }
                     }

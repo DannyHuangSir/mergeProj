@@ -556,6 +556,28 @@ public class MedicalAllianceServiceTask {
                                         isInsured = true;
                                     }
                                     log.info("=================API403-查詢查詢案件資訊-當前是否為保戶:"+isInsured);
+                                    
+                                    //修正filename,path可能的錯誤-start
+                                    if(medicalVo.getFileData()!=null && medicalVo.getFileData().size()>0) {
+                                    	for(MedicalTreatmentClaimFileDataVo mtcfdVo : medicalVo.getFileData()) {
+                                    		//path
+                                    		if(StringUtils.isBlank(mtcfdVo.getPath())) {
+                                    			mtcfdVo.setPath(this.FILE_SAVE_PATH);
+                                    		}
+                                    		
+                                    		//filename
+                                    		String fileId = mtcfdVo.getFileId();
+                                    		if(StringUtils.isBlank(mtcfdVo.getFileName())) {
+                                    			mtcfdVo.setFileName(fileId);//default set fileId
+                                    		}
+                                    		
+                                    		String fileExtension = FilenameUtils.getExtension(mtcfdVo.getFileName());
+                                            if(StringUtils.isBlank(fileExtension)) {
+                                            	mtcfdVo.setFileName(mtcfdVo.getFileName()+".pdf");
+                                            }
+                                    	}
+                                    }
+                                    //修正filename可能的錯誤-end
 
                                     if(isAllNewCase) {
                                     	if(isInsured){
@@ -568,20 +590,6 @@ public class MedicalAllianceServiceTask {
                                             medicalVo.setAuthorizationStartDate(medicalVo.getHsTime());
                                             medicalVo.setToHospitalId(medicalVo.getHpId());
                                             
-                                            //修正filename可能的錯誤
-                                            if(medicalVo.getFileData()!=null && medicalVo.getFileData().size()>0) {
-                                            	for(MedicalTreatmentClaimFileDataVo mtcfdVo : medicalVo.getFileData()) {
-                                            		String fileId   = mtcfdVo.getFileId();
-                                            		if(StringUtils.isBlank(mtcfdVo.getFileName())) {
-                                            			mtcfdVo.setFileName(fileId);//default set fileId
-                                            		}
-                                            		
-                                            		String fileExtension = FilenameUtils.getExtension(mtcfdVo.getFileName());
-                                                    if(StringUtils.isBlank(fileExtension)) {
-                                                    	mtcfdVo.setFileName(mtcfdVo.getFileName()+".pdf");
-                                                    }
-                                            	}
-                                            }
                                             medicalVo.setFileDatas(medicalVo.getFileData());
 
                                             //toData
