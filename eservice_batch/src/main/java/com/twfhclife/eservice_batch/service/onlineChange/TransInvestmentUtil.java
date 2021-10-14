@@ -55,12 +55,11 @@ public class TransInvestmentUtil {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransInvestmentVo vo : list) {
-                                // 介接代碼(3),申請序號(12),保單號碼(10),投資標的flag(1),投資標的(10),變更後單位（18),1(1)，收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
-                                String line = String.format(StringUtils.repeat("%s", 9),
+                                // 介接代碼(3),申請序號(12),保單號碼(10)投資標的(10),變更後單位（18),1(1)，收文日(系統日yyyMMdd),生效日(下個周月日yyyMMdd
+                                String line = String.format(StringUtils.repeat("%s", 8),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
-                                        StringUtil.rpadBlank(vo.getPreDistributionRatio() == null || vo.getPreDistributionRatio() == 0 ? "1" : "2", 1),
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
                                         StringUtil.rpadBlank(String.valueOf(vo.getDistributionRatio()), 18),
                                         "1",

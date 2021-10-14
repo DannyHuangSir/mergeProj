@@ -21,6 +21,8 @@ public class TransFundConversionVo implements Serializable {
     //	 投資標的名稱
     private String  invtName;
 
+    private String inInvtNo;
+
     public String getInvtName() {
         return invtName;
     }
@@ -90,5 +92,13 @@ public class TransFundConversionVo implements Serializable {
 
     public void setValue(BigDecimal value) {
         this.value = value;
+    }
+
+    public String getInInvtNo() {
+        return inInvtNo;
+    }
+
+    public void setInInvtNo(String inInvtNo) {
+        this.inInvtNo = inInvtNo;
     }
 }

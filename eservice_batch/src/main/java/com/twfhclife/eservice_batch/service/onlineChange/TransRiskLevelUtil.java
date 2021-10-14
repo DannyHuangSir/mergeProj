@@ -65,13 +65,15 @@ public class TransRiskLevelUtil {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransRiskLevelVo vo : list) {
-                                // 介接代碼(3),申請序號(12),保單號碼(10),風險屬性(1),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                // 介接代碼(3),申請序號(12),保戶身份證(10),風險屬性(1),風險評分(3),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                String score = String.valueOf(vo.getRiskScore());
+                                score = "   ".substring(0, score.length() -1) + score;
                                 String line = String.format(StringUtils.repeat("%s", 7),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
-                                        StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
-                                        StringUtil.rpadBlank( vo.getRiskLevelNew(), 1),
-                                        StringUtil.rpadBlank(String.valueOf(vo.getRiskScore()), 3),
+                                        StringUtil.rpadBlank(vo.getRocId(), 10),
+                                        StringUtil.rpadBlank(vo.getRiskLevelNew(), 1),
+                                        score,
                                         systemTwDate,
                                         systemTwDate
                                 );

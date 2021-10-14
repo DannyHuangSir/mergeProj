@@ -328,7 +328,7 @@ public class MergeChangeUtil {
 					}
 
 					if (line.startsWith("030") && policyNo.equals(linePolicyNo) && line.length() > 25) {
-						investment = line.substring(25);
+						conversion = line.substring(25);
 						insertTransMerge(transMergeVo);
 
 						if (!removeLineKeyList.contains(lineKey)) {

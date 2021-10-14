@@ -25,8 +25,17 @@ import com.twfhclife.eservice_batch.dao.TransDao;
 import com.twfhclife.eservice_batch.model.ParameterVo;
 import com.twfhclife.eservice_batch.model.TransStatusHistoryVo;
 import com.twfhclife.eservice_batch.model.TransVo;
-import com.twfhclife.eservice_batch.util.CallApiMailCode;
+import com.twfhclife.eservice_batch.service.onlineChange.*;
 import com.twfhclife.eservice_batch.util.FTPUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class BatchUploadService {
 
@@ -84,7 +93,7 @@ public class BatchUploadService {
 			processList.addAll(new TransDepositUtil().appendApplyItems(txtSb, systemTwDate));// 申請保單提領(贖回):028
 			processList.addAll(new TransInvestmentUtil().appendApplyItems(txtSb, systemTwDate));// 未來保費投資標的與分配比例:029
 			processList.addAll(new TransConversionUtil().appendApplyItems(txtSb, systemTwDate));// 變更投資標的與分配比例:030
-			processList.addAll(new TransCashPaymentUtil().appendApplyItems(txtSb, systemTwDate));// 收益分配或撥回資產分配方式:033
+			processList.addAll(new TransCashPaymentUtil().appendApplyItems(txtSb, systemTwDate));// 收益分配或撥回資產分配方式:032
 			processList.addAll(new TransChangePremiumUtil().appendApplyItems(txtSb, systemTwDate));// 定期定額保費變更:034
 			processList.addAll(new TransRiskLevelUtil().appendApplyItems(txtSb, systemTwDate));// 變更風險屬性:031
 

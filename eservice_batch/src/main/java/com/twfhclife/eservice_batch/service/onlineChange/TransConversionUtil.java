@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,9 +62,9 @@ public class TransConversionUtil {
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
-                                        StringUtil.rpadBlank(StringUtils.equals("OUT", vo.getInvestmentType()) ? vo.getInvtNo() : "", 10),
-                                        StringUtil.lpad(StringUtils.equals("OUT", vo.getInvestmentType()) ? String.valueOf(vo.getValue()) : "", 18, "0"),
-                                        StringUtil.rpadBlank(StringUtils.equals("IN", vo.getInvestmentType()) ? String.valueOf(vo.getInvtNo()) : "", 10),
+                                        StringUtil.rpadBlank(vo.getInvtNo(), 10),
+                                        StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100)).toString(), 18, "0"),
+                                        StringUtil.rpadBlank(vo.getInInvtNo(), 10),
                                         "2",
                                         systemTwDate,
                                         systemTwDate

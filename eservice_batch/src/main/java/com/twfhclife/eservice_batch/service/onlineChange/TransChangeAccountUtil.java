@@ -112,8 +112,11 @@ public class TransChangeAccountUtil {
 						String beneficiaryRocid = changeAccountDao.findRocId(changeType, policyNo);
 						String swiftCode = "";
 						
+						// 20211012 調整介接資料為正常, 如下:
 						// 介接代碼(3),申請序號(12),保單號碼(10),收文日(7),生效日(7),受益類別(1),
-						// 受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(3)匯款帳號(10),國際號SwiftCode(16)
+						// 受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(4)匯款帳號(16),國際號SwiftCode(16)
+						/// 介接代碼(3),申請序號(12),保單號碼(10),收文日(7),生效日(7),受益類別(1),
+						/// 受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(3)匯款帳號(10),國際號SwiftCode(16)
 						txtSb.append(String.format(StringUtils.repeat("%s", 12), 
 								UPLOAD_CODE,
 								StringUtil.rpadBlank(transNum, 12), 
@@ -124,8 +127,8 @@ public class TransChangeAccountUtil {
 								StringUtil.rpadBlank(beneficiaryRocid, 10),
 								StringUtil.rpadBlank(accountName, 10),
 								StringUtil.rpadBlank(bankId, 3),
-								StringUtil.rpadBlank(branchId, 3),
-								StringUtil.rpadBlank(accountNo, 10),
+								StringUtil.rpadBlank(branchId, 4),
+								StringUtil.rpadBlank(accountNo, 16),
 								StringUtil.rpadBlank(swiftCode, 16)
 						));
 						txtSb.append("\r\n");

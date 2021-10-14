@@ -8,6 +8,7 @@
     <result column="POLICY_NO" property="policyNo" jdbcType="NVARCHAR" />
     <result column="INVT_NO" property="invtNo" jdbcType="NVARCHAR" />
     <result column="INVT_NAME" property="invtName" jdbcType="NVARCHAR" />
+    <result column="IN_INVT_NO" property="inInvtNo" jdbcType="NVARCHAR" />
     <result column="INVESTMENT_TYPE" property="investmentType" jdbcType="NVARCHAR" />
     <result column="RATIO" property="ratio" jdbcType="NUMERIC" />
     <result column="VALUE" property="value" jdbcType="NUMERIC" />
@@ -18,8 +19,9 @@
   </sql>
 
   <select id="getTransFundConversions" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"/>
-    FROM  ESERVICE.dbo.TRANS_FUND_CONVERSION
-    WHERE TRANS_NUM = #{transNum}
+    SELECT f1.ID, f1.TRANS_NUM, f1.POLICY_NO, f1.INVT_NO, f1.INVESTMENT_TYPE, f1.[VALUE], f2.RATIO, f2.INVT_NO IN_INVT_NO FROM
+    (SELECT * FROM TRANS_FUND_CONVERSION WHERE INVESTMENT_TYPE='OUT') f1 INNER JOIN
+    (SELECT * FROM TRANS_FUND_CONVERSION WHERE INVESTMENT_TYPE='IN') f2 ON f1.TRANS_NUM = f2.TRANS_NUM
+    WHERE f1.TRANS_NUM = #{transNum}
   </select>
 </mapper>
