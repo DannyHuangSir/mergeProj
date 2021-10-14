@@ -422,7 +422,7 @@ public class MedicalServiceImpl implements IMedicalService {
 
     @Override
     @Transactional
-    public int updateTransMedicalTreatmentByCaseId(MedicalTreatmentClaimVo claimVo) throws Exception {
+    public int updateTransMedicalTreatmentByCaseId(MedicalTreatmentClaimVo claimVo,String fileSavePath) throws Exception {
     	/**
     	 * 1.更新之前保單的  聯盟狀態
     	 * 2.更新當前保單的文件狀態(存在更新),不存在新增

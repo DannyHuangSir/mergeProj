@@ -656,18 +656,18 @@ public class MedicalAllianceServiceTask {
                                         	vo.setNcStatus(NotifyOfNewCaseVo.NC_STATUS_ONE);
                                             vo.setMsg(NotifyOfNewCaseVo.MSG);
                                             iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
-                                            //匯報406接口
-                                            params.put("status", NotifyOfNewCaseMedicalVo.STATUS_3);
-                                            params.put("msg", NotifyOfNewCaseMedicalVo.MSG);
+                                            //匯報402接口
+                                            params.put("action", StatuCode.ACTION_CODE_N.code);
                                             //聯盟鏈歷程參數
-                                            unParams.put("name", "「非保戶」回報-API406");
-                                            allianceService.postForEntity(URL_API406, params, unParams);
+                                            unParams.put("name", "API-402不取醫療資料");
+                                             medicalExternalServiceImpl.postForEntity(URL_API402, params, unParams);
                                         }//end-if(isInsured)
                                     }else {
                                     	//非全新案件
                                     	if(StringUtils.isNotBlank(transNum)) {//台銀首家件且已有CASEID故transNum不會為空
-                                    	//進行更新最新的狀態信息數據
-                                            int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo);
+                                    		//進行更新最新的狀態信息數據
+                                            //設置默認的地址
+                                    		int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo,this.FILE_SAVE_PATH);
 
                                             //更新是否已經取得資料
                                             if(iRtn>0) {//如果有查詢且儲存成功

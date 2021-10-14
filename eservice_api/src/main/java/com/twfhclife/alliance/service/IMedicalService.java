@@ -84,7 +84,7 @@ public interface IMedicalService {
     int addMedicalRequest(MedicalTreatmentClaimVo medicalVo)throws  Exception;
     
     //進行更新數據信息
-    int updateTransMedicalTreatmentByCaseId(MedicalTreatmentClaimVo claimVo) throws Exception;
+    int updateTransMedicalTreatmentByCaseId(MedicalTreatmentClaimVo claimVo,String  fileSavePath) throws Exception;
     
     //查詢是否需要進行推送給聯盟的數據
     int getTransMedicalTreatmentBySendAlliance() throws Exception;

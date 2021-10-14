@@ -733,7 +733,8 @@
 		,[FILE_BASE64]
 		,[FILE_ID]
 		,[FILE_NAME]
-		,[FILE_STATUS])
+		,[FILE_STATUS]
+		,PATH)
 		VALUES
 		((NEXT VALUE for MEDICAL_TREATMENT_CLAIM_FD_SEQ)
 		,#{fileDataVo.claimsSeqId}
@@ -742,6 +743,7 @@
 		,#{fileDataVo.fileId}
 		,#{fileDataVo.fileName}
 		,#{fileDataVo.fileStatus}
+		,#{fileDataVo.path}
 		)
 	</insert>
 	<insert id="addTarnsMedicalTreatmentFile" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimFileDataVo">
