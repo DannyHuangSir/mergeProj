@@ -106,12 +106,15 @@
 												<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPS_PTHG' || detailData['ALLIANCE_STATUS'] eq 'ITPR'  }">
 													<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgGrey" disabled >取用醫療資料</button>
 													<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+											     	<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
 												</th:block>
 												<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG'  && detailData['ALLIANCE_STATUS'] ne 'ITPR'} ">
 													<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgOrange"  onclick="medicalOnWorde('取用醫療病例','GetMedicalCases')">取用醫療資料</button>
 													<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
 												</th:block>
-												<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
+												<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPR'  }">
+													<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases">醫療資料重新上傳</button>
+												</th:block>
 												<button style="width: 120px;" type="button" class="bgOrange" id="SuccessMedicalCases" onclick="medicalOnWorde('案件調查已完成','SuccessMedicalCases')">更新案件狀態</button>
 											</th:block>
 										</div>
@@ -138,12 +141,15 @@
 											<th:block th:if="${detailData['ALLIANCE_STATUS'] eq 'ITPS_PTHG'  || detailData['ALLIANCE_STATUS'] eq 'ITPR' }">
 												<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgGrey" disabled >取用醫療資料</button>
 												<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
+												<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
 											</th:block>
 											<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPR' } ">
 												<button style="width: 120px;" type="button" id="GetMedicalCases"  class="bgOrange"  onclick="medicalOnWorde('取用醫療病例','GetMedicalCases')">取用醫療資料</button>
 												<button style="width: 120px;" type="button" class="bgOrange" id="NotTakeMedicalCases" onclick="medicalOnWorde('不取用醫療病例','NotTakeMedicalCases')">不取用醫療資料</button>
 											</th:block>
-											<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
+											<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPR'  }">
+												<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases">醫療資料重新上傳</button>
+											</th:block>
 											<button style="width: 120px;" type="button" class="bgOrange" id="SuccessMedicalCases" onclick="medicalOnWorde('案件調查已完成','SuccessMedicalCases')">更新案件狀態</button>
 										</th:block>
 									</div>
@@ -314,6 +320,7 @@
 																		</th:block>
 																		<br/>
 																		<th:block th:text="${vo.FILE_NAME}"/>
+																		<th:block th:if="${vo.FileBase64 != null && vo.FileBase64 != '' }">
 																		<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
 																			<embed   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:application/pdf;base64, '+${vo.FileBase64}" type="application/pdf" width="50">
 																		</div>
@@ -323,6 +330,7 @@
 																		<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
 																			<img  th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
 																		</div>
+																		</th:block>
 																</div>
 															</div>
 													</div>

@@ -1248,6 +1248,8 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 						if (file.exists()) {
 							//通过路径,获取图片
 							map.put("FileBase64", this.converFileToBase64Str(filePath));
+							}else{
+								map.put("FileBase64", "");
 						}
 					}
 					}
