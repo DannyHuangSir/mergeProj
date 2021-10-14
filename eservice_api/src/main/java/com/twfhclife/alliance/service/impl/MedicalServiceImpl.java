@@ -21,6 +21,7 @@ import com.twfhclife.generic.utils.CallApiCode;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import com.twfhclife.generic.utils.StatuCode;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
@@ -76,10 +77,11 @@ public class MedicalServiceImpl implements IMedicalService {
     @Override
     @Transactional
     public int updateMedicalTreatmentClaimToAlliance(MedicalTreatmentClaimVo vo) throws Exception {
+        int  i=0;
         //進行回應對於的狀態,信息
-        iMedicalDao.updateMedicalTreatmentClaimToAllianceAndCaseId(vo);
-        iMedicalDao.updateTransMedicalTreatmentClaimToAllianceAndCaseId(vo);
-        return 0;
+        i+=iMedicalDao.updateMedicalTreatmentClaimToAllianceAndCaseId(vo);
+        i+=iMedicalDao.updateTransMedicalTreatmentClaimToAllianceAndCaseId(vo);
+        return i;
     }
 
     @Override
@@ -449,8 +451,15 @@ public class MedicalServiceImpl implements IMedicalService {
                             float claimsSeqId = iMedicalDao.getTransMedicalTreatmentClaimsSeqIdByCaseId(caseId);
                         	fileData.setClaimsSeqId(claimsSeqId);
                             fileData.setFileBase64("");
+                            
+                            //聯盟未回傳filename
                             String fileName = fileData.getFileName();
                             fileName = StringUtils.isBlank(fileName)?fileData.getFileId():fileName;
+                            String fileExtension = FilenameUtils.getExtension(fileName);
+                            if(StringUtils.isBlank(fileExtension)) {
+                            	fileName += ".pdf";
+                            }
+                            
                             fileData.setPath(ApConstants.PATH);
                             fileData.setFileName(fileName);
                             j = iMedicalDao.addTarnsMedicalTreatmentFile(fileData);

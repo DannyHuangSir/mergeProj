@@ -28,7 +28,7 @@ public interface IMedicalDao {
 
     int  updateMedicalTreatmentClaimToAllianceAndCaseId(@Param("vo") MedicalTreatmentClaimVo vo)throws  Exception;
 
-    int  updateTransMedicalTreatmentClaimToAllianceAndCaseId(@Param("vo")MedicalTreatmentClaimVo vo);
+    int  updateTransMedicalTreatmentClaimToAllianceAndCaseId(@Param("vo")MedicalTreatmentClaimVo vo)throws  Exception;
 
     List<MedicalTreatmentClaimVo> getTransMedicalTreatmentByCaseIdAndAllinaceStatus(@Param("itpsPthg")String itpsPthg,@Param("itpsEnd") String itpsEnd)throws  Exception;
 

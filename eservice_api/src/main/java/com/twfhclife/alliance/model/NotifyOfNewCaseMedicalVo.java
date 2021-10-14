@@ -12,6 +12,7 @@ public class NotifyOfNewCaseMedicalVo {
      */
     public static final String STATUS_DEFAULT = "0";
     public static final String STATUS_MESS = "新案件通知,待處理中";
+    public static final String PRICE_STATUS_MESS = "首家案件,便於更新狀態.執行跑403";
 
     /**
      * 已取得查詢理賠資料

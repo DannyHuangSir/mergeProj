@@ -14,6 +14,7 @@ import com.twfhclife.alliance.model.InsuranceClaimFileDataVo;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.InsuranceClaimVo;
 import com.twfhclife.alliance.model.MedicalRequestVo;
+import com.twfhclife.alliance.model.MedicalTreatmentClaimVo;
 import com.twfhclife.alliance.model.NotifyOfNewCaseVo;
 
 public interface IClaimChainService {
@@ -240,4 +241,7 @@ public interface IClaimChainService {
 	 * @throws Exception
 	 */
 	Float getItransInsuranceFiledatasId() throws Exception;
+
+	//進行將CASE_ID 進行回壓,便於首家案件更新狀態,執行跑403
+    int  addNotifyOfNewCaseMedicalIsPrice(MedicalTreatmentClaimVo vo)throws Exception;
 }

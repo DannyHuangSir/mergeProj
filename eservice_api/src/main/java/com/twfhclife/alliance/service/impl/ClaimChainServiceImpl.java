@@ -32,6 +32,7 @@ import com.twfhclife.alliance.model.InsuranceClaimFileDataVo;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.InsuranceClaimVo;
 import com.twfhclife.alliance.model.MedicalRequestVo;
+import com.twfhclife.alliance.model.MedicalTreatmentClaimVo;
 import com.twfhclife.alliance.model.NotifyOfNewCaseDnsVo;
 import com.twfhclife.alliance.model.NotifyOfNewCaseMedicalVo;
 import com.twfhclife.alliance.model.NotifyOfNewCaseVo;
@@ -636,6 +637,37 @@ public class ClaimChainServiceImpl implements IClaimChainService{
 	public Float getItransInsuranceFiledatasId() throws Exception {
 		Float itransInsuranceClaimFiledatasId = insuranceClaimDao.getItransInsuranceClaimFiledatasId();
 		return itransInsuranceClaimFiledatasId;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int  addNotifyOfNewCaseMedicalIsPrice(MedicalTreatmentClaimVo vo) {
+		int rtnValue = -1;
+		logger.info("Start ClaimChainServiceImpl.addNotifyOfNewCaseMedicalIsPrice().");
+		logger.info("input vo="+ReflectionToStringBuilder.toString(vo));
+		MedicalRequestVo rtnVo = new MedicalRequestVo();
+		if(vo.getCaseId()!=null) {
+			try {
+				rtnVo.setCode(ClaimResponseVo.CODE_ERROR);
+				//get sequence
+				Float seqId = notifyOfNewCaseMedicalDao.getNotifyOfNewCaseMedicalSeq();
+				logger.info("after insuranceCliamDao.getInsuranceClaimSequence()seqId="+seqId);
+				if(seqId!=null && seqId>0) {
+					NotifyOfNewCaseMedicalVo notifyOfNewCaseMedicalVo = new NotifyOfNewCaseMedicalVo();
+					notifyOfNewCaseMedicalVo.setSeqId(seqId);
+					notifyOfNewCaseMedicalVo.setCaseId(vo.getCaseId());
+					notifyOfNewCaseMedicalVo.setNcStatus(NotifyOfNewCaseMedicalVo.NC_STATUS_ONE);
+					notifyOfNewCaseMedicalVo.setType(BaseRequestVo.TYPE_NEW);
+					notifyOfNewCaseMedicalVo.setMsg(NotifyOfNewCaseMedicalVo.PRICE_STATUS_MESS);
+					rtnValue = notifyOfNewCaseMedicalDao.addNotifyOfNewCaseMedical(notifyOfNewCaseMedicalVo);
+				   logger.info("after insuranceCliamDao.addNotifyOfNewCaseMedicalIsPrice()="+rtnValue);
+				  }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
+		logger.info("End ClaimChainServiceImpl.addNotifyOfNewCaseMedicalIsPrice().");
+		return rtnValue;
 	}
 
 	public static void main(String[] args) {

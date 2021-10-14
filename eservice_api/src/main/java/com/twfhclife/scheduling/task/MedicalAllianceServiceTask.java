@@ -25,6 +25,8 @@ import com.twfhclife.generic.utils.ApConstants;
 import com.twfhclife.generic.utils.CallApiCode;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import com.twfhclife.generic.utils.StatuCode;
+
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -361,7 +363,11 @@ public class MedicalAllianceServiceTask {
                                     String parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_FTPS_PQHG);
                                     vo.setAllianceStatus(parameterValueByCode);
                                     log.info("updateMedicalTreatmentClaimToAlliance 的參數-----="+vo);
-                                    iMedicalService.updateMedicalTreatmentClaimToAlliance(vo);
+                                    int  i=iMedicalService.updateMedicalTreatmentClaimToAlliance(vo);
+                                    //進行將CASE_ID 進行回壓,便於首家案件更新狀態,執行跑403
+                                    if(i>1){
+                                        claimChainService.addNotifyOfNewCaseMedicalIsPrice(vo);
+                                    }
                                 }
 
                             }
@@ -561,6 +567,21 @@ public class MedicalAllianceServiceTask {
                                             medicalVo.setAuthorizationEndDate(medicalVo.getHeTime());
                                             medicalVo.setAuthorizationStartDate(medicalVo.getHsTime());
                                             medicalVo.setToHospitalId(medicalVo.getHpId());
+                                            
+                                            //修正filename可能的錯誤
+                                            if(medicalVo.getFileData()!=null && medicalVo.getFileData().size()>0) {
+                                            	for(MedicalTreatmentClaimFileDataVo mtcfdVo : medicalVo.getFileData()) {
+                                            		String fileId   = mtcfdVo.getFileId();
+                                            		if(StringUtils.isBlank(mtcfdVo.getFileName())) {
+                                            			mtcfdVo.setFileName(fileId);//default set fileId
+                                            		}
+                                            		
+                                            		String fileExtension = FilenameUtils.getExtension(mtcfdVo.getFileName());
+                                                    if(StringUtils.isBlank(fileExtension)) {
+                                                    	mtcfdVo.setFileName(mtcfdVo.getFileName()+".pdf");
+                                                    }
+                                            	}
+                                            }
                                             medicalVo.setFileDatas(medicalVo.getFileData());
 
                                             //toData
