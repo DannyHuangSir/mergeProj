@@ -287,16 +287,19 @@ public class DnsAllianceServiceTask {
 									contentVo.setFsz1PiSt(fsz1PiSt);
 									contentVo.setFsz1Id(fsz1Id);
 									
-									if("55".equals(fsz1PiSt)) {//表示取得身故值
+									/**
+									 * 55-身故
+									 * 62-身故,部份家屬尚未來辦理相關事項
+									 */
+									if("55".equals(fsz1PiSt) || "62".equals(fsz1PiSt)) {//表示取得身故值
 										try {
 											dnsDao.updateTransDnssfsz1PiStByPolicyNo(contentVo);
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
 									}else {
-										
+										//do nothing.
 									}
-									
 
 								}//end-if("0".equals(dataDetailStatus))
 							}//end-if
