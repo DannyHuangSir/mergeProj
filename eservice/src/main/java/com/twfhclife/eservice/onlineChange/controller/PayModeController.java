@@ -160,6 +160,7 @@ public class PayModeController extends BaseUserDataController {
 			addAttribute("showAmount", checkShowAmount(transPaymodeVo));
 			addAttribute("paymodeCanChange", mapPaymode);
 			addAttribute("transPaymodeVo", transPaymodeVo);
+			addAttribute("minValue", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_" + type + "_MIN"));
 		} catch (Exception e) {
 			logger.error("Unable to init from paymentMode2: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();

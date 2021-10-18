@@ -1,21 +1,21 @@
-<div class="col-sm-12">
+<div class="col-sm-12" style="text-align: left;">
 	<div class="check-title">新投資標的與比例</div>
 	<div class="plus-list">
 		<div class="col-sm-6">
-			<p>      新投資標的 </p>
+			<p>新投資標的 </p>
 		</div>
 		<div class="col-sm-3">
-			<p>      變更前分配比例與 </p>
+			<p>變更前分配比例與 </p>
 		</div>
 		<div class="col-sm-3">
-			<p>      變更後分配比例 </p>
+			<p>變更後分配比例 </p>
 		</div>
 	</div>
 	<div class="check-body grey2">
 		<th:block th:each="vo: ${finalInvestments}">
 			<div class="check-list2">
 				<div class="col-sm-6 ">
-					<p><th:block th:text="${vo.invtName}"/><span class="enSmall">(<th:block th:text="${vo.invtNo}"/>)</span></p>
+					<p><th:block th:text="${vo.invtName}"/><p class="enSmall">(<th:block th:text="${vo.invtNo}"/>)</p></p>
 				</div>
 				<div class="col-sm-3">
 					<th:block th:text="${vo.preRatio}"/>%

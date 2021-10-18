@@ -511,6 +511,7 @@
 								</div>
 							</th:block>
 						</th:block>
+						<input type="hidden" th:id="${'paymentAcctValue_'+ vo.policyNo}" th:value="${vo.paidAmount}"/>
 						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
 					</td>
 					

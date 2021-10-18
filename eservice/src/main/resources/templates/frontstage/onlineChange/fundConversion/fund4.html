@@ -381,11 +381,23 @@
 			$("input[name='ratio']").each(function(){
 					j+=parseInt($(this).val());			
        			 });
-			 if( j>100 || j<100){
+			 if( j>100 || j<100 ){
 				return false;
 			  }		
 			return  true;		
 		}	
+	//進行計算每個百分比不能輸入為0	
+		function  inputValidationMin(obj){
+			var boo = true;
+			 for(var i=0; i<obj.length; i++){
+				console.log("111111111",obj[i].ratio);
+					if(obj[i].ratio<1){
+						boo = false;
+						 break;
+					}
+			 }
+			 return  boo;	
+		}
 	//驗證基金部不能重複
 	function  fundValidation(obj){
 		var boo = true;
@@ -418,7 +430,12 @@
 					openAlert("當前保單新投資標不能重複選擇,還請重新選擇");
 					return false;
 				}
-				console.log('-----newObj---------',numInvestment);
+				//console.log("111111111",!inputValidationMin(numInvestment));
+				 if(!inputValidationMin(numInvestment)){
+					openAlert("當前保單新投資標中有百分比之為0%,還請基金百分比.");
+					return false;
+				 }
+				//console.log('-----newObj---------',numInvestment);
 				formData.numInvestment = JSON.stringify(numInvestment);
 				formData.investmentsList = JSON.stringify(investmentPortfolioVoList);
 				postWithFormData(/*[[@{/fund5}]]*/, formData);

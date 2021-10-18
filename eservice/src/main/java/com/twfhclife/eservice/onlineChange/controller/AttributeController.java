@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,9 @@ public class AttributeController extends BaseUserDataController  {
 
     @Autowired
     private IParameterService parameterService;
+
+    @Autowired
+    private MessageTemplateClient messageTemplateClient;
 
     @RequestLog
     @RequestMapping("/attribute1")
@@ -114,6 +118,7 @@ public class AttributeController extends BaseUserDataController  {
         UsersVo user = getUserDetail();
         try {
             int result = attributeService.addNewApply(vo, user);
+            sendNotification(vo, user);
             if (result <= 0) {
                 addDefaultSystemError();
                 return "forward:attribute2";
@@ -154,5 +159,59 @@ public class AttributeController extends BaseUserDataController  {
             }
         }
         return true;
+    }
+
+    public void sendNotification(TransAnswerVo vo, UsersVo user) {
+        try {
+            Map<String, Object> mailInfo = transInvestmentService.getSendMailInfo();
+            Map<String, String> paramMap = new HashMap<String, String>();
+            paramMap.put("TransNum", vo.getTransNum());
+            paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+            paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+            logger.info("Trans Num : {}", vo.getTransNum());
+            logger.info("Status Name : {}", mailInfo.get("statusName"));
+            logger.info("Trans Remark : {}", mailInfo.get("transRemark"));
+            logger.info("receivers={}", mailInfo.get("receivers"));
+            logger.info("user phone : {}", user.getMobile());
+            logger.info("user mail : {}", user.getEmail());
+            //获取保单编号
+
+            List<String> receivers = new ArrayList<String>();
+            String applyDate = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+            paramMap.put("DATA", applyDate);
+            //申請狀態-申請中
+            paramMap.put("TransStatus","已審核");
+            //申請功能
+            ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
+                    ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, TransTypeUtil.RISK_LEVEL_PARAMETER_CODE);
+            paramMap.put("APPLICATION_FUNCTION", parameterValueByCode.getParameterName());
+
+            //發送系統管理員
+            receivers = (List) mailInfo.get("receivers");
+            //推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
+            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_027, receivers, paramMap, "email");
+
+            //發送保戶SMS
+            //receivers = new ArrayList<String>();
+            receivers.clear();//清空
+            paramMap.clear();//清空模板參數
+            //設置模板參數
+            paramMap.put("TITLE", OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_TITLE);
+            paramMap.put("MESSAGE",OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CAPACITY6);
+            receivers.add(user.getMobile());
+            logger.info("user phone : {}", user.getMobile());
+            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "sms");
+            //發送保戶MAIL
+            //receivers = new ArrayList<String>();
+            if (user.getEmail() != null) {
+                receivers.clear();//清空
+                receivers.add(user.getEmail());
+                logger.info("user mail : {}", user.getEmail());
+                messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "email");
+            }
+        } catch (Exception e) {
+            logger.info("insertTransInvestment() success, but send notify mail/sms error.");
+        }
+        logger.info("End send mail");
     }
 }

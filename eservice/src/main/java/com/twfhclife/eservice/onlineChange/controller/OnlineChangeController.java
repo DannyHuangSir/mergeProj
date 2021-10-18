@@ -284,9 +284,6 @@ public class OnlineChangeController extends BaseController {
 						onlineChangeService.cancelApplyTrans(transNum1, hisVo);
 					}
 				}
-			}else if(transType !=null && TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transType)){
-				//進行取消 已持有醫療保單的轉換保單
-				onlineChangeService.cancelMedicalTreatmentApplyTrans(transNum, hisVo);
             }else if(transType !=null && INVSETMENT_TYPES.contains(transType)){
 				//進行查詢數據當前批次的保單號
 				String  policyNo =transContactInfoService.getHistoryPolicyNo(transNum);

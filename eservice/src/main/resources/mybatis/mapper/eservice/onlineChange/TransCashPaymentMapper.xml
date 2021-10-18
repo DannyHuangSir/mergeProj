@@ -18,7 +18,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    ID, TRANS_NUM, POLICY_NO, ALLOCATION, PRE_ALLOCATION
+    ID, TRANS_NUM, POLICY_NO, ALLOCATION, PRE_ALLOCATION,SWIFT_CODE, ENGLISH_NAME, ACCOUNT_NAME, BANK_ACCOUNT, BANK_NAME, BRANCH_NAME
   </sql>
 
   <insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo" >

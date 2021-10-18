@@ -113,6 +113,17 @@
 					openAlert('請輸入變更金額');
 					return false;
 				}
+
+				if (parseInt(amount) <=0) {
+					openAlert("請輸入大於0的繳別金額");
+					return false;
+				}
+
+				if ([[${minValue}]] != null && parseInt(amount) < [[${minValue}]]) {
+					openAlert("請輸入大於[[${minValue}]]的繳別金額");
+					return false;
+				}
+
 				var formData = [[${transPaymodeVo}]];
 				formData.amount = amount
 				postWithFormData(/*[[@{/changePremium3}]]*/, formData);

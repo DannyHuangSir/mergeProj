@@ -11,6 +11,7 @@ import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
+import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
 import com.twfhclife.eservice.web.model.ParameterVo;
@@ -75,6 +76,9 @@ public class ChangePremiumController extends BaseUserDataController  {
     @Autowired
     private IParameterService parameterService;
 
+    @Autowired
+    private IPolicyListService policyListService;
+
     @RequestLog
     @GetMapping("/changePremium1")
     public String changePremium1() {
@@ -85,9 +89,8 @@ public class ChangePremiumController extends BaseUserDataController  {
                 addSystemError(message);
                 return "redirect:apply1";
             }
-            String userRocId = getUserRocId();
             String userId = getUserId();
-            List<PolicyListVo> policyList = getUserOnlineChangePolicyList(userId, userRocId);
+            List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(getUserRocId());
 
             // 處理保單狀態是否鎖定
             if (policyList != null) {
@@ -141,6 +144,8 @@ public class ChangePremiumController extends BaseUserDataController  {
                 vo.setNextPayDate(formater.format(activeDate));
             }
             addAttribute("transPaymodeVo", vo);
+            String type = vo.getPolicyNoList().get(0).substring(0,2);
+            addAttribute("minValue", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CHANGE_PREMIUM_" + type + "_MIN"));
         } catch (Exception e) {
             logger.error("Unable to init from changePremium2: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -277,7 +282,7 @@ public class ChangePremiumController extends BaseUserDataController  {
             String applyDate = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
             paramMap.put("DATA", applyDate);
             //申請狀態-申請中
-            paramMap.put("TransStatus","申請中");
+            paramMap.put("TransStatus","已審核");
             //申請功能
             ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
                     ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, TransTypeUtil.CHANGE_PREMIUM_CODE);

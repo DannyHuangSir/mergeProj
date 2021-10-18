@@ -64,6 +64,7 @@ public class AttributeServiceImpl implements IAttributeService {
     public int addNewApply(TransAnswerVo vo, UsersVo user) {
         // 設定交易序號
         String transNum = transService.getTransNum();
+        vo.setTransNum(transNum);
         int result = 0;
         try {
 

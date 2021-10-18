@@ -11,6 +11,7 @@ public class TransAnswerVo {
     private Integer score;
     private String desc;
     private String level;
+    private String transNum;
 
     public String getQuestions() {
         return questions;
@@ -50,5 +51,13 @@ public class TransAnswerVo {
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public String getTransNum() {
+        return transNum;
+    }
+
+    public void setTransNum(String transNum) {
+        this.transNum = transNum;
     }
 }

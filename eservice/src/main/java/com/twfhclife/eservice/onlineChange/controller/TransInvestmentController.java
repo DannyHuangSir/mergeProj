@@ -275,7 +275,7 @@ public class TransInvestmentController extends BaseUserDataController  {
             String applyDate = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
             paramMap.put("DATA", applyDate);
             //申請狀態-申請中
-            paramMap.put("TransStatus","申請中");
+            paramMap.put("TransStatus","已審核");
             //申請功能
             ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
                     ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, TransTypeUtil.INVESTMENT_PARAMETER_CODE);

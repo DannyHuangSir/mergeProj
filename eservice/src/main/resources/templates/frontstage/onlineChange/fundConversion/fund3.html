@@ -424,7 +424,7 @@
 							}else{
 								unitMinNumber= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(investmentsList[i].netValueSell,4),4);
 							}
-							if(outputDate<unitMinNumber){
+							if(parseFloat(outputDate)<parseFloat(unitMinNumber)){
 								openAlert("输出單位數不能小於"+unitMinNumber);
 								$(investmentId).val(unitMinNumber);
 								boo= false;
