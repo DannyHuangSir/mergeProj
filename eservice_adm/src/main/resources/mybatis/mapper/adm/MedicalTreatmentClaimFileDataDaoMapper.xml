@@ -26,6 +26,9 @@
 	</update>
 	<update id="updateNotifyOfNewCaseMedicalIsCaseId">
 		UPDATE  [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL] SET  NC_STATUS = #{ncStatus},MSG = #{msg} where  CASE_ID = #{caseId}
+		AND  SEQ_ID=
+		(select  TOP 1   SEQ_ID  from [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL]
+		WHERE  CASE_ID = #{caseId}  ORDER  BY CREATE_DATE  DESC)
 	</update>
 	<select id="getTreatmentClaimCaseId"  resultType="java.lang.String"  parameterType="com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo"  >
 		select TOP 1  CASE_ID  from [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM]
@@ -33,7 +36,7 @@
 	</select>
 	<select id="getNotifyOfNewCaseMedicalIsCaseId" resultType="java.lang.String">
 		select  TOP 1   CASE_ID  from [ESERVICE].[dbo].[NOTIFY_OF_NEW_CASE_MEDICAL]
-		WHERE  CASE_ID = #{caseID,jdbcType=VARCHAR}
+		WHERE  CASE_ID = #{caseID,jdbcType=VARCHAR}  ORDER  BY CREATE_DATE  DESC
 	</select>
 
 </mapper>
