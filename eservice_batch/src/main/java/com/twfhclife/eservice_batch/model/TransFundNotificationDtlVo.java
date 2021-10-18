@@ -31,6 +31,8 @@ public class TransFundNotificationDtlVo {
 
 	private BigDecimal downValue;
 
+	private String policyNo;
+
 	public String getType() {
 		return type;
 	}
@@ -86,4 +88,11 @@ public class TransFundNotificationDtlVo {
 		this.downValue = downValue;
 	}
 
+	public String getPolicyNo() {
+		return policyNo;
+	}
+
+	public void setPolicyNo(String policyNo) {
+		this.policyNo = policyNo;
+	}
 }

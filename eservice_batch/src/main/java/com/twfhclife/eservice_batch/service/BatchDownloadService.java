@@ -741,6 +741,7 @@ public class BatchDownloadService {
 
 		transTypeMap.put("031", "RISK_LEVEL");
 		transTypeMap.put("033", "CHANGE_PREMIUM");
+		transTypeMap.put("034", "PAYMODE");
 		transTypeMap.put("032", "CASH_PAYMENT");
 		transTypeMap.put("030", "CONVERSION");
 		transTypeMap.put("029", "INVESTMENT");

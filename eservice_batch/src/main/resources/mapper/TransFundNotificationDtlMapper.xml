@@ -8,6 +8,7 @@
         <result column="FUND_CODE" property="fundCode"/>
         <result column="PERCENTAGE_UP" property="percentageUp"/>
         <result column="PERCENTAGE_DOWN" property="percentageDown"/>
+    <result column="POLICY_NO" property="policyNo"/>
     </resultMap>
     
     <sql id="Base_Column_List">
@@ -23,11 +24,11 @@
     </sql>
     
     <select id="queryTransFundNotificationDtl" resultMap="transFundNotificationDtlMap">
-        SELECT 
-            <include refid="Base_Column_List"/>
-        FROM 
-            ESERVICE.DBO.TRANS_FUND_NOTIFICATION_DTL
-        <include refid="whereCondition"/>
+        SELECT TFND.*, T1.POLICY_NO FROM TRANS_FUND_NOTIFICATION_DTL TFND
+        INNER JOIN (
+        SELECT MAX(TFN.ID) ID, TP.POLICY_NO FROM ESERVICE.DBO.TRANS T INNER JOIN ESERVICE.DBO.TRANS_POLICY TP ON T.TRANS_NUM = TP.TRANS_NUM
+        INNER JOIN ESERVICE.DBO.TRANS_FUND_NOTIFICATION TFN ON T.TRANS_NUM = TFN.TRANS_NUM GROUP BY TP.POLICY_NO
+        ) T1 ON TFND.TRANS_FUND_NOTIFICATION_ID = T1.ID
     </select>
     
 </mapper>

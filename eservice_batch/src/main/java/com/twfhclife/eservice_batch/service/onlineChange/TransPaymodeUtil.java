@@ -69,6 +69,7 @@ public class TransPaymodeUtil {
 					TransPaymodeVo transPaymodeVo = paymodeList.get(0);
 					paymode = StringUtils.trimToEmpty(transPaymodeVo.getPaymode());
 					mk =  StringUtils.trimToEmpty(transPaymodeVo.getMk());
+					amount = transPaymodeVo.getAmount();
 				}
 				logger.info("TransNum's paymode : {}", paymode);
 				
@@ -82,16 +83,16 @@ public class TransPaymodeUtil {
 						activeDate = paymodeDao.getActiveDate(policyNo);//下一應繳日
 						logger.info("TransNum's policyNo : {}", policyNo);
 						logger.info("TransNum's activeDate : {}", activeDate);
-						String INVESTMENT_TYPES = parameterDao.getParameterValueByCode("eservice", "INVESTMENT_TYPE");
+						String INVESTMENT_TYPES = parameterDao.getParameterValueByCode("eservice", "PAYMODE_INVESTMENT_TYPE");
 						if (StringUtils.isNotBlank(INVESTMENT_TYPES) && INVESTMENT_TYPES.contains(policyNo.substring(0,2))) {
 							// 介接代碼(3),申請序號(12),保單號碼(10),新繳別(1),彈性繳註記(1),新定期繳費(10),P(1),收文日(系統日yyyMMdd),生效日(下個周月日yyyMMdd)
-							txtSb.append(String.format(StringUtils.repeat("%s", 8),
-									"035",
+							txtSb.append(String.format(StringUtils.repeat("%s", 9),
+									"034",
 									StringUtil.rpadBlank(transNum, 12),
 									StringUtil.rpadBlank(policyNo, 10),
 									StringUtil.rpadBlank(paymode, 1),
 									StringUtil.rpadBlank(mk, 1),
-									StringUtil.lpad(String.valueOf(amount), 10, "0"),
+									StringUtil.rpad(String.valueOf(amount), 10, "0"),
 									"1",
 									systemTwDate,
 									activeDate

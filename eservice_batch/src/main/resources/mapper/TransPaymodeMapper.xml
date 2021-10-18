@@ -8,6 +8,7 @@
 		<result column="PAYMODE" property="paymode"/>
 		<result column="PAYMODE_OLD" property="paymodeOld"/>
 	<result column="LIPM_FLEX_RCP_MK" property="mk"/>
+	<result column="AMOUNT" property="amount"/>
 	</resultMap>
 	
 	<sql id="Base_Column_List">
@@ -31,12 +32,12 @@
 	
 	<select id="getTransPaymodeList" resultMap="TransPaymodeMap">
 		SELECT
-			P.ID, P.TRANS_NUM, P.PAYMODE, P.PAYMODE_OLD, D.LIPM_FLEX_RCP_MK
+			P.ID, P.TRANS_NUM, P.PAYMODE, P.PAYMODE_OLD, D.LIPM_FLEX_RCP_MK, P.AMOUNT
 		FROM
 			ESERVICE.DBO.TRANS_PAYMODE P
 			LEFT JOIN ESERVICE.DBO.TRANS_POLICY C on P.TRANS_NUM = C.TRANS_NUM
 			LEFT JOIN ESERVICE.DBO.LILIPM D ON C.POLICY_NO = D.LIPM_INSU_NO
-		<include refid="whereClause" />
+		WHERE P.TRANS_NUM = #{transPaymodeVo.transNum}
 	</select>
 	
 	<select id="findById" resultMap="TransPaymodeMap">
@@ -49,17 +50,17 @@
 	
 	<!-- 使用 TO_NUMBER 減去 19110000 算整體民國年月日 -->
 	<select id="getActiveDate" resultMap="TransPaymodeMap">
-		SELECT 
+		SELECT
 		    convert(VARCHAR,
-			CASE 
-		        WHEN LIPM_RCP_CODE = 'A' THEN DATEADD(month, 12, LIPM_TRED_PAAB_DATE)
-		        WHEN LIPM_RCP_CODE = 'S' THEN DATEADD(month, 6, LIPM_TRED_PAAB_DATE)
-		        WHEN LIPM_RCP_CODE = 'Q' THEN DATEADD(month, 3, LIPM_TRED_PAAB_DATE)
-		        WHEN LIPM_RCP_CODE = 'M' THEN DATEADD(month, 1, LIPM_TRED_PAAB_DATE)
+			CASE
+		        WHEN PAYMENT_MODE = 'A' THEN DATEADD(month, 12, EFFECTIVE_DATE)
+		        WHEN PAYMENT_MODE = 'S' THEN DATEADD(month, 6, EFFECTIVE_DATE)
+		        WHEN PAYMENT_MODE = 'Q' THEN DATEADD(month, 3, EFFECTIVE_DATE)
+		        WHEN PAYMENT_MODE = 'M' THEN DATEADD(month, 1, EFFECTIVE_DATE)
 		    END, 112)-19110000 activeDate
 		FROM
-		    ESERVICE.DBO.LILIPM_ES
-		WHERE LIPM_INSU_TYPE + cast(LIPM_INSU_GRP_NO as NVARCHAR(1)) + LIPM_INSU_SEQ_NO = #{policyNo}		
+		    ESERVICE.DBO.POLICY
+		WHERE POLICY_NO = #{policyNo}
 	</select>
 
 </mapper>

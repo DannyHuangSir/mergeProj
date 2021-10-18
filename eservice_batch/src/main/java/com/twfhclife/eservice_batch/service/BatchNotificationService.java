@@ -1,5 +1,6 @@
 package com.twfhclife.eservice_batch.service;
 
+import com.twfhclife.eservice_batch.dao.IMessagingTemplateServiceImpl;
 import com.twfhclife.eservice_batch.dao.RoiNotificationDao;
 import com.twfhclife.eservice_batch.dao.TransFundNotificationDao;
 import com.twfhclife.eservice_batch.dao.TransFundNotificationDtlDao;
@@ -100,47 +101,12 @@ public class BatchNotificationService {
 		logger.info(" 前置動作: 取得當天投保率警示設定 start. ");
 		TransFundNotificationDtlVo transFundNotificationDtlVo = new TransFundNotificationDtlVo(); 
 		List<TransFundNotificationDtlVo> listNewNoti = transFundNotificationDtlDao.queryTransFundNotificationDtl(transFundNotificationDtlVo);
-		Map<String, List<TransFundNotificationDtlVo>> mapNotice = new HashMap<>();
-		for(TransFundNotificationDtlVo vo: listNewNoti) {
-			List<TransFundNotificationDtlVo> tmpList;
-			Integer transNotificationId = vo.getTransFundNotificationId();
-			if(mapNotice.get(transNotificationId.toString()) != null) {
-				tmpList = mapNotice.get(transNotificationId.toString());
-			} else {
-				tmpList = new ArrayList<>();
-			}
-			tmpList.add(vo);
-			mapNotice.put(transNotificationId.toString(), tmpList);
-		}
-		logger.info(" 前置動作: 取得當天投保率警示設定 end. ");
-		
-		// 取得通知設定保單
-		logger.info(" 前置動作: 取得當天投保率警示設定對應保單 start. ");
-		Map<String, List<TransFundNotificationDtlVo>> mapPolicyNotice = new HashMap<>();
-		for(String notificationId: mapNotice.keySet()) {
-			TransFundNotificationVo transFundNotificationVo = new TransFundNotificationVo();
-			transFundNotificationVo.setId(Integer.parseInt(notificationId));
-			List<TransFundNotificationVo> tmpList = transFundNotificationDao.queryTransFundNotification(transFundNotificationVo);
-			if(tmpList != null && !tmpList.isEmpty()) {
-				String transNum = tmpList.get(0).getTransNum();
-				TransPolicyVo transPolicyVo = new TransPolicyVo();
-				transPolicyVo.setTransNum(transNum);
-				List<TransPolicyVo> listResult = transPolicyDao.getTransPolicyList(transPolicyVo);
-				if(listResult != null) {
-					String policyNo = listResult.get(0).getPolicyNo();
-					mapPolicyNotice.put(policyNo, mapNotice.get(notificationId));
-				}
-			}
-		}
-		logger.info(" 前置動作: 取得當天投保率警示設定對應保單 end. ");
-		
+
 		// insert ROI_NOTIFICATION_JOB
 		logger.info(" 前置動作: 插入警示設定 start. ");
-		for(String policyNo: mapPolicyNotice.keySet()) {
-			List<TransFundNotificationDtlVo> list = mapPolicyNotice.get(policyNo);
-			for(TransFundNotificationDtlVo vo: list) {
+		for(TransFundNotificationDtlVo vo: listNewNoti) {
 				RoiNotificationVo roiNotificationVo = new RoiNotificationVo();
-				roiNotificationVo.setPolicyNo(policyNo);
+			roiNotificationVo.setPolicyNo(vo.getPolicyNo());
 				roiNotificationVo.setEnabled("Y");
 				roiNotificationVo.setFundCode(vo.getFundCode());
 				if (StringUtils.equals(vo.getType(), "1")) {
@@ -153,10 +119,9 @@ public class BatchNotificationService {
 				roiNotificationVo.setDownValue(vo.getDownValue());
 				}
 				if(dao.insertRoiNotificationJob(roiNotificationVo)) {
-					logger.info("PolicyNo=" + policyNo + ", FundCode=" + vo.getFundCode() + " 設定成功");
+				logger.info("PolicyNo=" + vo.getPolicyNo() + ", FundCode=" + vo.getFundCode() + " 設定成功");
 				} else {
-					logger.info("PolicyNo=" + policyNo + ", FundCode=" + vo.getFundCode() + " 設定失敗");
-				}
+				logger.info("PolicyNo=" + vo.getPolicyNo() + ", FundCode=" + vo.getFundCode() + " 設定失敗");
 			}
 		}
 		logger.info(" 前置動作: 插入警示設定 end. ");
@@ -245,6 +210,9 @@ public class BatchNotificationService {
 				} else {
 					// {[(單位數*單位淨值*匯率)/(平均台幣買價*總單位數)]–1}%
 					values = this.formula1(netUnits, netValue, exchRate, ntdVal, expeNtd);
+						if (values[2] != null && values[1] != null) {
+							values[0] = values[1].subtract(values[2]).divide(values[2], 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100));
+						}
 				}
 
 				// 從Array指定變數
@@ -312,17 +280,10 @@ public class BatchNotificationService {
 			try {
 				if (isNew) {// 比對淨值
 					flag = checkAssetValue(item);
-				} else if(item.getFundCode().startsWith(INVT_FD)) {
+				} else {
 					if(checkROI(item)) {// 比對報酬率
 						flag = true;
 					}
-				} else if(item.getFundCode().startsWith(INVT_RT)){
-					if(checkExchRate(item)) {// 比對匯率
-						flag = true;
-					}
-				} else {
-					// 都不滿足
-					// do nothing
 				}
 				// 若比對為 true, 表示有條件到滿足點
 				if (flag) {
@@ -375,6 +336,9 @@ public class BatchNotificationService {
 				vo.setParameters(paramMap);
 				vo.setSystemId("eservice_batch");
 				logger.info("MessageTriggerRequestVo:"+vo.toString());
+				IMessagingTemplateServiceImpl iMessagingTemplateService = new IMessagingTemplateServiceImpl();
+				String resultMsg = iMessagingTemplateService.triggerMessageTemplate(vo);
+				logger.info("send fund notification result: {}", resultMsg);
 			} catch(Exception e) {
 				logger.error("sendMail error: ", e);
 				break;
@@ -415,7 +379,6 @@ public class BatchNotificationService {
 	private boolean checkROI(RoiNotificationVo vo) {
 		// 計算該保戶+該投資標的之報酬率
 		BigDecimal roiRate = vo.getPortfolioVo().getRoiRate();
-		roiRate = MathUtil.mul(roiRate, new BigDecimal(100)); // 投資報酬率需*100
 		logger.info(vo.getPolicyNo() + "標的 " + vo.getFundCode()+ " 報酬率: " + roiRate);
 		BigDecimal percentageUp = new BigDecimal(vo.getPercentageUp()==null? "99999": vo.getPercentageUp().toString());
 		BigDecimal percentageDown = new BigDecimal(vo.getPercentageDown()==null? "99999": vo.getPercentageDown().toString());
@@ -472,7 +435,7 @@ public class BatchNotificationService {
 				sb.append("☆已持有投資標的<br/>");
 				sb.append("￭保單號碼：" + vo.getPolicyNo() + "<br/>");
 				sb.append("￭類型：已持有 <br/>");
-				sb.append("￭投資標的：" + portfolio.getInvtName() + "<br/>");
+				sb.append("￭投資標的：" + portfolio.getInvtNo() + "<br/>");
 				sb.append("￭幣別：" + insuCurrName + "<br/>");
 				sb.append("￭投資收益等級：" + portfolio.getRiskBeneLevel() + "<br/>");
 				sb.append("￭幣別參考價值：" + portfolio.getAcctValue() + "<br/>");
@@ -483,7 +446,7 @@ public class BatchNotificationService {
 			} else if (vo.getDownValue() != null || vo.getUpValue() != null) {
 				sb.append("￭保單號碼：" + vo.getPolicyNo() + "<br/>");
 				sb.append("￭類型：觀察中<br/>");
-				sb.append("￭投資標的：" + investmentVo.getName() + "<br/>");
+				sb.append("￭投資標的：" + investmentVo.getInvtNo() + "<br/>");
 				sb.append("￭淨值日：" + sdf.format(investmentVo.getInNetValueDate()) + "<br/>");
 				sb.append("￭單位淨值：" + investmentVo.getNetValue() + "<br/>");
 				sb.append("￭現行淨值上限：" + vo.getUpValue() + "<br/>");
