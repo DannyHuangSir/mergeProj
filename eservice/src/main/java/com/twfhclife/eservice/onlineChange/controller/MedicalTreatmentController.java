@@ -297,21 +297,21 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					logger.info("Can't get age by policy={}",policyList.getPolicyNo());
 					logger.error(nfe.toString());
 				}
-				
+
 				if(age>=0) {
 					//PARAMETER.PARAMETER_CODE=ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL
 					String odmCheckServcieUrl = check_url;//odm flow
 					OnlineChangeModel ocModel = new OnlineChangeModel();
 					ocModel.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
 					ocModel.setInsuredAge(age);
-					
+
 					resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
 					odmResultPass = ocClient.checkLiaAPIResponseValue(resultStr, "/resultPass", "true");
 				}
-				
+
 			}
 			logger.info("resultPass="+odmResultPass);
-			
+
 			if(!odmResultPass) {
 				String resultMsg = "";
 				if(org.apache.commons.lang3.StringUtils.isNotBlank(resultStr)) {
@@ -415,14 +415,22 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			int  uploadMaxNumber=	lilipiService.findByUploadNumber(OnlineChangeUtil.UPLOAD_MAX_NUMBER,ApConstants.SYSTEM_ID);
 
 
-			//獲取保險公司明顯
+			//獲取醫院明顯
 		  	List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
 
-			//獲取醫院明顯
+			//獲取保險公司明顯
 			List<HospitalInsuranceCompany>  hospitalInsuranceCompanyList=	iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,StatuCode.AGREE_CODE.code);
+			//進行排除當前台銀人壽在UI上顯示
+			List<HospitalInsuranceCompany> collect = hospitalInsuranceCompanyList.stream().filter(x -> {
+ 				if(x.getInsuranceId() !=null && x.getInsuranceId().equals("L01")){
+					return   false;
+				}
+				return   true;
+			}).collect(Collectors.toList());
+
 			addAttribute("claimVo", claimVo);
 			addAttribute("uploadMaxNumber", uploadMaxNumber);
-			addAttribute("hospitalInsuranceCompanyList", hospitalInsuranceCompanyList);
+			addAttribute("hospitalInsuranceCompanyList", collect);
 			addAttribute("hospitalList", hospitalList);
 		} catch (Exception e) {
 			logger.error("Unable to init from MedicalTreatmentController - medicalTreatment3: {}", ExceptionUtils.getStackTrace(e));

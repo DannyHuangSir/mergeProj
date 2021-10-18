@@ -890,10 +890,17 @@
 								async: false,
 								data : JSON.stringify(dataBirdate),
 								success : function(response) {
-									if (response.resultData == null ||  response.resultData == '') {
-										boobirdate= false;
-										openAlert('請正確輸入出生日期');
+									if (response.resultMsg == null ||  response.resultMsg == ''){
+										//pass
+									}else{
+										if (response.resultData == null ||  response.resultData == '') {
+											boobirdate= false;
+											openAlert('請正確輸入出生日期');
+										}else{
+											openalert("年齡檢核結果："+response.resultMsg);
+										}
 									}
+									
 								},
 								error :function() {
 									boobirdate= false;

@@ -96,9 +96,8 @@ public class CashPaymentController extends BaseUserDataController {
             if (policyList != null) {
                 List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
                         userId, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
-                transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList);
-                transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList,
-                        TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
+                transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
+                transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
                 addAttribute("policyList", handledPolicyList);
             }
         } catch (Exception e) {

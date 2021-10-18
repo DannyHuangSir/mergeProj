@@ -348,7 +348,7 @@
 		if (oRow.invtNo.substring(0, 2) == 'RT' && oRow.insuCurr == oRow.invtExchCurr) {
 			html = '--';
 		} else {
-			html += '<p class="marginTop26">' + formatNumber(oRow.roiRate * 100, 2) +'%</p>';
+			html += '<p class="marginTop26">' + oRow.roiRate +'%</p>';
 		}
 		return html;
 	}
@@ -408,12 +408,12 @@
                     item = item + ' <td style="padding-top: 70px !important;"><b class="tablesaw-cell-label">單位淨值</b><span class="tablesaw-cell-content"  name="sellPrice">' + (vm.sellPrice == null ? '' : vm.sellPrice) + '</span></td>'
 
                     item = item + ' <td style="padding-top: 65px !important;"><b class="tablesaw-cell-label">現行淨值上限</b>'
-                    item = item +'   <span class="tablesaw-cell-content"> <input type="text" class="col-sm-8 lineHigh28" name="upValue" value="' + (vm.upValue == null ? '' : vm.upValue) + '"> </span>'
+                    item = item +'   <span class="tablesaw-cell-content"> <input type="number" class="col-sm-8 lineHigh28" name="upValue" value="' + (vm.upValue == null ? '' : vm.upValue) + '"> </span>'
 
                     item = item +' </td>'
 
                     item = item + ' <td style="padding-top: 65px !important;"><b class="tablesaw-cell-label">現行淨值下限</b>'
-                    item = item +' 		<span class="tablesaw-cell-content"><input type="text" class="col-sm-8 lineHigh28" name="downValue" value="' + (vm.downValue == null ? '' : vm.downValue) + '"> </span>'
+                    item = item +' 		<span class="tablesaw-cell-content"><input type="number" class="col-sm-8 lineHigh28" name="downValue" value="' + (vm.downValue == null ? '' : vm.downValue) + '"> </span>'
                     item = item +' </td>'
                     +' <td style="padding-top: 70px !important;"><a class="btn-cancel" onclick="removeInvestmentList(this)">删除</a></td>'
                 +' </tr>'

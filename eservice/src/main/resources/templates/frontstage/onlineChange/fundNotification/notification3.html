@@ -90,7 +90,7 @@
 									<td>
 										<th:block th:text="${vo.acctValue != null} ? ${#numbers.formatDecimal(vo.acctValue, 0, 'DEFAULT', 0, 'COMMA')}"/>
 									</td>
-									<td><th:block th:text="${vo.roiRate}"/></td>
+									<td><th:block th:text="${vo.roiRate} + '%'"/></td>
 									<td>
 										<th:block th:if="${vo.percentageUp != null}">
 											<th:block th:text="${vo.percentageUp}"/>%

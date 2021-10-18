@@ -131,7 +131,7 @@ public class FundConversionController extends BaseUserDataController  {
             }
 
             List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(userRocId);
-           transInvestmentService.handlePolicyStatusLocked(userRocId, policyList);
+            transInvestmentService.handlePolicyStatusLocked(userRocId, policyList, TransTypeUtil.INVESTMENT_CONVERSION_CODE );
             transService.handleVerifyPolicyRuleStatusLocked(policyList,TransTypeUtil.INVESTMENT_CONVERSION_CODE);
             //進行查詢當前保單是否已有投資標
             transInvestmentService.handleNotExistingInvestmentLock(userRocId, policyList);

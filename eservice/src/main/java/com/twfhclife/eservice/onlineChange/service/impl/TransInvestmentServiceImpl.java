@@ -26,7 +26,6 @@ import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -84,8 +83,8 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             .build();
 
     @Override
-    public void handlePolicyStatusLocked(String userRocId, List<PolicyListVo> policyList) {
-        String INVESTMENT_TYPES = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, "INVESTMENT_TYPE");
+    public void handlePolicyStatusLocked(String userRocId, List<PolicyListVo> policyList, String parameterCode) {
+        String INVESTMENT_TYPES = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, parameterCode + "_INVESTMENT_TYPE");
         if (!CollectionUtils.isEmpty(policyList)) {
             for (PolicyListVo e: policyList) {
                 if (StringUtils.equals(e.getApplyLockedFlag(), "Y")) {

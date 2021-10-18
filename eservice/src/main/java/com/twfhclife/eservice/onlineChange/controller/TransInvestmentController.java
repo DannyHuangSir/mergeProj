@@ -108,9 +108,8 @@ public class TransInvestmentController extends BaseUserDataController  {
             }
 
             List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(userRocId);
-            transInvestmentService.handlePolicyStatusLocked(userRocId, policyList);
-            transService.handleVerifyPolicyRuleStatusLocked(policyList,
-                    TransTypeUtil.INVESTMENT_PARAMETER_CODE);
+            transInvestmentService.handlePolicyStatusLocked(userRocId, policyList, TransTypeUtil.INVESTMENT_PARAMETER_CODE);
+            transService.handleVerifyPolicyRuleStatusLocked(policyList, TransTypeUtil.INVESTMENT_PARAMETER_CODE);
             addAttribute("policyList", policyList);
         } catch (Exception e) {
             logger.error("Unable to init from cancelContract1: {}", ExceptionUtils.getStackTrace(e));

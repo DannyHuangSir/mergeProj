@@ -13,7 +13,7 @@ import java.util.Map;
 
 public interface ITransInvestmentService {
 
-    void handlePolicyStatusLocked(String userRocId, List<PolicyListVo> policyList);
+    void handlePolicyStatusLocked(String userRocId, List<PolicyListVo> policyList, String investmentParameterCode);
 
     List<InvestmentPortfolioVo> getOwnInvestment(String policyNo);
 

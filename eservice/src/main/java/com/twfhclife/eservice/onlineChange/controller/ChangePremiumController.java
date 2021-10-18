@@ -93,9 +93,8 @@ public class ChangePremiumController extends BaseUserDataController  {
             if (policyList != null) {
                 List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
                         userId, TransTypeUtil.CHANGE_PREMIUM_CODE);
-                transInvestmentService.handlePolicyStatusLocked(null, handledPolicyList);
-                transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList,
-                        TransTypeUtil.CHANGE_PREMIUM_CODE);
+                transInvestmentService.handlePolicyStatusLocked(getUserRocId(), handledPolicyList, TransTypeUtil.CHANGE_PREMIUM_CODE);
+                transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.CHANGE_PREMIUM_CODE);
                 addAttribute("policyList", handledPolicyList);
             }
         } catch (Exception e) {

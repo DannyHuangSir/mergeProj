@@ -66,26 +66,6 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 	private IParameterService parameterService;
 
 	/**
-	 * 處理保單狀態是否鎖定.
-	 * 
-	 * @param policyList 保單清單資料
-	 */
-	@Override
-	public void handlePolicyStatusLocked(List<PolicyListVo> policyList) {
-		if (!CollectionUtils.isEmpty(policyList)) {
-			for (PolicyListVo vo : policyList) {
-				if ("N".equals(vo.getExpiredFlag())) {
-					String policyType = vo.getPolicyType();
-					if (!("UC".equals(policyType) || "UH".equals(policyType))) {
-						vo.setApplyLockedFlag("Y");
-						vo.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_N_INVESTMENT_MSG);
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * 停損停利通知-查詢.
 	 * 
 	 * @param transFundNotificationVo TransFundNotificationVo
@@ -204,7 +184,9 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 					dtlVo.setCurrency(portfolioVo.getCurrency());
 					dtlVo.setRiskBeneLevel(portfolioVo.getInvtRiskBeneLevel());
 					dtlVo.setAcctValue(String.valueOf(portfolioVo.getAcctValue()));
-					dtlVo.setRoiRate(String.valueOf(portfolioVo.getRoiRate()));
+					if (portfolioVo.getAcctValue() != null && portfolioVo.getAvgPval() != null) {
+						dtlVo.setRoiRate(String.valueOf(portfolioVo.getAcctValue().subtract(portfolioVo.getAvgPval()).divide(portfolioVo.getAvgPval()).multiply(BigDecimal.valueOf(100)).doubleValue()));
+					}
 					dtlVo.setInCurr(portfolioVo.getInvtExchCurr());
 				}
 			}
@@ -253,6 +235,9 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 					// {[(單位數*單位淨值*匯率)/(平均台幣買價*總單位數)]–1}%
 					//System.out.println("invtNo=" + portfolioVo.getInvtNo());
 					values = FormulaUtil.formula1(netUnits, netValue, exchRate, ntdVal, expeNtd);
+					if (values[2] != null && values[1] != null) {
+						values[0] = values[1].subtract(values[2]).divide(values[2]).multiply(BigDecimal.valueOf(100));
+					}
 				}
 
 				// 從Array指定變數

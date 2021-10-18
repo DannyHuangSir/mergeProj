@@ -130,9 +130,8 @@ public class FundNotificationController extends BaseUserDataController {
 			if (policyList != null) {
 				List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
 						userId, TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
-				transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList);
-				transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList,
-						TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
+				transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
+				transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
 				addAttribute("policyList", handledPolicyList);
 			}
 		} catch (Exception e) {

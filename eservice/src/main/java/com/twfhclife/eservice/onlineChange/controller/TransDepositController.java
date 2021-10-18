@@ -43,6 +43,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,9 +109,8 @@ public class TransDepositController extends BaseUserDataController {
 
             List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
                     getUserId(), TransTypeUtil.DEPOSIT_PARAMETER_CODE);
-            transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList);
-            transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList,
-                    TransTypeUtil.DEPOSIT_PARAMETER_CODE);
+            transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.DEPOSIT_PARAMETER_CODE);
+            transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.DEPOSIT_PARAMETER_CODE);
             addAttribute("policyList", handledPolicyList);
         }
         return "frontstage/onlineChange/deposit/deposit1";
@@ -116,7 +118,7 @@ public class TransDepositController extends BaseUserDataController {
 
     @RequestLog
     @PostMapping("/deposit2")
-    public String deposit2(TransDepositVo vo) {
+    public String deposit2(TransDepositVo vo, RedirectAttributes redirectAttributes) {
         String userRocId = getUserRocId();
         DepositPolicyListVo depositPolicy = (DepositPolicyListVo) transDepositService.getDepositPolicy(userRocId, vo.getPolicyNo());
         MutablePair<BigDecimal, BigDecimal> pair = computeMinAndMax(depositPolicy);
@@ -130,14 +132,15 @@ public class TransDepositController extends BaseUserDataController {
 
     @RequestLog
     @PostMapping("/deposit3")
-    public String deposit3(TransDepositVo vo, RedirectAttributes redirectAttributes) {
+    public String deposit3(TransDepositVo vo) {
         addAttribute("userName", getUserDetail().getUserName());
         addAttribute("showPost", checkPostShow(vo.getPolicyNo()));
         if (StringUtils.equals(vo.getDepositMethod(), "1")) {
             try {
             transDepositService.distributionDepositFund(getUserRocId(), vo);
             } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+                addSystemError(e.getMessage());
+                logger.warn("deposit3 error: {}", e.getMessage());
                 return "forward:deposit2";
             }
         }
