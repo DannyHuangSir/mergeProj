@@ -505,3 +505,10 @@ table td,
 	padding: 6px 10px;
 	border-radius: 2px;
 }
+
+.modal, .modal-open{
+	overflow: auto !important;
+}
+.modal-body iframe{
+	height: calc(100% - 30px);
+}

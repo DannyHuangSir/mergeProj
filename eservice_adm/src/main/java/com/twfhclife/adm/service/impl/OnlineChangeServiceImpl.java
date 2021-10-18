@@ -1222,7 +1222,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 								}else{
 									doc = PDDocument.load(input);
 									String miniatureBase64 = this.imgBase64(doc, baos);
-									logger.info("--------------------------------------------------PDF Base64转换为缩图="+miniatureBase64);
+									logger.info("--------------------------------------------------PDF Base64转换为缩图-----Base64  is  not  null");
 									map.put("FileBase64",miniatureBase64);
 									doc.close();
 								}
