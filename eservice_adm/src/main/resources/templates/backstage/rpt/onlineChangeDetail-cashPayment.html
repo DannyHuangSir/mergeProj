@@ -31,7 +31,6 @@
 
 						<div class="profile-info-row">
 							<div class="profile-info-name"> 保單號碼 </div>
-
 							<div class="profile-info-value">
 								<span><th:block th:text="${detailData['POLICY_NO']!=null}?${detailData['POLICY_NO']}"/></span>
 							</div>
@@ -42,32 +41,62 @@
 						<div class="panel-body clear1" id="poliyClaimsDetail">
 							<div class="mycigna3">
 								<div class="col-md-12  detailPolicy">
-									<div class="col-sm-12" style="text-align: left;">
-										<div class=" grey2">
-											<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
-												<thead>
-												<tr class="table2 orange2">
-													<th style="background-color: #DFFFDF;" class="text-left " scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
-													<th style="background-color: #DFFFDF;" class="item" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">收益分配或撥回資產分配方式</th>
-												</tr>
-												</thead>
-												<tbody>
-												<tr class="h65 tr-odd-noEvent">
-													<td><th:block th:text="${detailData['cashPayment'].productName}"/>
-														<p class="enSmall">(<th:block th:text="${detailData['cashPayment'].policyNo}"/>)</p>
-													</td>
+									<div class="col-sm-12 mode2select">
+										<label for="" class="col-sm-7  colorGreen">(變更前)收益分配或撥回資產分配方式：</label>
+										<th:block th:if="${detailData['cashPayment'].preAllocation != null && detailData['cashPayment'].preAllocation == '1'}">
+											現金給付
+										</th:block>
+										<th:block th:if="${detailData['cashPayment'].preAllocation != null && detailData['cashPayment'].preAllocation == '2'}">
+											增加投資標的單位數
+										</th:block>
+									</div>
+
+									<div class="col-sm-12 mode2select">
+										<label for="" class="col-sm-7  colorGreen">(變更後)收益分配或撥回資產分配方式：</label>
+										<label>
 													<th:block th:if="${detailData['cashPayment'].allocation != null && detailData['cashPayment'].allocation == '1'}">
-														<td>
 															現金給付
-														</td>
 													</th:block>
 													<th:block th:if="${detailData['cashPayment'].allocation != null && detailData['cashPayment'].allocation == '2'}">
-														<td>
 															增加投資標的單位數
-														</td>
 													</th:block>
-												</tr>
-											</table>
+										</label>
+									</div>
+										<div class="col-sm-12 mode2select">
+											<label for="" class="col-sm-7  colorGreen">(變更後)Swift Code：</label>
+											<label>
+												<th:block th:text="${detailData['cashPayment'].swiftCode}"/>
+											</label>
+										</div>
+										<div class="col-sm-12 mode2select">
+											<label for="" class="col-sm-7  colorGreen">(變更後)英文戶名：</label>
+											<label>
+												<th:block th:text="${detailData['cashPayment'].englishName}"/>
+											</label>
+										</div>
+										<div class="col-sm-12 mode2select">
+											<label for="" class="col-sm-7  colorGreen">(變更後)帳戶名稱：</label>
+											<label>
+												<th:block th:text="${detailData['cashPayment'].accountName}"/>
+											</label>
+										</div>
+										<div class="col-sm-12 mode2select">
+											<label for="" class="col-sm-7  colorGreen">(變更後)銀行名稱：</label>
+											<label>
+												<th:block th:text="${detailData['cashPayment'].bankName}"/>
+											</label>
+										</div>
+										<div class="col-sm-12 mode2select">
+											<label for="" class="col-sm-7  colorGreen">(變更後)分行名稱：</label>
+											<label>
+												<th:block th:text="${detailData['cashPayment'].branchName}"/>
+											</label>
+										</div>
+										<div class="col-sm-12 mode2select">
+											<label for="" class="col-sm-7  colorGreen">(變更後)帳號：</label>
+											<label>
+												<th:block th:text="${detailData['cashPayment'].bankAccount}"/>
+											</label>
 										</div>
 										<div class="center1 ptop30" style="background: #FFFFFF;"></div>
 									</div>

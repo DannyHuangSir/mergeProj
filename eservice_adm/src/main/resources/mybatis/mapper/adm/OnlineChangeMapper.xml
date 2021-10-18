@@ -3036,15 +3036,16 @@
 	</select>
 
 	<select id="getTransPaymentByTransNum" resultType="map">
-		select
+		SELECT
 		ID id, TRANS_NUM transNum, POLICY_NO policyNo, ALLOCATION allocation, PRE_ALLOCATION preAllocation,
-		(
+		SWIFT_CODE swiftCode, ENGLISH_NAME englishName, ACCOUNT_NAME accountName, BANK_ACCOUNT bankAccount, BANK_NAME bankName, BRANCH_NAME branchName,
+		ISNULL((
 		SELECT TOP 1
 		REPLACE(RTRIM(a.PRODUCT_NAME), '　', '')
 		FROM
 		ESERVICE.DBO.PRODUCT a
 		WHERE (SELECT LIPM_INSU_BEG_DATE FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = P.POLICY_NO) BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
-		) AS productName
+		), '') AS productName
 		from ESERVICE.DBO.TRANS_CASH_PAYMENT P
 		where TRANS_NUM = #{transNum}
 	</select>
