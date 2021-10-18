@@ -206,7 +206,8 @@
 			and t.TRANS_NUM = td.TRANS_NUM
 			and td.DETAIL_MESSAGE is null
 			and td.FSZ1_PI_ST is null
-			and t.STATUS = #{status}
+		and (t.STATUS !=  #{status}  and   t.STATUS !=  #{status2})
+		and (td.FSZ1_ID !=  #{fsz1Id} and  td.FSZ1_ID !=  #{fsz1Id2} )
 	</select>
 
 	<!-- 更新DNS_ALLIANCE.STATUS by seqId -->

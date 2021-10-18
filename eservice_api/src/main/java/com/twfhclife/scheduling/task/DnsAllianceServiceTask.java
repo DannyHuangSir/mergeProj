@@ -246,8 +246,11 @@ public class DnsAllianceServiceTask {
 
 		if ("N".equals(API_DNS_DISABLE)) {
 			try {
-				//A.取得TRANS中除戶案件的STATUS標示為已完成(STATUS=2)
-				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatusAndFsz1PiSt("2");
+				//A.取得TRANS中除戶案件的STATUS標示為已完成(STATUS!=2)
+				//取得TRANS中除戶案件的STATUS標示為取消(STATUS!=3)
+				//取得TRANS中除戶案件的(FSZ1_ID!=55)
+				//取得TRANS中除戶案件的(FSZ1_ID!=62)
+				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatusAndFsz1PiSt("2","3","55","62");
 				if (listContent != null && listContent.size() > 0) {
 					for (DnsContentVo contentVo : listContent) {
 						if (contentVo != null) {

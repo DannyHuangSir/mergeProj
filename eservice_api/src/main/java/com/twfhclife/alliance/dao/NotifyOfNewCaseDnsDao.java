@@ -108,7 +108,7 @@ public interface NotifyOfNewCaseDnsDao {
 	 * @return
 	 * @throws Exception
 	 */
-	List<DnsContentVo> getTransDnsByStatusAndFsz1PiSt(@Param("status") String s)throws Exception;
+	List<DnsContentVo> getTransDnsByStatusAndFsz1PiSt(@Param("status") String s,@Param("status2") String status2,@Param("fsz1Id") String  fsz1Id,@Param("fsz1Id2") String  fsz1Id2)throws Exception;
 
 	/**
 	 * 修改回寫狀態
