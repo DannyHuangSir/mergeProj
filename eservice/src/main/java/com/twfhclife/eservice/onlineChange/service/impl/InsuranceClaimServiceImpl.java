@@ -796,18 +796,17 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 					logger.info("--------------------------------------------------input filePath pdf=>Image=" + filePath);
 					PDDocument doc = PDDocument.load(file);
 					encodedString = this.imgBase64(doc, baos);
-					logger.error("--------------------------------------------------Thumbnails  PDF=>img Base64 {}", encodedString);
+					logger.error("--------------------------------------------------Thumbnails  PDF=>img Base64 is  not  null ");
 					doc.close();
 				} else if (length <= 51200L) {
 					logger.info("--------------------------------------------------input filePath length<=51200{}" + filePath);
 					encodedString = this.imgBase64(file);
-					logger.error("--------------------------------------------------Thumbnails  Base64 length<=51200{}", encodedString);
+					logger.error("--------------------------------------------------Thumbnails  Base64 length<=51200");
 				} else {
 					logger.info("--------------------------------------------------input filePath length>51200{}" + filePath);
 					encodedString = this.imgBase64(file, baos);
-					logger.error("--------------------------------------------------Thumbnails  Base64 length>51200{}", encodedString);
+					logger.error("--------------------------------------------------Thumbnails  Base64 length>51200 ");
 				}
-				logger.error("--------------------------------------------------Thumbnails  Base64 {}", encodedString);
 			}
 		} catch (Exception e) {
 			logger.error("input filePath is null.");

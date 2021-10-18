@@ -387,7 +387,7 @@
 														<th:block th:if="${hospitalList != null}">
 															<div class="col-sm-9">
 																<th:block th:each="vo : ${hospitalList}">
-																	<div class="radio inline col-sm-5">
+																	<div class="radio inline col-sm-6" style="margin-right: 0px;">
 																		<label>
 																				<th:block th:if="${vo.hpid != null}">
 																			<div class="radio-btn" style="margin-top: 8px !important;">
@@ -396,7 +396,7 @@
 																					</div>
 																				</th:block>
 																				<th:block th:if="${vo.hpName != null}">
-																				<label th:inline="text">[[${vo.hpName}]]</label>
+																				<label style="display: inline;" th:inline="text">[[${vo.hpName}]]</label>
 																				</th:block>
 																		</label>
 																	</div>
@@ -508,10 +508,10 @@
 															<th:block th:if="${hospitalInsuranceCompanyList != null}">
 																<div class="col-sm-9">
 																	<th:block th:each="vo : ${hospitalInsuranceCompanyList}">
-																		<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+																		<div class="checkbox col-sm-4" style="text-align: left;line-height: 1.7em; cursor: pointer">
 																			<div class="check-box"><i class=""><input type="checkbox" name="toItem"  th:value="${vo.insuranceId}"></i></div>
 																			<th:block th:if="${vo.insuranceName != null}">
-																				<label th:inline="text">[[${vo.insuranceName}]]</label>
+																				<label style="display: inline;" th:inline="text">[[${vo.insuranceName}]]</label>
 																			</th:block>
 																		</div>
 																	</th:block>
@@ -890,17 +890,12 @@
 								async: false,
 								data : JSON.stringify(dataBirdate),
 								success : function(response) {
-									if (response.resultMsg == null ||  response.resultMsg == ''){
-										//pass
+									if (response.resultMsg != null &&  response.resultMsg != '') {
+										boobirdate= false;
+										openAlert(response.resultMsg);
 									}else{
-										if (response.resultData == null ||  response.resultData == '') {
-											boobirdate= false;
-											openAlert('請正確輸入出生日期');
-										}else{
-											openalert("年齡檢核結果："+response.resultMsg);
-										}
+										boobirdate= true;
 									}
-									
 								},
 								error :function() {
 									boobirdate= false;

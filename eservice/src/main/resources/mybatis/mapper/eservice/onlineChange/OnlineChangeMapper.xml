@@ -340,4 +340,9 @@
 	<select id="getBirdateByPolicyNo" parameterType="java.lang.String" resultType="java.lang.String">
 		select LIPI_BIRTH from ESERVICE.dbo.LILIPI where LIPI_INSU_NO = #{policyNo}
 	</select>
+	<select id="getPolicyClaimCompletedPolicyno" resultType="java.lang.String">
+		select   TOP 1  B.POLICYNO from eservice.dbo.TRANS A left join eservice.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B on a.TRANS_NUM = B.TRANS_NUM
+		where A.STATUS not in ('2','3','7','8') and A.TRANS_TYPE = 'MEDICAL_TREATMENT'
+		and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{userRocId}) ORDER BY B.CREATE_DATE
+	</select>
 </mapper>

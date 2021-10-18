@@ -164,6 +164,8 @@ public interface ApConstants {
 	 * 醫療保單黑名單提示信息
 	 */
 	public static final String MEDICAL_BLACKLIST_ALERT01 = "MEDICAL_BLACKLIST_ALERT01";
+	//生日提示信息
+	public static final String MEDICAL_BIRDATE_WINDOW_MSG = "MEDICAL_BIRDATE_WINDOW_MSG";
 
 	public static final String INVESTMENT_TRANS_REMARK = "INVESTMENT_TRANS_REMARK";
 

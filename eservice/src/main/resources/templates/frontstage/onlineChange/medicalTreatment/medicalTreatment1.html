@@ -85,9 +85,14 @@
 				return false;
 			}
 			// 檢查保單理賠是否完成
+			let chosePolicy= 	$('input[name="chosePolicy"]:checked').val();
+			var  dataBirdate={
+				policyNo:chosePolicy
+			};
 			$.ajax({
 				type : 'POST',
 				contentType : 'application/json',
+				data : JSON.stringify(dataBirdate),
 				url : /*[[@{/medicalTreatmentClaimCompleted}]]*/,
 				success : function(response) {
 					if (response.result == 'SUCCESS') {

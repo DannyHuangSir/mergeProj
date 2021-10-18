@@ -149,4 +149,8 @@ public interface IMedicalTreatmentService {
     Integer getMedicalTreatmentWhetherFirst(String policyNo, String medicalTreatmentParameterCode)throws Exception;
 	//獲取生日
 	public String  getBirdateByPolicyNo(String policyNo);
+	//獲取當前正在申請中的保單
+    String getPolicyClaimCompletedPolicyno(String userRocId)throws Exception;
+	//第二次申請非當前申請保單進行鎖定
+	List<PolicyListVo> handlPolicyClaimCompletedPolicynoNotLocked(List<PolicyListVo> handledPolicyList, String userRocId)throws Exception ;
 }

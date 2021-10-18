@@ -41,7 +41,10 @@ public interface OnlineChangMsgUtil {
 	
 	/** 線上申請-契約狀況不允許變更 */
 	final String POLICY_STATUS_NOT_ALLOW_MSG = "此張保單契約狀況不允許變更。";
-	
+
+	/** 線上申請-契約狀況-非首次申請(第二次申請,不可在申請非相同保單) */
+	final String POLICY_STATUS_MANY_TIMES_MSG = "此張保單與申請中的保單不一致不允許申請。";
+
 	/** 線上申請-繳別T不允許變更 */
 	final String POLICY_PAYMODE_T_NOT_ALLOW_MSG = "此張保單的繳別不允許變更。";
 	

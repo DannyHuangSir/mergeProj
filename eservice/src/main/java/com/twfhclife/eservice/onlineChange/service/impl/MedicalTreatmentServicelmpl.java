@@ -1199,5 +1199,35 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		return onlineChangeDao.getBirdateByPolicyNo(policyNo);
 	}
 
+	@Override
+	public String getPolicyClaimCompletedPolicyno(String userRocId) throws Exception {
+		return onlineChangeDao.getPolicyClaimCompletedPolicyno(userRocId);
+	}
+
+	@Override
+	public List<PolicyListVo> handlPolicyClaimCompletedPolicynoNotLocked(List<PolicyListVo> handledPolicyList, String userRocId) throws Exception {
+		String policyNo =  this.getPolicyClaimCompletedPolicyno(userRocId);
+		//進行排除當前賬戶正在申請的保單,便於第二次申請
+		if(!org.springframework.util.StringUtils.isEmpty(policyNo)){
+		handledPolicyList.stream().forEach(x -> {
+				String policy= x.getPolicyNo();
+				if (!org.springframework.util.StringUtils.isEmpty(policy) && policyNo.equals(policy)) {
+					x.setApplyLockedFlag("");
+					x.setApplyLockedMsg("");
+				}else{
+					if(!org.springframework.util.StringUtils.isEmpty(x.getApplyLockedFlag())
+							&&  !x.getApplyLockedFlag().equals("Y")
+					  ){
+						x.setApplyLockedFlag("Y");
+						x.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_STATUS_MANY_TIMES_MSG);
+					}
+				}
+			});
+		}else{
+			return  handledPolicyList;
+		}
+		return handledPolicyList;
+	}
+
 
 }

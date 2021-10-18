@@ -138,12 +138,13 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			 * 3.有申請中的保單,則不可再申請
 			 * TRANS中transType=INSURANCE_TYPE,status=-1,0,4
 			 */
-			int result = iMedicalTreatmentService.getPolicyClaimCompleted(getUserRocId());
+			/*int result = iMedicalTreatmentService.getPolicyClaimCompleted(getUserRocId());
 			if (result > 0) {
+				//
 //				String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
 				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.MEDICAL_TREATMENT_CLAIM_APPLYING);
 				return "redirect:apply1";
-			}
+			}*/
 
 			String userRocId = getUserRocId();
 			String userId = getUserId();
@@ -217,6 +218,9 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				iMedicalTreatmentService.handlePolicyStatusLocked(handledPolicyList);
 				transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList,
 						TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
+
+				iMedicalTreatmentService.handlPolicyClaimCompletedPolicynoNotLocked(handledPolicyList,getUserRocId());
+
 				addAttribute("policyList", handledPolicyList);
 			}
 		} catch (Exception e) {
@@ -249,11 +253,15 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 	@RequestLog
 	@PostMapping("/medicalTreatmentClaimCompleted")
-	public ResponseEntity<ResponseObj> getPolicyClaimCompleted() {
+	@ResponseBody
+	public ResponseEntity<ResponseObj> getPolicyClaimCompleted(@RequestBody TransMedicalTreatmentClaimVo claimVo) {
 		try {
-			int result = iMedicalTreatmentService.getPolicyClaimCompleted(getUserRocId());
-			if (result > 0) {
-				processError(OnlineChangMsgUtil.MEDICAL_TREATMENT_CLAIM_APPLYING);
+			String result = iMedicalTreatmentService.getPolicyClaimCompletedPolicyno(getUserRocId());
+			if (!org.springframework.util.StringUtils.isEmpty(result)
+					&& !org.springframework.util.StringUtils.isEmpty(claimVo.getPolicyNo())
+					&&	!result.equals(claimVo.getPolicyNo())
+				) {
+				processError(OnlineChangMsgUtil.POLICY_STATUS_MANY_TIMES_MSG);
 			} else {
 				processSuccess(result);
 			}
@@ -381,13 +389,16 @@ public class MedicalTreatmentController extends BaseUserDataController {
 							logger.info("resultMsg=" + resultMsg);
 						}
 					}
+				}else{
+					String birdateMsg = iMedicalTreatmentService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_BIRDATE_WINDOW_MSG);
+					resultMsg=birdateMsg;
 				}
 			}
 		} catch (Exception e) {
 			logger.error("Unable to MedicalTreatmentController  -  getMedicalTreatmentWhetherFirst: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
-		processSuccess(resultMsg);
+		processSuccessMsg(resultMsg);
 		return processResponseEntity();
 	}
 
@@ -450,8 +461,11 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					claimVo.setRelation_name(vo.getParameterName());
 				}
 			}
-			//時間轉換
-			claimVo.setBirdate(claimVo.getBirdate().replace("-",""));
+			String policeDate = claimVo.getBirdate();
+			if (!org.apache.commons.lang3.StringUtils.isEmpty(policeDate)) {
+				String yyyyMMdd = DateUtil.getStringToDateString("yyyyMMdd", policeDate, "yyyy-MM-dd");
+				claimVo.setBirdate(yyyyMMdd);
+			}
 
 			//獲取保險公司明顯
 			List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,null);
@@ -492,7 +506,6 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	public String medicalTreatmentSuccess(TransMedicalTreatmentClaimVo claimVo, BindingResult bindingResult) {
 		logger.error("TransMedicalTreatmentClaimVo is: {}-----", claimVo);
 		try {
-			boolean isTransApplyed = false;
 			logger.error("TransMedicalTreatmentClaimVo is: {}-----", claimVo.toString());
 			ObjectMapper mapper = new ObjectMapper();
 			List<TransMedicalTreatmentClaimFileDataVo> fileDatas = new ArrayList<TransMedicalTreatmentClaimFileDataVo>();
@@ -503,10 +516,6 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			claimVo.setFileDatas(fileDatas);
 			logger.error("TransMedicalTreatmentClaimVo is: {}+++++", claimVo.toString());
 			String policyNo = claimVo.getPolicyNo();
-			isTransApplyed = transService.isTransApplyed(policyNo,TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, OnlineChangeUtil.TRANS_STATUS_PROCESSING);
-
-			// 沒有申請過才新增
-			if (!isTransApplyed) {
 				// 驗證驗證碼
 				String authNum = claimVo.getAuthenticationNum();
 				String msg = checkAuthCode("MedicalTreatment", authNum);
@@ -557,6 +566,8 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				hisVo.setIdentity(userDetail.getUserId());
 				addAttribute("claimVo", claimVo);
 
+				//時間轉換
+				claimVo.setBirdate(claimVo.getBirdate().replace("-",""));
 
 				Map<String,Object> rMap = iMedicalTreatmentService.inserttransMedicalTreatmentClaimVo(claimVo, hisVo);
 				int result = (int) rMap.get("result");
@@ -608,7 +619,6 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 				}
 //				}
-			}
 
 		} catch (Exception e) {
 			logger.error("Unable to init from medicalTreatmentSuccess: {}", ExceptionUtils.getStackTrace(e));

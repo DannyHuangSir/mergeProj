@@ -131,4 +131,6 @@ public interface OnlineChangeDao {
 	List<TransInsuranceClaimFileDataVo> getTransInsCliamFileData(@Param("vo")TransRFEVo tVo);
 
 	String getBirdateByPolicyNo(String policyNo);
+
+    String getPolicyClaimCompletedPolicyno(@Param("userRocId")String userRocId)throws Exception;
 }
