@@ -293,7 +293,7 @@
 
 			//基金选项变更
 			$("body").on('change', "[name='invSelect']", function(){
-				$(this).parent().parent().parent().parent().find("[name='toUri']").attr("href", [[${uri}]] + $(this).val())
+				$(this).parent().parent().parent().find("[name='toUri']").attr("href", [[${uri}]] + $(this).val())
 			})
 
 			$("body").on('change', "input[name='ratio']", function(){

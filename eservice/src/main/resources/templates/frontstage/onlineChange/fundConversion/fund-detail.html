@@ -11,7 +11,7 @@
 							<th:block th:if="${outInvestment[0].ratio !=null && outInvestment[0].ratio !=0}" >
 								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th>
 							</th:block>
-							<th:block th:if="${outInvestment[0].value !=null  && outInvestment[0].value !=0 }" >
+							<th:block th:if="${outInvestment[0].value !=null  && outInvestment[0].value !=0  && outInvestment[0].ratio ==0 }" >
 								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出單位數</th>
 							</th:block>
 						</th:block>
@@ -31,7 +31,7 @@
 							<th:block th:if="${from.ratio != null && from.ratio !=0}" >
 								<td th:text="${from.ratio} +'%'"></td>
 							</th:block>
-							<th:block th:if="${from.value != null && from.value !=0}" >
+							<th:block th:if="${from.value != null && from.value !=0 && from.ratio ==0}" >
 								<td th:text="${from.value}"></td>
 							</th:block>
 						</tr>

@@ -563,7 +563,7 @@ public class OnlineChangeController extends BaseController {
 				messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "email");
 			}
 		} catch (Exception e) {
-			logger.info("insertTransInvestment() success, but send notify mail/sms error.");
+			logger.error("cancel apply send email error : {}", ExceptionUtils.getStackTrace(e));
 		}
 		logger.info("End send mail");
 	}

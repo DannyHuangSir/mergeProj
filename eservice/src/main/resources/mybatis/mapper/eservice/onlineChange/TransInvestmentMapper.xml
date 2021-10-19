@@ -30,6 +30,9 @@
       <if test="invtNo != null" >
         INVT_NO,
       </if>
+      <if test="invtName != null" >
+        INVT_NAME,
+      </if>
       <if test="distributionRatio != null" >
         DISTRIBUTION_RATIO,
       </if>
@@ -50,6 +53,9 @@
       <if test="invtNo != null" >
         #{invtNo,jdbcType=NVARCHAR},
       </if>
+      <if test="invtName != null" >
+        #{invtName,jdbcType=NVARCHAR},
+      </if>
       <if test="distributionRatio != null" >
         #{distributionRatio,jdbcType=NUMERIC},
       </if>
@@ -60,9 +66,8 @@
   </insert>
 
   <select id="selectCompareInvestments" resultType="com.twfhclife.eservice.policy.model.CompareInvestmentVo">
-    SELECT TI.INVT_NO invtNo, TI.DISTRIBUTION_RATIO afterRatio, TI.PRE_DISTRIBUTION_RATIO preRatio, PP.INVT_NAME invtName
-      FROM ESERVICE.dbo.TRANS_INVESTMENT TI LEFT JOIN
-      ESERVICE.dbo.POLICY_PORTFOLIO PP ON TI.POLICY_NO = PP.POLICY_NO AND TI.INVT_NO = PP.INVT_NO
+    SELECT TI.INVT_NO invtNo, TI.DISTRIBUTION_RATIO afterRatio, TI.PRE_DISTRIBUTION_RATIO preRatio, TI.INVT_NAME invtName
+    FROM ESERVICE.dbo.TRANS_INVESTMENT TI
       WHERE TI.TRANS_NUM = #{transNum}
   </select>
 

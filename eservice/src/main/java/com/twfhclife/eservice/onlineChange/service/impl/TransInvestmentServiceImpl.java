@@ -80,6 +80,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             .put(FUND_NOTIFICATION_PARAMETER_CODE, "設定停利停損通知正在進行中")
             .put(CASH_PAYMENT_PARAMETER_CODE, "收益分配或撥回資產分配方式正在進行中")
             .put(RISK_LEVEL_PARAMETER_CODE, "變更風險屬性正在進行中")
+            .put(CHANGE_PREMIUM_CODE, "定期超額保費正在進行中")
             .build();
 
     @Override
@@ -105,6 +106,13 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
                 if (StringUtils.isNotBlank(userRocId) && !StringUtils.equals(userRocId, e.getRocId())) {
                     e.setApplyLockedFlag("Y");
                     e.setApplyLockedMsg("被保人無法申請保單");
+                    continue;
+                }
+                if ("Y".equals(e.getExpiredFlag())) {
+                    e.setApplyLockedFlag("Y");
+                    // 此張保單已過投保終期
+                    e.setApplyLockedFlag("Y");
+                    e.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_EXPIREDATE_MSG);
                     continue;
                 }
             }
@@ -579,9 +587,9 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             transInvestmentVo.setTransNum(transNum);
             transInvestmentVo.setInvtNo(e.getInvtNo());
             transInvestmentVo.setPolicyNo(vo.getPolicyNo());
+            transInvestmentVo.setInvtName(e.getInvtName());
             transInvestmentDao.insert(transInvestmentVo);
         }
-
         vo.setTransNum(transNum);
     }
 

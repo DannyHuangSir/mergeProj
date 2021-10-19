@@ -30,6 +30,8 @@ public class TransInvestmentVo extends AbstractOnlineChangeModelBean {
 
     private String finalInputInvestments;
 
+    private String invtName;
+
     //申請日期
     private Date applyDate;
     //投資保單郵件發送頭部參數
@@ -149,5 +151,13 @@ public class TransInvestmentVo extends AbstractOnlineChangeModelBean {
 
     public void setPreDistributionRatio(Short preDistributionRatio) {
         this.preDistributionRatio = preDistributionRatio;
+    }
+
+    public String getInvtName() {
+        return invtName;
+    }
+
+    public void setInvtName(String invtName) {
+        this.invtName = invtName;
     }
 }

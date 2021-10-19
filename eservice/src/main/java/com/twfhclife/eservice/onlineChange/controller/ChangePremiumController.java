@@ -36,6 +36,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
 import java.text.SimpleDateFormat;
@@ -81,7 +82,7 @@ public class ChangePremiumController extends BaseUserDataController  {
 
     @RequestLog
     @GetMapping("/changePremium1")
-    public String changePremium1() {
+    public String changePremium1(RedirectAttributes redirectAttributes) {
         try {
             if(!checkCanUseOnlineChange()) {
                 /*addSystemError("目前無法使用此功能，請臨櫃申請線上服務。");*/
@@ -89,6 +90,17 @@ public class ChangePremiumController extends BaseUserDataController  {
                 addSystemError(message);
                 return "redirect:apply1";
             }
+
+            /**
+             * 有申請中的保單理賠,則不可再申請
+             * TRANS  status=-1,0,4
+             */
+            String msg = transInvestmentService.checkHasApplying(getUserId());
+            if (StringUtils.isNotBlank(msg)) {
+                redirectAttributes.addFlashAttribute("errorMessage", msg);
+                return "redirect:apply1";
+            }
+
             String userId = getUserId();
             List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(getUserRocId());
 

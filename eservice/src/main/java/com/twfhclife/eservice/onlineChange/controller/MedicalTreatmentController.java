@@ -475,7 +475,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 
 			// 發送驗證碼
-			sendAuthCode("MedicalTreatment");
+			sendAuthCode("MedicalTreatment", claimVo.getMail(), claimVo.getPhone());
 			addAttribute("claimVo", claimVo);
 			addAttribute("hospitalInsuranceCompanyList", hospitalInsuranceCompanyList);
 			addAttribute("hospitalList", hospitalList);

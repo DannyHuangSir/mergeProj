@@ -405,6 +405,9 @@
 				//}
 				//回傳百分比
 				element.ratio=parseInt(perNumber);
+				console.log("element.safpNetUnits",element.safpNetUnits);
+				//進行回傳單位數.
+				element.number=parseFloat(formatNumber(element.safpNetUnits*parseInt(perNumber),4));
 			});
 			$("#showConutNumber").text(formatNumber(showOutputDate, 4));
 			};
@@ -452,7 +455,7 @@
 							break;
 						}
 						//回傳單位數為0
-						investmentsList[i].number=0; 
+						//investmentsList[i].number=0; 
 					}
 				} 
 				return  boo;
