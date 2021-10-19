@@ -545,13 +545,13 @@ public class BaseController extends BaseMvcController {
 				if(email!=null && !"".equals(email)){
 					emails.append(email);
 				}
-				if(newMail!=null && !"".equals(newMail) ){
+				if(newMail!=null && !"".equals(newMail) && !newMail.equals(email) ){
 					emails.append(";"+newMail);
 				}
 				if(mobile!=null && !"".equals(mobile)){
 					mobiles.append(mobile);
 				}
-				if(newMobile!=null && !"".equals(newMobile)){
+				if(newMobile!=null && !"".equals(newMobile) && !newMobile.equals(mobile)){
 					mobiles.append(";"+newMobile);
 				}
 				String authentication = sendAuthenticationService.sendAuthentication(emails.toString(), mobiles.toString());

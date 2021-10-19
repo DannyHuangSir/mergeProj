@@ -80,6 +80,7 @@ public class OnlineChangeController extends BaseController {
 	@Autowired
 	private ITransInvestmentService transInvestmentService;
 
+	@Autowired
 	private MessageTemplateClient messageTemplateClient;
 
 	/**
