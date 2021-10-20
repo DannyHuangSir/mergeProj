@@ -242,6 +242,25 @@
 		        };
 			    postWithFormData(/*[[@{/deposit3}]]*/, formData);
 			} else {
+			    let amount = 0
+			    let len = 0
+		        $("input[name='amount']").each(function(index, e){
+		            if ($(this).val() != null && $(this).val() != "") {
+		                amount = amount + Math.floor($(this).val())
+		                len += 1
+		            }
+		        })
+
+                if (len <= 0) {
+		            openAlert("提領項不能為空")
+		            return
+		        }
+
+		        if (amount > [[${maxValue}]]) {
+                    showAlertRoundMsg()
+		            return
+                }
+
                 $("#modal-container-locked").modal({
                     show: true,
                     backdrop: 'static',
@@ -260,12 +279,11 @@
                     stopAccount = e.parameterValue
                }
             })
-
             $("[name='tips']").text('僅顯示帳價>0之基金。提領金額會依使用者輸入的提領比例自動計算。')
+
 		    $("#ok").on("click", function(){
 		        acctValue = /*[[${depositVo.policyAcctValue}]]*/
 		        var invtDeposits = []
-		        var amount = 0
 		        $("input[name='amount']").each(function(index, e){
 		            if ($(this).val() != null && $(this).val() != "") {
 		                context = $(this).parent().parent().parent()
@@ -280,17 +298,6 @@
                         })
 		            }
 		        })
-
-                if (amount > [[${maxValue}]]) {
-                    showAlertRoundMsg()
-		            return
-                }
-
-		        if (invtDeposits.length <= 0) {
-		            openAlert("提領項不能為空")
-		            return
-		        }
-
 		        var formData = {
 		            depositMethod: "2",
 		            currency: [[${depositVo.currency}]],
