@@ -479,6 +479,10 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			addAttribute("claimVo", claimVo);
 			addAttribute("hospitalInsuranceCompanyList", hospitalInsuranceCompanyList);
 			addAttribute("hospitalList", hospitalList);
+			//重新發送驗證碼參數回傳
+			claimVo.setMobile(claimVo.getPhone());
+			claimVo.setEmail(claimVo.getMail());
+			addAttribute("transContactInfoDtlVo", claimVo);
 			getRequest().removeAttribute("errorMessage");//能執行到這裡應不會有系統錯誤訊息
 		} catch (Exception e) {
 			logger.error("Unable to init from  MedicalTreatmentController - medicalTreatment4: {}", ExceptionUtils.getStackTrace(e));

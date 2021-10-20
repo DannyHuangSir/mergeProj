@@ -75,9 +75,13 @@ public class SendAuthenticationController extends BaseController {
 			if(email!=null && !"".equals(email.trim())){
 				emails.append(email.trim());
 			}
-			if(newEmail!=null && !"".equals(newEmail.trim()) ){
+			if(newEmail!=null && !"".equals(newEmail.trim()) && !email.equals(newEmail)){
+				if(!StringUtils.isEmpty(email)) {
 				emails.append(";");
 				emails.append(newEmail.trim());
+				}else {
+					emails.append(newEmail);
+				}
 			}
 			
 			//mobiles
@@ -85,9 +89,13 @@ public class SendAuthenticationController extends BaseController {
 			if(mobile!=null && !"".equals(mobile.trim())){
 				mobiles.append(mobile.trim());
 			}
-			if(newMobile!=null && !"".equals(newMobile.trim())){
+			if(newMobile!=null && !"".equals(newMobile.trim())  && !mobile.equals(newMobile)){
+				if(!StringUtils.isEmpty(mobile)){
 				mobiles.append(";");
 				mobiles.append(newMobile);
+				}else{
+					mobiles.append(newMobile);
+				}
 			}
 			
 			String authentication = sendAuthenticationService.sendAuthentication(emails.toString(), mobiles.toString());

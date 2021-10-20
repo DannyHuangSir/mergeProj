@@ -546,13 +546,21 @@ public class BaseController extends BaseMvcController {
 					emails.append(email);
 				}
 				if(newMail!=null && !"".equals(newMail) && !newMail.equals(email) ){
+					if(!StringUtils.isEmpty(email)){
 					emails.append(";"+newMail);
+					}else {
+						emails.append(newMail);
+					}
 				}
 				if(mobile!=null && !"".equals(mobile)){
 					mobiles.append(mobile);
 				}
 				if(newMobile!=null && !"".equals(newMobile) && !newMobile.equals(mobile)){
+					if(!StringUtils.isEmpty(mobile)){
 					mobiles.append(";"+newMobile);
+					}else{
+						mobiles.append(newMobile);
+					}
 				}
 				String authentication = sendAuthenticationService.sendAuthentication(emails.toString(), mobiles.toString());
 				logger.info("sendAuthentication authentication(otp code)="+authentication);
