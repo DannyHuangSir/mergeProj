@@ -10,10 +10,13 @@ import com.twfhclife.eservice_batch.model.TransPolicyVo;
 import com.twfhclife.eservice_batch.model.TransVo;
 import com.twfhclife.eservice_batch.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class TransDepositUtil {
@@ -55,21 +58,29 @@ public class TransDepositUtil {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransDepositVo vo : list) {
+                                //獲取最新單位凈值
+                                MutablePair<BigDecimal, Date> fund = transDepositDao.getNearFundValue(vo.getInvtNo());
+                                if (fund == null) {
+                                    logger.warn("保單提領(贖回)投資標：{}，無法獲取最新凈值，跳過介接。", vo.getInvtNo());
+                                    continue;
+                                }
+                                logger.info("保單提領(贖回) 投資標：{}的最新净值：{}， 交易日期：{}", vo.getInvtNo(), fund.getLeft(), fund.getRight());
+                                BigDecimal fundValue = BigDecimal.valueOf(vo.getAmount()).divide(fund.getLeft(), 4, BigDecimal.ROUND_DOWN);
+                                logger.info("保單提領(贖回) 投資標：{}，計算後的單位凈值為：{}", vo.getInvtNo(), fundValue);
                                 // 介接代碼(3),申請序號(12),保單號碼(10),投資標的(10),轉出單位（18）,匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60),
                                 //收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
-                                String line = String.format(StringUtils.repeat("%s", 14),
+                                String line = String.format(StringUtils.repeat("%s", 15),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.lpad(String.valueOf(vo.getAmount()), 18, "0"),
-                                        StringUtil.rpadBlank(String.valueOf(vo.getAccountName()), 18),
+                                        StringUtil.lpad(String.valueOf(fundValue).replaceAll("\\.", ""), 18, " "),
                                         StringUtil.rpadBlank(vo.getAccountName(), 20),
                                         StringUtil.rpadBlank(vo.getBankName(), 10),
                                         StringUtil.rpadBlank(vo.getBranchName(), 10),
                                         StringUtil.rpadBlank(vo.getBankCode(), 3),
                                         StringUtil.rpadBlank(vo.getBranchCode(), 4),
-                                        StringUtil.rpadBlank(vo.getBankCode(), 16),
+                                        StringUtil.rpadBlank(vo.getBankAccount(), 16),
                                         StringUtil.rpadBlank(vo.getSwiftCode(), 16),
                                         StringUtil.rpadBlank(vo.getEnglishName(), 60),
                                         systemTwDate,

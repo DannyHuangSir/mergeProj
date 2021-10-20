@@ -63,7 +63,8 @@ public class TransConversionUtil {
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100)).toString(), 18, "0"),
+                                        StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100), 4, BigDecimal.ROUND_DOWN)
+                                                .toString().replaceAll("\\.", ""), 18, " "),
                                         StringUtil.rpadBlank(vo.getInInvtNo(), 10),
                                         "2",
                                         systemTwDate,
