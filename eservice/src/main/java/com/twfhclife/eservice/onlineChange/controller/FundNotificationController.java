@@ -114,7 +114,7 @@ public class FundNotificationController extends BaseUserDataController {
 			}
 
 			/**
-			 * 有申請中的保單理賠,則不可再申請
+			 * 投資型保單申請中不可繼續申請
 			 * TRANS  status=-1,0,4
 			 */
 			String msg = transInvestmentService.checkHasApplying(getUserId());
@@ -237,7 +237,7 @@ public class FundNotificationController extends BaseUserDataController {
 				if (StringUtils.equals(transFundNotificationVo.getAuthType(), "password")) {
 					msg = checkPassword(transFundNotificationVo.getUserPassword());
 				} else {
-					msg = checkAuthCode("investment", transFundNotificationVo.getAuthenticationNum());
+					msg = checkAuthCode("fundNotification", transFundNotificationVo.getAuthenticationNum());
 				}
 
 				if (!StringUtils.isEmpty(msg)) {

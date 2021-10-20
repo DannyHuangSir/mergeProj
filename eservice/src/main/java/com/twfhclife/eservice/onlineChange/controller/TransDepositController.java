@@ -88,7 +88,7 @@ public class TransDepositController extends BaseUserDataController {
         }
 
         /**
-         * 有申請中的保單理賠,則不可再申請
+         * 投資型保單申請中不可繼續申請
          * TRANS  status=-1,0,4
          */
         String msg = transInvestmentService.checkHasApplying(getUserId());

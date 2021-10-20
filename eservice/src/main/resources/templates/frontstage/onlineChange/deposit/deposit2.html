@@ -230,7 +230,7 @@
                 }
 
 		        if (depositAmount < [[${minValue}]] || depositAmount > [[${maxValue}]]) {
-		            openAlert("提領金額只能為" + [[${minValue}]] + "~" + [[${maxValue}]])
+		            showAlertRoundMsg()
 		            return
 		        }
 
@@ -261,12 +261,7 @@
                }
             })
 
-            $("[name='tips']").text(
-                '僅顯示帳價>0之基金。提領金額會依使用者輸入的提領比例自動計算。提領比例只能輸入'
-                                        + 0 + '-' + 100 +
-                                        '整數數字，若不符合規則則無法輸入。'
-            )
-
+            $("[name='tips']").text('僅顯示帳價>0之基金。提領金額會依使用者輸入的提領比例自動計算。')
 		    $("#ok").on("click", function(){
 		        acctValue = /*[[${depositVo.policyAcctValue}]]*/
 		        var invtDeposits = []
@@ -287,7 +282,7 @@
 		        })
 
                 if (amount > [[${maxValue}]]) {
-                    openAlert("提領金額只能為" + [[${minValue}]] + "~" + [[${maxValue}]])
+                    showAlertRoundMsg()
 		            return
                 }
 
@@ -320,7 +315,7 @@
 
                  if (stopAccount.indexOf($(context).find("[name='invtNo']").val()) == -1) {
                     if (percentVal < minValue) {
-                         openAlert("提領金額必須大於：" + minValue)
+                         openAlert("提領金額必須大於：" + formatNumber(minValue, 0))
                          $(this).val("");
                          $(context).find("[name='amount']").val("")
                          return
@@ -356,7 +351,7 @@
 
                  if (stopAccount.indexOf($(context).find("[name='invtNo']").val()) == -1) {
                       if ($(this).val() < minValue) {
-                         openAlert("提領金額必須大於：" + minValue)
+                         openAlert("提領金額必須大於：" + formatNumber(minValue, 0))
                          $(this).val("");
                          $(context).find("[name='percent']").val("")
                          return
@@ -391,6 +386,20 @@
                 return false
              }
              return true;
+        }
+
+        function showAlertRoundMsg(){
+            let min = [[${minValue}]]
+            let max = [[${maxValue}]]
+            let fractionDigits = 0
+            if ([[${depositVo.currency}]] == 'NTD') {
+                fractionDigits = 0;
+            } else {
+                fractionDigits = 2;
+            }
+            min = formatNumber(min, fractionDigits)
+            max = formatNumber(max, fractionDigits)
+            openAlert("提領金額只能為：" + min + "~" + max)
         }
 		/*]]>*/
 		</script>

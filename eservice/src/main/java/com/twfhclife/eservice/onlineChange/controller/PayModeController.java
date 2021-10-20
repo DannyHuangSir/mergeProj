@@ -213,7 +213,7 @@ public class PayModeController extends BaseUserDataController {
 		if (StringUtils.equals(transPaymodeVo.getAuthType(), "password")) {
 			msg = checkPassword(transPaymodeVo.getUserPassword());
 		} else {
-			msg = checkAuthCode("cashPayment", transPaymodeVo.getAuthenticationNum());
+			msg = checkAuthCode("payMode", transPaymodeVo.getAuthenticationNum());
 		}
 		if (!StringUtils.isEmpty(msg)) {
 			addSystemError(msg);

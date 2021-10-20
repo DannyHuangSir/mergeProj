@@ -103,8 +103,8 @@ public class FundConversionController extends BaseUserDataController  {
             }
 
             /**
-             * 有申請中的保單,則不可再申請
-             * status=-1,0,4
+             * 投資型保單申請中不可繼續申請
+             * TRANS  status=-1,0,4
              */
             String msg = transInvestmentService.checkHasApplying(getUserId());
             if (StringUtils.isNotBlank(msg)) {

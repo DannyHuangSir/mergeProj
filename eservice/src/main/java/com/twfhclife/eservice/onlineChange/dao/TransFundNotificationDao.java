@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.onlineChange.dao;
 
 import com.twfhclife.eservice.onlineChange.model.TransFundNotificationVo;
+import com.twfhclife.eservice.policy.model.FundValueVo;
 import com.twfhclife.eservice.policy.model.NotificationFundVo;
 import com.twfhclife.eservice.policy.model.NotificationPortfolioVo;
 import org.apache.ibatis.annotations.Param;
@@ -41,4 +42,6 @@ public interface TransFundNotificationDao {
 	List<NotificationFundVo> getSearchFunds(@Param("rrs") List<String> rrs, @Param("invtNos") List<String> invtNos);
 
 	List<NotificationPortfolioVo> getNotificationPortfolioList(String policyNo);
+
+    String findByInvtNo(@Param("policyNo") String policyNo, @Param("fundCode") String fundCode);
 }

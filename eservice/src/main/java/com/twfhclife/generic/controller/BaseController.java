@@ -442,7 +442,7 @@ public class BaseController extends BaseMvcController {
 	protected String hideMobile(String mobile){
 		String strMobile = "";
 			
-		if(mobile != null && !mobile.equals("")){
+		if(StringUtils.isNotBlank(mobile) && mobile.trim().length()>=10){//大於等於十碼才執行隱碼動作
 			strMobile = mobile.substring(0,3) + "***" + mobile.substring(6);
 		}
 		return strMobile;
@@ -540,7 +540,7 @@ public class BaseController extends BaseMvcController {
 				if (newMobile != null) {
 					mobile=mobile+";"+newMobile;
 				}*/
-				StringBuffer emails = new StringBuffer();
+				StringBuffer emails  = new StringBuffer();
 				StringBuffer mobiles = new StringBuffer();
 				if(email!=null && !"".equals(email)){
 					emails.append(email);
