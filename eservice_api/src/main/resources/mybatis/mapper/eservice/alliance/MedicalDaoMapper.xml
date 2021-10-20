@@ -536,7 +536,7 @@
 		from   ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
 		where  (CASE_ID is not  null AND CASE_ID!='' )
 		and  ALLIANCE_STATUS = #{itpsEnd}
-		and   ALLIANCE_FILE_STATUS ='SUCCESS'
+		and   upper(ALLIANCE_FILE_STATUS) ='SUCCESS'
 	</select>
 	<select id="getTransMedicalTreatmentByAllinaceStatusIsPqhfEnd" resultMap="TransMedicalTreatmentResultMap">
 		select top(10)
@@ -582,7 +582,7 @@
 		from   ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
 		where  (CASE_ID is not  null AND CASE_ID!='' )
 		and   ALLIANCE_STATUS = #{pqhfEnd}
-		and   ALLIANCE_FILE_STATUS ='SUCCESS'
+		and   upper(ALLIANCE_FILE_STATUS) ='SUCCESS'
 		and   RE_UPLOAD is not  null AND RE_UPLOAD!=''
 	</select>
 	<!--獲取到聯盟的數據信息-->
