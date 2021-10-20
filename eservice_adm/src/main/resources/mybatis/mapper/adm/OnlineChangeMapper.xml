@@ -60,13 +60,24 @@
 		<result property="insuranceName"    column="INSURANCE_NAME" />
 		<result property="functionName"  column="FUNCTION_NAME" />
 	</resultMap>
-	<resultMap id="transFundConversionMap" type="com.twfhclife.adm.model.TransFundConversionVo">
+	<resultMap id="transFundConversion" type="com.twfhclife.adm.model.TransFundConversionVo">
 		<result property="invtNo"   column="INVT_NO" />
 		<result property="invtName"  column="INVT_NAME" />
+		<result property="fundName"  column="FUND_NAME" />
 		<result property="investmentType"    column="INVESTMENT_TYPE" />
 		<result property="ratio"  column="RATIO" />
 		<result property="value"  column="VALUE" />
 	</resultMap>
+
+<resultMap id="transFundConversion" type="com.twfhclife.adm.model.TransFundConversionVo">
+		<result property="invtNo"   column="INVT_NO" />
+		<result property="invtName"  column="INVT_NAME" />
+		<result property="fundName"  column="FUND_NAME" />
+		<result property="investmentType"    column="INVESTMENT_TYPE" />
+		<result property="ratio"  column="RATIO" />
+		<result property="value"  column="VALUE" />
+	</resultMap>
+	
 	<sql id="TRANS_DNS_ALL">
 		A.SEQ_ID
 		,A.NOTIFY_SEQ_ID
@@ -2783,13 +2794,13 @@
 	</select>
 	
 	<!--查詢申請明細-已持有投資標的轉換查詢-->
-	<select id="getConversionDetail" resultMap="transFundConversionMap"  parameterType="com.twfhclife.adm.model.TransVo">
-		SELECT TF.INVT_NO INVT_NO,  PP.INVT_NAME INVT_NAME,  TF.INVESTMENT_TYPE INVESTMENT_TYPE,TF.RATIO RATIO,TF.VALUE VALUE
+	<select id="getConversionDetail" resultMap="transFundConversion"  parameterType="com.twfhclife.adm.model.TransVo">
+		SELECT TF.INVT_NO INVT_NO,  PP.INVT_NAME INVT_NAME,F.FUND_NAME,  TF.INVESTMENT_TYPE INVESTMENT_TYPE,TF.RATIO RATIO,TF.VALUE VALUE
 		FROM ESERVICE.dbo.TRANS_FUND_CONVERSION TF LEFT JOIN
 		ESERVICE.dbo.POLICY_PORTFOLIO PP ON TF.POLICY_NO = PP.POLICY_NO AND TF.INVT_NO = PP.INVT_NO
+		LEFT JOIN    ESERVICE.DBO.FUND   F  ON   TF.INVT_NO = F.FUND_CODE
 		WHERE TF.TRANS_NUM =#{transVo.transNum}
 	</select>
-
 	<!--查詢申請保單的基本明細-->
 	<select id="getOnlineChangeDetailByTransNum" parameterType="string" resultType="map">
 			SELECT ROW_NUMBER() OVER (ORDER BY CREATE_DATE) AS ROW_NUM ,A.*

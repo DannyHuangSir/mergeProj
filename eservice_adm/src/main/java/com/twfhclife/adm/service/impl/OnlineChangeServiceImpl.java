@@ -561,7 +561,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 
 					if(fileBase64!=null && !"".equals(fileBase64)){
 						//直接将原文件base64 转为 缩图的 base64
-						//进行考虑大文件的的处理
+						//TODO 进行考虑大文件的的处理
 						byte[] decode = Base64.getDecoder().decode(fileBase64);
 						//获取类型
 						String base64Type = this.checkBase64ImgOrPdf(decode);
@@ -1507,7 +1507,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			if (ApConstants.INVESTMENT_STATUS_IN.equals(x.getInvestmentType())) {
 				TransFundConversionVo transFundConversionVo = new TransFundConversionVo();
 				transFundConversionVo.setInvtNo(x.getInvtNo());
-				transFundConversionVo.setInvtName(x.getInvtName());
+				transFundConversionVo.setInvtName(x.getFundName());
 				transFundConversionVo.setRatio(x.getRatio());
 				in.add(transFundConversionVo);
 			}

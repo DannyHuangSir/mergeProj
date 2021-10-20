@@ -20,6 +20,16 @@ public class TransFundConversionVo implements Serializable {
     private BigDecimal value;
     //	 投資標的名稱
     private String  invtName;
+    //轉入投資標的名稱
+    private String  fundName;
+
+    public String getFundName() {
+        return fundName;
+    }
+
+    public void setFundName(String fundName) {
+        this.fundName = fundName;
+    }
 
     public String getInvtName() {
         return invtName;
