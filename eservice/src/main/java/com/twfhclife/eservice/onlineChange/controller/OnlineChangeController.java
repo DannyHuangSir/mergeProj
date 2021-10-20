@@ -3,6 +3,7 @@ package com.twfhclife.eservice.onlineChange.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.IHospitalServcie;
@@ -255,9 +256,19 @@ public class OnlineChangeController extends BaseController {
 			TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE,
 			TransTypeUtil.RISK_LEVEL_PARAMETER_CODE,
 			TransTypeUtil.CHANGE_PREMIUM_CODE,
-			TransTypeUtil.DEPOSIT_PARAMETER_CODE
+			TransTypeUtil.DEPOSIT_PARAMETER_CODE,
+			TransTypeUtil.PAYMODE_PARAMETER_CODE
 	);
 
+	private static final Map<String, String> MSG_MAP = ImmutableMap.<String, String>builder()
+			.put(TransTypeUtil.INVESTMENT_CONVERSION_CODE, OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY)
+			.put(TransTypeUtil.INVESTMENT_PARAMETER_CODE, OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY1)
+			.put(TransTypeUtil.PAYMODE_PARAMETER_CODE, OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY2)
+			.put(TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE, OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY3)
+			.put(TransTypeUtil.CHANGE_PREMIUM_CODE, OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY4)
+			.put(TransTypeUtil.DEPOSIT_PARAMETER_CODE, OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY5)
+			.put(TransTypeUtil.RISK_LEVEL_PARAMETER_CODE, OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY6)
+			.build();
 	/**
 	 * 取消申請
      *
@@ -299,7 +310,7 @@ public class OnlineChangeController extends BaseController {
 						ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
 				transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
 				transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
-				transInvestmentVo.setMessage(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY);
+				transInvestmentVo.setMessage(MSG_MAP.get(transType));
 				transInvestmentVo.setApplyDate(new Date());
 				sendConversionSMSAndEmail(transInvestmentVo,user);
 			}else{
@@ -527,7 +538,7 @@ public class OnlineChangeController extends BaseController {
 			logger.info("user phone : {}", user.getMobile());
 			logger.info("user mail : {}", user.getEmail());
 			//获取保单编号
-			paramMap.put("POLICY_NO", vo.getPolicyNo());
+			paramMap.put("POLICY_NO", StringUtils.isEmpty(vo.getPolicyNo()) ? " " : vo.getPolicyNo());
 			logger.info("POLICY_NO : {}", vo.getPolicyNo());
 
 			List<String> receivers = new ArrayList<String>();

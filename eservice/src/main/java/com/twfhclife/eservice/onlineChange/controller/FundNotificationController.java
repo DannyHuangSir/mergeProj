@@ -316,7 +316,7 @@ public class FundNotificationController extends BaseUserDataController {
 	@PostMapping("/getSearchPortfolio")
 	@ResponseBody
 	public ResponseEntity<ResponseObj> getSearchPortfolio(@RequestBody TransNotificationVo vo) {
-		processSuccess(transFundNotificationService.getSearchPortfolio(vo.getInvtNos(), getUserRocId()));
+		processSuccess(transFundNotificationService.getSearchPortfolio(vo.getPolicyNo(), vo.getInvtNos(), getUserRocId()));
 		return processResponseEntity();
 	}
 

@@ -1,15 +1,23 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
+import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
+import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.generic.api_client.MessageTemplateClient;
+import com.twfhclife.generic.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -68,6 +76,12 @@ public class PayModeController extends BaseUserDataController {
 
 	@Autowired
 	private IParameterService parameterService;
+
+	@Autowired
+	private MessageTemplateClient messageTemplateClient;
+
+	@Autowired
+	private ITransInvestmentService transInvestmentService;
 
 	/**
 	 * 保單清單頁面.
@@ -238,42 +252,21 @@ public class PayModeController extends BaseUserDataController {
 				// 設定使用者
 				String userId = getUserId();
 				transPaymodeVo.setUserId(userId);
-				
-				// Call api 送出線上申請資料
-				logger.info("Send user[{}] trans data to eservice_api[addTransRequest]", userId);
-				
 				String transAddResult = "";
-				TransAddRequest apiReq = new TransAddRequest();
-				apiReq.setSysId(ApConstants.SYSTEM_ID);
-				apiReq.setTransType(TransTypeUtil.PAYMODE_PARAMETER_CODE);
-				apiReq.setTransPaymodeVo(transPaymodeVo);
-				apiReq.setUserId(userId);
-				
-				TransAddResponse transAddResponse = transAddClient.addTransRequest(apiReq);
-				if (transAddResponse != null) {
-					logger.info("Get user[{}] transAddResponse from eservice_api[addTransRequest]: {}", userId,
-							MyJacksonUtil.object2Json(transAddResponse));
-					transAddResult = transAddResponse.getTransResult();
-				} else {
-					// 若無資料，嘗試由內部服務取得資料
-					logger.info("Call internal service to get user[{}] insertTransPaymode data", userId);
-					
 					// 設定交易序號
 					String transNum = transService.getTransNum();
 					transPaymodeVo.setTransNum(transNum);
-					
 					int result = transPaymodeService.insertTransPaymode(transPaymodeVo);
 					if (result <= 0) {
 						transAddResult = ReturnHeader.FAIL_CODE;
 					} else {
 						transAddResult = ReturnHeader.SUCCESS_CODE;
 					}
-				}
-				
 				if (!StringUtils.equals(transAddResult, ReturnHeader.SUCCESS_CODE)) {
 					addDefaultSystemError();
 					return "forward:paymentMode3";
 				}
+				sendNotification(transPaymodeVo, getUserDetail());
 			}
 		} catch (Exception e) {
 			logger.error("Unable to init from paymentModeSuccess: {}", ExceptionUtils.getStackTrace(e));
@@ -354,5 +347,64 @@ public class PayModeController extends BaseUserDataController {
 			}
 		}
 		return mingwen;
+	}
+
+
+	public void sendNotification(TransPaymodeVo vo, UsersVo user) {
+		try {
+			Map<String, Object> mailInfo = transInvestmentService.getSendMailInfo();
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put("TransNum", vo.getTransNum());
+			paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+			paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+			logger.info("Trans Num : {}", vo.getTransNum());
+			logger.info("Status Name : {}", mailInfo.get("statusName"));
+			logger.info("Trans Remark : {}", mailInfo.get("transRemark"));
+			logger.info("receivers={}", mailInfo.get("receivers"));
+			logger.info("user phone : {}", user.getMobile());
+			logger.info("user mail : {}", user.getEmail());
+			//获取保单编号
+			paramMap.put("POLICY_NO", vo.getPolicyNoList().get(0));
+			logger.info("POLICY_NO : {}", vo.getPolicyNoList().get(0));
+
+			List<String> receivers = new ArrayList<String>();
+
+			String applyDate = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+			paramMap.put("DATA", applyDate);
+			//申請狀態-申請中
+			paramMap.put("TransStatus","處理中");
+			//申請功能
+			ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
+					ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, TransTypeUtil.PAYMODE_PARAMETER_CODE);
+			paramMap.put("APPLICATION_FUNCTION", parameterValueByCode.getParameterName());
+
+
+			//發送系統管理員
+			receivers = (List) mailInfo.get("receivers");
+			//推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
+			messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_027, receivers, paramMap, "email");
+
+			//發送保戶SMS
+			//receivers = new ArrayList<String>();
+			receivers.clear();//清空
+			paramMap.clear();//清空模板參數
+			//設置模板參數
+			paramMap.put("TITLE", OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_TITLE);
+			paramMap.put("MESSAGE",OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CAPACITY2);
+			receivers.add(user.getMobile());
+			logger.info("user phone : {}", user.getMobile());
+			messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "sms");
+			//發送保戶MAIL
+			//receivers = new ArrayList<String>();
+			if (user.getEmail() != null) {
+				receivers.clear();//清空
+				receivers.add(user.getEmail());
+				logger.info("user mail : {}", user.getEmail());
+				messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "email");
+			}
+		} catch (Exception e) {
+			logger.info("insertTransInvestment() success, but send notify mail/sms error.");
+		}
+		logger.info("End send mail");
 	}
 }

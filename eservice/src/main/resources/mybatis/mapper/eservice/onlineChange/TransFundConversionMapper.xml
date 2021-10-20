@@ -12,7 +12,17 @@
     <result column="RATIO" property="ratio" jdbcType="NUMERIC" />
     <result column="VALUE" property="value" jdbcType="NUMERIC" />
   </resultMap>
-
+  <resultMap id="BaseResult" type="com.twfhclife.eservice.onlineChange.model.TransFundConversionVo" >
+    <id column="ID" property="id" jdbcType="NUMERIC" />
+    <result column="TRANS_NUM" property="transNum" jdbcType="NVARCHAR" />
+    <result column="POLICY_NO" property="policyNo" jdbcType="NVARCHAR" />
+    <result column="INVT_NO" property="invtNo" jdbcType="NVARCHAR" />
+    <result column="INVT_NAME" property="invtName" jdbcType="NVARCHAR" />
+    <result column="FUND_NAME" property="fundName" jdbcType="NVARCHAR" />
+    <result column="INVESTMENT_TYPE" property="investmentType" jdbcType="NVARCHAR" />
+    <result column="RATIO" property="ratio" jdbcType="NUMERIC" />
+    <result column="VALUE" property="value" jdbcType="NUMERIC" />
+  </resultMap>
   <sql id="Base_Column_List" >
     ID, TRANS_NUM, POLICY_NO, INVT_NO, INVESTMENT_TYPE, RATIO, VALUE
   </sql>
@@ -90,10 +100,11 @@
     where ID = #{id,jdbcType=NUMERIC}
   </update>
 
-  <select id="transInvestmentConversionDetail"  resultMap="BaseResultMap" >
-    SELECT TF.INVT_NO INVT_NO,  PP.INVT_NAME INVT_NAME,  TF.INVESTMENT_TYPE INVESTMENT_TYPE,TF.RATIO RATIO,TF.VALUE VALUE
+  <select id="transInvestmentConversionDetail"  resultMap="BaseResult" >
+    SELECT TF.INVT_NO INVT_NO,  PP.INVT_NAME INVT_NAME,F.FUND_NAME,  TF.INVESTMENT_TYPE INVESTMENT_TYPE,TF.RATIO RATIO,TF.VALUE VALUE
     FROM ESERVICE.dbo.TRANS_FUND_CONVERSION TF LEFT JOIN
     ESERVICE.dbo.POLICY_PORTFOLIO PP ON TF.POLICY_NO = PP.POLICY_NO AND TF.INVT_NO = PP.INVT_NO
+    LEFT JOIN    ESERVICE.DBO.FUND   F  ON   TF.INVT_NO = F.FUND_CODE
     WHERE TF.TRANS_NUM =#{transNum}
   </select>
 </mapper>

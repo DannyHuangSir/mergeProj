@@ -208,7 +208,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             if (TransTypeUtil.INVESTMENT_STATUS_IN.equals(x.getInvestmentType())) {
                 TransFundConversionVo transFundConversionVo = new TransFundConversionVo();
                 transFundConversionVo.setInvtNo(x.getInvtNo());
-                transFundConversionVo.setInvtName(x.getInvtName());
+                transFundConversionVo.setInvtName(x.getFundName());
                 transFundConversionVo.setRatio(x.getRatio());
                 in.add(transFundConversionVo);
             }

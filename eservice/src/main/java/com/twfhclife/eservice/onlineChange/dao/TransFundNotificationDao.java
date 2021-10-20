@@ -39,7 +39,7 @@ public interface TransFundNotificationDao {
 	 */
 	BigDecimal getNextTransFundNotificationId();
 
-	List<NotificationFundVo> getSearchFunds(@Param("rrs") List<String> rrs, @Param("invtNos") List<String> invtNos);
+	List<NotificationFundVo> getSearchFunds(@Param("policyNo") String policyNo, @Param("rrs") List<String> rrs, @Param("invtNos") List<String> invtNos);
 
 	List<NotificationPortfolioVo> getNotificationPortfolioList(String policyNo);
 

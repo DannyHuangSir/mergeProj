@@ -430,6 +430,8 @@
 							if(parseFloat(outputDate)<parseFloat(unitMinNumber)){
 								openAlert("输出單位數不能小於"+unitMinNumber);
 								$(investmentId).val(unitMinNumber);
+									//進行回傳單位數據
+								investmentsList[i].number=unitMinNumber;	
 								boo= false;
 								break;
 							}
@@ -451,6 +453,8 @@
 						if(outputDate<proportionMinNumber){
 							openAlert("输出百分比不能小於"+proportionMinNumber+"%");
 							$(investmentId).val(proportionMinNumber);
+										//進行回傳百分比
+							investmentsList[i].ratio=proportionMinNumber;		
 							boo=  false;
 							break;
 						}

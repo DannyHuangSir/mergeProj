@@ -168,6 +168,7 @@ public class AttributeController extends BaseUserDataController  {
             paramMap.put("TransNum", vo.getTransNum());
             paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
             paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+            paramMap.put("POLICY_NO", " ");
             logger.info("Trans Num : {}", vo.getTransNum());
             logger.info("Status Name : {}", mailInfo.get("statusName"));
             logger.info("Trans Remark : {}", mailInfo.get("transRemark"));

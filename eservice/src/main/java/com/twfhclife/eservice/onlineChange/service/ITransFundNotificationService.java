@@ -49,7 +49,7 @@ public interface ITransFundNotificationService {
 			BigDecimal transFundNotificationId);
 
 
-	List<NotificationFundVo> getSearchPortfolio(List<String> invtNos, String userRocId);
+	List<NotificationFundVo> getSearchPortfolio(String policyNo, List<String> invtNos, String userRocId);
 
 	List<NotificationPortfolioVo> getOwnNotifications(String policyNo);
 }

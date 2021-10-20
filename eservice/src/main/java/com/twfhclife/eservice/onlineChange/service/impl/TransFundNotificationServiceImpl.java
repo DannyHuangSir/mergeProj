@@ -186,7 +186,8 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 					dtlVo.setRiskBeneLevel(portfolioVo.getInvtRiskBeneLevel());
 					dtlVo.setAcctValue(String.valueOf(portfolioVo.getAcctValue()));
 					if (portfolioVo.getAcctValue() != null && portfolioVo.getAvgPval() != null) {
-						dtlVo.setRoiRate(String.valueOf(portfolioVo.getAcctValue().subtract(portfolioVo.getAvgPval()).divide(portfolioVo.getAvgPval()).multiply(BigDecimal.valueOf(100)).doubleValue()));
+							dtlVo.setRoiRate(String.valueOf(portfolioVo.getAcctValue().subtract(portfolioVo.getAvgPval()).
+									divide(portfolioVo.getAvgPval(), 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100)).doubleValue()));
 					}
 					dtlVo.setInCurr(portfolioVo.getInvtExchCurr());
 				}
@@ -199,14 +200,14 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 	}
 
 	@Override
-	public List<NotificationFundVo> getSearchPortfolio(List<String> invtNos, String userRocId) {
+	public List<NotificationFundVo> getSearchPortfolio(String policyNo, List<String> invtNos, String userRocId) {
 		String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
 		String listRR = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "RISK_LEVEL_TO_RR_" + riskLevel);
 		List<String> rrs = null;
 		if (StringUtils.isNotBlank(listRR)) {
 			rrs = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(listRR);
 		}
-		return transFundNotificationDao.getSearchFunds(rrs, invtNos);
+		return transFundNotificationDao.getSearchFunds(policyNo, rrs, invtNos);
 	}
 
 	@Override
@@ -239,7 +240,7 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 					//System.out.println("invtNo=" + portfolioVo.getInvtNo());
 					values = FormulaUtil.formula1(netUnits, netValue, exchRate, ntdVal, expeNtd);
 					if (values[2] != null && values[1] != null) {
-						values[0] = values[1].subtract(values[2]).divide(values[2]).multiply(BigDecimal.valueOf(100));
+						values[0] = values[1].subtract(values[2]).divide(values[2], 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100));
 					}
 				}
 
