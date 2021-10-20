@@ -14,7 +14,7 @@ import com.twfhclife.scheduling.task.CIOAllianceServiceTask;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableScheduling
+//@EnableScheduling
 public class EserviceApiApplication extends SpringBootServletInitializer {
 	
 //	@Bean

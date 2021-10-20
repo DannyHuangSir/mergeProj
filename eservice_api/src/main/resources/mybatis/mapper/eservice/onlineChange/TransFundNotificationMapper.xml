@@ -51,4 +51,7 @@
 		)
 	</insert>
 
+	<select id="findByInvtNo" resultType="string">
+		SELECT TOP 1 FUND_NAME FROM ESERVICE.DBO.FUND WHERE PRODUCT_NO = SUBSTRING(#{policyNo}, 1, 2) AND FUND_CODE = #{fundCode}
+	</select>
 </mapper>

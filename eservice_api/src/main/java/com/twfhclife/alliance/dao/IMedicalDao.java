@@ -109,4 +109,6 @@ public interface IMedicalDao {
     int updateTarnsMedicalTreatmentClaimToAllianceStatus(@Param("transNum")String transNum, @Param("pths")String medicalInterfaceStatusPths)throws Exception;;
    // 查詢需要進行下載的檔案數據數據信息
     List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFileData(@Param("hasFile")String has_file);
+    //儅舊案件的案件狀態為IPTS與HTPS_PTIS進行清除重新上傳描述
+    int updateTransMedicalTreatmentClaimByReUpload(@Param("caseId")String caseId)throws Exception;
 }

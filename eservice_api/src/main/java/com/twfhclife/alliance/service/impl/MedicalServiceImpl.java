@@ -433,7 +433,16 @@ public class MedicalServiceImpl implements IMedicalService {
         String caseId = claimVo.getCaseId();
         String allianceStatus = claimVo.getAllianceStatus();
         j = iMedicalDao.updateTransMedicalTreatmentByCaseId(caseId,allianceStatus);
-        
+        //儅舊案件的案件狀態為IPTS與HTPS_PTIS進行清除,重新上傳描述
+        if(j>0 && !StringUtils.isEmpty(allianceStatus)){
+            //獲取狀態
+           String itps= parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_ITPS);
+            String htpsPtis= parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_HTPS_PTIS);
+             if(itps.equals(allianceStatus) || htpsPtis.equals(allianceStatus)){
+                 iMedicalDao.updateTransMedicalTreatmentClaimByReUpload(caseId);
+             }
+        }
+
         //update TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
         List<MedicalTreatmentClaimFileDataVo> fileDatas = claimVo.getFileData();
         if (fileDatas!=null && fileDatas.size()>0) {
