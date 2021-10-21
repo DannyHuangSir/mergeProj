@@ -68,15 +68,6 @@
 		<result property="ratio"  column="RATIO" />
 		<result property="value"  column="VALUE" />
 	</resultMap>
-
-<resultMap id="transFundConversion" type="com.twfhclife.adm.model.TransFundConversionVo">
-		<result property="invtNo"   column="INVT_NO" />
-		<result property="invtName"  column="INVT_NAME" />
-		<result property="fundName"  column="FUND_NAME" />
-		<result property="investmentType"    column="INVESTMENT_TYPE" />
-		<result property="ratio"  column="RATIO" />
-		<result property="value"  column="VALUE" />
-	</resultMap>
 	
 	<sql id="TRANS_DNS_ALL">
 		A.SEQ_ID

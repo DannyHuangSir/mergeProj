@@ -110,7 +110,7 @@
 											     	<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
 												</th:block>
 													<th:block th:if="${ detailData['ALLIANCE_STATUS'] ne 'ITPS' }">
-														<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases">醫療資料重新上傳</button>
+														<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases" disabled>醫療資料重新上傳</button>
 													</th:block>
 												</th:block>
 												<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG'  && detailData['ALLIANCE_STATUS'] ne 'ITPR' && detailData['ALLIANCE_STATUS'] ne 'ITPS'} ">
@@ -124,7 +124,7 @@
 													</th:block>
 												</th:block>
 												<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPR'  && detailData['ALLIANCE_STATUS'] ne 'ITPS'  }">
-													<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases">醫療資料重新上傳</button>
+													<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases" disabled>醫療資料重新上傳</button>
 												</th:block>
 												<button style="width: 120px;" type="button" class="bgOrange" id="SuccessMedicalCases" onclick="medicalOnWorde('更新案件狀態','SuccessMedicalCases')">更新案件狀態</button>
 											</th:block>
@@ -156,7 +156,7 @@
 												<button style="width: 130px;" type="button" class="bgOrange" id="UploadMedicalCases" onclick="medicalOnWorde('醫療病例重新上傳','UploadMedicalCases')">醫療資料重新上傳</button>
 											</th:block>
 												<th:block th:if="${ detailData['ALLIANCE_STATUS'] ne 'ITPS' }">
-													<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases">醫療資料重新上傳</button>
+													<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases" disabled >醫療資料重新上傳</button>
 												</th:block>
 											</th:block>
 											<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPR' && detailData['ALLIANCE_STATUS'] ne 'ITPS'  } ">
@@ -170,7 +170,7 @@
 												</th:block>
 											</th:block>
 											<th:block th:if="${detailData['ALLIANCE_STATUS'] ne 'ITPS_PTHG' && detailData['ALLIANCE_STATUS'] ne 'ITPR'   && detailData['ALLIANCE_STATUS'] ne 'ITPS'   }">
-												<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases">醫療資料重新上傳</button>
+												<button style="width: 130px;" type="button" class="bgGrey" id="UploadMedicalCases" disabled>醫療資料重新上傳</button>
 											</th:block>
 											<button style="width: 120px;" type="button" class="bgOrange" id="SuccessMedicalCases" onclick="medicalOnWorde('更新案件狀態','SuccessMedicalCases')">更新案件狀態</button>
 										</th:block>
