@@ -163,7 +163,7 @@ public class TransDepositServiceImpl implements ITransDepositService {
             //1.分配含有保單中有分配比例的基金
             BigDecimal ratioAmount = BigDecimal.valueOf(0);
             for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
-                if (amount.doubleValue() >= 0 && portfolioVo.getAcctValue() != null) {
+                if (amount.doubleValue() >= 0 && portfolioVo.getAcctValue() != null && portfolioVo.getAcctValue().intValue() > 0) {
                     if (!stopAccount.contains(portfolioVo.getInvtNo())) {
                         BigDecimal ratio = transInvestmentService.getDistributeRationByInvtNo(depositPolicy.getPolicyNo(), portfolioVo.getInvtNo());
                         if (ratio != null) {
@@ -189,7 +189,7 @@ public class TransDepositServiceImpl implements ITransDepositService {
             //2.计算剩余基金总额
             BigDecimal remainingAllAmount = BigDecimal.valueOf(0);
             for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
-                if (portfolioVo.getAcctValue() != null && !stopAccount.contains(portfolioVo.getInvtNo())) {
+                if (portfolioVo.getAcctValue() != null && portfolioVo.getAcctValue().intValue() > 0 && !stopAccount.contains(portfolioVo.getInvtNo())) {
                     remainingAllAmount = remainingAllAmount.add(portfolioVo.getAcctValue());
                 }
             }
@@ -197,7 +197,7 @@ public class TransDepositServiceImpl implements ITransDepositService {
 
             //3.分配无分配比例的基金
             for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
-                if (amount.doubleValue() >= 0 && portfolioVo.getAcctValue() != null) {
+                if (amount.doubleValue() >= 0 && portfolioVo.getAcctValue() != null && portfolioVo.getAcctValue().intValue() > 0) {
                         BigDecimal ratio = transInvestmentService.getDistributeRationByInvtNo(depositPolicy.getPolicyNo(), portfolioVo.getInvtNo());
                     if (ratio != null) {
                                 continue;

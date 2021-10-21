@@ -67,7 +67,7 @@
 	</select>
 
 	<select id="getRiskAttr" resultType="string">
-		SELECT RISK_ATTR FROM ESERVICE.DBO.INDIVIDUAL WHERE ROC_ID = #{rocId}
-	</select>
+		SELECT top 1 RISK_ATTR FROM ESERVICE.DBO.INDIVIDUAL WHERE ROC_ID = #{rocId}
+	</select><!-- test data has multiple record by same ROC_ID -->
 
 </mapper>

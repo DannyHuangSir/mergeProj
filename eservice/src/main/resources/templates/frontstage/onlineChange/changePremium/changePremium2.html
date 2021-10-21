@@ -114,6 +114,11 @@
 					return false;
 				}
 
+				if (!checkDecimal(amount)) {
+					openAlert("只允許輸入數值整數！")
+					return
+				}
+
 				if (parseInt(amount) <=0) {
 					openAlert("請輸入大於0的繳別金額");
 					return false;
@@ -125,10 +130,19 @@
 				}
 
 				var formData = [[${transPaymodeVo}]];
-				formData.amount = amount
+				formData.amount = parseInt(amount)
 				postWithFormData(/*[[@{/changePremium3}]]*/, formData);
 			});
 	    });
+
+	    function checkDecimal(str) {
+            var re1 =/^[0-9]+(\.[0-9]{n})?$/;
+            if(!re1.test(str))
+             {
+                return false
+             }
+             return true;
+        }
 		/*]]>*/
 		</script>
 </body>

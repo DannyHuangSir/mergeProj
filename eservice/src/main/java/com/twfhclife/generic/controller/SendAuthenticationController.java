@@ -76,7 +76,7 @@ public class SendAuthenticationController extends BaseController {
 				emails.append(email.trim());
 			}
 			if(newEmail!=null && !"".equals(newEmail.trim()) && !email.equals(newEmail)){
-				if(!StringUtils.isEmpty(email)) {
+				if(!StringUtils.isBlank(email)) {
 				emails.append(";");
 				emails.append(newEmail.trim());
 				}else {
@@ -90,7 +90,7 @@ public class SendAuthenticationController extends BaseController {
 				mobiles.append(mobile.trim());
 			}
 			if(newMobile!=null && !"".equals(newMobile.trim())  && !mobile.equals(newMobile)){
-				if(!StringUtils.isEmpty(mobile)){
+				if(!StringUtils.isBlank(mobile)){
 				mobiles.append(";");
 				mobiles.append(newMobile);
 				}else{

@@ -85,6 +85,8 @@
 			WHERE TP.POLICY_NO = #{policyNo}
 		) R ON F.FUND_CODE = R.FUND_CODE
 		<where>
+			SUBSTRING(#{policyNo}, 0, 3) = F.PRODUCT_NO
+			AND F.status = '00' and (getdate() between (case when F.START_DATE is null then getdate() else F.START_DATE end) and (case when F.END_DATE is null then getdate() else F.END_DATE end))
 			<if test="rrs != null">
 				AND F.RISK_BENE_LEVEL IN
 				<foreach collection="rrs" separator="," open="(" close=")" item="rr">

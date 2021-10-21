@@ -178,19 +178,21 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 		if (!StringUtils.isEmpty(policyNo)) {
 			for (TransFundNotificationDtlVo dtlVo : detailList) {
 				if (StringUtils.equals(dtlVo.getType(), "1")) {
-				List<PortfolioVo> portfolioList = portfolioService.getPortfolioList(policyNo, Arrays.asList(dtlVo.getFundCode()));
-				if (portfolioList != null && portfolioList.size() > 0) {
-					PortfolioVo portfolioVo = portfolioList.get(0);
-					dtlVo.setInvtName(portfolioVo.getInvtName());
-					dtlVo.setCurrency(portfolioVo.getCurrency());
-					dtlVo.setRiskBeneLevel(portfolioVo.getInvtRiskBeneLevel());
-					dtlVo.setAcctValue(String.valueOf(portfolioVo.getAcctValue()));
-					if (portfolioVo.getAcctValue() != null && portfolioVo.getAvgPval() != null) {
-							dtlVo.setRoiRate(String.valueOf(portfolioVo.getAcctValue().subtract(portfolioVo.getAvgPval()).
-									divide(portfolioVo.getAvgPval(), 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100)).doubleValue()));
+					List<PortfolioVo> portfolioList = portfolioService.getPortfolioList(policyNo, Arrays.asList(dtlVo.getFundCode()));
+					if (portfolioList != null && portfolioList.size() > 0) {
+						PortfolioVo portfolioVo = portfolioList.get(0);
+						dtlVo.setInvtName(portfolioVo.getInvtName());
+						dtlVo.setCurrency(portfolioVo.getCurrency());
+						dtlVo.setRiskBeneLevel(portfolioVo.getInvtRiskBeneLevel());
+						dtlVo.setAcctValue(String.valueOf(portfolioVo.getAcctValue()));
+						if (portfolioVo.getAcctValue() != null && portfolioVo.getAvgPval() != null && portfolioVo.getAvgPval().intValue() != 0) {
+								dtlVo.setRoiRate(String.valueOf(portfolioVo.getAcctValue().subtract(portfolioVo.getAvgPval()).
+										divide(portfolioVo.getAvgPval(), 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100)).doubleValue()));
+						} else {
+							dtlVo.setRoiRate("0");
+						}
+						dtlVo.setInCurr(portfolioVo.getInvtExchCurr());
 					}
-					dtlVo.setInCurr(portfolioVo.getInvtExchCurr());
-				}
 				} else {
 					dtlVo.setInvtName(transFundNotificationDao.findByInvtNo(policyNo, dtlVo.getFundCode()));
 				}

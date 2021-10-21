@@ -127,6 +127,7 @@
 					openAlert($('#E0080').val());
 					return false;
 				}
+
 				
 				if (formData.paymodeOld == paymode) {
 					/* openAlert("已是當前繳別!"); */
@@ -135,6 +136,11 @@
 				}
 
 				var amount = $('input[name="amount"]').val();
+				if (!checkDecimal(amount)) {
+					openAlert("只允許輸入數值整數！")
+					return
+				}
+
 				if ([[${showAmount}]] && (amount == null || amount == "" || parseInt(amount) <=0)) {
 					openAlert("請輸入大於0的繳別金額");
 					return false;
@@ -146,10 +152,18 @@
 				}
 
 				formData.paymode = paymode;
-				formData.amount = amount;
+				formData.amount = parseInt(amount);
 				postWithFormData(/*[[@{/paymentMode3}]]*/, formData);
 			});
 		});
+		function checkDecimal(str) {
+            var re1 =/^[0-9]+(\.[0-9]{n})?$/;
+            if(!re1.test(str))
+             {
+                return false
+             }
+             return true;
+        }
 	/*]]>*/
 	</script>
 </body>

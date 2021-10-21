@@ -396,7 +396,11 @@
                      +'       <div class="selector-box">'
                      +'         <select class="selector" name="invSelect">'
                      $(newInvestments).each(function(index, e){
-						item += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '" itemValue=' + $.base64.encode(JSON.stringify(e), true) + '> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
+						item += '<option'
+						if (vm.invtNo != null && vm.invtNo == e.invtNo) {
+							item = item + ' selected'
+						}
+						item = item + '  invtName="' + e.invtName + '" value="' + e.invtNo +  '" itemValue=' + $.base64.encode(JSON.stringify(e), true) + '> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
 					 })
 
                     item = item +  '</select>'
@@ -418,7 +422,11 @@
                     +' <td style="padding-top: 70px !important;"><a class="btn-cancel" onclick="removeInvestmentList(this)">删除</a></td>'
                 +' </tr>'
 
+			if (vm != {}) {
+				$('#fundContent1').append(filterSearchAndChoose($(item), vm))
+			} else {
     		$('#fundContent1').append(filterAndRestItems($(item)))
+    	}
     	}
 
     	function removeInvestmentList(obj){
@@ -492,6 +500,32 @@
 				html  += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '" itemValue=' + $.base64.encode(JSON.stringify(e), true) + '> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
 			})
 
+			$(vm).find("[name='invSelect']").html(html)
+			if(html != '') {
+				setItemVals(vm)
+			} else {
+				$(vm).find("[name='effectiveDate']").text('')
+				$(vm).find("[name='sellPrice']").text('')
+			}
+			return $(vm)
+		}
+
+		function filterSearchAndChoose(vm, item) {
+			arr = $(newInvestments).filter(function(index, e) {
+				return e.company == $(vm).find("[name='companysItem'] option:selected").val()
+			}).filter(
+				function(index, e) {
+					return e.invtExchCurr == $(vm).find("[name='currencysItem'] option:selected").val()
+				}
+			)
+			let html = ''
+			$(arr).each(function(index, e){
+				html = html + '<option'
+				if (e.invtNo != null && e.invtNo == item.invtNo) {
+					html = html + ' selected '
+				}
+				html = html + ' invtName="' + e.invtName + '" value="' + e.invtNo +  '" itemValue=' + $.base64.encode(JSON.stringify(e), true) + '> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
+			})
 			$(vm).find("[name='invSelect']").html(html)
 			if(html != '') {
 				setItemVals(vm)
