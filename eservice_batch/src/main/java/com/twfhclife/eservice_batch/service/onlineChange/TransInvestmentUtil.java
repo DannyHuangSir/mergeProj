@@ -61,7 +61,7 @@ public class TransInvestmentUtil {
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.rpadBlank(String.valueOf(vo.getDistributionRatio()), 18),
+                                        StringUtil.lpad(String.valueOf(vo.getDistributionRatio()), 3, " "),
                                         "1",
                                         systemTwDate,
                                         systemTwDate
