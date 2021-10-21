@@ -731,9 +731,15 @@ public class MedicalAllianceServiceTask {
 	                                unParams.put("caseId", caseId);
 	                                unParams.put("transNum", transNum);
 
-	                                 String strResponse = medicalExternalServiceImpl.postForEntity(URL_API404, params, unParams);
+	                                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API404, params, unParams);
 	                                //String strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"content\":\"kbiefw3i8n3oi493nf…\"}}";
-	                                log.info("call URL_API404,strResponse="+strResponse);
+	                                if(strResponse!=null) {
+	                                	//do not print base64 string
+	                                	log.info("call URL_API404,strResponse is not null.");
+	                                }else {
+	                                	log.info("call URL_API404,strResponse is null.");
+	                                }
+	                                
 		                            //3-1.get api-404 response
 		                            if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
 		                                String content = MyJacksonUtil.readValue(strResponse, "/data/content");

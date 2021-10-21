@@ -240,8 +240,18 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
 			}
 	        
 			strRes= responseEntity.getBody();
-			logger.info("responseEntity.getBody()="+strRes);
-			//System.out.println("responseEntity.getBody()="+strRes);
+			
+			if(url.contains("ihs404i")) {
+				//do not print base64 string
+				if(strRes!=null) {
+					logger.info("responseEntity.getBody() is not null.");
+				}else {
+					logger.info("responseEntity.getBody() is null.");
+				}
+			}else {
+				logger.info("responseEntity.getBody():"+strRes);
+			}
+			
 			
 //			Object obj = responseEntity.getBody();
 //			if (obj == null) {
