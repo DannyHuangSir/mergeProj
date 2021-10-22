@@ -135,7 +135,7 @@ public class TransDepositController extends BaseUserDataController {
         }
 
         addAttribute("depositVo", depositPolicy);
-        addAttribute("depositPercent", transDepositService.getDepositConfigs(vo.getPolicyNo()));
+        addAttribute("depositPercent", transDepositService.getDepositConfigs());
         return "frontstage/onlineChange/deposit/deposit2";
     }
 
@@ -266,7 +266,7 @@ public class TransDepositController extends BaseUserDataController {
         BigDecimal minValue = BigDecimal.valueOf(0);
         BigDecimal surplusValue = BigDecimal.valueOf(0);
         String stopAccount = "";
-        List<ParameterVo> parameterVos = transDepositService.getDepositConfigs(depositPolicy.getPolicyNo());
+        List<ParameterVo> parameterVos = transDepositService.getDepositConfigs();
                 if (!CollectionUtils.isEmpty(parameterVos)) {
                     for (ParameterVo parameterVo : parameterVos) {
                 if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_MIN_VALUE")) {

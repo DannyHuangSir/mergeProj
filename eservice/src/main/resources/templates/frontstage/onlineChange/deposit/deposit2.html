@@ -215,7 +215,8 @@
 	<script th:inline="javascript">
         var minValue = 0;
         var currency = [[${depositVo.currency}]]
-        var stopAccount = '';
+        var stopAccount = ''
+        var surplusValue = 0
 
 		/*<![CDATA[*/
 		function go(){   	
@@ -244,9 +245,15 @@
 			} else {
 			    let amount = 0
 			    let len = 0
+			    let acctValue = 0
 		        $("input[name='amount']").each(function(index, e){
 		            if ($(this).val() != null && $(this).val() != "") {
+		                let context = $(this).parent().parent().parent()
+		                let invtNo = $(context).find("[name='invtNo']").val()
+		                if (stopAccount.indexOf(invtNo) < 0) {
 		                amount = amount + Math.floor($(this).val())
+		                    acctValue = acctValue + Math.floor($(context).find("[name='acctValue']").val())
+		                }
 		                len += 1
 		            }
 		        })
@@ -256,8 +263,8 @@
 		            return
 		        }
 
-		        if (amount > [[${maxValue}]]) {
-                    showAlertRoundMsg()
+		        if ((acctValue - amount) <  surplusValue) {
+                     openAlert("非停泊賬戶，剩余價值必須大於：" + surplusValue)
 		            return
                 }
 
@@ -277,6 +284,10 @@
 
                if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + "STOP_ACCOUNT") {
                     stopAccount = e.parameterValue
+               }
+
+               if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + currency + "_SURPLUS_VALUE") {
+                    surplusValue = parseInt(e.parameterValue)
                }
             })
             $("[name='tips']").text('僅顯示帳價>0之基金。提領金額會依使用者輸入的提領比例自動計算。')

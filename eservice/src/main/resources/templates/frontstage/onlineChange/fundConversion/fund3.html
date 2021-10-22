@@ -365,7 +365,7 @@
 				//showOutputDate+=investmentIdNumber * 10;
 				showOutputDate+=investmentIdNumber * element.netValueSell;
 				//回傳單位數
-				element.number=parseFloat(formatNumber(investmentIdNumber,4));
+				element.number=parseFloat(investmentIdNumber);
 			});
 			$("#showConutNumber").text(formatNumber(showOutputDate, 4));
 			};
@@ -404,10 +404,10 @@
 				//	showOutputDate+=( perNumber / 100) * acctValue;
 				//}
 				//回傳百分比
-				element.ratio=parseInt(perNumber);
+				element.ratio=parseFloat(perNumber);
 				console.log("element.safpNetUnits",element.safpNetUnits);
 				//進行回傳單位數.
-				element.number=parseFloat(formatNumber(element.safpNetUnits*parseInt(perNumber),4));
+				element.number=parseFloat(element.safpNetUnits*parseFloat(perNumber));
 			});
 			$("#showConutNumber").text(formatNumber(showOutputDate, 4));
 			};
@@ -416,6 +416,7 @@
 				var  boo=true;
 					if($("input[id='tab_group_1']").prop("checked")){
 						//investmentsList.forEach(element => {
+							var  SuminvestmentIdNumber=0;
 							for(let i=0;i<investmentsList.length;i++){
 							var  investmentId="#"+investmentsList[i].investmentId;i
 							//當前比例的方式計算
@@ -427,18 +428,29 @@
 							}else{
 								unitMinNumber= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(investmentsList[i].netValueSell,4),4);
 							}
-							if(parseFloat(outputDate)<parseFloat(unitMinNumber)){
-								openAlert("输出單位數不能小於"+unitMinNumber);
-								$(investmentId).val(unitMinNumber);
-									//進行回傳單位數據
-								investmentsList[i].number=unitMinNumber;	
-								boo= false;
-								break;
+							var investmentIdNumber= 	$(investmentId).val();
+							SuminvestmentIdNumber+=investmentIdNumber;
+							if(investmentIdNumber>0){
+								if(parseFloat(outputDate)<parseFloat(unitMinNumber)){
+									openAlert("输出單位數不能小於"+unitMinNumber);
+									//$(investmentId).val(unitMinNumber);
+										//進行回傳單位數據
+									//investmentsList[i].number=unitMinNumber;	
+									boo= false;
+									break;
+								}
 							}
+
 							//回傳百分比為0
 						 investmentsList[i].ratio=0;
 						}
+						//在次進行判斷,必須輸入一項
+						if(SuminvestmentIdNumber<=0){
+							openAlert("轉出基金必須最低傳出一項");
+							boo= false;
+						}	
 					}else{
+						var  sumperNumber=0;
 						for(let i=0;i<investmentsList.length;i++){
 						var  investmentId="#per"+investmentsList[i].investmentId;
 						//當前比例的方式計算
@@ -450,17 +462,26 @@
 						}else{
 							proportionMinNumber=parseInt(proportionMin['USD_PROPORTION_MIN']);
 						}
-						if(outputDate<proportionMinNumber){
-							openAlert("输出百分比不能小於"+proportionMinNumber+"%");
-							$(investmentId).val(proportionMinNumber);
-										//進行回傳百分比
-							investmentsList[i].ratio=proportionMinNumber;		
-							boo=  false;
-							break;
+						var  perNumber=$(investmentId).val();
+						sumperNumber+=perNumber;
+						if(perNumber>0){
+							if(outputDate<proportionMinNumber){
+								openAlert("输出百分比不能小於"+proportionMinNumber+"%");
+								//$(investmentId).val(proportionMinNumber);
+											//進行回傳百分比
+								//investmentsList[i].ratio=proportionMinNumber;		
+								boo=  false;
+								break;
+							}
 						}
 						//回傳單位數為0
 						//investmentsList[i].number=0; 
 					}
+					//在次進行判斷,必須輸入一項
+					if(sumperNumber<=0){
+							openAlert("轉出基金必須最低傳出一項");
+							boo= false;
+						}	
 				} 
 				return  boo;
 			}

@@ -498,7 +498,9 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
                 transFundConversionVo.setRatio(new BigDecimal(0));
             }*/
             transFundConversionVo.setInvtName(out.getInvtName());
+                if(out.getNumber()>0){
             outTransFundConversionVosList.add(transFundConversionVo);
+                }
         });
         return outTransFundConversionVosList;
 

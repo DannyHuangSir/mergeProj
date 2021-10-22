@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ITransDepositService {
 
-    List<ParameterVo> getDepositConfigs(String policyNo);
+    List<ParameterVo> getDepositConfigs();
 
     PolicyListVo getDepositPolicy(String userRocId, String policyNo);
 

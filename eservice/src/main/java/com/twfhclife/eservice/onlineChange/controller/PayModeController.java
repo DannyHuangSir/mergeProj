@@ -46,6 +46,7 @@ import com.twfhclife.generic.api_model.TransHistoryDetailResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.MyJacksonUtil;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
 /**
@@ -90,7 +91,7 @@ public class PayModeController extends BaseUserDataController {
 	 */
 	@RequestLog
 	@GetMapping("/paymentMode1")
-	public String paymentMode1() {
+	public String paymentMode1(RedirectAttributes redirectAttributes) {
 		try {
 			if(!checkCanUseOnlineChange()) {
 				/*addSystemError("目前無法使用此功能，請臨櫃申請線上服務。");*/
@@ -132,7 +133,7 @@ public class PayModeController extends BaseUserDataController {
 	 */
 	@RequestLog
 	@PostMapping("/paymentMode2")
-	public String paymentMode2(TransPaymodeVo transPaymodeVo) {
+	public String paymentMode2(TransPaymodeVo transPaymodeVo, RedirectAttributes redirectAttributes) {
 		try {
 			Integer lipmTredTms = transPaymodeService
 					.getPolicyPayMethodChange(transPaymodeVo.getPolicyNoList().get(0));
@@ -166,6 +167,10 @@ public class PayModeController extends BaseUserDataController {
 			String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
 			if (StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) &&
 				types.contains(type)) {
+				if (StringUtils.equals(paymodeOld, "M")) {
+					redirectAttributes.addFlashAttribute("errorMessage", "目前無其它繳別可變更");
+					return "redirect:paymentMode1";
+				}
 				mapPaymode.put("A", false);
 				mapPaymode.put("S", false);
 				mapPaymode.put("Q", false);

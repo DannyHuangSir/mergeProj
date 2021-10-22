@@ -79,20 +79,22 @@
 						<tbody>
 						<th:block  th:if="not ${#lists.isEmpty(outInvestmentService)}">	
 							<th:block th:each="from : ${outInvestmentService}">
-								<tr class="h90 tr-odd-noEvent">
-									<td class="text-left" >
-										<th:block th:text="${from.invtName != null} ?${from.invtName}"  ></th:block>
-										<p class="enSmall"  th:text="(${from.invtNo != null} ?${from.invtNo})"></p></td>
-										<th:block th:if="${from.ratio !=0}" >
-											<td th:text="${from.ratio != null}?${from.ratio} +'%'"></td>
-										</th:block>
-										<th:block th:if="${from.value !=0 && from.ratio ==0 }" >
-											<td th:text="${from.value != null}?${#numbers.formatDecimal(from.value,0,4)}"></td>
-										</th:block>
-										
-									<!-- <td>1,042,899<i class="my5">NTD</i></td> 
-									</td>-->
-								</tr>
+								<th:block th:if="${from.value !=0 }" >
+									<tr class="h90 tr-odd-noEvent">
+										<td class="text-left" >
+											<th:block th:text="${from.invtName != null} ?${from.invtName}"  ></th:block>
+											<p class="enSmall"  th:text="(${from.invtNo != null} ?${from.invtNo})"></p></td>
+											<th:block th:if="${from.ratio !=0}" >
+												<td th:text="${from.ratio != null}?${from.ratio} +'%'"></td>
+											</th:block>
+											<th:block th:if="${from.value !=0 && from.ratio ==0 }" >
+												<td th:text="${from.value != null}?${#numbers.formatDecimal(from.value,0,4)}"></td>
+											</th:block>
+											
+										<!-- <td>1,042,899<i class="my5">NTD</i></td> 
+										</td>-->
+									</tr>
+								</th:block>
 							</th:block>
 						</th:block>			
 						</tbody>

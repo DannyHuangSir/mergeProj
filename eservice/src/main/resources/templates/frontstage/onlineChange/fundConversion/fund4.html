@@ -194,7 +194,8 @@
 		investmentPortfolioVoList.forEach(element => {
 			ownInvtNos.push({invtNo: element.invtNo})
 		});
-		let data = {policyNo: policyNo, ownInvestments: ownInvtNos}
+		//let data = {policyNo: policyNo, ownInvestments: ownInvtNos}
+		let data = {policyNo: policyNo}
 		$.ajax({
 				type : 'POST',
 				contentType : 'application/json',
