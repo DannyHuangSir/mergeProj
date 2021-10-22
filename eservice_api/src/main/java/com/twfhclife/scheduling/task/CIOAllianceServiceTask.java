@@ -576,7 +576,12 @@ public class CIOAllianceServiceTask {
 //							String strBase64 = this.converFileToBase64Str(fileVo.getPath()+"/"+fileVo.getFileName());
 							//获取Base64数据
 							String fileBase64 = this.getFileBase64(fileVo);
-							log.info("fileBase64==  "+fileBase64);
+							if(fileBase64!=null) {
+								//do not print base64 string
+								log.info("call URL_API202,fileBase64 is not null.");
+							}else {
+								log.info("call URL_API202,fileBase64 is null.");
+							}
 							params.put("base64", fileBase64);
 
 							//參數
@@ -1076,7 +1081,12 @@ public class CIOAllianceServiceTask {
 									fileVo.setFileBase64(strBase64);
 									fileVo.setMsg(msg);
 								}
-								log.info("select API203 INSERT FileBase64 ="+fileVo.getFileBase64());
+								if(fileVo.getFileBase64()!=null) {
+									//do not print base64 string
+									log.info("call URL_API204,fileBase64 is not null.");
+								}else {
+									log.info("call URL_API204,fileBase64 is null.");
+								}
 								/***
 								 * 模仿将DB数据写出文档
 								 * */
@@ -1731,11 +1741,11 @@ public class CIOAllianceServiceTask {
 			if(base64EencodedString!=null && outputFileName!=null) {
 				log.info("input base64EencodedString is not null.");
 				log.info("input outputFileName="+outputFileName);
-				log.info("input base64EencodedString="+base64EencodedString);
+				//log.info("input base64EencodedString="+base64EencodedString);
 				String str=new String(Base64.getDecoder().decode(base64EencodedString));
 				log.info("Base64.getDecoder()  地址:"+str);
 				byte[] decodedBytes =str.getBytes();
-				log.info("decodedBytes:"+decodedBytes);
+				//log.info("decodedBytes:"+decodedBytes);
 				FileUtils.writeByteArrayToFile(new File(outputFileName), decodedBytes);
 				rtn = true;
 			}else {
@@ -1758,7 +1768,7 @@ public class CIOAllianceServiceTask {
 		String pathFileName = fileVo.getPath() + "/" + fileVo.getFileName();
 		if (fileBase64!=null && !"".equals(fileBase64)) {
 			if(fileVo.getFileName()!=null && !fileVo.getFileName().toLowerCase().endsWith("pdf")) {//不是PDF檔就轉成PDF
-				log.info("img-base64:"+fileBase64);
+				log.info("img-base64 is not  null ");
 				byte[] decode = Base64.getDecoder().decode(fileBase64);
 				File file = FileToBase64Str.convertToPdfFile(decode);
 				byte[] fileContent = FileUtils.readFileToByteArray(file);
