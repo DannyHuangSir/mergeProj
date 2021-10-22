@@ -394,7 +394,7 @@ values
 		(select max(PARAMETER_CATEGORY_ID)+1 from ESERVICE_ADM.dbo.PARAMETER_CATEGORY),
 		'eservice_adm',
 		'MEDICAL_ALLIANCE_MAIL',
-		'醫療⾸轉收家收件轉件',
+		'醫療首家轉收件',
 		'醫療授權資料需通知作業人員',
 		'1',
 		getdate(),
