@@ -507,7 +507,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 				if (val != null && org.apache.commons.lang3.StringUtils.equals("RISK_LEVEL_TO_RR_" + val, vo.getParameterCode())) {
 					map.put("BEFORE", vo.getParameterName());
 				}
-				if (newVal != null && org.apache.commons.lang3.StringUtils.equals("RISK_LEVEL_TO_RR_" + val, vo.getParameterCode())) {
+				if (newVal != null && org.apache.commons.lang3.StringUtils.equals("RISK_LEVEL_TO_RR_" + newVal, vo.getParameterCode())) {
 					map.put("AFTER", vo.getParameterName());
 				}
 			}

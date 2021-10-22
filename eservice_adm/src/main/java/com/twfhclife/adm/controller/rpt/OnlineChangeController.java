@@ -1161,18 +1161,18 @@ public class OnlineChangeController extends BaseController {
 			String AllianceStatus = onlineChangeService.getTransMedicalTreatmentByAllianceStatus(vo.getTransNum());
 			if (!StringUtils.isEmpty(AllianceStatus)) {
 				if (AllianceStatus.equals(itpsEnd) ||AllianceStatus.equals(pqhfEnd) ){
-			int result = onlineChangeService.updateTransStatus(transVo);
-			if (result > 0) {
-				processSuccess(result);
-				vo.setStatus("2");
-				vo.setCustomerName(getUserId());
-				vo.setIdentity((String) getSession(ApConstants.LOGIN_USER_ROLE_NAME));
-				result = onlineChangeService.addTransStatusHistory(vo);
-				// 發送郵件
-				onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(),ApConstants.INS_CLAIM_COMPLETED ,vo.getStatus());
-			} else {
-				processError("更新失敗");
-			}
+					int result = onlineChangeService.updateTransStatus(transVo);
+					if (result > 0) {
+						processSuccess(result);
+						vo.setStatus("2");
+						vo.setCustomerName(getUserId());
+						vo.setIdentity((String) getSession(ApConstants.LOGIN_USER_ROLE_NAME));
+						result = onlineChangeService.addTransStatusHistory(vo);
+						// 發送郵件
+						onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(),ApConstants.INS_CLAIM_COMPLETED ,vo.getStatus());
+					} else {
+						processError("更新失敗");
+					}
 				}else{
 					processError(notFinishedWindowMsg);
 				}
