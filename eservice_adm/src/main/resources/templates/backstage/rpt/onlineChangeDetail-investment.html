@@ -58,11 +58,11 @@
 													<th:block th:each="from : ${detailData['investments']}">
 														<tr class="h90 tr-odd-noEvent">
 															<td class="text-left"  >
-																<th:block th:text="${from.invtName != null} ?${from.invtName}"  ></th:block>
-																<p class="enSmall"  th:text="(${from.invtNo != null} ?${from.invtNo})"></p>
+																<th:block th:text="${from.get('invtName') != null} ?${from.invtName}"  ></th:block>
+																<p class="enSmall"  th:text="(${from.get('invtNo') != null} ?${from.invtNo})"></p>
 															</td>
-															<td th:text="${from.preRatio}"></td>
-															<td  th:text="${from.afterRatio}"></td>
+															<td th:text="${from.get('preRatio') != null} ?${from.preRatio} : '0'"></td>
+															<td  th:text="${from.get('afterRatio') != null} ?${from.afterRatio} : '0' "></td>
 														</tr>
 													</th:block>
 													<tr style="background: #FDE3D2;">
@@ -91,8 +91,8 @@
 		var pre = 0
 		var aft = 0
 		$([[${detailData['investments']}]]).each(function(index, e) {
-			pre += parseInt(e.preRatio)
-			aft += parseInt(e.afterRatio)
+			pre += parseInt(e.preRatio == undefined ? 0 : e.preRatio)
+			aft += parseInt(e.afterRatio == undefined ? 0 : e.afterRatio)
 		})
 		$("#preRatio").text(pre + '%')
 		$("#aftRatio").text(aft + '%')
