@@ -412,7 +412,7 @@ values
 		'eservice_adm',
 		'MEDICAL_ALLIANCE_MAIL_TWFHCLIFE_ADM',
 		'醫療作業通知人員',
-		'203216@twfhclife.com.tw;190064@twfhclife.com.tw;203352@twfhclife.com.tw;203352@twfhclife.com.tw;203990@twfhclife.com.tw;202712@twfhclife.com.tw',
+		'203216@twfhclife.com.tw;190064@twfhclife.com.tw;203352@twfhclife.com.tw;203990@twfhclife.com.tw;202712@twfhclife.com.tw;202859@twfhclife.com.tw;831227@twfhclife.com.tw',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='MEDICAL_ALLIANCE_MAIL'),
 		'1',
 		'N',
