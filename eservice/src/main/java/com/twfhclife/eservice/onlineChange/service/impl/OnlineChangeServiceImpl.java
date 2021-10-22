@@ -434,22 +434,37 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 					logger.info("--------------------------------------------------input filePath pdf=>Image="+filePath);
 					PDDocument doc = PDDocument.load(file);
 					encodedString =this.imgBase64(doc,baos);
-					logger.error("--------------------------------------------------Thumbnails  PDF=>img Base64 {}", encodedString);
+					if(encodedString!=null) {
+						//do not print base64 string
+						logger.info("Thumbnails  PDF=>img Base64  is not null.");
+					}else {
+						logger.info("Thumbnails  PDF=>img Base64   is null.");
+					}
 					doc.close();
 				}else {
 					//<=50KB
 					if (length<=51200) {
 						logger.info("--------------------------------------------------input filePath length<=51200{}"+filePath);
 						encodedString =this.imgBase64(file);
-						logger.error("--------------------------------------------------Thumbnails  Base64 length<=51200{}", encodedString);
+						if(encodedString!=null) {
+							//do not print base64 string
+							logger.info("Thumbnails  Base64 length<=51200   encodedString is not null.");
+						}else {
+							logger.info("Thumbnails  Base64 length<=51200   encodedString  is null.");
+						}
 					}else{
 						logger.info("--------------------------------------------------input filePath length>51200{}"+filePath);
 						//进行抓取缩略图
 						encodedString =this.imgBase64(file,baos);
-						logger.error("--------------------------------------------------Thumbnails  Base64 length>51200{}", encodedString);
+						if(encodedString!=null) {
+							//do not print base64 string
+							logger.info("Thumbnails  Base64 length>51200   encodedString is not null.");
+						}else {
+							logger.info("Thumbnails  Base64 length>1200   encodedString  is null.");
+						}
 					}
 				}
-				logger.error("--------------------------------------------------Thumbnails  Base64 {}", encodedString);
+				logger.error("--------------------------------------------------Thumbnails  Base64  END");
 			}
 		}catch(Exception e) {
 			logger.error("input filePath is null.");
