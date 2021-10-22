@@ -177,6 +177,7 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 		
 		if (!StringUtils.isEmpty(policyNo)) {
 			for (TransFundNotificationDtlVo dtlVo : detailList) {
+				logger.info("notification detail fund code is : {},  type is : {}", dtlVo.getFundCode(), dtlVo.getType());
 				if (StringUtils.equals(dtlVo.getType(), "1")) {
 					List<PortfolioVo> portfolioList = portfolioService.getPortfolioList(policyNo, Arrays.asList(dtlVo.getFundCode()));
 					if (portfolioList != null && portfolioList.size() > 0) {
@@ -194,7 +195,9 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 						dtlVo.setInCurr(portfolioVo.getInvtExchCurr());
 					}
 				} else {
-					dtlVo.setInvtName(transFundNotificationDao.findByInvtNo(policyNo, dtlVo.getFundCode()));
+					String invtName = transFundNotificationDao.findByInvtNo(policyNo, dtlVo.getFundCode());
+					logger.info("fundCode: {}, notification invtName is : {}", dtlVo.getFundCode(), invtName);
+					dtlVo.setInvtName(invtName);
 				}
 			}
 		}

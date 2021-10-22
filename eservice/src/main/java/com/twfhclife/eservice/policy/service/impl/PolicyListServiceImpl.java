@@ -238,8 +238,8 @@ public class PolicyListServiceImpl extends BaseServiceImpl implements IPolicyLis
 						amount = amount.add(acctValue);
 					}
 					depositVo.setPolicyAcctValue(amount);
-					result.add(depositVo);
 				}
+				result.add(depositVo);
 			}
 		}
 		return result;

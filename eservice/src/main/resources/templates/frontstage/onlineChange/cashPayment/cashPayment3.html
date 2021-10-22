@@ -86,6 +86,32 @@
 								</label>
 							</th:block>
                         </div>
+						<div id="tab_4">
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-7  colorGreen">(變更後)Swift Code：</label>
+								<label th:text="${transCashPaymentVo.swiftCode}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-7  colorGreen">(變更後)英文戶名：</label>
+								<label th:text="${transCashPaymentVo.englishName}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-7  colorGreen">(變更後)帳戶名稱：</label>
+								<label th:text="${transCashPaymentVo.accountName}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-7  colorGreen">(變更後)銀行名稱：</label>
+								<label th:text="${transCashPaymentVo.bankName}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-7  colorGreen">(變更後)分行名稱：</label>
+								<label th:text="${transCashPaymentVo.branchName}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-7  colorGreen">(變更後)帳號：</label>
+								<label th:text="${transCashPaymentVo.bankAccount}"/>
+							</div>
+						</div>
                     </div>
                     <div class="clearfix" style="margin-bottom: 30px;"></div>
                 </div>
@@ -122,6 +148,12 @@
                 postWithFormData(/*[[@{/cashPayment2}]]*/, formData);
             });
 			smsTimer.show(1); // 1秒
+
+			if ([[${transCashPaymentVo.allocation == '1'}]]) {
+				$("#tab_4").show()
+			} else {
+				$("#tab_4").hide()
+			}
 		});
 
 		var smsTimer = function() {

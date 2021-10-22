@@ -8,7 +8,8 @@
 		<result column="FUND_CODE" property="fundCode"/>
 		<result column="PERCENTAGE_UP" property="percentageUp"/>
 		<result column="PERCENTAGE_DOWN" property="percentageDown"/>
-	<result column="UP_VALUE" property="upValue"/>
+	<result column="TYPE" property="type"/>
+		<result column="UP_VALUE" property="upValue"/>
 		<result column="DOWN_VALUE" property="downValue"/>
 	</resultMap>
 	

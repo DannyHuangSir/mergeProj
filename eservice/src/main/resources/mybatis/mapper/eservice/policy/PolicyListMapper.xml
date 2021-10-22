@@ -347,9 +347,7 @@
 		ESERVICE.DBO.POLICY P
 		LEFT JOIN ESERVICE.DBO.LILIPM PM ON PM.LIPM_INSU_NO = P.POLICY_NO
 		LEFT JOIN ESERVICE.DBO.LILIPI PI ON PI.LIPI_INSU_NO = P.POLICY_NO
-		WHERE
-		P.POLICY_TYPE IN ('UC','UH','UR','UQ','UP','US','UU')
-		AND (PM.LIPM_ID =  #{rocId} OR PI.LIPI_ID = #{rocId})
+		WHERE (PM.LIPM_ID =  #{rocId} OR PI.LIPI_ID = #{rocId})
 		<!--  僅提供有效保單及兩年內失效保單之查詢 -->
 		AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
 	</select>

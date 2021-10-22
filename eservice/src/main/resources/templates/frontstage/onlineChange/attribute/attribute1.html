@@ -57,7 +57,7 @@
 												<th:block th:if="${!vo1.checked}">
 													<input th:attr="qid=${vo1.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
 												</th:block>
-												<th:block th:text="${vo1.item}"/>
+												<p name="itemText" th:text="${vo1.item}"/>
 											</label>
 											<span class="col-sm-4 pull-right">(<th:block th:text="${vo1.score}"/>分)</span>
 											</li>
@@ -75,7 +75,7 @@
 												<th:block th:if="${!vo1.checked}">
 													<input th:attr="qid=${vo1.id}" type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
 												</th:block>
-												<th:block th:text="${vo1.item}"/>
+												<p name="itemText" th:text="${vo1.item}"/>
 											</label>
 											<span class="col-sm-4 pull-right">(<th:block th:text="${vo1.score}"/>分)</span>
 										</li>
@@ -121,6 +121,10 @@
 			formData.score = score
 			postWithFormData(/*[[@{/attribute2}]]*/, formData);
 		});
+
+		$("body [name='itemText']").on('click', function() {
+			$(this).prev().click()
+		})
 	});
 	/*]]>*/
 	</script>

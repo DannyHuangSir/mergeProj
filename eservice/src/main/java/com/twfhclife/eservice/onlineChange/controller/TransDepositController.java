@@ -104,7 +104,11 @@ public class TransDepositController extends BaseUserDataController {
 
             for (PolicyListVo policyListVo : policyList) {
                 MutablePair<BigDecimal, BigDecimal> pair = computeMinAndMax((DepositPolicyListVo) policyListVo);
+                if (pair.getKey() == null || pair.getValue() == null) {
+                    policyListVo.setPolicyAcctValue(BigDecimal.valueOf(0));
+                } else {
                 policyListVo.setPolicyAcctValue(pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getValue() : BigDecimal.valueOf(0));
+            }
             }
 
             List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
@@ -122,9 +126,14 @@ public class TransDepositController extends BaseUserDataController {
         String userRocId = getUserRocId();
         DepositPolicyListVo depositPolicy = (DepositPolicyListVo) transDepositService.getDepositPolicy(userRocId, vo.getPolicyNo());
         MutablePair<BigDecimal, BigDecimal> pair = computeMinAndMax(depositPolicy);
-
+        if (pair.getKey() == null || pair.getValue() == null) {
+            addAttribute("minValue", 0);
+            addAttribute("maxValue", 0);
+        } else {
         addAttribute("minValue", pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getKey() : 0);
         addAttribute("maxValue", pair.getValue().compareTo(pair.getKey()) > 0 ? pair.getValue() : 0);
+        }
+
         addAttribute("depositVo", depositPolicy);
         addAttribute("depositPercent", transDepositService.getDepositConfigs(vo.getPolicyNo()));
         return "frontstage/onlineChange/deposit/deposit2";
