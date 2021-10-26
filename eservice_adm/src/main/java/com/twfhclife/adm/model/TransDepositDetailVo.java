@@ -9,6 +9,16 @@ public class TransDepositDetailVo extends TransDepositVo {
 
     private String productName;
 
+    private String applyItem;
+
+    public String getApplyItem() {
+        return applyItem;
+    }
+
+    public void setApplyItem(String applyItem) {
+        this.applyItem = applyItem;
+    }
+
     public String getProductName() {
         return productName;
     }

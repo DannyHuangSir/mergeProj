@@ -3009,6 +3009,7 @@
 		<result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
 		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
 		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="APPLY_ITEM" property="applyItem" jdbcType="VARCHAR" />
 		<collection property="details" resultMap="detailMap"/>
 	</resultMap>
 
@@ -3032,8 +3033,11 @@
 		FROM
 		ESERVICE.DBO.PRODUCT B
 		WHERE (SELECT LIPM_INSU_BEG_DATE FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = A.POLICY_NO) BETWEEN DESI_SALE_DATE AND DESI_CHAN_VAR_DATE
-		) AS PRODUCT_NAME
-		FROM ESERVICE.DBO.TRANS_DEPOSIT A LEFT JOIN ESERVICE.DBO.FUND B ON A.INVT_NO = B.FUND_CODE WHERE A.TRANS_NUM = #{transNum}
+		) AS PRODUCT_NAME,
+		AI.APPLY_ITEM
+		FROM ESERVICE.DBO.TRANS_DEPOSIT A LEFT JOIN ESERVICE.DBO.FUND B ON A.INVT_NO = B.FUND_CODE
+		LEFT JOIN ESERVICE.DBO.TRANS_APPLY_ITEM AI ON A.TRANS_NUM = AI.TRANS_NUM
+		WHERE A.TRANS_NUM = #{transNum}
 	</select>
 
 	<select id="getTransPaymentByTransNum" resultType="map">

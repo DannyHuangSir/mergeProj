@@ -31,6 +31,8 @@ public class QuestionVo implements Serializable {
 
     private List<OptionVo> options = Lists.newArrayList();
 
+    private List<Long> removeIds = Lists.newArrayList();
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -111,5 +113,13 @@ public class QuestionVo implements Serializable {
 
     public void setOptions(List<OptionVo> options) {
         this.options = options;
+    }
+
+    public List<Long> getRemoveIds() {
+        return removeIds;
+    }
+
+    public void setRemoveIds(List<Long> removeIds) {
+        this.removeIds = removeIds;
     }
 }
