@@ -21,8 +21,10 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.twfhclife.eservice_batch.dao.ParameterDao;
+import com.twfhclife.eservice_batch.dao.TransApplyItemDao;
 import com.twfhclife.eservice_batch.dao.TransDao;
 import com.twfhclife.eservice_batch.model.ParameterVo;
+import com.twfhclife.eservice_batch.model.TransApplyItemVo;
 import com.twfhclife.eservice_batch.model.TransStatusHistoryVo;
 import com.twfhclife.eservice_batch.model.TransVo;
 import com.twfhclife.eservice_batch.service.onlineChange.*;
@@ -207,6 +209,14 @@ public class BatchUploadService {
 						if (line.startsWith("010")) {//聯絡資料變更 (DS01):010
 							addTransStatusHistory(transNum, "5");
 							logger.info("addTransStatusHistory: {}={}:Z執行的響應行數:{}", "5", "已上傳");
+						}
+
+						if (line.startsWith("028") || line.startsWith("030")) {
+							TransApplyItemDao transApplyItemDao = new TransApplyItemDao();
+							TransApplyItemVo vo = new TransApplyItemVo();
+							vo.setApplyItem(line);
+							vo.setTransNum(transNum);
+							transApplyItemDao.updateTransApplyItem(vo);
 						}
 					} else {
 						logger.info("Update trans status to uploaded for transNum fail: {}", transNum);

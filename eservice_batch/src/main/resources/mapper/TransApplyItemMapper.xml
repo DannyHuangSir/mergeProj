@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransApplyItemMapper" >
+  <resultMap id="BaseResultMap" type="com.twfhclife.eservice_batch.model.TransApplyItemVo" >
+    <id column="TRANS_NUM" property="transNum" jdbcType="NVARCHAR" />
+    <result column="APPLY_ITEM" property="applyItem" jdbcType="NVARCHAR" />
+    <result column="INSERT_TIME" property="insertTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TRANS_NUM, APPLY_ITEM, INSERT_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByTransNum" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ESERVICE.DBO.TRANS_APPLY_ITEM
+    where TRANS_NUM = #{transNum,jdbcType=NVARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.twfhclife.eservice_batch.model.TransApplyItemVo" >
+    insert into ESERVICE.DBO.TRANS_APPLY_ITEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="transNum != null" >
+        TRANS_NUM,
+      </if>
+      <if test="applyItem != null" >
+        APPLY_ITEM,
+      </if>
+      <if test="insertTime != null" >
+        INSERT_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="transNum != null" >
+        #{transNum,jdbcType=NVARCHAR},
+      </if>
+      <if test="applyItem != null" >
+        #{applyItem,jdbcType=NVARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.twfhclife.eservice_batch.model.TransApplyItemVo" >
+    update ESERVICE.DBO.TRANS_APPLY_ITEM
+    <set >
+      <if test="applyItem != null" >
+        APPLY_ITEM = #{applyItem,jdbcType=NVARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        INSERT_TIME = #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TRANS_NUM = #{transNum,jdbcType=NVARCHAR}
+  </update>
+</mapper>
