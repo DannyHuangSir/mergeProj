@@ -349,19 +349,19 @@
 					unitMinNumber= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(element.netValueSell,4),4);
 				}
 				if(element.investmentId==inId){
-					if(parseFloat(outputDate)<parseFloat(unitMinNumber)){
+					if(parseFloat(outputDate) >0 && parseFloat(outputDate)<parseFloat(unitMinNumber)){
 						console.log('-----unitMinNumber---------',unitMinNumber);
 						openAlert("输出單位數不能小於"+unitMinNumber);
-						$(investmentId).val(unitMinNumber);
+						//$(investmentId).val(unitMinNumber);
 						//break;
 					} else  if(outputDate>element.safpNetUnits){
 						console.log('-----outputDate>element.safpNetUnits---------',outputDate,element.safpNetUnits);
 						openAlert("轉出單位數不能大於參考單位數");
 						//break;
-						$(investmentId).val(element.safpNetUnits);
+						//$(investmentId).val(element.safpNetUnits);
 					}
 				}
-			  var investmentIdNumber= 	$(investmentId).val();
+			  var investmentIdNumber= 	$(investmentId).val()==""?0:$(investmentId).val();
 				//showOutputDate+=investmentIdNumber * 10;
 				showOutputDate+=investmentIdNumber * element.netValueSell;
 				//回傳單位數
@@ -376,7 +376,7 @@
 			investmentsList.forEach(element => {
 				var  investmentId="#per"+element.investmentId;
 				//當前比例的方式計算
-				var   outputDate= $(investmentId).val();
+				var   outputDate= $(investmentId).val()==''?0:$(investmentId).val();
 				//獲取幣別的最小百分比例
 				var  proportionMinNumber=0;
 				if(element.invtExchCurr== 'NTD'){
@@ -386,20 +386,20 @@
 				}
 				console.log('-----outputDate---------',outputDate);
 				if("per"+element.investmentId=="per"+inId){
-					if(outputDate<proportionMinNumber){
+					if( outputDate  >0  && outputDate<proportionMinNumber){
 						openAlert("输出百分比不能小於"+proportionMinNumber+"%");
-						$(investmentId).val(proportionMinNumber);
+						//$(investmentId).val(proportionMinNumber);
 						//break;
 					} else  if(outputDate>100){
 						console.log('-----outputDate>element.safpNetUnits---------',outputDate,element.safpNetUnits);
 						openAlert("轉出百分比不能大於100%");
 						//break;
-						$(investmentId).val(100);
+						//$(investmentId).val(100);
 					}
 				}
 				//showOutputDate+=$(investmentId).val() * element.safpNetAmt;
 				//var  acctValue=element.acctValue;
-				var  perNumber=$(investmentId).val();
+				var  perNumber=$(investmentId).val()==''?0:$(investmentId).val();
 				//if(perNumber !=0){
 				//	showOutputDate+=( perNumber / 100) * acctValue;
 				//}
@@ -407,7 +407,7 @@
 				element.ratio=parseFloat(perNumber);
 				console.log("element.safpNetUnits",element.safpNetUnits);
 				//進行回傳單位數.
-				element.number=parseFloat(element.safpNetUnits*parseFloat(perNumber));
+				element.number=parseFloat((element.safpNetUnits*parseFloat(perNumber))/100);
 			});
 			$("#showConutNumber").text(formatNumber(showOutputDate, 4));
 			};
@@ -420,7 +420,7 @@
 							for(let i=0;i<investmentsList.length;i++){
 							var  investmentId="#"+investmentsList[i].investmentId;i
 							//當前比例的方式計算
-							var   outputDate= $(investmentId).val();
+							var   outputDate= $(investmentId).val()==''?0:$(investmentId).val();
 								//獲取幣別的最小單位書
 							var  unitMinNumber=0;
 							if(investmentsList[i].invtExchCurr== 'NTD'){
@@ -428,7 +428,7 @@
 							}else{
 								unitMinNumber= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(investmentsList[i].netValueSell,4),4);
 							}
-							var investmentIdNumber= 	$(investmentId).val();
+							var investmentIdNumber= 	$(investmentId).val()==''?0:$(investmentId).val();;
 							SuminvestmentIdNumber+=investmentIdNumber;
 							if(investmentIdNumber>0){
 								if(parseFloat(outputDate)<parseFloat(unitMinNumber)){
@@ -454,7 +454,7 @@
 						for(let i=0;i<investmentsList.length;i++){
 						var  investmentId="#per"+investmentsList[i].investmentId;
 						//當前比例的方式計算
-						var   outputDate= $(investmentId).val();
+						var   outputDate= $(investmentId).val()==''?0:$(investmentId).val();;
 							//獲取幣別的最小百分比例
 						var  proportionMinNumber=0;
 						if(investmentsList[i].invtExchCurr== 'NTD'){
@@ -462,7 +462,7 @@
 						}else{
 							proportionMinNumber=parseInt(proportionMin['USD_PROPORTION_MIN']);
 						}
-						var  perNumber=$(investmentId).val();
+						var  perNumber=$(investmentId).val()==''?0:$(investmentId).val();;
 						sumperNumber+=perNumber;
 						if(perNumber>0){
 							if(outputDate<proportionMinNumber){

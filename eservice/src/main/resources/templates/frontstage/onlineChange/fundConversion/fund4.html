@@ -349,14 +349,14 @@
 			//var  showOutputDate=0;
 			var  showObj=   $(obj).val();
 				console.log('-----showObj---------',showObj);
-					if(showObj<investmentInputSize.ratioMinSize){
+					if(showObj>0 && showObj<investmentInputSize.ratioMinSize){
 						let minMessage="新投資標的轉入百分比不能小於"+investmentInputSize.ratioMinSize+"%";
 						openAlert(minMessage);
-						$(obj).val(investmentInputSize.ratioMinSize);
+						//$(obj).val(investmentInputSize.ratioMinSize);
 					} else  if(showObj>investmentInputSize.ratioMaxSize){
 						let maxMessage="新投資標的轉入百分比不能大於"+investmentInputSize.ratioMaxSize+"%";
 						openAlert(maxMessage);
-						$(obj).val(investmentInputSize.ratioMaxSize);
+						//$(obj).val(investmentInputSize.ratioMaxSize);
 					}
 				//進行循環獲取其他的input的百分比		
 					//var numArr = new Array();

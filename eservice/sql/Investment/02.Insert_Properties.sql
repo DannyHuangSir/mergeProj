@@ -6,10 +6,15 @@ go
 		--- 已持有投資標的轉換[備註]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_TRANSFORMATION_REMARKS', N' 已持有投資標的轉換備註條款信息',
-		N'	變額萬能壽險保單：如於15:00前提出申請，則視當日為申請之生效日，逾時則視次一工作日為申請之生效日。<br/>
-			此次變更將於下一期應繳保費生效，續期保費將依照本次指定之標的的項目及百分比投資。<br/>
-			每一投資標的投資比例不得低於10%，加總需等於100%。<br/>
-			目前僅開放“要保人與被保險人為同一人”之保單於網路變更保單資料。<br/>',
+		N'1、未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。<br/>
+          2、相同標的不得同時申請投資標的部分提領及投資標的轉換。<br/>
+          3、申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。<br/>
+          4、各投資標的之配置比例必須為10的倍數且總和需為 100%。<br/>
+          5、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。<br/>
+          6、已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。<br/>
+          7、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。<br/>
+          8、如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。<br/>
+          9、您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金 的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高波動性之風險。<br/>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_TRANSFORMATION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 	--- 已持有投資標的轉換[同意]條款
@@ -22,10 +27,16 @@ go
 	--- 已持有投資標的[比例]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_TRANSFORMATION_PROPORTION', N' 已持有投資標的轉換[比例備註]條款信息',
-		N'若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。<br/>
-		 若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。<br/>
-		 若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。<br/>
-		 為確保保險商品符合您的投資能力及風險性，投資風險屬性若有變更，本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。<br/>',
+		N'1、未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。<br/>
+          2、相同標的不得同時申請投資標的部分提領及投資標的轉換。<br/>
+          3、申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。<br/>
+          4、各投資標的之配置比例必須為10的倍數且總和需為 100%。<br/>
+          5、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。<br/>
+          6、已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。<br/>
+          7、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。<br/>
+          8、若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。<br/>
+          9、若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。<br/>
+          10、若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。<br/>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_TRANSFORMATION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
@@ -37,13 +48,20 @@ go
 		---未來保費投資標的與分配比例[備註]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_REMARKS', N' 未來保費投資標的與分配比例備註條款信息',
-		N' <li> 變額萬能壽險保單：如於15:00前提出申請，則是當日為申請生效日，遇時則視為次一工作日為申請之生效日。</li>
-          <li>此次變更將於下一期應繳保費日生效，續期保費將依照本次指定之標的項目及百分比投資</li>
-          <li>目前僅開放要保人與被保險人為同一人之保單於網路變更保單資料。</li>
-          <li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2</li>
-          <li>若您的投資風險屬性為穩健型，您可選擇穩健型的基金RR1~RR4</li>
-          <li>若您的投資風險屬性為穩健型，您可選擇穩健型的基金RR1~RR5</li>
-          <li>為確保保險商品符合您的投資能力及風險屬性，投資風險屬性若有變更，本公司將以您最新風險屬性作為名下所有保單日後變更的評估依據</li> ',
+		N'<li>1、未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
+         <li>2、各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
+         <li>3、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
+         <li>4、若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li>
+         <li>5、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投
+            資標的申請之依據。</li>
+         <li>6、如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。
+            您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能
+            面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損
+         	   之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收
+         	   益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金
+         	   的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美
+         	   國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高
+         	   波動性之風險</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 	--- 未來保費投資標的與分配比例[同意]條款
@@ -69,10 +87,15 @@ go
 		---未來保費投資標的與分配比例[備註]
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_REMARK1', N' 未來保費投資標的與分配比例備註',
-		N'<li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</li>
-          <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</li>
-          <li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li>
-          <li>為確保保險商品符合您的投資能力及風險性，投資風險屬性若有變更，本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。</li>',
+		N'1、未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</br>
+         2、各投資標的之配置比例必須為10的倍數且總和需為 100%。</br>
+         3、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</br>
+         4、若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</br>
+         5、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投</br>
+            資標的申請之依據。</br>
+         6、若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</br>
+         7、若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</br>
+         8、若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</br>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
@@ -641,7 +664,7 @@ VALUES ((select max(PARAMETER_CATEGORY_ID)+1 from ESERVICE_ADM.dbo.PARAMETER_CAT
 go
 
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
-VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'LISTING_MAP_TEMPLATE_UC', N' UC-frontstage/listing2-1模板',
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'LISTING_MAP_TEMPLATE_UP', N' UP-frontstage/listing2-1模板',
 		N'frontstage/listing2-1',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='LISTING_MAP_TEMPLATE'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
@@ -655,6 +678,30 @@ go
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'LISTING_MAP_TEMPLATE_UR', N' UR-frontstage/listing2-1模板',
 		N'frontstage/listing2-1',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='LISTING_MAP_TEMPLATE'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'LISTING_MAP_TEMPLATE_UC', N' UC-frontstage/listing2-2模板',
+		N'frontstage/listing2-2',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='LISTING_MAP_TEMPLATE'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'LISTING_MAP_TEMPLATE_UH', N' UH-frontstage/listing2-2模板',
+		N'frontstage/listing2-2',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='LISTING_MAP_TEMPLATE'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'LISTING_MAP_TEMPLATE_US', N' US-frontstage/listing2-2模板',
+		N'frontstage/listing2-2',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='LISTING_MAP_TEMPLATE'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'LISTING_MAP_TEMPLATE_UU', N' UU-frontstage/listing2-2模板',
+		N'frontstage/listing2-2',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='LISTING_MAP_TEMPLATE'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
