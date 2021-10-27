@@ -495,7 +495,7 @@
 	</select>
 	
 	<select id="getContactInfoByHasNotifySeqIdAndBatchId" resultMap="ContactInfoResultMap">
-		select top(10) 
+		select top(30) 
 		<include refid="CONTACT_INFO_ALL"></include>
 		from ESERVICE.DBO.CONTACT_INFO
 		where FROM_COMPANY!='L01'
@@ -503,8 +503,9 @@
 		and CASE_ID is not null
 		and BATCH_ID is not null
 		and STATUS = 'RECEIVED'
-		order by CREATE_DATE desc
+		order by CREATE_DATE
 	</select><!-- 只回報聯盟件 -->
+	<!-- modify 20211026,top 10 to 30, and  order by CREATE_DATE -->
 	
 	<select id="getCompletedContactInfoByBatchId" parameterType="java.lang.Float" resultType="java.lang.Integer">
 		select count(*)-(
@@ -589,7 +590,7 @@
 					AND B.CASE_ID is null  
 					AND  E.STATUS = '5'  
 					AND NOT  EXISTS (SELECT 	<include refid="CONTACT_INFO_ALL"></include>
-		    FROM ESERVICE.DBO.CONTACT_INFO E WHERE B.BATCH_ID = E.BATCH_ID)
+		    FROM ESERVICE.DBO.CONTACT_INFO E WHERE B.TRANS_NUM = E.TRANS_NUM)
 	</select>
 	
 	<!-- 2021/09/13 計算batch_id已存在筆數 -->
