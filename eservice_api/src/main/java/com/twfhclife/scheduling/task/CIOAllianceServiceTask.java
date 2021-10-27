@@ -50,6 +50,7 @@ import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
+import com.twfhclife.eservice.user.model.LilipmVo;
 import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.domain.ReturnHeader;
@@ -869,8 +870,17 @@ public class CIOAllianceServiceTask {
 									log.info("listFileData is null.");
 								}
 								
-								int k = iLilipmService.getInsuredUsersByRocId(mapperVo.getCidNo());
-								log.info("判斷是否為保戶,count="+k);
+								//modify by 2021/10/26-only get from LILIPM-start
+								int k = -1;
+								LilipmVo lilipmVo = iLilipmService.findByRocId(mapperVo.getCidNo());//只找LILIPM
+								//int k = iLilipmService.getInsuredUsersByRocId(mapperVo.getCidNo());//找LILIPM+LILIPI
+								if(lilipmVo!=null) {
+									k = 1;
+									log.info("判斷是否為保戶:LilipmVo.LIPM_INSU_NO="+lilipmVo.getLipmInsuNo()+",LilipmVo.LIPM_ID="+lilipmVo.getLipmId());
+								}else {
+									log.info("判斷是否為保戶:LilipmVo is null."+"ROC_ID="+mapperVo.getCidNo());
+								}
+								//modify by 2021/10/26-only get from LILIPM-end
 								
 								if (k > 0) {
 									
@@ -903,28 +913,28 @@ public class CIOAllianceServiceTask {
 											log.info("call URL_API206,strResponse="+api206Response);
 
 										}else {	
-									int iRtn = contactInfoService.addContactInfo(mapperVo);
-									if(iRtn>0) {//如果有查詢且儲存成功
-										vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
-										int ncupdate = contactInfoService.updateNcStatusBySeqId(vo);
-										log.info("状态已经修改为保戶："+ncupdate);
+											int iRtn = contactInfoService.addContactInfo(mapperVo);
+											if(iRtn>0) {//如果有查詢且儲存成功
+												vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+												int ncupdate = contactInfoService.updateNcStatusBySeqId(vo);
+												log.info("状态已经修改为保戶："+ncupdate);
+						
+											}
+					
+											/**
+											 * 修改姓名或ID視為「異常件」，回報案件狀態為“Y” msg=已轉為人工處理
+											 * 当新名稱和ID有數據,為需要修改
+											 * */
+											if(StringUtils.isNotBlank(mapperVo.getName()) || StringUtils.isNotBlank(mapperVo.getIdNo())){
+												//匯報206接口
+												params.put("status", NotifyOfNewCaseChangeVo.NC_STATUS_Y);
+												params.put("msg", NotifyOfNewCaseChangeVo.GO_WORK_AHEAD_MSG);
+												log.info("----------修改姓名或ID視為「異常件」，回報案件狀態為“Y” msg=已轉為人工處理 调用206接口,参数---"+params);
 				
-									}
-			
-									/**
-									 * 修改姓名或ID視為「異常件」，回報案件狀態為“Y” msg=已轉為人工處理
-									 * 当新名稱和ID有數據,為需要修改
-									 * */
-									if(StringUtils.isNotBlank(mapperVo.getName()) || StringUtils.isNotBlank(mapperVo.getIdNo())){
-										//匯報206接口
-										params.put("status", NotifyOfNewCaseChangeVo.NC_STATUS_Y);
-										params.put("msg", NotifyOfNewCaseChangeVo.GO_WORK_AHEAD_MSG);
-										log.info("----------修改姓名或ID視為「異常件」，回報案件狀態為“Y” msg=已轉為人工處理 调用206接口,参数---"+params);
-		
-										//聯盟鏈歷程參數
-										unParams.put("name", "API206");
-										cioService.postForEntity(URL_API206, params, unParams);
-									}
+												//聯盟鏈歷程參數
+												unParams.put("name", "API206");
+												cioService.postForEntity(URL_API206, params, unParams);
+											}
 										}
 
 									}else {
@@ -1224,6 +1234,7 @@ public class CIOAllianceServiceTask {
 					try {
 						Float batchId = vo.getBatchId();
 						String caseId = vo.getCaseId();
+						log.info("do batchId="+batchId+",caseId="+caseId);
 						
 						params.put("caseId", caseId);
 						
@@ -1233,7 +1244,7 @@ public class CIOAllianceServiceTask {
 							int k = contactInfoService.getCompletedContactInfoByBatchId(batchId);
 							if(k > 0) {//有未完結案件，暫不進行回報
 								log.info("call URL_API206,不進行回報,有未完結案件,當前BATCH_D="+vo.getBatchId()+",有未滿足status= 2,6,7 ");
-								break;
+								continue;
 							}
 							
 							//2.無未完結案件時
@@ -1248,7 +1259,7 @@ public class CIOAllianceServiceTask {
 									int rtn = contactInfoService.updateStatusByBatchId(vo);
 									log.info("call URL_API206,當前BATCH_D="+vo.getBatchId()+",有status=7,不進行回報聯盟,直接壓CONTACT_INFO.STATUS=Y.");
 									
-									break;
+									continue;
 								}
 								
 								//  若有一個不為2,則回報失敗,否則回報為成功
