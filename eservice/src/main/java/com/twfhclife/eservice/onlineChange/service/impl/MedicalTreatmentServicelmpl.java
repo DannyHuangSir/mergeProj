@@ -511,7 +511,7 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 				String authorizationEndDate = transMedicalTreatmentClaimVo.getAuthorizationEndDate();
 				String authorizationStartDate = transMedicalTreatmentClaimVo.getAuthorizationStartDate();
 				if(!StringUtils.isEmpty(authorizationEndDate)){
-					transMedicalTreatmentClaimVo.setAuthorizationEndDate(authorizationStartDate.replace("-",""));
+					transMedicalTreatmentClaimVo.setAuthorizationEndDate(authorizationEndDate.replace("-",""));
 				}
 				if(!StringUtils.isEmpty(authorizationStartDate)){
 					transMedicalTreatmentClaimVo.setAuthorizationStartDate(authorizationStartDate.replace("-",""));
