@@ -9,4 +9,6 @@ public interface TransApplyItemMapper {
     TransApplyItemVo selectByTransNum(String transNum);
 
     int update(TransApplyItemVo record);
+
+    int updateAppend(TransApplyItemVo record);
 }

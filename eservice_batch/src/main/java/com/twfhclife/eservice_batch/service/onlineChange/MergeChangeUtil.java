@@ -337,8 +337,8 @@ public class MergeChangeUtil {
 					}
 				}
 			}
-			
-			mergeSb.append(String.format(StringUtils.repeat("%s", 17), 
+
+			mergeSb.append(String.format(StringUtils.repeat("%s", 20),
 					StringUtil.rpadBlank(paymode, 1),
 					StringUtil.rpadBlank(annuityMethod, 1),
 					StringUtil.rpadBlank(bouns, 1),

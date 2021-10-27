@@ -62,4 +62,20 @@
     </set>
     where TRANS_NUM = #{transNum,jdbcType=NVARCHAR}
   </update>
+
+  <update id="updateAppend" parameterType="com.twfhclife.eservice_batch.model.TransApplyItemVo" >
+    update ESERVICE.DBO.TRANS_APPLY_ITEM
+    <set >
+      <if test="applyItem != null" >
+        APPLY_ITEM = CONCAT(APPLY_ITEM, #{applyItem,jdbcType=NVARCHAR}),
+      </if>
+      <if test="insertTime != null" >
+        INSERT_TIME = #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TRANS_NUM = #{transNum,jdbcType=NVARCHAR}
+  </update>
 </mapper>

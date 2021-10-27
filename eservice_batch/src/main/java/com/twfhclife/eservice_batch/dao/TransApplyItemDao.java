@@ -31,21 +31,48 @@ public class TransApplyItemDao extends BaseDao {
 
 	public int updateTransApplyItem(TransApplyItemVo vo) {
 		int result = 0;
-		TransApplyItemVo transApplyItemVo = selectByTransNum(vo);
 		try {
 			Date sysTime = new Date();
 			TransApplyItemMapper transMapper = this.getSqlSession().getMapper(TransApplyItemMapper.class);
-			if (transApplyItemVo == null) {
-				vo.setUpdateTime(sysTime);
-				vo.setInsertTime(sysTime);
-				result = transMapper.insert(vo);
-			} else {
 				vo.setUpdateTime(sysTime);
 				result = transMapper.update(vo);
-			}
 			this.getSqlSession().commit();
 		} catch (Exception e) {
 			logger.error("updateTransApplyItem error:", e);
+		} finally {
+			this.release();
+		}
+		return result;
+	}
+
+	public int updateAppendTransApplyItem(TransApplyItemVo vo) {
+		int result = 0;
+		try {
+			Date sysTime = new Date();
+			TransApplyItemMapper transMapper = this.getSqlSession().getMapper(TransApplyItemMapper.class);
+			vo.setUpdateTime(sysTime);
+			vo.setApplyItem("\r\n" + vo.getApplyItem());
+			result = transMapper.updateAppend(vo);
+			this.getSqlSession().commit();
+		} catch (Exception e) {
+			logger.error("updateAppendTransApplyItem error:", e);
+		} finally {
+			this.release();
+		}
+		return result;
+	}
+
+	public int addTransApplyItem(TransApplyItemVo vo) {
+		int result = 0;
+		try {
+			Date sysTime = new Date();
+			TransApplyItemMapper transMapper = this.getSqlSession().getMapper(TransApplyItemMapper.class);
+			vo.setUpdateTime(sysTime);
+			vo.setInsertTime(sysTime);
+			result = transMapper.insert(vo);
+			this.getSqlSession().commit();
+		} catch (Exception e) {
+			logger.error("addTransApplyItem error:", e);
 		} finally {
 			this.release();
 		}

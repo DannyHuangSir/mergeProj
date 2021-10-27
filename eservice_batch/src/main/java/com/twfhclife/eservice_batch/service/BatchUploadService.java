@@ -186,7 +186,25 @@ public class BatchUploadService {
 			List<String> doneList = new ArrayList<String>();
 			for (String line : applyLines) {
 				if (!"".equals(StringUtils.trimToEmpty(line)) && line.length() >= 15) {
+
 					String transNum = line.substring(3, 15);
+					if (line.startsWith("028") || line.startsWith("030")) {
+						TransApplyItemDao transApplyItemDao = new TransApplyItemDao();
+						TransApplyItemVo vo = new TransApplyItemVo();
+						vo.setApplyItem(line);
+						vo.setTransNum(transNum);
+						TransApplyItemVo transApplyItemVo = transApplyItemDao.selectByTransNum(vo);
+						if (transApplyItemVo != null) {
+							if (doneList.contains(transNum)) {
+								transApplyItemDao.updateAppendTransApplyItem(vo);
+							} else {
+								transApplyItemDao.updateTransApplyItem(vo);
+							}
+						} else {
+							transApplyItemDao.addTransApplyItem(vo);
+						}
+					}
+
 					if (doneList.contains(transNum)) {
 						continue;
 					}
@@ -202,21 +220,12 @@ public class BatchUploadService {
 					int result = transDao.updateTrans(updVo);
 					if (result > 0) {
 						logger.info("Update trans status to uploaded for transNum success: {}", transNum);
-
 						/**
 						 * 追加是保全的才進行發生,狀態歷程"已上傳"的時間記錄;
 						 */
 						if (line.startsWith("010")) {//聯絡資料變更 (DS01):010
 							addTransStatusHistory(transNum, "5");
 							logger.info("addTransStatusHistory: {}={}:Z執行的響應行數:{}", "5", "已上傳");
-						}
-
-						if (line.startsWith("028") || line.startsWith("030")) {
-							TransApplyItemDao transApplyItemDao = new TransApplyItemDao();
-							TransApplyItemVo vo = new TransApplyItemVo();
-							vo.setApplyItem(line);
-							vo.setTransNum(transNum);
-							transApplyItemDao.updateTransApplyItem(vo);
 						}
 					} else {
 						logger.info("Update trans status to uploaded for transNum fail: {}", transNum);
