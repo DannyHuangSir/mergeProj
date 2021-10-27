@@ -572,6 +572,31 @@ public interface OnlineChangeDao {
 	
 	public Map<String, Object> getDnsDetailInfo(@Param("transNum") String transNum);
 
+	/**
+	 * 獲取查詢條件
+	 *   保單理賠申請統計報表
+	 *
+	 * @return
+	 */
+	List getMedicalTreatmentStatisticsReport(@Param("vo") MedicalTreatmentStatisticsVo var1, @Param("columnItem") String var2, @Param("status") List<String> var3, @Param("fileReceivedList") List<String> var4, @Param("sendAllianceList") List<String> var5);
+
+	/**
+	 * 獲取查詢條件
+	 *   保單理賠明顯統計報表
+	 *
+	 * @return
+	 */
+	List getMedicalTreatmentDetailReport(@Param("vo") MedicalTreatmentStatisticsVo var1, @Param("columnItem") String var2, @Param("status") List<String> var3, @Param("fileReceivedList") List<String> var4, @Param("sendAllianceList") List<String> var5);
+
+	//獲取保險公司明顯
+	List<Hospital> getHospitalList(@Param("functionName")String medicalTreatmentParameterCode);
+
+	//獲取醫院明顯
+	List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(@Param("functionName") String medicalTreatmentParameterCode);
+
+	//保單醫療   補件單歷程.
+	List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFiledatas(@Param("vo") TransRFEVo tVo);
+
 	/***
 	 * 查詢申請明細-已持有投資標的轉換查詢
 	 * @param transVo
@@ -593,26 +618,7 @@ public interface OnlineChangeDao {
 
     List<Map<String, Object>> getTransChangePremium(@Param("transNum") String transNum);
 
-	/**
-	 * 獲取查詢條件
-	 *   保單理賠申請統計報表
-	 *
-	 * @return
-	 */
-	List getMedicalTreatmentStatisticsReport(@Param("vo") MedicalTreatmentStatisticsVo var1, @Param("columnItem") String var2, @Param("status") List<String> var3, @Param("fileReceivedList") List<String> var4, @Param("sendAllianceList") List<String> var5);
-	/**
-	 * 獲取查詢條件
-	 *   保單理賠明顯統計報表
-	 *
-	 * @return
-	 */
-	List getMedicalTreatmentDetailReport(@Param("vo") MedicalTreatmentStatisticsVo var1, @Param("columnItem") String var2, @Param("status") List<String> var3, @Param("fileReceivedList") List<String> var4, @Param("sendAllianceList") List<String> var5);
-	//獲取保險公司明顯
-	List<Hospital> getHospitalList(@Param("functionName")String medicalTreatmentParameterCode);
-	//獲取醫院明顯
-	List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(@Param("functionName") String medicalTreatmentParameterCode);
-	//保單醫療   補件單歷程.
-	List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFiledatas(@Param("vo") TransRFEVo tVo);
+	String   getTransApplyItemByTransNum(@Param("transNum")String transNum);
 
 	//查詢醫療保單
 	int getMedicalTreatmentCaseIDNum(@Param("transNum")String transNum);

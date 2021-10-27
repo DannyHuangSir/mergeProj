@@ -48,7 +48,7 @@
 												<td><th:block th:text="${dtl['FUND_CODE']}"/></td>
 												<td><th:block th:text="${dtl['FUND_NAME']}"/></td>
 												<td><th:block th:text="${dtl['PERCENTAGE_UP']}"/></td>
-												<td><th:block th:text="${dtl['PERCENTAGE_DOWN']}"/></td>
+													<td><th:block th:text="-${dtl['PERCENTAGE_DOWN']}"/></td>
 												</th:block>
 											</tr>
 										</tbody>

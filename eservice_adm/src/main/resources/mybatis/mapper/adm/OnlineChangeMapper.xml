@@ -3062,6 +3062,11 @@
 		ESERVICE.DBO.TRANS_CHANGE_PREMIUM
 		WHERE TRANS_NUM = #{transNum}
 	</select>
+	<select id="getTransApplyItemByTransNum" resultType="java.lang.String">
+		SELECT top 1 APPLY_ITEM  from
+		[ESERVICE].[dbo].[TRANS_APPLY_ITEM]
+		WHERE  TRANS_NUM=#{transNum} order BY [UPDATE_TIME] DESC
+	</select>
 
 </mapper>
 

@@ -1518,7 +1518,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			map=onlineChangeDao.getOnlineChangeDetailByTransNum(transNum);
 
 		}
+		//進行查詢當前保單推送給核心的數據信息
+	 String  applyItem=	onlineChangeDao.getTransApplyItemByTransNum(transNum);
+
 		map.put(ApConstants.INVESTMENT_STATUS_OUT,out);
+		map.put("applyItem",applyItem);
 		map.put(ApConstants.INVESTMENT_STATUS_IN,in);
 
 		return map;
