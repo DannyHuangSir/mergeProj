@@ -141,6 +141,8 @@ public class TransInvestmentController extends BaseUserDataController  {
         }
 
         addAttribute("uri", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_URI));
+        String limit = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_LIMIT);
+        addAttribute("INVESTMENT_LIMIT", StringUtils.isEmpty(limit) ? Integer.MAX_VALUE : Integer.parseInt(limit));
         UsersVo user = getUserDetail();
         String riskLevel = riskLevelService.getUserRiskAttr(user.getRocId());
         addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));

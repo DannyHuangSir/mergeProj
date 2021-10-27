@@ -101,7 +101,7 @@
 									</td>
 									<td>
 										<th:block th:if="${vo.percentageDown != null}">
-											<th:block th:text="${vo.percentageDown}"/>%
+											<th:block th:text="-${vo.percentageDown}"/>%
 										</th:block>
 										<th:block th:if="${vo.percentageDown == null}">
 											--

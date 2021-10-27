@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
 
+<style>
+   /* 谷歌 */
+   input::-webkit-outer-spin-button,
+   input::-webkit-inner-spin-button {
+     -webkit-appearance: none;
+   }
+
+   /* 火狐 */
+   input[type="number"]{
+     -moz-appearance: textfield;
+   }
+ </style>
+
 <head>
 	<th:block th:replace="fragments/head"/>
 	<title>未來保費投資標的與分配比例｜臺銀人壽保單網路服務</title>
@@ -118,6 +131,10 @@
 	/*<![CDATA[*/
 		var percent = 0
 		function addInvestment(){
+			if ($('#fundContent').children().length >= [[${INVESTMENT_LIMIT}]]) {
+				openAlert('分配的標的設定為最多[[${INVESTMENT_LIMIT}]]個!')
+				return false
+			}
 			var item = '<div class="check-list2 newfund" id="investment_template">'
               +'<div style="width: 100%;display: inline-block;">'
                            +'<div class="col-sm-2">'
@@ -302,6 +319,13 @@
 					$(this).val(limit.ratioMinSize)
 					return
 				}
+
+				if ($(this).val() % 10 != 0) {
+					openAlert("只允許輸入10的倍數！")
+					$(this).val(limit.ratioMinSize)
+					return
+				}
+
 				if ($(this).val() < limit.ratioMinSize || $(this).val() > limit.ratioMaxSize) {
 					$(this).val(limit.ratioMinSize)
 					openAlert("比例必須在" + limit.ratioMinSize + "-" + limit.ratioMaxSize + "之間！",)

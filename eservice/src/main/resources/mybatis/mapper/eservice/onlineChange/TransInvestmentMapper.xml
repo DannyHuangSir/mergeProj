@@ -119,7 +119,7 @@
     ,PP.EXCH_RATE_DATE AS exchRateDate
     FROM ESERVICE.dbo.POLICY_INVEST_FUND PI
     LEFT JOIN ESERVICE.dbo.POLICY_PORTFOLIO PP ON PI.POLICY_NO = PP.POLICY_NO AND PI.FUND_CODE = PP.INVT_NO
-    WHERE PI.POLICY_NO = #{policyNo} AND PI.EFFECTIVE_DATE &gt; #{date}
+    WHERE PI.POLICY_NO = #{policyNo}
   </select>
 
   <select id="getNewInvestments" resultType="com.twfhclife.eservice.policy.model.InvestmentPortfolioVo">

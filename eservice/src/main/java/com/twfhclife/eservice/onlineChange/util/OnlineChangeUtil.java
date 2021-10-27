@@ -197,6 +197,8 @@ public interface OnlineChangeUtil {
 	public static final String INVESTMENT_DISTRIBUTION_REMARK1="INVESTMENT_DISTRIBUTION_REMARK1";
 	/**未來保費投資標的與分配比例-我要瞭解基金內容*/
 	public static final String INVESTMENT_DISTRIBUTION_URI="INVESTMENT_DISTRIBUTION_URI";
+	/**未來保費投資標的與分配比例-數量 */
+	public static final String INVESTMENT_LIMIT="INVESTMENT_LIMIT";
 	/**設定停損停利通知-備註*/
 	public static final String NOTIFICATION_REMARKS="NOTIFICATION_REMARK1";
 	/**臺幣  欲轉出基金與比例,限制單位數小值*/

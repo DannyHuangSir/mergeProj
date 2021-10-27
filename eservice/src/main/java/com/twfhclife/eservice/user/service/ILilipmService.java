@@ -60,9 +60,10 @@ public interface ILilipmService {
 	public List<LilipmVo> getAliveLilipm(LilipmVo lilipmVo);
 	
 	/**
-	 * 判斷是否保戶
+	 * 判斷是否保戶(要保人+被保人)
 	 * @param rocId
 	 * @return 回傳數據條數
 	 */
 	public int getInsuredUsersByRocId(String rocId);
+
 }
