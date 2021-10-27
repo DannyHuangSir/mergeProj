@@ -211,9 +211,9 @@ public class TransContactInfoServiceImpl implements ITransContactInfoService {
 						transContactInfoOldVo.setTelHome(lilipmVo.getNoHiddenLipmTelH());
 						transContactInfoOldVo.setTelOffice(lilipmVo.getNoHiddenLipmTelO());
 						transContactInfoOldVo.setAddress(lilipmVo.getLipmAddr());
-						transContactInfoOldVo.setAddressFull(lilipmVo.getLipmAddr());
+						transContactInfoOldVo.setAddressFull(lilipmVo.getLipmAddrNoHidden());//modify 2021/10/27
 						transContactInfoOldVo.setAddressCharge(lilipmVo.getLipmCharAddr());
-						transContactInfoOldVo.setAddressFullCharge(lilipmVo.getLipmCharAddr());
+						transContactInfoOldVo.setAddressFullCharge(lilipmVo.getLipmCharAddrNoHidden());//modify 2021/10/27
 					}
 					
 					//transContactInfoOldVo取用LIPMDA_ES的MOBLIE,EMAIL

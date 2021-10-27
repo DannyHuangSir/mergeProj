@@ -56,6 +56,13 @@ public class LilipmVo implements Serializable {
 	private String lipmName2;
 	/**  */
 	private String lipmAddr;
+	
+	/**
+	 * add 2021/10/27
+	 * 不隱碼地址
+	 */
+	private String lipmAddrNoHidden;
+	
 	/**  */
 	private String lipmZipCode;
 	/**  */
@@ -74,6 +81,12 @@ public class LilipmVo implements Serializable {
 	private String lipmCharId;
 	/**  */
 	private String lipmCharAddr;
+	
+	/**
+	 * add 2021/10/27
+	 * 不隱碼收費地址
+	 */
+	private String lipmCharAddrNoHidden;
 	/**  */
 	private String lipmCharZipCode;
 	/**  */
@@ -321,6 +334,22 @@ public class LilipmVo implements Serializable {
 
 	public void setLipmFlexRcpMk(String lipmFlexRcpMk) {
 		this.lipmFlexRcpMk = lipmFlexRcpMk;
+	}
+
+	public String getLipmAddrNoHidden() {
+		return lipmAddrNoHidden;
+	}
+
+	public void setLipmAddrNoHidden(String lipmAddrNoHidden) {
+		this.lipmAddrNoHidden = lipmAddrNoHidden;
+	}
+
+	public String getLipmCharAddrNoHidden() {
+		return lipmCharAddrNoHidden;
+	}
+
+	public void setLipmCharAddrNoHidden(String lipmCharAddrNoHidden) {
+		this.lipmCharAddrNoHidden = lipmCharAddrNoHidden;
 	}
 
 	@Override
