@@ -646,4 +646,12 @@ public interface OnlineChangeDao {
 	int addMedicalTreatmentClaim(@Param("vo")TransMedicalTreatmentClaimVo voTemp);
 	//查詢當前保單狀態碼
     String getTransMedicalTreatmentByAllianceStatus(@Param("transNum")String transNum)throws Exception;
+	//獲取當前案件需要上傳影響系統條數
+	int getTransMedicalTreatmentByCount(@Param("transNum")String transNum)throws Exception;
+	//獲取當前案件已上傳影像系統成功條數
+	int getTransMedicalTreatmentBySuccessCount(@Param("transNum")String transNum)throws Exception;
+	//獲取當前的保單的caseId
+	String getTransMedicalTreatmentByCaseId(@Param("transNum")String transNum)throws Exception;
+	//進行回壓聯盟結束流程狀態
+	void updateTarnsMedicalTreatmentClaimToAllianceStatus(@Param("vo")TransMedicalTreatmentClaimVo mvo)throws Exception;
 }

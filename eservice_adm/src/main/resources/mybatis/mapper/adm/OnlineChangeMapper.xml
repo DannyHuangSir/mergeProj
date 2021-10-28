@@ -665,7 +665,9 @@
 			AND TH.REJECT_REASON  = #{transVo.abnormalReason}
 		</if>
 		<if test="transVo.fromHospitalId != null and transVo.fromHospitalId != ''" >
-			AND FD.FILE_STATUS = #{transVo.fromHospitalId}
+			AND  F.CLAIMS_SEQ_ID  IN  (
+			select  distinct  CLAIMS_SEQ_ID  FROM  ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS FD  WHERE  FD.FILE_STATUS   = #{transVo.fromHospitalId}
+			)
 		</if>
 
 	</sql>
@@ -2892,6 +2894,13 @@
 		WHERE
 		TRANS_NUM = #{vo.transNum,jdbcType=VARCHAR}
 	</update>
+	<update id="updateTarnsMedicalTreatmentClaimToAllianceStatus"  parameterType="com.twfhclife.adm.model.TransMedicalTreatmentClaimVo">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		set
+		ALLIANCE_STATUS = #{vo.allianceStatus},
+		ALLIANCE_FILE_STATUS = #{vo.allianceFileStatus}
+		where CASE_ID = #{vo.caseId}
+	</update>
 	<select id="getTransMedicalTreatmentByTransNum" resultMap="TransMedicalTreatmentClaimResultMap" parameterType="java.lang.String">
 		select
 		<include refid="MEDICAL_TREATMENT_CLAIM_ALL"></include>
@@ -2905,6 +2914,23 @@
 	<select id="getTransMedicalTreatmentByAllianceStatus" resultType="java.lang.String">
 		SELECT ALLIANCE_STATUS
 		FROM [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM] where TRANS_NUM=#{transNum}
+	</select>
+	<select id="getTransMedicalTreatmentByCount" resultType="java.lang.Integer">
+		SELECT  COUNT(FD_ID)
+		FROM [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS] TMF INNER  JOIN
+		[ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM] TM  ON  TMF.CLAIMS_SEQ_ID=TM.CLAIMS_SEQ_ID
+		WHERE TRANS_NUM=#{transNum}
+	</select>
+	<select id="getTransMedicalTreatmentBySuccessCount" resultType="java.lang.Integer">
+		SELECT  COUNT(FD_ID)
+		FROM [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS] TMF INNER  JOIN
+		[ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM] TM  ON  TMF.CLAIMS_SEQ_ID=TM.CLAIMS_SEQ_ID
+		WHERE   TMF.FILE_BASE64 IS NOT NULL AND  TMF.FILE_BASE64 !='' AND  TMF.EZ_ACQUIRE_TASK_ID IS NOT  NULL   AND  TMF.EZ_ACQUIRE_TASK_ID !='' AND TRANS_NUM=#{transNum}
+	</select>
+	<select id="getTransMedicalTreatmentByCaseId" resultType="java.lang.String">
+		SELECT TOP 1 CASE_ID
+		FROM [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM]
+		WHERE   TRANS_NUM=#{transNum}
 	</select>
 	<insert id="addMedicalTreatmentClaim" parameterType="com.twfhclife.adm.model.TransMedicalTreatmentClaimVo" >
 		INSERT INTO

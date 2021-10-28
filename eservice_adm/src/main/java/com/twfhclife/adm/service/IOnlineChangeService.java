@@ -522,4 +522,12 @@ public interface IOnlineChangeService {
 	int updateOrAddMedicalTreatment(TransMedicalTreatmentClaimVo vo);
 	//查詢當前保單的聯盟狀態
     String getTransMedicalTreatmentByAllianceStatus(String transNum)throws Exception;
+	// 獲取當前案件需要上傳影響系統條數
+    int getTransMedicalTreatmentByCount(String transNum)throws Exception;
+	// 獲取當前案件已上傳影像系統成功條數
+	int getTransMedicalTreatmentBySuccessCount(String transNum)throws Exception;
+	//獲取當前的保單的caseId
+    String getTransMedicalTreatmentByCaseId(String transNum)throws Exception;
+	//進行回壓聯盟結束流程狀態
+	void updateTarnsMedicalTreatmentClaimToAllianceStatus(TransMedicalTreatmentClaimVo mvo)throws Exception;
 }

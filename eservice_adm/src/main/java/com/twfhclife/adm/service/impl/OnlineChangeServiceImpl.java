@@ -561,7 +561,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 
 					if(fileBase64!=null && !"".equals(fileBase64)){
 						//直接将原文件base64 转为 缩图的 base64
-						//TODO 进行考虑大文件的的处理
+						//进行考虑大文件的的处理
 						byte[] decode = Base64.getDecoder().decode(fileBase64);
 						//获取类型
 						String base64Type = this.checkBase64ImgOrPdf(decode);
@@ -1487,6 +1487,26 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	@Override
 	public String getTransMedicalTreatmentByAllianceStatus(String transNum) throws Exception {
 		return onlineChangeDao.getTransMedicalTreatmentByAllianceStatus(transNum);
+	}
+
+	@Override
+	public int getTransMedicalTreatmentByCount(String transNum) throws Exception {
+		return onlineChangeDao.getTransMedicalTreatmentByCount(transNum);
+	}
+
+	@Override
+	public int getTransMedicalTreatmentBySuccessCount(String transNum) throws Exception {
+		return onlineChangeDao.getTransMedicalTreatmentBySuccessCount(transNum);
+	}
+
+	@Override
+	public String getTransMedicalTreatmentByCaseId(String transNum) throws Exception {
+		return onlineChangeDao.getTransMedicalTreatmentByCaseId(transNum);
+	}
+
+	@Override
+	public void updateTarnsMedicalTreatmentClaimToAllianceStatus(TransMedicalTreatmentClaimVo mvo)throws Exception {
+		 onlineChangeDao.updateTarnsMedicalTreatmentClaimToAllianceStatus(mvo);
 	}
 
 	@Override

@@ -216,8 +216,17 @@ public interface ApConstants {
 	public static final String MEDICAL_INTERFACE_STATUS_ITPS_END = "MEDICAL_INTERFACE_STATUS_ITPS_END";
 	//流程結束
 	public static final String MEDICAL_INTERFACE_STATUS_PQHF_END = "MEDICAL_INTERFACE_STATUS_PQHF_END";
+	//案件已取得醫療資料，平台CallBack給保險公司成功
+	public static final String MEDICAL_INTERFACE_STATUS_HTPS_PTIS = "MEDICAL_INTERFACE_STATUS_HTPS_PTIS";
+	//保險公司呼叫平台已成功取得醫療資料
+	public static final String MEDICAL_INTERFACE_STATUS_ITPS = "MEDICAL_INTERFACE_STATUS_ITPS";
 	//聯盟案件狀態未結束提示信息
 	public static final String MEDICAL_NOT_FINISHED_WINDOW_MSG = "MEDICAL_NOT_FINISHED_WINDOW_MSG";
+	//API 406 地址
+	public static final String MEDICALALLIANCE_API406_URL = "medicalAlliance.api406.url";
+	//聯盟案件更新失敗提示
+	public static final String MEDICAL_NOT_APIALLIANCE_WINDOW_MSG = "MEDICAL_NOT_APIALLIANCE_WINDOW_MSG";
+
 
 	/** 線上申請-未持有投資標的轉換 狀態 */
 	final String INVESTMENT_STATUS_OUT = "OUT";

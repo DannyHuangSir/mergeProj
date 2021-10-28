@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,11 @@ import com.twfhclife.adm.model.ParameterVo;
 import com.twfhclife.adm.model.TransClaimPaymentVo;
 import com.twfhclife.adm.service.IParameterService;
 
+import com.twfhclife.generic.api_client.APIAllianceTemplateClient;
+import com.twfhclife.generic.api_model.APIAllianceRequestVo;
+import com.twfhclife.generic.api_model.ApiResponseObj;
+import com.twfhclife.generic.api_model.ReturnHeader;
+import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang3.StringUtils;
@@ -75,7 +81,8 @@ public class OnlineChangeController extends BaseController {
 
 	@Autowired
 	private IOnlineChangeService onlineChangeService;
-
+	@Autowired
+	private APIAllianceTemplateClient apiAllianceTemplateClient;
 	@Autowired
 	private IParameterService parameterService;
 
@@ -1156,11 +1163,91 @@ public class OnlineChangeController extends BaseController {
 			//查詢聯盟結束狀態碼
 			String itpsEnd = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS_ITPS_END);
 			String pqhfEnd = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS_PQHF_END);
+			String htpsPtis = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS_HTPS_PTIS);
+			String itps = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS_ITPS);
 			String notFinishedWindowMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_NOT_FINISHED_WINDOW_MSG);
+			String notApiAllianceWindowMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_NOT_APIALLIANCE_WINDOW_MSG);
 			//查詢當前保單狀態碼
 			String AllianceStatus = onlineChangeService.getTransMedicalTreatmentByAllianceStatus(vo.getTransNum());
 			if (!StringUtils.isEmpty(AllianceStatus)) {
-				if (AllianceStatus.equals(itpsEnd) ||AllianceStatus.equals(pqhfEnd) ){
+				boolean  boo=false;
+				//1.	該聯盟案件狀態需為HTPS_PTIS or ITPS or ITPS_END or PQHF_END
+				if (AllianceStatus.equals(itpsEnd) ||AllianceStatus.equals(pqhfEnd)
+						||AllianceStatus.equals(htpsPtis) ||AllianceStatus.equals(itps)){
+					/**
+					 * 當聯盟案件狀態=HTPS_PTIS or ITPS該案件有file_data，
+					 * 	需全部已上傳影像系統成功(FILE_BASE64皆有值，且 EZ_ACQUIRE_TASK_ID皆有值)
+					 * */
+					 if(AllianceStatus.equals(htpsPtis) ||AllianceStatus.equals(itps)){
+							//進行查詢當前案件是否已上傳影像系統成功
+							//1.1  獲取當前案件需要上傳影響系統條數
+						int  uploadCount= onlineChangeService.getTransMedicalTreatmentByCount(vo.getTransNum());
+						 	//1.2  獲取當前案件已上傳影像系統成功條數
+						 int  uploadSuccess= onlineChangeService.getTransMedicalTreatmentBySuccessCount(vo.getTransNum());
+						if(uploadCount>0){
+							if(uploadCount==uploadSuccess){
+								//呼叫API-406回報案件已完成,並於回傳成功(code=0)後，更新TRANS.STATUS=’2’
+								//獲取當前的保單的caseId
+								String caseId =onlineChangeService.getTransMedicalTreatmentByCaseId(vo.getTransNum());
+								//call api-406 to
+								Map<String, String> params = new HashMap<>();
+								String transNum = vo.getTransNum();
+								params.put("caseId",caseId);
+								//聯盟鏈歷程參數
+								Map<String, String> unParams = new HashMap<>();
+								unParams.put("name", "API-406 已完成案件申請");
+								unParams.put("caseId", caseId);
+								unParams.put("transNum", transNum);
+								//獲取API的請求地址
+								String parameterValue = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICALALLIANCE_API406_URL);
+								APIAllianceRequestVo requestVo = new APIAllianceRequestVo();
+								requestVo.setUrl(parameterValue);
+								requestVo.setParams(params);
+								requestVo.setUnParams(unParams);
+								//調用API
+								ReturnHeader returnHeader = apiAllianceTemplateClient.apiAlliance(requestVo);
+								String returnCode = returnHeader.getReturnCode();
+								if (ApiResponseObj.SUCCESS.equals(returnCode)) {
+									String returnMesg = returnHeader.getReturnMesg();
+									if(!StringUtils.isEmpty(returnMesg) && MyJacksonUtil.checkLiaAPIResponseValue(returnMesg,"/code","0")) {
+										String msg = MyJacksonUtil.readValue(returnMesg, "/msg");
+										TransMedicalTreatmentClaimVo mvo = new TransMedicalTreatmentClaimVo();
+										mvo.setAllianceStatus(pqhfEnd);
+										//進行回應狀態醫院資料信息描述
+										mvo.setAllianceFileStatus(msg);
+										onlineChangeService.updateTarnsMedicalTreatmentClaimToAllianceStatus(mvo);
+										boo=true;
+									}else{
+										processError(notApiAllianceWindowMsg);
+									}
+								}else{
+									//API 調用失敗
+									processError(notApiAllianceWindowMsg);
+								}
+							}else{
+								//有文件但為全部上傳至影響系統
+								processError(notApiAllianceWindowMsg);
+							}
+						}else{
+							//有文件但為成功塞入DB
+							processError(notApiAllianceWindowMsg);
+						}
+					 }
+
+
+
+					/**
+					 * 當聯盟案件狀態為以下，無需呼叫API406,直接更新TRANS.STATUS=2即可
+					 * 		2.1.當聯盟案件狀態=ITPS_END，就可能不會有file_data
+					 *      2.2. 當聯盟案件狀態=PQHF_END，不會有file_data
+					 */
+					if(AllianceStatus.equals(itpsEnd) ||AllianceStatus.equals(pqhfEnd)){
+						boo=true;
+					}
+					/***
+					 * 進行更新status 狀態
+					 */
+					if(boo){
 					int result = onlineChangeService.updateTransStatus(transVo);
 					if (result > 0) {
 						processSuccess(result);
@@ -1172,6 +1259,7 @@ public class OnlineChangeController extends BaseController {
 						onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(),ApConstants.INS_CLAIM_COMPLETED ,vo.getStatus());
 					} else {
 						processError("更新失敗");
+					}
 					}
 				}else{
 					processError(notFinishedWindowMsg);
