@@ -818,7 +818,7 @@ public class MedicalAllianceServiceTask {
     /**
      *  API-406 已完成案件申請
      * */
-    @Scheduled(cron = "${cron.medical406.expression}")
+   // @Scheduled(cron = "${cron.medical406.expression}")
     public void callAPI406() {
         log.info("Start API-406 Task.");
         log.info("API_DISABLE="+API_DISABLE);
