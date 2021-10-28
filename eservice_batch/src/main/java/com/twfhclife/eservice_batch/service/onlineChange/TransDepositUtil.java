@@ -44,7 +44,6 @@ public class TransDepositUtil {
             for (TransVo trantsVo : transList) {
                 String transNum = trantsVo.getTransNum();
                 logger.info("TransNum: {}", transNum);
-
                 // 取得資料
                 TransDepositVo transDepositVo = new TransDepositVo();
                 transDepositVo.setTransNum(transNum);
@@ -67,8 +66,7 @@ public class TransDepositUtil {
                                 logger.info("保單提領(贖回) 投資標：{}的最新净值：{}， 交易日期：{}", vo.getInvtNo(), fund.getLeft(), fund.getRight());
                                 BigDecimal fundValue = BigDecimal.valueOf(vo.getAmount()).divide(fund.getLeft(), 4, BigDecimal.ROUND_DOWN);
                                 logger.info("保單提領(贖回) 投資標：{}，計算後的單位凈值為：{}", vo.getInvtNo(), fundValue);
-                                // 介接代碼(3),申請序號(12),保單號碼(10),投資標的(10),轉出單位（18）,匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60),
-                                //收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                // 介接代碼(3),申請序號(12),保單號碼(10),投資標的(10),轉出單位（18）,匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
                                 String line = String.format(StringUtils.repeat("%s", 15),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),

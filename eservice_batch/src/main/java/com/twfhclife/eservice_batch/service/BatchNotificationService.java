@@ -159,14 +159,14 @@ public class BatchNotificationService {
 			InvestmentVo investmentVo = new InvestmentVo();
 			investmentVo.setInsuNo(vo.getPolicyNo());
 			investmentVo.setInvtNo(vo.getFundCode());
-			investmentVo = dao.findFundByInvestNo(investmentVo);
-			if (investmentVo != null) {
 				vo.setPortfolioVo(dao.findPortfolioByInvestNo(investmentVo));
-				if (StringUtils.equals(investmentVo.getInvtCurr(), "NTD")) {
-					investmentVo.setExchRate(BigDecimal.valueOf(1));
+			InvestmentVo newInvestmentVo = dao.findFundByInvestNo(investmentVo);
+			if (newInvestmentVo != null) {
+				if (StringUtils.equals(newInvestmentVo.getInvtCurr(), "NTD")) {
+					newInvestmentVo.setExchRate(BigDecimal.valueOf(1));
+					vo.setInvestmentVo(newInvestmentVo);
 				}
 			}
-			vo.setInvestmentVo(investmentVo);
 		}
 	}
 	
@@ -180,10 +180,6 @@ public class BatchNotificationService {
 		 */
 		List<RoiNotificationVo> tmpList = new ArrayList<RoiNotificationVo>();
 		for(RoiNotificationVo vo: list) {
-			InvestmentVo investmentVo = vo.getInvestmentVo();
-			if(investmentVo == null) {
-				continue;
-			}
 			if (vo.getPortfolioVo() != null) {
 			MyPortfolioVo portfolioVo = vo.getPortfolioVo();
 			BigDecimal netAmt = portfolioVo.getSafpNetAmt(); // 目前金額
@@ -352,7 +348,7 @@ public class BatchNotificationService {
 		if (netUnits != null && netValue != null && exchRate != null && ntdVal != null && accumAmt != null) {
 			values = RoiRateUtil.formula1(netUnits, netValue, exchRate, ntdVal, accumAmt);
 		} else {
-			values = this.getZero();
+			values = getZero();
 		}
 		return values;
 	}
@@ -384,28 +380,6 @@ public class BatchNotificationService {
 		BigDecimal percentageDown = new BigDecimal(vo.getPercentageDown()==null? "99999": vo.getPercentageDown().toString());
 		return this.doCompare(percentageUp, percentageDown.multiply(new BigDecimal(-1)), roiRate);
 	}
-	
-	/** 檢查匯率 */
-	private boolean checkExchRate(RoiNotificationVo vo) {
-		boolean flag = false;
-		InvestmentVo investmentVo = vo.getInvestmentVo();
-		MyPortfolioVo portfolioVo = vo.getPortfolioVo();
-		BigDecimal exchRate = portfolioVo.getExchRateBuy(); // 匯率
-		BigDecimal maxBigdecimal = null;
-		BigDecimal minBigdecimal = null;
-
-		if(vo.getPercentageUp() != null) {
-			String max = StringUtils.trimToEmpty(vo.getPercentageUp().toString()); // 保戶設定值
-			maxBigdecimal = new BigDecimal(max);
-		}
-		if(vo.getPercentageDown() != null) {
-			String min = StringUtils.trimToEmpty(vo.getPercentageDown().toString()); // 保戶設定值
-			minBigdecimal = new BigDecimal(min);
-		}
-		exchRate = investmentVo.getExchRate(); // 買價
-		flag = this.doCompare(maxBigdecimal, minBigdecimal, exchRate);
-		return flag;
-	}
 
 	/** 進行比較: FD/RT */
 	private boolean doCompare(BigDecimal percentageUp, BigDecimal percentageDown, BigDecimal value) {
@@ -427,23 +401,23 @@ public class BatchNotificationService {
 		StringBuffer sb = new StringBuffer();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for (RoiNotificationVo vo : list) {
-			MyPortfolioVo portfolio = vo.getPortfolioVo();
-			InvestmentVo investmentVo = vo.getInvestmentVo();
-			String insuCurrName = StringUtils.trimToEmpty(investmentVo.getInvtCurr());
 			// 表頭
 			if (vo.getPercentageDown() != null || vo.getPercentageUp() != null) {
-				sb.append("☆已持有投資標的<br/>");
+				MyPortfolioVo portfolio = vo.getPortfolioVo();
+				sb.append("<br/>☆已持有投資標的<br/>");
 				sb.append("￭保單號碼：" + vo.getPolicyNo() + "<br/>");
 				sb.append("￭類型：已持有 <br/>");
 				sb.append("￭投資標的：" + portfolio.getInvtNo() + "<br/>");
-				sb.append("￭幣別：" + insuCurrName + "<br/>");
-				sb.append("￭投資收益等級：" + portfolio.getRiskBeneLevel() + "<br/>");
+				sb.append("￭幣別：" + StringUtils.trimToEmpty(portfolio.getInvtExchCurr()) + "<br/>");
+				sb.append("￭投資收益等級：" + portfolio.getInvtRiskBeneLevel() + "<br/>");
 				sb.append("￭幣別參考價值：" + portfolio.getAcctValue() + "<br/>");
 				sb.append("￭參考報酬率百分比：" + portfolio.getRoiRate() + "<br/>");
 				sb.append("￭現行的停利點：" + vo.getPercentageUp() + "<br/>");
 				sb.append("￭現行的停損點：" + vo.getPercentageDown() + "<br/>");
 				sb.append("￭通知日期：" + sdf.format(new Date()) + "<br/>");
 			} else if (vo.getDownValue() != null || vo.getUpValue() != null) {
+				InvestmentVo investmentVo = vo.getInvestmentVo();
+				sb.append("<br/>☆觀察中投資標的<br/>");
 				sb.append("￭保單號碼：" + vo.getPolicyNo() + "<br/>");
 				sb.append("￭類型：觀察中<br/>");
 				sb.append("￭投資標的：" + investmentVo.getInvtNo() + "<br/>");
