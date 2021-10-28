@@ -2872,11 +2872,14 @@ td {
 
 /*Custom radio button*/
 .radio-btn input[type="radio"],
-.check-box input[type="checkbox"] {
+.check-box input[type="checkbox"] ,
+.radio-btn2 input[type="radio"],
+.check-box2 input[type="checkbox"]{
     visibility: hidden;
 }
 
-.radio-btn {
+.radio-btn,
+.radio-btn2 {
     background-color: #fff;
     width: 16px;
     height: 16px;
