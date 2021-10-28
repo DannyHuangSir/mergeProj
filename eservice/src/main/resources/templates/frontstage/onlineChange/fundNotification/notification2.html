@@ -224,6 +224,7 @@
 		];
 		grid1.fnInitComplete = function() {
 			initSearchItems()
+			initObserveInvestments()
 			initNewInvestments()
 			if (grid1.rownum() == 0) {
 				/* openAlert('查無資料'); */
@@ -462,6 +463,10 @@
 			$.each(grid1.getDataList(), function(i, oRow) {
 				ownInvtNos.push(oRow.invtNo)
 			})
+			$(observeInvestments).each(function(index, e){
+				ownInvtNos.push(e.invtNo)
+			})
+
 			let data = {policyNo: [[${policyNo}]], invtNos: ownInvtNos}
 			$.ajax({
 					type : 'POST',
@@ -474,10 +479,32 @@
 							openAlert(response.resultMsg);
 						} else {
 							newInvestments = response.resultData
+						}
+					},
+					error : function() {
+						openAlert($('#E0018').val());
+					}
+				});
+		}
+
+		var observeInvestments = []
+		function initObserveInvestments() {
+			let observeInvtNos = []
+			let data = {policyNo: [[${policyNo}]]}
+			$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/getObservePortfolio}]]*/,
+					async: false,
+					data : JSON.stringify(data),
+					success : function(response) {
+						if(response.result == "ERROR") {
+							openAlert(response.resultMsg);
+						} else {
 							$(response.resultData).each(function(index, e){
-								if (e.downValue != null && e.upValue != null) {
+								newInvestments.push(e)
+								observeInvestments.push(e)
 									addInvestment(e)
-								}
 							})
 						}
 					},

@@ -69,6 +69,7 @@ public class PortfolioController extends BaseController {
 			if (!CollectionUtils.isEmpty(parameterVos)) {
 				for (ParameterVo parameterVo : parameterVos) {
 					if (parameterVo.getParameterCode().endsWith(policyNo.substring(0, 2))) {
+						logger.info("listing2 -> : {}", parameterVo.getParameterValue());
 						return parameterVo.getParameterValue();
 					}
 				}
@@ -77,7 +78,7 @@ public class PortfolioController extends BaseController {
 			logger.error("Unable to getRiskLevelName from listing2: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
-		
+		logger.info("listing2 -> : {}", "frontstage/listing2");
 		return "frontstage/listing2";
 	}
 	

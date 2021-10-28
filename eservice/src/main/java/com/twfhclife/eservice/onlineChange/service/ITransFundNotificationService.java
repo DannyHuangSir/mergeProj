@@ -52,4 +52,6 @@ public interface ITransFundNotificationService {
 	List<NotificationFundVo> getSearchPortfolio(String policyNo, List<String> invtNos, String userRocId);
 
 	List<NotificationPortfolioVo> getOwnNotifications(String policyNo);
+
+	List<NotificationPortfolioVo> getObservePortfolio(String policyNo);
 }

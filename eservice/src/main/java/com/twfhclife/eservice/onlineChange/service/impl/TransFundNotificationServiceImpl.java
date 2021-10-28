@@ -268,4 +268,9 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 		}
 		return portfolioList;
 	}
+
+	@Override
+	public List<NotificationPortfolioVo> getObservePortfolio(String policyNo) {
+		return transFundNotificationDao.getObserveFunds(policyNo);
+	}
 }

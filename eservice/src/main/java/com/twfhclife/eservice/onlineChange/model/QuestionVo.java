@@ -8,6 +8,8 @@ import java.util.List;
 
 public class QuestionVo implements Serializable {
 
+    private Long id;
+
     private String question;
 
     private String title;
@@ -46,5 +48,13 @@ public class QuestionVo implements Serializable {
 
     public void setIsMulti(String isMulti) {
         this.isMulti = isMulti;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

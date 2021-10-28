@@ -321,6 +321,14 @@ public class FundNotificationController extends BaseUserDataController {
 	}
 
 	@RequestLog
+	@PostMapping("/getObservePortfolio")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> getObservePortfolio(@RequestBody TransNotificationVo vo) {
+		processSuccess(transFundNotificationService.getObservePortfolio(vo.getPolicyNo()));
+		return processResponseEntity();
+	}
+
+	@RequestLog
 	@PostMapping("/getNotificationPortfolioList")
 	public ResponseEntity<ResponseObj> getPortfolioList(@RequestParam("policyNo") String policyNo) {
 		try {

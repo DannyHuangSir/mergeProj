@@ -100,8 +100,9 @@ public class AttributeController extends BaseUserDataController  {
         List<QuestionVo> questions = attributeService.getQuestions();
         boolean flag = checkChoose(questions, vo.getAnswers());
         if (!flag) {
-            redirectAttributes.addFlashAttribute("errorMessage", "请回答完整问卷！");
-            return "redirect:attribute1";
+            addAttribute("transAnswerVo", vo);
+            addAttribute("errorMessage", "請回答完整問卷！");
+            return "forward:attribute1";
         }
 
         String riskLevel = riskLevelService.computeRiskLevel(vo.getScore());

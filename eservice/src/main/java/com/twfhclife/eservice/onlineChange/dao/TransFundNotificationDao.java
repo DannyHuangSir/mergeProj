@@ -44,4 +44,6 @@ public interface TransFundNotificationDao {
 	List<NotificationPortfolioVo> getNotificationPortfolioList(String policyNo);
 
     String findByInvtNo(@Param("policyNo") String policyNo, @Param("fundCode") String fundCode);
+
+	List<NotificationPortfolioVo> getObserveFunds(@Param("policyNo") String policyNo);
 }

@@ -6,6 +6,7 @@
     <result column="QUESTION" property="question" jdbcType="NVARCHAR" />
     <result column="TITLE" property="title" jdbcType="NVARCHAR" />
     <result column="IS_MULTI" property="isMulti" jdbcType="NVARCHAR" />
+    <result column="QID" property="id" jdbcType="NUMERIC" />
     <collection property="options" resultMap="OptionMap"></collection>
   </resultMap>
 
@@ -16,7 +17,7 @@
   </resultMap>
 
   <select id="selectQuestionnaire" resultMap="QuestionnaireMap">
-    SELECT O.ID, QUESTION, TITLE, ITEM, SCORE, IS_MULTI
+    SELECT Q.ID QID, O.ID, QUESTION, TITLE, ITEM, SCORE, IS_MULTI
     FROM ESERVICE.DBO.QUESTION Q LEFT JOIN ESERVICE.DBO.OPTIONS O ON Q.ID = O.QUESTION_ID
     WHERE #{date} &gt;= EFFECTIVE_TIME AND #{date} &lt;= STOP_TIME
     ORDER BY Q.SEQ, O.SEQ

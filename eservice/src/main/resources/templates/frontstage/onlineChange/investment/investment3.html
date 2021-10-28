@@ -192,10 +192,11 @@
 		function addOwnInvestment(oRow){
     		$('#fundContent').append(
 			'<div class="check-list2 newfund" id="investment_template">'
-              +'<div style="width: 100%;display: inline-block;">'
+              +'<div style="width: 100%; display: inline-block;">'
               			 +'<input type="hidden" name="invtNo" value="' + oRow.invtNo + '">'
                          +'<div class="col-sm-6">'
-                         +'<div class="selector-box">'
+                         +'<span>' + oRow.invtName + oRow.invtNo + '</span>'
+                         +'<div style="display:none; class="selector-box">'
                          +'<select class="selector" name="invSelect" disabled="disabled">'
                          +'<option invtName="' + oRow.invtName + '" value="' + oRow.invtNo +  '"> ' + oRow.invtName +' <span>(' + oRow.invtNo + ')</span></option>'
                          +'</select>'
