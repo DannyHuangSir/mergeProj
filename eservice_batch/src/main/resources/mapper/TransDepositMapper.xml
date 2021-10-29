@@ -33,6 +33,6 @@
 
 	<select id="getNearFundValue" resultType="org.apache.commons.lang3.tuple.MutablePair">
 		SELECT TOP 1 SELL_PRICE [left], EFFECTIVE_DATE [right] FROM ESERVICE.DBO.FUND_VALUE
-		WHERE FUND_CODE = #{invtNo}
+		WHERE FUND_CODE = #{invtNo} ORDER BY EFFECTIVE_DATE DESC
 	</select>
 </mapper>
