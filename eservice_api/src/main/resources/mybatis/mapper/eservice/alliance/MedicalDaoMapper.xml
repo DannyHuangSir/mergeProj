@@ -641,15 +641,12 @@
 			resultMap="TransMedicalTreatmentResultMap">
 			select top(10)
 			<include refid="TRANS_MEDICAL_CLAIM_ALIAS_ALL"></include>
-			from   ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM TM  inner  join  ESERVICE.DBO.TRANS T
-			on  TM.TRANS_NUM=T.TRANS_NUM  WHERE
-			(TM.CASE_ID is not  null AND TM.CASE_ID!='')
-			AND T.TRANS_TYPE='MEDICAL_TREATMENT' AND  T.STATUS='2'
-			AND  TM.ALLIANCE_STATUS   in
-			<foreach collection="lists"   index="index"  item="status" open="(" close=")" separator="," >
-				#{status}
-			</foreach>
-	</select>
+			from ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM TM  
+				inner join ESERVICE.DBO.TRANS T on TM.TRANS_NUM=T.TRANS_NUM
+			WHERE (TM.CASE_ID is not  null AND TM.CASE_ID!='')
+			AND T.TRANS_TYPE='MEDICAL_TREATMENT' AND T.STATUS='2'
+			AND TM.ALLIANCE_STATUS ='HTPS_PTIS'
+	</select><!-- 只有HTPS_PTIS才可呼叫API406 -->
 
 
     <select id="getTransMedicalTreatmentBySendAlliance"
