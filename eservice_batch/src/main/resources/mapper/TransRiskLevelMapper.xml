@@ -31,4 +31,11 @@
 		update ESERVICE.dbo.INDIVIDUAL SET RISK_ATTR = #{riskLevelNew}
 		where ROC_ID = #{rocId}
 	</update>
+	<select id="getTop1PolicyNo" resultType="string">
+		SELECT TOP 1 P.POLICY_NO FROM
+		ESERVICE.dbo.POLICY P
+		WHERE
+		P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
+		AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
+	</select>
 </mapper>

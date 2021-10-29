@@ -219,10 +219,10 @@ public class BatchDownloadService {
 			File file = new File(downloadFileName);
 			List<String> applyLines = FileUtils.readLines(file);
 			ParameterDao parameterDao = new ParameterDao();
-			
+			List<String> investCodes = this.getInvestCodes();
 			logger.info("\n");
 			int i = 1;
-			
+
 			String transOkCode = parameterDao.getParameterValueByCode("eservice", "TRANS_OK_CODE");
 			Map<String, String> okMap = new HashMap<String, String>();
 			if (transOkCode != null) { 
@@ -401,7 +401,13 @@ public class BatchDownloadService {
 					req.setParameters(paramMap);
 					
 					UserDao userDao = new UserDao();
-					UserVo userVo = userDao.getMailPhoneByPolicyNo(policyNum);
+					UserVo userVo = null;
+					if (investCodes.contains(transCode)) {
+						userVo = userDao.getMailPhoneByTransNum(transNum);
+					} else {
+						userVo = userDao.getMailPhoneByPolicyNo(policyNum);
+					}
+					if (userVo != null) {
 					if (StringUtils.isNotEmpty(userVo.getEmail())) {
 						List<String> receivers = new ArrayList<String>();
 						receivers.add(userVo.getEmail());
@@ -416,6 +422,7 @@ public class BatchDownloadService {
 						req.setSendType(MessageTriggerRequestVo.SEND_TYPE_SMS);
 						api.postMessageTemplateTrigger(req);
 					}
+					}
 				} catch (Exception e) {
 					logger.error("寄出變更完成通知訊息 error:", e);
 				}
@@ -426,6 +433,18 @@ public class BatchDownloadService {
 		} catch (IOException e) {
 			logger.error("update apply result error:", e);
 		}
+	}
+
+	private List<String> getInvestCodes() {
+		List<String> list = new ArrayList<>();
+		list.add("031");
+		list.add("033");
+		list.add("034");
+		list.add("032");
+		list.add("030");
+		list.add("029");
+		list.add("028");
+		return list;
 	}
 
 	/***

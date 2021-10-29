@@ -57,25 +57,27 @@ public class TransRiskLevelUtil {
                 transRiskLevelVo.setTransNum(transNum);
                 List<TransRiskLevelVo> list = transRiskLevelDao.getTransLevel(transRiskLevelVo);
                 if (list != null && list.size() > 0) {
+                    String policyNo = transRiskLevelDao.getTop1PolicyNo(list.get(0).getRocId());
                     // 取得保單號碼
                     TransPolicyVo tpQryVo = new TransPolicyVo();
                     tpQryVo.setTransNum(transNum);
                     List<TransPolicyVo> transPolicyList = transPolicyDao.getTransPolicyList(tpQryVo);
                     if (transPolicyList != null) {
                         for (TransPolicyVo tpVo : transPolicyList) {
-                            logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
+                            logger.info("TransNum : {}, policyNo : {}", transNum, policyNo);
                             for (TransRiskLevelVo vo : list) {
-                                // 介接代碼(3),申請序號(12),保戶身份證(10),風險屬性(1),風險評分(3),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                //  介接代碼(3),申請序號(12),保單號碼(10),風險屬性(1),風險評分(3),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),保戶身份證(10)
                                 String score = String.valueOf(vo.getRiskScore());
                                 score = "   ".substring(0, score.length() -1) + score;
-                                String line = String.format(StringUtils.repeat("%s", 7),
+                                String line = String.format(StringUtils.repeat("%s", 8),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
-                                        StringUtil.rpadBlank(vo.getRocId(), 10),
+                                        StringUtil.rpadBlank(policyNo, 10),
                                         StringUtil.rpadBlank(vo.getRiskLevelNew(), 1),
                                         score,
                                         systemTwDate,
-                                        systemTwDate
+                                        systemTwDate,
+                                        StringUtil.rpadBlank(vo.getRocId(), 10)
                                 );
                                 logger.info(line);
                                 txtSb.append(line);

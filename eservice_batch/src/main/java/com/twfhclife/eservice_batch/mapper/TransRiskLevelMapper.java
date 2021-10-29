@@ -12,4 +12,6 @@ public interface TransRiskLevelMapper {
     TransRiskLevelVo getEffectUserTransRiskLevel(String transNum);
 
     void updateIndividual(TransRiskLevelVo vo);
+
+    String getTop1PolicyNo(@Param("rocId") String rocId);
 }

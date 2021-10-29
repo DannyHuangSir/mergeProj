@@ -3,6 +3,7 @@ package com.twfhclife.eservice_batch.mapper;
 import java.util.List;
 
 import com.twfhclife.eservice_batch.model.UserVo;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
 	public UserVo findById(String username);
@@ -39,4 +40,6 @@ public interface UserMapper {
 	public List<UserVo> getUserLastLoginOverYears(String lastLoginLimitYears);
 	
 	public int lockUserStatus(String userId);
+
+    UserVo getMailPhoneByTransNum(@Param("transNum") String transNum);
 }

@@ -164,8 +164,8 @@ public class BatchNotificationService {
 			if (newInvestmentVo != null) {
 				if (StringUtils.equals(newInvestmentVo.getInvtCurr(), "NTD")) {
 					newInvestmentVo.setExchRate(BigDecimal.valueOf(1));
-					vo.setInvestmentVo(newInvestmentVo);
 				}
+				vo.setInvestmentVo(newInvestmentVo);
 			}
 		}
 	}
@@ -304,7 +304,7 @@ public class BatchNotificationService {
 		logger.info(vo.getPolicyNo() + "標的 " + vo.getFundCode()+ " 淨值: " + netValue);
 		BigDecimal upValue = new BigDecimal(vo.getUpValue()==null? "99999": vo.getUpValue().toString());
 		BigDecimal downValue = new BigDecimal(vo.getDownValue()==null? "99999": vo.getDownValue().toString());
-		return this.doCompare(upValue, downValue.multiply(new BigDecimal(-1)), netValue);
+		return this.doCompare(upValue, downValue.multiply(new BigDecimal(1)), netValue);
 	}
 
 	/**

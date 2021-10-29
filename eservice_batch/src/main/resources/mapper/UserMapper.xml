@@ -70,8 +70,14 @@
             ESERVICE.DBO.LIPMDA_ES 
 		WHERE 
             (PMDA_INSU_TYPE + CONVERT(VARCHAR,PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) = #{policyNo}
-	</select>	
-	
+	</select>
+
+	<select id="getMailPhoneByTransNum" resultMap="UserMap" parameterType="java.lang.String">
+		SELECT TOP 1 ESERVICE.DBO.FN_DEBASE64(U.EMAIL) EMAIL, ESERVICE.DBO.FN_DEBASE64(U.MOBILE) MOBILE
+		FROM TRANS T LEFT JOIN ESERVICE.DBO.USERS U ON LOWER(T.USER_ID) = LOWER(U.USER_ID)
+		WHERE T.TRANS_NUM = #{transNum}
+	</select>
+
 	<select id="getUserLastLoginOverYears" resultMap="UserMap" parameterType="java.lang.String">
 	<![CDATA[
 		select t.user_id id from (

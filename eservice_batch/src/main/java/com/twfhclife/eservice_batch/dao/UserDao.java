@@ -93,6 +93,20 @@ public class UserDao extends BaseDao {
 		}
 		return user;
 	}
+
+	public UserVo getMailPhoneByTransNum(String transNum) {
+		UserVo user = null;
+		try {
+			UserMapper userMapper = this.getSqlSession().getMapper(UserMapper.class);
+			user = userMapper.getMailPhoneByTransNum(transNum);
+			logger.debug("transNum:{}, mail:{}, phone:{}", transNum, user.getEmail(), user.getMobile());
+		} catch (Exception e) {
+			logger.error("getMailPhoneByTransNum error:", e);
+		} finally {
+			this.release();
+		}
+		return user;
+	}
 	
 	public List<UserVo> getUserLastLoginOverYears(String lastLoginLimitYears) {
 		List<UserVo> userList = null;

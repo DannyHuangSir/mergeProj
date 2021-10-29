@@ -49,4 +49,16 @@ public class TransRiskLevelDao extends BaseDao {
 			this.release();
 		}
 	}
+
+    public String getTop1PolicyNo(String rocId) {
+		try {
+			TransRiskLevelMapper transRiskLevelMapper = this.getSqlSession().getMapper(TransRiskLevelMapper.class);
+			return transRiskLevelMapper.getTop1PolicyNo(rocId);
+		} catch (Exception e) {
+			logger.error("getTop1PolicyNo error:", e);
+		} finally {
+			this.release();
+		}
+		return null;
+    }
 }
