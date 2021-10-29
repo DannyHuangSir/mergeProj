@@ -19,6 +19,16 @@ public class InvestmentPortfolioVo extends PortfolioVo {
     private Integer ratioMaxSize;
     //報單類型
     private String policyType;
+    //停泊賬號  N  不是   Y是
+    private String depositAccount;
+
+    public String getDepositAccount() {
+        return depositAccount;
+    }
+
+    public void setDepositAccount(String depositAccount) {
+        this.depositAccount = depositAccount;
+    }
 
     public Integer getRatioMinSize() {
         return ratioMinSize;

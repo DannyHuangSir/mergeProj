@@ -8,6 +8,8 @@ public class TransCashPaymentVo extends AbstractOnlineChangeModelBean {
 
     private String policyNo;
 
+    private String currency;
+
     private String allocation;
 
     private String preAllocation;
@@ -132,5 +134,13 @@ public class TransCashPaymentVo extends AbstractOnlineChangeModelBean {
 
     public void setBranchName(String branchName) {
         this.branchName = branchName;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

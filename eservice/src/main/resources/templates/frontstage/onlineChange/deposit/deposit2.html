@@ -170,7 +170,7 @@
                                     </div>
                                     <p class="text-ps" name="tips"></p>
                                     <div class="check-list2 sum-list marginTop20">
-                                      <label class="col-sm-12 text-left" style="color: red;">可能有贖回手續費產生，於執行後需另扣除，若對贖回手續費有清楚的地方可詢問客戶人員。</label>
+                                      <label class="col-sm-12 text-left" style="color: red;">可能有贖回手續費產生，於執行後需另扣除，若對贖回手續費有清楚的地方可詢問客服人員。</label>
                                    </div>
                                   </section>
                                 </article>
@@ -247,15 +247,17 @@
 			    let len = 0
 			    let acctValue = 0
 		        $("input[name='amount']").each(function(index, e){
+		            let invtNo = $(context).find("[name='invtNo']").val()
 		            if ($(this).val() != null && $(this).val() != "") {
 		                let context = $(this).parent().parent().parent()
-		                let invtNo = $(context).find("[name='invtNo']").val()
 		                if (stopAccount.indexOf(invtNo) < 0) {
 		                amount = amount + Math.floor($(this).val())
-		                    acctValue = acctValue + Math.floor($(context).find("[name='acctValue']").val())
 		                }
 		                len += 1
 		            }
+		            if (stopAccount.indexOf(invtNo) < 0) {
+                        acctValue = acctValue + Math.floor($(context).find("[name='acctValue']").val())
+                    }
 		        })
 
                 if (len <= 0) {
@@ -264,7 +266,7 @@
 		        }
 
 		        if ((acctValue - amount) <  surplusValue) {
-                     openAlert("非停泊賬戶，剩余價值必須大於：" + surplusValue)
+                    openAlert("非停泊賬戶，剩餘價值必須大於：" + surplusValue)
 		            return
                 }
 

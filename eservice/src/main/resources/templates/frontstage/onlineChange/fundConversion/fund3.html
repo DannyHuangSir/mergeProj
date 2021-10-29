@@ -127,7 +127,7 @@
 						<a href="javascript:void(0);"><button id="go" class="btn-signup">下一步</i></button></a>
 					</div>
 				</div>
-					
+
 				</div>
 			</div>
 		</section>
@@ -281,6 +281,9 @@
 		// 轉出單位數
 		function showNumberOfOutput(oRow) {
 			var html = '';
+			if(oRow.depositAccount=="Y"){
+				html+='<P width="120" class="company"><input  value="0"  id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="0" max="0" type="hidden">停泊帳戶不能轉換為其它基金</P>';
+			}else{
 			if (oRow.invtExchCurr== 'NTD') {
 					//計算臺幣的可輸入的最小的單位書
 					//提參考價值=單位數*淨值*匯率  反推獲取單位書=參考價值/淨值/匯率
@@ -290,15 +293,20 @@
 				var USD_UNIT_MIN= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(oRow.netValueSell,4), 4);
 				html+='<P width="120" class="company"><input value="0" onblur="showNumberCompany(\''+oRow.investmentId+'\')" id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="'+USD_UNIT_MIN+'" max="'+formatNumber(oRow.safpNetUnits,4)+'" type="number">單位</P>';
 			}
+			}
 				return html;
 		}
 		//轉出百分比
 		function showPercentage(oRow) {
 			var html = '';
+			if(oRow.depositAccount=="Y"){
+				html+='<P width="120" class="company"><input value="0" id="per'+oRow.investmentId+'"  class="item90" max="100" type="hidden">停泊帳戶不能轉換為其它基金</P>';
+			}else{
 			if (oRow.invtExchCurr== 'NTD') {
 				html+='<P style="display: none;" class="percentage"><input value="0" onblur="showNumberPercentage(\''+oRow.investmentId+'\')" id="per'+oRow.investmentId+'"  min="'+proportionMin['NTD_PROPORTION_MIN']+'" class="item90" max="100" type="number">%</P>'
 			}else{
 				html+='<P style="display: none;" class="percentage"><input value="0" onblur="showNumberPercentage(\''+oRow.investmentId+'\')" id="per'+oRow.investmentId+'"  min="'+proportionMin['USD_PROPORTION_MIN']+'" class="item90" max="100" type="number">%</P>'
+			}
 			}
 			 return html;
 		}

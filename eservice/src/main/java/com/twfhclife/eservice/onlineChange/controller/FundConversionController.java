@@ -210,8 +210,25 @@ public class FundConversionController extends BaseUserDataController  {
         try {
             //查询已有投资标
             List<InvestmentPortfolioVo> investments = transInvestmentService.getHeldInvestmentTarget(policyNo);
+            //獲取到停泊賬號信息
+            String uuStopAccount = parameterService.getParameterValueByCode(
+                    ApConstants.SYSTEM_ID, OnlineChangeUtil.DEPOSIT_UU_STOP_ACCOUNT);
+            String usStopAccount = parameterService.getParameterValueByCode(
+                    ApConstants.SYSTEM_ID, OnlineChangeUtil.DEPOSIT_US_STOP_ACCOUNT);
+            List<InvestmentPortfolioVo> collect = investments.stream().map(x -> {
+                String invtNo = x.getInvtNo();
+                if (!StringUtils.isEmpty(invtNo)) {
+                    if (invtNo.equals(uuStopAccount) || invtNo.equals(usStopAccount)) {
+                        x.setDepositAccount("Y");
+                    } else {
+                        x.setDepositAccount("N");
+                    }
+                }
+                return x;
+            }).collect(Collectors.toList());
+
             logger.error("U=====================取得取得投資損益及投報率清單資料.====={}", investments);
-            processSuccess(investments);
+            processSuccess(collect);
         } catch (Exception e) {
             logger.error("Unable to getPortfolioList: {}", ExceptionUtils.getStackTrace(e));
             processSystemError();

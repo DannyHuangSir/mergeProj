@@ -152,6 +152,7 @@
 				formData.preAllocation = [[${preAllocation}]]
 
 				if ($("#tab_4").is(':visible')) {
+					if ([[${transCashPaymentVo.currency}]] != 'NTD') {
 					if ($('#swiftCode').val() == '') {
 						openAlert("請輸入Swift Code");
 						return false;
@@ -159,6 +160,7 @@
 					if ($('#englishName').val() == '') {
 						openAlert("請輸入英文戶名");
 						return false;
+					}
 					}
 					if ($('#bankOpt').val() == '') {
 						openAlert("請選擇銀行");

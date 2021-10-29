@@ -213,4 +213,9 @@ public interface OnlineChangeUtil {
 	public static final String ELIFE_MAIL_027="ELIFE_MAIL_027";
 	/**投資型保單商品-保戶人員通知	接受申請/申請完成/取消申請*/
 	public static final String ELIFE_MAIL_028="ELIFE_MAIL_028";
+	/**
+	 * 停泊賬號信息數據
+	 */
+	public static final String DEPOSIT_UU_STOP_ACCOUNT = "DEPOSIT_UU_STOP_ACCOUNT";
+	public static final String DEPOSIT_US_STOP_ACCOUNT = "DEPOSIT_US_STOP_ACCOUNT";
 }
