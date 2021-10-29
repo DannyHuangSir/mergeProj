@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.util.ArrayUtils;
 
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
@@ -1170,21 +1171,21 @@ public class OnlineChangeController extends BaseController {
 			//查詢當前保單狀態碼
 			String AllianceStatus = onlineChangeService.getTransMedicalTreatmentByAllianceStatus(vo.getTransNum());
 			if (!StringUtils.isEmpty(AllianceStatus)) {
-				boolean  boo=false;
-				//1.	該聯盟案件狀態需為HTPS_PTIS or ITPS or ITPS_END or PQHF_END
+				boolean boo = false;
+				//1.該聯盟案件狀態需為HTPS_PTIS or ITPS or ITPS_END or PQHF_END
 				if (AllianceStatus.equals(itpsEnd) ||AllianceStatus.equals(pqhfEnd)
 						||AllianceStatus.equals(htpsPtis) ||AllianceStatus.equals(itps)){
 					/**
 					 * 當聯盟案件狀態=HTPS_PTIS or ITPS該案件有file_data，
 					 * 	需全部已上傳影像系統成功(FILE_BASE64皆有值，且 EZ_ACQUIRE_TASK_ID皆有值)
 					 * */
-					 if(AllianceStatus.equals(htpsPtis) ||AllianceStatus.equals(itps)){
-							//進行查詢當前案件是否已上傳影像系統成功
-							//1.1  獲取當前案件需要上傳影響系統條數
-						int  uploadCount= onlineChangeService.getTransMedicalTreatmentByCount(vo.getTransNum());
-						 	//1.2  獲取當前案件已上傳影像系統成功條數
-						 int  uploadSuccess= onlineChangeService.getTransMedicalTreatmentBySuccessCount(vo.getTransNum());
-						if(uploadCount>0){
+					 if(AllianceStatus.equals(htpsPtis)){
+						 //進行查詢當前案件是否已上傳影像系統成功
+						 //1.1  獲取當前案件需要上傳影響系統條數
+						 int uploadCount= onlineChangeService.getTransMedicalTreatmentByCount(vo.getTransNum());
+						 //1.2  獲取當前案件已上傳影像系統成功條數
+						 int uploadSuccess= onlineChangeService.getTransMedicalTreatmentBySuccessCount(vo.getTransNum());
+						 if(uploadCount>0){
 							if(uploadCount==uploadSuccess){
 								//呼叫API-406回報案件已完成,並於回傳成功(code=0)後，更新TRANS.STATUS=’2’
 								//獲取當前的保單的caseId
@@ -1204,6 +1205,7 @@ public class OnlineChangeController extends BaseController {
 								requestVo.setUrl(parameterValue);
 								requestVo.setParams(params);
 								requestVo.setUnParams(unParams);
+								
 								//調用API
 								ReturnHeader returnHeader = apiAllianceTemplateClient.apiAlliance(requestVo);
 								String returnCode = returnHeader.getReturnCode();
@@ -1216,7 +1218,7 @@ public class OnlineChangeController extends BaseController {
 										//進行回應狀態醫院資料信息描述
 										mvo.setAllianceFileStatus(msg);
 										onlineChangeService.updateTarnsMedicalTreatmentClaimToAllianceStatus(mvo);
-										boo=true;
+										boo = true;
 									}else{
 										processError(notApiAllianceWindowMsg);
 									}
@@ -1234,32 +1236,33 @@ public class OnlineChangeController extends BaseController {
 						}
 					 }
 
-
-
 					/**
 					 * 當聯盟案件狀態為以下，無需呼叫API406,直接更新TRANS.STATUS=2即可
 					 * 		2.1.當聯盟案件狀態=ITPS_END，就可能不會有file_data
-					 *      2.2. 當聯盟案件狀態=PQHF_END，不會有file_data
+					 *      2.2.當聯盟案件狀態=PQHF_END，不會有file_data
+					 *      2.3.當聯盟案件狀態=ITPS，不允許重覆呼叫API406
 					 */
-					if(AllianceStatus.equals(itpsEnd) ||AllianceStatus.equals(pqhfEnd)){
-						boo=true;
+					if(AllianceStatus.equals(itpsEnd) 
+							|| AllianceStatus.equals(pqhfEnd)
+							|| AllianceStatus.equals(itps)){
+						boo = true;
 					}
 					/***
 					 * 進行更新status 狀態
 					 */
 					if(boo){
-					int result = onlineChangeService.updateTransStatus(transVo);
-					if (result > 0) {
-						processSuccess(result);
-						vo.setStatus("2");
-						vo.setCustomerName(getUserId());
-						vo.setIdentity((String) getSession(ApConstants.LOGIN_USER_ROLE_NAME));
-						result = onlineChangeService.addTransStatusHistory(vo);
-						// 發送郵件
-						onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(),ApConstants.INS_CLAIM_COMPLETED ,vo.getStatus());
-					} else {
-						processError("更新失敗");
-					}
+						int result = onlineChangeService.updateTransStatus(transVo);
+						if (result > 0) {
+							processSuccess(result);
+							vo.setStatus("2");
+							vo.setCustomerName(getUserId());
+							vo.setIdentity((String) getSession(ApConstants.LOGIN_USER_ROLE_NAME));
+							result = onlineChangeService.addTransStatusHistory(vo);
+							// 發送郵件
+							onlineChangeService.sendMedicalTreatmentMailTO(vo.getTransNum(),ApConstants.INS_CLAIM_COMPLETED ,vo.getStatus());
+						} else {
+							processError("更新失敗");
+						}
 					}
 				}else{
 					processError(notFinishedWindowMsg);
