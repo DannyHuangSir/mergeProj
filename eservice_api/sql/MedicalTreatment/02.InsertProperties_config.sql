@@ -338,8 +338,8 @@ go
 
 -- API联盟API-403查詢案件資訊郵件模板
 INSERT INTO ESERVICE_ADM.[dbo].[MESSAGING_TEMPLATE]([MESSAGING_TEMPLATE_ID],[SYSTEM_ID],[MESSAGING_TEMPLATE_CODE],[MESSAGING_TEMPLATE_NAME],[STATUS],[TRIGGER_TYPE],[EVENT_TYPE],[SEND_TYPE],[SEND_TIME],[CIRCLE_TYPE],[CIRCLE_VALUE],[RECEIVER_MODE],[MESSAGING_SUBJECT],[MESSAGING_CONTENT],[CREATE_DATE],[CREATE_USER],[UPDATE_DATE],[UPDATE_USER])
-VALUES((select max([MESSAGING_TEMPLATE_ID])+1 from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE),N'eservice_api',N'MEDICAL_MAIL_034',N'醫療保單查詢案件資訊取得案件通知'
-,3,N'api ',NULL,N'email',NULL,NULL,NULL,N'dynamic',N'醫療保單查詢案件資訊取得案件通知MAIL模版'
+VALUES((select max([MESSAGING_TEMPLATE_ID])+1 from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE),N'eservice_api',N'MEDICAL_MAIL_034',N'醫療保單查詢案件資訊取得案件通知MAIL模版'
+,3,N'api ',NULL,N'email',NULL,NULL,NULL,N'dynamic',N'醫療保單查詢案件資訊取得案件通知'
 ,N'代碼:API-${CODE}</br>訊息:已從醫院端取得授權資料，請與保險公司的核心系統確認，是否是保戶</br>案件狀態代碼及中文:${STATUS}-${STATUS_MESSAGE}</br>與醫院對接序號:${HOSPITAL_CODE}</br>被保人身分證字號:${INSURED_ID}', getdate(),N'admin',getdate(),N'admin')
 GO
 
