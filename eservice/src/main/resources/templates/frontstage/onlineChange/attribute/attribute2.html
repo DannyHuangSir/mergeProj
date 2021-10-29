@@ -64,7 +64,8 @@
 
 				$('#deny').click(function(){
 					let formData = {
-						answers: [[${transAnswerVo.answers}]]
+						answers: [[${transAnswerVo.answers}]],
+						read: true
 					}
 					postWithFormData(/*[[@{/attribute1}]]*/, formData);
 				})

@@ -164,6 +164,8 @@
                 var formData = {};
                 if($("[name='tab_group_2']:checked").val() == 'option2') {
                     // 檢核是否有選一筆資料
+                    var currency = [[${depositVo.currency}]]
+                    if (currency != 'NTD') {
                     if ($('#swiftCode').val() == '') {
                         openAlert("請輸入Swift Code");
                         return false;
@@ -171,6 +173,7 @@
                     if ($('#englishName').val() == '') {
                         openAlert("請輸入英文戶名");
                         return false;
+                    }
                     }
                     if ($('#bankOpt').val() == '') {
                         openAlert("請選擇銀行");

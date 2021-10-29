@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
+import com.google.common.collect.Maps;
 import com.twfhclife.eservice.onlineChange.model.OptionVo;
 import com.twfhclife.eservice.onlineChange.model.QuestionVo;
 import com.twfhclife.eservice.onlineChange.model.TransAnswerVo;
@@ -65,7 +66,9 @@ public class AttributeController extends BaseUserDataController  {
 
     @RequestLog
     @RequestMapping("/attribute1")
-    public String attribute1(RedirectAttributes redirectAttributes, @RequestParam(name = "answers", required = false) List<String> answers) {
+    public String attribute1(RedirectAttributes redirectAttributes,
+                             @RequestParam(name = "answers", required = false) List<String> answers,
+                             @RequestParam(name = "read", required = false, defaultValue = "false") boolean read) {
 
         if(!checkCanUseOnlineChange()) {
             String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
@@ -90,6 +93,7 @@ public class AttributeController extends BaseUserDataController  {
             }
         }
         addAttribute("questions", questions);
+        addAttribute("read", read);
         return "frontstage/onlineChange/attribute/attribute1";
     }
 
@@ -104,6 +108,13 @@ public class AttributeController extends BaseUserDataController  {
             addAttribute("errorMessage", "請回答完整問卷！");
             return "forward:attribute1";
         }
+        try {
+            calculateScore(questions, vo);
+        } catch (Exception e) {
+            addAttribute("transAnswerVo", vo);
+            addAttribute("errorMessage", e.getMessage());
+            return "forward:attribute1";
+        }
 
         String riskLevel = riskLevelService.computeRiskLevel(vo.getScore());
         vo.setLevel(riskLevel);
@@ -111,6 +122,38 @@ public class AttributeController extends BaseUserDataController  {
         addAttribute("transAnswerVo", vo);
         addAttribute("analysisStatement", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "RISK_ATTRIBUTE_ANALYSIS_STATEMENT"));
         return "frontstage/onlineChange/attribute/attribute2";
+    }
+
+    private void calculateScore(List<QuestionVo> questions, TransAnswerVo vo) throws Exception {
+       boolean is3Zero = false;
+       Map<Long, Integer> scoreMap = Maps.newHashMap();
+        for (QuestionVo qVo : questions) {
+            for (OptionVo oVo : qVo.getOptions()) {
+                if (vo.getAnswers().contains(String.valueOf(oVo.getId()))) {
+                    Integer oScore = scoreMap.get(qVo.getId());
+                    Integer tmpScore = oVo.getScore().intValue();
+                    if (oScore != null && oScore > tmpScore) {
+                        tmpScore = oScore;
+                    }
+                    scoreMap.put(qVo.getId(), tmpScore);
+                }
+            }
+        }
+       int finalScore = 0;
+       for (Map.Entry<Long, Integer> entry: scoreMap.entrySet()) {
+           int tmpScore = entry.getValue();
+           if (StringUtils.equals(String.valueOf(entry.getKey()), "2") && entry.getValue().equals(0)) {
+               is3Zero = true;
+           }
+           if (StringUtils.equals(String.valueOf(entry.getKey()), "3") && is3Zero) {
+               tmpScore = 0;
+           }
+           if (StringUtils.equals(String.valueOf(entry.getKey()), "5") && entry.getValue().equals(0)) {
+               throw new Exception("不適合購買投資型保單");
+           }
+           finalScore += tmpScore;
+       }
+       vo.setScore(finalScore);
     }
 
     @RequestLog

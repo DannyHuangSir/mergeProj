@@ -89,7 +89,12 @@
 					<div class="statement1 wht">
 					  <p class="text-ps">備註：上述第5項問項得0分者，不論總分為何，均屬於「不適合購買投資型保單」。</p>
 					  <div>
+						  <th:block th:if="${read}">
+							  <input style="float:left;" checked type="checkbox" id="readCheck"/><p>本人已詳細閱讀本文件內容，並確認本文件資料皆由本人親自填寫及勾選。</p>
+						  </th:block>
+						  <th:block th:if="${!read}">
 						  <input style="float:left;" type="checkbox" id="readCheck"/><p>本人已詳細閱讀本文件內容，並確認本文件資料皆由本人親自填寫及勾選。</p>
+						  </th:block>
 					  </div>
 					</div>
 				</div>
@@ -111,53 +116,18 @@
 	/*<![CDATA[*/
 	 $(function() {
 		$('#go').click(function() {
-
 			if (!$("#readCheck").is(":checked")) {
-				openAlert('請詳細閱讀本文件內容')
+				openAlert('請詳細閱讀本文件內容後進行勾選')
 				return
 			}
-			score = 0
 			answers = []
-			var scoreMap = {}
 		    $("input[field='question']:checked").each(function(index, e){
-		    	tmpScore = parseInt($(e).val())
-				if ($(this).attr('type') == 'checkbox') {
-					score1 = scoreMap[$(this).attr('quesid')]
-					if (score1 != undefined && score1 > tmpScore) {
-						tmpScore = score1
-					}
-				}
-		    	scoreMap[$(this).attr('quesid')] = tmpScore
 		    	answers.push($(e).attr("qid"))
 		    })
-
-			var checked = true
-			var is3Zero = false
-			for(var k in scoreMap) {
-				score2 = scoreMap[k]
-				if (k == '2' && score2 == 0) {
-		    		is3Zero = true
-		    	}
-
-		    	if (k == '3' && is3Zero) {
-		    		score2 = 0
-		    	}
-		    	if (k == '5' && score2 == 0) {
-		    		checked = false
-					openAlert('不適合購買投資型保單')
-					return
-		    	}
-				score += score2
-			}
-
-			if (!checked) {
-		    	return
-		    }
-
 			var formData = {};
 			formData.questions = JSON.stringify([[${questions}]])
 			formData.answers =  answers
-			formData.score = score
+			formData.read = true
 			postWithFormData(/*[[@{/attribute2}]]*/, formData);
 		});
 

@@ -9761,3 +9761,9 @@ tr.disabled .action-buttons{
 input[type=number]{
     padding-right: 0 !important;
 }
+
+@media only screen and (min-device-width: 200px) and (max-device-width: 1024px){
+    .attribute1 .attr1-padding {
+        height: auto !important;
+    }
+}

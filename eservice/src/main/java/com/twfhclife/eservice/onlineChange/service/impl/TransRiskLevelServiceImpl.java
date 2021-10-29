@@ -122,7 +122,7 @@ public class TransRiskLevelServiceImpl implements ITransRiskLevelService {
 			for (ParameterVo parameterVo : parameterVos) {
 				if (parameterVo.getParameterCode().contains("MAX")) {
 					Integer paramScore = Integer.valueOf(parameterVo.getParameterValue());
-					if (paramScore > score && StringUtils.equals(parameterVo.getParameterName(), maxMinVo.getParameterName())) {
+					if (paramScore >= score && StringUtils.equals(parameterVo.getParameterName(), maxMinVo.getParameterName())) {
 						return parameterVo.getParameterName();
 		}
 	}
