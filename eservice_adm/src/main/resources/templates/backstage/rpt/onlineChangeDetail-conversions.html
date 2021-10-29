@@ -49,17 +49,17 @@
 								  <table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack"> 
 										  <thead>
 											<tr class="table2 orange2">
-												<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+												<th class="text-left" style="width: 70%;"  scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
 												<!-- <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th>  
 												-->
 												<th:block th:if="not ${#lists.isEmpty(detailData['OUT'])}">
 							
 														<th:block th:with="outInvestment=${detailData['OUT']}">
 															<th:block th:if="${outInvestment[0].ratio !=null && outInvestment[0].ratio !=0}">
-																<th  scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th>
+																<th  style="width: 30%;"  scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th>
 															</th:block>
 															<th:block th:if="${outInvestment[0].value !=null  && outInvestment[0].value !=0  && outInvestment[0].ratio ==0}">
-																<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出單位數</th>
+																<th style="width: 30%;"  scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出單位數</th>
 															</th:block>
 														</th:block>
 												
@@ -98,8 +98,8 @@
 										<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack"> 
 										  <thead>
 											<tr class="table2 orange2">
-											  <th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
-											  <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th>                 
+											  <th class="text-left" scope="col" style="width: 70%;" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+											  <th scope="col" data-tablesaw-sortable-col="" style="width: 30%;"  data-tablesaw-priority="">轉出百分比</th>                 
 											</tr>
 										  </thead>
 										<tbody>
