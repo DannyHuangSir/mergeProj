@@ -61,8 +61,8 @@
 																<th:block th:text="${from.get('invtName') != null} ?${from.invtName}"  ></th:block>
 																<p class="enSmall"  th:text="(${from.get('invtNo') != null} ?${from.invtNo})"></p>
 															</td>
-															<td th:text="${from.get('preRatio') != null} ?${from.preRatio} : '0'"></td>
-															<td  th:text="${from.get('afterRatio') != null} ?${from.afterRatio} : '0' "></td>
+															<td th:text="${from.get('preRatio') != null} ?${from.preRatio + '%'} : '0%'"></td>
+															<td  th:text="${from.get('afterRatio') != null} ?${from.afterRatio + '%'} : '0%' "></td>
 														</tr>
 													</th:block>
 													<tr style="background: #FDE3D2;">
