@@ -12,7 +12,7 @@ public interface IQuestionaireService {
 
     int getQuestionPageTotal(QuestionaireVo questionaireVo);
 
-    QuestionVo getQuestionById(String questionId);
+    QuestionVo getQuestionById(Long questionId);
 
     int insertOrUpdateQuestion(QuestionVo questionVo);
 

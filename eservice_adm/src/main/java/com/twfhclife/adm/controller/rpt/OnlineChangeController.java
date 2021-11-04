@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.collect.Lists;
 import com.twfhclife.adm.model.MessagingTemplateVo;
 import com.twfhclife.adm.model.ParameterVo;
 import com.twfhclife.adm.model.TransClaimPaymentVo;
@@ -1648,6 +1649,10 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getInvestmentDetail")
 	public String getInvestmentDetail(@RequestBody TransVo transVo) {
 		try {
+			final List<String> showAccountInvts = Lists.newArrayList();
+			parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID_ESERVICE, "SHOW_ACCOUNT_INVT_NOS")
+					.forEach(e -> showAccountInvts.add(e.getParameterValue()));
+			addAttribute("showAccountInvts", showAccountInvts);
 			addAttribute("detailData", onlineChangeService.getInvestmentDetail(transVo));
 		} catch (Exception e) {
 			logger.error("Unable to getInvestmentDetail: {}", ExceptionUtils.getStackTrace(e));

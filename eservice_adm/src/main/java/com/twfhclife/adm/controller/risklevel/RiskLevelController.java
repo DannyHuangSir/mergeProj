@@ -85,11 +85,12 @@ public class RiskLevelController extends BaseController {
 	}
 
 	@GetMapping("/attributeAdd")
-	public String attributeAdd(String questionId) {
-		if (StringUtils.isNotBlank(questionId)) {
+	public String attributeAdd(Long questionId) {
+		if (questionId != null && questionId > 0) {
 			QuestionVo vo = questionService.getQuestionById(questionId);
 			if (vo != null) {
-				addAttribute("questionVo", questionService.getQuestionById(questionId));
+				vo.setId(questionId);
+				addAttribute("questionVo", vo);
 				return "backstage/attribute/attributeUpdate";
 			}
 		}

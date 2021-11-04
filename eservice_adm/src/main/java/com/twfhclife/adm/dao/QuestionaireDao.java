@@ -14,7 +14,7 @@ public interface QuestionaireDao {
 
     int countQuestions(@Param("vo") QuestionaireVo questionaireVo);
 
-    QuestionVo getQuestionById(@Param("questionId") String questionId);
+    QuestionVo getQuestionById(@Param("questionId") Long questionId);
 
     int insertQuestion(QuestionVo questionVo);
 
@@ -23,4 +23,12 @@ public interface QuestionaireDao {
     int deleteQuestion(@Param("questionId") Long questionId);
 
     int deleteOptions(@Param("questionId") Long questionId);
+
+    int updateQuestion(QuestionVo questionVo);
+
+    int updateOption(OptionVo option);
+
+    int deleteOptionsByIds(@Param("ids") List<Long> removeIds);
+
+    Long selectNextQuestionId();
 }

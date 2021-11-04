@@ -2,7 +2,6 @@ package com.twfhclife.adm.service.impl;
 
 import com.twfhclife.adm.dao.QuestionaireDao;
 import com.twfhclife.adm.model.OptionVo;
-import com.twfhclife.adm.model.PartnerUserEntityVo;
 import com.twfhclife.adm.model.QuestionVo;
 import com.twfhclife.adm.model.QuestionaireVo;
 import com.twfhclife.adm.service.IQuestionaireService;
@@ -38,7 +37,7 @@ public class QuestionaireServiceImpl implements IQuestionaireService {
     }
 
     @Override
-    public QuestionVo getQuestionById(String questionId) {
+    public QuestionVo getQuestionById(Long questionId) {
         return questionaireDao.getQuestionById(questionId);
     }
 
@@ -49,6 +48,8 @@ public class QuestionaireServiceImpl implements IQuestionaireService {
         Date systemTime = new Date();
         try {
             if (questionVo.getId() == null) {
+                Long id = questionaireDao.selectNextQuestionId();
+                questionVo.setId(id);
                 questionVo.setCreateTime(systemTime);
                 questionVo.setUpdateTime(systemTime);
                 questionaireDao.insertQuestion(questionVo);
@@ -59,6 +60,26 @@ public class QuestionaireServiceImpl implements IQuestionaireService {
                         option.setQuestionId(questionVo.getId());
                         questionaireDao.insertOption(option);
                     }
+                }
+            } else {
+                questionVo.setUpdateTime(systemTime);
+                questionaireDao.updateQuestion(questionVo);
+                if (!CollectionUtils.isEmpty(questionVo.getOptions())) {
+                    for (OptionVo option : questionVo.getOptions()) {
+                        if (option.getId() == null) {
+                            option.setCreateTime(systemTime);
+                            option.setUpdateTime(systemTime);
+                            option.setQuestionId(questionVo.getId());
+                            questionaireDao.insertOption(option);
+                        } else {
+                            option.setUpdateTime(systemTime);
+                            option.setQuestionId(questionVo.getId());
+                            questionaireDao.updateOption(option);
+                        }
+                    }
+                }
+                if (!CollectionUtils.isEmpty(questionVo.getRemoveIds())) {
+                    questionaireDao.deleteOptionsByIds(questionVo.getRemoveIds());
                 }
             }
         } catch (Exception e) {

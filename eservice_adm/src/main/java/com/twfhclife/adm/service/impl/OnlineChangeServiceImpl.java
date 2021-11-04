@@ -1130,15 +1130,6 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		return onlineChangeDao.getDNS_CSV(transVo);
 	}
 
-	@Override
-	public int getOnlineChangeCIODetailTotal(TransVo transVo) {
-		return onlineChangeDao.getOnlineChangeCIODetailTotal(transVo);
-	}
-
-	@Override
-	public int getOnlineChangeDnsDetailTotal(TransVo transVo) {
-		return onlineChangeDao.getOnlineChangeDnsDetailTotal(transVo);
-	}
 	public List getMedicalTreatmentStatisticsReport(MedicalTreatmentStatisticsVo claimVo) {
 		List<String> columns = claimVo.getColumn();
 		String str = "";
@@ -1529,6 +1520,15 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 				transFundConversionVo.setInvtNo(x.getInvtNo());
 				transFundConversionVo.setInvtName(x.getFundName());
 				transFundConversionVo.setRatio(x.getRatio());
+
+				//組裝數據
+				transFundConversionVo.setBankAccount(x.getBankAccount());
+				transFundConversionVo.setBankName(x.getBankName());
+				transFundConversionVo.setBranchName(x.getBranchName());
+				transFundConversionVo.setSwiftCode(x.getSwiftCode());
+				transFundConversionVo.setEnglishName(x.getEnglishName());
+				transFundConversionVo.setAccountName(x.getAccountName());
+
 				in.add(transFundConversionVo);
 			}
 		});
@@ -1606,4 +1606,13 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		return map;
     }
 
+    @Override
+	public int getOnlineChangeCIODetailTotal(TransVo transVo) {
+		return onlineChangeDao.getOnlineChangeCIODetailTotal(transVo);
+	}
+
+	@Override
+	public int getOnlineChangeDnsDetailTotal(TransVo transVo) {
+		return onlineChangeDao.getOnlineChangeDnsDetailTotal(transVo);
+	}
 }

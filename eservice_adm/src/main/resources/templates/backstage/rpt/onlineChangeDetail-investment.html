@@ -79,6 +79,40 @@
 								</div>
 							</div>
 						</div>
+						<div id="tab_4" class="check-body grey2">
+							<div style="text-align: center;" class="check-list2">
+								<div class="col-sm-12 mode2select">
+									<label for="" class="col-sm-6  colorGreen">(變更後)Swift Code：</label>
+									<label id="swiftCode">
+									</label>
+								</div>
+								<div class="col-sm-12 mode2select">
+									<label for="" class="col-sm-6  colorGreen">(變更後)英文戶名：</label>
+									<label id="englishName">
+									</label>
+								</div>
+								<div class="col-sm-12 mode2select">
+									<label for="" class="col-sm-6  colorGreen">(變更後)帳戶名稱：</label>
+									<label id="accountName">
+									</label>
+								</div>
+								<div class="col-sm-12 mode2select">
+									<label for="" class="col-sm-6  colorGreen">(變更後)銀行名稱：</label>
+									<label id="bankName">
+									</label>
+								</div>
+								<div class="col-sm-12 mode2select">
+									<label for="" class="col-sm-6  colorGreen">(變更後)分行名稱：</label>
+									<label id="branchName">
+									</label>
+								</div>
+								<div class="col-sm-12 mode2select">
+									<label for="" class="col-sm-6  colorGreen">(變更後)帳號：</label>
+									<label id="bankAccount">
+									</label>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -90,9 +124,22 @@
 	$(function(){
 		var pre = 0
 		var aft = 0
+		$("#tab_4").hide()
+		var showAccountInvts = [[${showAccountInvts}]]
 		$([[${detailData['investments']}]]).each(function(index, e) {
 			pre += parseInt(e.preRatio == undefined ? 0 : e.preRatio)
 			aft += parseInt(e.afterRatio == undefined ? 0 : e.afterRatio)
+			$(showAccountInvts).each(function(index, e1) {
+				if (e1 == e.invtNo) {
+					$("#tab_4").show()
+					$("#swiftCode").text(e.swiftCode)
+					$("#englishName").text(e.englishName)
+					$("#bankName").text(e.bankName)
+					$("#branchName").text(e.branchName)
+					$("#accountName").text(e.accountName)
+					$("#bankAccount").text(e.bankAccount)
+				}
+			})
 		})
 		$("#preRatio").text(pre + '%')
 		$("#aftRatio").text(aft + '%')

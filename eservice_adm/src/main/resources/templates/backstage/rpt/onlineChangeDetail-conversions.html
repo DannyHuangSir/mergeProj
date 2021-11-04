@@ -121,6 +121,91 @@
 										</tbody>
 									  </table>
 								</div>   
+								<div class="center1 ptop30" style="background: #FFFFFF;"></div>
+							  
+								<div class="check-title">匯款帳戶資料</div>
+								<th:block  th:if="not ${#lists.isEmpty(detailData['IN'])}">	
+									<th:block  th:if="not ${#lists.isEmpty(detailData['IN'][0])}">	
+										<div class=" " style="background: #FFFFFF;">
+											<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack"> 
+												<thead>
+													<tr class="table2 orange2">
+													<th class="text-left" scope="col" style="width: 70%;" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">名稱</th>
+													<th scope="col" data-tablesaw-sortable-col="" style="width: 30%;"  data-tablesaw-priority="">内容</th>                 
+													</tr>
+												</thead>
+												<tbody>
+													<th:block th:if="${detailData['IN'][0].swiftCode != null
+															&& detailData['IN'][0].swiftCode != '' }" >
+														<tr class="h90 tr-odd-noEvent">
+															<td class="text-left" >
+																Swift Code
+															</td>
+															<td>
+																<th:block th:text="${detailData['IN'][0].swiftCode}"  ></th:block>
+															</td>
+														</tr>
+													</th:block>
+													<th:block th:if="${detailData['IN'][0].englishName != null
+														&& detailData['IN'][0].englishName != '' }" >
+														<tr class="h90 tr-odd-noEvent">
+															<td class="text-left" >
+																英文戶名
+															</td>
+															<td>
+																<th:block th:text="${detailData['IN'][0].englishName}"  ></th:block>
+															</td>
+														</tr>
+													</th:block>
+													<th:block th:if="${detailData['IN'][0].accountName != null
+														&& detailData['IN'][0].accountName != '' }" >
+														<tr class="h90 tr-odd-noEvent">
+															<td class="text-left" >
+																帳戶名稱
+															</td>
+															<td>
+																<th:block th:text="${detailData['IN'][0].accountName}"  ></th:block>
+															</td>
+														</tr>
+													</th:block>
+													<th:block th:if="${detailData['IN'][0].bankName != null
+														&& detailData['IN'][0].bankName != '' }" >
+														<tr class="h90 tr-odd-noEvent">
+															<td class="text-left" >
+																銀行名稱
+															</td>
+															<td>
+																<th:block th:text="${detailData['IN'][0].bankName}"  ></th:block>
+															</td>
+														</tr>
+													</th:block>
+													<th:block th:if="${detailData['IN'][0].branchName != null
+														&& detailData['IN'][0].branchName != '' }" >
+														<tr class="h90 tr-odd-noEvent">
+															<td class="text-left" >
+																分行名稱
+															</td>
+															<td>
+																<th:block th:text="${detailData['IN'][0].branchName}"  ></th:block>
+															</td>
+														</tr>
+													</th:block>
+													<th:block th:if="${detailData['IN'][0].bankAccount != null
+														&& detailData['IN'][0].bankAccount != '' }" >
+														<tr class="h90 tr-odd-noEvent">
+															<td class="text-left" >
+																帳號
+															</td>
+															<td>
+																<th:block th:text="${detailData['IN'][0].bankAccount}"  ></th:block>
+															</td>
+														</tr>
+													</th:block>
+												</tbody>
+											</table>
+										</div>  
+									</th:block>
+								</th:block>
 						</div>
 
 						</div>
