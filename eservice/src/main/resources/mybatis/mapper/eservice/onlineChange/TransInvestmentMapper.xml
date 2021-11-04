@@ -39,6 +39,30 @@
       <if test="preDistributionRatio != null" >
         PRE_DISTRIBUTION_RATIO,
       </if>
+    <if test="swiftCode != null" >
+        SWIFT_CODE,
+      </if>
+      <if test="englishName != null" >
+        ENGLISH_NAME,
+      </if>
+      <if test="bankCode != null" >
+        BANK_CODE,
+      </if>
+      <if test="branchCode != null" >
+        BRANCH_CODE,
+      </if>
+      <if test="accountName != null" >
+        ACCOUNT_NAME,
+      </if>
+      <if test="bankAccount != null" >
+        BANK_ACCOUNT,
+      </if>
+      <if test="bankName != null" >
+        BANK_NAME,
+      </if>
+      <if test="branchName != null" >
+        BRANCH_NAME,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -62,11 +86,36 @@
       <if test="preDistributionRatio != null" >
         #{preDistributionRatio,jdbcType=NUMERIC},
       </if>
+    <if test="swiftCode != null" >
+        #{swiftCode,jdbcType=NVARCHAR},
+      </if>
+      <if test="englishName != null" >
+        #{englishName,jdbcType=NVARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=NVARCHAR},
+      </if>
+      <if test="branchCode != null" >
+        #{branchCode,jdbcType=NVARCHAR},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=NVARCHAR},
+      </if>
+      <if test="bankAccount != null" >
+        #{bankAccount,jdbcType=NVARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=NVARCHAR},
+      </if>
+      <if test="branchName != null" >
+        #{branchName,jdbcType=NVARCHAR},
+      </if>
     </trim>
   </insert>
 
-  <select id="selectCompareInvestments" resultType="com.twfhclife.eservice.policy.model.CompareInvestmentVo">
-    SELECT TI.INVT_NO invtNo, TI.DISTRIBUTION_RATIO afterRatio, TI.PRE_DISTRIBUTION_RATIO preRatio, TI.INVT_NAME invtName
+  <select id="selectCompareInvestments" resultType="com.twfhclife.eservice.onlineChange.model.TransInvestmentDetailVo">
+    SELECT TI.INVT_NO invtNo, TI.DISTRIBUTION_RATIO afterRatio, TI.PRE_DISTRIBUTION_RATIO preRatio, TI.INVT_NAME invtName,
+    SWIFT_CODE swiftCode, ENGLISH_NAME englishName, BANK_CODE bankCode, BRANCH_CODE branchCode, ACCOUNT_NAME accountName, BANK_ACCOUNT bankAccount, BANK_NAME bankName, BRANCH_NAME branchName
     FROM ESERVICE.dbo.TRANS_INVESTMENT TI
       WHERE TI.TRANS_NUM = #{transNum}
   </select>
@@ -148,7 +197,7 @@
   </select>
 
   <select id="getDistributeRationByInvtNo" resultType="java.math.BigDecimal">
-    SELECT INVEST_WEIGHT FROM ESERVICE.dbo.POLICY_INVEST_FUND
-    WHERE POLICY_NO = #{policyNo} AND FUND_CODE = #{invtNo} AND EFFECTIVE_DATE &gt; #{date}
+    SELECT TOP 1 INVEST_WEIGHT FROM ESERVICE.dbo.POLICY_INVEST_FUND
+    WHERE POLICY_NO = #{policyNo} AND FUND_CODE = #{invtNo} ORDER BY EFFECTIVE_DATE DESC
   </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.dao;
 
+import com.twfhclife.eservice.onlineChange.model.TransInvestmentDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.policy.model.CompareInvestmentVo;
 import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
@@ -13,7 +14,7 @@ public interface TransInvestmentDao {
 
     int insert(TransInvestmentVo record);
 
-    List<CompareInvestmentVo> selectCompareInvestments(@Param("transNum") String transNum);
+    List<TransInvestmentDetailVo> selectCompareInvestments(@Param("transNum") String transNum);
 
     String selectProcessInvestment(@Param("userId") String userId, @Param("transTypes") List<String> transTypes);
 

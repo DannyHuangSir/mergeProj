@@ -22,6 +22,15 @@
     <result column="INVESTMENT_TYPE" property="investmentType" jdbcType="NVARCHAR" />
     <result column="RATIO" property="ratio" jdbcType="NUMERIC" />
     <result column="VALUE" property="value" jdbcType="NUMERIC" />
+  <result column="SWIFT_CODE" property="swiftCode" jdbcType="NVARCHAR" />
+    <result column="ENGLISH_NAME" property="englishName" jdbcType="NVARCHAR" />
+    <result column="BANK_CODE" property="bankCode" jdbcType="NVARCHAR" />
+    <result column="BRANCH_CODE" property="branchCode" jdbcType="NVARCHAR" />
+    <result column="ACCOUNT_NAME" property="accountName" jdbcType="NVARCHAR" />
+    <result column="BANK_ACCOUNT" property="bankAccount" jdbcType="NVARCHAR" />
+    <result column="BANK_NAME" property="bankName" jdbcType="NVARCHAR" />
+    <result column="BRANCH_NAME" property="branchName" jdbcType="NVARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     ID, TRANS_NUM, POLICY_NO, INVT_NO, INVESTMENT_TYPE, RATIO, VALUE
@@ -38,6 +47,103 @@
     delete from TRANS_FUND_CONVERSION
     where ID = #{id,jdbcType=NUMERIC}
   </delete>
+  <insert id="insertInvestments"  >
+    insert into TRANS_FUND_CONVERSION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="record.id != null" >
+        ID,
+      </if>
+      <if test="record.transNum != null" >
+        TRANS_NUM,
+      </if>
+      <if test="record.policyNo != null" >
+        POLICY_NO,
+      </if>
+      <if test="record.invtNo != null" >
+        INVT_NO,
+      </if>
+      <if test="record.investmentType != null" >
+        INVESTMENT_TYPE,
+      </if>
+      <if test="record.ratio != null" >
+        RATIO,
+      </if>
+      <if test="record.value != null" >
+        VALUE,
+      </if>
+      <if test="transInvestment.swiftCode != null" >
+        SWIFT_CODE,
+      </if>
+      <if test="transInvestment.englishName != null" >
+        ENGLISH_NAME,
+      </if>
+      <if test="transInvestment.bankCode != null" >
+        BANK_CODE,
+      </if>
+      <if test="transInvestment.branchCode != null" >
+        BRANCH_CODE,
+      </if>
+      <if test="transInvestment.accountName != null" >
+        ACCOUNT_NAME,
+      </if>
+      <if test="transInvestment.bankAccount != null" >
+        BANK_ACCOUNT,
+      </if>
+      <if test="transInvestment.bankName != null" >
+        BANK_NAME,
+      </if>
+      <if test="transInvestment.branchName != null" >
+        BRANCH_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="record.id != null" >
+        #{record.id,jdbcType=NUMERIC},
+      </if>
+      <if test="record.transNum != null" >
+        #{record.transNum,jdbcType=NVARCHAR},
+      </if>
+      <if test="record.policyNo != null" >
+        #{record.policyNo,jdbcType=NVARCHAR},
+      </if>
+      <if test="record.invtNo != null" >
+        #{record.invtNo,jdbcType=NVARCHAR},
+      </if>
+      <if test="record.investmentType != null" >
+        #{record.investmentType,jdbcType=NVARCHAR},
+      </if>
+      <if test="record.ratio != null" >
+        #{record.ratio,jdbcType=NUMERIC},
+      </if>
+      <if test="record.value != null" >
+        #{record.value,jdbcType=NUMERIC},
+      </if>
+      <if test="transInvestment.swiftCode != null" >
+        #{transInvestment.swiftCode,jdbcType=NVARCHAR},
+      </if>
+      <if test="transInvestment.englishName != null" >
+        #{transInvestment.englishName,jdbcType=NVARCHAR},
+      </if>
+      <if test="transInvestment.bankCode != null" >
+        #{transInvestment.bankCode ,jdbcType=NVARCHAR},
+      </if>
+      <if test="transInvestment.branchCode != null" >
+        #{transInvestment.branchCode,jdbcType=NVARCHAR},
+      </if>
+      <if test="transInvestment.accountName != null" >
+        #{transInvestment.accountName,jdbcType=NVARCHAR},
+      </if>
+      <if test="transInvestment.bankAccount != null" >
+        #{transInvestment.bankAccount,jdbcType=NVARCHAR},
+      </if>
+      <if test="transInvestment.bankName != null" >
+        #{transInvestment.bankName,jdbcType=NVARCHAR},
+      </if>
+      <if test="transInvestment.branchName != null" >
+        #{transInvestment.branchName,jdbcType=NVARCHAR},
+      </if>
+    </trim>
+  </insert>
 
   <insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransFundConversionVo" >
     insert into TRANS_FUND_CONVERSION
@@ -102,6 +208,7 @@
 
   <select id="transInvestmentConversionDetail"  resultMap="BaseResult" >
     SELECT TF.INVT_NO INVT_NO,  PP.INVT_NAME INVT_NAME,F.FUND_NAME,  TF.INVESTMENT_TYPE INVESTMENT_TYPE,TF.RATIO RATIO,TF.VALUE VALUE
+    ,TF.SWIFT_CODE,TF.ENGLISH_NAME,TF.BANK_CODE,TF.BRANCH_CODE,TF.ACCOUNT_NAME,TF.BANK_ACCOUNT,TF.BANK_NAME,TF.BRANCH_NAME
     FROM ESERVICE.dbo.TRANS_FUND_CONVERSION TF LEFT JOIN
     ESERVICE.dbo.POLICY_PORTFOLIO PP ON TF.POLICY_NO = PP.POLICY_NO AND TF.INVT_NO = PP.INVT_NO
     LEFT JOIN    ESERVICE.DBO.FUND   F  ON   TF.INVT_NO = F.FUND_CODE

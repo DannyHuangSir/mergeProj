@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.onlineChange.model.TransDepositVo;
@@ -140,6 +141,12 @@ public class TransInvestmentController extends BaseUserDataController  {
             addAttribute("transformationRemark", parameterValueByCodeConsent);
         }
 
+        final List<String> showAccountInvts = Lists.newArrayList();
+        parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "SHOW_ACCOUNT_INVT_NOS")
+                .forEach(e -> showAccountInvts.add(e.getParameterValue()));
+
+        addAttribute("showAccountInvts", showAccountInvts);
+        addAttribute("proposer", getProposerName());
         addAttribute("uri", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_URI));
         String limit = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_LIMIT);
         addAttribute("INVESTMENT_LIMIT", StringUtils.isEmpty(limit) ? Integer.MAX_VALUE : Integer.parseInt(limit));
@@ -154,7 +161,7 @@ public class TransInvestmentController extends BaseUserDataController  {
 
     @RequestLog
     @PostMapping("/investment4")
-    public String investment4(TransInvestmentVo vo) {
+    public String investment4(TransInvestmentVo vo, @RequestParam(name = "showAccount", defaultValue = "false") Boolean showAccount) {
         List<InvestmentPortfolioVo> newInvts = new Gson().fromJson(vo.getNewInvestments(), new TypeToken<List<InvestmentPortfolioVo>>(){}.getType());
         List<InvestmentPortfolioVo> ownInvts = new Gson().fromJson(vo.getInvestments(), new TypeToken<List<InvestmentPortfolioVo>>(){}.getType());
         List<CompareInvestmentVo> finalInvestments =  transInvestmentService.compareNew(ownInvts, newInvts);
@@ -162,6 +169,7 @@ public class TransInvestmentController extends BaseUserDataController  {
         sendAuthCode("investment");
         addAttribute("investmentTimeSet", 300);
         addAttribute("transInvestmentVo", vo);
+        addAttribute("showAccount", showAccount);
         return "frontstage/onlineChange/investment/investment4";
     }
 
@@ -214,6 +222,10 @@ public class TransInvestmentController extends BaseUserDataController  {
     @PostMapping("/getTransInvestmentDetail")
     public String getTransDnsDetail(@RequestParam("transNum") String transNum) {
         try {
+            final List<String> showAccountInvts = Lists.newArrayList();
+            parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "SHOW_ACCOUNT_INVT_NOS")
+                    .forEach(e -> showAccountInvts.add(e.getParameterValue()));
+            addAttribute("showAccountInvts", showAccountInvts);
             addAttribute("finalInvestments", transInvestmentService.getAppliedInvestments(transNum));
         } catch (Exception e) {
             logger.error("Unable to getTransInvestmentDetail: {}", ExceptionUtils.getStackTrace(e));

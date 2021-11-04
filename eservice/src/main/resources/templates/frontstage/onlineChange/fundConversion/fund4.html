@@ -132,7 +132,51 @@
 							<button class="btn-login invst2btn" id="add-check-list"    onclick="addInvestment()"><i class="fa fa-plus-circle fa-lg"></i> 新增投資標的</button>
 						</div>
 						<div class="invst2total"> 總百分比 : <span id="showConutPercentage">0</span> %</div>
-
+							<!-- TAB 2 -->
+						<article class="tab" id="tab_4" style="display: none;">
+							<!-- <article class="tab" id="tab_4" > -->
+							<section id="tab_frame_print1" class="tab-frame">
+									<div class="arrow-upleft"></div>
+									<div class="grey2">
+										<div class="check-title depo2">帳戶內容</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">Swift Code</label>
+											<div class="col-sm-9"><input id="swiftCode" type="text" class="col-sm-6"> </div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">英文戶名</label>
+											<div class="col-sm-9"><input id="englishName" type="text" class="col-sm-6"> </div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">帳戶名稱</label>
+											<div class="col-sm-8 gray">
+												<th:block th:text="${proposer}"/>
+												<input type="hidden" id="accountName" name="accountName" th:value="${proposer}"/>
+											</div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">銀行名稱</label>
+											<div class="col-sm-3">
+												<div class="selector-box">
+													<select class="selector" id="bankOpt" name="bankOpt">
+													</select>
+												</div>
+											</div>
+											<label for="" class="col-sm-2">分行名稱</label>
+											<div class="col-sm-3">
+												<div class="selector-box">
+													<select class="selector" id="brancheOpt" name="brancheOpt" >
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">帳號</label>
+											<div class="col-sm-9"><input type="text" id="bankAccount" class="col-sm-11"> </div>
+										</div>
+									</div>
+							</section>
+						</article>
 						<div class="statement1 wht">
 							<p class="text-ps">備註：</p>
 							<ol class="text-ps" id="parameterValueByProportionFund4">
@@ -159,6 +203,12 @@
 	<script th:inline="javascript">
 	/*<![CDATA[*/
 		var investmentPortfolioVoList = /*[[${investmentPortfolioVo}]]*/;
+		var chckSwiftCode = /*[[${chckSwiftCode}]]*/;
+		//銀行下拉選單
+		var bankUrl = /*[[@{/getBankList}]]*/;
+			var branchesUrl = /*[[@{/getBranchesList}]]*/;
+			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+
 		$(function() {
 			//獲取條款備注信息
 		var parameterValueByProportion = /*[[${parameterValueByProportion}]]*/;
@@ -181,6 +231,7 @@
 			//基金选项变更
 			$("body").on('change', "[name='invSelect']", function(){
 				$(this).parent().parent().parent().find("[name='toUri']").attr("href", [[${uri}]] + $(this).val())
+				showOrHideAccount();
 			})
 		});
 	//獲取當前保單的新投資標的數據	
@@ -293,10 +344,10 @@
                           +'</div>'
                          +'<div class="col-sm-6">'
                          +'   <div class="selector-box">'
-                         +'     <select class="selector" name="invSelect">'
+                         +'     <select class="selector" name="invSelect" >'
 						$(newInvestments).each(function(index, e){
 							if (e != null) {
-								item += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '"> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
+								item += '<option  invtName="' + e.invtName + '" value="' + e.invtNo +  '"> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
 							}
 						})
 						item = item +'</select>'
@@ -312,6 +363,7 @@
                          +'       <div class="clearfix"></div>'
                          +' </div> '
     		$('#fundContent').append(filterAndRestItems($(item)));
+			showOrHideAccount();
     	}
 	
 		function filterAndRestItems(vm) {
@@ -329,9 +381,10 @@
 					$(vm).find("[name='toUri']").attr("href", [[${uri}]] + e.invtNo)
 					isFirst = false
 				}
-				html += '<option invtName="' + e.invtName + '" value="' + e.invtNo +  '"> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
+				html += '<option   invtName="' + e.invtName + '" value="' + e.invtNo +  '"> ' + e.invtName +' <span>(' + e.invtNo + ')</span></option>'
 			})
 			$(vm).find("[name='invSelect']").html(html)
+			showOrHideAccount();
 			return $(vm)
 		}
 		//刪除新投資標的欄目
@@ -376,6 +429,20 @@
 				//設置百分比
 			$("#showConutPercentage").text(i);
 			};	
+		//進行驗證當前賬戶的投資標是否為商品顯示賬戶
+		function showOrHideAccount() {
+		let show = false
+		$("#fundContent").children().each(function(index, e) {
+			let invtNo = $(e).find("[name='invSelect'] option:selected").val()
+			if (chckSwiftCode.indexOf(invtNo) != -1) {
+				$("#tab_4").show()
+				show = true
+			}
+		})
+		if (!show) {
+			$("#tab_4").hide()
+		}
+	}	
     //進行驗證提交時所有的百分比不能超過100
 		function  inputValidation(){
 			 let  j=0;
@@ -413,7 +480,52 @@
 				}
 			}
 			return  boo;		
-		}	
+		}
+	//進行判斷帳戶內容
+	function  fundValidationAccount(obj){
+		let invtNo="";
+		let show = false
+			$("#fundContent").children().each(function(index, e) {
+				let invtNo = $(e).find("[name='invSelect'] option:selected").val()
+				if (chckSwiftCode.indexOf(invtNo) != -1) {
+					show = true
+				}
+			})
+			if(show){
+				$("#fundContent").children().each(function(index, e) {
+					invtNo = $(e).find("[name='currencysItem'] option:selected").val()
+				});
+				console.log("--invtNo",invtNo);
+				if (invtNo!= 'NTD') {
+					if ($('#swiftCode').val() == '') {
+							openAlert("請輸入Swift Code");
+						return   false;
+						}
+					if ($('#englishName').val() == '') {
+						openAlert("請輸入英文戶名");
+						return  false;
+					}
+				}
+				if($('#bankOpt').val() == '') {
+					openAlert("請選擇銀行");
+					return false;
+				}
+				if ($('#brancheOpt').val() == '') {
+					openAlert("請選擇分行");
+					return false;
+				}
+				if ($('#bankAccount').val() == '') {
+					openAlert("請輸入帳號");
+					return false;
+				}
+				if (!/^\d+$/.test($('#bankAccount').val())) {
+					openAlert('銀行帳號僅為數字');
+					openAlert($('#E0053').val());
+					return false;
+				}
+			}
+		return  true;
+	}
 	//提交点击下一步
 		$("#go").click(function(){
 			 	if(!inputValidation()){
@@ -436,6 +548,26 @@
 					openAlert("當前保單新投資標中有百分比之為0%,還請基金百分比.");
 					return false;
 				 }
+				 if(!fundValidationAccount(formData)){
+					return false;
+				 }
+				 let show = false
+				$("#fundContent").children().each(function(index, e) {
+					let invtNo = $(e).find("[name='invSelect'] option:selected").val()
+					if (chckSwiftCode.indexOf(invtNo) != -1) {
+						show = true
+					}
+				})
+				if(show){
+					formData.bankAccount = $('#bankAccount').val();
+					formData.bankName = $('#bankOpt option:selected').text();
+					formData.bankCode = $('#bankOpt option:selected').val();
+					formData.branchName = $('#brancheOpt option:selected').text();
+					formData.branchCode = $('#brancheOpt option:selected').val();
+					formData.englishName = $('#englishName').val();
+					formData.swiftCode = $('#swiftCode').val();
+					formData.accountName = $('#accountName').val();
+				}
 				//console.log('-----newObj---------',numInvestment);
 				formData.numInvestment = JSON.stringify(numInvestment);
 				formData.investmentsList = JSON.stringify(investmentPortfolioVoList);

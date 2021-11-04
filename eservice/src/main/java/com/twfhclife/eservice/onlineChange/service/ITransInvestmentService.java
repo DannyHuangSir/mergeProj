@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.onlineChange.service;
 
 import com.twfhclife.eservice.onlineChange.model.TransFundConversionVo;
+import com.twfhclife.eservice.onlineChange.model.TransInvestmentDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.policy.model.CompareInvestmentVo;
 import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
@@ -8,6 +9,7 @@ import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +45,7 @@ public interface ITransInvestmentService {
      * @param user
      * @return
      */
-    TransInvestmentVo insertTransFundConversion(String outInvestments, String inInvestments, UsersVo user)throws Exception;
+    TransInvestmentVo insertTransFundConversion(TransInvestmentVo transInvestmentVo, UsersVo user)throws Exception;
 
     /***
      * 風險屬性轉換
@@ -52,7 +54,7 @@ public interface ITransInvestmentService {
      */
     String transRiskLevelToName(String riskLevel);
 
-    List<CompareInvestmentVo> getAppliedInvestments(String transNum);
+    List<TransInvestmentDetailVo> getAppliedInvestments(String transNum);
 
     /***
      * 獲取選項
@@ -89,4 +91,6 @@ public interface ITransInvestmentService {
     Map<String, String> getNtdAndUsdProportionMin();
 
     BigDecimal getDistributeRationByInvtNo(String policyNo, String invtNo);
+    //查詢當前的投資標商品是否為顯示賬戶
+    List<String> getChckSwiftCode()throws Exception;
 }

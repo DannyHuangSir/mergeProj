@@ -255,9 +255,12 @@ public class FundConversionController extends BaseUserDataController  {
             if (parameterValueByProportion != null) {
                 addAttribute("parameterValueByProportion", parameterValueByProportion);
             }
+            List<String> chckSwiftCode = transInvestmentService.getChckSwiftCode();
             //進行查詢
             addAttribute("uri", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_URI));
             addAttribute("investmentPortfolioVo", investmentPortfolioVo);
+            addAttribute("proposer", getProposerName());
+            addAttribute("chckSwiftCode", chckSwiftCode);
         } catch (Exception ex) {
             logger.error("--------Unable to init from FundConversionController - fund4--------: {}", ExceptionUtils.getStackTrace(ex));
             addDefaultSystemError();
@@ -286,15 +289,18 @@ public class FundConversionController extends BaseUserDataController  {
 
     @RequestLog
     @PostMapping("/fund5")
-    public String fund5(String investmentsList, String numInvestment) {
+        public String fund5(InvestmentPortfolioVo  formData) {
         try {
             Gson builderTime = (new GsonBuilder()).setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+            String investmentsList = formData.getInvestmentsList();
+            String numInvestment = formData.getNumInvestment();
+
             //轉出基金
             List<InvestmentPortfolioVo> outInvestmentPortfolioVo =
                     builderTime.fromJson(investmentsList, new TypeToken<List<InvestmentPortfolioVo>>() {}.getType());
             //轉入基金
             List<InvestmentPortfolioVo> inInvestmentPortfolioVo =
-                    builderTime.fromJson(numInvestment, new TypeToken<List<InvestmentPortfolioVo>>() {}.getType());
+                    builderTime.fromJson( numInvestment,new TypeToken<List<InvestmentPortfolioVo>>() {}.getType());
             //基金匯總數據
             List<TransFundConversionVo> outInvestmentService = transInvestmentService.outransFundConversionDate(outInvestmentPortfolioVo);
             List<TransFundConversionVo> inInvestmentService = transInvestmentService.inransFundConversionDate(inInvestmentPortfolioVo);
@@ -302,6 +308,7 @@ public class FundConversionController extends BaseUserDataController  {
             addAttribute("inInvestmentService", inInvestmentService);
             addAttribute("investmentsList",investmentsList);
             addAttribute("numInvestment", numInvestment);
+            addAttribute("formData", formData);
             //發驗證碼
             sendAuthCode("conversion");
             addAttribute("timeSet", 300);
@@ -329,9 +336,8 @@ public class FundConversionController extends BaseUserDataController  {
              } else {
                  UsersVo user = getUserDetail();
                  try {
-                     String outInvestments = transInvestmentVo.getInvestments();
-                     String inInvestments = transInvestmentVo.getNewInvestments();
-               TransInvestmentVo vo=       transInvestmentService.insertTransFundConversion(outInvestments,inInvestments,user);
+
+               TransInvestmentVo vo=       transInvestmentService.insertTransFundConversion(transInvestmentVo,user);
                     // 當前使用用的模板後期會變化
 
                    sendNotification(vo, user);

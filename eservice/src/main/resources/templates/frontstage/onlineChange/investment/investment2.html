@@ -72,6 +72,7 @@
 					</a>
 				</div>
 				<input type="hidden" id="policyNo" name="policyNo" th:value="${transInvestmentVo.policyNo}"/>
+				<input type="hidden" id="currency" name="currency" th:value="${transInvestmentVo.currency}"/>
 			</div>
 		</div>
 	</section>
@@ -81,6 +82,7 @@
 		/*<![CDATA[*/
 			var formData = {};
 			formData.policyNo = $('#policyNo').val();
+			formData.currency = $('#currency').val();
 			$(function() {
 				// 同意事件
 				$('#go').click(function() {

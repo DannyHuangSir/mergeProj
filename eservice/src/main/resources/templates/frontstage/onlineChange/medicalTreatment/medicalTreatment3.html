@@ -621,7 +621,7 @@
 													<div class="check-list2 grey2">
 														<label for="" class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>帳號</label>
 														<div class="col-sm-9">
-															<input type="text" name="bankAccount" id="bankAccount" th:value="${claimVo.bankAccount}" class="col-sm-7" maxlength="14" onKeyUp="value=value.replace(/\D/g,'')" onchange="value=value.replace(/\D/g,'')"> 
+															<input type="number" name="bankAccount" id="bankAccount" th:value="${claimVo.bankAccount}" class="col-sm-7" maxlength="14" minlength="8" onKeyUp="value=value.replace(/\D/g,'')" onchange="value=value.replace(/\D/g,'')"> 
 														</div>
 													</div>
 												</div>
@@ -1047,6 +1047,21 @@
 						if($('#accountName').val() =='' || $('#bankCode').val() =='' || $('#bankAccount').val() ==''){
 							openAlert('請輸入電匯必填欄位');
 							return false;
+						}
+						//進行判斷賬號為數字,并且最短8位、最長14位
+						var  bankAccount=	$('#bankAccount').val();
+						if (/^\d+$/.test(bankAccount)) {
+							if(bankAccount.length<8){
+								openAlert('匯款帳戶長度,最短8位');
+								return false;	
+							}
+							if(bankAccount.length>14){
+								openAlert('匯款帳戶長度,最長14位');
+								return false;	
+							}
+						}else{
+							openAlert('匯款帳戶只能數字');
+							return false;	
 						}
 					}
 					//生日

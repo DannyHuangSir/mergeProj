@@ -218,4 +218,6 @@ public interface OnlineChangeUtil {
 	 */
 	public static final String DEPOSIT_UU_STOP_ACCOUNT = "DEPOSIT_UU_STOP_ACCOUNT";
 	public static final String DEPOSIT_US_STOP_ACCOUNT = "DEPOSIT_US_STOP_ACCOUNT";
+	/**投資標商品顯示賬戶*/
+	public static final String SHOW_ACCOUNT_INVT_NOS="SHOW_ACCOUNT_INVT_NOS";
 }

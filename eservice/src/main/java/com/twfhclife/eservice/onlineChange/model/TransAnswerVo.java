@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class TransAnswerVo {
+public class TransAnswerVo extends AbstractOnlineChangeModelBean {
 
     private String questions;
     private List<String> answers = Lists.newArrayList();

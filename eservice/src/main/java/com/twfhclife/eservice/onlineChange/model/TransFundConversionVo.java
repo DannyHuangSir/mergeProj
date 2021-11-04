@@ -22,6 +22,78 @@ public class TransFundConversionVo implements Serializable {
     private String  invtName;
     //	 轉入的投資標的名稱
     private String  fundName;
+    private String bankAccount;
+    private String bankName;
+    private String bankCode;
+    private String branchName;
+    private String branchCode;
+    private String englishName;
+    private String swiftCode;
+    private String accountName;
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getBranchCode() {
+        return branchCode;
+    }
+
+    public void setBranchCode(String branchCode) {
+        this.branchCode = branchCode;
+    }
+
+    public String getEnglishName() {
+        return englishName;
+    }
+
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
+    }
+
+    public String getSwiftCode() {
+        return swiftCode;
+    }
+
+    public void setSwiftCode(String swiftCode) {
+        this.swiftCode = swiftCode;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
     public String getFundName() {
         return fundName;

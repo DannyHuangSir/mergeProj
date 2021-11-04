@@ -68,3 +68,90 @@
 		</tbody>
 	</table>
 </div>
+
+<th:block  th:if="not ${#lists.isEmpty(listTransFundConversionVo)}">	
+	<th:block th:if="not ${#lists.isEmpty(listTransFundConversionVo[1])}">
+		<th:block th:if="not ${#lists.isEmpty(listTransFundConversionVo[1][0])}">	
+			<div class="center1 ptop30" style="background: #fff;"><img src="img/arrow-down.png" id="img-trans"></div>
+			<div class="check-title">匯款帳戶資料</div>
+			<div class=" grey2">
+				<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+					<thead>
+					<tr class="table2 orange2">
+						<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">名稱</th>
+						<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">内容</th>
+					</tr>
+					</thead>
+					<tbody>
+						<th:block th:if="${listTransFundConversionVo[1][0].swiftCode != null
+								 && listTransFundConversionVo[1][0].swiftCode != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									Swift Code
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].swiftCode}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].englishName != null
+							&& listTransFundConversionVo[1][0].englishName != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									英文戶名
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].englishName}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].accountName != null
+							&& listTransFundConversionVo[1][0].accountName != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									帳戶名稱
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].accountName}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].bankName != null
+							&& listTransFundConversionVo[1][0].bankName != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									銀行名稱
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].bankName}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].branchName != null
+							&& listTransFundConversionVo[1][0].branchName != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									分行名稱
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].branchName}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].bankAccount != null
+							&& listTransFundConversionVo[1][0].bankAccount != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									帳號
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].bankAccount}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</div>
+		</th:block>
+	</th:block>
+</th:block>	

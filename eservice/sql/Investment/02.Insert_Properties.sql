@@ -52,8 +52,7 @@ VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice
          <li>2、各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
          <li>3、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
          <li>4、若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li>
-         <li>5、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投
-            資標的申請之依據。</li>
+         <li>5、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
          <li>6、如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。
             您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能
             面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損
@@ -86,7 +85,7 @@ go
 --- 變更風險屬性-風險屬性分析表
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'RISK_ATTRIBUTE_ANALYSIS_STATEMENT', N'變更風險屬性-風險屬性分析表',
-		N'<div class="check-title"> 風險屬性分析表 </div> <div class="check-body grey2"> <div class="plus-list"> <div class="col-sm-2 text-left"> 總 分 </div> <div class="col-sm-2 text-left"> 投資組合類型 </div> <div class="col-sm-8 text-left"> 風險屬性說明 </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 9分(含)以下 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 保守型 </p> <p> (A) </p> </div> <div class="col-sm-8"> 願意接受微幅的價格波動，對於風險承受度較低，僅追求穩定的收益即可獲得滿足。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 10~17分 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 穩健型 </p> <p> (B) </p> </div> <div class="col-sm-8"> 願意承擔部分的投資風險，以追求穩定的投資報酬，認為資產成長與風險分散同等重 要，利用不同投資報酬及風險性的投資工具，調配投資組合內容。 </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 18分(含)以上 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 積極型 </p> <p> (C) </p> </div> <div class="col-sm-8"> 願意承擔較高的風險，以追求超額報酬，風險承受度最高，著眼於資產的高度成長，並 清楚認知投資標的淨值有較大的波動，投資目的為極積追求最高報酬。 </div> </div> </div>',
+		N'<div class="check-title"> 風險屬性分析表 </div> <div class="check-body grey2"> <div class="plus-list"> <div class="col-sm-2 text-left"> 總 分 </div> <div class="col-sm-2 text-left"> 投資屬性 </div> <div class="col-sm-6 text-left"> 說明 </div> <div class="col-sm-2 text-left"> 適合基金風險類型 </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 9分(含)以下 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 保守型 </p> <p> (A) </p> </div> <div class="col-sm-6"> 願意接受微幅的價格波動，對於風險承受度較低，僅追求穩定的收益即可獲得滿足。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div> <div class="col-sm-2"> RR1 </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 10~17分 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 穩健型 </p> <p> (B) </p> </div> <div class="col-sm-6"> 願意承擔部分的投資風險，以追求穩定的投資報酬，認為資產成長與風險分散同等重 要，利用不同投資報酬及風險性的投資工具，調配投資組合內容。 </div> <div class="col-sm-2"> RR1、RR2、RR3 </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 18分(含)以上 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 積極型 </p> <p> (C) </p> </div> <div class="col-sm-6"> 願意承擔較高的風險，以追求超額報酬，風險承受度最高，著眼於資產的高度成長，並 清楚認知投資標的淨值有較大的波動，投資目的為極積追求最高報酬。 </div> <div class="col-sm-2"> RR1、RR2、RR3、RR4、RR5 </div> </div> </div>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
@@ -809,4 +808,15 @@ INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARA
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CHANGE_PREMIUM_UH_MIN', N'UH_MIN_VALUE',
 		N'2000',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='CHANGE_PREMIUM_INVESTMENT'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER_CATEGORY (PARAMETER_CATEGORY_ID, SYSTEM_ID, CATEGORY_CODE, CATEGORY_NAME, STATUS, CREATE_DATE, CREATE_USER)
+VALUES ((select max(PARAMETER_CATEGORY_ID)+1 from ESERVICE_ADM.dbo.PARAMETER_CATEGORY), 'eservice', 'SHOW_ACCOUNT_INVT_NOS', N'投資標商品顯示帳戶', 1, getdate(), 'admin')
+go
+
+--- 投資型商品暫設定GPNTD00001需要提供賬戶
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'SHOW_ACCOUNT_INVT_1', N'GPNTD00001',
+		N'GPNTD00001',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SHOW_ACCOUNT_INVT_NOS'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go

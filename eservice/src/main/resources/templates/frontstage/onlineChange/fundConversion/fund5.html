@@ -87,13 +87,13 @@
 											<th:block th:if="${from.ratio !=0}" >
 												<td th:text="${from.ratio != null}?${from.ratio} +'%'"></td>
 											</th:block>
-											<th:block th:if="${from.value !=0 && from.ratio ==0 }" >
+											<th:block  th:if="${from.value !=0 && from.ratio ==0 }" >
 												<td th:text="${from.value != null}?${#numbers.formatDecimal(from.value,0,4)}"></td>
 											</th:block>
 											
 										<!-- <td>1,042,899<i class="my5">NTD</i></td> 
 										</td>-->
-									</tr>
+									</tr  >
 								</th:block>
 							</th:block>
 						</th:block>			
@@ -130,6 +130,89 @@
 						</tbody>
 					</table>
 					<!-- <div class="invst2total">總轉入金額 <span class="chNormal">NTD </span><span class="orange">50,866.68</span></div> -->
+				</div>
+				<div class="center1 ptop30"><img src="img/arrow-down.png" id="img-trans">
+				</div>
+				<div class="check-title">匯款帳戶資料</div>
+				<div class=" grey2">
+					<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+						<thead>
+						<tr class="table2 orange2">
+							<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">名稱</th>
+							<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">内容</th>
+						</tr>
+						</thead>
+						<tbody>
+						<th:block  th:if="${formData} !=null">	
+								<th:block th:if="${formData.swiftCode != null
+										&& formData.swiftCode != '' }" >
+								<tr class="h90 tr-odd-noEvent">
+									<td class="text-left" >
+										Swift Code
+									</td>
+									<td>
+										<th:block th:text="${formData.swiftCode}"  ></th:block>
+									</td>
+								</tr>
+							</th:block>
+							<th:block th:if="${formData.englishName != null
+								&& formData.englishName != '' }" >
+								<tr class="h90 tr-odd-noEvent">
+									<td class="text-left" >
+										英文戶名
+									</td>
+									<td>
+										<th:block th:text="${formData.englishName}"  ></th:block>
+									</td>
+								</tr>
+							</th:block>
+							<th:block th:if="${formData.accountName != null
+								&& formData.accountName != '' }" >
+								<tr class="h90 tr-odd-noEvent">
+									<td class="text-left" >
+										帳戶名稱
+									</td>
+									<td>
+										<th:block th:text="${formData.accountName}"  ></th:block>
+									</td>
+								</tr>
+							</th:block>
+							<th:block th:if="${formData.bankName != null
+								&& formData.bankName != '' }" >
+								<tr class="h90 tr-odd-noEvent">
+									<td class="text-left" >
+										銀行名稱
+									</td>
+									<td>
+										<th:block th:text="${formData.bankName}"  ></th:block>
+									</td>
+								</tr>
+							</th:block>
+							<th:block th:if="${formData.branchName != null
+								&& formData.branchName != '' }" >
+								<tr class="h90 tr-odd-noEvent">
+									<td class="text-left" >
+										分行名稱
+									</td>
+									<td>
+										<th:block th:text="${formData.branchName}"  ></th:block>
+									</td>
+								</tr>
+							</th:block>
+							<th:block th:if="${formData.bankAccount != null
+								&& formData.bankAccount != '' }" >
+								<tr class="h90 tr-odd-noEvent">
+									<td class="text-left" >
+										帳號
+									</td>
+									<td>
+										<th:block th:text="${formData.bankAccount}"  ></th:block>
+									</td>
+								</tr>
+							</th:block>
+						</th:block>	
+						</tbody>
+					</table>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3" style="line-height: 40px;">選擇驗證方式完成申請：</label>
@@ -226,6 +309,7 @@
 	<script th:src="@{/plugin/jquery.base64.js}"></script>
 	<script th:src="@{/js/travelPolicy/moment.js}"></script>
 	<script th:inline="javascript">
+			var formDataInvestmentPortfolioVo = /*[[${formData}]]*/;
 			var outInvestmentServiceList = /*[[${outInvestmentService}]]*/;
 			var inInvestmentServiceList = /*[[${inInvestmentService}]]*/;
 			var investmentsList = /*[[${investmentsList}]]*/;
@@ -239,6 +323,15 @@
          function go(){
 			 console.log('--------------------------------------');
 				let formData = {};
+				formData.bankAccount =formDataInvestmentPortfolioVo.bankAccount;
+				formData.bankName = formDataInvestmentPortfolioVo.bankName;
+				formData.bankCode = formDataInvestmentPortfolioVo.bankCode;
+				formData.branchName = formDataInvestmentPortfolioVo.branchName;
+				formData.branchCode = formDataInvestmentPortfolioVo.branchCode;
+				formData.englishName =formDataInvestmentPortfolioVo.englishName;
+				formData.swiftCode = formDataInvestmentPortfolioVo.swiftCode;
+				formData.accountName = formDataInvestmentPortfolioVo.accountName;
+
 				formData.investments = JSON.stringify(outInvestmentServiceList);
 				formData.newInvestments = JSON.stringify(inInvestmentServiceList);
 				formData.investmentsList = investmentsList;

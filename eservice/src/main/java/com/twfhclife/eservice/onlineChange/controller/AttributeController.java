@@ -14,8 +14,11 @@ import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.service.IPortfolioService;
+import com.twfhclife.eservice.web.model.LoginRequestVo;
+import com.twfhclife.eservice.web.model.LoginResultVo;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UsersVo;
+import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sun.misc.BASE64Decoder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,6 +67,9 @@ public class AttributeController extends BaseUserDataController  {
 
     @Autowired
     private MessageTemplateClient messageTemplateClient;
+
+    @Autowired
+    private ILoginService loginService;
 
     @RequestLog
     @RequestMapping("/attribute1")
@@ -120,6 +127,8 @@ public class AttributeController extends BaseUserDataController  {
         vo.setLevel(riskLevel);
         vo.setDesc(transInvestmentService.transRiskLevelToName(riskLevel));
         addAttribute("transAnswerVo", vo);
+        addAttribute("attributeTimeSet", 300);
+        sendAuthCode("attribute");
         addAttribute("analysisStatement", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "RISK_ATTRIBUTE_ANALYSIS_STATEMENT"));
         return "frontstage/onlineChange/attribute/attribute2";
     }
@@ -161,17 +170,28 @@ public class AttributeController extends BaseUserDataController  {
     public String attributeSuccess(TransAnswerVo vo) {
         UsersVo user = getUserDetail();
         try {
+            String msg;
+            if (StringUtils.equals(vo.getAuthType(), "password")) {
+                msg = checkPassword(vo.getUserPassword());
+            } else {
+                msg = checkAuthCode("attribute", vo.getAuthenticationNum());
+            }
+            if (!StringUtils.isEmpty(msg)) {
+                addSystemError(msg);
+                return "forward:attribute2";
+            } else {
             int result = attributeService.addNewApply(vo, user);
             sendNotification(vo, user);
             if (result <= 0) {
                 addDefaultSystemError();
                 return "forward:attribute2";
             }
+                return "frontstage/onlineChange/attribute/attribute-success";
+            }
         } catch (Exception e) {
             logger.error(e);
             return "forward:attribute2";
         }
-        return "frontstage/onlineChange/attribute/attribute-success";
     }
 
     @RequestLog
@@ -258,5 +278,38 @@ public class AttributeController extends BaseUserDataController  {
             logger.info("insertTransInvestment() success, but send notify mail/sms error.");
         }
         logger.info("End send mail");
+    }
+
+    //keycloak驗證密碼
+    private String checkPassword(String authenticationNum) {
+        try {
+            UsersVo loginUser = getUserDetail();
+            if (loginUser == null) {
+                return "密碼驗證失敗！";
+            }
+            LoginRequestVo loginRequestVo = new LoginRequestVo();
+            String decodePasswd = decodeBase64(authenticationNum);
+            loginRequestVo.setUserId(loginUser.getUserId());
+            loginRequestVo.setPassword(decodePasswd);
+            LoginResultVo res = loginService.doLogin(loginRequestVo);
+            return res != null && StringUtils.equals("SUCCESS", res.getReturnCode()) ?  null : "密碼驗證失敗！";
+        } catch (Exception e) {
+            logger.error(e);
+            return "密碼驗證失敗！";
+        }
+    }
+
+    private String decodeBase64(String mi) {
+        String mingwen = "";
+        if (StringUtils.isNotBlank(mi)) {
+            BASE64Decoder decoder = new BASE64Decoder();
+            try {
+                byte[] by = decoder.decodeBuffer(mi);
+                mingwen = new String(by);
+            } catch (Exception ex) {
+                logger.error("==========密碼加密失敗=========== {}", ExceptionUtils.getStackTrace(ex));
+            }
+        }
+        return mingwen;
     }
 }

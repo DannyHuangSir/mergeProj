@@ -21,6 +21,96 @@ public class InvestmentPortfolioVo extends PortfolioVo {
     private String policyType;
     //停泊賬號  N  不是   Y是
     private String depositAccount;
+    private String investmentsList;
+    private String numInvestment;
+    private String bankAccount;
+    private String bankName;
+    private String bankCode;
+    private String branchName;
+    private String branchCode;
+    private String englishName;
+    private String swiftCode;
+    private String accountName;
+
+    public String getInvestmentsList() {
+        return investmentsList;
+    }
+
+    public void setInvestmentsList(String investmentsList) {
+        this.investmentsList = investmentsList;
+    }
+
+    public String getNumInvestment() {
+        return numInvestment;
+    }
+
+    public void setNumInvestment(String numInvestment) {
+        this.numInvestment = numInvestment;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getBranchCode() {
+        return branchCode;
+    }
+
+    public void setBranchCode(String branchCode) {
+        this.branchCode = branchCode;
+    }
+
+    public String getEnglishName() {
+        return englishName;
+    }
+
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
+    }
+
+    public String getSwiftCode() {
+        return swiftCode;
+    }
+
+    public void setSwiftCode(String swiftCode) {
+        this.swiftCode = swiftCode;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
     public String getDepositAccount() {
         return depositAccount;

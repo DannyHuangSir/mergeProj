@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.onlineChange.dao.*;
 import com.twfhclife.eservice.onlineChange.model.TransFundConversionVo;
+import com.twfhclife.eservice.onlineChange.model.TransInvestmentDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
@@ -30,6 +31,7 @@ import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.groovy.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -210,10 +212,18 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
                 transFundConversionVo.setInvtNo(x.getInvtNo());
                 transFundConversionVo.setInvtName(x.getFundName());
                 transFundConversionVo.setRatio(x.getRatio());
+                //組裝數據
+                transFundConversionVo.setBankAccount(x.getBankAccount());
+                transFundConversionVo.setBankName(x.getBankName());
+                transFundConversionVo.setBranchName(x.getBranchName());
+                transFundConversionVo.setSwiftCode(x.getSwiftCode());
+                transFundConversionVo.setEnglishName(x.getEnglishName());
+                transFundConversionVo.setAccountName(x.getAccountName());
                 in.add(transFundConversionVo);
             }
         });
         lists.add(out);
+        lists.add(in);
         lists.add(in);
         return lists;
     }
@@ -368,8 +378,9 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 
     @Override
     @Transactional
-    public TransInvestmentVo insertTransFundConversion(String outInvestments, String inInvestments,UsersVo user) throws Exception {
-
+    public TransInvestmentVo insertTransFundConversion(TransInvestmentVo transInvestment,UsersVo user) throws Exception {
+        String outInvestments = transInvestment.getInvestments();
+        String inInvestments = transInvestment.getNewInvestments();
         List<TransFundConversionVo> oInvestments =
                     new Gson().fromJson(outInvestments, new TypeToken<List<TransFundConversionVo>>(){}.getType());
         if (CollectionUtils.isEmpty(oInvestments)) {
@@ -421,7 +432,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 
         iInvestments.forEach((x)->{
             x.setTransNum(transNum);
-            int insert = transFundConversionDao.insert(x);
+                int insert = transFundConversionDao.insertInvestments(x,transInvestment);
         });
 
 
@@ -456,7 +467,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
     }
 
     @Override
-    public List<CompareInvestmentVo> getAppliedInvestments(String transNum) {
+    public List<TransInvestmentDetailVo> getAppliedInvestments(String transNum) {
         return transInvestmentDao.selectCompareInvestments(transNum);
     }
 
@@ -590,6 +601,14 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             transInvestmentVo.setInvtNo(e.getInvtNo());
             transInvestmentVo.setPolicyNo(vo.getPolicyNo());
             transInvestmentVo.setInvtName(e.getInvtName());
+            transInvestmentVo.setEnglishName(vo.getEnglishName());
+            transInvestmentVo.setSwiftCode(vo.getSwiftCode());
+            transInvestmentVo.setBankCode(vo.getBankCode());
+            transInvestmentVo.setBankName(vo.getBankName());
+            transInvestmentVo.setBranchCode(vo.getBranchCode());
+            transInvestmentVo.setBranchName(vo.getBranchName());
+            transInvestmentVo.setAccountName(vo.getAccountName());
+            transInvestmentVo.setBankAccount(vo.getBankAccount());
             transInvestmentDao.insert(transInvestmentVo);
         }
         vo.setTransNum(transNum);
@@ -639,5 +658,17 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
     @Override
     public BigDecimal getDistributeRationByInvtNo(String policyNo, String invtNo) {
         return transInvestmentDao.getDistributeRationByInvtNo(policyNo, invtNo, new Date());
+    }
+
+    @Override
+    public List<String> getChckSwiftCode() throws Exception {
+        List<ParameterVo> parameterByCategoryCode = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.SHOW_ACCOUNT_INVT_NOS);
+
+        List<String> collect = parameterByCategoryCode.stream().map(x -> {
+            return x.getParameterValue();
+        }).collect(Collectors.toList());
+        return  collect;
+
+
     }
 }
