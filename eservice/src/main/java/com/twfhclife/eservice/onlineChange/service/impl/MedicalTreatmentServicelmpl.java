@@ -19,6 +19,8 @@ import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import com.twfhclife.generic.util.RptUtils;
 import com.twfhclife.generic.util.RptUtils2;
+import com.twfhclife.generic.util.StatuCode;
+
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -1227,6 +1229,26 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 			return  handledPolicyList;
 		}
 		return handledPolicyList;
+	}
+
+	@Override
+	public List<Hospital> gitChooseHospitalList(String policyNo, String userRocId) throws Exception {
+		//當前可用的醫院
+		List<Hospital> hospitalList = transMedicalTreatmentClaimDao.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
+		 //當前保單已經選擇的醫院
+		List<String> strings = transMedicalTreatmentClaimDao.gitChooseHospitalList(policyNo, userRocId);
+		List<Hospital> collect = hospitalList.stream().map(X -> {
+				 if(!org.springframework.util.CollectionUtils.isEmpty(strings)){
+					 strings.stream().forEach(j->{
+						 if (!StringUtils.isEmpty(j) && j.equals(X.getHpid())) {
+							X.setHpid("");
+						 }
+					 });
+				 }
+			return X;
+		}).collect(Collectors.toList());
+
+		return  collect;
 	}
 
 

@@ -427,8 +427,10 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 
 			//獲取醫院明顯
-		  	List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
+		  	//List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
 
+		  	//將當前保單已經選中的醫院資料進行排查
+			List<Hospital>  hospitalList=		iMedicalTreatmentService.gitChooseHospitalList(claimVo.getPolicyNo(),getUserRocId());
 			//獲取保險公司明顯
 			List<HospitalInsuranceCompany>  hospitalInsuranceCompanyList=	iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,StatuCode.AGREE_CODE.code);
 			//進行排除當前台銀人壽在UI上顯示

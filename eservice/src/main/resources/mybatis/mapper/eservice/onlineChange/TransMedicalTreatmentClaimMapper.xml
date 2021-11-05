@@ -249,7 +249,14 @@
 		 where STATUS = 'NON' 
 		   and RFE_ID = #{rfeId}
 	</update>
-	
+	<select id="gitChooseHospitalList" resultType="java.lang.String" parameterType="java.lang.String">
+		select  DISTINCT TO_HOSPITAL_ID from eservice.dbo.TRANS A
+		left join eservice.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B on a.TRANS_NUM = B.TRANS_NUM
+		where A.STATUS not in ('2','3','7','8')
+		and A.TRANS_TYPE = 'MEDICAL_TREATMENT'
+		and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{userRocId})
+		and  B.POLICYNO=#{policyNo}
+	</select>
 	<!-- 依保單號碼找出商品險種 -->
 	<select id="getProductCodeByPolicyNo" resultType="java.lang.String" parameterType="java.lang.String">
 		select PRODUCT_CODE 

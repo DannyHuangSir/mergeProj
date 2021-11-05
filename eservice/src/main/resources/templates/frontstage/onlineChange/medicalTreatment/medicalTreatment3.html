@@ -389,32 +389,25 @@
 																<th:block th:each="vo : ${hospitalList}">
 																	<div class="radio inline col-sm-6" style="margin-right: 0px;">
 																		<label>
-																				<th:block th:if="${vo.hpid != null}">
+																				<th:block th:if="${vo.hpid != null && vo.hpid !=''}">
 																			<div class="radio-btn" style="margin-top: 8px !important;">
-																					
 																						<i><input type="radio" name="toHospitalIdItem"  th:value="${vo.hpid}" ></i>
 																					</div>
-																				</th:block>
 																				<th:block th:if="${vo.hpName != null}">
 																				<label style="display: inline;" th:inline="text">[[${vo.hpName}]]</label>
 																				</th:block>
-																		</label>
+																				</th:block>
+																				<th:block th:if="${vo.hpid == null || vo.hpid ==''}">
+																					<div class="radio-btn" style="margin-top: 8px !important;">
+																						<i onclick="chooseHospital()"><input type="radio"  style="color: cadetblue;"  name="toHospitalIdItem"  disabled></i>
 																	</div>
-																	<!-- <div class="radio inline col-sm-4">
-																		<div class="radio-btn" style="margin-top: 6px !important;">
-																			<div class="radio-btn"><i class=""><input type="radio" name="toHospitalIdItem"  th:value="${vo.hpid}"></i></div>
 																			<th:block th:if="${vo.hpName != null}">
-																				<label th:inline="text">[[${vo.hpName}]]</label>
+																						<label style="display: inline;color: cadetblue;" th:inline="text">[[${vo.hpName}]]</label>
 																			</th:block>
-																			<th:block th:if="${vo.value.parameterName == null}">
-																				<th:block th:if="${vo.value.parameterCode == 'MEDICAL_COMPANY_01'}">臺北市立聯合醫院</th:block>
-																				<th:block th:if="${vo.value.parameterCode == 'MEDICAL_COMPANY_02'}">國立台灣大學醫學院附設醫院</th:block>
-																				<th:block th:if="${vo.value.parameterCode == 'MEDICAL_COMPANY_03'}">林口長醫院</th:block>
-																				<th:block th:if="${vo.value.parameterCode == 'MEDICAL_COMPANY_04'}">輔大醫院</th:block>
-																				<th:block th:if="${vo.value.parameterCode == 'MEDICAL_COMPANY_05'}">淡水馬階醫院</th:block>
-																			</th:block> 
+																				</th:block>
+																				
+																		</label>
 																		</div>
-																	</div> -->
 																</th:block>
 															</div>
 														</th:block>
@@ -1169,7 +1162,10 @@
 				return true;	
 			  }
 			}
-	
+			//提示彈窗
+			function chooseHospital(){
+				openAlert("當前醫院已被此保單申請,還請重新選擇!");
+			}
 		 function checkedMedical(){
 			$('#modal-container-Medical').modal({
 				show: true,

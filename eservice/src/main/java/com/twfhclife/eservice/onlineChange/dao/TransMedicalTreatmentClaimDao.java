@@ -96,4 +96,6 @@ public interface TransMedicalTreatmentClaimDao {
 	List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(@Param("functionName") String functionName,@Param("status")  String status)throws  Exception;
 
     int getMedicalTreatmentWhetherFirst(@Param("policyNo")String policyNo, @Param("functionName")String medicalTreatmentParameterCode)throws Exception;
+	//進行獲取當前保單已經選中的醫院資料
+    List<String> gitChooseHospitalList(@Param("policyNo")String policyNo,@Param("userRocId") String userRocId)throws  Exception;
 }

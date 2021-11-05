@@ -153,4 +153,7 @@ public interface IMedicalTreatmentService {
     String getPolicyClaimCompletedPolicyno(String userRocId)throws Exception;
 	//第二次申請非當前申請保單進行鎖定
 	List<PolicyListVo> handlPolicyClaimCompletedPolicynoNotLocked(List<PolicyListVo> handledPolicyList, String userRocId)throws Exception ;
+	//進行獲取當前保單已經選中的醫院資料
+    List<Hospital> gitChooseHospitalList(String policyNo, String userRocId)throws Exception;
+
 }
