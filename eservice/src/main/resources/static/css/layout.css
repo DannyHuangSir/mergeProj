@@ -5152,6 +5152,7 @@ select {
     border-radius: 0;
     height: 30px;
     padding-left: 10px;
+    padding-right: 20px;
     -webkit-appearance: none;
     width: 140%\9;
     /*width: 120%\9;*/
@@ -9766,4 +9767,22 @@ input[type=number]{
     .attribute1 .attr1-padding {
         height: auto !important;
     }
+    .custominput{
+        width: 100%;
+    }
+}
+
+.custominput{
+    border: 1px solid #dfdfdf!important;
+    background: #fff;
+    width: 90px;
+    float: left;
+}
+.custominput>input{
+    border: 0 !important;
+    float: none !important;
+    padding-left: 0;
+ }
+.custominput>input:focus{
+    outline:none; 
 }

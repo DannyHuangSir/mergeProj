@@ -71,7 +71,7 @@
 								<th class="item90">類型</th>
 								<th class="text-left " scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
 								<th class="item text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">幣別</th>
-								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">投資收益等級</th>
+								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">投資收益&nbsp;等級</th>
 								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">幣別參考價值</th>
 								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">參考報酬率百分比</th>
 								<th class="text-right">停利點</th>
@@ -133,7 +133,7 @@
 							<th:block th:each="vo : ${observeList}">
 								<tr>
 									<td>
-										觀查中
+										追蹤中
 									</td>
 									<td><th:block th:text="${vo.invtName}"/>(<th:block th:text="${vo.fundCode}"/>)</td>
 									<td><th:block th:text="${vo.currency}"/></td>
@@ -168,12 +168,30 @@
 				<div class="col-md-12 two-buttons">
 				<div class="col-md-12 two-buttons">
 					<button type="button" id="deny" class="btn-signup">上一步</button>
-					<button type="button" id="go" class="btn-signup">確認送出</button>
+					<button type="button" id="go" data-toggle="modal" data-target="#modal-container-Policy" class="btn-signup">確認送出</button>
 				</div>
 				</div>
 			</div>
 		</div>
 	</section>
+	<div class="modal fade in" id="modal-container-Policy" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 grey2">
+					<h3>本投資標的通知僅供參考通知服務任何交易仍必須另外申請方能生效。
+					</h3>
+					<p>是否要繼續變更？</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn-signup" data-dismiss="modal" aria-label="Close">取消</button>
+					<button type="button" class="btn-signup" id="go1" style="background-color: #CC7A02;" data-dismiss="modal" aria-label="Close" onclick="go()">確認</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- 要送出的form data -->
 	<footer th:replace="fragments/footer"></footer>
 	<th:block th:replace="fragments/script"/>
@@ -192,7 +210,7 @@
 			});
 			
 			// 確認送出
-			$('#go').click(function() {
+			$('#go1').click(function() {
 				if ($('#InputCert1').val() == '') {
 					/* openAlert("請輸入驗證碼"); */
 					openAlert($('#E0071').val());

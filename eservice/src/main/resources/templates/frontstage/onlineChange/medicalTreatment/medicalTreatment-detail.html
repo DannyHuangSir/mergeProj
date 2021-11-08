@@ -301,8 +301,8 @@
                         <div class="form-group">
                             <label class="col-sm-4">是否傳送其他保險公司：</label>
                             <div class="col-sm-8">
-                                <th:block th:if="${claimVo.to != null}">同意</th:block>
-                                <th:block th:unless="${claimVo.to != null}">不同意</th:block>
+                                <th:block th:if="${claimVo.to != null && claimVo.to != '' }">同意</th:block>
+                                <th:block th:unless="${claimVo.to != null && claimVo.to != ''}">不同意</th:block>
                             </div>
                         </div>
                         <th:block th:if="${claimVo.to != null}">

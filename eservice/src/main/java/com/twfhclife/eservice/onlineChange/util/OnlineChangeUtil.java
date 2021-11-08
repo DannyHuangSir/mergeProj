@@ -159,6 +159,8 @@ public interface OnlineChangeUtil {
 	
 	/** 保單理賠SMS */
 	final String ELIFE_SMS_005 = "ELIFE_SMS-005";
+	/** 理賠醫起通SMS */
+	final String MEDICAL_SMS_037 = "MEDICAL_SMS-037";
 
         final String ELIFE_SMS_006 = "ELIFE_SMS-006";
 	
@@ -179,8 +181,12 @@ public interface OnlineChangeUtil {
 	public static final String ELIFE_MAIL_023="ELIFE_MAIL_023";
 	/**客戶通知	首家件通知  臺銀人壽保單理賠申請通知*/
 	public static final String ELIFE_MAIL_024="ELIFE_MAIL_024";
+	/**客戶通知	首家件通知  理賠醫起保單理賠申請通知*/
+	public static final String MEDICAL_MAIL_036="MEDICAL_MAIL_036";
 	/**內部人員通知	首家件通知	理賠聯盟鏈首家理賠申請通知*/
 	public static final String ELIFE_MAIL_025="ELIFE_MAIL_025";
+	/**內部人員通知	首家件通知	理賠醫起通首家理賠申請通知*/
+	public static final String MEDICAL_MAIL_035="MEDICAL_MAIL_035";
 	/**內部人員通知	轉收件通知	理賠聯盟鏈轉收申請通知*/
 	public static final String ELIFE_MAIL_026="ELIFE_MAIL_026";
 	/**已持有投資標的轉換-備註條款*/

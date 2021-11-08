@@ -427,10 +427,10 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 
 			//獲取醫院明顯
-		  	//List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
+		  	List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
 
 		  	//將當前保單已經選中的醫院資料進行排查
-			List<Hospital>  hospitalList=		iMedicalTreatmentService.gitChooseHospitalList(claimVo.getPolicyNo(),getUserRocId());
+			//List<Hospital>  hospitalList=		iMedicalTreatmentService.gitChooseHospitalList(claimVo.getPolicyNo(),getUserRocId());
 			//獲取保險公司明顯
 			List<HospitalInsuranceCompany>  hospitalInsuranceCompanyList=	iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,StatuCode.AGREE_CODE.code);
 			//進行排除當前台銀人壽在UI上顯示
@@ -602,7 +602,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					receivers = (List)mailInfo.get("receivers");
 					//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
 					//使用新郵件範本
-					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_025, receivers, paramMap, "email");
+					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_MAIL_035, receivers, paramMap, "email");
 
 
 					//發送保戶MAIL
@@ -612,7 +612,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					logger.info("user mail : {}", claimVo.getMail());
 					//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
 					//使用新郵件範本
-					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_024, receivers, paramMap, "email");
+					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_MAIL_036, receivers, paramMap, "email");
 					logger.info("End send mail");
 
 
@@ -621,7 +621,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					receivers.add(claimVo.getPhone());
 					paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
 					logger.info("user phone : {}", claimVo.getPhone());
-					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_SMS_005, receivers, paramMap, "sms");
+					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_SMS_037, receivers, paramMap, "sms");
 
 				}
 //				}

@@ -7,6 +7,7 @@ import com.twfhclife.eservice.onlineChange.model.TransDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundNotificationDtlVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundNotificationVo;
 import com.twfhclife.eservice.onlineChange.model.TransNotificationVo;
+import com.twfhclife.eservice.onlineChange.service.ITransDepositService;
 import com.twfhclife.eservice.onlineChange.service.ITransFundNotificationService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
@@ -90,6 +91,9 @@ public class FundNotificationController extends BaseUserDataController {
 	@Autowired
 	private ITransRiskLevelService riskLevelService;
 
+	@Autowired
+	private ITransDepositService transDepositService;
+
 	/**
 	 * 保單清單頁面.
 	 * 
@@ -157,8 +161,11 @@ public class FundNotificationController extends BaseUserDataController {
 	@PostMapping("/notification2")
 	public String notification2(TransFundNotificationVo transFundNotificationVo) {
 		try {
-			addAttribute("policyNo", transFundNotificationVo.getPolicyNoList().get(0));
+			String policyNo = transFundNotificationVo.getPolicyNoList().get(0);
+			addAttribute("policyNo", policyNo);
 			addAttribute("transFundNotificationVo", transFundNotificationVo);
+			addAttribute("policyType", policyNo.substring(0, 2));
+			addAttribute("configs", transDepositService.getDepositConfigs());
 			String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
 					ApConstants.SYSTEM_ID, OnlineChangeUtil.NOTIFICATION_REMARKS);
 			if (parameterValueByCodeConsent != null) {

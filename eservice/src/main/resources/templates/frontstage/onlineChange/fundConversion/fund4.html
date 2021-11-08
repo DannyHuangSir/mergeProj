@@ -307,6 +307,7 @@
 				} else {
 					companysItems = response.resultData.companys
 					currencysItems = response.resultData.currencys
+					currencysItems.unshift({KEY: '依基金幣別查詢', VALUE: 'ALL'})
 				}
 			},
 			error : function() {
@@ -319,7 +320,7 @@
 			//根据保单号，持有基金查询可转入基金
 			var item = '<div class="check-list2 newfund" id="investment_template">'
               +'<div style="width: 100%;display: inline-block;">'
-                              +'<div class="col-sm-2">'
+                             /* +'<div class="col-sm-2">'
                            +' <div class="selector-box">'
                             +'  <select name="companysItem" class="selector">'
 								$(companysItems).each(function(index, e){
@@ -330,6 +331,7 @@
 							item = item +' </select>'
                             +'</div>'
                          +' </div>'
+						 */
                          +' <div class="col-sm-2">'
                           +'  <div class="selector-box">'
                           +'    <select  name="currencysItem" class="selector">'
@@ -367,11 +369,14 @@
     	}
 	
 		function filterAndRestItems(vm) {
-			arr = $(newInvestments).filter(function(index, e) {
+			arr = $(newInvestments)
+				/*.filter(function(index, e) {
 				return e.company == $(vm).find("[name='companysItem'] option:selected").val()
-			}).filter(
+			})*/
+			.filter(
 				function(index, e) {
-					return e.invtExchCurr == $(vm).find("[name='currencysItem'] option:selected").val()
+					let selectCurrency = $(vm).find("[name='currencysItem'] option:selected").val()
+					return selectCurrency == 'ALL' || e.invtExchCurr == selectCurrency
 				}
 			)
 			let html = ''

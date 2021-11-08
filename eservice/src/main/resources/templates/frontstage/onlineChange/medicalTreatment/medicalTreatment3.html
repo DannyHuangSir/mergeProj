@@ -463,9 +463,9 @@
 								<span class="col-sm-9 authorizationTime" style="display:none;color: red;">(以上項目至少選取1項)</span>
 								<label class="col-sm-3 authorizationTime" style="display:none"><span style="color: #ff5300; font-size: 16px">*</span>授權時間區間：</label>
 								<div class="col-sm-9 authorizationTime" style="display:none">
-									<input type="text" class="col-sm-4 datepicker" id="authorizationStartDate" name="authorizationStartDate" value="" placeholder="2021/04/06" style="padding: 6px 12px;line-height: 1em;">
+									<input type="text" autocomplete="off" class="col-sm-4 datepicker" id="authorizationStartDate" name="authorizationStartDate" value="" placeholder="2021/04/06" style="padding: 6px 12px;line-height: 1em;">
 									<span class="col-sm-1"> ~ </span>
-									<input type="text" class="col-sm-4 datepicker" id="authorizationEndDate" name="authorizationEndDate" value="" placeholder="2021/05/01" style="padding: 6px 12px;line-height: 1em;">
+									<input type="text" autocomplete="off" class="col-sm-4 datepicker" id="authorizationEndDate" name="authorizationEndDate" value="" placeholder="2021/05/01" style="padding: 6px 12px;line-height: 1em;">
 								</div>									
 								<div class="clearfix"></div>
 									<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否傳送其他保險公司：</label>
@@ -477,7 +477,10 @@
 										</div>
 										<div class="radio inline">
 											<label>
-												<div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_4').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
+											 <!-- 取消限制 -->
+											<!-- <div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_4').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
+											 -->
+											<div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" ></i></div>不同意
 											</label>
 										</div>
 									</div>
@@ -716,6 +719,23 @@
 				<div class="modal-footer center1">
 					<button class="btn-login lock2" data-dismiss="modal" aria-label="Close">取消</button>
 					<button id="go" class="btn-login lock2">確認</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade in" id="modal-container-chooseHospital" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="margin-top: 150px;">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 center1 grey2">
+					<p>當前醫院已被此保單申請,還請重新選擇!</p>
+				</div>
+				<div class="modal-footer center1">
+					<button id="go" class="btn-login lock2" data-dismiss="modal" aria-label="Close">確認</button>
 
 				</div>
 			</div>
@@ -1031,10 +1051,12 @@
 						toItotemALL = toItotemALL.substr(0,toItotemALL.length - 1);
 					}
 					$("input[name='to']").val(toItotemALL);
-				}else {
-					checkedNOTONGYI();
-					return false;
-				}				
+				}
+				//取消 是否傳送其他保險公司 不同意限制
+				// else {
+				// 	checkedNOTONGYI();
+				// 	return false;
+				// }				
 					//校驗指定給付方式
 					if($("input[name='paymentMethod']:checked").val() == "1"){
 						if($('#accountName').val() =='' || $('#bankCode').val() =='' || $('#bankAccount').val() ==''){
@@ -1164,7 +1186,12 @@
 			}
 			//提示彈窗
 			function chooseHospital(){
-				openAlert("當前醫院已被此保單申請,還請重新選擇!");
+				//openAlert("當前醫院已被此保單申請,還請重新選擇!");
+					$('#modal-container-chooseHospital').modal({
+					show: true,
+					backdrop: 'static',
+					keyboard: false
+				});
 			}
 		 function checkedMedical(){
 			$('#modal-container-Medical').modal({
