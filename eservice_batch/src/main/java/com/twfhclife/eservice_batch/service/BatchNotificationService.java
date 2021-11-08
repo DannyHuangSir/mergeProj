@@ -412,14 +412,14 @@ public class BatchNotificationService {
 				sb.append("￭投資收益等級：" + portfolio.getInvtRiskBeneLevel() + "<br/>");
 				sb.append("￭幣別參考價值：" + portfolio.getAcctValue() + "<br/>");
 				sb.append("￭參考報酬率百分比：" + portfolio.getRoiRate() + "<br/>");
-				sb.append("￭現行的停利點：" + vo.getPercentageUp() + "<br/>");
-				sb.append("￭現行的停損點：" + vo.getPercentageDown() + "<br/>");
+				sb.append("￭參考報酬率停利點：" + vo.getPercentageUp() + "<br/>");
+				sb.append("￭參考報酬率停損點：" + vo.getPercentageDown() + "<br/>");
 				sb.append("￭通知日期：" + sdf.format(new Date()) + "<br/>");
 			} else if (vo.getDownValue() != null || vo.getUpValue() != null) {
 				InvestmentVo investmentVo = vo.getInvestmentVo();
-				sb.append("<br/>☆觀察中投資標的<br/>");
+				sb.append("<br/>☆追蹤中投資標的<br/>");
 				sb.append("￭保單號碼：" + vo.getPolicyNo() + "<br/>");
-				sb.append("￭類型：觀察中<br/>");
+				sb.append("￭類型：追蹤中<br/>");
 				sb.append("￭投資標的：" + investmentVo.getInvtNo() + "<br/>");
 				sb.append("￭淨值日：" + sdf.format(investmentVo.getInNetValueDate()) + "<br/>");
 				sb.append("￭單位淨值：" + investmentVo.getNetValue() + "<br/>");
