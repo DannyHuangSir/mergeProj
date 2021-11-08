@@ -12,6 +12,7 @@ import com.twfhclife.adm.model.HospitalInsuranceCompany;
 import com.twfhclife.adm.model.InsClaimStatisticsVo;
 import com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo;
 import com.twfhclife.adm.model.MedicalTreatmentStatisticsVo;
+import com.twfhclife.adm.model.NotifyOfNewCaseMedicalVo;
 import com.twfhclife.adm.model.TransExtendAttrVo;
 import com.twfhclife.adm.model.TransInsuranceClaimVo;
 import com.twfhclife.adm.model.TransMedicalTreatmentClaimVo;
@@ -530,4 +531,6 @@ public interface IOnlineChangeService {
     String getTransMedicalTreatmentByCaseId(String transNum)throws Exception;
 	//進行回壓聯盟結束流程狀態
 	void updateTarnsMedicalTreatmentClaimToAllianceStatus(TransMedicalTreatmentClaimVo mvo)throws Exception;
+
+    List<NotifyOfNewCaseMedicalVo> getUnionCourseListAllianceStatusMsg(NotifyOfNewCaseMedicalVo vo)throws Exception;
 }

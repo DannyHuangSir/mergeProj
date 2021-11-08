@@ -1501,6 +1501,14 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	}
 
 	@Override
+	public List<NotifyOfNewCaseMedicalVo> getUnionCourseListAllianceStatusMsg(NotifyOfNewCaseMedicalVo vo) throws Exception {
+		if (!org.springframework.util.StringUtils.isEmpty(vo.getCaseId())) {
+			return onlineChangeDao.getUnionCourseListAllianceStatusMsg(vo);
+		}
+		return null;
+	}
+
+	@Override
 	public Map<String, Object> getConversionDetail(TransVo transVo) {
 		List<TransFundConversionVo> conversionDetail = onlineChangeDao.getConversionDetail(transVo);
 		Map<String, Object> map = new HashMap<>();

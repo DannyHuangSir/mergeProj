@@ -2957,6 +2957,46 @@
 		FROM [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM]
 		WHERE   TRANS_NUM=#{transNum}
 	</select>
+	<select id="getUnionCourseListAllianceStatusMsg"
+			resultType="com.twfhclife.adm.model.NotifyOfNewCaseMedicalVo"
+				parameterType="com.twfhclife.adm.model.NotifyOfNewCaseMedicalVo">
+				SELECT
+				[SEQ_ID]
+				,[CASE_ID]
+				,[TYPE]
+				,[CREATE_DATE]
+				,[NC_STATUS]
+				,[STATUS_DATE]
+				,[MSG]
+				,COALESCE(CASE_STATUS,' ') AS CASE_STATUS
+				,COALESCE((SELECT
+				a1.PARAMETER_NAME
+				FROM
+				ESERVICE_ADM.DBO.PARAMETER a1
+				,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b1
+				WHERE
+				a1.PARAMETER_CATEGORY_ID = b1.PARAMETER_CATEGORY_ID
+				AND a1.STATUS = b1.STATUS
+				AND b1.STATUS = 1
+				AND b1.CATEGORY_CODE = 'MEDICAL_INTERFACE_STATUS'
+				AND a1.PARAMETER_VALUE =CASE_STATUS),' ')  AS CASE_MESSAGE
+				FROM ESERVICE.dbo.[NOTIFY_OF_NEW_CASE_MEDICAL]
+			WHERE 1=1
+			<if test="notifyVo.caseId != '' and notifyVo.caseId != null">
+				AND CASE_ID = #{notifyVo.caseId}
+			</if>
+			<if test="notifyVo.ncStatus != '' and notifyVo.ncStatus != null">
+				AND NC_STATUS = #{unionCourseVo.ncStatus}
+			</if>
+			<if test="notifyVo.createDate != null and  notifyVo.createDate != '' ">
+				AND convert(varchar(10), STATUS_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{notifyVo.createDate}, 120)
+			</if>
+			<if test="notifyVo.completeDate != null and notifyVo.completeDate !='' ">
+				AND convert(varchar(10), STATUS_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{notifyVo.completeDate}, 120)
+			</if>
+			ORDER BY CASE_STATUS DESC
+
+	</select>
 	<insert id="addMedicalTreatmentClaim" parameterType="com.twfhclife.adm.model.TransMedicalTreatmentClaimVo" >
 		INSERT INTO
 		ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM

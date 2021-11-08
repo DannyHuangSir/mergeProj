@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.collect.Lists;
 import com.twfhclife.adm.model.MessagingTemplateVo;
+import com.twfhclife.adm.model.NotifyOfNewCaseMedicalVo;
 import com.twfhclife.adm.model.ParameterVo;
 import com.twfhclife.adm.model.TransClaimPaymentVo;
 import com.twfhclife.adm.service.IParameterService;
@@ -1032,6 +1033,27 @@ public class OnlineChangeController extends BaseController {
 		}
 		return processResponseEntity();
 	}
+
+	/**
+	 * 查詢聯盟案件歷程
+	 *
+	 * @return
+	 */
+	@PostMapping("/onlineChange/getUnionCourseListAllianceStatusMsg")
+	public ResponseEntity<ResponseObj> getUnionCourseListAllianceStatusMsg(@RequestBody NotifyOfNewCaseMedicalVo vo) {
+		try {
+			List<NotifyOfNewCaseMedicalVo> results = onlineChangeService.getUnionCourseListAllianceStatusMsg(vo);
+				processSuccess(results);
+		} catch (Exception e) {
+			logger.error("Unable to getUnionCourseList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+
+		return processResponseEntity();
+	}
+
+
+
 	
 	/**
 	 * 開始處理

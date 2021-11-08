@@ -654,4 +654,6 @@ public interface OnlineChangeDao {
 	String getTransMedicalTreatmentByCaseId(@Param("transNum")String transNum)throws Exception;
 	//進行回壓聯盟結束流程狀態
 	void updateTarnsMedicalTreatmentClaimToAllianceStatus(@Param("vo")TransMedicalTreatmentClaimVo mvo)throws Exception;
+
+	List<NotifyOfNewCaseMedicalVo> getUnionCourseListAllianceStatusMsg(@Param("notifyVo")NotifyOfNewCaseMedicalVo vo)throws Exception;
 }

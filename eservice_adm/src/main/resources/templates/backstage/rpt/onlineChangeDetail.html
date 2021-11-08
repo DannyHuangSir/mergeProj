@@ -532,6 +532,67 @@
 				</div>
 			</div>
 		</div>
+		<!--聯盟案件狀態歷程-->
+		<div class="modal fade in" id="modal-container-medicalOnAllianceStatusMsg" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up"  style="width: 700px;">
+					<div class="modal-header"> 聯盟鏈歷程
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body clearfix  grey2">
+						<div class="form-horizontal" style="border-bottom: 0;">
+							<div class="form-group">
+								<label class="col-xs-3" id="div_allinance_app_item">申請項目：</label>
+								<div class="col-xs-9" id="allinance_application_items_status"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">申請序號：</label>
+								<div class="col-xs-9" id="allinance_insurance_num_status"></div>
+							</div>
+					</div>
+					</div>
+					<div class="modal-body clearfix grey2">
+						<div class="tb3 top0 nopd clearfix">
+								<i class="foo-business_15 foo-2x"></i>
+								<a data-toggle="collapse" data-target="#collapseBarStatus" aria-expanded="false" aria-controls="collapseBar" class="btn btn-linl">
+									<i class="fa fa-search gray search1" style="color: #DDDDDD;"></i>
+								</a>
+							</div>
+							<div id="collapseBarStatus" class="collapse">
+								<form class="form-inline wht clearfix" id="statusMsg_collapseSearchBar" style="padding: 10px 0;">
+									<input type="hidden" id="allinance_case_id_status" name="caseId"/>
+									<input type="hidden" id="allinance_from_company_id_status" name="fromCompanyId"/>
+									<div class="col-xs-8 input-inline" style="margin-top: 10px;">
+										<label>狀態時間</label>
+										<div>
+											<input type="text" class="datepicker" name="startDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)"> 
+											至
+											<input type="text" class="datepicker" name="endDate" placeholder="YYYY/MM/DD" onblur="checkYMD(this.value)">
+										</div>
+									</div>
+									
+									<div class="col-xs-2 text-right" style="margin-top: 10px;">
+										<button type="button" class="bgOrange" style="border: 0;padding: 5px 10px;" onclick="medicalOnAllianceStatusMsg('','','','','query')">搜尋</button>
+									</div>
+								</form>
+							</div>
+						<table class="tablesaw" style="background: #FFFFFF;">
+							<thead>
+								<tr>
+									<th>編號</th>
+									<th>動作狀態碼</th>
+									<th>描述</th>
+									<th>狀態時間</th>
+								</tr>
+							</thead>
+							<tbody id="statusMsg_tbody">
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!--  已審核     -->
 		<div class="modal fade in" id="modal-FailureConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -2017,7 +2078,7 @@
 				});
 			}
 			function checkYMD(str){
-				var reg = /^\d{4}\/(0[1-9]|1[1-2])\/(0[1-9]|[1-2][0-9]|3[0-1])$/;
+				var reg = /^\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])$/;
 				if (str != null && str != ''){
 					if(reg.test(str)){
 						return true;
@@ -2396,6 +2457,75 @@
 											'</tr>';
 								});
 								$('#union_course_body').html(html);
+							}
+						   
+		                },
+		                error :function() {
+		                  
+		                }
+		            });
+			};
+			//聯盟案件狀態歷程
+			function medicalOnAllianceStatusMsg(TRANS_TYPE, TRANS_NUM, CASE_ID, FROM_COMPANY_ID, str){
+				var data = {};
+				var form = $('#statusMsg_collapseSearchBar')[0];
+				// 舒適化加載對話框
+				if (str != 'query') {
+					$('#modal-container-medicalOnAllianceStatusMsg').modal({
+						show: true,
+						backdrop: 'static', 
+						keyboard: false
+					});
+					$('#allinance_application_items_status').html($('#medical_label_apply_item').html());
+					$('#allinance_insurance_num_status').html(TRANS_NUM);
+					$('#allinance_case_id_status').val(CASE_ID);
+					$('#allinance_from_company_id_status').val(FROM_COMPANY_ID);
+					// 刪除查詢條件中的數據
+					form.reset();
+					if (FROM_COMPANY_ID != 'L01') {
+						data = {caseId : CASE_ID, transNum: $('#allinance_insurance_num').html()};
+					}else {
+						data = {caseId : CASE_ID, transNum: $('#allinance_insurance_num').html()};
+					}
+					
+				}else {
+					data = {
+		                    caseId :form.caseId.value,
+							transNum : $('#allinance_insurance_num').html() ,
+							createDate: form.startDate.value.replaceAll('/','-'),
+							completeDate: form.endDate.value.replaceAll('/','-')
+		                   };
+				}
+				if (!checkYMD(form.startDate.value)) {
+					return;
+				}
+				if (!checkYMD(form.endDate.value)) {
+					return;
+				}
+			    $('#statusMsg_tbody').html('');
+				$.ajax({
+		                type : 'POST',
+		                contentType : 'application/json',
+		                url : /*[[@{/onlineChange/getUnionCourseListAllianceStatusMsg}]]*/,
+		                data : JSON.stringify(data),
+		                success : function(response) {
+							var html = '';
+							if (response.resultData != null) {
+								response.resultData.forEach(function(item,index){
+									html += '<tr><td>'+item.caseId+'</td>';
+											if(!item.caseStatus!=null){
+												html +='<td>'+item.caseStatus+'</td>';
+											}else{
+												html +='<td></td>';
+											}	
+											if(!item.caseMessage!=null){
+												html +='<td>'+item.caseMessage+'</td>';
+											}else{
+												html +='<td></td>';
+											}		
+									html +='<td>'+item.statusDate+'</td></tr>';
+								});
+								$('#statusMsg_tbody').html(html);
 							}
 						   
 		                },
