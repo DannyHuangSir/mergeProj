@@ -147,12 +147,12 @@
 				
 				var startDate = $("#startDate").val();
 				var endDate = $("#endDate").val();
-				var d3=(new Date(endDate)-new Date(startDate))/86400000;
-				if(d3 > 7){
-					$("#searchError").show();
-					$("#searchErrorCont").text("查詢條件「記錄時間起迄」 區間必須小於 3 天，請重新確認!");
-					return;
-				}
+			//var d3=(new Date(endDate)-new Date(startDate))/86400000;
+			// if(d3 > 7){
+			// 	$("#searchError").show();
+			// 	$("#searchErrorCont").text("查詢條件「記錄時間起迄」 區間必須小於 3 天，請重新確認!");
+			// 	return;
+			// }
 					
 				var data = {
 						userId : $("#userId").val(),
@@ -327,17 +327,14 @@
 				'autoUpdateInput' : false,
 				'applyClass' : 'btn-sm btn-success',
 				'cancelClass' : 'btn-sm btn-default',
-				maxDate : new Date(),
+			maxDate : new Date(),		
 				locale: {
 					format:'YYYY-MM-DD',
 					applyLabel: 'Apply',
-					cancelLabel: 'Cancel',
-				},
-				'dateLimit': {
-			        "days": 7
-			    },
+				cancelLabel: 'Cancel'
+			}
 			});
-			
+
 			function changeEventDate(){
 				var eventDate = $("#eventDate").val();
 				$("#startDate").val(eventDate.substring(0,eventDate.indexOf("~")).trim());
@@ -354,7 +351,8 @@
 				$("#startDate").val("");
 				$("#endDate").val("");
 				$(this).val("");
-			});
+		});			
+		
 			
 			function resetForm(){
 				document.getElementById('eventRecord').reset();

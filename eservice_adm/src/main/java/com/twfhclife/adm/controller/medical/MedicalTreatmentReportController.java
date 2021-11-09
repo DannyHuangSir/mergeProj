@@ -10,6 +10,8 @@ import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.EventCodeConstants;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -188,6 +190,56 @@ public class MedicalTreatmentReportController extends BaseController {
 		return processResponseEntity();
 	}
 
+
+	/**
+	 * 執行醫療資料介接	-取/不取用醫療資料
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/medicalTreatmentDetail/getUploadMedicalCases")
+	public ResponseEntity<ResponseObj> getUploadMedicalCases(@RequestBody MedicalTreatmentClaimFileDataVo  medicalTreatmentClaimFileDataVo) {
+		try {
+			/**
+			 * 進行驗證當前保單的醫療資料是已經獲取
+			 * */
+			String transNum = medicalTreatmentClaimFileDataVo.getTransNum();
+			if (StringUtils.isNotBlank(transNum)){
+				int  uploadCount= onlineChangeService.getTransMedicalTreatmentByCount(transNum);
+				//1.2  獲取當前案件已上傳影像系統成功條數
+				int  uploadSuccess= onlineChangeService.getTransMedicalTreatmentBySuccessCount(transNum);
+				String notItprWindowMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_NOT_ITPR_WINDOW_MSG);
+				if(uploadCount>0) {
+					if (uploadCount == uploadSuccess) {
+						//進行查詢修改文件的狀態
+						int  i=iMedicalTreatmentClaimFileDataService.updaetMedicalTreatmentClaimFileDataFileStatusCases(medicalTreatmentClaimFileDataVo);
+						if (i > 0) {
+							String allianceStatus = medicalTreatmentClaimFileDataVo.getAllianceStatus();
+							String itpr = parameterService.getParameterValueByCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS_ITPR);
+							if (allianceStatus != null && itpr.equals(allianceStatus)) {
+								String parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_ITPR_WINDOW_MSG);
+								processSuccess(parameterValueByCode);
+							} else {
+								processSuccess(i);
+							}
+						}
+					}else{
+						processError(notItprWindowMsg);
+					}
+				}else{
+					processError(notItprWindowMsg);
+				}
+			}else {
+				processSystemError();
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getMedicalFileCases: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+
+
 	/**
 	 * 執行醫療資料介接	-取/不取用醫療資料
 	 * @param medicalTreatmentClaimFileDataVo
@@ -210,6 +262,8 @@ public class MedicalTreatmentReportController extends BaseController {
 				}else{
 			processSuccess(i);
 				}
+			}else {
+				processSystemError();
 			}
 		} catch (Exception e) {
 			logger.error("Unable to getMedicalFileCases: {}", ExceptionUtils.getStackTrace(e));

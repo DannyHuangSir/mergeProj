@@ -210,6 +210,8 @@ public interface ApConstants {
 	final String MEDICAL_UPDATE_STATUS_WINDOW_MSG = "MEDICAL_UPDATE_STATUS_WINDOW_MSG";
 	//醫療病例重新上傳提升信息
 	final String MEDICAL_ITPR_WINDOW_MSG = "MEDICAL_ITPR_WINDOW_MSG";
+	//禁止醫療病例重新上傳提示信息
+	final String MEDICAL_NOT_ITPR_WINDOW_MSG = "MEDICAL_NOT_ITPR_WINDOW_MSG";
 	//保險公司發送醫療資料重送
 	public static final String MEDICAL_INTERFACE_STATUS_ITPR = "MEDICAL_INTERFACE_STATUS_ITPR";
 	//保險公司(首家/轉收家)已確認，不申請此次醫療資料查調
