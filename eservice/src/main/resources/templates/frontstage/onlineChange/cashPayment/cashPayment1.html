@@ -83,6 +83,7 @@
 			var formData = {};
 			formData.policyNo = $('input[name="chosePolicy"]:checked').val();
 			formData.currency = $('#currency_' + formData.policyNo).val();
+			formData.paymode = $('#paymentMode_' + formData.policyNo).val();
 			postWithFormData(/*[[@{/cashPayment2}]]*/, formData);
 		});
 	});

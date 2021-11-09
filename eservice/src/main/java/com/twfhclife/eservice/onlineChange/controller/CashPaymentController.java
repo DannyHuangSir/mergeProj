@@ -109,7 +109,11 @@ public class CashPaymentController extends BaseUserDataController {
 
     @RequestLog
     @PostMapping("/cashPayment2")
-    public String cashPayment2(TransCashPaymentVo vo) {
+    public String cashPayment2(TransCashPaymentVo vo, RedirectAttributes redirectAttributes) {
+        if (!StringUtils.equals("M", vo.getPaymode())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "僅月繳保單可以做定期定額保費變更");
+            return "redirect:cashPayment1";
+        }
         addAttribute("proposer", getProposerName());
         addAttribute("transCashPaymentVo", vo);
         addAttribute("preAllocation", transCashPaymentService.getPreAllocation(vo.getPolicyNo()));

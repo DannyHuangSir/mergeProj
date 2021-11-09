@@ -157,7 +157,12 @@ public class ChangePremiumController extends BaseUserDataController  {
             }
             addAttribute("transPaymodeVo", vo);
             String type = vo.getPolicyNoList().get(0).substring(0,2);
-            addAttribute("minValue", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CHANGE_PREMIUM_" + type + "_MIN"));
+            String value = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CHANGE_PREMIUM_" + type + "_MIN");
+            if (StringUtils.isNotBlank(value)) {
+                addAttribute("minValue", value);
+            } else {
+                addAttribute("minValue", Integer.MAX_VALUE);
+            }
         } catch (Exception e) {
             logger.error("Unable to init from changePremium2: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();

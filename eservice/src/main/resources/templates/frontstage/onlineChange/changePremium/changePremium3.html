@@ -86,7 +86,7 @@
 					<div th:replace="fragments/sendVerify"></div>
 				</div>
 				<div class="col-md-8 col-md-offset-2 two-buttons">
-					<a href="changePremium2"><button id="deny" class="btn-signup">上一步</i></button></a>
+					<a><button id="deny" class="btn-signup">上一步</i></button></a>
 					<button id="go" class="btn-signup">確認送出</i></button>
 				</div>
 			</div>
@@ -107,6 +107,10 @@
 				formData.userPassword = $.base64.encode($("input[name='userPassword']").val())
 				formData.authenticationNum = $("input[name='authNum']").val()
 				postWithFormData(/*[[@{/changePremiumSuccess}]]*/, formData);
+			});
+			$('#deny').click(function() {
+				var formData = [[${transPaymodeVo}]]
+				postWithFormData(/*[[@{/changePremium2}]]*/, formData);
 			});
 			smsTimer.show(1); // 1秒
 		});

@@ -30,6 +30,8 @@ public class TransCashPaymentVo extends AbstractOnlineChangeModelBean {
 
     private String branchName;
 
+    private String paymode;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -142,5 +144,13 @@ public class TransCashPaymentVo extends AbstractOnlineChangeModelBean {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public String getPaymode() {
+        return paymode;
+    }
+
+    public void setPaymode(String paymode) {
+        this.paymode = paymode;
     }
 }

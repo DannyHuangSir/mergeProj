@@ -93,7 +93,7 @@
 									<td><th:block th:text="${vo.roiRate} + '%'"/></td>
 									<td>
 										<th:block th:if="${vo.percentageUp != null}">
-											<th:block th:text="${vo.percentageUp}"/>%
+											+<th:block th:text="${vo.percentageUp}"/>%
 										</th:block>
 										<th:block th:if="${vo.percentageUp == null}">
 											--
@@ -101,7 +101,7 @@
 									</td>
 									<td>
 										<th:block th:if="${vo.percentageDown != null}">
-											<th:block th:text="-${vo.percentageDown}"/>%
+											-<th:block th:text="${vo.percentageDown}"/>%
 										</th:block>
 										<th:block th:if="${vo.percentageDown == null}">
 											--
@@ -115,7 +115,7 @@
 					<div class=" grey2">
 						<br/>
 						<div class="tb3 top0">
-							<i class="fas fa-chevron-down"></i> 現行淨值
+							<i class="fas fa-chevron-down"></i> 投資標的追蹤通知
 						</div>
 						<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
 							<thead>

@@ -59,14 +59,20 @@
 							? ${userInfo.productNameMap[transCashPaymentVo.policyNo]}"/>
 					</span></label>
 					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+						<div class="col-sm-12" text-align="left">
+							<label for="" class="col-sm-6 colorGreen" style="padding-left:0px;">保單原撥回方式：</label>
+							<div class="col-sm-6" style="padding-left:0px;">
+								<th:block th:if="${preAllocation == '1'}">現金給付</th:block>
+								<th:block th:if="${preAllocation == '2'}">增加投資標的單位數</th:block>
+							</div>
+						</div>
                         <div class="col-sm-12 mode2select">
                             <label for="" class="col-sm-6 colorGreen">收益分配或撥回資產分配方式：</label>
-                           
 							<div class="selector-box col-sm-6">
 								<select class="selector" name="allocation" onchange="allocation()">
-									<option th:selected="${preAllocation eq '' }"></option>
-									<option th:selected="${preAllocation eq '1'}" value="1">現金給付</option>
-									<option th:selected="${preAllocation eq '2'}" value="2">增加投資標的單位數</option>
+									<option></option>
+									<option value="1">現金給付</option>
+									<option value="2">增加投資標的單位數</option>
 								</select>
 							</div>
                        </div>
@@ -79,7 +85,7 @@
 
 							</article>
 							<!-- TAB 2 -->
-							<article class="tab" id="tab_4"th:attr="style=${preAllocation eq '1' ? 'display: block' : 'display: none' }">
+							<article class="tab" id="tab_4" style="display: none;">
 								<section id="tab_frame_print1" class="tab-frame">
 									<div class="arrow-upleft"></div>
 									<div class="grey2">
@@ -125,6 +131,14 @@
 							</article>
 						</div>
 					</div>
+					<div class="statement1 wht col-sm-8 col-sm-offset-2">
+						<p class="text-ps">備註：</p>
+						<ol class="text-ps">
+							<li>此為預約受理，並非立即生效，須待次一營業日生效，如遇保單撥回基準日則順延生效</li>
+							<li>如欲取消申請或變更撥回方式請於營業日下午3:00前提出申請。</li>
+							<li>您可至『我的申請紀錄』中查詢受理進度。</li>
+						</ol>
+					</div>
                 </div>
 				<div class="col-md-8 col-md-offset-2 two-buttons">
 					<a href="cashPayment1"><button id="deny" class="btn-signup">上一步</i></button></a>
@@ -152,15 +166,17 @@
 				formData.preAllocation = [[${preAllocation}]]
 
 				if ($("#tab_4").is(':visible')) {
-					if ([[${transCashPaymentVo.currency}]] != 'NTD') {
-					if ($('#swiftCode').val() == '') {
-						openAlert("請輸入Swift Code");
-						return false;
-					}
-					if ($('#englishName').val() == '') {
-						openAlert("請輸入英文戶名");
-						return false;
-					}
+					if ([[${transCashPaymentVo.currency}]] == 'USD') {
+						if ($('#swiftCode').val() == '') {
+								openAlert("請輸入Swift Code");
+								return false;
+							}
+						if ($('#englishName').val() == '') {
+							openAlert("請輸入英文戶名");
+							return false;
+						}
+						formData.englishName = $('#englishName').val()
+						formData.swiftCode = $('#swiftCode').val()
 					}
 					if ($('#bankOpt').val() == '') {
 						openAlert("請選擇銀行");
@@ -184,8 +200,6 @@
 					formData.bankCode = $('#bankOpt option:selected').val()
 					formData.branchName = $('#brancheOpt option:selected').text()
 					formData.branchCode = $('#brancheOpt option:selected').val()
-					formData.englishName = $('#englishName').val()
-					formData.swiftCode = $('#swiftCode').val()
 					formData.accountName = $('#accountName').val()
 				}
 				postWithFormData(/*[[@{/cashPayment3}]]*/, formData);
