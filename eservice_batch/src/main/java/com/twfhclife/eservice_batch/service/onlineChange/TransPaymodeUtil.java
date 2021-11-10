@@ -86,16 +86,20 @@ public class TransPaymodeUtil {
 						String INVESTMENT_TYPES = parameterDao.getParameterValueByCode("eservice", "PAYMODE_INVESTMENT_TYPE");
 						if (StringUtils.isNotBlank(INVESTMENT_TYPES) && INVESTMENT_TYPES.contains(policyNo.substring(0,2))) {
 							// 介接代碼(3),申請序號(12),保單號碼(10),新繳別(1),彈性繳註記(1),新定期繳費(10),P(1),收文日(系統日yyyMMdd),生效日(下個周月日yyyMMdd)
+							if (StringUtils.equals("E", paymode)) {
+								paymode = "A";
+								mk = "Y";
+							}
 							txtSb.append(String.format(StringUtils.repeat("%s", 9),
 									"034",
 									StringUtil.rpadBlank(transNum, 12),
 									StringUtil.rpadBlank(policyNo, 10),
+									systemTwDate,
+									activeDate,
 									StringUtil.rpadBlank(paymode, 1),
 									StringUtil.rpadBlank(mk, 1),
 									StringUtil.lpad(String.valueOf(amount.intValue()), 10, " "),
-									"1",
-									systemTwDate,
-									activeDate
+									"P"
 							));
 						} else {
 						// 介接代碼(3),申請序號(12),保單號碼(10),收文日(7),生效日(7),申請值(1)

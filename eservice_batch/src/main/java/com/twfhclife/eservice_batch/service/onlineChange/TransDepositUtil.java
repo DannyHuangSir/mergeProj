@@ -56,6 +56,8 @@ public class TransDepositUtil {
                     if (transPolicyList != null) {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
+                            boolean isFirst = true;
+                            StringBuilder line = new StringBuilder();
                             for (TransDepositVo vo : list) {
                                 //獲取最新單位凈值
                                 MutablePair<BigDecimal, Date> fund = transDepositDao.getNearFundValue(vo.getInvtNo());
@@ -66,13 +68,14 @@ public class TransDepositUtil {
                                 logger.info("保單提領(贖回) 投資標：{}的最新净值：{}， 交易日期：{}", vo.getInvtNo(), fund.getLeft(), fund.getRight());
                                 BigDecimal fundValue = BigDecimal.valueOf(vo.getAmount()).divide(fund.getLeft(), 4, BigDecimal.ROUND_DOWN);
                                 logger.info("保單提領(贖回) 投資標：{}，計算後的單位凈值為：{}", vo.getInvtNo(), fundValue);
-                                // 介接代碼(3),申請序號(12),保單號碼(10),投資標的(10),轉出單位（18）,匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
-                                String line = String.format(StringUtils.repeat("%s", 15),
+                                // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60),投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）,投資標的(10),轉出單位（18）
+                                if (isFirst) {
+                                    line.append(String.format(StringUtils.repeat("%s", 13),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
-                                        StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.lpad(String.valueOf(fundValue).replaceAll("\\.", ""), 18, " "),
+                                            systemTwDate,
+                                            systemTwDate,
                                         StringUtil.rpadBlank(vo.getAccountName(), 20),
                                         StringUtil.rpadBlank(vo.getBankName(), 10),
                                         StringUtil.rpadBlank(vo.getBranchName(), 10),
@@ -80,14 +83,18 @@ public class TransDepositUtil {
                                         StringUtil.rpadBlank(vo.getBranchCode(), 4),
                                         StringUtil.rpadBlank(vo.getBankAccount(), 16),
                                         StringUtil.rpadBlank(vo.getSwiftCode(), 16),
-                                        StringUtil.rpadBlank(vo.getEnglishName(), 60),
-                                        systemTwDate,
-                                        systemTwDate
-                                );
-                                logger.info(line);
-                                txtSb.append(line);
-                                txtSb.append("\r\n");
+                                            StringUtil.rpadBlank(vo.getEnglishName(), 60)
+                                    ));
+                                    isFirst = false;
                             }
+                                line.append(String.format(StringUtils.repeat("%s", 2),
+                                        StringUtil.rpadBlank(vo.getInvtNo(), 10),
+                                        StringUtil.lpad(String.valueOf(fundValue).replaceAll("\\.", ""), 18, " ")));
+                            }
+                            txtSb.append(String.format(StringUtils.repeat("%s", 1),
+                                    StringUtil.rpadBlank(line.toString(), 3 + 12 + 10 + 20 + 10 + 10 + 3 + 4 + 16 + 16 + 60 + 7 + 7 + 28 * 10)));
+                            txtSb.append("\r\n");
+                            logger.info(line);
                         }
                     }
                 }

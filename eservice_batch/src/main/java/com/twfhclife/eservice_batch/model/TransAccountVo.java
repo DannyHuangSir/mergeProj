@@ -1,16 +1,8 @@
 package com.twfhclife.eservice_batch.model;
 
-public class TransCashPaymentVo {
+public class TransAccountVo {
 
-    private Long id;
-
-    private String transNum;
-
-    private String policyNo;
-
-    private String allocation;
-
-    private String preAllocation;
+    private String rocId;
 
     private String swiftCode;
 
@@ -27,48 +19,6 @@ public class TransCashPaymentVo {
     private String bankName;
 
     private String branchName;
-
-    private static final long serialVersionUID = 1L;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTransNum() {
-        return transNum;
-    }
-
-    public void setTransNum(String transNum) {
-        this.transNum = transNum;
-    }
-
-    public String getPolicyNo() {
-        return policyNo;
-    }
-
-    public void setPolicyNo(String policyNo) {
-        this.policyNo = policyNo;
-    }
-
-    public String getAllocation() {
-        return allocation;
-    }
-
-    public void setAllocation(String allocation) {
-        this.allocation = allocation;
-    }
-
-    public String getPreAllocation() {
-        return preAllocation;
-    }
-
-    public void setPreAllocation(String preAllocation) {
-        this.preAllocation = preAllocation;
-    }
 
     public String getSwiftCode() {
         return swiftCode;
@@ -132,5 +82,13 @@ public class TransCashPaymentVo {
 
     public void setBranchName(String branchName) {
         this.branchName = branchName;
+    }
+
+    public String getRocId() {
+        return rocId;
+    }
+
+    public void setRocId(String rocId) {
+        this.rocId = rocId;
     }
 }

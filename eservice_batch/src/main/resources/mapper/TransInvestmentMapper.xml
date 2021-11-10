@@ -20,4 +20,10 @@
 		FROM  ESERVICE.dbo.TRANS_INVESTMENT
 		WHERE TRANS_NUM = #{transNum}
 	</select>
+
+	<select id="findAccount" resultType="com.twfhclife.eservice_batch.model.TransAccountVo">
+		SELECT TOP 1 U.ROC_ID, SWIFT_CODE swiftCode, ENGLISH_NAME englishName, BANK_CODE bankCode, BRANCH_CODE branchCode, ACCOUNT_NAME accountName, BANK_ACCOUNT bankAccount, BANK_NAME bankName, BRANCH_NAME branchName
+		FROM TRANS_INVESTMENT I INNER JOIN TRANS T ON T.TRANS_NUM = I.TRANS_NUM LEFT JOIN USERS U ON T.USER_ID = U.USER_ID
+		WHERE I.TRANS_NUM = #{transNum} AND INVT_NO = #{invtNo}
+	</select>
 </mapper>

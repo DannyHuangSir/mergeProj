@@ -60,10 +60,10 @@ public class TransChangePremiumUtil {
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
-                                        StringUtil.lpad(String.valueOf(vo.getAmount().intValue()), 10, " "),
-                                        "1",
                                         systemTwDate,
-                                        systemTwDate
+                                        systemTwDate,
+                                        StringUtil.lpad(String.valueOf(vo.getAmount().intValue()), 10, " "),
+                                        "P"
                                 );
                                 logger.info(line);
                                 txtSb.append(line);

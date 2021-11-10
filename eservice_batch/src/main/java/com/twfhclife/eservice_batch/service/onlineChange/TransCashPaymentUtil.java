@@ -61,6 +61,8 @@ public class TransCashPaymentUtil {
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
+                                        systemTwDate,
+                                        systemTwDate,
                                         StringUtil.rpadBlank(vo.getAllocation(), 1),
                                         "5",
                                         StringUtil.rpadBlank(vo.getAccountName(), 20),
@@ -70,9 +72,7 @@ public class TransCashPaymentUtil {
                                         StringUtil.rpadBlank(vo.getBranchCode(), 4),
                                         StringUtil.rpadBlank(vo.getBankAccount(), 16),
                                         StringUtil.rpadBlank(vo.getSwiftCode(), 16),
-                                        StringUtil.rpadBlank(vo.getEnglishName(), 60),
-                                        systemTwDate,
-                                        systemTwDate
+                                        StringUtil.rpadBlank(vo.getEnglishName(), 60)
                                 );
                                 logger.info(line);
                                 txtSb.append(line);

@@ -43,7 +43,7 @@ public class MergeChangeUtil {
 	//	014:「補發保單」: 申請值(1), 寄送地址(50)
 	//  027:「保戶基本資料更新」：國籍代碼(2),職業代碼大(2),職業代碼中(2),職業代碼小(4)
 	//  002:「年金給付」變更: 保證期間申請值(2)
-	private List<String> mergeChangeCodeList = Arrays.asList("001", "002", "003", "004", "005", "006", "009", "010", "014", "027", "028", "029", "030");
+	private List<String> mergeChangeCodeList = Arrays.asList("001", "002", "003", "004", "005", "006", "009", "010", "014", "027", "029", "030", "031", "033", "034");
 
 	public List<String> getMergePolicyNoList(String applyItemText) {
 		String[] lines = applyItemText.split("\r\n");
@@ -123,9 +123,11 @@ public class MergeChangeUtil {
 		String resendPolicyFlag = "";
 		String resendPolicyAdress = "";
 		String policyHolderProfile = "";
-		String conversion = "";
-		String investment = "";
-		String deposit = "";
+		StringBuilder conversion = null;
+		StringBuilder investment = null;
+		String riskLevel = "";
+		String changePremium = "";
+		String investPaymode = "";
 
 		StringBuilder mergeSb = new StringBuilder();
 		for (String policyNo : mergePolicyNoList) {
@@ -161,6 +163,12 @@ public class MergeChangeUtil {
 			resendPolicyFlag    = "";
 			resendPolicyAdress  = "";
 			policyHolderProfile = "";
+			conversion = new StringBuilder();
+			investment = new StringBuilder();
+			riskLevel = "";
+			changePremium = "";
+			investPaymode = "";
+
 			/**
 			 * init end.
 			 */
@@ -309,8 +317,8 @@ public class MergeChangeUtil {
 						}
 					}
 
-					if (line.startsWith("028") && policyNo.equals(linePolicyNo) && line.length() > 25) {
-						deposit = line.substring(25);
+					if (line.startsWith("029") && policyNo.equals(linePolicyNo) && line.length() > 51) {
+						investment.append(line, 39, 52);
 						insertTransMerge(transMergeVo);
 
 						if (!removeLineKeyList.contains(lineKey)) {
@@ -318,8 +326,8 @@ public class MergeChangeUtil {
 						}
 					}
 
-					if (line.startsWith("029") && policyNo.equals(linePolicyNo) && line.length() > 25) {
-						investment = line.substring(25);
+					if (line.startsWith("030") && policyNo.equals(linePolicyNo) && line.length() > 76) {
+						conversion.append(line, 39, 77);
 						insertTransMerge(transMergeVo);
 
 						if (!removeLineKeyList.contains(lineKey)) {
@@ -327,8 +335,26 @@ public class MergeChangeUtil {
 						}
 					}
 
-					if (line.startsWith("030") && policyNo.equals(linePolicyNo) && line.length() > 25) {
-						conversion = line.substring(25);
+					if (line.startsWith("031") && policyNo.equals(linePolicyNo) && line.length() > 39) {
+						riskLevel = line.substring(39);
+						insertTransMerge(transMergeVo);
+
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
+
+					if (line.startsWith("033") && policyNo.equals(linePolicyNo) && line.length() > 39) {
+						changePremium = line.substring(39);
+						insertTransMerge(transMergeVo);
+
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
+
+					if (line.startsWith("034") && policyNo.equals(linePolicyNo) && line.length() > 39) {
+						investPaymode = line.substring(39);
 						insertTransMerge(transMergeVo);
 
 						if (!removeLineKeyList.contains(lineKey)) {
@@ -338,7 +364,7 @@ public class MergeChangeUtil {
 				}
 			}
 
-			mergeSb.append(String.format(StringUtils.repeat("%s", 20),
+			mergeSb.append(String.format(StringUtils.repeat("%s", 22),
 					StringUtil.rpadBlank(paymode, 1),
 					StringUtil.rpadBlank(annuityMethod, 1),
 					StringUtil.rpadBlank(bouns, 1),
@@ -356,9 +382,11 @@ public class MergeChangeUtil {
 					StringUtil.rpadBlank(resendPolicyAdress, 50),
 					StringUtil.rpadBlank(policyHolderProfile, 10),
 					StringUtil.rpadBlank(guaranteePeriod, 2),
-					StringUtil.rpadBlank(investment, 1 + 10 + 18 + 1),
-					StringUtil.rpadBlank(conversion, 10 + 18 + 10 + 1),
-					StringUtil.rpadBlank(deposit, 10 + 18 + 20 + 10 + 10 + 3 + 4 + 16 + 16 + 60)
+					StringUtil.rpadBlank(investment.toString(), 10 * 13),
+					StringUtil.rpadBlank(conversion.toString(), 10 * 38),
+					StringUtil.rpadBlank(riskLevel, 14),
+					StringUtil.rpadBlank(changePremium, 10),
+					StringUtil.rpadBlank(investPaymode, 12)
 			));
 			mergeSb.append("\r\n");
 		}

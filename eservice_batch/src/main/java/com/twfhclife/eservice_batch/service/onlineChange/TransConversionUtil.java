@@ -1,9 +1,11 @@
 package com.twfhclife.eservice_batch.service.onlineChange;
 
+import com.twfhclife.eservice_batch.dao.ParameterDao;
 import com.twfhclife.eservice_batch.dao.TransDao;
 import com.twfhclife.eservice_batch.dao.TransFundConversionDao;
 import com.twfhclife.eservice_batch.dao.TransInvestmentDao;
 import com.twfhclife.eservice_batch.dao.TransPolicyDao;
+import com.twfhclife.eservice_batch.model.TransAccountVo;
 import com.twfhclife.eservice_batch.model.TransFundConversionVo;
 import com.twfhclife.eservice_batch.model.TransInvestmentVo;
 import com.twfhclife.eservice_batch.model.TransPolicyVo;
@@ -14,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +33,7 @@ public class TransConversionUtil {
 
         TransDao transDao = new TransDao();
         TransPolicyDao transPolicyDao = new TransPolicyDao();
+        ParameterDao parameterDao = new ParameterDao();
         TransFundConversionDao transFundConversionDao = new TransFundConversionDao();
 
         // 申請資料條件
@@ -53,22 +57,51 @@ public class TransConversionUtil {
                     TransPolicyVo tpQryVo = new TransPolicyVo();
                     tpQryVo.setTransNum(transNum);
                     List<TransPolicyVo> transPolicyList = transPolicyDao.getTransPolicyList(tpQryVo);
+                    final List<String> showAccountInvts = new ArrayList<>();
+                    parameterDao.getParameterByCategoryCode("eservice", "SHOW_ACCOUNT_INVT_NOS")
+                            .forEach(e -> showAccountInvts.add(e.getParameterValue()));
+                    boolean addedAccount = false;
                     if (transPolicyList != null) {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransFundConversionVo vo : list) {
+                                if (!addedAccount && showAccountInvts.contains(vo.getInInvtNo())) {
+                                    addedAccount = true;
+                                    TransAccountVo accountVo = transFundConversionDao.findAccount(transNum, vo.getInInvtNo());
+                                    //介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),受益類別(1),受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(4)匯款帳號(16),國際號SwiftCode(16),英文戶名(60)
+                                    if (accountVo != null) {
+                                        String line = String.format(StringUtils.repeat("%s", 13),
+                                                "035",
+                                                StringUtil.rpadBlank(transNum, 12),
+                                                StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
+                                                systemTwDate,
+                                                systemTwDate,
+                                                "5",
+                                                StringUtil.rpadBlank(accountVo.getRocId(), 10),
+                                                StringUtil.rpadBlank(accountVo.getAccountName(), 10),
+                                                StringUtil.rpadBlank(accountVo.getBankCode(), 3),
+                                                StringUtil.rpadBlank(accountVo.getBranchCode(), 4),
+                                                StringUtil.rpadBlank(accountVo.getBankAccount(), 16),
+                                                StringUtil.rpadBlank(accountVo.getSwiftCode(), 16),
+                                                StringUtil.rpadBlank(accountVo.getEnglishName(), 60)
+                                        );
+                                        logger.info(line);
+                                        txtSb.append(line);
+                                        txtSb.append("\r\n");
+                                    }
+                                }
                                 // 介接代碼(3),申請序號(12),保單號碼(10),轉出投資標的(10),轉出單位（18),轉入投資標的(10),2(1),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
                                 String line = String.format(StringUtils.repeat("%s", 9),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
+                                        systemTwDate,
+                                        systemTwDate,
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
                                         StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100), 4, BigDecimal.ROUND_DOWN)
                                                 .toString().replaceAll("\\.", ""), 18, " "),
                                         StringUtil.rpadBlank(vo.getInInvtNo(), 10),
-                                        "2",
-                                        systemTwDate,
-                                        systemTwDate
+                                        "2"
                                 );
                                 logger.info(line);
                                 txtSb.append(line);

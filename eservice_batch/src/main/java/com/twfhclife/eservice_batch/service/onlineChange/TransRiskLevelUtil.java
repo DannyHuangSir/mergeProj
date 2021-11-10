@@ -51,7 +51,6 @@ public class TransRiskLevelUtil {
             for (TransVo trantsVo : transList) {
                 String transNum = trantsVo.getTransNum();
                 logger.info("TransNum: {}", transNum);
-
                 // 取得資料
                 TransRiskLevelVo transRiskLevelVo = new TransRiskLevelVo();
                 transRiskLevelVo.setTransNum(transNum);
@@ -61,22 +60,19 @@ public class TransRiskLevelUtil {
                     // 取得保單號碼
                     TransPolicyVo tpQryVo = new TransPolicyVo();
                     tpQryVo.setTransNum(transNum);
-                    List<TransPolicyVo> transPolicyList = transPolicyDao.getTransPolicyList(tpQryVo);
-                    if (transPolicyList != null) {
-                        for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, policyNo);
                             for (TransRiskLevelVo vo : list) {
                                 //  介接代碼(3),申請序號(12),保單號碼(10),風險屬性(1),風險評分(3),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),保戶身份證(10)
                                 String score = String.valueOf(vo.getRiskScore());
-                                score = "   ".substring(0, score.length() -1) + score;
+                        score = "   ".substring(0, score.length() - 1) + score;
                                 String line = String.format(StringUtils.repeat("%s", 8),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(policyNo, 10),
-                                        StringUtil.rpadBlank(vo.getRiskLevelNew(), 1),
-                                        score,
                                         systemTwDate,
                                         systemTwDate,
+                                StringUtil.rpadBlank(vo.getRiskLevelNew(), 1),
+                                score,
                                         StringUtil.rpadBlank(vo.getRocId(), 10)
                                 );
                                 logger.info(line);
@@ -85,8 +81,6 @@ public class TransRiskLevelUtil {
                             }
                         }
                     }
-                }
-            }
             return transList;
         } else {
             return Collections.emptyList();

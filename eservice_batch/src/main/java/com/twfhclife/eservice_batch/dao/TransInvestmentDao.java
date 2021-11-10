@@ -1,7 +1,9 @@
 package com.twfhclife.eservice_batch.dao;
 
+import com.twfhclife.eservice_batch.mapper.TransFundConversionMapper;
 import com.twfhclife.eservice_batch.mapper.TransInvestmentMapper;
 import com.twfhclife.eservice_batch.mapper.TransLoanMapper;
+import com.twfhclife.eservice_batch.model.TransAccountVo;
 import com.twfhclife.eservice_batch.model.TransInvestmentVo;
 import com.twfhclife.eservice_batch.model.TransLoanVo;
 import org.apache.logging.log4j.LogManager;
@@ -24,5 +26,18 @@ public class TransInvestmentDao extends BaseDao {
             this.release();
         }
         return transInvestments;
+    }
+
+    public TransAccountVo findAccount(String transNum, String invtNo) {
+        TransAccountVo transAccountVo = null;
+        try {
+            TransInvestmentMapper transInvestmentMapper = this.getSqlSession().getMapper(TransInvestmentMapper.class);
+            transAccountVo = transInvestmentMapper.findAccount(transNum, invtNo);
+        } catch (Exception e) {
+            logger.error("findAccount error:", e);
+        } finally {
+            this.release();
+        }
+        return transAccountVo;
     }
 }
