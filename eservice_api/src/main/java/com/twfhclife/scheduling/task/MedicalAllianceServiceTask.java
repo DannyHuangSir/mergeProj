@@ -494,7 +494,7 @@ public class MedicalAllianceServiceTask {
                              * 此時不一定有TRANS_NUM,因為可能尚未轉到TRANS
                              */
                             String transNum = iMedicalService.getTransMedicalTreatmentByCaseId(caseId);
-                            if (org.apache.commons.lang3.StringUtils.isNotBlank(transNum)) {
+                            if (StringUtils.isNotBlank(transNum)) {
                                 unParams.put("transNum", transNum);
                             }else{
                                 //do not create new TRANS_NUM here.
@@ -607,7 +607,7 @@ public class MedicalAllianceServiceTask {
                                              * accident=意外,2
                                              */
                                             String accidentCause = medicalVo.getAccidentCause();
-                                            if (!org.springframework.util.StringUtils.isEmpty(accidentCause)) {
+                                            if (StringUtils.isNotBlank(accidentCause)) {
                                                 if ("disease".equals(accidentCause)) {
                                                     medicalVo.setAccidentCause("1");
                                                 }else if("accident".equals(accidentCause)) {
@@ -619,7 +619,7 @@ public class MedicalAllianceServiceTask {
 
                                             // "1":診斷證明書，"2":收據
                                             String dtype = medicalVo.getDtype();
-                                            if (!org.springframework.util.StringUtils.isEmpty(dtype)) {
+                                            if (StringUtils.isNotBlank(dtype)) {
                                                 String[] split = dtype.split(",");
                                                 StringBuffer stringBuffer = new StringBuffer();
                                                 for (int i = 0; i < split.length; i++) {

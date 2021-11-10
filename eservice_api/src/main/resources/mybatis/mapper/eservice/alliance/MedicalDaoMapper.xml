@@ -870,6 +870,8 @@
 	<update id="updateTarnsMedicalTreatmentFileStatus">
 		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
 		set
+		FILE_BASE64 ='',
+		EZ_ACQUIRE_TASK_ID='',
 		FILE_STATUS = #{fileStatus}
 		where FILE_ID = #{fileId}
 	</update>
