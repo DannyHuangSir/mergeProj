@@ -117,6 +117,14 @@ public interface ITransContactInfoService {
 	 * @return
 	 */
 	List<String> getTransContactInfoTransNumByBatchId(Float  batchId);
+
+	/**
+	 * 验证,取消申請
+	 *    如,已經推送至聯盟并且已經審核通過,則不能進行取消
+	 *		SEND_ALLIANCE!=Y
+	 */
+	String transMedicalTreatmentClaimByCheck(String transNum);
+
 	//進行查詢數據當前批次的保單號
     String getHistoryPolicyNo(String transNum);
 }

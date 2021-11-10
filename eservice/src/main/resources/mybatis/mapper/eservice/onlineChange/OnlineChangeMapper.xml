@@ -345,4 +345,8 @@
 		where A.STATUS not in ('2','3','7','8') and A.TRANS_TYPE = 'MEDICAL_TREATMENT'
 		and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{userRocId}) ORDER BY B.CREATE_DATE  DESC
 	</select>
+	<select id="getTransMedicalTreatmentClaimBySendAlliance" resultType="java.lang.String">
+		select  SEND_ALLIANCE  from  [ESERVICE].[dbo].[TRANS_MEDICAL_TREATMENT_CLAIM]
+		where  TRANS_NUM=#{transNum}
+	</select>
 </mapper>

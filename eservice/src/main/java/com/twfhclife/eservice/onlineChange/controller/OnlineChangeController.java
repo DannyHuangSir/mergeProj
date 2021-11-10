@@ -17,6 +17,8 @@ import com.twfhclife.generic.annotation.EventRecordLog;
 import com.twfhclife.generic.annotation.EventRecordParam;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.util.DateUtil;
+import com.twfhclife.generic.api_model.ReturnHeader;
+import com.twfhclife.generic.util.StatuCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -211,6 +213,17 @@ public class OnlineChangeController extends BaseController {
 								logger.info("===================================================================");
 							}
 						}
+						//進行對醫起通進行單獨的處理
+						String type = x.getTransType();
+						if(type!=null  &&  !"".equals(type)){
+							if (TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(type)){
+								//進行查詢當前醫起通 保單是否推送至聯盟
+							String  sendAlliance=	onlineChangeService.getTransMedicalTreatmentClaimBySendAlliance(x.getTransNum());
+								if (!StringUtils.isBlank(sendAlliance) && sendAlliance.equals(StatuCode.ALLIANCE_Y.code)) {
+									x.setSendAlliance(StatuCode.ALLIANCE_Y.code);
+								}
+							}
+						}
 						logger.info("getTransList ! {}", x);
 						return x;
 					}).collect(Collectors.toList());
@@ -313,6 +326,13 @@ public class OnlineChangeController extends BaseController {
 				transInvestmentVo.setMessage(MSG_MAP.get(transType));
 				transInvestmentVo.setApplyDate(new Date());
 				sendConversionSMSAndEmail(transInvestmentVo,user);
+			}else if(transType !=null && TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transType)){
+				 //進行嚴重當前保單是否可以取消
+				String  check=	 transContactInfoService.transMedicalTreatmentClaimByCheck(transNum);
+				if(check.equals(ReturnHeader.SUCCESS_CODE)) {
+					//進行取消 已持有醫療保單的轉換保單
+					onlineChangeService.cancelMedicalTreatmentApplyTrans(transNum, hisVo);
+				}
 			}else{
 				onlineChangeService.cancelApplyTrans(transNum, hisVo);
 			}
@@ -322,7 +342,23 @@ public class OnlineChangeController extends BaseController {
 
 		return "frontstage/onlineChange/apply2";
 	}
-
+	/**
+	 * 验证,取消申請
+	 *    如,已經推送至聯盟并且已經審核通過,則不能進行取消
+	 *		SEND_ALLIANCE!=Y
+	 * @param transNum
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/transMedicalTreatmentClaimByCheck")
+	@ResponseBody
+	public  List<String>  transMedicalTreatmentClaimByCheck(@RequestParam("transNum") String transNum){
+		ArrayList<String> checkList = new ArrayList<>();
+		//查询当前保单同批次的状态
+		String  check=	 transContactInfoService.transMedicalTreatmentClaimByCheck(transNum);
+		checkList.add(check);
+		return  checkList;
+	}
 	/**
 	 * 验证,取消申請是否可以进行取消此時STATUS=1
 	 * @param transNum

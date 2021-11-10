@@ -712,10 +712,18 @@
 				'fnRender': function(oRow) {
 					var botton = "";
 					if(oRow.status == '0' || oRow.status == '-1'){
+						if(oRow.transType == 'MEDICAL_TREATMENT' && oRow.status == '0'  && oRow.sendAlliance=='Y'){
+							botton = '';
+						}else{
 						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">取消申請  <i class="fas fa-chevron-right"></i></button>';
+						}	
 					}else if(oRow.status == '4'){
+						if(oRow.transType == 'MEDICAL_TREATMENT' && oRow.sendAlliance=='Y'){
+							botton = '<button class="btn-cancel" id="upload_'+oRow.transNum+'" onclick="addedFile('+oRow.transNum+')">補件  <i class="fas fa-chevron-right"></i></button>&nbsp;';
+						}else{
 						botton = '<button class="btn-cancel" id="upload_'+oRow.transNum+'" onclick="addedFile('+oRow.transNum+')">補件  <i class="fas fa-chevron-right"></i></button>&nbsp;'+
 						'<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>';
+						}		
 					}else if(oRow.status == '2' && oRow.endorsementStatus > 0){
 						botton = '<button class="btn-cancel" id="endorsement_'+oRow.transNum+'" onclick="downloadEndorsement(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">下載批註單  <i class="fas fa-chevron-right"></i></button>';
 					}else if((oRow.transType == 'CONTACT_INFO' || oRow.transType == 'INVESTMENT' || oRow.transType == 'CONVERSION'
@@ -873,8 +881,35 @@
 	function cancelTrans(transNum,transType){
 		$("#cancelTransType").val(transType);
 		$("#cancelTransNum").val(transNum);
+			//進行驗證醫療保單 是否可以進行取消
+		if(transType=="MEDICAL_TREATMENT"){
+			var  respon='';
+			$.ajaxSetup({async: false});
+				$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				url : getRootPath()+'/eservice/transMedicalTreatmentClaimByCheck',
+				data : {
+						transNum:transNum
+						},
+				success : function(response) {
+					respon=response[0];
+				},
+				error :function() {
+				}
+				});
+			$.ajaxSetup({async: true});
+			if('SUCCESS'==respon){
 		$('#modal-container-deleteConfirm').show();
 		$('#fadeInBg').show();
+	}
+			if('FAIL'==respon){
+				cancelTransTips();
+			}
+		}else{
+			$('#modal-container-deleteConfirm').show();
+			$('#fadeInBg').show();
+		}
 	}
 
 	function downloadEndorsement(transNum, transType) {

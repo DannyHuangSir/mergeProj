@@ -133,4 +133,6 @@ public interface OnlineChangeDao {
 	String getBirdateByPolicyNo(String policyNo);
 
     String getPolicyClaimCompletedPolicyno(@Param("userRocId")String userRocId)throws Exception;
+	//進行查詢當前醫起通 保單是否推送至聯盟
+    String getTransMedicalTreatmentClaimBySendAlliance(@Param("transNum")String transNum);
 }

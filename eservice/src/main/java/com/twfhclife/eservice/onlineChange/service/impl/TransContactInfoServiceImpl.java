@@ -12,6 +12,7 @@ import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.generic.api_model.ReturnHeader;
 import com.twfhclife.generic.controller.BaseController;
+import com.twfhclife.generic.util.StatuCode;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -403,6 +404,17 @@ public class TransContactInfoServiceImpl implements ITransContactInfoService {
 	@Override
 	public List<String> getTransContactInfoTransNumByBatchId(Float batchId) {
 		return transContactInfoDao.getTransContactInfoTransNumByBatchId(batchId);
+	}
+
+	@Override
+	public String transMedicalTreatmentClaimByCheck(String transNum) {
+		if(transNum != null  && !"".equals(transNum)) {
+			String  str = onlineChangeDao.getTransMedicalTreatmentClaimBySendAlliance(transNum);
+			if (!StringUtils.isEmpty(str) && str.equals(StatuCode.ALLIANCE_Y.code)) {
+				return ReturnHeader.FAIL_CODE;
+			}
+		}
+		return ReturnHeader.SUCCESS_CODE;
 	}
 
 	@Override

@@ -42,6 +42,7 @@ public interface IOnlineChangeService {
 	 * 檢查是否進入進入黑名單
 	 */
 	public Map<String, String> checkBackList(@Param("blackListVo")BlackListVo blackListVo);
+
 	//進行取消 已持有醫療保單的轉換保單
     void cancelMedicalTreatmentApplyTrans(String transNum, TransStatusHistoryVo hisVo);
 	/**
@@ -57,11 +58,17 @@ public interface IOnlineChangeService {
 	 * @return
 	 */
 	List<TransRFEVo> getTransRFEList(TransRFEVo vo);
-
 	/**
 	 * 檢查醫療是否進入進入黑名單
 	 */
 	Map<String, String> checkMedicalBackList(BlackListVo blackListVo);
+
+	/**
+	 * 查詢當前的保單的 SendAlliance 值
+	 * @param transNum
+	 * @return
+	 */
+	String getTransMedicalTreatmentClaimBySendAlliance(String transNum);
 
 	//取消已持有投資標的轉換
 	void cancelApplyTransConversion(String transNum, TransStatusHistoryVo hisVo);

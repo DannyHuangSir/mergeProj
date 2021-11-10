@@ -419,6 +419,11 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 		return   rMap;
 	}
 
+	@Override
+	public String getTransMedicalTreatmentClaimBySendAlliance(String transNum) {
+		return onlineChangeDao.getTransMedicalTreatmentClaimBySendAlliance(transNum);
+	}
+
 
 	public String fileDataToBase64Str(String filePath) {
 		String encodedString = null;

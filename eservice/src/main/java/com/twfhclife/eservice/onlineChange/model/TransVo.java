@@ -90,6 +90,16 @@ public class TransVo extends PageInfoVo implements Serializable {
 	private TravelPolicyVo travelPolicy;
 	
 	private int endorsementStatus;
+	//是否開始已經推送至聯盟
+	private String sendAlliance;
+
+	public String getSendAlliance() {
+		return sendAlliance;
+	}
+
+	public void setSendAlliance(String sendAlliance) {
+		this.sendAlliance = sendAlliance;
+	}
 
 	@Override
 	public String toString() {
