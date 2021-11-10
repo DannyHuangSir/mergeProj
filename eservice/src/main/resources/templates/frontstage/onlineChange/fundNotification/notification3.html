@@ -69,13 +69,13 @@
 						<thead>
 							<tr class="table2 orange2">
 								<th class="item90">類型</th>
-								<th class="text-left " scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
-								<th class="item text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">幣別</th>
-								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">投資收益&nbsp;等級</th>
-								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">幣別參考價值</th>
-								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">參考報酬率百分比</th>
-								<th class="text-right">停利點</th>
-								<th class="text-right">停損點</th>
+								<th class="item100 text-left " scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+								<th class="item90" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">幣別</th>
+								<th class="item120" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">投資收益&nbsp;等級</th>
+								<th class="item120" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">幣別參考價值</th>
+								<th class="item131" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">參考報酬率百分比</th>
+								<th class="item90">停利點</th>
+								<th class="item90">停損點</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -84,7 +84,7 @@
 									<td>
 										已持有
 									</td>
-									<td><th:block th:text="${vo.invtName}"/>(<th:block th:text="${vo.fundCode}"/>)</td>
+									<td><th:block th:text="${vo.invtName}"/><p class="enSmall">(<th:block th:text="${vo.fundCode}"/>)</p></td>
 									<td><th:block th:text="${vo.currency}"/></td>
 									<td><th:block th:text="${vo.riskBeneLevel}"/></td>
 									<td>
@@ -122,11 +122,11 @@
 							<tr class="table2 orange2">
 								<th class="item90">類型</th>
 								<th class="text-left " scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
-								<th class="item text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">幣別</th>
-								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">淨值日</th>
-								<th class=" text-right" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">單位淨值</th>
-								<th class="text-right">現行淨值上限</th>
-								<th class="text-right">現行淨值下限</th>
+								<th class="item" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">幣別</th>
+								<th class="" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">淨值日</th>
+								<th class="" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">單位淨值</th>
+								<th>現行淨值上限</th>
+								<th>現行淨值下限</th>
 							</tr>
 							</thead>
 							<tbody>

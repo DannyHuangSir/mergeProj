@@ -98,6 +98,15 @@ public class CashPaymentController extends BaseUserDataController {
                         userId, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
                 transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
                 transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
+                for (PolicyListVo vo : handledPolicyList) {
+                    if (!StringUtils.equals(vo.getApplyLockedFlag(), "Y")) {
+                        if (!StringUtils.equals("M", vo.getPaymentMode())) {
+                            vo.setApplyLockedFlag("Y");
+                            vo.setApplyLockedMsg("僅月繳保單可以做定期定額保費變更");
+                            continue;
+                        }
+                    }
+                }
                 addAttribute("policyList", handledPolicyList);
             }
         } catch (Exception e) {
@@ -110,10 +119,6 @@ public class CashPaymentController extends BaseUserDataController {
     @RequestLog
     @PostMapping("/cashPayment2")
     public String cashPayment2(TransCashPaymentVo vo, RedirectAttributes redirectAttributes) {
-        if (!StringUtils.equals("M", vo.getPaymode())) {
-            redirectAttributes.addFlashAttribute("errorMessage", "僅月繳保單可以做定期定額保費變更");
-            return "redirect:cashPayment1";
-        }
         addAttribute("proposer", getProposerName());
         addAttribute("transCashPaymentVo", vo);
         addAttribute("preAllocation", transCashPaymentService.getPreAllocation(vo.getPolicyNo()));

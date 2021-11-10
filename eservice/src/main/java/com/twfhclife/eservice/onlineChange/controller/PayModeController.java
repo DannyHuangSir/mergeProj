@@ -110,6 +110,17 @@ public class PayModeController extends BaseUserDataController {
 				transPaymodeService.handlePolicyStatusLocked(handledPolicyList);
 				transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList,
 						TransTypeUtil.PAYMODE_PARAMETER_CODE);
+				String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
+				for (PolicyListVo vo : handledPolicyList) {
+					String type = vo.getPolicyType();
+					if (StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type)) {
+						if (!StringUtils.equals(vo.getApplyLockedFlag(), "Y") && !StringUtils.equals("M", vo.getPaymentMode())) {
+							vo.setApplyLockedFlag("Y");
+							vo.setApplyLockedMsg("目前無其它繳別可變更");
+							continue;
+						}
+					}
+				}
 				addAttribute("policyList", handledPolicyList);
 			}
 		} catch (Exception e) {
@@ -161,20 +172,18 @@ public class PayModeController extends BaseUserDataController {
 			mapPaymode.put("A", paymodeA);
 			mapPaymode.put("S", paymodeS);
 			mapPaymode.put("Q", paymodeQ);
+			mapPaymode.put("E", false);
 
 			String policyNo = transPaymodeVo.getPolicyNoList().get(0);
 			String type = policyNo.substring(0,2);
 			String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
 			if (StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) &&
 				types.contains(type)) {
-				if (StringUtils.equals(paymodeOld, "M")) {
-					redirectAttributes.addFlashAttribute("errorMessage", "目前無其它繳別可變更");
-					return "redirect:paymentMode1";
-				}
 				mapPaymode.put("A", false);
 				mapPaymode.put("S", false);
 				mapPaymode.put("Q", false);
 				mapPaymode.put("M", true);
+				mapPaymode.put("E", true);
 			}
 			addAttribute("showAmount", checkShowAmount(transPaymodeVo));
 			addAttribute("paymodeCanChange", mapPaymode);

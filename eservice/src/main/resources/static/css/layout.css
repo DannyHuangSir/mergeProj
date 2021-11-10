@@ -5077,11 +5077,14 @@ header .searchbar .col-sm-3 {
     margin: 0 5%;
 }
 
-.notification2 .tablesaw thead tr:first-child th {
+.notification2 .tablesaw thead tr:first-child th,
+.notification2 .tablesaw tbody tr td{
     text-align: left;
 }
-.notification2 .tablesaw thead tr:first-child th.text-right {
-    text-align: right;
+.notification2 .tablesaw thead tr:first-child th.text-right,
+.notification2 .tablesaw thead tr th:last-child,
+.notification2 .tablesaw tbody tr td:last-child {
+    text-align: right !important;
 }
 
 

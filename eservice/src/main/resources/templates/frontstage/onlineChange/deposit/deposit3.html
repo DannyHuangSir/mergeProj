@@ -102,11 +102,11 @@
                                         <div class="check-title depo2">帳戶內容</div>
                                         <div class="check-list2 grey2">
                                             <label for="" class="col-sm-3">Swift Code</label>
-                                             <div class="col-sm-9"><input id="swiftCode" type="text" class="col-sm-6"> </div>
+                                             <div class="col-sm-9"><input placeholder="非臺幣保單不需輸入" id="swiftCode" type="text" class="col-sm-6"> </div>
                                         </div>
                                         <div class="check-list2 grey2">
                                             <label for="" class="col-sm-3">英文戶名</label>
-                                             <div class="col-sm-9"><input id="englishName" type="text" class="col-sm-6"> </div>
+                                             <div class="col-sm-9"><input placeholder="非臺幣保單不需輸入" id="englishName" type="text" class="col-sm-6"> </div>
                                         </div>
                                         <div class="check-list2 grey2">
                                              <label for="" class="col-sm-3">帳戶名稱</label>
@@ -166,14 +166,14 @@
                     // 檢核是否有選一筆資料
                     var currency = [[${depositVo.currency}]]
                     if (currency != 'NTD') {
-                    if ($('#swiftCode').val() == '') {
-                        openAlert("請輸入Swift Code");
-                        return false;
-                    }
-                    if ($('#englishName').val() == '') {
-                        openAlert("請輸入英文戶名");
-                        return false;
-                    }
+                        if ($('#swiftCode').val() == '') {
+                            openAlert("請輸入Swift Code");
+                            return false;
+                        }
+                        if ($('#englishName').val() == '') {
+                            openAlert("請輸入英文戶名");
+                            return false;
+                        }
                     }
                     if ($('#bankOpt').val() == '') {
                         openAlert("請選擇銀行");

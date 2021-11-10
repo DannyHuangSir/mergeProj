@@ -110,6 +110,15 @@ public class ChangePremiumController extends BaseUserDataController  {
                         userId, TransTypeUtil.CHANGE_PREMIUM_CODE);
                 transInvestmentService.handlePolicyStatusLocked(getUserRocId(), handledPolicyList, TransTypeUtil.CHANGE_PREMIUM_CODE);
                 transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.CHANGE_PREMIUM_CODE);
+                for (PolicyListVo vo : handledPolicyList) {
+                    if (!StringUtils.equals(vo.getApplyLockedFlag(), "Y")) {
+                        if (!StringUtils.equals("M", vo.getPaymentMode())) {
+                            vo.setApplyLockedFlag("Y");
+                            vo.setApplyLockedMsg("僅月繳保單可以做定期定額保費變更");
+                            continue;
+                        }
+                    }
+                }
                 addAttribute("policyList", handledPolicyList);
             }
         } catch (Exception e) {
