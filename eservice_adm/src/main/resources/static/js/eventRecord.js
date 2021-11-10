@@ -331,8 +331,11 @@
 				locale: {
 					format:'YYYY-MM-DD',
 					applyLabel: 'Apply',
-				cancelLabel: 'Cancel'
-			}
+					cancelLabel: 'Cancel',
+				},
+				'dateLimit': {
+			        "days": 7
+			    },
 			});
 
 			function changeEventDate(){
