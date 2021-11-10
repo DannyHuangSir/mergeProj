@@ -21,11 +21,14 @@ import com.twfhclife.adm.model.PartnerUserEntityVo;
 import com.twfhclife.adm.model.RoleDivAuthVo;
 import com.twfhclife.adm.model.UsersVo;
 import com.twfhclife.adm.service.IPartnerUserMgntService;
+import com.twfhclife.generic.annotation.EventRecordLog;
+import com.twfhclife.generic.annotation.EventRecordParam;
 import com.twfhclife.generic.annotation.FuncUsageParam;
 import com.twfhclife.generic.annotation.LoginCheck;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
+import com.twfhclife.generic.util.EventCodeConstants;
 import com.twfhclife.generic.util.ValidateUtils;
 
 /**
@@ -91,6 +94,10 @@ public class PartnerUserMgntController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARTNER_USER_MGNT_GET_PARTNERUSER_ENTITYPAGELIST_001, 
+			sqlId = EventCodeConstants.PARTNER_USER_MGNT_GET_PARTNERUSER_ENTITYPAGELIST_SQL_ID_001, 
+			daoVoParamKey = "userEntityVo"))
 	@PostMapping("/partnerUserMgnt/getPartnerUserEntityPageList")
 	public ResponseEntity<PageResponseObj> getPartnerUserEntityPageList(@RequestBody PartnerUserEntityVo userEntityVo) {
 		PageResponseObj pageResp = new PageResponseObj();

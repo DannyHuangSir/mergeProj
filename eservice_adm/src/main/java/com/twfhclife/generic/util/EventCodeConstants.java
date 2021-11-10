@@ -253,4 +253,11 @@ public interface EventCodeConstants {
 	public static final String MEDICAL_TREATMENT_39 = "MEDICAL_TREATMENT_39";
 	public static final String MEDICAL_TREATMENT_39_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.updateMedicalTreatmentSendAlliance";
 
+	/**
+	 * 外部人員管理
+	 */
+	//getPartnerUserEntityPageList
+	public static final String PARTNER_USER_MGNT_GET_PARTNERUSER_ENTITYPAGELIST_001 = "PARTNERUSER_ENTITYPAGELIST_001";
+	public static final String PARTNER_USER_MGNT_GET_PARTNERUSER_ENTITYPAGELIST_SQL_ID_001 = 
+			"com.twfhclife.adm.dao.PartnerUserEntityDao.getPartnerUserEntityPageList";
 }

@@ -40,10 +40,12 @@
 			,ESERVICE.DBO.USERS U
 		WHERE
 			UPPER(UE.USERNAME) = UPPER(U.USER_ID)
-			AND UE.REALM_ID = #{partnerUserEntityVo.realmId}
-			<if test="partnerUserEntityVo.username != null and partnerUserEntityVo.username != ''"> AND UPPER(UE.USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{partnerUserEntityVo.username}),'%'))</if>
-			<if test="partnerUserEntityVo.lastName != null and partnerUserEntityVo.lastName != ''"> AND UPPER(CONCAT(UE.LAST_NAME, UE.FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{partnerUserEntityVo.lastName}),'%'))</if>
-			<if test="partnerUserEntityVo.rocId != null and partnerUserEntityVo.rocId != ''"> AND UPPER(U.ROC_ID) = #{partnerUserEntityVo.rocId} </if>
+			<if test="partnerUserEntityVo!=null">
+				AND UE.REALM_ID = #{partnerUserEntityVo.realmId}
+				<if test="partnerUserEntityVo.username != null and partnerUserEntityVo.username != ''"> AND UPPER(UE.USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{partnerUserEntityVo.username}),'%'))</if>
+				<if test="partnerUserEntityVo.lastName != null and partnerUserEntityVo.lastName != ''"> AND UPPER(CONCAT(UE.LAST_NAME, UE.FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{partnerUserEntityVo.lastName}),'%'))</if>
+				<if test="partnerUserEntityVo.rocId != null and partnerUserEntityVo.rocId != ''"> AND UPPER(U.ROC_ID) = #{partnerUserEntityVo.rocId} </if>
+			</if>
 	</sql>
 	
 	<!-- 取得外部人員管理查詢結果(分頁) -->
@@ -59,8 +61,13 @@
 			) A
 		) B		
 		WHERE
+			<if test="partnerUserEntityVo!=null">
 			B.ROW_NUM <![CDATA[<=]]> #{partnerUserEntityVo.page} * #{partnerUserEntityVo.rows}
 			AND B.ROW_NUM <![CDATA[>]]> (#{partnerUserEntityVo.page} - 1) * #{partnerUserEntityVo.rows}	
+			</if>
+			<if test="partnerUserEntityVo==null">
+			B.ROW_NUM = 0
+			</if>
 	</select>
 	
 	<!-- 取得人員管理查詢結果(總筆數) -->
