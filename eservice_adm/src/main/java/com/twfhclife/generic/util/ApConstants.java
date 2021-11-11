@@ -228,6 +228,14 @@ public interface ApConstants {
 	public static final String MEDICALALLIANCE_API406_URL = "medicalAlliance.api406.url";
 	//聯盟案件更新失敗提示
 	public static final String MEDICAL_NOT_APIALLIANCE_WINDOW_MSG = "MEDICAL_NOT_APIALLIANCE_WINDOW_MSG";
+	//目前不可執行已完成-文件未上傳影響系統提示信息
+	public static final String MEDICAL_NOT_FILE_WINDOW_MSG = "MEDICAL_NOT_FILE_WINDOW_MSG";
+	//目前不可執行已完成-文件未存入DB提示信息
+	public static final String MEDICAL_FILE_NOT_DB_WINDOW_MSG = "MEDICAL_FILE_NOT_DB_WINDOW_MSG";
+	//目前不可執行重新上傳-文件未上傳影響系統提示信息
+	public static final String MEDICAL_UPLOAD_NOT_FILE_WINDOW_MSG = "MEDICAL_UPLOAD_NOT_FILE_WINDOW_MSG";
+	//目前不可執行重新上傳-文件未存入DB提示信息
+	public static final String MEDICAL_UPLOAD_FILE_NOT_DB_WINDOW_MSG = "MEDICAL_UPLOAD_FILE_NOT_DB_WINDOW_MSG";
 
 
 	/** 線上申請-未持有投資標的轉換 狀態 */

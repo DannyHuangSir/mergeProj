@@ -192,7 +192,7 @@ public class MedicalTreatmentReportController extends BaseController {
 
 
 	/**
-	 * 執行醫療資料介接	-取/不取用醫療資料
+	 * 執行醫療資料介接	重新上傳
 	 * @return
 	 */
 	@RequestLog
@@ -207,7 +207,6 @@ public class MedicalTreatmentReportController extends BaseController {
 				int  uploadCount= onlineChangeService.getTransMedicalTreatmentByCount(transNum);
 				//1.2  獲取當前案件已上傳影像系統成功條數
 				int  uploadSuccess= onlineChangeService.getTransMedicalTreatmentBySuccessCount(transNum);
-				String notItprWindowMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_NOT_ITPR_WINDOW_MSG);
 				if(uploadCount>0) {
 					if (uploadCount == uploadSuccess) {
 						//進行查詢修改文件的狀態
@@ -223,10 +222,14 @@ public class MedicalTreatmentReportController extends BaseController {
 							}
 						}
 					}else{
-						processError(notItprWindowMsg);
+						String notFileWindowMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_UPLOAD_NOT_FILE_WINDOW_MSG);
+						logger.info("getUploadMedicalCases:  目前不可執行醫療資料介接重新上傳：有檔案未完全上傳影響系統");
+						processError(notFileWindowMsg);
 					}
 				}else{
-					processError(notItprWindowMsg);
+					String notFileDBWindowMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.MEDICAL_UPLOAD_FILE_NOT_DB_WINDOW_MSG);
+					logger.info("getUploadMedicalCases:  目前不可執行醫療資料介接重新上傳：有檔案未下載完成，請稍後再試");
+					processError(notFileDBWindowMsg);
 				}
 			}else {
 				processSystemError();
