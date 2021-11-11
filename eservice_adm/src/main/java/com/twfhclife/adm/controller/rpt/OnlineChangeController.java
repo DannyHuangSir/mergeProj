@@ -1243,19 +1243,19 @@ public class OnlineChangeController extends BaseController {
 										onlineChangeService.updateTarnsMedicalTreatmentClaimToAllianceStatus(mvo);
 										boo = true;
 									}else{
-										processError(notApiAllianceWindowMsg);
+										processError(notApiAllianceWindowMsg+"：呼叫聯盟API-406更新失敗");
 									}
 								}else{
 									//API 調用失敗
-									processError(notApiAllianceWindowMsg);
+									processError(notApiAllianceWindowMsg+"：呼叫聯盟API-406調用失敗");
 								}
 							}else{
-								//有文件但為全部上傳至影響系統
-								processError(notApiAllianceWindowMsg);
+								//有文件但未全部上傳至影像系統
+								processError(notApiAllianceWindowMsg+"：有文件但未全部上傳至影像系統");
 							}
 						}else{
-							//有文件但為成功塞入DB
-							processError(notApiAllianceWindowMsg);
+							//有文件但未成功塞入DB
+							processError(notApiAllianceWindowMsg+"：有文件但未成功塞入DB");
 						}
 					 }
 
