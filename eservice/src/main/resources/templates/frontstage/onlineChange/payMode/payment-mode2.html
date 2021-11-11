@@ -87,7 +87,7 @@
 						</div>
 					</div>
 					<div class="clearfix" style="margin-bottom: 30px;"></div>
-					<th:block th:if="${showAmount}">
+					<div id="changeAmount" th:if="${showAmount}">
 						<label class="col-sm-10 col-sm-offset-2 enNormal colorGreen">(變更前)定期繳費： <span class="colorBlack"><th:block th:text="${transPaymodeVo.oldAmount}"/></span></label>
 						<div class="check-list col-sm-8 col-sm-offset-2 grey2">
 							<div class="col-sm-11 col-sm-offset-1 mode2select marginTop20">
@@ -97,7 +97,7 @@
 								</label>
 							</div>
 						</div>
-					</th:block>
+					</div>
 					<div class="clearfix" style="margin-bottom: 30px;"></div>
 					<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_00102'] != null} 
 						? ${session.PAGE_WORDING['WORDING_00102'].parameterValue}"/>
@@ -136,25 +136,37 @@
 				}
 
 				var amount = $('input[name="amount"]').val();
-				if (!checkDecimal(amount)) {
-					openAlert("只允許輸入數值整數！")
-					return
-				}
+				if (paymode == 'E') {
+					amount = 0
+				} else if ([[${showAmount}]]) {
+					if (!checkDecimal(amount)) {
+						openAlert("只允許輸入數值整數！")
+						return
+					}
 
-				if ([[${showAmount}]] && (amount == null || amount == "" || parseInt(amount) <=0)) {
-					openAlert("請輸入大於0的繳別金額");
-					return false;
-				}
+					if (amount == null || amount == "" || parseInt(amount) <=0) {
+						openAlert("請輸入大於0的繳別金額");
+						return false;
+					}
 
-				if ([[${minValue}]] != null && parseInt(amount) < [[${minValue}]]) {
-					openAlert("請輸入大於[[${minValue}]]的繳別金額");
-					return false;
+					if ([[${minValue}]] != null && parseInt(amount) < [[${minValue}]]) {
+						openAlert("請輸入大於[[${minValue}]]的繳別金額");
+						return false;
+					}
 				}
 
 				formData.paymode = paymode;
-				formData.amount = parseInt(amount);
+				formData.amount = amount == undefined ? 0 : parseInt(amount);
 				postWithFormData(/*[[@{/paymentMode3}]]*/, formData);
 			});
+
+			$("[name='radio-btn']").change(function(){
+				if ($(this).val() == 'E') {
+					$("#changeAmount").hide()
+				} else {
+					$("#changeAmount").show()
+				}
+			})
 		});
 		function checkDecimal(str) {
             var re1 =/^[0-9]+(\.[0-9]{n})?$/;

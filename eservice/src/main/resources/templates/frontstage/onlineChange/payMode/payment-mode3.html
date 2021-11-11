@@ -63,19 +63,19 @@
 						</span>
 					</label>
 					<div class="check-list col-sm-8 col-sm-offset-2 grey2 center1">
-							<span class="chMiddle">
+						<span class="chMiddle">
 							<div class="check-list col-sm-8 col-sm-offset-2 grey2 center1" style="margin-top: 20px;">
 								<div class="paymode3"><span class="chMiddle">(變更前)繳別：<th:block th:text="${transPaymodeVo != null and transPaymodeVo.paymodeOld != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][transPaymodeVo.paymodeOld] != null}
 								? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][transPaymodeVo.paymodeOld].parameterValue}"/></span></div>
 								<div class="paymode3"><span class="chMiddle">(變更後)繳別：<th:block th:text="${transPaymodeVo != null and transPaymodeVo.paymode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][transPaymodeVo.paymode] != null}
 								? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][transPaymodeVo.paymode].parameterValue}"/></span></div>
-					</div>
-					<th:block th:if="${showAmount}">
-						<div class="check-list col-sm-8 col-sm-offset-2 grey2 center1" style="margin-top: 20px;">
-							<div class="paymode3"><span class="chMiddle">(變更前)定期繳費：<th:block th:text="${transPaymodeVo.oldAmount}"/></span></div>
-							<div class="paymode3"><span class="chMiddle">(變更後)定期繳費：<th:block th:text="${transPaymodeVo.amount}"/></span></div>
-						</div>
-					</th:block>
+							</div>
+							<th:block th:if="${showAmount && transPaymodeVo.paymode != 'E'}">
+								<div class="check-list col-sm-8 col-sm-offset-2 grey2 center1" style="margin-top: 20px;">
+									<div class="paymode3"><span class="chMiddle">(變更前)定期繳費：<th:block th:text="${transPaymodeVo.oldAmount}"/></span></div>
+									<div class="paymode3"><span class="chMiddle">(變更後)定期繳費：<th:block th:text="${transPaymodeVo.amount}"/></span></div>
+								</div>
+							</th:block>
 						</span>
 					</div>
 				</div>
