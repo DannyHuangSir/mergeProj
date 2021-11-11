@@ -35,7 +35,7 @@
 								<span><th:block th:text="${detailData['PAYMODE']}"/></span>
 							</div>
 						</div>
-						<th:block th:if="${showAmount}">
+						<th:block th:if="${showAmount && detailData['PAYMODE'] != 'E'}">
 							<div class="profile-info-row">
 								<div class="profile-info-name">定期繳費</div>
 								<div class="profile-info-value">
