@@ -497,7 +497,7 @@ public class MedicalServiceImpl implements IMedicalService {
                 }
             }
             paramMap.put("STATUS_MESSAGE", !StringUtils.isEmpty(statusMessage)?statusMessage:alliance_status);
-            paramMap.put("HOSPITAL_CODE", !StringUtils.isEmpty(claimVo.getToHospitalId() )?claimVo.getToHospitalId():"[無]");
+            paramMap.put("HOSPITAL_CODE", !StringUtils.isEmpty(claimVo.getHpUid() )?claimVo.getHpUid():"[無]");
             paramMap.put("INSURED_ID", claimVo.getIdNo());
             //使用郵件範本
             vo = getMessageTriggerRequestVo(ApConstants.MEDICAL_MAIL_034, receivers, paramMap, "email");
