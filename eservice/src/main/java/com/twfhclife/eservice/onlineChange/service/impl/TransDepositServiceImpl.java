@@ -88,6 +88,7 @@ public class TransDepositServiceImpl implements ITransDepositService {
         params.put("transNum", null);
         transDao.getTransNum(params);
         String transNum = params.get("transNum").toString();
+        vo.setTransNum(transNum);
 
         TransVo transVo = new TransVo();
         transVo.setTransNum(transNum);

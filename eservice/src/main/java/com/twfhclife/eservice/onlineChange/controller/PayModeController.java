@@ -110,17 +110,6 @@ public class PayModeController extends BaseUserDataController {
 				transPaymodeService.handlePolicyStatusLocked(handledPolicyList);
 				transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList,
 						TransTypeUtil.PAYMODE_PARAMETER_CODE);
-				String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
-				for (PolicyListVo vo : handledPolicyList) {
-					String type = vo.getPolicyType();
-					if (StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type)) {
-						if (!StringUtils.equals(vo.getApplyLockedFlag(), "Y") && !StringUtils.equals("M", vo.getPaymentMode())) {
-							vo.setApplyLockedFlag("Y");
-							vo.setApplyLockedMsg("目前無其它繳別可變更");
-							continue;
-						}
-					}
-				}
 				addAttribute("policyList", handledPolicyList);
 			}
 		} catch (Exception e) {
