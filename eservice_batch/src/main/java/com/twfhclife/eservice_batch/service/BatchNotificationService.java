@@ -410,7 +410,7 @@ public class BatchNotificationService {
 				sb.append("￭投資標的：" + portfolio.getInvtNo() + "<br/>");
 				sb.append("￭幣別：" + StringUtils.trimToEmpty(portfolio.getInvtExchCurr()) + "<br/>");
 				sb.append("￭投資收益等級：" + portfolio.getInvtRiskBeneLevel() + "<br/>");
-				sb.append("￭幣別參考價值：" + portfolio.getAcctValue() + "<br/>");
+				sb.append("￭參考帳戶價值：" + portfolio.getAcctValue() + "<br/>");
 				sb.append("￭參考報酬率(%)：" + portfolio.getRoiRate() + "<br/>");
 				sb.append("￭參考報酬率停利點：" + vo.getPercentageUp() + "<br/>");
 				sb.append("￭參考報酬率停損點：" + vo.getPercentageDown() + "<br/>");
