@@ -78,12 +78,15 @@
 						<th:block th:each="vo: ${finalInvestments}">
 							<div class="check-list2">
 								<div class="col-sm-6 ">
+									<b class="tablesaw-cell-label">新投資標的</b>
 									<p><th:block th:text="${vo.invtName}"/><span class="enSmall">(<th:block th:text="${vo.invtNo}"/>)</span></p>
 								</div>
 								<div class="col-sm-3">
+									<b class="tablesaw-cell-label">變更前分配比例</b>
 									<th:block th:text="${vo.preRatio}"/>%
 								</div>
 								<div class="col-sm-3">
+									<b class="tablesaw-cell-label">變更後分配比例</b>
 									<th:block th:text="${vo.afterRatio}"/>%
 								</div>
 							</div>
