@@ -412,8 +412,8 @@ public class BatchNotificationService {
 				sb.append("￭投資收益等級：" + portfolio.getInvtRiskBeneLevel() + "<br/>");
 				sb.append("￭參考帳戶價值：" + portfolio.getAcctValue() + "<br/>");
 				sb.append("￭參考報酬率(%)：" + portfolio.getRoiRate() + "<br/>");
-				sb.append("￭參考報酬率停利點：" + vo.getPercentageUp() + "<br/>");
-				sb.append("￭參考報酬率停損點：" + vo.getPercentageDown() + "<br/>");
+				sb.append("￭停利點：" + vo.getPercentageUp() + "<br/>");
+				sb.append("￭停損點：" + vo.getPercentageDown() + "<br/>");
 				sb.append("￭通知日期：" + sdf.format(new Date()) + "<br/>");
 			} else if (vo.getDownValue() != null || vo.getUpValue() != null) {
 				InvestmentVo investmentVo = vo.getInvestmentVo();
