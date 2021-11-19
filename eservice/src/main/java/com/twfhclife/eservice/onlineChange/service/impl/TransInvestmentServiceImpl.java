@@ -671,4 +671,22 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 
 
     }
+
+    @Override
+    public Map<String, Object> getDepositMailInfo() {
+        String transRemark = parameterDao.getStatusName(ApConstants.MESSAGING_PARAMETER, ApConstants.INVESTMENT_TRANS_REMARK);
+        String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_ADM, OnlineChangeUtil.TWFHCLIFE_DEPOSIT_ADM);
+        String[] mails = mailTo.split(";");
+        Map<String,Object> rMap = new HashMap<String,Object>();
+        List<String> receivers = new ArrayList<String>();
+        if(mails.length > 0) {
+            for (String mail : mails) {
+                receivers.add(mail);
+                log.info("Mail Address : " + mail);
+            }
+        }
+        rMap.put("transRemark", transRemark);
+        rMap.put("receivers", receivers);
+        return rMap;
+    }
 }

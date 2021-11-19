@@ -143,7 +143,8 @@ public interface OnlineChangeUtil {
 
 	final String TWFHCLIFE_ADM = "twfhclife_adm";
 
-	
+	final String TWFHCLIFE_DEPOSIT_ADM = "twfhclife_deposit_adm";
+
 	/** 系統收件人MAIL主題 */
 	final String SYS_MAIL_SUB = "SYS_MAIL_SUB";
 	

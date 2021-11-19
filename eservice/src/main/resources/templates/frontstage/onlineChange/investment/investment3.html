@@ -80,6 +80,7 @@
 
 							<tr class="table2">
 								<th class="text-left item180" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">幣別<br><span class="enSmall displayNone">A</span></th>
 								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">單位數<br><span class="enSmall displayNone">A</span></th>
 								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">最近匯率<br><span class="enSmall">(匯率日)</span></th>
 								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">單位淨值<br><span class="enSmall displayNone">(台幣B/原幣D<br>/淨值日)</span><span class="enSmall">(淨值日)</span></th>
@@ -267,6 +268,7 @@
 			$([[${investments}]]).each(function(index, vo){
 				html += "<tr class=\"h65 noEvent\">"
 				html += "<td class=\"text-left\"><b class=\"tablesaw-cell-label\">投資標的</b><span class=\"tablesaw-cell-content\"><p>" + vo.invtName +"<p class=\"enSmall\">(" + vo.invtNo + ")</p></span></td>"
+				html += "<td><b class=\"tablesaw-cell-label\">幣別<span class=\"enSmall displayNone\">A</span></b><span class=\"tablesaw-cell-content\">" + vo.currency + "</span></td>"
 				html += "<td><b class=\"tablesaw-cell-label\">單位數<span class=\"enSmall displayNone\">A</span></b><span class=\"tablesaw-cell-content\">" + showNetUnits(vo) + "</span></td>"
 				html += "<td><b class=\"tablesaw-cell-label\">最近匯率<span class=\"enSmall\">(匯率日)</span></b><span class=\"tablesaw-cell-content\">" + showRateBuy(vo) + "</span></td>"
 				html += "<td><b class=\"tablesaw-cell-label\">單位淨值<span class=\"enSmall displayNone\">(台幣B/原幣D<br>/淨值日)</span></b><span class=\"tablesaw-cell-content\">" + showNetValueDate(vo) + "</span></td>"

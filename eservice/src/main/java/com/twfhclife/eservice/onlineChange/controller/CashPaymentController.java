@@ -102,7 +102,7 @@ public class CashPaymentController extends BaseUserDataController {
                     if (!StringUtils.equals(vo.getApplyLockedFlag(), "Y")) {
                         if (!StringUtils.equals("M", vo.getPaymentMode())) {
                             vo.setApplyLockedFlag("Y");
-                            vo.setApplyLockedMsg("僅月繳保單可以做定期定額保費變更");
+                            vo.setApplyLockedMsg("僅月繳保單可以做收益分配或撥回資產分配方式");
                             continue;
                         }
                     }

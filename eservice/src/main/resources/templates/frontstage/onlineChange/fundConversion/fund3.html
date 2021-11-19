@@ -115,12 +115,17 @@
 					<!-- <div class="invst2total"> 總轉出金額 <span class="chNormal">NTD </span><span id="showConutNumber" class="orange">00,000.0000</span></div> -->
 					<div class="statement1 wht">
 						<p class="text-ps">備註：</p>
-						<p class="text-ps" id="parameterValueByProportion">
-							若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。<br/>
-							若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。<br/>
-							若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。<br/>
-							為確保保險商品符合您的投資能力及風險性，投資風險屬性若有變更，本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。<br/>
-						</p>
+						<ol class="text-ps" id="parameterValueByProportion">
+							<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
+							<li>相同標的不得同時申請投資標的部分提領及投資標的轉換。</li>
+							<li>申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。</li>
+							<li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
+							<li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
+							<li>已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。</li>
+							<li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
+							<li>如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
+							<li>您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金 的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高波動性之風險。</li>
+						</ol>
 					</div>
 					<div class="col-md-12 two-buttons">
 						<a href="javascript:void(0);"><button id="deny" class="btn-signup">上一步</i></button></a>
@@ -284,15 +289,15 @@
 			if(oRow.depositAccount=="Y"){
 				html+='<P width="120" class="company"><input  value="0"  id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="0" max="0" type="hidden">停泊帳戶不能轉換為其它基金</P>';
 			}else{
-			if (oRow.invtExchCurr== 'NTD') {
-					//計算臺幣的可輸入的最小的單位書
-					//提參考價值=單位數*淨值*匯率  反推獲取單位書=參考價值/淨值/匯率
-				var NTD_UNIT_MIN= formatNumber(parseInt(unitMin['NTD_UNIT_MIN'])/formatNumber(oRow.netValueSell,4), 4);
-				html+='<P width="120" class="company"><input value="0" onblur="showNumberCompany(\''+oRow.investmentId+'\')" id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="'+NTD_UNIT_MIN+'" max="'+formatNumber(oRow.safpNetUnits,4)+'" type="number">單位</P>';
-			}else{
-				var USD_UNIT_MIN= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(oRow.netValueSell,4), 4);
-				html+='<P width="120" class="company"><input value="0" onblur="showNumberCompany(\''+oRow.investmentId+'\')" id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="'+USD_UNIT_MIN+'" max="'+formatNumber(oRow.safpNetUnits,4)+'" type="number">單位</P>';
-			}
+				if (oRow.invtExchCurr== 'NTD') {
+						//計算臺幣的可輸入的最小的單位書
+						//提參考價值=單位數*淨值*匯率  反推獲取單位書=參考價值/淨值/匯率
+					var NTD_UNIT_MIN= formatNumber(parseInt(unitMin['NTD_UNIT_MIN'])/formatNumber(oRow.netValueSell,4), 4);
+					html+='<P width="120" class="company"><input value="0" onblur="showNumberCompany(\''+oRow.investmentId+'\')" id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="'+NTD_UNIT_MIN+'" max="'+formatNumber(oRow.safpNetUnits,4)+'" type="number">單位</P>';
+				}else{
+					var USD_UNIT_MIN= formatNumber(parseInt(unitMin['USD_UNIT_MIN'])/formatNumber(oRow.netValueSell,4), 4);
+					html+='<P width="120" class="company"><input value="0" onblur="showNumberCompany(\''+oRow.investmentId+'\')" id="'+oRow.investmentId+'"  class="item90  showNumberCompany" min="'+USD_UNIT_MIN+'" max="'+formatNumber(oRow.safpNetUnits,4)+'" type="number">單位</P>';
+				}
 			}
 				return html;
 		}
@@ -302,11 +307,11 @@
 			if(oRow.depositAccount=="Y"){
 				html+='<P width="120" class="company"><input value="0" id="per'+oRow.investmentId+'"  class="item90" max="100" type="hidden">停泊帳戶不能轉換為其它基金</P>';
 			}else{
-			if (oRow.invtExchCurr== 'NTD') {
-				html+='<P style="display: none;" class="percentage"><input value="0" onblur="showNumberPercentage(\''+oRow.investmentId+'\')" id="per'+oRow.investmentId+'"  min="'+proportionMin['NTD_PROPORTION_MIN']+'" class="item90" max="100" type="number">%</P>'
-			}else{
-				html+='<P style="display: none;" class="percentage"><input value="0" onblur="showNumberPercentage(\''+oRow.investmentId+'\')" id="per'+oRow.investmentId+'"  min="'+proportionMin['USD_PROPORTION_MIN']+'" class="item90" max="100" type="number">%</P>'
-			}
+				if (oRow.invtExchCurr== 'NTD') {
+					html+='<P style="display: none;" class="percentage"><input value="0" onblur="showNumberPercentage(\''+oRow.investmentId+'\')" id="per'+oRow.investmentId+'"  min="'+proportionMin['NTD_PROPORTION_MIN']+'" class="item90" max="100" type="number">%</P>'
+				}else{
+					html+='<P style="display: none;" class="percentage"><input value="0" onblur="showNumberPercentage(\''+oRow.investmentId+'\')" id="per'+oRow.investmentId+'"  min="'+proportionMin['USD_PROPORTION_MIN']+'" class="item90" max="100" type="number">%</P>'
+				}
 			}
 			 return html;
 		}

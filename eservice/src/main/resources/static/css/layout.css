@@ -9765,14 +9765,57 @@ tr.disabled .action-buttons{
 input[type=number]{
     padding-right: 0 !important;
 }
-
+.check-list2 .tablesaw-cell-label{
+    display: none;
+}
+@media (max-width: 200px) and (min-width: 1024px){
+    .notification2 .tablesaw thead tr th:last-child,
+    .notification2 .tablesaw tbody tr td:last-child {
+        text-align: left !important;
+    }   
+    .posaout{
+        width: 100%;
+    }
+    .check-list2 i.my5 {
+        top: 20px !important;
+        right: 60px !important;
+        float: right !important;
+    }
+    .check-list2 .tablesaw-cell-label{
+        display: block !important;
+        width: 40%;
+        float: left;
+    }
+}
 @media only screen and (min-device-width: 200px) and (max-device-width: 1024px){
     .attribute1 .attr1-padding {
         height: auto !important;
     }
     .custominput{
+        width: 90% !important;
+    }
+    td span.sub1{
+        float: left;
+        padding-left: 5px;
+    }
+    .notification2 .tablesaw thead tr th:last-child,
+    .notification2 .tablesaw tbody tr td:last-child {
+        text-align: left !important;
+    }
+    .posaout{
         width: 100%;
     }
+    .check-list2 .tablesaw-cell-label{
+        display: block !important;
+        width: 40%;
+        float: left;
+    }
+}
+@media only screen and (min-device-width: 200px) and (max-device-width: 768px){
+    .col-sm-10.enNormal{
+        width: 100%;
+    }
+ 
 }
 
 .custominput{
@@ -9781,6 +9824,9 @@ input[type=number]{
     width: 90px;
     float: left;
 }
+.custominput>span{
+    padding: 5px;
+}
 .custominput>input{
     border: 0 !important;
     float: none !important;
@@ -9788,4 +9834,13 @@ input[type=number]{
  }
 .custominput>input:focus{
     outline:none; 
+}
+tr.textcolor td{
+    color: #fff;
+    font-weight: 500;
+}
+tr.textcolor p.enSmall,
+tr.textcolor .my5{
+    color: #ffffff;
+    opacity: .9;
 }

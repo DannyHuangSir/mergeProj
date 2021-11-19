@@ -334,6 +334,13 @@ public class TransDepositController extends BaseUserDataController {
             //推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
             messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_027, receivers, paramMap, "email");
 
+            receivers.clear();//清空
+            Map<String, Object> depositMailInfo = transInvestmentService.getDepositMailInfo();
+            //發送系統管理員
+            receivers = (List) depositMailInfo.get("receivers");
+            //推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
+            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_027, receivers, paramMap, "email");
+
             //發送保戶SMS
             //receivers = new ArrayList<String>();
             receivers.clear();//清空

@@ -6,15 +6,15 @@ go
 		--- 已持有投資標的轉換[備註]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_TRANSFORMATION_REMARKS', N' 已持有投資標的轉換備註條款信息',
-		N'1、未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。<br/>
-          2、相同標的不得同時申請投資標的部分提領及投資標的轉換。<br/>
-          3、申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。<br/>
-          4、各投資標的之配置比例必須為10的倍數且總和需為 100%。<br/>
-          5、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。<br/>
-          6、已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。<br/>
-          7、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。<br/>
-          8、如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。<br/>
-          9、您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金 的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高波動性之風險。<br/>',
+		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
+          <li>相同標的不得同時申請投資標的部分提領及投資標的轉換。</li>
+          <li>申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。</li>
+          <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
+          <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
+          <li>已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。</li>
+          <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
+          <li>如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
+          <li>您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金 的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高波動性之風險。</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_TRANSFORMATION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 	--- 已持有投資標的轉換[同意]條款
@@ -27,16 +27,16 @@ go
 	--- 已持有投資標的[比例]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_TRANSFORMATION_PROPORTION', N' 已持有投資標的轉換[比例備註]條款信息',
-		N'1、未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。<br/>
-          2、相同標的不得同時申請投資標的部分提領及投資標的轉換。<br/>
-          3、申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。<br/>
-          4、各投資標的之配置比例必須為10的倍數且總和需為 100%。<br/>
-          5、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。<br/>
-          6、已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。<br/>
-          7、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。<br/>
-          8、若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。<br/>
-          9、若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。<br/>
-          10、若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。<br/>',
+		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
+          <li>相同標的不得同時申請投資標的部分提領及投資標的轉換。</li>
+          <li>申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。</li>
+          <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
+          <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
+          <li>已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。</li>
+          <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
+          <li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</li>
+         <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</li>
+          <li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_TRANSFORMATION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
@@ -48,19 +48,7 @@ go
 		---未來保費投資標的與分配比例[備註]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_REMARKS', N' 未來保費投資標的與分配比例備註條款信息',
-		N'<li>1、未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
-         <li>2、各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
-         <li>3、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
-         <li>4、若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li>
-         <li>5、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
-         <li>6、如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。
-            您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能
-            面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損
-         	   之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收
-         	   益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金
-         	   的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美
-         	   國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高
-         	   波動性之風險</li>',
+		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li> <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li> <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li> <li>若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li> <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投 資標的申請之依據。</li> <li>如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。 您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能 面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損 之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收 益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金 的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美 國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高 波動性之風險</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 	--- 未來保費投資標的與分配比例[同意]條款
@@ -85,22 +73,14 @@ go
 --- 變更風險屬性-風險屬性分析表
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'RISK_ATTRIBUTE_ANALYSIS_STATEMENT', N'變更風險屬性-風險屬性分析表',
-		N'<div class="check-title"> 風險屬性分析表 </div> <div class="check-body grey2"> <div class="plus-list"> <div class="col-sm-2 text-left"> 總 分 </div> <div class="col-sm-2 text-left"> 投資屬性 </div> <div class="col-sm-6 text-left"> 說明 </div> <div class="col-sm-2 text-left"> 適合基金風險類型 </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 9分(含)以下 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 保守型 </p> <p> (A) </p> </div> <div class="col-sm-6"> 願意接受微幅的價格波動，對於風險承受度較低，僅追求穩定的收益即可獲得滿足。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div> <div class="col-sm-2"> RR1 </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 10~17分 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 穩健型 </p> <p> (B) </p> </div> <div class="col-sm-6"> 願意承擔部分的投資風險，以追求穩定的投資報酬，認為資產成長與風險分散同等重 要，利用不同投資報酬及風險性的投資工具，調配投資組合內容。 </div> <div class="col-sm-2"> RR1、RR2、RR3 </div> </div> <div class="check-list inlineBlock"> <div class="col-sm-2"> 18分(含)以上 </div> <div class="col-sm-2"> <p class="orange chMiddle"> 積極型 </p> <p> (C) </p> </div> <div class="col-sm-6"> 願意承擔較高的風險，以追求超額報酬，風險承受度最高，著眼於資產的高度成長，並 清楚認知投資標的淨值有較大的波動，投資目的為極積追求最高報酬。 </div> <div class="col-sm-2"> RR1、RR2、RR3、RR4、RR5 </div> </div> </div>',
+		N'<div class="check-title"> 風險屬性分析表 </div> <div class="check-body grey2"> <div class="plus-list" style="width: 100%;"> <div class="col-sm-2 text-left"> 投資屬性 </div> <div class="col-sm-8 text-left"> 說明 </div> <div class="col-sm-2 text-left"> 適合基金風險類型 </div> </div> <div class="check-list inlineBlock" style="width: 100%;"> <div class="col-sm-2"> <p class="orange chMiddle"> 保守型 </p> <p> (A) </p> </div> <div class="col-sm-8"> 願意接受微幅的價格波動，對於風險承受度較低，僅追求穩定的收益即可獲得滿足。 </div> <div class="col-sm-2"> RR1 </div> </div> <div class="check-list inlineBlock" style="width: 100%;"> <div class="col-sm-2"> <p class="orange chMiddle"> 穩健型 </p> <p> (B) </p> </div> <div class="col-sm-8"> 願意承擔部分的投資風險，以追求穩定的投資報酬，認為資產成長與風險分散同等重 要，利用不同投資報酬及風險性的投資工具，調配投資組合內容。 </div> <div class="col-sm-2"> RR1、RR2、RR3 </div> </div> <div class="check-list inlineBlock" style="width: 100%;"> <div class="col-sm-2"> <p class="orange chMiddle"> 積極型 </p> <p> (C) </p> </div> <div class="col-sm-8"> 願意承擔較高的風險，以追求超額報酬，風險承受度最高，著眼於資產的高度成長，並 清楚認知投資標的淨值有較大的波動，投資目的為極積追求最高報酬。 </div> <div class="col-sm-2"> RR1、RR2、RR3、RR4、RR5 </div> </div> </div>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
 		---未來保費投資標的與分配比例[備註]
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_REMARK1', N' 未來保費投資標的與分配比例備註',
-		N'1、未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</br>
-         2、各投資標的之配置比例必須為10的倍數且總和需為 100%。</br>
-         3、本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</br>
-         4、若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</br>
-         5、新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投</br>
-            資標的申請之依據。</br>
-         6、若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</br>
-         7、若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</br>
-         8、若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</br>',
+		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li> <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li> <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li> <li>若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li> <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li> <li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</li> <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</li> <li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
@@ -799,4 +779,28 @@ VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'WORDING_INVESTMENT_02603', N'未來保費投資標的與分配比例-申請成功', N'<p>系統將於每日下午4:00處理您送出的申請。<br />「未來保費投資標的與分配比例」約需1個工作天進行作業，您可隨時至「我的申請紀錄」掌握最新處理進度。</p>', (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='PAGE_WORDING'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL);
 GO
+
+INSERT ESERVICE_ADM.dbo.PARAMETER
+    (
+	PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER
+	)
+VALUES
+   (
+   (select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER)
+	, N'eservice_adm'
+	, N'TWFHCLIFE_DEPOSIT_ADM'
+	, N'臺銀人壽保單提領管理人員'
+	, N'203990@twfhclife.com.tw;202074@twfhclife.com.tw;life108@twfhclife.com.tw'
+	, (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_DNS_API_URL')
+	, NULL
+	, NULL
+	, 1
+	, NULL
+	, NULL
+	, getdate()
+	, N'system'
+	, NULL
+	, NULL
+	)
+go
 

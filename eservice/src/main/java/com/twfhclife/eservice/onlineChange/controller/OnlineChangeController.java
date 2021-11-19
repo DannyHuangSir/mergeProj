@@ -325,7 +325,7 @@ public class OnlineChangeController extends BaseController {
 				transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
 				transInvestmentVo.setMessage(MSG_MAP.get(transType));
 				transInvestmentVo.setApplyDate(new Date());
-				sendConversionSMSAndEmail(transInvestmentVo,user);
+				sendConversionSMSAndEmail(transInvestmentVo, user, transType);
 			}else if(transType !=null && TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transType)){
 				 //進行嚴重當前保單是否可以取消
 				String  check=	 transContactInfoService.transMedicalTreatmentClaimByCheck(transNum);
@@ -560,7 +560,7 @@ public class OnlineChangeController extends BaseController {
 	}
 
 		//發送郵件
-	public void sendConversionSMSAndEmail(TransInvestmentVo vo,UsersVo user) {
+	public void sendConversionSMSAndEmail(TransInvestmentVo vo, UsersVo user, String transType) {
 		try {
 			Map<String, Object> mailInfo = transInvestmentService.getSendMailInfo();
 			Map<String, String> paramMap = new HashMap<String, String>();
@@ -591,6 +591,15 @@ public class OnlineChangeController extends BaseController {
 			receivers = (List) mailInfo.get("receivers");
 			//推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
 			messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_027, receivers, paramMap, "email");
+
+			if (StringUtils.equals(transType, "DEPOSIT")) {
+				receivers.clear();//清空
+				Map<String, Object> depositMailInfo = transInvestmentService.getDepositMailInfo();
+				//發送系統管理員
+				receivers = (List) depositMailInfo.get("receivers");
+				//推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
+				messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_027, receivers, paramMap, "email");
+			}
 
 			//發送保戶SMS
 			//receivers = new ArrayList<String>();

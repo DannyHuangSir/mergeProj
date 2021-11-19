@@ -21,7 +21,7 @@
 	</th:block>
 	<!--major 3 tabs-->
 	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
-	<section class="grey applyInner has-special-note fullContent">
+	<section class="grey applyInner fullContent">
 		<div class="container bg3">
 			<ul class="breadcrumb detail1">
 				<li>
@@ -61,12 +61,18 @@
 					<table th:replace="fragments/applyPolicyList :: table13 (choseType='radio')"></table>
 					<div class="statement1 wht">
 						<p class="text-ps">備註</p>
-						<p class="text-ps" id="transformationRemarks">
-							變額萬能壽險保單：如於15:00前提出申請，則視當日為申請之生效日，逾時則視次一工作日為申請之生效日。<br/>
-							此次變更將於下一期應繳保費生效，續期保費將依照本次指定之標的的項目及百分比投資。<br/>
-							每一投資標的投資比例不得低於10%，加總需等於100%。<br/>
-							目前僅開放“要保人與被保險人為同一人”之保單於網路變更保單資料。<br/>
-						</p>
+						<ol class="text-ps" id="transformationRemarks">
+							<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
+							<li>相同標的不得同時申請投資標的部分提領及投資標的轉換。</li>
+							<li>申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。</li>
+							<li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
+							<li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
+							<li>已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。</li>
+							<li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
+							<li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</li>
+							<li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</li>
+							<li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li>
+						</ol>
 					</div>
 					<div class="col-md-8 col-md-offset-2 two-buttons">
 						<a href="apply1">

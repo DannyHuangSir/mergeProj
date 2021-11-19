@@ -93,4 +93,6 @@ public interface ITransInvestmentService {
     BigDecimal getDistributeRationByInvtNo(String policyNo, String invtNo);
     //查詢當前的投資標商品是否為顯示賬戶
     List<String> getChckSwiftCode()throws Exception;
+
+    Map<String, Object> getDepositMailInfo();
 }
