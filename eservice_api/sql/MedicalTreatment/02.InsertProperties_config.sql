@@ -53,7 +53,7 @@ INSERT ESERVICE_ADM.DBO.PARAMETER (
      CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES (
      (select max(PARAMETER_ID)+1 from ESERVICE_ADM.DBO.PARAMETER), N'eservice_api',
-     N'cron.api.medical.disable', N'cron.api.medical.disable', N'N',
+     N'cron.api.medical.disable', N'cron.api.medical.disable', N'Y',
      (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.DBO.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_MEDICAL_SCH'), 0, NULL, 1,
      NULL, NULL,
      GETDATE(), N'admin', NULL, NULL)
