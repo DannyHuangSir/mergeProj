@@ -365,23 +365,23 @@ public class MergeChangeUtil {
 			}
 
 			mergeSb.append(String.format(StringUtils.repeat("%s", 22),
-					StringUtil.rpadBlank(paymode, 1),
-					StringUtil.rpadBlank(annuityMethod, 1),
-					StringUtil.rpadBlank(bouns, 1),
-					StringUtil.rpadBlank(reward, 1),
-					StringUtil.rpadBlank(cushion, 1),
-					StringUtil.rpadBlank(beneficiaryFlag, 1),
-					StringUtil.rpadBlank(renewFlag, 1),
-					StringUtil.rpadBlank(reduceFlag, 1),
-					StringUtil.rpadBlank(reducePolicyFlag1, 1),
-					StringUtil.rpadBlank(contractAmount, 10),
-					StringUtil.rpadBlank(reducePolicyFlag2, 1),
-					StringUtil.rpadBlank(contactInfoFlag, 1),
-					StringUtil.rpadBlank(contactInfo, 10 + 10 + 50 + 10 + 4 + 100 + 100 +1),
-					StringUtil.rpadBlank(resendPolicyFlag, 1),
-					StringUtil.rpadBlank(resendPolicyAdress, 50),
-					StringUtil.rpadBlank(policyHolderProfile, 10),
-					StringUtil.rpadBlank(guaranteePeriod, 2),
+					StringUtil.rpadBlank(paymode, 1), //繳別
+					StringUtil.rpadBlank(annuityMethod, 1),//年金給付
+					StringUtil.rpadBlank(bouns, 1),//紅利選擇權
+					StringUtil.rpadBlank(reward, 1),//增值回饋金領取方式
+					StringUtil.rpadBlank(cushion, 1),//自動墊繳選擇權
+					StringUtil.rpadBlank(beneficiaryFlag, 1),//受益人
+					StringUtil.rpadBlank(renewFlag, 1),//展期定期
+					StringUtil.rpadBlank(reduceFlag, 1),//減額繳清
+					StringUtil.rpadBlank(reducePolicyFlag1, 1),//減少保險金額（主約）」
+					StringUtil.rpadBlank(contractAmount, 10),//欲變更金額
+					StringUtil.rpadBlank(reducePolicyFlag2, 1),//減少保險金額（附約）
+					StringUtil.rpadBlank(contactInfoFlag, 1),//「聯絡資料」變更: 申請註記(1),、
+					StringUtil.rpadBlank(contactInfo, 10 + 10 + 50 + 10 + 4 + 100 + 100 +1),//聯絡資料
+					StringUtil.rpadBlank(resendPolicyFlag, 1),//補發保單: 申請值(1)
+					StringUtil.rpadBlank(resendPolicyAdress, 50),//補發保單: 寄送地址(50)
+					StringUtil.rpadBlank(policyHolderProfile, 10),//保戶基本資料更新
+					StringUtil.rpadBlank(guaranteePeriod, 2),//年金給付
 					StringUtil.rpadBlank(investment.toString(), 10 * 13),
 					StringUtil.rpadBlank(conversion.toString(), 10 * 38),
 					StringUtil.rpadBlank(riskLevel, 14),

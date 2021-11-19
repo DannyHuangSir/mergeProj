@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
+import com.google.gson.Gson;
 import com.twfhclife.eservice_batch.dao.*;
 import com.twfhclife.eservice_batch.model.*;
 import com.twfhclife.eservice_batch.service.onlineChange.TransRiskLevelUtil;
@@ -376,7 +377,7 @@ public class BatchDownloadService {
 					}
 					// 變更完成後，以該保單號碼的手機及電子郵件信箱寄出變更完成通知訊息
 					List<ParameterVo> paramList = parameterDao.getParameterByCategoryCode("eservice", "trans_" + transCode + "_mapping");
-					String remark = "";
+					String remark = " ";
 					String policyNum = line.substring(15, 25);
 					if ("X".equals(applyResult)) {
 						remark = line.substring(34, 133); //100
@@ -404,24 +405,28 @@ public class BatchDownloadService {
 					UserVo userVo = null;
 					if (investCodes.contains(transCode)) {
 						userVo = userDao.getMailPhoneByTransNum(transNum);
+						logger.info("Invest BatchDownload get user info ---> transCode: {}, transNum: {}, info: {}",
+								transCode, transNum, new Gson().toJson(userVo));
 					} else {
 						userVo = userDao.getMailPhoneByPolicyNo(policyNum);
+						logger.info("BatchDownload get user info ---> transCode: {}, transNum: {}, info: {}",
+								transCode, transNum, new Gson().toJson(userVo));
 					}
 					if (userVo != null) {
-					if (StringUtils.isNotEmpty(userVo.getEmail())) {
-						List<String> receivers = new ArrayList<String>();
-						receivers.add(userVo.getEmail());
-						req.setMessagingReceivers(receivers);
-						req.setSendType(MessageTriggerRequestVo.SEND_TYPE_MAIL);
-						api.postMessageTemplateTrigger(req);
-					}
-					if (StringUtils.isNotEmpty(userVo.getMobile())) {
-						List<String> receivers = new ArrayList<String>();
-						receivers.add(userVo.getMobile());
-						req.setMessagingReceivers(receivers);
-						req.setSendType(MessageTriggerRequestVo.SEND_TYPE_SMS);
-						api.postMessageTemplateTrigger(req);
-					}
+						if (StringUtils.isNotEmpty(userVo.getEmail())) {
+							List<String> receivers = new ArrayList<String>();
+							receivers.add(userVo.getEmail());
+							req.setMessagingReceivers(receivers);
+							req.setSendType(MessageTriggerRequestVo.SEND_TYPE_MAIL);
+							api.postMessageTemplateTrigger(req);
+						}
+						if (StringUtils.isNotEmpty(userVo.getMobile())) {
+							List<String> receivers = new ArrayList<String>();
+							receivers.add(userVo.getMobile());
+							req.setMessagingReceivers(receivers);
+							req.setSendType(MessageTriggerRequestVo.SEND_TYPE_SMS);
+							api.postMessageTemplateTrigger(req);
+						}
 					}
 				} catch (Exception e) {
 					logger.error("寄出變更完成通知訊息 error:", e);
@@ -437,13 +442,13 @@ public class BatchDownloadService {
 
 	private List<String> getInvestCodes() {
 		List<String> list = new ArrayList<>();
+		list.add("028");
+		list.add("029");
+		list.add("030");
 		list.add("031");
+		list.add("032");
 		list.add("033");
 		list.add("034");
-		list.add("032");
-		list.add("030");
-		list.add("029");
-		list.add("028");
 		return list;
 	}
 

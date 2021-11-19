@@ -32,11 +32,11 @@ public class TransPaymodeUtil {
 	
 	/**
 	 * 合併申請項目.
-	 * 
 	 * @param txtSb StringBuilder
 	 * @param systemTwDate 系統日
+	 * @param activeTwDate
 	 */
-	public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate) {
+	public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate, String activeTwDate) {
 		logger.info("Start running generate apply file: {}", TRANS_TYPE);
 		
 		TransDao transDao = new TransDao();
@@ -90,16 +90,15 @@ public class TransPaymodeUtil {
 								paymode = "A";
 								mk = "Y";
 							}
-							txtSb.append(String.format(StringUtils.repeat("%s", 9),
+							txtSb.append(String.format(StringUtils.repeat("%s", 8),
 									"034",
 									StringUtil.rpadBlank(transNum, 12),
 									StringUtil.rpadBlank(policyNo, 10),
 									systemTwDate,
-									activeDate,
+									activeTwDate,
 									StringUtil.rpadBlank(paymode, 1),
 									StringUtil.rpadBlank(mk, 1),
-									StringUtil.lpad(String.valueOf(amount.intValue()), 10, " "),
-									"P"
+									StringUtil.lpad(String.valueOf(amount.intValue()), 10, " ")
 							));
 						} else {
 						// 介接代碼(3),申請序號(12),保單號碼(10),收文日(7),生效日(7),申請值(1)

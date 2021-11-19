@@ -26,7 +26,7 @@ public class TransInvestmentUtil {
     private static final String TRANS_STATUS = "1";   // 申請中
     private static final String UPLOAD_CODE = "029"; // 介接代碼
 
-    public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate) {
+    public List<TransVo> appendApplyItems(StringBuilder txtSb, String systemTwDate, String activeTwDate) {
         logger.info("Start running generate apply file: {}", TRANS_TYPE);
 
         TransDao transDao = new TransDao();
@@ -94,10 +94,9 @@ public class TransInvestmentUtil {
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
                                         systemTwDate,
-                                        systemTwDate,
+                                        activeTwDate,
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.lpad(String.valueOf(vo.getDistributionRatio()), 3, " "),
-                                        "1"
+                                        StringUtil.lpad(String.valueOf(vo.getDistributionRatio()), 3, " ")
                                 );
                                 logger.info(line);
                                 txtSb.append(line);

@@ -91,7 +91,7 @@ public class TransConversionUtil {
                                     }
                                 }
                                 // 介接代碼(3),申請序號(12),保單號碼(10),轉出投資標的(10),轉出單位（18),轉入投資標的(10),2(1),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
-                                String line = String.format(StringUtils.repeat("%s", 9),
+                                String line = String.format(StringUtils.repeat("%s", 8),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
@@ -100,8 +100,7 @@ public class TransConversionUtil {
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
                                         StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100), 4, BigDecimal.ROUND_DOWN)
                                                 .toString().replaceAll("\\.", ""), 18, " "),
-                                        StringUtil.rpadBlank(vo.getInInvtNo(), 10),
-                                        "2"
+                                        StringUtil.rpadBlank(vo.getInInvtNo(), 10)
                                 );
                                 logger.info(line);
                                 txtSb.append(line);
