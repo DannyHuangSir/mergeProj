@@ -104,7 +104,7 @@ public class MedicalAllianceServiceTask {
     //@Value("${medicalAlliance.api408.url}")
     public String URL_API408;
     
-    //@Value("${cron.api.disable}")
+    //@Value("${cron.api.medical.disable}")
     public String API_DISABLE;
 
     @Autowired
