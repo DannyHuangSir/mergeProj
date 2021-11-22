@@ -85,7 +85,7 @@ public class TransPaymodeUtil {
 						logger.info("TransNum's activeDate : {}", activeDate);
 						String INVESTMENT_TYPES = parameterDao.getParameterValueByCode("eservice", "PAYMODE_INVESTMENT_TYPE");
 						if (StringUtils.isNotBlank(INVESTMENT_TYPES) && INVESTMENT_TYPES.contains(policyNo.substring(0,2))) {
-							// 介接代碼(3),申請序號(12),保單號碼(10),新繳別(1),彈性繳註記(1),新定期繳費(10),P(1),收文日(系統日yyyMMdd),生效日(下個周月日yyyMMdd)
+							// 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(下個周月日yyyMMdd),新繳別(1),彈性繳註記(1),新定期繳費(10)
 							if (StringUtils.equals("E", paymode)) {
 								paymode = "A";
 								mk = "Y";

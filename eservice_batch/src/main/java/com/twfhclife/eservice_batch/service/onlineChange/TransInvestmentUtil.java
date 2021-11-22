@@ -88,8 +88,8 @@ public class TransInvestmentUtil {
                                         txtSb.append("\r\n");
                                     }
                                 }
-                                // 介接代碼(3),申請序號(12),保單號碼(10)投資標的(10),變更後單位（18),1(1)，收文日(系統日yyyMMdd),生效日(下個周月日yyyMMdd
-                                String line = String.format(StringUtils.repeat("%s", 8),
+                                // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(下個周月日yyyMMdd),投資標的(10),變更後單位（3)
+                                String line = String.format(StringUtils.repeat("%s", 7),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),

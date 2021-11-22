@@ -55,7 +55,7 @@ public class TransChangePremiumUtil {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransChangePremiumVo vo : list) {
-                                // 介接代碼(3),申請序號(12),保單號碼(10),新定期繳費(10),P(1),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),新定期繳費(10)
                                 String line = String.format(StringUtils.repeat("%s", 6),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),

@@ -55,8 +55,7 @@ public class TransCashPaymentUtil {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransCashPaymentVo vo : list) {
-                                //介接代碼(3),申請序號(12),保單號碼(10),新收益分配或撥回資產分配方式(1) ,受益類別(1),匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60),
-                                //收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                //介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),新收益分配或撥回資產分配方式(1),受益類別(1),匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60)
                                 String line = String.format(StringUtils.repeat("%s", 15),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),

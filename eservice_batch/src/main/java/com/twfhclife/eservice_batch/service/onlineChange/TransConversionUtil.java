@@ -90,7 +90,7 @@ public class TransConversionUtil {
                                         txtSb.append("\r\n");
                                     }
                                 }
-                                // 介接代碼(3),申請序號(12),保單號碼(10),轉出投資標的(10),轉出單位（18),轉入投資標的(10),2(1),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd)
+                                // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),轉出投資標的(10),轉出單位（18),轉入投資標的(10)
                                 String line = String.format(StringUtils.repeat("%s", 8),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
