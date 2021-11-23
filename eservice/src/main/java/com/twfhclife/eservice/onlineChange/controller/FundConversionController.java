@@ -159,10 +159,18 @@ public class FundConversionController extends BaseUserDataController  {
     public String fund2(PolicyListVo formData) {
         try {
             //進行查詢當前同意條款
+            String policyType = formData.getPolicyNo().substring(0, 2);
+            //進行查詢當前同意條款
             String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
-                    ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_TRANSFORMATION_CONSENT);
+                    ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_CONSENT+ "_"  + policyType);
             if (parameterValueByCodeConsent != null) {
+                addAttribute("next", true);
                 addAttribute("transformationConsent", parameterValueByCodeConsent);
+            }else {
+                String error = parameterService.getParameterValueByCode(
+                        ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_CONSENT + "_ERROR");
+                addSystemError(error);
+                addAttribute("next", false);
             }
             logger.error("--============================================================-policyList {}",formData.getPolicyNo());
 

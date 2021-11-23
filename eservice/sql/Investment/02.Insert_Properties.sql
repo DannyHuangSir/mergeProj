@@ -51,10 +51,26 @@ VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice
 		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li> <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li> <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li> <li>若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li> <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投 資標的申請之依據。</li> <li>如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。 您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能 面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損 之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收 益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金 的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美 國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高 波動性之風險</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
-	--- 未來保費投資標的與分配比例[同意]條款
+
+--- 未來保費投資標的與分配比例[同意]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
-VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_CONSENT', N'未來保費投資標的與分配比例[同意條款]條款信息',
-		N'<iframe src="pdf/terms/臺銀人壽外幣投資標的批註條款-0G_c.pdf" width="100%" height="100%"></iframe>',
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_CONSENT_US', N'US未來保費投資標的與分配比例[同意條款]條款信息',
+		N'<iframe src="pdf/terms/鑫富利變額年金保險批註條款-US.pdf" width="100%" height="100%"></iframe>',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_CONSENT_UU', N'UU未來保費投資標的與分配比例[同意條款]條款信息',
+		N'<iframe src="pdf/terms/鑫富美外幣變額年金保險批註條款-UU.pdf" width="100%" height="100%"></iframe>',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_CONSENT_ERROR', N'未來保費投資標的與分配比例[同意條款]條款ERROR信息',
+		N'線上申請功能尚未開放此保單險種申請，<br/>
+          如有疑問，請先至臺銀人壽會員專區查詢或請電洽:<br/>
+          免費客服電話0800-011966<br/>
+          市話服務:02-27849151轉保全科',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 

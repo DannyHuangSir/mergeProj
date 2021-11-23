@@ -123,10 +123,17 @@ public class TransInvestmentController extends BaseUserDataController  {
     @PostMapping("/investment2")
     public String investment2(TransInvestmentVo transInvestmentVo) {
         //進行查詢當前同意條款
+        String policyType = transInvestmentVo.getPolicyNo().substring(0, 2);
         String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
-                ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_CONSENT);
+                ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_CONSENT + "_"  + policyType);
         if (parameterValueByCodeConsent != null) {
+            addAttribute("next", true);
             addAttribute("transformationConsent", parameterValueByCodeConsent);
+        } else {
+            String error = parameterService.getParameterValueByCode(
+                    ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_CONSENT + "_ERROR");
+            addSystemError(error);
+            addAttribute("next", false);
         }
         addAttribute("transInvestmentVo", transInvestmentVo);
         return "frontstage/onlineChange/investment/investment2";
@@ -324,5 +331,4 @@ public class TransInvestmentController extends BaseUserDataController  {
         }
         logger.info("End send mail");
     }
-
 }

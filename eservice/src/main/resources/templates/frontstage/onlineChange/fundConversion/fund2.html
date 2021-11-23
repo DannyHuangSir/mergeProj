@@ -63,16 +63,24 @@
                         <h2>請閱讀並同意以下條款</h2>
                     </div>
                     <div class="term1" id="term1" style="overflow:hidden;padding: 0;height:450px;">	
-						<iframe src="./pdf/terms/臺銀人壽外幣投資標的批註條款-0G_c.pdf" width="100%" height="100%"></iframe>           
+					<!--	<iframe src="./pdf/terms/臺銀人壽外幣投資標的批註條款-0G_c.pdf" width="100%" height="100%"></iframe>
+                   -->
                     </div>
                 </div>
 				<div class="col-md-8 col-md-offset-2 two-buttons">
 					<a href="fund1">
 						<button id="deny" class="btn-signup">不同意</button>
 					</a>
-					<a href="javascript:void(0);" class="gorest">
+					<th:block th:if="${next == true}">
+						<a class="gorest">
 						<button id="go" class="btn-signup">同意並進行變更</button>
 					</a>
+					</th:block>
+					<th:block th:if="${next == false}">
+						<a id="gorest" style="pointer-events:none">
+							<button class="btn-signup" id="go" style="background-color: #F2F2F2;cursor:no-drop ;">同意並進行變更</button>
+						</a>
+					</th:block>
 				</div>
 <!--				<input type="hidden" id="policyNo" name="policyNo" th:value="${claimVo.policyNo}"/>-->
 			</div>

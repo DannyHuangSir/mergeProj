@@ -73,6 +73,8 @@ public class PolicyListVo extends PolicyVo {
 
 	private String lipiRocId;
 
+	private String lipmFlexRcpMk = "N";
+
 	public String getCustomerNameBase64() {
 		return customerNameBase64;
 	}
@@ -265,6 +267,14 @@ public class PolicyListVo extends PolicyVo {
 
 	public void setLipiRocId(String lipiRocId) {
 		this.lipiRocId = lipiRocId;
+	}
+
+	public String getLipmFlexRcpMk() {
+		return lipmFlexRcpMk;
+	}
+
+	public void setLipmFlexRcpMk(String lipmFlexRcpMk) {
+		this.lipmFlexRcpMk = lipmFlexRcpMk;
 	}
 
 	@Override
