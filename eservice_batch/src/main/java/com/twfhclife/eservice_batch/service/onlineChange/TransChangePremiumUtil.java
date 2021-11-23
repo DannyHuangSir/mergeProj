@@ -1,10 +1,8 @@
 package com.twfhclife.eservice_batch.service.onlineChange;
 
-import com.twfhclife.eservice_batch.dao.TransCashPaymentDao;
 import com.twfhclife.eservice_batch.dao.TransChangePremiumDao;
 import com.twfhclife.eservice_batch.dao.TransDao;
 import com.twfhclife.eservice_batch.dao.TransPolicyDao;
-import com.twfhclife.eservice_batch.model.TransCashPaymentVo;
 import com.twfhclife.eservice_batch.model.TransChangePremiumVo;
 import com.twfhclife.eservice_batch.model.TransPolicyVo;
 import com.twfhclife.eservice_batch.model.TransVo;
