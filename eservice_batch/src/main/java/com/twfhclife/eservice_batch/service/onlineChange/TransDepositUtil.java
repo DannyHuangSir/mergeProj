@@ -77,8 +77,8 @@ public class TransDepositUtil {
                                             systemTwDate,
                                             systemTwDate,
                                         StringUtil.rpadBlank(vo.getAccountName(), 20),
-                                        StringUtil.rpadBlank(vo.getBankName(), 10),
-                                        StringUtil.rpadBlank(vo.getBranchName(), 10),
+                                            StringUtil.newRpadBlank(vo.getBankName(), 10),
+                                            StringUtil.newRpadBlank(vo.getBranchName(), 10),
                                         StringUtil.rpadBlank(vo.getBankCode(), 3),
                                         StringUtil.rpadBlank(vo.getBranchCode(), 4),
                                         StringUtil.rpadBlank(vo.getBankAccount(), 16),
@@ -89,7 +89,7 @@ public class TransDepositUtil {
                             }
                                 line.append(String.format(StringUtils.repeat("%s", 2),
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.lpad(String.valueOf(fundValue).replaceAll("\\.", ""), 18, " ")));
+                                        StringUtil.lpad(String.valueOf(fundValue.intValue()), 18, " ")));
                             }
                             txtSb.append(String.format(StringUtils.repeat("%s", 1),
                                     StringUtil.rpadBlank(line.toString(), 3 + 12 + 10 + 20 + 10 + 10 + 3 + 4 + 16 + 16 + 60 + 7 + 7 + 28 * 10)));

@@ -38,6 +38,57 @@ public class StringUtil {
 		return fillString(str, "R", realPadLen, addStr);
 	}
 
+	/***
+	 * modify: 2021/11/23 xianzhi
+	 * 新rpad方法，修復漢字截取長度問題，
+	 * addStr 不能爲漢字，否則長度計算會出錯
+	 * @param str
+	 * @param len
+	 * @return
+	 */
+	public static String newRpadBlank(String str, int len) {
+		if (str == null) {
+			str = "";
+		}
+		return newRpad(str, len, " ");
+	}
+
+	public static String newRpad(String str, int len, String addStr) {
+		int wordLen = countDobuleSize(str);
+		int addrLen = str.length();
+		if (wordLen > addrLen) {
+			return getNewRpadLen(str, len, addStr);
+		}
+		return fillString(str, "R", len, addStr);
+	}
+
+	private static String getNewRpadLen(String str, int len, String addStr) {
+		StringBuilder resultStr = new StringBuilder();
+		for (int i = 0; i < str.length(); i++) {
+			String strTmp = str.substring(i, i + 1);
+			if (strTmp.matches("[^\\x00-\\xff]")) {
+				len--;
+			}
+			len--;
+			if (len > 0) {
+				resultStr.append(strTmp);
+			}
+			if (len == 0) {
+				resultStr.append(strTmp);
+				break;
+			}
+			if (len < 0) {
+				resultStr.append(addStr);
+				break;
+			}
+		}
+		while (len > 0) {
+			len--;
+			resultStr.append(addStr);
+		}
+		return resultStr.toString();
+	}
+
 	public static String fillString(String str, String position, int len,
 			String addStr) {
 		if (addStr == null || addStr.length() == 0) {
