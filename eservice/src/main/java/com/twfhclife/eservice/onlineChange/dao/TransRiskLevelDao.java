@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -43,4 +44,6 @@ public interface TransRiskLevelDao {
 	 * @return
 	 */
     String getRiskAttr(@Param("rocId") String rocId);
+
+    Date getRecentApplyTime(@Param("userId") String userId);
 }

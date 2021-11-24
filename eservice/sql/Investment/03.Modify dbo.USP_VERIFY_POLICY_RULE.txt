@@ -1,3 +1,25 @@
 1.詳情請見Installation Guide
 於PAYMODE段落的WHERE條件，添加
-AND PROVD_PROD_NO NOT IN (‘US’,’UU’)
+AND PROVD_PROD_NO NOT IN ('US','UU')
+
+結果應似如下
+SELECT TOP 1 @v_prdv_database_no = SUBSTRING(PRVD_DATABASE_NO,8,1)
+FROM LIPRVD_ES
+WHERE prvd_prod_no = SUBSTRING(@policy_no_in,1,2) AND PROVD_PROD_NO NOT IN ('US','UU')
+ORDER BY prvd_version DESC
+
+2.
+於PAYMODE段落最下方的IF段落內
+IF (@v_lipm_rcp_code = N'M' AND @v_lipi_prem_year * 12 <= @v_lipi_tred_rcp_tms +2)
+BEGIN
+		SET @result_out = N'N'
+END
+
+添加
+@v_prod_type != N'US' AND @v_prod_type != N'UU' AND
+
+結果應為:
+IF (@v_prod_type != N'US' AND @v_prod_type != N'UU' AND @v_lipm_rcp_code = N'M' AND @v_lipi_prem_year * 12 <= @v_lipi_tred_rcp_tms +2)
+BEGIN
+		SET @result_out = N'N'
+END

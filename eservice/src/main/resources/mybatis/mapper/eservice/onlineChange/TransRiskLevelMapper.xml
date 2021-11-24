@@ -70,4 +70,9 @@
 		SELECT top 1 RISK_ATTR FROM ESERVICE.DBO.INDIVIDUAL WHERE ROC_ID = #{rocId}
 	</select><!-- test data has multiple record by same ROC_ID -->
 
+	<select id="getRecentApplyTime" resultType="java.util.Date">
+		SELECT TOP 1 CREATE_DATE FROM TRANS T WHERE TRANS_TYPE = 'RISK_LEVEL'
+		AND USER_ID = #{userId} AND STATUS = '2' ORDER BY CREATE_DATE DESC
+	</select>
+
 </mapper>

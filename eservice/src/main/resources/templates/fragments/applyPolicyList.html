@@ -553,7 +553,7 @@
 						<th:block th:if="${vo.paymentMode != null and vo.paymentMode == 'A' and vo.lipmFlexRcpMk == 'Y'}">
 							彈性繳
 						</th:block>
-						<th:block th:if="${vo.lipmFlexRcpMk != 'Y'}">
+						<th:block th:if="${vo.paymentMode != null and (vo.paymentMode != 'A' or vo.lipmFlexRcpMk != 'Y')}">
 							<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
 							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
 						</th:block>

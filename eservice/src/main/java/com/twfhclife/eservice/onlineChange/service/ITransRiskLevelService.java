@@ -51,4 +51,6 @@ public interface ITransRiskLevelService {
 	public String getUserRiskAttr(String rocId);
 
 	String computeRiskLevel(Integer score);
+
+	boolean checkRiskLevelExpire(String userRocId);
 }

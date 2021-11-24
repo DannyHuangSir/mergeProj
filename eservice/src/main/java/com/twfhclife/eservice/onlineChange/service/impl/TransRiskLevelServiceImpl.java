@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -131,5 +132,21 @@ public class TransRiskLevelServiceImpl implements ITransRiskLevelService {
 		}
 		logger.warn("配置計算風險屬性評分有誤");
 		return "A";
+	}
+
+	@Override
+	public boolean checkRiskLevelExpire(String userId) {
+		Date time = transRiskLevelDao.getRecentApplyTime(userId);
+		if (time != null) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.HOUR, 0);
+			calendar.add(Calendar.YEAR, -1);
+			if (calendar.getTimeInMillis() > time.getTime()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

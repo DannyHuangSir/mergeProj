@@ -110,6 +110,12 @@ public class FundNotificationController extends BaseUserDataController {
 				return "redirect:apply1";
 			}
 
+			boolean expire = riskLevelService.checkRiskLevelExpire(getUserId());
+			if (expire) {
+				redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
+				return "redirect:apply1";
+			}
+
 			String userRocId = getUserRocId();
 			String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
 			if(StringUtils.isBlank(riskLevel)) {

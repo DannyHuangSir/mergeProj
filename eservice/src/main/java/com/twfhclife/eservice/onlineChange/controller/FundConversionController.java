@@ -116,6 +116,12 @@ public class FundConversionController extends BaseUserDataController  {
             String userRocId = getUserRocId();
             UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
 
+            boolean expire = riskLevelService.checkRiskLevelExpire(userDetail.getUserId());
+            if (expire) {
+                redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
+                return "redirect:apply1";
+            }
+
             String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
             if(StringUtils.isBlank(riskLevel)) {
                 String message = "請先變更風險屬性！";
