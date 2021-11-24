@@ -42,4 +42,6 @@ public interface UserMapper {
 	public int lockUserStatus(String userId);
 
     UserVo getMailPhoneByTransNum(@Param("transNum") String transNum);
+
+    UserVo getMailPhoneByTransMergeNum(@Param("transMergeNum") String transNum);
 }
