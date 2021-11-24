@@ -24,8 +24,14 @@ public class ProductVo implements Serializable {
 	
 	private String desiVersion;
 	
+	/**
+	 * 指定年月的開賣日
+	 */
 	private Date desiSaleDate;
 	
+	/**
+	 * 指定年月的結束販售日
+	 */
 	private Date desiChanVarDate;
 	
 	public String getProductId() {

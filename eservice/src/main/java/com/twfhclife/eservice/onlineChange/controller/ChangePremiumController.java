@@ -1,8 +1,6 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
 import com.twfhclife.eservice.onlineChange.model.TransChangePremiumVo;
-import com.twfhclife.eservice.onlineChange.model.TransDetailVo;
-import com.twfhclife.eservice.onlineChange.model.TransPaymodeVo;
 import com.twfhclife.eservice.onlineChange.service.ITransChangePremiumService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransPaymodeService;
@@ -23,7 +21,6 @@ import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.TransAddClient;
 import com.twfhclife.generic.api_client.TransHistoryDetailClient;
-import com.twfhclife.generic.api_model.TransHistoryDetailResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
@@ -169,8 +166,6 @@ public class ChangePremiumController extends BaseUserDataController  {
             String value = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CHANGE_PREMIUM_" + type + "_MIN");
             if (StringUtils.isNotBlank(value)) {
                 addAttribute("minValue", value);
-            } else {
-                addAttribute("minValue", Integer.MAX_VALUE);
             }
         } catch (Exception e) {
             logger.error("Unable to init from changePremium2: {}", ExceptionUtils.getStackTrace(e));
