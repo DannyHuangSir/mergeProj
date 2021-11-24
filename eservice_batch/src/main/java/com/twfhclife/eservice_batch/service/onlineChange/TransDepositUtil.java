@@ -89,7 +89,7 @@ public class TransDepositUtil {
                             }
                                 line.append(String.format(StringUtils.repeat("%s", 2),
                                         StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.lpad(String.valueOf(fundValue.intValue()), 18, " ")));
+                                        StringUtil.lpad(String.valueOf(fundValue.intValue()), 14, " ")) + "0000");
                             }
                             txtSb.append(String.format(StringUtils.repeat("%s", 1),
                                     StringUtil.rpadBlank(line.toString(), 3 + 12 + 10 + 20 + 10 + 10 + 3 + 4 + 16 + 16 + 60 + 7 + 7 + 28 * 10)));
