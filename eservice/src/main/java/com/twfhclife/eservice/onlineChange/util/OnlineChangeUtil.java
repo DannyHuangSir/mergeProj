@@ -227,4 +227,13 @@ public interface OnlineChangeUtil {
 	public static final String DEPOSIT_US_STOP_ACCOUNT = "DEPOSIT_US_STOP_ACCOUNT";
 	/**投資標商品顯示賬戶*/
 	public static final String SHOW_ACCOUNT_INVT_NOS="SHOW_ACCOUNT_INVT_NOS";
+
+	public static final String ATTRIBUTE_REMARK1 = "ATTRIBUTE_REMARK1";
+	public static final String ATTRIBUTE_SUCCESS1 = "ATTRIBUTE_SUCCESS1";
+
+	public static final String CASH_PAYMENT_REMARK1 = "CASH_PAYMENT_REMARK1";
+	public static final String CASH_PAYMENT_SUCCESS1 = "CASH_PAYMENT_SUCCESS1";
+
+	public static final String CHANGE_PREMIUM_REMARK1 = "CHANGE_PREMIUM_REMARK1";
+	public static final String CHANGE_PREMIUM_SUCCESS1 = "CHANGE_PREMIUM_SUCCESS1";
 }

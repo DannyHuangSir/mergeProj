@@ -41,7 +41,7 @@
 				<div class="activated">
 					<figure><img src="img/check1.png" alt="check"/></figure>
 					<h2>申請成功！</h2>
-					<p>您的變更風險屬性已申請成功，約需要5個工作天。<br/>可由上方的申請通知，或至我的申請記錄隨時掌握最新狀況。</p>					
+					<p id="remark">您的變更風險屬性已申請成功，約需要2個工作天。<br/>可由上方的申請通知，或至我的申請記錄隨時掌握最新狀況。</p>
 				</div>
 			</div>
 			<div class="mystyle3">
@@ -63,6 +63,12 @@
 	<script th:inline="javascript">
 	/*<![CDATA[*/
 		var formData = /*[[${claimVo}]]*/;
+		$(function() {
+			var transformationRemark = /*[[${transformationRemark}]]*/;
+			if (transformationRemark!= undefined && transformationRemark != null && transformationRemark != ''){
+				$("#remark").html(transformationRemark);
+			}
+		});
 	/*]]>*/
 	</script>
 </body>

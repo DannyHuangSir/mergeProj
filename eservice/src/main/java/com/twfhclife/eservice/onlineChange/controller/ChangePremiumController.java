@@ -171,6 +171,11 @@ public class ChangePremiumController extends BaseUserDataController  {
             logger.error("Unable to init from changePremium2: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
         }
+        String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
+                ApConstants.SYSTEM_ID, OnlineChangeUtil.CHANGE_PREMIUM_REMARK1);
+        if (parameterValueByCodeConsent != null) {
+            addAttribute("transformationRemark", parameterValueByCodeConsent);
+        }
         return "frontstage/onlineChange/changePremium/changePremium2";
     }
 
@@ -220,6 +225,11 @@ public class ChangePremiumController extends BaseUserDataController  {
         } catch (Exception e) {
             logger.error(e);
             return "forward:changePremium3";
+        }
+        String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
+                ApConstants.SYSTEM_ID, OnlineChangeUtil.CHANGE_PREMIUM_SUCCESS1);
+        if (parameterValueByCodeConsent != null) {
+            addAttribute("transformationRemark", parameterValueByCodeConsent);
         }
         return "frontstage/onlineChange/changePremium/changePremium-success";
     }

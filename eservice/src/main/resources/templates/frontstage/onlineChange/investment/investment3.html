@@ -176,6 +176,7 @@
 	/*<![CDATA[*/
 		var percent = 0
 		var showAccountInvts = [[${showAccountInvts}]]
+		var currencyAccount = ''
 		function addInvestment(){
 			if ($('#fundContent').children().length >= [[${INVESTMENT_LIMIT}]]) {
 				openAlert('分配的標的設定為最多[[${INVESTMENT_LIMIT}]]個!')
@@ -388,6 +389,13 @@
 
 			});
 
+			$([[${configs}]]).each(function(index, e){
+			   policyType = /*[[${policyType}]]*/
+			   if (e.parameterCode == 'DEPOSIT_' + policyType + '_' + "CURRENCY_ACCOUNT") {
+					currencyAccount = e.parameterValue
+			   }
+			})
+
 			//搜索选项
 			initSearchItems()
 			//根据保单号，持有基金查询可转入基金
@@ -567,7 +575,11 @@
 				let selectCurrency = $(vm).find("[name='currencysItem'] option:selected").val()
 				return selectCurrency == 'ALL' || e.invtExchCurr == selectCurrency
 			}
-        )
+        ).filter(
+			function(index, e) {
+				return currencyAccount.indexOf(e.invtNo) < 0
+			}
+		)
 
 		let html = ''
 		var isFirst = true

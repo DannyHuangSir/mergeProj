@@ -186,12 +186,14 @@ public class PayModeController extends BaseUserDataController {
 	}
 
 	private boolean checkShowAmount(TransPaymodeVo transPaymodeVo) {
-		String INVESTMENT_TYPES = parameterService.getParameterValueByCode("eservice", "INVESTMENT_TYPE");
+		//目前暫時關閉顯示 2021/11/25 xianzhi
+		return false;
+		/*String INVESTMENT_TYPES = parameterService.getParameterValueByCode("eservice", "INVESTMENT_TYPE");
 		if (StringUtils.isNotBlank(INVESTMENT_TYPES) && INVESTMENT_TYPES.contains(transPaymodeVo.getPolicyNoList().get(0).substring(0,2))) {
 			return true;
 		} else {
 			return false;
-		}
+		}*/
 	}
 
 	/**

@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.onlineChange.model.TransDepositVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.ITransDepositService;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
@@ -73,6 +74,9 @@ public class TransInvestmentController extends BaseUserDataController  {
 
     @Autowired
     private MessageTemplateClient messageTemplateClient;
+
+    @Autowired
+    private ITransDepositService transDepositService;
 
     @RequestLog
     @GetMapping("/investment1")
@@ -167,7 +171,10 @@ public class TransInvestmentController extends BaseUserDataController  {
         String riskLevel = riskLevelService.getUserRiskAttr(user.getRocId());
         addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));
         //查询已有投资标
+        String policyType = transInvestmentVo.getPolicyNo().substring(0, 2);
+        addAttribute("policyType", policyType);
         List<InvestmentPortfolioVo> investments = transInvestmentService.getOwnInvestment(transInvestmentVo.getPolicyNo());
+        addAttribute("configs", transDepositService.getDepositConfigs());
         addAttribute("investments", investments);
         return "frontstage/onlineChange/investment/investment3";
     }

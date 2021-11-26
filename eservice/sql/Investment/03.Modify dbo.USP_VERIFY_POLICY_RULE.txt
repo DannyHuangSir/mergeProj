@@ -8,7 +8,27 @@ FROM LIPRVD_ES
 WHERE prvd_prod_no = SUBSTRING(@policy_no_in,1,2) AND PROVD_PROD_NO NOT IN ('US','UU')
 ORDER BY prvd_version DESC
 
-2.
+
+2.於PAYMODE段落註釋後新壹行
+/*
+    8.下列條件不允許辦理變更繳別(繳別係數M=12、Q=3、S=2、A=1)
+    (1).年繳:DS22繳別=A，DS23繳費年期*1(繳別係數)=已繳期數
+    (2).半年繳:DS22繳別=S，DS23繳費年期*2(繳別係數)=已繳期數
+    (3).季繳:DS22繳別=Q，DS23繳費年期*3(繳別係數)=已繳期數
+    (4).月繳:DS22繳別=M，DS23繳費年期*12(繳別係數)+2≧已繳期數
+*/
+
+/*
+modify for SR investment-start
+*/
+declare @policy_type NVARCHAR(2)
+SET @policy_type = SUBSTRING(@policy_no_in,1,2)
+print 'policy_type = ' + @policy_type
+/*
+modify for SR investment-end
+*/
+
+3.
 於PAYMODE段落最下方的IF段落內
 IF (@v_lipm_rcp_code = N'M' AND @v_lipi_prem_year * 12 <= @v_lipi_tred_rcp_tms +2)
 BEGIN
@@ -16,10 +36,10 @@ BEGIN
 END
 
 添加
-@v_prod_type != N'US' AND @v_prod_type != N'UU' AND
+@policy_type != N'US' AND @policy_type != N'UU' AND
 
 結果應為:
-IF (@v_prod_type != N'US' AND @v_prod_type != N'UU' AND @v_lipm_rcp_code = N'M' AND @v_lipi_prem_year * 12 <= @v_lipi_tred_rcp_tms +2)
+IF (@policy_type != N'US' AND @policy_type != N'UU' AND  @v_lipm_rcp_code = N'M' AND @v_lipi_prem_year * 12 <= @v_lipi_tred_rcp_tms + 2)
 BEGIN
 		SET @result_out = N'N'
 END

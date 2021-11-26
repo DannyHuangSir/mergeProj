@@ -61,14 +61,14 @@
 					</span></label>
 					<label class="col-sm-10 col-sm-offset-2 enNormal">繳費年限： <span class="colorBlack"><th:block th:text="${transPaymodeVo.premYear}"/></span></label>
 					<label class="col-sm-10 col-sm-offset-2 enNormal">繳別： <span class="colorBlack"><th:block th:text="${session.SYSTEM_PARAMETER['PAYMODE_TYPE'].get(transPaymodeVo.paymodeOld).parameterValue}"/></span></label>
-					<label class="col-sm-10 col-sm-offset-2" style="color: #009b30;font-size: 16px;line-height: 20px;">(變更前)定期繳費： <span class="colorBlack">
+					<label class="col-sm-10 col-sm-offset-2" style="color: #009b30;font-size: 16px;line-height: 20px;">(變更前)定期超額保費： <span class="colorBlack">
 						<th:block th:text="${transPaymodeVo.oldAmount != null} ? ${#numbers.formatDecimal(transPaymodeVo.oldAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
 					</span></label>
 					
 					
 					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
 						<div class="col-sm-12 mode2select marginTop20">
-						  <label for="" class="col-sm-12 text-center" style="font-size: 20px; color: #009b30;">(變更後)定期繳費：<th:block th:text="${transPaymodeVo.amount != null}
+						  <label for="" class="col-sm-12 text-center" style="font-size: 20px; color: #009b30;">(變更後)定期超額保費：<th:block th:text="${transPaymodeVo.amount != null}
 							? ${#numbers.formatDecimal(transPaymodeVo.amount, 0, 'DEFAULT', 0, 'COMMA')}"/></label>
 						</div>
 					</div>

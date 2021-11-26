@@ -133,11 +133,7 @@
 					</div>
 					<div class="statement1 wht col-sm-8 col-sm-offset-2">
 						<p class="text-ps">備註：</p>
-						<ol class="text-ps">
-							<li>此為預約受理，並非立即生效，須待次一營業日生效，如遇保單撥回基準日則順延生效</li>
-							<li>如欲取消申請或變更撥回方式請於營業日下午3:00前提出申請。</li>
-							<li>您可至『我的申請紀錄』中查詢受理進度。</li>
-						</ol>
+						<ol class="text-ps" id="remark"></ol>
 					</div>
                 </div>
 				<div class="col-md-8 col-md-offset-2 two-buttons">
@@ -209,6 +205,11 @@
 			var bankUrl = /*[[@{/getBankList}]]*/;
 			var branchesUrl = /*[[@{/getBranchesList}]]*/;
 			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+
+			var transformationRemark = /*[[${transformationRemark}]]*/;
+			if (transformationRemark!= undefined && transformationRemark != null && transformationRemark != ''){
+				$("#remark").html(transformationRemark);
+			}
 	    });
 
 	    function allocation(){

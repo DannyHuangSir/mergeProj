@@ -41,9 +41,8 @@
 				<div class="activated">
 					<figure><img src="img/check1.png" alt="check"/></figure>
 					<h2>申請成功！</h2>
-					<p>系統將於每日下午3:00處理您送出的申請。<br>
-                    您可隨時至「我的申請紀錄」掌握最新處理進度。<br>
-                    本項交易確認完成后，將寄發確認信函至您指定的E-mail信箱</p>					
+					<p id="remark">
+					</p>
 				</div>
 			</div>
 			<div class="mystyle3">
@@ -64,7 +63,12 @@
 	<th:block th:replace="fragments/script"/>
 	<script th:inline="javascript">
 	/*<![CDATA[*/
-		var formData = /*[[${claimVo}]]*/;
+		$(function() {
+			var transformationRemark = /*[[${transformationRemark}]]*/;
+			if (transformationRemark!= undefined && transformationRemark != null && transformationRemark != ''){
+				$("#remark").html(transformationRemark);
+			}
+	    });
 	/*]]>*/
 	</script>
 </body>

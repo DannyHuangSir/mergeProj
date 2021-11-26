@@ -101,6 +101,11 @@ public class AttributeController extends BaseUserDataController  {
         }
         addAttribute("questions", questions);
         addAttribute("read", read);
+        String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
+                ApConstants.SYSTEM_ID, OnlineChangeUtil.ATTRIBUTE_REMARK1);
+        if (parameterValueByCodeConsent != null) {
+            addAttribute("transformationRemark", parameterValueByCodeConsent);
+        }
         return "frontstage/onlineChange/attribute/attribute1";
     }
 
@@ -186,6 +191,11 @@ public class AttributeController extends BaseUserDataController  {
                 addDefaultSystemError();
                 return "forward:attribute2";
             }
+                String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
+                        ApConstants.SYSTEM_ID, OnlineChangeUtil.ATTRIBUTE_SUCCESS1);
+                if (parameterValueByCodeConsent != null) {
+                    addAttribute("transformationRemark", parameterValueByCodeConsent);
+                }
                 return "frontstage/onlineChange/attribute/attribute-success";
             }
         } catch (Exception e) {

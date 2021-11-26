@@ -6,7 +6,7 @@ go
 		--- 已持有投資標的轉換[備註]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_TRANSFORMATION_REMARKS', N' 已持有投資標的轉換備註條款信息',
-		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
+		N'<li>未來保費投資標的申請如於當日16:00前提出並已完成申請作業則視為當日申請，逾時則視為次一工作日申請。</li>
           <li>相同標的不得同時申請投資標的部分提領及投資標的轉換。</li>
           <li>申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。</li>
           <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
@@ -27,15 +27,15 @@ go
 	--- 已持有投資標的[比例]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_TRANSFORMATION_PROPORTION', N' 已持有投資標的轉換[比例備註]條款信息',
-		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
+		N'<li>未來保費投資標的申請如於當日16:00前提出並已完成申請作業則視為當日申請，逾時則視為次一工作日申請。</li>
           <li>相同標的不得同時申請投資標的部分提領及投資標的轉換。</li>
           <li>申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。</li>
           <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
           <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
           <li>已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。</li>
           <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
-          <li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</li>
-         <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</li>
+          <li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1。</li>
+		  <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR3。</li>
           <li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_TRANSFORMATION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
@@ -48,7 +48,7 @@ go
 		---未來保費投資標的與分配比例[備註]條款
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_REMARKS', N' 未來保費投資標的與分配比例備註條款信息',
-		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li> <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li> <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li> <li>若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li> <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投 資標的申請之依據。</li> <li>如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。 您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能 面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損 之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收 益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金 的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美 國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高 波動性之風險</li>',
+		N'<li>未來保費投資標的申請如於當日16:00前提出並已完成申請作業則視為當日申請，逾時則視為次一工作日申請。</li> <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li> <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li> <li>若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li> <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投 資標的申請之依據。</li> <li>如新約定投資標的非屬保守型，且距前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。 您於指定投資標的前，應充分瞭解下列以投資高收益債券為訴求之基金之特有風險：(1)信用風險：由於高收益債券之信用評等未達投資等級或未經信用評等，可能 面臨債券發行機構違約不支付本金、利息或破產之風險。(2)利率風險：由於債券易受利率之變動而影響其價格，故可能因利率上升導致債券價格下跌，而蒙受虧損 之風險，高收益債亦然。(3)流動性風險：高收益債券可能因市場交易不活絡而造成流動性下降，而有無法在短期內依合理價格出售的風險。(4)如要保人指定以高收 益債券為訴求之基金為投資標的者，不宜占其投資組合過高之比重，且不適合無法承擔相關風險之要保人。(5)若高收益債券基金為配息型，基金的配息可能由基金 的收益或本金中支付。任何涉及由本金支出的部分，可能導致原始投資金額減損。部分基金進行配息前未先扣除行政管理相關費用。(6)高收益債券基金可能投資美國144A債券（境內基金投資比例最高可達基金總資產30%；境外基金不限），該債券屬私募性質，易發生流動性不足，財務訊息揭露不完整或價格不透明導致高波動性之風險。</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
@@ -96,7 +96,7 @@ go
 		---未來保費投資標的與分配比例[備註]
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'INVESTMENT_DISTRIBUTION_REMARK1', N' 未來保費投資標的與分配比例備註',
-		N'<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li> <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li> <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li> <li>若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li> <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li> <li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</li> <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</li> <li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li>',
+		N'<li>未來保費投資標的申請如於當日16:00前提出並已完成申請作業則視為當日申請，逾時則視為次一工作日申請。</li> <li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li> <li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li> <li>若尚有未投資淨保險費時，保費投資標的種類及比例變更經本公司受理後即進入投資標的交易作業流程，故本公司受理後即不再接受撤銷或中途變更。</li> <li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li> <li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1。</li> <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR3。</li> <li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li>',
 		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_DISTRIBUTION'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 
@@ -764,12 +764,6 @@ INSERT ESERVICE_ADM.dbo.PARAMETER_CATEGORY (PARAMETER_CATEGORY_ID, SYSTEM_ID, CA
 VALUES ((select max(PARAMETER_CATEGORY_ID)+1 from ESERVICE_ADM.dbo.PARAMETER_CATEGORY), 'eservice', 'CHANGE_PREMIUM_INVESTMENT', N'定期超額保費-投資型保單類型', 1, getdate(), 'admin')
 go
 
-INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
-VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CHANGE_PREMIUM_UU_MIN', N'UU_MIN_VALUE',
-		N'200',
-		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='CHANGE_PREMIUM_INVESTMENT'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
-go
-
 INSERT ESERVICE_ADM.dbo.PARAMETER_CATEGORY (PARAMETER_CATEGORY_ID, SYSTEM_ID, CATEGORY_CODE, CATEGORY_NAME, STATUS, CREATE_DATE, CREATE_USER)
 VALUES ((select max(PARAMETER_CATEGORY_ID)+1 from ESERVICE_ADM.dbo.PARAMETER_CATEGORY), 'eservice', 'SHOW_ACCOUNT_INVT_NOS', N'投資標商品顯示帳戶', 1, getdate(), 'admin')
 go
@@ -790,12 +784,9 @@ go
 --申請成功畫面文案
 --FUND_CONVERSION
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
-VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'WORDING_FUND_CONVERSION_02603', N'已持有投資標的轉換-申請成功', N'<p>系統將於每日下午4:00處理您送出的申請。<br />「已持有投資標的轉換」約需1個工作天進行作業，您可隨時至「我的申請紀錄」掌握最新處理進度。</p>', (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='PAGE_WORDING'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL);
---INVESTMENT
-INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
-VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'WORDING_INVESTMENT_02603', N'未來保費投資標的與分配比例-申請成功', N'<p>系統將於每日下午4:00處理您送出的申請。<br />「未來保費投資標的與分配比例」約需1個工作天進行作業，您可隨時至「我的申請紀錄」掌握最新處理進度。</p>', (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='PAGE_WORDING'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL);
-GO
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'WORDING_FUND_CONVERSION_02603', N'已持有投資標的轉換-申請成功', N'<p>系統將於每日下午4:00處理您送出的申請。<br />「已持有投資標的轉換」需依照保險契約資產評價日工作天進行作業，<br /> 您可隨時至「我的申請紀錄」掌握最新處理進度。</p>', (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='PAGE_WORDING'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL);
 
+--INVESTMENT
 INSERT ESERVICE_ADM.dbo.PARAMETER
     (
 	PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER
@@ -820,3 +811,65 @@ VALUES
 	)
 go
 
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CHANGE_PREMIUM_UU_MIN', N'UU_MIN_VALUE',
+		N'100',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='CHANGE_PREMIUM_INVESTMENT'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CHANGE_PREMIUM_US_MIN', N'US_MIN_VALUE',
+		N'2000',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='CHANGE_PREMIUM_INVESTMENT'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+UPDATE ESERVICE_ADM.DBO.PARAMETER SET PARAMETER_VALUE = '<p>系統將於每日下午4:00處理您送出的申請。超過4點之申請案件將於下1個工作日處理</br> 繳別變更約需3個工作天進行作業，您可隨時至「我的申請紀錄」掌握最新處理進度。</br> (投資型保單繳別變更為預約受理，並非立即生效，須待次一保單保費應繳日生效)</p>' WHERE PARAMETER_CODE = 'WORDING_00103'
+
+UPDATE ESERVICE_ADM.DBO.PARAMETER SET PARAMETER_VALUE = '可設定投資標的追蹤通知' WHERE PARAMETER_CODE = 'WORDING_INVESTMENT_007'
+
+UPDATE ESERVICE_ADM.DBO.PARAMETER SET PARAMETER_VALUE = '<li>本服務僅為提供通知服務，如需做其他保單變更服務，須另外申請變更。</li> <li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1。</li> <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR3。</li> <li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li> <li>為確保保險商品符合您的投資能力及風險性，投資風險屬性若有變更，本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。</li>' WHERE PARAMETER_CODE = 'NOTIFICATION_REMARK1'
+
+INSERT ESERVICE_ADM.dbo.PARAMETER_CATEGORY (PARAMETER_CATEGORY_ID, SYSTEM_ID, CATEGORY_CODE, CATEGORY_NAME, STATUS, CREATE_DATE, CREATE_USER)
+VALUES ((select max(PARAMETER_CATEGORY_ID)+1 from ESERVICE_ADM.dbo.PARAMETER_CATEGORY), 'eservice', 'INVESTMENT_REMARKS', N'投資型商品文案', 1, getdate(), 'admin')
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'ATTRIBUTE_REMARK1', N'變更風險屬性備註',
+        N'備註：上述第5項問項得0分者，不論總分為何，均屬於「不適合購買投資型保單」。為確保保險商品符合您的投資能力及風險性，投資風險屬性若有變更，本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。',
+        (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_REMARKS'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'ATTRIBUTE_SUCCESS1', N'變更風險屬性成功',
+        N'您的變更風險屬性已申請成功，約需要2個工作天。<br/>可由上方的申請通知，或至我的申請記錄隨時掌握最新狀況。',
+        (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_REMARKS'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CHANGE_PREMIUM_REMARK1', N'定期超額保費備註',
+        N'<li>此為預約受理，並非立即生效，須待次一保單保費應繳日生效。</li> <li>如欲取消申請或變更請於營業日下午3:30前提出申請。</li> <li>新臺幣保單每次最低2,000元，美元保單每次最低100美元。</li> <li>新臺幣保單保費金額皆以千元為單位，美元保單保費金額皆以百元為單位。</li> <li>您可至『我的申請紀錄』中查詢受理進度。</li>',
+        (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_REMARKS'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CHANGE_PREMIUM_SUCCESS1', N'定期超額保費成功',
+        N'您的定期超額保費已申請成功，此為預約受理，並非立即生效，須待次一保單保費應繳日生效。<br/>可由上方的申請通知，或至我的申請記錄隨時掌握最新狀況。',
+        (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_REMARKS'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CASH_PAYMENT_REMARK1', N'收益分配或撥回資產分配方式備註',
+        N'<li>此為預約受理，並非立即生效，須待次一營業日生效，如遇保單撥回基準日則順延生效。</li> <li>如欲取消申請或變更撥回方式請於營業日下午3:30前提出申請。</li> <li>您可至『我的申請紀錄』中查詢受理進度。</li>',
+        (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_REMARKS'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CASH_PAYMENT_SUCCESS1', N'收益分配或撥回資產分配方式成功',
+        N'系統將於每日下午3:30處理您送出的申請。<br/> 此為預約受理，並非立即生效，須待次一營業日生效，如遇保單撥回基準日則順延生效。<br/> 您可隨時至「我的申請紀錄」掌握最新處理進度。<br/> 本項交易確認完成後，將寄發確認信函至您指定的E-mail信箱',
+        (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_REMARKS'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'WORDING_INVESTMENT_02603', N' 已持有投資標的轉換成功',
+		N'系統將於每日下午4:00處理您送出的申請。<br/> 「未來保費投資標的與分配比例」約需1個工作天進行作業，<br/> 您可隨時至「我的申請紀錄」掌握最新處理進度。',
+		(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='PAGE_WORDING'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
+go

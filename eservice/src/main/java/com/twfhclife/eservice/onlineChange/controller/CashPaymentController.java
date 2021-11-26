@@ -1,8 +1,6 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
 import com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo;
-import com.twfhclife.eservice.onlineChange.model.TransDepositVo;
-import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.onlineChange.service.ITransCashPaymentService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
@@ -23,7 +21,6 @@ import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
-import com.twfhclife.generic.util.StatuCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -100,9 +97,9 @@ public class CashPaymentController extends BaseUserDataController {
                 transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
                 for (PolicyListVo vo : handledPolicyList) {
                     if (!StringUtils.equals(vo.getApplyLockedFlag(), "Y")) {
-                        if (!StringUtils.equals("M", vo.getPaymentMode())) {
+                        if (!StringUtils.equals("M", vo.getPaymentMode()) && !StringUtils.equals("A", vo.getPaymentMode())) {
                             vo.setApplyLockedFlag("Y");
-                            vo.setApplyLockedMsg("僅月繳保單可以做收益分配或撥回資產分配方式");
+                            vo.setApplyLockedMsg("僅月繳、年繳保單可以做收益分配或撥回資產分配方式");
                             continue;
                         }
                     }
@@ -122,6 +119,11 @@ public class CashPaymentController extends BaseUserDataController {
         addAttribute("proposer", getProposerName());
         addAttribute("transCashPaymentVo", vo);
         addAttribute("preAllocation", transCashPaymentService.getPreAllocation(vo.getPolicyNo()));
+        String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
+                ApConstants.SYSTEM_ID, OnlineChangeUtil.CASH_PAYMENT_REMARK1);
+        if (parameterValueByCodeConsent != null) {
+            addAttribute("transformationRemark", parameterValueByCodeConsent);
+        }
         return "frontstage/onlineChange/cashPayment/cashPayment2";
     }
 
@@ -172,6 +174,11 @@ public class CashPaymentController extends BaseUserDataController {
         } catch (Exception e) {
             logger.error(e);
             return "forward:cashPayment3";
+        }
+        String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
+                ApConstants.SYSTEM_ID, OnlineChangeUtil.CASH_PAYMENT_SUCCESS1);
+        if (parameterValueByCodeConsent != null) {
+            addAttribute("transformationRemark", parameterValueByCodeConsent);
         }
         return "frontstage/onlineChange/cashPayment/cashPayment-success";
     }

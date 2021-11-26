@@ -16,14 +16,14 @@
 	<select id="getActiveDate" resultType="java.util.Date">
 		SELECT
 		CASE
-			WHEN PAYMENT_MODE = 'A' THEN DATEADD(month, 12, EFFECTIVE_DATE)
-			WHEN PAYMENT_MODE = 'S' THEN DATEADD(month, 6, EFFECTIVE_DATE)
-			WHEN PAYMENT_MODE = 'Q' THEN DATEADD(month, 3, EFFECTIVE_DATE)
-			WHEN PAYMENT_MODE = 'M' THEN DATEADD(month, 1, EFFECTIVE_DATE)
+			WHEN LIPM_RCP_CODE = 'A' THEN DATEADD(month, 12, LIPM_TRED_PAAB_DATE)
+			WHEN LIPM_RCP_CODE = 'S' THEN DATEADD(month, 6, LIPM_TRED_PAAB_DATE)
+			WHEN LIPM_RCP_CODE = 'Q' THEN DATEADD(month, 3, LIPM_TRED_PAAB_DATE)
+			WHEN LIPM_RCP_CODE = 'M' THEN DATEADD(month, 1, LIPM_TRED_PAAB_DATE)
 		END activeDate
 		FROM
-		ESERVICE.DBO.POLICY
-		WHERE POLICY_NO = #{policyNo}
+		ESERVICE.DBO.LILIPM_ES
+		WHERE LIPM_INSU_TYPE + cast(LIPM_INSU_GRP_NO as NVARCHAR(1)) + LIPM_INSU_SEQ_NO = #{policyNo}
 	</select>
 
 	<insert id="insert" parameterType="com.twfhclife.eservice.onlineChange.model.TransChangePremiumVo" >

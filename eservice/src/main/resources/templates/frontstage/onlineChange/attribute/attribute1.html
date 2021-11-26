@@ -87,7 +87,7 @@
 					  <div class="clearfix"></div>
 					</div>
 					<div class="statement1 wht">
-					  <p class="text-ps">備註：上述第5項問項得0分者，不論總分為何，均屬於「不適合購買投資型保單」。</p>
+					  <p class="text-ps" id="remark"></p>
 					  <div>
 						  <th:block th:if="${read}">
 							  <input style="float:left;" checked type="checkbox" id="readCheck"/><p>本人已詳細閱讀本文件內容，並確認本文件資料皆由本人親自填寫及勾選。</p>
@@ -134,6 +134,10 @@
 		$("body [name='itemText']").on('click', function() {
 			$(this).prev().click()
 		})
+		var transformationRemark = /*[[${transformationRemark}]]*/;
+		if (transformationRemark!= undefined && transformationRemark != null && transformationRemark != ''){
+			$("#remark").html(transformationRemark);
+		}
 	});
 	/*]]>*/
 	</script>
