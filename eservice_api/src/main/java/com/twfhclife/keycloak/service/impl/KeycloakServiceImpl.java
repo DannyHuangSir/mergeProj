@@ -24,7 +24,9 @@ import org.springframework.stereotype.Component;
 import com.twfhclife.common.util.EncryptionUtil;
 import com.twfhclife.generic.dao.AuthoDao;
 import com.twfhclife.generic.dao.adm.UsersDao;
+import com.twfhclife.generic.dao.KeycloakUserDao;
 import com.twfhclife.generic.domain.KeycloakLoginResponse;
+import com.twfhclife.generic.domain.KeycloakLoginResponseByEIN;
 import com.twfhclife.generic.model.KeycloakUser;
 import com.twfhclife.generic.model.KeycloakUserSession;
 import com.twfhclife.generic.model.UserVo;
@@ -33,6 +35,7 @@ import com.twfhclife.generic.utils.KeycloakUtil;
 import com.twfhclife.generic.utils.MyStringUtil;
 import com.twfhclife.keycloak.service.AbstractKeycloakService;
 import com.twfhclife.keycloak.service.KeycloakService;
+
 
 @Component
 public class KeycloakServiceImpl extends AbstractKeycloakService implements KeycloakService {
@@ -56,6 +59,9 @@ public class KeycloakServiceImpl extends AbstractKeycloakService implements Keyc
 	@Autowired
 	KeycloakUtil kutil;
 	
+	@Autowired
+	private KeycloakUserDao KeycloakUserDao;
+
 	/**
 	 * 登入.
 	 * 
@@ -113,6 +119,67 @@ public class KeycloakServiceImpl extends AbstractKeycloakService implements Keyc
 		return loginResponse;
 	}
 	
+	/**20211013 by 203999 */
+	@Override
+	public KeycloakLoginResponseByEIN loginByEIN(String username, String password, String realm, String clientId) {
+		KeycloakLoginResponseByEIN loginResponse = new KeycloakLoginResponseByEIN();
+		try {
+			String accessToken = "";
+			String refreshToken = "";
+			Keycloak keycloakClient = getKeycloakClient(realm, clientId, username, password);
+			AccessTokenResponse accessTokenResponse = keycloakClient.tokenManager().getAccessToken();
+			accessToken = accessTokenResponse.getToken();
+			refreshToken = accessTokenResponse.getRefreshToken();
+			if (MyStringUtil.isNullOrEmpty(accessToken)) {
+				loginResponse.setStatus("FAIL");
+			} else {
+				loginResponse.setStatus("SUCCESS");
+			}
+			
+			loginResponse.setRocId("");
+			loginResponse.setAccessToken(accessToken);
+			loginResponse.setRefreshToken(refreshToken);
+			loginResponse.setExpiresIn(accessTokenResponse.getExpiresIn());
+			loginResponse.setRefreshExpiresIn(accessTokenResponse.getRefreshExpiresIn());
+			loginResponse.setTokenType(accessTokenResponse.getTokenType());
+			loginResponse.setSessionState(accessTokenResponse.getSessionState());
+
+			Map resultMap = kutil.validateToken(accessToken, realm);
+			String userId = MyStringUtil.objToStr(resultMap.get("userId"));
+			if(MyStringUtil.isNotNullOrEmpty(userId)) {
+				loginResponse.setUserId(userId);
+
+				UserRepresentation user = findByUsername(realm, username);
+				if (user.getAttributes() != null) {
+					user.getAttributes().forEach((k, v) -> {
+						if ("rocId".equals(k)) {
+							loginResponse.setRocId(v.get(0));
+						}
+					});
+				}
+
+			} else {
+				loginResponse.setStatus(MyStringUtil.objToStr(resultMap.get("error")));
+			}
+			
+			if(realm.equals("twfhclife")) {
+				List<UserVo> pu = new ArrayList<>();
+				pu = authoDao.getDeputyUser(userId);
+//				if(pu != null && pu.size() > 0) {
+					loginResponse.setDeputyOf(pu);
+//				}
+			}
+
+		} catch (NotAuthorizedException nae) {
+			loginResponse.setStatus("FAIL");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			loginResponse.setStatus("ERROR");
+		}
+
+		return loginResponse;
+	}
+
 	@Override
 	public KeycloakLoginResponse loginByFb(String fbId, String fbToken, String realm, String clientId) {
 		KeycloakLoginResponse loginResponse = new KeycloakLoginResponse();

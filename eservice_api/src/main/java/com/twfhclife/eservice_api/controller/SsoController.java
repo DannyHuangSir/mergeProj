@@ -25,6 +25,7 @@ import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.KeycloakLoginRequest;
 import com.twfhclife.generic.domain.KeycloakLoginResponse;
+import com.twfhclife.generic.domain.KeycloakLoginResponseByEIN;
 import com.twfhclife.generic.domain.KeycloakUserSessionRequest;
 import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.model.KeycloakUserSession;
@@ -139,6 +140,56 @@ public class SsoController extends BaseController {
 	}
 
 
+//  20211013 by 203999
+//	@ApiRequest
+//	@EventRecordLog(value = @EventRecordParam(
+//			eventCode = "AA-019", 
+//			systemEventParams = {
+//				@SystemEventParam(
+//					execMethod = "登入",
+//					execFile = "SSO"
+//				)
+//			}))
+	@PostMapping(value = "/sso/login/ein", produces = { "application/json" })
+	public ResponseEntity<?> loginByEIN(@Valid @RequestBody KeycloakLoginRequest req) {
+		ApiResponseObj<KeycloakLoginResponseByEIN> response = new ApiResponseObj<>();
+		ReturnHeader returnHeader = new ReturnHeader();
+		KeycloakLoginResponseByEIN KeycloakLoginResponseByEIN = null;
+		if (req == null) {
+			returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, "參數不可為空", "", "");
+		} else {
+			if (!"password,fb,moica,".contains(req.getGrantType() + ",")) {
+				returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, "無效的grantType", "", "");
+				response.setReturnHeader(returnHeader);
+				return ResponseEntity.status(HttpStatus.OK).body(response);
+			}
+
+			if (req.getGrantType().equals("password")) {
+				logger.info("User login by username/pwd: " + req.getUsername());
+				// 帳密登入
+				if (MyStringUtil.isNullOrEmpty(req.getUsername()) || MyStringUtil.isNullOrEmpty(req.getPassword())) {
+					returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, "帳號密碼必須輸入", "", "");
+				} else {
+					KeycloakLoginResponseByEIN = keycloakService.loginByEIN(req.getUsername(), req.getPassword(), req.getRealm(),
+							req.getClientId());
+
+					if (KeycloakLoginResponseByEIN.getStatus().equals("SUCCESS")) {
+						returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+						response.setResult(KeycloakLoginResponseByEIN);
+					} else if (KeycloakLoginResponseByEIN.getStatus().equals("FAIL")) {
+						returnHeader.setReturnHeader(ReturnHeader.FAIL_CODE, "帳號/密碼認證失敗，請確認帳號/密碼是否正確輸入", "", "");
+					} else {
+						returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, "認證系統發生錯誤，請稍後再試", "", "");
+					}
+				}
+			}
+
+		}
+
+		response.setReturnHeader(returnHeader);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
 //	@EventRecordLog(value = @EventRecordParam(
 //			eventCode = "AA-021", 
 //			systemEventParams = {

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 
 import com.twfhclife.generic.domain.KeycloakLoginResponse;
+import com.twfhclife.generic.domain.KeycloakLoginResponseByEIN;
 import com.twfhclife.generic.model.KeycloakUser;
 import com.twfhclife.generic.model.KeycloakUserSession;
 import com.twfhclife.generic.model.UsersVo;
@@ -20,6 +21,9 @@ public interface KeycloakService {
 	 * @return 回傳KeycloakLoginResponse
 	 */
 	KeycloakLoginResponse login(String username, String password, String realm, String clientId);
+
+	/**20211013 by 203999 */
+	KeycloakLoginResponseByEIN loginByEIN(String username, String password, String realm, String clientId);
 	
 	KeycloakLoginResponse loginByFb(String fbId, String fbToken, String realm, String clientId);
 	
