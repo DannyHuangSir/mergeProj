@@ -167,12 +167,14 @@ public class OnlineChangeController extends BaseController {
 			Map<String, Object> detail = onlineChangeService.getTransPaymode(transVo);
 			addAttribute("detailData", detail);
 			String INVESTMENT_TYPES = parameterService.getParameterValueByCode("eservice", "INVESTMENT_TYPE");
-			if (StringUtils.isNotBlank(INVESTMENT_TYPES) &&
+			/*if (StringUtils.isNotBlank(INVESTMENT_TYPES) &&
 					INVESTMENT_TYPES.contains(detail.get("SHOW_POLICY_NO").toString().substring(0, 2))) {
 				addAttribute("showAmount", true);
 			} else {
 				addAttribute("showAmount", false);
-			}
+			}*/
+			//目前暫時關閉顯示 2021/11/25 xianzhi
+			addAttribute("showAmount", false);
 		} catch (Exception e) {
 			logger.error("Unable to getTransPaymode: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
