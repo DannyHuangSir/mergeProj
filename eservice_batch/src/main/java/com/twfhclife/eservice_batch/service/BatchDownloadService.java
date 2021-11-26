@@ -396,7 +396,8 @@ public class BatchDownloadService {
 					req.setMessagingTemplateCode("ELIFE_MAIL-004");
 					
 					Map<String, String> paramMap = new HashMap<String, String>();
-					paramMap.put("TransNum", transNum);
+					String mailTransNum = getMailTransNum(transNum);
+					paramMap.put("TransNum", mailTransNum);
 					paramMap.put("TransStatus", successCode.indexOf(applyResult) != -1 ? "成功" : "失敗");
 					paramMap.put("TransRemark", remark);
 					req.setParameters(paramMap);
@@ -438,6 +439,11 @@ public class BatchDownloadService {
 		} catch (IOException e) {
 			logger.error("update apply result error:", e);
 		}
+	}
+
+	private String getMailTransNum(String transNum) {
+		TransDao transDao = new TransDao();
+		return transNum.indexOf("M") == -1 ? transNum : transDao.getTransNumsByMergeNum(transNum);
 	}
 
 	private List<String> getInvestCodes() {

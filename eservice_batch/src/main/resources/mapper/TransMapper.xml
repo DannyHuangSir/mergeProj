@@ -88,5 +88,8 @@
 		)
 	</insert>
 
+	<select id="getTransNumsByMergeNum" resultType="string">
+		SELECT STRING_AGG(TRANS_NUM, ',') FROM ESERVICE.DBO.TRANS_MERGE WHERE TRANS_NUM_MERGE = #{transNum}
+	</select>
 
 </mapper>

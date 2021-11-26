@@ -95,7 +95,7 @@ public class TransPaymodeUtil {
 									StringUtil.rpadBlank(transNum, 12),
 									StringUtil.rpadBlank(policyNo, 10),
 									systemTwDate,
-									activeTwDate,
+									activeDate,
 									StringUtil.rpadBlank(paymode, 1),
 									StringUtil.rpadBlank(mk, 1),
 									StringUtil.lpad(String.valueOf(amount.intValue()), 10, " ")

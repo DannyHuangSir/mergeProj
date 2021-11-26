@@ -18,4 +18,6 @@ public interface TransMapper {
 	public int updateTransMerge(@Param("transVo") TransVo transVo);
 
     int addTransStatusHistory(@Param("transStatusHistoryVo")   TransStatusHistoryVo transStatusHistoryVo);
+
+    String getTransNumsByMergeNum(@Param("transNum") String transNum);
 }

@@ -98,7 +98,7 @@ public class UserDao extends BaseDao {
 		UserVo user = null;
 		try {
 			UserMapper userMapper = this.getSqlSession().getMapper(UserMapper.class);
-			user = transNum.indexOf("M") == -1 ? userMapper.getMailPhoneByTransNum(transNum) : userMapper.getMailPhoneByTransMergeNum(transNum);
+			user = userMapper.getMailPhoneByTransNum(transNum);
 			logger.debug("transNum:{}, mail:{}, phone:{}", transNum, user.getEmail(), user.getMobile());
 		} catch (Exception e) {
 			logger.error("getMailPhoneByTransNum error:", e);

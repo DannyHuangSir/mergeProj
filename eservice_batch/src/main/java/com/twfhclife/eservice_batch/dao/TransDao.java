@@ -67,4 +67,16 @@ public class TransDao extends BaseDao {
 		}
 		return result;
 	}
+
+	public String getTransNumsByMergeNum(String transNum) {
+		try {
+			TransMapper transMapper = this.getSqlSession().getMapper(TransMapper.class);
+			return transMapper.getTransNumsByMergeNum(transNum);
+		} catch (Exception e) {
+			logger.error("getTransNumsByMergeNum error:", e);
+		} finally {
+			this.release();
+		}
+		return "";
+	}
 }

@@ -78,12 +78,6 @@
 		WHERE T.TRANS_NUM = #{transNum}
 	</select>
 
-	<select id="getMailPhoneByTransMergeNum" resultMap="UserMap" parameterType="java.lang.String">
-		SELECT TOP 1 ESERVICE.DBO.FN_DEBASE64(U.EMAIL) EMAIL, ESERVICE.DBO.FN_DEBASE64(U.MOBILE) MOBILE
-		FROM TRANS T LEFT JOIN ESERVICE.DBO.USERS U ON LOWER(T.USER_ID) = LOWER(U.USER_ID)
-		WHERE T.TRANS_NUM IN (SELECT TRANS_NUM FROM ESERVICE.DBO.TRANS_MERGE WHERE TRANS_NUM_MERGE = #{transMergeNum})
-	</select>
-
 	<select id="getUserLastLoginOverYears" resultMap="UserMap" parameterType="java.lang.String">
 	<![CDATA[
 		select t.user_id id from (

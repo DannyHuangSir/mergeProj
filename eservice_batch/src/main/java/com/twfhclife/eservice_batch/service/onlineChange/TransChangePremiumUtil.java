@@ -2,6 +2,7 @@ package com.twfhclife.eservice_batch.service.onlineChange;
 
 import com.twfhclife.eservice_batch.dao.TransChangePremiumDao;
 import com.twfhclife.eservice_batch.dao.TransDao;
+import com.twfhclife.eservice_batch.dao.TransPaymodeDao;
 import com.twfhclife.eservice_batch.dao.TransPolicyDao;
 import com.twfhclife.eservice_batch.model.TransChangePremiumVo;
 import com.twfhclife.eservice_batch.model.TransPolicyVo;
@@ -26,6 +27,7 @@ public class TransChangePremiumUtil {
 
         TransDao transDao = new TransDao();
         TransPolicyDao transPolicyDao = new TransPolicyDao();
+        TransPaymodeDao paymodeDao = new TransPaymodeDao();
         TransChangePremiumDao transChangePremiumDao = new TransChangePremiumDao();
 
         // 申請資料條件
@@ -44,6 +46,7 @@ public class TransChangePremiumUtil {
                 TransChangePremiumVo transChangePremiumVo = new TransChangePremiumVo();
                 transChangePremiumVo.setTransNum(transNum);
                 List<TransChangePremiumVo> list = transChangePremiumDao.getTransChangePremium(transChangePremiumVo);
+
                 if (list != null && list.size() > 0) {
                     // 取得保單號碼
                     TransPolicyVo tpQryVo = new TransPolicyVo();
@@ -52,6 +55,7 @@ public class TransChangePremiumUtil {
                     if (transPolicyList != null) {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
+                            String activeDate = paymodeDao.getActiveDate(tpVo.getPolicyNo());
                             for (TransChangePremiumVo vo : list) {
                                 // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),新定期繳費(10)
                                 String line = String.format(StringUtils.repeat("%s", 6),
@@ -59,7 +63,7 @@ public class TransChangePremiumUtil {
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
                                         systemTwDate,
-                                        activeTwDate,
+                                        activeDate,
                                         StringUtil.lpad(String.valueOf(vo.getAmount().intValue()), 10, " ")
                                 );
                                 logger.info(line);

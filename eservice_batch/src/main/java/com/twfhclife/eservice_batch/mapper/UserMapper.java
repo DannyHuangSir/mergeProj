@@ -43,5 +43,4 @@ public interface UserMapper {
 
     UserVo getMailPhoneByTransNum(@Param("transNum") String transNum);
 
-    UserVo getMailPhoneByTransMergeNum(@Param("transMergeNum") String transNum);
 }
