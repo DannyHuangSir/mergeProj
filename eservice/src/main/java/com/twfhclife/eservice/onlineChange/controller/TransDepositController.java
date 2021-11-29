@@ -267,30 +267,30 @@ public class TransDepositController extends BaseUserDataController {
         BigDecimal surplusValue = BigDecimal.valueOf(0);
         String stopAccount = "";
         List<ParameterVo> parameterVos = transDepositService.getDepositConfigs();
-                if (!CollectionUtils.isEmpty(parameterVos)) {
-                    for (ParameterVo parameterVo : parameterVos) {
+    	if (!CollectionUtils.isEmpty(parameterVos)) {
+            for (ParameterVo parameterVo : parameterVos) {
                 if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_MIN_VALUE")) {
                     minValue = new BigDecimal(parameterVo.getParameterValue());
-                            }
+                }
                 if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_" + depositPolicy.getCurrency() + "_SURPLUS_VALUE")) {
                     surplusValue = new BigDecimal(parameterVo.getParameterValue());
-                        }
+                }
                 if (StringUtils.equals(parameterVo.getParameterCode(), "DEPOSIT_" + depositPolicy.getPolicyType() + "_STOP_ACCOUNT")) {
                     stopAccount = parameterVo.getParameterValue();
-                    }
                 }
             }
+        }
         boolean allStopAccount = true;
         boolean hasStopAccount = false;
         if (depositPolicy != null && !CollectionUtils.isEmpty(depositPolicy.getPortfolioVoList())) {
             for (PortfolioVo portfolioVo : depositPolicy.getPortfolioVoList()) {
                 if (!stopAccount.contains(portfolioVo.getInvtNo())) {
                     allStopAccount = false;
-                    } else {
-                    hasStopAccount = true;
-                    }
-    }
+                } else {
+                	hasStopAccount = true;
+                }
             }
+        }
         if (!hasStopAccount && minValue.doubleValue() >= 1) {
             min = min.add(minValue).subtract(BigDecimal.valueOf(1));
         }

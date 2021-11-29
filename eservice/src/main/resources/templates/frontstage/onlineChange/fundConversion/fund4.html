@@ -421,6 +421,9 @@
 						openAlert(maxMessage);
 						//$(obj).val(investmentInputSize.ratioMaxSize);
 					}
+					if(showObj%10!=0){
+						openAlert("新投資標的轉入百分比只能輸入10的倍數");
+					}
 				//進行循環獲取其他的input的百分比		
 					//var numArr = new Array();
 					let  i=0;
@@ -476,6 +479,18 @@
 			 }
 			 return  boo;	
 		}
+		//百分比只允許輸入10的倍數
+		function  inputValidationMultiple(obj){
+			var boo = true;
+			 for(var i=0; i<obj.length; i++){
+				console.log("111111111",obj[i].ratio);
+					if(obj[i].ratio % 10 !=0){
+						boo = false;
+						 break;
+					}
+			 }
+			 return  boo;	
+		}	
 	//驗證基金部不能重複
 	function  fundValidation(obj){
 		var boo = true;
@@ -556,6 +571,11 @@
 				//console.log("111111111",!inputValidationMin(numInvestment));
 				 if(!inputValidationMin(numInvestment)){
 					openAlert("當前保單新投資標中有百分比之為0%,還請基金百分比.");
+					return false;
+				 }
+				 //百分比只允許輸入10的倍數
+				 if(!inputValidationMultiple(numInvestment)){
+					openAlert("當前保單新投資標中有百分比不是10的倍數");
 					return false;
 				 }
 				 if(!fundValidationAccount(formData)){

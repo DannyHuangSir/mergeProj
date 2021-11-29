@@ -409,6 +409,9 @@
 						//break;
 						//$(investmentId).val(100);
 					}
+					 if(outputDate % 10 !=0){
+						openAlert("输出百分比只允許輸入10的倍數");
+					}
 				}
 				//showOutputDate+=$(investmentId).val() * element.safpNetAmt;
 				//var  acctValue=element.acctValue;
@@ -483,6 +486,10 @@
 								//$(investmentId).val(proportionMinNumber);
 											//進行回傳百分比
 								//investmentsList[i].ratio=proportionMinNumber;		
+								boo=  false;
+								break;
+							}else if(outputDate % 10 !=0){
+								openAlert("输出百分比只允許輸入10的倍數");
 								boo=  false;
 								break;
 							}
