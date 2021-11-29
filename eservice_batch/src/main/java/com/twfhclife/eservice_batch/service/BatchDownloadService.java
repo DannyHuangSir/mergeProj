@@ -442,8 +442,15 @@ public class BatchDownloadService {
 	}
 
 	private String getMailTransNum(String transNum) {
+		if (transNum.indexOf("M") == -1) {
+			return transNum;
+		}
 		TransDao transDao = new TransDao();
-		return transNum.indexOf("M") == -1 ? transNum : transDao.getTransNumsByMergeNum(transNum);
+		String transNums = transDao.getTransNumsByMergeNum(transNum);
+		if (StringUtils.isBlank(transNums)) {
+			return transNum;
+		}
+		return transNums;
 	}
 
 	private List<String> getInvestCodes() {
