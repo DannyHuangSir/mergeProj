@@ -40,7 +40,7 @@
                 <div class="my1 center1 ">
                     <i class="far fa-edit fa-lg"></i> 保全類別
                 </div>
-                <a href="paymentMode1" id="useControl">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'paymentMode1') or loginUserType ne 'member' }" href="paymentMode1" id="useControl">
                     <div class="col-sm-6 center1 gradient no-borderRight">
                         <h3>繳別</h3>
                         <p><th:block th:text="${onlineChangeHome['WORDING_30001']}"/></p>
@@ -137,7 +137,7 @@
                 <div class="my1 center1 ">
                     <i class="fas fa-dolly-flatbed fa-lg"></i> 投資類別
                 </div>
-                <a href="investment1">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'investment1') or loginUserType ne 'member' }" href="investment1">
                     <div class="col-sm-6 center1 gradient">
                         <h3>未來保費投資標的與分配比例</h3>
                         <p>
@@ -145,7 +145,7 @@
                         </p>
                     </div>
                 </a>
-                <a href="fund1">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'fund1') or loginUserType ne 'member' }" href="fund1">
                     <div class="col-sm-6 center1 gradient">
                         <h3>已持有投資標的轉換</h3>
                         <p>
@@ -153,7 +153,7 @@
                         </p>
                     </div>
                 </a>
-                <a href="attribute1">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'deposit1') or loginUserType ne 'member' }" href="attribute1">
                      <div class="col-sm-6 center1 gradient">
                          <h3>變更風險屬性</h3>
                          <p>
@@ -161,7 +161,7 @@
                          </p>
                      </div>
                 </a>
-                <a href="deposit1">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'deposit1') or loginUserType ne 'member' }" href="deposit1">
                     <div class="col-sm-6 center1 gradient">
                         <h3>保單提領(贖回)</h3>
                         <p>
@@ -169,13 +169,13 @@
                         </p>
                     </div>
                 </a>
-                <a href="notification1" id="useControl">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'notification1') or loginUserType ne 'member' }" href="notification1" id="useControl">
                     <div class="col-sm-6 center1 gradient">
                         <h3>設定停利停損通知</h3>
                         <p><th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_007']}"/></p>
                     </div>
                 </a>
-                <a href="cashPayment1">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'cashPayment1') or loginUserType ne 'member' }" href="cashPayment1">
                     <div class="col-sm-6 center1 gradient">
                         <h3>收益分配或撥回資產分配方式</h3>
                         <p>
@@ -207,7 +207,7 @@
                         <p><th:block th:text="${onlineChangeHome['WORDING_30017']}"/></p>
                     </div>
                 </a>
-                <a href="changePremium1" id="useControl">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'changePremium1') or loginUserType ne 'member' }" href="changePremium1" id="useControl">
                     <div class="col-sm-6 center1 gradient">
                         <h3>定期超額保費</h3>
                         <p><th:block th:text="${onlineChangeHome['WORDING_INVESTMENT_006']}"/></p>

@@ -112,7 +112,7 @@ public class OnlineChangeController extends BaseController {
 			}
 		}
 
-
+		modelMap.addAttribute("disableShowForMembers", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DISABLE_SHOW_ONLINECHANGE_FOR_MEMBER"));
 		modelMap.addAttribute("onlineChangeHome", map);
 		modelMap.addAttribute("canUseFlag", getUserDetail().getOnlineFlag());
 		modelMap.addAttribute("onlinechangeEnableEntry", onlinechangeEnableEntry);
