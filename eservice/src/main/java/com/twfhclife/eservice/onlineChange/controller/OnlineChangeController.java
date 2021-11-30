@@ -112,8 +112,18 @@ public class OnlineChangeController extends BaseController {
 			}
 		}
 
-		modelMap.addAttribute("disableShowMedicalForMembers", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DISABLE_SHOW_MEDICAL_FOR_MEMBER"));
-		modelMap.addAttribute("disableShowForMembers", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DISABLE_SHOW_ONLINECHANGE_FOR_MEMBER"));
+        String disableShowMedicalForMembers = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DISABLE_SHOW_MEDICAL_FOR_MEMBER");
+        if(StringUtils.isBlank(disableShowMedicalForMembers)) {
+        	disableShowMedicalForMembers = "";
+        }
+        
+        String disableShowForMembers = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DISABLE_SHOW_ONLINECHANGE_FOR_MEMBER");
+        if(StringUtils.isBlank(disableShowForMembers)) {
+        	disableShowForMembers = "";
+        }
+        
+		modelMap.addAttribute("disableShowMedicalForMembers", disableShowMedicalForMembers);
+		modelMap.addAttribute("disableShowForMembers", disableShowForMembers);
 		modelMap.addAttribute("onlineChangeHome", map);
 		modelMap.addAttribute("canUseFlag", getUserDetail().getOnlineFlag());
 		modelMap.addAttribute("onlinechangeEnableEntry", onlinechangeEnableEntry);
