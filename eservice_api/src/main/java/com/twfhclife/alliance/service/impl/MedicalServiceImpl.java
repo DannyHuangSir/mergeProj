@@ -198,8 +198,11 @@ public class MedicalServiceImpl implements IMedicalService {
             }
 
             MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
+           String status="";
+            if(rMap!=null) {
             result = (int) rMap.get("result");
-            String status = (String) rMap.get("status");
+                status= (String) rMap.get("status");
+            }
             if(result > 0) {
                 logger.info("Start send mail");
                 String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_AMD, ApConstants.TWFHCLIFE_ADM);

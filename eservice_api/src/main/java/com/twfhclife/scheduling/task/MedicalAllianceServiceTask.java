@@ -1151,7 +1151,7 @@ public class MedicalAllianceServiceTask {
      * @return
      */
     private String getToDataNodeString(String strResponse) {
-    	String nodeString = null;
+    	String nodeString = "";
     	try {
     		if(StringUtils.isNotBlank(strResponse)) {
         		String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
@@ -1191,7 +1191,7 @@ public class MedicalAllianceServiceTask {
      * @return String
      */
     private String getToDataStatus(String strResponse) {
-    	String status = null; 
+    	String status = "";
     	try{
     		String dataString = getToDataNodeString(strResponse);
 	       	
@@ -1210,7 +1210,7 @@ public class MedicalAllianceServiceTask {
      * @return
      */
     private String getFromDataNodeString(String strResponse) {
-    	String nodeString = null;
+    	String nodeString = "";
     	try {
     		if(StringUtils.isNotBlank(strResponse)) {
         		String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
@@ -1234,7 +1234,7 @@ public class MedicalAllianceServiceTask {
      * @return
      */
     private String getFromDataToValue(String strResponse) {
-    	String status = null; 
+    	String status = "";
     	try{
     		String dataString = getFromDataNodeString(strResponse);
 	       	
@@ -1253,7 +1253,7 @@ public class MedicalAllianceServiceTask {
      * @return
      */
     private String getFromDataStatus(String strResponse) {
-    	String status = null; 
+    	String status = "";
     	try{
     		String dataString = getFromDataNodeString(strResponse);
 	       	
