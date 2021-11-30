@@ -852,7 +852,7 @@ go
 
 INSERT ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
 VALUES ((select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER), N'eservice', N'CHANGE_PREMIUM_SUCCESS1', N'定期超額保費成功',
-        N'您的定期超額保費已申請成功，此為預約受理，並非立即生效，須待次一保單保費應繳日生效。<br/>可由上方的申請通知，或至我的申請記錄隨時掌握最新狀況。',
+        N'您的定期超額保費已申請成功，此為預約受理，並非立即生效，<br/>須待次一保單保費應繳日生效。<br/>可由上方的申請通知，或至我的申請記錄隨時掌握最新狀況。',
         (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='INVESTMENT_REMARKS'), NULL, NULL, 1, NULL, NULL, getdate(), N'admin', NULL, NULL)
 go
 

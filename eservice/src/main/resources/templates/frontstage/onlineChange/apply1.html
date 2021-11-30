@@ -270,12 +270,15 @@
                         <p>本公司理賠及轉送其它公司</p>
                     </div>
                 </a>
-                <a href="medicalTreatment1" id="useControlmedical" name="medicalTreatment"  onclick="checkMedicalUsed();return false;">
+
+                <a th:if="${!#strings.contains(disableShowMedicalForMembers, 'medicalTreatment1') or loginUserType ne 'member' }" 
+                	href="medicalTreatment1" id="useControlmedical" name="medicalTreatment"  onclick="checkMedicalUsed();return false;">
                     <div class="col-sm-6 center1 gradient">
                         <h3>保險理賠醫起通</h3>
                         <p>授權取得醫療資料，加速理賠審查流程</p>
                     </div>
                 </a>
+
                 <div class="clearfix"></div>
             </div>
             </th:block>

@@ -77,9 +77,9 @@
 					
 					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
 						<div class="col-sm-12 mode2select marginTop20">
-						  <label for="" class="col-sm-4 text-right" style="font-size: 20px; color: #009b30;">(變更後)定期超額保費：</label>
+						  <label for="" class="col-sm-5 text-right" style="font-size: 20px; color: #009b30;">(變更後)定期超額保費：</label>
 						 
-							<div class="col-sm-8" style="padding: 5px;">
+							<div class="col-sm-7" style="padding: 5px;">
 								<input type="text" name="amount" class="col-sm-8" placeholder="請輸入欲更改後的保費" style="line-height: 30px;">
 							</div>
 						</div>
@@ -128,7 +128,7 @@
 					return false;
 				}
 
-				if (policyType == 'US' && tmpAmount % 1000 != 0  || tmpAmount < 2000) {
+				if (policyType == 'US' && (tmpAmount % 1000 != 0  || tmpAmount < 2000)) {
 					openAlert("新臺幣保單每次最低2,000元，以仟元為單位。");
 					return false;
 				}
