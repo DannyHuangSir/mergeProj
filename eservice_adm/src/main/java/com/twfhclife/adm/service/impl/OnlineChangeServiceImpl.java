@@ -1393,7 +1393,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		if (fdId!=null && fdId!=0) {
 			medicalVo=	onlineChangeDao.getMedicalTreatmentDetailBase64(fdId);
 			String fileBase64 = medicalVo.getFileBase64();
-			if (fileBase64 != null && fileBase64 != "") {
+			if (fileBase64 != null && !"".equals(fileBase64)) {
 				byte[] decode = Base64.getDecoder().decode(fileBase64);
 				//获取文件类型
 				String base64Type = this.checkBase64ImgOrPdf(decode);
@@ -1424,6 +1424,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 				}
 			}
 		}else{
+			medicalVo=new MedicalTreatmentClaimFileDataVo();
 			medicalVo.setFileSize(0F);
 			medicalVo.setFileBase64("");
 		}
