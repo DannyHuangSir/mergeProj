@@ -117,18 +117,29 @@
 					return
 				}
 
-				if (parseInt(amount) <=0) {
-					openAlert("請輸入大於0的繳別金額");
+				var tmpAmount = parseInt(amount);
+				if (tmpAmount <=0) {
+					openAlert("請輸入大於0的金額");
+					return false;
+				}
+				var policyType = /*[[${#strings.substring(transPaymodeVo.policyNoList[0],0,2)}]]*/;
+				if (policyType == 'UU' && (tmpAmount % 100 != 0 || tmpAmount < 100)) {
+					openAlert("美元保單每次最低100美元，以百元為單位。");
 					return false;
 				}
 
-				if ([[${minValue}]] != null && parseInt(amount) < [[${minValue}]]) {
-					openAlert("請輸入大於[[${minValue}]]的繳別金額");
+				if (policyType == 'US' && tmpAmount % 1000 != 0  || tmpAmount < 2000) {
+					openAlert("新臺幣保單每次最低2,000元，以仟元為單位。");
+					return false;
+				}
+
+				if ([[${minValue}]] != null && tmpAmount < [[${minValue}]]) {
+					openAlert("請輸入大於[[${minValue}]]的金額");
 					return false;
 				}
 
 				var formData = [[${transPaymodeVo}]];
-				formData.amount = parseInt(amount)
+				formData.amount = tmpAmount
 				postWithFormData(/*[[@{/changePremium3}]]*/, formData);
 			});
 			var transformationRemark = /*[[${transformationRemark}]]*/;

@@ -364,7 +364,7 @@
 				if(element.investmentId==inId){
 					if(parseFloat(outputDate) >0 && parseFloat(outputDate)<parseFloat(unitMinNumber)){
 						console.log('-----unitMinNumber---------',unitMinNumber);
-						openAlert("输出單位數不能小於"+unitMinNumber);
+						openAlert("輸出單位數不能小於"+unitMinNumber);
 						//$(investmentId).val(unitMinNumber);
 						//break;
 					} else  if(outputDate>element.safpNetUnits){
@@ -400,7 +400,7 @@
 				console.log('-----outputDate---------',outputDate);
 				if("per"+element.investmentId=="per"+inId){
 					if( outputDate  >0  && outputDate<proportionMinNumber){
-						openAlert("输出百分比不能小於"+proportionMinNumber+"%");
+						openAlert("輸出百分比不能小於"+proportionMinNumber+"%");
 						//$(investmentId).val(proportionMinNumber);
 						//break;
 					} else  if(outputDate>100){
@@ -410,7 +410,7 @@
 						//$(investmentId).val(100);
 					}
 					 if(outputDate % 10 !=0){
-						openAlert("输出百分比只允許輸入10的倍數");
+						openAlert("輸出百分比只允許輸入10的倍數");
 					}
 				}
 				//showOutputDate+=$(investmentId).val() * element.safpNetAmt;
@@ -448,7 +448,7 @@
 							SuminvestmentIdNumber+=investmentIdNumber;
 							if(investmentIdNumber>0){
 								if(parseFloat(outputDate)<parseFloat(unitMinNumber)){
-									openAlert("输出單位數不能小於"+unitMinNumber);
+									openAlert("輸出單位數不能小於"+unitMinNumber);
 									//$(investmentId).val(unitMinNumber);
 										//進行回傳單位數據
 									//investmentsList[i].number=unitMinNumber;	
@@ -482,14 +482,14 @@
 						sumperNumber+=perNumber;
 						if(perNumber>0){
 							if(outputDate<proportionMinNumber){
-								openAlert("输出百分比不能小於"+proportionMinNumber+"%");
+								openAlert("輸出百分比不能小於"+proportionMinNumber+"%");
 								//$(investmentId).val(proportionMinNumber);
 											//進行回傳百分比
 								//investmentsList[i].ratio=proportionMinNumber;		
 								boo=  false;
 								break;
 							}else if(outputDate % 10 !=0){
-								openAlert("输出百分比只允許輸入10的倍數");
+								openAlert("輸出百分比只允許輸入10的倍數");
 								boo=  false;
 								break;
 							}

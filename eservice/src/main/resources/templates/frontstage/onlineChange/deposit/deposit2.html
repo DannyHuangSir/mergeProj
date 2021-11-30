@@ -98,21 +98,22 @@
           <div class="form-group">
                       <label for="inputPassword3" class="col-sm-2">可提領金額：</label>
                       <div class="col-sm-9">
+<!--                          <div class="radio inline">-->
+<!--                              <label>-->
+<!--                                  <div class="radio-btn checkedRadio"><i><input type="radio" id="tab_group_1" name="tab_group_2" value="option1" checked="checked" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div> 指定總金額-->
+<!--                              </label>-->
+<!--                          </div>-->
                           <div class="radio inline">
                               <label>
-                                  <div class="radio-btn checkedRadio"><i><input type="radio" id="tab_group_1" name="tab_group_2" value="option1" checked="checked" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div> 指定總金額
-                              </label>
-                          </div>
-                          <div class="radio inline">
-                              <label>
-                                  <div class="radio-btn"><i><input type="radio" name="tab_group_2" value="option2" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div> 自定投資標的比例 
+                                  <div class="radio-btn"><i><input type="radio" checked="checked" name="tab_group_2" value="option2" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div> 自定投資標的比例
                               </label>
                           </div>
                       </div>
                       <div class="col-sm-11">
                           <div class="tabs">
                       <!-- TAB 1 -->
-                              <article id="tab_1" class="tab tab-show">
+<!--                              <article id="tab_1" class="tab tab-show">-->
+                              <article id="tab_1" class="tab">
                                 <section id="tab_frame_1" class="tab-frame">
                                   <div class="arrow-upleft" style="left: 25%"></div>
                                   <div class="grey2">
@@ -127,7 +128,8 @@
                                 </section>
                               </article>
                       <!-- TAB 2 -->
-                              <article id="tab_2" class="tab">
+<!--                              <article id="tab_2" class="tab">-->
+                              <article id="tab_2" class="tab tab-show">
                                   <section id="tab_frame_2" class="tab-frame">
                                     <div class="arrow-upleft ml37" style="left: 45%"></div>
                                     <div class="grey">
