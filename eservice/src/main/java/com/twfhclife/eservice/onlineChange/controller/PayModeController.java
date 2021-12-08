@@ -271,7 +271,13 @@ public class PayModeController extends BaseUserDataController {
 					addDefaultSystemError();
 					return "forward:paymentMode3";
 				}
+				String policyNo = transPaymodeVo.getPolicyNoList().get(0);
+				String type = policyNo.substring(0,2);
+				String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
+				if (StringUtils.isNotBlank(types)
+						&& StringUtils.isNotBlank(type) && types.contains(type)) {
 				sendNotification(transPaymodeVo, getUserDetail());
+			}
 			}
 		} catch (Exception e) {
 			logger.error("Unable to init from paymentModeSuccess: {}", ExceptionUtils.getStackTrace(e));

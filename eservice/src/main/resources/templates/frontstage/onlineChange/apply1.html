@@ -133,7 +133,10 @@
                 </a> -->
                 <div class="clearfix"></div>
             </div>
-             <div id="investmientCategory" class="apply1">
+             <div th:if="${!#strings.contains(disableShowForMembers, 'investment1') or !#strings.contains(disableShowForMembers, 'fund1')
+              or !#strings.contains(disableShowForMembers, 'deposit1')  or !#strings.contains(disableShowForMembers, 'attribute1')
+              or !#strings.contains(disableShowForMembers, 'notification1')  or !#strings.contains(disableShowForMembers, 'cashPayment1')
+              or loginUserType ne 'member'}" id="investmientCategory" class="apply1">
                 <div class="my1 center1 ">
                     <i class="fas fa-dolly-flatbed fa-lg"></i> 投資類別
                 </div>
@@ -153,7 +156,7 @@
                         </p>
                     </div>
                 </a>
-                <a th:if="${!#strings.contains(disableShowForMembers, 'deposit1') or loginUserType ne 'member' }" href="attribute1">
+                <a th:if="${!#strings.contains(disableShowForMembers, 'attribute1') or loginUserType ne 'member' }" href="attribute1">
                      <div class="col-sm-6 center1 gradient">
                          <h3>變更風險屬性</h3>
                          <p>

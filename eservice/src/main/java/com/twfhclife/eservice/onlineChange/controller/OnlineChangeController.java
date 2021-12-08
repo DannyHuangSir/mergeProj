@@ -311,18 +311,25 @@ public class OnlineChangeController extends BaseController {
 		//查询当前保单同批次的保单，序号
 		List<TransContactInfoVo> transContactInfoTransNum
 				   = transContactInfoService.getTransContactInfoTransNum(transNum);
-		try{
+		try {
 
-			if (transContactInfoTransNum !=null && transContactInfoTransNum.size()>0) {
+			if (transContactInfoTransNum != null && transContactInfoTransNum.size() > 0) {
 				for (TransContactInfoVo transContactInfoVo : transContactInfoTransNum) {
 					String transNum1 = transContactInfoVo.getTransNum();
-					if (transNum1!=null && !"".equals(transNum1)) {
+					if (transNum1 != null && !"".equals(transNum1)) {
 						onlineChangeService.cancelApplyTrans(transNum1, hisVo);
 					}
 				}
-            }else if(transType !=null && INVSETMENT_TYPES.contains(transType)){
+			} else if (transType != null && INVSETMENT_TYPES.contains(transType)) {
 				//進行查詢數據當前批次的保單號
-				String  policyNo =transContactInfoService.getHistoryPolicyNo(transNum);
+				String policyNo = transContactInfoService.getHistoryPolicyNo(transNum);
+				String type = policyNo.substring(0, 2);
+				String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
+				//繳別非投資型保單，取消不需要發送投資型通知
+				if (StringUtils.equals(transType, TransTypeUtil.PAYMODE_PARAMETER_CODE) &&
+						!(StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type))) {
+					onlineChangeService.cancelApplyTrans(transNum, hisVo);
+				} else {
 				//進行取消 已持有投資標的轉換保單
 				onlineChangeService.cancelApplyTransConversion(transNum, hisVo);
 				//發送 郵件
@@ -331,20 +338,14 @@ public class OnlineChangeController extends BaseController {
 				transInvestmentVo.setTransNum(transNum);
 				//申請功能名稱
 				ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
-						ApConstants.SYSTEM_ID,OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
+							ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
 				transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
 				transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
 				transInvestmentVo.setMessage(MSG_MAP.get(transType));
 				transInvestmentVo.setApplyDate(new Date());
 				sendConversionSMSAndEmail(transInvestmentVo, user, transType);
-			}else if(transType !=null && TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE.equals(transType)){
-				 //進行嚴重當前保單是否可以取消
-				String  check=	 transContactInfoService.transMedicalTreatmentClaimByCheck(transNum);
-				if(check.equals(ReturnHeader.SUCCESS_CODE)) {
-					//進行取消 已持有醫療保單的轉換保單
-					onlineChangeService.cancelMedicalTreatmentApplyTrans(transNum, hisVo);
 				}
-			}else{
+			} else {
 				onlineChangeService.cancelApplyTrans(transNum, hisVo);
 			}
 		} catch (Exception e) {
@@ -353,23 +354,7 @@ public class OnlineChangeController extends BaseController {
 
 		return "frontstage/onlineChange/apply2";
 	}
-	/**
-	 * 验证,取消申請
-	 *    如,已經推送至聯盟并且已經審核通過,則不能進行取消
-	 *		SEND_ALLIANCE!=Y
-	 * @param transNum
-	 * @return
-	 */
-	@RequestLog
-	@PostMapping("/transMedicalTreatmentClaimByCheck")
-	@ResponseBody
-	public  List<String>  transMedicalTreatmentClaimByCheck(@RequestParam("transNum") String transNum){
-		ArrayList<String> checkList = new ArrayList<>();
-		//查询当前保单同批次的状态
-		String  check=	 transContactInfoService.transMedicalTreatmentClaimByCheck(transNum);
-		checkList.add(check);
-		return  checkList;
-	}
+
 	/**
 	 * 验证,取消申請是否可以进行取消此時STATUS=1
 	 * @param transNum

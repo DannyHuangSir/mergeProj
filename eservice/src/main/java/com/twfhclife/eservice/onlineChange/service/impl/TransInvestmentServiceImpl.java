@@ -616,7 +616,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 
     public Map<String,Object> getSendMailInfo() {
         String transRemark = parameterDao.getStatusName(ApConstants.MESSAGING_PARAMETER, ApConstants.INVESTMENT_TRANS_REMARK);
-        String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_ADM, OnlineChangeUtil.TWFHCLIFE_ADM);
+        String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_ADM, OnlineChangeUtil.TWFHCLIFE_INVESTMENT_ADM);
         String[] mails = mailTo.split(";");
         Map<String,Object> rMap = new HashMap<String,Object>();
         List<String> receivers = new ArrayList<String>();
