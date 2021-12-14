@@ -4,6 +4,7 @@ import com.twfhclife.eservice_batch.dao.TransCashPaymentDao;
 import com.twfhclife.eservice_batch.dao.TransDao;
 import com.twfhclife.eservice_batch.dao.TransInvestmentDao;
 import com.twfhclife.eservice_batch.dao.TransPolicyDao;
+import com.twfhclife.eservice_batch.model.TransAccountVo;
 import com.twfhclife.eservice_batch.model.TransCashPaymentVo;
 import com.twfhclife.eservice_batch.model.TransInvestmentVo;
 import com.twfhclife.eservice_batch.model.TransPolicyVo;
@@ -52,26 +53,43 @@ public class TransCashPaymentUtil {
                     tpQryVo.setTransNum(transNum);
                     List<TransPolicyVo> transPolicyList = transPolicyDao.getTransPolicyList(tpQryVo);
                     if (transPolicyList != null) {
+                        boolean addedAccount = false;
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransCashPaymentVo vo : list) {
-                                //介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),新收益分配或撥回資產分配方式(1),受益類別(1),匯款戶名(20),銀行名稱(10),分行名稱(10),銀行代碼(3),分行代碼(4),匯款帳號(16),國際號SwiftCode(16),英文戶名(60)
-                                String line = String.format(StringUtils.repeat("%s", 15),
+                                if (!addedAccount) {
+                                    addedAccount = true;
+                                    TransAccountVo accountVo = transCashPaymentDao.findAccount(transNum);
+                                    //介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),受益類別(1),受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(4)匯款帳號(16),國際號SwiftCode(16),英文戶名(60)
+                                    if (accountVo != null) {
+                                        String line = String.format(StringUtils.repeat("%s", 13),
+                                                "035",
+                                        StringUtil.rpadBlank(transNum, 12),
+                                        StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
+                                        systemTwDate,
+                                        systemTwDate,
+                                        "5",
+                                                StringUtil.rpadBlank(accountVo.getRocId(), 10),
+                                                StringUtil.rpadBlank(accountVo.getAccountName(), 10),
+                                                StringUtil.rpadBlank(accountVo.getBankCode(), 3),
+                                                StringUtil.rpadBlank(accountVo.getBranchCode(), 4),
+                                                StringUtil.rpadBlank(accountVo.getBankAccount(), 16),
+                                                StringUtil.rpadBlank(accountVo.getSwiftCode(), 16),
+                                                StringUtil.rpadBlank(accountVo.getEnglishName(), 60)
+                                        );
+                                        logger.info(line);
+                                        txtSb.append(line);
+                                        txtSb.append("\r\n");
+                                    }
+                                }
+                                //介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),新收益分配或撥回資產分配方式(1)
+                                String line = String.format(StringUtils.repeat("%s", 6),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
                                         systemTwDate,
                                         systemTwDate,
-                                        StringUtil.rpadBlank(vo.getAllocation(), 1),
-                                        "5",
-                                        StringUtil.rpadBlank(vo.getAccountName(), 20),
-                                        StringUtil.newRpadBlank(vo.getBankName(), 10),
-                                        StringUtil.newRpadBlank(vo.getBranchName(), 10),
-                                        StringUtil.rpadBlank(vo.getBankCode(), 3),
-                                        StringUtil.rpadBlank(vo.getBranchCode(), 4),
-                                        StringUtil.rpadBlank(vo.getBankAccount(), 16),
-                                        StringUtil.rpadBlank(vo.getSwiftCode(), 16),
-                                        StringUtil.rpadBlank(vo.getEnglishName(), 60)
+                                        StringUtil.rpadBlank(vo.getAllocation(), 1)
                                 );
                                 logger.info(line);
                                 txtSb.append(line);

@@ -27,4 +27,11 @@
 		FROM  ESERVICE.dbo.TRANS_CASH_PAYMENT
 		WHERE TRANS_NUM = #{transNum}
 	</select>
+
+	<select id="findAccount" resultType="com.twfhclife.eservice_batch.model.TransAccountVo">
+		SELECT TOP 1 U.ROC_ID, SWIFT_CODE swiftCode, ENGLISH_NAME englishName, BANK_CODE bankCode, BRANCH_CODE branchCode, ACCOUNT_NAME accountName, BANK_ACCOUNT bankAccount, BANK_NAME bankName, BRANCH_NAME branchName
+		FROM  ESERVICE.DBO.TRANS_CASH_PAYMENT I INNER JOIN ESERVICE.DBO.TRANS T ON T.TRANS_NUM = I.TRANS_NUM LEFT JOIN ESERVICE.DBO.USERS U ON T.USER_ID = U.USER_ID
+		WHERE I.TRANS_NUM = #{transNum}
+	</select>
+
 </mapper>

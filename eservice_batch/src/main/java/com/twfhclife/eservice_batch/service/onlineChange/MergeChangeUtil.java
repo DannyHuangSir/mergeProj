@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.twfhclife.eservice_batch.dao.ParameterDao;
+import com.twfhclife.eservice_batch.dao.TransMergeDao;
 import com.twfhclife.eservice_batch.model.ParameterVo;
+import com.twfhclife.eservice_batch.model.TransMergeVo;
+import com.twfhclife.eservice_batch.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +46,7 @@ public class MergeChangeUtil {
 	//	014:「補發保單」: 申請值(1), 寄送地址(50)
 	//  027:「保戶基本資料更新」：國籍代碼(2),職業代碼大(2),職業代碼中(2),職業代碼小(4)
 	//  002:「年金給付」變更: 保證期間申請值(2)
-	private List<String> mergeChangeCodeList = Arrays.asList("001", "002", "003", "004", "005", "006", "009", "010", "014", "027", "029", "030", "031", "033", "034");
+	private List<String> mergeChangeCodeList = Arrays.asList("001", "002", "003", "004", "005", "006", "009", "010", "014", "027", "029", "030", "031", "032", "033", "034");
 
 	public List<String> getMergePolicyNoList(String applyItemText) {
 		String[] lines = applyItemText.split("\r\n");
@@ -128,6 +131,7 @@ public class MergeChangeUtil {
 		String riskLevel = "";
 		String changePremium = "";
 		String investPaymode = "";
+		String cashPayment = "";
 
 		StringBuilder mergeSb = new StringBuilder();
 		for (String policyNo : mergePolicyNoList) {
@@ -168,6 +172,7 @@ public class MergeChangeUtil {
 			riskLevel = "";
 			changePremium = "";
 			investPaymode = "";
+			cashPayment = "";
 
 			/**
 			 * init end.
@@ -361,10 +366,19 @@ public class MergeChangeUtil {
 							removeLineKeyList.add(lineKey);
 						}
 					}
+
+					if (line.startsWith("032") && policyNo.equals(linePolicyNo) && line.length() > 39) {
+						cashPayment = line.substring(39);
+						insertTransMerge(transMergeVo);
+
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
 				}
 			}
 
-			mergeSb.append(String.format(StringUtils.repeat("%s", 22),
+			mergeSb.append(String.format(StringUtils.repeat("%s", 23),
 					StringUtil.rpadBlank(paymode, 1), //繳別
 					StringUtil.rpadBlank(annuityMethod, 1),//年金給付
 					StringUtil.rpadBlank(bouns, 1),//紅利選擇權
@@ -382,11 +396,12 @@ public class MergeChangeUtil {
 					StringUtil.rpadBlank(resendPolicyAdress, 50),//補發保單: 寄送地址(50)
 					StringUtil.rpadBlank(policyHolderProfile, 10),//保戶基本資料更新
 					StringUtil.rpadBlank(guaranteePeriod, 2),//年金給付
-					StringUtil.rpadBlank(investment.toString(), 10 * 13),
-					StringUtil.rpadBlank(conversion.toString(), 10 * 38),
-					StringUtil.rpadBlank(riskLevel, 14),
-					StringUtil.rpadBlank(changePremium, 10),
-					StringUtil.rpadBlank(investPaymode, 12)
+					StringUtil.rpadBlank(investment.toString(), 10 * 13), //未來保費分配比例
+					StringUtil.rpadBlank(conversion.toString(), 10 * 38), //已有投資標的轉換
+					StringUtil.rpadBlank(riskLevel, 14), //變更風險屬性
+					StringUtil.rpadBlank(changePremium, 10), //定期超額保費
+					StringUtil.rpadBlank(investPaymode, 12), //投資型繳別
+					StringUtil.rpadBlank(cashPayment, 1) //收益分配或撥回方式
 			));
 			mergeSb.append("\r\n");
 		}
