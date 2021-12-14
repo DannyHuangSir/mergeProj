@@ -71,8 +71,8 @@
 							<div class="selector-box col-sm-6">
 								<select class="selector" name="allocation" onchange="allocation()">
 									<option></option>
-									<option value="1">現金給付</option>
-									<option value="2">增加投資標的單位數</option>
+									<option th:if="${preAllocation != '1'}" value="1">現金給付</option>
+									<option th:if="${preAllocation != '2'}" value="2">增加投資標的單位數</option>
 								</select>
 							</div>
                        </div>

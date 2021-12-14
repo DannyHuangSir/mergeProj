@@ -6,16 +6,28 @@ import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.onlineChange.service.IOnlineChangeService;
 import com.twfhclife.eservice.onlineChange.service.IHospitalServcie;
 import com.twfhclife.eservice.onlineChange.service.ITransContactInfoService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
+import com.twfhclife.eservice.web.domain.ResponseObj;
+import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UserDataInfo;
+import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.eservice.web.service.IRegisterUserService;
+import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.annotation.EventRecordLog;
 import com.twfhclife.generic.annotation.EventRecordParam;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
+import com.twfhclife.generic.api_client.TransHistoryListClient;
+import com.twfhclife.generic.api_model.TransHistoryListResponse;
+import com.twfhclife.generic.controller.BaseController;
+import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import com.twfhclife.generic.api_model.ReturnHeader;
 import com.twfhclife.generic.util.StatuCode;
@@ -331,7 +343,7 @@ public class OnlineChangeController extends BaseController {
 					onlineChangeService.cancelApplyTrans(transNum, hisVo);
 				} else {
 				//進行取消 已持有投資標的轉換保單
-				onlineChangeService.cancelApplyTransConversion(transNum, hisVo);
+					onlineChangeService.cancelApplyTransInvestment(transNum, hisVo);
 				//發送 郵件
 				TransInvestmentVo transInvestmentVo = new TransInvestmentVo();
 				transInvestmentVo.setPolicyNo(policyNo);

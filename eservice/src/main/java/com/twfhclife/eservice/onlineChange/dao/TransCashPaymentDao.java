@@ -2,7 +2,6 @@ package com.twfhclife.eservice.onlineChange.dao;
 
 import com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.access.method.P;
 
 public interface TransCashPaymentDao {
 

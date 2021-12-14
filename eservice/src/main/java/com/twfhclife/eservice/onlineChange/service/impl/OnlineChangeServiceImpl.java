@@ -54,6 +54,19 @@ import com.twfhclife.generic.service.impl.BaseServiceImpl;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.HttpUtil;
 import com.twfhclife.generic.util.RptUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.print.DocFlavor;
 
@@ -387,7 +400,7 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	}
 
 	@Override
-	public void cancelApplyTransConversion(String transNum, TransStatusHistoryVo hisVo) {
+	public void cancelApplyTransInvestment(String transNum, TransStatusHistoryVo hisVo) {
 		onlineChangeDao.updateTransStatus(transNum, OnlineChangeUtil.TRANS_STATUS_CANCEL);
 		onlineChangeDao.addTransStatusHistory(hisVo);
 	}
