@@ -24,9 +24,10 @@
 		<timestamp>${build.time}</timestamp>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 		<start-class>com.twfhclife.Application</start-class>
+		<log4j2.version>2.16.0</log4j2.version>
 	</properties>
 
-		<parent>
+	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.9.RELEASE</version>
@@ -103,6 +104,33 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
+		<!-- Modify CVE-2021-44228 start
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.16.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.16.0</version>
+		</dependency>
+		 Modify CVE-2021-44228 end-->
+		
 		<dependency>
 			<groupId>com.lmax</groupId>
 			<artifactId>disruptor</artifactId>
@@ -287,6 +315,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+                    <execution>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
 			</plugin>
 
 			<!--maven jar plugin elife-mybatis.jar start -->
@@ -324,6 +357,7 @@
 						<include>**/generic/util/RoiRateUtil*</include>
 						<include>**/generic/util/MathUtil*</include>
 						<include>**/generic/util/HttpUtil*</include>
+						<!--include>**/generic/annotation/*</include-->
 					</includes>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
@@ -354,13 +388,13 @@
 				</configuration>
 			</plugin>
 
-<plugin>
+			<plugin>
 			        <artifactId>maven-compiler-plugin</artifactId>
 			        <configuration>
 			            <source>1.8</source>
 			            <target>1.8</target>
 			        </configuration>
-			    </plugin>
+			</plugin>
 			<plugin>
 	            <groupId>org.codehaus.mojo</groupId>
 	            <artifactId>build-helper-maven-plugin</artifactId>
@@ -379,15 +413,7 @@
 	                </execution>
 	            </executions>
 	        </plugin>
-		            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
+
 		</plugins>
 	</build>
 
