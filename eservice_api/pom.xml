@@ -17,6 +17,7 @@
 		<timestamp>${build.time}</timestamp>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 		<start-class>com.twfhclife.EserviceApiApplication</start-class>
+		<log4j2.version>2.16.0</log4j2.version>
 	</properties>
 
 	<parent>
@@ -199,7 +200,7 @@
 			<artifactId>eservice</artifactId>
 			<version>mergeProj</version>
 		</dependency>
-				<dependency>
+		<dependency>
 			<groupId>com.twfhclife</groupId>
 			<artifactId>unboundid-ldapsdk</artifactId>
 			<version>4.1.0</version>
