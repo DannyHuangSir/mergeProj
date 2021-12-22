@@ -273,7 +273,11 @@
 		var formData = /*[[${transContactInfoDtlVo}]]*/;
 		var dataDetail = /*[[${dataDetail}]]*/;
 			$(function () {
+				setTimeout(function(){
 				commonOptions('#cityOption', 'getCityList');
+				},1000)
+				//可能出現瀏覽器假死現象，先加個延時看看
+				
 				/**if($('#cityOption').val()!=null){
 						var cityId=	$('#cityOption').val();
 						$('#cityOption option[selected=selected]').attr("selected",false);
