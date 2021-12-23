@@ -215,3 +215,11 @@ ALTER TABLE [ESERVICE].[dbo].[TRANS_INVESTMENT] ADD BANK_ACCOUNT nvarchar(100) N
 ALTER TABLE [ESERVICE].[dbo].[TRANS_INVESTMENT] ADD BANK_NAME nvarchar(100) NULL
 ALTER TABLE [ESERVICE].[dbo].[TRANS_INVESTMENT] ADD BRANCH_NAME nvarchar(100) NULL
 GO
+
+create sequence TRANS_CHANGE_ACCOUNT_SEQ
+minvalue 1
+maxvalue 999
+start with 1
+increment by 1
+cycle
+no cache;
