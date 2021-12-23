@@ -93,4 +93,8 @@
 		SELECT ',' + TRANS_NUM FROM ESERVICE.DBO.TRANS_MERGE WHERE TRANS_NUM_MERGE = #{transNum} FOR xml path('')) , 1 , 1 , '')
 	</select>
 
+	<select id="getChangeAccountNum" resultType="string">
+		SELECT NEXT VALUE FOR ESERVICE.DBO.TRANS_CHANGE_ACCOUNT_SEQ
+	</select>
+
 </mapper>

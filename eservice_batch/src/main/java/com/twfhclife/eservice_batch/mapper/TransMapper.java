@@ -20,4 +20,6 @@ public interface TransMapper {
     int addTransStatusHistory(@Param("transStatusHistoryVo")   TransStatusHistoryVo transStatusHistoryVo);
 
     String getTransNumsByMergeNum(@Param("transNum") String transNum);
+
+    String getChangeAccountNum();
 }

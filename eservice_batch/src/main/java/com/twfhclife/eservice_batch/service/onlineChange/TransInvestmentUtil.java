@@ -4,10 +4,8 @@ import com.twfhclife.eservice_batch.dao.ParameterDao;
 import com.twfhclife.eservice_batch.dao.TransDao;
 import com.twfhclife.eservice_batch.dao.TransInvestmentDao;
 import com.twfhclife.eservice_batch.dao.TransPolicyDao;
-import com.twfhclife.eservice_batch.dao.TransPolicyHolderProfileDao;
 import com.twfhclife.eservice_batch.model.TransAccountVo;
 import com.twfhclife.eservice_batch.model.TransInvestmentVo;
-import com.twfhclife.eservice_batch.model.TransPolicyHolderProfileVo;
 import com.twfhclife.eservice_batch.model.TransPolicyVo;
 import com.twfhclife.eservice_batch.model.TransVo;
 import com.twfhclife.eservice_batch.util.StringUtil;
@@ -68,9 +66,10 @@ public class TransInvestmentUtil {
                                     TransAccountVo accountVo = transInvestmentDao.findAccount(transNum, vo.getInvtNo());
                                     //介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),受益類別(1),受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(4)匯款帳號(16),國際號SwiftCode(16),英文戶名(60)
                                     if (accountVo != null) {
+                                        String changeAccountNum = "35" + systemTwDate + StringUtil.lpad(transDao.getChangeAccountNum(), 3, "0");
                                         String line = String.format(StringUtils.repeat("%s", 13),
                                                 "035",
-                                                StringUtil.rpadBlank(transNum, 12),
+                                                changeAccountNum,
                                                 StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
                                                 systemTwDate,
                                                 systemTwDate,

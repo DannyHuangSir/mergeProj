@@ -79,4 +79,16 @@ public class TransDao extends BaseDao {
 		}
 		return "";
 	}
+
+    public String getChangeAccountNum() {
+		try {
+			TransMapper transMapper = this.getSqlSession().getMapper(TransMapper.class);
+			return transMapper.getChangeAccountNum();
+		} catch (Exception e) {
+			logger.error("getChangeAccountNum error:", e);
+		} finally {
+			this.release();
+		}
+		return "";
+    }
 }
