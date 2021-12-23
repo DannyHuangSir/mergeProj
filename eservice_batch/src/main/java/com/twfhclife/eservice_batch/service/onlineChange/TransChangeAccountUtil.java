@@ -78,18 +78,24 @@ public class TransChangeAccountUtil {
 				if ("700".equals(bankId)) {
 					branchId = "";
 				}
+
+				// 20211108 by 203990
+				// 分行用4位
+				/*
 				// 分行代碼大於3位
 				if (!StringUtils.isEmpty(branchId) && branchId.length() > 3) {
 					if (branchId.startsWith("0")) {
 						branchId = branchId.substring(1, 4);
 					}
 				}
+				*/
+
 				logger.info("TransNum's bankId : {}", bankId);
 				logger.info("TransNum's branchId : {}", branchId);
 				logger.info("TransNum's accountName : {}", accountName);
 				
 				// 取得新的變更受益類別
-				String changeType = ""; // 1:滿期金, 2:生存金
+				String changeType = ""; // 1:滿期金, 2:生存金  ***目前介接規格書是寫: 生存:2 滿期:3 紅利:F ***但是產出的CHANGE_REQ檔, 生存金是卻是傳出3 .......
 				TransChangeAccountVo qryChangeAccountVo = new TransChangeAccountVo();
 				qryChangeAccountVo.setTransNum(transNum);
 				List<TransChangeAccountVo> changeAccountList = changeAccountDao.getTransChangeAccountList(qryChangeAccountVo);
@@ -112,8 +118,24 @@ public class TransChangeAccountUtil {
 						String beneficiaryRocid = changeAccountDao.findRocId(changeType, policyNo);
 						String swiftCode = "";
 						
+						// 20211108 by 203990
+						// 正常 生存:2  滿期:3 , 現在的程式卻是 生存:3  滿期:2
+						// 若要正常調是要調整這2支,
+						// \eservice\src\main\resources\templates\frontstage\onlineChange\changePayAcct\change-pay-acct2.html
+						// \eservice_batch\src\main\resources\mapper\TransChangeAccountMapper.xml
+						// 但是我不想調整多支, 所以只調這支, 將傳出的結果互換
+						if ("2".equals(changeType)) {
+							changeType = "3";
+						}
+						else if ("3".equals(changeType)) {
+							changeType = "2";
+						}
+						
+						// 20211012 調整介接資料為正常, 如下:
 						// 介接代碼(3),申請序號(12),保單號碼(10),收文日(7),生效日(7),受益類別(1),
-						// 受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(3)匯款帳號(10),國際號SwiftCode(16)
+						// 受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(4)匯款帳號(16),國際號SwiftCode(16)
+						/// 介接代碼(3),申請序號(12),保單號碼(10),收文日(7),生效日(7),受益類別(1),
+						/// 受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(3)匯款帳號(10),國際號SwiftCode(16)
 						txtSb.append(String.format(StringUtils.repeat("%s", 12), 
 								UPLOAD_CODE,
 								StringUtil.rpadBlank(transNum, 12), 
@@ -124,8 +146,8 @@ public class TransChangeAccountUtil {
 								StringUtil.rpadBlank(beneficiaryRocid, 10),
 								StringUtil.rpadBlank(accountName, 10),
 								StringUtil.rpadBlank(bankId, 3),
-								StringUtil.rpadBlank(branchId, 3),
-								StringUtil.rpadBlank(accountNo, 10),
+								StringUtil.rpadBlank(branchId, 4),
+								StringUtil.rpadBlank(accountNo, 16),
 								StringUtil.rpadBlank(swiftCode, 16)
 						));
 						txtSb.append("\r\n");
