@@ -54,7 +54,7 @@ public class TransCashPaymentUtil {
                         for (TransPolicyVo tpVo : transPolicyList) {
                             logger.info("TransNum : {}, policyNo : {}", transNum, tpVo.getPolicyNo());
                             for (TransCashPaymentVo vo : list) {
-                                if (!addedAccount) {
+                                if ("1".equals(vo.getAllocation()) && !addedAccount) {
                                     addedAccount = true;
                                     TransAccountVo accountVo = transCashPaymentDao.findAccount(transNum);
                                     //介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),受益類別(1),受益人身分證號(10),匯款戶名(10),銀行代碼(3),分行代碼(4)匯款帳號(16),國際號SwiftCode(16),英文戶名(60)
