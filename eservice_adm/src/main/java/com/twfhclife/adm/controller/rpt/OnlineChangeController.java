@@ -936,8 +936,8 @@ public class OnlineChangeController extends BaseController {
 				result = onlineChangeService.updateInsuranceClaimSendAlliance(vo);
 				
 				if("Y".equals(vo.getSendAlliance())) {//審核通過才insert INSURANCE_CLAIM,INSURANCE_CLAIM_FILEDATAS
-				result = onlineChangeService.addInsuranceClaim(vo);
-			}
+					result = onlineChangeService.addInsuranceClaim(vo);
+				}
 				
 			}
 
