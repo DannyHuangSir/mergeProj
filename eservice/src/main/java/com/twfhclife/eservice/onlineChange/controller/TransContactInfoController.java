@@ -560,10 +560,15 @@ public class TransContactInfoController extends BaseUserDataController {
 						paramMap.put("LoginTime", loginTime);
 						
 						List<String> receivers = new ArrayList<String>();
+						
+						/// 20211228 by 203990
+						/// 已接收的管理員通知信不再發送
+						/*
 						//發送系統管理員
 						receivers = (List)mailInfo.get("receivers");
 						//推送管 理已接收 保單編號: [保單編號]  保戶[同意/不同意]轉送聯盟鏈
 						messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_009, receivers, paramMap, "email");
+						*/
 
 						//發送保戶SMS
 						//receivers = new ArrayList<String>();
