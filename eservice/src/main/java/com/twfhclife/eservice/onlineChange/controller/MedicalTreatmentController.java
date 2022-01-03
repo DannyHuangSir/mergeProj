@@ -185,15 +185,23 @@ public class MedicalTreatmentController extends BaseUserDataController {
 						appendMsg(policyListVo,OnlineChangMsgUtil.MEDICAL_TREATMENT_CLAIM_PLAN);
 					}
 				}
-				//登入者和被保人不是同一人。
-				if(!StringUtils.isEmpty(policyListVo.getLipiRocId()) && !StringUtils.isEmpty(userRocId) &&  !userRocId.equals(policyListVo.getLipiRocId()) ) {
-					policyListVo.setApplyLockedFlag("Y");
-					appendMsg(policyListVo,OnlineChangMsgUtil.INSURANCE_CLAIM_NOT_SAME);
-				}
-
+				
 				LilipmVo lilipmVo = lilipmService.findByPolicyNo(policyListVo.getPolicyNo());
 				if (lilipmVo != null) {
 					policyListVo.setCustomerName(lilipmVo.getLipmName1());
+				}
+				
+				LilipiVo lilipiVo = lilipiService.findByPolicyNo(policyListVo.getPolicyNo());
+				if(lilipiVo!=null && org.apache.commons.lang3.StringUtils.isNotBlank(lilipiVo.getNoHiddenLipiId())) {
+					policyListVo.setLipiRocId(lilipiVo.getNoHiddenLipiId().trim());
+				}
+				
+				//登入者和被保人不是同一人。
+				logger.info("判斷登入者和被保人是否同一人:policyListVo.getLipiRocId()="+policyListVo.getLipiRocId()+",userRocId="+userRocId);
+				if(!StringUtils.isEmpty(policyListVo.getLipiRocId()) && !StringUtils.isEmpty(userRocId) 
+						&& !userRocId.equals(policyListVo.getLipiRocId()) ) {
+					policyListVo.setApplyLockedFlag("Y");
+					appendMsg(policyListVo,OnlineChangMsgUtil.INSURANCE_CLAIM_NOT_SAME);
 				}
 
 				//檢核:要/被保人是否相同
