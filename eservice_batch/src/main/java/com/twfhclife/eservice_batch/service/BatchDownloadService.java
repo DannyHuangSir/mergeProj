@@ -286,8 +286,12 @@ public class BatchDownloadService {
 								/**
 								 * 发送邮件给管理员
 								 */
+								/// 20211228 by 203990
+								/// 已完成的管理員通知信不再發送
+								/*
 								String s = resultManageSendMail(insuranceNum, from_company_id, "2");
 								logger.info("從壽險核心接收回案件狀態,發送郵件給管理員-----{}", s);
+								*/
 
 								/**
 								 * 发送邮件给保戶
