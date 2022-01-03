@@ -474,12 +474,16 @@ public class TransAddServiceImpl implements ITransAddService {
 						//保单编号
 						paramMap.put("POLICY_NUMBER", policyNo);
 
+						/// 20211228 by 203990
+						/// 保全聯盟轉收件 - 進件成功的管理員通知信不再發送
+						/*
 						//發送系統管理員
 						//voCIO = getMessageTriggerRequestVo(ApConstants.ELIFE_MAIL_007, receivers, paramMap, "email");
 						//轉收件通知中的本次新變更email
 						voCIO = getMessageTriggerRequestVo(ApConstants.TRANSFER_MAIL_014, receivers, paramMap, "email");
 						String resultSYS_MailMsg = messagingTemplateService.triggerMessageTemplate(voCIO);
 						logger.info("發送系統管理員 : " + resultSYS_MailMsg);
+						*/
 						
 						//發送保戶SMS
 						receivers.clear();

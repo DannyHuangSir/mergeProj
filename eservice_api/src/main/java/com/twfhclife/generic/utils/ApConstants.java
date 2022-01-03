@@ -104,6 +104,8 @@ public interface ApConstants {
 	public static final String TRANSFER_MAIL_018="TRANSFER_MAIL_018";
 	/**【轉修eservice進件-已註記異常件-處理】通知後台保戶人員 发送邮件*/
 	public static final String TRANSFER_MAIL_019="TRANSFER_MAIL_019";
+	/**【保全聯盟鏈 - 轉收件 - 擋件】通知後台管理人員 发送邮件*/
+	public static final String TRANSFER_MAIL_023="TRANSFER_MAIL_023";
 	/**客戶通知  轉收件通知  臺銀人壽保單理賠申請通知*/
 	public static final String ELIFE_MAIL_023="ELIFE_MAIL_023";
 	/**客戶通知	首家件通知  臺銀人壽保單理賠申請通知*/

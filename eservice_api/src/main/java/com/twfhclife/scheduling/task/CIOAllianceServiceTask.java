@@ -782,6 +782,31 @@ public class CIOAllianceServiceTask {
 								vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_Y);
 								vo.setMsg(NotifyOfNewCaseChangeVo.GO_AHEAD_MSG);
 								contactInfoService.updateNcStatusBySeqId(vo);
+
+
+								// 20211110 by 203990
+								// 【保全聯盟鏈 - 轉收件 - 擋件】通知後台管理人員
+								Map<String, Object> mailInfo = transContactInfoService.getSendMailInfo();
+								//發送系統管理員
+								long timeMillis = System.currentTimeMillis();
+								List<String> receivers = new ArrayList<String>();
+								receivers = (List)mailInfo.get("receivers");
+								Map<String, String> paramMap = new HashMap<String, String>();
+								paramMap.put("EMAIL",EMailTemplate.INSURED_EMAIL_IS_NULL);
+								//paramMap.put("DATA",CallApiDateFormatUtil.getTimeMillisToString(timeMillis,"yyyyMMddHHmmss"));
+								paramMap.put("DATA",caseId);
+								paramMap.put("CACE_NUMBER",caseId);
+								MessageTriggerRequestVo voCIO = new MessageTriggerRequestVo();
+								voCIO.setMessagingTemplateCode(ApConstants.TRANSFER_MAIL_023);
+								voCIO.setSendType("email");
+								voCIO.setMessagingReceivers(receivers);
+								voCIO.setParameters(paramMap);
+								voCIO.setSystemId(ApConstants.SYSTEM_ID);
+								//进行发送通信
+								String resultSYSMailMsg = messagingTemplateService.triggerMessageTemplate(voCIO);
+								log.info("發送【保全聯盟鏈 - 轉收件 - 擋件】系統管理員RESULT : " + resultSYSMailMsg);
+								
+								
 								/**
 								 * 如果保戶已有申請單在處理中，回報案件狀態為“Y” msg=已有案件處理中
 								 * */
