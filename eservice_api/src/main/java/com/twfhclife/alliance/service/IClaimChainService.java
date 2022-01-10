@@ -236,11 +236,11 @@ public interface IClaimChainService {
 	int updateInsuranceClaimFileBase64(InsuranceClaimFileDataVo vo) throws Exception;
 
 	/**
-	 * 獲取保單理賠的文件編號
+	 * 獲取保單理賠的文件編號(INSURANCE_CLAIM_FILEDATAS.FD_ID's sequence)
 	 * @return
 	 * @throws Exception
 	 */
-	Float getItransInsuranceFiledatasId() throws Exception;
+	Float getInsuranceFiledatasId() throws Exception;
 
 	//進行將CASE_ID 進行回壓,便於首家案件更新狀態,執行跑403
     int  addNotifyOfNewCaseMedicalIsPrice(MedicalTreatmentClaimVo vo)throws Exception;

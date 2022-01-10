@@ -138,7 +138,7 @@ public class ClaimChainServiceImpl implements IClaimChainService{
 						for(InsuranceClaimFileDataVo fileVo : fileDatas) {
 							fileVo.setClaimSeqId(seqId);
 							//获取InsuranceClaimFileData FD_ID
-							Float fdId = insuranceClaimDao.getItransInsuranceClaimFiledatasId();
+							Float fdId = insuranceClaimDao.getInsuranceClaimFiledatasId();
 							logger.info("---------------------獲取保單理賠的文件FD_ID-----{}",fdId);
 							fileVo.setFdId(fdId);
 							//获取保单的文件数据
@@ -634,9 +634,9 @@ public class ClaimChainServiceImpl implements IClaimChainService{
 	}
 
 	@Override
-	public Float getItransInsuranceFiledatasId() throws Exception {
-		Float itransInsuranceClaimFiledatasId = insuranceClaimDao.getItransInsuranceClaimFiledatasId();
-		return itransInsuranceClaimFiledatasId;
+	public Float getInsuranceFiledatasId() throws Exception {
+		Float insuranceClaimFdId = insuranceClaimDao.getInsuranceClaimFiledatasId();
+		return insuranceClaimFdId;
 	}
 
 	@Override

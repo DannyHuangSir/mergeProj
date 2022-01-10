@@ -220,8 +220,8 @@
        			getdate()
 			)
 	</insert>
-	<select id="getItransInsuranceClaimFiledatasId" resultType="java.lang.Float">
-		SELECT  NEXT VALUE for TRANS_INSURANCE_CLAIM_FD_SEQ  AS FD_ID
+	<select id="getInsuranceClaimFiledatasId" resultType="java.lang.Float">
+		SELECT  NEXT VALUE for INSURANCE_CLAIM_FD_SEQ  AS FD_ID
 	</select>
 	<update id="updateInsuranceClaimFileBase64" parameterType="com.twfhclife.alliance.model.InsuranceClaimFileDataVo" >
 		update

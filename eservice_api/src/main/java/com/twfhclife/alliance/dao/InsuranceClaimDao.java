@@ -60,11 +60,11 @@ public interface InsuranceClaimDao {
 	int updateInsuranceClaimFileBase64(@Param("vo") InsuranceClaimFileDataVo vo) throws Exception;
 
 	/**
-	 * 獲取保單理賠的文件編號
+	 * 獲取保單理賠的文件編號的sequence(INSURANCE_CLAIM_FILEDATAS.FD_ID)
 	 * @return
 	 * @throws Exception
 	 */
-	Float getItransInsuranceClaimFiledatasId() throws Exception;
+	Float getInsuranceClaimFiledatasId() throws Exception;
 
 	/**
 	 * 新增理賠申請
