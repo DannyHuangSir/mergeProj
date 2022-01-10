@@ -374,7 +374,8 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			String birdate = claimVo.getBirdate();
 			if (!StringUtils.isEmpty(policyNo) &&!StringUtils.isEmpty(birdate) ) {
 				String birdateByPolicyNo = iMedicalTreatmentService.getBirdateByPolicyNo(policyNo);//獲取被保人生日
-				birdate=birdate.replaceAll("/","-");
+				logger.info("比對生日(/getMedicalVerifyAge),UI_birdate:{},birdateByPolicyNo:{}", claimVo.getBirdate(),birdateByPolicyNo);
+				//birdate=birdate.replaceAll("/","-");
 				if (birdateByPolicyNo.equals(birdate)) {
 					String str = iMedicalTreatmentService.getAgeByPolicyNo(policyNo);//使用被保人生日計算年齡
 					String check_url = iMedicalTreatmentService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL);
