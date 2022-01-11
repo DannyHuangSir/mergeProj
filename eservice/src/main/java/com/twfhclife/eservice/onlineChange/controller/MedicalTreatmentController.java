@@ -374,8 +374,8 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			String birdate = claimVo.getBirdate();
 			if (!StringUtils.isEmpty(policyNo) &&!StringUtils.isEmpty(birdate) ) {
 				String birdateByPolicyNo = iMedicalTreatmentService.getBirdateByPolicyNo(policyNo);//獲取被保人生日
-				logger.info("比對生日(/getMedicalVerifyAge),UI_birdate:{},birdateByPolicyNo:{}", claimVo.getBirdate(),birdateByPolicyNo);
-				//birdate=birdate.replaceAll("/","-");
+				birdate = birdate.replaceAll("/","-");
+				logger.info("比對生日(/getMedicalVerifyAge),UI_birdate:{},birdateByPolicyNo:{}", birdate,birdateByPolicyNo);
 				if (birdateByPolicyNo.equals(birdate)) {
 					String str = iMedicalTreatmentService.getAgeByPolicyNo(policyNo);//使用被保人生日計算年齡
 					String check_url = iMedicalTreatmentService.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.ESERVICE_MEDICAL_ONLINECHANGE_ODM_URL);
@@ -432,16 +432,15 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				claimVo.setBirdate(DateUtil.formatDateTime(lilipiVo.getLipiBirth(), DateUtil.FORMAT_WEST_DATE));
 			}
 			//获取文件上传最大值，kb单位
-			int  uploadMaxNumber=	lilipiService.findByUploadNumber(OnlineChangeUtil.UPLOAD_MAX_NUMBER,ApConstants.SYSTEM_ID);
-
+			int uploadMaxNumber = lilipiService.findByUploadNumber(OnlineChangeUtil.UPLOAD_MAX_NUMBER,ApConstants.SYSTEM_ID);
 
 			//獲取醫院明顯
-		  	List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
+		  	List<Hospital> hospitalList = iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
 
 		  	//將當前保單已經選中的醫院資料進行排查
 			//List<Hospital>  hospitalList=		iMedicalTreatmentService.gitChooseHospitalList(claimVo.getPolicyNo(),getUserRocId());
 			//獲取保險公司明顯
-			List<HospitalInsuranceCompany>  hospitalInsuranceCompanyList=	iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,StatuCode.AGREE_CODE.code);
+			List<HospitalInsuranceCompany> hospitalInsuranceCompanyList = iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,StatuCode.AGREE_CODE.code);
 			//進行排除當前台銀人壽在UI上顯示
 			List<HospitalInsuranceCompany> collect = hospitalInsuranceCompanyList.stream().filter(x -> {
  				if(x.getInsuranceId() !=null && x.getInsuranceId().equals("L01")){
@@ -472,18 +471,18 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					claimVo.setRelation_name(vo.getParameterName());
 				}
 			}
+
 			String policeDate = claimVo.getBirdate();
-			if (!org.apache.commons.lang3.StringUtils.isEmpty(policeDate)) {
-				String yyyyMMdd = DateUtil.getStringToDateString("yyyyMMdd", policeDate, "yyyy-MM-dd");
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(policeDate) && policeDate.contains("/")) {
+				String yyyyMMdd = DateUtil.getStringToDateString("yyyy/MM/dd", policeDate, "yyyy-MM-dd");
 				claimVo.setBirdate(yyyyMMdd);
 			}
 
 			//獲取保險公司明顯
-			List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,null);
+			List<Hospital> hospitalList = iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,null);
 
 			//獲取醫院明顯
-			List<HospitalInsuranceCompany>  hospitalInsuranceCompanyList=	iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,null);
-
+			List<HospitalInsuranceCompany> hospitalInsuranceCompanyList = iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,null);
 
 			// 發送驗證碼
 			sendAuthCode("MedicalTreatment", claimVo.getMail(), claimVo.getPhone());
@@ -786,5 +785,26 @@ public class MedicalTreatmentController extends BaseUserDataController {
 		}
 		return processResponseEntity();
 	}
+	/**
+	public static void main(String[] args) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(1970, 5, 12);
+
+		String yyyy_mm_dd = DateUtil.formatDateTime(calendar.getTime(), DateUtil.FORMAT_WEST_DATE);
+		System.out.println("yyyy_mm_dd="+yyyy_mm_dd);
+		
+		
+		//String policeDate = "1970/05/12";
+		String dateString = DateUtil.getStringToDateString("yyyy/MM/dd", yyyy_mm_dd, "yyyy-MM-dd");
+		System.out.println("dateString="+dateString);
+		
+		String strDate = "1970/5/12";
+		if(strDate.contains("/")) {
+			System.out.println("contains '/'");
+		}else {
+			System.out.println("Not contains '/'");
+		}
+		
+	}**/
 
 }

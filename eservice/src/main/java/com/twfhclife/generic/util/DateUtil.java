@@ -89,7 +89,7 @@ public class DateUtil {
 	public  static String  getStringToDateString(String dateFormat,String  args,String returnDateFormat){
 		try {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-			Date parse =simpleDateFormat.parse(args);
+			Date parse = simpleDateFormat.parse(args);
 			SimpleDateFormat format = new SimpleDateFormat(returnDateFormat);
 			String formatStr = format.format(parse);
 			return   formatStr;

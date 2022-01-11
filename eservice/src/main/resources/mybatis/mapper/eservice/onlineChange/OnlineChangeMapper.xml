@@ -206,6 +206,12 @@
 	<select id="getUserIdByTransNum" parameterType="java.lang.String" resultType="java.lang.String">
 		 select user_id from ESERVICE.DBO.TRANS where trans_num=#{transNum} and status='2' and trans_type=#{transType}
 	</select>
+
+	<!-- 20211118 add by 203990 -->
+	<select id="getUserIdByPolicyNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select top 1 user_id from users where roc_id = (select top 1 lipm_id from lilipm where LIPM_INSU_NO = #{policyNo});
+	</select>
+
 	<!--
 	select ESERVICE.DBO.FN_DEBASE64(A.NAME)+'|'+A.TRANS_NUM+'|'+CONVERT(varchar(10),  ESERVICE.DBO.FN_DEBASE64(A.CREATE_DATE), 120) from
 		ESERVICE.dbo.TRANS_INSURANCE_CLAIM A, ESERVICE_ADM.DBO.BLACK_LIST B  where A.TRANS_NUM = B.TRANS_NUM  and B.ID_NO = #{blackListVo.idNo}
@@ -338,7 +344,7 @@
 	</select>
 
 	<select id="getBirdateByPolicyNo" parameterType="java.lang.String" resultType="java.lang.String">
-		select CONVERT(varchar,LIPI_BIRTH,111) LIPI_BIRTH from ESERVICE.dbo.LILIPI where LIPI_INSU_NO = #{policyNo}
+		select LIPI_BIRTH from ESERVICE.dbo.LILIPI where LIPI_INSU_NO = #{policyNo}
 	</select>
 
 	<select id="getPolicyClaimCompletedPolicyno" resultType="java.lang.String">
