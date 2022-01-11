@@ -38,8 +38,14 @@ public interface IOnlineChangeService {
 	 * @return 回傳報表 byte[]
 	 */
 	public byte[] getEndorsementPDF(String transNum, String rocId);
-	
+
+	// 20211118 add by 203990
+	public byte[] getEINPDF(String policyNo, String rocId);
+
 	public String getUserIdByTransNum(@Param("transNum") String transNum, @Param("transType") String transType);
+
+	// 20211118 add by 203990
+	public String getUserIdByPolicyNo(@Param("policyNo")String policyNo);
 	
 	public boolean checkFileSize(String transNum, List<MultipartFile> uploadFiles, String limitSizeStr);
 	

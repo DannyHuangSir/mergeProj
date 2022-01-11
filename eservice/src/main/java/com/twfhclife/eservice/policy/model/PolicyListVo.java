@@ -73,6 +73,17 @@ public class PolicyListVo extends PolicyVo {
 
 	private String lipiRocId;
 
+	/** 20211220 by 203990 保單是否擁有電子保單 */
+	private String pmdaEpoMk;
+
+	public String getPmdaEpoMk() {
+		return pmdaEpoMk;
+	}
+
+	public void setPmdaEpoMk(String pmdaEpoMk) {
+		this.pmdaEpoMk = pmdaEpoMk;
+	}
+
 	private String lipmFlexRcpMk = "N";
 
 	public String getCustomerNameBase64() {

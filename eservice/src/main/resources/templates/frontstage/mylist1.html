@@ -43,6 +43,7 @@
 										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">繳費年期</th>
 										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">繳別</th>
 										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="10">支付工具</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="11">保單類型</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -113,6 +114,9 @@
 												<th:block th:text="${vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
 													? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue}"/>
 											</td>
+											<td class="hid1 hid2" th:onclick="${vo.pmdaEpoMk} == 'Y' ? 'getEINPDF(\'' + ${vo.policyNo} + '\')'">
+												<th:block th:text="${vo.pmdaEpoMk} == 'Y' ? '電子保單下載':'紙本保單'"/>
+											</td>
 										</tr>
 									</th:block>
 								</tbody>
@@ -144,6 +148,7 @@
 											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">繳費年期</th>
 											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">繳別</th>
 											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="10">支付工具</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="11">電子保單</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -212,6 +217,9 @@
 												<td class="hid1 hid2">
 													<th:block th:text="${vo.paymentMode != null and vo.paymentMode != 'T' and vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
 														? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue} : '-'"/>
+												</td>
+												<td class="hid1 hid2" th:onclick="${vo.pmdaEpoMk} == 'Y' ? 'getEINPDF(\'' + ${vo.policyNo} + '\')'">
+													<th:block th:text="${vo.pmdaEpoMk} == 'Y' ? '電子保單下載':'紙本保單'"/>
 												</td>
 											</tr>
 										</th:block>
@@ -288,6 +296,16 @@
 			}
 		]);
 	}
+
+	// 20211118 by 203990
+	function getEINPDF(policyNo) {
+		e = window.event;                // Get the window event
+	    e.cancelBubble = true;                       // IE Stop propagation
+	    if (e.stopPropagation) e.stopPropagation();  // Other Broswers
+		winTab = window.open('getEINPDF?policyNo=' + policyNo);
+		return false;
+	}	
+
 	/*]]>*/
 	</script>
 </body>

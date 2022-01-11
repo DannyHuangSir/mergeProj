@@ -40,6 +40,8 @@
 		<result column="PROD_TYPE" property="prodType"/>	
 		<result column="MAIN_AMOUNT" property="mainAmount"/>
 		<result column="CURRENCY" property="currency"/>
+
+<result column="PMDA_EPO_MK" property="pmdaEpoMk"/>
 	</resultMap>
 
 	<!-- product -->
@@ -105,6 +107,12 @@
 		) AS CUSTOMER_NAME
 	</sql>
 
+
+	<!-- 20211220 by 203990 保單是否擁有電子保單 -->
+	<sql id="PMDA_EPO_MK_Column">
+		(select top 1 PMDA_EPO_MK from ESERVICE.DBO.LIPMDA_ES WHERE (PMDA_INSU_TYPE + CONVERT(VARCHAR,PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) = P.POLICY_NO) AS PMDA_EPO_MK
+	</sql>
+	
 
 	<!-- 主約被保人名稱 -->
 	<sql id="MainInsuredName_Column">
@@ -226,6 +234,7 @@
 			,<include refid="ProductName_Column"/>
 			,<include refid="Expired_Column"/>
 			,<include refid="sameIdCount_Column"/>
+			,<include refid="CustomerName_Column"/>
 			,PRODES.PROD_IS_FATCA,PRODES.PROD_TYPE
 		FROM
 			ESERVICE.DBO.POLICY P
@@ -272,6 +281,7 @@
 			,<include refid="Expired_Column"/>
 			,<include refid="sameIdCount_Column"/>
 			,<include refid="CustomerName_Column"/>
+			,<include refid="PMDA_EPO_MK_Column"/>
 		FROM
 			ESERVICE.DBO.POLICY P
 		WHERE
@@ -298,6 +308,7 @@
 			,<include refid="Expired_Column"/>
 			,<include refid="sameIdCount_Column"/>
 			,<include refid="CustomerName_Column"/>
+			,<include refid="PMDA_EPO_MK_Column"/>
 		FROM
 			ESERVICE.DBO.POLICY P
 		WHERE

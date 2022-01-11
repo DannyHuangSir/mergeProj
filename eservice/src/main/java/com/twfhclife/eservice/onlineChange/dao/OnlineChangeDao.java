@@ -67,7 +67,10 @@ public interface OnlineChangeDao {
 			@Param("transFile") byte[] transFile, @Param("userId") String userId);
 	
 	public String getUserIdByTransNum(@Param("transNum")String transNum, @Param("transType")String transType);
-	
+
+	// 20211118 add by 203990
+	public String getUserIdByPolicyNo(@Param("policyNo")String policyNo);
+
 	/**
 	 * 檢查是否進入進入黑名單
 	 * @param blackListVo

@@ -335,12 +335,13 @@ public class OnlineChangeController extends BaseController {
 			} else if (transType != null && INVSETMENT_TYPES.contains(transType)) {
 				//進行查詢數據當前批次的保單號
 				String policyNo = transContactInfoService.getHistoryPolicyNo(transNum);
+				//繳別非投資型保單，取消不需要發送投資型通知
+				if (StringUtils.equals(transType, TransTypeUtil.PAYMODE_PARAMETER_CODE)) {
 				String type = policyNo.substring(0, 2);
 				String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
-				//繳別非投資型保單，取消不需要發送投資型通知
-				if (StringUtils.equals(transType, TransTypeUtil.PAYMODE_PARAMETER_CODE) &&
-						!(StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type))) {
+					if (!(StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type))) {
 					onlineChangeService.cancelApplyTrans(transNum, hisVo);
+					}
 				} else {
 				//進行取消 已持有投資標的轉換保單
 					onlineChangeService.cancelApplyTransInvestment(transNum, hisVo);
@@ -459,6 +460,42 @@ public class OnlineChangeController extends BaseController {
 			}
 
 			document = onlineChangeService.getEndorsementPDF(transNum, rocId);
+			header.setContentType(new MediaType("application", "pdf"));
+			header.set("Content-Disposition", new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
+			header.setContentLength(document.length);
+
+		} catch (Exception e) {
+			logger.error("Unable to get data from downloadLoanPDF: {}", ExceptionUtils.getStackTrace(e));
+		}
+		return new HttpEntity<byte[]>(document, header);
+	}
+
+
+	/** 20211118 by 203990
+	 * 下載電子保單PDF.
+     *
+	 * @param String transNum
+	 * @return
+	 */
+	@RequestLog
+	@RequestMapping(value = "/getEINPDF")
+	public @ResponseBody HttpEntity<byte[]> getEINPDF(String policyNo) {
+		byte[] document = null;
+		HttpHeaders header = new HttpHeaders();
+		try {
+			String fileName = String.format("inline; filename=電子保單-%s.pdf", policyNo);
+			String userId = getUserId();
+            String str = onlineChangeService.getUserIdByPolicyNo(policyNo);
+			if (str == null || !str.equals(userId)) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+			UsersVo userDetail = registerUserService.getUserByAccount(userId);
+			String rocId = "";
+			if (userDetail != null) {
+				rocId = userDetail.getRocId();
+			}
+
+			document = onlineChangeService.getEINPDF(policyNo, rocId);
 			header.setContentType(new MediaType("application", "pdf"));
 			header.set("Content-Disposition", new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
 			header.setContentLength(document.length);

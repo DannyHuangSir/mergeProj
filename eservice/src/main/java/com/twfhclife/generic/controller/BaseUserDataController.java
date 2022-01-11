@@ -124,8 +124,8 @@ public class BaseUserDataController extends BaseController {
 	 */
 	@SuppressWarnings("unchecked")
 	public PolicyListResponse getPolicyListByUser(String userId, String rocId) {
-		// 從session取得資料
 		List<PolicyListVo> invtPolicyList = null;
+		// 從session取得資料
 		if (getSession(UserDataInfo.USER_INVT_POLICY_LIST) != null) {
 			logger.info("Find user[{}] invtPolicyList from session", userId);
 			invtPolicyList = (List<PolicyListVo>) getSession(UserDataInfo.USER_INVT_POLICY_LIST);
@@ -137,6 +137,7 @@ public class BaseUserDataController extends BaseController {
 			benefitPolicyList = (List<PolicyListVo>) getSession(UserDataInfo.USER_BENEFIT_POLICY_LIST);
 		}
 		
+		/* 20211224 by 203990
 		// Call api 取得資料
 		if (CollectionUtils.isEmpty(invtPolicyList) ||  CollectionUtils.isEmpty(benefitPolicyList)) {
 			PolicyListResponse policyListResponse = userPolicyListClient.getPolicyListByUser(userId, rocId);
@@ -145,6 +146,7 @@ public class BaseUserDataController extends BaseController {
 				benefitPolicyList = policyListResponse.getBenefitPolicyList();
 			}
 		}
+		*/
 		
 		// 投資型保單(若無資料，嘗試由內部服務取得資料)
 		if (CollectionUtils.isEmpty(invtPolicyList)) {

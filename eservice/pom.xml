@@ -294,6 +294,12 @@
 			<artifactId>btli-common-utils</artifactId>
 			<version>1.18.626</version>
 		</dependency>
+		
+		<dependency><!-- 明順追加於OnlineChangeServiceImpl -->
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20211205</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.mortbay.jetty.alpn/alpn-boot -->
 <!-- 		<dependency> -->
 <!-- 			<groupId>org.mortbay.jetty.alpn</groupId> -->

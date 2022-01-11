@@ -1,9 +1,11 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -13,6 +15,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import com.twfhclife.eservice.onlineChange.dao.*;
 import com.twfhclife.eservice.onlineChange.model.*;
@@ -28,6 +42,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.twfhclife.eservice.onlineChange.dao.OnlineChangeDao;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
@@ -107,6 +123,19 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	
 	@Value("${upload.file.save.path}")
 	private String FILE_SAVE_PATH;
+	
+	// 20211118 by 203990
+	@Value("${eni_api.api008.url}")
+	private String ENI_API_API008_URL;
+	
+	@Value("${eni_api.api008.accesstoken}")
+	private String ENI_API_API008_ACCESSTOKEN;
+	
+	@Value("${eni_api.api009.url}")
+	private String ENI_API_API009_URL;
+	
+	@Value("${eni_api.api009.accesstoken}")
+	private String ENI_API_API009_ACCESSTOKEN;
 	
 	/**
 	 * 我的申請
@@ -611,6 +640,207 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 		String base64= Base64.getEncoder().encodeToString(fileContent);
 		return  base64;
 	}
+
+	// 20211118 add by 203990	
+	@Override
+	public byte[] getEINPDF(String policyNo, String rocId) {
+		byte[] pdfByte = null;
+		try {
+			/*
+			javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+					  new javax.net.ssl.HostnameVerifier(){
+
+					      public boolean verify(String hostname,
+					             javax.net.ssl.SSLSession sslSession) {
+					          return hostname.equals("localhost"); // or return true
+					      }
+					  });*/
+			
+			//ENI API008 取得資料
+	        HttpsURLConnection.setDefaultHostnameVerifier(new OnlineChangeServiceImpl().new NullHostNameVerifier());
+	        SSLContext sc = SSLContext.getInstance("TLS");
+	        sc.init(null, trustAllCerts, new SecureRandom());
+	        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+			java.net.URL netUrl = new java.net.URL(ENI_API_API008_URL);
+			java.net.HttpURLConnection httpConn=(java.net.HttpURLConnection)netUrl.openConnection();
+		   //設定引數
+		   httpConn.setDoOutput(true);//需要輸出
+		   httpConn.setDoInput(true);//需要輸入
+		   httpConn.setUseCaches(false);//不允許快取
+		   httpConn.setRequestMethod("POST");//設定POST方式連線
+		   //設定請求屬性
+		   httpConn.setRequestProperty("Content-Type", "application/json");
+		   //httpConn.setRequestProperty("Connection", "Keep-Alive");// 維持長連線
+		   httpConn.setRequestProperty("Charset", "UTF-8");
+		   httpConn.setRequestProperty("Access-Token", ENI_API_API008_ACCESSTOKEN);
+		   //httpConn.setRequestProperty("call_user",unParams.get("call_user") );
+		   //連線
+		   httpConn.connect();
+		   //建立輸入流，向指向的URL傳入引數
+		   java.io.DataOutputStream dos = new java.io.DataOutputStream(httpConn.getOutputStream());
+
+		   //test
+		   //rocId = "S202340416";
+		   //policyNo = "GQ10400020";
+		   String raw_josn = "{\"askIdno\":\"" + rocId + "\",\"insNo\":\"" + policyNo + "\"}";
+		   
+		   dos.write(raw_josn.getBytes("UTF-8"));
+		   dos.flush();
+		   dos.close();
+		   //獲得響應狀態
+		   BufferedReader br = null;
+		   String api008Result = "";
+		   if (200 <= httpConn.getResponseCode() && httpConn.getResponseCode() <= 399) {
+		       br = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
+		       api008Result = br.lines().collect(Collectors.joining());
+		   } else {
+		       br = new BufferedReader(new InputStreamReader(httpConn.getErrorStream()));
+		       logger.error("Unable to getEINPDF: ENI_API_API008 http error ", br.toString());
+		   }
+		   
+		   // 解析 api008Result , 取得 fileId
+		   /*
+			{
+			   "msg":"SUCCESS",
+			   "code":"0",
+			   "data":[
+			      {
+			         "insNo":"20201120_02-01_0001",
+			         "insSource":"01",
+			         "insCode":"000001",
+			         "step":"9",
+			         "askIdno":"B123000001",
+			         "askName":"我是要保人姓名",
+			         "fileId":"202111271639-XXXXX"
+			      },
+			      {
+			         "insNo":"20201120_02-01_0001",
+			         "insSource":"02",
+			         "insCode":"000001",
+			         "step":"9",
+			         "askIdno":"B123000001",
+			         "askName":"我是要保人姓名",
+			         "fileId":"202111271639-YYYYY"
+			      }
+			   ]
+			}		    
+		    */
+	        JSONObject obj = new JSONObject(api008Result);
+	        String api008Result_code = obj.getString("code");
+	        if (! "0".equals(api008Result_code)) {
+			    logger.error("Unable to getEINPDF: ENI_API_API008 response error code ", api008Result_code);
+	        	return pdfByte;
+	        }
+
+	        JSONArray arr = obj.getJSONArray("data");
+	        //for (int i = 0; i < arr.length(); i++) {
+	        //    String[] fileId = arr.getJSONObject(i).getString("fileId");
+	        //}
+	        String fileId = arr.getJSONObject(0).getString("fileId");
+		   
+
+	        //ENI API009 取得資料
+			netUrl = new java.net.URL(ENI_API_API009_URL);
+		   httpConn=(java.net.HttpURLConnection)netUrl.openConnection();
+		   //設定引數
+		   httpConn.setDoOutput(true);//需要輸出
+		   httpConn.setDoInput(true);//需要輸入
+		   httpConn.setUseCaches(false);//不允許快取
+		   httpConn.setRequestMethod("POST");//設定POST方式連線
+		   //設定請求屬性
+		   httpConn.setRequestProperty("Content-Type", "application/json");
+		   //httpConn.setRequestProperty("Connection", "Keep-Alive");// 維持長連線
+		   httpConn.setRequestProperty("Charset", "UTF-8");
+		   httpConn.setRequestProperty("Access-Token", ENI_API_API009_ACCESSTOKEN);
+		   //httpConn.setRequestProperty("call_user",unParams.get("call_user") );
+		   //連線
+		   httpConn.connect();
+		   //建立輸入流，向指向的URL傳入引數
+		   dos = new java.io.DataOutputStream(httpConn.getOutputStream());
+
+		   raw_josn = "{\"fileId\":\"" + fileId + "\"}";
+		   dos.write(raw_josn.getBytes("UTF-8"));
+		   dos.flush();
+		   dos.close();
+		   //獲得響應狀態
+		   br = null;
+		   String api009Result = "";
+		   if (200 <= httpConn.getResponseCode() && httpConn.getResponseCode() <= 399) {
+		       br = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
+		       api009Result = br.lines().collect(Collectors.joining());
+		   } else {
+		       br = new BufferedReader(new InputStreamReader(httpConn.getErrorStream()));
+		       logger.error("Unable to getEINPDF: ENI_API_API009 http error ", br.toString());
+		       return pdfByte;
+		   }
+		   
+		   // 解析 api009Result , 取得 b64Pdf
+		   /*
+			{
+			  "code": "0",
+			  "msg": "success",
+			  "data": {
+			    "b64Pdf": "JFGJTVGL:OJUYG651Dcce7fgeUGLklm424reger...",
+			    "fileName": "no_sign.pdf"
+			  }
+			}
+		    */
+	        obj = new JSONObject(api009Result);
+	        String api009Result_code = obj.getString("code");
+	        if (! "0".equals(api009Result_code)) {
+			    logger.error("Unable to getEINPDF: ENI_API_API009 response error code ", api009Result_code);
+	        	return pdfByte;
+	        }
+
+	        String b64Pdf = obj.getJSONObject("data").getString("b64Pdf");
+		   
+			pdfByte = Base64.getDecoder().decode(b64Pdf);
+		} catch (Exception e) {
+			logger.error("Unable to getEINPDF: {}", ExceptionUtils.getStackTrace(e));
+		}
+		return pdfByte;
+	}
+
+	// 20211118 add by 203990
+	@Override
+	public String getUserIdByPolicyNo(String policyNo) {
+		return onlineChangeDao.getUserIdByPolicyNo(policyNo);
+	}
+
+	// 20211118 add by 203990
+    static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    } };
+
+	// 20211118 add by 203990
+    public class NullHostNameVerifier implements HostnameVerifier {
+        /*
+         * (non-Javadoc)
+         * 
+         * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String,
+         * javax.net.ssl.SSLSession)
+         */
+        @Override
+        public boolean verify(String arg0, SSLSession arg1) {
+            // TODO Auto-generated method stub
+            return true;
+        }
+    }
 
 	public String converFileToBase64Str(String filePath) {
 		String encodedString = null;
