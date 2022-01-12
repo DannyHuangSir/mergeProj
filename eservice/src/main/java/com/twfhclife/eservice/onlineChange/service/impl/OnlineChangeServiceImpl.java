@@ -70,21 +70,6 @@ import com.twfhclife.generic.service.impl.BaseServiceImpl;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.HttpUtil;
 import com.twfhclife.generic.util.RptUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.print.DocFlavor;
 
 @Service
 public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineChangeService {
@@ -123,19 +108,6 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	
 	@Value("${upload.file.save.path}")
 	private String FILE_SAVE_PATH;
-	
-	// 20211118 by 203990
-	@Value("${eni_api.api008.url}")
-	private String ENI_API_API008_URL;
-	
-	@Value("${eni_api.api008.accesstoken}")
-	private String ENI_API_API008_ACCESSTOKEN;
-	
-	@Value("${eni_api.api009.url}")
-	private String ENI_API_API009_URL;
-	
-	@Value("${eni_api.api009.accesstoken}")
-	private String ENI_API_API009_ACCESSTOKEN;
 	
 	/**
 	 * 我的申請
@@ -644,6 +616,14 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	// 20211118 add by 203990	
 	@Override
 	public byte[] getEINPDF(String policyNo, String rocId) {
+		String ENI_API_API008_URL = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, "ENI_API_API008_URL");
+				
+		String ENI_API_API008_ACCESSTOKEN = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, "ENI_API_API008_ACCESSTOKEN");
+				
+		String ENI_API_API009_URL = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, "ENI_API_API009_URL");
+				
+		String ENI_API_API009_ACCESSTOKEN = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, "ENI_API_API009_ACCESSTOKEN");
+
 		byte[] pdfByte = null;
 		try {
 			/*
@@ -664,40 +644,40 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 
 			java.net.URL netUrl = new java.net.URL(ENI_API_API008_URL);
 			java.net.HttpURLConnection httpConn=(java.net.HttpURLConnection)netUrl.openConnection();
-		   //設定引數
-		   httpConn.setDoOutput(true);//需要輸出
-		   httpConn.setDoInput(true);//需要輸入
-		   httpConn.setUseCaches(false);//不允許快取
-		   httpConn.setRequestMethod("POST");//設定POST方式連線
-		   //設定請求屬性
-		   httpConn.setRequestProperty("Content-Type", "application/json");
-		   //httpConn.setRequestProperty("Connection", "Keep-Alive");// 維持長連線
-		   httpConn.setRequestProperty("Charset", "UTF-8");
-		   httpConn.setRequestProperty("Access-Token", ENI_API_API008_ACCESSTOKEN);
-		   //httpConn.setRequestProperty("call_user",unParams.get("call_user") );
-		   //連線
-		   httpConn.connect();
-		   //建立輸入流，向指向的URL傳入引數
-		   java.io.DataOutputStream dos = new java.io.DataOutputStream(httpConn.getOutputStream());
+			//設定引數
+		    httpConn.setDoOutput(true);//需要輸出
+		    httpConn.setDoInput(true);//需要輸入
+		    httpConn.setUseCaches(false);//不允許快取
+		    httpConn.setRequestMethod("POST");//設定POST方式連線
+		    //設定請求屬性
+		    httpConn.setRequestProperty("Content-Type", "application/json");
+		    //httpConn.setRequestProperty("Connection", "Keep-Alive");// 維持長連線
+		    httpConn.setRequestProperty("Charset", "UTF-8");
+		    httpConn.setRequestProperty("Access-Token", ENI_API_API008_ACCESSTOKEN);
+		    //httpConn.setRequestProperty("call_user",unParams.get("call_user") );
+		    //連線
+		    httpConn.connect();
+		    //建立輸入流，向指向的URL傳入引數
+		    java.io.DataOutputStream dos = new java.io.DataOutputStream(httpConn.getOutputStream());
 
-		   //test
-		   //rocId = "S202340416";
-		   //policyNo = "GQ10400020";
-		   String raw_josn = "{\"askIdno\":\"" + rocId + "\",\"insNo\":\"" + policyNo + "\"}";
+		    //test
+		    //rocId = "S202340416";
+		    //policyNo = "GQ10400020";
+		    String raw_josn = "{\"askIdno\":\"" + rocId + "\",\"insNo\":\"" + policyNo + "\"}";
 		   
-		   dos.write(raw_josn.getBytes("UTF-8"));
-		   dos.flush();
-		   dos.close();
-		   //獲得響應狀態
-		   BufferedReader br = null;
-		   String api008Result = "";
-		   if (200 <= httpConn.getResponseCode() && httpConn.getResponseCode() <= 399) {
-		       br = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
-		       api008Result = br.lines().collect(Collectors.joining());
-		   } else {
-		       br = new BufferedReader(new InputStreamReader(httpConn.getErrorStream()));
-		       logger.error("Unable to getEINPDF: ENI_API_API008 http error ", br.toString());
-		   }
+		    dos.write(raw_josn.getBytes("UTF-8"));
+		    dos.flush();
+		    dos.close();
+		    //獲得響應狀態
+		    BufferedReader br = null;
+		    String api008Result = "";
+		    if (200 <= httpConn.getResponseCode() && httpConn.getResponseCode() <= 399) {
+		    	br = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
+		        api008Result = br.lines().collect(Collectors.joining());
+		    } else {
+		        br = new BufferedReader(new InputStreamReader(httpConn.getErrorStream()));
+		        logger.error("Unable to getEINPDF: ENI_API_API008 http error ", br.toString());
+		    }
 		   
 		   // 解析 api008Result , 取得 fileId
 		   /*
@@ -734,15 +714,18 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	        }
 
 	        JSONArray arr = obj.getJSONArray("data");
-	        //for (int i = 0; i < arr.length(); i++) {
-	        //    String[] fileId = arr.getJSONObject(i).getString("fileId");
-	        //}
 	        String fileId = arr.getJSONObject(0).getString("fileId");
+	        for (int i = 0; i < arr.length(); i++) {
+				if ("01".equals(arr.getJSONObject(i).getString("insSource"))) {
+					fileId = arr.getJSONObject(i).getString("fileId");
+					break;
+				}
+	        }
 		   
 
 	        //ENI API009 取得資料
 			netUrl = new java.net.URL(ENI_API_API009_URL);
-		   httpConn=(java.net.HttpURLConnection)netUrl.openConnection();
+		    httpConn=(java.net.HttpURLConnection)netUrl.openConnection();
 		   //設定引數
 		   httpConn.setDoOutput(true);//需要輸出
 		   httpConn.setDoInput(true);//需要輸入
