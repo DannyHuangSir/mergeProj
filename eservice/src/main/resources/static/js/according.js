@@ -37,7 +37,19 @@ $(function() {
 	            arrowTarget.removeClass('foo-angle-down').addClass('foo-angle-up');
 	        }
 	
-	
+	        // 20220120 by 203990
+			$(this).find('svg').each(function(i, obj) {
+				if ($(obj).attr('data-icon') == 'chevron-down') {
+					$(obj).attr('data-icon', 'chevron-up');
+					$(obj).removeClass('fa-chevron-down');
+					$(obj).addClass('fa-chevron-up');
+				} else if ($(obj).attr('data-icon') == 'chevron-up') {
+					$(obj).attr('data-icon', 'chevron-down');
+					$(obj).removeClass('fa-chevron-up');
+					$(obj).addClass('fa-chevron-down');
+				}
+			});
+
 	        //$(".mobile-toggle-panel").not(":eq("+idx+")").slideUp().delay(250).addClass("toggle-hide");
 	        $(".mobile-toggle-panel").eq(idx).slideToggle('500').delay(250).removeClass("toggle-hide");
 	
