@@ -190,73 +190,76 @@ public class EventRecordLogAspect {
 			}
 			
 			logger.debug("BusinessEvent record: " + MyJacksonUtil.object2Json(be));
+			
 			// 系統事件
 			SystemEventParam[] systemEventParams = eventRecordParam.systemEventParams();
-			for (SystemEventParam systemEventParam : systemEventParams) {
-				Map<String, Object> runSqlParams = new HashMap<>();
-				
-				String sqlId = systemEventParam.sqlId();
-				String execMethod = systemEventParam.execMethod();
-				String execFile = !"".equals(sqlId) ? "SQL DATA" : systemEventParam.execFile();
-				String sqlVoType = systemEventParam.sqlVoType();
-				String sqlVoKey = systemEventParam.sqlVoKey();
+			if(systemEventParams!=null) {
+				for (SystemEventParam systemEventParam : systemEventParams) {
+					Map<String, Object> runSqlParams = new HashMap<>();
+					
+					String sqlId = systemEventParam.sqlId();
+					String execMethod = systemEventParam.execMethod();
+					String execFile = !"".equals(sqlId) ? "SQL DATA" : systemEventParam.execFile();
+					String sqlVoType = systemEventParam.sqlVoType();
+					String sqlVoKey = systemEventParam.sqlVoKey();
 
-				// 表示sql優先使用vo當參數傳入
-				if (!StringUtils.isEmpty(sqlVoType) && !StringUtils.isEmpty(sqlVoKey)) {
-					Class sqlClass = Class.forName(sqlVoType);
-					Object sqlVoObj = sqlClass.newInstance();
+					// 表示sql優先使用vo當參數傳入
+					if (!StringUtils.isEmpty(sqlVoType) && !StringUtils.isEmpty(sqlVoKey)) {
+						Class sqlClass = Class.forName(sqlVoType);
+						Object sqlVoObj = sqlClass.newInstance();
 
-					// 若不是用vo當參數傳入，從註解取出使用者設定的
-					SqlParam[] sqlParams = systemEventParam.sqlParams();
-					for (SqlParam param: sqlParams) {
-						String requestParamkey = param.requestParamkey();
-						String sqlParamkey = param.sqlParamkey();
+						// 若不是用vo當參數傳入，從註解取出使用者設定的
+						SqlParam[] sqlParams = systemEventParam.sqlParams();
+						for (SqlParam param: sqlParams) {
+							String requestParamkey = param.requestParamkey();
+							String sqlParamkey = param.sqlParamkey();
+							
+							Object fieldValue = getRequestValue(args, parameterAnnotations, requestParamkey);
+							Field field = ReflectionUtils.findField(sqlClass, sqlParamkey);
+							ReflectionUtils.makeAccessible(field);
+							ReflectionUtils.setField(field, sqlVoObj, fieldValue);
+						}
 						
-						Object fieldValue = getRequestValue(args, parameterAnnotations, requestParamkey);
-						Field field = ReflectionUtils.findField(sqlClass, sqlParamkey);
-						ReflectionUtils.makeAccessible(field);
-						ReflectionUtils.setField(field, sqlVoObj, fieldValue);
+						runSqlParams.put(sqlVoKey, sqlVoObj);
+					} else {
+						// 若不是用vo當參數傳入，從註解取出使用者設定的
+						SqlParam[] sqlParams = systemEventParam.sqlParams();
+						for (SqlParam param: sqlParams) {
+							String requestParamkey = param.requestParamkey();
+							String sqlParamkey = param.sqlParamkey();
+							
+							// 若sqlParamkey有設定，代表sql的參數不是前端參數的key值，以sqlParamkey為優先
+							String runSqlParamkey = (!StringUtils.isEmpty(sqlParamkey) ? sqlParamkey : requestParamkey);
+							
+							runSqlParams.put(runSqlParamkey, getRequestValue(args, parameterAnnotations, requestParamkey));
+						}
+					}
+
+					SystemEventVo se = new SystemEventVo();
+					se.setExecDate(nowDate);
+					se.setExecUser(userId);
+					se.setExecMethod(execMethod);
+					se.setExecFile(execFile);
+					se.setExecStatus(eventStatus);
+					se.setCreateDate(nowDate);
+					se.setCreateUser(userId);
+					if (eventCode.contains("AA")) {
+						se.setExecMsg(ssoExecMsg);
 					}
 					
-					runSqlParams.put(sqlVoKey, sqlVoObj);
-				} else {
-					// 若不是用vo當參數傳入，從註解取出使用者設定的
-					SqlParam[] sqlParams = systemEventParam.sqlParams();
-					for (SqlParam param: sqlParams) {
-						String requestParamkey = param.requestParamkey();
-						String sqlParamkey = param.sqlParamkey();
-						
-						// 若sqlParamkey有設定，代表sql的參數不是前端參數的key值，以sqlParamkey為優先
-						String runSqlParamkey = (!StringUtils.isEmpty(sqlParamkey) ? sqlParamkey : requestParamkey);
-						
-						runSqlParams.put(runSqlParamkey, getRequestValue(args, parameterAnnotations, requestParamkey));
+					if (!StringUtils.isEmpty(sqlId)) {
+						try {
+							se.setExecSql(mybatisSqlUtil.getNativeSql(sqlId, runSqlParams));
+							logger.info("sysId: {}, userId: {}, eventCode: {}, sqlId: {}, running sql: {}", 
+										sysId, userId, eventCode, sqlId, se.getExecSql());
+						} catch (Exception e) {
+							se.setExecStatus("0");
+							se.setExecMsg(ExceptionUtils.getStackTrace(e));
+							logger.warn("Unable to getNativeSql: {}", ExceptionUtils.getStackTrace(e));
+						}
 					}
+					systemEventList.add(se);
 				}
-
-				SystemEventVo se = new SystemEventVo();
-				se.setExecDate(nowDate);
-				se.setExecUser(userId);
-				se.setExecMethod(execMethod);
-				se.setExecFile(execFile);
-				se.setExecStatus(eventStatus);
-				se.setCreateDate(nowDate);
-				se.setCreateUser(userId);
-				if (eventCode.contains("AA")) {
-					se.setExecMsg(ssoExecMsg);
-				}
-				
-				if (!StringUtils.isEmpty(sqlId)) {
-					try {
-						se.setExecSql(mybatisSqlUtil.getNativeSql(sqlId, runSqlParams));
-						logger.info("sysId: {}, userId: {}, eventCode: {}, sqlId: {}, running sql: {}", 
-									sysId, userId, eventCode, sqlId, se.getExecSql());
-					} catch (Exception e) {
-						se.setExecStatus("0");
-						se.setExecMsg(ExceptionUtils.getStackTrace(e));
-						logger.warn("Unable to getNativeSql: {}", ExceptionUtils.getStackTrace(e));
-					}
-				}
-				systemEventList.add(se);
 			}
 			
 			erReq.setBusinessEvent(be);
@@ -317,26 +320,33 @@ public class EventRecordLogAspect {
 	 */
 	private String getEventName(String sysId, String eventCode) {
 		String eventName = "";
-		if (eventNameCacheMap != null) {
-			eventName = eventNameCacheMap.get(sysId + "_" + eventCode);
-		} else {
+		
+		if(eventNameCacheMap==null) {
 			eventNameCacheMap = new HashMap<>();
 		}
 		
-		// 若cache 內有，直接回傳
-		if (!StringUtils.isEmpty(eventName)) {
-			return eventName;
+		//如果cache有就直接取用
+		boolean containEventCode = eventNameCacheMap.containsKey(sysId + "_"+ eventCode);
+		if(containEventCode) {
+			eventName = eventNameCacheMap.get(sysId + "_" + eventCode);
 		}
 		
-		List<ParameterVo> paramterList = parameterDao.getParameterByCategoryCode(sysId, "EVENT_TYPE");
-		if (paramterList != null) {
-			for (ParameterVo vo : paramterList) {
-				if (eventCode.equals(vo.getParameterValue())) {
-					eventName = vo.getParameterName();
-					eventNameCacheMap.put(sysId + "_" + eventCode, eventName);
+		if(!containEventCode || eventNameCacheMap.isEmpty()) {
+			List<ParameterVo> paramterList = parameterDao.getParameterByCategoryCode(sysId, "EVENT_TYPE");
+			if (paramterList != null) {
+				for (ParameterVo vo : paramterList) {
+					if (eventCode.equals(vo.getParameterValue())) {
+						eventName = vo.getParameterName();
+						eventNameCacheMap.put(sysId + "_" + eventCode, eventName);
+					}
 				}
 			}
 		}
+		
+		if (eventNameCacheMap != null) {
+			eventName = eventNameCacheMap.get(sysId + "_" + eventCode);
+		}
+		
 		return eventName;
 	}
 

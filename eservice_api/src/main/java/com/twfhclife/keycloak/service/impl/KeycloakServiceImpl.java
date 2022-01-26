@@ -36,7 +36,6 @@ import com.twfhclife.generic.utils.MyStringUtil;
 import com.twfhclife.keycloak.service.AbstractKeycloakService;
 import com.twfhclife.keycloak.service.KeycloakService;
 
-
 @Component
 public class KeycloakServiceImpl extends AbstractKeycloakService implements KeycloakService {
 
