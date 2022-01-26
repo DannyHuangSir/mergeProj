@@ -1,5 +1,9 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
+import com.twfhclife.eservice.generic.annotation.EserviceEventParam;
+import com.twfhclife.eservice.generic.annotation.EventRecordLog;
+import com.twfhclife.eservice.generic.annotation.EventRecordParam;
+import com.twfhclife.eservice.generic.annotation.SqlParam;
 import com.twfhclife.eservice.onlineChange.dao.OnlineChangeDao;
 import com.twfhclife.eservice.onlineChange.dao.TransCashPaymentDao;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
@@ -11,6 +15,7 @@ import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.web.dao.ParameterDao;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +45,14 @@ public class TransCashPaymentServiceImpl implements ITransCashPaymentService {
     private TransCashPaymentDao transCashPaymentDao;
 
     @Override
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "ES-018",
+            systemEventParams = {
+                    @EserviceEventParam(
+                            sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.getTransNum",
+                            execMethod = "送出線上申請"
+                    )
+            }))
     public int insertCashPayment(TransCashPaymentVo vo, String userId) {
 
         String transNum = vo.getTransNum();
@@ -83,6 +96,17 @@ public class TransCashPaymentServiceImpl implements ITransCashPaymentService {
     }
 
     @Override
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "ES-017",
+            systemEventParams = {
+                    @EserviceEventParam(
+                            sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.findByTransNum",
+                            execMethod = "查詢線上申請明細",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "transNums", sqlParamkey = "transNum")
+                            }
+                    )
+            }))
     public TransCashPaymentVo getCurrentTransCashPayment(String transNum) {
         return transCashPaymentDao.getTransPaymentByTransNum(transNum);
     }

@@ -26,7 +26,7 @@ public class RequestLogAspect {
 	 */
 	private static final List<String> IGNORE_REQ_PARAMS = Arrays.asList("password");
 
-	@Pointcut("@annotation(com.twfhclife.generic.annotation.RequestLog)")
+	@Pointcut("@annotation(com.twfhclife.eservice.generic.annotation.RequestLog)")
 	public void log() {
 	}
 

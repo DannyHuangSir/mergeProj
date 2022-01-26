@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.dao.TransPolicyDao;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.dao.TransCushionDao;
 import com.twfhclife.eservice.onlineChange.model.TransCushionVo;
 import com.twfhclife.eservice.onlineChange.service.ITransCushionService;
@@ -23,7 +24,6 @@ import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 自動墊繳選擇權服務.

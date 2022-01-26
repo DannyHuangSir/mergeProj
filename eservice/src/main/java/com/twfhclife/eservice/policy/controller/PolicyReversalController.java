@@ -1,9 +1,9 @@
 package com.twfhclife.eservice.policy.controller;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.model.PolicyReversalVo;
 import com.twfhclife.eservice.policy.service.IPolicyReversalService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;

@@ -13,10 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.twfhclife.eservice.dashboard.service.IDashboardService;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.model.CoverageVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.BenefitDetailClient;
 import com.twfhclife.generic.api_model.BenefitDetailResponse;
 import com.twfhclife.generic.controller.BaseController;

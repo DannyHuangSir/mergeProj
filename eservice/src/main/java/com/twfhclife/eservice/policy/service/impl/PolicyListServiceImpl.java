@@ -1,12 +1,12 @@
 package com.twfhclife.eservice.policy.service.impl;
 
 import com.google.common.collect.Lists;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.dao.PolicyExtraDao;
 import com.twfhclife.eservice.policy.dao.PolicyListDao;
 import com.twfhclife.eservice.policy.model.*;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.util.FormulaUtil;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

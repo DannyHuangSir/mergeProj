@@ -14,10 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.model.FundTransactionVo;
 import com.twfhclife.eservice.policy.service.IFundTransactionService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.TxLogClient;
 import com.twfhclife.generic.api_model.PolicyFundTransactionResponse;
 import com.twfhclife.generic.controller.BaseController;

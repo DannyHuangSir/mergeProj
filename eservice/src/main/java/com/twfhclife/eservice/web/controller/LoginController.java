@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.twfhclife.eservice.auth.service.IFuctionAuthService;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.user.model.LilipiVo;
 import com.twfhclife.eservice.user.model.LilipmVo;
 import com.twfhclife.eservice.user.service.ILilipiService;
@@ -45,7 +46,6 @@ import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_model.PolicyListResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.service.IUnicodeService;

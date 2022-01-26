@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.twfhclife.eservice.dashboard.service.IPaymentReminderService;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.dao.PolicyExtraDao;
 import com.twfhclife.eservice.policy.model.PolicyExtraVo;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 繳費提醒服務.

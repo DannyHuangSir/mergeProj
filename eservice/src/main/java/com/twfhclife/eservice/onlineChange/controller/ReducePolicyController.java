@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.TransDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransReducePolicyDtlVo;
 import com.twfhclife.eservice.onlineChange.model.TransReducePolicyVo;
@@ -27,7 +28,6 @@ import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.CoverageVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.policy.service.ICoverageService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.TransAddClient;
 import com.twfhclife.generic.api_client.TransHistoryDetailClient;

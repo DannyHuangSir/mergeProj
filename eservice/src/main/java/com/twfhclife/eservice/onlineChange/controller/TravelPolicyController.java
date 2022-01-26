@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.TransVo;
 import com.twfhclife.eservice.onlineChange.model.TravelPlanVo;
 import com.twfhclife.eservice.onlineChange.model.TravelPolicyVo;
@@ -40,7 +41,6 @@ import com.twfhclife.eservice.web.dao.ParameterDao;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_model.CommLogRequest;
 import com.twfhclife.generic.controller.BaseController;

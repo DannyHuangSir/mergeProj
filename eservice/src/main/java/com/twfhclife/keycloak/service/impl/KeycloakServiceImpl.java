@@ -22,9 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.twfhclife.common.util.EncryptionUtil;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.UsersVo;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.SsoClient;
 import com.twfhclife.generic.api_model.KeycloakLoginRequest;
 import com.twfhclife.generic.api_model.KeycloakLoginResponse;

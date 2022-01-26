@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.dao.TransPolicyDao;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.dao.TransBankInfoDao;
 import com.twfhclife.eservice.onlineChange.dao.TransSurrenderDao;
 import com.twfhclife.eservice.onlineChange.model.TransBankInfoVo;
@@ -29,7 +30,6 @@ import com.twfhclife.eservice.user.service.ILilipiService;
 import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.util.PdfUtil;
 import com.twfhclife.generic.util.RptUtils;
 

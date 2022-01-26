@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.twfhclife.eservice.dashboard.model.EstatmentAttrVo;
 import com.twfhclife.eservice.dashboard.model.EstatmentVo;
 import com.twfhclife.eservice.dashboard.service.IEstatmentService;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.UserDataInfo;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
 
 /**

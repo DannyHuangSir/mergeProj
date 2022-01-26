@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.TransResendPolicyVo;
 import com.twfhclife.eservice.onlineChange.service.ITransResendPolicyService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
@@ -20,7 +21,6 @@ import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.user.model.LilipmVo;
 import com.twfhclife.eservice.user.service.ILilipmService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.TransAddClient;
 import com.twfhclife.generic.api_model.ReturnHeader;

@@ -43,6 +43,7 @@ var eserviceOption = function() {
 			url : url,
 			type : "POST"
 		}).done(function(data) {
+		    console.log("execute commonOptions ajax done : "  + $target.attr("id") + " url: " + url)
 			if (data.result == 'SUCCESS') {
 				var optHtml = '<option value="">請選擇</option>';
 				$.each(data.resultData, function(i, obj) {

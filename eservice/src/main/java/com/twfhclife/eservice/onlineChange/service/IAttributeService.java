@@ -3,6 +3,7 @@ package com.twfhclife.eservice.onlineChange.service;
 import com.twfhclife.eservice.onlineChange.model.QuestionVo;
 import com.twfhclife.eservice.onlineChange.model.TransAnswerVo;
 import com.twfhclife.eservice.onlineChange.model.TransRiskLevelVo;
+import com.twfhclife.eservice.policy.model.IndividualVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface IAttributeService {
     int addNewApply(TransAnswerVo vo, UsersVo user);
 
     TransRiskLevelVo getTransRiskLevelDetail(String transNum);
+
+    IndividualVo getIndividualVoByRocId(String userRocId);
 }

@@ -1,7 +1,6 @@
 package com.twfhclife.eservice.onlineChange.dao;
 
 import com.twfhclife.eservice.onlineChange.model.QuestionVo;
-import com.twfhclife.eservice.onlineChange.model.TransAnswerVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;

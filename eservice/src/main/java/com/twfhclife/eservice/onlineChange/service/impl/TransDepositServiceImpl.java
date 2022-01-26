@@ -4,6 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.twfhclife.eservice.generic.annotation.EserviceEventParam;
+import com.twfhclife.eservice.generic.annotation.EventRecordLog;
+import com.twfhclife.eservice.generic.annotation.EventRecordParam;
+import com.twfhclife.eservice.generic.annotation.SqlParam;
 import com.twfhclife.eservice.onlineChange.dao.OnlineChangeDao;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.dao.TransDepositDao;
@@ -26,6 +30,7 @@ import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -82,9 +87,19 @@ public class TransDepositServiceImpl implements ITransDepositService {
 
     @Override
     @Transactional
-    public void addNewDepositApply(TransDepositVo vo, UsersVo user) {
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "ES-018",
+            systemEventParams = {
+                    @EserviceEventParam(
+                            sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.getTransNum",
+                            execMethod = "送出線上申請"
+                    )
+            }))
+    public int addNewDepositApply(TransDepositVo vo, UsersVo user) {
 
         Map<String, Object> params = Maps.newHashMap();
+        int result = 0;
+        try {
         params.put("transNum", null);
         transDao.getTransNum(params);
         String transNum = params.get("transNum").toString();
@@ -116,6 +131,7 @@ public class TransDepositServiceImpl implements ITransDepositService {
 
         List<TransDepositVo> newDeposits = new Gson().fromJson(vo.getInvtDeposits(), new TypeToken<List<TransDepositVo>>() {
         }.getType());
+
         if (!CollectionUtils.isEmpty(newDeposits)) {
             for (TransDepositVo e : newDeposits) {
                 TransDepositVo transDepositVo = new TransDepositVo();
@@ -131,9 +147,27 @@ public class TransDepositServiceImpl implements ITransDepositService {
             vo.setTransNum(transNum);
             transDepositDao.insert(vo);
         }
+            result = 1;
+        } catch (Exception e) {
+            result = 0;
+            log.error("Unable to init from addNewDepositApply: {}", ExceptionUtils.getStackTrace(e));
+            throw e;
+        }
+        return result;
     }
 
     @Override
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "ES-017",
+            systemEventParams = {
+                    @EserviceEventParam(
+                            sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.findByTransNum",
+                            execMethod = "查詢線上申請明細",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "transNums", sqlParamkey = "transNum")
+                            }
+                    )
+            }))
     public TransDepositDetailVo getAppliedTransDeposits(String transNum) {
         return transDepositDao.getAppliedTransDeposits(transNum);
     }

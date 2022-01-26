@@ -44,45 +44,144 @@
 					<div class="check-title">投資風險屬性 評估</div>
 					<div class="check-body grey2">
 						<th:block th:each="vo, rowStat : ${questions}">
-							<div class="check-list col-sm-6 attr1-padding">
-								<p class="marginBottom20"><th:block th:text="${vo.question}"/></p>
-								<th:block th:if="${vo.isMulti == 'N'}">
-									<div class="radio attr1">
-										<th:block th:each="vo1, rowStat1 : ${vo.options}">
-											<li style="list-style: none;">
-											<label for="answerB-1" id="answerB-1-1" class="col-sm-8">
-												<th:block th:if="${vo1.checked}">
-													<input th:attr="qid=${vo1.id},quesid=${vo.id}" checked type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+									<th:block th:if="${vo.isMulti == 'N'}">
+										<th:block th:if="${vo.id != 2 && vo.id != 3 && vo.id != 4 && vo.id != 5 && vo.id != 1}">
+											<div class="check-list col-sm-6 attr1-padding" th:style="${vo.id == 1} ? 'height: 100%;' : ''">
+												<p class="marginBottom20"><th:block th:text="${vo.question}"/></p>
+											<div class="radio attr1">
+												<th:block th:each="vo1, rowStat1 : ${vo.options}">
+													<li style="list-style: none;">
+														<label for="answerB-1" id="answerB-1-1" class="col-sm-8">
+															<th:block th:if="${vo1.checked}">
+																<input th:attr="qid=${vo1.id},quesid=${vo.id}" checked type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+															</th:block>
+															<th:block th:if="${!vo1.checked}">
+																<input th:attr="qid=${vo1.id},quesid=${vo.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+															</th:block>
+															<p name="itemText" th:text="${vo1.item}"/>
+														</label>
+													</li>
 												</th:block>
-												<th:block th:if="${!vo1.checked}">
-													<input th:attr="qid=${vo1.id},quesid=${vo.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
-												</th:block>
-												<p name="itemText" th:text="${vo1.item}"/>
-											</label>
-<!--											<span class="col-sm-4 pull-right">(<th:block th:text="${vo1.score}"/>分)</span>-->
-											</li>
+											</div>
+											</div>
 										</th:block>
-									</div>
-								</th:block>
-								<th:block th:if="${vo.isMulti == 'Y'}">
-									<div class="checkbox attr1">
-										<th:block th:each="vo1, rowStat : ${vo.options}">
-											<li style="list-style: none;">
-											<label for="answerB-1" class="col-sm-8">
-												<th:block th:if="${vo1.checked}">
-													<input th:attr="qid=${vo1.id},quesid=${vo.id}" checked type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
-												</th:block>
-												<th:block th:if="${!vo1.checked}">
-													<input th:attr="qid=${vo1.id},quesid=${vo.id}" type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
-												</th:block>
-												<p name="itemText" th:text="${vo1.item}"/>
-											</label>
-<!--											<span class="col-sm-4 pull-right">(<th:block th:text="${vo1.score}"/>分)</span>-->
-										</li>
+										<th:block th:if="${vo.id == 1}">
+											<div class="check-list col-sm-6" style="height:100%; padding:0">
+												<div class="attr1-padding">
+													<p class="marginBottom20"><th:block th:text="${vo.question}"/></p>
+													<div class="radio attr1">
+														<th:block th:each="vo1, rowStat : ${vo.options}">
+															<li style="list-style: none;">
+																<label for="answerB-1" class="col-sm-8">
+																	<th:block th:if="${vo1.checked}">
+																		<input th:attr="qid=${vo1.id},quesid=${vo.id}" checked type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+																	</th:block>
+																	<th:block th:if="${!vo1.checked}">
+																		<input th:attr="qid=${vo1.id},quesid=${vo.id}" type="radio" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+																	</th:block>
+																	<p name="itemText" th:text="${vo1.item}"/>
+																</label>
+															</li>
+														</th:block>
+													</div>
+												</div>
+												<div class="check-list col-sm-12 attr1-padding" style="box-shadow:0 0px 0px rgb(0 0 0 / 5%);">
+													<p class="marginBottom20"><th:block th:text="${questions[1].question}"/></p>
+													<div class="radio attr1">
+														<th:block th:each="vo1, rowStat1 : ${questions[1].options}">
+															<li style="list-style: none;">
+																<label for="answerB-1" id="answerB-1-1" class="col-sm-8">
+																	<th:block th:if="${vo1.checked}">
+																		<input th:attr="qid=${vo1.id},quesid=${questions[1].id}" checked type="radio" field="question" th:name="${questions[1].question}" th:value="${vo1.score}">
+																	</th:block>
+																	<th:block th:if="${!vo1.checked}">
+																		<input th:attr="qid=${vo1.id},quesid=${questions[1].id}" type="radio" field="question" th:name="${questions[1].question}" th:value="${vo1.score}">
+																	</th:block>
+																	<p name="itemText" th:text="${vo1.item}"/>
+																</label>
+															</li>
+														</th:block>
+													</div>
+												</div>
+												<div class="check-list col-sm-12 attr1-padding" style="box-shadow:0 0px 0px rgb(0 0 0 / 5%);">
+													<p class="marginBottom20"><th:block th:text="${questions[2].question}"/></p>
+													<div class="checkbox attr1">
+														<th:block th:each="vo1, rowStat : ${questions[2].options}">
+															<li style="list-style: none;">
+																<label for="answerB-1" class="col-sm-8">
+																	<th:block th:if="${vo1.checked}">
+																		<input class="question2Item" th:attr="qid=${vo1.id},quesid=${questions[3].id}" checked type="checkbox" field="question" th:name="${questions[3].question}" th:value="${vo1.score}">
+																	</th:block>
+																	<th:block th:if="${!vo1.checked}">
+																		<input class="question2Item" th:attr="qid=${vo1.id},quesid=${questions[3].id}" type="checkbox" field="question" th:name="${questions[3].question}" th:value="${vo1.score}">
+																	</th:block>
+																	<p name="itemText" th:text="${vo1.item}"/>
+																</label>
+															</li>
+														</th:block>
+													</div>
+												</div>
+												<div class="check-list col-sm-12 attr1-padding" style="box-shadow:0 0px 0px rgb(0 0 0 / 5%);">
+													<p class="marginBottom20"><th:block th:text="${questions[3].question}"/></p>
+													<div class="radio attr1">
+														<th:block th:each="vo1, rowStat : ${questions[3].options}">
+															<li style="list-style: none;">
+																<label for="answerB-1" class="col-sm-8">
+																	<th:block th:if="${vo1.checked}">
+																		<input class="question2Item" th:attr="qid=${vo1.id},quesid=${questions[3].id}" checked type="radio" field="question" th:name="${questions[3].question}" th:value="${vo1.score}">
+																	</th:block>
+																	<th:block th:if="${!vo1.checked}">
+																		<input class="question2Item" th:attr="qid=${vo1.id},quesid=${questions[3].id}" type="radio" field="question" th:name="${questions[3].question}" th:value="${vo1.score}">
+																	</th:block>
+																	<p name="itemText" th:text="${vo1.item}"/>
+																</label>
+															</li>
+														</th:block>
+													</div>
+												</div>
+												<div class="check-list col-sm-12 attr1-padding" style="box-shadow:0 0px 0px rgb(0 0 0 / 5%);">
+													<p class="marginBottom20"><th:block th:text="${questions[4].question}"/></p>
+													<div class="radio attr1">
+														<th:block th:each="vo1, rowStat : ${questions[4].options}">
+															<li style="list-style: none;">
+																<label for="answerB-1" class="col-sm-8">
+																	<th:block th:if="${vo1.checked}">
+																		<input class="question2Item" th:attr="qid=${vo1.id},quesid=${questions[4].id}" checked type="radio" field="question" th:name="${questions[4].question}" th:value="${vo1.score}">
+																	</th:block>
+																	<th:block th:if="${!vo1.checked}">
+																		<input class="question2Item" th:attr="qid=${vo1.id},quesid=${questions[4].id}" type="radio" field="question" th:name="${questions[4].question}" th:value="${vo1.score}">
+																	</th:block>
+																	<p name="itemText" th:text="${vo1.item}"/>
+																</label>
+															</li>
+														</th:block>
+													</div>
+												</div>
+											</div>
 										</th:block>
-									</div>
-								</th:block>
-							</div>
+									</th:block>
+									<th:block th:if="${vo.isMulti == 'Y'}">
+										<th:block th:if="${vo.id != 2 && vo.id != 3 && vo.id != 4 && vo.id != 5}">
+											<div class="check-list col-sm-6 attr1-padding" th:style="${vo.id == 1} ? 'height: 100%;' : ''">
+												<p class="marginBottom20"><th:block th:text="${vo.question}"/></p>
+												<div class="checkbox attr1">
+													<th:block th:each="vo1, rowStat : ${vo.options}">
+														<li style="list-style: none;">
+															<label for="answerB-1" class="col-sm-8">
+																<th:block th:if="${vo1.checked}">
+																	<input th:attr="qid=${vo1.id},quesid=${vo.id}" checked type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+																</th:block>
+																<th:block th:if="${!vo1.checked}">
+																	<input th:attr="qid=${vo1.id},quesid=${vo.id}" type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+																</th:block>
+																<p name="itemText" th:text="${vo1.item}"/>
+															</label>
+														</li>
+													</th:block>
+												</div>
+											</div>
+										</th:block>
+									</th:block>
 						</th:block>
 					  <div class="clearfix"></div>
 					</div>
@@ -90,10 +189,28 @@
 					  <p class="text-ps" id="remark"></p>
 					  <div>
 						  <th:block th:if="${read}">
-							  <input style="float:left;" checked type="checkbox" id="readCheck"/><p>本人已詳細閱讀本文件內容，並確認本文件資料皆由本人親自填寫及勾選。</p>
+							  <input style="float:left;" checked type="checkbox" id="readCheck"/>
+							  <p>
+								  本人(要保人)已確認以下事項：<br/>
+								  <ol>
+									  <li>本人已確實瞭解所繳交之保險費係用以購買投資型保險商品。</li>
+									  <li>本人已充分瞭解購買投資型保險商品之保單相關費用(如保費費用)及其收取方式，並已確認所投保之商品險種、繳費年期及繳費金額皆符合本人實際需求。</li>
+									  <li>本人已充分瞭解並願意承擔相關投資風險，此一風險可能使投資金額發生虧損，且最大可能損失為其原投資金額全部無法回收。</li>
+									  <li>本人已詳細閱讀本文件內容，並確認本文件資料皆由本人親自填寫及勾選。</li>
+								  </ol>
+							  </p>
 						  </th:block>
 						  <th:block th:if="${!read}">
-							  <input style="float:left;" type="checkbox" id="readCheck"/><p>本人已詳細閱讀本文件內容，並確認本文件資料皆由本人親自填寫及勾選。</p>
+							  <input style="float:left;" type="checkbox" id="readCheck"/>
+							  <p>
+								  本人(要保人)已確認以下事項：<br/>
+								  <ol>
+									  <li>本人已確實瞭解所繳交之保險費係用以購買投資型保險商品。</li>
+									  <li>本人已充分瞭解購買投資型保險商品之保單相關費用(如保費費用)及其收取方式，並已確認所投保之商品險種、繳費年期及繳費金額皆符合本人實際需求。</li>
+									  <li>本人已充分瞭解並願意承擔相關投資風險，此一風險可能使投資金額發生虧損，且最大可能損失為其原投資金額全部無法回收。</li>
+									  <li>本人已詳細閱讀本文件內容，並確認本文件資料皆由本人親自填寫及勾選。</li>
+								  </ol>
+							  </p>
 						  </th:block>
 					  </div>
 					</div>
@@ -138,6 +255,19 @@
 		if (transformationRemark!= undefined && transformationRemark != null && transformationRemark != ''){
 			$("#remark").html(transformationRemark);
 		}
+
+		if ($("input[qid='5'").attr("checked")) {
+		$(".question2Item").attr("checked", false)
+			$(".question2Item").attr("disabled", true)
+		}
+		$("body [qid='5']").on('click', function() {
+			$(".question2Item").attr("checked", false)
+			$(".question2Item").attr("disabled", true)
+		})
+
+		$("body [qid='6']").on('click', function() {
+			$(".question2Item").attr("disabled", false)
+		})
 	});
 	/*]]>*/
 	</script>

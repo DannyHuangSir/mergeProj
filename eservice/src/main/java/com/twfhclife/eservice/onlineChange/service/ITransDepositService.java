@@ -14,7 +14,7 @@ public interface ITransDepositService {
 
     PolicyListVo getDepositPolicy(String userRocId, String policyNo);
 
-    void addNewDepositApply(TransDepositVo vo, UsersVo user);
+    int addNewDepositApply(TransDepositVo vo, UsersVo user);
 
     TransDepositDetailVo getAppliedTransDeposits(String transNum);
 

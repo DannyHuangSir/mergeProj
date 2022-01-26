@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.twfhclife.eservice.generic.annotation.EventRecordLog;
+import com.twfhclife.eservice.generic.annotation.EventRecordParam;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.IOnlineChangeService;
 import com.twfhclife.eservice.onlineChange.service.IHospitalServcie;
@@ -19,10 +22,7 @@ import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
-import com.twfhclife.generic.annotation.EventRecordLog;
-import com.twfhclife.generic.annotation.EventRecordParam;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.TransHistoryListClient;
 import com.twfhclife.generic.api_model.TransHistoryListResponse;
@@ -58,7 +58,6 @@ import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.TransHistoryListClient;
 import com.twfhclife.generic.api_model.TransHistoryListResponse;
@@ -337,10 +336,10 @@ public class OnlineChangeController extends BaseController {
 				String policyNo = transContactInfoService.getHistoryPolicyNo(transNum);
 				//繳別非投資型保單，取消不需要發送投資型通知
 				if (StringUtils.equals(transType, TransTypeUtil.PAYMODE_PARAMETER_CODE)) {
-					String type = policyNo.substring(0, 2);
-					String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
+				String type = policyNo.substring(0, 2);
+				String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
 					if (!(StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type))) {
-						onlineChangeService.cancelApplyTrans(transNum, hisVo);
+					onlineChangeService.cancelApplyTrans(transNum, hisVo);
 					}
 				} else {
 					//進行取消 已持有投資標的轉換保單

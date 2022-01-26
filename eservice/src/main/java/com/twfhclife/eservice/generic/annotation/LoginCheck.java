@@ -1,4 +1,4 @@
-package com.twfhclife.generic.annotation;
+package com.twfhclife.eservice.generic.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequestLog {
+public @interface LoginCheck {
 	
 }

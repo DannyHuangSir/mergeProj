@@ -3,6 +3,7 @@ package com.twfhclife.eservice.onlineChange.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.twfhclife.eservice.policy.model.IndividualVo;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.eservice.onlineChange.model.TransRiskLevelVo;
@@ -46,4 +47,6 @@ public interface TransRiskLevelDao {
     String getRiskAttr(@Param("rocId") String rocId);
 
     Date getRecentApplyTime(@Param("userId") String userId);
+
+    IndividualVo getIndividualVoByRocId(@Param("rocId") String userRocId);
 }

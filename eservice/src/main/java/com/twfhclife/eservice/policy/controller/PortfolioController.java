@@ -3,6 +3,7 @@ package com.twfhclife.eservice.policy.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -19,7 +20,6 @@ import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.eservice.policy.service.IPortfolioService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.ParameterVo;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.PortfolioClient;
 import com.twfhclife.generic.api_model.PortfolioResponse;
 import com.twfhclife.generic.controller.BaseController;

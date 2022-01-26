@@ -10,6 +10,8 @@ public class OptionVo {
 
     private String item;
 
+    private String extraValue;
+
     private boolean checked = false;
 
     public boolean isChecked() {
@@ -50,5 +52,13 @@ public class OptionVo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getExtraValue() {
+        return extraValue;
+    }
+
+    public void setExtraValue(String extraValue) {
+        this.extraValue = extraValue;
     }
 }

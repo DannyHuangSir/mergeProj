@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itextpdf.text.DocumentException;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.dao.TransCertPrintDao;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.dao.TransExtendAttrDao;
@@ -37,7 +38,6 @@ import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.service.IUnicodeService;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.MyStringUtil;

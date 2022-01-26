@@ -1,9 +1,9 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
 import com.twfhclife.eservice.web.domain.ResponseObj;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;

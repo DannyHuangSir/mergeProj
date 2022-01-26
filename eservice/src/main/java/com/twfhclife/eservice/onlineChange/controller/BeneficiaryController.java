@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.TransBeneficiaryDtlVo;
 import com.twfhclife.eservice.onlineChange.model.TransBeneficiaryOldVo;
 import com.twfhclife.eservice.onlineChange.model.TransBeneficiaryVo;
@@ -32,7 +33,6 @@ import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.model.BeneficiaryVo;
 import com.twfhclife.eservice.web.model.ParameterVo;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.TransAddClient;
 import com.twfhclife.generic.api_client.TransHistoryDetailClient;

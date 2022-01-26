@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.partner.service.IPartnerService;
 import com.twfhclife.eservice.policy.controller.PolicyDataController;
 import com.twfhclife.eservice.policy.model.AgentVo;
 import com.twfhclife.eservice.web.domain.ResponseObj;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
 
 @Controller

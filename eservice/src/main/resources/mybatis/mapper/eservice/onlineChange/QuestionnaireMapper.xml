@@ -14,10 +14,11 @@
     <id column="ID" property="id" jdbcType="NUMERIC" />
     <result column="ITEM" property="item" jdbcType="NVARCHAR" />
     <result column="SCORE" property="score" jdbcType="NUMERIC" />
+  <result column="EXTRA_VALUE" property="extraValue" jdbcType="NVARCHAR" />
   </resultMap>
 
   <select id="selectQuestionnaire" resultMap="QuestionnaireMap">
-    SELECT Q.ID QID, O.ID, QUESTION, TITLE, ITEM, SCORE, IS_MULTI
+    SELECT Q.ID QID, O.ID, QUESTION, TITLE, ITEM, SCORE, IS_MULTI, EXTRA_VALUE
     FROM ESERVICE.DBO.QUESTION Q LEFT JOIN ESERVICE.DBO.OPTIONS O ON Q.ID = O.QUESTION_ID
     WHERE #{date} &gt;= EFFECTIVE_TIME AND #{date} &lt;= STOP_TIME
     ORDER BY Q.SEQ, O.SEQ

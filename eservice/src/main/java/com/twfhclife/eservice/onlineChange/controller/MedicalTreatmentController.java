@@ -4,6 +4,9 @@ package com.twfhclife.eservice.onlineChange.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.twfhclife.eservice.generic.annotation.EventRecordLog;
+import com.twfhclife.eservice.generic.annotation.EventRecordParam;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.odm.OnlineChangeModel;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
@@ -24,9 +27,6 @@ import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.generic.annotation.EventRecordLog;
-import com.twfhclife.generic.annotation.EventRecordParam;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.OnlineChangeClient;
@@ -371,7 +371,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 		try {
 			//獲取當前保單的出生日期
 			String policyNo = claimVo.getPolicyNo();
-			String birdate = claimVo.getBirdate();
+			String birdate  = claimVo.getBirdate();
 			if (!StringUtils.isEmpty(policyNo) &&!StringUtils.isEmpty(birdate) ) {
 				String birdateByPolicyNo = iMedicalTreatmentService.getBirdateByPolicyNo(policyNo);//獲取被保人生日
 				birdate = birdate.replaceAll("/","-");

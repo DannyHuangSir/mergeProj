@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.dao.TransCustInfoDao;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.model.TransCustInfoVo;
@@ -19,7 +20,6 @@ import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.model.UsersVo;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 變更基本資料服務.

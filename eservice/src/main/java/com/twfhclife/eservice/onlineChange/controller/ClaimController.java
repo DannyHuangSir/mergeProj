@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.ClaimVo;
 import com.twfhclife.eservice.onlineChange.service.IClaimService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
@@ -24,7 +25,6 @@ import com.twfhclife.eservice.user.model.LilipiVo;
 import com.twfhclife.eservice.user.model.LilipmVo;
 import com.twfhclife.eservice.user.service.ILilipiService;
 import com.twfhclife.eservice.user.service.ILilipmService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;

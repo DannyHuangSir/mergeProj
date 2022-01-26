@@ -75,4 +75,9 @@
 		AND USER_ID = #{userId} AND STATUS = '2' ORDER BY CREATE_DATE DESC
 	</select>
 
+	<select id="getIndividualVoByRocId" resultType="com.twfhclife.eservice.policy.model.IndividualVo">
+		SELECT top 1 INDIVIDUAL_ID individualId, NAME name, ROC_ID rocId, SEX sex, BIRTH_DATE birthDate, RISK_ATTR riskAttr
+		FROM ESERVICE.DBO.INDIVIDUAL WHERE ROC_ID = #{rocId}
+	</select>
+
 </mapper>

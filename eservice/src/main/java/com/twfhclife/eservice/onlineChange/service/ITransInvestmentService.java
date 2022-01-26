@@ -23,7 +23,7 @@ public interface ITransInvestmentService {
 
     List<CompareInvestmentVo> compareNew(List<InvestmentPortfolioVo> ownInvts, List<InvestmentPortfolioVo> newInvts);
 
-    void addNewInvestmentApply(TransInvestmentVo vo, UsersVo user) throws Exception;
+    int addNewInvestmentApply(TransInvestmentVo vo, UsersVo user) throws Exception;
 
     /**
      * 计算 已持有投資標的轉換 数据

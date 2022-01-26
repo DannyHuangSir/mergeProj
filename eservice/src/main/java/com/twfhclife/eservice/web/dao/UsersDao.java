@@ -3,7 +3,6 @@ package com.twfhclife.eservice.web.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-
 import com.twfhclife.eservice.web.model.InsuredVo;
 import com.twfhclife.eservice.web.model.UserRoleVo;
 import com.twfhclife.eservice.web.model.UserTermVo;

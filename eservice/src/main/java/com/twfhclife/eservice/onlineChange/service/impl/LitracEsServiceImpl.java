@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.dao.LitracEsDao;
 import com.twfhclife.eservice.onlineChange.model.LitracEsVo;
 import com.twfhclife.eservice.onlineChange.service.ILitracEsService;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 滿期生存匯款資訊服務.

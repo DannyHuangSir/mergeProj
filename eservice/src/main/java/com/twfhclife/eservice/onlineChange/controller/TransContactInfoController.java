@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
@@ -34,7 +35,6 @@ import com.twfhclife.eservice.user.model.LilipmVo;
 import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.dao.ParameterDao;
 import com.twfhclife.eservice.web.model.ParameterVo;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.TransAddClient;
@@ -396,6 +396,7 @@ public class TransContactInfoController extends BaseUserDataController {
 				**/
 			}
 			logger.info("user-detail-info(end):{}",rMap);
+
 			addAttribute("dataDetail", rMap);
 			addAttribute("transContactInfoDtlVo", transContactInfoDtlVo);
 		} catch (Exception e) {

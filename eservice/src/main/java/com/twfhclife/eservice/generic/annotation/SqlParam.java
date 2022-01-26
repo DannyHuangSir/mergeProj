@@ -1,4 +1,4 @@
-package com.twfhclife.generic.annotation;
+package com.twfhclife.eservice.generic.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

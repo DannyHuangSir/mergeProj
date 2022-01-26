@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_model.PolicyListResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;

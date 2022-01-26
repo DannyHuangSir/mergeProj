@@ -1,6 +1,10 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
 import com.google.common.base.Splitter;
+import com.twfhclife.eservice.generic.annotation.EserviceEventParam;
+import com.twfhclife.eservice.generic.annotation.EventRecordLog;
+import com.twfhclife.eservice.generic.annotation.EventRecordParam;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.dao.TransFundNotificationDao;
 import com.twfhclife.eservice.onlineChange.dao.TransFundNotificationDtlDao;
@@ -9,7 +13,6 @@ import com.twfhclife.eservice.onlineChange.model.TransFundNotificationDtlVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundNotificationVo;
 import com.twfhclife.eservice.onlineChange.service.ITransFundNotificationService;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
-import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.*;
@@ -18,7 +21,6 @@ import com.twfhclife.eservice.util.FormulaUtil;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -85,6 +87,14 @@ public class TransFundNotificationServiceImpl implements ITransFundNotificationS
 	 */
 	@Transactional
 	@Override
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = "ES-018",
+			systemEventParams = {
+					@EserviceEventParam(
+							sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.getTransNum",
+							execMethod = "送出線上申請"
+					)
+			}))
 	public int insertTransFundNotification(TransFundNotificationVo transFundNotificationVo) {
 		String transNum = transFundNotificationVo.getTransNum();
 		String userId = transFundNotificationVo.getUserId();

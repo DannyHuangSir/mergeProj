@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.dao.ExchangeRateDao;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
 import com.twfhclife.eservice.policy.service.IExchangeRateService;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 匯率服務.

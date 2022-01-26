@@ -1,4 +1,4 @@
-package com.twfhclife.generic.annotation;
+package com.twfhclife.eservice.generic.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -43,4 +43,6 @@ public @interface EventRecordParam {
 	 * @return
 	 */
 	SqlParam[] sqlParams() default {};
+
+	EserviceEventParam[] systemEventParams() default {};
 }

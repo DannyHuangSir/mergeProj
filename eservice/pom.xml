@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.twfhclife</groupId>
-	<artifactId>eservice_mergeProj</artifactId>
+	<artifactId>eservice_GoLive20220103</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>eservice</name>
@@ -363,7 +363,10 @@
 						<include>**/generic/util/RoiRateUtil*</include>
 						<include>**/generic/util/MathUtil*</include>
 						<include>**/generic/util/HttpUtil*</include>
-						<!--include>**/generic/annotation/*</include-->
+			
+						<include>**/generic/annotation/*</include>
+					
+						<!--include>**/generic/annotation/EserviceEventParam*</include-->
 					</includes>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>

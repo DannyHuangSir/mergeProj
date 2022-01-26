@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.TransCreditCardDateVo;
 import com.twfhclife.eservice.onlineChange.model.TransDetailVo;
 import com.twfhclife.eservice.onlineChange.service.ITransCreditCardDateService;
@@ -25,7 +26,6 @@ import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.policy.model.PolicyPayerVo;
 import com.twfhclife.eservice.policy.service.IPolicyPayerService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.TransAddClient;
 import com.twfhclife.generic.api_client.TransHistoryDetailClient;

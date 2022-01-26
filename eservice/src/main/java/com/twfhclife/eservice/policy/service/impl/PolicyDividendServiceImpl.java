@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.dao.PolicyDividendDao;
 import com.twfhclife.eservice.policy.model.PolicyDividendVo;
 import com.twfhclife.eservice.policy.service.IPolicyDividendService;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 保單收益分配服務.

@@ -1,5 +1,9 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
+import com.twfhclife.eservice.generic.annotation.EserviceEventParam;
+import com.twfhclife.eservice.generic.annotation.EventRecordLog;
+import com.twfhclife.eservice.generic.annotation.EventRecordParam;
+import com.twfhclife.eservice.generic.annotation.SqlParam;
 import com.twfhclife.eservice.onlineChange.dao.*;
 import com.twfhclife.eservice.onlineChange.model.AnswerVo;
 import com.twfhclife.eservice.onlineChange.model.QuestionVo;
@@ -10,9 +14,11 @@ import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
+import com.twfhclife.eservice.policy.model.IndividualVo;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.model.UsersVo;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,13 +67,20 @@ public class AttributeServiceImpl implements IAttributeService {
 
     @Override
     @Transactional
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "ES-018",
+            systemEventParams = {
+                    @EserviceEventParam(
+                            sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.getTransNum",
+                            execMethod = "送出線上申請"
+                    )
+            }))
     public int addNewApply(TransAnswerVo vo, UsersVo user) {
         // 設定交易序號
         String transNum = transService.getTransNum();
         vo.setTransNum(transNum);
         int result = 0;
         try {
-
             TransVo transVo = new TransVo();
             transVo.setTransNum(transNum);
             transVo.setTransDate(new Date());
@@ -111,6 +124,17 @@ public class AttributeServiceImpl implements IAttributeService {
     }
 
     @Override
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "ES-017",
+            systemEventParams = {
+                    @EserviceEventParam(
+                            sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.findByTransNum",
+                            execMethod = "查詢線上申請明細",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "transNums", sqlParamkey = "transNum")
+                            }
+                    )
+            }))
     public TransRiskLevelVo getTransRiskLevelDetail(String transNum) {
         TransRiskLevelVo qryVo = new TransRiskLevelVo();
         qryVo.setTransNum(transNum);
@@ -121,5 +145,10 @@ public class AttributeServiceImpl implements IAttributeService {
             detailVo = transRiskLevelVoList.get(0);
         }
         return detailVo;
+    }
+
+    @Override
+    public IndividualVo getIndividualVoByRocId(String userRocId) {
+        return transRiskLevelDao.getIndividualVoByRocId(userRocId);
     }
 }

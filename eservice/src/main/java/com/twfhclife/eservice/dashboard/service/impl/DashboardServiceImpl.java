@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.twfhclife.eservice.dashboard.service.IDashboardService;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.dao.BenefitDao;
 import com.twfhclife.eservice.policy.dao.CoverageDao;
 import com.twfhclife.eservice.policy.dao.ExchangeRateDao;
@@ -18,7 +19,6 @@ import com.twfhclife.eservice.policy.model.BenefitVo;
 import com.twfhclife.eservice.policy.model.CoverageVo;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 保障總覽服務.

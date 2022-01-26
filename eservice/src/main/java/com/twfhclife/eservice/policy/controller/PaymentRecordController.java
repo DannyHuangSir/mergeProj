@@ -10,9 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.model.PolicyPaymentRecordVo;
 import com.twfhclife.eservice.policy.service.IPolicyPaymentRecordService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.PaymentRecordClient;
 import com.twfhclife.generic.api_model.PolicyPaymentRecordResponse;
 import com.twfhclife.generic.controller.BaseController;

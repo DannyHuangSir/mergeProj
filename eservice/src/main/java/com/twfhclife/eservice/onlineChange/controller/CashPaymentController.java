@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo;
 import com.twfhclife.eservice.onlineChange.service.ITransCashPaymentService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
@@ -15,7 +16,6 @@ import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.controller.BaseUserDataController;

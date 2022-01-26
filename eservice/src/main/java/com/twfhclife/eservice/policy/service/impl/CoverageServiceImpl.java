@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.twfhclife.eservice.policy.service.ICoverageService;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.dao.BenefitDao;
 import com.twfhclife.eservice.policy.dao.CoverageDao;
 import com.twfhclife.eservice.policy.model.BenefitVo;
 import com.twfhclife.eservice.policy.model.CoverageVo;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.service.impl.BaseServiceImpl;
 
 /**

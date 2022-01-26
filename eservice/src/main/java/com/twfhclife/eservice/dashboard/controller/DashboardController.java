@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.twfhclife.eservice.dashboard.service.IDashboardService;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.model.PolicyExtraVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.policy.service.IPolicyExtraService;
@@ -24,7 +25,6 @@ import com.twfhclife.eservice.policy.service.IPortfolioService;
 import com.twfhclife.eservice.web.model.AuditLogVo;
 import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.service.ILoginService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.DashboardClient;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_model.DashboardResponse;

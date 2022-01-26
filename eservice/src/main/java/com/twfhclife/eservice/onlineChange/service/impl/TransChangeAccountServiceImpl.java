@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.dao.BankInfoDao;
 import com.twfhclife.eservice.onlineChange.dao.TransBankInfoDao;
 import com.twfhclife.eservice.onlineChange.dao.TransChangeAccountDao;
@@ -32,7 +33,6 @@ import com.twfhclife.eservice.policy.service.IPolicyBonusService;
 import com.twfhclife.eservice.web.model.BeneficiaryVo;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 匯款帳號變更服務.

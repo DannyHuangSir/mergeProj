@@ -14,10 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.AuthenticationVo;
 import com.twfhclife.eservice.web.model.UsersVo;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.service.ISendAuthenticationService;
 import com.twfhclife.generic.util.ApConstants;
 import org.springframework.web.bind.annotation.RequestParam;

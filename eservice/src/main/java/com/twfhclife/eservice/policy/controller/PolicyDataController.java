@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.service.IBeneficiaryService;
 import com.twfhclife.eservice.policy.model.AgentVo;
 import com.twfhclife.eservice.policy.model.CoverageVo;
@@ -33,7 +34,6 @@ import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.PolicyDataClient;
 import com.twfhclife.generic.api_model.PolicyDataResponse;
 import com.twfhclife.generic.controller.BaseController;

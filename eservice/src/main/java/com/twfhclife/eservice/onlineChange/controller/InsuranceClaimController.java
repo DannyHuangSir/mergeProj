@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.odm.OnlineChangeModel;
 import com.twfhclife.eservice.onlineChange.model.BlackListVo;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
@@ -50,7 +51,6 @@ import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
-import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.OnlineChangeClient;

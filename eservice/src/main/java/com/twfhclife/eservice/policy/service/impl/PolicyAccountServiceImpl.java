@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.policy.dao.PolicyAccountValueDao;
 import com.twfhclife.eservice.policy.model.PolicyAccountValueVo;
 import com.twfhclife.eservice.policy.service.IPolicyAccountValueService;
-import com.twfhclife.generic.annotation.RequestLog;
 
 /**
  * 保單帳戶價值服務.

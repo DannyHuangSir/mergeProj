@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_model.PolicyListResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;

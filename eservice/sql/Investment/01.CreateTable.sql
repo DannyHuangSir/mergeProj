@@ -97,13 +97,6 @@ CREATE TABLE [ESERVICE].[dbo].[TRANS_CASH_PAYMENT](
 ) ON [PRIMARY]
 GO
 
-create sequence QUESTION_SEQUENCE
-minvalue 1
-maxvalue 9223372036854775807
-start with 1
-increment by 1
-no cache;
-
 CREATE TABLE [ESERVICE].[dbo].[QUESTION](
 	[ID] [numeric](18, 0) NOT NULL,
 	[QUESTION] [nvarchar](50) NOT NULL,
@@ -223,3 +216,18 @@ start with 1
 increment by 1
 cycle
 no cache;
+
+ALTER TABLE [ESERVICE].[dbo].[OPTIONS] ADD EXTRA_VALUE nvarchar(50) NULL
+GO
+
+-- Attribute
+DROP SEQUENCE if exists QUESTION_SEQUENCE
+go
+
+create sequence QUESTION_SEQUENCE
+minvalue 1
+maxvalue 9223372036854775807
+start with 1
+increment by 1
+no cache
+go

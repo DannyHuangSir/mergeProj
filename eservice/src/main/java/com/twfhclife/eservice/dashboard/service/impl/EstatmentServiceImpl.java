@@ -11,7 +11,7 @@ import com.twfhclife.eservice.dashboard.dao.EstatmentDao;
 import com.twfhclife.eservice.dashboard.model.EstatmentAttrVo;
 import com.twfhclife.eservice.dashboard.model.EstatmentVo;
 import com.twfhclife.eservice.dashboard.service.IEstatmentService;
-import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
 
 /**
  * 我的通知服務.

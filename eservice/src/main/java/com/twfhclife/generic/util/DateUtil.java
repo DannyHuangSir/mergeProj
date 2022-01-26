@@ -92,7 +92,7 @@ public class DateUtil {
 			Date parse = simpleDateFormat.parse(args);
 			SimpleDateFormat format = new SimpleDateFormat(returnDateFormat);
 			String formatStr = format.format(parse);
-			return   formatStr;
+			return  formatStr;
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

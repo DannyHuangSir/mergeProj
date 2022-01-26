@@ -6,6 +6,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.twfhclife.eservice.generic.annotation.EserviceEventParam;
+import com.twfhclife.eservice.generic.annotation.EventRecordLog;
+import com.twfhclife.eservice.generic.annotation.EventRecordParam;
+import com.twfhclife.eservice.generic.annotation.SqlParam;
 import com.twfhclife.eservice.onlineChange.dao.*;
 import com.twfhclife.eservice.onlineChange.model.TransFundConversionVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentDetailVo;
@@ -29,6 +33,7 @@ import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.groovy.util.StringUtil;
@@ -467,6 +472,17 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
     }
 
     @Override
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "ES-017",
+            systemEventParams = {
+                    @EserviceEventParam(
+                            sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.findByTransNum",
+                            execMethod = "查詢線上申請明細",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "transNums", sqlParamkey = "transNum")
+                            }
+                    )
+            }))
     public List<TransInvestmentDetailVo> getAppliedInvestments(String transNum) {
         return transInvestmentDao.selectCompareInvestments(transNum);
     }
@@ -557,8 +573,18 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 
     @Transactional
     @Override
-    public void addNewInvestmentApply(TransInvestmentVo vo, UsersVo user) throws Exception {
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "ES-018",
+            systemEventParams = {
+                    @EserviceEventParam(
+                            sqlId = "com.twfhclife.eservice.onlineChange.dao.TransDao.getTransNum",
+                            execMethod = "送出線上申請"
+                    )
+            }))
+    public int addNewInvestmentApply(TransInvestmentVo vo, UsersVo user) throws Exception {
 
+        int result = 0;
+        try {
         List<CompareInvestmentVo> newInvestments = new Gson().fromJson(vo.getFinalInvestments(), new TypeToken<List<CompareInvestmentVo>>(){}.getType());
         if (CollectionUtils.isEmpty(newInvestments)) {
             throw new RuntimeException("申請為空，請重試！");
@@ -612,6 +638,13 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             transInvestmentDao.insert(transInvestmentVo);
         }
         vo.setTransNum(transNum);
+            result = 1;
+        }  catch (Exception e) {
+            result = 0;
+            log.error("Unable to init from addNewInvestmentApply: {}", ExceptionUtils.getStackTrace(e));
+            throw e;
+        }
+        return result;
     }
 
     public Map<String,Object> getSendMailInfo() {
