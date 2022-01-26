@@ -116,7 +116,9 @@ public class ParameterController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.PARAMMGT_001, 
 			sqlId = EventCodeConstants.PARAMMGT_001_SQL_ID,
-			daoVoParamKey = "parameterVo"))
+			daoVoParamKey = "parameterVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/parameter/getParameterPageList")
 	public ResponseEntity<PageResponseObj> getParameterPageList(@RequestBody ParameterVo vo,
 			HttpServletRequest request) {
@@ -173,7 +175,9 @@ public class ParameterController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.PARAMMGT_002, 
 			sqlId = EventCodeConstants.PARAMMGT_002_SQL_ID,
-			daoVoParamKey = "parameterVo"))
+			daoVoParamKey = "parameterVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/parameter/insertParameter")
 	public ResponseEntity<ResponseObj> insertParameter(@RequestBody ParameterVo parameterVo) {
 		try {
@@ -229,7 +233,9 @@ public class ParameterController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.PARAMMGT_003, 
 			sqlId = EventCodeConstants.PARAMMGT_003_SQL_ID,
-			daoVoParamKey = "parameterVo"))
+			daoVoParamKey = "parameterVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/parameter/updateParameter")
 	public ResponseEntity<ResponseObj> updateParameter(@RequestBody ParameterVo parameterVo) {
 		try {
@@ -261,7 +267,9 @@ public class ParameterController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.PARAMMGT_004, 
 			sqlId = EventCodeConstants.PARAMMGT_004_SQL_ID,
-			daoVoParamKey = "parameterVo"))
+			daoVoParamKey = "parameterVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/parameter/deleteParameter")
 	public ResponseEntity<ResponseObj> deleteParameter(@RequestBody ParameterVo parameterVo) {
 		try {
@@ -293,7 +301,9 @@ public class ParameterController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.PARAMMGT_005, 
 			sqlId = EventCodeConstants.PARAMMGT_005_SQL_ID,
-			daoVoParamKey = "parameterVo"))
+			daoVoParamKey = "parameterVo",
+			systemEventParams = {}
+			))
 	@RequestMapping(value = "/parameter/downloadParameterCsv")
 	public void downloadParameterCsv(@RequestParam(value = "stD", required = false) String startDate, @RequestParam(value = "enD", required = false) String endDate,
 			@RequestParam("sy") String systemId, @RequestParam("ci") Integer categoryId,

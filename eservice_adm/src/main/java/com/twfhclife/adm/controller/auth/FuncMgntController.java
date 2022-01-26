@@ -110,7 +110,9 @@ public class FuncMgntController extends BaseController {
 			sqlId = EventCodeConstants.FUNCMGT_001_SQL_ID,
 			sqlParams = {
 					@SqlParam(requestParamkey = "sysId", sqlParamkey = "sysId") 
-			}))
+			},
+			systemEventParams = {}
+			))
 	@PostMapping("/funcMgnt/getFunctions")
 	public ResponseEntity<ResponseObj> getFunctions(@RequestParam("sysId") String sysId) {
 		try {
@@ -141,7 +143,9 @@ public class FuncMgntController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.FUNCMGT_002, 
 			sqlId = EventCodeConstants.FUNCMGT_002_SQL_ID,
-			daoVoParamKey = "functionVo"))
+			daoVoParamKey = "functionVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/funcMgnt/insertFunctions")
 	public ResponseEntity<ResponseObj> insertFunctions(@RequestBody FunctionItemVo functionVo) {
 		try {
@@ -182,7 +186,9 @@ public class FuncMgntController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.FUNCMGT_003, 
 			sqlId = EventCodeConstants.FUNCMGT_003_SQL_ID,
-			daoVoParamKey = "functionVo"))
+			daoVoParamKey = "functionVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/funcMgnt/updateFunctions")
 	public ResponseEntity<ResponseObj> updateFunctions(@RequestBody FunctionItemVo functionVo) {
 		try {
@@ -217,7 +223,9 @@ public class FuncMgntController extends BaseController {
 			sqlId = EventCodeConstants.FUNCMGT_004_SQL_ID,
 			sqlParams = {
 					@SqlParam(requestParamkey = "functionId", sqlParamkey = "functionId") 
-			}))
+			},
+			systemEventParams = {}
+			))
 	@PostMapping("/funcMgnt/deleteFunctions")
 	public ResponseEntity<ResponseObj> deleteFunctions(@RequestBody FunctionItemVo functionVo) {
 		try {
@@ -247,7 +255,9 @@ public class FuncMgntController extends BaseController {
 			sqlId = EventCodeConstants.FUNCMGT_005_SQL_ID,
 			sqlParams = {
 					@SqlParam(requestParamkey = "param", sqlParamkey = "sysId") 
-			}))
+			},
+			systemEventParams = {}
+			))
 	@RequestMapping(value = "/funcMgnt/downloadFunctionsCsv")
 	public void downloadFunctionsCsv(@RequestParam("param") String param, HttpServletResponse response)
 			throws IOException {

@@ -64,7 +64,9 @@ public class JobTitleController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.JOBTITLEMGT_001, 
 			sqlId = EventCodeConstants.JOBTITLEMGT_001_SQL_ID,
-			daoVoParamKey = "jobTitleVo"))
+			daoVoParamKey = "jobTitleVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/jobTitleMgnt/getJobTitleDetail")
 	public ResponseEntity<PageResponseObj> getJobTitleDetail(@RequestBody JobTitleVo vo) {
 		PageResponseObj pageResp = new PageResponseObj();
@@ -96,7 +98,9 @@ public class JobTitleController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.JOBTITLEMGT_002, 
 			sqlId = EventCodeConstants.JOBTITLEMGT_002_SQL_ID,
-			daoVoParamKey = "jobTitleVo"))
+			daoVoParamKey = "jobTitleVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/jobTitleMgnt/insertJobTitle")
 	public ResponseEntity<ResponseObj> insertJobTitle(@RequestBody JobTitleVo jobTitleVo) {
 		try {
@@ -131,7 +135,9 @@ public class JobTitleController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.JOBTITLEMGT_003, 
 			sqlId = EventCodeConstants.JOBTITLEMGT_003_SQL_ID,
-			daoVoParamKey = "jobTitleVo"))
+			daoVoParamKey = "jobTitleVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/jobTitleMgnt/updateJobTitle")
 	public ResponseEntity<ResponseObj> updateJobTitle(@RequestBody JobTitleVo jobTitleVo) {
 		try {
@@ -159,7 +165,9 @@ public class JobTitleController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.JOBTITLEMGT_004, 
 			sqlId = EventCodeConstants.JOBTITLEMGT_004_SQL_ID,
-			daoVoParamKey = "jobTitleVo"))
+			daoVoParamKey = "jobTitleVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/jobTitleMgnt/deleteJobTitle")
 	public ResponseEntity<ResponseObj> deleteJobTitle(@RequestBody JobTitleVo jobTitleVo) {
 		try {

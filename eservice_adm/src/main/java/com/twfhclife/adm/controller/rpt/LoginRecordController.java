@@ -74,7 +74,9 @@ public class LoginRecordController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.LOGIN_RECORD, 
 			sqlId = EventCodeConstants.LOGIN_RECORD_SQL_ID,
-			daoVoParamKey = "loginLogVo"))
+			daoVoParamKey = "loginLogVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/loginRecord/getLoginRecordDetail")
 	public ResponseEntity<PageResponseObj> getLoginRecordDetail(@RequestBody LoginLogVo loginLogVo) {
 		PageResponseObj pageResp = new PageResponseObj();

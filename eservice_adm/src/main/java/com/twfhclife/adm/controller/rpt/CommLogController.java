@@ -118,7 +118,9 @@ public class CommLogController extends BaseController{
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.COMMLOG_001, 
 			sqlId = EventCodeConstants.COMMLOG_001_SQL_ID,
-			daoVoParamKey = "commLogVo"))
+			daoVoParamKey = "commLogVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/commLog/getCommLogDetail")
 	public ResponseEntity<PageResponseObj> getCommLogDetail(
 			@RequestBody CommLogVo vo,

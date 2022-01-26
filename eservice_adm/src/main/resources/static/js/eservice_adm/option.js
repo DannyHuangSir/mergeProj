@@ -5,6 +5,7 @@ var eserviceAdmOption = function() {
 			url : url,
 			type : "POST"
 		}).done(function(data) {
+		    console.log("execute commonOptions ajax done : "  + $target.attr("id") + " url: " + url)
 			if (data.result == 'SUCCESS') {
 				var optHtml = '';
 				if (msg) {
@@ -261,8 +262,28 @@ var eserviceAdmOption = function() {
 		$target.html('');
 		$target.html('<option value="">' + defaultValue + '</option>');
 	};
+	function relationOption($target, url, selectVal) {
+    		$target.html('');
+    		$.ajax({
+    			url : url,
+    			type : "POST"
+    		}).done(function(data) {
+    			if (data.result == 'SUCCESS') {
+    				var optHtml = '';
+    				$.each(data.resultData, function(i, obj) {
+    				    if (obj.parameterValue == selectVal) {
+    				    optHtml += ('<option selected value="' + obj.parameterValue + '">' + obj.parameterName + '</option>');
+    				    } else {
+        					optHtml += ('<option value="' + obj.parameterValue + '">' + obj.parameterName + '</option>');
+    				    }
+    				});
+    				$target.html(optHtml);
+    			}
+    		});
+    	};
 	return {
 		common : function(target, url, msg, parameterType, callback) {
+		    console.log("execute common: "  + target + " url: " + url)
 			if ((typeof url === 'undefined')) {
 				emptyOptions($(target), msg);
 			} else {
@@ -355,6 +376,13 @@ var eserviceAdmOption = function() {
 			} else {
 				roleOptions($(target), url, callback);
 			}
+		},
+		relation: function(target, url, select) {
+		    if ((typeof url === 'undefined')) {
+                emptyOptions($(target), msg);
+            } else {
+                relationOption($(target), url, select);
+            }
 		}
 	};
 }();

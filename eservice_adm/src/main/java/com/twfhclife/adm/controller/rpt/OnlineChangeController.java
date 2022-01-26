@@ -67,6 +67,8 @@ import com.twfhclife.generic.annotation.EventRecordParam;
 import com.twfhclife.generic.annotation.FuncUsageParam;
 import com.twfhclife.generic.annotation.LoginCheck;
 import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.generic.annotation.SqlParam;
+import com.twfhclife.generic.annotation.SystemEventParam;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.EventCodeConstants;
@@ -125,7 +127,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_001, 
 			sqlId = EventCodeConstants.ONLINECHANGE_001_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo", 
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getOnlineChangeDetail")
 	public ResponseEntity<PageResponseObj> getOnlineChangeDetail(@RequestBody TransVo transVo) {
 		PageResponseObj pageResp = new PageResponseObj();
@@ -160,7 +164,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_002, 
 			sqlId = EventCodeConstants.ONLINECHANGE_002_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransPaymode")
 	public String getTransPaymode(@RequestBody TransVo transVo) {
 		try {
@@ -186,7 +192,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_029, 
 			sqlId = EventCodeConstants.ONLINECHANGE_029_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransInsuranceClaim")
 	public String getTransInsuranceClaim(@RequestBody TransVo transVo) {
 		try {
@@ -207,7 +215,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_029,
 			sqlId = EventCodeConstants.ONLINECHANGE_029_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getMedicalTreatmentClaim")
 	public String getMedicalTreatmentClaim(@RequestBody TransVo transVo) {
 		try {
@@ -233,7 +243,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.MEDICAL_TREATMENT_39,
 			sqlId = EventCodeConstants.MEDICAL_TREATMENT_39_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/updateMedicalTreatmentSendAlliance")
 	public ResponseEntity<ResponseObj> updateMedicalTreatmentSendAlliance(@RequestBody TransMedicalTreatmentClaimVo vo) {
 		try {
@@ -262,7 +274,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_003, 
 			sqlId = EventCodeConstants.ONLINECHANGE_003_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransAnnuityMethod")
 	public String getTransAnnuityMethod(@RequestBody TransVo transVo) {
 		try {
@@ -283,7 +297,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_004, 
 			sqlId = EventCodeConstants.ONLINECHANGE_004_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransBonus")
 	public String getTransBonus(@RequestBody TransVo transVo) {
 		try {
@@ -304,7 +320,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_005, 
 			sqlId = EventCodeConstants.ONLINECHANGE_005_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransReward")
 	public String getTransReward(@RequestBody TransVo transVo) {
 		try {
@@ -325,7 +343,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_006, 
 			sqlId = EventCodeConstants.ONLINECHANGE_006_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransCushion")
 	public String getTransCushion(@RequestBody TransVo transVo) {
 		try {
@@ -346,7 +366,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_007, 
 			sqlId = EventCodeConstants.ONLINECHANGE_007_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransBeneficiary")
 	public String getTransBeneficiary(@RequestBody TransVo transVo) {
 		try {
@@ -367,7 +389,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_008, 
 			sqlId = EventCodeConstants.ONLINECHANGE_008_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransRenew")
 	public String getTransRenew(@RequestBody TransVo transVo) {
 		try {
@@ -388,7 +412,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_009, 
 			sqlId = EventCodeConstants.ONLINECHANGE_009_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransReduce")
 	public String getTransReduce(@RequestBody TransVo transVo) {
 		try {
@@ -409,7 +435,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_010, 
 			sqlId = EventCodeConstants.ONLINECHANGE_010_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransReducePolicy")
 	public String getTransReducePolicy(@RequestBody TransVo transVo) {
 		try {
@@ -430,7 +458,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_011, 
 			sqlId = EventCodeConstants.ONLINECHANGE_011_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransContactInfo")
 	public String getTransContactInfo(@RequestBody TransVo transVo) {
 		try {
@@ -451,7 +481,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_012, 
 			sqlId = EventCodeConstants.ONLINECHANGE_012_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransFundNotification")
 	public String getTransFundNotification(@RequestBody TransVo transVo) {
 		try {
@@ -472,7 +504,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_013, 
 			sqlId = EventCodeConstants.ONLINECHANGE_013_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransPayMethod")
 	public String getTransPayMethod(@RequestBody TransVo transVo) {
 		try {
@@ -493,7 +527,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_014, 
 			sqlId = EventCodeConstants.ONLINECHANGE_014_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransCreditCardInfo")
 	public String getTransCreditCardInfo(@RequestBody TransVo transVo) {
 		try {
@@ -514,7 +550,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_015, 
 			sqlId = EventCodeConstants.ONLINECHANGE_015_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransCancelContract")
 	public String getTransCancelContract(@RequestBody TransVo transVo) {
 		try {
@@ -535,7 +573,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_016, 
 			sqlId = EventCodeConstants.ONLINECHANGE_016_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransSurrender")
 	public String getTransSurrender(@RequestBody TransVo transVo) {
 		try {
@@ -556,7 +596,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_017, 
 			sqlId = EventCodeConstants.ONLINECHANGE_017_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransLoan")
 	public String getTransLoan(@RequestBody TransVo transVo) {
 		try {
@@ -577,7 +619,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_018, 
 			sqlId = EventCodeConstants.ONLINECHANGE_018_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransLoanCustInfo")
 	public String getTransLoanCustInfo(@RequestBody TransVo transVo) {
 		try {
@@ -599,7 +643,8 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_021,
 			sqlId = EventCodeConstants.ONLINECHANGE_021_SQL_ID,
-			daoVoParamKey = "transVo"
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
 			))
 	@PostMapping("/onlineChange/getTransMaturity")
 	public String getTransMaturity(@RequestBody TransVo transVo) {
@@ -622,7 +667,8 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_024,
 			sqlId = EventCodeConstants.ONLINECHANGE_024_SQL_ID,
-			daoVoParamKey = "transVo"
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
 			))
 	@PostMapping("/onlineChange/getTransResendPolicy")
 	public String getTransResendPolicy(@RequestBody TransVo transVo) {
@@ -645,7 +691,8 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_025,
 			sqlId = EventCodeConstants.ONLINECHANGE_025_SQL_ID,
-			daoVoParamKey = "transVo"
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
 			))
 	@PostMapping("/onlineChange/getTransCancelAuth")
 	public String getTransCancelAuth(@RequestBody TransVo transVo) {
@@ -668,7 +715,8 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_026,
 			sqlId = EventCodeConstants.ONLINECHANGE_026_SQL_ID,
-			daoVoParamKey = "transVo"
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
 			))
 	@PostMapping("/onlineChange/getTransValuePrint")
 	public String getTransValuePrint(@RequestBody TransVo transVo) {
@@ -691,7 +739,8 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_027,
 			sqlId = EventCodeConstants.ONLINECHANGE_027_SQL_ID,
-			daoVoParamKey = "transVo"
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
 			))
 	@PostMapping("/onlineChange/getTransTravelPolicy")
 	public String getTransTravelPolicy(@RequestBody TransVo transVo) {
@@ -714,7 +763,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_019, 
 			sqlId = EventCodeConstants.ONLINECHANGE_019_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getOnlineChangeReview")
 	public ResponseEntity<ResponseObj> getOnlineChangeReview(@RequestBody TransVo transVo) {
 		try {
@@ -744,7 +795,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_020, 
 			sqlId = EventCodeConstants.ONLINECHANGE_020_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getOnlineChangeResend")
 	public ResponseEntity<ResponseObj> getOnlineChangeResend(@RequestBody TransVo transVo) {
 		try {
@@ -774,7 +827,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_022, 
 			sqlId = EventCodeConstants.ONLINECHANGE_022_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getOnlineChangeComplete")
 	public ResponseEntity<ResponseObj> getOnlineChangeComplete(@RequestBody TransVo transVo) {
 		try {
@@ -807,7 +862,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_023, 
 			sqlId = EventCodeConstants.ONLINECHANGE_023_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@RequestMapping(path = "/onlineChange/getTransUploadZipFile", method = RequestMethod.GET)
 	public ResponseEntity<Resource> getTransUploadZipFile(@RequestParam("transNum") String transNum){
 		byte[] zipBytes = null;
@@ -866,7 +923,8 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_028,
 			sqlId = EventCodeConstants.ONLINECHANGE_028_SQL_ID,
-			daoVoParamKey = "transVo"
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
 			))
 	@PostMapping("/onlineChange/getTransChangePayAccount")
 	public String getTransChangePayAccount(@RequestBody TransVo transVo) {
@@ -889,7 +947,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_030, 
 			sqlId = EventCodeConstants.ONLINECHANGE_030_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/setInsuranceClaimFileReceivedYes")
 	public ResponseEntity<ResponseObj> updateInsuranceClaimFileReceived(@RequestBody TransInsuranceClaimVo vo) {
 		try {
@@ -924,7 +984,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_031, 
 			sqlId = EventCodeConstants.ONLINECHANGE_031_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/updateInsuranceClaimSendAlliance")
 	public ResponseEntity<ResponseObj> updateInsuranceClaimSendAlliance(@RequestBody TransInsuranceClaimVo vo) {
 		try {
@@ -958,6 +1020,13 @@ public class OnlineChangeController extends BaseController {
 	 * 
 	 * @return
 	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_041,
+			sqlId = EventCodeConstants.ONLINECHANGE_041_SQL_ID,
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransRiskLevel")
 	public String getTransRiskLevel(@RequestBody TransVo transVo) {
 		try {
@@ -1067,7 +1136,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_022, 
 			sqlId = EventCodeConstants.ONLINECHANGE_022_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getOnlineChangeDispose")
 	public ResponseEntity<ResponseObj> getOnlineChangeDispose(@RequestBody TransStatusHistoryVo vo) {
 		try {			
@@ -1103,7 +1174,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_022, 
 			sqlId = EventCodeConstants.ONLINECHANGE_022_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getOnlineChangeReject")
 	public ResponseEntity<ResponseObj> getOnlineChangeReject(@RequestBody TransStatusHistoryVo vo) {
 		try {
@@ -1175,7 +1248,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_022,
 			sqlId = EventCodeConstants.ONLINECHANGE_022_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getOnlineChangeMedicalCompleted")
 	public ResponseEntity<ResponseObj> getOnlineChangeMedicalCompleted(@RequestBody TransStatusHistoryVo vo) {
 		try {
@@ -1314,7 +1389,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_022, 
 			sqlId = EventCodeConstants.ONLINECHANGE_022_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getOnlineChangeCompleted")
 	public ResponseEntity<ResponseObj> getOnlineChangeCompleted(@RequestBody TransStatusHistoryVo vo) {
 		try {
@@ -1352,7 +1429,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_033, 
 			sqlId = EventCodeConstants.ONLINECHANGE_033_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/addTransRFE")
 	public ResponseEntity<ResponseObj> addTransRFE(@RequestBody TransRFEVo vo) {
 		// 檢查補件流程是否完成
@@ -1408,7 +1487,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_034, 
 			sqlId = EventCodeConstants.ONLINECHANGE_034_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransStatusHistoryList")
 	public ResponseEntity<ResponseObj> getTransStatusHistoryList(@RequestBody TransStatusHistoryVo vo) {
 		try {			
@@ -1435,7 +1516,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_035, 
 			sqlId = EventCodeConstants.ONLINECHANGE_035_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransRFEList")
 	public ResponseEntity<ResponseObj> getTransRFEList(@RequestBody TransRFEVo vo) {
 		try {			
@@ -1485,7 +1568,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_033,
 			sqlId = EventCodeConstants.ONLINECHANGE_033_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/addMedicalTransRFE")
 	public ResponseEntity<ResponseObj> addMedicalTransRFE(@RequestBody TransRFEVo vo) {
 		// 檢查補件流程是否完成
@@ -1541,7 +1626,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_035,
 			sqlId = EventCodeConstants.ONLINECHANGE_035_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getMedicalTreatmentTransRFEList")
 	public ResponseEntity<ResponseObj> getMedicalTreatmentTransRFEList(@RequestBody TransRFEVo vo) {
 		try {
@@ -1568,7 +1655,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.MEDICAL_TREATMENT_37,
 			sqlId = EventCodeConstants.MEDICAL_TREATMENT_37_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getMedicalTreatmentOnlineChangeReject")
 	@ResponseBody
 	public ResponseEntity<ResponseObj> getMedicalTreatmentOnlineChangeReject(@RequestBody TransStatusHistoryVo vo) {
@@ -1598,7 +1687,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.MEDICAL_TREATMENT_38,
 			sqlId = EventCodeConstants.MEDICAL_TREATMENT_38_SQL_ID,
-			daoVoParamKey = "vo"))
+			daoVoParamKey = "vo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getMedicalTreatmentOnlineChangeRejectSubmit")
 	public ResponseEntity<ResponseObj> getMedicalTreatmentOnlineChangeRejectSubmit(@RequestBody TransStatusHistoryVo vo) {
 		try {
@@ -1653,7 +1744,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_036,
 			sqlId = EventCodeConstants.ONLINECHANGE_036_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getConversionDetail")
 	public String getConversionDetail(@RequestBody TransVo transVo) {
 		try {
@@ -1669,7 +1762,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_037,
 			sqlId = EventCodeConstants.ONLINECHANGE_037_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getInvestmentDetail")
 	public String getInvestmentDetail(@RequestBody TransVo transVo) {
 		try {
@@ -1689,7 +1784,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_038,
 			sqlId = EventCodeConstants.ONLINECHANGE_038_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getCashPaymentDetail")
 	public String getCashPaymentDetail(@RequestBody TransVo transVo) {
 		try {
@@ -1705,7 +1802,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_039,
 			sqlId = EventCodeConstants.ONLINECHANGE_039_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getDepositDetail")
 	public String getDepositDetail(@RequestBody TransVo transVo) {
 		try {
@@ -1722,7 +1821,9 @@ public class OnlineChangeController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.ONLINECHANGE_040,
 			sqlId = EventCodeConstants.ONLINECHANGE_040_SQL_ID,
-			daoVoParamKey = "transVo"))
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/onlineChange/getTransChangePremiumDetail")
 	public String getTransChangePremium(@RequestBody TransVo transVo) {
 		try {
@@ -1732,7 +1833,7 @@ public class OnlineChangeController extends BaseController {
 			addDefaultSystemError();
 		}
 		return "backstage/rpt/onlineChangeDetail-changePremium";
-	}	
+	}
 	
 	/**
 	 * 聯絡資料變更-失败

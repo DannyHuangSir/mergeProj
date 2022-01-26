@@ -40,6 +40,9 @@ public class JobMgmtServiceImpl implements IJobMgmtService {
 	@Value("${keycloak.elife-realm:elife}")
 	protected String ELIFE_REALM;
 
+	@Autowired
+	private SshUtil sshUtil;
+
 	@Override
 	public Map<String, String> getRealtimeLoginStat() throws Exception {
 		Map<String, String> statMap = new HashMap<>();
@@ -184,9 +187,8 @@ public class JobMgmtServiceImpl implements IJobMgmtService {
 		List<String> listCmd = new ArrayList<>();
 		listCmd.addAll(jobMgmtDao.queryAllSettingReportJobCmd());
 		listCmd.addAll(jobMgmtDao.queryAllSettingBusinessEventJobCmd());
-		if(listCmd != null && listCmd.size() > 0) {
+		if(listCmd != null) {
 			try {
-				SshUtil sshUtil = new SshUtil();
 				sshUtil.writeIntoCrontab(listCmd);
 				return 1;
 			} catch(Exception e) {

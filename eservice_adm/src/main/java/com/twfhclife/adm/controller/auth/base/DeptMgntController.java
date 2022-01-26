@@ -107,7 +107,9 @@ public class DeptMgntController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.DEPTMGT_002, 
 			sqlId = EventCodeConstants.DEPTMGT_002_SQL_ID,
-			daoVoParamKey = "departmentVo"))
+			daoVoParamKey = "departmentVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/deptMgnt/insertDepartment")
 	public ResponseEntity<ResponseObj> insertDepartment(@RequestBody DepartmentVo departmentVo) {
 		try {
@@ -141,7 +143,9 @@ public class DeptMgntController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.DEPTMGT_003, 
 			sqlId = EventCodeConstants.DEPTMGT_003_SQL_ID,
-			daoVoParamKey = "departmentVo"))
+			daoVoParamKey = "departmentVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/deptMgnt/updateDepartment")
 	public ResponseEntity<ResponseObj> updateDepartment(@RequestBody DepartmentVo departmentVo) {
 		try {
@@ -176,7 +180,9 @@ public class DeptMgntController extends BaseController {
 			sqlId = EventCodeConstants.DEPTMGT_004_SQL_ID,
 			sqlParams = {
 					@SqlParam(requestParamkey = "depId", sqlParamkey = "depId") 
-			}))
+			},
+			systemEventParams = {}
+			))
 	@PostMapping("/deptMgnt/deleteDepartment")
 	public ResponseEntity<ResponseObj> deleteDepartment(@RequestBody DepartmentVo departmentVo) {
 		try {

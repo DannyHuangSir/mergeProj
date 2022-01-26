@@ -5,37 +5,37 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EventRecordParam {
-	
-	/**
-	 * 業務事件.
-	 * 
-	 * @return
-	 */
-	String eventCode();
-	
-	/**
-	 * 業務事件訊息.
-	 * 
-	 * @return
-	 */
-	String eventMsg() default "";
-	
+@Target(ElementType.FIELD)
+public @interface SystemEventParam {
+
 	/**
 	 * Mybatis sql id.
 	 * 
 	 * @return
 	 */
 	String sqlId() default "";
-	
+
 	/**
-	 * vo傳入sql中所使用的key
+	 * 執行方法.
 	 * 
 	 * @return
 	 */
-	String daoVoParamKey() default "";
+	String execMethod();
+
+	/**
+	 * sql參數為vo物件.
+	 * 
+	 * @return
+	 */
+	String sqlVoType() default "";
+
+	/**
+	 * sql參數名稱.
+	 * 
+	 * @return
+	 */
+	String sqlVoKey() default "";
 
 	/**
 	 * Sql參數設定.
@@ -45,9 +45,9 @@ public @interface EventRecordParam {
 	SqlParam[] sqlParams() default {};
 	
 	/**
-	 * 系統事件.
+	 * 存取物件-資料名稱.
 	 * 
 	 * @return
 	 */
-	SystemEventParam[] systemEventParams();
+	String execFile() default "";
 }

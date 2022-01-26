@@ -26,6 +26,8 @@ import com.twfhclife.generic.annotation.EventRecordParam;
 import com.twfhclife.generic.annotation.FuncUsageParam;
 import com.twfhclife.generic.annotation.LoginCheck;
 import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.generic.annotation.SqlParam;
+import com.twfhclife.generic.annotation.SystemEventParam;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.EventCodeConstants;
@@ -97,7 +99,19 @@ public class PartnerUserMgntController extends BaseController {
 	@EventRecordLog(value = @EventRecordParam(
 			eventCode = EventCodeConstants.PARTNER_USER_MGNT_GET_PARTNERUSER_ENTITYPAGELIST_001, 
 			sqlId = EventCodeConstants.PARTNER_USER_MGNT_GET_PARTNERUSER_ENTITYPAGELIST_SQL_ID_001, 
-			daoVoParamKey = "userEntityVo"))
+			daoVoParamKey = "userEntityVo",
+			systemEventParams = {
+				@SystemEventParam(
+					sqlId = "com.twfhclife.adm.service.impl.PartnerUserMngtServiceImpl.partnerUserEntityDao",
+					execMethod = "外部人員管理-分頁查詢",
+					sqlVoType  = "com.twfhclife.adm.model.PartnerUserEntityVo",
+					sqlVoKey   = "userEntityVo",
+					sqlParams = { 
+						@SqlParam(requestParamkey = "realmId", sqlParamkey = "REALM_ID")
+					}
+				)
+			}
+			))
 	@PostMapping("/partnerUserMgnt/getPartnerUserEntityPageList")
 	public ResponseEntity<PageResponseObj> getPartnerUserEntityPageList(@RequestBody PartnerUserEntityVo userEntityVo) {
 		PageResponseObj pageResp = new PageResponseObj();
@@ -144,6 +158,22 @@ public class PartnerUserMgntController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARTNER_USER_MGNT_INSERT_002, 
+			sqlId = EventCodeConstants.PARTNER_USER_MGNT_INSERT_002_SQL_ID, 
+			daoVoParamKey = "userEntityVo",
+			systemEventParams = {
+				@SystemEventParam(
+					sqlId = "com.twfhclife.adm.dao.UsersDao.insertUsers",
+					execMethod = "外部人員-新增",
+					sqlVoType  = "com.twfhclife.adm.model.UsersVo",
+					sqlVoKey   = "usersVo",
+					sqlParams = { 
+						@SqlParam(requestParamkey = "rocId", sqlParamkey = "ROC_ID")
+					}
+				)
+			}
+			))
 	@PostMapping("/partnerUserMgnt/insertPartnerUser")
 	public ResponseEntity<ResponseObj> insertPartnerUser(@RequestBody PartnerUserEntityVo userEntityVo) {
 		try {
@@ -211,6 +241,22 @@ public class PartnerUserMgntController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARTNER_USER_MGNT_DELETE_003, 
+			sqlId = EventCodeConstants.PARTNER_USER_MGNT_DELETE_003_SQL_ID, 
+			daoVoParamKey = "userEntityVo",
+			systemEventParams = {
+				@SystemEventParam(
+					sqlId = "com.twfhclife.adm.dao.UsersDao.deleteUsers",
+					execMethod = "外部人員-刪除",
+					sqlVoType  = "com.twfhclife.adm.model.UsersVo",
+					sqlVoKey   = "usersVo",
+					sqlParams = { 
+						@SqlParam(requestParamkey = "rocId", sqlParamkey = "ROC_ID")
+					}
+				)
+			}
+			))
 	@PostMapping("/partnerUserMgnt/deletePartnerUser")
 	public ResponseEntity<ResponseObj> deletePartnerUser(@RequestBody PartnerUserEntityVo userEntityVo) {
 		try {
@@ -234,6 +280,22 @@ public class PartnerUserMgntController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARTNER_USER_MGNT_UNLOCKUSER_004, 
+			sqlId = EventCodeConstants.PARTNER_USER_MGNT_UNLOCKUSER_004_SQL_ID, 
+			daoVoParamKey = "userEntityVo",
+			systemEventParams = {
+				@SystemEventParam(
+					sqlId = "com.twfhclife.adm.dao.UsersDao.updateUsers",
+					execMethod = "外部人員管理-解鎖",
+					sqlVoType  = "com.twfhclife.adm.model.UsersVo",
+					sqlVoKey   = "usersVo",
+					sqlParams = { 
+						@SqlParam(requestParamkey = "rocId", sqlParamkey = "ROC_ID")
+					}
+				)
+			}
+			))
 	@PostMapping("/partnerUserMgnt/unlockUser")
 	public ResponseEntity<ResponseObj> unlockUser(@RequestBody PartnerUserEntityVo userEntityVo) {
 		try {
@@ -256,6 +318,22 @@ public class PartnerUserMgntController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARTNER_USER_MGNT_UPDATEONLINECHANGE_005, 
+			sqlId = EventCodeConstants.PARTNER_USER_MGNT_UPDATEONLINECHANGE_005_SQL_ID, 
+			daoVoParamKey = "usersVo",
+			systemEventParams = {
+				@SystemEventParam(
+					sqlId = "com.twfhclife.adm.dao.UsersDao.updateOnlineChangeUse",
+					execMethod = "外部人員管理-解鎖",
+					sqlVoType  = "com.twfhclife.adm.model.UsersVo",
+					sqlVoKey   = "usersVo",
+					sqlParams = { 
+						@SqlParam(requestParamkey = "userId", sqlParamkey = "USER_ID")
+					}
+				)
+			}
+			))
 	@PostMapping("/partnerUserMgnt/updateOnlineChangeUse")
 	public ResponseEntity<ResponseObj> updateOnlineChangeUse(@RequestBody UsersVo usersVo){
 		try {

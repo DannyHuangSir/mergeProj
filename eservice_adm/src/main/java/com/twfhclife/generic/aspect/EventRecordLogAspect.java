@@ -165,9 +165,11 @@ public class EventRecordLogAspect {
 		be.setEventName(getEventName(eventCode));
 		be.setEventMsg(getEventName(eventCode));
 		be.setSourceIp(getClientIp());
+		be.setTargetIp(getRequest().getRemoteAddr());
 		be.setTargetSystemId(ApConstants.SYSTEM_ID);
 		be.setCreateDate(nowDate);
 		be.setCreateUser(userId);
+		be.setEventStatus("1");
 
 		SystemEventVo se = new SystemEventVo();
 		se.setExecDate(nowDate);
@@ -175,7 +177,8 @@ public class EventRecordLogAspect {
 		se.setExecMethod(methodName);
 		se.setCreateDate(nowDate);
 		se.setCreateUser(userId);
-		
+		se.setExecStatus("1");
+
 		if (!StringUtils.isEmpty(sqlId)) {
 			try {
 				se.setExecSql(mybatisSqlUtil.getNativeSql(sqlId, sqlParam));
@@ -197,29 +200,35 @@ public class EventRecordLogAspect {
 	 * @return
 	 */
 	private String getEventName(String eventCode) {
-		// TODO 需要調整 cache 的失效，減少DB存取參數檔
 		String eventName = "";
-		if (eventNameCacheMap != null) {
-			eventName = eventNameCacheMap.get(eventCode);
-		} else {
+		
+		if(eventNameCacheMap==null) {
 			eventNameCacheMap = new HashMap<>();
 		}
 		
-		// 若cache 內有，直接回傳
-		if (!StringUtils.isEmpty(eventName)) {
-			return eventName;
+		//如果cache有就直接取用
+		boolean containEventCode = eventNameCacheMap.containsKey(eventCode);
+		if(containEventCode) {
+			eventName = eventNameCacheMap.get(eventCode);
 		}
-		
-		List<ParameterVo> paramterList = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID,
-				ApConstants.EVENT_TYPE_PARAMETER_CATEGORY_CODE);
-		if (paramterList != null) {
-			for (ParameterVo vo : paramterList) {
-				if (eventCode.equals(vo.getParameterValue())) {
-					eventName = vo.getParameterName();
-					eventNameCacheMap.put(eventCode, eventName);
+
+		if(!containEventCode || eventNameCacheMap.isEmpty()) {
+			List<ParameterVo> paramterList = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID,
+					ApConstants.EVENT_TYPE_PARAMETER_CATEGORY_CODE);
+			if (paramterList != null) {
+				for (ParameterVo vo : paramterList) {
+					if (eventCode.equals(vo.getParameterValue())) {
+						eventName = vo.getParameterName();
+						eventNameCacheMap.put(eventCode, eventName);
+					}
 				}
 			}
 		}
+		
+		if (eventNameCacheMap != null) {
+			eventName = eventNameCacheMap.get(eventCode);
+		}
+		
 		return eventName;
 	}
 

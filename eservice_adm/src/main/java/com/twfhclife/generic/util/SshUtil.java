@@ -12,18 +12,20 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SshUtil {
 
-//	@Value("${jsch.ssh.host}")
+	@Value("${jsch.ssh.host}")
 	private String host = "220.133.126.209";
-//	@Value("${jsch.ssh.port}")
+	@Value("${jsch.ssh.port}")
 	private int port = 8822;
-//	@Value("${jsch.ssh.user}")
+	@Value("${jsch.ssh.user}")
 	private String user = "hpeadmin";
-//	@Value("${jsch.ssh.pwd}")
+	@Value("${jsch.ssh.pwd}")
 	private String pwd = "hpe1234!@";
-//	@Value("${jsch.ssh.tempcron.path}")
+	@Value("${jsch.ssh.tempcron.path}")
 	private String tempPath = "/home/hpeadmin/crontab.d/";
 	
 	
@@ -34,8 +36,13 @@ public class SshUtil {
 			
 			Session session = jsch.getSession(user, host, port);
 			session.setPassword(pwd);
-			session.setConfig("StrictHostKeyChecking", "no");
-			session.connect(30000); // making a connection with timeout.
+			
+			java.util.Properties config = new java.util.Properties();
+	        config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			
+			session.setTimeout(30000);// making a connection with timeout.
+			session.connect(); 
 
 			Channel channel = session.openChannel("exec");
 			String cmd = "crontab -l";
@@ -64,8 +71,13 @@ public class SshUtil {
 
 			Session session = jsch.getSession(user, host, port);
 			session.setPassword(pwd);
-			session.setConfig("StrictHostKeyChecking", "no");
-			session.connect(30000); // making a connection with timeout.
+			
+			java.util.Properties config = new java.util.Properties();
+	        config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			
+			session.setTimeout(30000);// making a connection with timeout.
+			session.connect(); 
 
 			Channel channel = session.openChannel("exec");
 			String cmd = "crontab -l > "+ tempPath + "temp.cron;";
@@ -97,8 +109,13 @@ public class SshUtil {
 
 			Session session = jsch.getSession(user, host, port);
 			session.setPassword(pwd);
-			session.setConfig("StrictHostKeyChecking", "no");
-			session.connect(30000); // making a connection with timeout.
+			
+			java.util.Properties config = new java.util.Properties();
+	        config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			
+			session.setTimeout(30000);// making a connection with timeout.
+			session.connect(); 
 
 			Channel channel = session.openChannel("exec");
 			String tempFile = tempPath + "temp.cron";
@@ -108,8 +125,12 @@ public class SshUtil {
 			String cmd = "";
 			cmd += "rm " + tempFile + ";";
 			cmd += "crontab -l > " + backupOldFile + ";";// 備份當前的crontab
+			if (cronList.size() > 0) {
 			for (String cron : cronList) {
 				cmd += "echo \"" + cron + "\" >> " + tempFile + ";";// write to temp file
+			}
+			} else {
+				cmd += "echo \"\" >> " + tempFile + ";";// write to temp file
 			}
 			cmd += "crontab " + tempFile + ";";// commit to crontab(寫入即生效)
 			cmd += "mv " + tempFile + " " + backupNewFile + ";";// 備份本次變更的crontab
@@ -133,8 +154,13 @@ public class SshUtil {
 //			
 //			Session session = jsch.getSession(user, host, port);
 //			session.setPassword(pwd);
-//			session.setConfig("StrictHostKeyChecking", "no");
-//			session.connect(30000); // making a connection with timeout.
+	
+//			java.util.Properties config = new java.util.Properties();
+//		    config.put("StrictHostKeyChecking", "no");
+//			session.setConfig(config);
+//			
+//			session.setTimeout(30000);// making a connection with timeout.
+//			session.connect(); 
 //
 //			Channel channel = session.openChannel("exec");
 //			String cmd = "cat " + tempPath + "*.cron | crontab -";

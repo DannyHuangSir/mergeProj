@@ -113,7 +113,12 @@ public class ParameterCategoryController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
-	@EventRecordLog(value = @EventRecordParam(eventCode = EventCodeConstants.PARAMMGT_006, sqlId = EventCodeConstants.PARAMMGT_006_SQL_ID, daoVoParamKey = "parameterCategoryVo"))
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARAMMGT_006, 
+			sqlId = EventCodeConstants.PARAMMGT_006_SQL_ID, 
+			daoVoParamKey = "parameterCategoryVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/parameterType/getParameterCategoryPageList")
 	public ResponseEntity<PageResponseObj> getParameterCategoryPageList(@RequestBody ParameterCategoryVo vo,
 			HttpServletRequest request) {
@@ -164,7 +169,12 @@ public class ParameterCategoryController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
-	@EventRecordLog(value = @EventRecordParam(eventCode = EventCodeConstants.PARAMMGT_007, sqlId = EventCodeConstants.PARAMMGT_007_SQL_ID, daoVoParamKey = "parameterCategoryVo"))
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARAMMGT_007, 
+			sqlId = EventCodeConstants.PARAMMGT_007_SQL_ID, 
+			daoVoParamKey = "parameterCategoryVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/parameterType/insertParameterCategory")
 	public ResponseEntity<ResponseObj> insertParameterCategory(@RequestBody ParameterCategoryVo parameterCategoryVo) {
 		try {
@@ -211,7 +221,12 @@ public class ParameterCategoryController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
-	@EventRecordLog(value = @EventRecordParam(eventCode = EventCodeConstants.PARAMMGT_008, sqlId = EventCodeConstants.PARAMMGT_008_SQL_ID, daoVoParamKey = "parameterCategoryVo"))
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARAMMGT_008, 
+			sqlId = EventCodeConstants.PARAMMGT_008_SQL_ID, 
+			daoVoParamKey = "parameterCategoryVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/parameterType/updateParameterCategory")
 	public ResponseEntity<ResponseObj> updateParameterCategory(@RequestBody ParameterCategoryVo parameterCategoryVo) {
 		try {
@@ -237,7 +252,12 @@ public class ParameterCategoryController extends BaseController {
 	 * @return
 	 */
 	@RequestLog
-	@EventRecordLog(value = @EventRecordParam(eventCode = EventCodeConstants.PARAMMGT_009, sqlId = EventCodeConstants.PARAMMGT_009_SQL_ID, daoVoParamKey = "parameterCategoryVo"))
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARAMMGT_009, 
+			sqlId = EventCodeConstants.PARAMMGT_009_SQL_ID, 
+			daoVoParamKey = "parameterCategoryVo",
+			systemEventParams = {}
+			))
 	@PostMapping("/parameterType/deleteParameterCategory")
 	public ResponseEntity<ResponseObj> deleteParameterCategory(@RequestBody ParameterCategoryVo parameterCategoryVo) {
 		try {
@@ -266,7 +286,12 @@ public class ParameterCategoryController extends BaseController {
 	 * @throws IOException
 	 */
 	@RequestLog
-	@EventRecordLog(value = @EventRecordParam(eventCode = EventCodeConstants.PARAMMGT_010, sqlId = EventCodeConstants.PARAMMGT_010_SQL_ID, daoVoParamKey = "parameterCategoryVo"))
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.PARAMMGT_010, 
+			sqlId = EventCodeConstants.PARAMMGT_010_SQL_ID, 
+			daoVoParamKey = "parameterCategoryVo",
+			systemEventParams = {}
+			))
 	@RequestMapping(value = "/parameterType/downloadParameterCategoryCsv")
 	public void downloadParameterCsv(@RequestParam(value = "stD", required = false) String startDate, @RequestParam(value = "enD", required = false) String endDate,
 			@RequestParam("sy") String systemId, @RequestParam("co") Integer parameterCategoryId,

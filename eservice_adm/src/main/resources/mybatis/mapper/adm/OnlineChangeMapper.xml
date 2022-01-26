@@ -2844,7 +2844,7 @@
 		SELECT TI.INVT_NO invtNo, TI.DISTRIBUTION_RATIO afterRatio, TI.PRE_DISTRIBUTION_RATIO preRatio, TI.INVT_NAME invtName,
 		SWIFT_CODE swiftCode, ENGLISH_NAME englishName, BANK_CODE bankCode, BRANCH_CODE branchCode, ACCOUNT_NAME accountName, BANK_ACCOUNT bankAccount, BANK_NAME bankName, BRANCH_NAME branchName
 		FROM ESERVICE.dbo.TRANS_INVESTMENT TI
-		WHERE TI.TRANS_NUM = #{transNum}
+		WHERE TI.TRANS_NUM = #{transVo.transNum}
 	</select>
 
 	<!--醫療保單加入黑名單	-->

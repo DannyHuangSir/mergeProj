@@ -1,6 +1,7 @@
 package com.twfhclife.adm.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -60,4 +61,5 @@ public interface UsersDao {
 	 * @return 回傳影響筆數
 	 */
 	int updateUsers(@Param("usersVo") UsersVo usersVo);
+
 }

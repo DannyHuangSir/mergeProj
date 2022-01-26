@@ -308,4 +308,22 @@ public class OptionController extends BaseController {
 		}
 		return processResponseEntity();
 	}
+
+	/**
+	 * 下拉選單資料-关系名称.
+	 *
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/common/relationList")
+	public ResponseEntity<ResponseObj> relationList() {
+		try {
+			List<ParameterVo> optionList = parameterService.getParameterByCategoryCode("eservice", "MEMBER_RESULT_OPTION");
+			processSuccess(optionList);
+		} catch (Exception e) {
+			logger.error("Unable to msgTmpNameList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
 }

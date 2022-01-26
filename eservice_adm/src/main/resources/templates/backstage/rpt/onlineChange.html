@@ -216,9 +216,11 @@
 		$(function() {
 					$.ajaxSetup({ async: false });	
 			// 取得線上申請項目下拉選單
+			console.log("get apply item list start ")
 			eserviceAdmOption.common('#onlineChangeSelect', 
 					/*[[@{/common/optionList?categoryCode=ONLINE_CHANGE}]]*/,
 					'請選擇申請項目...');
+			console.log("get apply item list end ")
 					$.ajaxSetup({ async: true });	
 					$.ajaxSetup({ async: false });
 			// 取得線上申請項目下拉選單

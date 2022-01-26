@@ -84,5 +84,7 @@
 		<mapper resource="mybatis/mapper/adm/MedicalTreatmentClaimFileDataDaoMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/UnionCourseMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/QuestionnaireMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/UnionCourseMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/QuestionnaireMapper.xml"/>
 	</mappers>
 </configuration>

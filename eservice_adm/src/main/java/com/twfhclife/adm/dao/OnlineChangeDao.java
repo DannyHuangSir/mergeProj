@@ -610,7 +610,7 @@ public interface OnlineChangeDao {
 	 */
 	Map<String, Object> getOnlineChangeDetailByTransNum(@Param("transNum")String transNum);
 
-	List<Map<String, Object>> selectCompareInvestments(@Param("transNum") String transNum);
+	List<Map<String, Object>> selectCompareInvestments(@Param("transVo") TransVo transVo);
 
 	TransDepositDetailVo getAppliedTransDeposits(@Param("transNum") String transNum);
 

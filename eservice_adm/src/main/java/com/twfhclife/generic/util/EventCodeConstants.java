@@ -148,6 +148,9 @@ public interface EventCodeConstants {
 	public static final String ONLINECHANGE_040 = "ONLINECHANGE_040";
 	public static final String ONLINECHANGE_040_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getTransChangePremium";
 
+	public static final String ONLINECHANGE_041 = "ONLINECHANGE_041";
+	public static final String ONLINECHANGE_041_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getTransRiskLevel";
+
 	/** 功能維護-查詢 */
 	public static final String FUNCMGT_001 = "FUNCMGT_001";
 	public static final String FUNCMGT_001_SQL_ID = "com.twfhclife.adm.dao.FunctionItemDao.getAllFuncBySysId";
@@ -254,10 +257,30 @@ public interface EventCodeConstants {
 	public static final String MEDICAL_TREATMENT_39_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.updateMedicalTreatmentSendAlliance";
 
 	/**
-	 * 外部人員管理
+	 * 外部人員管理-start
 	 */
-	//getPartnerUserEntityPageList
+	///partnerUserMgnt/getPartnerUserEntityPageList
 	public static final String PARTNER_USER_MGNT_GET_PARTNERUSER_ENTITYPAGELIST_001 = "PARTNERUSER_ENTITYPAGELIST_001";
 	public static final String PARTNER_USER_MGNT_GET_PARTNERUSER_ENTITYPAGELIST_SQL_ID_001 = 
 			"com.twfhclife.adm.dao.PartnerUserEntityDao.getPartnerUserEntityPageList";
+	
+	///partnerUserMgnt/insertPartnerUser
+	public static final String PARTNER_USER_MGNT_INSERT_002 = "PARTNERUSER_INSERT_002";
+	public static final String PARTNER_USER_MGNT_INSERT_002_SQL_ID = "com.twfhclife.adm.dao.UsersDao.insertUsers";
+	
+	///partnerUserMgnt/deletePartnerUser
+	public static final String PARTNER_USER_MGNT_DELETE_003 = "PARTNERUSER_DELETE_003";
+	public static final String PARTNER_USER_MGNT_DELETE_003_SQL_ID = "com.twfhclife.adm.dao.UsersDao.deleteUsers";
+
+	//外部人員管理-解鎖
+	///partnerUserMgnt/unlockUser
+	public static final String PARTNER_USER_MGNT_UNLOCKUSER_004 = "PARTNERUSER_UNLOCK_004";
+	public static final String PARTNER_USER_MGNT_UNLOCKUSER_004_SQL_ID = "com.twfhclife.adm.dao.UsersDao.updateUsers";
+
+	//外部人員管理-更新線上申請使用
+	///partnerUserMgnt/updateOnlineChangeUse
+	public static final String PARTNER_USER_MGNT_UPDATEONLINECHANGE_005 = "PARTNERUSER_UPDATEONLINECHANGE_005";
+	public static final String PARTNER_USER_MGNT_UPDATEONLINECHANGE_005_SQL_ID = "com.twfhclife.adm.dao.UsersDao.updateOnlineChangeUse";
+
+	
 }

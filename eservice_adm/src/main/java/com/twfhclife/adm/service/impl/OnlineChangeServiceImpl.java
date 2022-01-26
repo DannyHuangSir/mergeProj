@@ -1562,9 +1562,9 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		Map<String, Object> map = Maps.newHashMap();
 		if (!org.apache.commons.lang3.StringUtils.isEmpty(transVo.getTransNum())) {
 			map = onlineChangeDao.getOnlineChangeDetailByTransNum(transVo.getTransNum());
-
 		}
-		map.put("investments", onlineChangeDao.selectCompareInvestments(transVo.getTransNum()));
+
+		map.put("investments", onlineChangeDao.selectCompareInvestments(transVo));
         return map;
     }
 
