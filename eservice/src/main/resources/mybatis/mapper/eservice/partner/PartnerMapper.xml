@@ -14,6 +14,7 @@
 		<result column="EFFECTIVE_DATE" property="effectiveDate"/>
 	</resultMap>
 
+	<!-- 20220117 by 203990  投資型保單的條件設為參數化 -->
 	<!-- 取得保代下的使用者的所有保單清單 -->
 	<!-- @param rocId 要保人身份證字號 -->	
 	<!-- @param policyNo 保單號碼 -->	
@@ -66,7 +67,7 @@
 			,#{pageNum} AS PAGE_NUM
 			,PDU.POLICY_NO
 			,CASE 
-			    WHEN PDU.POLICY_TYPE IN ('UC','UH','UP','UQ','UR','US') then '1'
+			    WHEN PDU.POLICY_TYPE IN (SELECT v.value FROM ESERVICE_ADM.DBO.PARAMETER t CROSS APPLY STRING_SPLIT(t.PARAMETER_VALUE, ',')v WHERE t.PARAMETER_CODE = 'POLICY_INVESTMENT_TYPE') then '1'
 			    ELSE '2'
 			 END AS POLICY_LIST_TYPE
 			,PDU.EFFECTIVE_DATE

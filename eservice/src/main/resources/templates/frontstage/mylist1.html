@@ -54,7 +54,7 @@
 													? ${vo.productName}"/>
 												<p>(<th:block th:text="${vo.policyNo}"/>)</p>
 											</td>
-											<td class="hid1 hid2"><!-- 要保人 -->
+											<td class="hid1 hid2" style="width:100px"><!-- 要保人 -->
 												<div th:switch="${vo.customerNameBase64 != '' } ">
 													<div th:case="${true}">
 														<!--<th:block th:text="${vo.customerName != null}  ? ${vo.customerName}"/>-->
@@ -67,7 +67,7 @@
 													</div>
 												</div>
 											</td>
-											<td class="hid1 hid2"><!-- 被保人 -->
+											<td class="hid1 hid2" style="width:100px"><!-- 被保人 -->
 												<div th:switch="${vo.mainInsuredNameBase64} != '' ">
 													<div th:case="${true}">
 														<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
@@ -81,22 +81,22 @@
 												<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
 													? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
 											</td>
-											<td class="hid1 hid2 enThin">
+											<td class="hid1 hid2 enThin" style="width:100px">
 												<th:block th:text="${vo.effectiveDate} != null 
 													? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
 											</td>
-											<td class="hid1 hid2">
+											<td class="hid1 hid2" style="width:100px">
 												<th:block th:text="${vo.mainAmount} != null 
 													? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
 												<!-- <i class="my5"><th:block th:text="${vo.currency}"/></i> -->
 											</td>
-											<td class="hid1 hid2">
+											<td class="hid1 hid2" style="width:85px">
 												<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.val1ReseAmt} != null ? ${#numbers.formatDecimal(vo.policyExtraVo.val1ReseAmt, 0, 'COMMA', 0, 'POINT')}"/>
 												<i class="my5" style="margin-left: -58px;">
 												<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.modifyDatetime} != null ? ${#dates.format(vo.policyExtraVo.modifyDatetime, 'yyyy/MM/dd')}"/>
 												</i>
 											</td>
-											<td class="hid1 hid2">
+											<td class="hid1 hid2" style="width:85px">
 												<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.val1CancAmt} != null ? ${#numbers.formatDecimal(vo.policyExtraVo.val1CancAmt, 0, 'COMMA', 0, 'POINT')}"/>
 												<i class="my5" style="margin-left: -58px;">
 												<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.modifyDatetime} != null ? ${#dates.format(vo.policyExtraVo.modifyDatetime, 'yyyy/MM/dd')}"/>
@@ -106,7 +106,7 @@
 												<th:block th:text="${vo.premYear} != null 
 													? ${#numbers.formatDecimal(vo.premYear, 0, 'DEFAULT', 0, 'DEFAULT')}"/>
 											</td>
-											<td class="hid1 hid2">
+											<td class="hid1 hid2" style="width:50px">
 												<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
 													? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
 											</td>
@@ -159,7 +159,7 @@
 														? ${vo.productName}"/>
 													<p>(<th:block th:text="${vo.policyNo}"/>)</p>
 												</td>
-												<td class="hid1 hid2"><!-- 要保人 -->
+												<td class="hid1 hid2" style="width:100px"><!-- 要保人 -->
 													<div th:switch=" ${vo.customerNameBase64  !='' } ">
 														<div th:case="${true}">
 														<!--	<th:block th:text="${vo.customerName != null}  ? ${vo.customerName}"/>-->
@@ -171,7 +171,7 @@
 														</div>
 													</div>
 												</td>
-												<td class="hid1 hid2"><!-- 被保人 -->
+												<td class="hid1 hid2" style="width:100px"><!-- 被保人 -->
 													<div th:switch="${vo.mainInsuredNameBase64} != ''"> 
 														<div th:case="${true}">
 															<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
@@ -185,22 +185,22 @@
 													<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
 														? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
 												</td>
-												<td class="hid1 hid2 enThin">
+												<td class="hid1 hid2 enThin" style="width:100px">
 													<th:block th:text="${vo.effectiveDate} != null 
 														? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
 												</td>
-												<td class="hid1 hid2">
+												<td class="hid1 hid2" style="width:100px">
 													<th:block th:text="${vo.mainAmount} != null 
 														? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
 													<!-- <i class="my5"><th:block th:text="${vo.currency}"/></i> -->
 												</td>
-												<td class="hid1 hid2">
+												<td class="hid1 hid2" style="width:85px">
 													<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.val1ReseAmt} != null ? ${#numbers.formatDecimal(vo.policyExtraVo.val1ReseAmt, 0, 'COMMA', 0, 'POINT')}"/>
 													<i class="my5" style="margin-left: -58px;">
 													<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.modifyDatetime} != null ? ${#dates.format(vo.policyExtraVo.modifyDatetime, 'yyyy/MM/dd')}"/>
 													</i>
 												</td>
-												<td class="hid1 hid2">
+												<td class="hid1 hid2" style="width:85px">
 													<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.val1CancAmt} != null ? ${#numbers.formatDecimal(vo.policyExtraVo.val1CancAmt, 0, 'COMMA', 0, 'POINT')}"/>
 													<i class="my5" style="margin-left: -58px;">
 													<th:block th:text="${vo.policyExtraVo} != null and ${vo.policyExtraVo.modifyDatetime} != null ? ${#dates.format(vo.policyExtraVo.modifyDatetime, 'yyyy/MM/dd')}"/>
@@ -210,7 +210,7 @@
 													<th:block th:text="${vo.premYear} != null 
 														? ${#numbers.formatDecimal(vo.premYear, 0, 'DEFAULT', 0, 'DEFAULT')}"/>
 												</td>
-												<td class="hid1 hid2">
+												<td class="hid1 hid2" style="width:50px">
 													<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
 														? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
 												</td>

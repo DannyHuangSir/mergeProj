@@ -270,6 +270,7 @@
 			AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
 	</select>
 	
+	<!-- 20220117 by 203990  投資型保單的條件設為參數化 -->
 	<!-- 取得使用者的所有保單清單(投資型) -->
 	<select id="getInvtPolicyList" resultMap="PolicyListMap">
 		SELECT
@@ -285,7 +286,7 @@
 		FROM
 			ESERVICE.DBO.POLICY P
 		WHERE
-			P.POLICY_TYPE IN ('UC','UH','UR','UQ','UP','US','UU')
+			P.POLICY_TYPE IN (SELECT v.value FROM ESERVICE_ADM.DBO.PARAMETER t CROSS APPLY STRING_SPLIT(t.PARAMETER_VALUE, ',')v WHERE t.PARAMETER_CODE = 'POLICY_INVESTMENT_TYPE')
         AND
         (
         P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
@@ -297,6 +298,7 @@
 			AND (P.STATUS <![CDATA[ < ]]> 31 OR case when P.STATUS_DATE is null then getdate() else P.STATUS_DATE end > DATEADD(month, -24, getdate()) + 1)
 	</select>
 
+	<!-- 20220117 by 203990  投資型保單的條件設為參數化 -->
 	<!-- 取得使用者的所有保單清單(保障型) -->
 	<select id="getBenefitPolicyList" resultMap="PolicyListMap">
 		SELECT
@@ -312,7 +314,7 @@
 		FROM
 			ESERVICE.DBO.POLICY P
 		WHERE
-			P.POLICY_TYPE NOT IN ('UC','UH','UR','UQ','UP','US','UU')
+			P.POLICY_TYPE NOT IN (SELECT v.value FROM ESERVICE_ADM.DBO.PARAMETER t CROSS APPLY STRING_SPLIT(t.PARAMETER_VALUE, ',')v WHERE t.PARAMETER_CODE = 'POLICY_INVESTMENT_TYPE')
         AND
         (
         P.POLICY_NO IN (SELECT LIPM_INSU_NO FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID = #{rocId})
