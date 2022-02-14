@@ -2,6 +2,7 @@ package com.twfhclife.alliance.service.impl;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,10 @@ public class CioServiceImpl implements ICioExternalService{
 	private UnionCourseDao unionCourseDao;
 	
 	public CioServiceImpl() {
-		
+		initRestTemplate();
+	}
+	
+	private void initRestTemplate() {
 		// Fix the RestTemplate to be a singleton instance.
 		restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
 
@@ -131,7 +135,7 @@ public class CioServiceImpl implements ICioExternalService{
 	        responseEntity = restTemplate.postForEntity(url, entity, String.class);
 	        uc.setCompleteDate(new Date());
 	        
-	        strRes= responseEntity.getBody();
+	        strRes = responseEntity.getBody();
 			logger.info("responseEntity.getBody()="+strRes);
 			boolean checkRes = this.checkResponseStatus(responseEntity);
 			
@@ -180,6 +184,8 @@ public class CioServiceImpl implements ICioExternalService{
 
 	@Override
 	public String postForEntity(String url, Map<String, String> params,Map<String, String> unParams) throws Exception {
+		this.initRestTemplate();//強制初始化restTemplate
+		
 		String strRes = null;
 		
 		UnionCourseVo uc = new UnionCourseVo();
@@ -202,16 +208,24 @@ public class CioServiceImpl implements ICioExternalService{
 			
 	        HttpEntity<String> entity = new HttpEntity<String>(json,headers);
 	        
-	        uc.setCreateDate(new Date());//UNION_COURSE.CRETE_DATE
+	        Calendar calObj = Calendar.getInstance();
+	        Date ucCreateDdte = calObj.getTime();
+	        uc.setCreateDate(ucCreateDdte);//UNION_COURSE.CRETE_DATE
 	        //聯盟API千萬不要用restTemplate.exchange()方式呼叫,Bad request.
 
 	        if( (url!=null && url.indexOf("lia206i")>=0) || params.containsKey("msg")){
 	        	//API206回報,msg可能有中文字
 	        	restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 	        }
+	        
+	        this.logger.info("before call postForEntity:"+calObj.getTimeInMillis());
 	        responseEntity = restTemplate.postForEntity(url, entity, String.class);
 	        //logger.info("(restTemplate.postForEntity(url, entity, String.class))=" + MyJacksonUtil.object2Json(responseEntity));
-	        uc.setCompleteDate(new Date());//UNION_COURSE.COMPLETE_DATE
+	        calObj = Calendar.getInstance();
+	        this.logger.info("after call postForEntity:"+calObj.getTimeInMillis());
+	        
+	        Date ucCompleteDate = calObj.getTime();
+	        uc.setCompleteDate(ucCompleteDate);//UNION_COURSE.COMPLETE_DATE
 	        
 //	        responseEntity = restTemplate.postForEntity(url, entity, String.class, json);//useful client code.
 	        
@@ -332,7 +346,7 @@ public class CioServiceImpl implements ICioExternalService{
 	}
 
 	public static void main(String[] args){
-		
+		/*
 		String url = "http://210.61.11.88:80/lia-api/api/ext/lia103i";
 		Map<String,String> params = new HashMap<>();
 		params.put("caseId", "20201231161500-9xCTpWe");
@@ -349,7 +363,8 @@ public class CioServiceImpl implements ICioExternalService{
 		}catch(Exception e) {
 			System.out.println(e);
 		}
-		
+		*/
+
 	}
 
 	public String getACCESS_TOKEN() {
