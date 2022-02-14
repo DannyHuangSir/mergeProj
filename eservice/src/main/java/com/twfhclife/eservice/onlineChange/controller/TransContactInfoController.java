@@ -186,29 +186,45 @@ public class TransContactInfoController extends BaseUserDataController {
 	@PostMapping("/changeContact3")
 	public String changeContact3(TransContactInfoDtlVo transContactInfoDtlVo) {
 		try {
+			
+			Map<String,Object> rMap = null;
+			HashMap userCurrentNetworkData = null;
+			LilipmVo lilipmVo = null;
+			
 			// 根據最新保單帶出變更前的要保人聯絡資料
-//			List<String> policyNos = transContactInfoDtlVo.getPolicyNoList();
-//			if (!CollectionUtils.isEmpty(policyNos)) {
-//				LilipmVo lilipmVo = lilipmService.findContactInfoByPolicyNoList(policyNos);
-//				if (lilipmVo != null) {
-//					transContactInfoDtlVo.setLipmName1(lilipmVo.getLipmName1());
-//					transContactInfoDtlVo.setTelHome(lilipmVo.getNoHiddenLipmTelH());
-//					transContactInfoDtlVo.setTelOffice(lilipmVo.getNoHiddenLipmTelO());
-//					transContactInfoDtlVo.setMobile("");
-//					transContactInfoDtlVo.setEmail("");
-//					transContactInfoDtlVo.setAddress(lilipmVo.getLipmAddr());
-//					transContactInfoDtlVo.setAddressCharge(lilipmVo.getLipmCharAddr());
-//				}
-//			}
+			com.twfhclife.eservice.web.model.UsersVo userVo = this.getUserDetail();
+			List<String> policyNos = transContactInfoDtlVo.getPolicyNoList();
+			//202201:保單'單筆'勾選時,只顯示該被勾選保單的現行保單資料作為預設顯示供修改
+			if (CollectionUtils.isNotEmpty(policyNos)) {
+				if( policyNos.size()==1) {//單選保單
+					//20210120-保單單筆勾選時：只顯示該被勾選保單的現行保單資料作為預設顯示供修改
+					rMap = new HashMap<String,Object>();
+					userCurrentNetworkData = transContactInfoService.getUserCurrentNetworkData(policyNos.get(0));
+					lilipmVo = lilipmService.findContactInfoByPolicyNoList(policyNos);
+					
+					if (lilipmVo != null) {
+						transContactInfoDtlVo.setLipmName1(lilipmVo.getLipmName1());
+						transContactInfoDtlVo.setTelHome(lilipmVo.getNoHiddenLipmTelH());
+						transContactInfoDtlVo.setTelOffice(lilipmVo.getNoHiddenLipmTelO());
+						transContactInfoDtlVo.setAddress(lilipmVo.getLipmAddrNoHidden());
+						transContactInfoDtlVo.setAddressCharge(lilipmVo.getLipmCharAddrNoHidden());
+						if(userCurrentNetworkData!=null && !userCurrentNetworkData.isEmpty()) {
+							transContactInfoDtlVo.setMobile((String)userCurrentNetworkData.get("MOBILE"));
+							transContactInfoDtlVo.setEmail((String)userCurrentNetworkData.get("EMAIL"));
+						}
+					}
+				}else {
+					rMap = transContactInfoService.getCIOUserDetailInfoNew(getUserRocId());
+					if(rMap == null) {
+					   rMap = transContactInfoService.getCIOUserDetailInfoOld(getUserRocId());
+					}
+				}
+			}
+			
 		    List<Map<String, Object>> cityList = optionService.getCityList();
 		    //List<Map<String, Object>> regionList = optionService.getRegionList("");
 		    //List<Map<String, Object>> roadList = optionService.getRoadList("");
-		   
-			Map<String,Object> rMap =  transContactInfoService.getCIOUserDetailInfoNew(getUserRocId());
-			if(rMap == null) {
-			   rMap =  transContactInfoService.getCIOUserDetailInfoOld(getUserRocId());
-			}
-			//logger.info("user-detail-info(begin):{}",rMap);
+
 			if(rMap != null) {
 				
 				//for error control-start
@@ -261,6 +277,34 @@ public class TransContactInfoController extends BaseUserDataController {
 					rMap.put("ADDRESS_FULL_CHARGE", null);
 				}
 				//for error control-end
+				
+				if(lilipmVo!=null) {//單選保單時才進入此流程
+					rMap.put("TYPE", "new");//value='new' or 'old'
+					//UI資料
+					if(lilipmVo.getLipmNameBase64()!=null) {
+						rMap.put("NAME", lilipmVo.getLipmNameBase64());
+					}else {
+						rMap.put("NAME", lilipmVo.getLipmName1());
+					}
+
+					rMap.put("TEL_HOME", lilipmVo.getNoHiddenLipmTelH());
+					rMap.put("TEL_OFFICE", lilipmVo.getNoHiddenLipmTelO());
+					
+					if(userCurrentNetworkData!=null && !userCurrentNetworkData.isEmpty()) {
+						rMap.put("MOBILE", (String)userCurrentNetworkData.get("MOBILE"));
+						rMap.put("EMAIL",  (String)userCurrentNetworkData.get("EMAIL"));
+					}
+					
+					rMap.put("ADDRESS_FULL", lilipmVo.getLipmAddrNoHidden());
+					rMap.put("ADDRESS_FULL_CHARGE", lilipmVo.getLipmCharAddrNoHidden());
+					
+					//地址相關
+					rMap.put("CITY_CHAR", null);
+					rMap.put("REGION", null);
+					rMap.put("CITY_NAME_CHAR", null);
+					rMap.put("REGION_NAME_CHAR", null);
+					
+				}
 				
 				String telOffice = (String)rMap.get("TEL_OFFICE");
 				if(telOffice != null && telOffice.contains("#")) {
