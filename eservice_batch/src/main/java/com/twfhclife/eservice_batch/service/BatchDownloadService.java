@@ -651,6 +651,7 @@ public class BatchDownloadService {
 		listData.add(String.format("要保人 %s  君", MyStringUtil.nullToString(infoMap.get("LIPM_NAME_1"))));
 		// get from table LILIPM.LIPM_INSU_BEG_DATE
 		LocalDate begDate = ((Date)infoMap.get("LIPM_INSU_BEG_DATE")).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		
 		String currency = MyStringUtil.nullToString(infoMap.get("CURRENCY"));
 		String currencyCht = "NTD".equals(currency)? "新台幣": (("USD".equals(currency))?"美金": "");
 		String moneyMain = arrayInputData[0].substring(0, 10).replaceAll(" ", "").trim();
@@ -660,6 +661,7 @@ public class BatchDownloadService {
 		String twYear = twDate.substring(0, 3);
 		String twMonth = twDate.substring(3, 5);
 		String twDay = twDate.substring(5, 7);
+
 		listData.add(String.format("於%3d年%2d月%2d日投保本公司︰「%s」"
 				, begDate.getYear() - 1911 // y-1911 顯示民國年
 				, begDate.getMonthValue()
@@ -694,6 +696,19 @@ public class BatchDownloadService {
 						, Integer.parseInt(moneySub)));
 			}
 		}
+		
+		// 2022/03/02 by 203990
+		listData.add(" ");
+		// get from table LILIPM_ES.LIPM_LO_MK
+		String LIPM_LO_MK = MyStringUtil.nullToString(infoMap.get("LIPM_LO_MK"));
+		logger.debug("LIPM_LO_MK:{}", LIPM_LO_MK);
+		if ("Y".equals(LIPM_LO_MK)) {
+			listData.add("*本證明開立時有保單質借");
+		}
+		else {
+			listData.add("*本證明開立時無保單質借");
+		}
+		
 		pdfUtil.addToOneColumnTable(listData, 12, 100f, 655f, 15f);
 		pdfUtil.closeDoc();
 		pdfUtil.toPdf();
