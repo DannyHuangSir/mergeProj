@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.twfhclife</groupId>
-	<artifactId>eservice_adm_mergeProj</artifactId>
+	<artifactId>eservice_adm_GoLive20220103</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>autho</name>
@@ -19,7 +19,7 @@
 		<timestamp>${build.time}</timestamp>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 		<start-class>com.twfhclife.Application</start-class>
-		<log4j2.version>2.16.0</log4j2.version>
+		<log4j2.version>2.17.1</log4j2.version>
 	</properties>
 
 	<parent>
