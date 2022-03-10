@@ -49,7 +49,8 @@ public class CioServiceImpl implements ICioExternalService{
 	
 	private void initRestTemplate() {
 		// Fix the RestTemplate to be a singleton instance.
-		restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
+		//restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
+		restTemplate = new RestTemplate();//force init.
 
 	    // Set the request factory. 
 	    // IMPORTANT: This section I had to add for POST request. Not needed for GET
