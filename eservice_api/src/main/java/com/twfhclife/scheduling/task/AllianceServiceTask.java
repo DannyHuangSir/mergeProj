@@ -464,7 +464,16 @@ public class AllianceServiceTask {
 							//2.1.call api-104
 							Map<String,String> params = new HashMap<>();
 							params.put("fileId", fileVo.getFileId());
-							String strBase64 = this.converFileToBase64Str(fileVo.getPath()+"/"+fileVo.getFileName());
+							
+							String strBase64 = null;
+							if(fileVo.getFileBase64()==null || "".contentEquals(fileVo.getFileBase64().trim())) {
+								log.info("取用自file_base64 string.");
+								strBase64 = fileVo.getFileBase64();
+							}else {
+								//嘗試取用實體位置文件檔
+								log.info("取用自實體檔路徑.");
+								strBase64 = this.converFileToBase64Str(fileVo.getPath()+"/"+fileVo.getFileName());
+							}
 							params.put("base64", strBase64);
 							
 							//聯盟鏈歷程參數
@@ -488,7 +497,6 @@ public class AllianceServiceTask {
 						}
 					}
 				}
-				
 				
 			}catch(Exception e) {
 				log.error(e.toString());
