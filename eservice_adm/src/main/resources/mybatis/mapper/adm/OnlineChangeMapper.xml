@@ -1899,7 +1899,7 @@
 	<insert id="addInsuranceClaimFileData" parameterType="com.twfhclife.adm.model.TransInsuranceClaimFileDataVo">
 		INSERT INTO 
        		ESERVICE.DBO.INSURANCE_CLAIM_FILEDATAS
-       		(CLAIMS_SEQ_ID,FILE_ID,SIZE,TYPE,FILE_NAME,FILE_STATUS,PATH)
+       		(CLAIMS_SEQ_ID,FILE_ID,SIZE,TYPE,FILE_NAME,FILE_STATUS,PATH,FILE_BASE64)
        	VALUES
        		(
        			#{vo.claimSeqId,  jdbcType=FLOAT},
@@ -1915,7 +1915,8 @@
        			</choose>
        			#{vo.fileName, jdbcType=VARCHAR},
        			'0',
-       			#{vo.filePath, jdbcType=VARCHAR}
+       			#{vo.filePath, jdbcType=VARCHAR},
+       			#{vo.fileBase64, jdbcType=VARCHAR}
        		)
 	</insert>
 	
