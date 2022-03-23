@@ -103,6 +103,8 @@ public class OnlineChangeController extends BaseController {
 			))
 	@GetMapping("/onlineChange")
 	public String onlineChange() {
+		addAttribute("onlineChange", parameterService.getParameterByCategoryCode(null, "ONLINE_CHANGE"));
+		addAttribute("onlineChangeStatus", parameterService.getParameterByCategoryCode(null, "ONLINE_CHANGE_STATUS"));
 		return "backstage/rpt/onlineChange";
 	}
 
