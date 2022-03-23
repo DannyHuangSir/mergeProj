@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.user.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -76,5 +77,13 @@ public interface LilipmDao {
 	 * @return 回傳數據條數
 	 */
 	public int getInsuredUsersByRocId(@Param("rocId") String rocId);
+
+	/**
+	 * 取得保單的 LIPM_TARGET_PREM 資訊
+	 * 用作繳別由短變長判斷依據
+	 * @param policyNo
+	 * @return
+	 */
+	BigDecimal getLipmTargetPremByPolicyNo(@Param("policyNo") String policyNo);
 	
 }

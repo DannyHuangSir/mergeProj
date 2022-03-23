@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.twfhclife.eservice.onlineChange.model.TransPaymodeVo;
@@ -49,4 +50,6 @@ public interface ITransPaymodeService {
 	 * @param policyList
 	 */
 	public Integer getPolicyPayMethodChange(String policyNo);
+
+	BigDecimal getPolicyPayOld(String policyNo);
 }

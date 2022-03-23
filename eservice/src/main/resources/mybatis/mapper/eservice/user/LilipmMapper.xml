@@ -33,7 +33,7 @@
 		<result column="NO_HIDDEN_LIPM_ID" property="noHiddenLipmId"/>
 		<result column="NO_HIDDEN_LIPM_TEL_H" property="noHiddenLipmTelH"/>
 		<result column="NO_HIDDEN_LIPM_TEL_O" property="noHiddenLipmTelO"/>
-		<result column="LIPM_ADDR_NOHIDDEN" property="lipmAddrNoHidden"/>
+	<result column="LIPM_ADDR_NOHIDDEN" property="lipmAddrNoHidden"/>
 		<result column="LIPM_CHAR_ADDR_NOHIDDEN" property="lipmCharAddrNoHidden"/>
 	</resultMap>
 	
@@ -170,6 +170,16 @@
         <where>
             AND (LIPM_INSU_TYPE + CAST(LIPM_INSU_GRP_NO AS NVARCHAR(1)) + LIPM_INSU_SEQ_NO ) = #{policyNo}
         </where>
+	</select>
+
+	<select id="getLipmTargetPremByPolicyNo" resultType="java.math.BigDecimal">
+		SELECT
+		DISTINCT LIPM_TARGET_PREM
+		FROM
+		ESERVICE.DBO.LILIPM_ES
+		<where>
+			AND (LIPM_INSU_TYPE + CAST(LIPM_INSU_GRP_NO AS NVARCHAR(1)) + LIPM_INSU_SEQ_NO ) = #{policyNo}
+		</where>
 	</select>
 	
 	<!-- 查詢有效保單 -->

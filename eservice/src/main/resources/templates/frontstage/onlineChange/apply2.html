@@ -815,8 +815,6 @@
 						transDetailTitle = transDetailTitle + ',<br/>' + emptyIfNull(obj.productName) + '(' + emptyIfNull(obj.policyNo) + ')';
 					}
 				});
-				
-				$.ajaxSetup({async: false});
 				$.ajax({
 					type : 'POST',
 					contentType : 'application/json',
@@ -827,14 +825,11 @@
 						$('#transDetailDiv').show();
 					}
 				});
-				$.ajaxSetup({async: true});
 			} else {
 				$('#transDetailDiv').load("tableget?transType="+transType+"&transNum="+transNum);
 			}
 		}
-		
-		
-		
+
 		$('#modal-iframe-container').modal({
 			show: true,
 			//backdrop: 'static', 
@@ -844,28 +839,25 @@
 
 	//验证是否可以进行取消
 	function cancelTransCheck(transNum,transType){
-			var  respon='';
-				$.ajaxSetup({async: false});
-				$.ajax({
-				type : 'POST',
-				dataType : 'json',
-				url : getRootPath()+'/eservice/cancelApplyTransCheck',
-				data : {
-						transNum:transNum
-						},
-				success : function(response) {
-					respon=response[0];
-				},
-				error :function() {
-				}
-			});
-			$.ajaxSetup({async: true});
-			if('SUCCESS'==respon){
+			$.ajax({
+			type : 'POST',
+			dataType : 'json',
+			url : getRootPath()+'/eservice/cancelApplyTransCheck',
+			data : { transNum:transNum },
+			success : function(response) {
+				if('SUCCESS'==response[0]){
 					cancelTrans(transNum,transType);
 				}
-			if('FAIL'==respon){
+				if('FAIL'==response[0]){
 					cancelTransTips();
 				}
+			},
+			error :function() {
+				cancelTransTips();
+			}
+		});
+		event.preventDefault();
+		event.stopPropagation();
 	}
 
 	//提示

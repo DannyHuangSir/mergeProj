@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -163,4 +164,10 @@ public class TransPaymodeServiceImpl implements ITransPaymodeService {
 	public Integer getPolicyPayMethodChange(String policyNo) {
 		return lilipmDao.getLipmTredTmsByPolicyNo(policyNo);
 	}
+
+	@Override
+	public BigDecimal getPolicyPayOld(String policyNo) {
+		return lilipmDao.getLipmTargetPremByPolicyNo(policyNo);
+	}
+
 }

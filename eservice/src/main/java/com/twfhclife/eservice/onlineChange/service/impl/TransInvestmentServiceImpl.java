@@ -195,7 +195,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
     }
 
     @Override
-    public  List<List<TransFundConversionVo>>  transInvestmentConversionDetail(String transNum) throws Exception {
+    public  List<List<TransFundConversionVo>> transInvestmentConversionDetail(String transNum) throws Exception {
         List<TransFundConversionVo> transFundConversionVos =
                 transFundConversionDao.transInvestmentConversionDetail(transNum);
         log.info(transFundConversionDao);
@@ -501,7 +501,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             if (number==null) {
                 number = 0F;
             }
-            transFundConversionVo.setValue(new BigDecimal(number));
+            transFundConversionVo.setValue(new BigDecimal(String.valueOf(number)));
             transFundConversionVo.setInvestmentType(TransTypeUtil.INVESTMENT_STATUS_OUT);
             if (out.getRatio()==null) {
                 out.setRatio(0);

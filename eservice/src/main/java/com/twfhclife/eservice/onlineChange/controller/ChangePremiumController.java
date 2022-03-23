@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -131,6 +132,9 @@ public class ChangePremiumController extends BaseUserDataController  {
         try {
             Integer lipmTredTms = transPaymodeService
                     .getPolicyPayMethodChange(vo.getPolicyNoList().get(0));
+            BigDecimal oldAmount = transPaymodeService
+                    .getPolicyPayOld(vo.getPolicyNoList().get(0));
+            vo.setOldAmount(oldAmount);
             String paymodeOld = vo.getPaymodeOld();
             boolean paymodeA = true;//年繳
             boolean paymodeS = true;//半年繳
