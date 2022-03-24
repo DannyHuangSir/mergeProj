@@ -466,7 +466,7 @@ public class AllianceServiceTask {
 							params.put("fileId", fileVo.getFileId());
 							
 							String strBase64 = null;
-							if(fileVo.getFileBase64()==null || "".contentEquals(fileVo.getFileBase64().trim())) {
+							if(fileVo.getFileBase64()!=null ) {
 								log.info("取用自file_base64 string.");
 								strBase64 = fileVo.getFileBase64();
 							}else {
