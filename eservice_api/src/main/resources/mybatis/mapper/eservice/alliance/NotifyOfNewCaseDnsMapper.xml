@@ -140,8 +140,10 @@
 			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM
 		from ESERVICE.DBO.TRANS t,ESERVICE.DBO.TRANS_DNS td
 		where t.STATUS = #{status}
+		and td.SEND_ALLIANCE is null
 		and t.TRANS_TYPE = 'DNS_ALLIANCE'
-		and td.CODE is null
+		and td.TOKEN is not null
+		and td.FSZ1_PI_ST in ('55','62')
 		and t.TRANS_NUM  = td.TRANS_NUM
 	</select>
 
@@ -150,16 +152,16 @@
 	<select id="getTransDnsByStatus" parameterType="java.lang.String" resultMap="DnsResultMap">
 		select top(10)
 			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,
-			td.INSNOM POLICYNO,
-			ESERVICE.dbo.FN_DEBASE64(td.NAME) NAME
-			,td.CON,td.CONDATE,td.ADDDATE
+			td.INSNOM POLICY_NO,
+			ESERVICE.dbo.FN_DEBASE64(td.NAME) NAME,
+			td.CON,td.CONDATE,td.ADDDATE
 		from ESERVICE.DBO.TRANS t 
 		inner join ESERVICE.DBO.TRANS_DNS td on t.TRANS_TYPE = 'DNS_ALLIANCE'
 		where td.CODE is null
 			and t.TRANS_NUM = td.TRANS_NUM
-			and td.DETAIL_MESSAGE is null
-			and td.FSZ1_PI_ST='55'
-			and t.STATUS = #{status}
+			and td.TOKEN is null
+			and td.FSZ1_PI_ST is null
+			and t.STATUS in ('0','1','5');
 	</select>
 
 
@@ -202,12 +204,10 @@
 			ESERVICE.dbo.FN_DEBASE64(td.IDNO) IDNO
 		from ESERVICE.DBO.TRANS t inner 
 		join ESERVICE.DBO.TRANS_DNS td on t.TRANS_TYPE = 'DNS_ALLIANCE'
-		where td.CODE is null
-			and t.TRANS_NUM = td.TRANS_NUM
-			and td.DETAIL_MESSAGE is null
+		where t.TRANS_NUM = td.TRANS_NUM
+			and td.TOKEN is not null
 			and td.FSZ1_PI_ST is null
-		and (t.STATUS !=  #{status}  and   t.STATUS !=  #{status2})
-		and (td.FSZ1_ID !=  #{fsz1Id} and  td.FSZ1_ID !=  #{fsz1Id2} )
+			and t.STATUS in ('0','1','5')
 	</select>
 
 	<!-- 更新DNS_ALLIANCE.STATUS by seqId -->
@@ -221,6 +221,7 @@
 	<update id="updateTransDnsSDetailMessageByTransNum"  parameterType="com.twfhclife.alliance.model.DnsContentVo">
 		update ESERVICE.DBO.TRANS_DNS
 		set
+			TOKEN = #{vo.token},
 		DETAIL_MESSAGE = #{vo.detailMessage}
 		where TRANS_NUM = #{vo.transNum}
 	</update>
@@ -231,6 +232,11 @@
 			FSZ1_ID = #{vo.fsz1Id},
 			TOKEN = #{vo.token}
 		where TRANS_NUM = #{vo.transNum} and INSNOM = #{vo.policyNo}
+	</update>
+	<update id="updateTransStatusByTransNum" parameterType="map">
+		update ESERVICE.DBO.TRANS
+		set STATUS = #{status}
+		where TRANS_NUM = #{transNum}
 	</update>
 
 </mapper>

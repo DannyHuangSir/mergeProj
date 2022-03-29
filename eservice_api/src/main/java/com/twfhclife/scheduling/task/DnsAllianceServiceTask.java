@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
 import com.twfhclife.generic.utils.CallApiCode;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
@@ -39,7 +41,6 @@ import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.utils.ApConstants;
 import com.twfhclife.generic.utils.MyJacksonUtil;
-import org.springframework.util.StringUtils;
 
 /**
  * 死亡除戶
@@ -171,29 +172,39 @@ public class DnsAllianceServiceTask {
 
 		if("N".equals(API_DNS_DISABLE)){
 			try {
-				//A.取得TRANS中除戶案件的STATUS標示為已完成(STATUS=2)
-				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatus("2");
+				//A.20211210-modify:取得未上傳,除戶案件的STATUS未完成(0,1,5),直接call FS62寫入核心
+				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatus("");
 				if(listContent!=null && listContent.size()>0) {
 					for(DnsContentVo contentVo : listContent) {
 						if(contentVo!=null) {
-							//B.LOOP案件回報聯盟
-							//all DNS-101
 							String apiCode = null;
 							Map<String,String> params = new HashMap<>();
 							params.put("FS62-SCN-NAME","FS62");//必填：固定用”FS62”
 							params.put("FS62-FUNC-CODE","IN");//必填：固定用”IN”
 							params.put("FS62-INSU-NO",contentVo.getPolicyNo());//必填：保單號碼
-							params.put("FS62-ACC-DATE",contentVo.getAdddate());//必填：辦理日(yyyyMMdd)年份為民國年
+							params.put("FS62-PAGE","0");//放0即可
+							
+							String addDate = contentVo.getAdddate();
+							if(StringUtils.isNotBlank(addDate) && addDate.length()>=7) {
+								addDate = addDate.substring(0,7);
+								addDate = "0"+addDate;
+							}
+							params.put("FS62-ACC-DATE",addDate);//必填：辦理日(yyyyMMdd)年份為民國年;聯盟傳來的有時分秒(民國年 YYYMMDDhhmm)
+							
 							params.put("FS62-PAY-CODE","30");//必填：種類/固定”30”
-							params.put("FS62-ACCI-DATE",contentVo.getCondate());//必填：事故日
+							params.put("FS62-ACCI-DATE","0"+contentVo.getCondate());//必填：身故日(事故日),民國年 yyyyMMdd;(聯盟傳來民國年 YYYMMDD)
+							params.put("FS62-DIAB-CLASS", "");//殘障分類,放空白即可
+
 							//進行查詢事故的原因
 							StringBuffer reason = new StringBuffer();
 							reason.append("批註除戶回報系統通報");
-							reason.append(contentVo.getCondate());
 							reason.append(contentVo.getName());
+							reason.append("0"+contentVo.getCondate());//身故日
 							reason.append("身故");
-							params.put("FS62-ACCI-REASON",reason.toString());//必填：事故原因，長度44
+							params.put("FS62-ACCI-REASON1",reason.toString());//必填：事故原因，長度44
 							params.put("FS62-ACCI-REASON2","");//必填：事故原因2，長度78
+							params.put("FS62-CLERK","");//放空白即可
+							params.put("FS62-BRANCH-CODE","01");//放'01'即可
 
 							//聯盟鏈歷程參數
 							Map<String,String> unParams = new HashMap<>();
@@ -206,13 +217,15 @@ public class DnsAllianceServiceTask {
 							//String strResponse = "{\"success\":true,\"data\":{\"token\":\"20210830_00000001\",\"detail_status\":\"0\",\"detail_message\":\"〔寫入完成〕\"}}";
 							log.info("call URL_dnsFS62,strResponse="+strResponse);
 
-							String callRtncode = MyJacksonUtil.readValue(strResponse, "/success");//0代表成功,1代表查無資料
+							String callRtncode = MyJacksonUtil.readValue(strResponse, "/success");//CSP平台執行狀況，true=成功，其他=失敗
 							Boolean aBoolean = Boolean.valueOf(callRtncode);
 							if(aBoolean) {//核心回傳成功
 								String dataDetailStatus = MyJacksonUtil.readValue(strResponse, "/data/detail_status");
 								String msg = MyJacksonUtil.readValue(strResponse, "/data/detail_message");
+								String token = MyJacksonUtil.readValue(strResponse, "/data/token");
 								if("0".equals(dataDetailStatus)) {
-									contentVo.setDetailMessage(msg!=null?msg:"寫入完成");
+									contentVo.setDetailMessage(msg!=null?msg:"新增完成");
+									contentVo.setToken(token);
 									int rtnCnt = dnsDao.updateTransDnsSDetailMessageByTransNum(contentVo);
 									log.info("dnsDao.updateTransDnsSDetailMessageByTransNum rtnCnt="+rtnCnt);
 								}else{
@@ -246,11 +259,11 @@ public class DnsAllianceServiceTask {
 
 		if ("N".equals(API_DNS_DISABLE)) {
 			try {
-				//A.取得TRANS中除戶案件的STATUS標示為已完成(STATUS!=2)
-				//取得TRANS中除戶案件的STATUS標示為取消(STATUS!=3)
-				//取得TRANS中除戶案件的(FSZ1_ID!=55)
-				//取得TRANS中除戶案件的(FSZ1_ID!=62)
-				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatusAndFsz1PiSt("2","3","55","62");
+				//A.
+				//取得TRANS_DNS.TOKEN is null - 表示有成功寫入核心
+				//取得TRANS中除戶案件的STATUS標示為0 or 1 or 5 - 表示合法的TRANS
+				//取得TRANS中除戶案件的(FSZ1_PI_ST is null) - 表示未取過契況
+				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatusAndFsz1PiSt();
 				if (listContent != null && listContent.size() > 0) {
 					for (DnsContentVo contentVo : listContent) {
 						if (contentVo != null) {
@@ -295,8 +308,16 @@ public class DnsAllianceServiceTask {
 									 * 62-身故,部份家屬尚未來辦理相關事項
 									 */
 									if("55".equals(fsz1PiSt) || "62".equals(fsz1PiSt)) {//表示取得身故值
+										int rtn = -1;
 										try {
-											dnsDao.updateTransDnssfsz1PiStByPolicyNo(contentVo);
+											rtn = dnsDao.updateTransDnssfsz1PiStByPolicyNo(contentVo);
+											log.info("updateTransDnssfsz1PiStByPolicyNo() rtn=" + rtn);
+											if(rtn>0) {
+												rtn = dnsDao.updateTransStatusByTransNum(contentVo.getTransNum(), "2");
+												log.info("updateTransStatusByTransNum(),transNum="+contentVo.getTransNum()+ ",rtn=" + rtn);
+											}else {
+												log.info("updateTransDnssfsz1PiStByPolicyNo() fail");
+											}
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -609,8 +630,10 @@ public class DnsAllianceServiceTask {
 //		}
 		
 		DnsAllianceServiceTask task = new DnsAllianceServiceTask();
-		task.API_DNS_DISABLE = "N";
-		task.testCallDNS201(task);
+		//task.API_DNS_DISABLE = "N";
+		//task.testCallDNS201(task);
+		String addDate = "0711012123456";
+		System.out.println(addDate.substring(0,7));
 		
 	}
 	

@@ -96,9 +96,9 @@ public interface NotifyOfNewCaseDnsDao {
 	Integer getDnsAllianceByCaseId(@Param("caseId") String caseId) throws Exception;
 
 	/**
-	 * 修改狀態
+	 * 更新TOKEN,DetailMessage
 	 * @param contentVo
-	 * @return
+	 * @return int
 	 */
 	int updateTransDnsSDetailMessageByTransNum(@Param("vo") DnsContentVo contentVo)throws Exception;
 
@@ -108,7 +108,7 @@ public interface NotifyOfNewCaseDnsDao {
 	 * @return
 	 * @throws Exception
 	 */
-	List<DnsContentVo> getTransDnsByStatusAndFsz1PiSt(@Param("status") String s,@Param("status2") String status2,@Param("fsz1Id") String  fsz1Id,@Param("fsz1Id2") String  fsz1Id2)throws Exception;
+	List<DnsContentVo> getTransDnsByStatusAndFsz1PiSt()throws Exception;
 
 	/**
 	 * 修改回寫狀態
@@ -116,4 +116,13 @@ public interface NotifyOfNewCaseDnsDao {
 	 * @throws Exception
 	 */
 	int updateTransDnssfsz1PiStByPolicyNo(@Param("vo")  DnsContentVo contentVo)throws Exception;
+	
+	/**
+	 * 
+	 * @param transNum
+	 * @param status
+	 * @return int
+	 * @throws Exception
+	 */
+	int updateTransStatusByTransNum(@Param("transNum") String transNum,@Param("status") String status) throws Exception;
 }
