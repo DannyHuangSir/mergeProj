@@ -180,7 +180,7 @@ public class DnsAllianceServiceTask {
 							String apiCode = null;
 							Map<String,String> params = new HashMap<>();
 							params.put("FS62-SCN-NAME","FS62");//必填：固定用”FS62”
-							params.put("FS62-FUNC-CODE","IN");//必填：固定用”IN”
+							params.put("FS62-FUNC-CODE","AA");//必填：固定用”AA”
 							params.put("FS62-INSU-NO",contentVo.getPolicyNo());//必填：保單號碼
 							params.put("FS62-PAGE","0");//放0即可
 							
