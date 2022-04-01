@@ -148,6 +148,7 @@
 			var policyList = /*[[${policyListPolicyNo}]]*/;
 			$("#deny").click(function(){
 				formDataObj.policyNo=policyList.policyNo;
+				formDataObj.currency = policyList.currency
 				postWithFormData(/*[[@{/fund2}]]*/, formDataObj);
 			});
 			$(function() {
@@ -514,6 +515,7 @@
 				}
 			//	investmentsList.netValueDate="";
 			//	investmentsList.exchRateDate="";
+				formData.currency = policyList.currency
 				formData.investmentsList = JSON.stringify(investmentsList)
 				postWithFormData(/*[[@{/fund4}]]*/, formData);
 			});

@@ -110,6 +110,7 @@
 			var policyNo= $('input[name="chosePolicy"]:checked').val()
 			formData.policyNo = policyNo;
 			formData.invtRiskBeneLevel = riskLevel;
+			formData.currency = $("#currency_" + policyNo).val();
 			console.log('=========',formData);
 			postWithFormData(/*[[@{/fund2}]]*/,formData);
 		});

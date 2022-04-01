@@ -348,6 +348,7 @@
 			let formData = {};
 			formData.investmentsList = investmentsList;
 			formData.numInvestment = numInvestment;
+			formData.currency = formDataInvestmentPortfolioVo.currency;
 			console.log('---------------------退上上一步-----------------');
 		 	postWithFormData(/*[[@{/fund4}]]*/,formData);
 		 });

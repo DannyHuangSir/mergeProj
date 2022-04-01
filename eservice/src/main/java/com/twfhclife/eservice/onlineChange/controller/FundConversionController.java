@@ -251,7 +251,7 @@ public class FundConversionController extends BaseUserDataController  {
     }
     @RequestLog
     @PostMapping("/fund4")
-    public String fund4(String  investmentsList) {
+    public String fund4(String  investmentsList, PolicyListVo policyList) {
         try {
             Gson builderTime = (new GsonBuilder()).setDateFormat("yyyy/MM/dd HH:mm:ss").create();
             List<InvestmentPortfolioVo> investmentPortfolioVo = builderTime.fromJson(investmentsList, new TypeToken<List<InvestmentPortfolioVo>>(){}.getType());
@@ -275,6 +275,7 @@ public class FundConversionController extends BaseUserDataController  {
             addAttribute("investmentPortfolioVo", investmentPortfolioVo);
             addAttribute("proposer", getProposerName());
             addAttribute("chckSwiftCode", chckSwiftCode);
+            addAttribute("policyListPolicyNo", policyList);
         } catch (Exception ex) {
             logger.error("--------Unable to init from FundConversionController - fund4--------: {}", ExceptionUtils.getStackTrace(ex));
             addDefaultSystemError();
