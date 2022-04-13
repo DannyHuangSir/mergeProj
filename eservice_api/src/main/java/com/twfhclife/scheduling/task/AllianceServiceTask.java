@@ -561,7 +561,7 @@ public class AllianceServiceTask {
 							
 							//聯盟鏈歷程參數
 							Map<String,String> unParams = new HashMap<>();
-							unParams.put("name", "API-104檔案上傳");
+							unParams.put("name", "API-105查詢理賠案件");
 							unParams.put("caseId", vo.getCaseId());
 							unParams.put("transNum", null);
 							String strResponse = allianceService.postForEntity(URL_API105, params, unParams);
