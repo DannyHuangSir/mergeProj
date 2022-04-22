@@ -1,12 +1,11 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.twfhclife.eservice.generic.annotation.EventRecordLog;
-import com.twfhclife.eservice.generic.annotation.EventRecordParam;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.IOnlineChangeService;
@@ -29,7 +28,6 @@ import com.twfhclife.generic.api_model.TransHistoryListResponse;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
-import com.twfhclife.generic.api_model.ReturnHeader;
 import com.twfhclife.generic.util.StatuCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -51,18 +49,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.twfhclife.eservice.onlineChange.service.IOnlineChangeService;
-import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
-import com.twfhclife.eservice.web.domain.ResponseObj;
-import com.twfhclife.eservice.web.model.ParameterVo;
-import com.twfhclife.eservice.web.model.UsersVo;
-import com.twfhclife.eservice.web.service.IRegisterUserService;
-import com.twfhclife.generic.api_client.FunctionUsageClient;
-import com.twfhclife.generic.api_client.TransHistoryListClient;
-import com.twfhclife.generic.api_model.TransHistoryListResponse;
-import com.twfhclife.generic.controller.BaseController;
-import com.twfhclife.generic.util.ApConstants;
 
 @Controller
 @EnableAutoConfiguration
@@ -138,6 +124,29 @@ public class OnlineChangeController extends BaseController {
 		modelMap.addAttribute("onlineChangeHome", map);
 		modelMap.addAttribute("canUseFlag", getUserDetail().getOnlineFlag());
 		modelMap.addAttribute("onlinechangeEnableEntry", onlinechangeEnableEntry);
+
+		if (getSession("POPUP_FLAG") == null || !(boolean) getSession("POPUP_FLAG")) {
+			try {
+				String onlineChangeMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "ONLINECHANGE_POPUP_MSG");
+				if (StringUtils.isNotBlank(onlineChangeMsg)) {
+					String onlineChangeTime = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "ONLINECHANGE_POPUP_TIME_FORMAT");
+					if (StringUtils.isNotBlank(onlineChangeTime) && StringUtils.contains(onlineChangeTime, "-")) {
+						String[] timeStr = onlineChangeTime.split("-");
+						SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+						long startTime = timeFormat.parse(timeStr[0]).getTime();
+						long endTime = timeFormat.parse(timeStr[1]).getTime();
+						long currentTime = System.currentTimeMillis();
+						if (currentTime >= startTime && currentTime <= endTime) {
+							addAttribute("POPUP_MSG", onlineChangeMsg);
+							addSession("POPUP_FLAG", true);
+						}
+					}
+				}
+			} catch (Exception e) {
+				logger.debug("Show POPUP MSG error: ", e);
+			}
+		}
+
 		logger.info("open {}", "frontstage/apply1.html");
 		/* 計算功能使用次數 */
 		try {
@@ -221,7 +230,7 @@ public class OnlineChangeController extends BaseController {
 							startDate, endDate, pageNum, defaultPageSize);
 				}
 
-				 // TODO 进行处理数据
+				 //进行处理数据
 				if (transHistoryList != null) {
 					transHistoryList = transHistoryList.stream().map(x -> {
 						logger.info("getTransList ! {}", x);
@@ -342,20 +351,20 @@ public class OnlineChangeController extends BaseController {
 					onlineChangeService.cancelApplyTrans(transNum, hisVo);
 					}
 				} else {
-					//進行取消 已持有投資標的轉換保單
+				//進行取消 已持有投資標的轉換保單
 					onlineChangeService.cancelApplyTransInvestment(transNum, hisVo);
-					//發送 郵件
-					TransInvestmentVo transInvestmentVo = new TransInvestmentVo();
-					transInvestmentVo.setPolicyNo(policyNo);
-					transInvestmentVo.setTransNum(transNum);
-					//申請功能名稱
-					ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
-								ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
-					transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
-					transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
-					transInvestmentVo.setMessage(MSG_MAP.get(transType));
-					transInvestmentVo.setApplyDate(new Date());
-					sendConversionSMSAndEmail(transInvestmentVo, user, transType);
+				//發送 郵件
+				TransInvestmentVo transInvestmentVo = new TransInvestmentVo();
+				transInvestmentVo.setPolicyNo(policyNo);
+				transInvestmentVo.setTransNum(transNum);
+				//申請功能名稱
+				ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
+							ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
+				transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
+				transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
+				transInvestmentVo.setMessage(MSG_MAP.get(transType));
+				transInvestmentVo.setApplyDate(new Date());
+				sendConversionSMSAndEmail(transInvestmentVo, user, transType);
 				}
 			} else {
 				onlineChangeService.cancelApplyTrans(transNum, hisVo);
@@ -601,6 +610,24 @@ public class OnlineChangeController extends BaseController {
 			processSystemError();
 		}
 		return processResponseEntity();
+	}
+
+	/**
+	 * 验证,取消申請
+	 *    如,已經推送至聯盟并且已經審核通過,則不能進行取消
+	 *		SEND_ALLIANCE!=Y
+	 * @param transNum
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/transMedicalTreatmentClaimByCheck")
+	@ResponseBody
+	public List<String> transMedicalTreatmentClaimByCheck(@RequestParam("transNum") String transNum){
+		ArrayList<String> checkList = new ArrayList<>();
+		//查询当前保单同批次的状态
+		String check = transContactInfoService.transMedicalTreatmentClaimByCheck(transNum);
+		checkList.add(check);
+		return  checkList;
 	}
 
 		//發送郵件
