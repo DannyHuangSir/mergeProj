@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.model;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.sql.Timestamp;
@@ -290,7 +291,16 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	private String stauts;
 	//便於重新發送驗證
 	private String mobile;
+	
 	private String email;
+
+	/**
+	 * Spec v1.5.2
+	 * 申請資料
+	 */
+	private List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfo = Lists.newArrayList();
+
+	private String medicalInfoList;
 
 	public String getEmail() {
 		return email;
@@ -867,6 +877,22 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 
 	public void setCpoa(String cpoa) {
 		this.cpoa = cpoa;
+	}
+
+	public List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo() {
+		return medicalInfo;
+	}
+
+	public void setMedicalInfo(List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfo) {
+		this.medicalInfo = medicalInfo;
+	}
+
+	public String getMedicalInfoList() {
+		return medicalInfoList;
+	}
+
+	public void setMedicalInfoList(String medicalInfoList) {
+		this.medicalInfoList = medicalInfoList;
 	}
 
 	@Override

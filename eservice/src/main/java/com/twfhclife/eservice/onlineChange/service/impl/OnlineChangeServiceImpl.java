@@ -644,40 +644,40 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 
 			java.net.URL netUrl = new java.net.URL(ENI_API_API008_URL);
 			java.net.HttpURLConnection httpConn=(java.net.HttpURLConnection)netUrl.openConnection();
-			//設定引數
-		    httpConn.setDoOutput(true);//需要輸出
-		    httpConn.setDoInput(true);//需要輸入
-		    httpConn.setUseCaches(false);//不允許快取
-		    httpConn.setRequestMethod("POST");//設定POST方式連線
-		    //設定請求屬性
-		    httpConn.setRequestProperty("Content-Type", "application/json");
-		    //httpConn.setRequestProperty("Connection", "Keep-Alive");// 維持長連線
-		    httpConn.setRequestProperty("Charset", "UTF-8");
-		    httpConn.setRequestProperty("Access-Token", ENI_API_API008_ACCESSTOKEN);
-		    //httpConn.setRequestProperty("call_user",unParams.get("call_user") );
-		    //連線
-		    httpConn.connect();
-		    //建立輸入流，向指向的URL傳入引數
-		    java.io.DataOutputStream dos = new java.io.DataOutputStream(httpConn.getOutputStream());
+		   //設定引數
+		   httpConn.setDoOutput(true);//需要輸出
+		   httpConn.setDoInput(true);//需要輸入
+		   httpConn.setUseCaches(false);//不允許快取
+		   httpConn.setRequestMethod("POST");//設定POST方式連線
+		   //設定請求屬性
+		   httpConn.setRequestProperty("Content-Type", "application/json");
+		   //httpConn.setRequestProperty("Connection", "Keep-Alive");// 維持長連線
+		   httpConn.setRequestProperty("Charset", "UTF-8");
+		   httpConn.setRequestProperty("Access-Token", ENI_API_API008_ACCESSTOKEN);
+		   //httpConn.setRequestProperty("call_user",unParams.get("call_user") );
+		   //連線
+		   httpConn.connect();
+		   //建立輸入流，向指向的URL傳入引數
+		   java.io.DataOutputStream dos = new java.io.DataOutputStream(httpConn.getOutputStream());
 
-		    //test
-		    //rocId = "S202340416";
-		    //policyNo = "GQ10400020";
-		    String raw_josn = "{\"askIdno\":\"" + rocId + "\",\"insNo\":\"" + policyNo + "\"}";
+		   //test
+		   //rocId = "S202340416";
+		   //policyNo = "GQ10400020";
+		   String raw_josn = "{\"askIdno\":\"" + rocId + "\",\"insNo\":\"" + policyNo + "\"}";
 		   
-		    dos.write(raw_josn.getBytes("UTF-8"));
-		    dos.flush();
-		    dos.close();
-		    //獲得響應狀態
-		    BufferedReader br = null;
-		    String api008Result = "";
-		    if (200 <= httpConn.getResponseCode() && httpConn.getResponseCode() <= 399) {
-		    	br = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
-		        api008Result = br.lines().collect(Collectors.joining());
-		    } else {
-		        br = new BufferedReader(new InputStreamReader(httpConn.getErrorStream()));
-		        logger.error("Unable to getEINPDF: ENI_API_API008 http error ", br.toString());
-		    }
+		   dos.write(raw_josn.getBytes("UTF-8"));
+		   dos.flush();
+		   dos.close();
+		   //獲得響應狀態
+		   BufferedReader br = null;
+		   String api008Result = "";
+		   if (200 <= httpConn.getResponseCode() && httpConn.getResponseCode() <= 399) {
+		       br = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
+		       api008Result = br.lines().collect(Collectors.joining());
+		   } else {
+		       br = new BufferedReader(new InputStreamReader(httpConn.getErrorStream()));
+		       logger.error("Unable to getEINPDF: ENI_API_API008 http error ", br.toString());
+		   }
 		   
 		   // 解析 api008Result , 取得 fileId
 		   /*
@@ -724,7 +724,7 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 		   
 
 	        //ENI API009 取得資料
-			netUrl = new java.net.URL(ENI_API_API009_URL);
+	        netUrl = new java.net.URL(ENI_API_API009_URL);
 		    httpConn=(java.net.HttpURLConnection)netUrl.openConnection();
 		   //設定引數
 		   httpConn.setDoOutput(true);//需要輸出

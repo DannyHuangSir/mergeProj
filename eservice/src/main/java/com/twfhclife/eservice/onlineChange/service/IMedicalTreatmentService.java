@@ -162,4 +162,5 @@ public interface IMedicalTreatmentService {
 	//進行獲取當前保單已經選中的醫院資料
     List<Hospital> gitChooseHospitalList(String policyNo, String userRocId)throws Exception;
 
+    List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo(Float claimSeqId);
 }

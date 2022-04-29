@@ -98,4 +98,8 @@ public interface TransMedicalTreatmentClaimDao {
     int getMedicalTreatmentWhetherFirst(@Param("policyNo")String policyNo, @Param("functionName")String medicalTreatmentParameterCode)throws Exception;
 	//進行獲取當前保單已經選中的醫院資料
     List<String> gitChooseHospitalList(@Param("policyNo")String policyNo,@Param("userRocId") String userRocId)throws  Exception;
+
+    int addInsuranceClaimMedicalInfo(@Param("vo") TransMedicalTreatmentClaimMedicalInfoVo vo);
+
+    List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfoByClaimId(@Param("claimSeqId") Float claimSeqId);
 }

@@ -153,7 +153,7 @@ public class RptUtils2 {
 		table.addCell(createCell("寄回資訊-收件人 :", keyfont, Element.ALIGN_RIGHT,1,false));
 		table.addCell(createCell("臺銀人壽 理賠科",keyfont,Element.ALIGN_LEFT,2,false));
 
-		table.addCell(createCell("寄回咨詢-收件地址 : ", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell("寄回資訊-收件地址 : ", keyfont, Element.ALIGN_RIGHT,1,false));
 		table.addCell(createCell("106 台北市大安區敦化南路二段 69 號 2 樓",keyfont,Element.ALIGN_LEFT,2,false));
 
 		document.add(paragraph);
@@ -247,7 +247,7 @@ public class RptUtils2 {
 		table.addCell(createCell("寄回資訊-收件人 :", keyfont, Element.ALIGN_RIGHT,1,false));
 		table.addCell(createCell("臺銀人壽 理賠科",keyfont,Element.ALIGN_LEFT,2,false));
 
-		table.addCell(createCell("寄回咨詢-收件地址 : ", keyfont, Element.ALIGN_RIGHT,1,false));
+		table.addCell(createCell("寄回資訊-收件地址 : ", keyfont, Element.ALIGN_RIGHT,1,false));
 		table.addCell(createCell("106 台北市大安區敦化南路二段 69 號 2 樓",keyfont,Element.ALIGN_LEFT,2,false));
 
 		document.add(paragraph);

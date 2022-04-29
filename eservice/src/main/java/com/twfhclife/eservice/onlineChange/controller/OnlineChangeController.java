@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.onlineChange.service.IHospitalServcie;
 import com.twfhclife.eservice.onlineChange.service.IOnlineChangeService;
 import com.twfhclife.eservice.onlineChange.service.IHospitalServcie;
 import com.twfhclife.eservice.onlineChange.service.ITransContactInfoService;
@@ -230,7 +231,7 @@ public class OnlineChangeController extends BaseController {
 							startDate, endDate, pageNum, defaultPageSize);
 				}
 
-				 //进行处理数据
+				 // TODO 进行处理数据
 				if (transHistoryList != null) {
 					transHistoryList = transHistoryList.stream().map(x -> {
 						logger.info("getTransList ! {}", x);
@@ -343,28 +344,27 @@ public class OnlineChangeController extends BaseController {
 			} else if (transType != null && INVSETMENT_TYPES.contains(transType)) {
 				//進行查詢數據當前批次的保單號
 				String policyNo = transContactInfoService.getHistoryPolicyNo(transNum);
-				//繳別非投資型保單，取消不需要發送投資型通知
-				if (StringUtils.equals(transType, TransTypeUtil.PAYMODE_PARAMETER_CODE)) {
 				String type = policyNo.substring(0, 2);
 				String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
-					if (!(StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type))) {
+				if (StringUtils.equals(transType, TransTypeUtil.PAYMODE_PARAMETER_CODE) &&
+						!(StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type))) {
+					//繳別非投資型保單，取消不需要發送投資型通知
 					onlineChangeService.cancelApplyTrans(transNum, hisVo);
-					}
 				} else {
-				//進行取消 已持有投資標的轉換保單
+					//進行取消 已持有投資標的轉換保單
 					onlineChangeService.cancelApplyTransInvestment(transNum, hisVo);
-				//發送 郵件
-				TransInvestmentVo transInvestmentVo = new TransInvestmentVo();
-				transInvestmentVo.setPolicyNo(policyNo);
-				transInvestmentVo.setTransNum(transNum);
-				//申請功能名稱
-				ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
-							ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
-				transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
-				transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
-				transInvestmentVo.setMessage(MSG_MAP.get(transType));
-				transInvestmentVo.setApplyDate(new Date());
-				sendConversionSMSAndEmail(transInvestmentVo, user, transType);
+					//發送 郵件
+					TransInvestmentVo transInvestmentVo = new TransInvestmentVo();
+					transInvestmentVo.setPolicyNo(policyNo);
+					transInvestmentVo.setTransNum(transNum);
+					//申請功能名稱
+					ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
+					ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
+					transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
+					transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
+					transInvestmentVo.setMessage(MSG_MAP.get(transType));
+					transInvestmentVo.setApplyDate(new Date());
+					sendConversionSMSAndEmail(transInvestmentVo, user, transType);
 				}
 			} else {
 				onlineChangeService.cancelApplyTrans(transNum, hisVo);
@@ -622,10 +622,10 @@ public class OnlineChangeController extends BaseController {
 	@RequestLog
 	@PostMapping("/transMedicalTreatmentClaimByCheck")
 	@ResponseBody
-	public List<String> transMedicalTreatmentClaimByCheck(@RequestParam("transNum") String transNum){
+	public  List<String>  transMedicalTreatmentClaimByCheck(@RequestParam("transNum") String transNum){
 		ArrayList<String> checkList = new ArrayList<>();
 		//查询当前保单同批次的状态
-		String check = transContactInfoService.transMedicalTreatmentClaimByCheck(transNum);
+		String  check=	 transContactInfoService.transMedicalTreatmentClaimByCheck(transNum);
 		checkList.add(check);
 		return  checkList;
 	}

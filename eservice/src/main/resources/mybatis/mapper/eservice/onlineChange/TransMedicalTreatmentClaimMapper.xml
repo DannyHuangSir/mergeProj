@@ -289,4 +289,37 @@
 		where
 		T.TRANS_TYPE=#{functionName}  AND  TMT.POLICYNO=#{policyNo}
 	</select>
+
+	<insert id="addInsuranceClaimMedicalInfo" parameterType="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo">
+			<if test="vo.dtypeList != null and vo.dtypeList.size() > 0">
+				insert into ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO(
+					MI_ID, CLAIMS_SEQ_ID, SENO, HS_TIME, HE_TIME, OTYPE, DEPID, SUB_DEPID, DTYPE, CREATE_DATE, OTYPE_NAME, DEP_NAME, SUB_DEP_NAME, DTYPE_NAME, FILE_NAME
+				)
+				values
+				<foreach collection="vo.dtypeList" item="item" separator=",">
+					(next value for TRANS_MEDICAL_TREATMENT_CLAIM_MI_SEQ, #{vo.claimId}, #{vo.seNo}, #{vo.hsTime}, #{vo.heTime},
+					#{vo.otype}, #{vo.depid}, #{vo.subDepid}, #{item.value}, #{vo.createDate}, #{vo.otypeName}, #{vo.depName}, #{vo.subDepName}, #{item.name}, #{item.name})
+				</foreach>
+			</if>
+	</insert>
+
+	<resultMap id="MedicalInfoMap" type="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo">
+		<result column="HS_TIME" property="hsTime"/>
+		<result column="HE_TIME" property="heTime"/>
+		<result column="OTYPE_NAME" property="otypeName"/>
+		<result column="DEP_NAME" property="depName"/>
+		<result column="SUB_DEP_NAME" property="subDepName"/>
+		<association property="dtypeList" resultMap="DtypeMap"/>
+	</resultMap>
+
+	<resultMap id="DtypeMap" type="map">
+		<result column="DTYPE_NAME" property="name"/>
+		<result column="DTYPE" property="value"/>
+	</resultMap>
+
+	<select id="getMedicalInfoByClaimId" resultMap="MedicalInfoMap">
+		select HS_TIME, HE_TIME, OTYPE_NAME, DEP_NAME, SUB_DEP_NAME, DTYPE_NAME, DTYPE FROM
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+		where CLAIMS_SEQ_ID = #{claimSeqId}
+	</select>
 </mapper>

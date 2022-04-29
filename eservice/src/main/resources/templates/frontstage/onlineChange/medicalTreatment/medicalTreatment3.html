@@ -135,8 +135,8 @@
 									<input type="text"  name="address" th:value="${claimVo.address}" class="col-sm-9" maxlength="200" style="padding: 6px 12px;line-height: 1em;" >
 								</div>
 								<div class="clearfix"></div>
-								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>與主被保險人(員工)之關係：</label>
-								<div class="col-sm-9">
+								<label class="col-sm-12"><span style="color: #ff5300; font-size: 16px">*</span>與主被保險人(員工)之關係：</label>
+								<div class="col-sm-9 col-sm-offset-3">
 									<th:block th:if="${session.RELATION_ITEMS != null}">
 										<th:block th:each="vo : ${session.RELATION_ITEMS}">
 											<div class="radio inline">
@@ -153,7 +153,7 @@
 															[[${vo.value.parameterName}]]
 														</label>
 													</th:block>
-													
+
 												</label>
 											</div>
 										</th:block>
@@ -161,8 +161,8 @@
 									<input type="hidden" id="id_relation_name" name="relation_name" value=""/>
 								</div>
 								<div class="clearfix"></div>
-								<label class="col-sm-3">被保險人是否有投保別家保險公司之保賠：</label>
-								<div class="col-sm-9">
+								<label class="col-sm-12">被保險人是否有投保別家保險公司之保賠：</label>
+								<div class="col-sm-9 col-sm-offset-3">
 									<div class="radio inline">
 										<label>
 											<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="Y" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>有
@@ -266,7 +266,7 @@
 														<div class="col-sm-8" >
 															<input type="text" name="accidentDate" id="accidentDate" data-validation="date" class="col-sm-4" placeholder="輸入年月日" readonly>
 															<span class="col-sm-1"></span>
-															<input type="text" name="accidentTime" id="accidentTime" data-validation="time" class="col-sm-4" maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
+															<input type="text" name="accidentTime" id="accidentTime" data-validation="time" class="col-sm-4" maxlength="5" placeholder="00:00" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
 														</div>
 													</div>
 													<div class="check-list2 grey2">
@@ -311,7 +311,7 @@
 														<div class="col-sm-8">
 															<input type="text" class="col-sm-4" name="policeDate" id="policeDate"  placeholder="輸入年月日" readonly>
 															<span class="col-sm-1"></span>
-															<input type="text" class="col-sm-4" name="policeTime" id="policeTime" data-validation="time"  maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
+															<input type="text" class="col-sm-4" name="policeTime" id="policeTime" data-validation="time"  maxlength="5" placeholder="00:00" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
 														</div>
 													</div>
 												</div>
@@ -354,10 +354,10 @@
 								<label class="col-sm-3">理賠醫起通說明</label>
 								<div class="col-sm-9" th:inline="text">
 									[[${session.PAGE_WORDING != null and session.PAGE_WORDING['MEDICAL_TREATMENT_PAGE'] != null} ? ${session.PAGE_WORDING['MEDICAL_TREATMENT_PAGE'].parameterValue} : '
-									即日起，使用本公司線上理賠申請服務時，可一併授權本公司將您的理賠申請資料，透過「中華民國人壽保險商業同業公會」建制之「理賠醫起通」服務傳送予您有投保之保險公司（該保險公司須有參與理賠醫起通），免除以往須向不同保險公司分別提出理賠申請之不便。
+									即日起，使用本公司線上理賠申請服務時，可一併授權本公司將您的理賠申請資料，透過「中華民國人壽保險商業同業公會」建置之「理賠醫起通」服務傳送予您有投保之保險公司（該保險公司須有參與理賠醫起通），免除以往需向不同保險公司分別提出理賠申請之不便。
 									']]
 								</div>
-								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否傳送其他醫療單位：</label>
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否傳送醫療單位：</label>
 								<div class="col-sm-9">
 									<div class="radio inline">
 										<label>
@@ -378,95 +378,86 @@
 										</article>
 										<!-- TAB 2 -->
 										<article class="tab tab-hide" id="tab3_2">
-											<section id="tab_frame_print1" class="tab-frame">
-												<div class="arrow-upleft" style="left: 30%"></div>
-												<div class="grey2">
-													<div class="check-title depo2">同意轉送醫療資料介接申請至其他保險公司</div>
+											<section id="tab_frame_print_company" class="tab-frame">
+												<input type="hidden" id="medicalInfo" name="medicalInfoList">
+												<div class="arrow-upleft" style="left: 20%"></div>
+												<div class="grey2 medicalParent">
+													<div class="check-title depo2">同意轉送醫療資料介接申請至保險公司</div>
 													<div class="check-list2 grey2">
-														<label for="" class="col-sm-3">授權傳送其他醫療單位</label>				
-														<th:block th:if="${hospitalList != null}">
+														<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>醫療單位：</label>
+														<div class="col-sm-9">
+															<div class="selector-box">
+																<select class="selector" name="toHospitalId" class="hospital" onchange="changeHospital(this)">
+																	<option th:each="vo : ${hospitalList}"
+																			th:value="${vo.hpid}"
+																			th:utext="${vo.hpName}"/>
+																</select>
+															</div>
+														</div>
+														<div class="clearfix"></div>
+													</div>
+													<div class="itemMedicalData" id="medicalDataId">
+														<hr/>
+														<div class="check-list2 grey2">
+															<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>就診類型：</label>
 															<div class="col-sm-9">
-																<th:block th:each="vo : ${hospitalList}">
-																	<div class="radio inline col-sm-6" style="margin-right: 0px;">
-																		<label>
-																				<th:block th:if="${vo.hpid != null && vo.hpid !=''}">
-																			<div class="radio-btn" style="margin-top: 8px !important;">
-																						<i><input type="radio" name="toHospitalIdItem"  th:value="${vo.hpid}" ></i>
-																					</div>
-																				<th:block th:if="${vo.hpName != null}">
-																				<label style="display: inline;" th:inline="text">[[${vo.hpName}]]</label>
-																				</th:block>
-																				</th:block>
-																				<th:block th:if="${vo.hpid == null || vo.hpid ==''}">
-																					<div class="radio-btn" style="margin-top: 8px !important;">
-																						<i onclick="chooseHospital()"><input type="radio"  style="color: cadetblue;"  name="toHospitalIdItem"  disabled></i>
-																	</div>
-																			<th:block th:if="${vo.hpName != null}">
-																						<label style="display: inline;color: cadetblue;" th:inline="text">[[${vo.hpName}]]</label>
-																			</th:block>
-																				</th:block>
-																				
-																		</label>
-																		</div>
-																</th:block>
+																<div class="selector-box">
+																	<select class="selector patientType" onchange="showDivision(this)">
+																	</select>
+																</div>
 															</div>
-														</th:block>
-														<input type="hidden" name="toHospitalId" >
-														<!-- <div class="col-sm-9">
-															<div class="radio inline col-sm-4">
-																<label>
-																	<div class="radio-btn" style="margin-top: 6px !important;"><i><input type="radio" name="radio01" value="option1"></i></div>臺北市立聯合醫院
-																</label>
+															<div class="clearfix"></div>
+														</div>
+														<div class="check-list2 grey2">
+															<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">&nbsp;</span>主科別：</label>
+															<div class="col-sm-9">
+																<div class="selector-box">
+																	<select class="selector divisionType" onchange="showSubDivision(this)">
+																	</select>
+																</div>
 															</div>
-															<div class="radio inline col-sm-6">
-																<label>
-																	<div class="radio-btn" style="margin-top: 6px !important;"><i><input type="radio" name="radio01" value="option1"></i></div>國立台灣大學醫學院附設醫院
-																</label>
+															<div class="clearfix"></div>
+														</div>
+														<div class="check-list2 grey2">
+															<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>子科別：</label>
+															<div class="col-sm-9">
+																<div class="selector-box">
+																	<select class="selector subDivisionType">
+																	</select>
+																</div>
 															</div>
-															<div class="radio inline col-sm-4">
-																<label>
-																	<div class="radio-btn" style="margin-top: 6px !important;"><i><input type="radio" name="radio01" value="option1"></i></div>林口長醫院
-																</label>
+															<div class="clearfix"></div>
+														</div>
+														<div class="check-list2 grey2">
+															<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>授權文件類型：</label>
+															<div class="col-sm-9 dataFileGroupType">
 															</div>
-															<div class="radio inline col-sm-6">
-																<label>
-																	<div class="radio-btn" style="margin-top: 6px !important;"><i><input type="radio" name="radio01" value="option1"></i></div>輔大醫院
-																</label>
+															<div class="clearfix"></div>
+														</div>
+														<div class="check-list2 grey2">
+															<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>授權時間區間：</label>
+															<div class="col-sm-9">
+																<input type="text" autocomplete="off" class="col-sm-4 authorizationDate" name="startDate" value="" style="padding: 6px 12px;line-height: 1em;">
+																<span class="col-sm-1"> ~ </span>
+																<input type="text" autocomplete="off" class="col-sm-4 authorizationDate" name="endDate" value="" style="padding: 6px 12px;line-height: 1em;">
 															</div>
-															<div class="radio inline col-sm-4">
-																<label>
-																	<div class="radio-btn" style="margin-top: 6px !important;"><i><input type="radio" name="radio01" value="option1"></i></div>淡水馬階醫院
-																</label>
+															<div class="clearfix"></div>
+														</div>
+														<div class="check-list2 grey2">
+															<label class="col-sm-3">功能：</label>
+															<div class="col-sm-9">
+																<button class="col-sm-4" type="button" onclick="addMedicalInfo()" style="padding: 6px 12px;line-height: 1em;background: #009b30;color: #ffffff;border: 0;border-radius: 3px;">+ 新增</button>
+																<span class="col-sm-1"> </span>
+																<button class="col-sm-4" type="button" onclick="deleteTarget(this)" style="padding: 6px 12px;line-height: 1em;background: #BEBEBE;color: #ffffff;border: 0;border-radius: 3px;">- 删除</button>
 															</div>
-															<div class="radio inline col-sm-6">
-																<label>
-																	<div class="radio-btn" style="margin-top: 6px !important;"><i><input type="radio" name="radio01" value="option1"></i></div>淡水馬階醫院
-																</label>
-															</div>
-														</div> -->
+															<div class="clearfix"></div>
+														</div>
 													</div>
 												</div>
 											</section>
 										</article>
 									</div>
 								</div>
-								<label class="col-sm-3 authorizationTime" style="display:none"><span style="color: #ff5300; font-size: 16px">*</span>授權文件類型：</label>
-								<div class="col-sm-9 authorizationTime" style="display:none">
-									<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
-										<div class="check-box"><i class=""><input id="checkBox2" type="checkbox"  name="fileType" value="1"></i></div>診斷證明書
-									</div>
-									<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
-										<div class="check-box"><i class=""><input id="checkBox2" type="checkbox" name="fileType" value="2"></i></div>收據
-									</div>
-									<input type="hidden" id="authorizationFileType" name="authorizationFileType" >
-								</div>
-								<span class="col-sm-9 authorizationTime" style="display:none;color: red;">(以上項目至少選取1項)</span>
-								<label class="col-sm-3 authorizationTime" style="display:none"><span style="color: #ff5300; font-size: 16px">*</span>授權時間區間：</label>
-								<div class="col-sm-9 authorizationTime" style="display:none">
-									<input type="text" autocomplete="off" class="col-sm-4 datepicker" id="authorizationStartDate" name="authorizationStartDate" value="" placeholder="2021/04/06" style="padding: 6px 12px;line-height: 1em;">
-									<span class="col-sm-1"> ~ </span>
-									<input type="text" autocomplete="off" class="col-sm-4 datepicker" id="authorizationEndDate" name="authorizationEndDate" value="" placeholder="2021/05/01" style="padding: 6px 12px;line-height: 1em;">
-								</div>									
 								<div class="clearfix"></div>
 									<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否傳送其他保險公司：</label>
 									<div class="col-sm-9">
@@ -647,6 +638,7 @@
 												</div>
 												<input  class="uploadfile" th:id="${vo.value.remark}" name="files" type="file" multiple>
 											</div>
+											<div class="col-sm-9 col-sm-offset-3">支援格式：(png,jpg,pdf)</div>
 											<div class="clearfix"></div>
 										</div>
 										<input type="hidden" th:id="${vo.value.parameterCode}">
@@ -713,8 +705,8 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 				</div>
 				<div class="modal-body apply2 center1 grey2">
-					<h3>請於就醫醫院同時辦理申請手續，才可享有醫起通服務。</h3>
-					<p>請確認，點擊取消可重新進行申請資料修正，點擊確認則進入步驟4. 資料及一次性密碼確認</p>
+					<h3>請確認，點擊取消可重新進行申請資料修正，</h3>
+					<h3>點擊確認則進入步驟4. 資料及一次性密碼確認</h3>
 				</div>
 				<div class="modal-footer center1">
 					<button class="btn-login lock2" data-dismiss="modal" aria-label="Close">取消</button>
@@ -741,6 +733,66 @@
 			</div>
 		</div>
 	</div>
+
+
+	<div class="itemMedicalData" name="cloneItemMedicalData" style="display: none;">
+		<hr />
+		<div class="check-list2 grey2">
+			<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>就診類型：</label>
+			<div class="col-sm-9">
+				<div class="selector-box">
+					<select class="selector patientType" onchange="showDivision(this)">
+					</select>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="check-list2 grey2">
+			<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>主科別：</label>
+			<div class="col-sm-9">
+				<div class="selector-box">
+					<select class="selector divisionType" onchange="showSubDivision(this)">
+					</select>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="check-list2 grey2">
+			<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>子科別：</label>
+			<div class="col-sm-9">
+				<div class="selector-box">
+					<select class="selector subDivisionType">
+					</select>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="check-list2 grey2">
+			<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>授權文件類型：</label>
+			<div class="col-sm-9 dataFileGroupType">
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="check-list2 grey2">
+			<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>授權時間區間：</label>
+			<div class="col-sm-9">
+				<input type="text" autocomplete="off" class="col-sm-4 authorizationDate" name="startDate" value="" style="padding: 6px 12px;line-height: 1em;">
+				<span class="col-sm-1"> ~ </span>
+				<input type="text" autocomplete="off" class="col-sm-4 authorizationDate" name="endDate" value=""  style="padding: 6px 12px;line-height: 1em;">
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="check-list2 grey2">
+			<label class="col-sm-3">功能：</label>
+			<div class="col-sm-9">
+				<button class="col-sm-4" type="button" onclick="addMedicalInfo()" style="padding: 6px 12px;line-height: 1em;background: #009b30;color: #ffffff;border: 0;border-radius: 3px;">+ 新增</button>
+				<span class="col-sm-1"> </span>
+				<button class="col-sm-4" type="button" onclick="deleteTarget(this)" style="padding: 6px 12px;line-height: 1em;background: #BEBEBE;color: #ffffff;border: 0;border-radius: 3px;">- 删除</button>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+
 	<th:block th:replace="fragments/script"/>
 	<script th:inline="javascript">
 		var uploadFiles = /*[[${session.MEDICAL_TREATMENT_UPLOADFILE}]]*/;
@@ -826,13 +878,17 @@
 				yearRange: 'c-80:c+80',
 				dateFormat : 'yy/mm/dd'
 			});
-		 $('.datepicker').datepicker({//日期控件
-			changeMonth : true,
-			changeYear : true,
-			maxDate : new Date(),
-			yearRange: 'c-80:c+80',
-			dateFormat : 'yy/mm/dd'
-		 });
+
+			$("body").on("focus",".authorizationDate", function(){
+			   $(this).datepicker({//日期控件
+					changeMonth : true,
+					changeYear : true,
+					maxDate : new Date(),
+					yearRange: 'c-80:c+80',
+					dateFormat : 'yy/mm/dd'
+				 })
+			});
+
 			$("#bankOpt").chosen({
 				allow_single_deselect:true,
 				search_contains: true
@@ -875,7 +931,25 @@
 				}
 				$('#step3Form').submit();
 			});
-			
+
+			$("body").on('click', '.check-box', function(e) {
+				e.stopPropagation();
+				/*****  Add condition @Linus_09/23 *****/
+				if(!$(this).find(':checkbox').prop("disabled")) {
+					if ($(this).hasClass('checkedBox')) {
+						$(this).find('input:checkbox').prop('checked', false);
+						$(this).delay(400).removeClass('checkedBox');
+						$(this).find('i').removeClass('checkedBox-i');
+					}
+					else {
+						$(this).find('input:checkbox').prop('checked', true);
+						$(this).delay(400).addClass('checkedBox');
+						$(this).find('i').addClass('checkedBox-i')
+					}
+				}
+			});
+
+			showPatientType($(".hospital"), $("#medicalDataId"))
 		})
        		  //选择项目applyItemList
 			 function   againValidation(){
@@ -966,68 +1040,130 @@
 					}
 						//醫療單位fromHospitalId
 					if($("input[name='fromHospitalId']:checked").val() == undefined){
-							openAlert('請選擇是否傳送其他醫療單位');
+							openAlert('請選擇是否傳送醫療單位');
 							return false;
 					}
-					//授權傳送其他醫療單位
+					//授權傳送醫療單位
 					if ($("input[name='fromHospitalId']:checked").val() == "Y"){
-						var toItemList = $("input[name='toHospitalIdItem']:checked"); //选择所有name="'toItem'"
-						if(toItemList.length == 0){
-							openAlert('授權傳送其他醫療單位');
-							return false;
-						}
-						//循环检测是不是被选中
-						var toItotemALL='';
-						for(var i=0; i<toItemList.length; i++){
-							if(toItemList[i].checked == true){
-								toItotemALL += toItemList[i].value + ',';
-							}
-						}
-						//去掉最后一个逗号
-						if (toItotemALL.length > 0) {
-							toItotemALL = toItotemALL.substr(0,toItotemALL.length - 1);
-						}
-						$("input[name='toHospitalId']").val(toItotemALL);
-						//return true;
+						var isPass = true
+						var medicalInfo = []
+						var checkMap = {}
+						$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
 
-						var  fileType= $("input[name='fileType']:checked").val();
-						if(fileType==undefined|| fileType.length<1){
-							openAlert('授權文件類型,項目至少選取1項');
-							return false;
-						}else{
-							var  fileTypeItemList= $("input[name='fileType']");
-							var fileTypeItemALL='';
-							for(var i=0; i<fileTypeItemList.length; i++){
-								if(fileTypeItemList[i].checked == true){
-									fileTypeItemALL += fileTypeItemList[i].value + ',';
+							let hsTime = $(obj).find("input[name='startDate']").val()
+							let heTime = $(obj).find("input[name='endDate']").val()
+							let otype = $(obj).find(".patientType").val()
+							let depid = $(obj).find(".divisionType").val()
+							let subDepid = $(obj).find(".subDivisionType").val()
+
+							if(hsTime ==undefined || hsTime ==''){
+								openAlert('授權時間區間,開始時間必有');
+								isPass = false;
+								return false;
+							}
+
+							if(heTime==undefined || heTime =='' ){
+								openAlert('授權時間區間,開始時間必有');
+								isPass = false;
+								return false;
+							}
+
+							let checkKey = otype + "_" + depid + "_" + subDepid
+							let intHsTime = parseInt(hsTime.replace(/\//g, ""))
+							let intHeTime = parseInt(heTime.replace(/\//g, ""))
+
+							if (intHsTime > intHeTime) {
+								openAlert('授權時間開始時間不能大於結束時間');
+								isPass = false;
+								return false;
+							}
+
+							if (checkMap[checkKey] != null) {
+								let oldHsTime = checkMap[checkKey].hsTime
+								let oldHeTime = checkMap[checkKey].heTime
+
+								if (isIntersect([intHsTime, intHeTime], [oldHsTime, oldHeTime])) {
+									openAlert("授權傳送醫療單位:第" + checkMap[checkKey].index + "項與第" + (inx + 1) +"重複，請調整。");
+									isPass = false;
+									return false;
 								}
 							}
-							//去掉最后一个逗号
-							if (fileTypeItemALL.length > 0 ) {
-								fileTypeItemALL = fileTypeItemALL.substr(0,fileTypeItemALL.length - 1);
-							}
-							$("input[name='authorizationFileType']").val(fileTypeItemALL);
-						}
-						if($("input[name='authorizationStartDate']").val()==undefined ||$("input[name='authorizationStartDate']").val()=='' ){
-							openAlert('授權時間區間,開始時間必有');
-							return false;
-						}else{
-							$("input[name='authorizationStartDate']").val($('#authorizationStartDate').val().replace(/\//g, "\-"));
-						}
-						if($("input[name='authorizationEndDate']").val()==undefined ||$("input[name='authorizationEndDate']").val()=='' ){
-							openAlert('授權時間區間,結束時間必有');
-							return false;
-						}else{
-							$("input[name='authorizationEndDate']").val($('#authorizationEndDate').val().replace(/\//g, "\-"));
-						}
-						
-						
 
+							let checkVal = {
+								index: inx + 1,
+								hsTime: intHsTime,
+								heTime: intHeTime
+							}
+							checkMap[checkKey] = checkVal
+
+							let dtypes = []
+							let dtypeList = []
+							let hasFileType = false
+							$.each($(obj).find(".dataFileGroupType [name='fileDataGroup']:checked"), function(inx, obj1) {
+								dtypes.push($(obj1).val())
+								let temp = {}
+								temp.name = $(obj1).attr("valtext")
+								temp.value = $(obj1).val()
+								dtypeList.push(temp)
+								hasFileType = true
+							})
+
+							if (!hasFileType) {
+								openAlert('授權文件類型必有');
+								isPass = false;
+								return false;
+							}
+
+							let requireList = Object.assign(fileTypeRequiredMap[$(".hospital").val() + "_" + $(obj).find(".patientType").val()])
+							$.each(requireList, function(inx, obj2) {
+								if (parseInt(obj2.require) < 1) {
+									return true;
+								}
+								let require = parseInt(obj.require)
+								let msg = ''
+								$.each(obj2.fileType, function(inx, obj3) {
+								    msg += (obj3.dname + '、')
+									if (dtypes.indexOf(obj.dtype) != -1) {
+										require--
+									}
+								})
+								if (require > 0) {
+									openAlert(msg.substr(0,msg.length - 1) + "中必須選擇" + parseInt(obj2.require) + "個");
+									isPass = false;
+									return false;
+								}
+							})
+
+							if (!isPass) {
+								return isPass;
+							}
+
+							let item = {}
+							item.seNo = inx + 1
+							item.hsTime = hsTime
+							item.heTime = heTime
+							item.otype = otype
+							item.otypeName = $(obj).find(".patientType option:selected").text()
+							item.depid = depid
+							item.depName = $(obj).find(".divisionType  option:selected").text()
+							item.subDepid = subDepid
+							item.subDepName = $(obj).find(".subDivisionType  option:selected").text()
+							item.dtypes = dtypes
+							item.dtypeListStr = JSON.stringify(dtypeList)
+							medicalInfo.push(item)
+						})
+
+						if (!isPass) {
+							return false;
+						}
+
+						$("#medicalInfo").val(JSON.stringify(medicalInfo))
 					}else {
 						checkedMedical();
 						return false;
 					}
-						//保险公司sendAlliance
+
+					//保险公司sendAlliance
 					if($("input[name='sendAlliance']:checked").val() == undefined){
 							openAlert('請選擇是否傳送其他保險公司');
 							return false;
@@ -1052,11 +1188,7 @@
 					}
 					$("input[name='to']").val(toItotemALL);
 				}
-				//取消 是否傳送其他保險公司 不同意限制
-				// else {
-				// 	checkedNOTONGYI();
-				// 	return false;
-				// }				
+
 					//校驗指定給付方式
 					if($("input[name='paymentMethod']:checked").val() == "1"){
 						if($('#accountName').val() =='' || $('#bankCode').val() =='' || $('#bankAccount').val() ==''){
@@ -1079,6 +1211,7 @@
 							return false;	
 						}
 					}
+
 					//生日
 					$("input[name='birdate']").val($('#birdate').val().replace(/\//g, "\-"));
 					if($('#policeDate').val() != ''){
@@ -1115,41 +1248,6 @@
 						})
 					}
 					$('input[name="fileDataList"]').val(JSON.stringify(List));
-					//  if($("#fileDatas2").val()==''){
-					// 	openAlert("請選擇診斷證明書!");
-					//  	return false;
-					//  }else{
-					//         var List = [];
-					// 		if ($("#fileDatas1").val() != ''){
-					// 			List.push(JSON.parse($("#fileDatas1").val()));
-					// 		}else{
-					// 			List.push({claimSeqId: null, type: "1", fileName: "", filePath: ""});
-					// 		}
-
-					// 		List.push(JSON.parse($("#fileDatas2").val()));
-
-					// 		if ($("#fileDatas3").val() != ''){
-					// 			List.push(JSON.parse($("#fileDatas3").val()));
-					// 		}else{
-					// 			List.push({claimSeqId: null, type: "3", fileName: "", filePath: ""});
-					// 		}
-					// 		if ($("#fileDatas4").val() != ''){
-					// 			List.push(JSON.parse($("#fileDatas4").val()));
-					// 		}else{
-					// 			List.push({claimSeqId: null, type: "4", fileName: "", filePath: ""});
-					// 		}
-					// 		if ($("#fileDatas5").val() != ''){
-					// 			List.push(JSON.parse($("#fileDatas5").val()));
-					// 		}else{
-					// 			List.push({claimSeqId: null, type: "5", fileName: "", filePath: ""});
-					// 		}
-					// 		if ($("#fileDatas5").val() != ''){
-					// 			List.push(JSON.parse($("#fileDatas6").val()));
-					// 		}else{
-					// 			List.push({claimSeqId: null, type: "6", fileName: "", filePath: ""});
-					// 		}
-					// 		$('input[name="fileDataList"]').val(JSON.stringify(List));
-					// }
 
 				//獲取當前保單是否有上傳文件數據
 				var  booleanFirst=true;
@@ -1217,6 +1315,145 @@
 				keyboard: false
 			});
 		};
+
+		// 2022.3.23 xianzhi
+
+		function addMedicalInfo() {
+			clone = $("[name='cloneItemMedicalData']").clone().show().removeAttr("name")
+			$(".medicalParent").append(clone)
+			showPatientType($(".hospital"), clone)
+		}
+
+		function deleteTarget(target) {
+		    if ($(".itemMedicalData:visible").size() <= 1) {
+		    	openAlert('請至少添加一組醫療單位！');
+				return;
+		    }
+			$(target).parent().parent().parent().remove()
+		}
+
+		function showPatientType(vm, obj) {
+			$.ajax({
+				type : 'POST',
+				url : "getPatientType",
+				data : {
+					hpId: $(vm).val()
+				},
+				success : function(response) {
+				    let html = ''
+					if(response.result == 'SUCCESS') {
+						$.each(response.resultData, function(inx, obj) {
+							html += "<option value='" + obj.otype + "'>" + obj.oname +  "</option>"
+						})
+						let newVm = $(obj).find(".patientType")
+						$(newVm).html(html)
+						showDivision(newVm)
+					}
+				},
+				error : function() {
+					openAlert($('#E0011').val());
+				}
+			});
+		}
+
+		var divisionMap = {}
+		function showDivision(vm) {
+			hpVm = $(".hospital");
+			$.ajax({
+				type : 'POST',
+				url : "getDivision",
+				data : {
+					hpId: hpVm.val(),
+					otype: $(vm).val()
+				},
+				success : function(response) {
+				    let html = ''
+				    let subHtml = ''
+					if(response.result == 'SUCCESS') {
+						let first = true
+						$.each(response.resultData, function(inx, obj) {
+							html += "<option value='" + obj.mainDepid + "'>" + obj.mainDepname +  "</option>"
+							if (first) {
+								first = false
+								$.each(obj.subDivisions, function(inx1, obj1) {
+									subHtml += "<option value='" + obj1.depid + "'>" + obj1.depname +  "</option>"
+								})
+							}
+							divisionMap[hpVm.val() + '_' + $(vm).val() + '_' + obj.mainDepid] = obj.subDivisions
+						})
+						let newVm = $(vm).parents(".itemMedicalData:first").find(".divisionType")
+						$(newVm).html(html)
+
+						let subNewVm = $(vm).parents(".itemMedicalData:first").find(".subDivisionType")
+						$(subNewVm).html(subHtml)
+						showDataFileGroup(vm)
+					}
+				},
+				error : function() {
+					openAlert($('#E0011').val());
+				}
+			});
+		}
+
+		var fileTypeRequiredMap = {}
+		function showDataFileGroup(vm) {
+			hpVm = $(".hospital");
+			$.ajax({
+				type : 'POST',
+				url : "getMedicalDataFileGroup",
+				data : {
+					hpId: hpVm.val(),
+					otype: $(vm).val()
+				},
+				success : function(response) {
+				    let html = ''
+					if(response.result == 'SUCCESS') {
+						fileTypeRequiredMap[hpVm.val() + '_' + $(vm).val()] = response.resultData
+						$.each(response.resultData, function(inx, obj) {
+							$.each(obj.fileType, function(inx, obj){
+								html += "<div class='checkbox col-sm-3' style='line-height: 1em; cursor: pointer;padding-left:0;text-align: left;'>"
+								html += "<div class='check-box'><i class=''><input id='checkBox1' type='checkbox' valtext='" + obj.dname + "' name='fileDataGroup' value='" + obj.dtype +  "'></i></div>" + obj.dname
+								html += "</div>"
+							})
+						})
+						let newVm = $(vm).parents(".itemMedicalData:first").find(".dataFileGroupType")
+						$(newVm).html(html)
+					}
+				},
+				error : function() {
+					openAlert($('#E0011').val());
+				}
+			});
+		}
+
+		function showSubDivision(vm) {
+			let hospital = $(".hospital").val()
+			let patientType = $(vm).parents(".itemMedicalData:first").find(".patientType").val()
+			let divisionType = $(vm).val()
+			let subDivisions = divisionMap[hospital + '_' + patientType + '_' + divisionType]
+
+			if (subDivisions != null) {
+				let subHtml = ''
+				$.each(subDivisions, function(inx, obj) {
+					subHtml += "<option value='" + obj.depid + "'>" + obj.depname +  "</option>"
+				})
+				let subNewVm = $(vm).parents(".itemMedicalData:first").find(".subDivisionType")
+				$(subNewVm).html(subHtml)
+			}
+		}
+
+		function changeHospital(vm) {
+			$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
+				showPatientType(vm, obj)
+			})
+			$("[name='hpName']").val($(vm).find('option:selected').text())
+		}
+
+		function isIntersect(arr1,arr2){
+			let start = [Math.min(...arr1),Math.min(...arr2)];//区间的两个最小值
+			let end = [Math.max(...arr1),Math.max(...arr2)];//区间的两个最大值
+			return Math.max(...start) <= Math.min(...end);//最大值里的最小值 是否 小于等于 最大值的最小值
+		}
 	</script>
 
 </body>

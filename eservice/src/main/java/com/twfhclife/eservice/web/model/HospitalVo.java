@@ -1,5 +1,7 @@
 package com.twfhclife.eservice.web.model;
 
+import java.util.List;
+
 /**
  * @author hui.chen
  * @create 2021-09-14
@@ -17,8 +19,18 @@ public class HospitalVo {
     public String createDate;
     //當前狀態  Y  可用 N不可用(假刪除)
     public String status;
+    
+    /**
+     * 醫院就診類型清單
+     */
+    public OutpatientType[] outpatientTypes;
+    
+    /**
+     * 醫院科別
+     */
+    public List<Division> divisions;
 
-    public Float getId() {
+	public Float getId() {
         return id;
     }
 
@@ -65,4 +77,21 @@ public class HospitalVo {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    public OutpatientType[] getOutpatientTypes() {
+		return outpatientTypes;
+	}
+
+	public void setOutpatientTypes(OutpatientType[] outpatientTypes) {
+		this.outpatientTypes = outpatientTypes;
+	}
+
+	public List<Division> getDivisions() {
+		return divisions;
+	}
+
+	public void setDivisions(List<Division> divisions) {
+		this.divisions = divisions;
+	}
+	
 }

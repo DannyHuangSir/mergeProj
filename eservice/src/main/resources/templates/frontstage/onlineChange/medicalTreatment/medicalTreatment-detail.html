@@ -77,9 +77,9 @@
                             <div class="col-sm-9"><th:block th:text="${claimVo.address}"/></div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-5">與主被保險人(員工關係)：</label>
+                            <label class="col-sm-12">與主被保險人(員工關係)：</label>
                             <th:block th:if="${session.RELATION_ITEMS != null}">
-                                <div class="col-sm-7">
+                                <div class="col-sm-12 col-sm-offset-3">
                                     <th:block th:each="vo : ${session.RELATION_ITEMS}">
                                         <th:block th:if="${claimVo.relation eq vo.value.parameterValue}">
                                             <th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
@@ -90,8 +90,8 @@
                             
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-6">被保險人是否投保別家保險公司之保險：</label>
-                            <div class="col-sm-6">
+                            <label class="col-sm-12">被保險人是否投保別家保險公司之保險：</label>
+                            <div class="col-sm-12 col-sm-offset-3">
                                 <th:block th:if="${claimVo.otherCompanyInsured eq 'Y'}">有</th:block>
                                 <th:block th:if="${claimVo.otherCompanyInsured eq 'N'}">沒有</th:block>
                             </div>
@@ -126,11 +126,11 @@
                     </div>
                     <div class="mobile-toggle-panel">
                         <div class="form-group">
-                            <label class="col-sm-3">事故種類：</label>
-                            <!-- <div class="col-sm-9">
+                        <label class="col-sm-3">事故種類：</label>
+                          <div class="col-sm-9">
                                 <th:block th:if="${claimVo.accidentCause eq '1'}">疾病</th:block>
                                 <th:block th:if="${claimVo.accidentCause eq '2'}">意外</th:block>
-                            </div> -->
+
                             <th:block th:if="${session.APPLICATION_ITEMS != null}">
                                 <th:block th:each="vo : ${session.APPLICATION_ITEMS}">
                                     <th:block th:if="${claimVo.accidentCause eq vo.value.parameterValue}">
@@ -138,6 +138,7 @@
                                     </th:block>
                                 </th:block>
                             </th:block>
+                          </div>
                         </div>
                         <th:block th:if="${claimVo.accidentCause eq '1'}">
                             <div class="form-group">
@@ -147,7 +148,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3">該疾病初診日:</label>
                                 <div class="col-sm-9">
-                                        <th:block th:text="${claimVo.accidentDate}"/>                       
+                                    <th:block th:text="${claimVo.accidentDate}"/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -221,30 +222,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-4">是否傳送其他醫療單位:</label>
-                            <div class="col-sm-8">
+                            <label class="col-sm-3">是否傳送其他醫療單位:</label>
+                            <div class="col-sm-9">
                                 <th:block th:if="${claimVo.fromHospitalId != null}">同意</th:block>
                                 <th:block th:unless="${claimVo.fromHospitalId != null}">不同意</th:block>
                             </div>
                         </div>
                         <th:block th:if="${claimVo.fromHospitalId != null}">
                             <div class="form-group">
-                                <label class="col-sm-3">同意轉送的醫療單位:</label>
-                                <!-- <div class="col-sm-9">
-                                    <th:block th:each="toItem : ${claimVo.to}">
-                                        <th:block th:if="${toItem eq 'L02'}">臺灣人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'L04'}">國泰人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'L21'}">第一金人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'L05'}">中國人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'L61'}">元大人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'L06'}">南山人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'L64'}">全球人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'L08'}">新光人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'L51'}">富邦財險 </th:block>
-                                        <th:block th:if="${toItem eq 'L52'}">富邦人壽 </th:block>
-                                        <th:block th:if="${toItem eq 'N15'}">國泰世紀保險 </th:block>
-                                    </th:block>
-                                </div> -->
+                                <label class="col-sm-3">醫療單位:</label>
                                 <th:block th:if="${hospitalList != null}">
                                     <div class="col-sm-9">
                                         <th:block th:if="${claimVo.toHospitalId != null}">
@@ -255,36 +241,42 @@
                                                     </th:block>
                                                 </th:block>
                                             </th:block>
-                                     </th:block>
+                                        </th:block>
                                     </div>
                                 </th:block>
                             </div>
                         </th:block>
-                        <div class="form-group">
-                            <label class="col-sm-3">授權文件類型：</label>
-                            <div class="col-sm-9">
-                                <th:block th:if="${claimVo.authorizationFileType != null}">
-                                    <th:block th:each="from : ${#strings.arraySplit(claimVo.authorizationFileType, ',')}">
-                                        <th:block th:if="${from eq '1'}">
-                                            <span>診斷證明書</span>
+                        <th:block th:each="vo :${claimVo.medicalInfo}">
+                            <hr style="border:1px dashed  #F2F1F1"/>
+                            <div class="form-group">
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>就診類型：</label>
+                                <div class="col-sm-9" th:text="${vo.otypeName}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">&nbsp;</span>主科別：</label>
+                                <div class="col-sm-9" th:text="${vo.depName}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>子科別：</label>
+                                <div class="col-sm-9" th:text="${vo.subDepName}"></div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>授權文件類型：</label>
+                                <div class="col-sm-9" >
+                                    <th:block th:each="vo1, state : ${vo.dtypeList}">
+                                        <th:block th:if="${state.index > 0}">
+                                            ,
                                         </th:block>
-                                        <th:block th:if="${from eq '2'}">
-                                            <span>收據</span>
-                                        </th:block>
+                                        <th:block th:text="${vo1.name}"/>
                                     </th:block>
-                                 </th:block>   
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-
-                            <label class="col-sm-3">授權時間區間：</label>
-                            <div class="col-sm-9">
-                                <th:block th:text="${claimVo.authorizationStartDate}"/>
-                                ~
-                                <th:block th:text="${claimVo.authorizationEndDate}"/>
+                            <div class="form-group" >
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>授權時間區間：</label>
+                                <div class="col-sm-9" th:text="${vo.hsTime + ' ~ ' + vo.heTime}"/>
                             </div>
-                        </div>
-                    </div>
+                        </th:block>
+                </div>
                 </div>
                 <div class="form-horizontal">
                     <div class="tb3 mobile-toggle" data-toggle="true">
@@ -299,8 +291,8 @@
                                 公司分別提出理賠申請之不便。']]</div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-4">是否傳送其他保險公司：</label>
-                            <div class="col-sm-8">
+                            <label class="col-sm-12">是否傳送其他保險公司：</label>
+                            <div class="col-sm-12 col-sm-offset-3">
                                 <th:block th:if="${claimVo.to != null && claimVo.to != '' }">同意</th:block>
                                 <th:block th:unless="${claimVo.to != null && claimVo.to != ''}">不同意</th:block>
                             </div>
@@ -339,7 +331,6 @@
                             </div>
                         </th:block>
                     </div>
-                </div>
                 <div class="form-horizontal">
                     <div class="tb3 mobile-toggle" data-toggle="true">
                         <i class="fas fa-chevron-up hid2 mobile"></i>

@@ -2,10 +2,9 @@ package com.twfhclife.eservice.onlineChange.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.twfhclife.eservice.generic.annotation.EventRecordLog;
-import com.twfhclife.eservice.generic.annotation.EventRecordParam;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.odm.OnlineChangeModel;
 import com.twfhclife.eservice.onlineChange.model.*;
@@ -22,6 +21,9 @@ import com.twfhclife.eservice.user.model.LilipmVo;
 import com.twfhclife.eservice.user.service.ILilipiService;
 import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
+import com.twfhclife.eservice.web.model.Division;
+import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
+import com.twfhclife.eservice.web.model.OutpatientType;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
@@ -40,6 +42,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -51,7 +54,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -472,6 +474,16 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				}
 			}
 
+			List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfos = Lists.newArrayList();
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(claimVo.getMedicalInfoList())) {
+				List<TransMedicalTreatmentClaimMedicalInfoVo> fileDataTemp = Arrays.asList(new Gson().fromJson(claimVo.getMedicalInfoList(), TransMedicalTreatmentClaimMedicalInfoVo[].class));
+				fileDataTemp.forEach(x -> {
+					x.setDtypeList(new Gson().fromJson(x.getDtypeListStr(), List.class));
+					medicalInfos.add(x);
+				});
+			}
+			claimVo.setMedicalInfo(medicalInfos);
+
 			String policeDate = claimVo.getBirdate();
 			if (org.apache.commons.lang3.StringUtils.isNotBlank(policeDate) && policeDate.contains("/")) {
 				String yyyyMMdd = DateUtil.getStringToDateString("yyyy/MM/dd", policeDate, "yyyy-MM-dd");
@@ -528,6 +540,17 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				fileDatas.addAll(fileDataTemp);
 			}
 			claimVo.setFileDatas(fileDatas);
+
+			List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfos = Lists.newArrayList();
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(claimVo.getMedicalInfoList())) {
+				List<TransMedicalTreatmentClaimMedicalInfoVo> fileDataTemp = Arrays.asList(new Gson().fromJson(claimVo.getMedicalInfoList(), TransMedicalTreatmentClaimMedicalInfoVo[].class));
+				fileDataTemp.forEach(x -> {
+					x.setDtypeList(new Gson().fromJson(x.getDtypeListStr(), List.class));
+					medicalInfos.add(x);
+				});
+			}
+			claimVo.setMedicalInfo(medicalInfos);
+
 			logger.error("TransMedicalTreatmentClaimVo is: {}+++++", claimVo.toString());
 			String policyNo = claimVo.getPolicyNo();
 				// 驗證驗證碼
@@ -693,28 +716,13 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	@PostMapping("/getTransMedicalTreatmentDetail")
 	public String getTransInsuranceClaimDetail(@RequestParam("transNum") String transNum) {
 		try {
-			String userId = getUserId();
 			TransMedicalTreatmentClaimVo claimVo = null;
 
-			// Call api 取得資料
-//			TransHistoryDetailResponse transHistoryDetailResponse = transHistoryDetailClient
-//					.getTransHistoryDetail(userId, Arrays.asList(transNum));
-			// 若無資料，嘗試由內部服務取得資料
-//			if (transHistoryDetailResponse != null) {
-//				logger.info("Get user[{}] data from eservice_api[getTransInsuranceClaimDetail]", userId);
-//				List<TransDetailVo> transHistoryDetailList = transHistoryDetailResponse.getTransHistoryDetailList();
-//				if (transHistoryDetailList != null && transHistoryDetailList.size() > 0) {
-//					transInsuranceClaimVo = transHistoryDetailList.get(0).getTransInsuranceClaimVo();
-//				}
-//			} else {
-//				logger.info("Call internal service to get user[{}] getTransInsuranceClaimDetail data", userId);
 			claimVo = iMedicalTreatmentService.getTransInsuranceClaimDetail(transNum);
-//			}
-//			if (claimVo.getFileDatas() != null) {
-//				for (TransInsuranceClaimFileDataVo fileData : claimVo.getFileDatas()) {
-//					logger.error("TransInsuranceClaimFileDataVo is: {}", fileData.toString());
-//				}
-//			}
+			if (claimVo != null && claimVo.getClaimSeqId() != null) {
+				List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfoVos = iMedicalTreatmentService.getMedicalInfo(claimVo.getClaimSeqId());
+				claimVo.setMedicalInfo(medicalInfoVos);
+			}
 
 			logger.error(" MedicalTreatmentController  -- TransInsuranceClaimVo is: {}", claimVo.toString());
 			//獲取保險公司明顯
@@ -737,7 +745,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	/**
 	 * 狀態歷程.
 	 *
-	 * @param transVo TransVo
+	 * @param vo TransVo
 	 * @return
 	 */
 	@RequestLog
@@ -806,5 +814,69 @@ public class MedicalTreatmentController extends BaseUserDataController {
 		}
 		
 	}**/
+
+	@Value("${eservice_api.es409.url}")
+	private String es409;
+
+	@RequestLog
+	@PostMapping(value = "/getPatientType")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> getPatientType(String hpId) {
+		try {
+			OnlineChangeClient ocClient = new OnlineChangeClient();
+			Map<String, String> params = Maps.newHashMap();
+			params.put("hpId", hpId);
+			String resStr = ocClient.postForParams(es409, params);
+			processSuccess(new Gson().fromJson(resStr, OutpatientType[].class));
+		} catch (Exception e) {
+			logger.error("Unable to MedicalTreatmentController  -  getPatientType: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	@Value("${eservice_api.es410.url}")
+	private String es410;
+
+	@RequestLog
+	@PostMapping(value = "/getDivision")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> getDivision(@RequestParam(value="hpId") String hpId,
+												   @RequestParam(value="otype") String otype) {
+		try {
+			OnlineChangeClient ocClient = new OnlineChangeClient();
+			Map<String, String> params = Maps.newHashMap();
+			params.put("hpId", hpId);
+			params.put("otype", otype);
+			String resStr = ocClient.postForParams(es410, params);
+			processSuccess(new Gson().fromJson(resStr, Division[].class));
+		} catch (Exception e) {
+			logger.error("Unable to MedicalTreatmentController  -  getDivision: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	@Value("${eservice_api.es411.url}")
+	private String es411;
+
+	@RequestLog
+	@PostMapping(value = "/getMedicalDataFileGroup")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> getDataFileGroup(@RequestParam(value="hpId") String hpId,
+												   @RequestParam(value="otype") String otype) {
+		try {
+			OnlineChangeClient ocClient = new OnlineChangeClient();
+			Map<String, String> params = Maps.newHashMap();
+			params.put("hpId", hpId);
+			params.put("otype", otype);
+			String resStr = ocClient.postForParams(es411, params);
+			processSuccess(new Gson().fromJson(resStr, MedicalDataFileGroup[].class));
+		} catch (Exception e) {
+			logger.error("Unable to MedicalTreatmentController  -  getDataFileGroup: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return processResponseEntity();
+	}
 
 }

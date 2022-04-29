@@ -1,23 +1,26 @@
 package com.twfhclife.generic.api_client;
 
-import java.util.Map;
-
-import org.apache.http.HttpStatus;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.twfhclife.eservice.odm.OnlineChangeModel;
 import com.twfhclife.generic.util.MyJacksonUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 public class OnlineChangeClient {
 
@@ -144,4 +147,32 @@ public class OnlineChangeClient {
 		}
 		return rtn;
 	}
+
+	public String postForParams(String url, Map<String, String> params) throws Exception {
+		String strRes = null;
+		if (url != null && params != null) {
+			ResponseEntity<String> responseEntity = null;
+			HttpHeaders headers = new HttpHeaders();
+			String secret = BaseRestClient.getAccessKey();
+			if(StringUtils.isNotBlank(secret)) {
+				headers.add("Authorization", "Bearer " + secret);
+			}
+
+			MultiValueMap<String, String> httpParams = new LinkedMultiValueMap();
+			params.entrySet().forEach(e -> httpParams.add(e.getKey(), e.getValue()));
+
+			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(httpParams, headers);
+			responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+
+			if (!this.checkResponseStatus(responseEntity)) {
+				return null;
+			}
+
+			strRes = responseEntity.getBody();
+			logger.info("responseEntity.getBody()=" + strRes);
+
+		}
+		return strRes;
+	}
+
 }

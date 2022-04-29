@@ -523,6 +523,21 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 				result = transMedicalTreatmentClaimDao.addInsuranceClaim(transMedicalTreatmentClaimVo);
 			}
 
+			if (result > 0) {
+				if ((CollectionUtils.isNotEmpty(transMedicalTreatmentClaimVo.getMedicalInfo()))) {
+					for (TransMedicalTreatmentClaimMedicalInfoVo vo : transMedicalTreatmentClaimVo.getMedicalInfo()) {
+						vo.setClaimId(transMedicalTreatmentClaimVo.getClaimSeqId());
+						vo.setCreateDate(new Date());
+						vo.setHeTime(vo.getHeTime() == null ? "" :vo.getHeTime().replaceAll("/", ""));
+						vo.setHsTime(vo.getHsTime() == null ? "" :vo.getHsTime().replaceAll("/", ""));
+						result = transMedicalTreatmentClaimDao.addInsuranceClaimMedicalInfo(vo);
+						if (result < 1) {
+							break;
+						}
+					}
+				}
+			}
+
 //			TransInsuranceClaimFileDataVo data = new TransInsuranceClaimFileDataVo();
 //			data.setType("A");
 //			data.setFilePath("C:\\root\\");
@@ -1251,5 +1266,9 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		return  collect;
 	}
 
+	@Override
+	public List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo(Float claimSeqId) {
+		return transMedicalTreatmentClaimDao.getMedicalInfoByClaimId(claimSeqId);
+	}
 
 }
