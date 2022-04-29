@@ -1,3 +1,4 @@
+
 <tr class="detail-row even open" role="row">
 	<td colspan="7">
 		<div class="table-detail">
@@ -318,56 +319,23 @@
 				<div class="col-xs-12 col-sm-11">
 					<div class="panel panel-default profile-user-info" >
 						<div class="panel-heading">※ 保險科技共享平台醫療資料</div>
-						<div class="panel-body clear1" id="poliyClaimsDetail">
+						<div class="panel-body clear1">
 							<div class="mycigna3">
-							<div class="col-md-12 detailPolicy">
-								<th:block th:if="${not #lists.isEmpty(detailData.FileDatas)}">
-									<th:block th:if="${not #lists.isEmpty(detailData.Parameters)}">
-										<th:block th:each="vo, rowStat : ${detailData.FileDatas}">
-											<th:block th:each="po, rpo : ${detailData.Parameters}">
-												<th:block th:if="${vo.TYPE eq po.parameterValue}">		
-													<div class="form-horizontal">
-														<div class="form-group">
-															<label class="col-xs-4">醫療資料介接案件狀態：</label>
-															<div class="col-xs-8">
-																<th:block th:if="${ vo.FILE_STATUS != null && vo.FILE_STATUS != ''}">
-																	<th:block th:inline="text">[[${vo.FILE_STATUS}]]</th:block>
-																</th:block>
-															</div>
-														</div>
-														<div class="form-group">
-																<label class="col-xs-4">已取回的醫療資料：</label>
-																<div class="col-xs-8">
-																		<th:block th:if="${po.parameterName != ''}">
-																			<th:block th:inline="text">[[${po.parameterName}]]</th:block>
-																		</th:block>
-																		<br/>
-																		<th:block th:text="${vo.FILE_NAME}"/>
-																		<th:block th:if="${vo.FileBase64 != null && vo.FileBase64 != '' }">
-																		<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
-																			<embed   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:application/pdf;base64, '+${vo.FileBase64}" type="application/pdf" width="50">
-																		</div>
-																		<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.jpg')}">
-																			<img   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'" th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
-																		</div>
-																		<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
-																			<img  th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
-																		</div>
-																		</th:block>
-																</div>
-															</div>
-													</div>
-												</th:block>	
+								<div class="col-md-12 detailPolicy">
+									<div class="form-horizontal">
+										<div class="form-group">
+											<label class="col-xs-4">醫療資料介接案件狀態：</label>
+											<th:block th:if="${status != null && statusStr != null}">
+												<div class="col-xs-8" th:text="${status + ': ' + statusStr}"></div>
 											</th:block>
-										</th:block>
-									</th:block>
-								</th:block>
-							</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div th:id="${detailData['TRANS_NUM']}" class="col-xs-12 col-sm-11">				
+				<div th:id="${detailData['TRANS_NUM']}" class="col-xs-12 col-sm-11">
 					<div class="panel panel-default profile-user-info">
 
 						<div class="panel-heading">※ 申請資料</div>
@@ -414,7 +382,7 @@
 								<div class="form-horizontal">
 									<div class="colorGreen mobile-toggle" data-toggle="true">
 										<i class="fa hid2 foo-angle-up mobile"></i>
-										<i class="fa foo-angle-up hid1"></i>  ^ 事故者質料
+										<i class="fa foo-angle-up hid1"></i>^ 事故者質料
 									</div>
 									<div class="mobile-toggle-panel">
 										<div class="form-group">
@@ -454,16 +422,26 @@
 											<div class="col-xs-9"><span><th:block th:text="${detailData['ADDRESS']}"/></span></div>
 										</div>
 										<div class="form-group">
-											<label class="col-sm-3">與主被保險人(員工關係)：</label>
-											<div class="col-sm-9"><span><th:block th:text="${detailData['RELATION_NAME']}"/></span></div>
+											<label class="col-sm-12">與主被保險人(員工關係)：</label>
+											<div class="col-xs-12" style="padding:0px;">
+												<div class="col-xs-3"/>
+												<div class="col-sm-9">
+													<span><th:block th:text="${detailData['RELATION_NAME']}"/></span>
+												</div>
+											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-sm-3">被保險人是否投保別家保險公司之保險：</label>
-											<div class="col-sm-9"><span>
-												<!-- <th:block th:text="${detailData['OTHERCOMPANYINSURED']}"/> -->
-												<th:block th:if="${detailData['OTHERCOMPANYINSURED'] eq 'Y'}">有</th:block>
-											    <th:block th:if="${detailData['OTHERCOMPANYINSURED'] eq 'N'}">沒有</th:block>
-											</span></div>
+											<label class="col-sm-12">被保險人是否投保別家保險公司之保險：</label>
+											<div class="col-xs-12" style="padding:0px;">
+												<div class="col-xs-3"/>
+												<div class="col-sm-9">
+													<span>
+														<th:block th:if="${detailData['OTHERCOMPANYINSURED'] eq 'Y'}">有</th:block>
+														<th:block th:if="${detailData['OTHERCOMPANYINSURED'] eq 'N'}">沒有</th:block>
+													</span>
+												</div>
+											</div>
+										</div>
 										</div>
 										<div class="form-group">
 											<label class="col-xs-3">保險公司名稱：</label>
@@ -486,7 +464,6 @@
 											</span></div>
 										</div>
 									</div>
-								</div>
 								<div class="form-horizontal">
 									<div class="colorGreen mobile-toggle" data-toggle="true">
 										<i class="fa hid2 foo-angle-up mobile"></i>
@@ -497,27 +474,27 @@
 											<label class="col-xs-3">事故種類：</label>
 											<!-- <div class="col-xs-9">意外</div> -->
 											<th:block th:if="${session['PAGE_WORDING'] == null}">
-												<div class="col-sm-8">
+												<div class="col-xs-9">
 													<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '1'}">疾病</th:block>
 													<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '2'}">意外</th:block>
 												</div>
 											</th:block>
 											<th:block th:if="${session['PAGE_WORDING'] != null}">
-												<div class="col-sm-8">
+												<div class="col-xs-9">
 													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_01'] == null}">
 														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '1'}">疾病</th:block>
 													</th:block>
 													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_01'] != null}">
 														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq session.PAGE_WORDING['INS_ACCIDENT_01'].parameterValue}">
-														<label th:inline="text">[[${session.PAGE_WORDING['INS_ACCIDENT_01'].parameterName}]] </label></th:block>
+															<label th:inline="text">[[${session.PAGE_WORDING['INS_ACCIDENT_01'].parameterName}]] </label></th:block>
 													</th:block>
-													
+
 													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_02'] == null}">
 														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq '2'}">意外</th:block>
 													</th:block>
 													<th:block th:if="${session.PAGE_WORDING['INS_ACCIDENT_02'] != null}">
 														<th:block th:if="${detailData['ACCIDENT_CAUSE'] eq session.PAGE_WORDING['INS_ACCIDENT_02'].parameterValue}">
-														<label th:inline="text">[[${session.PAGE_WORDING['INS_ACCIDENT_02'].parameterName}]] </label></th:block>
+															<label th:inline="text">[[${session.PAGE_WORDING['INS_ACCIDENT_02'].parameterName}]] </label></th:block>
 													</th:block>
 												</div>
 											</th:block>
@@ -535,8 +512,15 @@
 											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCIDENT_LOCATION']}"/></span></div>
 										</div>
 										<div class="form-group">
-											<label class="col-xs-3">事故原因及送醫經過詳情:<br/> (請述明就診醫院名稱)</label>
-											<div class="col-xs-9"><span><th:block th:text="${detailData['ACCIDENT_DESCR']}"/></span></div>
+											<label class="col-xs-12">事故原因及送醫經過詳情:(請述明就診醫院名稱)</label>
+											<div class="col-xs-12" style="padding:0px;">
+												<div class="col-xs-3"/>
+												<div class="col-sm-9">
+													<span>
+														<th:block th:text="${detailData['ACCIDENT_DESCR']}"/>
+													</span>
+												</div>
+											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-xs-3">是否報警：</label>
@@ -578,52 +562,81 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-xs-3">是否傳送其他醫療單位:</label>
-											<div class="col-xs-9"><span>
-												<th:block th:if="${detailData['FROM_HOSPITAL_ID'] eq 'Y'}">同意</th:block>
-                                				<th:block th:if="${detailData['FROM_HOSPITAL_ID'] eq 'N'}">不同意</th:block>
-											</span></div>
+											<label class="col-xs-12">是否傳送其他醫療單位:</label>
+											<div class="col-xs-12" style="padding:0px;">
+												<div class="col-xs-3"/>
+												<div class="col-xs-9">
+													<th:block th:if="${detailData['FROM_HOSPITAL_ID'] eq 'Y'}">同意</th:block>
+													<th:block th:if="${detailData['FROM_HOSPITAL_ID'] eq 'N'}">不同意</th:block>
+												</div>
+											</div>
 										</div>
 										<div class="form-group">
-											<label class="col-xs-3">授權時間區間:</label>
-											<div class="col-xs-9"><span>
-												 <th:block th:text="${detailData['AUTHORIZATION_START_DATE']}"></th:block> 
-												~
-                                				<th:block th:text="${detailData['AUTHORIZATION_END_DATE']}"></th:block>
-											</span></div>
-										</div>
-										<div class="form-group">
-											<label class="col-xs-3">授權文件類型:</label>
-											<div class="col-xs-9"><span>
-												<th:block th:if="${detailData['AUTHORIZATION_FILE_TYPE'] != null}">
-													<th:block th:each="from : ${#strings.arraySplit(detailData['AUTHORIZATION_FILE_TYPE'], ',')}">
-														<th:block th:if="${from eq '1'}">
-															<span>診斷證明書</span>
-														</th:block>
-														<th:block th:if="${from eq '2'}">
-															<span>收據</span>
-														</th:block>
-													</th:block>
-												</th:block>   
-											</span></div>
-										</div>
-										<div class="form-group">
-											<label class="col-xs-3">同意轉送的醫療單位:</label>
+											<label class="col-xs-3">醫療單位:</label>
 											<th:block th:if="${hospitalList != null}">
 												<div class="col-sm-9">
 													<th:block th:each="from : ${#strings.arraySplit(detailData['TO_HOSPITAL_ID'], ',')}">
 														<th:block th:each="vo : ${hospitalList}">
 															<th:block th:if="${from eq vo.hpid}">
 																<th:block th:inline="text">[[${vo.hpName}]]</th:block>
-														</th:block>
 															</th:block>
 														</th:block>
+													</th:block>
 												</div>
 											</th:block>
-											
 										</div>
+										<th:block th:each="vo :${medicalInfo}">
+											<hr style="border:1px dashed  #F2F1F1"/>
+											<div class="form-group">
+												<label class="col-xs-3" ><span style="color: #ff5300; font-size: 16px">*</span>就診類型：</label>
+												<div class="col-sm-9" th:text="${vo.otypeName}"></div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-3"><span style="color: #ff5300; font-size: 16px">&nbsp;</span>主科別：</label>
+												<div class="col-sm-9" th:text="${vo.depName}"></div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-3"><span style="color: #ff5300; font-size: 16px">*</span>子科別：</label>
+												<div class="col-sm-9" th:text="${vo.subDepName}"></div>
+											</div>
+											<div class="form-group" >
+												<label class="col-xs-3"><span style="color: #ff5300; font-size: 16px">*</span>授權文件類型：</label>
+												<div class="col-sm-9">
+													<th:block th:each="vo1, state : ${vo.dtypeList}">
+														<th:block th:if="${state.index > 0}">
+															,
+														</th:block>
+														<th:block th:text="${vo1.name}"/>
+													</th:block>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-3">已取回的醫療資料：</label>
+												<div class="col-xs-9">
+													<th:block th:each="vo1 : ${vo.dtypeList}">
+														<th:block th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64 != null and vo1.fileBase64 != ''}">
+															<th:block th:text="${vo1.fileName}"/>
+														</th:block>
+													</th:block>
+													<div class="col-xs-12 upload-drop-zone boardDotted">
+														<th:block th:each="vo1 : ${vo.dtypeList}">
+															<th:block th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64 != null and vo1.fileBase64 != ''}">
+																<img th:onclick="'javascript:medicalInfoImgConfirm(\''+${vo1['fileId']}+'\')'" th:src="'data:application/pdf;base64, '+${vo1.fileBase64}" type="application/pdf" width="50" th:title="${vo1.fileName}">
+															</th:block>
+														</th:block>
+													</div>
+												</div>
+											</div>
+											<div class="form-group" >
+												<label class="col-xs-12" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>授權時間區間：</label>
+												<div class="col-xs-12" style="padding:0px;">
+													<div class="col-xs-3"/>
+													<div class="col-sm-9" th:text="${vo.hsTime + ' ~ ' + vo.heTime}"/>
+												</div>
+											</div>
+										</th:block>
 									</div>
-								</div>							
+								</div>
 								<div class="form-horizontal">
 									<div class="colorGreen mobile-toggle" data-toggle="true">
 										<i class="fa hid2 foo-angle-up mobile"></i>
@@ -637,11 +650,16 @@
 												公司分別提出理賠申請之不便。']]</div>
 										</div>
 										<div class="form-group">
-											<label class="col-xs-3">是否傳送其他保險公司：</label>
-											<div class="col-xs-9"><span>
-												<th:block th:if="${detailData['TO_COMPANY_ID'] != null && detailData['TO_COMPANY_ID'] != ''}">同意</th:block>
-                                				<th:block th:unless="${detailData['TO_COMPANY_ID'] != null &&  detailData['TO_COMPANY_ID'] != '' }">不同意</th:block>
-											</span></div>
+											<label class="col-xs-12">是否傳送其他保險公司：</label>
+											<div class="col-xs-12" style="padding:0px;">
+												<div class="col-xs-3"/>
+												<div class="col-xs-9">
+													<span>
+														<th:block th:if="${detailData['TO_COMPANY_ID'] != null && detailData['TO_COMPANY_ID'] != ''}">同意</th:block>
+														<th:block th:unless="${detailData['TO_COMPANY_ID'] != null &&  detailData['TO_COMPANY_ID'] != '' }">不同意</th:block>
+													</span>
+												</div>
+											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-xs-3">授權傳送公司：</label>
@@ -658,10 +676,10 @@
 													</th:block>
 												</div>
 											</th:block>
-											
+
 										</div>
 									</div>
-								</div>							
+								</div>
 								<div class="form-horizontal">
 									<div class="colorGreen mobile-toggle" data-toggle="true">
 										<i class="fa hid2 foo-angle-up mobile"></i>
@@ -689,7 +707,7 @@
 														<th:block th:if="${detailData['PAYMENT_METHOD'] eq session.PAGE_WORDING['TRANS_MDOE_01'].parameterValue}">
 														<label th:inline="text">[[${session.PAGE_WORDING['TRANS_MDOE_01'].parameterName}]] </label></th:block>
 													</th:block>
-													
+
 													<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_02'] == null}">
 														<th:block th:if="${detailData['PAYMENT_METHOD'] eq '2'}">郵寄支票</th:block>
 													</th:block>
@@ -713,7 +731,7 @@
 											<div class="col-xs-9"><span><th:block th:text="${detailData['BRANCH_NAME']}"/></span></div>
 										</div>
 										<div class="form-group">
-											<label class="col-xs-3">賬號：</label>
+											<label class="col-xs-3">帳號：</label>
 											<div class="col-xs-9"><span><th:block th:text="${detailData['BANK_ACCOUNT']}"/></span></div>
 										</div>
 									</div>
@@ -730,33 +748,33 @@
 													<th:block th:each="po, rpo : ${detailData.medicalUploadfile}">
 														<th:block th:if="${vo.TYPE eq po.parameterCode}">
 															<div class="form-group">
-															<label class="col-sm-3">
-																<th:block th:if="${vo.TYPE_NAME != ''}">
-																	<th:block th:inline="text">[[${vo.TYPE_NAME}]]：</th:block>
-																</th:block>
-																<th:block th:if="${vo.TYPE_NAME == ''}">
-																	補件：
-																</th:block>
-															</label>
-															<div class="col-sm-9">
-																<th:block th:text="${vo.FILE_NAME}"/>
-																<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
-																	<embed   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:application/pdf;base64, '+${vo.FileBase64}" type="application/pdf" width="50">
-																</div>
-																<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.jpg')}">
-																	<img   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'" th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
-																</div>
-																<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
-																	<img  th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+																<label class="col-sm-3">
+																	<th:block th:if="${vo.TYPE_NAME != ''}">
+																		<th:block th:inline="text">[[${vo.TYPE_NAME}]]：</th:block>
+																	</th:block>
+																	<th:block th:if="${vo.TYPE_NAME == ''}">
+																		補件：
+																	</th:block>
+																</label>
+																<div class="col-sm-9">
+																	<th:block th:text="${vo.FILE_NAME}"/>
+																	<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
+																		<embed   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:application/pdf;base64, '+${vo.FileBase64}" type="application/pdf" width="50">
+																	</div>
+																	<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.jpg')}">
+																		<img   th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'" th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+																	</div>
+																	<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
+																		<img  th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
+																	</div>
 																</div>
 															</div>
-															</div>
-														</th:block>	
+														</th:block>
 													</th:block>
 													<th:block th:if="${vo.TYPE eq 'C'}">
-															<div class="form-group">
+														<div class="form-group">
 															<label class="col-sm-3">
-																	補件：
+																補件：
 															</label>
 															<div class="col-sm-9">
 																<th:block th:text="${vo.FILE_NAME}"/>
@@ -770,14 +788,20 @@
 																	<img  th:onclick="'javascript:imgConfirm(\''+${vo.FD_ID}+'\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}" width="50">
 																</div>
 															</div>
-															</div>
-													</th:block>	
+														</div>
+													</th:block>
 												</th:block>
 											</th:block>
 										</th:block>
-									 </div>
-									
+									</div>
+
 								</div>
+							</div>
+
+
+
+
+
 							</div>
 						</div>
 
@@ -845,6 +869,46 @@
 			});
 			$.ajaxSetup({async: true});
 			}
+
+			function medicalInfoImgConfirm(obj){
+				var data = {
+					fdId:obj
+				}
+				$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				contentType : 'application/json',
+				data : JSON.stringify(data),
+				url : /*[[@{/medicalTreatmentDetail/medicalInfoBase64FileSize}]]*/,
+				success : function(response) {
+				   console.log(response.result);
+				   if(response.result=="SUCCESS"){
+					if(response.resultData.fileBase64!=null && response.resultData.fileBase64!="" ){
+							$('#modal-container-imgConfirm').modal({
+								show: true,
+								backdrop: 'static',
+								keyboard: false
+							});
+							if(response.resultData.type=="pdf"){
+								$("#imgOnPrint").html('<iframe  id="imgsrc" src="data:application/pdf;base64,'+response.resultData.fileBase64+'") width="100%" height="100%"></iframe>');
+								$("#onMedicalPrint").hide();
+							}else{
+								$("#imgOnPrint").html('<img id="imgsrc" width="500" alt="" src="data:image/png;base64, '+response.resultData.fileBase64+'")/>');
+								$("#onMedicalPrint").show();
+							}
+						}else{
+							alertMsg("「檔案過大無法於畫面呈現，請至影像系統查詢」");
+						}
+				   }else{
+					alertMsg("「檔案過大無法於畫面呈現，請至影像系統查詢」");
+				   }
+				},
+				error :function() {
+					alertMsg("「檔案過大無法於畫面呈現，請至影像系統查詢」");
+				}
+			});
+			}
+
 			//醫院執行醫療資料介接 button事件
 			function medicalOnWorde(obj,agrs){
 				let parameterName=$('#medicalParameterName').val();
@@ -1064,3 +1128,14 @@
 			}
     /*]]>*/
 </script>
+<style type="text/css">
+	.profile-info-name {
+		text-align: right;
+		padding: 6px 10px 6px 4px;
+		font-weight: 400;
+		color: #667E99;
+		background-color: transparent;
+		width: 175px;
+		vertical-align: middle;
+	}
+</style>

@@ -3,6 +3,8 @@ package com.twfhclife.adm.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.adm.model.ParameterVo;
@@ -106,6 +108,10 @@ public interface ParameterDao {
 	 * @return String
 	 */
 	public String getStatusName(@Param("parentCategoryCode") String parentCategoryCode, @Param("status") String status);
+
+	@MapKey("parameterCode")
+	Map<String, ParameterVo> getStatusMap();
+
 	
 	/**
 	 * 查詢醫療異常描述id值

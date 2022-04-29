@@ -190,6 +190,27 @@ public class MedicalTreatmentReportController extends BaseController {
 		return processResponseEntity();
 	}
 
+	/**
+	 * 進行獲取Bsse64的文件數據信息大小
+	 *
+	 * @param transVo TransVo
+	 * @return
+	 */
+	@RequestLog
+	@PostMapping("/medicalTreatmentDetail/medicalInfoBase64FileSize")
+	public ResponseEntity<ResponseObj> getMedicalInfoFileSize(@RequestBody MedicalTreatmentClaimFileDataVo  medicalTreatmentClaimFileDataVo) {
+		try {
+			//進行查詢當前文件的大小
+			System.out.println(medicalTreatmentClaimFileDataVo.getFdId());
+			MedicalTreatmentClaimFileDataVo medicalFileVo=onlineChangeService.getMedicalInfoBase64FileSize(medicalTreatmentClaimFileDataVo.getFdId());
+			processSuccess(medicalFileVo);
+		} catch (Exception e) {
+			logger.error("Unable to getOnlineChangeReview: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
 
 	/**
 	 * 執行醫療資料介接	重新上傳

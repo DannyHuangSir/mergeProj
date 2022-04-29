@@ -699,7 +699,7 @@
 				ROW_NUMBER() OVER (ORDER BY CREATE_DATE) AS ROW_NUM
 				,A.*
 			FROM (
-				<include refid="INC1" />
+				<include refid="optimizeINC1" />
 			) A
 		) B		
 		WHERE
@@ -2905,6 +2905,14 @@
 		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS B
 		where B.FD_ID  =  #{fdId}
 	</select>
+
+	<!-- 取得醫療文件圖片數據 -->
+	<select id="getMedicalInfoDetailBase64" resultMap="medicalTreatmentClaimFileDataResultMap" parameterType="float">
+		select B.CLAIMS_SEQ_ID,B.OTYPE,B.FILE_NAME,B.FILE_BASE64
+		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO B
+		where B.FILE_ID = #{fdId}
+	</select>
+
 	<select id="getMedicalTreatmentFromCompanyId" parameterType="string" resultType="string">
 		select B.FROM_COMPANY_ID FROM_COMPANY_ID
 		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B
@@ -3159,6 +3167,82 @@
 		SELECT top 1 APPLY_ITEM  from
 		[ESERVICE].[dbo].[TRANS_APPLY_ITEM]
 		WHERE  TRANS_NUM=#{transNum} order BY [UPDATE_TIME] DESC
+	</select>
+
+	<sql id="optimizeINC1">
+		SELECT
+		T.TRANS_NUM
+		,T.TRANS_DATE
+		,T.TRANS_TYPE
+		<!-- TODO 需要加入系統條件 -->
+		,T.CREATE_DATE
+		,U.ROC_ID
+		,F.FROM_COMPANY_ID,
+		T.STATUS
+		FROM
+		ESERVICE.DBO.TRANS T
+		LEFT JOIN ESERVICE.DBO.USERS U ON T.USER_ID = U.USER_ID
+		LEFT JOIN ESERVICE.DBO.TRANS_INSURANCE_CLAIM F ON T.TRANS_NUM = F.TRANS_NUM
+		WHERE
+		convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{transVo.startDate}, 120)
+		AND convert(varchar(10), T.CREATE_DATE, 120) <![CDATA[<=]]> convert(varchar(10), #{transVo.endDate}, 120)
+		<if test="transVo.transType != null and transVo.transType != ''" >
+			AND T.TRANS_TYPE = #{transVo.transType}
+		</if>
+		<if test="transVo.policyNo != null and transVo.policyNo != ''" >
+			<!-- 一筆序號可能會對應多筆保單號碼，join TRANS_POLICY 會造成序號資料會多筆顯示，所以查詢保單號碼需要單獨判斷 -->
+			AND (
+			SELECT
+			COUNT(1)
+			FROM ESERVICE.DBO.TRANS_POLICY TP
+			WHERE
+			TP.TRANS_NUM = T.TRANS_NUM
+			AND TP.POLICY_NO = #{transVo.policyNo}) <![CDATA[>=]]> 1
+		</if>
+		<if test="transVo.status != null and transVo.status != ''" >
+			AND T.STATUS = #{transVo.status}
+		</if>
+		<if test="transVo.policyHolderId != null and transVo.policyHolderId != ''" >
+			AND U.ROC_ID = #{transVo.policyHolderId}
+		</if>
+		<if test="transVo.dataScope == '01'" >
+			AND F.FROM_COMPANY_ID = 'L01'
+		</if>
+		<if test="transVo.dataScope == '02'" >
+			AND F.FROM_COMPANY_ID != 'L01'
+		</if>
+		<if test="transVo.fileReceived != null and transVo.fileReceived != ''" >
+			AND F.FILE_RECEIVED = #{transVo.fileReceived}
+		</if>
+		<if test="transVo.to != null and transVo.to != ''" >
+			AND F.TO_COMPANY_ID is not null
+		</if>
+		<if test="transVo.sendToAlliance != null and transVo.sendToAlliance != ''" >
+			AND F.SEND_ALLIANCE = #{transVo.sendToAlliance}
+		</if>
+	</sql>
+
+	<resultMap id="MedicalInfoMap" type="com.twfhclife.adm.model.TransMedicalTreatmentClaimMedicalInfoVo">
+		<result column="HS_TIME" property="hsTime"/>
+		<result column="HE_TIME" property="heTime"/>
+		<result column="OTYPE_NAME" property="otypeName"/>
+		<result column="DEP_NAME" property="depName"/>
+		<result column="SUB_DEP_NAME" property="subDepName"/>
+		<association property="dtypeList" resultMap="DtypeMap"/>
+	</resultMap>
+
+	<resultMap id="DtypeMap" type="map">
+		<result column="DTYPE_NAME" property="name"/>
+		<result column="DTYPE" property="value"/>
+		<result column="FILE_BASE64" property="fileBase64"/>
+		<result column="FILE_NAME" property="fileName"/>
+		<result column="FILE_ID" property="fileId"/>
+	</resultMap>
+
+	<select id="getMedicalInfoByClaimId" resultMap="MedicalInfoMap">
+		select HS_TIME, HE_TIME, OTYPE_NAME, DEP_NAME, SUB_DEP_NAME, DTYPE_NAME, DTYPE, FILE_BASE64, FILE_NAME, FILE_ID FROM
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+		where CLAIMS_SEQ_ID = #{claimSeqId}
 	</select>
 
 </mapper>

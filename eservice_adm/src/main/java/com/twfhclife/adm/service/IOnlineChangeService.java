@@ -15,6 +15,7 @@ import com.twfhclife.adm.model.MedicalTreatmentStatisticsVo;
 import com.twfhclife.adm.model.NotifyOfNewCaseMedicalVo;
 import com.twfhclife.adm.model.TransExtendAttrVo;
 import com.twfhclife.adm.model.TransInsuranceClaimVo;
+import com.twfhclife.adm.model.TransMedicalTreatmentClaimMedicalInfoVo;
 import com.twfhclife.adm.model.TransMedicalTreatmentClaimVo;
 import com.twfhclife.adm.model.TransRFEVo;
 import com.twfhclife.adm.model.TransStatusHistoryVo;
@@ -533,4 +534,8 @@ public interface IOnlineChangeService {
 	void updateTarnsMedicalTreatmentClaimToAllianceStatus(TransMedicalTreatmentClaimVo mvo)throws Exception;
 
     List<NotifyOfNewCaseMedicalVo> getUnionCourseListAllianceStatusMsg(NotifyOfNewCaseMedicalVo vo)throws Exception;
+
+	List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo(Double claimId);
+
+	MedicalTreatmentClaimFileDataVo getMedicalInfoBase64FileSize(Float fdId) throws Exception;
 }

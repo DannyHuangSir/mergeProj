@@ -656,4 +656,8 @@ public interface OnlineChangeDao {
 	void updateTarnsMedicalTreatmentClaimToAllianceStatus(@Param("vo")TransMedicalTreatmentClaimVo mvo)throws Exception;
 
 	List<NotifyOfNewCaseMedicalVo> getUnionCourseListAllianceStatusMsg(@Param("notifyVo")NotifyOfNewCaseMedicalVo vo)throws Exception;
+
+    List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfoByClaimId(@Param("claimSeqId") Double claimId);
+
+	MedicalTreatmentClaimFileDataVo getMedicalInfoDetailBase64(@Param("fdId") Float fdId);
 }

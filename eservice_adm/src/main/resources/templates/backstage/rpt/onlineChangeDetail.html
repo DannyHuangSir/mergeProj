@@ -579,8 +579,8 @@
 						<table class="tablesaw" style="background: #FFFFFF;">
 							<thead>
 								<tr>
-									<th>編號</th>
-									<th>動作狀態碼</th>
+									<th>聯盟案件編號</th>
+									<th>聯盟狀態代碼</th>
 									<th>描述</th>
 									<th>狀態時間</th>
 								</tr>
@@ -711,7 +711,7 @@
 		</div>
 		<!--醫療狀態歷程-->
 		<div class="modal fade in" id="modal-medical-container-statusConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
+			<div class="modal-dialog" style="width:615px;">
 				<div class="modal-content lock-up">
 					<div class="modal-header"> 狀態歷程
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -780,7 +780,7 @@
 		</div>
 		<!--醫療保單補件單歷程-->
 		<div class="modal fade in" id="modal-medical-container-viewsupplementConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
+			<div class="modal-dialog" style="width: 660px;">
 				<div class="modal-content lock-up">
 					<div class="modal-header"> 補件單歷程
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -1068,7 +1068,7 @@
 		</div>
 
 		<div class="modal fade in" id="modal-container-print-detail" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
+				<div class="modal-dialog" style="width:750px;">
 					<div class="modal-content lock-up">
 						<div class="modal-header">申請資料
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -2237,7 +2237,7 @@
 									
 									' <div class="col-sm-12 upload-drop-zone boardDotted">';
 										if (file.fileName.indexOf('.pdf') === -1 && file.fileName.indexOf('.PDF') === -1) {
-											rHtml +='<img src="data:image/png;base64, '+file.fileBase64+'" width=50>';
+											rHtml +='<img onclick="javascript:imgConfirm(6.0)" src="data:image/png;base64, '+file.fileBase64+'" width=50>';
 										}else{
 											//縮圖顯示
 											rHtml +='<img src="data:image/png;base64, '+file.fileBase64+'" width=50>';

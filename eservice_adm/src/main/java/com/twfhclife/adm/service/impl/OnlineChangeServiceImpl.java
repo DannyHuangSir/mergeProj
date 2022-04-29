@@ -19,6 +19,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,13 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 				dataPageList = onlineChangeDao.getOnlineChangeMedicalTreatmentDetail(transVo);
 			}else {
 				dataPageList = onlineChangeDao.getOnlineChangeDetailForPageable(transVo);
+				if (!CollectionUtils.isEmpty(dataPageList)) {
+					Map<String, ParameterVo> statusNameMap = parameterDao.getStatusMap();
+					dataPageList.forEach(data -> {
+						data.put("TRANS_TYPE_NAME", statusNameMap.get(data.get("TRANS_TYPE")).getParameterName());
+						data.put("STATUS_NAME", statusNameMap.get(data.get("STATUS")).getParameterName());
+					});
+				}
 			}
 		}else{
 			dataPageList = onlineChangeDao.getOnlineChangeDetail(transVo);
@@ -1212,7 +1220,10 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 									map.put("FileBase64",miniatureBase64);
 								}else{
 									doc = PDDocument.load(input);
-									String miniatureBase64 = this.imgBase64(doc, baos);
+									PDPage page = doc.getPage(0);
+									PDDocument newDoc = new PDDocument();
+									newDoc.addPage(page);
+									String miniatureBase64 = this.imgBase64(newDoc, baos);
 									logger.info("--------------------------------------------------PDF Base64转换为缩图-----Base64  is  not  null");
 									map.put("FileBase64",miniatureBase64);
 									doc.close();
@@ -1508,6 +1519,102 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		}
 		return null;
 	}
+
+	@Override
+	public List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo(Double claimId) {
+		List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfoList = onlineChangeDao.getMedicalInfoByClaimId(claimId);
+		if (medicalInfoList != null && medicalInfoList.size() >= 1) {
+			for (TransMedicalTreatmentClaimMedicalInfoVo medicalInfo : medicalInfoList) {
+				if (medicalInfo.getDtypeList() != null && medicalInfo.getDtypeList().size() >= 1) {
+					for (Map<String, String> map : medicalInfo.getDtypeList()) {
+						String fileBase64 = (String)map.get("fileBase64");
+						if (fileBase64 != null && !"".equals(fileBase64)) {
+							//直接将原文件base64 转为 缩图的 base64
+							byte[] decode = Base64.getDecoder().decode(fileBase64);
+							//获取类型
+							String base64Type = this.checkBase64ImgOrPdf(decode);
+							logger.info("--------------------------------------------------PDF Base64  文件的类型="+base64Type);
+							ByteArrayInputStream input = new ByteArrayInputStream(decode);
+							ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+							if (base64Type!=null && ("pdf".equalsIgnoreCase(base64Type))) {
+								PDDocument doc = null;
+								try {
+									doc = PDDocument.load(input);
+									PDPage page = doc.getPage(0);
+									PDDocument newDoc = new PDDocument();
+									newDoc.addPage(page);
+									String miniatureBase64 = this.imgBase64(newDoc, baos);
+									logger.info("--------------------------------------------------PDF Base64转换为缩图-----Base64  is  not  null");
+									map.put("fileBase64",miniatureBase64);
+									doc.close();
+								} catch (Exception e) {
+									e.printStackTrace();
+								} finally {
+									try {
+										baos.flush();
+										baos.close();
+										input.close();
+										if(doc!=null) {
+											doc.close();
+										}
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return medicalInfoList;
+	}
+
+	@Override
+	public MedicalTreatmentClaimFileDataVo getMedicalInfoBase64FileSize(Float fdId) throws Exception {
+		MedicalTreatmentClaimFileDataVo medicalVo=null;
+		if (fdId!=null && fdId!=0) {
+			medicalVo=	onlineChangeDao.getMedicalInfoDetailBase64(fdId);
+			String fileBase64 = medicalVo.getFileBase64();
+			if (fileBase64 != null && !"".equals(fileBase64)) {
+				byte[] decode = Base64.getDecoder().decode(fileBase64);
+				//获取文件类型
+				String base64Type = this.checkBase64ImgOrPdf(decode);
+				if (base64Type != null && !"".equals(base64Type)){
+					try {
+						if ("png".equals(base64Type) || "jpg".equals(base64Type)) {
+							int length = decode.length;//转换成字节
+							if(length<2097152) {
+								String miniatureBase64 = this.imgOriginalBase64(decode);
+								medicalVo.setFileBase64(miniatureBase64);
+								medicalVo.setType("png");
+							}else{
+								medicalVo.setFileBase64("");
+							}
+						} else {
+							int length = decode.length;//转换成字节
+							if(length<2097152) {
+								String miniatureBase64 = this.imgOriginalBase64(decode);
+								medicalVo.setFileBase64(miniatureBase64);
+								medicalVo.setType("pdf");
+							}else{
+								medicalVo.setFileBase64("");
+							}
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}else{
+			medicalVo=new MedicalTreatmentClaimFileDataVo();
+			medicalVo.setFileSize(0F);
+			medicalVo.setFileBase64("");
+		}
+		return medicalVo;
+	}
+
 
 	@Override
 	public Map<String, Object> getConversionDetail(TransVo transVo) {

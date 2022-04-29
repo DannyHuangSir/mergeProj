@@ -254,6 +254,12 @@ public class TransMedicalTreatmentClaimVo {
 	private String cpOa;
 	//聯盟相應文件的狀態信息
 	private String allianceFileStatus;
+	
+	/**
+	 * Spec v1.5.2
+	 * 申請資料
+	 */
+	private List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfo;
 
 	public String getAllianceFileStatus() {
 		return allianceFileStatus;
@@ -757,6 +763,14 @@ public class TransMedicalTreatmentClaimVo {
 
 	public void setToItem(List<String> toItem) {
 		this.toItem = toItem;
+	}
+
+	public List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo() {
+		return medicalInfo;
+	}
+
+	public void setMedicalInfo(List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfo) {
+		this.medicalInfo = medicalInfo;
 	}
 
 	@Override

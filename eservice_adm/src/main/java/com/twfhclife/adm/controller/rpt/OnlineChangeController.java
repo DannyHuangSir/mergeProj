@@ -28,6 +28,7 @@ import com.twfhclife.generic.api_model.ReturnHeader;
 import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +42,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,7 +50,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.ArrayUtils;
-
+import com.google.common.collect.Lists;
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.ParameterVo;
@@ -69,9 +69,14 @@ import com.twfhclife.generic.annotation.LoginCheck;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.annotation.SqlParam;
 import com.twfhclife.generic.annotation.SystemEventParam;
+import com.twfhclife.generic.api_client.APIAllianceTemplateClient;
+import com.twfhclife.generic.api_model.APIAllianceRequestVo;
+import com.twfhclife.generic.api_model.ApiResponseObj;
+import com.twfhclife.generic.api_model.ReturnHeader;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.EventCodeConstants;
+import com.twfhclife.generic.util.MyJacksonUtil;
 
 /**
  * 報表查詢-線上申請查詢.
@@ -227,7 +232,22 @@ public class OnlineChangeController extends BaseController {
 			addAttribute("hospitalList", onlineChangeService.getHospitalList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
 			//授權醫療保險公司名稱
 			addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
-			addAttribute("detailData", onlineChangeService.getMedicalTreatmentClaim(transVo));
+			Map<String, Object> detailDataMap = onlineChangeService.getMedicalTreatmentClaim(transVo);
+			addAttribute("detailData", detailDataMap);
+			if (detailDataMap.containsKey("CLAIMS_SEQ_ID")) {
+				addAttribute("medicalInfo", onlineChangeService.getMedicalInfo((Double) detailDataMap.get("CLAIMS_SEQ_ID")));
+			}
+			if (detailDataMap.containsKey("ALLIANCE_STATUS")) {
+				String code = (String) detailDataMap.get("ALLIANCE_STATUS");
+				ParameterVo parameterVo = new ParameterVo();
+				parameterVo.setParameterCode("MEDICAL_INTERFACE_STATUS_" + code);
+				parameterVo.setSystemId(ApConstants.SYSTEM_API_ID);
+				List<ParameterVo> parameterVos = parameterService.getParameter(parameterVo);
+				if (CollectionUtils.isNotEmpty(parameterVos)) {
+					addAttribute("statusStr", parameterVos.get(0).getParameterName());
+					addAttribute("status", code);
+				}
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransInsuranceClaim: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
