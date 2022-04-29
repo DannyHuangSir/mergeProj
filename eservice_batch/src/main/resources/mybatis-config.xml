@@ -101,14 +101,14 @@
 		<mapper resource="mapper/TransPolicyHolderProfileMapper.xml" />
 		<mapper resource="mapper/TransInsuranceClaimFileDataMapper.xml" />
 		<mapper resource="mapper/MessageTemplateMapper.xml" />
-
-<mapper resource="mapper/TransMedicalTreatmentClaimFileDatasMapper.xml" />
-	<mapper resource="mapper/TransCashPaymentMapper.xml" />
+		<mapper resource="mapper/TransMedicalTreatmentClaimFileDatasMapper.xml" />
+		<mapper resource="mapper/TransCashPaymentMapper.xml" />
 		<mapper resource="mapper/TransDepositMapper.xml" />
 		<mapper resource="mapper/TransInvestmentMapper.xml" />
 		<mapper resource="mapper/TransFundConversionMapper.xml" />
 		<mapper resource="mapper/TransChangePremiumMapper.xml" />
-	<mapper resource="mapper/TransRiskLevelMapper.xml" />
-	<mapper resource="mapper/TransApplyItemMapper.xml" />
+		<mapper resource="mapper/TransRiskLevelMapper.xml" />
+		<mapper resource="mapper/TransApplyItemMapper.xml" />
+		<mapper resource="mapper/TransMedicalInfoFileDataMapper.xml" />
 	</mappers>
 </configuration>

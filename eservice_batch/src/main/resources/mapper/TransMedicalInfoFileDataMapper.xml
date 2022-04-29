@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransMedicalInfoFileDataMapper">
+
+	<resultMap id="TransMedicalInfosResultMap" type="com.twfhclife.eservice_batch.model.TransMedicalInfoVo">
+		<result property="fdId"   column="MI_ID" />
+		<result property="claimsSeqId" column="CLAIMS_SEQ_ID" />
+		<result property="type" column="DTYPE" />
+		<result property="fileName"    column="FILE_NAME" />
+		<result property="transNum"    column="TRANS_NUM" />
+		<result property="ezAcquireTaskId" column="EZ_ACQUIRE_TASK_ID" />
+		<result property="policyNo"    column="POLICY_NO" />
+		<result property="lipiId"      column="LIPI_ID" />
+		<result property="lipmId"      column="LIPM_ID" />
+		<result property="fileBase64"  column="FILE_BASE64" />
+	</resultMap>
+
+	<select id="queryTransMedicalInfoVo" resultMap="TransMedicalInfosResultMap">
+		select a.PATH,a.MI_ID,a.DTYPE,a.CLAIMS_SEQ_ID,a.FILE_NAME,a.RFE_ID,b.TRANS_NUM, b.POLICYNO, ESERVICE.DBO.FN_DEBASE64(b.ID_NO) as LIPI_ID,a.FILE_BASE64
+		from ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO as a,
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM as b,
+		ESERVICE.dbo.TRANS c
+		where (a.EZ_ACQUIRE_TASK_ID is null or a.EZ_ACQUIRE_TASK_ID='')
+		and (a.FILE_BASE64 is not null and a.FILE_BASE64!='')
+		and a.CLAIMS_SEQ_ID=b.CLAIMS_SEQ_ID
+		and b.TRANS_NUM=c.TRANS_NUM
+		and c.TRANS_TYPE='MEDICAL_TREATMENT'
+		and c.STATUS in ('-1','0','8','2')
+	</select><!-- STATUS='2'補送影像件用 -->
+
+	<update id="updateEzAcquireTaskId" parameterType="com.twfhclife.eservice_batch.model.TransMedicalInfoVo">
+		update ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+		set EZ_ACQUIRE_TASK_ID = #{vo.ezAcquireTaskId}
+		where MI_ID = #{vo.fdId}
+	</update>
+
+</mapper>
