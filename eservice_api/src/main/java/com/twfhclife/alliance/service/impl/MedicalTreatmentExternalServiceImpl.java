@@ -118,8 +118,8 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
 
                 logger.info("debug03");
                 vo.setCpoa(stringBuffer.toString());
-                vo.setHsTime(vo.getAuthorizationStartDate());
-                vo.setHeTime(vo.getAuthorizationEndDate());
+//                vo.setHsTime(vo.getAuthorizationStartDate());
+//                vo.setHeTime(vo.getAuthorizationEndDate());
 
                 logger.info("debug04");
                 vo.setTo(vo.getToCompanyId());
@@ -140,7 +140,7 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
                 			break;
                 	}
                 }
-                vo.setDtypes(objects);
+//                vo.setDtypes(objects);
                 
                 //accidentCause
                 //disease=疾病,accident=意外
@@ -200,10 +200,12 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
 	public String postForEntity(String url, Map<String, String> params,Map<String, String> unParams) throws Exception {
 		String strRes = null;
 		UnionCourseVo uc = new UnionCourseVo();
-		uc.setCaseId(unParams.get("caseId"));
-		uc.setTransNum(unParams.get("transNum"));
 		uc.setType(uc.TYPE);
-		uc.setName(unParams.get("name"));
+		if(unParams!=null) {
+			uc.setCaseId(unParams.get("caseId"));
+			uc.setTransNum(unParams.get("transNum"));
+			uc.setName(unParams.get("name"));
+		}
 		uc.setCreateDate(new Date());
 		if(url!=null) {
 			ResponseEntity<String> responseEntity = null;
@@ -233,7 +235,9 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
 	        }
 	        uc.setCompleteDate(new Date());
 			uc.setMsg(getResInfo(strRes));
-			unionCourseDao.insertUnionCourseVo(uc);
+			if(unParams!=null) {//當unParams傳入為null,表示不寫入聯盟歷程
+				unionCourseDao.insertUnionCourseVo(uc);
+			}
 	        
 	        if (!checkResp) {
 				return null;

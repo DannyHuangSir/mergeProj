@@ -910,4 +910,171 @@
 		and TF.FILE_STATUS=#{hasFile}
 	</select>
 
+	<resultMap id="TransMedicalInfoMap" type="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo">
+		<result column="CLAIMS_SEQ_ID" property="claimId"/>
+		<result column="MI_ID" property="miId"/>
+		<result column="SENO" property="seNo"/>
+		<result column="HS_TIME" property="hsTime"/>
+		<result column="HE_TIME" property="heTime"/>
+		<result column="OTYPE" property="otype"/>
+		<result column="SUB_DEPID" property="subDepid"/>
+		<result column="DTYPE" property="dtype"/>
+	</resultMap>
+
+	<select id="getTransMedicalInfoByClaimId" resultMap="TransMedicalInfoMap">
+		select CLAIMS_SEQ_ID, MI_ID, SENO, HS_TIME, HE_TIME, OTYPE, SUB_DEPID, DTYPE FROM
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+		where CLAIMS_SEQ_ID = #{claimSeqId}
+	</select>
+
+	<sql id="Base_Medical_Apply_Data_Column_List">
+		AD_ID,CLAIMS_SEQ_ID,MI_ID,SENO,HS_TIME,HE_TIME
+		,OTYPE,DEPID,DTYPE
+	</sql>
+
+	<insert id="addMedicalTreatmentApplyData"  parameterType="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo" >
+		INSERT INTO
+		ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_APPLYDATA
+		(
+		<include refid="Base_Medical_Apply_Data_Column_List" />
+		)
+		VALUES
+		(
+		(NEXT VALUE for MEDICAL_TREATMENT_CLAIM_AD_SEQ),
+		#{vo.claimId,jdbcType=FLOAT},
+		#{vo.miId,jdbcType=FLOAT},
+		#{vo.seNo,jdbcType=VARCHAR},
+		#{vo.hsTime,jdbcType=VARCHAR},
+		#{vo.heTime,jdbcType=VARCHAR},
+		#{vo.otype,jdbcType=VARCHAR},
+		#{vo.subDepid,jdbcType=VARCHAR},
+		#{vo.dtype,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<resultMap id="ApplyDataMap" type="com.twfhclife.alliance.model.MedicalTreatmentClaimApplyDataVo">
+		<result property="claimId"  column="CLAIMS_SEQ_ID" />
+		<result property="miId"     column="MI_ID" />
+		<result property="seNo"     column="SENO" />
+		<result property="hsTime"   column="HS_TIME" />
+		<result property="heTime"   column="HE_TIME" />
+		<result property="otype"    column="OTYPE" />
+		<result property="depid"    column="DEPID" />
+		<result property="transNum" column="TRANS_NUM" />
+		<result property="caseId"   column="CASE_ID" />
+		<result property="fileName" column="FILE_NAME" />
+		<result property="fileId"   column="FILE_ID" />
+		<result property="fileBase64"   column="FILE_BASE64" />
+		<result property="fileStatus"   column="FILE_STATUS" />
+		<result property="path"     column="PATH" />
+		<association property="dtypeList" resultMap="DtypeMap"/>
+	</resultMap>
+
+	<resultMap id="DtypeMap" type="map">
+		<result column="DTYPE" property="value"/>
+	</resultMap>
+
+	<select id="getMedicalTreatmentClaimApplyData" resultMap="ApplyDataMap">
+		select SENO, HS_TIME, HE_TIME, OTYPE, DEPID, DTYPE FROM
+		ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM_APPLYDATA
+		where CLAIMS_SEQ_ID = #{claimSeqId}
+	</select>
+
+	<select id="getMedicalTreatmentClaimApplyDataByHasFile" resultMap="ApplyDataMap" >
+		select  TOP 10
+		AD.*,MTC.TRANS_NUM,MTC.CASE_ID
+		from  ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM_APPLYDATA AD
+		INNER JOIN ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM MTC
+		ON AD.CLAIMS_SEQ_ID=MTC.CLAIMS_SEQ_ID
+		where (AD.FILE_BASE64='' OR AD.FILE_BASE64 is null)
+		and (AD.FILE_ID!='' and AD.FILE_ID is not null)
+		and AD.FILE_STATUS=#{hasFile}
+	</select>
+
+	<update id="updateMedicalTreatmentClaimApplyDataForFileStatus" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimApplyDataVo">
+		update ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_APPLYDATA
+		set
+		FILE_STATUS = #{vo.fileStatus}
+		<if test="vo.fileBase64 !=null and  vo.fileBase64!='' ">
+			, FILE_BASE64 = #{vo.fileBase64}
+		</if>
+		where FILE_ID = #{vo.fileId}
+	</update>
+
+	<update id="updateTransMedicalInfoForFileStatus" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimApplyDataVo">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+		set
+		FILE_STATUS = #{vo.fileStatus}
+		<if test="vo.fileBase64 !=null and  vo.fileBase64!='' ">
+			, FILE_BASE64 = #{vo.fileBase64}
+		</if>
+		where FILE_ID = #{vo.fileId} and MI_ID = #{vo.miId}
+	</update>
+
+	<insert id="addMedicalTreatmentApplyDatas">
+		<if test="vo.dtypeList != null and vo.dtypeList.size() > 0">
+			INSERT INTO [ESERVICE].[dbo].[MEDICAL_TREATMENT_CLAIM_APPLYDATA]
+			([AD_ID]
+			,[CLAIMS_SEQ_ID]
+			,[SENO]
+			,[HS_TIME]
+			,[HE_TIME]
+			,[OTYPE]
+			,[DEPID]
+			,[DTYPE]
+			,[FILE_ID]
+			,[FILE_NAME]
+			,[FILE_BASE64]
+			,[FILE_STATUS]
+			,[PATH])
+			VALUES
+			<foreach collection="vo.dtypeList" item="item">
+				((NEXT VALUE for MEDICAL_TREATMENT_CLAIM_AD_SEQ)
+				,#{vo.claimId}
+				,#{vo.seNo}
+				,#{vo.hsTime}
+				,#{vo.heTime}
+				,#{vo.otype}
+				,#{item.value}
+				,#{vo.depid}
+				,#{vo.fileId}
+				,#{vo.fileName}
+				<if test="vo.fileBase64 !=null and  vo.fileBase64!='' ">
+					,#{vo.fileBase64}
+				</if>
+				<if test="vo.fileBase64 =null or  vo.fileBase64='' ">
+					,''
+				</if>
+				,#{vo.fileStatus}
+				,#{vo.path}
+				)
+			</foreach>
+		</if>
+	</insert>
+
+	<update id="updateMedicalTreatmentApplyData">
+		update ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_APPLYDATA
+		set
+		FILE_ID = #{vo.fileId},
+		FILE_NAME = #{vo.fileName},
+		FILE_STATUS = #{vo.fileStatus},
+		PATH = #{vo.path}
+		where MI_ID = #{vo.miId} and CLAIMS_SEQ_ID = #{vo.claimId}
+	</update>
+
+	<update id="updateTransMedicalTreatmentMedicalInfo">
+		update ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+		set
+		FILE_ID = #{vo.fileId},
+		FILE_STATUS = #{vo.fileStatus},
+		PATH = #{vo.path}
+		where MI_ID = #{vo.miId}
+	</update>
+
+	<select id="getMedicalTreatmentClaimApplyDataByInfo" resultMap="ApplyDataMap">
+		select CLAIMS_SEQ_ID, MI_ID FROM
+		ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM_APPLYDATA
+		where SENO = #{seNo} and OTYPE = #{otype} and DEPID = #{depId} and DTYPE = #{dtype}
+	</select>
+
 </mapper>

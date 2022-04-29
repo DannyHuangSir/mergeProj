@@ -13,11 +13,15 @@ import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimFileDataVo;
+import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
 import com.twfhclife.eservice.onlineChange.service.*;
 import com.twfhclife.eservice.user.service.ILilipmService;
+import com.twfhclife.eservice.web.model.Division;
 import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
 import com.twfhclife.eservice.web.model.HospitalVo;
+import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
+import com.twfhclife.eservice.web.model.OutpatientType;
 import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.service.MailService;
 import com.twfhclife.generic.service.SmsService;
@@ -104,7 +108,16 @@ public class MedicalAllianceServiceTask {
     //@Value("${medicalAlliance.api408.url}")
     public String URL_API408;
     
-    //@Value("${cron.api.medical.disable}")
+	//@Value("${medicalAlliance.api409.url}")
+    public String URL_API409;
+    
+    //@Value("${medicalAlliance.api410.url}")
+    public String URL_API410;
+    
+    //@Value("${medicalAlliance.api411.url}")
+    public String URL_API411;
+
+	//@Value("${cron.api.medical.disable}")
     public String API_DISABLE;
 
     @Autowired
@@ -166,6 +179,15 @@ public class MedicalAllianceServiceTask {
                 }
                 if ("medicalAlliance.api408.url".equals(parameterItem.getParameterName())) {
                     this.setURL_API408(parameterItem.getParameterValue());
+                }
+                if ("medicalAlliance.api409.url".equals(parameterItem.getParameterName())) {
+                    this.setURL_API409(parameterItem.getParameterValue());
+                }
+                if ("medicalAlliance.api410.url".equals(parameterItem.getParameterName())) {
+                    this.setURL_API410(parameterItem.getParameterValue());
+                }
+                if ("medicalAlliance.api411.url".equals(parameterItem.getParameterName())) {
+                    this.setURL_API411(parameterItem.getParameterValue());
                 }
             });
         }
@@ -297,6 +319,22 @@ public class MedicalAllianceServiceTask {
                                     transMedicalTreatmentClaimVo.setFileDatas(transFileDatas);
                                 }//end-if
 
+                                List<MedicalTreatmentClaimApplyDataVo> applyDatas = vo.getApplyData();
+                                if(applyDatas!=null && applyDatas.size()>0) {
+                                    List<TransMedicalTreatmentClaimMedicalInfoVo> transMedicalInfos = new ArrayList<TransMedicalTreatmentClaimMedicalInfoVo>();
+                                    for(MedicalTreatmentClaimApplyDataVo applyData : applyDatas) {
+                                        TransMedicalTreatmentClaimMedicalInfoVo transMedicalInfo = new TransMedicalTreatmentClaimMedicalInfoVo();
+                                        transMedicalInfo.setSeNo(applyData.getSeNo());
+                                        transMedicalInfo.setHsTime(applyData.getHsTime());
+                                        transMedicalInfo.setHeTime(applyData.getHeTime());
+                                        transMedicalInfo.setOtype(applyData.getOtype());
+                                        transMedicalInfo.setDepid(applyData.getDepid());
+                                        transMedicalInfo.setDtypeList(applyData.getDtypeList());
+                                        transMedicalInfos.add(transMedicalInfo);
+                                    }
+                                    transMedicalTreatmentClaimVo.setMedicalInfo(transMedicalInfos);
+                                }
+
                                 //3.2.call addTransRequest()
                                 int i = iMedicalService.addTransRequest(transMedicalTreatmentClaimVo);//這裡會主動先塞好TRANS Table.
                                 if(i>0) {
@@ -346,6 +384,7 @@ public class MedicalAllianceServiceTask {
                     for (MedicalTreatmentClaimVo vo : listMedical) {
                     	try {
                             if(vo!=null) {
+                                vo.setMedicalInfo(iMedicalService.getMedicalTreatmentClaimApplyData(vo));
                                 //3.call api-401 to upload.
                                 String strResponse = medicalExternalServiceImpl.postForEntity(URL_API401, vo, "API-401理賠申請上傳");
                                 //String  strResponse="{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"caseId\":\"20210125153001-45c17f68e615-L01\"}}";
@@ -465,235 +504,278 @@ public class MedicalAllianceServiceTask {
                 //2.call api-403
                 if(notifyList!=null && !notifyList.isEmpty() && notifyList.size()>0) {
                     for (NotifyOfNewCaseMedicalVo vo : notifyList) {
-                        if(vo!=null) {
-                            //3.call api-403 to
-                            Map<String, String> params = new HashMap<>();
-                            String caseId = vo.getCaseId();
-                            params.put("caseId",caseId);
-                            //聯盟鏈歷程參數
-                            Map<String, String> unParams = new HashMap<>();
-                            unParams.put("name", "API-403 查詢案件資訊");
-                            unParams.put("caseId", caseId);
+                        try {
+                            if (vo != null) {
+                                //3.call api-403 to
+                                Map<String, String> params = new HashMap<>();
+                                String caseId = vo.getCaseId();
+                                params.put("caseId", caseId);
+                                //聯盟鏈歷程參數
+                                Map<String, String> unParams = new HashMap<>();
+                                unParams.put("name", "API-403 查詢案件資訊");
+                                unParams.put("caseId", caseId);
 
-                            /**
-                             * 獲取到transNum數據
-                             * 1.新案件進行創建
-                             * 2.已有的案件進行查詢出
-                             */
-                            boolean isAllNewCase = false;//用於判斷是否為全新案件
-                            MedicalTreatmentClaimVo medicalTCVo = iMedicalService.getMedicalTreatmentByCaseId(caseId);
-                            if(medicalTCVo==null) {
-                            	isAllNewCase = true;
-                            } else {
-                            	//非全新案件，則以查得的STATUS更新TRANS_MEDICAL_TREATMENT_CLAIM.ALLIANCE_STATUS
-                            	//更新成功,則此NotifyOfNewCaseMedicalVo.NC_STATUS更新為1
-                            	//更新不成功則忽略，下次重作
-                            }
-                            
-                            /**
-                             * 此時不一定有TRANS_NUM,因為可能尚未轉到TRANS
-                             */
-                            String transNum = iMedicalService.getTransMedicalTreatmentByCaseId(caseId);
-                            if (StringUtils.isNotBlank(transNum)) {
-                                unParams.put("transNum", transNum);
-                            }else{
-                                //do not create new TRANS_NUM here.
-                            }
-
-                            String strResponse = medicalExternalServiceImpl.postForEntity(URL_API403, params, unParams);
-                            // strResponse = "{"code":"0","msg":"success","data":{"hpUid":"202101030900001-JQ","idNo":"A123456789","dtype":"Receipt,CertificateDiagnosis","name":"王⼤明","birdate":"19910415","hpId":"0101090517","cpoa":"本⼈王⼤明/A123456789…","hsTime":"20210120","heTime":"20210125","phone":"0912345678","zipCode":"70157","address":"台北市中正區信義路⼀段 21-3 號","mail":" abc@test.com.tw ","paymentMethod":"1","bankCode":"004","branchCode":"0107","bankAccount":"12345678901234","applicationDate":"20190105","applicationTime":"1520","applicationItem":"1","job":"老師","jobDescr":"⼯作的描述內容","accidentDate":"20190101","accidentTime":"1520","accidentCause":"disease","accidentLocation":"台北市中正區信義路⼀段","accidentDescr":"遭計程⾞追撞","policeStation":"臺北市政府警察局⼤安分局安和路派出所","policeName":"王⼩明","policePhone":"0987654321","policeDate":"20190101","policeTime":"1530","stauts":"ITPS","to":"L01,L02,L03","from":"L01","fromData":{"from":"L01","status":"PTIG"},"toData":[{"to":"L01","status":"PTHS"},{"to":"L01","status":"PTHS"}],"fileData":[{"dtype":"CertificateDiagnosis","fileId":"45c17f68e615-L02-c-1231","fileStatus":"HAS_FILE"},{"dtype":"CertificateDiagnosis","fileId":"45c17f68e615-L02-c-123001","fileStatus":"NO_FILE"},{"dtype":"Receipt","fileId":"45c17f68e615-L02-c-12300","fileStatus":"RE_FILE"}]}}";
-                            log.info("call URL_API403,strResponse="+strResponse);
-
-                            if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {
-                                String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                JsonNode rootNode = objectMapper.readTree(dataString);
-                                dataString = rootNode.toString();
-                                //如有時間進行格式化時間
-                                //Gson builderTime = (new GsonBuilder()).setDateFormat("yyyy/MM/dd HH:mm:ss").create();
-                                MedicalTreatmentClaimVo medicalVo = new Gson().fromJson(dataString, new TypeToken<MedicalTreatmentClaimVo>() {
-                                }.getType());
-                                log.info("after new Gson().fromJson................."+medicalVo);
-
-                                if (medicalVo != null) {
-                                	medicalVo.setCaseId(caseId);
-                                    /**
-                                     * 判斷是否台銀該接收的資料-start
-                                     * 1.fromData.from=L01時,表示為台銀首家件,只取用status做為更新聯盟案件狀態
-                                     * 2.toData.to不含L01時,表示並非傳送給台銀,此案件不落地
-                                     */
-                                    //fromData
-                                    String fromValue = this.getFromDataToValue(strResponse);
-                                    String fromDataStatus = this.getFromDataStatus(strResponse);
-                                    
-                                    //toData
-                                    String toValue = this.getToDataToValue(strResponse);
-                                    String allianceStatus = this.getToDataStatus(strResponse);
-                                    
-                                    if("L01".equals(fromValue)) {//台銀首家件資料
-                                    	isAllNewCase = false;
-                                    	medicalVo.setAllianceStatus(fromDataStatus);
-                                    }else {//非台銀首家件資料
-                                    	if(StringUtils.isNotBlank(toValue) && toValue.indexOf("L01")>=0) {
-                                    		//do nothing.
-                                    	}else {
-                                    		//非傳送給台銀的案件,此案件不落地
-                                    		vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
-                                            vo.setMsg(NotifyOfNewCaseChangeVo.MSG_NOT_FOR_TWFHCLIFE);
-                                            int updateCnt = iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
-                                            log.info("NotifyOfNewCaseChangeVo.MSG_NOT_FOR_TWFHCLIFE,caseId="+vo.getCaseId());
-                                            continue;
-                                    	}
-                                    }
-                                    /**
-                                     * 判斷是否台銀該接收的資料-end
-                                     */
-                                    
-                                    //ID在本公司僅為要保人視為非本公司保戶方式，不接收資料)
-                                    List<String> policyNos = allianceService.getPolicyNoByID(medicalVo.getIdNo());
-                                    boolean isInsured = false;//是否為保戶
-                                    if(policyNos!=null && policyNos.size()>0) {//保戶
-                                        isInsured = true;
-                                    }
-                                    log.info("=================API403-查詢查詢案件資訊-當前是否為保戶:"+isInsured);
-                                    
-                                    //修正filename,path可能的錯誤-start
-                                    if(medicalVo.getFileData()!=null && medicalVo.getFileData().size()>0) {
-                                    	for(MedicalTreatmentClaimFileDataVo mtcfdVo : medicalVo.getFileData()) {
-                                    		//path
-                                    		if(StringUtils.isBlank(mtcfdVo.getPath())) {
-                                    			mtcfdVo.setPath(this.FILE_SAVE_PATH);
-                                    		}
-                                    		
-                                    		//filename
-                                    		String fileId = mtcfdVo.getFileId();
-                                    		if(StringUtils.isBlank(mtcfdVo.getFileName())) {
-                                    			mtcfdVo.setFileName(fileId);//default set fileId
-                                    		}
-                                    		
-                                    		String fileExtension = FilenameUtils.getExtension(mtcfdVo.getFileName());
-                                            if(StringUtils.isBlank(fileExtension)) {
-                                            	mtcfdVo.setFileName(mtcfdVo.getFileName()+".pdf");
-                                            }
-                                    	}
-                                    }
-                                    //修正filename可能的錯誤-end
-
-                                    if(isAllNewCase) {
-                                    	if(isInsured){
-                                            /**
-                                             * 存儲數據的組合
-                                             */
-                                            medicalVo.setFromCompanyId(medicalVo.getFrom());
-                                            medicalVo.setToCompanyId(medicalVo.getTo());
-                                            medicalVo.setAuthorizationEndDate(medicalVo.getHeTime());
-                                            medicalVo.setAuthorizationStartDate(medicalVo.getHsTime());
-                                            medicalVo.setToHospitalId(medicalVo.getHpId());
-                                            
-                                            medicalVo.setFileData(medicalVo.getFileData());
-
-                                            //toData
-                                            //String toValue = this.getToDataToValue(strResponse);
-                                            medicalVo.setToCompanyId(toValue);
-                                            //String allianceStatus = getToDataStatus(strResponse);
-                                            medicalVo.setAllianceStatus(allianceStatus);
-                                            
-                                            //fromData
-                                            //String fromValue = this.getFromDataToValue(strResponse);
-                                            medicalVo.setFromCompanyId(fromValue);
-
-                                            /**
-                                             * disease=疾病,1
-                                             * accident=意外,2
-                                             */
-                                            String accidentCause = medicalVo.getAccidentCause();
-                                            if (StringUtils.isNotBlank(accidentCause)) {
-                                                if ("disease".equals(accidentCause)) {
-                                                    medicalVo.setAccidentCause("1");
-                                                }else if("accident".equals(accidentCause)) {
-                                                    medicalVo.setAccidentCause("2");
-                                                }else {
-                                                	log.info("Can't judge accidentCause="+accidentCause);
-                                                }
-                                            }
-
-                                            // "1":診斷證明書，"2":收據
-                                            String dtype = medicalVo.getDtype();
-                                            if (StringUtils.isNotBlank(dtype)) {
-                                                String[] split = dtype.split(",");
-                                                StringBuffer stringBuffer = new StringBuffer();
-                                                for (int i = 0; i < split.length; i++) {
-                                                    String s = split[i];
-                                                    if ("CertificateDiagnosis".equals(s)) {
-                                                        stringBuffer.append("1,");
-                                                    }
-                                                    if ("Receipt".equals(s)) {
-                                                        stringBuffer.append("2,");
-                                                    }
-                                                }
-                                                medicalVo.setAuthorizationFileType(stringBuffer.toString());
-                                            }
-                                            
-                                            String pqhsPtis = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PQHS_PTIS);
-                                            //案件資訊的回傳狀態為PQHS_PTIS時,新的轉收件存入後申請狀態為申請中
-                                            if(medicalVo.getAllianceStatus() !=null && pqhsPtis.equals(medicalVo.getAllianceStatus())){
-                                                medicalVo.setStauts("-1");
-                                            }
-                                            
-                                            /**
-                                             * 進行存儲數據
-                                             */
-                                            int iRtn = iMedicalService.addMedicalRequest(medicalVo);
-                                            //更新是否已經取得資料
-                                            if(iRtn>0) {//如果有查詢且儲存成功
-                                                vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
-                                                vo.setMsg(NotifyOfNewCaseChangeVo.SUCCESS_MSG);
-                                                iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
-                                                log.info("狀態已修改為保戶");
-                                            }
-
-                                        } else {//非保戶
-                                        	vo.setNcStatus(NotifyOfNewCaseVo.NC_STATUS_ONE);
-                                            vo.setMsg(NotifyOfNewCaseVo.MSG);
-                                            iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
-                                            //匯報402接口
-                                            params.put("action", StatuCode.ACTION_CODE_N.code);
-                                            //聯盟鏈歷程參數
-                                            unParams.put("name", "API-402不取醫療資料");
-                                             medicalExternalServiceImpl.postForEntity(URL_API402, params, unParams);
-                                        }//end-if(isInsured)
-                                    }else {
-                                    	//非全新案件
-                                    	if(StringUtils.isNotBlank(transNum)) {//台銀首家件且已有CASEID故transNum不會為空
-                                    		//進行更新最新的狀態信息數據
-                                            //設置默認的地址
-                                    		int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo,this.FILE_SAVE_PATH);
-
-                                            //更新是否已經取得資料
-                                            if(iRtn>0) {//如果有查詢且儲存成功
-                                                vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
-                                                vo.setMsg(NotifyOfNewCaseChangeVo.SUCCESS_MSG+",update ALLIANE_STATUS="+medicalVo.getAllianceStatus());
-                                                iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
-                                                log.info("案件／檔案狀態更新結束");
-                                            }else {
-                                            	//狀態未更新成功，則忽略此案件下次重作
-                                            	log.info("案件／檔案狀態更新結束未更新成功，則忽略此案件下次重作,seqId="+vo.getSeqId());
-                                            }
-                                    	}else {
-                                    		vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
-                                            vo.setMsg(NotifyOfNewCaseChangeVo.MSG_TWFHCLIFE_NO_THIS_CASE);
-                                            iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
-                                            log.info("台銀首家件查無此案件,caseId="+vo.getCaseId());
-                                    	}
-                                    	
-                                    }
- 
+                                /**
+                                 * 獲取到transNum數據
+                                 * 1.新案件進行創建
+                                 * 2.已有的案件進行查詢出
+                                 */
+                                boolean isAllNewCase = false;//用於判斷是否為全新案件
+                                MedicalTreatmentClaimVo medicalTCVo = iMedicalService.getMedicalTreatmentByCaseId(caseId);
+                                if (medicalTCVo == null) {
+                                    isAllNewCase = true;
                                 } else {
-                                    log.info("API403-查詢查詢案件資訊-轉換數據  medicalVo is null.");
+                                    //非全新案件，則以查得的STATUS更新TRANS_MEDICAL_TREATMENT_CLAIM.ALLIANCE_STATUS
+                                    //更新成功,則此NotifyOfNewCaseMedicalVo.NC_STATUS更新為1
+                                    //更新不成功則忽略，下次重作
                                 }
-                            }else{
-                                log.info("API403-查詢查詢案件資訊-失敗 ");
+
+                                /**
+                                 * 此時不一定有TRANS_NUM,因為可能尚未轉到TRANS
+                                 */
+                                String transNum = iMedicalService.getTransMedicalTreatmentByCaseId(caseId);
+                                if (StringUtils.isNotBlank(transNum)) {
+                                    unParams.put("transNum", transNum);
+                                } else {
+                                    //do not create new TRANS_NUM here.
+                                }
+
+                                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API403, params, unParams);
+                                // strResponse = "{"code":"0","msg":"success","data":{"hpUid":"202101030900001-JQ","idNo":"A123456789","dtype":"Receipt,CertificateDiagnosis","name":"王⼤明","birdate":"19910415","hpId":"0101090517","cpoa":"本⼈王⼤明/A123456789…","hsTime":"20210120","heTime":"20210125","phone":"0912345678","zipCode":"70157","address":"台北市中正區信義路⼀段 21-3 號","mail":" abc@test.com.tw ","paymentMethod":"1","bankCode":"004","branchCode":"0107","bankAccount":"12345678901234","applicationDate":"20190105","applicationTime":"1520","applicationItem":"1","job":"老師","jobDescr":"⼯作的描述內容","accidentDate":"20190101","accidentTime":"1520","accidentCause":"disease","accidentLocation":"台北市中正區信義路⼀段","accidentDescr":"遭計程⾞追撞","policeStation":"臺北市政府警察局⼤安分局安和路派出所","policeName":"王⼩明","policePhone":"0987654321","policeDate":"20190101","policeTime":"1530","stauts":"ITPS","to":"L01,L02,L03","from":"L01","fromData":{"from":"L01","status":"PTIG"},"toData":[{"to":"L01","status":"PTHS"},{"to":"L01","status":"PTHS"}],"fileData":[{"dtype":"CertificateDiagnosis","fileId":"45c17f68e615-L02-c-1231","fileStatus":"HAS_FILE"},{"dtype":"CertificateDiagnosis","fileId":"45c17f68e615-L02-c-123001","fileStatus":"NO_FILE"},{"dtype":"Receipt","fileId":"45c17f68e615-L02-c-12300","fileStatus":"RE_FILE"}]}}";
+                                log.info("call URL_API403,strResponse=" + strResponse);
+
+                                if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {
+                                    String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+                                    ObjectMapper objectMapper = new ObjectMapper();
+                                    JsonNode rootNode = objectMapper.readTree(dataString);
+                                    dataString = rootNode.toString();
+                                    //如有時間進行格式化時間
+                                    //Gson builderTime = (new GsonBuilder()).setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+                                    MedicalTreatmentClaimVo medicalVo = new Gson().fromJson(dataString, new TypeToken<MedicalTreatmentClaimVo>() {
+                                    }.getType());
+                                    log.info("after new Gson().fromJson................." + medicalVo);
+
+                                    if (medicalVo != null) {
+                                        medicalVo.setCaseId(caseId);
+                                        /**
+                                         * 判斷是否台銀該接收的資料-start
+                                         * 1.fromData.from=L01時,表示為台銀首家件,只取用status做為更新聯盟案件狀態
+                                         * 2.toData.to不含L01時,表示並非傳送給台銀,此案件不落地
+                                         */
+                                        //fromData
+                                        String fromValue = this.getFromDataToValue(strResponse);
+                                        String fromDataStatus = this.getFromDataStatus(strResponse);
+
+                                        //toData
+                                        String toValue = null;
+                                        String allianceStatus = null;
+                                        if (medicalVo.getToData() != null && medicalVo.getToData().size() >= 0) {
+                                            for (MedicalTreatmentClaimToFromDataVo toData : medicalVo.getToData()) {
+                                                if (StringUtils.isNotBlank(toData.getTo()) && "L01".equals(toData.getTo())) {
+                                                    toValue = toData.getTo();
+                                                    allianceStatus = toData.getStatus();
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if ("L01".equals(fromValue)) {//台銀首家件資料
+                                            isAllNewCase = false;
+                                            medicalVo.setAllianceStatus(fromDataStatus);
+                                            vo.setCaseStatus(fromDataStatus);
+                                        } else {//非台銀首家件資料
+                                            if (StringUtils.isNotBlank(toValue) && toValue.indexOf("L01") >= 0) {
+                                                medicalVo.setAllianceStatus(allianceStatus);
+                                                vo.setCaseStatus(allianceStatus);
+                                            } else {
+                                                //非傳送給台銀的案件,此案件不落地
+                                                vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+                                                vo.setMsg(NotifyOfNewCaseChangeVo.MSG_NOT_FOR_TWFHCLIFE);
+                                                int updateCnt = iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
+                                                log.info("NotifyOfNewCaseChangeVo.MSG_NOT_FOR_TWFHCLIFE,caseId=" + vo.getCaseId());
+                                                continue;
+                                            }
+                                        }
+                                        /**
+                                         * 判斷是否台銀該接收的資料-end
+                                         */
+
+                                        //ID在本公司僅為要保人視為非本公司保戶方式，不接收資料)
+                                        List<String> policyNos = allianceService.getPolicyNoByID(medicalVo.getIdNo());
+                                        boolean isInsured = false;//是否為保戶
+                                        if (policyNos != null && policyNos.size() > 0) {//保戶
+                                            isInsured = true;
+                                        }
+                                        log.info("=================API403-查詢查詢案件資訊-當前是否為保戶:" + isInsured);
+
+                                        //修正filename,path可能的錯誤-start
+                                        if (medicalVo.getFileData() != null && medicalVo.getFileData().size() > 0) {
+                                            for (MedicalTreatmentClaimFileDataVo mtcfdVo : medicalVo.getFileData()) {
+                                                //path
+                                                if (StringUtils.isBlank(mtcfdVo.getPath())) {
+                                                    mtcfdVo.setPath(this.FILE_SAVE_PATH);
+                                                }
+
+                                                //filename
+                                                String fileId = mtcfdVo.getFileId();
+                                                if (StringUtils.isBlank(mtcfdVo.getFileName())) {
+                                                    mtcfdVo.setFileName(fileId);//default set fileId
+                                                }
+
+                                                String fileExtension = FilenameUtils.getExtension(mtcfdVo.getFileName());
+                                                if (StringUtils.isBlank(fileExtension)) {
+                                                    mtcfdVo.setFileName(mtcfdVo.getFileName() + ".pdf");
+                                                }
+                                            }
+                                        }
+
+                                        if (medicalVo.getApplyData() != null && medicalVo.getApplyData().size() > 0) {
+                                            for (MedicalTreatmentClaimApplyDataVo applyData : medicalVo.getApplyData()) {
+                                                //path
+                                                if (StringUtils.isBlank(applyData.getPath())) {
+                                                    applyData.setPath(this.FILE_SAVE_PATH);
+                                                }
+
+                                                List<MedicalTreatmentClaimApplyDataFileDataVo> files = applyData.getFileData();
+                                                if (files != null && files.size() > 0) {
+                                                    for (MedicalTreatmentClaimApplyDataFileDataVo file : files) {
+                                                        if (file != null) {
+                                                            //filename
+                                                            String fileId = file.getFileId();
+                                                            if (StringUtils.isBlank(applyData.getFileName())) {
+                                                                applyData.setFileName(fileId);//default set fileId
+                                                            }
+
+                                                            String fileExtension = FilenameUtils.getExtension(applyData.getFileName());
+                                                            if (StringUtils.isBlank(fileExtension)) {
+                                                                applyData.setFileName(applyData.getFileName() + ".pdf");
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        //修正filename可能的錯誤-end
+
+                                        if (isAllNewCase) {
+                                            if (isInsured) {
+                                                /**
+                                                 * 存儲數據的組合
+                                                 */
+                                                medicalVo.setFromCompanyId(medicalVo.getFrom());
+                                                medicalVo.setToCompanyId(medicalVo.getTo());
+//                                            medicalVo.setAuthorizationEndDate(medicalVo.getHeTime());
+//                                            medicalVo.setAuthorizationStartDate(medicalVo.getHsTime());
+//                                            medicalVo.setToHospitalId(medicalVo.getHpId());
+
+                                                medicalVo.setFileData(medicalVo.getFileData());
+
+                                                //toData
+                                                //String toValue = this.getToDataToValue(strResponse);
+                                                medicalVo.setToCompanyId(toValue);
+                                                //String allianceStatus = getToDataStatus(strResponse);
+                                                medicalVo.setAllianceStatus(allianceStatus);
+
+                                                //fromData
+                                                //String fromValue = this.getFromDataToValue(strResponse);
+                                                medicalVo.setFromCompanyId(fromValue);
+
+                                                /**
+                                                 * disease=疾病,1
+                                                 * accident=意外,2
+                                                 */
+                                                String accidentCause = medicalVo.getAccidentCause();
+                                                if (StringUtils.isNotBlank(accidentCause)) {
+                                                    if ("disease".equals(accidentCause)) {
+                                                        medicalVo.setAccidentCause("1");
+                                                    } else if ("accident".equals(accidentCause)) {
+                                                        medicalVo.setAccidentCause("2");
+                                                    } else {
+                                                        log.info("Can't judge accidentCause=" + accidentCause);
+                                                    }
+                                                }
+
+                                                // "1":診斷證明書，"2":收據
+                                                String dtype = medicalVo.getDtype();
+                                                if (StringUtils.isNotBlank(dtype)) {
+                                                    String[] split = dtype.split(",");
+                                                    StringBuffer stringBuffer = new StringBuffer();
+                                                    for (int i = 0; i < split.length; i++) {
+                                                        String s = split[i];
+                                                        if ("CertificateDiagnosis".equals(s)) {
+                                                            stringBuffer.append("1,");
+                                                        }
+                                                        if ("Receipt".equals(s)) {
+                                                            stringBuffer.append("2,");
+                                                        }
+                                                    }
+                                                    medicalVo.setAuthorizationFileType(stringBuffer.toString());
+                                                }
+
+                                                String pqhsPtis = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_PQHS_PTIS);
+                                                //案件資訊的回傳狀態為PQHS_PTIS時,新的轉收件存入後申請狀態為申請中
+                                                if (medicalVo.getAllianceStatus() != null && pqhsPtis.equals(medicalVo.getAllianceStatus())) {
+                                                    medicalVo.setStauts("-1");
+                                                }
+
+                                                /**
+                                                 * 進行存儲數據
+                                                 */
+                                                int iRtn = iMedicalService.addMedicalRequest(medicalVo);
+                                                //更新是否已經取得資料
+                                                if (iRtn > 0) {//如果有查詢且儲存成功
+                                                    vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+                                                    vo.setMsg(NotifyOfNewCaseChangeVo.SUCCESS_MSG);
+                                                    iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
+                                                    log.info("狀態已修改為保戶");
+                                                }
+
+                                            } else {//非保戶
+                                                vo.setNcStatus(NotifyOfNewCaseVo.NC_STATUS_ONE);
+                                                vo.setMsg(NotifyOfNewCaseVo.MSG);
+                                                iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
+                                                //匯報402接口
+                                                params.put("action", StatuCode.ACTION_CODE_N.code);
+                                                //聯盟鏈歷程參數
+                                                unParams.put("name", "API-402不取醫療資料");
+                                                medicalExternalServiceImpl.postForEntity(URL_API402, params, unParams);
+                                            }//end-if(isInsured)
+                                        } else {
+                                            //非全新案件
+                                            if (StringUtils.isNotBlank(transNum)) {//台銀首家件且已有CASEID故transNum不會為空
+                                                //進行更新最新的狀態信息數據
+                                                //設置默認的地址
+                                                int iRtn = iMedicalService.updateTransMedicalTreatmentByCaseId(medicalVo, this.FILE_SAVE_PATH);
+
+                                                //更新是否已經取得資料
+                                                if (iRtn > 0) {//如果有查詢且儲存成功
+                                                    vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+                                                    vo.setMsg(NotifyOfNewCaseChangeVo.SUCCESS_MSG + ",update ALLIANE_STATUS=" + medicalVo.getAllianceStatus());
+                                                    iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
+                                                    log.info("案件／檔案狀態更新結束");
+                                                } else {
+                                                    //狀態未更新成功，則忽略此案件下次重作
+                                                    log.info("案件／檔案狀態更新結束未更新成功，則忽略此案件下次重作,seqId=" + vo.getSeqId());
+                                                }
+                                            } else {
+                                                vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
+                                                vo.setMsg(NotifyOfNewCaseChangeVo.MSG_TWFHCLIFE_NO_THIS_CASE);
+                                                iMedicalService.updateNotifyOfNewCaseMedicalNcStatusBySeqId(vo);
+                                                log.info("台銀首家件查無此案件,caseId=" + vo.getCaseId());
+                                            }
+
+                                        }
+
+                                    } else {
+                                        log.info("API403-查詢查詢案件資訊-轉換數據  medicalVo is null.");
+                                    }
+                                } else {
+                                    log.info("API403-查詢查詢案件資訊-失敗 ");
+                                }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            log.error(e);
                         }
                     }
 
@@ -716,37 +798,90 @@ public class MedicalAllianceServiceTask {
         log.info("API_DISABLE="+API_DISABLE);
         if("N".equals(API_DISABLE)){
             try {
+                List<MedicalTreatmentClaimApplyDataVo> applyDataVoList = iMedicalService.getMedicalTreatmentClaimApplyDataByHasFile( CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
+                //2.call api-404
+                if(applyDataVoList!=null && !applyDataVoList.isEmpty() && applyDataVoList.size()>0) {
+                    for (MedicalTreatmentClaimApplyDataVo vo : applyDataVoList) {
+                        //3.call api-404 to
+                        Map<String, String> params = new HashMap<>();
+                        String caseId = vo.getCaseId();
+                        String transNum = vo.getTransNum();
+                        params.put("fileId",vo.getFileId());
+                        //聯盟鏈歷程參數
+                        Map<String, String> unParams = new HashMap<>();
+                        unParams.put("name", "API-404 檔案下載");
+                        unParams.put("caseId", caseId);
+                        unParams.put("transNum", transNum);
+
+                        String strResponse = medicalExternalServiceImpl.postForEntity(URL_API404, params, unParams);
+                        //String strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"content\":\"kbiefw3i8n3oi493nf…\"}}";
+                        if(strResponse!=null) {
+                            //do not print base64 string
+                            log.info("call URL_API404,strResponse is not null.");
+                        }else {
+                            log.info("call URL_API404,strResponse is null.");
+                        }
+
+                        //3-1.get api-404 response
+                        if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+                            String content = MyJacksonUtil.readValue(strResponse, "/data/content");
+//                            vo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
+                            vo.setFileBase64(content);
+                            if (vo.getMiId() == null) {
+                                //進行回應狀態
+                                iMedicalService.updateMedicalTreatmentClaimApplyDataForFileStatus(vo);
+                            } else {
+                                iMedicalService.updateMedicalTreatmentClaimApplyDataForFileStatus(vo);
+                                iMedicalService.updateTransMedicalInfoForFileStatus(vo);
+                            }
+                        }
+                    }
+                }
+            }catch(Exception e) {
+                //e.printStackTrace();
+                log.info(e);
+            }
+        }
+        log.info("End API-404 Task.");
+
+    }
+
+    public void callAPI404Bak() {
+        log.info("Start API-404 Task.");
+        log.info("API_DISABLE="+API_DISABLE);
+        if("N".equals(API_DISABLE)){
+            try {
                 List<MedicalTreatmentClaimFileDataVo> listMedical = iMedicalService.getTransMedicalTreatmentClaimFileData( CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
                 //2.call api-404
                 if(listMedical!=null && !listMedical.isEmpty() && listMedical.size()>0) {
                     for (MedicalTreatmentClaimFileDataVo vo : listMedical) {
-	                                //3.call api-404 to
-	                                Map<String, String> params = new HashMap<>();
-	                                String caseId = vo.getCaseId();
-	                                String transNum = vo.getTransNum();
-	                                params.put("fileId",vo.getFileId());
-	                                //聯盟鏈歷程參數
-	                                Map<String, String> unParams = new HashMap<>();
-	                                unParams.put("name", "API-404 檔案下載");
-	                                unParams.put("caseId", caseId);
-	                                unParams.put("transNum", transNum);
+                    	//3.call api-404 to
+                        Map<String, String> params = new HashMap<>();
+                        String caseId = vo.getCaseId();
+                        String transNum = vo.getTransNum();
+                        params.put("fileId",vo.getFileId());
+                        //聯盟鏈歷程參數
+                        Map<String, String> unParams = new HashMap<>();
+                        unParams.put("name", "API-404 檔案下載");
+                        unParams.put("caseId", caseId);
+                        unParams.put("transNum", transNum);
 
-	                                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API404, params, unParams);
-	                                //String strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"content\":\"kbiefw3i8n3oi493nf…\"}}";
-	                                if(strResponse!=null) {
-	                                	//do not print base64 string
-	                                	log.info("call URL_API404,strResponse is not null.");
-	                                }else {
-	                                	log.info("call URL_API404,strResponse is null.");
-	                                }
-	                                
-		                            //3-1.get api-404 response
-		                            if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
-		                                String content = MyJacksonUtil.readValue(strResponse, "/data/content");
-                                        vo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
-                                        vo.setFileBase64(content);
-		                                //進行回應狀態
-		                                iMedicalService.updateTarnsMedicalTreatmentFileDataStatus(vo);
+                        String strResponse = medicalExternalServiceImpl.postForEntity(URL_API404, params, unParams);
+                        //String strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"content\":\"kbiefw3i8n3oi493nf…\"}}";
+                        if(strResponse!=null) {
+                        	//do not print base64 string
+                        	log.info("call URL_API404,strResponse is not null.");
+                        }else {
+                        	log.info("call URL_API404,strResponse is null.");
+                        }
+                        
+                        //3-1.get api-404 response
+                        if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+                            String content = MyJacksonUtil.readValue(strResponse, "/data/content");
+                            vo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
+                            vo.setFileBase64(content);
+                            //進行回應狀態
+                            iMedicalService.updateTarnsMedicalTreatmentFileDataStatus(vo);
                         }
                     }
                 }
@@ -960,6 +1095,7 @@ public class MedicalAllianceServiceTask {
             log.info("-----------End API-408 Task.-----------");
         }
     }
+
     /**
      *  API-407 查詢醫院清單
      * */
@@ -1052,6 +1188,135 @@ public class MedicalAllianceServiceTask {
             log.info("-----------End API-407 Task.-----------");
         }
     }
+    
+    /**
+     * API-409 取得醫院之就診類型
+     */
+    //@Scheduled(cron = "${cron.medical409.expression}")
+    public void callAPI409() {
+        log.info("-----------Start API-409 Task.-----------");
+        log.info("API_DISABLE=" + API_DISABLE);
+        if ("N".equals(API_DISABLE)) {
+        	try {
+        		//Request
+        		//TODO 1.一次只能呼叫一個醫院資料?
+        		Map<String, String> params = new HashMap<>();
+        		params.put("hpId", null);//必填,String(20),醫院之醫事機構代碼
+        		
+                //聯盟鏈歷程參數
+                Map<String, String> unParams = new HashMap<>();
+                unParams.put("name", "API-409取得醫院之就診類型");
+                unParams.put("caseId", null);
+                unParams.put("transNum", null);
+                
+                
+                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API409, params, unParams);
+                log.info("API-409取得醫院之就診類型,回傳=" + strResponse);
+                
+                if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+                	String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+                	HospitalVo hospitalVo = (HospitalVo)MyJacksonUtil.json2Object(dataString, HospitalVo.class);
+                	if(hospitalVo!=null && hospitalVo.getOutpatientTypes()!=null) {
+                		OutpatientType[] outpatientTypes = hospitalVo.getOutpatientTypes();
+                		
+                	}
+                	//TODO 存入DB
+                	
+                }
+                
+        	} catch (Exception e) {
+                 log.error(e);
+        	}
+        	
+        }
+        
+        log.info("-----------End API-409 Task.-----------");
+    }
+    
+    /**
+     * API-410 取得醫院科別清單
+     */
+    //@Scheduled(cron = "${cron.medical410.expression}")
+    public void callAPI410() {
+        log.info("-----------Start API-410 Task.-----------");
+        log.info("API_DISABLE=" + API_DISABLE);
+        if ("N".equals(API_DISABLE)) {
+        	try {
+        		//Request
+        		//TODO 1.一次只能呼叫一個醫院資料?
+        		Map<String, String> params = new HashMap<>();
+        		params.put("hpId", null);//必填,String(20),醫院之醫事機構代碼
+        		params.put("otype", null);//必填,String(50),就診類型代碼
+        		
+                //聯盟鏈歷程參數
+                Map<String, String> unParams = new HashMap<>();
+                unParams.put("name", "API-410取得醫院科別清單");
+                unParams.put("caseId", null);
+                unParams.put("transNum", null);
+                
+                
+                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API410, params, unParams);
+                log.info("API-410取得醫院科別清單,回傳=" + strResponse);
+                
+                if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+                	String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+                	Division[] divisions = (Division[])MyJacksonUtil.json2Object(dataString, Division.class);
+                	
+                	//TODO 存入DB
+                	
+                }
+                
+        	} catch (Exception e) {
+                 log.error(e);
+        	}
+        	
+        }
+        
+        log.info("-----------End API-410 Task.-----------");
+    }
+    
+    /**
+     * API-411 取得醫院資料群組
+     */
+    //@Scheduled(cron = "${cron.medical411.expression}")
+    public void callAPI411() {
+        log.info("-----------Start API-411 Task.-----------");
+        log.info("API_DISABLE=" + API_DISABLE);
+        if ("N".equals(API_DISABLE)) {
+        	try {
+        		//Request
+        		//TODO 1.一次只能呼叫一個醫院資料?
+        		Map<String, String> params = new HashMap<>();
+        		params.put("hpId", null);//必填,String(20),醫院之醫事機構代碼
+        		params.put("otype", null);//必填,String(50),就診類型代碼
+        		
+                //聯盟鏈歷程參數
+                Map<String, String> unParams = new HashMap<>();
+                unParams.put("name", "API-411取得醫院資料群組");
+                unParams.put("caseId", null);
+                unParams.put("transNum", null);
+                
+                
+                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API411, params, unParams);
+                log.info("API-411取得醫院資料群組,回傳=" + strResponse);
+                
+                if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+                	String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+                	MedicalDataFileGroup[] fileGroups = (MedicalDataFileGroup[])MyJacksonUtil.json2Object(dataString, MedicalDataFileGroup.class);
+                	
+                	//TODO 存入DB
+                	
+                }
+                
+        	} catch (Exception e) {
+                 log.error(e);
+        	}
+        	
+        }
+        
+        log.info("-----------End API-411 Task.-----------");
+    }
+    
     /**
      * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
      * @param responseJsonString
@@ -1145,7 +1410,32 @@ public class MedicalAllianceServiceTask {
         this.API_DISABLE = API_DISABLE;
     }
     
-    /**
+    public String getURL_API409() {
+		return URL_API409;
+	}
+
+	public void setURL_API409(String uRL_API409) {
+		URL_API409 = uRL_API409;
+	}
+	
+    
+    public String getURL_API410() {
+		return URL_API410;
+	}
+
+	public void setURL_API410(String uRL_API410) {
+		URL_API410 = uRL_API410;
+	}
+
+	public String getURL_API411() {
+		return URL_API411;
+	}
+
+	public void setURL_API411(String uRL_API411) {
+		URL_API411 = uRL_API411;
+	}
+
+	/**
      * 取得toData nodeString.
      * @param strResponse
      * @return

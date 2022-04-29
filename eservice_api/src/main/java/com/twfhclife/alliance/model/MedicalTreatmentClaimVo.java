@@ -4,6 +4,8 @@ import com.twfhclife.eservice.onlineChange.model.AbstractOnlineChangeModelBean;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.google.common.collect.Lists;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -270,19 +272,31 @@ public class MedicalTreatmentClaimVo {
 	/**
 	 * 傳輸給聯盟的文件類型數據
 	 * */
-	private List<String> dtypes;
+	private List<MedicalTreatmentClaimApplyDataVo> medicalInfo = Lists.newArrayList();
 	//醫院之醫事機構代碼
 	private String hpId;
-	//授權開始時間
-	private String hsTime;
-	//授權結束時間
-	private String heTime;
 	//重新上傳的原因
 	private String reUpload;
 	private String stauts;
 	//獲取聯盟的文件類型
 	private String dtype;
+	
 	private List<MedicalTreatmentClaimFileDataVo> fileData;
+	
+	/**
+	 * Spec v1.5.2
+	 */
+	private List<MedicalTreatmentClaimToFromDataVo> toData;
+	
+	/**
+	 * Spec v1.5.2
+	 */
+	private MedicalTreatmentClaimToFromDataVo fromData;
+	
+	/**
+	 * Spec v1.5.2
+	 */
+	private List<MedicalTreatmentClaimApplyDataVo> applyData;
 
 	public List<MedicalTreatmentClaimFileDataVo> getFileData() {
 		return fileData;
@@ -324,12 +338,12 @@ public class MedicalTreatmentClaimVo {
 		this.reUpload = reUpload;
 	}
 
-	public List<String> getDtypes() {
-		return dtypes;
+	public List<MedicalTreatmentClaimApplyDataVo> getMedicalInfo() {
+		return medicalInfo;
 	}
 
-	public void setDtypes(List<String> dtypes) {
-		this.dtypes = dtypes;
+	public void setMedicalInfo(List<MedicalTreatmentClaimApplyDataVo> medicalInfo) {
+		this.medicalInfo = medicalInfo;
 	}
 
 	public String getHpId() {
@@ -338,22 +352,6 @@ public class MedicalTreatmentClaimVo {
 
 	public void setHpId(String hpId) {
 		this.hpId = hpId;
-	}
-
-	public String getHsTime() {
-		return hsTime;
-	}
-
-	public void setHsTime(String hsTime) {
-		this.hsTime = hsTime;
-	}
-
-	public String getHeTime() {
-		return heTime;
-	}
-
-	public void setHeTime(String heTime) {
-		this.heTime = heTime;
 	}
 
 	public String getFromCompanyId() {
@@ -891,6 +889,38 @@ public class MedicalTreatmentClaimVo {
 
 	public void setToItem(List<String> toItem) {
 		this.toItem = toItem;
+	}
+
+	public List<MedicalTreatmentClaimFileDataVo> getFileDatas() {
+		return fileDatas;
+	}
+
+	public void setFileDatas(List<MedicalTreatmentClaimFileDataVo> fileDatas) {
+		this.fileDatas = fileDatas;
+	}
+
+	public List<MedicalTreatmentClaimToFromDataVo> getToData() {
+		return toData;
+	}
+
+	public void setToData(List<MedicalTreatmentClaimToFromDataVo> toData) {
+		this.toData = toData;
+	}
+
+	public MedicalTreatmentClaimToFromDataVo getFromData() {
+		return fromData;
+	}
+
+	public void setFromData(MedicalTreatmentClaimToFromDataVo fromData) {
+		this.fromData = fromData;
+	}
+
+	public List<MedicalTreatmentClaimApplyDataVo> getApplyData() {
+		return applyData;
+	}
+
+	public void setApplyData(List<MedicalTreatmentClaimApplyDataVo> applyData) {
+		this.applyData = applyData;
 	}
 
 	@Override

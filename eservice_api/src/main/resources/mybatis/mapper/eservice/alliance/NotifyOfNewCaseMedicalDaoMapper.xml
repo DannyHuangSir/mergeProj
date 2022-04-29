@@ -16,6 +16,7 @@
 		[ESERVICE].[dbo].NOTIFY_OF_NEW_CASE_MEDICAL
 		set  NC_STATUS=#{vo.ncStatus}
 		,MSG=#{vo.msg}
+		,CASE_STATUS=#{vo.caseStatus}
 		,STATUS_DATE = getdate()
 		where CASE_ID=#{vo.caseId} and SEQ_ID=#{vo.seqId}
 	</update>

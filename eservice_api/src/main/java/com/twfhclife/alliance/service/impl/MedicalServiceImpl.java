@@ -1,16 +1,15 @@
 package com.twfhclife.alliance.service.impl;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.alliance.dao.IMedicalDao;
 import com.twfhclife.alliance.dao.NotifyOfNewCaseMedicalDao;
 import com.twfhclife.alliance.dao.UnionCourseDao;
-import com.twfhclife.alliance.model.MedicalTreatmentClaimFileDataVo;
-import com.twfhclife.alliance.model.MedicalTreatmentClaimVo;
-import com.twfhclife.alliance.model.NotifyOfNewCaseMedicalVo;
-import com.twfhclife.alliance.model.UnionCourseVo;
+import com.twfhclife.alliance.model.*;
 import com.twfhclife.alliance.service.IMedicalService;
 import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
+import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
 import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
@@ -168,12 +167,15 @@ public class MedicalServiceImpl implements IMedicalService {
         if (!CollectionUtils.isEmpty(medical)) {
             collect= medical.stream().map(x -> {
                 List<MedicalTreatmentClaimFileDataVo> medicalFilData = null;
+                List<MedicalTreatmentClaimApplyDataVo> applyDatas = null;
                 try {
                     medicalFilData = iMedicalDao.getMedicalTreatmentFileDataByClaimSeqId(x.getClaimSeqId());
+                    applyDatas = iMedicalDao.getMedicalTreatmentClaimApplyData(x.getClaimSeqId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 x.setFileData(medicalFilData);
+                x.setApplyData(applyDatas);
                 return x;
             }).collect(Collectors.toList());
         }
@@ -377,6 +379,34 @@ public class MedicalServiceImpl implements IMedicalService {
                 	iRtn = addFileCountResult;
                 }
             }
+
+            List<MedicalTreatmentClaimApplyDataVo> applyDatas = medicalVo.getApplyData();
+            if (applyDatas != null && applyDatas.size() > 0) {
+                int addInfoCountResult = 0;
+
+                for (MedicalTreatmentClaimApplyDataVo applyData : applyDatas) {
+                    if (applyData != null) {
+                        applyData.setClaimId(seqId);
+                        List<MedicalTreatmentClaimApplyDataFileDataVo> files = applyData.getFileData();
+                        if (files != null && files.size() > 0) {
+                            for (MedicalTreatmentClaimApplyDataFileDataVo file : files) {
+                                if (file != null) {
+                                    applyData.setFileId(file.getFileId());
+                                    List<String> dtypes = new ArrayList<String>();
+                                    dtypes.add(file.getDtype());
+                                    applyData.setDtypes(dtypes);
+                                    applyData.setFileStatus(file.getFileStatus());
+                                    addInfoCountResult = iMedicalDao.addMedicalTreatmentApplyDatas(applyData);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(addInfoCountResult>0) {
+                    iRtn = addInfoCountResult;
+                }
+            }
         }
 
         /**
@@ -469,6 +499,34 @@ public class MedicalServiceImpl implements IMedicalService {
             }
         }
 
+        List<MedicalTreatmentClaimApplyDataVo> applyDatas = claimVo.getApplyData();
+        if (applyDatas!=null && applyDatas.size()>0) {
+            for (MedicalTreatmentClaimApplyDataVo applyData : applyDatas) {
+                if (applyData != null) {
+                    List<MedicalTreatmentClaimApplyDataFileDataVo> files = applyData.getFileData();
+                    if (files != null && files.size() > 0) {
+                        for (MedicalTreatmentClaimApplyDataFileDataVo file : files) {
+                            if (file != null) {
+                                List<MedicalTreatmentClaimApplyDataVo> applyDataInfoList = iMedicalDao.getMedicalTreatmentClaimApplyDataByInfo(applyData.getSeNo(), applyData.getOtype(), applyData.getDepid(), file.getDtype());
+                                if (applyDataInfoList!=null && applyDataInfoList.size()>0) {
+                                    for (MedicalTreatmentClaimApplyDataVo applyDataInfo : applyDataInfoList) {
+                                        if (applyDataInfo != null) {
+                                            applyDataInfo.setFileId(file.getFileId());
+                                            applyDataInfo.setFileName(applyData.getFileName());
+                                            applyDataInfo.setFileStatus(file.getFileStatus());
+                                            applyDataInfo.setPath(fileSavePath);
+                                            iMedicalDao.updateMedicalTreatmentApplyData(applyDataInfo);
+                                            iMedicalDao.updateTransMedicalTreatmentMedicalInfo(applyDataInfo);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         /**
          * 更新狀態訊息後,進行發送郵件信息
          */
@@ -520,10 +578,24 @@ public class MedicalServiceImpl implements IMedicalService {
         int rtn=0;
         if (voList != null && voList.size() != 0) {
             for (TransMedicalTreatmentClaimVo voTemp : voList) {
+                List<TransMedicalTreatmentClaimMedicalInfoVo> infoVoList = iMedicalDao.getTransMedicalInfoByClaimId(voTemp.getClaimSeqId());
+                
                 Float seq = iMedicalDao.getMedicalTreatmentSequence();
                 voTemp.setClaimSeqId(seq);
                 rtn = iMedicalDao.addTransMedicalToMedicalTreatment(voTemp);
+                
                 if(rtn>0){
+                	//1.不用上傳filedata到聯盟,故不用新增MEDICAL_TREATMENT_CLAIM_FILEDATAS
+                	
+                	//2.insert MEDICAL_TREATMENT_CLAIM_APPLYDATA
+                	if (infoVoList != null && infoVoList.size() != 0) {
+                        for (TransMedicalTreatmentClaimMedicalInfoVo infoVoTemp : infoVoList) {
+                        	infoVoTemp.setClaimId(seq);
+                            iMedicalDao.addMedicalTreatmentApplyData(infoVoTemp);
+                        }
+                    }
+                	
+                	//3.UPDATE TRANS_MEDICAL_TREATMENT_CLAIM.SEND_ALLIANCE_PUSH
                     iMedicalDao.updetaTransMedicalTreatmentClaimBySendAlliancePush(voTemp,StatuCode.AUDIT_CODE_Y.code);
                 }
             }
@@ -541,6 +613,11 @@ public class MedicalServiceImpl implements IMedicalService {
     @Override
     public List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFileData(String has_file) throws Exception {
         return  iMedicalDao.getTransMedicalTreatmentClaimFileData(has_file);
+    }
+
+    @Override
+    public List<MedicalTreatmentClaimApplyDataVo> getMedicalTreatmentClaimApplyDataByHasFile(String has_file) throws Exception {
+        return  iMedicalDao.getMedicalTreatmentClaimApplyDataByHasFile(has_file);
     }
 
     private MessageTriggerRequestVo getMessageTriggerRequestVo(String msgCode, List<String> receivers, Map<String, String> paramMap,String type) {
@@ -562,4 +639,32 @@ public class MedicalServiceImpl implements IMedicalService {
 		return vo;
 	}
 
+    @Override
+    public List<MedicalTreatmentClaimApplyDataVo> getMedicalTreatmentClaimApplyData(MedicalTreatmentClaimVo vo)throws Exception {
+        List<MedicalTreatmentClaimApplyDataVo> applyVo = iMedicalDao.getMedicalTreatmentClaimApplyData(vo.getClaimSeqId());
+        if (applyVo != null && applyVo.size() != 0) {
+            for (MedicalTreatmentClaimApplyDataVo voTemp : applyVo) {
+                List<String> dtypes = Lists.newArrayList();
+                List<Map<String, String>> dtypeList = voTemp.getDtypeList();
+                if (dtypeList != null && dtypeList.size() != 0) {
+                    for (Map<String, String> dtype : dtypeList) {
+                        dtypes.add(dtype.get("value"));
+                    }
+                }
+                voTemp.setDtypes(dtypes);
+                voTemp.setDtypeList(null);
+            }
+        }
+        return applyVo;
+    }
+
+    @Override
+    public int updateMedicalTreatmentClaimApplyDataForFileStatus(MedicalTreatmentClaimApplyDataVo vo) throws Exception {
+        return iMedicalDao.updateMedicalTreatmentClaimApplyDataForFileStatus(vo);
+    }
+
+    @Override
+    public int updateTransMedicalInfoForFileStatus(MedicalTreatmentClaimApplyDataVo vo) throws Exception {
+        return iMedicalDao.updateTransMedicalInfoForFileStatus(vo);
+    }
 }

@@ -1,14 +1,18 @@
 package com.twfhclife.alliance.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.twfhclife.alliance.model.MedicalRequestVo;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.twfhclife.alliance.domain.ClaimRequestVo;
@@ -18,7 +22,14 @@ import com.twfhclife.alliance.domain.DnsResponseVo;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.InsuranceClaimVo;
 import com.twfhclife.alliance.service.IClaimChainService;
+import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
+import com.twfhclife.eservice.web.model.Division;
+import com.twfhclife.eservice.web.model.HospitalVo;
+import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
+import com.twfhclife.eservice.web.model.OutpatientType;
+import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.annotation.ApiRequest;
+import com.twfhclife.generic.utils.MyJacksonUtil;
 
 @RestController
 public class ClaimChainController{
@@ -27,6 +38,12 @@ public class ClaimChainController{
 	
 	@Autowired
 	IClaimChainService claimChainService;
+	
+	@Autowired
+    MedicalTreatmentExternalServiceImpl medicalExternalServiceImpl;
+	
+	@Autowired
+	IParameterService parameterServiceImpl;
 	
 	/**
 	 * API-107 通知有新案件
@@ -209,4 +226,189 @@ public class ClaimChainController{
 		logger.info("End ClaimChainController.addNotifyOfNewCaseMedical().");
 		return mdVo;
 	}
+	
+	/**
+	 * API-409 取得醫院之就診類型
+	 * @param hospitalId
+	 * @return OutpatientType[]
+	 */
+	@ApiRequest
+	@RequestMapping("/api409")
+	public OutpatientType[] callAPI409(
+			@RequestParam(value="hpId",required=true) String hospitalId){
+		logger.info("Start ClaimChainController.callAPI409().");
+		
+		OutpatientType[] outpatientTypes = null;
+		
+		try {
+			if(hospitalId!=null) {
+				//Request
+        		Map<String, String> params = new HashMap<>();
+        		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
+        		
+        		logger.info("API-409取得醫院之就診類型,request hpId=" + hospitalId);
+        		String strResponse = medicalExternalServiceImpl.postForEntity(
+        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api409.url"),
+        				params,
+        				null);
+        		logger.info("API-409取得醫院之就診類型,回傳=" + strResponse);
+        		
+        		/**
+        		 * fake code for dev-start
+        		 */
+//        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API409_RESPONSE");
+        		/**
+        		 * fake code for dev-end
+        		 */
+                
+        		if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+                	String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+                	HospitalVo rtnVo = (HospitalVo)MyJacksonUtil.json2Object(dataString, HospitalVo.class);
+                	if(rtnVo!=null && rtnVo.getOutpatientTypes()!=null) {
+                		outpatientTypes = rtnVo.getOutpatientTypes();
+                	}
+                }
+ 
+			}
+		}catch(Exception e) {
+			logger.error(e);
+		}
+		
+		logger.info("End ClaimChainController.callAPI409().");
+		return outpatientTypes;
+	}
+	
+	/**
+	 * API-409 取得醫院之就診類型
+	 * @param hospitalId
+	 * @param oType
+	 * @return Division[]
+	 */
+	@ApiRequest
+	@RequestMapping("/api410")
+	public Division[] callAPI410(
+			@RequestParam(value="hpId",required=true) String hospitalId,
+			@RequestParam(value="otype",required=true) String oType){
+		logger.info("Start ClaimChainController.callAPI410().");
+		
+		Division[] divisions = null;
+		
+		try {
+			if(hospitalId!=null && oType!=null) {
+				//Request
+        		Map<String, String> params = new HashMap<>();
+        		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
+        		params.put("otype", oType);//必填,String(50),就診類型代碼
+        		
+        		logger.info("API-410取得醫院科別清單,request=" + params.toString());
+        		String strResponse = medicalExternalServiceImpl.postForEntity(
+        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api410.url"),
+        				params,
+        				null);
+        		logger.info("API-410取得醫院科別清單,回傳=" + strResponse);
+        		
+        		/**
+        		 * fake code for dev-start
+        		 */
+//        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API410_RESPONSE");
+        		/**
+        		 * fake code for dev-end
+        		 */
+                
+                if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+                	String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+                	//dataString = dataString.substring(1, dataString.length() - 1);
+            		//System.out.println(dataString);
+            		
+            		HospitalVo hospitalVo = (HospitalVo)MyJacksonUtil.json2Object(dataString, HospitalVo.class);
+            		//System.out.println(hospitalVo);
+                	
+            		List<Division> list = hospitalVo.getDivisions();
+            		divisions = (Division[])list.toArray(new Division[0]);
+                }else {
+                	logger.info("API-410 Response code is not 0.");
+                }
+
+			}
+		}catch(Exception e) {
+			logger.error(e);
+		}
+		
+		logger.info("End ClaimChainController.callAPI410().");
+		return divisions;
+	}
+	
+	/**
+	 * API-411 取得醫院資料群組
+	 * @param hospitalId
+	 * @param oType
+	 * @return MedicalDataFileGroup[]
+	 */
+	@ApiRequest
+	@RequestMapping("/api411")
+	public MedicalDataFileGroup[] callAPI411(
+			@RequestParam(value="hpId",required=true) String hospitalId,
+			@RequestParam(value="otype",required=true) String oType){
+		logger.info("Start ClaimChainController.callAPI411().");
+		
+		MedicalDataFileGroup[] fileGroups = null;
+		
+		try {
+			if(hospitalId!=null && oType!=null) {
+				//Request
+        		Map<String, String> params = new HashMap<>();
+        		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
+        		params.put("otype", oType);//必填,String(50),就診類型代碼
+        		
+        		logger.info("API-411取得醫院資料群組,request=" + params.toString());
+        		String strResponse = medicalExternalServiceImpl.postForEntity(
+        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api411.url"),
+        				params,
+        				null);
+        		logger.info("API-411取得醫院資料群組,回傳=" + strResponse);
+        		
+        		/**
+        		 * fake code for dev-start
+        		 */
+//        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API411_RESPONSE");
+        		/**
+        		 * fake code for dev-end
+        		 */
+                
+        		if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+					String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+					
+					OutpatientType outpatientTye = (OutpatientType)MyJacksonUtil.json2Object(dataString, OutpatientType.class);
+					List<MedicalDataFileGroup> listGroup = outpatientTye.getFileGroup();
+					fileGroups = listGroup.toArray(new MedicalDataFileGroup[0]);
+                }
+ 
+			}
+		}catch(Exception e) {
+			logger.error(e);
+		}
+		
+		logger.info("End ClaimChainController.callAPI411().");
+		return fileGroups;
+	}
+	
+	/**
+     * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
+     * @param responseJsonString
+     * @param pathFieldName ex:"/code"
+     * @param checkValue ex:"0"
+     * @return boolean
+     */
+    private boolean checkLiaAPIResponseValue(String responseJsonString,String pathFieldName,String checkValue) throws Exception{
+        boolean b = false;
+        if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
+            String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);
+            logger.info("-----------checkLiaAPIResponseValue-----------"+code);
+            if(checkValue.equals(code)) {//success
+                b = true;
+            }
+        }
+        logger.info("-----------checkLiaAPIResponseValue-----return  ------"+b);
+        return b;
+    }
 }

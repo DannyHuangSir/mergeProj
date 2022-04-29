@@ -1,5 +1,6 @@
 package com.twfhclife.alliance.service;
 
+import com.twfhclife.alliance.model.MedicalTreatmentClaimApplyDataVo;
 import com.twfhclife.alliance.model.MedicalTreatmentClaimFileDataVo;
 import com.twfhclife.alliance.model.MedicalTreatmentClaimVo;
 import com.twfhclife.alliance.model.NotifyOfNewCaseMedicalVo;
@@ -98,4 +99,12 @@ public interface IMedicalService {
     int updaetNotifyOfNewCaseMedicalStatus(String caseId,String transNum)throws Exception;
     //查詢需要進行發送下載的案件信息
     List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFileData(String has_file)throws Exception;
+
+    List<MedicalTreatmentClaimApplyDataVo> getMedicalTreatmentClaimApplyData(MedicalTreatmentClaimVo vo)throws Exception;
+
+    List<MedicalTreatmentClaimApplyDataVo> getMedicalTreatmentClaimApplyDataByHasFile(String has_file)throws Exception;
+
+    int updateMedicalTreatmentClaimApplyDataForFileStatus(MedicalTreatmentClaimApplyDataVo vo) throws Exception;
+
+    int updateTransMedicalInfoForFileStatus(MedicalTreatmentClaimApplyDataVo vo) throws Exception;
 }

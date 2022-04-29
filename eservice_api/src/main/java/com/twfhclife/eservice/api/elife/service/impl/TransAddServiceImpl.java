@@ -3,16 +3,13 @@ package com.twfhclife.eservice.api.elife.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.twfhclife.alliance.service.IContactInfoService;
 import com.twfhclife.generic.utils.*;
-import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -167,6 +164,7 @@ public class TransAddServiceImpl implements ITransAddService {
 	
 	@Autowired
 	private ParameterDao parameterDao;
+
 	@Autowired
 	private IContactInfoService iContactInfoService;
 
@@ -184,7 +182,7 @@ public class TransAddServiceImpl implements ITransAddService {
 		
 		int result = 0;
 		try {
-			// TODO 若一個policyNo配一個交易序號，需根據保單號碼清單取多筆交易序號
+			//若一個policyNo配一個交易序號，需根據保單號碼清單取多筆交易序號
 			String transNum = transService.getTransNum();
 			transAddResponse.setTransNums(Arrays.asList(transNum));
 			

@@ -1,5 +1,6 @@
 package com.twfhclife.generic.utils;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -10,6 +11,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.twfhclife.alliance.model.InsuranceClaimFileDataVo;
 import com.twfhclife.alliance.model.InsuranceClaimVo;
+import com.twfhclife.eservice.web.model.Division;
+import com.twfhclife.eservice.web.model.HospitalVo;
 
 public class MyJacksonUtil {
 
@@ -33,6 +36,7 @@ public class MyJacksonUtil {
 		Object obj = null;
 		try {
 			ObjectMapper om = new ObjectMapper();
+			om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
 			//将json字符串转换成对象
 			Map map = om.readValue(jsonString, Map.class);
 			obj = toClass.newInstance();
@@ -107,10 +111,23 @@ public class MyJacksonUtil {
 //		MyJacksonUtil util = new MyJacksonUtil();
 //		util.testJsonStringToObject();
 		
-		String jsonFileData = "{\"data\":[{\"fileDatas\": [{\"fileId\": \"01\",\"fileName\": \"filename01\"}, {\"fileId\": \"02\",\"fileName\": \"filename02\"}]}]}\r\n" + 
-				"";
-		String str = MyJacksonUtil.getNodeString(jsonFileData, "data");
-		System.out.println(str);
+//		String jsonFileData = "{\"data\":[{\"fileDatas\": [{\"fileId\": \"01\",\"fileName\": \"filename01\"}, {\"fileId\": \"02\",\"fileName\": \"filename02\"}]}]}\r\n" + 
+//				"";
+//		String str = MyJacksonUtil.getNodeString(jsonFileData, "data");
+//		System.out.println(str);
+		
+//		String jsonString = "{\"code\":\"0\",\"msg\":\"success\",\"data\":[{\"divisions\":[{\"mainDepid\":\"100\",\"mainDepname\":\"內科\",\"subDivisions\":[{\"depid\":\"10001\",\"depname\":\"心臟內科\"},{\"depid\":\"10002\",\"depname\":\"腸胃內科\"}]},{\"mainDepid\":\"200\",\"mainDepname\":\"外科\",\"subDivisions\":[{\"depid\":\"20001\",\"depname\":\"一般外科\"},{\"depid\":\"20002\",\"depname\":\"整型外科\"}]}]}]}";
+//		jsonString = MyJacksonUtil.getNodeString(jsonString, "data");
+//		System.out.println(jsonString);
+//		
+//		jsonString = jsonString.substring(1, jsonString.length() - 1);
+//		System.out.println(jsonString);
+//		
+//		com.twfhclife.eservice.web.model.HospitalVo hospitalVo = (com.twfhclife.eservice.web.model.HospitalVo)MyJacksonUtil.json2Object(jsonString, com.twfhclife.eservice.web.model.HospitalVo.class);
+//		System.out.println(hospitalVo);
+
+		
+
 	}
 
 

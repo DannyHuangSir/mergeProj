@@ -71,6 +71,26 @@ public class AllianceServiceImpl implements IExternalService{
 		}
 	}
 	
+	/**
+     * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
+     * @param responseJsonString
+     * @param pathFieldName ex:"/code"
+     * @param checkValue ex:"0"
+     * @return boolean
+     */
+    public boolean checkLiaAPIResponseValue(String responseJsonString,String pathFieldName,String checkValue) throws Exception{
+        boolean b = false;
+        if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
+            String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);
+            logger.info("-----------checkLiaAPIResponseValue-----------"+code);
+            if(checkValue.equals(code)) {//success
+                b = true;
+            }
+        }
+        logger.info("-----------checkLiaAPIResponseValue-----return  ------"+b);
+        return b;
+    }
+	
 
 	@Override
 	public String postForEntity(String url, InsuranceClaimMapperVo cliaimVo, String name) throws Exception {
@@ -181,8 +201,16 @@ public class AllianceServiceImpl implements IExternalService{
 	        
 //	        responseEntity = restTemplate.postForEntity(url, entity, String.class, json);//useful client code.
 	        
-	        boolean checkResp = this.checkResponseStatus(responseEntity);
+	        boolean checkResp  = this.checkResponseStatus(responseEntity);//check http status
+	        boolean checkCode0 = false;//check response code value.
 	        if(checkResp) {
+	        	if (responseEntity!=null && responseEntity.getBody()!=null) {
+		        	//String(10),0代表成功,錯誤代碼則自行定義
+		        	checkCode0 = checkLiaAPIResponseValue(responseEntity.getBody(), "/code", "0");
+		        }
+	        }
+	        
+	        if(checkCode0 && checkResp) {
 	        	uc.setNcStatus(uc.NC_STATUS_S);
 	        }else {
 	        	uc.setNcStatus(uc.NC_STATUS_F);

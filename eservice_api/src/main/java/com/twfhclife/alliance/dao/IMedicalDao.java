@@ -1,8 +1,10 @@
 package com.twfhclife.alliance.dao;
 
+import com.twfhclife.alliance.model.MedicalTreatmentClaimApplyDataVo;
 import com.twfhclife.alliance.model.MedicalTreatmentClaimFileDataVo;
 import com.twfhclife.alliance.model.MedicalTreatmentClaimVo;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
+import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
 import org.apache.ibatis.annotations.Param;
 import org.jgroups.protocols.EXAMPLE;
@@ -111,4 +113,24 @@ public interface IMedicalDao {
     List<MedicalTreatmentClaimFileDataVo> getTransMedicalTreatmentClaimFileData(@Param("hasFile")String has_file);
     //儅舊案件的案件狀態為IPTS與HTPS_PTIS進行清除重新上傳描述
     int updateTransMedicalTreatmentClaimByReUpload(@Param("caseId")String caseId)throws Exception;
+
+    List<TransMedicalTreatmentClaimMedicalInfoVo> getTransMedicalInfoByClaimId(@Param("claimSeqId") Float claimSeqId);
+
+    int addMedicalTreatmentApplyData(@Param("vo")TransMedicalTreatmentClaimMedicalInfoVo infoVoTemp)throws Exception;
+
+    List<MedicalTreatmentClaimApplyDataVo> getMedicalTreatmentClaimApplyData(@Param("claimSeqId") Float claimSeqId);
+
+    List<MedicalTreatmentClaimApplyDataVo> getMedicalTreatmentClaimApplyDataByHasFile(@Param("hasFile")String has_file);
+
+    int updateMedicalTreatmentClaimApplyDataForFileStatus(@Param("vo")MedicalTreatmentClaimApplyDataVo vo) throws Exception;
+
+    int updateTransMedicalInfoForFileStatus(@Param("vo")MedicalTreatmentClaimApplyDataVo vo) throws Exception;
+
+    int addMedicalTreatmentApplyDatas(@Param("vo")MedicalTreatmentClaimApplyDataVo applyData)throws Exception;
+
+    int updateMedicalTreatmentApplyData(@Param("vo")MedicalTreatmentClaimApplyDataVo applyData)throws Exception;
+
+    int updateTransMedicalTreatmentMedicalInfo(@Param("vo")MedicalTreatmentClaimApplyDataVo applyData)throws Exception;
+
+    List<MedicalTreatmentClaimApplyDataVo> getMedicalTreatmentClaimApplyDataByInfo(@Param("seNo") String seNo, @Param("otype") String otype, @Param("depId") String depId, @Param("dtype") String dtype);
 }

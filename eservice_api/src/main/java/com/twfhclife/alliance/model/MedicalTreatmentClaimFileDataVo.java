@@ -5,6 +5,7 @@ package com.twfhclife.alliance.model;
  * @create 2021-09-21
  */
 public class MedicalTreatmentClaimFileDataVo {
+	
     //ID編號
     private float fdId;
     //保單編號
@@ -27,6 +28,13 @@ public class MedicalTreatmentClaimFileDataVo {
     private String dtype;
     private String transNum;
     private String caseId;
+    
+    /**
+     * Spec v1.5.2
+     * get/set from MedicalTreatmentClaimFileTypeEnum
+     * 醫療資料檔案類型
+     */
+    private String dtypes;
 
 
     public String getTransNum() {
@@ -132,4 +140,20 @@ public class MedicalTreatmentClaimFileDataVo {
     public void setFileStatus(String fileStatus) {
         this.fileStatus = fileStatus;
     }
+
+    /**
+     * get/set from MedicalTreatmentClaimFileTypeEnum
+     * @return String
+     */
+	public String getDtypes() {
+		return dtypes;
+	}
+
+	/**
+	 * get/set from MedicalTreatmentClaimFileTypeEnum
+	 * @param dtypes
+	 */
+	public void setDtypes(String dtypes) {
+		this.dtypes = dtypes;
+	}
 }
