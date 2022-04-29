@@ -242,19 +242,19 @@
 					$.ajaxSetup({ async: true });
 -->
 
-					$.ajaxSetup({ async: false });
+					//$.ajaxSetup({ async: false });
 			// 取得公會聯盟鏈回報狀態下拉選單
 			eserviceAdmOption.common('#codeSelect', 
 					/*[[@{/common/optionList?categoryCode=ALLIANCE_RETURNS_CODE}]]*/,
 					'請選擇申請狀態...');
-					$.ajaxSetup({ async: true });
-					$.ajaxSetup({ async: false });	
+					//$.ajaxSetup({ async: true });
+					//$.ajaxSetup({ async: false });	
 					//異常件註記原因:醫療異常件注記原因
 			eserviceAdmOption.common('#abnormalReason', 
 					/*[[@{/common/optionList?categoryCode=MEDICAL_ABNORMAL_REASON_MSG}]]*/, 
 					'請選擇原因...','VALUE');
-					$.ajaxSetup({ async: true });	
-					$.ajaxSetup({ async: false });		
+					//$.ajaxSetup({ async: true });	
+					//$.ajaxSetup({ async: false });		
 					//醫療資料介接案件狀態
 			eserviceAdmOption.common('#medicalCaseStatus', 
 					/*[[@{/common/optionMedicalStatusList?categoryCode=MEDICAL_INTERFACE_STATUS}]]*/, 

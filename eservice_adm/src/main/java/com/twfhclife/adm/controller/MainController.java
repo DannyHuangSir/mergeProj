@@ -78,7 +78,9 @@ public class MainController extends BaseMvcController {
 		Object KeycloakUserObj = request.getSession().getAttribute(ApConstants.KEYCLOAK_USER);
 		if (KeycloakUserObj != null) {
 			 KeycloakUser keycloakUser = (KeycloakUser) KeycloakUserObj;
-			 if(!"admin".equals(keycloakUser.getUsername())) {
+			 
+			 //modify by 203990_20220429
+			 if(! ( "admin".equals(keycloakUser.getUsername()) || "202712".equals(keycloakUser.getUsername()) || "203990".equals(keycloakUser.getUsername()) ) ) {
 				 return "index";
 			 }
 		} else {
