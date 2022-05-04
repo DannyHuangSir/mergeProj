@@ -284,4 +284,22 @@
 		where
 		T.TRANS_TYPE=#{functionName}  AND  TMT.POLICYNO=#{policyNo}
 	</select>
+	
+	<insert id="addInsuranceClaimMedicalInfo" parameterType="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo">
+		<if test="vo.dtypeList != null and vo.dtypeList.size() > 0">
+			insert into ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO(
+				MI_ID, CLAIMS_SEQ_ID, SENO, HS_TIME, HE_TIME, OTYPE, DEPID, SUB_DEPID, DTYPE, 
+				CREATE_DATE, OTYPE_NAME, DEP_NAME, SUB_DEP_NAME, DTYPE_NAME, FILE_NAME,
+				FILE_ID, FILE_STATUS
+			)
+			values
+			<foreach collection="vo.dtypeList" item="item" separator=",">
+				(next value for TRANS_MEDICAL_TREATMENT_CLAIM_MI_SEQ, #{vo.claimId}, #{vo.seNo}, #{vo.hsTime}, #{vo.heTime},
+				#{vo.otype}, #{vo.depid}, #{vo.subDepid}, #{vo.dtype}, 
+				#{vo.createDate}, #{vo.otypeName}, #{vo.depName}, #{vo.subDepName}, #{item.name}, #{item.name},
+				#{item.fileId}, #{item.fileStatus}
+				)
+			</foreach>
+		</if>
+	</insert>
 </mapper>

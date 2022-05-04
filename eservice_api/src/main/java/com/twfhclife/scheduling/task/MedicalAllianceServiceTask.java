@@ -2,6 +2,7 @@ package com.twfhclife.scheduling.task;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.alliance.model.*;
@@ -12,6 +13,7 @@ import com.twfhclife.alliance.service.impl.MedicalServiceImpl;
 import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
+import com.twfhclife.eservice.onlineChange.model.MedicalTreatmentClaimFileTypeEnum;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimFileDataVo;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
@@ -294,6 +296,7 @@ public class MedicalAllianceServiceTask {
                                 //設定交易序號
     							String transNum = transService.getTransNum();
     							transMedicalTreatmentClaimVo.setTransNum(transNum);
+    							log.info("eservice_api transNum="+transNum);
 
                                 transMedicalTreatmentClaimVo.setUserId(userId);
                                 transMedicalTreatmentClaimVo.setPolicyNo(policyBuff.toString());
@@ -318,22 +321,45 @@ public class MedicalAllianceServiceTask {
                                     }
                                     transMedicalTreatmentClaimVo.setFileDatas(transFileDatas);
                                 }//end-if
+                                log.info("eservice_api setFileDatas end.");
 
                                 List<MedicalTreatmentClaimApplyDataVo> applyDatas = vo.getApplyData();
                                 if(applyDatas!=null && applyDatas.size()>0) {
                                     List<TransMedicalTreatmentClaimMedicalInfoVo> transMedicalInfos = new ArrayList<TransMedicalTreatmentClaimMedicalInfoVo>();
+
                                     for(MedicalTreatmentClaimApplyDataVo applyData : applyDatas) {
                                         TransMedicalTreatmentClaimMedicalInfoVo transMedicalInfo = new TransMedicalTreatmentClaimMedicalInfoVo();
                                         transMedicalInfo.setSeNo(applyData.getSeNo());
                                         transMedicalInfo.setHsTime(applyData.getHsTime());
                                         transMedicalInfo.setHeTime(applyData.getHeTime());
                                         transMedicalInfo.setOtype(applyData.getOtype());
-                                        transMedicalInfo.setDepid(applyData.getDepid());
-                                        transMedicalInfo.setDtypeList(applyData.getDtypeList());
+                                        
+                                        transMedicalInfo.setDepid("");//聯盟件沒有回傳depid
+                                        transMedicalInfo.setSubDepid(applyData.getDepid());
+
+                                        //dtypes
+                                        transMedicalInfo.setDtype(applyData.getDtype());
+                                        transMedicalInfo.setDtypeListStr(applyData.getDtype());
+                                        log.info("applyData.getDtype()="+applyData.getDtype());
+                                        
+                                        Map<String,String> dtypeMap = new HashMap<String,String>();
+                                        String fileName = MedicalTreatmentClaimFileTypeEnum.valueOf(applyData.getDtype()).getdTypeCht();
+                                        if(fileName==null) {
+                                        	fileName = applyData.getDtype();
+                                        }
+                                        dtypeMap.put("name", fileName);
+                                        dtypeMap.put("fileId", applyData.getFileId());
+                                        dtypeMap.put("fileStatus", applyData.getFileStatus());
+
+                                        List<Map<String,String>> dtypeList = new ArrayList<Map<String,String>>();
+                                        dtypeList.add(dtypeMap);
+                                        transMedicalInfo.setDtypeList(dtypeList);
+                                        
                                         transMedicalInfos.add(transMedicalInfo);
                                     }
                                     transMedicalTreatmentClaimVo.setMedicalInfo(transMedicalInfos);
                                 }
+                                log.info("eservice_api setMedicalInfo end.");
 
                                 //3.2.call addTransRequest()
                                 int i = iMedicalService.addTransRequest(transMedicalTreatmentClaimVo);//這裡會主動先塞好TRANS Table.
@@ -827,12 +853,11 @@ public class MedicalAllianceServiceTask {
                             String content = MyJacksonUtil.readValue(strResponse, "/data/content");
 //                            vo.setFileStatus(CallApiCode.MEDICAL_INTERFACE_HAS_FILE);
                             vo.setFileBase64(content);
-                            if (vo.getMiId() == null) {
-                                //進行回應狀態
-                                iMedicalService.updateMedicalTreatmentClaimApplyDataForFileStatus(vo);
-                            } else {
-                                iMedicalService.updateMedicalTreatmentClaimApplyDataForFileStatus(vo);
-                                iMedicalService.updateTransMedicalInfoForFileStatus(vo);
+                            
+                            iMedicalService.updateMedicalTreatmentClaimApplyDataForFileStatus(vo);
+
+                            if(vo.getFileId()!=null) {//嘗試去更新TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+                            	iMedicalService.updateTransMedicalInfoForFileStatus(vo);
                             }
                         }
                     }
@@ -1524,17 +1549,15 @@ public class MedicalAllianceServiceTask {
      * @return
      */
     private String getFromDataToValue(String strResponse) {
-    	String status = "";
+    	String fromString = "";
     	try{
-    		String dataString = getFromDataNodeString(strResponse);
-	       	
-	       	status = MyJacksonUtil.readValue(dataString.replace("[", "").replace("]", ""), "/from");
+    		fromString = MyJacksonUtil.readValue(strResponse, "/data/fromData/from");
 	       	//System.out.println("status="+status);
     	}catch(Exception e) {
     		e.printStackTrace();
     	}
     	
-    	return status;
+    	return fromString;
     }
     
     /**
@@ -1545,9 +1568,7 @@ public class MedicalAllianceServiceTask {
     private String getFromDataStatus(String strResponse) {
     	String status = "";
     	try{
-    		String dataString = getFromDataNodeString(strResponse);
-	       	
-	       	status = MyJacksonUtil.readValue(dataString.replace("[", "").replace("]", ""), "/status");
+    		status = MyJacksonUtil.readValue(strResponse, "/data/fromData/status");
 	       	//System.out.println("status="+status);
     	}catch(Exception e) {
     		e.printStackTrace();
@@ -1560,17 +1581,34 @@ public class MedicalAllianceServiceTask {
     
     public static void main(String[] args) {
     	System.out.println("MAIN()");
+    	
+    	String fileName = MedicalTreatmentClaimFileTypeEnum.valueOf("Receipt").getdTypeCht();
+    	System.out.println("fileName="+fileName);
+    	
     	try {
-    		String strResponse = "{\"code\":\"0\",\"data\":{\"toData\":[{\"to\":\"L01\",\"status\":\"PQHS_PTIS\"}]}}";
-        	String allianceStatus = MyJacksonUtil.readValue(strResponse, "/data/toData/status");
-        	System.out.println("allianceStatus="+allianceStatus);
+    		String strResponse = "{\r\n" + 
+    				"    \"code\": \"0\",\r\n" + 
+    				"    \"data\": {\r\n" + 
+    				"		\"fromData\": {\r\n" + 
+    				"			\"from\": \"L05\",\r\n" + 
+    				"			\"status\": \"XXXX\"\r\n" + 
+    				"        },\r\n" + 
+    				"        \"toData\": [{\r\n" + 
+    				"                \"to\": \"L01\",\r\n" + 
+    				"                \"status\": \"HTPS_PTIS\"\r\n" + 
+    				"            }\r\n" + 
+    				"        ]\r\n" + 
+    				"    }\r\n" + 
+    				"}";
+        	String fromString = MyJacksonUtil.readValue(strResponse, "/data/fromData/from");
+        	System.out.println("fromString="+fromString);
         	
-        	 String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
-        	 System.out.println("dataString="+dataString);
-        	 dataString = MyJacksonUtil.getNodeString(dataString, "toData");
-        	 System.out.println("dataString="+dataString);
-        	 dataString = MyJacksonUtil.readValue(dataString.replace("[", "").replace("]", ""), "/status");
-        	 System.out.println("dataString="+dataString);
+//        	 String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+//        	 System.out.println("dataString="+dataString);
+//        	 dataString = MyJacksonUtil.getNodeString(dataString, "toData");
+//        	 System.out.println("dataString="+dataString);
+//        	 dataString = MyJacksonUtil.readValue(dataString.replace("[", "").replace("]", ""), "/status");
+//        	 System.out.println("dataString="+dataString);
         	 
     	}catch(Exception e) {
     		System.out.println(e.toString());

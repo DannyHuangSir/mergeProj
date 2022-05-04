@@ -967,6 +967,7 @@
 		<result property="fileBase64"   column="FILE_BASE64" />
 		<result property="fileStatus"   column="FILE_STATUS" />
 		<result property="path"     column="PATH" />
+		<result property="dtype"    column="DTYPE" />
 		<association property="dtypeList" resultMap="DtypeMap"/>
 	</resultMap>
 
@@ -975,8 +976,8 @@
 	</resultMap>
 
 	<select id="getMedicalTreatmentClaimApplyData" resultMap="ApplyDataMap">
-		select SENO, HS_TIME, HE_TIME, OTYPE, DEPID, DTYPE FROM
-		ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM_APPLYDATA
+		select SENO, HS_TIME, HE_TIME, OTYPE, DEPID, DTYPE, FILE_ID 
+		FROM ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM_APPLYDATA
 		where CLAIMS_SEQ_ID = #{claimSeqId}
 	</select>
 
@@ -1008,11 +1009,10 @@
 		<if test="vo.fileBase64 !=null and  vo.fileBase64!='' ">
 			, FILE_BASE64 = #{vo.fileBase64}
 		</if>
-		where FILE_ID = #{vo.fileId} and MI_ID = #{vo.miId}
+		where FILE_ID = #{vo.fileId}
 	</update>
 
-	<insert id="addMedicalTreatmentApplyDatas">
-		<if test="vo.dtypeList != null and vo.dtypeList.size() > 0">
+	<insert id="addMedicalTreatmentApplyDatas" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimApplyDataVo">
 			INSERT INTO [ESERVICE].[dbo].[MEDICAL_TREATMENT_CLAIM_APPLYDATA]
 			([AD_ID]
 			,[CLAIMS_SEQ_ID]
@@ -1028,15 +1028,14 @@
 			,[FILE_STATUS]
 			,[PATH])
 			VALUES
-			<foreach collection="vo.dtypeList" item="item">
 				((NEXT VALUE for MEDICAL_TREATMENT_CLAIM_AD_SEQ)
 				,#{vo.claimId}
 				,#{vo.seNo}
 				,#{vo.hsTime}
 				,#{vo.heTime}
 				,#{vo.otype}
-				,#{item.value}
 				,#{vo.depid}
+				,#{vo.dtype}
 				,#{vo.fileId}
 				,#{vo.fileName}
 				<if test="vo.fileBase64 !=null and  vo.fileBase64!='' ">
@@ -1048,11 +1047,9 @@
 				,#{vo.fileStatus}
 				,#{vo.path}
 				)
-			</foreach>
-		</if>
 	</insert>
 
-	<update id="updateMedicalTreatmentApplyData">
+	<update id="updateMedicalTreatmentApplyData" parameterType="com.twfhclife.alliance.model.MedicalTreatmentClaimApplyDataVo">
 		update ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM_APPLYDATA
 		set
 		FILE_ID = #{vo.fileId},

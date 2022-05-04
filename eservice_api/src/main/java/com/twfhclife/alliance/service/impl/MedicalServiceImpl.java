@@ -200,7 +200,7 @@ public class MedicalServiceImpl implements IMedicalService {
             }
 
             MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
-           String status="";
+            String status="";
             if(rMap!=null) {
             result = (int) rMap.get("result");
                 status= (String) rMap.get("status");
@@ -391,12 +391,14 @@ public class MedicalServiceImpl implements IMedicalService {
                         if (files != null && files.size() > 0) {
                             for (MedicalTreatmentClaimApplyDataFileDataVo file : files) {
                                 if (file != null) {
-                                    applyData.setFileId(file.getFileId());
-                                    List<String> dtypes = new ArrayList<String>();
-                                    dtypes.add(file.getDtype());
-                                    applyData.setDtypes(dtypes);
-                                    applyData.setFileStatus(file.getFileStatus());
-                                    addInfoCountResult = iMedicalDao.addMedicalTreatmentApplyDatas(applyData);
+                                	MedicalTreatmentClaimApplyDataVo tempApplyDataVo = applyData;
+                                	tempApplyDataVo.setFileData(null);
+                                	tempApplyDataVo.setDtype(file.getDtype());
+                                	tempApplyDataVo.setFileId(file.getFileId());
+                                	tempApplyDataVo.setFileName(file.getFileId()+".pdf");
+                                	tempApplyDataVo.setFileStatus(file.getFileStatus());
+
+                                    addInfoCountResult = iMedicalDao.addMedicalTreatmentApplyDatas(tempApplyDataVo);
                                 }
                             }
                         }

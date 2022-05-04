@@ -61,6 +61,8 @@ public class MedicalTreatmentClaimApplyDataVo {
 	 * 可使用MedicalTreatmentClaimFileTypeEnum
 	 */
 	private List<String> dtypes = Lists.newArrayList();
+	
+	private String dtype;
 
 	private List<Map<String, String>> dtypeList = Lists.newArrayList();
 	
@@ -180,6 +182,14 @@ public class MedicalTreatmentClaimApplyDataVo {
 
 	public void setFileData(List<MedicalTreatmentClaimApplyDataFileDataVo> fileData) {
 		this.fileData = fileData;
+	}
+
+	public String getDtype() {
+		return dtype;
+	}
+
+	public void setDtype(String dtype) {
+		this.dtype = dtype;
 	}
 
 }
