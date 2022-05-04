@@ -5,14 +5,14 @@ package com.twfhclife.eservice.onlineChange.model;
  *
  */
 public enum MedicalTreatmentClaimFileTypeEnum {
-	CERTIFICATEDIAGNOSIS("CertificateDiagnosis","診斷證明書"),
-	RECEIPT("Receipt","費用明細"),
-	DISCHARGESUMMARY("DischargeSummary","出院病摘"),
-	MEDICALIMAGE("MedicalImage","醫學影像"),
-	PATHLOGY("Pathlogy","病理檢查"),
-	SURGERY("Surgery","手術資料"),
-	HOSPITALIZATION("Hospitalization","住院"),
-	EMERGENCY("Emergency","急診");
+	CertificateDiagnosis("CertificateDiagnosis","診斷證明書"),
+	Receipt("Receipt","費用明細"),
+	DischargeSummary("DischargeSummary","出院病摘"),
+	MedicalImage("MedicalImage","醫學影像"),
+	Pathlogy("Pathlogy","病理檢查"),
+	Surgery("Surgery","手術資料"),
+	Hospitalization("Hospitalization","住院"),
+	Emergency("Emergency","急診");
 	
 	MedicalTreatmentClaimFileTypeEnum(String dType,String dTypeCht){
 		this.dType = dType;
