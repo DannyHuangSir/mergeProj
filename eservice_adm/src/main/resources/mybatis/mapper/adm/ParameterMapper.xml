@@ -346,6 +346,19 @@
 		  AND b.CATEGORY_CODE = #{parentCategoryCode}
 		  AND a.PARAMETER_CODE = #{status}
 	</select>
+
+<select id="getStatusMap" resultType="com.twfhclife.adm.model.ParameterVo">
+		SELECT
+		a.PARAMETER_CODE as parameterCode, a.PARAMETER_NAME as parameterName
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a,
+		ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND b.CATEGORY_CODE IN('ONLINE_CHANGE', 'ONLINE_CHANGE_STATUS')
+	</select>
 	<select id="getParameterValueByCategoryCodeAndSystemId" resultType="java.lang.String">
 		SELECT
 		a.PARAMETER_VALUE
