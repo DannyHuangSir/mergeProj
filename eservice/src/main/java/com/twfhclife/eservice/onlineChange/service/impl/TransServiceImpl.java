@@ -1,14 +1,11 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.ibatis.annotations.Param;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -284,4 +281,9 @@ public class TransServiceImpl implements ITransService {
 		// TODO Auto-generated method stub
 		return transDao.getBatchIdSequence();
 	}
+
+    @Override
+    public Date getLastCompleteTime(String transType, String userId) {
+        return transDao.getLastCompleteTime(transType, userId);
+    }
 }

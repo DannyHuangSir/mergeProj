@@ -342,29 +342,46 @@ public class OnlineChangeController extends BaseController {
 					}
 				}
 			} else if (transType != null && INVSETMENT_TYPES.contains(transType)) {
-				//進行查詢數據當前批次的保單號
-				String policyNo = transContactInfoService.getHistoryPolicyNo(transNum);
-				String type = policyNo.substring(0, 2);
-				String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
-				if (StringUtils.equals(transType, TransTypeUtil.PAYMODE_PARAMETER_CODE) &&
-						!(StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type))) {
-					//繳別非投資型保單，取消不需要發送投資型通知
-					onlineChangeService.cancelApplyTrans(transNum, hisVo);
-				} else {
+				if (StringUtils.equals(transType, TransTypeUtil.RISK_LEVEL_PARAMETER_CODE)) {
 					//進行取消 已持有投資標的轉換保單
 					onlineChangeService.cancelApplyTransInvestment(transNum, hisVo);
 					//發送 郵件
 					TransInvestmentVo transInvestmentVo = new TransInvestmentVo();
-					transInvestmentVo.setPolicyNo(policyNo);
 					transInvestmentVo.setTransNum(transNum);
+					transInvestmentVo.setPolicyNo("");
 					//申請功能名稱
 					ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
-					ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
+							ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
 					transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
 					transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
 					transInvestmentVo.setMessage(MSG_MAP.get(transType));
 					transInvestmentVo.setApplyDate(new Date());
 					sendConversionSMSAndEmail(transInvestmentVo, user, transType);
+				} else {
+					//進行查詢數據當前批次的保單號
+					String policyNo = transContactInfoService.getHistoryPolicyNo(transNum);
+					String type = policyNo.substring(0, 2);
+					String types = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "PAYMODE_INVESTMENT_TYPE");
+					if (StringUtils.equals(transType, TransTypeUtil.PAYMODE_PARAMETER_CODE) &&
+							!(StringUtils.isNotBlank(types) && StringUtils.isNotBlank(type) && types.contains(type))) {
+						//繳別非投資型保單，取消不需要發送投資型通知
+						onlineChangeService.cancelApplyTrans(transNum, hisVo);
+					} else {
+						//進行取消 已持有投資標的轉換保單
+						onlineChangeService.cancelApplyTransInvestment(transNum, hisVo);
+						//發送 郵件
+						TransInvestmentVo transInvestmentVo = new TransInvestmentVo();
+						transInvestmentVo.setPolicyNo(policyNo);
+						transInvestmentVo.setTransNum(transNum);
+						//申請功能名稱
+						ParameterVo parameterValueByCode = parameterService.getParameterByParameterValue(
+								ApConstants.SYSTEM_ID, OnlineChangeUtil.ONLINE_CHANGE_PARAMETER_CATEGORY_CODE, transType);
+						transInvestmentVo.setAuthType(parameterValueByCode.getParameterName());
+						transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
+						transInvestmentVo.setMessage(MSG_MAP.get(transType));
+						transInvestmentVo.setApplyDate(new Date());
+						sendConversionSMSAndEmail(transInvestmentVo, user, transType);
+					}
 				}
 			} else {
 				onlineChangeService.cancelApplyTrans(transNum, hisVo);

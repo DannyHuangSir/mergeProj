@@ -1,28 +1,5 @@
 package com.twfhclife.scheduling.task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
-import com.twfhclife.generic.utils.CallApiCode;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import com.twfhclife.alliance.dao.NotifyOfNewCaseDnsDao;
 import com.twfhclife.alliance.model.DnsContentVo;
 import com.twfhclife.alliance.model.DnsReturnVo;
@@ -33,14 +10,29 @@ import com.twfhclife.eservice.api.elife.domain.TransAddRequest;
 import com.twfhclife.eservice.api.elife.domain.TransAddResponse;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
 import com.twfhclife.eservice.onlineChange.model.TransDnsVo;
-import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.service.ITransDnsService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.utils.ApConstants;
+import com.twfhclife.generic.utils.CallApiCode;
 import com.twfhclife.generic.utils.MyJacksonUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 死亡除戶
@@ -566,7 +558,35 @@ public class DnsAllianceServiceTask {
 		
 		log.info("End saveToEserviceTransDns Task.");
 	}
-	
+
+	/**
+	 * 系統註記案件為「AUTO超時自動結案」
+	 */
+	@Scheduled(cron = "${cron.auto.expression}")
+	public void dnsAuto() {
+		log.info("Start DNS-AUTO Task.");
+		try {
+			//1.取得「收檔日+N天契況尚未變更」的案件
+			String autoDay = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "DNS_AUTO_DAY");
+			if (StringUtils.isNotBlank(autoDay) && StringUtils.isNumeric(autoDay)) {
+				List<DnsContentVo> listContent = dnsDao.getTransDnsByStatusByAutoDay(Integer.parseInt(autoDay));
+				if (CollectionUtils.isNotEmpty(listContent)) {
+					listContent.forEach(c -> {
+						//系統註記案件為「AUTO超時自動結案」
+						dnsDao.updateTransDnsAuto(c);
+						//直接結束案件並且將強制回報聯盟已完成
+						dnsDao.updateTransStatusAuto(c.getTransNum(), "2");
+					});
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.toString());
+		}
+		log.info("End DNS-AUTO Task.");
+	}
+
+
 	/**
 	 * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
 	 * @param responseJsonString

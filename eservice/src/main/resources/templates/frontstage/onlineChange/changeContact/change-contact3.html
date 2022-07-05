@@ -362,6 +362,11 @@
 						return false;
 					}
 
+					if ($("#mobile").val() == null || $("#mobile").val() == ""){
+						cancelTrans("請填写手机号");
+						return false;
+					}
+
 					if (($("#telHome").val() == null || $("#telHome").val() == "") &&
 						($("#telOffice").val() == null || $("#telOffice").val() == "") &&
 						($("#mobile").val() == null || $("#mobile").val() == "")) {

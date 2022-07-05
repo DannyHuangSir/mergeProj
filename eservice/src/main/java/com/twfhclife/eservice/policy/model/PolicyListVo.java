@@ -2,8 +2,10 @@ package com.twfhclife.eservice.policy.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.twfhclife.eservice.onlineChange.model.LitracEsVo;
@@ -75,6 +77,18 @@ public class PolicyListVo extends PolicyVo {
 
 	/** 20211220 by 203990 保單是否擁有電子保單 */
 	private String pmdaEpoMk;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd hh:mm:ss")
+	private Date beginDate;
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
 
 	public String getPmdaEpoMk() {
 		return pmdaEpoMk;

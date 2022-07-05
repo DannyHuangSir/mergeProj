@@ -1467,7 +1467,7 @@
 				</tr>
 						<input type="hidden" th:id="${'paymentMode_'+vo.policyNo}" th:value="${vo.paymentMode}"/>
 				<input type="hidden" th:id="${'paymentAcctValue_'+vo.policyNo}" th:value="${vo.paidAmount}"/>
-				<input type="hidden" th:id="${'paidToDate_'+vo.policyNo}" th:value="${vo.paidToDate}"/>
+				<input type="hidden" th:id="${'beginDate_'+vo.policyNo}" th:value="${vo.beginDate} != null ? ${#dates.format(vo.beginDate, 'yyyy-MM-dd')}"/>
 				<input type="hidden" th:id="${'premYear_'+vo.policyNo}" th:value="${vo.premYear}"/>
 				<input type="hidden" th:id="${'currency_'+vo.policyNo}" th:value="${vo.currency}"/>
 			</th:block>

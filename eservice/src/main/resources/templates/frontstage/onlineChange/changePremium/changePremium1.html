@@ -92,7 +92,7 @@
 				formData.policyNoList = [policyNo];
 				formData.paymodeOld = $('#paymentMode_' + policyNo).val();
 				formData.oldAmount = $('#paymentAcctValue_' + policyNo).val();
-				formData.paidToDate = formatDate($('#paidToDate_' + policyNo).val());
+				formData.paidToDate = formatDate($('#beginDate_' + policyNo).val());
 				formData.premYear = $('#premYear_' + policyNo).val();
 				postWithFormData(/*[[@{/changePremium2}]]*/, formData);
 			});

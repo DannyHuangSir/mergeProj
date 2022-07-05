@@ -3,6 +3,7 @@ package com.twfhclife.eservice.onlineChange.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.sun.deploy.association.utility.AppConstants;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.BlackListVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundConversionVo;
@@ -45,6 +46,7 @@ import sun.rmi.log.LogInputStream;
 
 import javax.print.DocFlavor;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -102,6 +104,29 @@ public class FundConversionController extends BaseUserDataController  {
                 return "redirect:apply1";
             }
 
+            String limitDay = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CONVERSION_APPLY_LIMIT_DAY");
+
+            //申請間隔管控
+            Date completeTime = transService.getLastCompleteTime(TransTypeUtil.INVESTMENT_CONVERSION_CODE, getUserId());
+            if (completeTime != null && StringUtils.isNotBlank(limitDay) && StringUtils.isNumeric(limitDay)) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(completeTime);
+                calendar.set(Calendar.MILLISECOND, 0 );
+                calendar.set(Calendar.SECOND, 0 );
+                calendar.set(Calendar.MINUTE, 0 );
+                calendar.set(Calendar.HOUR, 0 );
+                calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(limitDay));
+                if (calendar.getTimeInMillis() > System.currentTimeMillis()) {
+                    String limitMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CONVERSION_APPLY_LIMIT_MSG");
+                    if (StringUtils.isNotBlank(limitMsg)) {
+                        limitMsg = limitMsg.replace("${time}", new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
+                        redirectAttributes.addFlashAttribute("errorMessage", limitMsg);
+                        return "redirect:apply1";
+                    }
+                    redirectAttributes.addFlashAttribute("errorMessage", "您最近有完成此功能的申請處理！");
+                    return "redirect:apply1";
+                }
+            }
             /**
              * 投資型保單申請中不可繼續申請
              * TRANS  status=-1,0,4

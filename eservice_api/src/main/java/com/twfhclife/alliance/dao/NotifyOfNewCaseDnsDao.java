@@ -125,4 +125,11 @@ public interface NotifyOfNewCaseDnsDao {
 	 * @throws Exception
 	 */
 	int updateTransStatusByTransNum(@Param("transNum") String transNum,@Param("status") String status) throws Exception;
+
+
+	List<DnsContentVo> getTransDnsByStatusByAutoDay(@Param("autoDay") int autoDay);
+
+	int updateTransDnsAuto(@Param("vo") DnsContentVo contentVo);
+
+	int updateTransStatusAuto(@Param("transNum") String transNum,@Param("status") String status);
 }

@@ -136,14 +136,14 @@
 	
 	<!-- 取得TRANS_DNS資料 -->
 	<select id="getTransDnsByTransStatus" parameterType="java.lang.String" resultMap="DnsContentResultMap">
-		select top(10)
+		select top(30)
 			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM
 		from ESERVICE.DBO.TRANS t,ESERVICE.DBO.TRANS_DNS td
 		where t.STATUS = #{status}
 		and td.SEND_ALLIANCE is null
 		and t.TRANS_TYPE = 'DNS_ALLIANCE'
 		and td.TOKEN is not null
-		and td.FSZ1_PI_ST in ('55','62')
+		and td.FSZ1_PI_ST in ('55','62', 'AUTO')
 		and t.TRANS_NUM  = td.TRANS_NUM
 	</select>
 
@@ -196,7 +196,7 @@
 		and CASE_ID = #{caseId};
 	</select>
 	<select id="getTransDnsByStatusAndFsz1PiSt" resultMap="DnsResultMap">
-		select top(10)
+		select top(30)
 			td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,
 			td.INSNOM POLICY_NO,
 			ESERVICE.dbo.FN_DEBASE64(td.NAME) NAME
@@ -239,4 +239,33 @@
 		where TRANS_NUM = #{transNum}
 	</update>
 
+	<update id="updateTransDnsAuto" parameterType="com.twfhclife.alliance.model.DnsContentVo">
+		update ESERVICE.DBO.TRANS_DNS
+		set
+		FSZ1_PI_ST = 'AUTO'
+		where TRANS_NUM = #{vo.transNum}
+	</update>
+
+	<update id="updateTransStatusAuto" parameterType="map">
+		update ESERVICE.DBO.TRANS
+		set STATUS = #{status}, UPDATE_USER='admin', UPDATE_DATE=getdate()
+		where TRANS_NUM = #{transNum}
+	</update>
+
+	<select id="getTransDnsByStatusByAutoDay" resultMap="DnsResultMap">
+		select top(30)
+		td.SEQ_ID,td.TYPE,td.JOB_ID,td.CASE_ID,td.TRANS_NUM,
+		td.INSNOM POLICY_NO,
+		ESERVICE.dbo.FN_DEBASE64(td.NAME) NAME
+		,td.CON,td.CONDATE,td.ADDDATE,
+		ESERVICE.dbo.FN_DEBASE64(td.IDNO) IDNO
+		from ESERVICE.DBO.TRANS t
+		inner join ESERVICE.DBO.TRANS_DNS td on t.TRANS_TYPE = 'DNS_ALLIANCE'
+		inner join (SELECT JOB_ID, MIN(CREATE_DATE) CREATE_DATE FROM ESERVICE.DBO.NOTIFY_OF_NEW_CASE_DNS GROUP BY JOB_ID) d on d.JOB_ID = td.JOB_ID
+		where t.TRANS_NUM = td.TRANS_NUM
+		and td.TOKEN is not null
+		and td.FSZ1_PI_ST is null
+		and t.STATUS in ('0','1','5')
+		and DATEADD(day, #{autoDay}, d.CREATE_DATE) &lt; CURRENT_TIMESTAMP
+	</select>
 </mapper>

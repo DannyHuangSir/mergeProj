@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -77,4 +78,6 @@ public interface ITransService {
 	
 	
 	public Float getBatchIdSequence();
+
+    Date getLastCompleteTime(String investmentConversionCode, String userId);
 }

@@ -152,4 +152,10 @@
 		T.TRANS_NUM = TP.TRANS_NUM
 		AND TP.POLICY_NO = #{policyNo}
 	</select>
+
+	<select id="getLastCompleteTime" resultType="java.util.Date">
+		SELECT TOP 1 UPDATE_DATE FROM TRANS WHERE TRANS_TYPE = #{transType}
+		AND STATUS = '2' AND USER_ID = #{user}
+		AND UPDATE_DATE IS NOT NULL ORDER BY UPDATE_DATE DESC
+	</select>
 </mapper>

@@ -40,6 +40,8 @@
 		<result column="PROD_TYPE" property="prodType"/>	
 		<result column="MAIN_AMOUNT" property="mainAmount"/>
 		<result column="CURRENCY" property="currency"/>
+		<result column="LIPM_INSU_BEG_DATE" property="beginDate"/>
+
 
 <result column="PMDA_EPO_MK" property="pmdaEpoMk"/>
 	</resultMap>
@@ -355,7 +357,7 @@
 		,<include refid="Expired_Column"/>
 		,<include refid="sameIdCount_Column"/>
 		,<include refid="CustomerName_Column"/>
-		,PM.LIPM_ID
+		,PM.LIPM_ID, PM.LIPM_INSU_BEG_DATE
 		FROM
 		ESERVICE.DBO.POLICY P
 		LEFT JOIN ESERVICE.DBO.LILIPM PM ON PM.LIPM_INSU_NO = P.POLICY_NO

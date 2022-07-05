@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.dao;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,4 +80,6 @@ public interface TransDao {
 	Float getBatchIdSequence();
 	//通過保單編號獲取申請序號
 	String isTransNum(@Param("policyNo")String policyNo);
+
+    Date getLastCompleteTime(@Param("transType") String transType, @Param("user") String userId);
 }
