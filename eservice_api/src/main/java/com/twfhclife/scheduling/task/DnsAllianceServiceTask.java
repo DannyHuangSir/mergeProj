@@ -288,8 +288,8 @@ public class DnsAllianceServiceTask {
 									//String fsz1Name = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-SCN-NAME");
 									//String fsz1Code = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-FUNC-CODE");
 									//String fsz1No   = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-INSU-NO");
-									String fsz1Id   = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-ID");
-									String fsz1PiSt = MyJacksonUtil.readValue(strResponse, "/data/values/FSZ1-PI-ST");
+									String fsz1Id   = MyJacksonUtil.readValue(strResponse, "/data/values/0/FSZ1-ID");
+									String fsz1PiSt = MyJacksonUtil.readValue(strResponse, "/data/values/0/FSZ1-PI-ST");
 									
 									contentVo.setToken(token);
 									contentVo.setFsz1PiSt(fsz1PiSt);
