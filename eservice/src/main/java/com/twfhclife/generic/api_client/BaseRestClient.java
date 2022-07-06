@@ -1,5 +1,8 @@
 package com.twfhclife.generic.api_client;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,8 +11,12 @@ import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +56,8 @@ import com.twfhclife.generic.api_model.TransHistoryListResponse;
 import com.twfhclife.generic.api_model.UserPolicyAcctValueResponse;
 import com.twfhclife.generic.model.KeycloakUserSession;
 import com.twfhclife.generic.util.MyJacksonUtil;
+
+import javax.net.ssl.SSLContext;
 
 @Service
 public class BaseRestClient {
@@ -99,14 +108,34 @@ public class BaseRestClient {
 
 	@Autowired
 	public BaseRestClient() {
-		CloseableHttpClient httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+//		CloseableHttpClient httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
 
-		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-		requestFactory.setHttpClient(httpClient);
+		HttpComponentsClientHttpRequestFactory requestFactory = generateHttpRequestFactory();
+//		requestFactory.setHttpClient(httpClient);
 
 		restTemplate = new RestTemplate(requestFactory);
 //		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
 //		restTemplate = restTemplateBuilder.errorHandler(new RestTemplateResponseErrorHandler()).build();
+	}
+
+	public static HttpComponentsClientHttpRequestFactory generateHttpRequestFactory() {
+
+		TrustStrategy acceptingTrustStrategy = (x509Certificates, authType) -> true;
+		SSLContext sslContext = null;
+		try {
+			sslContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		SSLConnectionSocketFactory connectionSocketFactory = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+
+		HttpClientBuilder httpClientBuilder = HttpClients.custom();
+		httpClientBuilder.setSSLSocketFactory(connectionSocketFactory);
+		CloseableHttpClient httpClient = httpClientBuilder.build();
+		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+		factory.setHttpClient(httpClient);
+		return factory;
 	}
 
 	public HttpHeaders setHeader(Map<String, String> headerMap) {
