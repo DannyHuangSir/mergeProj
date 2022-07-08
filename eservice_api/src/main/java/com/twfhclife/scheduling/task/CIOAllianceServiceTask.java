@@ -341,7 +341,7 @@ public class CIOAllianceServiceTask {
 							conVO.setCname(icvo.getCname());
 
 							ContactInfoContact contVO = new ContactInfoContact();
-							contVO.setcPhone(icvo.getcPhone());
+							contVO.setcPhone(icvo.getPhone());
 							contVO.setcMail(icvo.getcMail());
 							contVO.setcAddress(icvo.getcAddress());
 
