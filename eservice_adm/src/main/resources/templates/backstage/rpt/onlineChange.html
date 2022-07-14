@@ -197,6 +197,7 @@
 									<input type="hidden" id="status" name="status"/>
 									<input type="hidden" id="policyNo" name="policyNo"/>
 									
+									<input type="hidden" id="dnsAllianceCode" name="dnsCode"/>
 									<input type="hidden" id="dataScope" name="dataScope">
 									<input type="hidden" id="fileReceived" name="fileReceived"/>
 									<input type="hidden" id="to" name="to"/>
@@ -312,7 +313,7 @@
 			$("#to").val($('#toSelect option:checked').val());
 			$("#fromCompanyId").val($('#fromCompanyIdSelect option:checked').val());
 			$("#sendToAlliance").val($('#sendToAllianceSelect option:checked').val());
-			$("code").val($('#codeSelect option:checked').val());
+			$("#dnsAllianceCode").val($('#codeSelect option:selected').val());
 
 			$("#abnormalReasonValue").val($('#abnormalReason option:checked').val());
 			$("#fromHospitalIdValue").val($('#fromHospitalId option:checked').val());

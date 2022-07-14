@@ -487,6 +487,9 @@
 			<if test="transVo.code != null and transVo.code != ''" >
 				AND F.CODE = #{transVo.code}	
 			</if>
+			<if test="transVo.dnsCode != null and transVo.dnsCode != ''">
+				AND F.FSZ1_PI_ST = #{transVo.dnsCode}
+			</if>
 	</sql>
 	
 <!-- include sql: 醫療 -->

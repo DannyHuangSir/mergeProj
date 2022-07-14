@@ -24,6 +24,8 @@ public class TransVo extends Pagination {
 	private String to;
 	private String sendToAlliance;
 	private String code;
+
+	private String dnsCode;
 	/**
 	 * 商品名稱
 	 */
@@ -248,6 +250,14 @@ public class TransVo extends Pagination {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getDnsCode() {
+		return dnsCode;
+	}
+
+	public void setDnsCode(String dnsCode) {
+		this.dnsCode = dnsCode;
 	}
 
 	@Override
