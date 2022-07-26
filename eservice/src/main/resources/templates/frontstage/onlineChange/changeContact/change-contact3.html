@@ -179,7 +179,7 @@
 					</div>
 					<div class="col-sm-8" th:inline="text">
 						<th:block th:each="from : ${#strings.arraySplit(transContactInfoDtlVo.toCompany, ',')}">
-							<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
+							<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS_CONTACT}">
 								<th:block th:if="${from eq vo.value.parameterValue}">
 									<th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
 								</th:block>

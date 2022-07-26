@@ -134,8 +134,8 @@
 
 										<div class="col-sm-9">
                                             <select class="form-control" id="companyListSelect"  multiple='multiple'>	
-												<th:block th:if="${session.SEND_COMPANY_ITEMS != null}">
-													<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
+												<th:block th:if="${session.SEND_COMPANY_ITEMS_CONTACT != null}">
+													<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS_CONTACT}">
 														<option th:value="${vo.value.parameterValue}"><th:block th:inline="text">[[${vo.value.parameterName}]]</th:block></option>
 													</th:block>
 												</th:block>

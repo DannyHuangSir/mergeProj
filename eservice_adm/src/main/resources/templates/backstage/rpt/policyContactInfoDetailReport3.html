@@ -90,7 +90,7 @@
 						var str = data[i][column[j]].split(',');
 						var strName = []
 						str.forEach(element => {
-							var data = /*[[${session.SEND_COMPANY_ITEMS}]]*/;
+							var data = /*[[${session.SEND_COMPANY_ITEMS_CONTACT}]]*/;
 							$.each(data,function(i,item){
 								if(item.parameterValue == element){
 									strName.push(item.parameterName)

@@ -158,10 +158,10 @@
 													<div class="col-sm-3">
 														<label for="" clasee="col-sm-3">授權傳送公司：</label>
 													</div>
-													<th:block th:if="${session.SEND_COMPANY_ITEMS != null}">
+													<th:block th:if="${session.SEND_COMPANY_ITEMS_CONTACT != null}">
 														<div class="col-sm-8">
 															<th:block th:each="from : ${#strings.arraySplit(dtl['TO_COMPANY_ID'], ',')}">
-																<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
+																<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS_CONTACT}">
 																	<th:block th:if="${from eq vo.value.parameterValue}">
 																		<th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
 																	</th:block>

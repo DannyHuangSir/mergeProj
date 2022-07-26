@@ -156,7 +156,7 @@
                         </p>
                     </div>
                 </a>
-                <a th:if="${!#strings.contains(disableShowForMembers, 'attribute1') or loginUserType ne 'member' }" href="attribute1">
+                <a th:if="${(!#strings.contains(disableShowForMembers, 'attribute1') or loginUserType ne 'member') and !#lists.isEmpty(session.USER_INVT_POLICY_LIST) }" href="attribute1">
                      <div class="col-sm-6 center1 gradient">
                          <h3>變更風險屬性</h3>
                          <p>

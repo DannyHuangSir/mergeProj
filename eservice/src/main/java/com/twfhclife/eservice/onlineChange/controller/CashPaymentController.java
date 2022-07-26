@@ -95,6 +95,9 @@ public class CashPaymentController extends BaseUserDataController {
                         userId, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
                 transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
                 transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
+                /// 20220627 by 203990
+                /// 淑妙經理反應, 投資型保單都是A年繳和M月繳, 應都可申請; 依家維的說法, 收益分配及資產撥回 可申請的保單種類目前只限 US 就可先把限制繳別的條件拿掉
+                /*
                 for (PolicyListVo vo : handledPolicyList) {
                     if (!StringUtils.equals(vo.getApplyLockedFlag(), "Y")) {
                         if (!StringUtils.equals("M", vo.getPaymentMode()) && !StringUtils.equals("A", vo.getPaymentMode())) {
@@ -104,6 +107,8 @@ public class CashPaymentController extends BaseUserDataController {
                         }
                     }
                 }
+                */
+
                 addAttribute("policyList", handledPolicyList);
             }
         } catch (Exception e) {

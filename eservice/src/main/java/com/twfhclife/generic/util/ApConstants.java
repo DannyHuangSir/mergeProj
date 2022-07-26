@@ -124,7 +124,9 @@ public interface ApConstants {
 	public static final String RELATION_ITEMS = "RELATION_ITEMS";
 	
 	public static final String SEND_COMPANY_ITEMS = "SEND_COMPANY_ITEMS";
-	
+
+	public static final String SEND_COMPANY_ITEMS_CONTACT = "SEND_COMPANY_ITEMS_CONTACT";
+
 	public static final String PAYMENT_METHOD = "PAYMENT_METHOD";
 
 	public static final String INSURANCE_ACCIDENT = "INSURANCE_ACCIDENT";

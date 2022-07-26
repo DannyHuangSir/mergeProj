@@ -228,6 +228,7 @@ public class LoginController extends BaseUserDataController {
 				addSession(ApConstants.MEDICAL_TREATMENT_UPLOADFILE, (Serializable) sysParamMap.get("MEDICAL_TREATMENT_UPLOADFILE"));
 				addSession(ApConstants.RELATION_ITEMS, (Serializable) sysParamMap.get("RELATION_ITEMS"));
 				addSession(ApConstants.SEND_COMPANY_ITEMS, (Serializable) sysParamMap.get("SEND_COMPANY_ITEMS"));
+				addSession(ApConstants.SEND_COMPANY_ITEMS_CONTACT, (Serializable) sysParamMap.get("SEND_COMPANY_ITEMS_CONTACT"));
 				addSession(ApConstants.MEDICAL_COMPANY_ITEMS, (Serializable) sysParamMap.get("MEDICAL_COMPANY_ITEMS"));
 				addSession(ApConstants.PAYMENT_METHOD, (Serializable) sysParamMap.get("PAYMENT_METHOD"));
 				addSession(ApConstants.INSURANCE_ACCIDENT, (Serializable) sysParamMap.get("INSURANCE_ACCIDENT"));

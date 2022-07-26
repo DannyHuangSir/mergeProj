@@ -89,18 +89,50 @@ public class TransConversionUtil {
                                         txtSb.append("\r\n");
                                     }
                                 }
-                                // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),轉出投資標的(10),轉出單位（18),轉入投資標的(10)
-                                String line = String.format(StringUtils.repeat("%s", 8),
-                                        UPLOAD_CODE,
-                                        StringUtil.rpadBlank(transNum, 12),
-                                        StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
-                                        systemTwDate,
-                                        systemTwDate,
-                                        StringUtil.rpadBlank(vo.getInvtNo(), 10),
-                                        StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100), 4, BigDecimal.ROUND_DOWN)
-                                                .toString().replaceAll("\\.", ""), 18, " "),
-                                        StringUtil.rpadBlank(vo.getInInvtNo(), 10)
-                                );
+
+                                // 20220622 by 203990
+                                String line = "";
+                                if (vo.getInvtNo().contains("RTNTD")) {
+	                                // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),轉出投資標的(10),轉出單位（18),轉入投資標的(10)
+	                                line = String.format(StringUtils.repeat("%s", 8),
+	                                        UPLOAD_CODE,
+	                                        StringUtil.rpadBlank(transNum, 12),
+	                                        StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
+	                                        systemTwDate,
+	                                        systemTwDate,
+	                                        StringUtil.rpadBlank(vo.getInvtNo(), 10),
+	                                        StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100), 0, BigDecimal.ROUND_DOWN)
+	                                                .toString().replaceAll("\\.", ""), 14, " ") + "0000",
+	                                        StringUtil.rpadBlank(vo.getInInvtNo(), 10)
+	                                );
+                                } else if (vo.getInvtNo().contains("RTUSD")) {
+                                    // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),轉出投資標的(10),轉出單位（18),轉入投資標的(10)
+                                    line = String.format(StringUtils.repeat("%s", 8),
+                                            UPLOAD_CODE,
+                                            StringUtil.rpadBlank(transNum, 12),
+                                            StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
+                                            systemTwDate,
+                                            systemTwDate,
+                                            StringUtil.rpadBlank(vo.getInvtNo(), 10),
+                                            StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_DOWN)
+                                                    .toString().replaceAll("\\.", ""), 16, " ") + "00",
+                                            StringUtil.rpadBlank(vo.getInInvtNo(), 10)
+                                    );
+                                } else {
+                                    // 介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),轉出投資標的(10),轉出單位（18),轉入投資標的(10)
+                                    line = String.format(StringUtils.repeat("%s", 8),
+                                            UPLOAD_CODE,
+                                            StringUtil.rpadBlank(transNum, 12),
+                                            StringUtil.rpadBlank(tpVo.getPolicyNo(), 10),
+                                            systemTwDate,
+                                            systemTwDate,
+                                            StringUtil.rpadBlank(vo.getInvtNo(), 10),
+                                            StringUtil.lpad(vo.getValue().multiply(vo.getRatio()).divide(BigDecimal.valueOf(100), 4, BigDecimal.ROUND_DOWN)
+                                                    .toString().replaceAll("\\.", ""), 18, " "),
+                                            StringUtil.rpadBlank(vo.getInInvtNo(), 10)
+                                    );
+                                }
+
                                 logger.info(line);
                                 txtSb.append(line);
                                 txtSb.append("\r\n");

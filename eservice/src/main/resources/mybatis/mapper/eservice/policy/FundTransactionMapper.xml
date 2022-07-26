@@ -68,7 +68,7 @@
 			,SADP_TR_DATE
 			,SADP_EXCH_DATE
 			,SADP_TR_TYPE
-			,case when SADP_TR_CODE in ('INV102','INV103') then 'INV101' else 'INV101' end AS SADP_TR_CODE  
+			,case when SADP_TR_CODE in ('INV102','INV103') then 'INV101' else SADP_TR_CODE end AS SADP_TR_CODE  
 			<!-- 處理INV101,INV102,INV103, 這些代碼名稱相同(首期投入), 代碼檔(INV102、INV103)以INV101代表 -->
 			,(
 				CASE
