@@ -117,7 +117,7 @@ public interface ApConstants {
 	/**內部人員通知	轉收件通知	理賠聯盟鏈轉收申請通知*/
 	public static final String ELIFE_MAIL_026="ELIFE_MAIL_026";
 
-	public static final String ELIFE_MAIL_029="ELIFE_MAIL_029";
+	public static final String ELIFE_MAIL_036 ="ELIFE_MAIL_036";
 
 	/** 醫療日程安排-系統屬性 */
 	public static final String SYS_MEDICAL_SCH = "SYS_MEDICAL_SCH";
