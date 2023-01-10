@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey listing6 fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3 listing-area">
+				<div class="row-offcanvas row-offcanvas-left">
+					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing6_2')"></div>
+					<div th:replace="fragments/sidebar :: sidebar (funId='listing6_2')"></div>
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<div class="tb3 top0 mobile-toggle" data-toggle="true">
+							<i class="fas fa-chevron-down hid2 mobile"></i>
+							<i class="fas fa-chevron-up hid1"></i> 保單收益分配
+						</div>
+						<br/>
+						<div class="mobile-toggle-panel specialHeight toggle-hide">
+							<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+								<thead>
+									<tr class="table2">
+										<th class="text-left item180" scope="col" data-tablesaw-priority="persist">投資標的名稱/代碼</th>
+										<th scope="col" data-tablesaw-priority="1">基準日<br/></th>
+										<th scope="col" data-tablesaw-priority="1">發放日<br/></th>
+										<th scope="col" data-tablesaw-priority="1">幣別<br/></th>
+										<th scope="col" data-tablesaw-priority="1">帳戶單位<br/></th>
+										<th scope="col" data-tablesaw-priority="1">配息率/撥回率<br/></th>
+										<th scope="col" data-tablesaw-priority="1">匯率<br/></th>
+										<th scope="col" data-tablesaw-priority="3">台幣(NTD)/<br/>外幣價值(USD)</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+								<tbody>
+									<tr class="h80 tr-blue tr-total">
+										<td class="text-left table3">總計</td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td><span id="acctValueSum"></span><i class="my5">NTD</i></td>
+									</tr>
+								</tbody>
+							</table>
+							<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20009'] != null} 
+								? ${session.PAGE_WORDING['WORDING_20009'].parameterValue}"/>
+						</div>
+						<div th:replace="fragments/listingReferOnly"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		// 建立保障項目 grid
+		var grid1 = new eserviceGrid();
+		grid1.sGridId = '#grid1';
+		grid1.sQueryUrl = /*[[@{/getPolicyDividendList?policyNo=} + ${param.policyNo[0]}]]*/;
+		grid1.aoColumns = [
+			{
+				// 投資標的名稱/代碼
+				'fnRender': function(oRow) {
+					return emptyIfNull(oRow.invtName) + '<p class="enSmall">(' + emptyIfNull(oRow.invtNo) + ')</p>';
+				},
+				'rwdName': '投資標的名稱/代碼'
+			},
+			{
+				// 基準日
+				'fnRender': function(oRow) {
+					return westDate(oRow.inpdIntDividendDate);
+				},
+				'rwdName': '基準日'
+			},
+			{
+				// 發放日
+				'fnRender': function(oRow) {
+					return westDate(oRow.clupTrDate);
+				},
+				'rwdName': '發放日'
+			},
+			{
+				// 幣別
+				'fnRender': function(oRow) {
+					return getInvtCurrName(oRow.invtCurr);
+				},
+				'rwdName': '幣別'
+			},
+			{
+				// 帳戶單位
+				'fnRender': function(oRow) {
+					return '<p class="marginTop25">' + formatNumber(oRow.clupExpeUnits, 4) + '</p>';
+				},
+				'rwdName': '帳戶單位'
+			},
+			{
+				// 配息率
+				'fnRender': function(oRow) {
+					return '<span class="enSmall enSmallDate">' + formatNumber(oRow.clupInprRate, 4) + '</span>';
+				},
+				'rwdName': '配息率'
+			},
+			{
+				// 匯率
+				'fnRender': function(oRow) {
+					return '<p class="marginTop25">' + formatNumber(oRow.clupExchRate, 4) + '</p>';
+				},
+				'rwdName': '匯率'
+			},
+			{
+				// 台幣(NTD)/外幣價值(USD)
+				'fnRender': function(oRow) {
+					var acctValueHtml = '';
+					acctValueHtml += ('<p>' + formatNumber(oRow.clupExpeNtd, 2) + '</p>');
+					if (oRow.clupExpeNtd != null && oRow.clupExchRate != null) {
+						acctValueHtml += '<p>' + formatNumber(oRow.clupExpeNtd / oRow.clupExchRate, 2) + '</p>';
+					}
+					return acctValueHtml;
+				},
+				'rwdName': '台幣(NTD)/外幣價值(USD)'
+			}
+		];
+		grid1.fnInitComplete = function() { 
+			showAcctValueSum(grid1);
+			if (grid1.rownum() == 0) {
+				/* openAlert('查無資料'); */
+				openAlert($('#E0035').val());
+				return false;
+			}
+		};
+		grid1.createSimple();
+	});
+	
+	// 顯示帳戶價值合計
+	function showAcctValueSum(grid1) {
+		$('#acctValueSum').html(formatNumber(grid1.sumByField('clupExpeNtd'), 2));
+	}
+	
+	// 顯示幣別名稱
+	function getInvtCurrName(invtCurr) {
+		var invtCurrName = emptyIfNull(invtCurr);
+		$.each(/*[[${session.SYSTEM_PARAMETER['CURRENCY']}]]*/, function(i, obj) {
+			if (obj.parameterCode == invtCurr) {
+				invtCurrName = emptyIfNull(obj.parameterName);
+				return;
+			}
+		});
+		
+		return invtCurrName;
+	}
+	
+	/*]]>*/
+	</script>
+</body>
+</html>

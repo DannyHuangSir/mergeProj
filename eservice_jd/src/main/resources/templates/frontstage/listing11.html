@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey listing8 fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3 listing-area">
+				<div class="row-offcanvas row-offcanvas-left">
+					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing11')"></div>
+					<div th:replace="fragments/sidebar :: sidebar (funId='listing11')"></div>
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<div class="box-border wht">
+							<div class="tb3 top0">
+								<i class="fas fa-chevron-down"></i> 投資標的淨值
+							</div>
+							<div class="mobile-toggle-panel specialHeight">
+								<div id="policyInfoDiv" class="col-md-12 down20" style="padding-bottom: 0px">
+									<table class="tablesaw tablesaw-stack no-border wht col-table" data-tablesaw-mode="stack">
+										<tr class="noEvent borderTop">
+											<th class="hid1 hid2" scope="col">保單號碼</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">保單號碼</b> 
+												<span class="mobile-span">
+												<th:block th:text="${policyVo != null and policyVo.policyNo != null}
+													? ${policyVo.policyNo}"/>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">保險期間</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">保險期間</b> 
+												<span class="mobile-span">
+												<th:block th:text="${policyStartEndDate != null} ? ${policyStartEndDate}"/>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">契約狀況</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">契約狀況</b> 
+												<span class="mobile-span">
+												<th:block th:text="${policyVo != null and policyVo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][policyVo.status] != null}
+													? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][policyVo.status].parameterValue}"/>
+												</span>
+											</td>
+										</tr>
+										<tr class="noEvent">
+											<th class="hid1 hid2" scope="col">要保人</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">要保人</b> 
+												<span class="mobile-span">
+												    <div th:switch="${lilipmVo != null and lilipmVo.lipmNameBase64 != ''}">
+												        <div th:case="${false}">
+															<th:block th:text="${lilipmVo != null and lilipmVo.lipmName1 != null} ? ${lilipmVo.lipmName1}"/>
+												        </div>
+												        <div th:case="${true}">
+													        <img width="200" height="23px" th:src="|data:image/svg+xml;base64, ${lilipmVo.lipmNameBase64}|" />
+												        </div>
+													</div>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">被保險人</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">被保險人</b> 
+												<span class="mobile-span">
+												    <div th:switch="${lilipiVo != null and lilipiVo.lipiNameBase64 != ''}">
+												        <div th:case="${false}">
+															<th:block th:text="${lilipiVo != null and lilipiVo.lipiName != null} ? ${lilipiVo.lipiName}"/>
+												        </div>
+												        <div th:case="${true}">
+													        <img width="200" height="23px" th:src="|data:image/svg+xml;base64, ${lilipiVo.lipiNameBase64}|" />
+												        </div>
+													</div>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">保單幣別</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">保單幣別</b> 
+												<span class="mobile-span">
+												<th:block th:text="${currName}"/>
+												</span>
+											</td>
+										</tr>
+										<tr class="noEvent">
+											<th class="hid1 hid2" scope="col">基金名稱</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">基金名稱</b> 
+												<span class="mobile-span">
+												<div class="selector-box">
+													<select id="invtList" class="selector" title="請選擇基金">
+														<option value="">請選擇基金...</option>
+														<th:block th:each="portfolioVo : ${portfolioList}">
+															<option th:value="${portfolioVo.invtNo}" 
+																th:attr="data-exchcurr=${portfolioVo.invtExchCurr},data-exchcurrname=${portfolioVo.currency},data-invtname=${portfolioVo.invtName},data-riskbenelevel=${portfolioVo.riskBeneLevel}">
+																<th:block th:text="${portfolioVo.invtName}"/>
+															</option>
+														</th:block>
+													</select>
+												</div>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">基金幣別</th>
+											<td id="invtExchCurrNameTd">
+											</td>
+											<th class="hid1 hid2" scope="col">風險收益等級</th>
+											<td id="riskBeneLevelTd">
+											</td>
+										</tr>
+										<tr class="noEvent">
+											<th class="hid1 hid2" scope="col">查詢區間</th>
+											<td colspan="5">
+												<div class="col-sm-12" style="padding-left: 0px">
+													<div class="radio">
+														<label>
+															<div class="radio-btn checkedRadio">
+																<i>
+																	<input type="radio" name="qryRadioType" value="A" title="最近一個營業日" checked="checked"/>
+																</i>
+															</div>最近一個月走勢圖
+														</label>
+													</div>
+												</div>
+												<div class="col-sm-12" style="padding-left: 0px">
+													<div class="radio">
+														<label>
+															<div class="radio-btn">
+																<i>
+																	<input type="radio" name="qryRadioType" value="B" title="最近三個月走勢圖"/>
+																</i>
+															</div>最近三個月走勢圖
+														</label>
+													</div>
+												</div>
+												<div class="col-sm-12" style="padding-left: 0px">
+													<div class="radio">
+														<label>
+															<div class="radio-btn">
+																<i>
+																	<input type="radio" name="qryRadioType" value="C" title="指定年月"/>
+																</i>
+															</div>指定年月
+														</label>
+														<label>
+															<div style="width: 100px">
+																<div class="selector-box">
+																	<select id="qryYear" class="selector" title="請選擇年份">
+																		<th:block th:each="year : ${rocYearMenu}">
+																			<option th:value="${year}"><th:block th:text="${year}"/></option>
+																		</th:block>
+																	</select>
+																</div>
+															</div>
+														</label>&nbsp;年&nbsp;
+														<label>
+															<div style="width: 100px">
+																<div class="selector-box">
+																	<select id="qryMonth" class="selector" title="請選擇月份">
+																		<option value="01" label="01"/>
+																		<option value="02" label="02"/>
+																		<option value="03" label="03"/>
+																		<option value="04" label="04"/>
+																		<option value="05" label="05"/>
+																		<option value="06" label="06"/>
+																		<option value="07" label="07"/>
+																		<option value="08" label="08"/>
+																		<option value="09" label="09"/>
+																		<option value="10" label="10"/>
+																		<option value="11" label="11"/>
+																		<option value="12" label="12"/>
+																	</select>
+																</div>
+															</div>
+														</label>&nbsp;月
+													</div>
+												</div>
+												<div class="col-sm-3" style="padding-left: 0px">
+													<button id="searchBtn" type="button" class="btn-form btn-search">搜尋</button>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<div id="chartDiv" class="mobile-toggle-panel specialHeight" style="display: none">
+								<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+									<tr>
+										<td>
+											<div id="container" style="min-width: 310px; height: 400px;margin: 0 auto">
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div id="netValueDiv" class="mobile-toggle-panel specialHeight" style="display: none">
+								<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2">
+											<th class="text-center" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">日期</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-center">淨值</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+						<div th:replace="fragments/listingReferOnly"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/highcharts/highcharts.js}"></script>
+	<script th:src="@{/plugin/highcharts/modules/exporting.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		$('#invtList').change(function() {
+			// 基金幣別
+			$('#invtExchCurrNameTd').html("<b class='tablesaw-cell-label mobile-b'>基金幣別</b><span class='mobile-span'>" + $(this).find('option:selected').data('exchcurrname') + "</span>");
+			// 風險收益等級
+			$('#riskBeneLevelTd').html("<b class='tablesaw-cell-label mobile-b'>風險收益等級</b><span class='mobile-span'>" + $(this).find('option:selected').data('riskbenelevel') + "</span>");
+		});
+		
+		$('#searchBtn').click(function() {
+			if ($('#invtList').val() == '') {
+				/* openAlert('請選擇基金名稱'); */
+				openAlert($('#E0036').val());
+				return false;
+			}
+			
+			var invtName = $('#invtList').find('option:selected').data('invtname');
+			var queryType = $('div.checkedRadio input[name="qryRadioType"]').val();
+			var queryMonth = (parseInt($('#qryYear').val(), 10) + 1911) + '/' + $('#qryMonth').val();
+			var effectDate = /*[[${effectDate}]]*/;
+			if (queryType == 'C' && queryMonth < effectDate.substring(0, 7)) {
+				/* openAlert('查詢區間指定年月不可早於商品開賣日'); */
+				openAlert($('#E0037').val());
+				return false;
+			}
+			
+			var formData = {
+				fundCode : $('#invtList').val(),
+				queryType : queryType,
+				queryMonth : queryMonth
+			};
+			$.ajax({
+				url : /*[[@{/getNetValueChartList}]]*/,
+				contentType: 'application/json',
+				type: "POST",
+				data:  JSON.stringify(formData)
+			}).done(function(response) {
+				if (response.result == 'SUCCESS') {
+					if ($(response.resultData).size() == 0) {
+						/* openAlert('查無資料'); */
+						openAlert($('#E0035').val());
+						$('#chartDiv').hide();
+						$('#netValueDiv').hide();
+						return false;
+					}
+					$('#chartDiv').show();
+					$('#netValueDiv').show();
+					$('#grid1 tbody').html('');
+					
+					var dataX = [];
+					var dataY = [];
+					
+					$.each(response.resultData, function(i, obj) {
+						if (obj.sellPrice != null) {
+							dataX.push(twDate(obj.effectiveDate).substring(4, 10).replace('/', '-'));
+							dataY.push(obj.sellPrice);
+							
+							var rowHtml = '';
+							rowHtml += '<tr>';
+							rowHtml += '	<td class="text-center" width="50%">' + twDate(obj.effectiveDate) + '</td>';
+							rowHtml += '	<td class="text-center" width="50%">' + emptyIfNull(obj.sellPrice) + '</td>';
+							rowHtml += '</tr>';
+							
+							$('#grid1 tbody').append(rowHtml);
+						}
+					});
+					
+					$('#container').highcharts({
+						chart: {
+							type: 'spline'
+						},
+						colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+						title: {
+							text: invtName
+						},
+						subtitle: {
+							text: '淨值走勢圖'
+						},
+						xAxis: {
+// 							reversed: true,
+							tickInterval: 5,
+							categories: dataX
+						},
+						yAxis: {
+							title: {
+								text: '淨值'
+							},
+							labels: {
+								formatter: function() {
+									return this.value;
+								}
+							}
+						},
+						tooltip: {
+							crosshairs: true,
+							shared: true
+						},
+						plotOptions: {
+							spline: {
+								marker: {
+									radius: 4,
+									lineColor: '#666666',
+									lineWidth: 1
+								}
+							}
+						},
+						series: [{
+							name: '淨值',
+							dataLabels: {
+								color: 'green'
+							},
+							marker: {
+								symbol: 'square'
+							},
+							data: dataY
+						}]
+					});
+				}
+			});
+		});
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

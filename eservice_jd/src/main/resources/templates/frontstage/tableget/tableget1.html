@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<!-- 保單申請項目資訊 -->
+	<th:block th:if="${tableGet.transType != null}">
+	    <table  id="" class="hid-body col-sm-12">
+	        <thead>
+	        </thead>
+	        <tbody>
+				<tr>
+					<th class="hid-th w35p">申請項目</th>
+					<td colspan="3"><th:block th:text="${tableGet.transType}"/></td>
+				</tr>
+				<th:block th:if="${tableGet.policys != null}">
+					<tr>
+						<th class="hid-th w35p">保單</th>
+						<td colspan="3">
+							<th:block th:each="policy, rowStat : ${tableGet.policys}">
+								<th:block th:if="${rowStat.index == 0}">
+									<th:block th:text="${policy.productName}"/>(<th:block th:text="${policy.policyNo}"/>)
+								</th:block>
+								<th:block th:unless="${rowStat.index == 0}">
+									<br/><th:block th:text="${policy.productName}"/>(<th:block th:text="${policy.policyNo}"/>)
+								</th:block>
+							</th:block>
+						</td>
+					</tr>
+				</th:block>
+			</tbody>
+		</table>
+	</th:block>
+	<!-- 僅顯示或單筆新舊顯示的 -->
+	<th:block th:if="${tableGet.transDoubleObject != null}">
+	<th:block th:each="object, rowStat : ${tableGet.transDoubleObject}">
+	<table id="" class="hid-body col-sm-12">
+        <thead>
+        	<div th:if="${object['parTitle'] != null}" class="col-sm-12 hid-title2">
+	        	<th:block th:text="${object['parTitle']}"/>
+	        </div>
+        </thead>
+        <tbody>
+        	<th:block th:each="trans, rowStat : ${object['trans']}">
+				<tr>
+					<th class="hid-th w35p"><th:block th:text="${trans['key']}"/></th>
+					<td><th:block th:text="${trans['value']}"/></td>
+				</tr>
+				<tr>
+					<th class="hid-th w35p"><th:block th:text="${trans['key2']}"/></th>
+					<td><th:block th:text="${trans['value2']}"/></td>
+				</tr>
+				<tr th:if="${trans['changKey'] != null}">
+					<th class="hid-th w35p"><th:block th:text="${trans['changKey']}"/></th>
+					<td colspan="3">
+						<th:block th:text="${trans['changValue']}"/>  
+						<i class="fa fa-angle-right-blue"></i>  
+						<th:block th:text="${trans['changValue2']}"/>  
+					</td>
+				</tr>
+				<tr th:if="${trans['keyColspan'] != null}">
+					<th class="hid-th w35p"><th:block th:text="${trans['keyColspan']}"/></th>
+					<td colspan="3"><th:block th:text="${trans['valueColspan']}"/></td>
+				</tr>
+				<tr th:if="${trans['keyColspan2'] != null}">
+					<th class="hid-th w35p"><th:block th:text="${trans['keyColspan2']}"/></th>
+					<td><th:block th:text="${trans['valueColspan2']}"/></td>
+				</tr>
+				<tr th:if="${trans['keyColspan3'] != null}">
+					<th colspan="3" class="hid-th w35p"><th:block th:text="${trans['keyColspan3']}"/></th>
+					<td colspan="1"><th:block th:text="${trans['valueColspan3']}"/></td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	</th:block>
+	</th:block>
+	<!-- 顯示有新舊變化的物件序列資料 -->
+	<table id="" class="hid-body col-sm-12">
+        <thead>
+        </thead>
+        <tbody>
+			<tr>
+				<th:block th:if="${tableGet.transDoubleObjectOld != null}">
+					<table id="" class="hid-body col-sm-12">
+						<thead>
+				        </thead>
+						<tbody>
+							<th:block th:each="objectOld, rowStat : ${tableGet.transDoubleObjectOld}">
+								<tr class="">
+									<td>
+										<table id="" class="hid-body col-sm-12">
+											<thead>
+												<div th:if="${objectOld['parTitle'] != null}" class="col-sm-12 hid-title2">
+                									<th:block th:text="${objectOld['parTitle']}"/>
+            									</div>
+											</thead>
+											<tbody>
+												<th:block th:each="trans, rowStat : ${objectOld['transOld']}">
+													<tr class="">
+														<th class="hid-th w35p"><th:block th:text="${trans['key']}"/></th>
+														<td><th:block th:text="${trans['value']}"/></td>
+													</tr>
+													<tr class="">
+														<th class="hid-th w35p"><th:block th:text="${trans['key2']}"/></th>
+														<td><th:block th:text="${trans['value2']}"/></td>
+													</tr>
+													<tr th:if="${trans['keyColspan'] != null}">
+														<th class="hid-th w35p"><th:block th:text="${trans['keyColspan']}"/></th>
+														<td><th:block th:text="${trans['valueColspan']}"/></td>
+													</tr>
+												</th:block>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</th:block>
+				<th:block th:if="${tableGet.transDoubleObjectNew != null}">
+					<table class="hid-body col-sm-12">
+						<thead>
+							<div class="hid-chang-title"></div>
+				            <div class="col-sm-12 hid-title3">
+				                	<i class="fas fa-chevron-down fa-2x orange"></i>
+				            </div>
+				            <div class="hid-chang-title"></div>
+				        </thead>
+						<tbody>
+						</tbody>
+				    </table>
+					<table id="" class="hid-body col-sm-12">
+						<thead>
+				            <!-- div class="col-sm-12 hid-title">
+				                	新受益人
+				            </div -->
+				        </thead>
+						<tbody>
+				            <th:block th:each="objectNew, rowStat : ${tableGet.transDoubleObjectNew}">
+								<tr class="">
+									<td>
+										<table id="" class="hid-body col-sm-12">
+											<thead>
+												<div th:if="${objectNew['parTitle'] != null}" class="col-sm-12 hid-title2">
+                									<th:block th:text="${objectNew['parTitle']}"/>
+            									</div>
+											</thead>
+											<tbody>
+												<th:block th:each="trans, rowStat : ${objectNew['transNew']}">
+													<tr class="">
+														<th class="hid-th w35p"><th:block th:text="${trans['key']}"/></th>
+														<td><th:block th:text="${trans['value']}"/></td>
+													</tr>
+													<tr class="">
+														<th class="hid-th w35p"><th:block th:text="${trans['key2']}"/></th>
+														<td><th:block th:text="${trans['value2']}"/></td>
+													</tr>
+													<tr th:if="${trans['keyColspan'] != null}">
+														<th class="hid-th w35p"><th:block th:text="${trans['keyColspan']}"/></th>
+														<td colspan="3"><th:block th:text="${trans['valueColspan']}"/></td>
+													</tr>
+												</th:block>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</th:block>
+			</tr>
+		</tbody>
+	</table>
+</body>
+<script>
+$(function(){
+	$('#transDetailDiv').show();
+});
+</script>
+</html>

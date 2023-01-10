@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>變更風險屬性｜臺銀人壽保單網路服務</title>
+	<link th:href="@{/css/tmp-radio.css}" rel="stylesheet"/>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">變更風險屬性</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 變更風險屬性
+			</div>
+			    <div class="mystyle3 attribute1">
+                <h2>請填寫投資型保險商品保戶風險適性問卷</h2>
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="attr1 marginTop20 chMiddle">以下您所填寫之投資適性調查表，將有助於我們了解您對於投資風險承受度及適合投保之商品。</div>
+                    <div class="check-title marginTop5">第一部份：財務資訊與財務目標</div>
+                    <div class="check-body grey2">
+                        <div class="check-list">
+                            <div class="attr-quest ">1. 請問您本次購買投資型保險商品之目的：
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="purpose"> </i>
+                                        </div>
+                                        保險保障
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="purpose"> </i>
+                                        </div>
+                                        財務規劃
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="purpose"> </i>
+                                        </div>
+                                        其他
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="check-list">
+                            <div class="attr-quest">2. 家庭年平均收入：
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="income"> </i>
+                                        </div>
+                                        0~50萬
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="income"> </i>
+                                        </div>
+                                        51萬~100萬
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="income"> </i>
+                                        </div>
+                                        101萬~200萬
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="income"> </i>
+                                        </div>
+                                        201萬以上
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="check-list">
+                            <div class="attr-quest">3. 您每年須付的保費占您的收入比例：
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="percentageOfIncome"> </i>
+                                        </div>
+                                        10%以下
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="percentageOfIncome"> </i>
+                                        </div>
+                                        10~20%
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="percentageOfIncome"> </i>
+                                        </div>
+                                        20~30%
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="percentageOfIncome"> </i>
+                                        </div>
+                                        30%以上
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="check-list">
+                            <div class="attr-quest">4. 淨資產(動產與不動產扣除負債合計)：
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="netAsset"> </i>
+                                        </div>
+                                        100萬以下
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="netAsset"> </i>
+                                        </div>
+                                        101萬~500萬
+                                    </label>
+                                </div>
+                                <div class="radio inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="netAsset"> </i>
+                                        </div>
+                                        501萬以上
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="check-title">第二部份：投資風險屬性 評估</div>
+                    <div class="check-body grey2">
+                        <div class="check-list col-sm-6 attr1-padding">
+                            <p class="marginBottom20">1. 您目前的年齡</p>
+                            <div class="attr1">
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="age" value="5"> </i>
+                                        </div>
+                                        A. 60歲以上
+                                        <span class="col-sm-4 pull-right">(5分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="age" value="10"> </i>
+                                        </div>
+                                        B. 41～60歲
+                                        <span class="col-sm-4 pull-right">(10分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="age" value="15"> </i>
+                                        </div>
+                                        C. 40歲以下
+                                        <span class="col-sm-4 pull-right">(15分)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="check-list col-sm-6 attr1-padding">
+                            <p class="marginBottom20">2. 您曾接觸過的投資工具</p>
+                            <div class="radio attr1">
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="payMethod" value="0"> </i>
+                                        </div>
+                                        A. 沒有任何經驗
+                                        <span class="col-sm-4 pull-right">(0分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="payMethod" value="5"> </i>
+                                        </div>
+                                        B. 銀行存款、儲蓄險
+                                        <span class="col-sm-4 pull-right">(5分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="payMethod" value="10"> </i>
+                                        </div>
+                                        C. 共同基金、債券
+                                        <span class="col-sm-4 pull-right">(10分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="payMethod" value="15"> </i>
+                                        </div>
+                                        D. 股票、期貨或其他衍生性金融商品
+                                        <span class="col-sm-4 pull-right">(15分)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="check-list col-sm-6 attr1-padding">
+                            <p class="marginBottom20">3. 您的投資經驗</p>
+                            <div class="radio attr1">
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="period" value="5"> </i>
+                                        </div>
+                                        A. 3個月以內
+                                        <span class="col-sm-4 pull-right">(5分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="period" value="10"> </i>
+                                        </div>
+                                        B. 3個月～  3年
+                                        <span class="col-sm-4 pull-right">(10分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="period" value="15"> </i>
+                                        </div>
+                                        C. 3年以上
+                                        <span class="col-sm-4 pull-right">(15分)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="check-list col-sm-6 attr1-padding">
+                            <p class="marginBottom20">4. 風險承擔能力（負年報酬率) (含價格與匯率波動)</p>
+                            <div class="radio attr1">
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="underTakeRange" id="underTakeRange" value="0"> </i>
+                                        </div>
+                                        A. 不能接受
+                                        <span class="col-sm-4 pull-right">(0分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="underTakeRange" value="5"> </i>
+                                        </div>
+                                        B. -(0% ～ 5%)
+                                        <span class="col-sm-4 pull-right">(5分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="underTakeRange" value="10"> </i>
+                                        </div>
+                                        C. -(6% ～ 10%)
+                                        <span class="col-sm-4 pull-right">(10分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="underTakeRange" value="15"> </i>
+                                        </div>
+                                        D. -(11% 以上)
+                                        <span class="col-sm-4 pull-right">(15分)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="check-list col-sm-6 attr1-padding">
+                            <p class="marginBottom20">5. 財務目標</p>
+                            <div class="radio attr1">
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="aimOfFinance" value="5"> </i>
+                                        </div>
+                                        A. 避免資產的損失
+                                        <span class="col-sm-4 pull-right">(5分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="aimOfFinance" value="10"> </i>
+                                        </div>
+                                        B. 資產穩定的成長
+                                        <span class="col-sm-4 pull-right">(10分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="aimOfFinance" value="15"> </i>
+                                        </div>
+                                        C. 資產迅速的成長
+                                        <span class="col-sm-4 pull-right">(15分)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="check-list col-sm-6 attr1-padding">
+                            <p class="marginBottom20">6. 年期望報酬率</p>
+                            <div class="radio attr1">
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="rewardRange" value="5"> </i>
+                                        </div>
+                                        A. 0% ～ 5%
+                                        <span class="col-sm-4 pull-right">(5分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="rewardRange" value="10"> </i>
+                                        </div>
+                                        B. 6% ～ 10%
+                                        <span class="col-sm-4 pull-right">(10分)</span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i><input type="radio" class="hide" name="rewardRange" value="15"> </i>
+                                        </div>
+                                        C. 11% 以上
+                                        <span class="col-sm-4 pull-right">(15分)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="statement1 wht">
+                        <p class="text-ps">備註：上述第4題答覆若為「A.不能接受」，則不論總分為何，其投資風險屬性皆歸類為「保守型保戶」。
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-12 two-buttons">
+                    <a href="apply1">
+						<button type="button" id="deny" class="btn-signup">取消</button>
+					</a>
+					<button type="button" id="go" class="btn-signup">下一步</button>
+                </div>
+            </div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = {};
+		$(function() {
+			// 下一步事件
+			$('#go').click(function() {
+				var totalScore = 0;
+				if(!isSelected("purpose") 
+				|| !isSelected("income") 
+				|| !isSelected("percentageOfIncome") 
+				|| !isSelected("netAsset")
+				|| !isSelected("age")
+				|| !isSelected("payMethod")
+				|| !isSelected("period")
+				|| !isSelected("aimOfFinance")
+				|| !isSelected("rewardRange")) {
+
+					if(!document.getElementById("underTakeRange").checked) {
+						openAlert("請完成問卷內所有問題");
+						return false;
+					} else {
+						formData.riskScore = 0;
+						postWithFormData(/*[[@{/riskLevel2}]]*/, formData);
+					}
+					
+				} else {
+					if(document.getElementById("underTakeRange").checked){
+						riskScore = 0;
+					} else {
+						riskScore = 
+							sumByCheckboxName("age") + 
+							sumByCheckboxName("payMethod") + 
+							sumByCheckboxName("period") + 
+							sumByCheckboxName("underTakeRange") + 
+							sumByCheckboxName("aimOfFinance") + 
+							sumByCheckboxName("rewardRange");
+					}
+					formData.riskScore = riskScore;
+					postWithFormData(/*[[@{/riskLevel2}]]*/, formData);
+				}
+			});
+		});
+
+		function isSelected(elementName){
+			var checkBoxNames = document.getElementsByName(elementName);
+			for(var i=0; i<checkBoxNames.length; i++) {
+				if(checkBoxNames[i].checked){
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function sumByCheckboxName(elementName) {
+			var sum = 0;
+			var checkBoxNames = document.getElementsByName(elementName);
+			for(var i=0; i<checkBoxNames.length; i++) {
+				if(checkBoxNames[i].checked){
+					sum = sum + Number((checkBoxNames[i].value));
+					continue;
+				}
+			}
+			return sum;
+		}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

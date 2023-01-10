@@ -1,0 +1,69 @@
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<div class="col-sm-12 hid-title2">
+					<th:block th:if="${session.USER_DETAIL == null}">
+						<th:block th:text="${session.LOGIN_USER_ID}"/>
+					</th:block>
+					<th:block th:if="${session.USER_DETAIL != null}">
+						<th:block th:text="${session.USER_DETAIL.userName}"/>
+					</th:block>
+				</div>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<tr class="">
+							<th class="hid-th w40p">手機號碼</th>
+							<td><th:block th:text="${transCustInfoVo != null} ? ${transCustInfoVo.mobileOld}"/></td>
+						</tr>
+						<tr class="">
+							<th class="hid-th w40p">電子郵件</th>
+							<td><th:block th:text="${transCustInfoVo != null} ? ${transCustInfoVo.emailOld}"/></td>
+						</tr>
+						<tr>
+							<th class="hid-th w40p">通知方式</th>
+							<td>
+								<th:block th:if="${transCustInfoVo != null}">
+									<th:block th:if="${transCustInfoVo.smsFlagOld == '1'}">手機簡訊</th:block>
+									<th:block th:if="${transCustInfoVo.mailFlagOld == '1'}">電子郵件</th:block>
+								</th:block>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div class="col-sm-12 hid-title3">
+	<i class="fas fa-chevron-down fa orange"></i>
+</div>
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<tr class="">
+							<th class="hid-th w40p">手機號碼</th>
+							<td><th:block th:text="${transCustInfoVo != null} ? ${transCustInfoVo.mobile}"/></td>
+						</tr>
+						<tr class="">
+							<th class="hid-th w40p">電子郵件</th>
+							<td><th:block th:text="${transCustInfoVo != null} ? ${transCustInfoVo.email}"/></td>
+						</tr>
+						<tr>
+							<th class="hid-th w40p">通知方式</th>
+							<td>
+								<th:block th:if="${transCustInfoVo != null}">
+									<th:block th:if="${transCustInfoVo.smsFlag == '1'}">手機簡訊</th:block>
+									<th:block th:if="${transCustInfoVo.mailFlag == '1'}"> 電子郵件</th:block>
+								</th:block>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

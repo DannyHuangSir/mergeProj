@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>保單價值列印｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">保單價值列印</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 保單價值列印
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-4">
+						2<span class="hid1">. 設定列印內容</span>
+					</li>
+					<li class="step3 col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>設定列印內容</h2>
+				<div class="col-md-8 col-md-offset-2">
+					<form id="printForm" class="form-horizontal no-borderBottom marginTop20" role="form">
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-3">列印格式：</label>
+							<div class="col-sm-9">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="lang" value="C" checked="checked"></i></div>中文
+									</label>
+								</div>
+								<div class="radio inline hide">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="lang" value="E"></i></div>英文
+									</label>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-3">收件方式：</label>
+							<div class="col-sm-9">
+								<div class="radio inline hide">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="deliverType" value="P" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>紙本
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="deliverType" value="E" onclick="if(this.checked) $('#tab_1').show().siblings().hide();" checked="checked"></i></div>電子郵件
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-12" style="width: 120%">
+								<div class="tabs">
+									<!-- TAB 1 -->
+									<article id="tab_1" class="tab show">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 30%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">電子郵件信箱</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">E-Mail</label>
+													<div class="col-sm-9">
+													<input type="text" class="col-sm-9" name="beliverMail" id="beliverMail" placeholder="請輸入電子郵件信箱"> </div>
+												</div>
+											</div>
+										</section>
+									</article>
+									<!-- TAB 2 -->
+									<article class="tab tab-hide hide" id="tab_2">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 25%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">收件地址</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-2">地址</label>
+													<div class="col-sm-10">
+														<th:block th:replace="fragments/address"/>
+													</div>
+												</div>
+											</div>
+										</section>
+									</article>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-12 two-buttons">
+					<a href="valuePrint1">
+						<button id="deny" class="btn-signup">上一步</button>
+					</a>
+					<th:block th:if="${loginUserType eq 'member'}">
+						<button id="go" class="btn-signup">下一步</button>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = /*[[${transValuePrintVo}]]*/;
+		$(function() {
+			// 下一步事件
+			$('#go').click(function() {
+				formData.lang = $('input[name="lang"]:checked').val();
+				formData.deliverType = $('input[name="deliverType"]:checked').val();
+				
+				if ($('input[name="lang"]:checked').val() == null) {
+					/* openAlert("請選擇列印格式"); */
+					openAlert($('#E0054').val());
+					return false;
+				}
+				
+				if ($('input[name="deliverType"]:checked').val() == null) {
+					/* openAlert("請選擇收件方式"); */
+					openAlert($('#E0057').val());
+					return false;
+				}
+				
+				if ($('input[name="deliverType"]:checked').val() == 'P') {
+					/* if (!isAddressValid('請輸入收件地址')) {
+	                    return false;
+	                } */
+	                if(!isAddressValid($('E0060').val())){
+	                    return false;
+	                }
+					formData.deliverAddr = $("#selectAddressFull").val();
+				}
+				
+				if ($('input[name="deliverType"]:checked').val() == 'E') {
+					if ($('#beliverMail').val() == '') {
+						/* openAlert("請輸入電子郵件信箱"); */
+						openAlert($('#E0059').val());
+						return false;
+					}
+					if (!eserviceForm.isEmail($('#beliverMail').val())) {
+						/* openAlert("請輸入正確的電子郵件信箱格式"); */
+						openAlert($('#E0060').val());
+						return false;
+					}
+					formData.beliverMail = $('#beliverMail').val();
+				}
+				
+				postWithFormData(/*[[@{/valuePrint3}]]*/, formData);
+			});
+		});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

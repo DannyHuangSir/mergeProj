@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>已持有投資標的轉換｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">已持有投資標的轉換</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 已持有投資標的轉換
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 active col-xs-3">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-3">
+						2<span class="hid1">. 接受條件</span>
+					</li>
+					<li class="step3b col-xs-2">
+						3<span class="hid1">. 選擇轉出基金</span>
+					</li>
+					<li class="step3b col-xs-2">
+						4<span class="hid1">. 選擇轉入基金</span>
+					</li> 
+					<li class="step4 col-xs-2">
+						5<span class="hid1">. 確認資料與密碼</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請選擇欲申請之保單</h2>
+				<div class="loan1">
+					<table th:replace="fragments/applyPolicyList :: table13 (choseType='radio')"></table>
+					<div class="statement1 wht">
+						<p class="text-ps">備註</p>
+						<ol class="text-ps" id="transformationRemarks">
+							<li>未來保費投資標的申請如於當日15:00提出申請則視為當日申請，逾時則視為次一工作日申請。</li>
+							<li>相同標的不得同時申請投資標的部分提領及投資標的轉換。</li>
+							<li>申請『投資標的轉換』之保單，如果仍有已申請但未完成的交易項目，須待前一交易完成後方可提出。</li>
+							<li>各投資標的之配置比例必須為10的倍數且總和需為 100%。</li>
+							<li>本保單投資標的總數以10 個為上限，每次交易最多得同時選擇10個投資標的做為未來繳入保費的投資配置項目。</li>
+							<li>已持有標的轉換後，如未來保費投資標的也要轉換時，則必須再做未來保費投資配置變更。</li>
+							<li>新約定投資標的之風險屬性須符合要保人最新風險屬性等級，如前次所作風險屬性等級評估已達1年以上，須重新評估要保人之風險屬性等級，並作為日後變更投資標的申請之依據。</li>
+							<li>若您的投資風險屬性為保守型，您可選擇保守型的基金RR1~RR2。</li>
+							<li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型的基金RR1~RR4。</li>
+							<li>若您的投資風險屬性為積極型型，您可選擇保守型、穩健型及積極型型的基金RR1~RR5。</li>
+						</ol>
+					</div>
+					<div class="col-md-8 col-md-offset-2 two-buttons">
+						<a href="apply1">
+							<button id="deny" class="btn-signup">取消</button>
+						</a>
+						<a href="javascript:void(0);">
+							<button id="go" class="btn-signup">同意並進行變更</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	 /*<![CDATA[*/
+	 $(function() {
+		var transformationRemarks = /*[[${transformationRemarks}]]*/;
+		var riskLevel = /*[[${riskLevel}]]*/;
+				if (transformationRemarks!= undefined && transformationRemarks != null && transformationRemarks != ''){
+					$("#transformationRemarks").html(transformationRemarks);
+				}
+
+		var formData = {};
+		$('#go').click(function() {
+			// 檢核是否有選一筆資料
+			if ($('input[name="chosePolicy"]:checked').val() == null) {
+				/* openAlert("請選擇一筆保單"); */
+				openAlert($('#E0038').val());
+				return false;
+			}
+			
+			var formData = {};
+			var policyNo= $('input[name="chosePolicy"]:checked').val()
+			formData.policyNo = policyNo;
+			formData.invtRiskBeneLevel = riskLevel;
+			formData.currency = $("#currency_" + policyNo).val();
+			console.log('=========',formData);
+			postWithFormData(/*[[@{/fund2}]]*/,formData);
+		});
+	});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

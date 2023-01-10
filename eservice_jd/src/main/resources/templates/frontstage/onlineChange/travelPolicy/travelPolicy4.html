@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+<th:block th:replace="fragments/head" />
+    <title>臺銀人壽旅平險</title>
+    <!-- Bootstrap -->
+    <!-- link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/icon.css" rel="stylesheet"/>
+    <link href="css/layout.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/tablesaw.stackonly.css"/>
+    <link rel="shortcut icon" href="img/favor-icon.png"/>
+    <link rel="stylesheet" href="css/scrollbar.css" type="text/css"/>
+    <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.css" type="text/css"/ -->
+</head>
+
+<body>
+    <div class="row hid1" id="top1">
+        <div class="container">
+            <button class="btn pull-right user1" type="button">商業 Business</button>
+            <button class="btn pull-right user1 active" type="button">個人 Personal</button>
+        </div>
+    </div>
+    <header>
+        <div class="container">
+            <div class="row">
+                <th:block th:replace="fragments/logo"/>
+                <div class="n1 inlineBlock float-left">旅平險試算與申請</div>
+            </div>
+        </div>
+    </header>
+	
+    <section class="grey applyInner beneficiary2 fullContent">
+        <div class="container bg3 ">
+            <div class="">
+                <ul class="step">
+                    <li class="step1 col-xs-3">
+                        1<span class="hid1">. 輸入旅平險申請資料</span>
+                    </li>
+                    <li class="step2 col-xs-3">
+                        2<span class="hid1">. 選擇您的方案</span>
+                    </li>
+                    <li class="step3b col-xs-3">
+                        3<span class="hid1">. 輸入保單資料</span>
+                    </li>
+                    <li class="step4 active col-xs-3">
+                        4<span class="hid1">. 確認保單資料</span>
+                    </li>
+                </ul>
+            </div>    
+            <div class="mystyle3" id="policyInfo">
+                <h2 style="padding-bottom:10px;color:#078B37;font-size:26px;text-align: center;">要保書基本內容</h2>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">辦理投保事宜之地點為：</div>
+                    <div class="col-sm-7">
+						<th:block th:text="${travelPolicy.wnpiDeptStr}"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">要保人姓名：</div>
+                    <div class="col-sm-7">
+						<th:block th:text="${travelPolicy.proposer.proposer}"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">與被保險人關係：</div>
+                    <div class="col-sm-7">
+						<th:block th:text="${travelPolicy.proposer.relationToInsured}"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">要保人身分證字號：</div>
+                    <div class="col-sm-7">
+						<th:block th:text="${travelPolicy.proposer.identityId}"/>
+					</div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">生日：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${#dates.format(travelPolicy.proposer.birthday, 'yyyy/MM/dd')}"/>
+                    </div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">要保人地址：</div>
+                    <div class="col-sm-7">						
+						<th:block th:text="${travelPolicy.proposer.address}"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">聯絡電話(公)：</div>
+                    <div class="col-sm-7">						
+						<th:block th:text="${travelPolicy.proposer.officeTel}"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">聯絡電話(宅)：</div>
+                    <div class="col-sm-7">						
+						<th:block th:text="${travelPolicy.proposer.homeTel}"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">聯絡電話(行動)：</div>
+                    <div class="col-sm-7">						
+						<th:block th:text="${travelPolicy.proposer.cellphoneNum}"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">E-mail：</div>
+                    <div class="col-sm-7">						
+						<th:block th:text="${travelPolicy.proposer.email}"/>
+					</div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">國籍：</div>
+                    <div class="col-sm-7">						
+						<th:block th:text="${travelPolicy.proposer.country}"/>
+					</div>
+                </div>
+				
+				<h2 class="divider divider88"></h2>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">被保險人姓名：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.insured.insuredName}"/>
+                    </div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">被保人身分證字號：</div>
+                    <div class="col-sm-7">
+                       	<th:block th:text="${travelPolicy.insured.identityId}"/>
+                    </div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">生日：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${#dates.format(travelPolicy.insured.birthday, 'yyyy/MM/dd')}"/>
+                    </div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">職業：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.insured.job}"/>
+                    </div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">被保人地址：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.insured.address}"/>
+                    </div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">聯絡電話(公)：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.insured.officeTel}"/>
+                    </div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">聯絡電話(宅)：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.insured.homeTel}"/>
+                    </div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">聯絡電話(行動)：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.insured.cellphoneNum}"/>
+                    </div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">目前是否受有監護宣告：</div>
+                    <div class="col-sm-7">						
+						<th:block th:text="${travelPolicy.insured.wnpiAnnounce == '1' ? '是 (臨櫃辦理時請提供相關證明文件)' : '否'}"/>
+					</div>
+                </div>
+				
+				<h2 class="divider divider88"></h2>
+				
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">受益人是否為法定繼承人：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.beneficiary.legalInherit == 'Y' ? '是' : '否'}"/>
+                    </div>
+                </div>
+                <th:block th:if="${travelPolicy.beneficiary.legalInherit == 'N'}">
+	                <div class="change2">
+	                    <div class="col-sm-3 col-sm-offset-1">受益人姓名：</div>
+	                    <div class="col-sm-7">
+	                        <th:block th:text="${travelPolicy.beneficiary.beneficiaryName}"/>
+	                    </div>
+	                </div>
+	                <div class="change2">
+	                    <div class="col-sm-3 col-sm-offset-1">受益人身分證字號：</div>
+	                    <div class="col-sm-7">
+	                        <th:block th:text="${travelPolicy.beneficiary.beneficiaryRocid}"/>
+	                    </div>
+	                </div>
+	                <div class="change2">
+	                    <div class="col-sm-3 col-sm-offset-1">與被保險人關係：</div>
+	                    <div class="col-sm-7">
+	                        <th:block th:text="${travelPolicy.beneficiary.beneficiaryRelationStr}"/>
+	                    </div>
+	                </div>
+	                <div class="change2">
+	                    <div class="col-sm-3 col-sm-offset-1">身故受益人非被保險人之直系血親配偶或兄弟姊妹者，請註明原因：</div>
+	                    <div class="col-sm-7">
+	                       	<th:block th:text="${travelPolicy.beneficiary.reason}"/> 
+	                    </div>
+	                </div>
+	                <div class="change2">
+	                    <div class="col-sm-3 col-sm-offset-1">受益人地址：</div>
+	                    <div class="col-sm-7">
+	                        <th:block th:text="${travelPolicy.beneficiary.beneficiaryAddressFull}"/> 
+	                    </div>
+	                </div>
+	                <div class="change2">
+	                    <div class="col-sm-3 col-sm-offset-1">受益人生日：</div>
+	                    <div class="col-sm-7">
+	                        <th:block th:text="${#dates.format(travelPolicy.beneficiary.beniBirthday, 'yyyy/MM/dd')}"/>
+	                    </div>
+	                </div>
+	                <div class="change2">
+	                    <div class="col-sm-3 col-sm-offset-1">受益人電話：</div>
+	                    <div class="col-sm-7">
+	                        <th:block th:text="${travelPolicy.beneficiary.beneficiaryTel}"/> 
+	                    </div>
+	                </div>
+					<div class="change2">
+	                    <div class="col-sm-3 col-sm-offset-1">國籍：</div>
+	                    <div class="col-sm-7">						
+							<th:block th:text="${travelPolicy.beneficiary.country}"/>
+						</div>
+	                </div>
+                </th:block>
+                
+				<h2 class="divider divider88"></h2>
+				
+                <h2 style="padding-bottom:10px;color:#078B37;font-size:26px;text-align: center;">保單內容</h2>
+								
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">保險金額：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${#numbers.formatDecimal(travelPolicy.travelPlan.addid, 0, 'DEFAULT', 0, 'COMMA')}"/> 萬元
+                    </div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">意外傷害醫療給付保險金限額：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.travelPlan.mrid == 0 ? '不附加' : #numbers.formatDecimal(travelPolicy.travelPlan.mrid, 0, 'DEFAULT', 0, 'COMMA') + '萬元'}"/> 
+                    </div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">海外突發疾病醫療給付保險金限額：</div>
+                    <div class="col-sm-7">
+                        <th:block th:text="${travelPolicy.travelPlan.orid == 0 ? '不附加' : #numbers.formatDecimal(travelPolicy.travelPlan.orid, 0, 'DEFAULT', 0, 'COMMA') + '萬元'}"/> 
+                    </div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">保險期間：</div>
+                    <div class="col-sm-7">
+                    	<th:block th:text="${#strings.append(travelPolicy.beginDate, #strings.append(' ', travelPolicy.beginTime))}"/>
+                    	至
+                    	<th:block th:text="${#strings.append(travelPolicy.endDate, #strings.append(' ', travelPolicy.endTime))}"/>
+                        	共
+                        <th:block th:text="${travelPolicy.travelDay}"/>
+                        	天
+                        
+                    </div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">旅行目的地：</div>
+                    <div class="col-sm-7"><!-- [國外]　 日本 -->
+                    	[<th:block th:text="${travelPolicy.travelDestType}"/>]  <th:block th:text="${travelPolicy.travelDest}"/>
+                    </div>
+                </div>
+				<div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">保險費合計：</div>
+                    <div class="col-sm-7">
+                       	 新台幣 <th:block th:text="${#numbers.formatDecimal(travelPolicy.travelPlan.premium, 0, 'DEFAULT', 0, 'COMMA')}"/> 元
+                    </div>
+                </div>
+				
+				<h2 class="divider divider88"></h2>
+				<div class="change2">
+                    <div class="col-sm-8 col-sm-offset-1">就本次旅程，被保險人是否已投保其他旅行平安保險(保括本公司或其他公司之各種保險)？ </div>
+                    <div class="col-sm-1">
+                       	<th:block th:if="${travelPolicy.otherTravel == 'Y'}">
+                       	是
+                       	</th:block>
+                       	<th:block th:if="${travelPolicy.otherTravel == 'N'}">
+                       	否
+                       	</th:block>
+                    </div>
+                </div>
+                <th:block th:if="${travelPolicy.otherTravel == 'Y'}">
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">保險公司名稱：</div>
+                    <div class="col-sm-7">
+                       	<th:block th:text="${travelPolicy.otherTravelCompany}"/>
+                    </div>
+                </div>
+                <div class="change2">
+                    <div class="col-sm-3 col-sm-offset-1">保險金額：新台幣 </div>
+                    <div class="col-sm-7">
+                    	新台幣 <th:block th:text="${#numbers.formatDecimal(travelPolicy.otherAmtWrap, 0, 'DEFAULT', 0, 'COMMA')}"/> 萬元
+                    </div>
+                </div>
+                </th:block>
+				<div class="change2">
+                    <div class="col-sm-8 col-sm-offset-1">
+                        <a data-toggle="modal" style="cursor: pointer" data-backdrop="static" data-keyboard="false" data-target="#modal-container-Confirm"><i class="fa fa-download fa-lg"></i> 下載旅平險要保書</a> 
+                    </div>
+                    <div class="col-sm-1">
+                        
+                    </div>
+                </div>
+			</div>
+			<div class="col-md-12 two-buttons">
+            <!-- <a href="#">
+                <button id="deny" class="btn-signup">上一步
+                </button>
+            </a> -->
+            <a href="travelPolicy1">
+                <button id="go" class="btn-signup">回到旅平險申請試算
+                </button>
+            </a>
+        </div>
+		</div>
+		
+        
+    </section>
+	
+	
+    <div class="modal fade in" id="modal-container-Confirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content lock-up">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body apply2 center1 grey2">
+                    <h3>下載旅平險要保書</h3>
+                    <p class="item360 text-center" style="margin:auto">
+                        *開啟密碼請輸入要保人身分證字號。
+                    </p> 
+                    <p class="marginTop20">
+                        <a>
+                            <button class="btn-login lock2" onclick="downloadPDF()" data-dismiss="modal">確定</button>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <footer th:replace="fragments/footer"></footer>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="plugin/jquery-1.11.3.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="plugin/jquery.placeholder.min.js"></script>
+	
+    <script src="plugin/detectmobilebrowser_jquery.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="plugin/bootstrap.min.js"></script>
+    <script src="plugin/scrollbar.js"></script>
+    <script src="js/popover.js"></script>
+    <script src="js/tablepand.js"></script>
+    <script th:inline="javascript">
+	/*<![CDATA[*/
+	var travelPolicy = /*[[${travelPolicy}]]*/;
+	var transNum = /*[[${transNum}]]*/;
+	
+	$("#deny").click(function(){
+		var params = {
+            	name : 'travelPolicy',
+            	value : JSON.stringify(travelPolicy)
+        };
+		
+		var paramArray = [];
+    	paramArray.push(params);
+		postWithParams(/*[[@{/travelPolicy3}]]*/, paramArray);
+	});
+	
+	function downloadPDF() {
+		//var url = '/eservice/travelPolicyPDF?' + $.param(travelPolicy);
+		var url = '/eservice/travelPolicyPDF';
+		//url = url.replace(/%5B/g, '').replace(/%5D/g, '');
+		window.open(url);
+	}
+	
+	function autoSendTravelPolicy(){
+		var policyTable = '';
+		var policyInfo = $('#policyInfo').get(0).children;
+		$.each(policyInfo, function(index){
+			var tmp = policyInfo[index];
+			if(tmp.childElementCount == 0){
+				policyTable += "<tr><td colspan='2'>"+ tmp.innerText + '</td></tr>';
+			} else if(tmp.childElementCount == 2){
+				var childArray = tmp.children;
+				policyTable += '<tr><td style="width: 35%;">'+ childArray[0].innerText 
+				+ '</td><td style="width:65%;">' + childArray[1].innerText + '</td></tr>';
+			}
+		});
+		policyTable = '<table>' + policyTable + '</table>';
+        var datas = {
+        		transNum : transNum, 
+        		travelPolicy: JSON.stringify(travelPolicy),
+        		travelPolicyInfo: JSON.stringify(policyTable)
+        };
+        $.ajax({
+            type : 'POST', 
+            contentType : 'application/json',
+            url : /*[[@{/travelPolicyAutoSend}]]*/,
+            data : JSON.stringify(datas),
+            success : function(response){
+                if(response.resultMsg == 'success'){
+                    
+                } else{
+                    
+                }
+            },
+            error : function(response){
+                openAlert('error!');
+            }
+        });
+	}
+	autoSendTravelPolicy();
+	/*]]>*/
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>申請續保憑證｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+    <div th:replace="fragments/header :: top"></div>
+    <header th:replace="fragments/header :: header"></header>
+    <th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+    <!--major 3 tabs-->
+    <div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+    <section class="grey applyInner fullContent">
+        <div class="container bg3">
+            <ul class="breadcrumb detail1">
+                <li>
+                    <a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+                </li>
+                <li class="active">
+                    <a href="javascript:;">續保憑證</a>
+                </li>
+            </ul>
+        </div>
+        <div class="container bg3 box-border">
+            <div class="tb3 top0 nopd">
+                <i class="fas fa-edit"></i> 補發續保憑證
+            </div>
+            <div class="">
+                <ul class="step">
+                    <li class="step1 col-xs-6">
+                        1<span class="hid1">. 選擇保單</span>
+                    </li>
+                    <li class="step3 active col-xs-6">
+                        2<span class="hid1">. 選擇寄送方式</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="mystyle3">
+                <h2>請選擇寄送方式</h2>
+                <div class="loan1">
+                    <div class="">
+                        <label for="checkBox12" class="col-sm-10 col-sm-offset-2 enNormal">保單號碼： <span class="colorBlack">TRK1213330</span></label>
+                        <!--  <label for="checkBox12" class="col-sm-10 col-sm-offset-2">保單號碼： <span class="colorBlack">TRK1213330</span></label> -->
+                    </div>
+                    <div class="col-sm-8 col-sm-offset-2 grey2 ptop30 greyBox">
+                        <!--   <div class="check-list3 pbottom0">    
+        <label for="" class="col-sm-3 ">申請項目：</label>
+        <label for="" class="col-sm-3"><input type="radio" name=""> 本期 </label>
+        <label> <input type="radio" name=""> 永久 </label>
+    </div>  -->
+                        <div class="check-list3 clearfix">
+                            <label for="" class="col-sm-3">郵寄方式：</label>
+                            
+                                <div class="col-sm-4 inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i>
+                                                <input type="radio" name="" value="option1">
+                                            </i>
+                                        </div> 限時專送
+                                    </label>
+                                </div>
+                                <div class="col-sm-5 inline">
+                                    <label>
+                                        <div class="radio-btn">
+                                            <i>
+                                                <input type="radio" name="" value="option1">
+                                            </i>
+                                        </div> 平信
+                                    </label>
+                                </div>
+                            
+                        </div>
+                            
+                        <div class="check-list3 clearfix">
+                            <label for="" class="col-sm-4">本次郵遞區號：</label>
+                            <input type="text" class="col-sm-2"/>
+                        </div>
+                        <div class="check-list3 clearfix">
+                            <label for="" class="col-sm-4">本次郵寄地址：</label>
+                            <input type="text" class="col-sm-8"/>
+                            <div class="col-sm-8 col-sm-offset-4"><a href="javascript:;" class="orange pull-right btn-mailChange" data-toggle="popover" id="change_address_btn" title="變更地址" data-target="#popoverChangeAddress">變更保單通訊地址</a></div>
+                        </div>
+                        <div id="popoverChangeAddress" class="collapse grey">
+                            <div id="ChangeAddressContent" class="content">
+                                本次郵寄地址，僅適用於本次申請，欲變更通訊地址，請下載<a href="" target="_blank" class="underline">契約內容變更申請書</a>，填寫完後傳真：02-27845218 或郵寄臺銀人壽：(10682)台北市大安區敦化南路二段 69 號 2 ~ 8 樓
+                            </div>
+                        </div>
+                        <div class="col-sm-9"></div>
+                        <div>
+                            <div class="col-sm-9">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <!--div class="claim1 col-sm-8 col-sm-offset-2">
+                        <p class="text-ps">本期收據為最近一期的繳費紀錄，如有特定期間之收據需求，請電洽服務中心 02-6623-3688或
+                            <br/>080-011709。</p>
+                    </div-->
+                    <div class="col-md-12 two-buttons">
+                        <a href="certificateRenew1">
+                            <button id="deny" class="btn-signup">上一步
+                            </button>
+                        </a>
+                        <a href="certificateRenewSuccess">
+                            <button id="go" class="btn-signup">確認送出
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer th:replace="fragments/footer"></footer>
+    <th:block th:replace="fragments/script"/>
+    <script>
+    $(function() {
+        $('#change_address_btn').popover();
+    });
+    </script>
+</body>
+
+</html>

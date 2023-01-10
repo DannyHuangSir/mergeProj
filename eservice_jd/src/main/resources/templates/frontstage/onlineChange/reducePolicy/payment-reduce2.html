@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>減少保險金額｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">減少保險金額</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border listing-area">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 申請減少保險金額
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-4">
+						2<span class="hid1">. 輸入保險金額</span>
+					</li>
+					<li class="step3 col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3 loan1 th span.enSmall">
+				<h2>請輸入欲減少的保險金額</h2>
+				<div class="check-title">設定保險金額</div>
+				<div class="grey2">
+					<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="" id="policyTable">
+						<thead>
+							<tr class="table2 orange2">
+								<th class="text-left" scope="col" data-tablesaw-sortable-col="保單號碼" data-tablesaw-priority="persist">保單號碼</th>
+								<th class="text-left" scope="col" data-tablesaw-sortable-col="險種名稱" data-tablesaw-priority="">險種名稱</th>
+								<th class="text-left" scope="col" data-tablesaw-sortable-col="契約種類" data-tablesaw-priority="">契約種類</th>
+								<th class="text-left" scope="col" data-tablesaw-sortable-col="原始保額" data-tablesaw-priority="">原始保額</th>
+								<th class="text-left" scope="col" data-tablesaw-sortable-col="欲變更保險金額" data-tablesaw-priority="">欲變更保險金額</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:if="${coverageVoList != null}">
+								<th:block th:each="vo : ${coverageVoList}">
+									<tr>
+										<td class="text-left">
+											<th:block th:text="${vo.policyNo}"/>
+											<input type="hidden" name="policyNo" th:value="${vo.policyNo}">
+										</td>
+										<td class="text-left">
+											<th:block th:text="${vo.productVo != null} 
+												? ${vo.productVo.productName}"/>
+											<input type="hidden" name="productName" th:value="${vo.productVo != null} ? ${vo.productVo.productName}">
+										</td>
+										<td class="text-left">
+											<th:block th:text="${vo.productVo != null} 
+												? ${vo.productVo.productTypeName}"/>
+											<input type="hidden" name="productTypeName" th:value="${vo.productVo != null} ? ${vo.productVo.productTypeName}">
+										</td>
+										<td class="text-left">
+											<th:block th:text="${vo.mainAmount != null}
+												? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}
+												: '&nbsp;'"/>
+											<input type="hidden" name="mainAmount" th:value="${vo.mainAmount}">
+										</td>
+										<td class="text-left">
+											降低為 <input type="number" min="0" style="width:30%;"/> (最低可降額度為)
+										</td>
+									</tr>
+								</th:block>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-8 col-md-offset-2 hide">
+					<form id="step2Form" class="form-horizontal no-borderBottom marginTop20">
+						<div class="form-group">
+							<label class="col-sm-2">領款方式：</label>
+							<div class="col-sm-8">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="paymentMethod" value="01" onclick="if(this.checked) $('#tab_3').show().siblings().hide();"></i></div>匯款
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="paymentMethod" value="02" onclick="if(this.checked) $('#tab_4').show().siblings().hide();"></i></div>支票
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="paymentMethod" value="03" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div>郵局存簿儲金
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-8" style="width: 100%">
+								<div class="tabs">
+									<!-- TAB 1 -->
+									<article id="tab_3" class="tab">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="grey2">
+												<div class="check-title depo2">匯款</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-2">匯款帳戶</label>
+													<div class="col-sm-9">
+													<input type="text" name="accountName" class="col-sm-12" value="" placeholder="">
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-2">銀行名稱</label>
+													<div class="col-sm-5">
+														<div>
+															<select id="bankOpt" name="bankOpt" data-placeholder="選擇銀行" class="wht">
+																<option value=""></option>
+															</select>
+															<input type="hidden" id="bankName" name="bankName"/>
+														</div>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-2">分行名稱</label>
+													<div class="col-sm-5">
+														<div>
+															<select class="selector wht" id="brancheOpt" name="brancheOpt" data-placeholder="選擇分行">
+																<option value=""></option>
+															</select>
+															<input type="hidden" id="branchName" name="branchName"/>
+														</div>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-2">帳號</label>
+													<div class="col-sm-9">
+														<input type="text" name="accountNumber" class="col-sm-12" value=""> </div>
+												</div>
+											</div>
+										</section>
+									</article>
+									<!-- TAB 2 -->
+									<article class="tab tab-hide" id="tab_4">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="grey2">
+												<div class="check-title depo2">支票</div>
+												<div class="check-list2 grey2">
+													<div class="radio  col-sm-8">
+														<label>
+															<div class="radio-btn"><i><input type="radio" name="postMethod" value="01" onclick=""></i></div>戶籍地址:
+														</label>
+													</div>
+													<div class="radio col-sm-8">
+														<label>
+															<div class="radio-btn"><i><input type="radio" name="postMethod" value="02" onclick=""></i></div>收費地址:
+														</label>
+													</div>
+													<div class="radio col-sm-8">
+														<label>
+															<div class="radio-btn"><i><input type="radio" name="postMethod" value="03" onclick=""></i></div>其他地址:
+														</label>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-2">收件人</label>
+													<div class="col-sm-8">
+														<input type="text" name="postalName" class="col-sm-12" value=""> 
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-2">郵遞區號</label>
+													<div class="col-sm-8">
+														<input type="text" name="postalCode" class="col-sm-12" value=""> 
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-2">郵寄地址</label>
+													<div class="col-sm-8">
+														<input type="text" name="postalAddr" class="col-sm-12" value="">
+													</div>
+												</div>
+											</div>
+										</section>
+									</article>
+									<!-- TAB 3 -->
+									<article id="tab_1" class="tab">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="grey2">
+												<div class="check-title depo2">郵局匯款資訊</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">戶名</label>
+													<div class="col-sm-9">
+													 <input type="text" id="postName" name="postName" class="col-sm-10" value=""> </div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">局號</label>
+													<div class="col-sm-9">
+													 <input type="text" id="postNo1" name="postNo1" class="col-sm-10" value=""> </div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">帳號</label>
+													<div class="col-sm-9">
+													 <input type="text" id="postNo2" name="postNo2" class="col-sm-10" value=""> </div>
+												</div>
+											</div>
+										</section>
+									</article>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_00902'] != null} 
+					? ${session.PAGE_WORDING['WORDING_00902'].parameterValue}"/>
+				<!-- div class="statement1 wht hide">
+					<p class="text-ps">備註：</p>
+					<p class="text-ps">※每一投資標的轉出金額不得低於NTD 2,000，但轉出百分比設定為100%則不受此限制</p>
+				</div -->
+				<div class="col-md-12 two-buttons">
+					<a href="paymentReduce1">
+						<button id="deny" class="btn-signup">上一步</button>
+					</a>
+					<th:block th:if="${loginUserType eq 'member'}">
+						<button id="go" class="btn-signup">下一步</button>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var formData = {};
+	formData.policyNoList = /*[[${transReducePolicyVo.policyNoList}]]*/;
+	
+	$(function() {
+		$('#go').click(function() {
+			// 檢核是否有輸入欲變更保險金額
+			var checkInput = false;
+			$('#policyTable tbody tr').each(function() {
+				var reduceAmount = $(this).find("td:eq(4) input").val();
+				if (reduceAmount != '') {
+					checkInput = true;
+				}
+ 			});
+			if (!checkInput) {
+				/* openAlert('請至少填寫一個欲變更保險金額'); */
+				openAlert($('#E0082').val());
+				return false;
+			}
+			
+			var flag = true;
+			$("#policyTable tbody tr").each(function(){
+				var reduceAmountOld = $(this).find("td:eq(3) input").val();
+				var reduceAmount = $(this).find("td:eq(4) input").val();
+				if (reduceAmount != '') {
+					if (parseInt(reduceAmount) < 0) {
+						/* openAlert('輸入金額不可為負數'); */
+						openAlert($('#E0083').val());
+						flag = false;
+						return false;
+					}
+					if (parseInt(reduceAmount) > parseInt(reduceAmountOld)) {
+						/* openAlert('輸入金額不可大於原保險金額'); */
+						openAlert($('#E0084').val());
+						flag = false;
+						return false;
+					}
+				}
+			});
+			
+			if (flag) {
+				var jsonDataArray = [];
+				$("#policyTable tbody tr").each(function(){
+					var rowData = {};
+					rowData.policyNo = $(this).find("td:eq(0) input").val();
+					rowData.productName = $(this).find("td:eq(1) input").val();
+					rowData.contractType = $(this).find("td:eq(2) input").val();
+					rowData.contractAmountOld = $(this).find("td:eq(3) input").val();
+					rowData.contractAmount = $(this).find("td:eq(4) input").val();
+					
+					jsonDataArray.push(rowData);
+				});
+				formData.transReducePolicyDtlJsonData = JSON.stringify(jsonDataArray);
+				postWithFormData(/*[[@{/paymentReduce3}]]*/, formData);
+			}
+		});
+	});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

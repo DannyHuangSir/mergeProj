@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jboss-web>
+<jboss-web>
+	<context-root>eservice_jd</context-root>
+	<session-config>
+		<cookie-config>
+			<name>JSESSIONID</name>
+			<http-only>true</http-only>
+			<secure>false</secure>
+		</cookie-config>
+	</session-config>
+</jboss-web>

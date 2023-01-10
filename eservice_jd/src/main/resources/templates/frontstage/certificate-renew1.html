@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>申請續保憑證｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+    <div th:replace="fragments/header :: top"></div>
+    <header th:replace="fragments/header :: header"></header>
+    <th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+    <!--major 3 tabs-->
+    <div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+    <section class="grey applyInner fullContent">
+        <div class="container bg3">
+            <ul class="breadcrumb detail1">
+                <li>
+                    <a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+                </li>
+                <li class="active">
+                    <a href="javascript:;">續保憑證</a>
+                </li>
+            </ul>
+        </div>
+        <div class="container bg3 box-border">
+            <div class="tb3 top0 nopd">
+                <i class="fas fa-edit"></i> 補發續保憑證
+            </div>
+            <div class="">
+                <ul class="step">
+                    <li class="step1 active col-xs-6">
+                        1<span class="hid1">. 選擇保單</span>
+                    </li>
+                    <li class="step3 col-xs-6">
+                        2<span class="hid1">. 選擇寄送方式</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="mystyle3">
+                <h2>請選擇欲補發之保單</h2>
+                <div class="loan1">
+                    <table class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+                        <thead>
+                            <tr class="table2">
+                                <th class="item90" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class="w10"></th>
+                                <th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">保單</th>
+                                <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">主被保險人</th>
+                                <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">每期保費</th>
+                                <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">通訊地址</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="radio rect1check">
+                                        <div class="check-box">
+                                            <i>
+                                                <input type="checkbox" name=""/>
+                                            </i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="table3">團體一年定期防癌保險GCAN
+                                    <p>(TRK1213330)</p>
+                                </td>
+                                <td>王臺銀</td>
+                                <td>420,000<i class="my5">NTD</i></td>
+                                <td>104台北市中山區**************2樓</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="radio rect1check">
+                                        <div class="check-box">
+                                            <i>
+                                                <input type="checkbox" name=""/>
+                                            </i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="table3">團體一年定期防癌保險GCAN
+                                    <p>(TRK1213330)</p>
+                                </td>
+                                <td>王臺銀</td>
+                                <td>420,000<i class="my5">NTD</i></td>
+                                <td>104台北市中山區**************2樓</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="radio rect1check">
+                                        <div class="check-box">
+                                            <i>
+                                                <input type="checkbox" name=""/>
+                                            </i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="table3">團體一年定期防癌保險GCAN
+                                    <p>(TRK1213330)</p>
+                                </td>
+                                <td>王臺銀</td>
+                                <td>420,000<i class="my5">NTD</i></td>
+                                <td>104台北市中山區**************2樓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="statement1 wht">
+                        <p class="text-ps">※僅受理短年期有效保單補發續保憑證</p>
+                    </div>
+                    <div class="col-md-12 two-buttons">
+                        <a href="apply1">
+                            <button id="deny" class="btn-signup">取消
+                            </button>
+                        </a>
+                        <a href="certificateRenew2">
+                            <button id="go" class="btn-signup">下一步
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer th:replace="fragments/footer"></footer>
+    <th:block th:replace="fragments/script"/>
+</body>
+
+</html>

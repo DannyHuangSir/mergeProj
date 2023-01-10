@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="policyNoInfo (funId)" class="my1 marginTop20" th:with="policyNo=(${param.policyNo[0]})">
+		<p class="pull-left visible-xs">
+			<button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fas fa-bars fa-2x"></i></button>
+		</p>
+		<i class="foo-business_7 foo-2x hidden-xs"></i> <th:block th:each="map : ${session.USER_PRODUCT_NAME_LIST}"><th:block th:if="${map['POLICY_NO'] eq policyNo}"><th:block th:text="${map['PRODUCT_NAME']}"/></th:block></th:block>
+		<span class=""></span><span class="insuranceID_pc">(<th:block th:text="${policyNo}"/>)</span>
+		<div class="dropdown pull-right r30">
+			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+				<i class="hidden-xs r31">其他保單</i>
+				<i class="foo-down-dir r32"></i>
+			</button>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				<th:block th:each="map : ${session.USER_PRODUCT_NAME_LIST}">
+					<th:block th:if="${map['POLICY_NO'] != policyNo}">
+						<li role="presentation">
+							<th:block th:if="${map['POLICY_LIST_TYPE'] eq '1'}">
+								<a role="menuitem" tabindex="-1" th:href="'javascript:postPolicyListType(\'' + @{/} + ${funId} + '\', \'' + ${map['POLICY_NO']} + '\', \'' + ${map['POLICY_LIST_TYPE']} + '\')'">
+									<th:block th:text="${map['PRODUCT_NAME']}"/> (<th:block th:text="${map['POLICY_NO']}"/>)
+								</a>
+							</th:block>
+							<th:block th:if="${map['POLICY_LIST_TYPE'] eq '2'}">
+								<th:block th:if="${funId eq 'listing2' or funId eq 'listing6' or funId eq 'listing6_2' or funId eq 'listing7' or funId eq 'listing10' or funId eq 'listing8' or funId eq 'listing11'or funId eq 'listing12' or funId eq 'listing13'}">
+									<a role="menuitem" tabindex="-1" th:href="'javascript:postPolicyListType(\'' + @{/} + 'listing1' + '\', \'' + ${map['POLICY_NO']} + '\', \'' + ${map['POLICY_LIST_TYPE']} + '\')'">
+										<th:block th:text="${map['PRODUCT_NAME']}"/> (<th:block th:text="${map['POLICY_NO']}"/>)
+									</a>
+								</th:block>
+								<th:block th:if="${funId eq 'listing1' or funId eq 'listing3' or funId eq 'listing4' or funId eq 'listing5' or funId eq 'listing5_2' or funId eq 'listing5_3'}">
+									<a role="menuitem" tabindex="-1" th:href="'javascript:postPolicyListType(\'' + @{/} + ${funId} + '\', \'' + ${map['POLICY_NO']} + '\', \'' + ${map['POLICY_LIST_TYPE']} + '\')'">
+										<th:block th:text="${map['PRODUCT_NAME']}"/> (<th:block th:text="${map['POLICY_NO']}"/>)
+									</a>
+								</th:block>
+							</th:block>
+						</li>
+					</th:block>
+				</th:block>
+			</ul>
+		</div>
+		<div class="insuranceID_phone"></div>
+	</div>
+</body>
+</html>

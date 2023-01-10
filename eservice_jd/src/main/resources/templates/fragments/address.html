@@ -1,0 +1,186 @@
+<div class="item100" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="cityOption" class="selector"></select>
+	</div>
+</div>
+<div class="item100" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="regionOption" class="selector"></select>
+	</div>
+</div>
+<div class="item150" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="roadOption" class="selector"></select>
+	</div>
+</div>
+<div class="clearfix"></div>
+<!-- <div class="" style="float: left; margin-top: 4px; margin-right: 4px;line-height: 1em;">
+	<input type="text" id="addr-1" class="item50">巷
+	<input type="text" id="addr-2" class="item50">弄
+	<input type="text" id="addr-3" class="item50">號之
+	<input type="text" id="addr-4" class="item50">，
+	<input type="text" id="addr-5" class="item50">樓之
+	<input type="text" id="addr-6" class="item50">
+	<input type="text" id="addr-7" class="item50 hide">
+</div> -->
+<div style="float: left;">
+	<input type="text" id="addr" class="" placeholder="請輸入所在路、巷、號、樓層">
+</div>
+<input type="hidden" id="selectAddress" name="selectAddress"/>
+<input type="hidden" id="selectAddressFull" name="selectAddress"/>
+<script src="plugin/jquery-1.11.2.min.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		// 地址下拉選單
+		var cityUrl = /*[[@{/getCityList}]]*/;
+		var regionUrl = /*[[@{/getRegionList}]]*/;
+		var roadUrl = /*[[@{/getRoadList}]]*/;
+		eserviceOption.cityRegion('#cityOption', cityUrl, '#regionOption', regionUrl);
+		eserviceOption.empty('#roadOption', '請選擇');
+		$('#regionOption').change(function() {
+			eserviceOption.common('#roadOption', (roadUrl + '?regionId=' + $(this).val()));
+		});
+		var dataDetail = /*[[${dataDetail}]]*/;
+		$('#cityOption,#regionOption,#roadOption,#addr,#addr-1,#addr-2,#addr-3,#addr-4,#addr-5,#addr-6,#addr-7').change(function() {
+			var address = '';
+			var addressFull = '';
+			if ($('#cityOption').val() != '') {
+				addressFull += $('#cityOption option:selected').text();
+			}
+			if ($('#regionOption').val() != '') {
+				addressFull += $('#regionOption option:selected').text();
+			}
+			if ($('#roadOption').val() != '') {
+				address += $('#roadOption option:selected').text();
+				addressFull += $('#roadOption option:selected').text();
+			}
+			if ($('#addr').val() != '') {
+				address += $('#addr').val();
+				addressFull += $('#addr').val();
+			}
+			// if ($('#addr-1').val() != '') {
+			// 	address += $('#addr-1').val() + '巷';
+			// 	addressFull += $('#addr-1').val() + '巷';
+			// }
+			// if ($('#addr-2').val() != '') {
+			// 	address += $('#addr-2').val() + '弄';
+			// 	addressFull += $('#addr-2').val() + '弄';
+			// }
+			// if ($('#addr-3').val() != '') {
+			// 	address += $('#addr-3').val() + '號';
+			// 	addressFull += $('#addr-3').val() + '號';
+			// }
+			// if ($('#addr-4').val() != '') {
+			// 	address += '之' + $('#addr-4').val();
+			// 	addressFull += '之' + $('#addr-4').val();
+			// }
+			// if ($('#addr-4').val() != '' && $('#addr-5').val() != '') {
+			// 	address += '，';
+			// 	addressFull += '，';
+			// }
+			// if ($('#addr-5').val() != '') {
+			// 	address += $('#addr-5').val() + '樓';
+			// 	addressFull += $('#addr-5').val() + '樓';
+			// }
+			// if ($('#addr-6').val() != '') {
+			// 	address += '之' + $('#addr-6').val();
+			// 	addressFull += '之' + $('#addr-6').val();
+			// }
+			// if ($('#addr-6').val() != '' && $('#addr-7').val() != '') {
+			// 	address += '，';
+			// 	addressFull += '，';
+			// }
+			// if ($('#addr-7').val() != '') {
+			// 	address += $('#addr-7').val() + '室';
+			// 	addressFull += $('#addr-7').val() + '室';
+			// }
+			$('#selectAddress').val(eserviceForm.convertAddressNumber(address));
+			$('#selectAddressFull').val(eserviceForm.convertAddressNumber(addressFull));
+		});
+		
+		if(dataDetail != null){
+			if(dataDetail['CITY'] != undefined && dataDetail['CITY'] != null){
+				eserviceOption.common('#regionOption', (regionUrl + '?cityId=' + dataDetail['CITY']));
+			}
+			if(dataDetail['REGION'] != undefined && dataDetail['REGION'] != null){
+				eserviceOption.common('#roadOption', (roadUrl + '?regionId=' + dataDetail['REGION']));
+			}
+		}
+		setTimeout(function () { 
+			if(dataDetail['CITY'] != undefined && dataDetail['CITY'] != null){
+				$('#cityOption').val(dataDetail['CITY']);
+			}
+			if(dataDetail['REGION'] != undefined && dataDetail['REGION'] != null){
+				$('#regionOption').val(dataDetail['REGION']);
+			}
+			if(dataDetail['ROAD'] != undefined && dataDetail['ROAD'] != null){
+				$('#roadOption').val(dataDetail['ROAD']);
+			}
+			if(dataDetail['ADDRESS'] != undefined && dataDetail['ADDRESS'] != null){
+				$('#addr').val(dataDetail['ADDRESS']);
+			}
+		}, 2000); // 延时1秒
+	});
+	
+	function isAddressValid(alertMsg) {
+		if ($('#cityOption').val() == '') {
+			openAlert(alertMsg);
+			return false;
+		}
+		if ($('#regionOption').val() == '') {
+			openAlert(alertMsg);
+			return false;
+		}
+		if ($('#roadOption').val() == '') {
+			openAlert(alertMsg);
+			return false;
+		}
+		
+		// if ($('#addr-1').val() != '') {
+		// 	if (!eserviceForm.isNumber($('#addr-1').val())) {
+		// 		/* openAlert("請輸入數字"); */
+		// 		openAlert($('#E0119').val());
+		// 		return false;
+		// 	}
+		// }
+		
+		// if ($('#addr-2').val() != '') {
+		// 	if (!eserviceForm.isNumber($('#addr-2').val())) {
+		// 		/* openAlert("請輸入數字"); */
+        //         openAlert($('#E0119').val());
+		// 		return false;
+		// 	}
+		// }
+		
+		// if ($('#addr-3').val() != '') {
+		// 	if (!eserviceForm.isNumber($('#addr-3').val())) {
+		// 		/* openAlert("請輸入數字"); */
+        //         openAlert($('#E0119').val());
+		// 		return false;
+		// 	}
+		// } else {
+		// 	openAlert("請輸入號");
+		// 	$('#addr-3').focus();
+		// 	return false;
+		// }
+		
+		// if ($('#addr-4').val() != '') {
+		// 	if (!eserviceForm.isNumber($('#addr-4').val())) {
+		// 		/* openAlert("請輸入數字"); */
+        //         openAlert($('#E0119').val());
+		// 		return false;
+		// 	}
+		// }
+		
+		// if ($('#addr-5').val() != '') {
+		// 	if (!eserviceForm.isNumber($('#addr-5').val())) {
+		// 		openAlert("請輸入數字");
+		// 		return false;
+		// 	}
+		// }
+		return true;
+	}
+	
+	/*]]>*/
+</script>

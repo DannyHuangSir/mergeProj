@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey listing8 fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3 listing-area">
+				<div class="row-offcanvas row-offcanvas-left">
+					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing8')"></div>
+					<div th:replace="fragments/sidebar :: sidebar (funId='listing8')"></div>
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<div class="box-border wht">
+							<div class="tb3 top0">
+								<i class="fas fa-chevron-down"></i> 帳戶價值通知書
+							</div>
+							<div class="mobile-toggle-panel specialHeight">
+								<div id="policyInfoDiv" class="col-md-12 down20">
+									<table class="tablesaw tablesaw-stack no-border wht col-table" data-tablesaw-mode="stack">
+										<tr class="noEvent borderTop">
+											<th class="hid1 hid2" scope="col">保單號碼</th>
+											<td style="width:">
+												<b class="tablesaw-cell-label mobile-b">保單號碼</b>
+												<span class="mobile-span">
+												<th:block th:text="${policyVo != null and policyVo.policyNo != null}
+													? ${policyVo.policyNo}"/>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">保險期間</th>
+											<td style="width:">
+												<b class="tablesaw-cell-label mobile-b">保險期間</b>
+												<span class="mobile-span">
+												<th:block th:text="${policyStartEndDate != null} ? ${policyStartEndDate}"/>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">契約狀況</th>
+											<td style="width:">
+												<b class="tablesaw-cell-label mobile-b">契約狀況</b>
+												<span class="mobile-span">
+												<th:block th:text="${policyVo != null and policyVo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][policyVo.status] != null}
+													? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][policyVo.status].parameterValue}"/>
+												</span>
+											</td>
+										</tr>
+										<tr class="noEvent">
+											<th class="hid1 hid2" scope="col">要保險人</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">要保人</b>
+												<span class="mobile-span">
+												    <div th:switch="${lilipmVo != null and lilipmVo.lipmNameBase64 != ''}">
+												        <div th:case="${false}">
+															<th:block th:text="${lilipmVo != null and lilipmVo.lipmName1 != null} ? ${lilipmVo.lipmName1}"/>
+												        </div>
+												        <div th:case="${true}">
+													        <img width="200" height="23px" th:src="|data:image/svg+xml;base64, ${lilipmVo.lipmNameBase64}|" />
+												        </div>
+													</div>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">被保險人</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">被保險人</b>
+												<span class="mobile-span">
+												    <div th:switch="${lilipmVo != null and lilipmVo.lipmNameBase64 != ''}">
+												        <div th:case="${false}">
+															<th:block th:text="${lilipmVo != null and lilipmVo.lipmName1 != null} ? ${lilipmVo.lipmName1}"/>
+												        </div>
+												        <div th:case="${true}">
+													        <img width="200" height="23px" th:src="|data:image/svg+xml;base64, ${lilipmVo.lipmNameBase64}|" />
+												        </div>
+													</div>
+												</span>
+											</td>
+											<th class="hid1 hid2" scope="col">保單幣別</th>
+											<td>
+												<b class="tablesaw-cell-label mobile-b">保單幣別</b>
+												<span class="mobile-span">
+												<th:block th:text="${policyVo != null and policyVo.currency != null and session.SYSTEM_PARAMETER['CURRENCY'][policyVo.currency] != null}
+													? ${session.SYSTEM_PARAMETER['CURRENCY'][policyVo.currency].parameterValue}"/>
+												</span>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+								<thead>
+									<tr class="table2">
+										<th class="text-center" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">時間</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-center">功能</th>
+									</tr>
+								</thead>
+								<tbody>
+								<th:block th:if="${accountValueList != null}">
+								<th:block th:each="vo, rowStat : ${accountValueList}">
+									<tr th:classappend="${rowStat.odd}? 'tr-odd'">
+										<td class="text-center">
+											<th:block th:text="${vo.quaterName != null} 
+												? ${vo.quaterName}"/>
+										</td>
+										<td class="text-center">
+											<button type="button" class="btn-form btn-search" 
+												th:onclick="'downloadPDF(\'' + ${vo.quaterCode} + '\')'">PDF</button>
+										</td>
+									</tr>
+								</th:block>
+								</th:block>
+								</tbody>
+							</table>
+							<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20012'] != null} 
+								? ${session.PAGE_WORDING['WORDING_20012'].parameterValue}"/>
+						</div>
+						<div th:replace="fragments/listingReferOnly"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	function downloadPDF(quaterCode) {
+		var url = /*[[@{/downloadAccountValue?policyNo=} + ${param.policyNo[0]}]]*/;
+		url += ('&quaterCode=' + quaterCode);
+		window.open(url);
+	}
+	/*]]>*/
+	</script>
+</body>
+</html>

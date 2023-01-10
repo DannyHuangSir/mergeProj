@@ -1,0 +1,15 @@
+/*disable hyperlink*/
+.not-active {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: black;
+}
+
+.redWord{
+	color:#ff5050;
+}
+
+.textCenter{
+	text-align:center;
+}

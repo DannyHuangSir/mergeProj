@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<header>
+		<div class="container">
+			<div class="row">
+				<th:block th:replace="fragments/logo"/>
+				<div class="n1 inlineBlock float-left">保單網路服務</div>
+				<div class="clearfix visible-xs-block"></div>
+			</div>
+		</div>
+	</header>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='dashboard')"></div>
+	<section class="grey applyInner fullContent h600">
+		<div class="container bg3 box-border marginTop25">
+			<div class="col-sm-8 col-sm-offset-2 col-lg-8 col-lg-offset-2">
+				<div class="activated">
+					<h2>&nbsp;</h2>
+					<figure><img src="img/alert.jpg" alt="check"/></figure>
+					<h2>系統部份功能不支援返回上一頁操作，請使用系統功能進行頁面切換！</h2>
+					<h2>&nbsp;</h2>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+</body>
+
+</html>

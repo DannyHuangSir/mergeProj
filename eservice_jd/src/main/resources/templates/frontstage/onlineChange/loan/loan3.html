@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>申請保單貸款｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">保單借款</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 申請保單借款
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-4">
+						2<span class="hid1">. 輸入欲借金額與給付方式</span>
+					</li>
+					<li class="step3 active col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請確認資料</h2>
+				<div class="loan1">
+					<div class="">
+						<label for="checkBox12" class="col-sm-10 col-sm-offset-2">
+							借款保單：<th:block th:text="${transLoanVo.productName}"/>(<th:block th:text="${transLoanVo.policyNo}"/>)
+						</label>
+					</div>
+					<div class="col-sm-8 col-sm-offset-2 grey2 ptop30 greyBox">
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">給付方式：</label>
+							<p type="text" class="col-sm-7">
+								匯入要保人帳戶
+							</p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">匯款銀行：</label>
+							<p type="text" class="col-sm-7">
+								<th:block th:text="${transLoanVo.bankName}"/><th:block th:text="${transLoanVo.branchName}"/>
+							</p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">匯款帳號：</label>
+							<p type="text" class="col-sm-7">
+								<th:block th:text="${transLoanVo.accountNumber}"/>
+							</p>
+						</div>
+						<div class="check-list3 ">
+							<label for="" class="col-sm-5 orange">欲借金額：</label>
+							<p type="text" class="col-sm-7">
+								<span class="chNormal">NTD</span><th:block th:text="${transLoanVo.loanAmount != null} ? ${#numbers.formatDecimal(transLoanVo.loanAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-10 col-sm-offset-2" style="font-size:16px">
+						請依步驟操作完成後本次申請始為有效<br/>
+						1.下載PDF後請簽名並拍照或掃描儲存為電子影像檔，並備妥身分證、存簿(郵寄支票者免)之電子影像檔<br/>
+						2.至線上申請＞我的申請紀錄＞選擇保單貸款補件＞將申請書、身分證、存簿電子影像檔一併上傳至系統
+						<span id="limitTag" style="color:red;"></span>
+						<br/>
+						3.申請紀錄狀態由待補件變更為處理中，代表已完成本次申請
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8 col-md-offset-2 ptop30">
+				<div class="marginTop25"></div>
+				<div class="col-md-12 two-buttons">
+					<button type="button" id="deny" class="btn-signup">上一步</button>
+					<button id="go" class="btn-signup">下載PDF</button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var formData = /*[[${transLoanVo}]]*/;
+	$(function() {
+		// 上一步事件
+		$('#deny').click(function() {
+			postWithFormData(/*[[@{/loan2}]]*/, formData);
+		});
+		
+		// 確認送出
+		$('#go').click(function() {
+			var url = '/eservice/downloadLoanPDF?' + $.param(formData);
+			url = url.replace(/%5B/g, '').replace(/%5D/g, '');
+			window.open(url);
+		});
+		var limitSizeStr = /*[[${limitSizeStr}]]*/;
+		if (limitSizeStr != null) {
+			$('#limitTag').html('<br/>(上傳檔案總和上限:<b>' + limitSizeStr + 'M</b>)');
+		}
+	});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

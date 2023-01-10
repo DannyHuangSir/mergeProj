@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<table th:fragment="table1 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">主被保險人</th>
+				<th scope="col">保單生效日</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr th:if="${vo.isShow == null}" class="disabled" th:id="${vo.policyNo}" data-toggle="modal" data-target="#modal-container-locked" style="cursor: pointer;" onclick="showMsg(this);">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" th:value="${vo.policyNo}" disabled="disabled"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" th:value="${vo.policyNo}" disabled="disabled"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.showMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null} 
+							? ${userInfo.productNameMap[vo.policyNo]}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.policyNo != null}"> 
+							<div th:switch="${#strings.isEmpty(userInfo.mainInsuredNameBase64Map[vo.policyNo])}"> 
+								<div th:case="${false}">
+									<img th:width="${#strings.length(userInfo.mainInsuredNameMap[vo.policyNo]) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${userInfo.mainInsuredNameBase64Map[vo.policyNo]}|" />
+								</div>
+								<div th:case="${true}">
+									<th:block th:text="${vo.policyNo != null and userInfo.mainInsuredNameMap != null}
+										? ${userInfo.mainInsuredNameMap[vo.policyNo]}"/>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.policyStartDate} != null 
+							? ${#dates.format(vo.policyStartDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+				<tr th:unless="${vo.isShow == null}" style="cursor: pointer;" onclick="$(this).find('input[name=chosePolicy]')[0].click();">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" th:value="${vo.policyNo}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" th:value="${vo.policyNo}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.showMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null} 
+							? ${userInfo.productNameMap[vo.policyNo]}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.policyNo != null}"> 
+							<div th:switch="${#strings.isEmpty(userInfo.mainInsuredNameBase64Map[vo.policyNo])}"> 
+								<div th:case="${false}">
+									<img th:width="${#strings.length(userInfo.mainInsuredNameMap[vo.policyNo]) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${userInfo.mainInsuredNameBase64Map[vo.policyNo]}|" />
+								</div>
+								<div th:case="${true}">
+									<th:block th:text="${vo.policyNo != null and userInfo.mainInsuredNameMap != null}
+										? ${userInfo.mainInsuredNameMap[vo.policyNo]}"/>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.policyStartDate} != null 
+							? ${#dates.format(vo.policyStartDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table2 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">主被保險人</th>
+				<th scope="col">支付工具</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr th:if="${vo.isShow == null}" class="disabled" th:id="${vo.policyNo}" data-toggle="modal" data-target="#modal-container-locked" style="cursor: pointer;" onclick="showMsg(this);">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" th:value="${vo.policyNo}" disabled="disabled"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" th:value="${vo.policyNo}" disabled="disabled"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.showMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null} 
+							? ${userInfo.productNameMap[vo.policyNo]}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.policyNo != null}"> 
+							<div th:switch="${#strings.isEmpty(userInfo.mainInsuredNameBase64Map[vo.policyNo])}"> 
+								<div th:case="${false}">
+									<img th:width="${#strings.length(userInfo.mainInsuredNameMap[vo.policyNo]) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${userInfo.mainInsuredNameBase64Map[vo.policyNo]}|" />
+								</div>
+								<div th:case="${true}">
+									<th:block th:text="${vo.policyNo != null and userInfo.mainInsuredNameMap != null}
+										? ${userInfo.mainInsuredNameMap[vo.policyNo]}"/>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+				<tr th:unless="${vo.isShow == null}" style="cursor: pointer;" onclick="$(this).find('input[name=chosePolicy]')[0].click();">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" th:value="${vo.policyNo}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" th:value="${vo.policyNo}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null} 
+							? ${userInfo.productNameMap[vo.policyNo]}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.policyNo != null}"> 
+							<div th:switch="${#strings.isEmpty(userInfo.mainInsuredNameBase64Map[vo.policyNo])}"> 
+								<div th:case="${false}">
+									<img th:width="${#strings.length(userInfo.mainInsuredNameMap[vo.policyNo]) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${userInfo.mainInsuredNameBase64Map[vo.policyNo]}|" />
+								</div>
+								<div th:case="${true}">
+									<th:block th:text="${vo.policyNo != null and userInfo.mainInsuredNameMap != null}
+										? ${userInfo.mainInsuredNameMap[vo.policyNo]}"/>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table3 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">保單狀態</th>
+				<th scope="col">保單生效日</th>
+				<th scope="col">保額/單位</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr th:if="${vo.isShow == null}" class="disabled" th:id="${vo.policyNo}" data-toggle="modal" data-target="#modal-container-locked" style="cursor: pointer;" onclick="showMsg(this);">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" th:value="${vo.policyNo}" disabled="disabled"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" th:value="${vo.policyNo}" disabled="disabled"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.showMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null} 
+							? ${userInfo.productNameMap[vo.policyNo]}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+							? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.policyStartDate} != null 
+							? ${#dates.format(vo.policyStartDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.mainAmount} != null 
+							? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+				<tr th:unless="${vo.isShow == null}" style="cursor: pointer;" onclick="$(this).find('input[name=chosePolicy]')[0].click();">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" th:value="${vo.policyNo}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" th:value="${vo.policyNo}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null} 
+							? ${userInfo.productNameMap[vo.policyNo]}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+							? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.policyStartDate} != null 
+							? ${#dates.format(vo.policyStartDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.mainAmount} != null 
+							? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table4 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">保單狀態</th>
+				<th scope="col">保單生效日</th>
+				<th scope="col">保額/單位</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" 
+													th:value="${vo.policyNo}"
+													th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.policyNo}"
+												th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+							? ${#strings.replace(session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue, '　', '')}"/>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null 
+							? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.mainAmount} != null 
+							? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table5 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">要保人</th>
+				<th scope="col">主被保險人</th>
+				<th scope="col">保單生效日</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" 
+													th:value="${vo.policyNo}"
+													th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.policyNo}"
+												th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'paymentAcctValue_'+ vo.policyNo}" th:value="${vo.paidAmount}"/>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.customerName != null} ? ${#strings.length(vo.customerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.customerName != null} ? ${vo.customerName}"/>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+							</div>
+						</div>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null 
+							? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:if="${vo.paymentMode != null and vo.paymentMode == 'A' and vo.lipmFlexRcpMk == 'Y'}">
+							彈性繳
+						</th:block>
+						<th:block th:if="${vo.paymentMode != null and (vo.paymentMode != 'A' or vo.lipmFlexRcpMk != 'Y')}">
+							<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+						</th:block>
+						<input type="hidden" th:id="${'paymentMode_'+vo.policyNo}" th:value="${vo.paymentMode}"/>
+						<input type="hidden" th:id="${'paymentAcctValue_'+vo.policyNo}" th:value="${vo.paidAmount}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table6 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">要保人</th>
+				<th scope="col">主被保險人</th>
+				<th scope="col">受益種類</th>
+				<th scope="col">匯款戶名</th>
+				<!-- <th scope="col">匯款帳號</th> -->
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" 
+													th:value="${vo.policyNo}"
+													th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.policyNo}"
+												th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.customerName != null} ? ${#strings.length(vo.customerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.customerName != null} ? ${vo.customerName}"/>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+							</div>
+						</div>
+					</td>
+					<td class="enThin">
+<!-- 						<th:block th:text="${vo.beneficiaryName != null}  -->
+<!-- 							? ${vo.beneficiaryName}"/> -->
+					    <th:block th:switch="${vo.beneficiaryName}">
+					        <th:block th:case="'01'">滿期金</th:block>
+					        <th:block th:case="'05'">生存金</th:block>
+					        <th:block th:case="'F1'">紅利給付</th:block>
+					    </th:block>
+					</td>
+					<td>
+						<th:block th:text="${vo.policyPayerVo != null and vo.policyPayerVo.payerName != null} 
+							? ${vo.policyPayerVo.payerName}"/>
+					</td>
+<!-- 					<td> -->
+<!-- 						<th:block th:text="${vo.policyPayerVo != null and vo.policyPayerVo.acctNumber != null}  -->
+<!-- 							? ${vo.policyPayerVo.acctNumber}"/> -->
+<!-- 					</td> -->
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table7 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">要保人</th>
+				<th scope="col">主被保險人</th>
+				<th scope="col">支付工具</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" 
+													th:value="${vo.policyNo}"
+													th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.policyNo}"
+												th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.customerName != null} ? ${#strings.length(vo.customerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.customerName != null} ? ${vo.customerName}"/>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+							</div>
+						</div>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table8 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">保單</th>
+				<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">可借額度</th>
+				<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">已借額度</th>
+				<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">主被保險人</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" 
+													th:value="${vo.policyNo}"
+													th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.policyNo}"
+												th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}"/>
+						<input type="hidden" th:id="${'productName_'+vo.policyNo}" th:value="${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<th:block th:text="${vo.policyExtraVo != null and vo.policyExtraVo.remainLoanValue != null}
+							? ${#numbers.formatDecimal(vo.policyExtraVo.remainLoanValue, 0, 'DEFAULT', 0, 'COMMA')}
+							: '&nbsp;'"/>
+						<input type="hidden" th:id="${'remainLoanValue_'+vo.policyNo}" th:value="${vo.policyExtraVo != null} ? ${vo.policyExtraVo.remainLoanValue}"/>
+						<i class="my5">NTD</i>
+					</td>
+					<td>
+						<th:block th:text="${vo.policyExtraVo != null and vo.policyExtraVo.loanAmount != null}
+							? ${#numbers.formatDecimal(vo.policyExtraVo.loanAmount, 0, 'DEFAULT', 0, 'COMMA')}
+							: '&nbsp;'"/>
+						<i class="my5">NTD</i>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table9 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">保單</th>
+				<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">可借額度</th>
+				<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">已借額度</th>
+				<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">主被保險人</th>
+				<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">指定帳號</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" 
+													th:value="${vo.policyNo}"
+													th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.policyNo}"
+												th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}"/>
+						<input type="hidden" th:id="${'productName_'+vo.policyNo}" th:value="${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<th:block th:text="${vo.policyExtraVo != null and vo.policyExtraVo.remainLoanValue != null}
+							? ${#numbers.formatDecimal(vo.policyExtraVo.remainLoanValue, 0, 'DEFAULT', 0, 'COMMA')}
+							: '&nbsp;'"/>
+						<input type="hidden" th:id="${'remainLoanValue_'+vo.policyNo}" th:value="${vo.policyExtraVo != null} ? ${vo.policyExtraVo.remainLoanValue}"/>
+						<i class="my5">NTD</i>
+					</td>
+					<td>
+						<th:block th:text="${vo.policyExtraVo != null and vo.policyExtraVo.loanAmount != null}
+							? ${#numbers.formatDecimal(vo.policyExtraVo.loanAmount, 0, 'DEFAULT', 0, 'COMMA')}
+							: '&nbsp;'"/>
+						<i class="my5">NTD</i>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+							</div>
+						</div>
+					</td>
+					<td>
+						<th:block th:text="${vo.policyExtraVo != null and vo.policyExtraVo.inmsAccountNo != null}
+							? ${vo.policyExtraVo.inmsAccountNo} : '&nbsp;'"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table10 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist"></th>
+				<th class="text-left">保單</th>
+				<th scope="col">要保險人</th>
+				<th scope="col">主被保險人</th>
+				<th scope="col">保單生效日</th>
+				<th scope="col">約定扣款日</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? '#modal-container-locked' : ''"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')}? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<th:block th:if="${vo.applyLockedMsg != null && vo.applyLockedMsg != ''}">
+											<div class="radio-btn">
+												<i>
+													<input type="radio" disabled/>
+												</i>
+											</div>
+										</th:block>
+										<th:block th:if="${vo.applyLockedMsg == null || vo.applyLockedMsg == ''}">
+											<div class="radio-btn">
+												<i>
+													<input type="radio" name="chosePolicy" 
+														th:value="${vo.policyNo}"
+														th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.isLoginerFlag, 'Y') or #strings.equals(vo.applyLockedFlag,'Y')  ? 'disabled' : 'false'}"/>
+												</i>
+											</div>
+										</th:block>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.policyNo}"
+												th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.isLoginerFlag, 'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.customerName != null} ? ${#strings.length(vo.customerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.customerName != null} ? ${vo.customerName}"/>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+							</div>
+						</div>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null 
+							? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null 
+							? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+						<input type="hidden" th:id="${'paymentMode_'+vo.policyNo}" th:value="${vo.paymentMode}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+
+	</table>
+	<table th:fragment="table11 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">要保人</th>
+				<th scope="col">主被保險人</th>
+				<!-- <th scope="col">保單狀態</th> -->
+				<th scope="col">保單生效日</th>
+				<!-- <th scope="col">保額/單位</th> -->
+				<th scope="col">約定扣款日</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;"  data-toggle="modal"
+					>
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy" 
+													th:value="${vo.policyNo}" 
+													th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div >
+									<span
+											th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+											th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(\''+此張保單已過投保終期+'\',this);' : 'disAgreeMsg(this);'"
+
+									>
+										<span
+											  th:class="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'check-box  ' : 'checkbox'"
+											  th:style="${#strings.equals(vo.applyLockedFlag, 'Y')} ? ' pointer-events: none;' : 'color:#fcfcfc'"
+										>
+										<div
+												th:class="${#strings.equals(vo.applyLockedFlag, 'Y')} ? ' checkbox' : 'plicy_no_check check-box '"
+												th:style="${#strings.equals(vo.applyLockedFlag, 'Y')} ? ' margin-top:-12px;' : 'color:#fcfcfc'"
+										>
+											<i>
+												<input type="checkbox" name="chosePolicy"
+													th:value="${vo.policyNo}"
+													th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+										</span>
+									</span>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}" 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"/>
+						<p 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">(<th:block th:text="${vo.policyNo}"/>)</p>
+						<div class="action-buttons">                                   
+							<a href="javascript:void(0);" class="green bigger-140 show-details-btn" title="Show Details" th:id="${'m_'+vo.policyNo}"
+
+							th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y') } ? 'showSelectMsg(\''+此張保單已過投保終期+'\',this);':'javascript:getUserCurrentNetworkData(\'' + ${vo.policyNo} + '\',this);'"
+							>
+								<i class="fa fa-search gray search1"></i>
+								<span>查看現行聯絡資料</span>
+								<span>關閉聯絡資料顯示區</span>
+							</a>
+						</div>
+					</td>
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.customerName != null} ? ${vo.customerName}"/>
+					</td>
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+					</td>
+					<!-- <td>
+						<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+							? ${#strings.replace(session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue, '　', '')}"/>
+					</td> -->
+					<td class="enThin" 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.effectiveDate} != null 
+							? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<!-- <td>
+						<th:block th:text="${vo.mainAmount} != null 
+							? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td> -->
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.drawDay != null} ? ${vo.drawDay}"/>
+					</td>
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+				<tr class="detail-row" th:id="${vo.policyNo}">
+					<td colspan="8" th:id="${'td_'+vo.policyNo}">
+
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table12 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+		<tr class="table2">
+			<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+			<th class="text-left" scope="col">保險商品</th>
+			<th scope="col">保單狀態</th>
+			<th scope="col">保單生效日</th>
+			<th scope="col">保額</th>
+			<th scope="col">每期保費</th>
+			<th scope="col">繳別</th>
+		</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? '#modal-container-locked' : ''"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')}? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<div class="radio">
+							<i>
+
+							</i>
+							<label>
+								<div class="radio-btn">
+									<i>
+										<input type="radio" name="chosePolicy"
+											   th:value="${vo.policyNo}"
+											   th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+									</i>
+								</div>
+							</label>
+						</div>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null}
+							? ${userInfo.productNameMap[vo.policyNo]}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+							? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null
+							? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.mainAmount} != null
+							? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null}
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+				<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+				<input type="hidden" th:id="${'currency_'+vo.policyNo}" th:value="${vo.currency}"/>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table13 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+		<tr class="table2">
+			<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+			<th class="text-left" scope="col">主約險種</th>
+			<th scope="col">保單狀態</th>
+			<th scope="col">保單生效日</th>
+			<th scope="col">保額</th>
+			<th scope="col">每期保費</th>
+			<th scope="col">繳別</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tbody>
+		<th:block th:each="vo, rowStat : ${policyList}">
+			<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+				th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? '#modal-container-locked' : ''"
+				th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? 'disabled'"
+				th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')}? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+				<!-- 选 -->
+				<td>
+					<th:block th:switch="${choseType}">
+						<th:block th:case="${'radio'}">
+							<div class="radio">
+								<label>
+									<th:block th:if="${vo.applyLockedMsg != null && vo.applyLockedMsg != ''}">
+										<div class="radio-btn">
+											<i>
+												<input type="radio" disabled/>
+											</i>
+										</div>
+									</th:block>
+									<th:block th:if="${vo.applyLockedMsg == null || vo.applyLockedMsg == ''}">
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy"
+													   th:value="${vo.policyNo}"
+													   th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.isLoginerFlag, 'Y') or #strings.equals(vo.applyLockedFlag,'Y')  ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</th:block>
+								</label>
+							</div>
+						</th:block>
+						<th:block th:case="${'checkbox'}">
+							<div class="checkbox">
+								<div class="check-box">
+									<i>
+										<input type="checkbox" name="chosePolicy"
+											   th:value="${vo.policyNo}"
+											   th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.isLoginerFlag, 'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+									</i>
+								</div>
+							</div>
+						</th:block>
+					</th:block>
+					<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					<input type="hidden" th:id="${'currency_'+vo.policyNo}" th:value="${vo.currency}"/>
+				</td>
+				<!-- 主約險種	 -->
+
+				<td class="table3">
+					<th:block th:text="${vo.productName} != null
+							? ${vo.productName}"/>	
+					<p><th:block th:text="${vo.policyNo} != null
+						? (${vo.policyNo})"/>	</p></td>
+				<!-- 保單狀態		 -->
+				<td>
+				<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+							? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
+				</td>
+				<!-- 保單生效日 -->
+				<td class="enThin">
+					<th:block th:text="${vo.effectiveDate} != null
+							? ${#dates.format(vo.effectiveDate, 'yyyy-MM-dd')}"/>
+				</td>
+				<!-- 保額 -->
+				<td class="enThin">
+					
+					<th:block th:text="${vo.mainAmount} != null
+							? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}""/>
+					 <i class="my5"><th:block th:text="${vo.currency}"/></i>
+				</td>
+				<!-- 每期保費	 -->
+				<td>
+					<th:block th:text="${vo.paidAmount != null}
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+					<i class="my5"><th:block th:text="${vo.currency}"/></i>
+				</td>
+				<!-- 繳別 -->
+				<td>
+					<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					<input type="hidden" th:id="${'paymentMode_'+vo.policyNo}" th:value="${vo.paymentMode}"/>
+				</td>
+			</tr>
+		</th:block>
+		</tbody>
+		</tbody>
+	</table>
+	<table th:fragment="table14 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+		<tr class="table2">
+			<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+			<th class="text-left" scope="col">保險項目</th>
+			<th scope="col">保單生效日</th>
+			<th scope="col">可提領金額</th>
+			<th scope="col">被保人</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? '#modal-container-locked' : ''"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')}? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<!-- 选 -->
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<th:block th:if="${vo.applyLockedMsg != null && vo.applyLockedMsg != ''}">
+											<div class="radio-btn">
+												<i>
+													<input type="radio" disabled/>
+												</i>
+											</div>
+										</th:block>
+										<th:block th:if="${vo.applyLockedMsg == null || vo.applyLockedMsg == ''}">
+											<div class="radio-btn">
+												<i>
+													<input type="radio" name="chosePolicy"
+														   th:value="${vo.policyNo}"
+														   th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.isLoginerFlag, 'Y') or #strings.equals(vo.applyLockedFlag,'Y')  ? 'disabled' : 'false'}"/>
+												</i>
+											</div>
+										</th:block>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy"
+												   th:value="${vo.policyNo}"
+												   th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.isLoginerFlag, 'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<!-- 保險項目	 -->
+
+					<td class="table3">
+						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null}
+								? ${userInfo.productNameMap[vo.policyNo]}"/>
+						<p><th:block th:text="${vo.policyNo} != null
+								? (${vo.policyNo})"/></p></td>
+
+					<!-- 保單生效日 -->
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null
+									? ${#dates.format(vo.effectiveDate, 'yyyy-MM-dd')}"/>
+					</td>
+
+					<!-- 可提領金額 -->
+					<td class="enThin">
+						<th:block th:if="${vo.currency != 'NTD'}">
+							<th:block th:text="${vo.policyAcctValue != null}
+							? ${#numbers.formatDecimal(vo.policyAcctValue, 0, 'DEFAULT', 2, 'POINT')}"/>
+						</th:block>
+						<th:block th:if="${vo.currency == 'NTD'}">
+							<th:block th:text="${vo.policyAcctValue != null}
+									? ${#numbers.formatDecimal(vo.policyAcctValue, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						</th:block>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+
+					<!-- 被保人 -->
+					<td>
+						<th:block th:text="${vo.mainInsuredName != null}
+									? ${vo.mainInsuredName}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+		</tbody>
+	</table>
+
+	<table th:fragment="table15 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90"></th>
+				<th class="text-left" >保單</th>
+				<th>保單狀態</th>
+				<th>保單生效日</th>
+				<th>保額</th>
+				<th>每期保費</th>
+				<th>繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<i>
+												<input type="radio" name="chosePolicy"
+													   th:value="${vo.policyNo}"
+													   th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy"
+												   th:value="${vo.policyNo}"
+												   th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null}
+								? ${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+								? ${#strings.replace(session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue, '　', '')}"/>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null
+								? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.mainAmount} != null
+								? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null}
+								? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
+								? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+					</td>
+				</tr>
+						<input type="hidden" th:id="${'paymentMode_'+vo.policyNo}" th:value="${vo.paymentMode}"/>
+				<input type="hidden" th:id="${'paymentAcctValue_'+vo.policyNo}" th:value="${vo.paidAmount}"/>
+				<input type="hidden" th:id="${'beginDate_'+vo.policyNo}" th:value="${vo.beginDate} != null ? ${#dates.format(vo.beginDate, 'yyyy-MM-dd')}"/>
+				<input type="hidden" th:id="${'premYear_'+vo.policyNo}" th:value="${vo.premYear}"/>
+				<input type="hidden" th:id="${'currency_'+vo.policyNo}" th:value="${vo.currency}"/>
+			</th:block>
+		</tbody>
+	</table>
+	<table th:fragment="table16 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist"></th>
+				<th class="text-left">保單</th>
+				<th scope="col">要保險人</th>
+				<th scope="col">主被保險人</th>
+				<th scope="col">保單生效日</th>
+				<th scope="col">約定扣款日</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? '#modal-container-locked' : ''"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')}? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<th:block th:if="${vo.applyLockedMsg != null && vo.applyLockedMsg != ''}">
+											<div class="radio-btn2">
+												<i>
+													<input type="radio" disabled/>
+												</i>
+											</div>
+										</th:block>
+										<th:block th:if="${vo.applyLockedMsg == null || vo.applyLockedMsg == ''}">
+											<div class="radio-btn">
+												<i>
+													<input type="radio" name="chosePolicy" 
+														th:value="${vo.policyNo}"
+														th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.isLoginerFlag, 'Y') or #strings.equals(vo.applyLockedFlag,'Y')  ? 'disabled' : 'false'}"/>
+												</i>
+											</div>
+										</th:block>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.policyNo}"
+												th:attr="disabled=${#strings.equals(vo.expiredFlag,'Y') or #strings.equals(vo.isLoginerFlag, 'Y') or #strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.productName != null} 
+							? ${vo.productName}"/>
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.customerName != null} ? ${#strings.length(vo.customerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.customerName != null} ? ${vo.customerName}"/>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div th:switch="${vo.mainInsuredNameBase64 != null and vo.mainInsuredNameBase64 != ''}"> 
+							<div th:case="${true}">
+								<img th:width="${vo.mainInsuredName != null} ? ${#strings.length(vo.mainInsuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.mainInsuredNameBase64}|" />
+							</div>
+							<div th:case="${false}">
+								<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+							</div>
+						</div>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null 
+							? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.effectiveDate} != null 
+							? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+					</td>
+					<td>
+						<th:block th:text="${vo.paidAmount != null} 
+							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+							<i class="my5"><th:block th:text="${vo.currency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+						<input type="hidden" th:id="${'paymentMode_'+vo.policyNo}" th:value="${vo.paymentMode}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<table class="hid-body col-sm-12" id="">
+	<tbody>
+		<tr class="">
+			<td>
+				<div class="col-sm-12 hid-title2" id="transDetailTitle"></div>
+				<table class="hid-body col-sm-12" id="">
+					<tbody>
+						<tr class="">
+							<th class="hid-th w40p">受益種類：</th>
+							<td>
+								<th:block th:if="${transChangeAccountVo.changeType eq '2'}">滿期金</th:block>
+								<th:block th:if="${transChangeAccountVo.changeType eq '3'}">生存金</th:block>
+								<th:block th:if="${transChangeAccountVo.changeType eq 'F'}">紅利給付</th:block>
+							</td>
+						</tr>
+						<tr class="">
+							<th class="hid-th w40p">戶名：</th>
+							<td>
+								<th:block th:text="${transChangeAccountVo.accountName}"/>
+							</td>
+						</tr>
+						
+						<th:block th:if="${transChangeAccountVo.acctType eq '1'}">
+							<tr class="">
+								<th class="hid-th w40p">銀行：</th>
+								<td>
+									<th:block th:text="${transChangeAccountVo.bankName}"/>(<th:block th:text="${transChangeAccountVo.bankId}"/>)
+								</td>
+							</tr>
+							<tr class="">
+								<th class="hid-th w40p">分行：</th>
+								<td>
+									<th:block th:text="${transChangeAccountVo.branchName}"/>(<th:block th:text="${transChangeAccountVo.branchId}"/>)
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${transChangeAccountVo.acctType eq '2'}">
+							<tr class="">
+								<th class="hid-th w40p">局號：</th>
+								<td>
+									<th:block th:text="${transChangeAccountVo.branchId}"/>
+								</td>
+							</tr>
+						</th:block>
+						<tr class="">
+							<th class="hid-th w40p">帳號：</th>
+							<td>
+								<th:block th:text="${transChangeAccountVo.accountNo}"/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

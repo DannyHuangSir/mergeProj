@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>定期超額保費｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">定期超額保費</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 定期超額保費
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 active col-xs-4">
+                        1<span class="hid1">. 選擇保單</span>
+                    </li>
+                    <li class="step2 col-xs-4">
+                        2<span class="hid1">. 修改保費</span>
+                    </li>
+                    <li class="step3 col-xs-4">
+                        3<span class="hid1">. 確認資料與密碼</span>
+                    </li>
+				</ul>
+			</div>
+			<div class="mystyle3 attribute1">
+				<h2>請選擇欲變更之保單</h2>
+				<div class="loan1">
+					<table th:replace="fragments/applyPolicyList :: table15 (choseType='radio')"></table>
+				    <div class="statement1 wht">
+						<p class="text-ps">備註：</p>
+						<ol class="text-ps">
+						  <li> 每次繳費金額限制請先查詢您所購買的商品規範。</li>
+						  <li>欲同時變更繳別及金額時，請至[繳別變更]中進行交易，目前僅開放進行大繳別改小繳別(如年繳改月繳)，另小繳別改大繳別(如月繳改年繳)請以填寫申請書方式向本公司申請。</li>
+						</ol>
+					</div>
+				</div>
+			  
+				<div class="col-md-12 two-buttons">
+					<a href="apply1">
+						<button id="deny" class="btn-signup">取消</button>
+					</a>
+					<a>
+					    <button id="go" class="btn-signup">下一步</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(function() {
+				$('#go').click(function() {
+					// 檢核是否有選一筆資料
+				if ($('input[name="chosePolicy"]:checked').val() == null) {
+					/* openAlert("請選擇一筆保單"); */
+					openAlert($('#E0038').val());
+					return false;
+				}
+
+				var formData = {};
+				var policyNo = $('input[name="chosePolicy"]:checked').val();
+				formData.policyNoList = [policyNo];
+				formData.paymodeOld = $('#paymentMode_' + policyNo).val();
+				formData.oldAmount = $('#paymentAcctValue_' + policyNo).val();
+				formData.paidToDate = formatDate($('#beginDate_' + policyNo).val());
+				formData.premYear = $('#premYear_' + policyNo).val();
+				postWithFormData(/*[[@{/changePremium2}]]*/, formData);
+			});
+		});
+
+		function formatDate(dt) {
+			try {
+				var formattedDate = new Date(dt);
+				var d = formattedDate.getDate();
+				var m =  formattedDate.getMonth();
+				m += 1;  // JavaScript months are 0-11
+				var y = formattedDate.getFullYear();
+				return y + "-" + m + "-" + d;
+			} catch (e) {
+				return "";
+			}
+		}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

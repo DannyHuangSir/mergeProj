@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>保單理賠｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent has-special-note ">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">保單理賠</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 保單理賠
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-3">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-3">
+						2<span class="hid1">. 接受條款</span>
+					</li>
+					<li class="step3b active col-xs-3">
+						3<span class="hid1">. 填寫申請資料</span>
+					</li>
+					<li class="step4 col-xs-3">
+						4<span class="hid1">. 資料及一次性密碼確認</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請填寫理賠申請書</h2>
+                <div class="col-md-8 col-md-offset-2">
+					<form id="step3Form" class="form-horizontal no-borderBottom marginTop20" role="form" th:action="@{/policyClaims4}" method="POST" enctype="multipart/form-data">
+						<div class="form-group">
+							<div class="grey2" style="padding:10px 0">
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>申請項目：</label>
+								<div class="col-sm-9">
+									<th:block th:if="${session.APPLICATION_ITEMS != null}">
+										<th:block th:each="vo : ${session.APPLICATION_ITEMS}">
+											<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+												<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" th:value="${vo.value.parameterValue}"></i></div>
+												<label th:inline="text">
+													[[${vo.value.parameterName}]]
+												</label>
+											</div>
+										</th:block>
+									</th:block>
+									<input type="hidden" id="itemOther" name="itemOther" th:value="${claimVo.itemOther}" class="item100" style="padding: 6px 12px;line-height: 1em;" >
+								 
+								</div>
+								<input type="hidden" name="applyItem">
+								<div class="clearfix"></div>
+                            </div>
+							
+							<!-- <label class="col-sm-3">要保人姓名：</label>
+							<div class="col-sm-9">
+								<th:block th:text="${claimVo.customerName}"/>
+								<input type="hidden" name="customerName" th:value="${claimVo.customerName}"/>
+							</div> -->
+							<div class="clearfix"></div>
+							<label class="col-sm-3">保單號碼：</label>
+							<div class="col-sm-9">
+								<th:block th:text="${claimVo.policyNo}"/>
+								<input type="hidden" name="policyNo" id="policyNo" th:value="${claimVo.policyNo}"/>
+							</div>
+							<div class="clearfix"></div><h2 class="divider divider88"></h2>
+						</div>
+						<div class="form-group">
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 事故者資料
+							</div>
+							<div class="mobile-toggle-panel toggle-hide">
+								<label class="col-sm-3">事故人：</label>
+								<div class="col-sm-9">
+									<div class="radio inline checkedRadio">
+										<label>
+											<div class="radio-btn"><i><input  type="radio"/></i></div>會員本人
+										</label>
+									</div>                            
+								</div>
+								<div class="clearfix"></div>
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>被保人姓名：</label>
+								<div class="col-sm-9">
+									<input type="text" name="name" id="name" th:value="${claimVo.name}" class="col-sm-9" data-validation="required" maxlength="200" style="padding: 6px 12px;line-height: 1em;" >
+
+								</div>
+								<div class="clearfix"></div>
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>身分證號碼：</label>
+								<div class="col-sm-9">
+									<input type="text" name="idNo" id="idNo" th:value="${claimVo.idNo}" data-validation="required|rocId" class="col-sm-9" maxlength="20" style="padding: 6px 12px;line-height: 1em;" >
+								 </div>
+								<!--   --> 
+								<div class="clearfix"></div>
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>出生日期：</label>
+								<div class="col-sm-9">
+									<input type="text" name="birdate" id="birdate"  th:value="${claimVo.birdate}"  data-validation="required|date" class="col-sm-9" style="padding: 6px 12px;line-height: 1em;" readonly>
+								</div>
+								<div class="clearfix"></div>
+								<label class="col-sm-3">聯絡電話：</label>
+								<div class="col-sm-9">
+									<input type="text" name="tel" id="tel" class="col-sm-9" maxlength="15" style="padding: 6px 12px;line-height: 1em;" >
+								</div>
+								<div class="clearfix"></div>
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>行動電話：</label>
+								<div class="col-sm-9">
+									<input type="number" name="phone" id="phone" class="col-sm-9" data-validation="required|mobile" maxlength="15" style="padding: 6px 12px;line-height: 1em; ime-mode: disabled;" >
+								</div>
+								<div class="clearfix"></div>
+								<label class="col-sm-3">E-MAIL：</label>
+								<div class="col-sm-9">
+									<input type="text" name="mail" class="col-sm-9" placeholder="範例：test@gmail.com" data-validation="mail" style="padding: 6px 12px;line-height: 1em;" >
+								</div>
+								<span class="col-sm-10" style="color: red;">(申請完成將以電子郵件通知，若未填寫則系統不會發送通知)</span>
+								<div class="clearfix"></div>
+								<label class="col-sm-3">聯絡地址：</label>
+								<div class="col-sm-9">
+									<input type="text"  name="address" th:value="${claimVo.address}" class="col-sm-9" maxlength="200" style="padding: 6px 12px;line-height: 1em;" >
+								</div>
+								<div class="clearfix"></div>
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>與主被保險人(員工)之關係：</label>
+								<div class="col-sm-9">
+									<th:block th:if="${session.RELATION_ITEMS != null}">
+										<th:block th:each="vo : ${session.RELATION_ITEMS}">
+											<div class="radio inline">
+												<label class="c_relation">
+													<div class="radio-btn"><i><input type="radio" name="relation" th:value="${vo.value.parameterValue}"></i></div>
+													<th:block th:if="${vo.value.parameterName == null || vo.value.parameterName == ''}">
+														<label th:if="${vo.value.parameterCode == 'WORDING_POLICYCLAIM_010'}">本人</label>
+														<label th:if="${vo.value.parameterCode == 'WORDING_POLICYCLAIM_011'}">父母</label>
+														<label th:if="${vo.value.parameterCode == 'WORDING_POLICYCLAIM_012'}">配偶</label>
+														<label th:if="${vo.value.parameterCode == 'WORDING_POLICYCLAIM_013'}">子女</label>
+													</th:block>
+													<th:block th:if="${vo.value.parameterName != null && vo.value.parameterName != ''}">
+														<label th:inline="text">
+															[[${vo.value.parameterName}]]
+														</label>
+													</th:block>
+													
+												</label>
+											</div>
+										</th:block>
+									</th:block>
+									<input type="hidden" id="id_relation_name" name="relation_name" value=""/>
+								</div>
+								<div class="clearfix"></div>
+								<label class="col-sm-6">被保險人是否有投保別家保險公司之保賠：</label>
+								<div class="col-sm-6">
+									<div class="radio inline">
+										<label>
+											<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="Y" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>有
+										</label>
+									</div>
+									<div class="radio inline">
+										<label>
+											<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="N" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div>沒有
+										</label>
+									</div>
+								</div>
+								<div class="col-sm-12" style="width: 100%">
+									<div class="tabs">
+										<!-- TAB 1 -->
+										<article class="tab tab-hide" id="tab_2">
+											<section id="tab_frame_print1" class="tab-frame">
+												<div class="arrow-upleft" style="left: 45%"></div>
+												<div class="grey2">
+													<div class="check-title depo2"></div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">保險公司名稱</label>
+														<div class="col-sm-9"><input type="text" name="otherInsuCompany" th:value="${claimVo.otherInsuCompany}" class="col-sm-9" placeholder=""></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">保險種類</label>
+														<div class="col-sm-9"><input type="text" name="otherInsuType" th:value="${claimVo.otherInsuType}" class="col-sm-9"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">保險金額</label>
+														<div class="col-sm-9"><input type="text" name="otherInsuAmout" th:value="${claimVo.otherInsuAmout}" class="col-sm-9"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">同時申請理賠</label>
+														<div class="col-sm-9">
+															<div class="radio inline">
+																<label>
+																	<div class="radio-btn"><i><input type="radio" name="otherInsuClaim" value="Y"></i></div>是　
+																</label>
+															</div>
+															<div class="radio inline">
+																<label>
+																	<div class="radio-btn"><i><input type="radio" name="otherInsuClaim" value="N"></i></div>否
+																</label>
+															</div>
+														</div>
+													</div>
+												</div>
+											</section>
+										</article>
+										<article class="tab tab-hide" id="tab_1">
+										</article>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+
+
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 保險事故
+							</div>
+							<div class="mobile-toggle-panel toggle-hide">
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>保險事故：</label>
+								<th:block th:if="${session.INSURANCE_ACCIDENT != null}">
+									<div class="col-sm-9">
+										<th:block th:each="vo : ${session.INSURANCE_ACCIDENT}">
+											<div class="radio inline">
+												<label>
+													<th:block th:if="${vo.value.parameterCode == 'INS_ACCIDENT_01'}">
+														<div class="radio-btn"><i><input type="radio" name="accidentCause" th:value="${vo.value.parameterValue}" checked="checked" onclick="if(this.checked) $('#tab2_2').show().siblings().hide();"></i></div>
+													</th:block>
+													<th:block th:if="${vo.value.parameterCode == 'INS_ACCIDENT_02'}">
+														<div class="radio-btn"><i><input type="radio" name="accidentCause" th:value="${vo.value.parameterValue}" onclick="if(this.checked) $('#tab2_1').show().siblings().hide();"></i></div>
+													</th:block>
+													<th:block th:if="${vo.value.parameterName != null}">
+														<label th:inline="text">[[${vo.value.parameterName}]]</label>
+													</th:block>
+													<th:block th:if="${vo.value.parameterName == null}">
+														<label th:if="${vo.value.parameterCode == 'INS_ACCIDENT_01'}">疾病</label>
+														<label th:if="${vo.value.parameterCode == 'INS_ACCIDENT_02'}">意外</label>
+													</th:block>
+												</label>
+											</div>
+										</th:block>
+									</div>
+								</th:block>
+
+								<div class="col-sm-12" style="width: 100%">
+									<div class="tabs">
+										<!-- TAB 1 -->
+										<article id="tab2_1" class="tab">
+											<section id="tab_frame_print1" class="tab-frame">
+												<div class="arrow-upleft" style="left: 42%"></div>
+												<div class="grey2">
+													<div class="check-title depo2">意外</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">事故當時職業</label>
+														<div class="col-sm-8"><input type="text" name="job" id="job" th:value="${claimVo.job}" class="col-sm-9" placeholder="輸入職業"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>發生時間</label>
+														<div class="col-sm-8" >
+															<input type="text" name="accidentDate" id="accidentDate" data-validation="date" class="col-sm-4" placeholder="輸入年月日" readonly>
+															<span class="col-sm-1"></span>
+															<input type="text" name="accidentTime" id="accidentTime" data-validation="time" class="col-sm-4" maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
+														</div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">事故地點</label>
+														<div class="col-sm-8"><input type="text" name="accidentLocation" th:value="${claimVo.accidentLocation}" class="col-sm-9" placeholder="輸入事故地點"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">事故原因及送醫經過詳情（請述明就診醫院名稱）</label>
+														<div class="col-sm-8">
+															<textarea class="col-sm-9" name="accidentDescr" th:value="${claimVo.accidentDescr}" ></textarea>
+														</div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">是否報警</label>
+														<div class="col-sm-9">
+															<div class="radio inline">
+																<label>
+																	<div class="radio-btn"><i><input type="radio" name="callPolice" value="Y"></i></div>是　
+																</label>
+															</div>
+															<div class="radio inline">
+																<label>
+																	<div class="radio-btn"><i><input type="radio" name="callPolice" value="N"></i></div>否
+																</label>
+															</div>
+														</div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">事故處理單位</label>
+														<div class="col-sm-8"><input type="text" name="policeStation" th:value="${claimVo.policeStation}" class="col-sm-9"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">承辦員警</label>
+														<div class="col-sm-8"><input type="text" name="policeName" th:value="${claimVo.policeName}" class="col-sm-9"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">員警電話</label>
+														<div class="col-sm-8"><input type="text" name="policePhone" th:value="${claimVo.policePhone}" class="col-sm-9"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">報警時間</label>
+														<div class="col-sm-8">
+															<input type="text" class="col-sm-4" name="policeDate" id="policeDate"  placeholder="輸入年月日" readonly>
+															<span class="col-sm-1"></span>
+															<input type="text" class="col-sm-4" name="policeTime" id="policeTime" data-validation="time"  maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
+														</div>
+													</div>
+												</div>
+											</section>
+										</article>
+										<!-- TAB 2 -->
+										<article class="tab tab-hide" id="tab2_2" style="display: block;">
+											<section id="tab_frame_print1" class="tab-frame">
+												<div class="arrow-upleft" style="left: 30%"></div>
+												<div class="grey2">
+													<div class="check-title depo2">疾病</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">診斷病名</label>
+														<div class="col-sm-9"><input type="text" name="diseaseName" th:value="${claimVo.diseaseName}" class="col-sm-9"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>該疾病初診日</label>
+														<div class="col-sm-9">
+															<input type="text" name="diagnosisDate" id="diagnosisDate" data-validation="date" th:value="${claimVo.diagnosisDate}" class="col-sm-9" readonly>
+														</div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">曾就診之醫院</label>
+														<div class="col-sm-9"><input type="text" name="hospital" th:value="${claimVo.hospital}" class="col-sm-9"></div>
+													</div>
+												</div>
+											</section>
+										</article>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 壽險公會理賠聯盟鏈授權專區
+							</div>
+							<div class="mobile-toggle-panel toggle-hide">
+								<label class="col-sm-3">理賠聯盟説明</label>
+								<div class="col-sm-9" th:inline="text">
+                                	[[${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_POLICYCLAIM_015'] != null} ? ${session.PAGE_WORDING['WORDING_POLICYCLAIM_015'].parameterValue} : '即日起，使用本公司線上理賠申請服務時，可一併授權本公司將您的理賠申請資料，透過「中華民國人壽保險同業公會」
+									建制「保險區塊鏈聯盟科技通用共享平臺」傳送予您有投保之保險公司（該保險公司需有參與聯盟鏈），免除以往需向不同
+									公司分別提出理賠申請之不便。']]
+								</div>
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否傳送其他保險公司：</label>
+								<div class="col-sm-9">
+									<div class="radio inline">
+										<label>
+											<div class="radio-btn"><i><input type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_2').show().siblings().hide();"></i></div>同意
+										</label>
+									</div>
+									<div class="radio inline">
+										<label>
+											<div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_1').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
+										</label>
+									</div>
+								</div>
+								<div class="col-sm-12" style="width: 100%">
+									<div class="tabs">
+										<!-- TAB 1 -->
+										<article id="tab3_1" class="tab">
+											
+										</article>
+										<!-- TAB 2 -->
+										<article class="tab tab-hide" id="tab3_2">
+											<section id="tab_frame_print1" class="tab-frame">
+												<div class="arrow-upleft" style="left: 30%"></div>
+												<div class="grey2">
+													<div class="check-title depo2">同意轉送理賠申請至其他保險公司</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">授權傳送其他公司</label>
+														<th:block th:if="${session.SEND_COMPANY_ITEMS != null}">
+															<div class="col-sm-9">
+																<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
+																	<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
+																		<div class="check-box"><i class=""><input type="checkbox" name="toItem"  th:value="${vo.value.parameterValue}"></i></div>
+																		<th:block th:if="${vo.value.parameterName != null}">
+																			<label th:inline="text">[[${vo.value.parameterName}]]</label>
+																		</th:block>
+																		<th:block th:if="${vo.value.parameterName == null}">
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_01'}">臺灣人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_02'}">國泰人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_03'}">第一金人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_04'}">中國人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_05'}">元大人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_06'}">南山人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_07'}">全球人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_08'}">新光人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_09'}">富邦財險</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_10'}">富邦人壽</th:block>
+																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_11'}">國泰世紀保險</th:block>
+																		</th:block>
+																	</div>
+																</th:block>
+															</div>
+														</th:block>
+														<input type="hidden" name="to" >
+													</div>
+												</div>
+											</section>
+										</article>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 給付方式
+							</div>
+							<div class="mobile-toggle-panel toggle-hide">
+								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>指定給付方式：</label>
+								
+								<th:block th:if="${session.PAYMENT_METHOD != null}">
+									<div class="col-sm-9">
+										<th:block th:each="vo : ${session.PAYMENT_METHOD}">
+											<div class="radio inline">
+												<label>
+													<th:block th:if="${vo.value.parameterName == null || vo.value.parameterName == ''}">
+														<div class="radio-btn"><i><input type="radio" name="paymentMethod" th:value="${vo.value.parameterValue}" checked="checked" onclick="if(this.checked) $('#tab4_2').show().siblings().hide();"></i></div>電匯
+													</th:block>
+													<th:block th:if="${vo.value.parameterName != null && vo.value.parameterName != ''}">
+														<div class="radio-btn"><i><input type="radio" name="paymentMethod" th:value="${vo.value.parameterValue}" checked="checked" onclick="if(this.checked) $('#tab4_2').show().siblings().hide();"></i></div>
+														<label th:inline="text">[[${vo.value.parameterName}]]</label>
+													</th:block>
+												</label>
+											</div>
+										</th:block>
+										<!-- <div class="radio inline">
+											<label>
+												<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_02'] == null}">
+													<div class="radio-btn"><i><input type="radio" name="paymentMethod" value="2" onclick="if(this.checked) $('#tab4_1').show().siblings().hide();"></i></div>郵寄支票
+												</th:block> 
+												<th:block th:if="${session.PAGE_WORDING['TRANS_MDOE_02'] != null}">
+													<div class="radio-btn"><i><input type="radio" name="paymentMethod" th:value="${session.PAGE_WORDING['TRANS_MDOE_02'].parameterValue}" onclick="if(this.checked) $('#tab4_1').show().siblings().hide();"></i></div>
+													<label th:inline="text">[[${session.PAGE_WORDING['TRANS_MDOE_02'].parameterName}]]</label>
+												</th:block>
+												
+											</label>
+										</div> -->
+									</div>
+								</th:block>
+								
+								<div class="col-sm-12" style="width: 100%">
+									<div class="tabs">
+										<!-- TAB 1 -->
+										<article id="tab4_1" class="tab">
+											<section id="tab_frame_print1" class="tab-frame">
+												<div class="arrow-upleft" style="left: 42%"></div>
+												<div class="grey2">
+													<div class="check-title depo2">郵寄隻票</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">郵寄區號</label>
+														<div class="col-sm-8"><input type="text" name="zipCode" th:value="${claimVo.zipCode}" class="col-sm-9"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">郵寄地址</label>
+														<div class="col-sm-8">
+															<input type="text" name="postalAddr" th:value="${claimVo.postalAddr}" class="col-sm-9">
+														</div>
+													</div>
+													
+												</div>
+											</section>
+										</article>
+										<!-- TAB 2 -->
+										<article class="tab tab-hide" id="tab4_2" style="display: block;">
+											<section id="tab_frame_print1" class="tab-frame">
+												<div class="arrow-upleft" style="left: 30%"></div>
+												<div class="grey2">
+													<div class="check-title depo2">電匯</div>
+													<div class="check-list2 grey2">
+														<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>匯款帳戶</label>
+														<div class="col-sm-9">
+															<input type="text" name="accountName" id="accountName" th:value="${claimVo.accountName}" class="col-sm-7" maxlength="14">
+															<span class="col-sm-5" style="color: red;">限被保險人本人帳戶</span>
+														</div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>銀行名稱</label>
+														<div class="col-sm-4">
+															<div>
+																<select class="wht" id="bankOpt" name="bankOpt" data-placeholder="選擇銀行" >
+																	<option value=""></option>
+																</select>
+																<input type="hidden" id="bankCode" name="bankCode"/>
+																<input type="hidden" id="bankName" name="bankName"/>
+															</div>
+														</div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3">分行名稱</label>
+														<div class="col-sm-4">
+															<div>
+																<select class="selector wht" id="brancheOpt" name="brancheOpt" data-placeholder="選擇分行">
+																	<option value=""></option>
+																</select>
+																<input type="hidden" id="branchCode" name="branchCode"/>
+																<input type="hidden" id="branchName" name="branchName"/>
+															</div>
+														</div>
+													</div>
+													<div class="check-list2 grey2">
+														<label for="" class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>帳號</label>
+														<div class="col-sm-9">
+															<input type="text" name="bankAccount" id="bankAccount" th:value="${claimVo.bankAccount}" class="col-sm-7" maxlength="14" onKeyUp="value=value.replace(/\D/g,'')" onchange="value=value.replace(/\D/g,'')"> 
+														</div>
+													</div>
+												</div>
+											</section>
+										</article>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 上傳申請應備文件
+							</div>
+							<div class="mobile-toggle-panel toggle-hide" >
+								<th:block th:if="${session.INSURANCE_CLAIM_UPLOADFILE != null}">
+									<th:block th:each="vo : ${session.INSURANCE_CLAIM_UPLOADFILE}">
+										<div class="form-group">
+											<label class="col-sm-3">
+												<span th:if="${vo.value.parameterValue == 'Y'}" style="color: #ff5300; font-size: 16px">*</span>
+												<th:block  th:inline="text">[[${vo.value.parameterName}]]</th:block>：
+											</label>
+											<div class="col-sm-9">
+												<div th:if="${vo.value.parameterCode == 'DIGI_SERVICE_CONSENT_FORM' || vo.value.parameterCode == 'ACCOUNT_COPY'}" class="dropdownFile" onclick="window.open('https://www.twfhclife.com.tw/wp-content/uploads/%E8%87%BA%E9%8A%80%E4%BA%BA%E5%A3%BD%E7%90%86%E8%B3%A0%E7%94%B3%E8%AB%8B%E8%BD%89%E9%80%81%E6%9A%A8%E5%80%8B%E8%B3%87%E8%92%90%E9%9B%86%E5%90%8C%E6%84%8F%E6%9B%B8.pdf')" 
+												style="position: absolute;top: 5px;right: 0px;"><i class="foo-down"></i>下載空白理賠申請轉送暨個資蒐集同意書
+												</div>
+												<input  class="uploadfile" th:id="${vo.value.remark}" name="files" type="file" multiple>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+										<input type="hidden" th:id="${vo.value.parameterCode}">
+									</th:block>
+								</th:block>
+								<input type="hidden" id="fileDataList" name="fileDataList">
+							</div>
+							<!-- <div class="mobile-toggle-panel toggle-hide">
+								<div class="form-group">
+									<label class="col-sm-3">數位服務同意書：</label>
+									<div class="col-sm-9">
+										<div class="dropdownFile" onclick="window.open('https://www.twfhclife.com.tw/wp-content/uploads/%E8%87%BA%E9%8A%80%E4%BA%BA%E5%A3%BD%E7%90%86%E8%B3%A0%E7%94%B3%E8%AB%8B%E8%BD%89%E9%80%81%E6%9A%A8%E5%80%8B%E8%B3%87%E8%92%90%E9%9B%86%E5%90%8C%E6%84%8F%E6%9B%B8.pdf')" 
+										style="position: absolute;top: 5px;right: 0px;"><i class="foo-down"></i>下載空白理賠申請轉送暨個資蒐集同意書
+									    </div>
+										<input  class="uploadfile" id="file-fr1" name="files" type="file" multiple>
+									</div>
+									<div class="clearfix"></div>
+								</div> 
+								<div class="form-group">
+									<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>診斷證明書：</label>
+									<div class="col-sm-9">
+											<input class="uploadfile" id="file-fr2" name="files"  type="file" multiple>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3">就醫收據：</label>
+									<div class="col-sm-9">
+
+										<input class="uploadfile" id="file-fr3" name="files" type="file" multiple>
+									
+									</div>
+									<div class="clearfix"></div>
+								</div> 
+								<div class="form-group">
+									<label class="col-sm-3">事故證明文件：(如警方軍方處理之文件，有關證明文件或報告等)</label>
+									<div class="col-sm-9">
+											<input class="uploadfile" id="file-fr4"  name="files" type="file" multiple>						
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3">受益人身份證明文件：(如身份證或胡記帳本)</label>
+									<div class="col-sm-9">
+											<input class="uploadfile" id="file-fr5" name="files" type="file" multiple>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3">帳戶影本：</label>
+									<div class="col-sm-9">
+										<div class="dropdownFile" onclick="window.open('https://www.twfhclife.com.tw/wp-content/uploads/%E6%8C%87%E5%AE%9A%E5%8C%AF%E6%AC%BE%E5%90%8C%E6%84%8F%E6%9B%B8.pdf')" 
+										style="position: absolute;top: 5px;
+	right: 0px;"><i class="foo-down"></i>下載空白保險給付指定匯款同意書</div>
+											<input class="uploadfile" id="file-fr6" name="files" type="file" multiple>
+									</div>
+									<div class="clearfix"></div>
+								</div> 
+								<input type="hidden" id="fileDatas1">
+								<input type="hidden" id="fileDatas2">
+								<input type="hidden" id="fileDatas3">
+								<input type="hidden" id="fileDatas4">
+								<input type="hidden" id="fileDatas5">
+								<input type="hidden" id="fileDatas6">
+								<input type="hidden" id="fileDataList" name="fileDataList">
+							</div> -->
+						</div>
+					
+						
+					
+					</form>
+				</div>
+				<div class="col-md-12 two-buttons">
+				
+					<button id="deny" class="btn-signup">上一步</button>
+					
+					<button id="go" class="btn-signup">下一步</button>
+				</div>
+
+			</div>
+			
+		</div>
+		<!--  「是否傳送其他保險公司」欄位選擇"不同意"時 -->
+		<div class="modal fade in" id="modal-container-NOTONGYI" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="margin-top: 200px;">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body apply2 center1 grey2">
+						<h3>無法送出理賠聯盟鏈申請，請改為"同意"</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var uploadFiles = /*[[${session.INSURANCE_CLAIM_UPLOADFILE}]]*/;
+		var uploadMaxNumber = /*[[${uploadMaxNumber}]]*/;
+		if (uploadFiles != undefined && uploadFiles != null) {
+			$.each(uploadFiles,function(key,value){
+				$("#"+value.remark).fileinput({
+					language: "zh",
+					showUpload : false,
+					showRemove : false,
+					uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+					showCaption: false,
+					showPreview: true,
+					dropZoneEnabled: true,//是否显示拖拽区域
+					browseClass: "btn btn-primary btn-lg",
+					uploadUrl: "/eservice/upLoadFiles",
+					maxFileSize : uploadMaxNumber,
+					maxFileCount: 10,
+					enctype: 'multipart/form-data',
+					allowedFileExtensions : ["jpg", "png","pdf"],
+					showBrowse: true,
+					fileType:"any",
+					browseOnZoneClick: true,
+					showUpload: false,
+				}).on("filebatchselected", function(event, files) {
+
+					$(this).fileinput("upload");
+
+				}).on('filebatchuploaderror', function(event, data) {
+					openAlert("上傳有誤，請重新上傳！");
+				}).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+							var  fileData = data.response;
+							var cons = [];
+							var con  = {};
+							for(var i=0 ; i < fileData.length ; i++ ){
+								if(fileData[i]!=null && fileData[i].filePath!=null && fileData[i].filePath!=""  ){
+									con['claimSeqId'] = 0;
+									con['type']= key;
+									con['fileOrPng'] = fileData[i].fileOrPng;
+									con['fileName'] = fileData[i].fileName;
+									con['filePath'] = fileData[i].filePath;
+									con['fileBase64'] = fileData[i].fileBase64;
+									cons.push(con);
+								}
+							}
+							$("#"+key).val(JSON.stringify(cons).replace(/\[|]/g, '' ));
+						});
+				});
+		}
+        // $("#file-fr1").fileinput({
+		// 	language: "zh",
+	    //     showUpload : false,
+	    //     showRemove : false,
+	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+		// 	showCaption: false,
+		// 	showPreview: true,
+	    //     dropZoneEnabled: true,//是否显示拖拽区域
+	    //     browseClass: "btn btn-primary btn-lg",
+	    //     uploadUrl: "/eservice/upLoadFiles",
+	    //     maxFileSize : 9999,
+		// 	maxFileCount: 10,
+	    //     enctype: 'multipart/form-data',
+	    //     allowedFileExtensions : ["jpg", "png","pdf"],
+		// 	showBrowse: true,
+		// 	fileType:"any",
+	    //     browseOnZoneClick: true,
+		// 	showUpload: false,
+	    // }).on("filebatchselected", function(event, files) {
+
+		// 	$(this).fileinput("upload");
+
+        // }).on('filebatchuploaderror', function(event, data) {
+		// 	openAlert("上傳有誤，請重新上傳！");
+		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+		// 	        var  fileData = data.response;
+		// 				var cons = [];
+		// 				var con ={};
+		// 				for(var i=0 ; i < fileData.length ; i++ ){
+		// 					con['claimSeqId'] = 0;
+		// 					con['type']= '1';
+		// 					con['fileName'] = fileData[i].fileName;
+		// 					con['filePath'] = fileData[i].filePath;
+		// 					cons.push(con);
+		// 				}
+		// 		$("#fileDatas1").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
+		// });
+	    // $('#file-fr2').fileinput({
+	    //     language: "zh",
+	    //     showUpload : false,
+	    //     showRemove : false,
+	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+		// 	showCaption: false,
+		// 	showPreview: true,
+	    //     dropZoneEnabled: true,//是否显示拖拽区域
+	    //     browseClass: "btn btn-primary btn-lg",
+	    //     uploadUrl: "/eservice/upLoadFiles",
+	    //     maxFileSize : 9999,
+		// 	maxFileCount: 10,
+	    //     enctype: 'multipart/form-data',
+	    //     allowedFileExtensions : ["jpg", "png","pdf"],
+		// 	showBrowse: true,
+		// 	fileType:"any",
+	    //     browseOnZoneClick: true,
+		// 	showUpload: false,
+	    // }).on("filebatchselected", function(event, files) {
+
+		// 	$(this).fileinput("upload");
+
+        // }).on('filebatchuploaderror', function(event, data) {
+		// 	openAlert("上傳有誤，請重新上傳！");
+		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+		// 	        var  fileData = data.response;
+		// 				var cons = [];
+		// 				var con ={};
+		// 				for(var i=0 ; i < fileData.length ; i++ ){
+		// 					con['claimSeqId'] = 0;
+		// 					con['type']= '2';
+		// 					con['fileName'] = fileData[i].fileName;
+		// 					con['filePath'] = fileData[i].filePath;
+		// 					cons.push(con);
+		// 				}
+		// 		$("#fileDatas2").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
+		// });
+		// $('#file-fr3').fileinput({
+	    //     language: "zh",
+	    //     showUpload : false,
+	    //     showRemove : false,
+	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+		// 	showCaption: false,
+		// 	showPreview: true,
+	    //     dropZoneEnabled: true,//是否显示拖拽区域
+	    //     browseClass: "btn btn-primary btn-lg",
+	    //     uploadUrl: "/eservice/upLoadFiles",
+	    //     maxFileSize : 9999,
+		// 	maxFileCount: 10,
+	    //     enctype: 'multipart/form-data',
+	    //     allowedFileExtensions : ["jpg", "png","pdf"],
+		// 	showBrowse: true,
+		// 	fileType:"any",
+	    //     browseOnZoneClick: true,
+		// 	showUpload: false,
+	    // }).on("filebatchselected", function(event, files) {
+
+		// 	$(this).fileinput("upload");
+
+        // }).on('filebatchuploaderror', function(event, data) {
+		// 	openAlert("上傳有誤，請重新上傳！");
+		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+		// 	        var  fileData = data.response;
+		// 				var cons = [];
+		// 				var con ={};
+		// 				for(var i=0 ; i < fileData.length ; i++ ){
+		// 					con['claimSeqId'] = 0;
+		// 					con['type']= '3';
+		// 					con['fileName'] = fileData[i].fileName;
+		// 					con['filePath'] = fileData[i].filePath;
+		// 					cons.push(con);
+		// 				}
+		// 		$("#fileDatas3").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
+		// });
+		// $('#file-fr4').fileinput({
+	    //     language: "zh",
+	    //     showUpload : false,
+	    //     showRemove : false,
+	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+		// 	showCaption: false,
+		// 	showPreview: true,
+	    //     dropZoneEnabled: true,//是否显示拖拽区域
+	    //     browseClass: "btn btn-primary btn-lg",
+	    //     uploadUrl: "/eservice/upLoadFiles",
+	    //     maxFileSize : 9999,
+		// 	maxFileCount: 10,
+	    //     enctype: 'multipart/form-data',
+	    //     allowedFileExtensions : ["jpg", "png","pdf"],
+		// 	showBrowse: true,
+		// 	fileType:"any",
+	    //     browseOnZoneClick: true,
+		// 	showUpload: false,
+	    // }).on("filebatchselected", function(event, files) {
+
+		// 	$(this).fileinput("upload");
+
+        // }).on('filebatchuploaderror', function(event, data) {
+		// 	openAlert("上傳有誤，請重新上傳！");
+		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+		// 	        var  fileData = data.response;
+		// 				var cons = [];
+		// 				var con ={};
+		// 				for(var i=0 ; i < fileData.length ; i++ ){
+		// 					con['claimSeqId'] = 0;
+		// 					con['type']= '4';
+		// 					con['fileName'] = fileData[i].fileName;
+		// 					con['filePath'] = fileData[i].filePath;
+		// 					cons.push(con);
+		// 				}
+		// 		$("#fileDatas4").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
+		// });
+		// $('#file-fr5').fileinput({
+	    //     language: "zh",
+	    //     showUpload : false,
+	    //     showRemove : false,
+	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+		// 	showCaption: false,
+		// 	showPreview: true,
+	    //     dropZoneEnabled: true,//是否显示拖拽区域
+	    //     browseClass: "btn btn-primary btn-lg",
+	    //     uploadUrl: "/eservice/upLoadFiles",
+	    //     maxFileSize : 9999,
+		// 	maxFileCount: 10,
+	    //     enctype: 'multipart/form-data',
+	    //     allowedFileExtensions : ["jpg", "png","pdf"],
+		// 	showBrowse: true,
+		// 	fileType:"any",
+	    //     browseOnZoneClick: true,
+		// 	showUpload: false,
+	    // }).on("filebatchselected", function(event, files) {
+
+		// 	$(this).fileinput("upload");
+
+        // }).on('filebatchuploaderror', function(event, data) {
+		// 	openAlert("上傳有誤，請重新上傳！");
+		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+		// 	        var  fileData = data.response;
+		// 				var cons = [];
+		// 				var con ={};
+		// 				for(var i=0 ; i < fileData.length ; i++ ){
+		// 					con['claimSeqId'] = 0;
+		// 					con['type']= '5';
+		// 					con['fileName'] = fileData[i].fileName;
+		// 					con['filePath'] = fileData[i].filePath;
+		// 					cons.push(con);
+		// 				}
+		// 		$("#fileDatas5").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
+		// });
+		// $('#file-fr6').fileinput({
+	    //     language: "zh",
+	    //     showUpload : false,
+	    //     showRemove : false,
+	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+		// 	showCaption: false,
+		// 	showPreview: true,
+	    //     dropZoneEnabled: true,//是否显示拖拽区域
+	    //     browseClass: "btn btn-primary btn-lg",
+	    //     uploadUrl: "/eservice/upLoadFiles",
+	    //     maxFileSize : 9999,
+		// 	maxFileCount: 10,
+	    //     enctype: 'multipart/form-data',
+	    //     allowedFileExtensions : ["jpg", "png","pdf"],
+		// 	showBrowse: true,
+		// 	fileType:"any",
+	    //     browseOnZoneClick: true,
+		// 	showUpload: false,
+	    // }).on("filebatchselected", function(event, files) {
+
+		// 	$(this).fileinput("upload");
+
+        // }).on('filebatchuploaderror', function(event, data) {
+		// 	openAlert("上傳有誤，請重新上傳！");
+		//   }).on("filebatchuploadsuccess", function (event, data, psereviewId, index) {
+		// 	        var  fileData = data.response;
+		// 				var cons = [];
+		// 				var con ={};
+		// 				for(var i=0 ; i < fileData.length ; i++ ){
+		// 					con['claimSeqId'] = 0;
+		// 					con['type']= '6';
+		// 					con['fileName'] = fileData[i].fileName;
+		// 					con['filePath'] = fileData[i].filePath;
+		// 					cons.push(con);
+		// 				}
+		// 		$("#fileDatas6").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
+	    // });
+		$(function(){
+			$('#birdate').datepicker({//日期控件
+				changeMonth : true,
+				changeYear : true,
+				maxDate : new Date(),
+				yearRange: 'c-80:c+80',
+				dateFormat : 'yy/mm/dd'
+			});
+			$('#accidentDate').datepicker({//日期控件
+				changeMonth : true,
+				changeYear : true,
+				maxDate : new Date(),
+				yearRange: 'c-80:c+80',
+				dateFormat : 'yy/mm/dd'
+			});
+			$('#diagnosisDate').datepicker({//日期控件
+				changeMonth : true,
+				changeYear : true,
+				maxDate : new Date(),
+				yearRange: 'c-80:c+80',
+				dateFormat : 'yy/mm/dd'
+			});
+			$('#policeDate').datepicker({//日期控件
+				changeMonth : true,
+				changeYear : true,
+				maxDate : new Date(),
+				yearRange: 'c-80:c+80',
+				dateFormat : 'yy/mm/dd'
+			});
+			$("#bankOpt").chosen({
+				allow_single_deselect:true,
+				search_contains: true
+			});
+			$("#brancheOpt").chosen({
+				allow_single_deselect:true,
+				search_contains: true
+			});
+			//銀行下拉選單
+			var bankUrl = /*[[@{/getBankList}]]*/;
+			var branchesUrl = /*[[@{/getBranchesList}]]*/;
+			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+			// 取得名稱
+			$('#bankOpt').change(function() {
+				$('#bankCode').val($('#bankOpt option:selected').val());
+				$('#bankName').val($('#bankOpt option:selected').html());
+			});
+			$('#brancheOpt').change(function() {
+				if ($('#brancheOpt').val() != '') {
+					$('#branchCode').val($('#brancheOpt option:selected').val());
+					$('#branchName').val($('#brancheOpt option:selected').html());
+				} else {
+					$('#branchCode').val('');
+					$('#branchName').val('');
+				}
+			});
+
+			$('div.mystyle3').validation();
+	        //选择项目applyItemList
+			$('#go').click(function() {
+
+				if($('#job').val() != "" && $('#job').val() != null){
+					if(chtLen($('#job').val())>40){
+						openAlert("職業欄位中英文長度不得大於20個字");
+						return false;
+					}
+				}
+				
+				if(!$("div.mystyle3").valid()){
+					return false;
+				}else{
+
+				if($('#birdate').val() == "" || $('#birdate').val() == null){
+					openAlert("請選擇被保人生日");
+					return false;
+				}
+				var objApplyItemList = $("input[name='applyItemList']"); //选择所有name="'applyItemList'"
+				//循环检测是不是被选中
+				var applyItemALL='';
+				for(var i=0; i<objApplyItemList.length; i++){
+					if(objApplyItemList[i].checked == true){
+						applyItemALL += objApplyItemList[i].value + ',';
+					}
+				}
+				//去掉最后一个逗号
+				if (applyItemALL.length > 0 && $("#itemOther").val()=='') {
+					applyItemALL = applyItemALL.substr(0,applyItemALL.length - 1);
+				}
+				if(applyItemALL == ''){
+					openAlert('請選擇申請項目');
+					return false;
+				}else{
+					$("input[name='applyItem']").val(applyItemALL+$("#itemOther").val());
+				}
+				//與主被保險人(員工)之關係
+				if($("input[name='relation']:checked").val() == undefined){
+						openAlert('請選擇與主被保險人(員工)之關係');
+					    return false;
+				}
+				//保险公司sendAlliance
+				if($("input[name='sendAlliance']:checked").val() == undefined){
+						openAlert('請選擇是否傳送其他保險公司');
+					    return false;
+				}
+				if ($("input[name='sendAlliance']:checked").val() == "Y"){
+					var toItemList = $("input[name='toItem']:checked"); //选择所有name="'toItem'"
+					if(toItemList.length == 0){
+						openAlert('請選擇授權傳送其他公司');
+						return false;
+					}
+					//循环检测是不是被选中
+					var toItotemALL='';
+					for(var i=0; i<toItemList.length; i++){
+						if(toItemList[i].checked == true){
+							toItotemALL += toItemList[i].value + ',';
+						}
+					}
+					//去掉最后一个逗号
+					if (toItotemALL.length > 0) {
+						toItotemALL = toItotemALL.substr(0,toItotemALL.length - 1);
+					}
+					$("input[name='to']").val(toItotemALL);
+				}else {
+					checkedNOTONGYI();
+					return false;
+				}
+				//校驗事故發生時間
+				if ($("input[name='accidentCause']:checked").val() == "2"){
+					if($('#accidentDate').val() =='' && $('#accidentTime').val() == ''){
+						openAlert('請輸入事故發生時間');
+					    return false;
+					}else{
+						$("input[name='accidentDate']").val($('#accidentDate').val().replace(/\//g, "\-"));
+						$("input[name='accidentTime']").val($('#accidentTime').val().replace(/\:/g, "\-"));
+					}
+
+				}else if($("input[name='accidentCause']:checked").val() == "1"){
+					if($('#diagnosisDate').val() ==''){
+						openAlert('請輸入該疾病初診日');
+					    return false;
+					}else{
+						$("input[name='accidentDate']").val($('#diagnosisDate').val().replace(/\//g, "\-"));
+					}
+				}
+				//校驗指定給付方式
+				if($("input[name='paymentMethod']:checked").val() == "1"){
+					if($('#accountName').val() =='' || $('#bankCode').val() =='' || $('#bankAccount').val() ==''){
+						openAlert('請輸入電匯必填欄位');
+					    return false;
+					}
+				}
+				//生日
+				$("input[name='birdate']").val($('#birdate').val().replace(/\//g, "\-"));
+				if($('#policeDate').val() != ''){
+					$("input[name='policeDate']").val($('#policeDate').val().replace(/\//g, "\-"));
+				}
+				if($('#policeTime').val() != ''){
+					$("input[name='policeTime']").val($('#policeTime').val().replace(/\:/g, "\-"));
+				}
+
+				//上傳文件
+				var flag = true;
+				if (uploadFiles != undefined && uploadFiles != null) {
+					$.each(uploadFiles,function(key,value){
+						if(value.parameterValue == 'Y' && $("#"+key).val()=='') {
+							openAlert("請選擇診斷證明書!");
+							flag = false;
+							return false;
+						}
+					})
+				}
+				if(!flag){
+					return;
+				}
+				var List = [];
+				if (uploadFiles != undefined && uploadFiles != null) {
+					$.each(uploadFiles,function(key,value){
+						if ($("#"+key).val() != ''){
+							List.push(JSON.parse($("#"+key).val()));
+						}else{
+							List.push({claimSeqId: null, type: key, fileName: "", filePath: "", fileBase64: ""});
+						}
+					})
+				}
+				$('input[name="fileDataList"]').val(JSON.stringify(List));
+				//  if($("#fileDatas2").val()==''){
+				// 	openAlert("請選擇診斷證明書!");
+				//  	return false;
+				//  }else{
+				//         var List = [];
+				// 		if ($("#fileDatas1").val() != ''){
+				// 			List.push(JSON.parse($("#fileDatas1").val()));
+				// 		}else{
+				// 			List.push({claimSeqId: null, type: "1", fileName: "", filePath: ""});
+				// 		}
+
+				// 		List.push(JSON.parse($("#fileDatas2").val()));
+
+				// 		if ($("#fileDatas3").val() != ''){
+				// 			List.push(JSON.parse($("#fileDatas3").val()));
+				// 		}else{
+				// 			List.push({claimSeqId: null, type: "3", fileName: "", filePath: ""});
+				// 		}
+				// 		if ($("#fileDatas4").val() != ''){
+				// 			List.push(JSON.parse($("#fileDatas4").val()));
+				// 		}else{
+				// 			List.push({claimSeqId: null, type: "4", fileName: "", filePath: ""});
+				// 		}
+				// 		if ($("#fileDatas5").val() != ''){
+				// 			List.push(JSON.parse($("#fileDatas5").val()));
+				// 		}else{
+				// 			List.push({claimSeqId: null, type: "5", fileName: "", filePath: ""});
+				// 		}
+				// 		if ($("#fileDatas5").val() != ''){
+				// 			List.push(JSON.parse($("#fileDatas6").val()));
+				// 		}else{
+				// 			List.push({claimSeqId: null, type: "6", fileName: "", filePath: ""});
+				// 		}
+				// 		$('input[name="fileDataList"]').val(JSON.stringify(List));
+				// }
+				$('#step3Form').submit();
+			  }
+			});
+
+			// 上一步事件
+			var formData = /*[[${claimVo}]]*/;
+			var formData = {};
+			formData.policyNo = $('#policyNo').val();
+			$('#deny').click(function() {
+				postWithFormData(/*[[@{/policyClaims2}]]*/, formData);
+			});
+
+		});
+		function checkedNOTONGYI(){
+			$('#modal-container-NOTONGYI').modal({
+				show: true,
+				backdrop: 'static',
+				keyboard: false
+				});
+		}
+
+		//計算中英文字長度
+		function chtLen(str){ 
+			return str.replace(/[^\x00-\xff]/g,"xx").length;
+		}
+	</script>
+
+</body>
+
+</html>

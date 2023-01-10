@@ -1,0 +1,64 @@
+<div class="item100" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="cityOption" class="selector"></select>
+	</div>
+</div>
+<div class="item100" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="regionOption" class="selector"></select>
+	</div>
+</div>
+<div class="item150" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box">
+		<select id="roadOption" class="selector"></select>
+	</div>
+</div>
+<div class="clearfix"></div>
+ <div class="" style="float: left; margin-top: 4px; margin-right: 4px;line-height: 1em;">
+	<input type="text" id="addr-1" class="item50">巷
+	<input type="text" id="addr-2" class="item50">弄
+	<input type="text" id="addr-3" class="item50">號之
+	<input type="text" id="addr-4" class="item50">，
+	<input type="text" id="addr-5" class="item50">樓之
+	<input type="text" id="addr-6" class="item50">
+	<input type="text" id="addr-7" class="item50 hide">
+</div>
+<!--<div style="float: left;">
+	<input type="text" id="add" class="" placeholder="請輸入所在路、巷、號、樓層">
+</div>-->
+<input type="hidden" id="selectAddress" name="selectAddress"/>
+<input type="hidden" id="selectAddressFull" name="selectAddress"/>
+<input type="hidden" id="selectAddressValid" name="selectAddressValid"/>
+<script src="plugin/jquery-1.11.2.min.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function () {
+		// 地址下拉選單
+		var cityUrl = /*[[@{/getCityList}]]*/;
+		var regionUrl = /*[[@{/getRegionList}]]*/;
+		var roadUrl = /*[[@{/getRoadList}]]*/;
+		eserviceOption.common('#cityOption', cityUrl);
+		eserviceOption.empty('#roadOption', '請選擇');
+		eserviceOption.empty('#regionOption', '請選擇');
+
+		$('#regionOption').change(function () {
+			eserviceOption.common('#roadOption', (roadUrl + '?regionId=' + $(this).val()));
+			var regionOptionID = $(this).val();
+			$('#regionOption option[selected=selected]').attr("selected", false);
+			$('#regionOption option[value="' + regionOptionID + '"]').attr("selected", true);
+		});
+
+		$('#cityOption').change(function () {
+			var cityOptionID = $(this).val();
+			eserviceOption.common('#regionOption', (regionUrl + '?cityId=' + $(this).val()));
+			$('#cityOption option[selected=selected]').attr("selected", false);
+			$('#cityOption option[value="' + cityOptionID + '"]').attr("selected", true);
+		});
+		$('#roadOption').change(function () {
+			var roadOptionID = $(this).val();
+			$('#roadOption option[selected=selected]').attr("selected", false);
+			$('#roadOption option[value="' + roadOptionID + '"]').attr("selected", true);
+		});
+	});
+	/*]]>*/
+</script>

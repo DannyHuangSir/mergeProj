@@ -1,0 +1,635 @@
+<div class="form-group detailClaims">
+    <label class="col-sm-3">查詢歷程資料</label>
+    <div class="col-sm-9" style="text-align: left;">
+        <button th:onclick="'javascript:onMedicalStatus(\'' + ${claimVo.applyItem} + '\',\'' + ${claimVo.transNum} + '\');'">狀態歷程</button>
+        <button th:onclick="'javascript:viewSupplement(\'' + ${claimVo.applyItem} + '\',\'' + ${claimVo.transNum} + '\');'">補件單歷程</button>
+        <button onclick="downloadPolicyClaimsPDF()">下載紙本文件寄回檢核表</button>
+    </div>
+</div>
+<div class="panel panel-default" style="padding-top: 30px;margin-top: 20px;background: #ffffff;">
+  <div class="panel-heading">※ 申請資料</div>
+  <div class="panel-body clear1" id="poliyClaimsDetail">
+       <div class="mycigna3">
+            <div class="col-md-12 detailPolicy">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3">申請項目：</label>
+                        <div class="col-sm-9" id="div-app-item">
+                            <th:block th:each="from : ${#strings.arraySplit(claimVo.applyItem, ',')}">
+                                <th:block th:each="vo : ${session.APPLICATION_ITEMS}">
+                                    <th:block th:if="${from eq vo.value.parameterValue}"> 
+                                        <label class="label-app-item" th:inline="text">[[${ vo.value.parameterName}]]</label>
+                                    </th:block>
+                                </th:block>
+                            </th:block>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label class="col-sm-3">要保人姓名：</label>
+                        <div class="col-sm-9">
+                            <b><th:block th:text="${claimVo.customerName}"/></b>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <label class="col-sm-3">保單號碼：</label>
+                        <div class="col-sm-9">
+                            <th:block th:text="${claimVo.policyNo}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="tb3 mobile-toggle" data-toggle="true">
+                        <i class="fas fa-chevron-up hid2 mobile"></i>
+                        <i class="fas fa-chevron-up hid1"></i> 事故者資料
+                    </div>
+                    <div class="mobile-toggle-panel">
+                        <div class="form-group">
+                            <label class="col-sm-3">事故人：</label>
+                            <!-- <div class="col-sm-9"><th:block th:text="${claimVo.customerName}"/></div> -->
+                            <div class="col-sm-9">會員本人</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">被保險人姓名：</label>
+                            <div class="col-sm-9"><th:block th:text="${claimVo.name}"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">身份證字號：</label>
+                            <div class="col-sm-9"><th:block th:text="${claimVo.idNo}"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">出生年月日：</label>
+                            <div class="col-sm-9"><th:block th:text="${claimVo.birdate}"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">聯絡電話：</label>
+                            <div class="col-sm-9"><th:block th:text="${claimVo.tel}"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">行動電話：</label>
+                            <div class="col-sm-9"><th:block th:text="${claimVo.phone}"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">E-MAIL：</label>
+                            <div class="col-sm-9"><th:block th:text="${claimVo.mail}"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">聯絡地址：</label>
+                            <div class="col-sm-9"><th:block th:text="${claimVo.address}"/></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12">與主被保險人(員工關係)：</label>
+                            <th:block th:if="${session.RELATION_ITEMS != null}">
+                                <div class="col-sm-12 col-sm-offset-3">
+                                    <th:block th:each="vo : ${session.RELATION_ITEMS}">
+                                        <th:block th:if="${claimVo.relation eq vo.value.parameterValue}">
+                                            <th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+                                        </th:block>
+                                    </th:block>
+                                </div>
+                            </th:block>
+                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12">被保險人是否投保別家保險公司之保險：</label>
+                            <div class="col-sm-12 col-sm-offset-3">
+                                <th:block th:if="${claimVo.otherCompanyInsured eq 'Y'}">有</th:block>
+                                <th:block th:if="${claimVo.otherCompanyInsured eq 'N'}">沒有</th:block>
+                            </div>
+                        </div>
+                        <th:block th:if="${claimVo.otherCompanyInsured eq 'Y'}">
+                            <div class="form-group">
+                                <label class="col-sm-3">保險公司名稱：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.otherInsuCompany}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">保險種類：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.otherInsuType}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">保險金額：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.otherInsuAmout}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">同時申請理賠：</label>
+                                <div class="col-sm-9">
+                                    <th:block th:if="${claimVo.otherInsuClaim eq 'Y'}">是</th:block>
+                                    <th:block th:if="${claimVo.otherInsuClaim eq 'N'}">否</th:block>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="tb3 mobile-toggle" data-toggle="true">
+                        <i class="fas fa-chevron-up hid2 mobile"></i>
+                        <i class="fas fa-chevron-up hid1"></i> 保險事故
+                    </div>
+                    <div class="mobile-toggle-panel">
+                        <div class="form-group">
+                        <label class="col-sm-3">事故種類：</label>
+                          <div class="col-sm-9">
+                                <th:block th:if="${claimVo.accidentCause eq '1'}">疾病</th:block>
+                                <th:block th:if="${claimVo.accidentCause eq '2'}">意外</th:block>
+
+                            <th:block th:if="${session.APPLICATION_ITEMS != null}">
+                                <th:block th:each="vo : ${session.APPLICATION_ITEMS}">
+                                    <th:block th:if="${claimVo.accidentCause eq vo.value.parameterValue}">
+                                        <th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+                                    </th:block>
+                                </th:block>
+                            </th:block>
+                          </div>
+                        </div>
+                        <th:block th:if="${claimVo.accidentCause eq '1'}">
+                            <div class="form-group">
+                                <label class="col-sm-3">診斷病名: </label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.diseaseName}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">該疾病初診日:</label>
+                                <div class="col-sm-9">
+                                    <th:block th:text="${claimVo.accidentDate}"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">曾就診之醫院:</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.hospital}"/></div>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${claimVo.accidentCause eq '2'}">
+                            <div class="form-group">
+                                <label class="col-sm-3">事故當時職業：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.job}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">發生時間：</label>
+                                <div class="col-sm-9">
+                                    <th:block th:text="${claimVo.accidentDate}"/>
+                                    <th:block th:text="${claimVo.accidentTime}"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">事故地點：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.accidentLocation}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4">事故原因及送醫經過詳情:<br/> (請述明就診醫院名稱)</label>
+                                <div class="col-sm-8"><th:block th:text="${claimVo.accidentDescr}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">是否報警：</label>
+                                <div class="col-sm-9">
+                                    <th:block th:if="${claimVo.callPolice eq 'Y'}">是</th:block>
+                                    <th:block th:if="${claimVo.callPolice eq 'N'}">否</th:block>
+                                </div>
+                            </div>
+                            <th:block th:if="${claimVo.callPolice eq 'Y'}">
+                                    <div class="form-group">
+                                        <label class="col-sm-3">事故處理單位：</label>
+                                        <div class="col-sm-9"><th:block th:text="${claimVo.policeStation}"/></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3">承辦警員：</label>
+                                        <div class="col-sm-9"><th:block th:text="${claimVo.policeName}"/></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3">警方電話：</label>
+                                        <div class="col-sm-9"><th:block th:text="${claimVo.policePhone}"/></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3">報案日期：</label>
+                                        <div class="col-sm-9">
+                                            <th:block th:text="${claimVo.policeDate}"/>
+                                            <th:block th:text="${claimVo.policeTime}"/>
+                                        </div>
+                                    </div>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="tb3 mobile-toggle" data-toggle="true">
+                        <i class="fas fa-chevron-up hid2 mobile"></i>
+                        <i class="fas fa-chevron-up hid1"></i> 壽險公會理賠聯盟鏈授權專區
+                    </div>
+                    <div class="mobile-toggle-panel">
+                        <div class="form-group">
+                            <label class="col-sm-3">醫療聯盟説明:</label>
+                            <div class="col-sm-9" th:inline="text">
+                                [[${session.PAGE_WORDING != null and session.PAGE_WORDING['MEDICAL_TREATMENT_PAGE'] != null} ? ${session.PAGE_WORDING['MEDICAL_TREATMENT_PAGE'].parameterValue} : '
+										即日起，使用本公司線上理賠申請服務時，可一併授權本公司將您的理賠申請資料，透過「中華民國人壽保險商業同業公會」建制之「理賠醫起通」服務傳送予您有投保之保險公司（該保險公司須有參與理賠醫起通），免除以往須向不同保險公司分別提出理賠申請之不便。
+									']]
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">是否傳送其他醫療單位:</label>
+                            <div class="col-sm-9">
+                                <th:block th:if="${claimVo.fromHospitalId != null}">同意</th:block>
+                                <th:block th:unless="${claimVo.fromHospitalId != null}">不同意</th:block>
+                            </div>
+                        </div>
+                        <th:block th:if="${claimVo.fromHospitalId != null}">
+                            <div class="form-group">
+                                <label class="col-sm-3">醫療單位:</label>
+                                <th:block th:if="${hospitalList != null}">
+                                    <div class="col-sm-9">
+                                        <th:block th:if="${claimVo.toHospitalId != null}">
+                                            <th:block th:each="from : ${#strings.arraySplit(claimVo.toHospitalId, ',')}">
+                                                <th:block th:each="vo : ${hospitalList}">
+                                                    <th:block th:if="${from eq vo.hpid}">
+                                                        <th:block th:inline="text">[[${vo.hpName}]]</th:block>
+                                                    </th:block>
+                                                </th:block>
+                                            </th:block>
+                                        </th:block>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </th:block>
+                        <th:block th:each="vo :${claimVo.medicalInfo}">
+                            <hr style="border:1px dashed  #F2F1F1"/>
+                            <div class="form-group">
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>就診類型：</label>
+                                <div class="col-sm-9" th:text="${vo.otypeName}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">&nbsp;</span>主科別：</label>
+                                <div class="col-sm-9" th:text="${vo.depName}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>子科別：</label>
+                                <div class="col-sm-9" th:text="${vo.subDepName}"></div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>授權文件類型：</label>
+                                <div class="col-sm-9" >
+                                    <th:block th:each="vo1, state : ${vo.dtypeList}">
+                                        <th:block th:if="${state.index > 0}">
+                                            ,
+                                        </th:block>
+                                        <th:block th:text="${vo1.name}"/>
+                                    </th:block>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-sm-3" style="padding-right: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>授權時間區間：</label>
+                                <div class="col-sm-9" th:text="${vo.hsTime + ' ~ ' + vo.heTime}"/>
+                            </div>
+                        </th:block>
+                </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="tb3 mobile-toggle" data-toggle="true">
+                        <i class="fas fa-chevron-up hid2 mobile"></i>
+                        <i class="fas fa-chevron-up hid1"></i> 壽險公會理賠聯盟鏈授權專區
+                    </div>
+                    <div class="mobile-toggle-panel">
+                        <div class="form-group">
+                            <label class="col-sm-3">理賠聯盟説明：</label>
+                            <div class="col-sm-9" th:inline="text">[[${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_POLICYCLAIM_015'] != null} ? ${session.PAGE_WORDING['WORDING_POLICYCLAIM_015'].parameterValue} : '即日起，使用本公司線上理賠申請服務時，可一併授權本公司將您的理賠申請資料，透過「中華民國人壽保險同業公會」
+                                建制「保險區塊鏈聯盟科技通用共享平臺」傳送予您有投保之保險公司（該保險公司需有參與聯盟鏈），免除以往需向不同
+                                公司分別提出理賠申請之不便。']]</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12">是否傳送其他保險公司：</label>
+                            <div class="col-sm-12 col-sm-offset-3">
+                                <th:block th:if="${claimVo.to != null && claimVo.to != '' }">同意</th:block>
+                                <th:block th:unless="${claimVo.to != null && claimVo.to != ''}">不同意</th:block>
+                            </div>
+                        </div>
+                        <th:block th:if="${claimVo.to != null}">
+                            <div class="form-group">
+                                <label class="col-sm-3">授權傳送公司：</label>
+                                <!-- <div class="col-sm-9">
+                                    <th:block th:each="toItem : ${claimVo.to}">
+                                        <th:block th:if="${toItem eq 'L02'}">臺灣人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'L04'}">國泰人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'L21'}">第一金人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'L05'}">中國人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'L61'}">元大人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'L06'}">南山人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'L64'}">全球人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'L08'}">新光人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'L51'}">富邦財險 </th:block>
+                                        <th:block th:if="${toItem eq 'L52'}">富邦人壽 </th:block>
+                                        <th:block th:if="${toItem eq 'N15'}">國泰世紀保險 </th:block>
+                                    </th:block>
+                                </div> -->
+                                <th:block th:if="${hospitalInsuranceCompanyList != null}">
+                                    <div class="col-sm-9">
+                                         <th:block th:if="${claimVo.to != null}"></th:block>
+                                            <th:block th:each="from : ${#strings.arraySplit(claimVo.to, ',')}">
+                                                <th:block th:each="vo : ${hospitalInsuranceCompanyList}">
+                                                    <th:block th:if="${from eq vo.insuranceId}">
+                                                        <th:block th:inline="text">[[${vo.insuranceName}]]</th:block>
+                                                    </th:block>
+                                                </th:block>
+                                            </th:block>
+                                        </th:block>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </th:block>
+                    </div>
+                <div class="form-horizontal">
+                    <div class="tb3 mobile-toggle" data-toggle="true">
+                        <i class="fas fa-chevron-up hid2 mobile"></i>
+                        <i class="fas fa-chevron-up hid1"></i> 給付方式
+                    </div>
+                    <div class="mobile-toggle-panel">
+                        <div class="form-group">
+                            <label class="col-sm-3">指定給付方式：</label>
+                            <!-- <div class="col-sm-9">
+                                <th:block th:if="${claimVo.paymentMethod eq '1'}">電匯</th:block>
+                                <th:block th:if="${claimVo.paymentMethod eq '2'}">郵寄支票</th:block>
+                            </div> -->
+                            <th:block th:if="${session.PAYMENT_METHOD != null}">
+                                <div class="col-sm-9">
+                                    <th:block th:each="vo : ${session.PAYMENT_METHOD}">
+                                        <th:block th:if="${claimVo.paymentMethod eq vo.value.parameterValue}">
+                                            <th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+                                        </th:block>
+                                    </th:block>
+                                </div>
+                            </th:block>
+                        </div>
+                        <th:block th:if="${claimVo.paymentMethod eq '1'}">
+                            <div class="form-group">
+                                <label class="col-sm-3">匯款帳戶：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.accountName}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">銀行名稱：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.bankName}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">分行名稱：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.branchName}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">帳號：</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.bankAccount}"/></div>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${claimVo.paymentMethod eq '2'}">
+                            <div class="form-group">
+                                <label class="col-sm-3">郵寄區號:</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.bankAccount}"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">郵寄地址:</label>
+                                <div class="col-sm-9"><th:block th:text="${claimVo.postalAddr}"/></div>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="tb3 mobile-toggle" data-toggle="true">
+                        <i class="fas fa-chevron-up hid2 mobile"></i>
+                        <i class="fas fa-chevron-up hid1"></i> 上傳申請應備文件
+                    </div>
+                    <div class="mobile-toggle-panel">
+                        <th:block th:if="${not #lists.isEmpty(claimVo.fileDatas)}">
+                           <th:block th:each="vo, rowStat : ${claimVo.fileDatas}">
+                                <div class="form-group">
+                                    <label class="col-sm-3">
+                                        <th:block th:if="${vo.type == 'C'}">
+                                            補件：
+                                        </th:block>
+                                        <th:block Rth:if="${session.INSURANCE_CLAIM_UPLOADFILE != null}">
+                                            <th:block th:each="file : ${session.INSURANCE_CLAIM_UPLOADFILE}">
+                                                <th:block th:if="${vo.type != 'C' && vo.type eq file.value.parameterCode}">
+                                                    <th:block th:inline="text">[[${file.value.parameterName}]]</th:block> ：
+                                                </th:block>
+                                            </th:block>
+                                        </th:block>
+                                        <!-- <th:block th:if="${vo.type eq '1'}">數位服務同意書：</th:block>
+                                        <th:block th:if="${vo.type eq '2'}">診斷證明書:</th:block>
+                                        <th:block th:if="${vo.type eq '3'}">就醫收據:</th:block>
+                                        <th:block th:if="${vo.type eq '4'}">事故證明文件：(如警方軍方處理之文件，有關證明文件或報告等)</th:block>
+                                        <th:block th:if="${vo.type eq '5'}">受益人身份證明文件：(如身份證或胡記帳本)</th:block>
+                                        <th:block th:if="${vo.type eq '6'}">帳戶影本:</th:block> -->
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <th:block th:text="${vo.fileName}"/>
+                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
+                                             <embed th:src="'data:application/pdf;base64, '+${vo.fileBase64}" type="application/pdf" width="50">
+                                        </div>
+                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.jpg')}">
+                                            <img th:src="'data:image/png;base64, '+${vo.fileBase64}" width="50">
+                                        </div>
+                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
+                                            <img th:src="'data:image/png;base64, '+${vo.fileBase64}" width="50">
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </div>     
+            </div>
+
+
+        </div>
+</div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        var claimVo = /*[[${claimVo}]]*/;
+        var fileDataList = "";
+        		//進行獲取醫療的申請狀態信息下拉選單
+		 $.ajaxSetup({async: false});
+		 commonOptionsParameter( /*[[@{/optionMedicalApplyForStatusList}]]*/);		
+			$.ajaxSetup({async: true});	
+
+        if (claimVo != null) {
+            var fileDatas = claimVo.fileDatas;
+             if(fileDatas != null){
+                var k = fileDatas.length;
+                for(var i=0; i <  k; i++){
+                    // if (fileDatas[i].fileName.indexOf('.pdf') >= 0 || fileDatas[i].fileName.indexOf('.PDF') >= 0) {
+                    //     var A = document.createElement("a");
+                    //     A.setAttribute("href","/images/" + fileDatas[i].fileName);
+                    //     A.setAttribute("target","_blank");
+                    //     document.body.appendChild(A);
+                    //     A.click();
+                    // }
+                    var fileTypeNames = /*[[ ${session.MEDICAL_TREATMENT_UPLOADFILE}]]*/;
+                    if(fileTypeNames != null){
+                        $.each( fileTypeNames, function( prop, value ) {
+                            if(value.parameterCode == fileDatas[i].type){
+                                fileDataList += value.parameterName;
+                                if(i < k-1){
+                                    fileDataList += ",";
+                                }
+                            }
+                        });
+                    }
+
+                }
+             }
+        }
+        function downloadPolicyClaimsPDF(){
+            var items = "";
+            $('.label-app-item').each(function(i,val){
+                items += this.innerText + " ";
+            })
+            claimVo.applicationItem = items;
+            claimVo.fileDataList = fileDataList;
+
+            var form = document.createElement("form");
+            form.style.display = "none";
+            form.action = '/eservice/downloadPolicyClaimsPDF';
+            form.method = "post";
+            form.target="_blank";
+            document.body.appendChild(form);
+            // 动态创建input并给value赋值
+            for (var key in claimVo) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = claimVo[key];
+                form.appendChild(input);
+            }
+
+            form.submit();
+            form.remove();
+            // var url = '/eservice/downloadPolicyClaimsPDF?' + $.param(claimVo);
+            // url = url.replace(/%5B/g, '').replace(/%5D/g, '');
+            // window.open(url);
+            // return false;
+        }
+
+        	// 狀態歷程
+	function onMedicalStatus(APPLYITEM, TRANS_NUM, str){
+		var data = {};
+		var form = $('#status_medica_collapseSearchBar')[0];
+		if (!checkYMD(form.startDate.value)) {
+			return;
+		}
+		if (!checkYMD(form.endDate.value)) {
+			return;
+		}
+		if (str != 'query') {
+			$('#modal-medical-statusConfirm').modal({
+				show: true,
+				backdrop: 'static', 
+				keyboard: false
+			});
+			$('#status_medical_application_items').html($('#div-app-item').html());
+			$('#status_medical_insurance_num').html(TRANS_NUM);
+			data = { transNum : TRANS_NUM };
+			// 刪除查詢條件中的數據
+			form.reset();
+		}else {
+			data = {
+					transNum : $('#status_medical_insurance_num').html(),
+					status: form.status.value,
+					startDate: form.startDate.value.replaceAll('/','-'),
+					endDate: form.endDate.value.replaceAll('/','-')
+					};
+		}
+		$('#status_medical_body').html('');
+		$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : '/eservice/getTransStatusHistoryList',
+				data : JSON.stringify(data),
+				success : function(response) {
+					var html = '';
+					if (response.resultData != null) {
+						response.resultData.forEach(function(item,index){
+							html += '<tr>'+
+										'<td>'+item.status+'</td>'+
+										'<td>'+item.requestDate+'</td>'+
+										'<td>'+item.identity+'</td>'+
+										'<td>'+item.customerName+'</td>'+
+										'<td><xmp>'+(item.content != null ? item.content : '')+'</xmp></td>'+
+									'</tr>';
+						});
+						$('#status_medical_body').html(html);
+					}
+				},
+				error :function() {
+				}
+			});
+	}
+
+    function commonOptionsParameter(url) {
+           $('#status_medical_select').html('');
+    		$.ajax({
+    			url : url,
+    			type : "POST"
+    		}).done(function(data) {
+    			if (data.result == 'SUCCESS') {
+    				var optHtml = '<option value="">請選擇</option>';
+    				$.each(data.resultData, function(i, obj) {
+    					//console.log(obj.VALUE );
+    					optHtml += ('<option value="' + obj.parameterCode + '">' + obj.parameterValue + '</option>');
+    				});
+                    $('#status_medical_select').html(optHtml);
+    			}
+    		});
+    	};
+        	//補件單歷程
+	var fileLogList = [];
+	function viewSupplement(APPLYITEM, TRANS_NUM, str){
+		var data = {};
+		var form = $('#view_medical_collapseSearchBar')[0];
+		if (str != 'query') {
+			$('#modal-medical-viewsupplementConfirm').modal({
+				show: true,
+				backdrop: 'static', 
+				keyboard: false
+			});
+			$('#view_medical_application_items').html($('#div-app-item').html());
+			$('#view_medical_insurance_num').html(TRANS_NUM);
+			// 刪除查詢條件中的數據
+			form.reset();
+			data = {transNum : TRANS_NUM};
+		}else {
+			data = {
+					transNum : $('#view_medical_insurance_num').html(),
+					claimSeqId: form.attNum.value,
+					startDate: form.startDate.value.replaceAll('/','-'),
+					endDate: form.endDate.value.replaceAll('/','-')
+					};
+		}
+		if (!checkYMD(form.startDate.value)) {
+			return;
+		}
+		if (!checkYMD(form.endDate.value)) {
+			return;
+		}
+		$('#view_medical_body').html('');
+		$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : '/eservice/getTransRFEList',
+				data : JSON.stringify(data),
+				success : function(response) {
+					var html = '';
+					if (response.resultData != null && response.result!='ERROR') {
+						fileLogList = response.resultData;
+						response.resultData.forEach(function(item,index){
+							html += '<tr>'+
+										'<td>'+item.rfeId+'</td>'+
+										'<td>'+item.requestDate+'</td>'+
+										'<td>'+item.responseDate+'</td>'+
+										'<td>'+
+											'<button type="button" onclick="viewSupplementDetil(\''+ index +'\')" style="position: relative;">查看<i class="foo-warning"></i></button>'+
+										'</td>';
+								html +=	'<td>'+ item.statusName+'</td>'+
+									'</tr>';
+						});
+					
+					}
+                    $('#view_medical_body').html(html);
+				},
+				error :function() {
+					
+				}
+			});
+	};
+    /*]]>*/
+</script>

@@ -1,0 +1,157 @@
+<div class="check-title">轉出基金</div>
+<div class="grey2">
+	<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2 orange2">
+				<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+				<!-- <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th> -->
+				<th:block  th:if="not ${#lists.isEmpty(listTransFundConversionVo)}">
+					<th:block th:if="not ${#lists.isEmpty(listTransFundConversionVo[0])}">
+						<th:block th:with="outInvestment=${listTransFundConversionVo[0]}">
+							<th:block th:if="${outInvestment[0].ratio !=null && outInvestment[0].ratio !=0}" >
+								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出百分比</th>
+							</th:block>
+							<th:block th:if="${outInvestment[0].value !=null  && outInvestment[0].value !=0  && outInvestment[0].ratio ==0 }" >
+								<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉出單位數</th>
+							</th:block>
+						</th:block>
+					</th:block>
+				</th:block>
+			</tr>
+		</thead>
+		<tbody>
+		<th:block  th:if="not ${#lists.isEmpty(listTransFundConversionVo)}">
+			<th:block th:if="not ${#lists.isEmpty(listTransFundConversionVo[0])}">
+				<th:block th:each="from : ${listTransFundConversionVo[0]}">
+						<tr class="h90 tr-odd-noEvent">
+							<td class="text-left" >
+								<th:block th:text="${from.invtName != null} ?${from.invtName}"  ></th:block>
+								<p class="enSmall"  th:text="(${from.invtNo != null} ?${from.invtNo})"></p>
+							</td>
+							<th:block th:if="${from.ratio != null && from.ratio !=0}" >
+								<td th:text="${from.ratio} +'%'"></td>
+							</th:block>
+							<th:block th:if="${from.value != null && from.value !=0 && from.ratio ==0}" >
+								<td th:text="${from.value}"></td>
+							</th:block>
+						</tr>
+				</th:block>
+			</th:block>
+		</th:block>			
+		</tbody>
+	</table>
+</div>
+<div class="center1 ptop30" style="background: #fff;"><img src="img/arrow-down.png" id="img-trans"></div>
+<div class="check-title">轉入基金</div>
+<div class=" grey2">
+	<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+		<thead>
+		<tr class="table2 orange2">
+			<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+			<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">轉入百分比</th>
+		</tr>
+		</thead>
+		<tbody>
+		<th:block  th:if="not ${#lists.isEmpty(listTransFundConversionVo)}">	
+			<th:block th:if="not ${#lists.isEmpty(listTransFundConversionVo[1])}">
+				<th:block th:each="from : ${listTransFundConversionVo[1]}">
+					<tr class="h90 tr-odd-noEvent">
+						<td class="text-left" >
+							<th:block th:text="${from.invtName != null} ?${from.invtName}"  ></th:block>
+							<p class="enSmall"  th:text="(${from.invtNo != null} ?${from.invtNo})"></p>
+						</td>
+						<td th:text="${from.ratio != null}?${from.ratio} +'%'"></td>
+					</tr>
+				</th:block>
+			</th:block>
+		</th:block>	
+		</tbody>
+	</table>
+</div>
+
+<th:block  th:if="not ${#lists.isEmpty(listTransFundConversionVo)}">	
+	<th:block th:if="not ${#lists.isEmpty(listTransFundConversionVo[1])}">
+		<th:block th:if="not ${#lists.isEmpty(listTransFundConversionVo[1][0])}">	
+			<div class="center1 ptop30" style="background: #fff;"><img src="img/arrow-down.png" id="img-trans"></div>
+			<div class="check-title">匯款帳戶資料</div>
+			<div class=" grey2">
+				<table class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
+					<thead>
+					<tr class="table2 orange2">
+						<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">名稱</th>
+						<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="">内容</th>
+					</tr>
+					</thead>
+					<tbody>
+						<th:block th:if="${listTransFundConversionVo[1][0].swiftCode != null
+								 && listTransFundConversionVo[1][0].swiftCode != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									Swift Code
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].swiftCode}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].englishName != null
+							&& listTransFundConversionVo[1][0].englishName != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									英文戶名
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].englishName}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].accountName != null
+							&& listTransFundConversionVo[1][0].accountName != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									帳戶名稱
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].accountName}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].bankName != null
+							&& listTransFundConversionVo[1][0].bankName != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									銀行名稱
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].bankName}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].branchName != null
+							&& listTransFundConversionVo[1][0].branchName != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									分行名稱
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].branchName}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+						<th:block th:if="${listTransFundConversionVo[1][0].bankAccount != null
+							&& listTransFundConversionVo[1][0].bankAccount != '' }" >
+							<tr class="h90 tr-odd-noEvent">
+								<td class="text-left" >
+									帳號
+								</td>
+								<td>
+									<th:block th:text="${listTransFundConversionVo[1][0].bankAccount}"  ></th:block>
+								</td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</div>
+		</th:block>
+	</th:block>
+</th:block>	

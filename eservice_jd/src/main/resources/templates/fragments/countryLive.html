@@ -1,0 +1,37 @@
+<div class="item150" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box csCountryLive disabled">
+		<select id="areaLiveOption" class="selector csCountryLive" disabled></select>
+	</div>
+</div>
+<div class="item250" style="float: left; margin-right: 4px;line-height: 1em;">
+	<div class="selector-box csCountryLive disabled">
+		<select id="countryLiveOption" class="selector csCountryLive" disabled></select>
+	</div>
+</div>
+<script src="plugin/jquery-1.11.2.min.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		// 地址下拉選單
+		var areaUrl = /*[[@{/getAreaList}]]*/;
+		var countryUrl = /*[[@{/getCountryList}]]*/;
+		eserviceOption.areaCountry('#areaLiveOption', areaUrl, '#countryLiveOption', countryUrl, '國家');
+		//eserviceOptcountryLiveOptioncountryLiveOption', '請選擇');
+		/* $('#countryLiveOption').change(function() {
+			eserviceOption.common('#roadOption', (roadUrl + '?regionId=' + $(this).val()));
+		}); */
+		
+		/* $('#areaOption,#countryLiveOption').change(function() {
+			var address = '';
+			var addressFull = '';
+			if ($('#areaOption').val() != '') {
+				addressFull += $('#areaOption option:selected').text();
+			}
+			if ($('#countryLiveOption').val() != '') {
+				addressFull += $('#countryLiveOption option:selected').text();
+			}
+		}); */
+	});
+	
+	/*]]>*/
+</script>

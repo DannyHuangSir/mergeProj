@@ -1,0 +1,65 @@
+<div class="form-group">
+	<label class="col-sm-4" style="line-height: 40px;"><span style="color: #ff5300; font-size: 16px">*</span>選擇驗證方式完成申請：</label>
+	<div class="col-sm-8">
+		<div class="radio inline">
+			<label>
+				<div class="radio-btn checkedRadio" style="margin: 3px;"><i><input type="radio" id="tab_group_1" name="tab_group_2" value="otp" checked="checked" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div> OTP驗證
+			</label>
+		</div>
+		<div class="radio inline">
+			<label>
+				<div class="radio-btn" style="margin: 3px;"><i><input type="radio" name="tab_group_2" value="option2"  value="password"  onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div> 會員登入密碼
+			</label>
+		</div>
+	</div>
+	<div class="col-sm-12">
+		<div class="tabs">
+			<!-- TAB 1 -->
+			<article id="tab_2" class="tab">
+				<section id="tab_frame_1" class="tab-frame">
+					<div class="arrow-upleft" style="left: 55%"></div>
+					<div class="grey2">
+						<div class="check-title depo2">請輸入您的用戶密碼以完成變更申請</div>
+						<div class="check-list2 grey2">
+							<div class="form-group text-center">
+								<div class="inlineBlock">
+									<label for="inputEmail3">用戶密碼</label>
+									<!-- <div> -->
+									<input type="password" name="userPassword" placeholder="">
+									<!-- </div> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</article>
+			<!-- TAB 2 -->
+			<article id="tab_1" class="tab  tab-show">
+				<section id="tab_frame_2" class="tab-frame">
+					<div class="arrow-upleft ml37" style="left: 40%"></div>
+					<div class="grey">
+						<div class="check-title depo2">請輸入驗證碼以完成申請</div>
+						<div class="col-md-8 col-md-offset-2  mobile-panel">
+							<div class="cert1 grey2" >
+								<p class="center1">請輸入驗證碼以完成申請</p>
+								<div class="colorBlack chMiddle marginTop20 marginBottom20">
+									驗證碼已傳送至手機號碼
+								</div>
+								<div class="clearFloat ">
+									<input type=""  name="authNum" class="form-control float-left w70p" placeholder="請查看簡訊，並輸入六碼驗證碼">
+									<a  href="javascript:smsTimer.reset()"   class="enSmall colorGreen lineHigh34">重新發送驗證碼</a>
+								</div>
+								<div class="countdown">
+									剩餘時間 <em id="timerDiv" style="color: #DD792E;">5:00</em>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+					</div>
+
+				</section>
+			</article>
+		</div>
+	</div>
+</div>

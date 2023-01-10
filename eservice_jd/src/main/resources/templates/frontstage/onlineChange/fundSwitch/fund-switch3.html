@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>變更投資標的及配置比例｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">變更投資標的及配置比例</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 變更投資標的及配置比例
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-3">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-3">
+						2<span class="hid1">. 選擇轉出投資標的</span>
+					</li>
+					<li class="step3b active col-xs-3">
+						3<span class="hid1">. 選擇轉入投資標的</span>
+					</li>
+					<li class="step4 col-xs-3">
+						4<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+                <h2>請選擇欲轉入投資標的與比例</h2>
+                <div class="loan1">
+                    <div class="tb3 top0">
+                        <span class="pull-left chMiddle colorBlack">
+                        	可轉入金額：<span class="chNormal">NTD </span>
+                        	<span class="colorBlue" id="totalOutAmtShow"></span>
+                        	<input type="hidden" id="totalOutAmt" th:value="${transFundSwitchVo.totalOutAmt}" >
+                        </span>
+                        <span class="pull-right colorBlack">
+                        	投資風險屬性：<span class="colorBlue"><th:block th:text="${transFundSwitchVo.riskLevel}"/></span>
+                        </span>
+                    </div>
+                    <div class="check-title">設定新投資標的與轉入百分比</div>
+                    <div class="plus-list">
+                        <div class="col-sm-5">新投資標的</div>
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-2">轉入百分比</div>
+                        <div class="col-sm-2">轉入金額</div>
+                    </div>
+                    <div class="check-body grey2">
+                        <div id="fundContent">
+                            <div class="check-list2 newfund displayNone" id="investment_template">
+                                <div class="col-sm-8">
+                                    <div class="deleteFundItem">x </div>
+                                    <div class="selector-box">
+                                        <select class="selector" name="pickFund">
+                                        	<th:block th:if="${fundValueList} != null">
+												<th:block th:each="vo, rowStat : ${fundValueList}">
+	                                            <option th:attr="value=${vo.fundCode}+'|'+${vo.fundName}"><th:block th:text="${vo.fundName}"/> (<th:block th:text="${vo.fundCode}"/>)</option>
+	                                            </th:block>
+	                                        </th:block>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2 r1">
+                                    <input type="text" class="col-sm-10" name="percentage" onkeyup="chgPercent(this)">%</div>
+                                <div class="col-sm-2"><i class="my5">NTD</i><div class="inAmt">0</div></div>
+                            </div>
+                            </div>
+                        <div class="check-list2 center1">
+                            <button class="btn-login invst2btn" id="add-check-list"><i class="fa-plus-circle fa-lg"></i> 新增投資標的</button>
+                        </div>
+                        <div class="invst2total"> 總百分比 : <span class="orange" id="totalPercent">0</span> %</div>
+                        <div class="statement1 wht">
+                        <p class="text-ps">備註：</p>
+                        <ol class="text-ps">
+                            <li>※為確保保險商品符合您的投資能力及風險屬性，投資風險屬性若有變更，本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據</li>
+                            <ul>
+                                <li>若您的投資風險屬性為保守型，您可選擇保守型基金RR1~RR2 </li>
+                                <li>若您的投資風險屬性為穩健型，您可選擇保守型及穩健型基金RR1~RR4</li>
+                                <li>若您的投資風險屬性為積極型，您可選擇保守型、穩健型及積極型基金RR1~RR5 </li>
+                            <ul>
+                        </ul></ul></ol>
+                    </div>
+                    </div>
+                </div>
+            </div>
+					<div class="col-md-12 two-buttons">
+						<button type="button" id="deny" class="btn-signup">上一步</button>
+						<th:block th:if="${loginUserType eq 'member'}">
+							<button id="go" class="btn-signup">下一步</button>
+						</th:block>
+					</div>
+				</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = {};
+		formData.switchOutJsonData = /*[[${transFundSwitchVo.switchOutJsonData}]]*/;
+		formData.policyNoList = /*[[${transFundSwitchVo.policyNoList}]]*/;
+		formData.riskLevel = /*[[${transFundSwitchVo.riskLevel}]]*/;
+		formData.totalOutAmt = /*[[${transFundSwitchVo.totalOutAmt}]]*/;
+		$(function() {
+			// 上一步事件
+			$('#deny').click(function() {
+				postWithFormData(/*[[@{/fundSwitch2}]]*/, formData);
+			});
+			
+			// 確認送出
+			$('#go').click(function() {
+				var valid = true;
+				var pcikFund = "";
+				$('select[name="pickFund"]').each(function(index) {
+					if (pcikFund.indexOf($(this).val()) != -1) {
+						openAlert("重覆的投資標的");
+						valid = false;
+						return false;
+					}
+					//console.log(index + ":" + $(this).val() + ",pcikFund=" + pcikFund);
+					if (index != 0) {
+						pcikFund = pcikFund + $(this).val() + ",";
+					}
+				});
+				//console.log("pcikFund:" + pcikFund);
+				
+				if (valid == true) {
+					if (pcikFund == "") {
+						openAlert("請輸入投資標的與轉入百分比");
+						return false;
+					}
+					
+					var fundSwitchIn = [];
+					var totalPercent = 0;
+					$('input[name="percentage"]').each(function(indexA) {
+						var invt = {};
+						if ($(this).val() != "") {
+							totalPercent = totalPercent + new Number($(this).val());
+
+							$('select[name="pickFund"]').each(function(indexB) {
+								if (indexA == indexB) {
+									pcikFund = pcikFund + $(this).val() + ",";
+									invt.fundCode = $(this).val().split("|")[0];
+									invt.fundName = $(this).val().split("|")[1];
+									return;
+								}
+							});
+							
+							invt.switchPercentage = $(this).val();
+							fundSwitchIn.push(invt);
+						}
+					});
+					if (totalPercent > 100) {
+						openAlert("轉入百分比總計上限不得超過100%，目前總計為：" + totalPercent + "%");
+						return false;
+					} else if (totalPercent < 100) {
+						openAlert("轉入百分比總計需達100%，目前總計為：" + totalPercent + "%");
+						return false;
+					} 
+					
+					formData.switchInJsonData = JSON.stringify(fundSwitchIn);
+					postWithFormData(/*[[@{/fundSwitch4}]]*/, formData);
+				}
+			});
+		});
+		
+		$('#add-check-list').click(function() {
+	        template = '<div class="check-list2 newfund">' + $('#investment_template').html() + '</div>';
+	        $('#fundContent').append(template);
+
+	        if ($(".newfund").length > 1) {
+	            $('.plus-list').show();
+	        }
+	        if ($(".newfund").length > 10) {
+	            $(this).parent().hide();
+	        }
+	    });
+
+	    $(document).on("click", ".deleteFundItem", function() {
+	        $(this).parent().parent().remove();
+	        if ($(".newfund").length == 1) {
+	            $('.plus-list').hide();
+	        }
+	        if ($(".newfund").length < 11) {
+	            $('#add-check-list').parent().show();
+	        }
+
+	    });
+
+	    function chgPercent(obj) {
+	    	if (obj.value >= 100) {
+	    		obj.value = 100;
+	    		
+		    }
+	    	var totalPercent = 0;
+	    	$('input[name="percentage"]').each(function(indexA) {
+				if ($(this).val() != "") {
+					var here = $(this).val();
+					totalPercent = totalPercent + new Number(here);
+					jQuery('.inAmt').each(function(indexB) {
+						if (indexA == indexB) {
+							var cut = new Number(here) / 100 * new Number($("#totalOutAmt").val());
+							$(this).html(formatNumber(cut, 2));
+							return;
+						}
+					});
+				}
+			});
+			$("#totalPercent").html(new Number(totalPercent));
+	    }
+	    
+	    $("#totalOutAmtShow").html(formatNumber($("#totalOutAmt").val(), 2));
+	/*]]>*/
+	</script>
+</body>
+
+</html>

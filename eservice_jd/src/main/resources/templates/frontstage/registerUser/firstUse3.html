@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>加入會員｜臺銀人壽保單網路服務</title>
+    <style>
+    .popover > .popover-content {
+        padding: 9px 14px;
+    }
+    
+    .popover > .popover-content > .title,
+    .popover > .popover-title {
+        background: #f7f7f7;
+    }
+    </style>
+
+</head>
+
+<body>
+    <div th:replace="fragments/header :: top"></div>
+    <header>
+        <div class="container">
+            <div class="row">
+                <th:block th:replace="fragments/logo"/>
+                <div class="n0 inlineBlock float-left">保單網路服務<span class="colorBlue">&nbsp;加入會員</span></div>
+                <div class="clearfix visible-xs-block"></div>
+            </div>
+        </div>
+    </header>
+    <section class="grey mobile-nopd fullContent">
+        <div class="container bg3 box-border no-borderTop">
+	        <div th:switch="${session.register_isMember}">	        
+			    <!-- 一般會員 start -->
+			    <div th:case="'false'">
+					<div class="">
+			            <ul class="step">
+		                    <li class="step1 col-xs-4">
+		                        <span class="mobile">步驟 </span> 1<span class="hid1">. 接受條款</span>
+		                    </li>
+		                    <li class="step2 active col-xs-4">
+		                        <span class="mobile">步驟 </span> 2<span class="hid1">. 輸入驗證碼</span>
+		                    </li>
+		                    <li class="step3 col-xs-4">
+		                        <span class="mobile">步驟 </span> 3<span class="hid1">. 設定用戶名稱與密碼</span>
+		                    </li>
+			            </ul>
+					</div>
+			    </div>
+			    <!-- 一般會員 end -->
+	        
+			    <!-- 保戶會員 start -->
+			    <div th:case="'true'">
+					<div class="">
+			            <ul class="step">
+			                <li class="step1 col-xs-3">
+			                    <span class="mobile">步驟 </span> 1<span class="hid1">. 接受條款</span>
+			                </li>
+			                <li class="step2 col-xs-3">
+			                    <span class="mobile">步驟 </span> 2<span class="hid1">. 確認身分</span>
+			                </li>
+			                <li class="step2 active col-xs-3">
+			                    <span class="mobile">步驟 </span> 3<span class="hid1">. 輸入驗證碼</span>
+			                </li>
+			                <li class="step3 col-xs-3">
+			                    <span class="mobile">步驟 </span> 4<span class="hid1">. 設定用戶名稱與密碼</span>
+			                </li>
+			            </ul>
+					</div>
+			    </div>
+			    <!-- 保戶會員 end -->			    
+	        </div>
+            <div class="col-md-6 col-md-offset-3 mobile-panel h300">
+				<th:block th:replace="fragments/sendSMS"/>
+            </div>
+            <div class="col-md-8 col-md-offset-2 two-buttons">
+		        <div th:switch="${session.register_isMember}">	        
+				    <!-- 一般會員 start -->
+				    <div th:case="'false'">
+		                <a href="firstUse1">
+		                    <button id="deny" class="btn-signup">上一步
+		                    </button>
+		                </a>
+		                <a href="#">
+		                    <button class="go btn-signup" onclick="checkAuthentication()">下一步
+		                    </button>
+		                </a>
+				    </div>
+				    <!-- 一般會員 end -->
+		        
+				    <!-- 保戶會員 start -->
+				    <div th:case="'true'">
+		                <a href="firstUse2">
+		                    <button id="deny" class="btn-signup">上一步
+		                    </button>
+		                </a>
+		                <a href="#">
+		                    <button class="go btn-signup" onclick="checkAuthentication()">下一步
+		                    </button>
+		                </a>
+				    </div>
+				    <!-- 保戶會員 end -->			    
+		        </div>
+            </div>
+        </div>
+    </section>
+    <footer th:replace="fragments/footer"></footer>
+    
+    <th:block th:replace="fragments/script"/>
+    <!-- script src="plugin/jquery-1.11.3.min.js"></script>
+    <script src="plugin/jquery.placeholder.min.js"></script>
+    <script src="plugin/detectmobilebrowser_jquery.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/Chart.js"></script>
+    <script src="plugin/bootstrap.min.js"></script>
+    <script src="plugin/scrollbar.js"></script>
+    <script src="js/popover.js"></script -->
+    <script>
+    function checkAuthentication(){
+    	var data = {
+    		authenticationType : "register",
+    		authenticationNum : $("#InputCert1").val()
+    	}
+    	popupLoading();
+    	$.ajax({
+    		type : 'POST',
+    		contentType : 'application/json',
+    		url : "/eservice/register/checkAuthentication",
+    		data : JSON.stringify(data),
+    		success : function(response) {
+    			if(response.resultMsg != ""){
+    				openAlert(response.resultMsg);
+					return;
+				}
+    			window.location.href = "/eservice/firstUse4";
+    		},error : function() {
+				openAlert('error!');
+    		},
+	        complete: function(data) {
+	            removeLoading();
+	        }
+    	});
+    }
+    </script>
+</body>
+
+</html>

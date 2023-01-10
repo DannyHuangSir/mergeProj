@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="sidebar (funId)" class="col-xs-6 col-sm-3 col-md-2 sidebar-offcanvas nopd" id="sidebar">
+        <div class="list-group tog1 box-border" th:with="policyNo=(${param.policyNo[0]}),policyListType=(${param.policyListType} != null ? ${param.policyListType[0]} : '1')">
+            <div class="tog2">保單資訊</div>
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing1} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing1')} ? 'active'">保單資料</a>
+            
+            <th:block th:if="${param.policyListType} != null and ${param.policyListType[0]} == '1'">
+            	<th:block th:if="${session.hideProdCode2} == null or (${session.hideProdCode2} != null and ${#strings.indexOf(session.hideProdCode2, #strings.substring(policyNo,0,2))} == -1)">
+            		<a th:href="'javascript:postPolicyListType(\'' + @{/listing2} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing2')} ? 'active'">投資損益及投報率</a>
+            	</th:block>
+            </th:block>
+            
+            <div class="tog2">一般查詢</div>
+            <th:block th:if="${session.hideProdCode3} == null or (${session.hideProdCode3} != null and ${#strings.indexOf(session.hideProdCode3, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing3} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing3')} ? 'active'">繳費紀錄</a>
+            </th:block>
+            
+            <th:block th:if="${session.hideProdCode4} == null or (${session.hideProdCode4} != null and ${#strings.indexOf(session.hideProdCode4, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing4} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing4')} ? 'active'">保單貸款資料</a>
+            </th:block>
+            
+            <th:block th:if="${session.hideProdCode5} == null or (${session.hideProdCode5} != null and ${#strings.indexOf(session.hideProdCode5, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing5} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing5')} ? 'active'">保單紅利資料</a>
+            </th:block>
+            
+            <th:block th:if="${session.hideProdCode5_2} == null or (${session.hideProdCode5_2} != null and ${#strings.indexOf(session.hideProdCode5_2, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing5_2} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing5_2')} ? 'active'">保單給付資料</a><!-- 20190725 added -->
+            </th:block>
+            
+            <th:block th:if="${session.hideProdCode5_3} == null or (${session.hideProdCode5_3} != null and ${#strings.indexOf(session.hideProdCode5_3, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing5_3} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing5_3')} ? 'active'">契約變更資料</a><!-- 20190823 added -->
+            </th:block>
+            
+            <th:block th:if="${param.policyListType} != null and ${param.policyListType[0]} == '1'">
+            <div class="tog2">投資型保單查詢</div>
+            
+            	<th:block th:if="${session.DOWN_LISTING_2} != null and ${#strings.indexOf(session.DOWN_LISTING_2, #strings.substring(policyNo,0,2))} != -1">
+            		<a th:href="'javascript:postPolicyListType(\'' + @{/listing2} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing2')} ? 'active'">投資損益及投報率</a>
+            	</th:block>
+        
+            <th:block th:if="${session.hideProdCode6} == null or (${session.hideProdCode6} != null and ${#strings.indexOf(session.hideProdCode6, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing6} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing6')} ? 'active'">保單帳戶價值</a>
+            </th:block>
+            
+            <th:block th:if="${session.hideProdCode6_2} == null or (${session.hideProdCode6_2} != null and ${#strings.indexOf(session.hideProdCode6_2, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing6_2} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing6_2')} ? 'active'">保單收益分配</a>
+            </th:block>
+            
+            <th:block th:if="${session.showProdCode13} != null and (${#strings.indexOf(session.showProdCode13, #strings.substring(policyNo,0,2))} != -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing13} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing13')} ? 'active'">保單收益分配</a>
+            </th:block>
+            
+            <th:block th:if="${session.hideProdCode7} == null or (${session.hideProdCode7} != null and ${#strings.indexOf(session.hideProdCode7, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing7} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing7')} ? 'active'">保費費用</a>
+            </th:block>
+            
+            <th:block th:if="${session.hideProdCode10} == null or (${session.hideProdCode10} != null and ${#strings.indexOf(session.hideProdCode10, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing10} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing10')} ? 'active'">交易歷史記錄</a>
+            </th:block>
+            
+            <!-- <a th:href="'javascript:postPolicyListType(\'' + @{/listing8} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing8')} ? 'active'">帳戶價值通知書</a> -->
+            <th:block th:if="${session.hideProdCode11} == null or (${session.hideProdCode11} != null and ${#strings.indexOf(session.hideProdCode11, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing11} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing11')} ? 'active'">投資標的淨值</a>
+            </th:block>
+            
+            <th:block th:if="${session.hideProdCode12} == null or (${session.hideProdCode12} != null and ${#strings.indexOf(session.hideProdCode12, #strings.substring(policyNo,0,2))} == -1)">
+            <a th:href="'javascript:postPolicyListType(\'' + @{/listing12} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'" class="list-group-item tog3" th:classappend="${#strings.equals(funId,'listing12')} ? 'active'">投資標的匯率</a>
+            </th:block>
+            </th:block>
+             
+            <div class="tog4 hide"><i class="fa foo-finance_1 fa-lg orange"></i> <span class="colorBlack">基金投資試算</span></div>
+            <div class="tog4 hide"><i class="fa foo-printer fa-lg orange"></i> <span class="colorBlack">列印保單明細</span></div>
+        </div>
+    </div>
+</body>
+</html>

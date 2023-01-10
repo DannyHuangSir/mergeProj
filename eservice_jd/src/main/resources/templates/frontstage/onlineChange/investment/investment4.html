@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>未來保費投資標的與分配比例｜臺銀人壽保單網路服務</title>
+	<!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/icon.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/layout.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}" />
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">未來保費投資標的與分配比例</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 未來保費投資標的與分配比例
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1  col-xs-3">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2  col-xs-3">
+						2<span class="hid1">. 接受條款</span>
+					</li>
+					<li class="step3b col-xs-3">
+						3<span class="hid1">. 修改標的與百分比</span>
+					</li>
+					<li class="step4 active col-xs-3">
+						4<span class="hid1">. 確認資料與密碼</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>確認新投資標的與比例</h2>
+				<div class="col-sm-8 col-sm-offset-2">
+					<div class="check-title">新投資標的與比例</div>
+					<div class="plus-list">
+						<div class="col-sm-6">
+							<p>      新投資標的 </p>
+						</div>
+						<div class="col-sm-3">
+							<p>      變更前分配比例 </p>
+						</div>
+						<div class="col-sm-3">
+							<p>      變更後分配比例 </p>
+						</div>
+					</div>
+
+					<div class="check-body grey2">
+						<th:block th:each="vo: ${finalInvestments}">
+							<div class="check-list2">
+								<div class="col-sm-6 ">
+									<b class="tablesaw-cell-label">新投資標的</b>
+									<p><th:block th:text="${vo.invtName}"/><span class="enSmall">(<th:block th:text="${vo.invtNo}"/>)</span></p>
+								</div>
+								<div class="col-sm-3">
+									<b class="tablesaw-cell-label">變更前分配比例</b>
+									<th:block th:text="${vo.preRatio}"/>%
+								</div>
+								<div class="col-sm-3">
+									<b class="tablesaw-cell-label">變更後分配比例</b>
+									<th:block th:text="${vo.afterRatio}"/>%
+								</div>
+							</div>
+						</th:block>
+					</div>
+					<div class="check-footer" style="background: #FDE3D2;">
+						<div class="check-list2">
+							<div class="col-sm-6">
+								<b>總百分比：</b>
+							</div>
+							<div class="col-sm-3">
+								<b id="preRatio">0%</b>
+							</div>
+							<div class="col-sm-3">
+								<b id="aftRatio">0%</b>
+							</div>
+						</div>
+					</div>
+					<div id="tab_4" class="check-body grey2">
+						<div style="text-align: center;" class="check-list2">
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-6  colorGreen">(變更後)Swift Code：</label>
+								<label th:text="${transInvestmentVo.swiftCode}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-6  colorGreen">(變更後)英文戶名：</label>
+								<label th:text="${transInvestmentVo.englishName}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-6  colorGreen">(變更後)帳戶名稱：</label>
+								<label th:text="${transInvestmentVo.accountName}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-6  colorGreen">(變更後)銀行名稱：</label>
+								<label th:text="${transInvestmentVo.bankName}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-6  colorGreen">(變更後)分行名稱：</label>
+								<label th:text="${transInvestmentVo.branchName}"/>
+							</div>
+							<div class="col-sm-12 mode2select">
+								<label for="" class="col-sm-6  colorGreen">(變更後)帳號：</label>
+								<label th:text="${transInvestmentVo.bankAccount}"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8 col-md-offset-2">
+					<div th:replace="fragments/sendVerify"></div>
+				</div>
+				<div class="col-md-10 col-md-offset-1 two-buttons">
+					<a><button id="deny" class="btn-signup">上一步</i></button></a>
+					<a><button id="go"   data-toggle="modal" data-target="#modal-container-Policy" class="btn-signup">確認送出</i></button></a>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" id="policyNo" name="policyNo" th:value="${transInvestmentVo.policyNo}"/>
+		<input type="hidden" id="currency" name="currency" th:value="${transInvestmentVo.currency}"/>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<div class="modal fade in" id="modal-container-Policy" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content lock-up">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body apply2 grey2">
+                    <h3>未來保費投資標的與分配比例將依您的新設定值重新進新調整，<br/>將於下一期保費生效。</h3>
+                    <p>是否要繼續變更？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-signup" data-dismiss="modal" aria-label="Close">取消</button>
+                    <button type="button" class="btn-signup" id="go"  data-dismiss="modal" aria-label="Close" onclick="go()">確認</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
+	<script th:inline="javascript">
+		var smsRemainTime = [[${investmentTimeSet}]];
+
+		//点击確認送出
+		function go(){
+				let formData = {};
+				formData.bankAccount = [[${transInvestmentVo.bankAccount}]]
+				formData.bankName = [[${transInvestmentVo.bankName}]]
+				formData.bankCode = [[${transInvestmentVo.bankCode}]]
+				formData.branchName = [[${transInvestmentVo.branchName}]]
+				formData.branchCode = [[${transInvestmentVo.branchCode}]]
+				formData.englishName = [[${transInvestmentVo.englishName}]]
+				formData.swiftCode = [[${transInvestmentVo.swiftCode}]]
+				formData.accountName = [[${transInvestmentVo.accountName}]]
+				formData.finalInvestments = JSON.stringify([[${finalInvestments}]])
+				formData.newInvestments = [[${transInvestmentVo.newInvestments}]]
+				formData.investments = [[${transInvestmentVo.investments}]]
+				formData.policyNo = $("#policyNo").val()
+				formData.authType = $("[name='tab_group_2']:checked").val()
+				formData.userPassword = $.base64.encode($("input[name='userPassword']").val())
+				formData.authenticationNum = $("input[name='authNum']").val()
+				postWithFormData(/*[[@{/investmentSuccess}]]*/, formData);
+		};
+
+		$(function(){
+			// 上一步事件
+			$('#deny').click(function() {
+				let formData = {};
+				formData.policyNo = $('#policyNo').val();
+				formData.currency = $('#currency').val();
+				postWithFormData(/*[[@{/investment3}]]*/, formData);
+			});
+			
+
+			var pre = 0
+			var aft = 0
+			$([[${finalInvestments}]]).each(function(index, e) {
+				pre += parseInt(e.preRatio)
+				aft += parseInt(e.afterRatio)
+			})
+			$("#preRatio").text(pre + '%')
+			$("#aftRatio").text(aft + '%')
+
+			smsTimer.show(1); // 1秒
+			if ([[${showAccount}]]) {
+				$("#tab_4").show()
+			} else {
+				$("#tab_4").hide()
+			}
+		})
+
+		var smsTimer = function() {
+			var timer;
+			function showSmsRemainTime(second) {
+				timer = setInterval(function() {
+					smsRemainTime = smsRemainTime - 1
+					if (smsRemainTime <= 0) {
+						clearInterval(timer);
+						$('#timerDiv').html('0:00');
+					} else {
+						var showTime = moment.utc(smsRemainTime * 1000).format('m:ss');
+						$('#timerDiv').html(showTime);
+					}
+				}, second * 1000);
+			};
+			function reset() {
+				clearInterval(timer);
+				reSendAuthentication();
+			};
+			return {
+				show : function(second) {
+					showSmsRemainTime(second);
+				},
+				reset : function() {
+					reset();
+				}
+			};
+		}();
+
+		function reSendAuthentication() {
+			popupLoading();
+			$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				url : "/eservice/sendAuthentication",
+				data : {
+					authenticationType: "investment"
+				},
+				success : function(response) {
+					removeLoading();
+					openAlert($('#E0010').val());
+					smsRemainTime = 300;
+					smsTimer.show(1);
+				},
+				error : function() {
+					removeLoading();
+					openAlert($('#E0011').val());
+					//openAlert("重新寄送失敗，請重新寄送驗證碼！");
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

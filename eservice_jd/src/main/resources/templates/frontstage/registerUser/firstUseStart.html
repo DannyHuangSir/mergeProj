@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>加入會員｜臺銀人壽保單網路服務</title>
+    <style>
+    select {
+        width: 31%;
+        -webkit-appearance: menulist-button;
+    }
+    </style>
+	<!-- page specific plugin styles -->
+
+	<!-- text fonts -->
+
+	<!-- my styles -->
+	
+	<!--[if IE 7]>
+		<link rel="stylesheet" type="text/css" th:href="@{/css/fontello-ie7.css}" />
+	<![endif]-->
+
+	<!-- inline styles related to this page -->
+
+	<!-- my settings handler -->
+
+	<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+	<!--[if lt IE 9]>
+		<script	th:src="@{/js/plugin/html5shiv.min.js}"></script>
+		<script	th:src="@{/plugin/respond.min.js}"></script>
+	<![endif]-->	
+</head>
+
+<body>
+    <div th:replace="fragments/header :: top"></div>
+    <header>
+        <div class="container">
+            <div class="row">
+                <th:block th:replace="fragments/logo"/>
+                <div class="n0 inlineBlock float-left">保單網路服務<span class="colorBlue">&nbsp;加入會員</span></div>
+                <div class="clearfix visible-xs-block"></div>
+            </div>
+        </div>
+    </header>
+    <section class="grey fullContent" id="">
+        <div class="container bg3 box-border no-borderTop mystyle3">
+            <div class="col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4 mobile-panel">
+                <div class="cert1" id="FirstUseMyData">
+                    <!--  <form action=""> -->
+                    <h2>請輸入要保人資料並確認申請意願</h2>
+                    <div class="form-group">
+                        <div class="text-left colorBlack">身分證字號</div>
+                        <!-- input class="form-control" id="rocId" style="text-transform: uppercase" placeholder="請輸入身分證字號" data-validation="required|rocId" th:value="${register_rocId}"></input-->
+                        <input class="form-control" id="rocId" style="text-transform: uppercase" placeholder="請輸入身分證字號" th:value="${register_rocId}" autocomplete="off" ></input><!-- by pass required rocid 20200507 -->
+                    </div>
+                    <!-- 20180830 因應內部使用暫不檢核 -->
+<!--                     <div class="form-group"> -->
+<!--                         <div class="text-left colorBlack">手機號碼</div> -->
+<!--                         <input class="form-control" id="mobile" placeholder="手機號碼或電子信箱請填入一項" data-validation="mobile"></input> -->
+<!--                     </div> -->
+<!--                     <div class="form-group"> -->
+<!--                         <div class="text-left colorBlack">電子郵件</div> -->
+<!--                         <input class="form-control" id="email" maxlength="100" th:value="${email}" placeholder="手機號碼或電子信箱請填入一項" data-validation="optionalRequiredOne::#mobile,#email::手機號碼或電子信箱請填入一項|mail"></input> -->
+<!--                     </div> -->
+                    
+                    <input type="hidden" id="fbId" name="fbId"  th:value="${fbId}"></input>
+                    <input type="hidden" id="cardSn" name="cardSn"  th:value="${cardSn}"></input>
+                    <!-- 20180830 因應內部使用暫不檢核，預設為 Enable -->
+                    
+                    <div class="checkbox hide">
+                        <div class="check-box">
+                        	<i><input type="checkbox" id="propoCheckBox" checked="checked" /></i>
+                        </div>
+                        <label for="checkBox1" onclick="$('#propoCheckBox').click();">我已持有臺銀人壽保單，直接註冊為保戶會員</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 two-buttons">
+                        <a href="/eservice">
+                            <button class="btn-signup" style="margin:30px 5px">取消</button>
+                        </a>
+                            <button id="f1go" class="go btn-signup" style="margin:30px 5px">確定</button>
+                    </div>
+                    <!--   <form> -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer th:replace="fragments/footer"></footer>
+
+    <!--  Popup modal -->
+    <div class="modal fade in" id="modal-container-locked" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content lock-up">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
+                </div>
+                <div class="modal-body apply2 center1 grey2">
+                    <p style="font-size: 14px;">您的保單裡未留存有效電子郵件信箱及手機號碼，請依照範例填寫契約變更申請書，送至本公司新增您的聯絡資料後，再次提出網路會員申請，若有相關疑問請來電本公司客服專線：0800-011-966。</p>
+                    <br/>
+                    <p><a href="https://www.twfhclife.com.tw/wp-content/uploads/%E4%BF%9D%E9%9A%AA%E5%A5%91%E7%B4%84%E5%85%A7%E5%AE%B9%E8%AE%8A%E6%9B%B4%E7%94%B3%E8%AB%8B%E6%9B%B8.pdf" target="_blank"><i class="fas fa-download"></i> 下載契約變更申請書</a></p>
+                    <p><a href="https://www.twfhclife.com.tw/wp-content/uploads/%E5%A1%AB%E5%AF%AB%E7%AF%84%E4%BE%8B1.pdf" target="_blank"><i class="fas fa-download"></i> 填寫範例</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  Popup end -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- >script src="plugin/jquery-1.11.3.min.js"></script-->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- script src="plugin/jquery.placeholder.min.js"></script>
+    <script src="plugin/detectmobilebrowser_jquery.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/Chart.js"></script>
+    <script src="plugin/bootstrap.min.js"></script>
+    <script src="plugin/jquery-ui.min.js"></script>
+    <script src="plugin/datepicker-zh-TW-year.js"></script-->
+	<script th:src="@{/js/login.js}"></script>
+    <th:block th:replace="fragments/script"/>
+    
+    <script type="text/javascript">
+    /*<![CDATA[*/
+    $(function() {
+        $('.datepicker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy/mm/dd'
+        });
+        
+        $('div.mystyle3').validation();
+        
+        $('#f1go').on('click', function(e) {
+        	
+        	if(!$("div.mystyle3").valid()){
+        		return;
+        	}else{
+        		/* 改為是否註冊為保戶會員,不需再檢查
+        		if (!$('#propoCheckBox').prop("checked")) {
+                    e.preventDefault();
+                    openAlert('請勾選「我要申請保單網路服務」');
+                    return;
+                }
+        		*/
+        	}
+            
+            data = {
+            	rocId : $("#rocId").val().toUpperCase(),
+            	mobile : $("#mobile").val(),
+            	email : $("#email").val(),
+            	fbId : $("#fbId").val(),
+            	moicaId : $("#cardSn").val(),
+            	isMember : $("#propoCheckBox").prop("checked")
+            }
+            
+            postJson("/eservice/register/checkRegister", data);
+        });
+    });
+    
+    function postJson(url, data){
+    	popupLoading();
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : url,
+			data : JSON.stringify(data),
+			success : function(response) {
+				//console.log(response);
+				if(response.resultMsg != ""){
+					if (response.resultMsg == "NODATA") {
+						$("#modal-container-locked").modal();
+					} else {
+						openAlert(response.resultMsg);
+					}
+					return;
+				}
+				window.location.href = "/eservice/firstUse1";
+			},
+			error : function() {
+				/* openAlert('系統發生錯誤!'); */
+                openAlert($('#E0018').val());
+			},
+	        complete: function(data) {
+	            removeLoading();
+	        }
+		});
+	}
+
+	/*]]>*/
+    </script>
+    <!--special file to avoid jquery-ui-min.css re-cover datepicker style issue-->
+    <link href="css/datepicker.css" rel="stylesheet"/>
+</body>
+
+</html>

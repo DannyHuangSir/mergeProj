@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>保戶服務｜保戶信箱</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3 box-border">
+			<div style="text-align: center;">
+				<div style="color: green;">
+                    <div>親愛的朋友，您好</div>
+                    <div>謝謝您光臨本網站，請留下您的基本資料與寶貴的意見，</div>
+                    <div>以供本公司改進發展的參考。</div>
+				</div>
+				<div style="color: blue;">
+					<div>
+						(本公司保戶，若對本公司有所建議或需求時，請
+						<span style="color: red;"> 務必 </span>
+						輸入
+						<span style="color: red;"> 投保本公司之保單號碼 </span>
+						及
+						<span style="color: red;"> 被保險人身分證字號 </span>
+						，以便
+                    </div>
+                    <div>
+						本公司能正確迅速處理您的需求。)
+					</div>
+				</div>
+                <div class="clearfix"></div>
+				<div>
+					<span style="color: blue;">
+						有<span style="color: red;"> * </span>號的欄位必填
+					</span>
+				</div>
+			</div>
+			<div class="mystyle3">
+				<div class="col-md-13 col-md-offset-2">
+					<form id="attitudeMailForm" class="form-horizontal no-borderBottom marginTop20" role="form" th:action="@{/saveAttitudeMail}" method="POST">
+						<div class="form-group">
+							<label class="col-sm-2">姓名<span style="color: red;">*</span>：</label>
+							<div class="col-sm-10">
+								<input type="text" id="attitudeName" name="attitudeName" th:value="${attitudeMailVo.attitudeName}" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-2">身分證號碼<span style="color: red;">*</span>：</label>
+							<div class="col-sm-10">
+								<input type="text" id="attitudeId" name="attitudeId" th:value="${attitudeMailVo.attitudeId}" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-2">年齡：</label>
+							<div class="col-sm-10">
+								<input type="text" id="attitudeOld" name="attitudeOld" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-2">投保本公司之<br>保單號碼：</label>
+							<div class="col-sm-10">
+								<input type="text" id="attitudeInsuNo" name="attitudeInsuNo" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="col-sm-2">
+								<button type="button" id="btnSearchInfo" name="btnSearchInfo" class="btn btn-sm">帶出個人資料</button>
+								<div class="clearfix"></div>
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-2">日間聯絡電話：</label>
+							<div class="col-sm-10">
+								<input type="text" id="attitudeTelDay" name="attitudeTelDay" th:value="${attitudeMailVo.attitudeTelDay}" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+                            <label class="col-sm-2">夜間聯絡電話：</label>
+							<div class="col-sm-10">
+								<input type="text" id="attitudeTelNight" name="attitudeTelNight" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+							<label class="col-sm-2">地址：</label>
+                            <div class="col-sm-10">
+                                <th:block th:replace="fragments/address"/>
+							</div>
+							<div class="clearfix" style="line-height: 10px;">&nbsp;</div>
+                            <label class="col-sm-2">E-mail：</label>
+							<div class="col-sm-10">
+								<input type="text" id="attitudeEmail" name="attitudeEmail" class="col-sm-10" style="padding: 6px 12px;line-height: 1em;" >
+							</div>
+							<div class="clearfix"></div>
+                            <label class="col-sm-2">建議或需求<span style="color: red;">*</span>：</label>
+							<div class="col-sm-10">
+								<textarea id="attitudeContent" name="attitudeContent" rows="3" cols="31" class="col-sm-10" ></textarea>
+							</div>
+							<div class="clearfix"></div>
+                            <label class="col-sm-2">聯絡方式？<span style="color: red;">*</span></label>
+							<div class="col-sm-6">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" id="attitudeContaceType" name="attitudeContaceType" value="0"></i></div>電話
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" id="attitudeContaceType" name="attitudeContaceType" value="1"></i></div>書面
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" id="attitudeContaceType" name="attitudeContaceType" value="2"></i></div>Email
+									</label>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+                            <label class="col-sm-2">可連絡時間：</label>
+							<div class="col-sm-10">
+								<div class="selector-box col-sm-5">
+									<select id="attitudeContaceTime" name="attitudeContaceTime" class="selector">
+	                                </select>
+                                </div>
+							</div>
+							<div class="clearfix"></div>
+							
+						</div>
+						<div class="form-group">
+							<div class="col-sm-10" style="text-align: center;">
+                                <button id="btnSaveSubmit" type="button" class="btn btn-sm">寫完送出</button>
+                                <button id="btnReset" type="button" class="btn ">重新輸入</button>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/highcharts/highcharts.js}"></script>
+	<script th:src="@{/plugin/highcharts/modules/exporting.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function(){
+		
+		var attitudeContaceTimeOption = '';
+		for(var start = 9; start < 19; start++){
+			var tmpTime = start + ':00~' + (start+1) + ':00';
+			attitudeContaceTimeOption += '<option value="'+ tmpTime + '">' + tmpTime + '</option>';
+		}
+		$('#attitudeContaceTime').html(attitudeContaceTimeOption);
+		
+		$('#btnSearchInfo').click(function(){
+			if($('#attitudeInsuNo').val() == ''){
+				/* openAlert('請輸入保單號碼'); */
+				openAlert($('#E0025').val());
+				return false;
+			}
+			var datas = {
+				attitudeInsuNo: $('#attitudeInsuNo').val()
+			};
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/attitudeMailSearch}]]*/,
+				data : JSON.stringify(datas),
+				success : function(response) {
+					if(response.result == "ERROR") {
+						openAlert(response.resultMsg);
+					} else {
+						if(response.resultData != null){
+							// result data to form value
+							var datas = response.resultData;
+							$('#attitudeName').val(datas.attitudeName);
+							$('#attitudeId').val(datas.attitudeId);
+							$('#attitudeOld').val(datas.attitudeOld);
+							$('#attitudeTelDay').val(datas.attitudeTelDay);
+						}
+					}
+				},
+				error : function() {
+					/* openAlert('系統發生錯誤!'); */
+					openAlert($('#E0018').val());
+				},
+		        complete: function(data) {
+	        		
+		        }
+			});
+		});
+		
+		$('#btnReset').click(function(){
+			// clear all input data
+			$('form#attitudeMailForm input').each(function(){
+				$(this).val('');
+			});
+			$('form#attitudeMailForm textarea').each(function(){
+				$(this).val('');
+			});
+			$('#attitudeContaceType').val('');
+			$('form#attitudeMailForm select').each(function(){
+				$(this).context.options[0].selected = true;
+			});
+		});
+		
+		$('#btnSaveSubmit').click(function(){
+			if($('#attitudeName').val() == ''){
+				/* openAlert('請輸入姓名'); */
+				openAlert($('#E0026').val());
+				return false;
+			}
+			if($('#attitudeId').val() == ''){
+				/* openAlert('請輸入身分證號碼'); */
+				openAlert($('#E0027').val());
+				return false;
+			}
+			if($('#attitudeContent').val() == ''){
+				/* openAlert('請輸入建議或需求'); */
+				openAlert($('#E0028').val());
+				return false;
+			}
+			switch($('div.checkedRadio input[name="attitudeContaceType"]').val()){
+				case '0': 
+					/* 檢查電話輸入 */
+					if($('#attitudeTelDay').val() == '' && $('#attitudeTelNight').val() == ''){
+						/* openAlert('尚未輸入連絡電話'); */
+						openAlert($('#E0029').val());
+						return false;
+					}
+					break;
+				case '1': 
+					/* 檢查地址輸入 */
+					if($('#selectAddressFull').val() == ''){
+						/* openAlert('尚未輸入地址'); */
+						openAlert($('#E0030').val());
+						return false;
+					} else if($('#selectAddress').val() == ''){
+						/* openAlert('地址不完整'); */
+						openAlert($('#E0031').val());
+						return false;
+					}
+					break;
+				case '2':
+					/* 檢查電子郵件輸入 */
+					if($('#attitudeEmail').val() == ''){
+						/* openAlert('尚未輸入電子郵件'); */
+						openAlert($('#E0032').val());
+						return false;
+					}
+					break;
+				default: /* openAlert('請選擇聯絡方式'); */
+					openAlert($('#E0033').val());
+					return false;
+			}
+			var datas = {
+					attitudeName: $('#attitudeName').val(),
+					attitudeId: $('#attitudeId').val(),
+					attitudeOld: $('#attitudeOld').val(),
+					attitudeInsuNo: $('#attitudeInsuNo').val(),
+					attitudeTelDay: $('#attitudeTelDay').val(),
+					attitudeTelNight: $('#attitudeTelNight').val(),
+					attitudeCity: ($('#cityOption option:selected').val() == 0) ? '': $('#cityOption option:selected').text(),
+					attitudeArea: ($('#regionOption option:selected').val() == 0) ? '': $('#regionOption option:selected').text(),
+					attitudeZipCode: '',
+					attitudeAddr: $('#selectAddress').val(),
+					attitudeEmail: $('#attitudeEmail').val(),
+					attitudeContent: $('#attitudeContent').val(),
+					attitudeContaceType: $('#attitudeContaceType').val()
+			};
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/attitudeMailSave}]]*/,
+				data : JSON.stringify(datas),
+				success : function(response) {
+					if(response.result == "ERROR") {
+						openAlert(response.resultMsg);
+					} else {
+						/* openAlert("發送成功"); */
+						openAlert($('#E0034').val());
+					}
+				},
+				error : function() {
+					/* openAlert('系統發生錯誤!'); */
+					openAlert($('#E0018').val());
+				},
+		        complete: function(data) {
+	        		
+		        }
+			});
+		});
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

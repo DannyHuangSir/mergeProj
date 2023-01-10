@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey listing6 fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3 listing-area">
+				<div class="row-offcanvas row-offcanvas-left">
+					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing6')"></div>
+					<div th:replace="fragments/sidebar :: sidebar (funId='listing6')"></div>
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<div class="tb3 top0 mobile-toggle" data-toggle="true">
+							<i class="fas fa-chevron-down hid2 mobile"></i>
+							<i class="fas fa-chevron-up hid1"></i> 保單帳戶價值
+						</div>
+						<div class="mobile-toggle-panel specialHeight toggle-hide">
+							<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+								<thead>
+									<tr class="table2">
+										<th class="text-left item180" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">平均成本<br/><p class="enSmall">(A)</p></th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">單位數/金額<br/><p class="enSmall">(B)</p></th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">參考單位淨值<br/><p class="enSmall">(C)</p></th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">參考價戶價值<br/><p class="enSmall">(E=B*C*D)</p></th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">未實現損益<br/><p class="enSmall">(F=E-A)</p></th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">幣別<br/></th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">參考匯率<br/><p class="enSmall">(D)</p></th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">參考報酬率<br/><p class="enSmall">(G=F/A)</p></th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+								<tbody>
+									<tr class="h80 tr-blue tr-total">
+										<td class="text-left table3">總計</td>
+										<td><span id="poevAvgPntdvalSum"></span></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td><span id="acctValueSum"></span><i class="my5">NTD</i></td>
+										<td><span id="costSum"></span></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td><span id="roiSum"></span></td>
+									</tr>
+								</tbody>
+							</table>
+							<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20008'] != null} 
+								? ${session.PAGE_WORDING['WORDING_20008'].parameterValue}"/>
+						</div>
+						<div th:replace="fragments/listingReferOnly"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		// 建立帳戶價值項目 grid
+		var grid1 = new eserviceGrid();
+		grid1.sGridId = '#grid1';
+		grid1.sQueryUrl = /*[[@{/getPolicyAcctValueList?policyNo=} + ${param.policyNo[0]}]]*/;
+		grid1.sRowClass = 'h65';
+		grid1.aoColumns = [
+			{
+				// 投資標的
+				'fnRender': function(oRow) {
+					return emptyIfNull(oRow.fundName) + '<p class="enSmall">(' + emptyIfNull(oRow.fundCode) + ')</p>';
+				},
+				'tdClass': 'text-left table3',
+				'rwdName': '投資標的'
+			},
+			{
+				// 平均成本(A)
+				'fnRender': function(oRow) {
+					return '<p>' + formatNumber(oRow.poevAvgPntdval, 2) + '</p>';
+				},
+				'rwdName': '平均成本(A)'
+			},
+			{
+				// 單位數/金額(B)
+				'fnRender': function(oRow) {
+					return '<p>' + formatNumber(oRow.poevSafpUnits, 2) + '</p>';
+				},
+				'rwdName': '單位數/金額(B)'
+			},
+			{
+				// 參考單位淨值(C)
+				'fnRender': function(oRow) {
+					return '<p>' + oRow.poevInprRate + '</p>';
+				},
+				'rwdName': '參考單位淨值(C)'
+			},
+			{
+				// 參考價戶價值(E=B*C*D)
+				'fnRender': function(oRow) {
+					return '<p>' + formatNumber((oRow.poevSafpUnits * oRow.poevInprRate * oRow.poevStateExchRate), 2) + '</p>';
+				},
+				'rwdName': '參考帳戶價值(E=B*C*D)'
+			},
+			{
+				// 未實現損益(F=E-A)
+				'fnRender': function(oRow) {
+					return '<p>' + formatNumber(oRow.cost, 2) + '</p>';
+				},
+				'rwdName': '未實現損益(F=E-A)'
+			},
+			{
+				// 幣別
+				'fnRender': function(oRow) {
+					return '<p>' + oRow.currency + '</p>';
+				},
+				'rwdName': '幣別'
+			},
+			{
+				// 參考匯率(D)
+				'fnRender': function(oRow) {
+					return '<p>' + formatNumber(oRow.poevStateExchRate, 2) + '</p>';
+				},
+				'rwdName': '參考匯率(D)'
+			},
+			{
+				//參考報酬率(G=F/A)
+				'fnRender': function(oRow) {
+					return '<p>' + formatNumber(((oRow.poevSafpUnits * oRow.poevInprRate * oRow.poevStateExchRate) - oRow.poevAvgPntdval) / oRow.poevAvgPntdval, 2) + '%</p>';
+				},
+				'rwdName': '參考報酬率(G=F/A)'
+			}
+		];
+		grid1.fnInitComplete = function() { 
+			showAcctValueSum(grid1);
+			if (grid1.rownum() == 0) {
+				/* openAlert('查無資料'); */
+				openAlert($('#E0035').val());
+				return false;
+			}
+		};
+		grid1.createSimple();
+	});
+	
+	// 顯示帳戶價值合計
+	function showAcctValueSum(grid1) {
+		$('#poevAvgPntdvalSum').html(formatNumber(grid1.sumByField('poevAvgPntdval'), 2));//平均成本
+		$('#acctValueSum').html(formatNumber(grid1.sumByField('accountValue'), 2));//參考帳戶價值
+		$('#costSum').html(formatNumber(grid1.sumByField('cost'), 2));//未實現損益
+		$('#roiSum').html(formatNumber((grid1.sumByField('cost') / grid1.sumByField('poevAvgPntdval')), 2) + '%');//參考報酬率
+	}
+	/*]]>*/
+	</script>
+</body>
+
+</html>

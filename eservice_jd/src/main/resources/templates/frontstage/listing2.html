@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey listing2 fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3 listing-area">
+				<div class="row-offcanvas row-offcanvas-left">
+					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing2')"></div>
+					<div th:replace="fragments/sidebar :: sidebar (funId='listing2')"></div>
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<div class="box-border" th:with="policyNo=(${param.policyNo[0]}),policyListType=(${param.policyListType} != null ? ${param.policyListType[0]} : '1')">
+							 <th:block th:if="${session.DOWN_LISTING_2} == null or (${session.DOWN_LISTING_2} != null and ${#strings.indexOf(session.DOWN_LISTING_2, #strings.substring(policyNo,0,2))} == -1)">
+							<a th:href="'javascript:postPolicyListType(\'' + @{/listing1} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'">
+								<div class="col-xs-6 folder ">保單資料</div>
+							</a>
+							</th:block>
+							<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+								<thead>
+									<div class="tb3 marginTop40">
+										<i class="fas fa-chevron-down"></i> 投資損益及投報率
+										<font color="white">listing2</font>
+<!--										<span class="pull-right colorBlack">投資風險屬性：<span class="colorBlue"><th:block th:text="${riskLevelName}"/></span></span>-->
+									</div>
+									<tr class="table2">
+										<th> 投資標的</th>
+										<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">幣別</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">投資效益等級</th>
+										
+										<th:block th:if="${session.hideProdCode991} == null or (${session.hideProdCode991} != null and ${#strings.indexOf(session.hideProdCode991, #strings.substring(policyNo,0,2))} == -1)">
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">平均成本(A)</th>											
+										</th:block>
+										<th:block th:unless="${session.hideProdCode991} == null or (${session.hideProdCode991} != null and ${#strings.indexOf(session.hideProdCode991, #strings.substring(policyNo,0,2))} == -1)">
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">持有成本(A)</th>											
+										</th:block>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">單位數/金額(B)</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">參考淨值(C)</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">參考匯率(D)</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">參考帳戶價值(E=B*C*D)</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">累計投資收益(F=E-A)</th>
+										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">參考報酬率((F/A)*100%)</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+								<tbody>
+									<tr class="h80 tr-blue tr-total">
+										<td class="text-left table3">總計</td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"><span id="t_avgPval"></span></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"><span id="acctValueSum"></span></td>
+										<td class="hid1 hid2"><span id="t_clupExpeSum"></span></td>
+										<td class="hid1 hid2"></td>
+									</tr>
+									<tr class="h80 tr-blue tr-total" id="total2">
+										<td class="text-left table3">兌換新台幣參考匯率：<span id="s_currency"></span><br />參考折合新台幣價值(NTD)</td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"><span id="s_avgPval"></span></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"></td>
+										<td class="hid1 hid2"><span id="s_acctValueSum"></span></td>
+										<td class="hid1 hid2"><span id="s_clupExpeSum"></span></td>
+										<td class="hid1 hid2"></td>
+									</tr>
+								</tbody>
+							</table>
+							<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20004'] != null} 
+								? ${session.PAGE_WORDING['WORDING_20004'].parameterValue}"/>
+<!-- 							<div class="wht h80 hid1 applyHide">
+								<div class="col-md-4 col-xs-6 col-md-offset-2">
+									<a href="surrender1">
+										<button id="va2" class="btn-login col-md-4 col-md-offset-4">紅利(儲存生息)/增值之提領  <i class="fas fa-chevron-right"></i></button>
+									</a>
+								</div>
+								<div class="col-md-4 col-xs-6">
+									<a href="notification1">
+										<button id="va2" class="btn-login col-md-4 col-md-offset-4">設定停利停損通知  <i class="fas fa-chevron-right"></i></button>
+									</a>
+								</div> -->
+							</div>
+						</div>
+						<div th:replace="fragments/listingReferOnly"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var s_currency = '';
+	$(function() {
+		// 建立保障項目 grid
+		var grid1 = new eserviceGrid();
+		grid1.sGridId = '#grid1';
+		grid1.sQueryUrl = /*[[@{/getPortfolioList?policyNo=} + ${param.policyNo[0]}]]*/;
+		grid1.aoColumns = [
+			{
+				// 投資標的
+				'fnRender': function(oRow) {
+					return emptyIfNull(oRow.invtName) + '<p class="enSmall">(' + emptyIfNull(oRow.invtNo) + ')</p>';
+				},
+				'rwdName': '投資標的'
+			},
+			{
+				// 幣別
+				'mDataProp': 'currency',
+				'rwdName': '幣別'
+			},
+			{
+				// 投資效益等級
+				'mDataProp': 'invtRiskBeneLevel',
+				'rwdName': '投資效益等級'
+			},
+			{
+				// 平均成本
+				'fnRender': function(oRow) {
+					return showAvgPval(oRow);
+				},
+				'rwdName': '平均成本'
+			},
+			{
+				// 單位數/金額
+				'fnRender': function(oRow) {
+					return showNetUnits(oRow);
+				},
+				'rwdName': '單位數/金額'
+			},
+			{
+				// 參考淨值/日期
+				'fnRender': function(oRow) {
+					return showNetValueDate(oRow);
+				},
+				'rwdName': '參考淨值/日期'
+			},
+			{
+				// 參考匯率/日期
+				'fnRender': function(oRow) {
+					return showExchRateDate(oRow);
+				},
+				'rwdName': '參考匯率/日期'
+			},
+			{
+				// 參考帳戶價值
+				'fnRender': function(oRow) {
+					return showAcctValue(oRow);
+				},
+				'rwdName': '參考帳戶價值'
+			},
+			{
+				// 累計投資收益
+				'fnRender': function(oRow) {
+					return showClupExpeNtdSum(oRow);
+				},
+				'rwdName': '累計投資收益'
+			},
+			{
+				// 參考報酬率(%)
+				'fnRender': function(oRow) {
+					return showRoiRate(oRow);
+				},
+				'rwdName': '參考報酬率(%)'
+			}
+		];
+		grid1.fnInitComplete = function() { 
+			showAcctValueSum(grid1);
+			if (grid1.sQueryUrl.indexOf('policyNo=UH') != -1) {
+				showTotalAvgPval(grid1);
+				showTotalClupExpeSum(grid1);
+				showScurrency(grid1);
+			} else {
+				$('#total2').hide();
+			}
+			if (grid1.rownum() == 0) {
+				/* openAlert('查無資料'); */
+				openAlert($('#E0035').val());
+				return false;
+			}
+		};
+		grid1.createSimple();
+	});
+	
+	// 單位數 / 金額  (單位數/金額：FD－小數4位／RT(台幣)－整數；RT(非台幣)－小數2位
+	function showNetUnits(oRow) {
+		var netUnits = 0;
+		var fractionDigits = 0;
+		if (oRow.invtNo.substring(0, 2) == 'RT') {
+			if (oRow.invtExchCurr == 'NTD') {
+				fractionDigits = 0;
+			} else {
+				fractionDigits = 4;
+			}
+			netUnits = oRow.safpNetAmt;
+		}
+		else if (oRow.invtNo.substring(0, 2) == 'FD') {
+			fractionDigits = 4;
+			netUnits = oRow.safpNetUnits;
+		}
+		else{
+			fractionDigits = 4;
+			netUnits = oRow.safpNetUnits;
+		}
+		return '<p class="marginTop26">' + formatNumber(netUnits, fractionDigits) +'</p>';
+	}
+	
+	// 參考淨值/日期
+	function showNetValueDate(oRow) {
+		var html = '';
+		if (oRow.invtNo.substring(0, 2) == 'RT') {
+			html = '--';
+		}
+		else if (oRow.invtNo.substring(0, 2) == 'FD') {
+			html += '<p class="marginTop26">' + formatNumber(oRow.netValueSell, 4) +'</p>';
+			/* html += '<p class="marginTop26">' + westDate(oRow.netValueDate); +'</p>'; */
+			html += '<p class="marginTop26"></p>';
+		}
+		else{
+			/* html += '<p class="marginTop26"><i class="my5" style="margin-left: 0px;">' + formatDate(oRow.netValueDate) + '</i>' + formatNumber(oRow.netValueSell, 4) +'</p>';*/
+			html += '<p class="marginTop26">' + formatNumber(oRow.netValueSell, 4) +'</p>';
+			html += '<p class="marginTop26"></p>';
+		}
+		return html;
+	}
+	
+	// 參考匯率/日期
+	function showExchRateDate(oRow) {
+		var html = '';
+		/* if (oRow.invtExchCurr == 'NTD') {
+			html += '<p class="marginTop26">1</p>';
+			html += '<p class="marginTop26"></p>';
+		} else {
+			html += '<p class="marginTop26">' + formatNumber(oRow.exchRateBuy, 4) +'</p>';
+			html += '<p class="marginTop26">' + westDate(oRow.exchRateDate); +'</p>';
+		} */
+		html += '<p class="marginTop26">1.0000</p>';
+		html += '<p class="marginTop26"></p>';
+		if (s_currency == '') {
+			s_currency = formatNumber(oRow.exchRateBuy, 4);
+			$('#s_currency').html(s_currency);
+		}
+		
+		return html;
+	}
+	
+	// 平均成本
+	function showAvgPval(oRow) {
+		var fractionDigits = 0;
+		if (oRow.invtExchCurr == 'NTD') {
+			fractionDigits = 0;
+		} else {
+			fractionDigits = 2;
+		}
+		if (oRow.invtNo.substring(0, 2) == 'RT') {
+			return '<p class="marginTop26">--</p>';
+		} else {
+			return '<p class="marginTop26">' + formatNumber(oRow.avgPval, fractionDigits) +'</p>';
+		}
+		
+	}
+	
+	// 累計投資收益
+	function showClupExpeNtdSum(oRow) {
+		var fractionDigits = 0;
+		if (oRow.invtExchCurr == 'NTD') {
+			fractionDigits = 0;
+		} else {
+			fractionDigits = 2;
+		}
+		
+		/* return '<p class="marginTop26">' + formatNumber(oRow.clupExpeNtdSum, fractionDigits) +'</p>'; */
+		return '<p class="marginTop26">' + formatNumber(oRow.acctValue - oRow.avgPval, fractionDigits) +'</p>';
+	}
+	
+	// 參考帳戶價值
+	function showAcctValue(oRow) {
+		var fractionDigits = 0;
+		if (oRow.invtExchCurr == 'NTD') {
+			fractionDigits = 0;
+		} else {
+			fractionDigits = 2;
+		}
+		
+		return '<p class="marginTop26">' + formatNumber(oRow.acctValue, fractionDigits) + '</p>';
+	}
+	
+	// 參考報酬率(%)
+	// 基金編號為RT且保單幣別等於基金幣別時，不顯示參考報酬率
+	function showRoiRate(oRow) {
+		var html = '';
+		if (oRow.invtNo.substring(0, 2) == 'RT') {
+			html = '--';
+		} else {
+			var caluRoiRate = 0;
+			if (oRow.avgPval != 0) {
+				caluRoiRate = ((oRow.acctValue - oRow.avgPval) / oRow.avgPval * 100);
+			}
+			console.log(emptyIfNull(oRow.invtNo) + " -> " + formatNumber(caluRoiRate, 4) + "=((" + oRow.acctValue + " - " + oRow.avgPval + ") / " + oRow.avgPval + " * 100)");
+			
+			html += '<p class="marginTop26">' + formatNumber(caluRoiRate, 2) +'%</p>';
+		}
+		
+		return html;
+	}
+	
+	// 顯示帳戶價值合計
+	function showAcctValueSum(grid1) {
+		$('#acctValueSum').html(formatNumber(grid1.sumByField('acctValue'), 2));
+	}
+
+	function showTotalAvgPval(grid1) {
+		$('#t_avgPval').html(formatNumber(grid1.sumByField('avgPval'), 2));
+	}
+
+	function showTotalClupExpeSum(grid1) {
+		$('#t_clupExpeSum').html(formatNumber(grid1.sumByField('acctValue') - grid1.sumByField('avgPval'), 2));
+	}
+
+	function showScurrency(grid1) {
+		$('#s_avgPval').html(formatNumber(grid1.sumByField('avgPval') * s_currency, 0));
+		$('#s_acctValueSum').html(formatNumber(grid1.sumByField('acctValue') * s_currency, 0));
+		$('#s_clupExpeSum').html(formatNumber((grid1.sumByField('acctValue') - grid1.sumByField('avgPval')) * s_currency, 0));
+	}
+	
+	/*]]>*/
+	</script>
+</body>
+
+</html>

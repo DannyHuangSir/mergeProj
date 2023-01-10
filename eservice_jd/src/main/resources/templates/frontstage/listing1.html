@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>我的保單｜臺銀人壽保單網路服務</title>
+</head>
+<body class="listing1">
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
+	<section class="grey listing1 fullContent">
+		<div class="container bg3 list1">
+			<div class="mystyle3 listing-area">
+				<div class="row-offcanvas row-offcanvas-left">
+					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing1')"></div>
+					<div th:replace="fragments/sidebar :: sidebar (funId='listing1')"></div>
+					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+						<div class="box-border" th:with="policyNo=(${param.policyNo[0]}),policyListType=(${param.policyListType} != null ? ${param.policyListType[0]} : '1')">
+							<a th:href="'javascript:postPolicyListType(\'' + @{/listing1} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'">
+								<div class="col-xs-6 folder active">保單資料</div>
+							</a>
+							<th:block th:if="${param.policyListType} != null and ${param.policyListType[0]} == '1'">
+							<th:block th:if="${session.hideProdCode2} != null and ${#strings.indexOf(session.hideProdCode2, #strings.substring(policyNo,0,2))} == -1">
+							<a th:href="'javascript:postPolicyListType(\'' + @{/listing2} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'">
+								<div class="col-xs-6 folder ">投資損益及投報率
+								</div>
+							</a>
+							</th:block>
+							</th:block>
+							<div class="tb3 mobile-toggle marginTop40" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 保單資料
+								<a href="#insurance-content" data-toggle="modal" data-target="#insurance-content" class="btn-cancel orange-bg pull-right">保障內容 <i class="fas fa-chevron-right"></i></a>
+							</div>
+							<div class="mobile-toggle-panel">
+								<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">商品名稱</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">幣別</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">被保險人</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">保單狀態</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">生效日</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">終止日</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">保額/單位</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">保費</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:if="${coverageList} != null">
+										<th:block th:each="vo, rowStat : ${coverageList}">
+											<tr class="h65" th:classappend="${rowStat.odd}? 'tr-odd-noEvent' : 'noEvent'">
+												<td>
+													<th:block th:text="${vo.productVo} != null ? ${vo.productVo.productName}"/>
+												</td>
+												<td>
+													<th:block th:text="${vo.policyVo != null and vo.policyVo.currency != null and session.SYSTEM_PARAMETER['CURRENCY'][vo.policyVo.currency] != null}
+														? ${session.SYSTEM_PARAMETER['CURRENCY'][vo.policyVo.currency].parameterValue}"/>
+												</td>
+												<td>
+													<div th:switch="${vo.insuredNameBase64} != null and ${vo.insuredNameBase64} != ''"> 
+														<div th:case="${true}">
+															<img th:width="${#strings.length(vo.insuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.insuredNameBase64}|" />
+														</div>
+														<div th:case="${false}">
+															<th:block th:text="${vo.insuredName} != null ? ${vo.insuredName}"/>
+														</div>
+													</div>
+												</td>
+												<td>
+													<th:block th:text="${vo.status != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status] != null}
+														? ${session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.status].parameterValue}"/>
+												</td>
+												<td class="enThin">
+													<th:block th:text="${vo.effectiveDate} != null 
+														? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/>
+												</td>
+												<td class="enThin">
+													<div th:switch="${vo.isWholeLife} != null and ${vo.isWholeLife} == 'Y'"> 
+														<div th:case="${true}">
+															終身
+														</div>
+														<div th:case="${false}">
+															<th:block th:text="${vo.expireDate} != null 
+															? ${#dates.format(vo.expireDate, 'yyyy/MM/dd')}"/>
+														</div>
+													</div>
+													
+												</td>
+												<td>
+													<th:block th:text="${vo.mainAmount} != null 
+														? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+													<!-- <i class="my5"><th:block th:text="${vo.policyVo} != null ? ${vo.policyVo.currency}"/></i> -->
+												</td>
+												<td>
+													<th:block th:text="${vo.premiumAmount} != null 
+														? ${#numbers.formatDecimal(vo.premiumAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+													<!-- <i class="my5"><th:block th:text="${vo.policyVo} != null ? ${vo.policyVo.currency}"/> -->
+												</i></td>
+											</tr>
+										</th:block>
+										</th:block>
+									</tbody>
+								</table>
+								<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20002'] != null} 
+									? ${session.PAGE_WORDING['WORDING_20002'].parameterValue}"/>
+							</div>
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 要保人
+							</div>
+							<div class="mobile-toggle-panel specialHeight toggle-hide">
+								<div class="row">
+									<div id="customerDiv" class="col-sm-12">
+										<div class="col-sm-6 nopd all-left-list">
+											<table class="tablesaw tablesaw-stack no-border wht col-table" data-tablesaw-mode="stack">
+												<tbody>
+													<tr class="noEvent borderTop">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">要保人</th>
+														<td>
+															<b class="tablesaw-cell-label mobile-b">要保人</b> 
+															<span class="mobile-span">
+																<div th:switch="${customerVo != null}"> 
+																	<div th:case="${true}">
+																		<div th:switch="${customerVo.lipmNameBase64} != null and ${customerVo.lipmNameBase64} != ''"> 
+																			<div th:case="${true}">
+																				<img th:width="${#strings.length(customerVo.lipmName1) * 20}" height="17px" th:src="|data:image/svg+xml;base64, ${customerVo.lipmNameBase64}|" />&nbsp;
+																			</div>
+																			<div th:case="${false}">
+																				<th:block th:text="${customerVo != null and customerVo.lipmName1 != null} ? ${customerVo.lipmName1}"/>&nbsp;
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													<tr class="noEvent">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">性別</th>
+														<td>
+															<b class="tablesaw-cell-label mobile-b">性別</b> 
+															<span class="mobile-span">
+																<th:block th:if="${customerVo != null and customerVo.lipmId != null and  #strings.length(customerVo.lipmId) == 10} ">
+																	<th:block th:if="${#strings.substring(customerVo.lipmId,1,2) == '1'} ">男</th:block>
+																	<th:block th:if="${#strings.substring(customerVo.lipmId,1,2) == '2'} ">女</th:block>&nbsp;
+																</th:block>
+															</span>
+														</td>
+													</tr>
+													<tr class="noEvent">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">生日</th>
+														<td>
+															<b class="tablesaw-cell-label mobile-b">生日</b> 
+															<span class="mobile-span">
+																<!-- <th:block th:text="${customerVo != null and customerVo.lipmBirth != null} 
+																	? ${#dates.format(customerVo.lipmBirth, 'yyyy/MM/dd')}"/>&nbsp; -->
+																<th:block th:text="${customerVo != null and customerVo.lipmBirth != null} 
+																	? ${#dates.format(customerVo.lipmBirth, 'yyyy/MM/')} + '**'"/>&nbsp;
+															</span>
+														</td>
+													</tr>
+													<tr class="noEvent">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">身分證字號</th>
+														<td>
+															<b class="tablesaw-cell-label mobile-b">身分證字號</b> 
+															<span class="mobile-span">
+																<th:block th:text="${customerVo != null and customerVo.lipmId != null} 
+																	? ${customerVo.lipmId}"/>&nbsp;
+															</span>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-sm-6 nopd all-left-list">
+											<table class="tablesaw tablesaw-stack no-border wht col-table" data-tablesaw-mode="stack">
+												<tbody>
+													<tr class="noEvent borderTop">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">聯絡電話(公)</th>
+														<td>
+															<b class="tablesaw-cell-label mobile-b">聯絡電話(公)</b> 
+															<span class="mobile-span">
+																<th:block th:text="${customerVo != null and customerVo.lipmTelO != null}
+																	? ${customerVo.lipmTelO}"/>&nbsp;
+															</span>
+														</td>
+													</tr>
+													<tr class="noEvent">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">聯絡電話(宅)</th>
+														<td>
+															<b class="tablesaw-cell-label mobile-b">聯絡電話(宅)</b> 
+															<span class="mobile-span">
+																<th:block th:text="${customerVo != null and customerVo.lipmTelH != null}
+																	? ${customerVo.lipmTelH}"/>&nbsp;
+															</span>
+														</td>
+													</tr>
+													<tr class="noEvent">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">通訊地址</th>
+														<td>
+															<b class="tablesaw-cell-label mobile-b">通訊地址</b> 
+															<span class="mobile-span">
+																<th:block th:text="${customerVo != null and customerVo.lipmCharAddr != null}
+																	? ${customerVo.lipmCharAddr}"/>&nbsp;
+															</span>
+														</td>
+													</tr>
+													<tr class="noEvent">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4"></th>
+														<td><b class="tablesaw-cell-label mobile-b"></b> <span class="mobile-span">&nbsp;</span></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 被保險人
+							</div>
+							<div class="mobile-toggle-panel toggle-hide">
+								<table id="grid2" class="tablesaw tablesaw-stack wht table4row" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2 noEvent">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">被保險人</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">性別</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">生日</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">身分證字號</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:if="${insuredCoverage} != null">
+											<tr class="h65 noEvent">
+												<td class="text-left">
+													<div th:switch="${insuredCoverage.lipiNameBase64} != null and ${insuredCoverage.lipiNameBase64} != ''"> 
+														<div th:case="${true}">
+															<img th:width="${#strings.length(insuredCoverage.lipiName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${insuredCoverage.lipiNameBase64}|" />
+														</div>
+														<div th:case="${false}">
+															<th:block th:text="${insuredCoverage.lipiName} != null ? ${insuredCoverage.lipiName}"/>
+														</div>
+													</div>
+												</td>
+												<td>
+													<th:block th:text="${insuredCoverage.lipiSex != null and session.SYSTEM_PARAMETER['SEX'] != null} 
+														? ${session.SYSTEM_PARAMETER['SEX'][insuredCoverage.lipiSex].parameterValue}"/>
+												</td>
+												<td>
+													<!-- <th:block th:text="${insuredCoverage.lipiBirth != null} 
+														? ${#dates.format(insuredCoverage.lipiBirth, 'yyyy/MM/dd')}"/> -->
+													<th:block th:text="${insuredCoverage.lipiBirth != null} 
+														? ${#dates.format(insuredCoverage.lipiBirth, 'yyyy/MM/')} + '**'"/>
+												</td>
+												<td>
+													<th:block th:text="${insuredCoverage.lipiId != null} 
+														? ${insuredCoverage.lipiId}"/>
+												</td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</div>
+							<!-- <div id="payerDiv1" class="tb3 top0 mobile-toggle" data-toggle="true" th:classappend="${payerVo == null} ? 'hide'">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 付款人
+							</div>
+							<div id="payerDiv2" class="mobile-toggle-panel toggle-hide" th:classappend="${payerVo == null} ? 'hide'">
+								<table class="tablesaw tablesaw-stack wht table4row" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2 noEvent">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">付款人</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">性別</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">身分證字號</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:if="${payerVo != null}">
+										<tr class="h65 noEvent">
+											<td class="text-left">
+												<div th:switch="${payerVo.payerNameBase64} != null and ${payerVo.payerNameBase64} != ''"> 
+													<div th:case="${true}">
+														<img th:width="${#strings.length(payerVo.payerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${payerVo.payerNameBase64}|" />
+													</div>
+													<div th:case="${false}">
+														<th:block th:text="${payerVo.payerName != null} ? ${payerVo.payerName}"/>
+													</div>
+												</div>
+											</td>
+											<td>
+												<th:block th:text="${payerVo.sex != null and session.SYSTEM_PARAMETER['SEX'] != null} 
+													? ${session.SYSTEM_PARAMETER['SEX'][payerVo.sex].parameterValue}"/>
+											</td>
+											<td>
+												<th:block th:text="${payerVo.rocId != null}
+													? ${payerVo.rocId}"/>
+											</td>
+										</tr>
+										</th:block>
+									</tbody>
+								</table>
+								<table class="tablesaw tablesaw-stack wht table4row" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">付款金融機構</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1" style="">銀行帳號/信用卡號</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" style="">有效期限</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:if="${payerVo} != null">
+										<tr class="h65 noEvent">
+											<td class="text-left">
+												<th:block th:text="${payerVo.bankName} != null ? ${payerVo.bankName}"/>
+											</td>
+											<td>
+												<th:block th:text="${payerVo.acctNumber} != null ? ${payerVo.acctNumber}"/>
+											</td>
+											<td>
+												<th:block th:text="${payerVo.expireDate} != null ? ${payerVo.expireDate}"/>
+											</td>
+										</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</div> -->
+							<!-- 受益人區塊 start -->
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 受益人
+							</div>
+							<div class="mobile-toggle-panel toggle-hide">
+								<table id="grid2" class="tablesaw tablesaw-stack wht table4row" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2 noEvent">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">受益人</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">關係</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">受益種類</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:if="${beneficiaryList} != null">
+										<th:block th:each="vo, rowStat : ${beneficiaryList}">
+											<tr class="h65" th:classappend="${rowStat.odd}? 'tr-odd-noEvent' : 'noEvent'">
+												<td class="text-left">
+													<div th:switch="${vo.beneficiaryNameBase64} != null and ${vo.beneficiaryNameBase64} != ''"> 
+														<div th:case="${true}">
+															<img th:width="${#strings.length(vo.beneficiaryName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.beneficiaryNameBase64}|" />
+														</div>
+														<div th:case="${false}">
+															<th:block th:text="${vo.beneficiaryName} != null ? ${vo.beneficiaryName}"/>
+														</div>
+													</div>
+												</td>
+												<td>
+													<th:block th:text="${vo.beneficiaryRelation} != null ? ${vo.beneficiaryRelation}"/>
+												</td>
+												<td>
+													<th:block th:text="${vo.beneficiaryTypeStr} != null ? ${vo.beneficiaryTypeStr} : ${vo.beneficiaryType}"/>
+												</td>
+											</tr>
+										</th:block>
+										</th:block>
+									</tbody>
+								</table>
+							</div>
+							<!-- 受益人區塊 end -->
+							<div class="tb3 top0 mobile-toggle" data-toggle="true">
+								<i class="fas fa-chevron-up hid2 mobile"></i>
+								<i class="fas fa-chevron-up hid1"></i> 招攬人
+							</div>
+							<div class="mobile-toggle-panel toggle-hide">
+								<table class="tablesaw tablesaw-stack wht table4row" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2 noEvent">
+											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">招攬人姓名</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">行動電話</th>
+											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">聯絡地址</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:if="${agentVo} != null">
+											<tr class="h65 noEvent">
+												<td class="text-left"><th:block th:text="${agentVo.abbrName} != null ? ${agentVo.abbrName}"/></td>
+												<td><th:block th:text="${agentVo.tel1} != null ? ${agentVo.tel1}"/></td>
+												<td><th:block th:text="${agentVoinveArea} != null ? ${agentVo.inveArea}"/></td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</div>
+							<!-- 僅被保人可使用 -->
+							<th:block th:if="${session.USER_DETAIL.identity.lilipi}">
+								<div class="wht h80 hid1 applyHide" id="button_update_base_info">
+								<div class="col-md-4 col-md-offset-4">
+									<a href="changeInfo1">
+										<button id="va2" class="btn-login col-md-4 col-md-offset-4">變更基本資料  <i class="fas fa-chevron-right"></i></button>
+									</a>
+								</div>
+							</div>
+							</th:block>
+						</div>
+						<div th:replace="fragments/listingReferOnly"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<div class="modal" id="insurance-content" tabindex="-1" role="dialog" aria-labelledby="insurance-content" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content" th:with="policyNo=(${param.policyNo[0]})">
+				<div class="modal-header"><th:block th:each="map : ${userPolicyNoList}"><th:block th:if="${map['POLICY_NO'] eq policyNo}"><th:block th:text="${map['PRODUCT_NAME']}"/></th:block></th:block><span class="en">(<th:block th:text="${policyNo}"/>)</span>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div id="sliderTabs" class="clearfix">
+						<ul>
+							<th:block th:each="vo, rowStat : ${coverageList}">
+								<li class="row folder sub gradient" th:classappend="${rowStat.index == 0} ? 'active'">
+									<a th:href="@{'#tabs' + ${rowStat.count}}">
+									<th:block th:if="${vo.insuredNameBase64} != ''">
+										<img th:width="${vo.insuredName != null} ? ${#strings.length(vo.insuredName) * 20}" height="40px" th:src="|data:image/svg+xml;base64, ${vo.insuredNameBase64}|" />
+									</th:block>
+									<th:block th:if="${vo.insuredNameBase64} == ''">
+										<th:block th:text="${vo.insuredName}"/>
+									</th:block>
+									</a>
+								</li>   
+							</th:block>
+						</ul>
+						<div th:each="vo, rowStat : ${coverageList}" th:id="${'tabs' + rowStat.count}">
+							<div class="container">
+								<h4>
+									<i class="fas fa-chevron-down fa orange"></i> 保障內容
+								</h4>
+								<table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+									<tbody>
+										<tr class="title">
+											<th class="table3">
+												<th:block th:text="${vo.productVo} != null ? ${vo.productVo.productName}"/> <th:block th:text="${vo.productVo} != null ? ${vo.productVo.productCode}"/>
+											</th>
+											<th>
+												<p class="enNormal"><span class="text">保額/單位</span> <span class="orange"><th:block th:text="${vo.mainAmount} != null 
+														? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/><!-- <i class="my5"><th:block th:text="${vo.policyVo} != null ? ${vo.policyVo.currency}"/></i> --></span></p>
+											</th>
+										</tr>
+										<th:block th:if="${vo.benefitList}  != null">
+											<tr class="grey" th:each="benefitData : ${vo.benefitList}">
+												<td><span class="mobileShow">給付項目</span><th:block th:text="${benefitData.benefitName}"/></td>
+												<td><span class="mobileShow">給付項目</span><th:block th:text="${benefitData.benefitDetail}"/></td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+								<br/>
+								<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20003'] != null} 
+									? ${session.PAGE_WORDING['WORDING_20003'].parameterValue}"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer center1">
+					<button type="button" class="btn-signup" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">關閉</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		
+		// TODO 先隱藏付款人資訊
+		$('#payerDiv1').hide();
+		$('#payerDiv2').hide();
+		
+		/* 20220120 by 203990  移至  /eservice/src/main/resources/static/js/according.js 一併執行
+		$('div[data-toggle=true]').click(function() {
+			$(this).find('svg').each(function(i, obj) {
+				if ($(obj).attr('data-icon') == 'chevron-down') {
+					$(obj).attr('data-icon', 'chevron-up');
+					$(obj).removeClass('fa-chevron-down');
+					$(obj).addClass('fa-chevron-up');
+				} else if ($(obj).attr('data-icon') == 'chevron-up') {
+					$(obj).attr('data-icon', 'chevron-down');
+					$(obj).removeClass('fa-chevron-up');
+					$(obj).addClass('fa-chevron-down');
+				}
+			});
+		});
+		*/
+		
+		// 保障內容
+		$('#insurance-content').on('shown.bs.modal', function(e) {
+			$("#sliderTabs").sliderTabs({
+				tabSlideLength: 400,
+				height: 560,
+				tabHeight: 38,
+				transition: 'fade'
+			});
+		});
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

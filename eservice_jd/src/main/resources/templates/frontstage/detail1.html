@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>保障總覽｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<div th:replace="fragments/header :: majorTabs (funId='dashboard')"></div>
+	<section class="grey detail1 fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="dashboard">保障總覽</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="#">我的保障 </a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border bgSpace">
+			<div class="my1">
+				<i class="foo-business_2 foo-2x"></i> 我的保障
+			</div>
+			<div id="sliderTabs" class="clearfix">
+				<ul>
+					<th:block th:each="insuredData, rowStat : ${benefitInsuredData}">
+						<li class="row folder sub gradient" th:classappend="${rowStat.index == 0} ? 'active'">
+							<a th:href="@{'#tabs' + ${rowStat.count}}">
+								<th:block th:if="${insuredData['value'][0].insuredNameBase64} != ''">
+									<img th:width="${insuredData['key'] != null} ? ${#strings.length(insuredData['key']) * 20}" height="40px" th:src="|data:image/svg+xml;base64, ${insuredData['value'][0].insuredNameBase64}|" />
+								</th:block>
+								<th:block th:if="${insuredData['value'][0].insuredNameBase64} == ''">
+									<th:block th:text="${insuredData['key']}"/>
+								</th:block>
+							</a>
+						</li>
+					</th:block>
+				</ul>
+				<th:block th:each="insuredData, rowStat : ${benefitInsuredData}">
+					<div th:id="${'tabs' + rowStat.count}">
+						<div class="mystyle3 wht">
+							<div class="my3 tb3">
+								<i class="far fa-check-square fa-lg"></i> 保障彙整
+								<div class="tog4 pull-right hide"><i class="fa foo-printer fa-lg orange"></i> <span class="colorBlack">列印此頁</span></div>
+							</div>
+							<div class="table4">
+								<table class="tablesaw tablesaw-stack table-striped" data-tablesaw-mode="stack">
+									<thead>
+										<tr class="table2">
+											<th class="textFirst item500" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">保障項目</th>
+											<th></th>
+											<th class="item500" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">保額/單位</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:each="coverageVo, coverageRowStat : ${insuredData['value']}">
+											<tr th:classappend="${coverageRowStat.odd}? 'tr-odd-noEvent' : 'noEvent'">
+												<td class="textFirst table3">
+													<th:block th:text="${coverageVo.productVo != null and coverageVo.productVo.productName != null}
+														? ${coverageVo.productVo.productName}"/>
+													<th:block th:text="${coverageVo.productVo != null and coverageVo.productVo.productName != null}
+														? ${coverageVo.productVo.productCode}"/>
+													<p>(<th:block th:text="${coverageVo.policyNo}"/>)</p>
+												</td>
+												<td class="hid2"></td>
+												<td class="num02">
+													<th:block th:text="${coverageVo.mainAmount} != null 
+														? ${#numbers.formatDecimal(coverageVo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')} : 0"/>
+													<!-- <i class="my5">
+														<th:block th:text="${coverageVo.policyVo != null and coverageVo.policyVo.currency != null}
+															? ${coverageVo.policyVo.currency}"/>
+													</i> -->
+												</td>
+												<td class="hid2"></td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+								<table class="tablesaw tablesaw-stack table-striped" data-tablesaw-mode="stack">
+										<tr class="noEvent">
+											<td class="textFirst table3" colspan="4">
+												<p>※本彙整表係各保障項目之保額加總，實際給付金額以申請當時本公司核定金額為準</p>
+											</td>
+										</tr>
+								</table>
+							</div>
+						</div>
+						<div class="mystyle3 wht">
+							<div class="my3 marginTop20">
+								<i class="far fa-clone fa-lg"></i> 保障內容
+							</div>
+							<div class="table-overview" th:each="coverageVo : ${insuredData['value']}">
+								<div class="my8 mobile-toggle" data-toggle="true">
+									<i class="fas fa-chevron-down mobile hid2"></i> 保單號碼<span>(<th:block th:text="${coverageVo.policyNo}"/>)</span>
+								</div>
+								<div class="mobile-toggle-panel toggle-hide">
+									<div class="bluetotal">
+										<div class="textFirst float-left">
+											<th:block th:text="${coverageVo.productVo != null and coverageVo.productVo.productName != null}
+												? ${coverageVo.productVo.productName}"/>
+											<th:block th:text="${coverageVo.productVo != null and coverageVo.productVo.productName != null}
+												? ${coverageVo.productVo.productCode}"/>
+										</div>
+										<div class="float-right">
+											<span class="total1 float-right"><span>保額/單位</span>
+												<!-- <i class="my7">
+													<th:block th:text="${coverageVo.policyVo != null and coverageVo.policyVo.currency != null}
+														? ${coverageVo.policyVo.currency}"/>
+												</i> -->
+												<th:block th:text="${coverageVo.mainAmount != null} 
+													? ${#numbers.formatDecimal(coverageVo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')} : 0"/>
+												<i class="pointBig"></i>
+											</span>
+										</div>
+									</div>
+									<div class="tablesaw-bar mode-stack"></div>
+									<table class="tablesaw tablesaw-stack table-striped" data-tablesaw-mode="stack">
+										<thead class="hid1 hid2">
+											<tr class="table2">
+												<th class="textFirst item500" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">給付項目</th>
+												<th></th>
+												<th class="item500" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">給付項目</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="benefitVo, benefitRowStat  : ${coverageVo.benefitList}">
+												<tr th:classappend="${benefitRowStat.odd}? 'tr-odd-noEvent' : 'noEvent'">
+													<td class="textFirst"><th:block th:text="${benefitVo.benefitName}"/></td>
+													<td></td>
+													<td class="num02"><th:block th:text="${benefitVo.benefitDetail}"/></td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</th:block>
+			</div>
+		</div>
+		<div class="container grey p15 text-ps">※本網頁資料僅供參考，各項給付條件之詳細內容，以保單條款約定為準</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script>
+	$(function(){
+		$("#sliderTabs").sliderTabs({
+			tabSlideLength: 400,
+			tabHeight: 38,
+			transition: 'fade'
+		});
+	
+		$(document).delegate(".nav-list li a", "click", function(){
+			$(this).parent().siblings().removeClass("active");
+			$(this).parent().addClass("active");
+		});
+	});
+	</script>
+</body>
+</html>

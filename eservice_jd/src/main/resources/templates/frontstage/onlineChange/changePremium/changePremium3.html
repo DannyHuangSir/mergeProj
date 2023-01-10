@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>定期超額保費｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">定期超額保費</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 定期超額保費
+			</div>
+			<div class="">
+                <ul class="step">                    
+                    <li class="step1 col-xs-4">
+                        1<span class="hid1">. 選擇保單</span>
+                    </li>
+                    <li class="step2 col-xs-4">
+                        2<span class="hid1">. 修改保費</span>
+                    </li>
+                    <li class="step3 active col-xs-4">
+                        3<span class="hid1">. 確認資料與密碼</span>
+                    </li>
+                </ul>
+            </div>
+			<div class="mystyle3">
+				<h2>請修改保費</h2>
+                <div class="loan1">
+					<label class="col-sm-10 col-sm-offset-2 enNormal">投保日期： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.paidToDate}"/>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">下次應繳日： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.nextPayDate}"/>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">繳費年限： <span class="colorBlack"><th:block th:text="${transPaymodeVo.premYear}"/></span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">繳別： <span class="colorBlack"><th:block th:text="${session.SYSTEM_PARAMETER['PAYMODE_TYPE'].get(transPaymodeVo.paymodeOld).parameterValue}"/></span></label>
+					<label class="col-sm-10 col-sm-offset-2" style="color: #009b30;font-size: 16px;line-height: 20px;">(變更前)定期超額保費： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.oldAmount != null} ? ${#numbers.formatDecimal(transPaymodeVo.oldAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+					</span></label>
+					
+					
+					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+						<div class="col-sm-12 mode2select marginTop20">
+						  <label for="" class="col-sm-12 text-center" style="font-size: 20px; color: #009b30;">(變更後)定期超額保費：<th:block th:text="${transPaymodeVo.amount != null}
+							? ${#numbers.formatDecimal(transPaymodeVo.amount, 0, 'DEFAULT', 0, 'COMMA')}"/></label>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+			
+					<div class="statement1 wht col-sm-8 col-sm-offset-2">
+						<p class="text-ps">備註：</p>
+						<ol class="text-ps">
+							<li>※投資型保單於變更繳別時，須同時設定每期保費金額</li>
+							<li>※每期保費可設定之金額範圍會隨商品類型、被保險人年紀及附加之附約而有所差異</li>
+						</ol>
+					</div>
+				</div>
+		        <div class="col-md-8 col-md-offset-2">
+					<div th:replace="fragments/sendVerify"></div>
+				</div>
+				<div class="col-md-8 col-md-offset-2 two-buttons">
+					<a><button id="deny" class="btn-signup">上一步</i></button></a>
+					<button id="go" class="btn-signup">確認送出</i></button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var smsRemainTime = [[${changePremiumTimeSet}]];
+
+		$(function() {
+			$('#go').click(function() {
+				// 檢核是否有選一筆資料
+				let formData = [[${transPaymodeVo}]];
+				formData.authType = $("[name='tab_group_2']:checked").val()
+				formData.userPassword = $.base64.encode($("input[name='userPassword']").val())
+				formData.authenticationNum = $("input[name='authNum']").val()
+				postWithFormData(/*[[@{/changePremiumSuccess}]]*/, formData);
+			});
+			$('#deny').click(function() {
+				var formData = [[${transPaymodeVo}]]
+				postWithFormData(/*[[@{/changePremium2}]]*/, formData);
+			});
+			smsTimer.show(1); // 1秒
+		});
+
+		var smsTimer = function() {
+			var timer;
+			function showSmsRemainTime(second) {
+				timer = setInterval(function() {
+					smsRemainTime = smsRemainTime - 1
+					if (smsRemainTime <= 0) {
+						clearInterval(timer);
+						$('#timerDiv').html('0:00');
+					} else {
+						var showTime = moment.utc(smsRemainTime * 1000).format('m:ss');
+						$('#timerDiv').html(showTime);
+					}
+				}, second * 1000);
+			};
+			function reset() {
+				clearInterval(timer);
+				reSendAuthentication();
+			};
+			return {
+				show : function(second) {
+					showSmsRemainTime(second);
+				},
+				reset : function() {
+					reset();
+				}
+			};
+		}();
+
+		function reSendAuthentication() {
+			popupLoading();
+			$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				url : "/eservice/sendAuthentication",
+				data : {
+					authenticationType: "changePremium"
+				},
+				success : function(response) {
+					removeLoading();
+					openAlert($('#E0010').val());
+					smsRemainTime = 300;
+					smsTimer.show(1);
+				},
+				error : function() {
+					removeLoading();
+					openAlert($('#E0011').val());
+					//openAlert("重新寄送失敗，請重新寄送驗證碼！");
+				}
+			});
+		}
+		/*]]>*/
+		</script>
+</body>
+
+</html>

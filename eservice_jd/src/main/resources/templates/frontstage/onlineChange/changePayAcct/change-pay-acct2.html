@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>匯款帳號變更｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner has-special-note fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">匯款帳號變更</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 匯款帳號變更
+			</div>
+			<div class="">
+				<ul class="step">
+				<li class="step1 col-xs-4">
+					1<span class="hid1">. 選擇保單</span>
+				</li>
+				<li class="step2 active col-xs-4">
+					2<span class="hid1">. 設定匯款帳號</span>
+				</li>
+				<li class="step3 col-xs-4">
+					3<span class="hid1">. 確認資料</span>
+				</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>設定受益種類與匯款帳號</h2>
+				<div class="col-md-8 col-md-offset-2">
+					<form class="form-horizontal no-borderBottom marginTop20" role="form">
+						<div class="form-group">
+							<label for="inputPassword3" class="col-sm-3">受益種類：</label>
+							<div class="col-sm-9">
+								<th:block th:if="${#strings.equals(canChangeType1,'Y')}">
+									<div class="radio inline">
+										<label>
+											<div class="radio-btn"><i><input type="radio" name="changeType" value="2" onclick="writeName(0);"></i></div>滿期金
+										</label>
+									</div>
+								</th:block>
+								<th:block th:if="${#strings.equals(canChangeType2,'Y')}">
+									<div class="radio inline">
+										<label>
+											<div class="radio-btn"><i><input type="radio" name="changeType" value="3" onclick="writeName(1);"></i></div>生存金
+										</label>
+									</div>
+								</th:block>
+								<th:block th:if="${#strings.equals(canChangeType3,'Y')}">
+									<div class="radio inline">
+										<label>
+											<div class="radio-btn"><i><input type="radio" name="changeType" value="F" onclick="writeName(2);"></i></div>紅利給付
+										</label>
+									</div>
+								</th:block>
+							</div>
+							<div class="clearfix"></div>
+							<label for="inputPassword3" class="col-sm-3">匯款帳號：</label>
+							<div class="col-sm-9">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="acctType" value="1" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>銀行帳戶
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="acctType" value="2" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div>郵局存簿儲金
+									</label>
+								</div>
+							</div>
+							<div class="col-sm-12" style="width: 120%">
+								<div class="tabs">
+									<!-- TAB 1 -->
+									<article id="tab_1" class="tab">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 45%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">郵局匯款資訊</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">戶名</label>
+													<div class="col-sm-9">
+													<label id="postNameLabel" class="col-sm-6"></label>
+													<input type="hidden" disabled="disabled" id="postName" name="postName" class="col-sm-6" value=""> </div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">局號</label>
+													<div class="col-sm-9">
+													 <input type="number" id="postNo1" name="postNo1" class="col-sm-6" value="" onkeypress="return isNumberKey(event)" autocomplete="off"> </div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">帳號</label>
+													<div class="col-sm-9">
+														<input type="number" id="postNo2" name="postNo2" class="col-sm-6 digit" value="" min="0" onkeypress="return isNumberKey(event)" autocomplete="off">
+													</div>
+												</div>
+												<!-- 202005_SR匯款帳號修改_start -->
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">請再輸入一遍局號與帳號</label>
+													<div class="col-sm-9">
+														<input type="number" id="postNo2Check" name="postNo2Check" class="col-sm-6 digit" value="" min="0" onkeypress="return isNumberKey(event)" autocomplete="off">
+													</div>
+												</div>
+												<!-- 202005_SR匯款帳號修改_end -->
+											</div>
+										</section>
+									</article>
+									<!-- TAB 2 -->
+									<article class="tab tab-hide" id="tab_2">
+										<section id="tab_frame_print1" class="tab-frame">
+											<div class="arrow-upleft" style="left: 30%"></div>
+											<div class="grey2">
+												<div class="check-title depo2">銀行匯款資訊</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">戶名</label>
+													<div class="col-sm-9">
+													<label id="accountNameLabel" class="col-sm-6"></label>
+													<input type="hidden" disabled="disabled" id="accountName" name="accountName" class="col-sm-6" value="" placeholder=""></div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">銀行</label>
+													<div class="col-sm-5">
+														<div>
+															<select id="bankOpt" name="bankOpt" data-placeholder="選擇銀行" class="wht">
+																<option value=""></option>
+															</select>
+															<input type="hidden" id="bankName" name="bankName"/>
+														</div>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">分行</label>
+													<div class="col-sm-5">
+														<div>
+															<select class="selector wht" id="brancheOpt" name="brancheOpt" data-placeholder="選擇分行">
+																<option value=""></option>
+															</select>
+															<input type="hidden" id="branchName" name="branchName"/>
+														</div>
+													</div>
+												</div>
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">帳號</label>
+													<div class="col-sm-9">
+														<input type="number" id="accountNumber" name="accountNumber" class="col-sm-6 digit" value="" maxlength="14" min="0" onkeypress="return isNumberKey(event)" autocomplete="off"> 
+													</div>
+												</div>
+												<!-- 202005_SR匯款帳號修改_start -->
+												<div class="check-list2 grey2">
+													<label for="" class="col-sm-3">請再輸入一遍帳號</label>
+													<div class="col-sm-9">
+														<input type="number" id="accountNumberCheck" name="accountNumberCheck" class="col-sm-6 digit" value="" maxlength="14" min="0" onkeypress="return isNumberKey(event)" autocomplete="off"> 
+													</div>
+												</div>
+												<!-- 202005_SR匯款帳號修改_end -->
+											</div>
+										</section>
+									</article>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-12 two-buttons">
+					<a href="changePayAcct1">
+						<button id="deny" class="btn-signup">上一步</button>
+					</a>
+					<th:block th:if="${loginUserType eq 'member'}">
+						<button id="go" class="btn-signup">下一步</button>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		//202005SR_匯款帳號修改-start
+		//jQuery(document).ready(function () {//202005SR_匯款帳號修改
+			//also works ctrl+v, right click.
+            //jQuery('input.digit').live('input keyup',function(e){ jQuery(this).val(jQuery(this).val().replace( /[^\d]/g ,'')); });
+		//});
+		
+		$('form,input,select,textarea').attr("autocomplete", "off");
+		
+		$(document).ready(function() {
+			//cut copy,paste,drag and drop
+			$('#postNo2').bind("cut copy paste drag drop", function(e) {
+			    e.preventDefault();
+			});     
+		});
+		$(document).ready(function() {
+			//cut copy,paste,drag and drop
+			$('#postNo1').bind("cut copy paste drag drop", function(e) {
+			    e.preventDefault();
+			});     
+		});
+		$(document).ready(function() {
+			//cut copy,paste,drag and drop
+			$('#postNo2Check').bind("cut copy paste drag drop", function(e) {
+			    e.preventDefault();
+			});     
+		});
+		$(document).ready(function() {
+			//cut copy,paste,drag and drop
+			$('#accountNumber').bind("cut copy paste drag drop", function(e) {
+			    e.preventDefault();
+			});     
+		});
+		$(document).ready(function() {
+			//cut copy,paste,drag and drop
+			$('#accountNumberCheck').bind("cut copy paste drag drop", function(e) {
+			    e.preventDefault();
+			});     
+		});
+		function isNumberKey(evt) {
+		    var charCode = (evt.which) ? evt.which : evt.keyCode;
+		    if (charCode > 31 && (charCode < 48 || charCode > 57)){
+		    	return false;
+			}
+		    return true;
+		}
+		//202005SR_匯款帳號修改-end
+	
+		var formData = /*[[${transChangeAccountVo}]]*/;
+		$(function() {
+			$("#bankOpt").chosen({
+				allow_single_deselect:true, 
+				search_contains: true
+			});
+			
+			$("#brancheOpt").chosen({
+				allow_single_deselect:true, 
+				search_contains: true
+			});
+			
+			//銀行下拉選單
+			var bankUrl = /*[[@{/getBankList}]]*/;
+			var branchesUrl = /*[[@{/getBranchesList}]]*/;
+			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+			
+			// 設定寬度
+			$('.chosen-container').width('207px');
+			
+			// 取得名稱
+			$('#bankOpt').change(function() {
+				$('#bankName').val($('#bankOpt option:selected').text());
+			});
+			$('#brancheOpt').change(function() {
+				if ($('#brancheOpt').val() != '') {
+					$('#branchName').val($('#brancheOpt option:selected').text());
+				} else {
+					$('#branchName').val('');
+				}
+			});
+			
+			// 下一步事件
+			$('#go').click(function() {
+				var $postNo1 = $('#postNo1').val().toString();
+				var $postNo2 = $('#postNo2').val().toString();
+				var $postNo3 = $postNo1+$postNo2;
+				if ($('input[name="changeType"]:checked').val() == null) {
+					/* openAlert("請選擇受益種類"); */
+					openAlert($('#E0068').val());
+					return false;
+				}
+				if ($('input[name="acctType"]:checked').val() == null) {
+					/* openAlert("請選擇匯款帳號"); */
+					openAlert($('#E0069').val());
+					return false;
+				}
+				if ($('input[name="acctType"]:checked').val() == '1') {
+					if ($('#accountName').val() == '') {
+						/* openAlert("請選擇戶名"); */
+						openAlert($('#E0049').val());
+						return false;
+					}
+					if ($('#bankOpt').val() == '') {
+						/* openAlert("請選擇銀行"); */
+						openAlert($('#E0050').val());
+						return false;
+					}
+					if ($('#brancheOpt').val() == '') {
+						/* openAlert("請選擇分行"); */
+						openAlert($('#E0051').val());
+						return false;
+					}
+					if ($('#accountNumber').val() == '') {
+						/* openAlert("請選擇帳號"); */
+						$('#accountNumber').focus()
+						openAlert($('#E0052').val());
+						return false;
+					}
+					/*
+					//if (!/^\d+$/.test($('#accountNumber').val())) {
+						//openAlert('銀行帳號僅為數字'); 
+						//openAlert($('#E0053').val());
+						//return false;
+					//}
+					*/
+					if ($('#accountNumberCheck').val() == '') {
+						/* openAlert("二次輸入帳號不相符"); */
+						$('#accountNumberCheck').focus();
+						openAlert($('#E0132').val());
+						return false;
+					}
+					if($('#accountNumber').val() != '' && $('#accountNumberCheck').val() != '') {
+						//二次輸入帳號需相同且不得為空
+						if($('#accountNumber').val() != $('#accountNumberCheck').val()){
+							$('#accountNumberCheck').focus();
+							openAlert($('#E0132').val());
+							return false;
+						}
+					}
+
+					formData.bankId = $('#bankOpt').val();
+					formData.bankName = $('#bankName').val();
+					formData.branchId = $('#brancheOpt').val();
+					formData.branchName = $('#branchName').val();
+					formData.accountNo = $('#accountNumber').val();
+					formData.accountName = $('#accountName').val();
+				} else if ($('input[name="acctType"]:checked').val() == '2') {
+					if ($('#postName').val() == '') {
+						/* openAlert("請選擇戶名"); */
+						openAlert($('#E0049').val());
+						return false;
+					}
+					if ($('#postNo1').val() == '') {
+						/* openAlert("請選擇局號"); */
+						openAlert($('#E0070').val());
+						return false;
+					}
+					if ($('#postNo2').val() == '') {
+						/* openAlert("請選擇帳號"); */
+						$('#postNo2').focus();
+						openAlert($('#E0052').val());
+						return false;
+					}
+					if ($('#postNo2Check').val() == '') {
+						/* openAlert("二次輸入局號與帳號不相符"); */
+						$('#postNo2Check').focus();
+						openAlert($('#E0133').val());
+						return false;
+					}
+					if($('#postNo2').val() != '' && $('#postNo2Check').val() != '') {
+						//二次輸入局號與帳號需相同且不得為空
+						if ( $postNo3 != $('#postNo2Check').val()){
+							$('#postNo2Check').focus();
+							openAlert($('#E0133').val());
+							return false;
+						}
+					}
+					
+					formData.bankId = '700';
+					formData.branchId = $('#postNo1').val();
+					formData.accountNo = $('#postNo2').val();
+					formData.accountName = $('#postName').val();
+				}
+				
+				formData.changeType = $('input[name="changeType"]:checked').val();
+				formData.acctType = $('input[name="acctType"]:checked').val();
+				
+				postWithFormData(/*[[@{/changePayAcct3}]]*/, formData);
+			});
+			
+		});
+		var payAccountName = /*[[${payAccountName}]]*/;
+		function writeName(valueIndex){
+			$('#postNameLabel').html(payAccountName[valueIndex]);
+			$('#postName').val(payAccountName[valueIndex]);
+			$('#accountNameLabel').html(payAccountName[valueIndex]);
+			$('#accountName').val(payAccountName[valueIndex]);
+		}
+
+	/*]]>*/
+	</script>
+</body>
+
+</html>

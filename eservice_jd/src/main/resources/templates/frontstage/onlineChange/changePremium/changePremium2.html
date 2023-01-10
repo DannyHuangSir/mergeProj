@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>定期超額保費｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">定期超額保費</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 定期超額保費
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+                        1<span class="hid1">. 選擇保單</span>
+                    </li>
+                    <li class="step2 active col-xs-4">
+                        2<span class="hid1">. 修改保費</span>
+                    </li>
+                    <li class="step3 col-xs-4">
+                        3<span class="hid1">. 確認資料與密碼</span>
+                    </li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請修改保費</h2>
+                <div class="loan1">
+					<label class="col-sm-10 col-sm-offset-2 enNormal">保單號碼： <span class="colorBlack">
+						<span id="policyNo" class="colorBlack">
+							<th:block th:if="${transPaymodeVo != null}">
+								<th:block th:each="policyNo : ${transPaymodeVo.policyNoList}">
+									<th:block th:text="${policyNo}"/>
+								</th:block>
+							</th:block>
+						</span>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">投保日期： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.paidToDate}"/>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">下次應繳日： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.nextPayDate}"/>
+					</span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">繳費年限： <span class="colorBlack"><th:block th:text="${transPaymodeVo.premYear}"/></span></label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">繳別： <span class="colorBlack"><th:block th:text="${session.SYSTEM_PARAMETER['PAYMODE_TYPE'].get(transPaymodeVo.paymodeOld).parameterValue}"/></span></label>
+					<label class="col-sm-10 col-sm-offset-2" style="color: #009b30;font-size: 16px;line-height: 20px;">(變更前)定期超額保費： <span class="colorBlack">
+						<th:block th:text="${transPaymodeVo.oldAmount != null} ? ${#numbers.formatDecimal(transPaymodeVo.oldAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+					</span></label>
+					
+					
+					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+						<div class="col-sm-12 mode2select marginTop20">
+						  <label for="" class="col-sm-5 text-right" style="font-size: 20px; color: #009b30;">(變更後)定期超額保費：</label>
+						 
+							<div class="col-sm-7" style="padding: 5px;">
+								<input type="text" name="amount" class="col-sm-8" placeholder="請輸入欲更改後的保費" style="line-height: 30px;">
+							</div>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+			
+					<div class="statement1 wht col-sm-8 col-sm-offset-2">
+						<p class="text-ps">備註：</p>
+						<ol class="text-ps" id="remark">
+						</ol>
+					</div>
+				</div>  
+				<div class="col-md-8 col-md-offset-2 two-buttons">
+					<a href="changePremium1"><button id="deny" class="btn-signup">上一步</i></button></a>
+					<button id="go" class="btn-signup">下一步</i></button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			$('#go').click(function() {
+				// 檢核是否有選一筆資料
+				amount = $("input[name='amount']").val()
+				if (amount == null || amount == '') {
+					openAlert('請輸入變更金額');
+					return false;
+				}
+
+				if (!checkDecimal(amount)) {
+					openAlert("只允許輸入數值整數！")
+					return
+				}
+
+				var tmpAmount = parseInt(amount);
+				if (tmpAmount <=0) {
+					openAlert("請輸入大於0的金額");
+					return false;
+				}
+				var policyType = /*[[${#strings.substring(transPaymodeVo.policyNoList[0],0,2)}]]*/;
+				if (policyType == 'UU' && (tmpAmount % 100 != 0 || tmpAmount < 100)) {
+					openAlert("美元保單每次最低100美元，以百元為單位。");
+					return false;
+				}
+
+				if (policyType == 'US' && (tmpAmount % 1000 != 0  || tmpAmount < 2000)) {
+					openAlert("新臺幣保單每次最低2,000元，以仟元為單位。");
+					return false;
+				}
+
+				if ([[${minValue}]] != null && tmpAmount < [[${minValue}]]) {
+					openAlert("請輸入大於[[${minValue}]]的金額");
+					return false;
+				}
+
+				var formData = [[${transPaymodeVo}]];
+				formData.amount = tmpAmount
+				postWithFormData(/*[[@{/changePremium3}]]*/, formData);
+			});
+			var transformationRemark = /*[[${transformationRemark}]]*/;
+			if (transformationRemark!= undefined && transformationRemark != null && transformationRemark != ''){
+				$("#remark").html(transformationRemark);
+			}
+	    });
+
+	    function checkDecimal(str) {
+            var re1 =/^[0-9]+(\.[0-9]{n})?$/;
+            if(!re1.test(str))
+             {
+                return false
+             }
+             return true;
+        }
+		/*]]>*/
+		</script>
+</body>
+
+</html>

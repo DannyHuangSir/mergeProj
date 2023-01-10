@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>收益分配或撥回資產分配方式｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">收益分配或撥回資產分配方式</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 收益分配或撥回資產分配方式
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+                        1<span class="hid1">. 選擇保單</span>
+                    </li>
+                    <li class="step2 active col-xs-4">
+                        2<span class="hid1">. 變更給付方式</span>
+                    </li>
+                    <li class="step3 col-xs-4">
+                        3<span class="hid1">. 確認資料</span>
+                    </li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請設定變更給付方式</h2>
+                <div class="loan1">
+                    <label for="checkBox12" class="col-sm-10 col-sm-offset-2 enNormal">保單號碼： <span class="colorBlack"><th:block th:text="${transCashPaymentVo.policyNo}"/></span></label>
+                    <label for="checkBox12" class="col-sm-10 col-sm-offset-2 enNormal">保單名稱： <span class="colorBlack">
+						<th:block th:text="${transCashPaymentVo.policyNo != null and userInfo.productNameMap != null}
+							? ${userInfo.productNameMap[transCashPaymentVo.policyNo]}"/>
+					</span></label>
+					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+						<div class="col-sm-12" text-align="left">
+							<label for="" class="col-sm-6 colorGreen" style="padding-left:0px;">保單原撥回方式：</label>
+							<div class="col-sm-6" style="padding-left:0px;">
+								<th:block th:if="${preAllocation == '1'}">現金給付</th:block>
+								<th:block th:if="${preAllocation == '2'}">增加投資標的單位數</th:block>
+							</div>
+						</div>
+                        <div class="col-sm-12 mode2select">
+                            <label for="" class="col-sm-6 colorGreen">收益分配或撥回資產分配方式：</label>
+							<div class="selector-box col-sm-6">
+								<select class="selector" name="allocation" onchange="allocation()">
+									<option></option>
+									<option th:if="${preAllocation != '1'}" value="1">現金給付</option>
+									<option th:if="${preAllocation != '2'}" value="2">增加投資標的單位數</option>
+								</select>
+							</div>
+                       </div>
+                    </div>
+                    <div class="clearfix" style="margin-bottom: 30px;"></div>
+					<div class="col-sm-8 col-sm-offset-2">
+						<div class="tabs">
+							<!-- TAB 1 -->
+							<article id="tab_3" class="tab">
+
+							</article>
+							<!-- TAB 2 -->
+							<article class="tab" id="tab_4" style="display: none;">
+								<section id="tab_frame_print1" class="tab-frame">
+									<div class="arrow-upleft"></div>
+									<div class="grey2">
+										<div class="check-title depo2">帳戶內容</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">Swift Code</label>
+											<div class="col-sm-9"><input placeholder="臺幣保單不需輸入" id="swiftCode" type="text" class="col-sm-6"> </div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">英文戶名</label>
+											<div class="col-sm-9"><input placeholder="臺幣保單不需輸入" id="englishName" type="text" class="col-sm-6"> </div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">帳戶名稱</label>
+											<div class="col-sm-8 gray">
+												<th:block th:text="${proposer}"/>
+												<input type="hidden" id="accountName" name="accountName" th:value="${proposer}"/>
+											</div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">銀行名稱</label>
+											<div class="col-sm-3">
+												<div class="selector-box">
+													<select class="selector" id="bankOpt" name="bankOpt">
+													</select>
+												</div>
+											</div>
+											<label for="" class="col-sm-2">分行名稱</label>
+											<div class="col-sm-3">
+												<div class="selector-box">
+													<select class="selector" id="brancheOpt" name="brancheOpt" >
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="check-list2 grey2">
+											<label for="" class="col-sm-3">帳號</label>
+											<div class="col-sm-9"><input type="text" id="bankAccount" class="col-sm-11"> </div>
+										</div>
+									</div>
+								</section>
+								<p class="text-ps">帳戶名稱由系統帶出，且無法更改。</p>
+							</article>
+						</div>
+					</div>
+					<div class="statement1 wht col-sm-8 col-sm-offset-2">
+						<p class="text-ps">備註：</p>
+						<ol class="text-ps" id="remark"></ol>
+					</div>
+                </div>
+				<div class="col-md-8 col-md-offset-2 two-buttons">
+					<a href="cashPayment1"><button id="deny" class="btn-signup">上一步</i></button></a>
+					<button id="go" class="btn-signup">下一步</i></button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			$('#go').click(function() {
+				// 檢核是否有選一筆資料
+				let selected = $("[name='allocation'] option:selected").val()
+				if (selected == null || selected == '') {
+					openAlert("請選擇分配方式");
+					return false;
+				}
+
+				var formData = {};
+				formData.policyNo = [[${transCashPaymentVo.policyNo}]]
+				formData.allocation = selected
+				formData.preAllocation = [[${preAllocation}]]
+
+				if ($("#tab_4").is(':visible')) {
+					if ([[${transCashPaymentVo.currency}]] != 'NTD') {
+						if ($('#swiftCode').val() == '') {
+								openAlert("請輸入Swift Code");
+								return false;
+							}
+						if ($('#englishName').val() == '') {
+							openAlert("請輸入英文戶名");
+							return false;
+						}
+						formData.englishName = $('#englishName').val()
+						formData.swiftCode = $('#swiftCode').val()
+					}
+					if ($('#bankOpt').val() == '') {
+						openAlert("請選擇銀行");
+						return false;
+					}
+					if ($('#brancheOpt').val() == '') {
+						openAlert("請選擇分行");
+						return false;
+					}
+					if ($('#bankAccount').val() == '') {
+						openAlert("請輸入帳號");
+						return false;
+					}
+					if (!/^\d+$/.test($('#bankAccount').val())) {
+						openAlert('銀行帳號僅為數字');
+						openAlert($('#E0053').val());
+						return false;
+					}
+					formData.bankAccount = $('#bankAccount').val()
+					formData.bankName = $('#bankOpt option:selected').text()
+					formData.bankCode = $('#bankOpt option:selected').val()
+					formData.branchName = $('#brancheOpt option:selected').text()
+					formData.branchCode = $('#brancheOpt option:selected').val()
+					formData.accountName = $('#accountName').val()
+				}
+				postWithFormData(/*[[@{/cashPayment3}]]*/, formData);
+			});
+
+			//銀行下拉選單
+			var bankUrl = /*[[@{/getBankList}]]*/;
+			var branchesUrl = /*[[@{/getBranchesList}]]*/;
+			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+
+			var transformationRemark = /*[[${transformationRemark}]]*/;
+			if (transformationRemark!= undefined && transformationRemark != null && transformationRemark != ''){
+				$("#remark").html(transformationRemark);
+			}
+	    });
+
+	    function allocation(){
+			if($('select[name="allocation"]').val() == '1'){
+				$("#tab_4").show()
+			}else{
+				$("#tab_4").hide()
+			}
+		}
+		/*]]>*/
+		</script>
+</body>
+
+</html>
