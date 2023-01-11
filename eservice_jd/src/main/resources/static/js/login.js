@@ -23,29 +23,12 @@ window.fbAsyncInit = function() {
 	fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
-function checkGDPR(){
-	var rtn = false;
-	var euNationality = $('input[name="euNationality"]:checked').val();
-	if (euNationality == '' || euNationality == null) {
-		//openAlert('請點選本人是否具有歐盟國會員國之國籍或是否居住於歐盟地區');
-		openAlert($('#E0134').val());
-		return false;
-	}else{
-		$('#loginForm #euNationality').val(euNationality);
-		rtn =  true;
-	}
-	return rtn;
-}
 
 function checkLoginState() {
 	//非使用帳號密碼登入，清空用戶名稱及密碼欄
 	$('#userId').val("");
 	$('#password').val("");
-	
-	if(!checkGDPR()){
-		return;
-	}
-	
+
 	if (location.protocol != 'https:') {
 		//openAlert("非安全性網站無法使用facebook登入功能!");
 		openAlert($('#E0004').val());
@@ -94,35 +77,6 @@ function statusChangeCallback(response) {
 		alert("Facebook未成功登入，請重新登入!");
 	}
 }
-
-// custom fb login button
-function fb_login() {
-	//非使用帳號密碼登入，清空用戶名稱及密碼欄
-	$('#userID').val("");
-	$('#password').val("");
-	
-	if(!checkGDPR()){
-		return;
-	}
-	
-	// FB 第三方登入，要求公開資料與email
-	FB.login(function(response) {
-		// statusChangeCallback(response);
-		//console.log(response);
-		removeLoading();
-	}, {
-		scope : 'public_profile,email'
-	});
-}
-
-function fb_logout() {
-	FB.logout(function(response) {
-		// Person is now logged out
-
-	});
-}
-
-
 /**憑證登入功能**/
 var postTarget;
 var timeoutId;
@@ -508,49 +462,5 @@ function onInited(code) {
 function submitCert() {
 	popupLoading();
 	makeSignature();
-}
-
-function openIcModal() {
-	return false;//disable MOICA login
-	//非使用帳號密碼登入，清空用戶名稱及密碼欄
-	$('#userId').val("");
-	$('#password').val("");
-	
-	if ($('#validateCode').val() == '') {
-		//openAlert('請輸入圖形驗證碼');
-		openAlert($('#E0008').val());
-		return false;
-	}
-	
-	if(!checkGDPR()){
-		return;
-	}
-	
-	$.ajax({
-		type : 'POST',
-		contentType : 'application/json',
-		url : '/eservice/preCheckkValidateCode',
-		data : $('#validateCode').val(),
-		success : function(response) {
-			//console.log(response);
-			if(response.resultMsg != ""){
-				openAlert(response.resultMsg);
-				$('#validateCode').val("");
-				return;
-			} else {
-				$('#icCardModal').modal('show');
-				setTimeout(function(){
-				    $('input[name=icpwd]').focus();
-				}, 0);
-			}
-		},
-		error : function() {
-			/* openAlert('系統發生錯誤!'); */
-            openAlert($('#E0018').val());
-		},
-        complete: function(data) {
-            removeLoading();
-        }
-	});
 }
 /* ]]> */

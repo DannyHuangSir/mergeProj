@@ -72,14 +72,6 @@ public class LoginController extends BaseController {
 				loginRequestVo.setSessionValidateCode((String) validateCodeObj);
 			}
 
-			//SR_GDPR
-			if("".equals(StringUtils.trimToEmpty(loginRequestVo.getEuNationality()))) {
-				String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0134");
-				addAttribute("errorMessage", errorMessage);
-				addAuditLog(userId, "0", "");
-				return "login";
-			}
-
 			//decrypt pw,retset to loginRequestVo-start
 			String encryptPw = loginRequestVo.getPassword();
 			String decryptPw = decodeBase64(encryptPw);
