@@ -8,7 +8,6 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 /* War   */
 @SpringBootApplication
-@MapperScan(basePackages = {"com.twfhclife.eservice.web.dao"})
 public class Application extends SpringBootServletInitializer {
 
     @Override

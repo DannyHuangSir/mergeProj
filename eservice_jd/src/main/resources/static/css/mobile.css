@@ -1,0 +1,134 @@
+.mobileStriped .tablesaw-cell-label,
+.mobileThStriped{
+	display: none;
+}
+.table .form-control-sm{
+	padding: 0 !important;
+}
+@media (min-width: 992px){
+	#advancedSearch .modal-lg,
+	#advancedSearch-1 .modal-lg{
+		max-width: 85%;
+	}
+	#g .modal-lg,
+	#a .modal-lg,
+	#f .modal-lg{
+	    max-width: 1000px;
+	}
+}
+@media screen and (max-width: 991px){
+	.mobile .card-body,
+	.mobile .card-body .chart-container{
+		padding: 0 !important;
+	}
+	.ThStriped{
+		display: none;
+	}
+	.mobileThStriped{
+		display: inline-block;
+	}
+	.mobileThStriped th{
+		min-width: 120px;
+	}
+	
+	.mobileThStriped td .form-check .form-radio-label{
+		width: 80%;
+	}
+	
+	.mobileStriped>thead{
+		display:none;
+	}
+	.mobileStriped>tbody{
+		font-size: 1rem;
+	}
+	.mobileStriped .tablesaw-cell-label{
+		display: inline-block;
+		float: left;
+		line-height: 28px;
+		width: 40%;
+		font-weight: 200;
+		/*color: #009b72;*/
+	}
+	.mobileStriped.thcolor .tablesaw-cell-label{
+		color: #009b72;
+	}
+	.mobileTbodyTh.mobile tbody>tr{
+		display: table;
+		width: 100%;
+		overflow: hidden;
+	}
+	.mobileTbodyTh.mobile tbody>tr>th{
+		display: table-cell;
+        word-wrap: break-word;
+		float: left;
+		width: 100px;
+		padding-bottom:100000px;
+		margin-bottom:-99990px;
+	}
+	.mobileTbodyTh.mobile tbody>tr>td{
+		display: table-cell;
+        word-wrap: break-word;
+		width:calc(100% - 100px);
+		float: left;
+		padding-bottom:100000px;
+		margin-bottom:-99990px;
+	}
+	.mobileTbodyTh.mobile td>.form-check>label,
+	.mobileTbodyTh.mobile td .input-group,
+	.mobileTbodyTh.mobile td .form-control{
+		max-width: 100% !important;
+	}
+	.mobileTbodyTh.mobile td .form-control-sm{
+		padding: 0 !important;
+	}
+	.mobileStriped tbody tr{
+		display: block;
+		border-top:1px solid #dee2e6;
+		overflow: hidden; 
+		*zoom: 1;
+	}
+	.mobileStriped tbody td{
+		display: block;
+		width:100%;
+		padding: .3rem .8rem;
+		border-top:0;
+		line-height: 28px;
+		overflow: hidden; 
+		*zoom: 1;
+	}
+	.mobileStriped td div.form-check,
+	.mobileStriped td>div,
+	.mobileStriped td>select,
+	.mobileStriped td>span{
+		display: inline-block;
+		/*float: right;*/
+        width: 60%;
+        line-height: 28px;
+	}
+	.mobileStriped td>div input{
+		width: 100% !important;
+		/*padding: 0 !important;*/
+	}
+	.mobileStriped td.bg-primary b{
+		color: #FFFFFF
+	}
+	/*.table td>.form-check>label{
+		min-width: 50px;
+	}*/
+	.mobileStriped.table-bordered-bd-default td, 
+	.mobileStriped.table-bordered-bd-default th{
+		border-bottom: 0 !important;
+		border-top: 0 !important;
+	}
+	
+	.mobileStriped .doubleDownList{
+		height: auto;
+	}
+	.mobileStriped tr.doubleDownList>td.doubleDown{
+		display: none;
+	}
+	.mobileStriped tr.doubleDownList td:last-child span{
+		display: inline-block;
+	}
+	
+}
