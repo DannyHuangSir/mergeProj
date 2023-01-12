@@ -174,4 +174,7 @@ public interface ApConstants {
 	public static final String DEPOSIT_TRANS_REMARK = "DEPOSIT_TRANS_REMARK";
 
 	public static final String PROCESS_INVESTMENT_LIST = "PROCESS_INVESTMENT_LIST";
+	public static final String WORDING_NA201 = "WORDING_NA201";
+
+	public static final String WORDING_NA202 = "WORDING_NA202";
 }

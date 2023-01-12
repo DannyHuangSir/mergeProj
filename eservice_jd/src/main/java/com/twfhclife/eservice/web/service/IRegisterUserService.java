@@ -32,7 +32,7 @@ public interface IRegisterUserService {
 	
 	public UsersVo getUserByAccount(String account);
 	
-	public void updatePassword(String account, String newPassword) throws Exception;
+	public String updatePassword(String account, String newPassword) throws Exception;
 	
 	public UsersVo getUserByFbId(String fbId);
 	

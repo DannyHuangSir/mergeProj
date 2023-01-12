@@ -3,6 +3,7 @@ package com.twfhclife.eservice.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.twfhclife.eservice.web.domain.HttpResponseVo;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -18,11 +19,13 @@ import org.apache.logging.log4j.Logger;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.token.TokenManager;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -309,5 +312,43 @@ public class KeycloakRestUtil {
 			logger.error(e.getMessage(), e);
 		}
 		return httpResponseVo;
+	}
+
+	protected final String URI_RESET_PWD = "/admin/realms/{realm}/users/{userId}/reset-password";
+
+	public Map<String, Object> resetPwdByRest(String realm, String userId, String newPwd) {
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			// set path parameters
+			Map<String, String> pathParams = new HashMap<>();
+			pathParams.put("realm", realm);
+			pathParams.put("userId", userId);
+
+			// set post parameters
+			Map<String, String> postParams = new HashMap<>();
+			postParams.put("type", "password");
+			postParams.put("temporary", "false");
+			postParams.put("value", newPwd);
+
+			HttpResponseVo httpResponseVo = this.putApi(URI_RESET_PWD, pathParams, postParams, true);
+			int statusCode = httpResponseVo.getStatusCode();
+			if (statusCode >= 200 && statusCode <= 226) {
+				resultMap.put("result", "true");
+			} else if(statusCode == 400) {
+				//Bad request
+				String body = httpResponseVo.getResponseBody();
+				if (body != null) {
+					JacksonJsonParser jjp = new JacksonJsonParser();
+					resultMap = jjp.parseMap(body);
+				}
+				resultMap.put("result", "false");
+			} else {
+				resultMap.put("result", "false");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to loginUser: {}", ExceptionUtils.getStackTrace(e));
+			resultMap.put("result", "false");
+		}
+		return resultMap;
 	}
 }

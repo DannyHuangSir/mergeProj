@@ -12,6 +12,9 @@ public class ErrorInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		int status = response.getStatus();
+		if (modelAndView == null) {
+			modelAndView = new ModelAndView();
+		}
 		if (status == 500) {
 			modelAndView.setViewName("/frontstage/500");
 		} else if (status == 404) {
@@ -20,5 +23,4 @@ public class ErrorInterceptor extends HandlerInterceptorAdapter {
 			modelAndView.setViewName("/frontstage/405");
 		}
 	}
-
 }

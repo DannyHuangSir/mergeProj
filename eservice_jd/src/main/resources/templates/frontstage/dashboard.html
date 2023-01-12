@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=9, chrome=1">
@@ -19,126 +18,8 @@
 
 <body>
 <div class="wrapper">
-	<div class="main-header">
-		<div class="row hid1" id="top1"></div>
-		<!-- Logo Header -->
-		<div class="logo-header">
-			<a href="index.html" class="logo">
-				<img th:src="@{/img/my-logo.png}" height="50px" alt="navbar brand" class="navbar-brand">
-			</a>
-			<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon">
-					<i class="bi bi-grid-1x2"></i>
-				</span>
-			</button>
-			<button class="topbar-toggler more"><i class="bi bi-grip-horizontal"></i></button>
-			<div class="nav-toggle">
-				<button class="btn btn-toggle toggle-sidebar">
-					<i class="bi bi-grid-1x2"></i>
-				</button>
-			</div>
-		</div>
-		<div class="n1 inlineBlock float-left">經代專區</div>
-		<!-- End Logo Header -->
-
-		<!-- Navbar Header -->
-		<nav class="navbar navbar-header navbar-expand-lg hello1-list">
-			<div class="hello1-list">
-				<div class="list members">
-					<a href="#" class="b3">
-						<img th:src="@{/img/icon-members.png}" width="26" alt="member">
-					</a>
-				</div>
-				<div class="list hid2">Hi, (使用者名字) 您好</div>
-				<div class="list marginRight20">
-					<a href="#"  data-target="#notification" data-toggle="popover" data-width="520" data-scroll-height="200" data-class="to-right" data-content="43greyrtu" data-placement="bottom" class="b3" data-original-title="" title=""><span class="badge b4 pull-right">4</span>我的通知</a>
-				</div>
-				<div class="list">
-					<a href="index.html">
-						<button class="btn-login pull-right">登出</button>
-						<button class="pull-right btn-reset">
-							<div class="rp1"><i class="foo-cw"></i>293秒</div>
-						</button>
-					</a>
-				</div>
-			</div>
-			<div id="notification" class="popover-template">
-				<div class="title">
-					線上通知
-					<span class="note"><em class="badge">2</em>封未讀取</span>
-					<a class="close">×</a>
-					<a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true" aria-controls="popoverSearchBar" class="pull-right">
-						<i class="fa fa-search orange"></i>
-					</a>
-				</div>
-				<div class="collapse grey" id="popoverSearchBar">
-					<div class="searchbar">
-						<form class="form-inline" aria-expanded="true">
-							<div class="col-sm-3">
-								<div class="selector-box">
-									<select class="selector">
-										<option>通知種類</option>
-										<option>種類111111111</option>
-										<option>種類2222222222</option>
-										<option>種類3</option>
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div class="selector-box">
-									<select class="selector">
-										<option>未讀取1111111</option>
-										<option>已讀取2222222</option>
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-4 text-right">
-								<div class="selector-box">
-									<select class="selector">
-										<option>通知月份</option>
-										<option>2015/一月</option>
-										<option>2015/二月</option>
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<button class="btn-form btn-search">搜尋</button>
-							</div>
-						</form>
-					</div>
-				</div>
-
-				<div class="searchResult">
-					<p class="">查無符合資料，請重新搜尋</p>
-				</div>
-
-				<div class="items">
-					<a href="#" class="item">
-						<div class="header">
-							<em>案件狀態通知</em> 新契約（OU1005）已完成
-						</div>
-						<div class="content text-right">
-							<small>2020年/12月份</small>
-						</div>
-					</a>
-					<a href="#" class="item">
-						<div class="header">
-							<em>案件狀態通知</em> 新契約（OU1003）照會中
-						</div>
-						<div class="content text-right">
-							<small>2015年/1月份</small>
-						</div>
-					</a>
-
-				</div>
-				<p>※本畫面僅提供一年內之通知資料查詢</p>
-			</div>
-
-		</nav>
-		<!-- End Navbar -->
-
-	</div>
-
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
 	<!-- Sidebar -->
 	<div class="sidebar sidebar-style-2">
 		<div class="sidebar-wrapper scrollbar scrollbar-inner">
@@ -158,7 +39,7 @@
 									</a>
 								</li>
 								<li>
-									<a href="change-password1.html">
+									<a href="changePassword1">
 										<span class="sub-item">變更密碼</span>
 									</a>
 								</li>
@@ -344,6 +225,8 @@
 <!--popover-->
 <script th:src="@{/plugin/scrollbar.js}"></script>
 <script th:src="@{/js/popover.js}"></script>
+<script th:src="@{/js/eservice/timer.js}"></script>
+<script th:src="@{/plugin/timer.jquery.js}"></script>
 <script>
         var doughnutChart = document.getElementById('doughnutChart').getContext('2d'),
             doughnutChart2 = document.getElementById('doughnutChart2').getContext('2d');

@@ -763,6 +763,13 @@ body {
   padding-top: 90px;
   right: 0;
   transition: all .3s; }
+
+.main-body {
+  position: fixed;
+  padding-top: 90px;
+  width: 100%;
+  transition: all .3s; }
+
 .CaseInquiry  .main-panel > .content {
     width: 100%;
     height: calc(100% - 30px);

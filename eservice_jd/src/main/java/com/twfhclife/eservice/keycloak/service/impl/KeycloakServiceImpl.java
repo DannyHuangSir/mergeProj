@@ -350,4 +350,31 @@ public class KeycloakServiceImpl extends AbstractKeycloakService implements Keyc
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public Map<String, Object> resetPwd(String realm, String userId, String password) {
+		Map<String, Object> map = kutil.resetPwdByRest(realm, userId, password);
+		if(map != null) {
+			if(map.get("result").equals("true")) {
+				// 需同時更新user attribute
+				UserRepresentation user = findByUserId(realm, userId);
+
+				Map<String, List<String>> attributes = user.getAttributes();
+				try {
+					attributes.put("idp", Arrays.asList(new String[] { EncryptionUtil.Encrypt(password) }));
+				} catch (Exception e) {
+					logger.error("EncryptionUtil error." + e.getMessage());
+				}
+				user.setAttributes(attributes);
+				updateUser(realm, userId, user);
+			} if(map.get("error") != null && map.get("error").equals("invalidPasswordHistoryMessage")) {
+				logger.info("invalidPasswordHistoryMessage: error="+map.get("error")+", error_description="+map.get("error_description"));
+				//密碼不可與過去重複
+				//map.put("error","invalidPasswordHistoryMessage");
+				//map.put("error_message","密碼不可與最近3次相同");
+				//resultString={"error":"invalidPasswordHistoryMessage","error_description":"Invalid password: must not be equal to any of last 3 passwords."}
+			}
+		}
+
+		return map;
+	}
 }

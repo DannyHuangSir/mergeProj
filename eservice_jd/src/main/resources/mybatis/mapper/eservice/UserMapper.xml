@@ -22,8 +22,8 @@
 	</resultMap>
 	
 	<sql id="User_Column_List">
-		u.user_id,u.roc_id,ESERVICE.DBO.FN_DEBASE64(u.mobile) mobile,ESERVICE.DBO.FN_DEBASE64(u.email) email,u.login_fail_count,u.last_chang_password_date,
-		u.sms_flag,u.mail_flag,u.fb_id,u.moica_id,u.user_type,u.create_date,u.create_user,
+		u.user_id,u.roc_id,ESERVICE_JD.DBO.FN_DEBASE64(u.mobile) mobile,ESERVICE_JD.DBO.FN_DEBASE64(u.email) email,u.login_fail_count,u.last_chang_password_date,
+		u.sms_flag,u.mail_flag,u.fb_id,u.moica_id,u.user_type,u.create_date,u.create_user, u.user_name username,
 		u.online_flag, u.login_fail_count, u.status
 	</sql>
 
@@ -31,14 +31,14 @@
 		SELECT TOP 1
 		    <include refid="User_Column_List" />
 		FROM
-			ESERVICE.DBO.USERS u
+			ESERVICE_JD.DBO.USERS u
 		WHERE
 		    u.roc_id = #{rocId}
 	</select>
 	
 	<insert id="createUser" parameterType="com.twfhclife.eservice.web.model.UsersVo">
-		insert into 
-		ESERVICE.DBO.USERS 
+		insert into
+		ESERVICE_JD.DBO.USERS
 		(user_id,
 		roc_id,
 		mobile,
@@ -53,8 +53,8 @@
 		VALUES (
 		lower(#{vo.userId,jdbcType=VARCHAR}),
 		#{vo.rocId,jdbcType=VARCHAR},
-		ESERVICE.DBO.FN_ENBASE64(#{vo.mobile,jdbcType=VARCHAR}),
-		ESERVICE.DBO.FN_ENBASE64(#{vo.email,jdbcType=VARCHAR}),
+		ESERVICE_JD.DBO.FN_ENBASE64(#{vo.mobile,jdbcType=VARCHAR}),
+		ESERVICE_JD.DBO.FN_ENBASE64(#{vo.email,jdbcType=VARCHAR}),
 		0,
 		getdate(),
 		#{vo.smsFlag,jdbcType=VARCHAR},
@@ -64,44 +64,34 @@
 		#{vo.userId,jdbcType=VARCHAR}
 		)
 	</insert>
-	
-	<insert id="createUserRole" parameterType="com.twfhclife.eservice.web.model.UserRoleVo">
-		INSERT INTO 
-		ESERVICE_ADM.DBO.USER_ROLE 
-		(USER_ID, ROLE_ID) 
-		VALUES (
-			#{vo.userId},
-			(SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE WHERE DESCRIPTION = #{vo.userType})
-		)
-	</insert>
-	
+
 	<select id="getUserByAccount" resultMap="UsersMap" parameterType="java.lang.String">
 		SELECT 
 			<include refid="User_Column_List" />
-		FROM 
-			ESERVICE.DBO.USERS u
+		FROM
+		ESERVICE_JD.DBO.USERS u
 		WHERE
 			LOWER(u.USER_ID) = LOWER(#{account})
 	</select>
 	
 	<update id="updatePassword" parameterType="java.lang.String">
-		update ESERVICE.DBO.USERS set 
+		update ESERVICE_JD.DBO.USERS set
 		last_chang_password_date = getdate()
 		where lower(user_id) = lower(#{account})
 	</update>
 	
 	<update id="updateUserType" parameterType="java.lang.String">
-		update ESERVICE.DBO.USERS set 
+		update ESERVICE_JD.DBO.USERS set
 		user_type = #{userType}
 		where lower(user_id) = lower(#{account})
 	</update>
 	
 	<!-- 變更基本資料 -->
 	<update id="updateCustInfo">
-		UPDATE ESERVICE.DBO.USERS
+		UPDATE ESERVICE_JD.DBO.USERS
 		<set>
-			<if test="usersVo.mobile != null and usersVo.mobile != ''"> MOBILE = ESERVICE.DBO.FN_ENBASE64(#{usersVo.mobile}), </if>
-			<if test="usersVo.email != null and usersVo.email != ''"> EMAIL = ESERVICE.DBO.FN_ENBASE64(#{usersVo.email}), </if>
+			<if test="usersVo.mobile != null and usersVo.mobile != ''"> MOBILE = ESERVICE_JD.DBO.FN_ENBASE64(#{usersVo.mobile}), </if>
+			<if test="usersVo.email != null and usersVo.email != ''"> EMAIL = ESERVICE_JD.DBO.FN_ENBASE64(#{usersVo.email}), </if>
 			<if test="usersVo.smsFlag != null and usersVo.smsFlag != ''"> SMS_FLAG = #{usersVo.smsFlag}, </if>
 			<if test="usersVo.mailFlag != null and usersVo.mailFlag != ''"> MAIL_FLAG = #{usersVo.mailFlag}, </if>
 			<if test="usersVo.loginFailCount != null"> LOGIN_FAIL_COUNT = #{usersVo.loginFailCount}, </if>
@@ -110,26 +100,9 @@
 		WHERE
 			LOWER(USER_ID) = LOWER(#{usersVo.userId})
 	</update>
-	
-	<select id="getUserByFbId" resultMap="UsersMap" parameterType="java.lang.String">
-		select ue.ID USER_ID, ue.USERNAME USERNAME, ua1.VALUE FB_ID, ua2.VALUE ENCRYPTED_PWD
-			from ESERVICE_ADM.DBO.USER_ENTITY ue
-			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua1 on ue.ID=ua1.USER_ID and ua1.NAME='fb_id'
-			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua2 on ue.ID=ua2.USER_ID and ua2.NAME='idp'
-			where ue.REALM_ID=#{realm} 
-			and ua1.VALUE=#{fbId}
-	</select>
-	<select id="getUserByCardSn" resultMap="UsersMap" parameterType="java.lang.String">
-		select ue.ID USER_ID, ue.USERNAME USERNAME, ua1.VALUE CARD_SN, ua2.VALUE ENCRYPTED_PWD
-			from ESERVICE_ADM.DBO.USER_ENTITY ue
-			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua1 on ue.ID=ua1.USER_ID and ua1.NAME='card_sn'
-			left join ESERVICE_ADM.DBO.USER_ATTRIBUTE ua2 on ue.ID=ua2.USER_ID and ua2.NAME='idp'
-			where ue.REALM_ID=#{realm} 
-			and ua1.VALUE=#{cardSn}
-	</select>
-	
+
 	<insert id="createUserTerm" parameterType="com.twfhclife.eservice.web.model.UserTermVo">
-		INSERT INTO ESERVICE.DBO.USER_TERM
+		INSERT INTO ESERVICE_JD.DBO.USER_TERM
 		(ID, USER_ID, TERM_NAME, ACCEPT_DATE, MEMO) 
 		VALUES 
 		(
@@ -144,39 +117,16 @@
 	<select id="checkOldSystemUser" resultType="java.lang.Integer" parameterType="java.lang.String">
 	   SELECT 
 	       count(*) as data_count 
-       FROM 
-           ESERVICE.DBO.MEMBERS 
+       FROM
+		ESERVICE_JD.DBO.MEMBERS
 	   WHERE 
 	       MEMBERS_ID=#{rocId} 
-	     AND ESERVICE.DBO.FN_DEBASE64(MEMBERS_PASSWORD)=#{password}
-	</select>	
-	
-	<select id="getMailPhoneByRocid" resultMap="UsersMap" parameterType="java.lang.String">
-		select lipm_id roc_id, pmda_applicant_email email, pmda_applicant_cellphone mobile from ESERVICE.DBO.lilipm
-		join eservice.dbo.lipmda_es on lipm_insu_no = (PMDA_INSU_TYPE + CONVERT(VARCHAR, PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) 
-		where lipm_id = #{rocId}
-		union all
-		select lipi_id roc_id, pmda_insured_email email, pmda_insured_cellphone mobile from ESERVICE.DBO.lilipi
-		join eservice.dbo.lipmda_es on lipi_insu_no = (PMDA_INSU_TYPE + CONVERT(VARCHAR, PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO)
-		where lipi_id = #{rocId}
+	     AND ESERVICE_JD.DBO.FN_DEBASE64(MEMBERS_PASSWORD)=#{password}
 	</select>
-	
-	<select id="getMailPhoneByRocidPolicyNo" resultMap="UsersMap" parameterType="java.lang.String">
-        SELECT DISTINCT TOP 1
-            LIPM_ID AS roc_id, PMDA_APPLICANT_EMAIL AS email, PMDA_APPLICANT_CELLPHONE AS mobile
-        FROM 
-            ESERVICE.DBO.LILIPM LIPM 
-		JOIN 
-            LIPMDA_ES 
-                ON LIPM_INSU_NO = (PMDA_INSU_TYPE + CONVERT(VARCHAR, PMDA_INSU_GRP_NO) + PMDA_INSU_SEQ_NO) 
-		WHERE 
-            LIPM_ID = #{rocId}
-            AND LIPM_INSU_NO = #{policyNo}
-	</select>
-	
+
 	<!-- 變更基本資料 -->
 	<update id="updateOnlineFlagY">
-		UPDATE ESERVICE.DBO.USERS
+		UPDATE ESERVICE_JD.DBO.USERS
 			set online_flag = 'Y'
 		WHERE
 			LOWER(USER_ID) = LOWER(#{userId})

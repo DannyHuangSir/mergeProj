@@ -6,6 +6,7 @@ import com.twfhclife.eservice.api_client.KeycloakRegisterClient;
 import com.twfhclife.eservice.api_client.SsoClient;
 import com.twfhclife.eservice.api_model.ApiResponseObj;
 import com.twfhclife.eservice.api_model.ReturnHeader;
+import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserAddRequest;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserResetPwdRequest;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserResponse;
@@ -196,22 +197,26 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		return user;
 	}
 
-	public void updatePassword(String account, String password) throws Exception {
-		// call keycloak
-		KeycloakUserResetPwdRequest apiReq = new KeycloakUserResetPwdRequest();
-		apiReq.setUsername(account);
-		apiReq.setNewPassword(password);
-		ApiResponseObj<?> resp = keycloakRegisterClient.resetPassword(apiReq);
-		ReturnHeader returnHeader = resp.getReturnHeader();
-		if (ReturnHeader.SUCCESS_CODE.equals(returnHeader.getReturnCode())) {
-			userDao.updatePassword(account);
+	public String updatePassword(String account, String password) throws Exception {
+		KeycloakUser user = keycloakService.getUserByUsername(account);
+		if(user == null) {
+			return "使用者帳號不存在";
 		} else {
-			if (returnHeader.getReturnMesg().indexOf("Invalid password: must not be equal to any of last") != -1) {
-				int end = returnHeader.getReturnMesg().indexOf(" passwords.");
-				String msg = "密碼不可與前" + returnHeader.getReturnMesg().substring(end-1, end) + "次相同";
-				throw new InvalidParameterException(msg);
+			Map<String, Object> resultmap = keycloakService.resetPwd(DEFAULT_REALM, user.getId(), password);
+			String result = resultmap.get("result").toString();
+			if(result.contentEquals("true")) {
+				logger.debug("update password success!");
+				userDao.updatePassword(account);
+				logger.debug("update last password date success!");
+			} else {
+				if(resultmap.get("error_description") != null) {
+					return resultmap.get("error_description").toString();
+				} else {
+					return "error";
+				}
 			}
 		}
+		return "success";
 	}
 
 	public UsersVo getUserByFbId(String fbId) {

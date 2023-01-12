@@ -5,6 +5,7 @@ import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 
 import java.util.List;
+import java.util.Map;
 
 public interface KeycloakService {
 	
@@ -43,4 +44,5 @@ public interface KeycloakService {
 
 	KeycloakLoginResponse loginByMoica(String moicaId, String ca, String realm, String clientId);
 
+	Map<String, Object> resetPwd(String realm, String userId, String password);
 }

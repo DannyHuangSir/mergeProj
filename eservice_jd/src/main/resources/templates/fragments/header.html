@@ -1,413 +1,137 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-	<div th:fragment="top" class="row hid1" id="top1">
-		<div class="container">
-			<button class="btn pull-right user1" type="button">商業 Business</button>
-			<button class="btn pull-right user1 active" type="button">個人 Personal</button>
-		</div>
-	</div>
-	<header th:fragment="header">
-		<div class="container">
-			<div class="row">
-				<th:block th:replace="fragments/logo"/>
-				<div class="n1 inlineBlock float-left">保單網路服務</div>
-				<div class="clearfix visible-xs-block"></div>
-				<div class="hello1-list">
-					<th:block th:if="${session.USER_DETAIL != undefined}"> 
-						<div class="list members">
-							<a href="#" onclick="toggleRole()" class="b3">
-								<i class="foo-role"></i>
-							</a>
-							<div id="members" class="popover fade bottom in" style="display: none;">
-								<div class="arrow" style="left: 73.6095%;"></div>
-								<div class="title members">
-									<span class="note">切換臺銀人壽會員身份：</span>
-									<a class="close" onclick="toggleRole()">×</a>
-								</div>
-								<div class="items">
-										<th:block> 	
-											<div class="item-list">
-												<i class="foo-proposer"></i>
-												<div class="CheckboxForm">
-													<label for="proposer">要保人身份</label> 
-													<input type="checkbox" class="form-checkbox" id="proposer" style="margin-top: 7px;"  
-													th:disabled = "${!session.USER_DETAIL.identity.lilipm}"  onclick="identity(this)">
-												</div>
-											</div>
-											<div class="item-list">
-												<i class="foo-insured"></i>
-												<div class="CheckboxForm">
-													<label for="insured">被保人身份</label>
-													<input type="checkbox" class="form-checkbox" id="insured" style="margin-top: 7px;" 
-													th:disabled = "${!session.USER_DETAIL.identity.lilipi}" name="insured"  onclick="identity(this)">
-												</div>
-											</div>
-										</th:block> 
-								</div>
-							</div>
-						</div>
-				    </th:block>
-					<div class="list hid2">
-						Hi, (
-						<th:block th:if="${loginUserType eq 'member'}">
-							<th:block th:if="${session.USER_DETAIL == null}">
-								<th:block th:text="${session.LOGIN_USER_ID}"/>
-							</th:block>
-							<th:block th:if="${session.USER_DETAIL != null}">
-								<span th:switch="${session.USER_DETAIL.userNameBase64} != ''"> 
-									<span th:case="${true}">
-										<img th:width="${session.USER_DETAIL.userName != null} ? ${#strings.length(session.USER_DETAIL.userName) * 20}" height="25px" th:src="|data:image/svg+xml;base64, ${session.USER_DETAIL.userNameBase64}|" />
-									</span>
-									<span th:case="${false}">
-										<th:block th:text="${session.USER_DETAIL.userName != null}  ? ${session.USER_DETAIL.userName}"/>
-									</span>
-								</span>
-							</th:block>
-						</th:block>
-						<th:block th:if="${loginUserType eq 'admin'}">
-							<th:block th:if="${session.ADMIN_QUERY_LILIPM != null}">
-								<span th:switch="${session.ADMIN_QUERY_LILIPM.lipmNameBase64} != ''"> 
-									<span th:case="${true}">
-										<img th:width="${session.ADMIN_QUERY_LILIPM.lipmName1 != null} ? ${#strings.length(session.ADMIN_QUERY_LILIPM.lipmName1) * 20}" height="25px" th:src="|data:image/svg+xml;base64, ${session.ADMIN_QUERY_LILIPM.lipmNameBase64}|" />
-									</span>
-									<span th:case="${false}">
-										<th:block th:text="${session.ADMIN_QUERY_LILIPM != null}  ? ${session.ADMIN_QUERY_LILIPM.lipmName1}"/>
-									</span>
-								</span>
-							</th:block>
-						</th:block>) 您好
-					</div>
-					<th:block th:if="${isPartnerUser}">
-						<div class="list">
-							<a href="partner" class="b3"><i class="foo-object_10 foo-1x "></i>回到保戶查詢頁</a>
-						</div>
-					</th:block>
-					<th:block th:if="${session.LAST_LOGIN_TIME != null}">
-						<div class="list hid2">
-							上次登入時間為：<th:block th:text="${#dates.format(session.LAST_LOGIN_TIME, 'yyyy/MM/dd HH:mm:ss')}"/>
-						</div>
-					</th:block>
-					<!--  
-					<th:block th:if="${showUserDataInfo}">
-						<div class="list marginRight20">
-							<a href="javascript:void(0)" data-target="#notification" data-toggle="popover" data-width="520" data-scroll-height="300" data-class="to-right" data-content=" " data-placement="bottom" class="b3" data-original-title="" title=""><span id="notificationNumber" class="badge b4 pull-right"><th:block th:text="${noticeBoardList} != null ? ${#lists.size(noticeBoardList)}"/></span>我的通知</a>
-						</div>
-					</th:block>
-					-->
-					<div id="logoutDiv" class="list" th:attr="data-timeout_seconds=${session.TIMEOUT_SECONDS}">
-						<a th:href="@{/doLogout}">
-							<button class="btn-login pull-right">登出</button>
-						</a>
-							<button id="logoutResetBtn" class="pull-right btn-reset">
-								<div class="rp1"><i class="foo-cw"></i>秒</div>
-							</button>
-						<form id="logoutForm" th:action="@{/doLogout}"></form>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- <div id="notification" class="popover-template">
-			<div class="title">
-				線上通知
-				<span class="note"><em id="notificationNotRead" class="badge"><th:block th:text="${notificationNotRead}"/></em>封未讀取</span>
-				<a class="close">×</a>
-				<a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true" aria-controls="popoverSearchBar" class="pull-right">
-					<i class="fa fa-search orange"></i>
-				</a>
-			</div>
-			<div class="collapse grey" id="popoverSearchBar">
-				<div class="searchbar">
-					<form class="form-inline" aria-expanded="true" onsubmit="return false;">
-						<div class="col-sm-3">
-							<div class="selector-box">
-								<select id="notificationSearchType" class="selector">
-									<option value="">通知種類</option>
-									<option value="">種類1</option>
-									<option value="">種類2</option>
-									<option value="">種類3</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-sm-3">
-							<div class="selector-box">
-								<select id="notificationSearchStatus" class="selector">
-									<option value="0">未讀取</option>
-									<option value="1">已讀取</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-sm-4 text-right">
-							<div class="selector-box">
-								<select id="notificationSearchMonth" class="selector">
-									<option value="">通知月份</option>
-									<th:block th:each="noticeMonth : ${noticeMonthList}">
-										<option th:value="${noticeMonth}">
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/01')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/01','/一月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/02')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/02','/二月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/03')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/03','/三月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/04')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/04','/四月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/05')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/05','/五月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/06')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/06','/六月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/07')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/07','/七月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/08')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/08','/八月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/09')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/09','/九月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/10')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/10','/十月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/11')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/11','/十一月')}"/>
-											</th:block>
-											<th:block th:if="${#strings.endsWith(noticeMonth,'/12')}">
-												<th:block th:text="${#strings.replace(noticeMonth,'/12','/十二月')}"/>
-											</th:block>
-										</option>
-									</th:block>
-								</select>
-							</div>
-						</div>
-						<div class="col-sm-2">
-							<button class="btn-form btn-search" onclick="getNoticeBoardList();">搜尋</button>
-						</div>
-					</form>
-				</div>
-			</div>
-			<div id="notificationItems" class="items">
-			<th:block th:if="${noticeBoardList} != null">
-			<th:block th:each="vo, rowStat : ${noticeBoardList}">
-				<a th:href="'javascript:showEstatmentModal(\'' + ${vo.id} + '\')'" class="item" style="cursor: pointer;">
-					<div class="header">
-						<em><th:block th:text="${vo.estatmentTitle}"/></em> 
-						<th:block th:text="${vo.estatmentSubtitle}"/>
-						<th:block th:if="${vo.status eq 0}"> 
-							<span th:id="'noticeNotRead_' + ${vo.id}" style="color: #007AB5">(未讀取)</span>
-						</th:block>
-					</div>
-					<div class="content text-right">
-						<small><th:block th:text="${vo.createDate} != null ? ${#dates.format(vo.createDate, 'yyyy年/MM月份')}"/></small>
-					</div>
-				</a>
-			</th:block>
-			</th:block>
-			</div>
-			<p>※本畫面僅提供一年內之通知資料查詢<br/>
-※『續期保險費通知書』的繳款單條碼若列印不清晰，將導致您無法於便利商店或郵局使用該繳款單繳費。如有相關需求，請與客服中心聯絡</p>
-		</div> -->
-	</header>
-
-	<div class="modal fade in" id="modal-container-roleConfirm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="margin-top: 200px;">
-            <div class="modal-content lock-up">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body apply2 center1 grey2">
-                    <h3>至少勾選一個！</h3>
-                </div>
+<header th:fragment="header">
+    <div class="main-header">
+        <div class="row hid1" id="top1"></div>
+        <!-- Logo Header -->
+        <div class="logo-header">
+            <a href="index.html" class="logo">
+                <img th:src="@{/img/my-logo.png}" height="50px" alt="navbar brand" class="navbar-brand">
+            </a>
+            <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
+                    data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon">
+					<i class="bi bi-grid-1x2"></i>
+				</span>
+            </button>
+            <button class="topbar-toggler more"><i class="bi bi-grip-horizontal"></i></button>
+            <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                    <i class="bi bi-grid-1x2"></i>
+                </button>
             </div>
         </div>
+        <div class="n1 inlineBlock float-left">經代專區</div>
+        <!-- End Logo Header -->
+
+        <!-- Navbar Header -->
+        <nav class="navbar navbar-header navbar-expand-lg hello1-list">
+            <div class="hello1-list">
+                <div class="list members">
+                    <a href="#" class="b3">
+                        <img th:src="@{/img/icon-members.png}" width="26" alt="member">
+                    </a>
+                </div>
+                <div class="list hid2">Hi, (
+                    <th:block th:if="${session.USER_DETAIL == null}">
+                        <th:block th:text="${session.LOGIN_USER_ID}"/>
+                    </th:block>
+                    <th:block th:if="${session.USER_DETAIL != null}">
+                        <th:block th:text="${session.USER_DETAIL.userName}"/>
+                    </th:block>
+                    ) 您好
+                </div>
+                <div class="list marginRight20">
+                    <a href="#" data-target="#notification" data-toggle="popover" data-width="520"
+                       data-scroll-height="200" data-class="to-right" data-content="43greyrtu"
+                       data-placement="bottom" class="b3" data-original-title="" title=""><span
+                            class="badge b4 pull-right">4</span>我的通知</a>
+                </div>
+                <div id="logoutDiv" class="list" th:attr="data-timeout_seconds=${session.TIMEOUT_SECONDS}">
+                    <a th:href="@{/doLogout}">
+                        <button class="btn-login pull-right">登出</button>
+                    </a>
+                    <button id="logoutResetBtn" class="pull-right btn-reset">
+                        <div class="rp1"><i class="foo-cw"></i>秒</div>
+                    </button>
+                    <form id="logoutForm" th:action="@{/doLogout}"></form>
+                </div>
+            </div>
+            <div id="notification" class="popover-template">
+                <div class="title">
+                    線上通知
+                    <span class="note"><em class="badge">2</em>封未讀取</span>
+                    <a class="close">×</a>
+                    <a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true"
+                       aria-controls="popoverSearchBar" class="pull-right">
+                        <i class="fa fa-search orange"></i>
+                    </a>
+                </div>
+                <div class="collapse grey" id="popoverSearchBar">
+                    <div class="searchbar">
+                        <form class="form-inline" aria-expanded="true">
+                            <div class="col-sm-3">
+                                <div class="selector-box">
+                                    <select class="selector">
+                                        <option>通知種類</option>
+                                        <option>種類111111111</option>
+                                        <option>種類2222222222</option>
+                                        <option>種類3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="selector-box">
+                                    <select class="selector">
+                                        <option>未讀取1111111</option>
+                                        <option>已讀取2222222</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 text-right">
+                                <div class="selector-box">
+                                    <select class="selector">
+                                        <option>通知月份</option>
+                                        <option>2015/一月</option>
+                                        <option>2015/二月</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn-form btn-search">搜尋</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="searchResult">
+                    <p class="">查無符合資料，請重新搜尋</p>
+                </div>
+
+                <div class="items">
+                    <a href="#" class="item">
+                        <div class="header">
+                            <em>案件狀態通知</em> 新契約（OU1005）已完成
+                        </div>
+                        <div class="content text-right">
+                            <small>2020年/12月份</small>
+                        </div>
+                    </a>
+                    <a href="#" class="item">
+                        <div class="header">
+                            <em>案件狀態通知</em> 新契約（OU1003）照會中
+                        </div>
+                        <div class="content text-right">
+                            <small>2015年/1月份</small>
+                        </div>
+                    </a>
+
+                </div>
+                <p>※本畫面僅提供一年內之通知資料查詢</p>
+            </div>
+
+        </nav>
+        <!-- End Navbar -->
     </div>
-	<!-- <div th:fragment="alert_mobile" id="alert_mobile">
-		我的提醒 <i class="badge a1">8</i>
-	</div> -->
-	<div th:fragment="alert_container" class="row alert1">
-		<div class="container">
-			<div class="alert_section">
-				<div class="list alertTitle" id="applicationStatus">1個月內線上申請進度</div>
-				<div class="list">
-					<a data-target="#application_processing" data-toggle="popover" data-width="430" data-scroll-height="300" data-class="to-left" data-placement="bottom" data-title="1個月內的線上申請進度 處理中">
-					處理中 <i id="appProcessingCnt" class="badge a1"><th:block th:text="${processingList} != null ? ${#lists.size(processingList)}"/></i> <span class="alert_unit">張</span>
-					</a>
-				</div>
-				<div class="list">
-					<a data-target="#application_complete" data-toggle="popover" data-width="430" data-scroll-height="300" data-class="to-left" data-placement="bottom" data-title="1個月內的線上申請進度 已完成">  
-					已完成 <i id="appCompleteCnt" class="badge a1"><th:block th:text="${completeList} != null ? ${#lists.size(completeList)}"/></i> <span class="alert_unit">張</span>
-					</a>
-				</div>
-			</div>
-			<!--  
-			<div class="list " id="paymentAlert">
-				<a data-target="#payment_notification" data-toggle="popover" data-width="430" data-scroll-height="228" data-class="to-left" data-placement="bottom" data-title="繳費提醒" data-payment="show" data-paytarget="#payonline_template">
-					<!--span class="payment_alert_mobile alertTitle">繳費提醒</span--
-					<span class="payment_alert_pc"><i id="unpaidAmountCnt" class="badge a1"><th:block th:text="${paymentReminderList} != null ? ${#lists.size(paymentReminderList)}"/></i>個繳費提醒 </span>
-					<span class="payment_alert_mobile"> 繳費提醒<i class="badge a1">1</i></span>
-				</a>
-			</div>
-			-->
-			<!--  繳費通知 -->
-			<!--  
-			<div class="modal fade in" id="modal-container-payment" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content lock-up">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						</div>
-						<div class="modal-body apply2 center1 grey2">
-							<h3>
-								<!-- <i class="foo-finance_3 foo-4x orange"></i> --
-								<img src="./img/online-payment.png" alt=""/>
-							</h3> 
-							請依下列資訊至全國繳費網完成繳費
-							<div class="popOverContent">
-								保險業者：臺銀人壽保險股份有限公司
-								<br/> 銷帳編號：請輸入繳納通知單正面所列14碼數字
-								<br/> 應繳保費金額：NTD <th:block th:text="${totalUnpaidAmount} != null ? ${#numbers.formatDecimal(totalUnpaidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
-								<br/>
-							</div>
-							<p>
-								<a href="https://ebill.ba.org.tw/PayPage/Index/c4d32040-33cc-4e82-b00e-d1b12de89bd9" target="_blank">
-									<button class="btn-login lock2">前往全國繳費網  <i class="fas fa-chevron-right"></i></button>
-								</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			-->
-			<!--  繳費通知 end -->
-		</div>
-	</div>
-	<!--popover-->
-	<div th:fragment="compensation_processing" id="compensation_processing" class="popover-template">
-		<div class="items">
-		</div>
-	</div>
-	<div th:fragment="compensation_incomplete" id="compensation_incomplete" class="popover-template">
-		<div class="items">
-		</div>
-	</div>
-	<div th:fragment="application_processing" id="application_processing" class="popover-template">
-		<div id="application_processing_items" class="items">
-			<th:block th:if="${processingList} != null">
-			<th:block th:each="vo, rowStat : ${processingList}">
-				<a href="#" class="item">
-					<div class="header">
-						<em>
-							<th:block th:text="${vo.transType != null and session.SYSTEM_PARAMETER['ONLINE_CHANGE'][vo.transType] != null}
-								? ${session.SYSTEM_PARAMETER['ONLINE_CHANGE'][vo.transType].parameterName}"/>
-						</em>
-						<small>(<th:block th:text="${vo.policyNo}"/>)</small>
-					</div>
-					<div class="content">
-						<th:block th:text="${vo.transDate} != null ? ${#dates.format(vo.transDate, 'yyyy/MM/dd')}"/>受理，案件處理中
-					</div>
-				</a>
-			</th:block>
-			</th:block>
-		</div>
-	</div>
-	<div th:fragment="application_complete" id="application_complete" class="popover-template">
-		<div id="application_complete_items" class="items">
-			<th:block th:if="${completeList} != null">
-			<th:block th:each="vo, rowStat : ${completeList}">
-				<a href="#" class="item">
-					<div class="header">
-						<em>
-							<th:block th:text="${vo.transType != null and session.SYSTEM_PARAMETER['ONLINE_CHANGE'][vo.transType] != null}
-								? ${session.SYSTEM_PARAMETER['ONLINE_CHANGE'][vo.transType].parameterName}"/>
-						</em>
-						<small>(<th:block th:text="${vo.policyNo}"/>)</small>
-					</div>
-					<div class="content">
-						<th:block th:text="${vo.transDate} != null ? ${#dates.format(vo.transDate, 'yyyy/MM/dd')}"/>受理
-						<th:block th:if="${vo.updateDate} != null">
-							, <th:block th:text="${#dates.format(vo.updateDate, 'yyyy/MM/dd')}"/>結案
-						</th:block>
-					</div>
-				</a>
-			</th:block>
-			</th:block>
-		</div>
-	</div>
-	<!--popover-->
-	<div th:fragment="compensation_complete" id="compensation_complete" class="popover-template">
-		<div class="items">
-		</div>
-	</div>
-	<!--popover-->
-	<!-- <div th:fragment="payment_notification" id="payment_notification" class="popover-template">
-		<div id="payment_notification_items" class="items">
-			<th:block th:if="${paymentReminderList} != null">
-			<th:block th:each="vo, rowStat : ${paymentReminderList}">
-				<a href="#" class="item payment_remind_item">
-					<div class="header payment_remind_header">
-						<th:block th:text="${vo.policyNo != null and userInfo.productNameMap != null} 
-							? ${userInfo.productNameMap[vo.policyNo]}"/>
-						<div><small>(<th:block th:text="${vo.policyNo}"/>)</small></div>
-					</div>
-					<th:block th:switch="${vo.aplAmount} != null"> 
-						<th:block th:case="true">
-							<div class="content payment_remind_content">
-								保費墊繳中
-							</div>
-						</th:block> 
-						<th:block th:case="false">
-							<div class="content payment_remind_content">
-								<span class="colorOrange">尚有逾期保費未繳納</span>
-								<p class="text-right">
-									<span>NTD </span>
-									<th:block th:text="${vo.policyVo != null and vo.policyVo.unpaidAmount != null}  
-										? ${#numbers.formatDecimal(vo.policyVo.unpaidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
-								</p>
-							</div>
-						</th:block> 
-					</th:block>
-				</a>
-			</th:block>
-			</th:block>
-		</div>
-	</div> -->
-	<!-- <div th:fragment="payonline_template" id="payonline_template">
-		<button data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-container-payment" id="pay1" class="btn-login pull-right">線上繳費  <i class="fas fa-chevron-right"></i></button>
-		<div class="total1" id="totalUnpaidAmount"><span>總共</span><th:block th:text="${totalUnpaidAmount} != null ? ${#numbers.formatDecimal(totalUnpaidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/><i class="my5">NTD</i></div>
-		<div class="notice">逾期未繳總金額不含繳費狀態為「保費墊繳中」、「保費已墊停」及投資型保單之「尚有定期保費未繳納」之金額，欲查詢詳細狀況，請與客服中心聯絡</div>
-	</div> -->
-	<div th:fragment="majorTabs (funId)" class="row grey">
-		<div class="container grey nopd">
-			<div class="col-xs-4">
-				<a href="dashboard">
-					<div class="row folder borderRight" th:classappend="${#strings.equals(funId,'dashboard')} ? 'active'">
-						<i class="far fa-folder-open fa-2x hid1"></i>
-						<p>保障總覽</p>
-					</div>
-				</a>
-			</div>
-			<div class="col-xs-4">
-				<a href="mylist1">
-					<div class="row folder borderRight" th:classappend="${#strings.equals(funId,'mylist1')} ? 'active'">
-						<i class="far fa-address-card fa-2x hid1"></i>
-						<p>我的保單</p>
-					</div>
-				</a>
-			</div>
-			<div class="col-xs-4">
-				<a href="apply1">
-					<div class="row folder borderRight" th:classappend="${#strings.equals(funId,'apply1')} ? 'active'">
-						<i class="far fa-edit fa-2x hid1"></i>
-						<p>線上申請</p>
-					</div>
-				</a>
-			</div>
-		</div>
-	</div>
-</body>
+</header>
 </html>

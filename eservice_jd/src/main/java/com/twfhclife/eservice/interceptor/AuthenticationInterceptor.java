@@ -20,25 +20,11 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         Object keycloakUser = request.getSession().getAttribute(ApConstants.LOGIN_USER_ID);
         Object eserviceUser = request.getSession().getAttribute(UserDataInfo.USER_DETAIL);
 
-//		if (keycloakUser == null || eserviceUser == null) {
-//			uriAuth = false;
-//		} else {
-//			UsersVo userDetail = (UsersVo) eserviceUser;
-//			if (userDetail.getLastChangPasswordDate() == null) {
-//				if (request.getServletPath().indexOf("doLogout") == -1 && request.getServletPath().indexOf("Password") == -1) {
-//					response.sendRedirect("/eservice_jd/changePassword1");
-//					return uriAuth;
-//				}
-//			}
-//			uriAuth = true;
-//		}
-
-		//TODO get user jdzq detail
-        if (keycloakUser == null) {
+        if (keycloakUser == null || eserviceUser == null) {
             uriAuth = false;
         } else {
             UsersVo userDetail = (UsersVo) eserviceUser;
-            if (userDetail != null && userDetail.getLastChangPasswordDate() == null) {
+            if (userDetail.getLastChangPasswordDate() == null) {
                 if (request.getServletPath().indexOf("doLogout") == -1 && request.getServletPath().indexOf("Password") == -1) {
                     response.sendRedirect("/eservice_jd/changePassword1");
                     return uriAuth;

@@ -164,6 +164,7 @@ public class LoginController extends BaseController {
 					return "login";
 				}
 
+				addSession(UserDataInfo.USER_DETAIL, userDetail);
 				addSession(ApConstants.KEYCLOAK_USER, keycloakUser);
 				addSession(ApConstants.LOGIN_USER_ID, keycloakUser.getUsername());
 
@@ -230,13 +231,6 @@ public class LoginController extends BaseController {
 				}
 				addAttribute("errorMessage", "");
 			} else {
-
-				boolean isOldSystemUser = registerUserService.checkOldSystemUser(userId, loginRequestVo.getPassword());
-				if (isOldSystemUser) {
-					addAttribute("isOldUser", isOldSystemUser);
-					addSession("register_rocId", userId);
-					return "login";
-				}
 
 				if ("password".equals(loginType) || (userDetail != null && userDetail.getStatus().equals("locked"))) {
 					/*addAttribute("errorMessage", "帳號或密碼不正確");*/
@@ -388,83 +382,6 @@ public class LoginController extends BaseController {
 		ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 40);
 		addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
 		addAttribute("validateImageBase64", vcUtil.imgToBase64String());
-	}
-
-	/**
-	 * 綁定 Facebook ID.
-	 *
-	 * @param userId
-	 * @param password
-	 * @return
-	 */
-	@PostMapping("/doBindFbId")
-	public String bindFbId(@RequestParam("userId3") String userId, @RequestParam("password3") String password) {
-		// 此處userId為userName
-		try {
-			// 設定系統參數
-			Map<String, Map<String, ParameterVo>> sysParamMap = parameterService.getSystemParameter(ApConstants.SYSTEM_ID);
-			addAttribute(ApConstants.PAGE_WORDING, sysParamMap.get("PAGE_WORDING"));
-			addAttribute(ApConstants.SYSTEM_CONSTANTS, sysParamMap.get("SYSTEM_CONSTANTS"));
-			addAttribute(ApConstants.SYSTEM_MSG_PARAMETER, sysParamMap.get("SYSTEM_MSG_PARAMETER"));
-
-			KeycloakUser keycloakUser = keycloakService.login(userId, password);
-			if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
-				String fbId = MyStringUtil.nullToString(getSessionStr("fbId"));
-				keycloakUser.setFbId(fbId);
-				FederatedIdentityRepresentation irLink = new FederatedIdentityRepresentation();
-				irLink.setIdentityProvider("facebook");
-				irLink.setUserId(fbId);
-				irLink.setUserName(userId);
-				keycloakService.updateUser(keycloakUser, irLink);
-				/*addAttribute("errorMessage", "Facebook帳號綁定成功");*/
-				addAttribute("errorMessage", parameterService.getParameterValueByCode(ApConstants.SYSTEM_MSG_PARAMETER, "E0122"));
-			} else {
-				/*addAttribute("errorMessage", "Facebook帳號綁定失敗");*/
-				addAttribute("errorMessage", parameterService.getParameterValueByCode(ApConstants.SYSTEM_MSG_PARAMETER, "E0123"));
-			}
-		} catch (Exception e) {
-			logger.error("Unable to doBindFbId: {}", ExceptionUtils.getStackTrace(e));
-			/*addAttribute("errorMessage", "Facebook帳號綁定失敗");*/
-			addAttribute("errorMessage", parameterService.getParameterValueByCode(ApConstants.SYSTEM_MSG_PARAMETER, "E0123"));
-		}
-		resetVerifyCode();
-		return "login";
-	}
-
-	/**
-	 * 綁定自然人憑證.
-	 *
-	 * @param userId
-	 * @param password
-	 * @return
-	 */
-	@PostMapping("/doBindCardSn")
-	public String bindCardSn(@RequestParam("userId2") String userId, @RequestParam("password2") String password) {
-		try {
-			// 設定系統參數
-			Map<String, Map<String, ParameterVo>> sysParamMap = parameterService.getSystemParameter(ApConstants.SYSTEM_ID);
-			addAttribute(ApConstants.PAGE_WORDING, sysParamMap.get("PAGE_WORDING"));
-			addAttribute(ApConstants.SYSTEM_CONSTANTS, sysParamMap.get("SYSTEM_CONSTANTS"));
-			addAttribute(ApConstants.SYSTEM_MSG_PARAMETER, sysParamMap.get("SYSTEM_MSG_PARAMETER"));
-
-			KeycloakUser keycloakUser = keycloakService.login(userId, password);
-			if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
-				String cardSn = MyStringUtil.nullToString(getSessionStr("cardSn"));
-				keycloakUser.setCardSn(cardSn);
-				keycloakService.updateUser(keycloakUser, null);
-				/*addAttribute("errorMessage", "帳號綁定自然人憑證成功");*/
-				addAttribute("errorMessage", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "E0120"));
-			} else {
-				/*addAttribute("errorMessage", "帳號綁定自然人憑證失敗");*/
-				addAttribute("errorMessage", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "E0121"));
-			}
-		} catch (Exception e) {
-			logger.error("Unable to doBindFbId: {}", ExceptionUtils.getStackTrace(e));
-			/*addAttribute("errorMessage", "帳號綁定自然人憑證失敗");*/
-			addAttribute("errorMessage", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "E0121"));
-		}
-		resetVerifyCode();
-		return "login";
 	}
 
 	@RequestMapping("/login-timeout")
