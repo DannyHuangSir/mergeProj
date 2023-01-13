@@ -1,49 +1,50 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=EDGE, chrome=1" />
-	    <meta http-equiv="Pragma" content="no-cache"> 
-		<meta http-equiv="Cache-Control" content="no-cache"> 
-		<meta http-equiv="Expires" content="0">
-		
-		<!-- meta http-equiv="Access-Control-Allow-Origin" content="http://localhost:61161"-->
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE, chrome=1"/>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 
-		<meta name="description" content="overview &amp; stats" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		
-		<title>系統登入頁｜經代專區</title>
+    <!-- meta http-equiv="Access-Control-Allow-Origin" content="http://localhost:61161"-->
 
-		<!-- bootstrap -->
-		<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
-		<link rel="stylesheet" type="text/css" th:href="@{/css/icon.css}" />
-		<link rel="stylesheet" type="text/css" th:href="@{/css/layout.css}" />
-		<link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}" />
-		
-		<!-- basic scripts -->
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script	th:src="@{/plugin/jquery-1.11.3.min.js}"></script>
-		<script	th:src="@{/plugin/bootstrap.min.js}"></script>
-		<script th:src="@{/js/tablepand.js}"></script>
-		<script type="text/javascript"> 
+    <meta name="description" content="overview &amp; stats"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>系統登入頁｜經代專區</title>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/icon.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/layout.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}"/>
+
+    <!-- basic scripts -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script th:src="@{/plugin/jquery-1.11.3.min.js}"></script>
+    <script th:src="@{/plugin/bootstrap.min.js}"></script>
+    <script th:src="@{/js/tablepand.js}"></script>
+    <script type="text/javascript">
 		<!-- if('ontouchstart' in document.documentElement) document.write("<script src='assets/plugin/jquery.mobile.custom.min.js'>"+"<"+"/script>");-->
-		</script>
-		
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script th:src="@{/plugin/jquery.placeholder.min.js}"></script>
-		<script th:src="@{/plugin/detectmobilebrowser_jquery.js}"></script>
-		<script th:src="@{/plugin/jquery.base64.js}"></script>
-		<script th:src="@{/js/scripts.js}"></script>
-		<script th:src="@{/js/eservice/actionModal.js}"></script>
-		<script th:src="@{/plugin/loading-modal/loading-modal.js}"></script>
-		<script th:src="@{/js/moica_errorcode.js}"></script>
-		<script th:src="@{/js/login.js}"></script>
-	    <script th:src="@{/fontawesome-free-5.1.1-web/js/solid.js}"></script>
-	    <script th:src="@{/fontawesome-free-5.1.1-web/js/regular.js}"></script>
-	    <script th:src="@{/fontawesome-free-5.1.1-web/js/fontawesome.js}"></script>
-	    
-	    <script type="text/javascript">
+
+    </script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script th:src="@{/plugin/jquery.placeholder.min.js}"></script>
+    <script th:src="@{/plugin/detectmobilebrowser_jquery.js}"></script>
+    <script th:src="@{/plugin/jquery.base64.js}"></script>
+    <script th:src="@{/js/scripts.js}"></script>
+    <script th:src="@{/js/eservice/actionModal.js}"></script>
+    <script th:src="@{/plugin/loading-modal/loading-modal.js}"></script>
+    <script th:src="@{/js/moica_errorcode.js}"></script>
+    <script th:src="@{/js/login.js}"></script>
+    <script th:src="@{/fontawesome-free-5.1.1-web/js/solid.js}"></script>
+    <script th:src="@{/fontawesome-free-5.1.1-web/js/regular.js}"></script>
+    <script th:src="@{/fontawesome-free-5.1.1-web/js/fontawesome.js}"></script>
+
+    <script type="text/javascript">
 	  	//close F12
 	    document.onkeydown = function () {
 	        //f12
@@ -81,122 +82,154 @@
 		$(function() {
 			sessionStorage.removeItem('identity')
 		});
-	    </script>
-		<!-- page specific plugin styles -->
 
-		<!-- text fonts -->
+    </script>
+    <!-- page specific plugin styles -->
 
-		<!-- my styles -->
-		
-		<!--[if IE 7]>
-			<link rel="stylesheet" type="text/css" th:href="@{/css/fontello-ie7.css}" />
-		<![endif]-->
+    <!-- text fonts -->
 
-		<!-- inline styles related to this page -->
+    <!-- my styles -->
 
-		<!-- my settings handler -->
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/fontello-ie7.css}"/>
+    <![endif]-->
 
-		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+    <!-- inline styles related to this page -->
 
-		<!--[if lt IE 9]>
-			<script	th:src="@{/js/plugin/html5shiv.min.js}"></script>
-			<script	th:src="@{/plugin/respond.min.js}"></script>
-		<![endif]-->		
-		<link rel="shortcut icon" th:href="@{/img/favor-icon.png}" />
-		<style>
-		</style>
-	</head>
-	<body>
-		<span id="httpObject" ></span>
-		<div class="row hid1" id="top1">
-			<div class="container">
-				<button class="btn pull-right user1" type="button">商業 Business</button>
-				<button class="btn pull-right user1 active" type="button">個人 Personal</button>
-			</div>
-		</div>
-		<header>
-			<div class="container">
-				<div class="row">
-					<th:block th:replace="fragments/logo"/>
-					<div class="n1 inlineBlock float-left">經代專區</div>
-					<div class="clearfix visible-xs-block"></div>
-				</div>
-			</div>
-		</header>
-		<th:block th:if="${SYSTEM_CONSTANTS} != null and ${SYSTEM_CONSTANTS['MAINTAIN_MSG'] != null} and ${SYSTEM_CONSTANTS['MAINTAIN_MSG'].status = 1}">
-		<div class="row alert1 alert-new">
-			<div class="container">
-				<div class="list"><a><i class="foo-attention"></i><th:block th:text="${SYSTEM_CONSTANTS['MAINTAIN_MSG'].parameterValue}"/></a></div>
-			</div>
-		</div>
-		</th:block>
-		<div class="container-fluid c1 fullContent">
-			<div class="bg1">
-				<div class="index-bg">
-				</div>
-				<div class="">
-					<div id="slogan" class="col-sm-5 col-lg-5 hid1">
-						<h2 class="bg-hero1">
-							隨時隨時了解您的客戶
-						</h2>
-						<h2 class="bg-hero2">
-							掌握您的案件進度
-						</h2>
-						<h2 class="bg-hero3">
-							<a href="#" class="none1">服務導覽 <i class="fa fa-angle-right fa-lg"></i></a>
-						</h2>
-					</div>
-<!-- 					<div id="login_section" class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-3 col-md-4 col-lg-4 col-lg-offset-3 main1 box-shadow"> -->
-			<div id="login_section" class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-3 col-md-4 col-lg-4 col-lg-offset-3 main1 box-shadow">
-						<form id="loginForm" th:action="@{/doLogin}" method="POST" onSubmit="return checkLoginForm()">
-							<h2>使用者登入</h2>
-							<p style="align-items: center; text-align: center;"><img th:src="@{/img/icon_friends-green.png}" class="login1"></p>
-							<div class="form-group">
-								<label for="inputName3" class="control-label">用戶名稱</label>
-								<input type="text" id="userId" name="userId" placeholder="忘記名稱或密碼鎖定請聯絡本公司" class="form-control" autocomplete="off" />
-							</div>
-							<div >
-								<label for="inputPassword3" class="control-label">密碼</label>
-								<input type="password" id="password" name="password" placeholder="輸入英文字母須區分大小寫" class="form-control" autocomplete="off" />
-							</div>
-							<div class="form-group" style="margin: 16px 4px 0 0;">
-								<label for="inputPassword3" class="control-label">驗證碼</label>
-								<div class="">
-									<input type="text" name="validateCode" id="validateCode" autocomplete="off" placeholder="輸入驗證碼" class="form-control  float-left w70p" style="width:50%" maxlength="4" />
-									&nbsp;&nbsp;&nbsp;<img id="validateImage" th:src="'data:image/png;base64, ' + ${validateImageBase64}" style="height:33px;cursor:pointer;" alt="點擊圖片重新讀取驗証碼"></img>
-								</div>
-							</div>
-							<div class="logActionBtn" style="margin:12px 4px 0 0;">
-								<a class="pull-left log1" href="password1">忘記密碼</a>
-								<a class="pull-right log1" href="#" onclick="window.open('會員註冊及登入說明.pdf')">登入問題</a>
-							</div>
-							<h5><span id="login-status"></span></h5>
-							<button id="loginBtn" class="col-xs-12 btn-login">登 入</button>
-							<input type="hidden" id="fbId" name="fbId"/>
-							<input type="hidden" id="email" name="email"/>
-							<input type="hidden" id="fbAccessToken" name="fbAccessToken"/>
-							<input type="hidden" id="cardSN"  name="cardSN"/>
-							<input type="hidden" id="certb64" name="certb64"/>
-							<input type="hidden" id="ret"     name="ret"/>
-							<input type="hidden" id="salt"    name="salt"/>
-							<input type="hidden" id="four"    name="four"/>
-							<input type="hidden" id="euNationality" name="euNationality"/>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<footer th:replace="fragments/footer"></footer>
-		<!-- my scripts -->
-		
-		<!-- inline scripts related to this page -->
-		<script>
+    <!-- my settings handler -->
+
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/plugin/html5shiv.min.js}"></script>
+    <script th:src="@{/plugin/respond.min.js}"></script>
+    <![endif]-->
+    <link rel="shortcut icon" th:href="@{/img/favor-icon.png}"/>
+    <style>
+    </style>
+</head>
+<body>
+<span id="httpObject"></span>
+<div class="row hid1" id="top1">
+    <div class="container">
+        <button class="btn pull-right user1" type="button">商業 Business</button>
+        <button class="btn pull-right user1 active" type="button">個人 Personal</button>
+    </div>
+</div>
+<header>
+    <div class="container">
+        <div class="row">
+            <th:block th:replace="fragments/logo"/>
+            <div class="n1 inlineBlock float-left">經代專區</div>
+            <div class="clearfix visible-xs-block"></div>
+        </div>
+    </div>
+</header>
+<th:block
+        th:if="${SYSTEM_CONSTANTS} != null and ${SYSTEM_CONSTANTS['MAINTAIN_MSG'] != null} and ${SYSTEM_CONSTANTS['MAINTAIN_MSG'].status = 1}">
+    <div class="row alert1 alert-new">
+        <div class="container">
+            <div class="list"><a><i class="foo-attention"></i>
+                <th:block th:text="${SYSTEM_CONSTANTS['MAINTAIN_MSG'].parameterValue}"/>
+            </a></div>
+        </div>
+    </div>
+</th:block>
+<div class="container-fluid c1 fullContent">
+    <div class="bg1">
+        <div class="index-bg">
+        </div>
+        <div class="">
+            <div id="slogan" class="col-sm-5 col-lg-5 hid1">
+                <h2 class="bg-hero1">
+                    隨時隨時了解您的客戶
+                </h2>
+                <h2 class="bg-hero2">
+                    掌握您的案件進度
+                </h2>
+                <h2 class="bg-hero3">
+                    <a href="#" class="none1">服務導覽 <i class="fa fa-angle-right fa-lg"></i></a>
+                </h2>
+            </div>
+            <!-- 					<div id="login_section" class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-3 col-md-4 col-lg-4 col-lg-offset-3 main1 box-shadow"> -->
+            <div id="login_section"
+                 class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-3 col-md-4 col-lg-4 col-lg-offset-3 main1 box-shadow">
+                <form id="loginForm" th:action="@{/doLogin}" method="POST" onSubmit="return checkLoginForm()">
+                    <h2>使用者登入</h2>
+                    <p style="align-items: center; text-align: center;"><img th:src="@{/img/icon_friends-green.png}"
+                                                                             class="login1"></p>
+                    <div class="form-group">
+                        <label for="inputName3" class="control-label">用戶名稱</label>
+                        <input type="text" id="userId" name="userId" placeholder="忘記名稱或密碼鎖定請聯絡本公司"
+                               class="form-control" autocomplete="off"/>
+                    </div>
+                    <div>
+                        <label for="inputPassword3" class="control-label">密碼</label>
+                        <input type="password" id="password" name="password" placeholder="輸入英文字母須區分大小寫"
+                               class="form-control" autocomplete="off"/>
+                    </div>
+                    <div class="form-group" style="margin: 16px 4px 0 0;">
+                        <label for="inputPassword3" class="control-label">驗證碼</label>
+                        <div class="">
+                            <input type="text" name="validateCode" id="validateCode" autocomplete="off"
+                                   placeholder="輸入驗證碼" class="form-control  float-left w70p" style="width:50%"
+                                   maxlength="4"/>
+                            &nbsp;&nbsp;&nbsp;<img id="validateImage"
+                                                   th:src="'data:image/png;base64, ' + ${validateImageBase64}"
+                                                   style="height:33px;cursor:pointer;"
+                                                   alt="點擊圖片重新讀取驗証碼"></img>
+                        </div>
+                    </div>
+                    <div class="logActionBtn" style="margin:12px 4px 0 0;">
+                        <a class="pull-left log1" href="password1">忘記密碼</a>
+                        <a class="pull-right log1" href="#" onclick="window.open('會員註冊及登入說明.pdf')">登入問題</a>
+                    </div>
+                    <h5><span id="login-status"></span></h5>
+                    <button id="loginBtn" class="col-xs-12 btn-login">登 入</button>
+                    <input type="hidden" id="fbId" name="fbId"/>
+                    <input type="hidden" id="email" name="email"/>
+                    <input type="hidden" id="fbAccessToken" name="fbAccessToken"/>
+                    <input type="hidden" id="cardSN" name="cardSN"/>
+                    <input type="hidden" id="certb64" name="certb64"/>
+                    <input type="hidden" id="ret" name="ret"/>
+                    <input type="hidden" id="salt" name="salt"/>
+                    <input type="hidden" id="four" name="four"/>
+                    <input type="hidden" id="euNationality" name="euNationality"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+			var d = new Date();
+			d.setDate(d.getDate() - 1);
+			var day = d.getDate();
+			var month = d.getMonth() + 1;
+			var year = d.getFullYear();
+
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119780635-2"></script>
+<script>
+			  document.addEventListener('contextmenu', event => event.preventDefault());
+			  window.dataLayer = window.dataLayer || [];
+			  function gtag(){dataLayer.push(arguments);}
+			  gtag('js', new Date());
+			  gtag('config', 'UA-119780635-2');
+
+</script>
+<!-- my scripts -->
+
+<!-- inline scripts related to this page -->
+<script>
 		$(function() {
 			$('input, textarea').placeholder();
 		});
-		</script>
-		
-		<script th:inline="javascript">
+
+</script>
+
+<script th:inline="javascript">
 		/*<![CDATA[*/
 		$(function() {
 			var errorMessage = /*[[${errorMessage}]]*/;
@@ -307,6 +340,7 @@
 
 		setInterval ("reloadValidateImage()", 300*1000);
 		/*]]>*/
-		</script>
-		<div class="loading-modal"></div>
+
+</script>
+<div class="loading-modal"></div>
 </html>

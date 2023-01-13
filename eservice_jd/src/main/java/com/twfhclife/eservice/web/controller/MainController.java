@@ -58,64 +58,9 @@ public class MainController extends BaseController {
 		return "login";
 	}
 
-	@GetMapping("/certificateRenew1")
-	public String certificateRenew1() {
-		logger.info("open frontstage/certificate-renew1.html");
-		return "frontstage/certificate-renew1";
-	}
-
-	@GetMapping("/certificateRenew2")
-	public String certificateRenew2() {
-		logger.info("open frontstage/certificate-renew2.html");
-		return "frontstage/certificate-renew2";
-	}
-
-	@GetMapping("/certificateRenewSuccess")
-	public String certificateRenewSuccess() {
-		logger.info("open frontstage/certificate-renew-success.html");
-		return "frontstage/certificate-renew-success";
-	}
-
-	@GetMapping("/demo")
-	public String demo() {
-		logger.info("open frontstage/demo.html");
-		return "frontstage/demo";
-	}
-
-	@GetMapping("/policyAutopay2")
-	public String policyAutopay2() {
-		logger.info("open frontstage/policy-autopay2.html");
-		return "frontstage/policy-autopay2";
-	}
-
-	@GetMapping("/policyAutopay3")
-	public String policyAutopay3() {
-		logger.info("open frontstage/policy-autopay3.html");
-		return "frontstage/policy-autopay3";
-	}
-
-	@GetMapping("/returnBonus2")
-	public String returnBonus2() {
-		logger.info("open frontstage/return-bonus2.html");
-		return "frontstage/return-bonus2";
-	}
-
-	@GetMapping("/returnBonus3")
-	public String returnBonus3() {
-		logger.info("open frontstage/return-bonus3.html");
-		return "frontstage/return-bonus3";
-	}
-
-	@GetMapping("/roiSearch")
-	public String roiSearch() {
-		logger.info("open frontstage/roi-search.html");
-		return "frontstage/roi-search";
-	}
-
 	@GetMapping("/errorPage")
 	public String errorPage() {
 		logger.info("open frontstage/500.html");
 		return "frontstage/500";
 	}
-
 }

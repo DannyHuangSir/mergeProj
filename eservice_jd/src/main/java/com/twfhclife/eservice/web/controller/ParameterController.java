@@ -28,7 +28,7 @@ public class ParameterController extends BaseMvcController {
 
 	private static final Logger logger = LogManager.getLogger(ParameterController.class);
 	
-	private static final String SYSTEM_ID = "eservice";
+	private static final String SYSTEM_ID = "eservice_jd";
 
 	@Autowired
 	private IParameterService parameterService;

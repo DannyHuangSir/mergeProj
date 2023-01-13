@@ -92,7 +92,7 @@ table.tablesaw {
 
   .tablesaw-stack td,
   .tablesaw-stack th {
-    text-align: right;
+    text-align: left;
     display: block;
   }
 
@@ -140,7 +140,7 @@ table.tablesaw {
 @media screen and (max-width: 767px) {
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
-    display: none !important;
+    display: none;
   }
 
   .tablesaw-stack tbody td,

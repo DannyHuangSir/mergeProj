@@ -216,7 +216,7 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 				}
 			}
 		}
-		return "success";
+		return "密碼變更成功";
 	}
 
 	public UsersVo getUserByFbId(String fbId) {

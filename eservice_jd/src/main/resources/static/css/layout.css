@@ -1,24 +1,22 @@
-html *
-{
-   font-family: Microsoft JhengHei !important;
-}.m-label{display:inline-block; width:10%;}
-.glyphicon{
-	font-family: 'Glyphicons Halflings' !important;
-}
+.m-label{display:inline-block; width:10%;}
 .m-span{display:inline-block; width:5%;}
 .m-btn{display:inline-block; width:15%;}
 .m-inp{display:inline-block; width:30%;}
-
+.foo-warning {
+    background-image: url(../img/warning.png);
+    background-repeat: no-repeat;
+    margin: 0 5px;
+    display: inline-block;
+    background-position: 0 0;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    top: -10px;
+    right: -15px;
+}
 .checkbox label, 
 .radio label {
     vertical-align: middle;
-}
-.btn-group-lg>.btn, .btn-lg{
-	font-size: 14px !important;
-}
-.file-drop-zone-title{
-	font-size:16px !important ;
-	padding: 25px 10px !important;
 }
 table {
     border-collapse: collapse;
@@ -85,6 +83,23 @@ a.underline:hover {
     display: inline-block\9; /* IE8+9 */
 }
 
+/*.adBlock {
+    margin: 0 auto;
+    background: url(http://www-t.cigna.com.tw/sites/default/files/styles/w314xh270/public/314x270-E.jpg?itok=q48uy3s0) no-repeat;
+    width: 314px;
+    height: 270px;
+    overflow: hidden;
+}
+.adBlock a {
+    display: block;
+    width: 314px;
+    height: 270px;
+}
+.ad_width {
+    width: 314px;
+    height: 270px;
+}*/
+
 .popOverContent {
     color: #888;
     font-size: 13.5px;
@@ -148,7 +163,11 @@ a.underline:hover {
 
 
 
-
+/*!
+ * Cigna HTML development
+ * Copyright 2014-2015 Fooddy.Co
+ * Made by Love & Tons of Coffee at Fooddy.Co
+ */
 /*! Customized CSS */
 
 a {
@@ -230,10 +249,11 @@ textarea {
     border-left: 1.5px solid rgba(0, 0, 0, 0.17);
     font-size: 21px;
     margin-top: 20px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     padding-top: 3px;
     padding-left: 10px;
     padding-right: 5px;
+    line-height: 36px;
 }
 
 .n0 {
@@ -272,12 +292,26 @@ textarea {
 
 .clearFloat {
     overflow: hidden;
+    padding: 0 20px;
 }
 
-/* ��嚙踐�縣��嚙踐����縣�鞈�蝞蕭���nicode \5FAE\8EDF\6B63\9ED1\9AD4 */
-/* body,p,span,h1,h2,h3,h4,h5,tr,td,li,.content,small,button {
-    font-family: Gotham, Gotham-Book, Gotham-Thin, "STHeiti Light", STXihei, STHeiti, "Apple LiGothic Medium", "��嚙踐�縣��嚙踝蕭", "Microsoft JhengHei", sans-serif, "5FAE\8EDF\6B63\9ED1\9AD4"!important;
-} */
+/* 敺株�迤暺�銝迤撣賊＊蝷箄�unicode \5FAE\8EDF\6B63\9ED1\9AD4 */
+body,
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+tr,
+td,
+li,
+.content,
+small,
+button {
+    font-family: Gotham, Gotham-Book, Gotham-Thin, "STHeiti Light", STXihei, STHeiti, "Apple LiGothic Medium", "敺株�迤暺��", "Microsoft JhengHei", sans-serif, "5FAE\8EDF\6B63\9ED1\9AD4"!important;
+}
 
 @font-face {
     font-family: 'Gotham-Thin';
@@ -408,13 +442,6 @@ img.bg {
     background-size: 100% 100%;
     background-image: url(../img/bg2.jpg);
 }
-/* .index-bg { */
-/*     width: 510px; */
-/*     height: 370px; */
-/*     position: absolute; */
-/*     margin-right: auto; */
-/*     background-image: url(../img/bg1.png); */
-/* } */
 
 .main1 {
     background-color: #f2f1f1;
@@ -764,7 +791,7 @@ header {
 .folder p {
     padding-bottom: 15px;
     font-size: large;
-    margin-top: 5px;
+    margin-top: -5px;
 }
 
 .folder:after {
@@ -968,7 +995,7 @@ header {
     position: absolute;
     font-size: 12px;
     margin-left: 3px;
-    margin-top: -20px;
+    margin-top: -14px;
     margin-left: -27px;
     font-style: normal;
     color: #9E9E9E;
@@ -1032,8 +1059,8 @@ td.table3 {
     font-size: 15px;
     font-weight: normal;
     text-align: left!important;
-    /*width: 250px;*/
-    width: 200px;
+    /*width: 210px;*/
+    width: 250px;
 }
 
 th.table3 {
@@ -1324,9 +1351,6 @@ a.btn-signup:focus {
     background-color: #aaa;
     padding: 5px 12px;
 }
-.btn-cancel:hover {
-    color: #fff;
-}
 
 hr {
     border-color: #CCC;
@@ -1354,11 +1378,6 @@ h4.orange-title small {
     background-color: #CC7A02;
 }
 
-.go
-{
-    background-color: #CC7A02;
-}
-
 .modal .check-list2 .col-sm-8 .selector-box {
     width: 67%;
 }
@@ -1376,10 +1395,6 @@ h4.orange-title small {
 }
 
 #deny {
-    background-color: #BEBEBE;
-}
-
-#denyAdded {
     background-color: #BEBEBE;
 }
 
@@ -1415,7 +1430,6 @@ span.tel2 {
     text-align: center;
     font-size: 21px;
     color: #E77D2C;
-    margin-bottom: 6px;
 }
 
 .activated h3 {
@@ -1445,8 +1459,9 @@ span.tel2 {
 }
 
 .cert1 {
-    margin: 0 0 0 0;
+    margin: 30px 0 40px 0;
     text-align: center;
+    padding: 10px 0;
 }
 
 .mobile-panel .cert1 .countdown {
@@ -1509,11 +1524,13 @@ span.tel2 {
 }
 
 .detail1 {
+	padding-left: 0;
     background-color: #F2F1F1;
     margin-bottom: 0;
 }
 
 .detail1 a {
+	font-size: 18px;
     text-decoration: underline;
     color: #333;
 }
@@ -1692,12 +1709,7 @@ span.tel2 {
     background: rgba(255, 194, 137, 1);
 }
 
-html,
-body {
-    overflow-x: hidden;
-    background: #f1f2f3;
-    /* Prevent scroll on narrow devices */
-}
+
 
 /*
  * Off Canvas
@@ -1721,7 +1733,7 @@ button.btn3.dropdown-toggle {
 }
 
 
-/*嚙踝蕭�嚙踝�蕭豲�� �����嚙踝蕭*/
+/*���� 閰喟敦鞈��*/
 .tog2-top {
     color: #009b38;
     font-size: large;
@@ -1890,7 +1902,7 @@ a.list-group-item.tog3:hover {
 .r31 {
     font-style: normal;
     color: #999;
-    font-family: 敺株�迤暺��,Gotham;
+    font-family: 微軟正黑體,Gotham;
 }
 
 .r32 {
@@ -1907,13 +1919,17 @@ a.list-group-item.tog3:hover {
 .bg3.list1 {
     background-color: transparent;
 }
-
+.list {
+    font-weight: 600;
+    padding: 15px 0;
+}
 div#list2 {
     padding: 15px;
     padding-right: 0px;
 }
 
-#list2 .folder {
+#list2 .folder,
+.list .folder {
     font-size: medium;
     padding: 10px 0 10px;
     background: #ffffff;
@@ -1936,25 +1952,34 @@ div#list2 {
     /* IE6-9 */
 }
 
-#list2 .folder:hover {
+#list2 .folder:hover,
+.list .folder:hover  {
     color: #009b38;
     background: #ccc;
 }
 
-#list2 .folder:hover:after {
+#list2 .folder:hover:after,
+.list .folder:hover:after {
     border-top: 15px solid #CCC;
 }
 
 #list2 .folder.active,
 #list2 .folder.active:hover,
 #list2 .folder.ui-tabs-active,
-#list2 .folder.ui-tabs-active:hover {
+#list2 .folder.ui-tabs-active:hover,
+
+.list .folder.active,
+.list .folder.active:hover,
+.list .folder.ui-tabs-active,
+.list .folder.ui-tabs-active:hover  {
     color: #FFF;
     background: #20B657;
 }
 
 #list2 .folder.active:after,
-#list2 .folder.ui-tabs-active:after {
+#list2 .folder.ui-tabs-active:after,
+.list .folder.active:after,
+.list .folder.ui-tabs-active:after {
     border-top: 15px solid #20B657;
 }
 
@@ -1981,13 +2006,9 @@ div#list2 {
     font-size: 20px;
     color: #009b38;
     font-weight: 80;
-    padding-top: 35px;
     background-color: #fff;
-    padding-left: 15px;
-    padding-right: 20px;
+    padding:15px;
     width: 100%;
-    line-height: 23px;
-    padding-bottom: 15px;
     /*font-family: gotham, sans-serif;*/
 }
 
@@ -2149,13 +2170,13 @@ th {
     color: #898887;
 }
 
-.mystyle3 h2 {
+.mycigna3 h2 {
     text-align: center;
     //color: rgb(0, 122, 180);
     padding: 0px 0 20px 0;
     font-size: 18px;
 }
-.mystyle3 #collapseSearchBar .btn-form {
+.mycigna3 #collapseSearchBar .btn-form {
     padding: 0 12px;
     display: inline-block;
 }
@@ -2205,21 +2226,22 @@ th {
     border-top: transparent;
     text-align: center;
 }
-.modal#modal-iframe-container .modal-body .form-group.detailClaims label{
+.modal#modal-iframe-container-2 .modal-body .form-group.detailClaims label{
 	line-height: 30px;
 }
-.modal#modal-iframe-container .panel{
+.modal#modal-iframe-container-2 .panel{
 	border: 1px solid #ededed;
 }
-.modal#modal-iframe-container .panel-heading{
+.modal#modal-iframe-container-2 .panel-heading{
 	background: #DDDDDD !important;
 	text-align: left;
 	padding: 5px 10px !important;
 }
-.modal#modal-iframe-container .modal-body .form-horizontal{
+.modal#modal-iframe-container-2 .modal-body .form-horizontal{
 	border-top: 0;
+	border-bottom: 1px solid #D0D0D0;
 }
-.modal#modal-iframe-container .detailPolicy{
+.modal#modal-iframe-container-2 .detailPolicy{
 	text-align: left;
 }
 .modal-footer button {
@@ -2460,14 +2482,6 @@ th {
     width: 85%;
     margin: 0 15%;
     padding: 5px 0 10px;
-    display: inline-block;
-}
-
-.change3 {
-    width: 90%;
-    margin: 0 5%;
-    padding: 5px 0 5px;
-    line-height: 26px;
     display: inline-block;
 }
 
@@ -2746,24 +2760,6 @@ li.compBLK {
     padding: 5px 0 5px;
 }
 
-.hid-title2 {
-    text-align: center;
-    background-color: #DFFFDF;
-    top: 0;
-    padding: 5px 0 5px;
-}
-
-.hid-title3 {
-    text-align: center;
-    color: #fff;
-    top: 0;
-    padding: 5px 0 5px;
-}
-
-.hid-chang-title {
-    padding: 5px 0 5px 0;
-}
-
 .hid-body {
     width: 100%;
     background-color: #f2f1f1;
@@ -2873,21 +2869,18 @@ td {
 
 /*Custom radio button*/
 .radio-btn input[type="radio"],
-.check-box input[type="checkbox"] ,
-.radio-btn2 input[type="radio"],
-.check-box2 input[type="checkbox"]{
+.check-box input[type="checkbox"] {
     visibility: hidden;
 }
 
-.radio-btn,
-.radio-btn2 {
+.radio-btn {
     background-color: #fff;
     width: 16px;
     height: 16px;
     display: inline-block;
     float: left;
     /*margin: 2px 7px 0 0;*/
-    margin: 5px 7px 0 0;
+    margin: 0 7px 0 0;
     cursor: pointer;
     position: relative;
     -webkit-border-radius: 100%;
@@ -3096,7 +3089,7 @@ p.comp2a {
 }
 
 .mode2select label {
-    padding: 5px 10px 5px 0;
+    padding: 10px 10px 15px 0;
 }
 
 .mode2select input {
@@ -3150,7 +3143,7 @@ p.comp2a {
 .invst2total {
     padding: 20px;
     font-size: 16px;
-    background-color: #DFFFDF;
+    background-color: #FDE3D2;
     text-align: right;
 }
 
@@ -3273,7 +3266,6 @@ p.comp2a {
 	padding: 5px;
 	color: #009b38;
 }
-
 .panel-heading {
     padding: 0px 0px;
     border-bottom: 1px solid transparent;
@@ -3362,7 +3354,7 @@ form > .form-group > label {
 }
 
 .form-horizontal {
-    width: 80%;
+   /* width: 80%;*/
     margin: auto;
     padding-bottom: 30px;
     border-bottom: 1px solid #E2E2E2;
@@ -3450,6 +3442,7 @@ form > .form-group > label {
 	cursor: pointer;
 }
 .collapse {
+	visibility: inherit;
     background: #FFF;
 }
 
@@ -3531,9 +3524,6 @@ form > .form-group > label {
 }
 .members .popover{
     max-width:230px;
-    width: 300px;
-    top: 60px;
-    left: -150px;
 }
 .popover {
     margin: 0 auto;
@@ -3656,7 +3646,7 @@ form > .form-group > label {
     height: 34px;
     overflow: hidden;
 }
-.alert1 .list > a {
+.alert1 .container > a {
     display: block;
     color: #FFF;
     cursor: pointer;
@@ -3671,11 +3661,6 @@ form > .form-group > label {
 /*0513 addcss*/
 .displayNone {
     display: none;
-}
-
-.h300 {
-    display: block;
-    min-height: 300px;
 }
 
 #h600 {
@@ -3736,7 +3721,14 @@ header {
 .hello1-list .list.members {
     padding: 20px 5px 15px;
     width: 26px;
+}
+.hello1-list .list.members a{
     position: relative;
+    display: inline-block;
+}
+.hello1-list .list.members a img {
+    position: absolute;
+    bottom: -5px;
 }
 
 .paddingClear {
@@ -3762,7 +3754,7 @@ header {
 }
 
 
-/*���嚙踐�蕭嚙踝蕭*/
+/*憿����*/
 .colorBlack {
     color: #666;
 }
@@ -3786,7 +3778,7 @@ header {
 }
 
 
-/*嚙踝蕭�嚙踐��蕭嚙踝蕭*/
+/*������*/
 .text-right {
     text-align: right!important;
 }
@@ -3870,8 +3862,9 @@ p {
 
 .text-ps {
     font-weight: 100;
-    font-size: 14px;
+    font-size: 12px;
     color: #9e9e9e;
+    font-family: 微軟正黑體,Gotham-Book;
     line-height: 18px;
     letter-spacing: 0.5px;
 }
@@ -3950,7 +3943,7 @@ hr.hr-stra {
 
 
 
-/*���撞嚙踐�蕭嚙踝蕭*/
+/*撖砍漲����*/
 .inlineBlock {
     display: inline-block;
 }
@@ -3958,7 +3951,9 @@ hr.hr-stra {
 .item360 {
     width: 360px;
 }
-
+.item400 {
+    width: 400px;
+}
 .item450 {
     width: 450px;
 }
@@ -3966,9 +3961,7 @@ hr.hr-stra {
 .item500 {
     width: 500px;
 }
-.item400{
-    width: 400px;
-}
+
 .item300 {
     width: 300px;
 }
@@ -4042,7 +4035,7 @@ hr.hr-stra {
     margin: 0 auto;
     width: 96%;
 }
-/*border嚙踐�蕭嚙踝蕭*/
+/*border*/
 .boardDotted{
 	border:2px dotted #009b38;
 }
@@ -4097,7 +4090,7 @@ footer .btn-link:hover {
 
 
 
-/*hover嚙踐�蕭嚙踝蕭*/
+/*hover����*/
 #dashboardContent .tablesaw-stack tbody tr {
     cursor: default;
 }
@@ -4156,7 +4149,7 @@ footer .btn-link:hover {
 .fullContent .tablesaw.apply2-table tr th {
     max-width: 20%;
 }
-.apply2history .mystyle3 .wht {
+.apply2history .mycigna3 .wht {
     width: 100%;
     overflow: hidden;
 }
@@ -4171,12 +4164,12 @@ footer .btn-link:hover {
 }
 
 .tablesaw-stack tbody tr.tr-blue:hover {
-    background-color: #f7f7f7;
+    background-color: #e3f5fd;
     cursor: default;
 }
 
 
-/*td嚙踐�蕭嚙踝蕭*/
+/*td����*/
 td.table3.col-sm-2,
 td.table4.col-sm-2 {
     line-height: 42px;
@@ -4206,7 +4199,7 @@ td input.col-sm-5.lineHigh28 {
 }
 
 
-/*�謍荔蕭���蕭嚙踝蕭*/
+/*摰����*/
 .float-left {
     float: left;
 }
@@ -4255,7 +4248,9 @@ td input.col-sm-5.lineHigh28 {
 .marginTop50 {
     margin-top: 50px;
 }
-
+.marginTop60 {
+    margin-top: 60px;
+}
 .marginLeft110 {
     margin-left: 110px\9;
     /* IE6-9 */
@@ -4311,7 +4306,7 @@ td input.col-sm-5.lineHigh28 {
 }
 
 
-/*icon嚙踐�蕭嚙踝蕭*/
+/*icon����*/
 i.foo-technology_4.foo-2x,
 i.foo-technology_1.foo-2x {
     font-size: 20px;
@@ -4358,7 +4353,7 @@ i.foo-object_20.foo-2x {
 }
 
 
-/*嚙踝蕭�嚙踐謆蕭嚙踝蕭*/
+/*������*/
 button {
     font-size: 15px;
     font-family: sans-serif, gotham;
@@ -4716,7 +4711,7 @@ button {
 .statement1 p.text-ps {
 
 }
-/*     嚙踝蕭謅嚙踝蕭�����蕭�嚙踝蕭*/
+/*     ����銝���*/
 
 .tb3 .tog4 {
     margin-top: -20px;
@@ -4745,7 +4740,7 @@ button {
 }
 
 
-/*嚙踝��正�蕭赯�*/
+/*�撌西”�*/
 .down20 .tablesaw-stack td,
 .down20 .tablesaw-stack th {
     text-align: left;
@@ -4858,7 +4853,7 @@ header .searchbar .col-sm-3 {
 }
 
 
-/*�謍荔蕭�������蕭*/
+/*蝺�隢見撘�*/
 .locked .col-sm-2 {
     width: 12%;
     margin-left: 50px;
@@ -4902,13 +4897,13 @@ header .searchbar .col-sm-3 {
 
 
 .fullContent {
-    /* min-height: 600px; */
+    /*min-height: 600px;*/
 }
 
-.stickyFooter {
-    /* position: absolute; */
+/*.stickyFooter {
+    position: absolute;
     bottom: 0;
-}
+}*/
 
 
 
@@ -4935,7 +4930,7 @@ header .searchbar .col-sm-3 {
 }
 
 .applyIndex .a1 .pull-right {
-    margin-top: 20px;
+    margin-top: 35px;
     margin-right: 15px;
 }
 
@@ -4955,7 +4950,6 @@ header .searchbar .col-sm-3 {
 /*applyInner*/
 .applyInner .tb3 {
     padding-top: 20px;
-    padding-bottom: 10px;
 }
 
 .applyInner .wht .tb3 {
@@ -4980,7 +4974,7 @@ header .searchbar .col-sm-3 {
     font-weight: 100;
     padding-left: 20px;
     padding-right: 20px;
-    text-align: right;
+   /* text-align: right;*/
 }
 
 .applyInner .tablesaw thead tr:first-child th:first-child {
@@ -5022,7 +5016,7 @@ header .searchbar .col-sm-3 {
     font-size: 17px
 }
 
-.applyInner .mystyle3 h2 {
+.applyInner .mycigna3 h2 {
     ;
     padding: 0px 0 0px 0;
     margin-bottom: 20px;
@@ -5078,14 +5072,11 @@ header .searchbar .col-sm-3 {
     margin: 0 5%;
 }
 
-.notification2 .tablesaw thead tr:first-child th,
-.notification2 .tablesaw tbody tr td{
+.notification2 .tablesaw thead tr:first-child th {
     text-align: left;
 }
-.notification2 .tablesaw thead tr:first-child th.text-right,
-.notification2 .tablesaw thead tr th:last-child,
-.notification2 .tablesaw tbody tr td:last-child {
-    text-align: right !important;
+.notification2 .tablesaw thead tr:first-child th.text-right {
+    text-align: right;
 }
 
 
@@ -5103,6 +5094,7 @@ header .searchbar .col-sm-3 {
 
 
 .selector-box {
+	margin-top: 5px;
     overflow: hidden;
     text-align: left;
     border: 1px solid #dfdfdf;
@@ -5119,15 +5111,15 @@ header .searchbar .col-sm-3 {
 .partner .tb3.relax {
     padding: 60px 20px 10px;
 }
-.partner .ui-tabs ul.tab {
+.partner .ui-tabs ul {
     margin: 0;
     padding: 0;
 }
-.partner .ui-tabs ul.tab li {
+.partner .ui-tabs ul li {
     list-style: none;
 }
 
-.partner .ui-tabs ul.tab li.active a {
+.partner .ui-tabs ul li.active a {
     color: #fff;
 }
 
@@ -5143,29 +5135,10 @@ header .searchbar .col-sm-3 {
     overflow-y: scroll;
 }
 
-
-select {
-    background: transparent;
-    font-size: 13.5px;
-    width: 100%;
-    /*width: 80%;*/
-    overflow: hidden;
-    height: 30px;
-    line-height: 1;
-    border: 0;
-    border-radius: 0;
-    height: 30px;
-    padding-left: 10px;
-    padding-right: 20px;
-    -webkit-appearance: none;
-    width: 140%\9;
-    /*width: 120%\9;*/
-    /* IE6-9 */
-}
-
 .selector-box select {
-    width: 140%\9;
-    /*width: 80%\9;*/
+    width:100%;
+    border: 0;
+    background: #FFFFFF; filter:Alpha(opacity=0);position:static
 }
 
 /* IEedge */
@@ -5260,22 +5233,11 @@ input {
     text-align: right;
     background-color: #f2f1f1;
     font-weight: normal;
-    font-size: 16px;
+    font-size: 13px;
     padding: 7px 10px 7px 10px;
-}
-
-.hid-body2 th {
-    text-align: right;
-    background-color: #fff;
 }
 
 .hid-body td {
-    font-size: 16px;
-    color: #333;
-    padding: 7px 10px 7px 10px;
-}
-
-.hid-body2 td {
     font-size: 13px;
     color: #333;
     padding: 7px 10px 7px 10px;
@@ -5284,15 +5246,6 @@ input {
 .hid-title {
     margin-bottom: 10px;
 }
-
-.hid-title2 {
-    margin-bottom: 10px;
-}
-
-.hid-title3 {
-    margin-bottom: 10px;
-}
-
 .mobileShow {
     display: none;
 }
@@ -5304,16 +5257,20 @@ input {
     width: 35%;
 }
 
-.w40p {
-    width: 40%;
-}
-
 .w25p {
     width: 25%;
 }
 
 .w70p {
     width: 70%;
+}
+
+.plus-list .col-sm-2 {
+    text-align: right;
+}
+
+.check-list2 .col-sm-2 {
+    text-align: right;
 }
 
 .input-400 {
@@ -5566,7 +5523,7 @@ label {
 
 .attribute1 .attr1-padding {
     padding: 15px 25px 15px 25px;
-    height: 250px;
+    height: 200px;
     border: 1px solid white;
     border-radius: 0px;
     border-left: 0px;
@@ -5580,13 +5537,7 @@ label {
     border-radius: 0px;
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
-.attribute1 .radio,
-.attribute1 .checkbox{
-    margin-left: 30px;
-}
-.attribute1 .checkbox input[type='checkbox']{
-    margin-top: 2px;
-}
+
 
 /*.mode2select*/
 .mode2select i.my5 {
@@ -5644,12 +5595,6 @@ textarea.inputText {
 
 
 /*datapicker*/
-.datepicker {
-    padding-left: 10px;
-    margin-bottom: 5px;
-    padding-top: 6px;
-    padding-bottom: 5px;
-}
 
 .ui-datepicker {
     z-index: 999999 !important
@@ -5884,7 +5829,7 @@ b.tablesaw-cell-label {
     font-weight: 300;
 }
 .ui-datepicker .ui-datepicker-header select {
-    font-family: Gotham, Gotham-Book, Gotham-Thin, 'STHeiti Light', STXihei, STHeiti, 'Apple LiGothic Medium', ��嚙踐�縣��嚙踝蕭, 'Microsoft JhengHei', sans-serif, '5FAE���縣��嚙踝蕭';
+    font-family: Gotham, Gotham-Book, Gotham-Thin, 'STHeiti Light', STXihei, STHeiti, 'Apple LiGothic Medium', 敺株�迤暺��, 'Microsoft JhengHei', sans-serif, '5FAE頠迤暺��';
 }
 
 #ui-datepicker-div .ui-datepicker .ui-datepicker-prev, 
@@ -6080,8 +6025,8 @@ b.tablesaw-cell-label {
 }
 
 
-.mystyle2 .my1,
-.mystyle3 .my1 {
+.mycigna2 .my1,
+.mycigna3 .my1 {
     margin-bottom: 0;
 }
 .bg3 .table1,
@@ -6346,6 +6291,22 @@ b.tablesaw-cell-label {
     .listing1 .mobileShow {
         margin-right: 20px;
     }
+
+    /*.adBlock {
+        background: url(http://www-t.cigna.com.tw/sites/default/files/styles/w314xh270/public/314x270-E.jpg?itok=q48uy3s0) no-repeat;
+        width: 226px;
+        height: 193px;
+        overflow: hidden;
+    }
+    .adBlock a {
+        display: block;
+        width: 226px;
+        height: 193px;
+    }
+    .ad_width {
+        width: 226px;
+        height: 193px;
+    }*/
 
     /* footer*/
     
@@ -6769,21 +6730,12 @@ b.tablesaw-cell-label {
     .sidebar-offcanvas .foo-printer {
         font-size: 1.4em;
     }
-/*     .index-bg {
+    .index-bg {
         width: 100%;
         height: 619px;
         position: absolute;
         margin-right: auto;
-        background-image: url(../img/bg2.png);
-        background-size: 100% 100%;
-        margin-top: -50px;
-    } */
-        .index-bg {
-        width: 75%;
-        height: 619px;
-        position: absolute;
-        margin-right: auto;
-        background-image: url(../img/bg2.png);
+        background-image: url(../img/bg2.jpg);
         background-size: 100% 100%;
         margin-top: -50px;
     }
@@ -6856,7 +6808,7 @@ b.tablesaw-cell-label {
         width: 100%;
     }
 
-    #dashboardContent .mystyle2 .hid1 {
+    #dashboardContent .mycigna2 .hid1 {
         display: none;
     }
     #dashboardContent .tablesaw-stack .textFirst {
@@ -7014,9 +6966,6 @@ b.tablesaw-cell-label {
 
 
 @media screen and (max-width: 767px) {
-    .plus-list{
-		display: none;
-	}
     .mobileHide {
         display: none;
     }
@@ -7238,9 +7187,7 @@ b.tablesaw-cell-label {
     .pdt2,
     .pdt3,
     .pdt4,
-    .pdt5,
-    .pdt6,
-    .pdt7 {
+    .pdt5 {
         font-size: 16px;
     }
     .bgSpace {
@@ -7420,9 +7367,13 @@ b.tablesaw-cell-label {
         line-height: 26px;
         height: 28px;
     }
-    .hello1-list .list:first-child {
+    /*.hello1-list .list:first-child {
         display: none;
-    }
+    }*/
+   .hello1-list .list.members{
+   	padding: 30px 40px 0 0 !important;
+   }
+   .dropdownFile{position: inherit !important;}
     .hello1-list .list:last-child {
         float: right;
     }
@@ -7621,12 +7572,8 @@ b.tablesaw-cell-label {
     .tablesaw-stack th {
         text-align: left!important;
     }
-    .check-list2 i.my5 {
-        top: 20px !important;
-        right: 60px !important;
-        float: right !important;
-    }
     i.my5 {
+        float: left;
         display: inline-block;
         position: relative;
         margin-top: 2px;
@@ -7946,6 +7893,24 @@ b.tablesaw-cell-label {
         margin-left: 5px;
     }
 
+    /*.adBlock {
+        background: url(http://www-t.cigna.com.tw/sites/default/files/styles/w285xh169/public/image285X168_0.jpg?itok=8zyastv8) no-repeat;
+        width: 285px;
+        height: 169px;
+        overflow: hidden;
+    }
+    .adBlock a {
+        display: block;
+        width: 285px;
+        height: 169px;
+    }
+    .ad_width {
+        width: 285px;
+        height: 169px;
+    }*/
+
+    
+
     .clearFloat .float-left.w70p {
         float: none;
     }
@@ -8089,7 +8054,7 @@ b.tablesaw-cell-label {
         display: none;
     }
 
-    .mylist1 .mystyle3 table td b.tablesaw-cell-label,
+    .mylist1 .mycigna3 table td b.tablesaw-cell-label,
     .mylist1 .grey table td b.tablesaw-cell-label {
         display: none;
     }
@@ -8193,15 +8158,15 @@ b.tablesaw-cell-label {
         padding-left: 25px !important;
     }
 
-    .listing7 .mystyle3 br.hid2 {
+    .listing7 .mycigna3 br.hid2 {
         display: none;
     }
-    .listing7 .mystyle3 .dateFix {
+    .listing7 .mycigna3 .dateFix {
         margin-left: 0;
         margin-right: 0;
         display: inline-block;
     }
-    .listing7 .mystyle3 .btn-form {
+    .listing7 .mycigna3 .btn-form {
         padding: 0 20px;
     }
 
@@ -8557,7 +8522,7 @@ b.tablesaw-cell-label {
 
 
 .attribute1 .check-list .radio.inline .radio-btn {
-    margin-top: 2px;
+    margin-top: 0;
 }
 
 .attribute1 .attr1-padding label {
@@ -8629,7 +8594,7 @@ b.tablesaw-cell-label {
     background: url(../img/foo/search_gray.png) no-repeat;
 }
 .fa-search.search1 {
-    top: 25px;
+    top: 35px;
 }
 .fa-search.orange {
     width: 14px;
@@ -8676,9 +8641,7 @@ b.tablesaw-cell-label {
 .pdt2.active,
 .pdt3.active,
 .pdt4.active,
-.pdt5.active,
-.pdt6.active,
-.pdt7.active {
+.pdt5.active {
     color: #009100;
 }
 
@@ -8734,26 +8697,19 @@ b.tablesaw-cell-label {
     margin-right: 6px;
 }
 
-.foo-angle-up, .foo-angle-down {
+.foo-angle-up,
+.foo-angle-down {
     position: relative;
     top: 4px;
     left: -4px;
 }
-.foo-angle-right, .fa-angle-right {
+.foo-angle-right,
+.fa-angle-right {
     width: 20px;
     height: 20px;
     margin: 0 5px;
     display: inline-block;
     background: url(../img/fa-angle-right.png) no-repeat;
-    position: relative;
-    vertical-align: middle;
-}
-.fa-angle-right-blue {
-    width: 20px;
-    height: 20px;
-    margin: 0 5px;
-    display: inline-block;
-    background: url(../img/fa-angle-right-blue.png) no-repeat;
     position: relative;
     vertical-align: middle;
 }
@@ -8767,37 +8723,6 @@ b.tablesaw-cell-label {
     position: relative;
     vertical-align: middle;
 }
-
-.fa-angle-up {
-	width: 20px;
-    height: 20px;
-    margin: 0 5px;
-    display: inline-block;
-  	background: url(../img/fa-angle-up.png) no-repeat;
-  	position: relative;
-    vertical-align: middle;
-}
-
-.fa-angle-down {
- 	width: 20px;
-    height: 20px;
-    margin: 0 5px;
-    display: inline-block;
-  	background: url(../img/fa-angle-down.png) no-repeat;
-  	position: relative;
-    vertical-align: middle;
-}
-
-.fa-angle-down-big {
- 	width: 40px;
-    height: 40px;
-    margin: 0 5px;
-    display: inline-block;
-  	background: url(../img/fa-angle-down-big.png) no-repeat;
-  	position: relative;
-    vertical-align: middle;
-}
-
 .foo-object_27 {
     background-position: 0 -925px;
     position: relative;
@@ -8889,14 +8814,14 @@ i.fa.foo-printer.fa-lg.orange {
     background: url(../img/sort_down_orange.png) no-repeat;
     position: relative;
 }
-/* .fa-bars {
+.fa-bars {
     width: 24px;
     height: 24px;
     display: inline-block;
     vertical-align: middle;
     background: url(../img/manu-nav-white.png) no-repeat;
     position: relative;
-} */
+}
 
 
 
@@ -8909,16 +8834,16 @@ i.fa.foo-printer.fa-lg.orange {
 
 
 /**/
-.partner #list2 ul.tab {
+.partner #list2 ul {
     padding: 0;
     margin: 0;
 }
 
-.partner #list2 ul.tab li {
+.partner #list2 ul li {
     list-style: none;
 }
 
-.partner #list2 ul.tab li a {
+.partner #list2 ul li a {
     color: #00DB00;
 }
 
@@ -8953,7 +8878,7 @@ i.fa.foo-printer.fa-lg.orange {
 
 
 .popover {
-    font-family: Gotham, Gotham-Book, Gotham-Thin, "STHeiti Light", STXihei, STHeiti, "Apple LiGothic Medium", "��嚙踐�縣��嚙踝蕭", "Microsoft JhengHei", sans-serif, "5FAE\8EDF\6B63\9ED1\9AD4"!important;
+    font-family: Gotham, Gotham-Book, Gotham-Thin, "STHeiti Light", STXihei, STHeiti, "Apple LiGothic Medium", "敺株�迤暺��", "Microsoft JhengHei", sans-serif, "5FAE\8EDF\6B63\9ED1\9AD4"!important;
 }
 
 
@@ -9012,6 +8937,7 @@ td .tablesaw-cell-content {
 
 
 
+.b{border: 1px solid red !important;}
 
 /*form file*/
 .uploadfile {
@@ -9043,18 +8969,6 @@ input[type=file]{
 }
 
 /*form checkbox*/
-#members .title.members {border-bottom: 1px solid #EEE;
-    background: #FFF;
-    padding: 10px 12px;
-    line-height: 20px;
-    }
-#members .items .item-list {
-    display: block;
-    padding: 5px 20px;
-    line-height: 30px;
-    display: flex;
-    align-items: center;
-}
 .CheckboxForm .form-checkbox{
 }      
 .CheckboxForm .form-checkbox,
@@ -9066,7 +8980,7 @@ input[type="checkbox"]{
     height: 16px;
     line-height: 16px;
     border: 1px solid #ccc;
-    margin:0 8px;
+    margin:8px;
     cursor: pointer;
     outline: none;
 }
@@ -9106,13 +9020,7 @@ input[type="checkbox"]:checked{
 .file-drop-zone{
 	border: 0 !important;
 }
-.gorest{
-	pointer-events:all !important;
-}
-.gorest button{
-	background-color: #CC7A02 !important;
-	cursor: pointer !important;
-}
+
 
 
 
@@ -9629,219 +9537,38 @@ input[type="checkbox"]:checked{
 
 }
 
-form.cmxform label.error, label.error {
-	/* remove the next line when you have trouble in IE6 with labels in list */
-	color: red;
-	font-style: italic
+/**/
+.gorest{
+	pointer-events:all !important;
+}
+.gorest button{
+	background-color: #CC7A02 !important;
+	cursor: pointer !important;
 }
 
-
-
+.mt-2{
+	margin-top: 10px;
+}
+.mb-4{
+	margin-bottom: 20px;
+}
+.fixed{
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 999;
+}
+.marginTop20{
+	margin-top: 20px;
+}
+.marginTop120{
+	margin-top: 120px;
+}
+.date.input-group-addon{
+	background: #DFFFDF;
+}
+.date.input-group-addon>i{
+	margin-left: 20px;
+}
 
 /**/
-.action-buttons{
-	margin-top: 5px;
-}
-.action-buttons>a{
-	position: relative;
-	padding: 5px;
-	background: #1fce83;
-	color: #FFFFFF;
-	border-radius: 3px;
-	margin-top: 5px;
-}
-.action-buttons>a .fa-search{
-	position: relative;
-	top: 5px;
-	right: 0;
-    background: url(../img/foo/search_white.png) no-repeat;
-
-}
-tr {
-    display: table-row;
-    vertical-align: inherit;
-    border-color: inherit;
-}
-tr.detail-row.open {
-    display: block !important;
-    display: table-row !important;
-}
-tr.detail-row {
-    display: none !important;
-}
-tr.detail-row>td {
-    background-color: #f1f6f8;
-    border-top: 3px solid #d1e1ea!important;
-}
-table td, .detailPolicy .col-xs-8 {
-    word-wrap: break-word;
-    word-break: break-all;
-}
-.table-detail {
-    background-color: #fff;
-    border: 1px solid #dcebf7;
-    width: 100%;
-    padding: 12px;
-}
-.table-detail .profile-user-info {
-    margin-bottom: 10px;
-}
-.table-detail .profile-user-info {
-    display: table;
-    width: 98%;
-    width: calc(100% - 24px);
-    margin: 0 auto;
-}
-.table-detail .panel-default {
-    border-color: #ddd;
-}
-.table-detail .panel {
-    margin-bottom: 20px;
-    background-color: #fff;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
-    box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
-}
-.table-detail .panel-default>.panel-heading {
-    color: #333;
-    background-color: #f5f5f5 !important;
-    border-color: #ddd !important;
-}
-.table-detail .panel-heading {
-    padding: 10px 15px !important;
-    border-bottom: 1px solid transparent !important;
-    border-top-right-radius: 3px;
-    border-top-left-radius: 3px;
-}
-.table-detail  .form-horizontal .form-group{
-	line-height: 10px;
-}
-.table-detail  .form-horizontal{
-	border-bottom: none !important;
-}
-
-.action-buttons>a span:nth-child(2){
-	display: inline-block;
-}
-.action-buttons>a span:nth-child(3){
-	display: none;
-}
-.openTextA span:nth-child(3){
-	display: inline-block !important;
-}
-.openTextA span:nth-child(2){
-	display: none !important;
-}
-.change-contace .radio.inline .radio-btn{
-	margin: 0 7px 0 0;
-}
-.change-contace .btn-cancel{
-	height: 38px;
-	line-height: 38px;
-	padding: 0
-}
-.change-contace .btn-login{
-	border-radius: 3px;
-	padding: 0;
-}
-.change-contace .checkbox+.checkbox, .change-contace .radio+.radio {
-    margin-top: 10px;
-}
-.change-contace .change1{
-	padding: 0;
-}
-.detailPolicy .change1{
-	width: 90%;
-	margin: 0 5%;
-	padding: 0;
-}
-.detailPolicy .change1 .col-sm-8,
-.detailPolicy .change1 .col-sm-3{
-	text-align: left
-}
-
-tr.disabled .action-buttons{
-    pointer-events:none;
-}
-input[type=number]{
-    padding-right: 0 !important;
-}
-.check-list2 .tablesaw-cell-label{
-    display: none;
-}
-@media (max-width: 200px) and (min-width: 1024px){
-    .notification2 .tablesaw thead tr th:last-child,
-    .notification2 .tablesaw tbody tr td:last-child {
-        text-align: left !important;
-    }   
-    .posaout{
-        width: 100%;
-    }
-    .check-list2 i.my5 {
-        top: 20px !important;
-        right: 60px !important;
-        float: right !important;
-    }
-    .check-list2 .tablesaw-cell-label{
-        display: block !important;
-        width: 40%;
-        float: left;
-    }
-}
-@media only screen and (min-device-width: 200px) and (max-device-width: 1024px){
-    .attribute1 .attr1-padding {
-        height: auto !important;
-    }
-    .custominput{
-        width: 90% !important;
-    }
-    td span.sub1{
-        float: left;
-        padding-left: 5px;
-    }
-    .notification2 .tablesaw thead tr th:last-child,
-    .notification2 .tablesaw tbody tr td:last-child {
-        text-align: left !important;
-    }
-    .posaout{
-        width: 100%;
-    }
-    .check-list2 .tablesaw-cell-label{
-        display: block !important;
-        width: 40%;
-        float: left;
-    }
-}
-@media only screen and (min-device-width: 200px) and (max-device-width: 768px){
-    .col-sm-10.enNormal{
-        width: 100%;
-    }
- 
-}
-
-.custominput{
-    border: 1px solid #dfdfdf!important;
-    background: #fff;
-    width: 90px;
-    float: left;
-}
-.custominput>span{
-    padding: 5px;
-}
-.custominput>input{
-    border: 0 !important;
-    float: none !important;
-    padding-left: 0;
- }
-.custominput>input:focus{
-    outline:none; 
-}
-tr.textcolor td{
-    color: #fff;
-    font-weight: 500;
-}
-tr.textcolor p.enSmall,
-tr.textcolor .my5{
-    color: #ffffff;
-    opacity: .9;
-}

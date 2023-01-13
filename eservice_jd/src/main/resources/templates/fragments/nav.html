@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="sidebar sidebar-style-2">
+    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+            <ul class="nav nav-primary">
+                <li class="nav-item active submenu">
+                    <a data-toggle="collapse" href="#claimCases">
+                        <i class="bi bi-bullseye"></i>
+                        <p>個人中心</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse in" id="claimCases">
+                        <ul class="nav nav-collapse">
+                            <li class="active">
+                                <a href="dashboard">
+                                    <span class="sub-item">個人案件列表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="changePassword1">
+                                    <span class="sub-item">變更密碼</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#overdueNotes">
+                        <i class="bi bi-infinity"></i>
+                        <p>客戶管理</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse in" id="overdueNotes">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="policyQuery">
+                                    <span class="sub-item">保單查詢</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="protectQuery">
+                                    <span class="sub-item">保戶查詢</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#Investigation">
+                        <i class="bi bi-journal-richtext"></i>
+                        <p>保單進度及照會管理</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse in" id="Investigation">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="caseQuery">
+                                    <span class="sub-item">案件進度查詢</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+</html>

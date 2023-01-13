@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+</head>
+
+<body>
+<div class="wrapper sidebar_minimize">
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<div th:replace="fragments/nav"></div>
+    <div class="main-panel" style="position: absolute;">
+		<div class="content">
+			<div class="page-inner">
+				<div class="mt-2 mb-4">
+		            <ul class="breadcrumb detail1">
+		                <li>
+		                    <a href="#">保單管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
+		                </li>
+		                <li class="active">
+		                    <a href="javascript:;">保單查詢</a>
+		                </li>
+		            </ul>
+				</div>
+				<div class="row mb-4">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header">
+								<div class="card-head-row">
+									<div class="card-title tb3" id="titleList">
+										<i class="foo-business_15 foo-2x"></i>查詢條件 
+									</div>
+								</div>
+							</div>
+							<div class="card-body clearfix bg3" style="padding: 0;">
+                                 
+					            <div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form class="form-horizontal" role="form">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label class="col-sm-3"> 保單號碼 </label>
+										<div class="col-sm-9">
+											<input type="text" placeholder="輸入欲查詢的保單號碼" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 no-padding-right"> 要保人姓名 </label>
+
+										<div class="col-sm-9">
+											<input type="text" placeholder="輸入欲查詢的要保人姓名" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 no-padding-right"> 被保險人姓名 </label>
+
+										<div class="col-sm-9">
+											<input type="text" placeholder="輸入欲查詢的被保險人姓名" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 no-padding-right"> 保單類型 </label>
+										<div class="col-sm-9">
+											<select class="form-control">
+												<option value=""></option>
+												<option value="">保障型保單</option>
+												<option value="">投資型保單</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 no-padding-right"> 保單生效日 </label>
+										<div class="col-sm-9 input-icon date datepicker">
+											<input type="text" class="form-control" placeholder="保單生效日">
+											<div class="input-group-addon input-icon-addon date" style="width: 60px;">
+												<i class="bi bi-calendar-heart"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label class="col-sm-3"> 保單狀態 </label>
+										<div class="col-sm-9">
+											<select class="form-control">
+												<option value=""></option>
+												<option value="">有效</option>
+												<option value="">無效</option>
+											</select>
+										</div>
+									</div> 
+									<div class="form-group">
+										<label class="col-sm-3 no-padding-right"> 要保人身分證號 </label>
+
+										<div class="col-sm-9">
+											<input type="text" placeholder="輸入欲查詢的要保人身分證號" class="form-control" />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 no-padding-right"> 被保人身分證號 </label>
+
+										<div class="col-sm-9">
+											<input type="text" placeholder="輸入欲查詢的被保人身分證號" class="form-control" />
+										</div>
+									</div>
+
+									
+									<div class="form-group">
+										<label class="col-sm-3 no-padding-right"> 險種 </label>
+										<div class="col-sm-9">
+											<select class="form-control">
+												<option value=""></option>
+												<option value="">壽險 </option>
+												<option value="">年金險</option>
+												<option value="">年金險 </option>
+												<option value="">投資型商品 </option>
+												<option value="">投資型 </option>
+												<option value="">健康險 </option>
+												<option value="">健康險/長照險 </option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 no-padding-right"> 繳費方式 </label>
+										<div class="col-sm-9">
+											<select class="form-control">
+												<option value=""></option>
+												<option value="">月繳</option>
+												<option value="">季繳</option>
+												<option value="">半年繳</option>
+												<option value="">年繳</option>
+											</select>
+										</div>
+									</div>
+								</div>	
+									<div class="clearfix form-actions">
+										<div class="col-md-offset-5 col-md-7">
+											<button class="btn btn-info" type="button" onclick="$('#form1').submit()">
+												<i class="my-icon fa fa-check bigger-110"></i>
+												查詢
+											</button>
+											<button class="btn" type="reset">
+												<i class="my-icon fa fa-undo bigger-110"></i>
+												重新輸入
+											</button>
+										</div>
+									</div>
+								</form>
+								<!-- PAGE CONTENT ENDS -->
+							    </div>
+					      
+					        </div>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-4">
+					<div class="col-md-12">
+						<div class="card">
+							<!--<div class="card-header">
+								<div class="card-head-row">
+									<div class="card-title tb3 my1" id="titleList">
+										<i class="foo-business_23 foo-lg"></i> 查詢結果清單  <span class="my2b">共 3 張</span>
+									</div>
+								</div>
+							</div>-->
+							<div class="card-body clearfix" style="padding: 0;">
+                                <div class="my1" style="margin-bottom:0">
+				                    <i class="foo-business_23 foo-lg"></i> 查詢結果清單 <span class="my2b">共 3 張</span>
+				                </div>
+					            <div class=" ">
+					            	
+					                <table class="tablesaw tablesaw-stack">
+				                        <thead>
+				                            <tr class="table2">
+				                                <th class="text-left item400">保單</th>
+				                                <th scope="col" class="item400">要保險人</th>
+				                                <th scope="col" class="item400">主被保險人</th>
+				                                <th scope="col" class="item400">保單狀態</th>
+				                                <th scope="col" class="item360">投保始期</th>
+				                                <th scope="col" class="item450">保額</th>
+				                                <th scope="col" class="item400">繳費年期</th>
+				                                <th scope="col" class="item450">繳別</th>
+				                                <th scope="col" class="item450">支付工具</th>
+				                            </tr>
+				                        </thead>
+				                        <tbody>
+				                            <tr onclick="window.document.location='listing1.html';">
+				                                <td class="table3">
+				                                    UC70000001
+				                                </td>
+				                                <td class="hid1 hid2">陳文倫</td>
+				                                <td class="hid1 hid2">陳文倫</td>
+				                                <td class="hid1 hid2">有效</td>
+				                                <td class="hid1 hid2 enThin">2015/01/16</td>
+				                                <td class="hid1 hid2">420,000<i class="my5">NTD</i></td>
+				                                <td class="hid1 hid2">20</td>
+				                                <td class="hid1 hid2">月繳</td>
+				                                <td class="hid1 hid2">郵局劃撥</td>
+				                            </tr>
+				                            <tr class="tr-odd" onclick="window.document.location='listing1.html';">
+				                                <td class="table3">
+				                                    UC70000001
+				                                </td>
+				                                <td class="hid1 hid2">李小龍</td>
+				                                <td class="hid1 hid2">陳文倫</td>
+				                                <td class="hid1 hid2">有效</td>
+				                                <td class="hid1 enThin hid2">2015/01/16</td>
+				                                <td class="hid1 hid2">420,000<i class="my5">NTD</i></td>
+				                                <td class="hid1 hid2">20</td>
+				                                <td class="hid1 hid2">月繳</td>
+				                                <td class="hid1 hid2">郵局劃撥</td>
+				                            </tr>
+				                           
+				                        </tbody>
+				                    </table>
+                
+					            </div>
+							
+					      
+					        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

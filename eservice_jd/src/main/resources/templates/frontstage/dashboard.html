@@ -5,91 +5,14 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=9, chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>個人工作列表｜臺銀人壽經代專區</title>
-	<link rel="shortcut icon" th:href="@{/img/favor-icon.png}">
-	<!-- Bootstrap -->
-	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
-	<link th:href="@{/css/atlantis.css}" rel="stylesheet">
-	<link th:href="@{/css/icon.css}" rel="stylesheet"/>
-	<link th:href="@{/css/layout.css}" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/mobile.css}">
-	<link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}">
-	<link rel="stylesheet" th:href="@{/css/tablesaw.stackonly.css}">
+	<th:block th:replace="fragments/head"/>
 </head>
 
 <body>
 <div class="wrapper">
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
-	<!-- Sidebar -->
-	<div class="sidebar sidebar-style-2">
-		<div class="sidebar-wrapper scrollbar scrollbar-inner">
-			<div class="sidebar-content">
-				<ul class="nav nav-primary">
-					<li class="nav-item active submenu">
-						<a data-toggle="collapse" href="#claimCases">
-							<i class="bi bi-bullseye"></i>
-							<p>個人中心</p>
-							<span class="caret"></span>
-						</a>
-						<div class="collapse in" id="claimCases">
-							<ul class="nav nav-collapse">
-								<li class="active">
-									<a href="dashboard.html">
-										<span class="sub-item">個人案件列表</span>
-									</a>
-								</li>
-								<li>
-									<a href="changePassword1">
-										<span class="sub-item">變更密碼</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</li>
-					<li class="nav-item">
-						<a data-toggle="collapse" href="#overdueNotes">
-							<i class="bi bi-infinity"></i>
-							<p>客戶管理</p>
-							<span class="caret"></span>
-						</a>
-						<div class="collapse in" id="overdueNotes">
-							<ul class="nav nav-collapse">
-								<li>
-									<a href="policy-inquiry.html">
-										<span class="sub-item">保單查詢</span>
-									</a>
-								</li>
-								<li>
-									<a href="protect-query.html">
-										<span class="sub-item">保戶查詢</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</li>
-					<li class="nav-item">
-						<a data-toggle="collapse" href="#Investigation">
-							<i class="bi bi-journal-richtext"></i>
-							<p>保單進度及照會管理</p>
-							<span class="caret"></span>
-						</a>
-						<div class="collapse in" id="Investigation">
-							<ul class="nav nav-collapse">
-								<li>
-									<a href="caseInquiry.html">
-										<span class="sub-item">案件進度查詢</span>
-									</a>
-								</li>
-
-							</ul>
-						</div>
-					</li>
-
-				</ul>
-			</div>
-		</div>
-	</div>
-	<!-- End Sidebar -->
+	<div th:replace="fragments/nav"></div>
 	<div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -208,25 +131,7 @@
 	</div>
 
 </div>
-<!--   Core JS Files   -->
-<script th:src="@{/plugin/jquery-1.11.3.min.js}"></script>
-<script th:src="@{/plugin/bootstrap.min.js}"></script>
-
-<script th:src="@{/js/eservice/demo.js}"></script>
-<!-- jQuery UI -->
-<script th:src="@{/plugin/jquery-ui.min.js}"></script>
-<!-- jQuery Scrollbar -->
-<script th:src="@{/plugin/jquery.scrollbar.min.js}"></script>
-<!-- Chart JS -->
-<script th:src="@{/plugin/chart.min.js}"></script>
-<!-- tablesaw -->
-<script th:src="@{/js/atlantis.js}"></script>
-<script th:src="@{/plugin/tablesaw.stackonly.js}"></script>
-<!--popover-->
-<script th:src="@{/plugin/scrollbar.js}"></script>
-<script th:src="@{/js/popover.js}"></script>
-<script th:src="@{/js/eservice/timer.js}"></script>
-<script th:src="@{/plugin/timer.jquery.js}"></script>
+<footer th:replace="fragments/footer"></footer>
 <script>
         var doughnutChart = document.getElementById('doughnutChart').getContext('2d'),
             doughnutChart2 = document.getElementById('doughnutChart2').getContext('2d');
