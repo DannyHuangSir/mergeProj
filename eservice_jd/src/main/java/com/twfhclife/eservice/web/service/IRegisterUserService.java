@@ -1,7 +1,6 @@
 package com.twfhclife.eservice.web.service;
 
 import com.twfhclife.eservice.web.model.ParameterVo;
-import com.twfhclife.eservice.web.model.RegisterQuestionVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 
 import java.util.List;
@@ -43,4 +42,10 @@ public interface IRegisterUserService {
 	public List<UsersVo> getMailPhoneByRocid(String rocId);
 	
 	public UsersVo getMailPhoneByRocidPolicyNo(String rocId, String policyNo);
+
+    int incLoginFailCount(String userId);
+
+	int updateLoginSuccess(String userId);
+
+	String changePassword(String account, String newPassword);
 }

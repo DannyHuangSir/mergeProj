@@ -26,7 +26,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
             UsersVo userDetail = (UsersVo) eserviceUser;
             if (userDetail.getLastChangPasswordDate() == null) {
                 if (request.getServletPath().indexOf("doLogout") == -1 && request.getServletPath().indexOf("Password") == -1) {
-                    response.sendRedirect("changePassword1");
+                    response.sendRedirect("changePasswordClause");
                     return uriAuth;
                 }
             }

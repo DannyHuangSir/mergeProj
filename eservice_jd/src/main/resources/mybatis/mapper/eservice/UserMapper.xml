@@ -19,12 +19,14 @@
 		<result column="encrypted_pwd" property="password" />
 		<result column="online_flag" property="onlineFlag"/>
 		<result column="status" property="status"/>
+		<result column="CLAUSE_FLAG" property="clauseFlag"/>
+		<result column="LOGIN_TIME" property="loginTime"/>
 	</resultMap>
 	
 	<sql id="User_Column_List">
 		u.user_id,u.roc_id,ESERVICE_JD.DBO.FN_DEBASE64(u.mobile) mobile,ESERVICE_JD.DBO.FN_DEBASE64(u.email) email,u.login_fail_count,u.last_chang_password_date,
 		u.sms_flag,u.mail_flag,u.fb_id,u.moica_id,u.user_type,u.create_date,u.create_user, u.user_name username,
-		u.online_flag, u.login_fail_count, u.status
+		u.online_flag, u.login_fail_count, u.status, u.LOGIN_TIME, u.CLAUSE_FLAG
 	</sql>
 
 	<select id="getUserByRocId" resultMap="UsersMap" parameterType="java.lang.String">
@@ -79,6 +81,15 @@
 		last_chang_password_date = getdate()
 		where lower(user_id) = lower(#{account})
 	</update>
+
+	<update id="changePassword" parameterType="java.lang.String">
+		update ESERVICE_JD.DBO.USERS set
+		last_chang_password_date = getdate(),
+		clause_flag = 'Y',
+		LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME(), STATUS = 'enable'
+		where lower(user_id) = lower(#{account})
+	</update>
+
 	
 	<update id="updateUserType" parameterType="java.lang.String">
 		update ESERVICE_JD.DBO.USERS set
@@ -130,5 +141,17 @@
 			set online_flag = 'Y'
 		WHERE
 			LOWER(USER_ID) = LOWER(#{userId})
+	</update>
+
+	<update id="incLoginFailCount">
+		UPDATE ESERVICE_JD.DBO.USERS
+		SET LOGIN_FAIL_COUNT = LOGIN_FAIL_COUNT +1
+		WHERE LOWER(USER_ID) = LOWER(#{userId})
+	</update>
+
+	<update id="updateLoginSuccess">
+		UPDATE ESERVICE_JD.DBO.USERS
+		SET LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME(), STATUS = 'enable'
+		WHERE LOWER(USER_ID) = LOWER(#{userId})
 	</update>
 </mapper>

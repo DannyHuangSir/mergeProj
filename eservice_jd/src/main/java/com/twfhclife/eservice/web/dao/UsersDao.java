@@ -55,5 +55,10 @@ public interface UsersDao {
 	public UsersVo getMailPhoneByRocidPolicyNo(@Param("rocId") String rocId, @Param("policyNo") String policyNo);
 	
 	public void updateOnlineFlagY(@Param("userId") String userId);
-	
+
+    int incLoginFailCount(@Param("userId") String userId);
+
+	int updateLoginSuccess(@Param("userId") String userId);
+
+	int changePassword(String account);
 }

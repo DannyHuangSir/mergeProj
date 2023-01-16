@@ -16,9 +16,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidParameterException;
 import java.util.Calendar;
@@ -39,16 +37,31 @@ public class ChangePasswordController extends BaseController {
     @Autowired
     private KeycloakService keycloakService;
 
-    @GetMapping("/changePassword1")
-    public String changePassword1() {
+
+    @GetMapping("/changePasswordClause")
+    public String changeClause() {
+        try {
+            //備註
+            String changePassword = getParameterValue(ApConstants.PAGE_WORDING_CATEGORY_CODE, ApConstants.WORDING_NA201);
+            addAttribute("changePasswordNote", changePassword);
+        } catch (Exception e) {
+            logger.error("changeInfo1 error! {}", e);
+        }
+        return "frontstage/onlineChange/changePassword/change-clause";
+    }
+
+    @RequestMapping("/changePassword1")
+    public String changePassword1(UsersVo usersVo) {
         try {
             //備註
             String changePassword = getParameterValue(ApConstants.PAGE_WORDING_CATEGORY_CODE, ApConstants.WORDING_NA201);
             addAttribute("changePasswordNote", changePassword);
             UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
-            //TODO: add error message parameter
             if (userDetail.getLastChangPasswordDate() == null) {
                 addAttribute("errorMessage", "為確保您的帳號安全，請立即變更密碼");
+            }
+            if (usersVo != null && usersVo.getClauseFlag() != null) {
+                addAttribute("CLAUSE_FLAG", usersVo.getClauseFlag());
             }
         } catch (Exception e) {
             logger.error("changeInfo1 error! {}", e);
@@ -74,7 +87,7 @@ public class ChangePasswordController extends BaseController {
             KeycloakUser keycloakUser = keycloakService.login(userId, users.getPassword());
             if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
                 if (ValidateUtil.isPwd(users.getNewPassword())) {
-                    message = registerUaerService.updatePassword(userId, users.getNewPassword());
+                    message = registerUaerService.changePassword(userId, users.getNewPassword());
                 } else {
                     /*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/
                     message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0024");

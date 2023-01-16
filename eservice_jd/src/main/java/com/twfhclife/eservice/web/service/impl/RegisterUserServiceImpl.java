@@ -254,4 +254,37 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		return userDao.getMailPhoneByRocidPolicyNo(rocId, policyNo);
 	}
 
+    @Override
+    public int incLoginFailCount(String userId) {
+        return userDao.incLoginFailCount(userId);
+    }
+
+	@Override
+	public int updateLoginSuccess(String userId) {
+		return userDao.updateLoginSuccess(userId);
+	}
+
+	@Override
+	public String changePassword(String account, String password) {
+		KeycloakUser user = keycloakService.getUserByUsername(account);
+		if(user == null) {
+			return "使用者帳號不存在";
+		} else {
+			Map<String, Object> resultmap = keycloakService.resetPwd(DEFAULT_REALM, user.getId(), password);
+			String result = resultmap.get("result").toString();
+			if(result.contentEquals("true")) {
+				logger.debug("update password success!");
+				userDao.changePassword(account);
+				logger.debug("update last password date success!");
+			} else {
+				if(resultmap.get("error_description") != null) {
+					return resultmap.get("error_description").toString();
+				} else {
+					return "error";
+				}
+			}
+		}
+		return "密碼變更成功";
+	}
+
 }

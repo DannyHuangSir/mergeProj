@@ -18,7 +18,9 @@ public interface ApConstants {
 	
 	/** 系統別 */
 	final String SYSTEM_ID_ADM = "eservice_adm";
-	
+
+	final String SYSTEM_ID_JD = "eservice_jd";
+
 	/** 事件類型 */
 	final String EVENT_TYPE_PARAMETER_CATEGORY_CODE = "EVENT_TYPE";
 

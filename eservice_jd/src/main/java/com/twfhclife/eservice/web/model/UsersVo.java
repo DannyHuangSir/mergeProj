@@ -20,6 +20,18 @@ public class UsersVo implements Serializable {
 	private String moicaId;
 	private String userType;
 	private Date createDate;
+	private Date loginTime;
+
+	private String clauseFlag;
+
+	public String getClauseFlag() {
+		return clauseFlag;
+	}
+
+	public void setClauseFlag(String clauseFlag) {
+		this.clauseFlag = clauseFlag;
+	}
+
 	private String createUser;
 	private String password;
 	private String newPassword;
@@ -207,6 +219,12 @@ public class UsersVo implements Serializable {
 	public void setIdentity(Map<String, Boolean> identity) {
 		this.identity = identity;
 	}
-	
 
+	public Date getLoginTime() {
+		return loginTime;
+	}
+
+	public void setLoginTime(Date loginTime) {
+		this.loginTime = loginTime;
+	}
 }
