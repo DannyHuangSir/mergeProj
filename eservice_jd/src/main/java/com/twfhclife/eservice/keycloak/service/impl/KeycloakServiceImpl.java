@@ -369,9 +369,8 @@ public class KeycloakServiceImpl extends AbstractKeycloakService implements Keyc
 			} if(map.get("error") != null && map.get("error").equals("invalidPasswordHistoryMessage")) {
 				logger.info("invalidPasswordHistoryMessage: error="+map.get("error")+", error_description="+map.get("error_description"));
 				//密碼不可與過去重複
-				//map.put("error","invalidPasswordHistoryMessage");
-				//map.put("error_message","密碼不可與最近3次相同");
-				//resultString={"error":"invalidPasswordHistoryMessage","error_description":"Invalid password: must not be equal to any of last 3 passwords."}
+				map.put("error","invalidPasswordHistoryMessage");
+				map.put("error_message","密碼不可與最近1次相同");
 			}
 		}
 

@@ -87,7 +87,7 @@ public class LoginController extends BaseController {
 
             //IP address  validate
             if (StringUtils.isNotBlank(clientIp) && StringUtils.equals("localhost", clientIp)
-                    && !StringUtils.equals("127.0.0.1", clientIp)) {
+                    && !StringUtils.equals("127.0.0.1", clientIp) && !StringUtils.equals(clientIp, "0:0:0:0:0:0:0:1")) {
                 String whiteStr = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "ESERVICE_JD_IP_WHITE_LIST");
                 if (StringUtils.isNotBlank(whiteStr)) {
                     List<String> whiteList = Splitter.on(";").omitEmptyStrings().splitToList(whiteStr);
@@ -101,7 +101,6 @@ public class LoginController extends BaseController {
                     }
                 }
             }
-
 
             switch (loginType) {
                 case "password":
@@ -126,7 +125,7 @@ public class LoginController extends BaseController {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(userDetail.getLoginTime());
 				calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(expireDay));
-				if (calendar.getTimeInMillis() > System.currentTimeMillis()) {
+				if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
 					addAttribute("errorMessage", "距離上次登錄過期，請重設密碼！");
 					addAuditLog(userId, "0", loginRequestVo.getEuNationality());
 					return "login";
@@ -158,18 +157,6 @@ public class LoginController extends BaseController {
                 // 設定系統參數
                 Map<String, Map<String, ParameterVo>> sysParamMap = parameterService.getSystemParameter(ApConstants.SYSTEM_ID);
                 addAttribute(ApConstants.SYSTEM_CONSTANTS, (Serializable) sysParamMap.get("SYSTEM_CONSTANTS"));
-                addSession(ApConstants.SYSTEM_PARAMETER, (Serializable) sysParamMap);
-                addSession(ApConstants.PAGE_WORDING, (Serializable) sysParamMap.get("PAGE_WORDING"));
-                addSession(ApConstants.SYSTEM_MSG_PARAMETER, (Serializable) sysParamMap.get("SYSTEM_MSG_PARAMETER"));
-                addSession(ApConstants.APPLICATION_ITEMS, (Serializable) sysParamMap.get("APPLICATION_ITEMS"));
-                addSession(ApConstants.INSURANCE_CLAIM_UPLOADFILE, (Serializable) sysParamMap.get("INSURANCE_CLAIM_UPLOADFILE"));
-                addSession(ApConstants.MEDICAL_TREATMENT_UPLOADFILE, (Serializable) sysParamMap.get("MEDICAL_TREATMENT_UPLOADFILE"));
-                addSession(ApConstants.RELATION_ITEMS, (Serializable) sysParamMap.get("RELATION_ITEMS"));
-                addSession(ApConstants.SEND_COMPANY_ITEMS, (Serializable) sysParamMap.get("SEND_COMPANY_ITEMS"));
-                addSession(ApConstants.SEND_COMPANY_ITEMS_CONTACT, (Serializable) sysParamMap.get("SEND_COMPANY_ITEMS_CONTACT"));
-                addSession(ApConstants.MEDICAL_COMPANY_ITEMS, (Serializable) sysParamMap.get("MEDICAL_COMPANY_ITEMS"));
-                addSession(ApConstants.PAYMENT_METHOD, (Serializable) sysParamMap.get("PAYMENT_METHOD"));
-                addSession(ApConstants.INSURANCE_ACCIDENT, (Serializable) sysParamMap.get("INSURANCE_ACCIDENT"));
 
                 // 設定登出倒數秒數
                 long logutTimeoutSeconds = 0;
@@ -186,7 +173,6 @@ public class LoginController extends BaseController {
                     if (lastLoginTime != null) {
                         addSession(UserDataInfo.LAST_LOGIN_TIME, lastLoginTime);
                     }
-                    userType = userDetail.getUserType();
                 }
                 addAttribute("errorMessage", "");
             } else {
@@ -215,40 +201,6 @@ public class LoginController extends BaseController {
             resetVerifyCode();
 			registerUserService.incLoginFailCount(userId);
             return "login";
-        }
-
-        // 20180424 CR16 系統登入成功/失敗發送電子郵件至要保人信箱
-        // 3.登入成功後POP UP訊息告知最近三次登入時間及狀態
-        if (ApConstants.isNotice && "member".equals(userType)) {
-            List<AuditLogVo> auditLogList = loginService.getLastAuditLog(userId, "3");
-            addSession("auditLogList", (Serializable) auditLogList);
-        }
-
-        try {
-            String keycloakUserId = keycloakUser.getId();
-            String nowSessionId = keycloakUser.getSessionState();
-            List<String> userSessionList = loginService.getKeycloakUserSessionIdList(keycloakUserId);
-            logger.debug("Find user[{}] this login sessionId: {}", userId, nowSessionId);
-            logger.debug("Find user[{}] sessionList: {}", userId, userSessionList);
-
-            if (userSessionList != null && userSessionList.size() > 1) {
-                boolean hasLogined = false;
-                for (String sessionId : userSessionList) {
-                    logger.debug("Find sessionId: {}", sessionId);
-                    logger.debug("Find sessionId.equals(nowSessionId): {}", sessionId.equals(nowSessionId));
-                    if (!sessionId.equals(nowSessionId)) {
-                        hasLogined = true;
-                        break;
-                    }
-                }
-
-                logger.debug("User[{}] hasLogined from other browser: {}", userId, hasLogined);
-                if (hasLogined) {
-                    return "confirmLogout";
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Unable to getKeycloakUserSessionIdList: {}", ExceptionUtils.getStackTrace(e));
         }
 
         addAuditLog(userId, "1", loginRequestVo.getEuNationality());

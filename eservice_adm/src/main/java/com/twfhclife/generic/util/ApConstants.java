@@ -244,4 +244,5 @@ public interface ApConstants {
 	final String INVESTMENT_STATUS_OUT = "OUT";
 	/** 線上申請-未持有投資標的轉換 狀態 */
 	final String INVESTMENT_STATUS_IN = "IN";
+	public static final String LOGIN_VALIDATE_CODE = "LOGIN_VALIDATE_CODE";
 }

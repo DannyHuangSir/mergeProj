@@ -6,6 +6,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.twfhclife.generic.util.ValidateCodeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.annotations.Param;
@@ -63,6 +64,7 @@ public class LoginController extends BaseController {
 	@RequestLog
 	@RequestMapping("/login")
 	public String login(String userId) {
+		resetVerifyCode();
 		return "login";
 	}
 	
@@ -74,7 +76,8 @@ public class LoginController extends BaseController {
 
 	@RequestLog
 	@PostMapping("/doLogin")
-	public String doLogin(@Param("username") String username, @Param("password") String password, HttpServletRequest request, HttpServletResponse response) {
+	public String doLogin(@Param("username") String username, @Param("password") String password,
+						  @Param("validateCode") String validateCode, HttpServletRequest request, HttpServletResponse response) {
 		KeycloakUser keycloakUser = null;
 		boolean loginSucsess = true;
 		String processUuid = UUID.randomUUID().toString();
@@ -83,6 +86,14 @@ public class LoginController extends BaseController {
 		try {
 			if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
 				addAttribute("errorMessage", "請輸入正確的帳號/密碼");
+				resetVerifyCode();
+				loginSucsess = false;
+			}
+
+			String sessionValidateCode = (String)request.getSession().getAttribute(ApConstants.LOGIN_VALIDATE_CODE);
+			if (!StringUtils.equals(validateCode, sessionValidateCode)) {
+				addAttribute("errorMessage", "請輸入正確的驗證碼");
+				resetVerifyCode();
 				loginSucsess = false;
 			}
 			
@@ -178,7 +189,7 @@ public class LoginController extends BaseController {
 					} else {
 						addAttribute("errorMessage", "登入失敗");
 					}
-					
+					resetVerifyCode();
 					loginSucsess = false;
 				}
 			}
@@ -252,5 +263,29 @@ public class LoginController extends BaseController {
 		}
 		
 		return "redirect:login";
+	}
+
+	@GetMapping(value = "/getVerify")
+	public void getVerify(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			response.setContentType("image/png");
+			response.setHeader("Pragma", "No-cache");
+			response.setHeader("Cache-Control", "no-cache");
+			response.setDateHeader("Expire", 0);
+
+			ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+			addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
+			vcUtil.write(response.getOutputStream());
+		} catch (Exception e) {
+			logger.error("Unable to getVerify: {}", ExceptionUtils.getStackTrace(e));
+		}
+	}
+
+	private void resetVerifyCode() {
+		// 設定驗證碼圖示
+		ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 40);
+		addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+		addAttribute("validateImageBase64", vcUtil.imgToBase64String());
 	}
 }
