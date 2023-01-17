@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+		<style type="text/css">
+			.tree-container-min{
+				background-color:#FFF;
+				border:0px solid#DDD;
+				border-left-color:#67B2DD;
+				display:block;
+				padding:0;
+				max-width:600px;
+				max-height:500px;
+			}
+			.bootstrap-tagsinput input {
+				border: none!important;
+				width:400px;
+			}
+		</style>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='jdDeptMgnt')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-user" aria-hidden="true"></i>
+								權限管理
+								<i class="my-icon fa fa-angle-double-right"></i>
+								經代專區
+								<i class="my-icon fa fa-angle-double-right"></i>
+								部門管理
+							</li>
+						</ul>
+					</div>
+					<div class="page-content">
+						<div class="row">
+							<div>
+								<div class="col-xs-10 col-sm-5">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">部門樹</h4>
+										</div>
+										<div class="widget-body">
+											<div id="aceTreeDiv" class="widget-main no-padding">
+												<div class="tree-container-min">
+													<ul id="aceTree"></ul>
+												</div>
+												<div class="space-4"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-5" id="nodeDiv" hidden="true">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">項目屬性設定</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form id="nodeForm">
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">上層部門：</label>
+														<div class="col-sm-8" id="parentDepDiv"></div>
+														<input type="hidden" id="parentDepName"/>
+														<input type="hidden" id="parentDep"/>
+<!-- 														<input type="hidden" id="depId"/> -->
+														<input type="hidden" id="notify"/>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">部門代碼：</label>
+														<div class="col-sm-8">
+															<input type="text" id="depId" class="form-control" readonly="readonly"/>
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>部門名稱：</label>
+														<div class="col-sm-8">
+															<input type="text" id="depName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">附註說明：</label>
+														<div class="col-sm-8">
+															<input type="text" id="description" class="form-control" />
+														</div>
+													</fieldset>
+													<div class="form-actions center">
+														<button type="button" id="addNodeBtn" class="btn btn-primary">
+															<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+															新增部門 
+														</button>
+														<button type="button" id="delNodeBtn" class="btn">
+															<i class="ace-icon fa fa-trash-o bigger-120" aria-hidden="true"></i>
+															刪除部門
+														</button>
+														<button type="button" id="updNodeBtn" class="btn btn-success">
+															<i class="ace-icon fa fa-check" aria-hidden="true"></i>
+															更新部門
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-5" id="rootDiv" style="display: none">
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title">部門管理</h4>
+										</div>
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<form>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">上層部門：</label>
+														<div class="col-sm-8"></div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>部門名稱：</label>
+														<div class="col-sm-8">
+															<input type="text" id="depName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">附註說明：</label>
+														<div class="col-sm-8">
+															<input type="text" id="description" class="form-control" />
+														</div>
+													</fieldset>
+													<div class="form-actions center">
+														<button id="addRootBtn" type="button" class="btn btn-primary">
+															<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+															新增部門
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="dialog-message" class="hide">
+								<div class="widget-main no-padding">
+									<form id="addForm">
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right">上層部門：</label>
+											<div class="col-sm-8" id="parentDepDiv"></div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>部門代碼：</label>
+											<div class="col-sm-8">
+												<input type="text" id="depId" class="form-control" />
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>部門名稱：</label>
+											<div class="col-sm-8">
+												<input type="text" id="depName" class="form-control" />
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right">附註說明：</label>
+											<div class="col-sm-8">
+												<input type="text" id="description" class="form-control" />
+											</div>
+										</fieldset>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+	</body>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/js/eservice_adm/tree.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var treeUtil;
+	$(function() {
+		// 建立aceTreeUtil工具類別
+		treeUtil = new aceTreeUtil();
+		treeUtil.sTreeId = '#aceTree';
+		treeUtil.sQueryUrl = /*[[@{/jdDeptMgnt/getDepts}]]*/;
+		
+		// 根節點初始化的function
+		treeUtil.fnInitRoot = function(response) {
+			alertMsg(response.resultMsg);
+			$('#rootDiv').show();
+		};
+		// 節點選擇function
+		treeUtil.fnNodeSelected = function(nodeData) {
+			// 設定同步
+			$.ajaxSetup({async: false});
+			getParentDepList(nodeData);
+			$.ajaxSetup({async: true});
+
+			$('#addForm #parentDepDiv').html(nodeData.target.text);
+			$('#nodeForm #parentDep').val(nodeData.target.parentDep);
+			$('#nodeForm #depId').val(nodeData.target.id);
+			$('#nodeForm #depName').val(nodeData.target.text);
+			$('#nodeForm #description').val(nodeData.target.description);
+			$('#nodeForm #notify').val(nodeData.target.notify);
+			$('#nodeDiv').show();
+		};
+		// 節點反選function
+		treeUtil.fnNodeDeselected = function() {
+			$('#nodeDiv').hide();
+		};
+		treeUtil.show();
+		
+		// 部門管理-新增Root節點事件(一開始只有系統沒有根目錄時須新增根目錄)
+		$('#addRootBtn').click(function() {
+			if ($('#rootDiv #depName').val() == '') {
+				alertMsg("請輸入部門名稱");
+				return false;
+			}
+			
+			var formData = {
+				depId : '0',
+				depName : $('#rootDiv #depName').val(),
+				description : $('#rootDiv #description').val()
+			};
+			eserviceForm.post(/*[[@{/jdDeptMgnt/insertDepartment}]]*/, formData, function(response) {
+				alertMsg(response.resultMsg);
+				initFunction();
+				treeUtil.show();
+			});
+		});
+		
+		// 項目屬性設定-新增節點事件
+		$('#addNodeBtn').on('click', function() {
+			var dialog = $('#dialog-message').removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-check'></i>新增部門</h4></div>",
+				title_html: true,
+				close: function() {
+					$('#addForm')[0].reset();
+				},
+				buttons: [ 
+					{
+						text: '取消',
+						'class' : 'btn',
+						click: function() {
+							$(this).dialog('close');
+							$('#addForm')[0].reset();
+						} 
+					},
+					{
+						text: '確定',
+						'class' : 'btn btn-primary',
+						click: function() {
+							if ($('#addForm #depName').val() == '') {
+								alertMsg("請輸入部門名稱");
+								return false;
+							}
+							var formData = {
+								parentDep : $('#nodeDiv #depId').val(),
+								depId : $('#addForm #depId').val(),
+								depName : $('#addForm #depName').val(),
+								description : $('#addForm #description').val()
+							};
+							eserviceForm.post(/*[[@{/jdDeptMgnt/insertDepartment}]]*/, formData, function(response) {
+								alertMsg(response.resultMsg);
+								initFunction();
+								treeUtil.show();
+								$('#nodeDiv').show();
+							});
+							
+							$(this).dialog('close');
+							$('#addForm')[0].reset();
+						} 
+					}
+				],
+				width: 600
+			});	
+		});
+		
+		// 項目屬性設定-刪除節點事件
+		$('#delNodeBtn').on('click', function() {
+			var notify = $('#nodeForm #notify').val();
+			if (notify == 'Y' || notify ==  'R') {
+				alertMsg('此目錄下還有其它子項目，故不可刪除');
+				return false;
+			}
+			confirmMsg('是否確認刪除', function(r) {
+				if (r) {
+					var formData = {
+						depId : $('#nodeForm #depId').val()
+					};
+					eserviceForm.post(/*[[@{/jdDeptMgnt/deleteDepartment}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						initFunction();
+						treeUtil.show();
+						$('#nodeDiv').show();
+					});
+				} else {
+					return false;
+				}
+			});
+		});
+		
+		// 項目屬性設定-更新節點事件
+		$('#updNodeBtn').on('click', function(e) {
+			if ($('#nodeForm #depName').val() == '') {
+				alertMsg('請輸入部門名稱');
+				return false;
+			}
+			confirmMsg('是否確認修改', function(r) {
+				if (r) {
+					var formData = {
+						depId :$('#nodeForm #depId').val(),
+						parentDep : $('#nodeForm #parentDep').val(),
+						depName : $('#nodeForm #depName').val(),
+						description : $('#nodeForm #description').val()
+					};
+					eserviceForm.post(/*[[@{/jdDeptMgnt/updateDepartment}]]*/, formData, function(response) {
+						alertMsg(response.resultMsg);
+						initFunction();
+						treeUtil.show();
+						$('#nodeDiv').show();
+					});
+				} else {
+					return false;
+				}
+			});
+		});
+		
+		eserviceAdmEvent.initDialog();
+	});
+
+	// 部門樹、項目屬性設定、部門管理初始化
+	function initFunction() {
+		// 部門樹初始化
+		$('#aceTreeDiv').empty();
+		$('#aceTreeDiv').append('<div class="tree-container-min"><ul id="aceTree"></ul></div>');
+		$('#aceTreeDiv').append('<div class="space-4"></div>');
+		// 項目屬性設定初始化
+		$('#nodeForm')[0].reset();
+		$('#nodeDiv').hide();
+		// 部門管理初始化
+		$('#rootDiv').hide();
+	}
+
+	// 取得上一層部門清單
+	function getParentDepList(nodeData) {
+		var formData = {
+			parentDep : nodeData.target.parentDep
+		};
+		eserviceForm.post(/*[[@{/jdDeptMgnt/getParentDepList}]]*/, formData, function(response) {
+			if (response.result == 'SUCCESS') {
+				if (response.resultData.length <= 1) {
+					$('#nodeForm #parentDepDiv').html(nodeData.target.par);
+				} else {
+					$('#nodeForm #parentDepDiv').html('');
+					var optHtml = '';
+					optHtml += '<select id="parentDepOpt" class="form-control" onchange="$(\'#nodeForm #parentDep\').val(this.value);">';
+					
+					$.each(response.resultData, function(i, obj) {
+						var selected = '';
+						if (obj.depId == nodeData.target.parentDep) {
+							selected = 'selected="selected"';
+						}
+						optHtml += ('<option value="' + obj.depId + '" ' + selected + '>' + obj.depName + '</option>');
+					});
+					optHtml += '</select>';
+					$('#nodeForm #parentDepDiv').html(optHtml);
+				}
+			}
+		});
+	}
+	
+	/*]]>*/
+	</script>
+</html>

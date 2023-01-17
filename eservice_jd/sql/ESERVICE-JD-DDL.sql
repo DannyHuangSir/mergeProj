@@ -45,3 +45,15 @@ BEGIN
 	RETURN CAST(N'' AS XML).value('xs:base64Binary(xs:hexBinary(sql:variable("@BinString")))','NVARCHAR(512)')
 END
 GO
+
+CREATE TABLE [ESERVICE_JD].[dbo].[DEPARTMENT](
+    [DEP_ID] [nvarchar](50) NOT NULL,
+    [DEP_NAME] [nvarchar](100) NOT NULL,
+    [DESCRIPTION] [nvarchar](200) NULL,
+    [PARENT_DEP] [nvarchar](50) NULL,
+    [CREATE_USER] [nvarchar](50) NULL,
+    [CREATE_DATE] [date] NULL,
+    [MODIFY_USER] [nvarchar](50) NULL,
+    [MODIFY_DATE] [date] NULL
+    ) ON [PRIMARY]
+GO
