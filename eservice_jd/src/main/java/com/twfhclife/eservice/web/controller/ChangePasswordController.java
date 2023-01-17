@@ -38,19 +38,8 @@ public class ChangePasswordController extends BaseController {
     private KeycloakService keycloakService;
 
 
-    @GetMapping("/changePasswordClause")
-    public String changeClause() {
-        try {
-            //備註
-            String changePassword = getParameterValue(ApConstants.PAGE_WORDING_CATEGORY_CODE, ApConstants.WORDING_NA201);
-            addAttribute("changePasswordNote", changePassword);
-        } catch (Exception e) {
-            logger.error("changeInfo1 error! {}", e);
-        }
-        return "frontstage/onlineChange/changePassword/change-clause";
-    }
 
-    @RequestMapping("/changePassword1")
+    @GetMapping("/changePassword1")
     public String changePassword1(UsersVo usersVo) {
         try {
             //備註
@@ -59,9 +48,6 @@ public class ChangePasswordController extends BaseController {
             UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
             if (userDetail.getLastChangPasswordDate() == null) {
                 addAttribute("errorMessage", "為確保您的帳號安全，請立即變更密碼");
-            }
-            if (usersVo != null && usersVo.getClauseFlag() != null) {
-                addAttribute("CLAUSE_FLAG", usersVo.getClauseFlag());
             }
         } catch (Exception e) {
             logger.error("changeInfo1 error! {}", e);

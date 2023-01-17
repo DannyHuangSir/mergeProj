@@ -36,7 +36,8 @@ public class MainController extends BaseController {
 	@RequestMapping(value = {"/login" }, method = RequestMethod.GET)
 	public String login(Model model) {
 		// 若已經登入～直接到首頁
-		if (getLoginUser() != null) {
+
+		if (getLoginUser() != null && getUserDetail() != null && getUserDetail().getLastChangPasswordDate() != null) {
 			logger.debug("# has login session: redirect:dashboard");
 			return "redirect:dashboard";
 		}

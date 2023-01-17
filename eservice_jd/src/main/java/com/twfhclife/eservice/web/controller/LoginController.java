@@ -62,7 +62,6 @@ public class LoginController extends BaseController {
         KeycloakUser keycloakUser = null;
         String loginSuccessPage = "redirect:dashboard";
         String userId = loginRequestVo.getUserId();
-        String userType = "";
         try {
             // 取得session驗證碼
             Object validateCodeObj = getSession(ApConstants.LOGIN_VALIDATE_CODE);

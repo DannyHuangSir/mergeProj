@@ -3,6 +3,7 @@ package com.twfhclife.eservice.interceptor;
 import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
             UsersVo userDetail = (UsersVo) eserviceUser;
             if (userDetail.getLastChangPasswordDate() == null) {
                 if (request.getServletPath().indexOf("doLogout") == -1 && request.getServletPath().indexOf("Password") == -1) {
-                    response.sendRedirect("changePasswordClause");
+                    response.sendRedirect("firstPassword1");
                     return uriAuth;
                 }
             }
