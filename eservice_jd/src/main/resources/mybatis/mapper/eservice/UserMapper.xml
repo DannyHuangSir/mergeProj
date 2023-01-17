@@ -78,15 +78,15 @@
 	
 	<update id="updatePassword" parameterType="java.lang.String">
 		update ESERVICE_JD.DBO.USERS set
-		last_chang_password_date = getdate()
+		last_chang_password_date = getdate(),
+		LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME()
 		where lower(user_id) = lower(#{account})
 	</update>
 
 	<update id="changePassword" parameterType="java.lang.String">
 		update ESERVICE_JD.DBO.USERS set
 		last_chang_password_date = getdate(),
-		clause_flag = 'Y',
-		LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME(), STATUS = 'enable'
+		clause_flag = 'Y'
 		where lower(user_id) = lower(#{account})
 	</update>
 
