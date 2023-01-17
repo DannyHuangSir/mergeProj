@@ -29,6 +29,7 @@
     <script type="text/javascript">
 		<!-- if('ontouchstart' in document.documentElement) document.write("<script src='assets/plugin/jquery.mobile.custom.min.js'>"+"<"+"/script>");-->
 
+
     </script>
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -82,6 +83,7 @@
 		$(function() {
 			sessionStorage.removeItem('identity')
 		});
+
 
     </script>
     <!-- page specific plugin styles -->
@@ -207,6 +209,7 @@
 			var month = d.getMonth() + 1;
 			var year = d.getFullYear();
 
+
 </script>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -218,6 +221,7 @@
 			  gtag('js', new Date());
 			  gtag('config', 'UA-119780635-2');
 
+
 </script>
 <!-- my scripts -->
 
@@ -226,6 +230,7 @@
 		$(function() {
 			$('input, textarea').placeholder();
 		});
+
 
 </script>
 
@@ -260,22 +265,19 @@
 			
 			$('#loginBtn').click(function() {
 				if ($('#loginForm #userId').val() == '') {
-					//openAlert('請輸入用戶名稱');
-					openAlert($('#E0006').val());
+					openAlert('請輸入用戶名稱');
 					return false;
 				}
 				
 				if ($('#loginForm #password').val() == '') {
-					//openAlert('請輸入用戶密碼');
-					openAlert($('#E0007').val());
+					openAlert('請輸入用戶密碼');
 					return false;
 				}else{
 					$('#loginForm #password').val($.base64.encode($('#loginForm #password').val()));
 				}
 				
 				if ($('#validateCode').val() == '') {
-					//openAlert('請輸入圖形驗證碼');
-					openAlert($('#E0008').val());
+					openAlert('請輸入圖形驗證碼');
 					return false;
 				}
 				popupLoading();
@@ -287,13 +289,11 @@
 				$('#loginForm #password').val("");
 				
 				if ($('#confirmBindFbIdModal #userId3').val() == '') {
-					//openAlert('請輸入用戶名稱');
-					openAlert($('#E0006').val());
+					openAlert('請輸入用戶名稱');
 					return false;
 				}
 				if ($('#confirmBindFbIdModal #password3').val() == '') {
-					//openAlert('請輸入用戶密碼');
-					openAlert($('#E0007').val());
+					openAlert('請輸入用戶密碼');
 					return false;
 				}
 				
@@ -309,13 +309,11 @@
 				$('#loginForm #password').val("");
 				
 				if ($('#confirmBindCardSnModal #userId2').val() == '') {
-					//openAlert('請輸入用戶名稱');
-					openAlert($('#E0006').val());
+					openAlert('請輸入用戶名稱');
 					return false;
 				}
 				if ($('#confirmBindCardSnModal #password2').val() == '') {
-					//openAlert('請輸入用戶密碼');
-					openAlert($('#E0007').val());
+					openAlert('請輸入用戶密碼');
 					return false;
 				}
 				
@@ -341,6 +339,8 @@
 		setInterval ("reloadValidateImage()", 300*1000);
 		/*]]>*/
 
+
 </script>
 <div class="loading-modal"></div>
+</body>
 </html>

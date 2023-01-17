@@ -89,6 +89,13 @@
 															<i class="my-icon fa fa-lock"></i>
 														</span>
 													</label>
+													<label class="block clearfix">
+														<input type="text" name="validateCode" id="validateCode" autocomplete="off"
+															   placeholder="ValidateCode" class="float-left w70p" style="width:50%"
+															   maxlength="4"/>
+														&nbsp;&nbsp;&nbsp;<img id="validateImage" th:src="'data:image/png;base64, ' + ${validateImageBase64}"
+																			   style="height:33px;cursor:pointer;" alt="點擊圖片重新讀取驗証碼"></img>
+													</label>
 													<div class="space"></div>
 													<div class="clearfix">
 														<button id="loginBtn" class="width-35 pull-right btn btn-sm btn-primary">
@@ -137,11 +144,17 @@
 					alertMsg('請輸入正確的帳號/密碼');
 					return false;
 				}
-				
+				if ($('#validateCode').val() == '') {
+					openAlert('請輸入圖形驗證碼');
+					return false;
+				}
 				//$('#loginForm').submit();
 			});
-			
-			
+
+			$('#validateImage').click(function() {
+				this.src = 'getVerify?r=' + Math.random();
+			});
+
 			var accessTokenCookie = getCookie("sso-token");
 			if(accessTokenCookie) {
 				console.log("accessTokenCookie="+accessTokenCookie);
