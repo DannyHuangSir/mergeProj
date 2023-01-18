@@ -177,18 +177,22 @@ public class ForgetPasswordController extends BaseController {
             HttpSession session = request.getSession();
             String message = "";
             String account = session.getAttribute("forget_account").toString();
-            boolean isCheck = getSession("forget_isChack") != null ? (boolean) getSession("forget_isChack") : false;
-            if (isCheck && getSession("forgetAuthentication") == null) {
-                if (ValidateUtil.isPwd(newPassword)) {
-                    registerUserService.updatePassword(account, newPassword);
-                    addSession("forget_isChack", null);
-                } else {
-                    /*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/
-                    message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0014");
-                }
+            if (StringUtils.equals(account, newPassword)) {
+                message = "密碼與代號 帳號不應相同";
             } else {
-                /*message = "請完成驗證碼驗證!";*/
-                message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0101");
+                boolean isCheck = getSession("forget_isChack") != null ? (boolean) getSession("forget_isChack") : false;
+                if (isCheck && getSession("forgetAuthentication") == null) {
+                    if (ValidateUtil.isPwd(newPassword)) {
+                        registerUserService.updatePassword(account, newPassword);
+                        addSession("forget_isChack", null);
+                    } else {
+                        /*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/
+                        message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0014");
+                    }
+                } else {
+                    /*message = "請完成驗證碼驗證!";*/
+                    message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0101");
+                }
             }
             this.setResponseObj(ResponseObj.SUCCESS, message, null);
         } catch (InvalidParameterException e) {

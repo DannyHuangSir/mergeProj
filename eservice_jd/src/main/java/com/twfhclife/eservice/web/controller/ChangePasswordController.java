@@ -9,6 +9,7 @@ import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,17 +71,21 @@ public class ChangePasswordController extends BaseController {
                 userId = userDetail.getUserId();
             }
 
-            KeycloakUser keycloakUser = keycloakService.login(userId, users.getPassword());
-            if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
-                if (ValidateUtil.isPwd(users.getNewPassword())) {
-                    message = registerUaerService.changePassword(userId, users.getNewPassword());
-                } else {
-                    /*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/
-                    message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0024");
-                }
+            if (StringUtils.equals(userId, users.getNewPassword())) {
+                message = "密碼與代號 帳號不應相同";
             } else {
-                /*message = "密碼錯誤!";*/
-                message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0118");
+                KeycloakUser keycloakUser = keycloakService.login(userId, users.getPassword());
+                if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
+                    if (ValidateUtil.isPwd(users.getNewPassword())) {
+                        message = registerUaerService.changePassword(userId, users.getNewPassword());
+                    } else {
+                        /*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/
+                        message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0024");
+                    }
+                } else {
+                    /*message = "密碼錯誤!";*/
+                    message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0118");
+                }
             }
             this.setResponseObj(ResponseObj.SUCCESS, message, null);
         } catch (InvalidParameterException e) {
