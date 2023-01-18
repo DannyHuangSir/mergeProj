@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.JdRoleDao">
+
+    <resultMap id="RoleMap" type="com.twfhclife.adm.model.RoleVo">
+        <result column="ROLE_ID" property="roleId"/>
+        <result column="ROLE_NAME" property="roleName"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="PARENT_ROLE_ID" property="parentRoleId"/>
+        <result column="DEPARTMENT_ID" property="departmentId"/>
+        <result column="DEPARTMENT_NAME" property="departmentName"/>
+        <result column="CREATE_USER" property="createUser"/>
+        <result column="CREATE_DATE" property="createDate"/>
+        <result column="MODIFY_USER" property="modifyUser"/>
+        <result column="MODIFY_DATE" property="modifyDate"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ROLE_ID
+        ,ROLE_NAME,DESCRIPTION,PARENT_ROLE_ID,DEPARTMENT_ID,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE
+    </sql>
+
+    <sql id="whereClause">
+        <where>
+            <if test="roleVo.roleId != null and roleVo.roleId != ''">
+                AND ROLE_ID = #{roleVo.roleId}
+            </if>
+            <if test="roleVo.roleName != null and roleVo.roleName != ''">
+                AND ROLE_NAME LIKE CONCAT(CONCAT('%',
+                #{roleVo.roleName}),'%')
+            </if>
+            <if test="roleVo.description != null and roleVo.description != ''">
+                AND DESCRIPTION = #{roleVo.description}
+            </if>
+            <if test="roleVo.parentRoleId != null and roleVo.parentRoleId != ''">
+                AND PARENT_ROLE_ID =
+                #{roleVo.parentRoleId}
+            </if>
+            <if test="roleVo.departmentId != null and roleVo.departmentId != ''">
+                AND DEPARTMENT_ID =
+                #{roleVo.departmentId}
+            </if>
+            <if test="roleVo.createUser != null and roleVo.createUser != ''">
+                AND CREATE_USER = #{roleVo.createUser}
+            </if>
+            <if test="roleVo.createDate != null and roleVo.createDate != ''">
+                AND CREATE_DATE = #{roleVo.createDate}
+            </if>
+            <if test="roleVo.modifyUser != null and roleVo.modifyUser != ''">
+                AND MODIFY_USER = #{roleVo.modifyUser}
+            </if>
+            <if test="roleVo.modifyDate != null and roleVo.modifyDate != ''">
+                AND MODIFY_DATE = #{roleVo.modifyDate}
+            </if>
+            <if test="roleVo.systemId != null and roleVo.systemId != ''">
+                AND ROLE_ID IN (
+                SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH
+                WHERE SYS_ID = #{roleVo.systemId}
+                <if test="adminUserFlag == 'N'.toString()">
+                    AND ROLE_ID IN (
+                    SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
+                    )
+                </if>
+                )
+            </if>
+            <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
+            <if test="(roleVo.systemId == null or roleVo.systemId == '') and adminUserFlag == 'N'.toString()">
+                AND ROLE_ID IN (
+                SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
+                )
+            </if>
+        </where>
+    </sql>
+
+    <sql id="wherePkClause">
+        <where>
+            AND ROLE_ID = #{roleVo.roleId}
+        </where>
+    </sql>
+
+    <!-- include sql: 使用者角色管理查詢結果 -->
+    <sql id="INC1">
+        SELECT
+        b.ROLE_ID,b.ROLE_NAME,b.DESCRIPTION,b.PARENT_ROLE_ID,b.DEPARTMENT_ID,b.CREATE_USER,b.CREATE_DATE,b.MODIFY_USER,b.MODIFY_DATE,a.DEP_NAME as DEPARTMENT_NAME
+        FROM
+        ESERVICE_ADM.DBO.ROLE b
+        right join ESERVICE_JD.DBO.DEPARTMENT a on b.DEPARTMENT_ID=a.DEP_ID COLLATE database_default
+        <include refid="whereClause"/>
+    </sql>
+
+    <!-- 取得使用者角色管理查詢結果(分頁) -->
+    <select id="getRolePageList" resultType="hashmap">
+        SELECT
+        *
+        FROM (
+        SELECT
+        ROW_NUMBER() OVER (ORDER BY ROLE_NAME) AS ROW_NUM
+        ,A.*
+        FROM (
+        <include refid="INC1"/>
+        ) A
+        ) B
+        WHERE
+        B.ROW_NUM <![CDATA[<=]]> #{roleVo.page} * #{roleVo.rows}
+        AND B.ROW_NUM <![CDATA[>]]> (#{roleVo.page} - 1) * #{roleVo.rows}
+    </select>
+
+    <!-- 取得使用者角色管理查詢結果(總筆數) -->
+    <select id="getRolePageTotal" resultType="int">
+        SELECT
+        COUNT(1) AS AMOUNT
+        FROM (
+        <include refid="INC1"/>
+        ) t
+    </select>
+
+    <!-- 取得使用者角色管理查詢結果 -->
+    <select id="getRole" resultMap="RoleMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        ESERVICE_ADM.DBO.ROLE
+        <include refid="whereClause"/>
+    </select>
+
+    <!-- 使用者角色管理-依照使用者權限查詢 -->
+    <select id="getRoleByAuth" resultMap="RoleMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        ESERVICE_ADM.DBO.ROLE
+        <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
+        <if test="adminUserFlag == 'N'.toString()">
+            WHERE
+            ROLE_ID IN (
+            SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
+            )
+        </if>
+    </select>
+
+    <!-- 使用者角色管理-新增 -->
+    <insert id="insertRole">
+        INSERT INTO ESERVICE_ADM.DBO.ROLE
+        (
+        <include refid="Base_Column_List"/>
+        )
+        VALUES
+        (
+        NEWID(),
+        #{roleVo.roleName, jdbcType=VARCHAR},
+        #{roleVo.description, jdbcType=VARCHAR},
+        #{roleVo.parentRoleId, jdbcType=VARCHAR},
+        #{roleVo.departmentId, jdbcType=VARCHAR},
+        #{roleVo.createUser, jdbcType=VARCHAR},
+        getdate(),
+        #{roleVo.modifyUser, jdbcType=VARCHAR},
+        getdate()
+        )
+    </insert>
+
+    <!-- 使用者角色管理-更新 -->
+    <update id="updateRole">
+        UPDATE
+        ESERVICE_ADM.DBO.ROLE
+        <set>
+            <if test="roleVo.roleId != null">ROLE_ID = #{roleVo.roleId},</if>
+            <if test="roleVo.roleName != null">ROLE_NAME = #{roleVo.roleName},</if>
+            <if test="roleVo.description != null">DESCRIPTION = #{roleVo.description},</if>
+            <if test="roleVo.parentRoleId != null">PARENT_ROLE_ID = #{roleVo.parentRoleId},</if>
+            <if test="roleVo.departmentId != null">DEPARTMENT_ID = #{roleVo.departmentId},</if>
+            <if test="roleVo.createUser != null">CREATE_USER = #{roleVo.createUser},</if>
+            <if test="roleVo.createDate != null">CREATE_DATE = #{roleVo.createDate},</if>
+            <if test="roleVo.modifyUser != null">MODIFY_USER = #{roleVo.modifyUser},</if>
+            MODIFY_DATE = getdate()
+        </set>
+        <include refid="wherePkClause"/>
+    </update>
+
+    <!-- 使用者角色管理-刪除 -->
+    <delete id="deleteRole">
+        DELETE ESERVICE_ADM.DBO.ROLE
+        <include refid="wherePkClause"/>
+    </delete>
+
+</mapper>
+

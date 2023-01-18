@@ -1,10 +1,13 @@
 package com.twfhclife.adm.controller.common;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.twfhclife.adm.domain.ResponseObj;
+import com.twfhclife.adm.model.JobTitleVo;
+import com.twfhclife.adm.model.MessagingTemplateVo;
+import com.twfhclife.adm.model.ParameterCategoryVo;
+import com.twfhclife.adm.model.ParameterVo;
+import com.twfhclife.adm.service.*;
+import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -16,21 +19,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.twfhclife.adm.domain.ResponseObj;
-import com.twfhclife.adm.model.JobTitleVo;
-import com.twfhclife.adm.model.MessagingTemplateVo;
-import com.twfhclife.adm.model.ParameterCategoryVo;
-import com.twfhclife.adm.model.ParameterVo;
-import com.twfhclife.adm.service.IDeptMgntService;
-import com.twfhclife.adm.service.IJobTitleService;
-import com.twfhclife.adm.service.IMessagingTemplateService;
-import com.twfhclife.adm.service.IParameterCategoryService;
-import com.twfhclife.adm.service.IParameterService;
-import com.twfhclife.adm.service.IRoleService;
-import com.twfhclife.adm.service.ISystemService;
-import com.twfhclife.generic.annotation.RequestLog;
-import com.twfhclife.generic.controller.BaseController;
-import com.twfhclife.keycloak.model.KeycloakUser;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 共用選單資料控制器.
@@ -54,7 +46,7 @@ public class OptionController extends BaseController {
 	
 	@Autowired
 	private IDeptMgntService deptMgntService;
-	
+
 	@Autowired
 	private IJobTitleService jobTitleService;
 	
@@ -63,6 +55,13 @@ public class OptionController extends BaseController {
 
 	@Autowired
 	private IMessagingTemplateService messagingTemplateService;
+
+	@Autowired
+	private IJdDeptMgntService jdDeptMgntService;
+
+	@Autowired
+	private IJdRoleService jdRoleService;
+
 	/**
 	 * 下拉選單資料-醫療資料介接案件狀態
 	 *
@@ -322,6 +321,35 @@ public class OptionController extends BaseController {
 			processSuccess(optionList);
 		} catch (Exception e) {
 			logger.error("Unable to msgTmpNameList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	@RequestLog
+	@PostMapping("/jd/common/deptList")
+	public ResponseEntity<ResponseObj> jdDeptList() {
+		try {
+			com.twfhclife.keycloak.model.KeycloakUser kuser = getLoginUser();
+			String username = kuser.getUsername();
+			String keyCloakUserId = kuser.getId();//此處查詢應使用id
+			processSuccess(jdDeptMgntService.getDeptList(keyCloakUserId, username));
+		} catch (Exception e) {
+			logger.error("Unable to deptList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	@RequestLog
+	@PostMapping("/jd/common/roleList")
+	public ResponseEntity<ResponseObj> jdRoleList() {
+		try {
+			String userName = getUserId();
+			String keyCloakUserId = getLoginUser().getId();
+			processSuccess(jdRoleService.getRoleByAuth(userName, keyCloakUserId));
+		} catch (Exception e) {
+			logger.error("Unable to roleList: {}", ExceptionUtils.getStackTrace(e));
 			processSystemError();
 		}
 		return processResponseEntity();

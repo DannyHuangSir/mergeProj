@@ -3,7 +3,7 @@ package com.twfhclife.adm.controller.jd;
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.RoleVo;
-import com.twfhclife.adm.service.IRoleService;
+import com.twfhclife.adm.service.IJdRoleService;
 import com.twfhclife.generic.annotation.FuncUsageParam;
 import com.twfhclife.generic.annotation.LoginCheck;
 import com.twfhclife.generic.annotation.RequestLog;
@@ -29,7 +29,7 @@ public class JdRoleController extends BaseController {
     private static final Logger logger = LogManager.getLogger(JdRoleController.class);
 
     @Autowired
-    private IRoleService roleService;
+    private IJdRoleService roleService;
 
     /**
      * 使用者角色管理頁面程式進入點.
