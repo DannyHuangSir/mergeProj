@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -63,5 +61,11 @@ public class MainController extends BaseController {
 	public String errorPage() {
 		logger.info("open frontstage/500.html");
 		return "frontstage/500";
+	}
+
+	@PostMapping("/bindSessionPage")
+	@ResponseBody
+	public void bindSessionPage(String uuid) {
+		getRequest().getSession().setAttribute("SESSION_PAGE_ID", uuid);
 	}
 }

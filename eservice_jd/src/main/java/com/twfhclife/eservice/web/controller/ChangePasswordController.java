@@ -73,6 +73,8 @@ public class ChangePasswordController extends BaseController {
 
             if (StringUtils.equals(userId, users.getNewPassword())) {
                 message = "密碼與代號 帳號不應相同";
+            }  else if (ValidateUtil.simpleLetterAndNumCheck(users.getNewPassword(), 2)) {
+                message = "不應訂為相同的英數字、連續英文字或連號數字";
             } else {
                 KeycloakUser keycloakUser = keycloakService.login(userId, users.getPassword());
                 if (keycloakUser != null && keycloakUser.getAccessToken() != null) {

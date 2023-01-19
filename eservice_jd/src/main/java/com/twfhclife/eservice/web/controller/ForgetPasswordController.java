@@ -179,6 +179,8 @@ public class ForgetPasswordController extends BaseController {
             String account = session.getAttribute("forget_account").toString();
             if (StringUtils.equals(account, newPassword)) {
                 message = "密碼與代號 帳號不應相同";
+            } else if (ValidateUtil.simpleLetterAndNumCheck(newPassword, 2)) {
+                message = "不應訂為相同的英數字、連續英文字或連號數字";
             } else {
                 boolean isCheck = getSession("forget_isChack") != null ? (boolean) getSession("forget_isChack") : false;
                 if (isCheck && getSession("forgetAuthentication") == null) {

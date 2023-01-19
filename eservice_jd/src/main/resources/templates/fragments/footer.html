@@ -21,10 +21,31 @@
 <script th:src="@{/js/popover.js}"></script>
 <script th:src="@{/js/eservice/timer.js}"></script>
 <script th:src="@{/plugin/timer.jquery.js}"></script>
-<script>
+<script th:inline="javascript">
+/*<![CDATA[*/
     document.oncontextmenu = function() {
         return false
     }
+
+    var currentPageId = sessionStorage.getItem("localId")
+    var sessionPageId = /*[[${session.SESSION_PAGE_ID}]]*/
+    if (currentPageId == null && sessionPageId == null) {
+        var uuid = crypto.randomUUID()
+        $.post(/*[[@{/bindSessionPage}]]*/,  {
+            uuid: uuid
+        })
+        sessionStorage.setItem("localId", uuid);
+    } else if ((currentPageId == null && sessionPageId != null) || (currentPageId != null && sessionPageId != null && currentPageId != sessionPageId)) {
+        alert("不允許打開新分頁");
+        sessionStorage.clear()
+        window.location.href = /*[[@{/doLogout}]]*/
+    } else if (currentPageId != null && sessionPageId == null) {
+        $.post(/*[[@{/bindSessionPage}]]*/,  {
+            uuid: currentPageId
+        })
+    }
+/*]]>*/
+
 </script>
 </body>
 </html>

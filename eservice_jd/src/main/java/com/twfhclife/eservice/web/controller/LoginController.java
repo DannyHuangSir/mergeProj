@@ -101,15 +101,10 @@ public class LoginController extends BaseController {
                 }
             }
 
-            switch (loginType) {
-                case "password":
-                    // 帳號密碼登入
-                    if (!verifyValidateCode) {
-                        addAttribute("errorMessage", "驗證碼不正確");
-                        resetVerifyCode();
-                        return "login";
-                    }
-                    break;
+            if (!verifyValidateCode) {
+                addAttribute("errorMessage", "驗證碼不正確");
+                resetVerifyCode();
+                return "login";
             }
 
             UsersVo userDetail = registerUserService.getUserByAccount(userId);
@@ -139,7 +134,6 @@ public class LoginController extends BaseController {
                     return "login";
                 }
             }
-
 
             if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
                 if (userDetail.getStatus().equals("locked")) {

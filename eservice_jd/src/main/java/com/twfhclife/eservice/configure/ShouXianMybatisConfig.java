@@ -8,41 +8,36 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
-import static com.twfhclife.eservice.configure.MybatisConfig.PACKAGE;
-
+import static com.twfhclife.eservice.configure.ShouXianMybatisConfig.PACKAGE;
 
 @Configuration
-@MapperScan(basePackages = PACKAGE, sqlSessionFactoryRef = "sqlSessionFactory")
-public class MybatisConfig {
+@MapperScan(basePackages = PACKAGE, sqlSessionFactoryRef = "shouxianSqlSessionFactory")
+public class ShouXianMybatisConfig {
 
-    static final String PACKAGE = "com.twfhclife.eservice.web.dao";
-    static final String MAPPER_LOCATION = "classpath:mybatis/mapper/eservice/*.xml";
+    static final String PACKAGE = "com.twfhclife.eservice.shouxian.dao";
+    static final String MAPPER_LOCATION = "classpath:mybatis/mapper/shouxian/*.xml";
 
-    @Primary
-    @Bean(name = "dataSource")
-    @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource dataSource() {
+    @Bean(name = "shouxianDataSource")
+    @ConfigurationProperties(prefix = "shouxian.datasource")
+    public DataSource shouxianDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Primary
-    @Bean(name = "transactionManager")
-    public DataSourceTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+    @Bean(name = "shouxianTransactionManager")
+    public DataSourceTransactionManager shopTransactionManager() {
+        return new DataSourceTransactionManager(shouxianDataSource());
     }
 
-    @Primary
-    @Bean(name = "sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource)
+    @Bean(name = "shouxianSqlSessionFactory")
+    public SqlSessionFactory shouxianSqlSessionFactory(@Qualifier("shouxianDataSource") DataSource shouxianDataSource)
             throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setDataSource(shouxianDataSource);
         sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
                 .getResources(MAPPER_LOCATION));
         return sessionFactory.getObject();
