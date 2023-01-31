@@ -8,7 +8,6 @@ import com.twfhclife.eservice.api_model.ApiResponseObj;
 import com.twfhclife.eservice.api_model.ReturnHeader;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserAddRequest;
-import com.twfhclife.eservice.keycloak.model.KeycloakUserResetPwdRequest;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserResponse;
 import com.twfhclife.eservice.keycloak.service.KeycloakService;
 import com.twfhclife.eservice.util.ApConstants;
@@ -16,7 +15,6 @@ import com.twfhclife.eservice.util.MyJacksonUtil;
 import com.twfhclife.eservice.web.dao.ParameterDao;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.ParameterVo;
-import com.twfhclife.eservice.web.model.RegisterQuestionVo;
 import com.twfhclife.eservice.web.model.UserTermVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IParameterService;
@@ -32,7 +30,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.InvalidParameterException;
 import java.util.*;
 
 @Service
@@ -216,7 +213,7 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 				}
 			}
 		}
-		return "密碼變更成功";
+		return "";
 	}
 
 	public UsersVo getUserByFbId(String fbId) {

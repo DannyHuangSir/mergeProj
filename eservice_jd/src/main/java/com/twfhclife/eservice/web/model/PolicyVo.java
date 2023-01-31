@@ -56,12 +56,15 @@ public class PolicyVo implements Serializable {
 
 	/** 每期保費 */
 	private String paidAmount;
+	private String mainAmount;
 
 	/** 生效日 */
 	private String effectiveDate;
 
 	/** 失效日 */
 	private String expireDate;
+
+	private String paidToDate;
 
 	public String getPolicyNo() {
 		return policyNo;
@@ -81,6 +84,22 @@ public class PolicyVo implements Serializable {
 
 	public String getPolicyType() {
 		return policyType;
+	}
+
+	public String getPaidToDate() {
+		return paidToDate;
+	}
+
+	public void setPaidToDate(String paidToDate) {
+		this.paidToDate = paidToDate;
+	}
+
+	public String getMainAmount() {
+		return mainAmount;
+	}
+
+	public void setMainAmount(String mainAmount) {
+		this.mainAmount = mainAmount;
 	}
 
 	public void setPolicyType(String policyType) {

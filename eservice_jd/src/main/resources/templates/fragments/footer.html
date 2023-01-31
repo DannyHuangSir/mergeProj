@@ -45,7 +45,31 @@
         })
     }
 /*]]>*/
-
+</script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+    $(function(){
+        $.ajax({
+            type : 'GET',
+            contentType : 'application/json',
+            dataType : 'json',
+            url : /*[[@{/message}]]*/,
+            success : function(data) {
+                if (data.result = 'SUCCESS') {
+                    $('#messageCount').text($(data.resultData).length)
+                    $(data.resultData).each(function(index, item){
+                        $('#messages').append(
+                            '<a href="#" class="item">' +
+                                '<div class="header"><em>' + item.title + '</em>' + item.msg + '</div>' +
+                                '<div class="content text-right"><small>' + item.createDate + '</small></div>' +
+                             '</a>'
+                        )
+                    })
+                }
+            }
+        });
+   })
+/*]]>*/
 </script>
 </body>
 </html>

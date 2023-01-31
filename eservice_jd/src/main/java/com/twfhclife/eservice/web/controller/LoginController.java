@@ -149,6 +149,7 @@ public class LoginController extends BaseController {
 
                 // 設定系統參數
                 Map<String, Map<String, ParameterVo>> sysParamMap = parameterService.getSystemParameter(ApConstants.SYSTEM_ID);
+                addSession(ApConstants.SYSTEM_PARAMETER, (Serializable) sysParamMap);
                 addAttribute(ApConstants.SYSTEM_CONSTANTS, (Serializable) sysParamMap.get("SYSTEM_CONSTANTS"));
 
                 // 設定登出倒數秒數

@@ -89,7 +89,7 @@
 												<option value="">無效</option>
 											</select>
 										</div>
-									</div> 
+									</div>
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 要保人身分證號 </label>
 
@@ -97,7 +97,7 @@
 											<input type="text" placeholder="輸入欲查詢的要保人身分證號" class="form-control" />
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 被保人身分證號 </label>
 
@@ -106,7 +106,7 @@
 										</div>
 									</div>
 
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 險種 </label>
 										<div class="col-sm-9">
@@ -170,55 +170,59 @@
 				                    <i class="foo-business_23 foo-lg"></i> 查詢結果清單 <span class="my2b">共 3 張</span>
 				                </div>
 					            <div class=" ">
-					            	
-					                <table class="tablesaw tablesaw-stack">
-				                        <thead>
-				                            <tr class="table2">
-				                                <th class="text-left item400">保單</th>
-				                                <th scope="col" class="item400">要保險人</th>
-				                                <th scope="col" class="item400">主被保險人</th>
-				                                <th scope="col" class="item400">保單狀態</th>
-				                                <th scope="col" class="item360">投保始期</th>
-				                                <th scope="col" class="item450">保額</th>
-				                                <th scope="col" class="item400">繳費年期</th>
-				                                <th scope="col" class="item450">繳別</th>
-				                                <th scope="col" class="item450">支付工具</th>
-				                            </tr>
-				                        </thead>
-				                        <tbody>
-				                            <tr onclick="window.document.location='listing1.html';">
-				                                <td class="table3">
-				                                    UC70000001
-				                                </td>
-				                                <td class="hid1 hid2">陳文倫</td>
-				                                <td class="hid1 hid2">陳文倫</td>
-				                                <td class="hid1 hid2">有效</td>
-				                                <td class="hid1 hid2 enThin">2015/01/16</td>
-				                                <td class="hid1 hid2">420,000<i class="my5">NTD</i></td>
-				                                <td class="hid1 hid2">20</td>
-				                                <td class="hid1 hid2">月繳</td>
-				                                <td class="hid1 hid2">郵局劃撥</td>
-				                            </tr>
-				                            <tr class="tr-odd" onclick="window.document.location='listing1.html';">
-				                                <td class="table3">
-				                                    UC70000001
-				                                </td>
-				                                <td class="hid1 hid2">李小龍</td>
-				                                <td class="hid1 hid2">陳文倫</td>
-				                                <td class="hid1 hid2">有效</td>
-				                                <td class="hid1 enThin hid2">2015/01/16</td>
-				                                <td class="hid1 hid2">420,000<i class="my5">NTD</i></td>
-				                                <td class="hid1 hid2">20</td>
-				                                <td class="hid1 hid2">月繳</td>
-				                                <td class="hid1 hid2">郵局劃撥</td>
-				                            </tr>
-				                           
-				                        </tbody>
-				                    </table>
-                
+									<table th:fragment="table5 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+										<thead>
+										<tr class="table2">
+											<th class="text-left item400">保單</th>
+											<th scope="col" class="item400">要保險人</th>
+											<th scope="col" class="item400">主被保險人</th>
+											<th scope="col" class="item400">保單狀態</th>
+											<th scope="col" class="item360">投保始期</th>
+											<th scope="col" class="item450">保額</th>
+											<th scope="col" class="item400">繳費年期</th>
+											<th scope="col" class="item450">繳別</th>
+											<th scope="col" class="item450">支付工具</th>
+										</tr>
+										</thead>
+										<tbody>
+										<th:block th:each="vo, rowStat : ${policyList}">
+											<tr style="cursor: pointer;" th:id="${vo.policyNo}" data-toggle="modal">
+												<td class="table3">
+													<p><th:block th:text="${vo.policyNo}"/></p>
+												</td>
+												<td>
+													陳文倫
+												</td>
+												<td>
+													陳文倫
+												</td>
+												<td>
+													有效
+												</td>
+												<td class="enThin">
+													<th:block th:text="${vo.effectiveDate}"/>
+												</td>
+												<td>
+													<th:block th:text="${vo.mainAmount != null} ? ${#numbers.formatDecimal(vo.mainAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
+												</td>
+												<td class="hid1 hid2">20</td>
+												<td>
+													<th:block th:if="${vo.paymentMode != null and vo.paymentMode == 'A' and vo.lipmFlexRcpMk == 'Y'}">
+														彈性繳
+													</th:block>
+													<th:block th:if="${vo.paymentMode != null and (vo.paymentMode != 'A' or vo.lipmFlexRcpMk != 'Y')}">
+														<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
+							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+													</th:block>
+													<input type="hidden" th:id="${'paymentMode_'+vo.policyNo}" th:value="${vo.paymentMode}"/>
+													<input type="hidden" th:id="${'paymentAcctValue_'+vo.policyNo}" th:value="${vo.paidAmount}"/>
+												</td>
+												<td class="hid1 hid2">郵局劃撥</td>
+											</tr>
+										</th:block>
+										</tbody>
+									</table>
 					            </div>
-							
-					      
 					        </div>
 						</div>
 					</div>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.web.dao.MessageDao">
+
+	<resultMap id="MessageMap" type="com.twfhclife.eservice.web.model.MessageVo" >
+		<result column="ID" property="id"/>
+		<result column="TITLE" property="title"/>
+		<result column="MSG" property="msg"/>
+		<result column="STATUS" property="status"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="NOTIFY_TIME" property="notifyTime"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TITLE,MSG,STATUS,CREATE_DATE,USER_ID,NOTIFY_TIME
+	</sql>
+	
+	<select id="getMessages" resultMap="MessageMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_JD.DBO.MESSAGE
+		ORDER BY
+			CREATE_DATE
+	</select>
+</mapper>

@@ -9,6 +9,7 @@ import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.eservice.web.service.IPolicyService;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -31,9 +32,12 @@ public class JdzqController extends BaseController {
 
 	private static final Logger logger = LogManager.getLogger(JdzqController.class);
 
+	@Autowired
+	private IPolicyService policyService;
 
 	@GetMapping("/policyQuery")
 	public String policyInquiry() {
+		addAttribute("policyList", policyService.getPolicyList());
 		return "frontstage/jdzq/policyQuery/policy-query";
 	}
 
