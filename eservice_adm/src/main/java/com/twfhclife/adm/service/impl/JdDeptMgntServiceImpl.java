@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @auther lihao
@@ -133,5 +134,17 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
             }
         }
         return parentDepList;
+    }
+
+    @Override
+    public List<Map<String, Object>> getDepartmentList(String username, String keyCloakUserId, DepartmentVo departmentVo) {
+        String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
+        return departmentDao.getDepartmentList(departmentVo, keyCloakUserId, adminUserFlag);
+    }
+
+    @Override
+    public int getDepartmentTotal(String username, String keyCloakUserId, DepartmentVo departmentVo) {
+        String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
+        return departmentDao.getDepartmentTotal(departmentVo, keyCloakUserId, adminUserFlag);
     }
 }

@@ -54,7 +54,7 @@
                 AND MODIFY_DATE = #{roleVo.modifyDate}
             </if>
             <if test="roleVo.systemId != null and roleVo.systemId != ''">
-                AND ROLE_ID IN (
+                AND b.ROLE_ID IN (
                 SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH
                 WHERE SYS_ID = #{roleVo.systemId}
                 <if test="adminUserFlag == 'N'.toString()">
@@ -85,7 +85,8 @@
         b.ROLE_ID,b.ROLE_NAME,b.DESCRIPTION,b.PARENT_ROLE_ID,b.DEPARTMENT_ID,b.CREATE_USER,b.CREATE_DATE,b.MODIFY_USER,b.MODIFY_DATE,a.DEP_NAME as DEPARTMENT_NAME
         FROM
         ESERVICE_ADM.DBO.ROLE b
-        left join ESERVICE_JD.DBO.DEPARTMENT a on b.DEPARTMENT_ID=a.DEP_ID COLLATE database_default
+        left join ESERVICE_JD.DBO.ROLE_DEPARTMENT RD ON RD.ROLE_ID = b.ROLE_ID COLLATE database_default
+        left join ESERVICE_JD.DBO.DEPARTMENT a on RD.DEP_ID=a.DEP_ID COLLATE database_default
         <include refid="whereClause"/>
     </sql>
 

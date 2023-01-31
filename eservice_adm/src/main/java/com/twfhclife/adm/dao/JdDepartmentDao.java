@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @auther lihao
@@ -58,4 +59,8 @@ public interface JdDepartmentDao {
      * @return 回傳影響筆數
      */
     int deleteDepartment(@Param("depId") String depId);
+
+    List<Map<String, Object>> getDepartmentList(@Param("vo") DepartmentVo departmentVo, @Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
+
+    int getDepartmentTotal(@Param("vo") DepartmentVo departmentVo, @Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
 }

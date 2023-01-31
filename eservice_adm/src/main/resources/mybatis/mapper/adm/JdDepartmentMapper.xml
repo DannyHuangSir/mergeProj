@@ -137,4 +137,38 @@
         DELETE FROM ESERVICE_JD.DBO.DEPARTMENT WHERE DEP_ID = #{depId}
     </delete>
 
+    <select id="getDepartmentList" resultType="hashmap">
+        SELECT *
+        FROM (
+        SELECT
+        ROW_NUMBER() OVER (ORDER BY DEP_ID) AS ROW_NUM
+        ,A.*
+        FROM (
+        <include refid="INC1"/>
+        ) A
+        ) B
+        WHERE
+        B.ROW_NUM <![CDATA[<=]]> #{vo.page} * #{vo.rows}
+        AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows}
+    </select>
+
+    <select id="getDepartmentTotal" resultType="int">
+        SELECT
+        COUNT(1) AS AMOUNT
+        FROM (
+        <include refid="INC1"/>
+        ) t
+    </select>
+
+    <sql id="INC1">
+        SELECT
+         d.DEP_ID
+        ,d.DEP_NAME
+        ,d.DESCRIPTION
+        ,d.PARENT_DEP
+        FROM
+        ESERVICE_JD.DBO.DEPARTMENT d
+        WHERE D.PARENT_DEP != 0
+    </sql>
+
 </mapper>

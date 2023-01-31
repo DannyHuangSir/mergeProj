@@ -3,6 +3,7 @@ package com.twfhclife.adm.service;
 import com.twfhclife.adm.model.DepartmentVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @auther lihao
@@ -62,4 +63,8 @@ public interface IJdDeptMgntService {
      * @return 回傳上一層部門清單
      */
     public List<DepartmentVo> getParentDepList(DepartmentVo departmentVo);
+
+    List<Map<String, Object>> getDepartmentList(String username, String keyCloakUserId, DepartmentVo departmentVo);
+
+    int getDepartmentTotal(String username, String keyCloakUserId, DepartmentVo departmentVo);
 }

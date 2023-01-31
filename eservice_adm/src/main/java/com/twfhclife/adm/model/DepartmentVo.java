@@ -2,9 +2,10 @@ package com.twfhclife.adm.model;
 
 import java.util.Date;
 
+import com.twfhclife.generic.model.Pagination;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class DepartmentVo {
+public class DepartmentVo extends Pagination {
 
 	private String depId;
 	private String depName;

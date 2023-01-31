@@ -90,3 +90,19 @@ VALUES (
      NULL, NULL,
      GETDATE(), N'admin', NULL, NULL)
 go
+
+insert ESERVICE_ADM.[dbo].[FUNCTION_ITEM] select
+(select max(FUNCTION_ID)+1 from ESERVICE_ADM.[dbo].[FUNCTION_ITEM]),
+N'經代專區通知管理',
+N'F',
+'jdzqNotifyManagement',
+PARENT_FUNC_ID,
+SYS_ID,
+(select max(SORT)+1 from ESERVICE_ADM.[dbo].[FUNCTION_ITEM] where FUNCTION_NAME  = N'通信模板維護'),
+ACTIVE,
+CREATE_USER,
+getDate(),
+UPDATE_USER,
+getDate()
+from ESERVICE_ADM.[dbo].[FUNCTION_ITEM] where FUNCTION_NAME  = N'通信模板維護'
+go

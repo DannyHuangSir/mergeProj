@@ -1,5 +1,6 @@
 package com.twfhclife.adm.controller.jd;
 
+import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.DepartmentVo;
 import com.twfhclife.adm.service.IJdDeptMgntService;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,6 +72,26 @@ public class JdDeptMgntController extends BaseController {
             processSystemError();
         }
         return processResponseEntity();
+    }
+
+    @RequestLog
+    @PostMapping("/department/getDepartment")
+    public ResponseEntity<PageResponseObj> getDepartment(@RequestBody DepartmentVo vo) {
+        PageResponseObj pageResp = new PageResponseObj();
+        try {
+            com.twfhclife.keycloak.model.KeycloakUser kuser = getLoginUser();
+            String username = kuser.getUsername();
+            String keyCloakUserId = kuser.getId();
+            pageResp.setRows(deptMgntService.getDepartmentList(username, keyCloakUserId, vo));
+            pageResp.setRecords(deptMgntService.getDepartmentTotal(username, keyCloakUserId, vo));
+            pageResp.setPage(vo.getPage());
+            pageResp.setTotal((pageResp.getRecords() + vo.getRows() - 1) / vo.getRows());
+            pageResp.setResult(PageResponseObj.SUCCESS);
+        } catch (Exception e) {
+            logger.error("Unable to getDepartment: {}", ExceptionUtils.getStackTrace(e));
+            processSystemError();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(pageResp);
     }
 
     /**
