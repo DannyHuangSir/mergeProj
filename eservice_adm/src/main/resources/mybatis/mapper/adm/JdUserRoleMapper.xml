@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.JdUserRoleDao">
+
+	<resultMap id="UserRoleMap" type="com.twfhclife.adm.model.UserRoleVo" >
+		<result column="USER_ID" property="userId"/>
+		<result column="ROLE_ID" property="roleId"/>
+	</resultMap>
+
+	<resultMap id="UserRoleNameMap" type="com.twfhclife.adm.model.UserRoleVo" extends="UserRoleMap">
+		<result column="ROLE_NAME" property="roleName"/>
+		<result column="DESCRIPTION" property="description"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		UR.USER_ID,UR.ROLE_ID
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="userRoleVo.userId != null and userRoleVo.userId != ''"> AND UR.USER_ID = #{userRoleVo.userId} </if>
+			<if test="userRoleVo.roleId != null and userRoleVo.roleId != ''"> AND UR.ROLE_ID = #{userRoleVo.roleId} </if>
+		</where>
+	</sql>
+	
+	<!-- include sql: 人員角色管理查詢結果 -->
+	<sql id="INC1">
+		SELECT
+		UR.USER_ID
+		,UR.ROLE_ID
+		,R.ROLE_NAME
+		,R.DESCRIPTION
+		FROM
+		ESERVICE_ADM.DBO.USER_ROLE UR
+		LEFT OUTER JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
+		INNER JOIN  ESERVICE_JD.dbo.DEPARTMENT D on R.DEPARTMENT_ID = D.DEP_ID COLLATE database_default
+		<include refid="whereClause" />
+	</sql>
+	
+	<!-- 取得人員角色管理查詢結果(分頁) -->
+	<select id="getUserRolePageList" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY USER_ID) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{userRoleVo.page} * #{userRoleVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{userRoleVo.page} - 1) * #{userRoleVo.rows}	
+	</select>
+	
+	<!-- 取得人員角色管理查詢結果(總筆數) -->
+	<select id="getUserRolePageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得人員角色管理查詢結果 -->
+	<select id="getUserRole" resultMap="UserRoleNameMap">
+		SELECT
+			<include refid="Base_Column_List" />
+			,R.ROLE_NAME
+			,R.DESCRIPTION
+		FROM
+			ESERVICE_ADM.DBO.USER_ROLE UR
+			LEFT OUTER JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 人員角色管理-新增 -->
+	<insert id="insertUserRole">
+		INSERT INTO ESERVICE_ADM.DBO.USER_ROLE
+		(
+			USER_ID
+			,ROLE_ID
+		)
+		VALUES
+		(
+			#{userRoleVo.userId, jdbcType=VARCHAR},
+			#{userRoleVo.roleId, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 人員角色管理-更新 -->
+	<update id="updateUserRole">
+		UPDATE
+			ESERVICE_ADM.DBO.USER_ROLE
+		<set>
+			<if test="userRoleVo.userId != null"> USER_ID = #{userRoleVo.userId}, </if>
+			<if test="userRoleVo.roleId != null"> ROLE_ID = #{userRoleVo.roleId}, </if>
+		</set>
+		<include refid="whereClause" />
+	</update>
+	
+	<!-- 人員角色管理-刪除 -->
+	<delete id="deleteUserRole">
+		DELETE ESERVICE_ADM.DBO.USER_ROLE
+		<where>
+			<if test="userRoleVo.userId != null and userRoleVo.userId != ''"> AND USER_ID = #{userRoleVo.userId} </if>
+			<if test="userRoleVo.roleId != null and userRoleVo.roleId != ''"> AND ROLE_ID = #{userRoleVo.roleId} </if>
+		</where>
+	</delete>
+
+</mapper>

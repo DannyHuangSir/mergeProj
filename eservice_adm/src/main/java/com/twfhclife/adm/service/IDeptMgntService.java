@@ -1,8 +1,8 @@
 package com.twfhclife.adm.service;
 
-import java.util.List;
-
 import com.twfhclife.adm.model.DepartmentVo;
+
+import java.util.List;
 
 /**
  * 基本資料管理-部門管理服務.

@@ -40,13 +40,13 @@ public class JdUserMgntController extends BaseController {
     private IAuthorizationService authorizationService;
 
     @Autowired
-    private IUserMgntService userMgntService;
+    private IJdUserMgntService userMgntService;
 
     @Autowired
     private IUserDepartmentService userDepartmentService;
 
     @Autowired
-    private IUserRoleService userRoleService;
+    private IJdUserRoleService userRoleService;
 
     @Autowired
     private IUserDeputyService userDeputyService;

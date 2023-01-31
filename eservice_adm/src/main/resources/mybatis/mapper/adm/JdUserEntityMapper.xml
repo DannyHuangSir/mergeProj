@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.JdUserEntityDao">
+
+	<resultMap id="UserEntityMap" type="com.twfhclife.adm.model.UserEntityVo" >
+		<result column="ID" property="id"/>
+		<result column="EMAIL" property="email"/>
+		<result column="EMAIL_CONSTRAINT" property="emailConstraint"/>
+		<result column="EMAIL_VERIFIED" property="emailVerified"/>
+		<result column="ENABLED" property="enabled"/>
+		<result column="FEDERATION_LINK" property="federationLink"/>
+		<result column="FIRST_NAME" property="firstName"/>
+		<result column="LAST_NAME" property="lastName"/>
+		<result column="REALM_ID" property="realmId"/>
+		<result column="USERNAME" property="username"/>
+		<result column="CREATED_TIMESTAMP" property="createdTimestamp"/>
+		<result column="SERVICE_ACCOUNT_CLIENT_LINK" property="serviceAccountClientLink"/>
+		<result column="NOT_BEFORE" property="notBefore"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,EMAIL,EMAIL_CONSTRAINT,EMAIL_VERIFIED,ENABLED,FEDERATION_LINK,FIRST_NAME,LAST_NAME,REALM_ID,USERNAME,CREATED_TIMESTAMP,SERVICE_ACCOUNT_CLIENT_LINK,NOT_BEFORE
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="userEntityVo.id != null and userEntityVo.id != ''"> AND ID = #{userEntityVo.id} </if>
+			<if test="userEntityVo.email != null and userEntityVo.email != ''"> AND EMAIL = #{userEntityVo.email} </if>
+			<if test="userEntityVo.emailConstraint != null and userEntityVo.emailConstraint != ''"> AND EMAIL_CONSTRAINT = #{userEntityVo.emailConstraint} </if>
+			<if test="userEntityVo.emailVerified != null"> AND EMAIL_VERIFIED = #{userEntityVo.emailVerified} </if>
+			<if test="userEntityVo.enabled != null"> AND ENABLED = #{userEntityVo.enabled} </if>
+			<if test="userEntityVo.federationLink != null and userEntityVo.federationLink != ''"> AND FEDERATION_LINK = #{userEntityVo.federationLink} </if>
+			<if test="userEntityVo.firstName != null and userEntityVo.firstName != ''"> AND FIRST_NAME = #{userEntityVo.firstName} </if>
+			<if test="userEntityVo.lastName != null and userEntityVo.lastName != ''"> AND LAST_NAME = #{userEntityVo.lastName} </if>
+			<if test="userEntityVo.realmId != null and userEntityVo.realmId != ''"> AND REALM_ID = #{userEntityVo.realmId} </if>
+			<if test="userEntityVo.username != null and userEntityVo.username != ''"> AND USERNAME = #{userEntityVo.username} </if>
+			<if test="userEntityVo.createdTimestamp != null"> AND CREATED_TIMESTAMP = #{userEntityVo.createdTimestamp} </if>
+			<if test="userEntityVo.serviceAccountClientLink != null and userEntityVo.serviceAccountClientLink != ''"> AND SERVICE_ACCOUNT_CLIENT_LINK = #{userEntityVo.serviceAccountClientLink} </if>
+			<if test="userEntityVo.notBefore != null"> AND NOT_BEFORE = #{userEntityVo.notBefore} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{userEntityVo.id}
+		</where>
+	</sql>
+	
+	<!-- include sql: 人員管理查詢結果 -->
+	<sql id="INC1">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.USER_ENTITY
+		<where>
+			<if test="userEntityVo.username != null and userEntityVo.username != ''"> AND UPPER(USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.username}),'%'))</if>
+			<if test="userEntityVo.lastName != null and userEntityVo.lastName != ''"> AND UPPER(CONCAT(LAST_NAME, FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.lastName}),'%'))</if>
+			<if test="userEntityVo.realmId != null and userEntityVo.realmId != ''"> AND REALM_ID = #{userEntityVo.realmId} </if>
+			<if test="userEntityVo.systemId != null and userEntityVo.systemId != ''">
+				AND ID IN (
+					SELECT USER_ID FROM ESERVICE_ADM.DBO.USER_ROLE
+					WHERE ROLE_ID IN (
+						SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH
+						WHERE SYS_ID = #{userEntityVo.systemId}
+					)
+				)
+			</if>
+			<if test="userEntityVo.department != null and userEntityVo.department != ''">
+				AND ID IN (
+					SELECT
+					udd.USER_ID
+					FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udd
+					inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID  COLLATE database_default
+					WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
+			    )
+			</if>
+			<if test="userEntityVo.jobTitle != null and userEntityVo.jobTitle != ''">
+				AND ID IN (
+			        SELECT
+			        	udt.USER_ID
+			        FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udt
+			        LEFT JOIN ESERVICE_ADM.DBO.JOB_TITLE jt on udt.TITLE_ID=jt.TITLE_ID
+			        WHERE UPPER(jt.TITLE_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.jobTitle}),'%'))
+			    )
+			</if>
+			<if test="userEntityVo.roleName != null and userEntityVo.roleName != ''">
+				AND ID IN (
+			        SELECT
+			        	urr.USER_ID
+			        FROM ESERVICE_ADM.DBO.USER_ROLE urr
+			        LEFT JOIN ESERVICE_ADM.DBO.ROLE rr on urr.ROLE_ID=rr.ROLE_ID
+			        WHERE UPPER(rr.ROLE_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.roleName}),'%'))
+			    )
+			</if>
+			<!-- 非系統最高權限管理員，只能查詢角色所屬部門的人員 -->
+			<if test="adminUserFlag == 'N'.toString()">
+				AND ID IN (
+					SELECT
+						USER_ID
+					FROM ESERVICE_ADM.DBO.USER_DEPARTMENT
+					WHERE DEP_ID IN (
+						SELECT DEPARTMENT_ID FROM ESERVICE_ADM.DBO.ROLE WHERE ROLE_ID IN (
+							SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{userEntityVo.id}
+						)
+					)
+				)
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 取得人員管理查詢結果(分頁) -->
+	<select id="getUserEntityPageList" resultType="hashmap">
+		SELECT
+			*
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY USERNAME) AS ROW_NUM
+				,A.*
+			FROM (
+				<include refid="INC1" />
+			) A
+		) B		
+		WHERE
+			B.ROW_NUM <![CDATA[<=]]> #{userEntityVo.page} * #{userEntityVo.rows}
+			AND B.ROW_NUM <![CDATA[>]]> (#{userEntityVo.page} - 1) * #{userEntityVo.rows}	
+	</select>
+	
+	<!-- 取得人員管理查詢結果(總筆數) -->
+	<select id="getUserEntityPageTotal" resultType="int">
+		SELECT
+			COUNT(1) AS AMOUNT
+		FROM (
+			<include refid="INC1" />
+		) t
+	</select>
+	
+	<!-- 取得人員管理查詢結果 -->
+	<select id="getUserEntity" resultMap="UserEntityMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE_ADM.DBO.USER_ENTITY
+		<include refid="whereClause" />
+	</select>
+
+	<!-- 取得人員管理查詢結果(分頁) -->
+	<select id="getALLUserEntityPageList" resultType="hashmap">
+		SELECT
+		*
+		FROM (
+		SELECT
+		ROW_NUMBER() OVER (ORDER BY USERNAME) AS ROW_NUM
+		,A.*
+		FROM (
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		ESERVICE_ADM.DBO.USER_ENTITY
+		<where>
+			ID IN (
+			SELECT
+			udd.USER_ID
+			FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udd
+			inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID  COLLATE database_default
+			WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
+			)
+			<if test="userEntityVo.realmId != null and userEntityVo.realmId != ''">
+				AND REALM_ID = #{userEntityVo.realmId}
+			</if>
+			<if test="userEntityVo.systemId != null and userEntityVo.systemId != ''">
+				AND ID IN (
+				SELECT USER_ID FROM ESERVICE_ADM.DBO.USER_ROLE
+				WHERE ROLE_ID IN (
+				SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH
+				WHERE SYS_ID = #{userEntityVo.systemId}
+				)
+-- 				)
+			</if>
+			<if test="adminUserFlag == 'N'.toString()">
+				AND ID IN (
+				SELECT
+				USER_ID
+				FROM ESERVICE_ADM.DBO.USER_DEPARTMENT
+				WHERE DEP_ID IN (
+				SELECT DEPARTMENT_ID FROM ESERVICE_ADM.DBO.ROLE WHERE ROLE_ID IN (
+				SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{userEntityVo.id}
+				)
+				)
+				)
+			</if>
+		</where>
+		) A
+		) B
+		WHERE
+		B.ROW_NUM <![CDATA[<=]]> #{userEntityVo.page} * #{userEntityVo.rows}
+		AND B.ROW_NUM <![CDATA[>]]> (#{userEntityVo.page} - 1) * #{userEntityVo.rows}
+	</select>
+</mapper>

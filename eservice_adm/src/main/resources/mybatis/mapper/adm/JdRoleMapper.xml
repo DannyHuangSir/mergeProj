@@ -22,6 +22,7 @@
 
     <sql id="whereClause">
         <where>
+                a.DEP_NAME != ''
             <if test="roleVo.roleId != null and roleVo.roleId != ''">
                 AND ROLE_ID = #{roleVo.roleId}
             </if>
@@ -84,7 +85,7 @@
         b.ROLE_ID,b.ROLE_NAME,b.DESCRIPTION,b.PARENT_ROLE_ID,b.DEPARTMENT_ID,b.CREATE_USER,b.CREATE_DATE,b.MODIFY_USER,b.MODIFY_DATE,a.DEP_NAME as DEPARTMENT_NAME
         FROM
         ESERVICE_ADM.DBO.ROLE b
-        right join ESERVICE_JD.DBO.DEPARTMENT a on b.DEPARTMENT_ID=a.DEP_ID COLLATE database_default
+        left join ESERVICE_JD.DBO.DEPARTMENT a on b.DEPARTMENT_ID=a.DEP_ID COLLATE database_default
         <include refid="whereClause"/>
     </sql>
 
@@ -126,9 +127,10 @@
     <!-- 使用者角色管理-依照使用者權限查詢 -->
     <select id="getRoleByAuth" resultMap="RoleMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        R.ROLE_ID,R.ROLE_NAME,R.DESCRIPTION,R.PARENT_ROLE_ID,R.DEPARTMENT_ID,R.CREATE_USER,R.CREATE_DATE,R.MODIFY_USER,R.MODIFY_DATE
         FROM
-        ESERVICE_ADM.DBO.ROLE
+        ESERVICE_ADM.DBO.ROLE R
+--         INNER JOIN  ESERVICE_JD.dbo.DEPARTMENT D on R.DEPARTMENT_ID = D.DEP_ID COLLATE database_default
         <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
         <if test="adminUserFlag == 'N'.toString()">
             WHERE

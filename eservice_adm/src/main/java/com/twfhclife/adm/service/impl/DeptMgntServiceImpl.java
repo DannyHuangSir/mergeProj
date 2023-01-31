@@ -1,17 +1,16 @@
 package com.twfhclife.adm.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.twfhclife.adm.dao.DepartmentDao;
+import com.twfhclife.adm.model.DepartmentVo;
+import com.twfhclife.adm.service.IDeptMgntService;
+import com.twfhclife.generic.annotation.RequestLog;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.twfhclife.adm.dao.DepartmentDao;
-import com.twfhclife.adm.model.DepartmentVo;
-import com.twfhclife.adm.service.IDeptMgntService;
-import com.twfhclife.generic.annotation.RequestLog;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 基本資料管理-部門管理服務.

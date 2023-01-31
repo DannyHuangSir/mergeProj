@@ -13,7 +13,7 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),'使用者匯入批次作業', 'F', 'userBatchImport',
+    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'使用者匯入批次作業', 'F', 'userBatchImport',
 	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm'),
 	'eservice_adm',
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm')),
@@ -38,7 +38,7 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),'VIP客戶名單匯入批次作業', 'F', 'vipBatchImport',
+    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'VIP客戶名單匯入批次作業', 'F', 'vipBatchImport',
 	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm'),
 	'eservice_adm',
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm')),
@@ -63,7 +63,7 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),'經代專區', 'FG', 'NULL',
+    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'經代專區', 'FG', 'NULL',
 	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm'),
 	'eservice_adm',
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm')),
@@ -88,7 +88,7 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),'部門管理', 'F', 'jdDeptMgnt',
+    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'部門管理', 'F', 'jdDeptMgnt',
 	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm'),
 	'eservice_adm',
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm')),
@@ -113,7 +113,7 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),'角色管理', 'F', 'jdRole',
+    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'角色管理', 'F', 'jdRole',
 	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm'),
 	'eservice_adm',
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm')),
@@ -138,7 +138,7 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),'人員管理', 'F', 'jdUserMgnt',
+    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'人員管理', 'F', 'jdUserMgnt',
 	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm'),
 	'eservice_adm',
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm')),

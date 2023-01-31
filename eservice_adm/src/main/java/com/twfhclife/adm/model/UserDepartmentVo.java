@@ -14,6 +14,51 @@ public class UserDepartmentVo extends Pagination {
 	/** 職位 */
 	private String titleId;
 	private String titleName;
+	/**
+	 * 通路别
+	 */
+	private String channel;
+	private String branch;
+	private String employeeNum;
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public void setBranch(String branch) {
+		this.branch = branch;
+	}
+
+	public void setEmployeeNum(String employeeNum) {
+		this.employeeNum = employeeNum;
+	}
+
+	public void setRegisterNum(String registerNum) {
+		this.registerNum = registerNum;
+	}
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public String getBranch() {
+		return branch;
+	}
+
+	public String getEmployeeNum() {
+		return employeeNum;
+	}
+
+	public String getRegisterNum() {
+		return registerNum;
+	}
+
+	/**
+	 * 登录字号
+	 */
+	private String registerNum;
+
+
 	
 	public String getUserId() {
 		return this.userId;

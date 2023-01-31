@@ -88,5 +88,8 @@
 		<mapper resource="mybatis/mapper/adm/QuestionnaireMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/JdDepartmentMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/JdRoleMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/JdUserDepartmentMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/JdUserEntityMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/JdUserRoleMapper.xml"/>
 	</mappers>
 </configuration>

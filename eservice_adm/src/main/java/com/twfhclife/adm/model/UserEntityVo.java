@@ -1,10 +1,9 @@
 package com.twfhclife.adm.model;
 
-import java.math.BigDecimal;
-
+import com.twfhclife.generic.model.Pagination;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.twfhclife.generic.model.Pagination;
+import java.math.BigDecimal;
 
 public class UserEntityVo extends Pagination {
 	
@@ -44,7 +43,53 @@ public class UserEntityVo extends Pagination {
 	private String jobTitle;
 	
 	private String roleName;
-	
+
+	/**
+	 * 通路别
+	 */
+	private String channel;
+	private String branch;
+	private String employeeNum;
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public void setBranch(String branch) {
+		this.branch = branch;
+	}
+
+	public void setEmployeeNum(String employeeNum) {
+		this.employeeNum = employeeNum;
+	}
+
+	public void setRegisterNum(String registerNum) {
+		this.registerNum = registerNum;
+	}
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public String getBranch() {
+		return branch;
+	}
+
+	public String getEmployeeNum() {
+		return employeeNum;
+	}
+
+	public String getRegisterNum() {
+		return registerNum;
+	}
+
+	/**
+	 * 登录字号
+	 */
+	private String registerNum;
+
+
+
 	public String getId() {
 		return this.id;
 	}
