@@ -168,7 +168,7 @@
         ,d.PARENT_DEP
         FROM
         ESERVICE_JD.DBO.DEPARTMENT d
-        WHERE D.PARENT_DEP != 0
+        WHERE D.PARENT_DEP = 30000
     </sql>
 
 </mapper>

@@ -157,13 +157,15 @@
 		FROM
 		ESERVICE_ADM.DBO.USER_ENTITY
 		<where>
+			<if test="userEntityVo.department != null and userEntityVo.department != ''">
 			ID IN (
 			SELECT
-			udd.USER_ID
-			FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udd
-			inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID  COLLATE database_default
-			WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
-			)
+				udd.USER_ID
+				FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
+				inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID COLLATE database_default
+				WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
+				)
+			</if>
 			<if test="userEntityVo.realmId != null and userEntityVo.realmId != ''">
 				AND REALM_ID = #{userEntityVo.realmId}
 			</if>
