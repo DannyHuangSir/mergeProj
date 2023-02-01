@@ -131,7 +131,7 @@
         R.ROLE_ID,R.ROLE_NAME,R.DESCRIPTION,R.PARENT_ROLE_ID,R.DEPARTMENT_ID,R.CREATE_USER,R.CREATE_DATE,R.MODIFY_USER,R.MODIFY_DATE
         FROM
         ESERVICE_ADM.DBO.ROLE R
---         INNER JOIN  ESERVICE_JD.dbo.DEPARTMENT D on R.DEPARTMENT_ID = D.DEP_ID COLLATE database_default
+        INNER JOIN  ESERVICE_JD.dbo.DEPARTMENT D on R.DEPARTMENT_ID = D.DEP_ID COLLATE database_default
         <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
         <if test="adminUserFlag == 'N'.toString()">
             WHERE
@@ -142,12 +142,13 @@
     </select>
 
     <!-- 使用者角色管理-新增 -->
-    <insert id="insertRole">
+    <insert id="insertRole" useGeneratedKeys="false">
+        declare @temp table(ROLE_ID varchar(50))
         INSERT INTO ESERVICE_ADM.DBO.ROLE
         (
         <include refid="Base_Column_List"/>
         )
-        VALUES
+        output inserted.ROLE_ID into @temp VALUES
         (
         NEWID(),
         #{roleVo.roleName, jdbcType=VARCHAR},
@@ -159,6 +160,7 @@
         #{roleVo.modifyUser, jdbcType=VARCHAR},
         getdate()
         )
+        insert ESERVICE_JD.dbo.ROLE_DEPARTMENT (ROLE_ID,DEP_ID) values ((select * from @temp),#{roleVo.departmentId, jdbcType=VARCHAR})
     </insert>
 
     <!-- 使用者角色管理-更新 -->
@@ -185,5 +187,19 @@
         <include refid="wherePkClause"/>
     </delete>
 
+    <update id="updateRoleDep">
+        UPDATE
+        ESERVICE_JD.DBO.ROLE_DEPARTMENT
+        <set>
+            <if test="roleVo.roleId != null">ROLE_ID = #{roleVo.roleId},</if>
+            <if test="roleVo.departmentId != null">DEP_ID = #{roleVo.departmentId}</if>
+        </set>
+        <include refid="wherePkClause"/>
+    </update>
+
+    <delete id="deleteRoleDep">
+        DELETE ESERVICE_JD.DBO.ROLE_DEPARTMENT
+        <include refid="wherePkClause"/>
+    </delete>
 </mapper>
 

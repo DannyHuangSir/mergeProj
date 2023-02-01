@@ -14,16 +14,6 @@ import java.util.Map;
 public interface JdUserEntityDao {
 
 	/**
-	 * 人員管理-分頁查詢-userEntityVo条件为空查询所有
-	 *
-	 * @param userEntityVo UserEntityVo
-	 * @param adminUserFlag 最高管理員權限註記
-	 * @return 回傳人員管理-分頁查詢結果
-	 */
-	List<Map<String, Object>> getALLUserEntityPageList(@Param("userEntityVo") UserEntityVo userEntityVo,
-													@Param("adminUserFlag") String adminUserFlag);
-
-	/**
 	 * 人員管理-分頁查詢.
 	 * 
 	 * @param userEntityVo UserEntityVo

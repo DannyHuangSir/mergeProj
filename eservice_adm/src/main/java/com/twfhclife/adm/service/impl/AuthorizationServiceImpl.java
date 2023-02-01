@@ -1,11 +1,11 @@
 package com.twfhclife.adm.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import com.twfhclife.adm.dao.*;
+import com.twfhclife.adm.domain.DownloadUserAuthCSVResponse;
+import com.twfhclife.adm.model.*;
+import com.twfhclife.adm.service.IAuthorizationService;
+import com.twfhclife.generic.annotation.RequestLog;
+import com.twfhclife.generic.util.MyStringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -13,24 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.twfhclife.adm.dao.AuthorizationDao;
-import com.twfhclife.adm.dao.FunctionDivDao;
-import com.twfhclife.adm.dao.FunctionItemDao;
-import com.twfhclife.adm.dao.RoleDivAuthDao;
-import com.twfhclife.adm.dao.RoleFuncAuthDao;
-import com.twfhclife.adm.dao.RoleSysAuthDao;
-import com.twfhclife.adm.dao.SystemsDao;
-import com.twfhclife.adm.dao.UserDepartmentDao;
-import com.twfhclife.adm.dao.UserRoleDao;
-import com.twfhclife.adm.domain.DownloadUserAuthCSVResponse;
-import com.twfhclife.adm.model.FunctionDivVo;
-import com.twfhclife.adm.model.FunctionItemVo;
-import com.twfhclife.adm.model.RoleSysAuthVo;
-import com.twfhclife.adm.model.UserDepartmentVo;
-import com.twfhclife.adm.model.UserRoleVo;
-import com.twfhclife.adm.service.IAuthorizationService;
-import com.twfhclife.generic.annotation.RequestLog;
-import com.twfhclife.generic.util.MyStringUtil;
+import java.util.*;
 
 /**
  * 權限查詢與報表服務.
@@ -68,6 +51,9 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 	
 	@Autowired
 	private SystemsDao systemsDao;
+
+	@Autowired
+	private JdUserDepartmentDao JdUserDepartmentDao;
 	
 	/**
 	 * 設定使用者的系統跟角色權限資料.
@@ -241,5 +227,76 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 	@Override
 	public List<DownloadUserAuthCSVResponse> downloadUserAuthCSV(String sysId) {
 		return authorizationDao.downloadUserAuthCSV(sysId);
+	}
+
+	/**
+	 * 经代专区
+	 * @param userAuthList 使用者清單
+	 */
+	@RequestLog
+	@Override
+	public void setJdUserSystemRoleAuth(List<Map<String, Object>> userAuthList) {
+		for (Map<String, Object> userMap : userAuthList) {
+			String userId = (String) userMap.get("ID"); // USER_ENTITY.ID
+			List<String> sysIdList = new ArrayList<>();
+			List<String> sysNameList = new ArrayList<>();
+			List<String> roleIdList = new ArrayList<>();
+			List<String> roleNameList = new ArrayList<>();
+			List<String> depNameList = new ArrayList<>();
+			List<String> titleNameList = new ArrayList<>();
+
+			// 取得使用者的角色清單
+			UserRoleVo qryVo = new UserRoleVo();
+			qryVo.setUserId(userId);
+			List<UserRoleVo> userRoleList = userRoleDao.getUserRole(qryVo);
+			for (UserRoleVo userRoleVo : userRoleList) {
+				String roleId = userRoleVo.getRoleId();
+				String roleName = MyStringUtil.nullToString(userRoleVo.getRoleName());
+				if (!roleIdList.contains(roleId)) {
+					roleIdList.add(roleId);
+				}
+				if (!roleNameList.contains(roleName)) {
+					roleNameList.add(roleName);
+				}
+
+				// 取得使用者的系統清單
+				RoleSysAuthVo sysQryVo = new RoleSysAuthVo();
+				sysQryVo.setRoleId(roleId);
+				List<RoleSysAuthVo> roleSysAuthList = roleSysAuthDao.getRoleSysAuth(sysQryVo);
+				for (RoleSysAuthVo roleSysAuthVo : roleSysAuthList) {
+					String sysId = roleSysAuthVo.getSysId();
+					String sysName = roleSysAuthVo.getSysName();
+					if (!sysIdList.contains(sysId)) {
+						sysIdList.add(sysId);
+					}
+					if (!sysNameList.contains(sysName)) {
+						sysNameList.add(sysName);
+					}
+				}
+			}
+
+			// 取得使用者的部門職位清單
+			UserDepartmentVo deptQryVo = new UserDepartmentVo();
+			deptQryVo.setUserId(userId);
+			List<UserDepartmentVo> userDeptList = JdUserDepartmentDao.getUserDepartment(deptQryVo);
+			for (UserDepartmentVo userDeptVo : userDeptList) {
+				String depName = userDeptVo.getDepName();
+				String titleName = userDeptVo.getTitleName();
+				if (!StringUtils.isEmpty(depName) && !depNameList.contains(depName)) {
+					depNameList.add(depName);
+				}
+				if (!StringUtils.isEmpty(titleName) && !titleNameList.contains(titleName)) {
+					titleNameList.add(titleName);
+				}
+			}
+
+			// 設定系統跟角色資料
+			userMap.put("ROLE_ID_LIST", String.join(",", roleIdList));
+			userMap.put("ROLE_NAME_LIST", String.join(",", roleNameList));
+			userMap.put("SYS_ID_LIST", String.join(",", sysIdList));
+			userMap.put("SYS_NAME_LIST", String.join(",", sysNameList));
+			userMap.put("DEP_NAME_LIST", String.join(",", depNameList));
+			userMap.put("TITLE_NAME_LIST", String.join(",", titleNameList));
+		}
 	}
 }

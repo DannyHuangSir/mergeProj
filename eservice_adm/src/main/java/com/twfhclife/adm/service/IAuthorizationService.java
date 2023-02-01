@@ -1,9 +1,9 @@
 package com.twfhclife.adm.service;
 
+import com.twfhclife.adm.domain.DownloadUserAuthCSVResponse;
+
 import java.util.List;
 import java.util.Map;
-
-import com.twfhclife.adm.domain.DownloadUserAuthCSVResponse;
 
 /**
  * 權限查詢與報表服務.
@@ -36,4 +36,6 @@ public interface IAuthorizationService {
 	 * @throws Exception
 	 */
 	List<DownloadUserAuthCSVResponse> downloadUserAuthCSV(String sysId);
+
+	public void setJdUserSystemRoleAuth(List<Map<String, Object>> userAuthList);
 }

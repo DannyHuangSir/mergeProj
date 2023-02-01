@@ -45,13 +45,6 @@ public class JdUserMngtServiceImpl implements IJdUserMgntService {
 		// 判斷目前登入者是否有最高權限管理員
 		String adminUserFlag = (StringUtils.equals(userId, systemAdminUser) ? "Y" : "N");
 		userEntityVo.setRealmId("elife_jd");
-		if(StringUtils.isEmpty(userEntityVo.getUsername())
-				&& StringUtils.isEmpty(userEntityVo.getLastName())
-				&& StringUtils.isEmpty(userEntityVo.getDepartment())
-				&& StringUtils.isEmpty(userEntityVo.getJobTitle())
-				&& StringUtils.isEmpty(userEntityVo.getRoleName())){
-			return userEntityDao.getALLUserEntityPageList(userEntityVo,adminUserFlag);
-		}
 		return userEntityDao.getUserEntityPageList(userEntityVo, adminUserFlag);
 	}
 

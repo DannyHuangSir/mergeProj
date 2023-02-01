@@ -78,4 +78,8 @@ public interface JdRoleDao {
      * @return 回傳影響筆數
      */
     int deleteRole(@Param("roleVo") RoleVo roleVo);
+
+    int updateRoleDep(@Param("roleVo") RoleVo roleVo);
+
+    int deleteRoleDep(@Param("roleVo") RoleVo roleVo);
 }
