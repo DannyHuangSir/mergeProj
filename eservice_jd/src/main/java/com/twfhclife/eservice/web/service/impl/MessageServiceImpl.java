@@ -15,7 +15,12 @@ public class MessageServiceImpl implements IMessageService {
     private MessageDao messageDao;
 
     @Override
-    public List<MessageVo> getMessages(String userId) {
-        return messageDao.getMessages(userId);
+    public List<MessageVo> getMessages(MessageVo vo, String userId) {
+        return messageDao.getMessages(vo, userId);
+    }
+
+    @Override
+    public int getTotalCount(MessageVo vo, String userId) {
+        return messageDao.getMessagesTotal(vo, userId);
     }
 }

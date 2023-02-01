@@ -18,7 +18,7 @@
 <script th:src="@{/plugin/tablesaw.stackonly.js}"></script>
 <!--popover-->
 <script th:src="@{/plugin/scrollbar.js}"></script>
-<script th:src="@{/js/popover.js}"></script>
+<script th:src="@{/js/popover-callback.js}"></script>
 <script th:src="@{/js/eservice/timer.js}"></script>
 <script th:src="@{/plugin/timer.jquery.js}"></script>
 <script th:inline="javascript">
@@ -48,19 +48,38 @@
 </script>
 <script th:inline="javascript">
 /*<![CDATA[*/
-    $(function(){
+    pageNum = 1
+    function popoverCallback(scrollHeight) {
+        pageNum += 1
+        appendNotifyItems()
+        $("#messages").mCustomScrollbar("destroy")
+        $("#messages").mCustomScrollbar({
+             callbacks:{
+                    onTotalScroll:function() {
+                        popoverCallback()
+                    }
+                }
+            })
+    }
+    function appendNotifyItems() {
         $.ajax({
-            type : 'GET',
+            type : 'POST',
             contentType : 'application/json',
             dataType : 'json',
             url : /*[[@{/message}]]*/,
+            data: JSON.stringify(
+                {
+                    pageSize: 5,
+                    pageNum: pageNum
+                }
+            ),
             success : function(data) {
                 if (data.result = 'SUCCESS') {
-                    $('#messageCount').text($(data.resultData).length)
-                    $(data.resultData).each(function(index, item){
+                    $('#messageCount').text(data.resultData.count)
+                    $(data.resultData.data).each(function(index, item){
                         $('#messages').append(
                             '<a href="#" class="item">' +
-                                '<div class="header"><em>' + item.title + '</em>' + item.msg + '</div>' +
+                                '<div class="header"><em>' + item.title + '</em> ' + item.msg + '</div>' +
                                 '<div class="content text-right"><small>' + item.createDate + '</small></div>' +
                              '</a>'
                         )
@@ -68,6 +87,9 @@
                 }
             }
         });
+    }
+    $(function(){
+        appendNotifyItems()
    })
 /*]]>*/
 </script>

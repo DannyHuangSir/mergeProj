@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
-public class MessageVo {
+public class MessageVo extends PageInfoVo {
 
     private Long id;
 

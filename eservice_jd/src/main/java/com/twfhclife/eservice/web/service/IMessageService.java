@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface IMessageService {
 
-	List<MessageVo> getMessages(String userId);
+	List<MessageVo> getMessages(MessageVo vo, String userId);
 
+	int getTotalCount(MessageVo vo, String id);
 }

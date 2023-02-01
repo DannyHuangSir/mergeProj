@@ -60,8 +60,38 @@
             <div id="notification" class="popover-template">
                 <div class="title">
                     線上通知
+                    <a class="close">×</a>
+                    <a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true" aria-controls="popoverSearchBar" class="pull-right">
+                        <i class="fa fa-search orange"></i>
+                    </a>
                 </div>
-                <div class="items" id="messages">
+                <div class="collapse grey" id="popoverSearchBar">
+                    <div class="searchbar">
+                        <form class="form-inline" aria-expanded="true">
+                            <div class="col-sm-3">
+                                <div class="selector-box">
+                                    <select class="selector">
+                                        <option value="1">未讀取</option>
+                                        <option value="2">已讀取</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 text-right">
+                                <div class="selector-box">
+                                    <select class="selector">
+                                        <option>通知月份</option>
+                                        <option>2015/一月</option>
+                                        <option>2015/二月</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn-form btn-search">搜尋</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="items " id="messages" style="overflow-y: hidden;">
                 </div>
                 <p>※本畫面僅提供一年內之通知資料查詢</p>
             </div>
