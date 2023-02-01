@@ -168,7 +168,11 @@
         ,d.PARENT_DEP
         FROM
         ESERVICE_JD.DBO.DEPARTMENT d
-        WHERE D.PARENT_DEP = 30000
+        <where>
+            <if test="vo.depName != null and vo.depName != ''">
+                AND D.DEP_NAME LIKE CONCAT('%', #{vo.depName},'%')
+            </if>
+            AND D.PARENT_DEP = 30000
+        </where>
     </sql>
-
 </mapper>

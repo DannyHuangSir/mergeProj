@@ -91,5 +91,6 @@
 		<mapper resource="mybatis/mapper/adm/JdUserDepartmentMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/JdUserEntityMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/JdUserRoleMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/JdMsgNotifyMapper.xml"/>
 	</mappers>
 </configuration>

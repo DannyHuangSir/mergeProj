@@ -64,31 +64,25 @@
 						<div class="page-content">
 							<div class="row">
 								<div class="col-xs-12 member">
-									<form class="form-horizontal" role="form" id="form1" action="func7-1.html">
+									<form class="form-horizontal" role="form" id="form1">
 										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者帳號 </label>
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者帳號：</label>
 											<div class="col-sm-5">
-												<input type="text" id="username" placeholder="輸入欲查詢的使用者帳號" class="form-control" />
+												<input type="text" id="username" class="form-control" />
 											</div>
 											<div class="col-sm-4">
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者名稱 </label>
-											<div class="col-sm-5">
-												<input type="text" id="lastName" placeholder="輸入欲查詢的使用者名稱" class="form-control" />
-											</div>
-											<div class="col-sm-4">
-											</div>
-										</div>
-										<div class="col-md-offset-3 col-md-9">
+										<div class="col-md-offset-3 col-md-1">
 											<button id="qryBtn" class="btn btn-success" type="button">
 												<i class="my-icon fa fa-check bigger-110"></i>
 												查詢
 											</button>
-											<button id="resetBtn" class="btn" type="reset">
-												<i class="my-icon fa fa-undo bigger-110"></i>
-												重新輸入
+										</div>
+										<div class="col-md-3">
+											<button class="btn btn-warning sendBtn">
+												<i class="my-icon fa fa-file-text-o bigger-110"></i>
+												發送通知
 											</button>
 										</div>
 									</form>
@@ -99,16 +93,22 @@
 											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">查詢分行：</label>
 											<div class="col-sm-5">
 												<div>
-													<input type="text" name="roleName" id="departmentName" class="form-control"/>
+													<input type="text" name="depName" id="depName" class="form-control"/>
 												</div>
 											</div>
 											<div class="col-sm-4">
 											</div>
 										</div>
-										<div class="col-md-offset-3 col-md-9">
+										<div class="col-md-offset-3 col-md-1">
 											<button type="button" class="btn btn-success" id="qryBtn2">
 												<i class="my-icon fa fa-check bigger-110"></i>
 												查詢
+											</button>
+										</div>
+										<div class="col-md-3">
+											<button class="btn btn-warning sendBtn">
+												<i class="my-icon fa fa-file-text-o bigger-110"></i>
+												發送通知
 											</button>
 										</div>
 									</form>
@@ -125,10 +125,16 @@
 											<div class="col-sm-4">
 											</div>
 										</div>
-										<div class="col-md-offset-3 col-md-9">
+										<div class="col-md-offset-3 col-md-1">
 											<button type="button" class="btn btn-success" id="qryBtn3">
 												<i class="my-icon fa fa-check bigger-110"></i>
 												查詢
+											</button>
+										</div>
+										<div class="col-md-3">
+											<button class="btn btn-warning sendBtn">
+												<i class="my-icon fa fa-file-text-o bigger-110"></i>
+												發送通知
 											</button>
 										</div>
 									</form>
@@ -147,18 +153,32 @@
 							</div>
 							<div id="msgDialog" class="hide">
 								<div class="widget-main no-padding">
-									<form id="editRoleForm">
+									<form id="notifyForm">
+										<fieldset style="margin-top:">
+											<label class="col-sm-2 control-label text-right no-padding-right">發送時間 :</label>
+											<div class="col-sm-8">
+												<input class="form-control" type="text" id="notifyTime" name="notifyTime" data-date-format="YYYY-MM-DD HH:mm:ss"/>
+											</div>
+										</fieldset>
 										<fieldset>
-											<label class="col-sm-2 control-label text-right no-padding-right">角色 :</label>
-											<div class="col-sm-10">
-												<select id="roleSelect"></select>
-												<button type="button" id="addRoleBtn" class="btn btn-primary">
-													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
-													新增
-												</button>
+											<label class="col-sm-2 control-label text-right no-padding-right">發送内容 :</label>
+											<div class="col-sm-8">
+												<textarea style="width: 100%" type="textarea" id="notifyMsg" name="msg" rows="5" placeholder="請輸入發送内容..."></textarea>
 											</div>
 										</fieldset>
 									</form>
+									<div class="col-md-offset-3 col-md-1">
+										<button id="confirmSendBtn" class="btn btn-success" type="button">
+											<i class="my-icon fa fa-check bigger-110"></i>
+											確定
+										</button>
+									</div>
+									<div class="col-md-offset-1 col-md-1">
+										<button onclick="closeMsgDialog()" class="btn" type="reset">
+											<i class="my-icon fa fa-undo bigger-110"></i>
+											取消
+										</button>
+									</div>
 								</div>
 								<div style="width: 750px">
 									<table id="roleGrid"></table>
@@ -176,16 +196,20 @@
 		</div>
 
 <th:block th:replace="fragments/script"/>
+<script th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
 <script th:inline="javascript">
 /*<![CDATA[*/
 		var qryGrid
 		var selectUserId;
+		var users, deps, roles
 		$(function() {
-			initOption(); // 初始下拉選單
+
+			$('input[name=notifyTime').datetimepicker();
+
 			$('#qryBtn').click(function() {
+				$("#queryContent").html('<table id="qryGrid"></table> <div id="qryPager"></div>')
 				initGrid();
 				qryGrid.setPostData('username', $('#username').val());
-				qryGrid.setPostData('lastName', $('#lastName').val());
 				// 產生grid
 				qryGrid.create();
 				// 顯示查詢結果區域
@@ -193,47 +217,45 @@
 			});
 
 			$('#qryBtn2').click(function(){
+				$("#queryContent").html('<table id="qryGrid"></table> <div id="qryPager"></div>')
 				qryGrid = new jqGridUtil();
 				qryGrid.id = '#qryGrid';
 				qryGrid.url = /*[[@{/department/getDepartment}]]*/;
 				qryGrid.pager = '#qryPager';
 				qryGrid.caption = '分行查詢結果';
-				qryGrid.colNames = ['分行代碼', '分行名稱', '分行描述', '操作'];
+				qryGrid.colNames = ['', '分行代碼', '分行名稱', '分行描述'];
 				qryGrid.colModel = [
+					{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
+						var actionHtml = '';
+						actionHtml += '<input class="depCheckBox" type="checkbox" value="' + row.DEP_ID + '"/>';
+						return actionHtml;
+					}},
 					{name: 'DEP_ID', index: 'DEP_ID', width: 100},
 					{name: 'DEP_NAME', index: 'DEP_NAME', width: 100},
-					{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200},
-					{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
-						var actionHtml = '';
-						actionHtml += '<a href="javascript:openMsgDialog(\'' + row.ROLE_ID + '\');" class="green bigger-140 show-details-btn" title="修改">';
-						actionHtml += '    <i class="my-icon fa fa-file-text-o bigger-120"></i> <span class="sr-only">Details</span> ';
-						actionHtml += '</a>';
-						return actionHtml;
-					}}
+					{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200}
 				];
-				qryGrid.setPostData('roleName', $('#roleName').val());
+				qryGrid.setPostData('depName', $('#depName').val());
 				qryGrid.create();
 				$('#show-detail-results').show();
 			})
 
 			$('#qryBtn3').click(function(){
+				$("#queryContent").html('<table id="qryGrid"></table> <div id="qryPager"></div>')
 				qryGrid = new jqGridUtil();
 				qryGrid.id = '#qryGrid';
 				qryGrid.url = /*[[@{/jdRole/getRoleDetail}]]*/;
 				qryGrid.pager = '#qryPager';
 				qryGrid.caption = '角色查詢結果';
-				qryGrid.colNames = ['角色名稱', '部門名稱', '角色描述', '操作'];
+				qryGrid.colNames = ['', '角色名稱', '部門名稱', '角色描述'];
 				qryGrid.colModel = [
+					{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
+						var actionHtml = '';
+						actionHtml += '<input class="roleCheckBox" type="checkbox" value="' + row.ROLE_ID + '"/>';
+						return actionHtml;
+					}},
 					{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
 					{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME', width: 100},
-					{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200},
-					{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
-						var actionHtml = '';
-						actionHtml += '<a href="javascript:openMsgDialog(\'' + row.ROLE_ID + '\');" class="green bigger-140 show-details-btn" title="修改">';
-						actionHtml += '    <i class="my-icon fa fa-file-text-o bigger-120"></i> <span class="sr-only">Details</span> ';
-						actionHtml += '</a>';
-						return actionHtml;
-					}}
+					{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200}
 				];
 				qryGrid.setPostData('roleName', $('#roleName').val());
 				qryGrid.setPostData('systemId', 'eservice_jd');
@@ -253,17 +275,69 @@
 				$('.' +  $(this).attr('bind')).show()
 				$("#queryContent").html('<table id="qryGrid"></table> <div id="qryPager"></div>')
 			});
-		});
 
-		// 初始下拉選單
-		function initOption() {
-			// 取得部門名稱下拉選單
-			eserviceAdmOption.dept('#deptSelect', /*[[@{/common/deptList}]]*/);
-			// 取得職位名稱下拉選單
-			eserviceAdmOption.jobTitle('#jobTitleSelect', /*[[@{/common/jobTitleList}]]*/);
-			// 取得角色名稱下拉選單
-			eserviceAdmOption.role('#roleSelect', /*[[@{/common/roleList}]]*/);
-		}
+			$('.sendBtn').click(function(){
+				users = new Array()
+				$('.memberCheckBox:checked').each(function(key,value){
+						users[key] = $(value).val()
+					}
+				)
+				roles = new Array()
+				$('.roleCheckBox:checked').each(function(key,value){
+						roles[key] = $(value).val()
+					}
+				)
+				deps = new Array()
+				$('.depCheckBox:checked').each(function(key,value){
+						deps[key] = $(value).val()
+					}
+				)
+				if ((users != undefined && users.length > 0) || (roles != undefined && roles.length > 0)
+					|| (deps != undefined && deps.length > 0)) {
+					openMsgDialog(users, deps, roles)
+					return false;
+				} else {
+					alertMsg('未選擇發送對象');
+					return false;
+				}
+			})
+
+			$("#confirmSendBtn").click(function(){
+				if ($("#notifyTime").val() == null || $("#notifyTime").val() == '') {
+					alertMsg('未選擇發送時間');
+					return false;
+				}
+
+				if ($("#notifyMsg").val() == null || $("#notifyMsg").val() == '') {
+					alertMsg('未填寫發送内容');
+					return false;
+				}
+				data = {
+					users: users,
+					deps: deps,
+					roles: roles,
+					notifyTime: $('#notifyTime').val(),
+					msg: $('#notifyMsg').val()
+				}
+
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : /*[[@{/jdzqSendMsg}]]*/,
+					data : JSON.stringify(data),
+					success : function(response) {
+						if (response.result == 'SUCCESS') {
+                           alertMsg('發送成功');
+                           return false;
+						}
+						closeMsgDialog()
+					},
+					error : function() {
+						alertMsg('error!')
+					}
+				});
+			})
+		});
 
 		// 初始Grid
 		function initGrid() {
@@ -273,8 +347,13 @@
 			qryGrid.pager = '#qryPager';
 			qryGrid.url = /*[[@{/jdUserMgnt/getUserEntityPageList}]]*/;
 			qryGrid.caption = '人員查詢結果';
-			qryGrid.colNames = ['使用者帳號', '使用者名稱', '角色', '部門', '職位', '操作'];
+			qryGrid.colNames = ['', '使用者帳號', '使用者名稱', '角色', '部門', '職位'];
 			qryGrid.colModel = [
+				{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
+					var actionHtml = '';
+					actionHtml += '<input class="memberCheckBox" type="checkbox" value="' + row.ID + '"/>';
+					return actionHtml;
+				}},
 				{name: 'USERNAME', index: 'USERNAME', width: 100},
 				{width: 90, formatter: function(cellvalue, options, row) {
 					return emptyIfNull(row.FIRST_NAME);
@@ -287,13 +366,6 @@
 				}},
 				{width: 100, formatter: function(cellvalue, options, row) {
 					return breakLine(row.TITLE_NAME_LIST);
-				}},
-				{width: 90, align: 'center', formatter: function(cellvalue, options, row) {
-					var actionHtml = '';
-					actionHtml += '<a href="javascript:openMsgDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="發送通知">';
-					actionHtml += '<i class="fa fa-file-text-o"></i> <span class="sr-only">發送通知</span> ';
-					actionHtml += '</a>';
-					return actionHtml;
 				}}
 			];
 		}
@@ -306,14 +378,18 @@
 			return result;
 		}
 
-		function openMsgDialog(userId) {
+		function openMsgDialog(users, deps, roles) {
 			$('#msgDialog').removeClass('hide').dialog({
 				modal: true,
-				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>人員角色設定</h4></div>",
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>發送通知</h4></div>",
 				title_html: true,
 				width: 800,
-				height: 530
+				height: 400
 			});
+		}
+
+		function closeMsgDialog() {
+			$('#msgDialog').dialog('close')
 		}
 /*]]>*/
 		</script>
