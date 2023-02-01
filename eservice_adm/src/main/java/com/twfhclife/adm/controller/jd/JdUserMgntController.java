@@ -43,7 +43,7 @@ public class JdUserMgntController extends BaseController {
     private IJdUserMgntService userMgntService;
 
     @Autowired
-    private IUserDepartmentService userDepartmentService;
+    private IJdUserDepartmentService userDepartmentService;
 
     @Autowired
     private IJdUserRoleService userRoleService;
@@ -83,7 +83,7 @@ public class JdUserMgntController extends BaseController {
             List<Map<String, Object>> userAuthList = userMgntService.getUserEntityPageList(getUserId(), userEntityVo);
 
             // 設定使用者的系統跟角色權限清單
-            authorizationService.setUserSystemRoleAuth(userAuthList);
+            authorizationService.setJdUserSystemRoleAuth(userAuthList);
 
             pageResp.setRows(userAuthList);
             // 設定jqGrid 資料查詢總筆數

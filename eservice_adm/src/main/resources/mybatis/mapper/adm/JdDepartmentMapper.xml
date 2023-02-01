@@ -84,7 +84,7 @@
         PARENT_DEP IS NOT NULL
         <if test="adminUserFlag == 'N'.toString()">
             AND DEP_ID IN (
-            SELECT DEP_ID FROM ESERVICE_ADM.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
+            SELECT DEP_ID FROM ESERVICE_JD.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
             )
         </if>
         ORDER BY

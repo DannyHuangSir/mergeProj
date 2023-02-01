@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,8 @@ public class JdRoleServiceImpl implements IJdRoleService {
     /**
      * 取得使用者角色管理查詢結果.
      *
-     * @param roleVo RoleVo
-     * @param userName 使用者帳號
+     * @param roleVo         RoleVo
+     * @param userName       使用者帳號
      * @param keyCloakUserId keyCloak user UUID
      * @return 回傳使用者角色管理查詢結果
      */
@@ -46,8 +47,8 @@ public class JdRoleServiceImpl implements IJdRoleService {
     /**
      * 取得使用者角色管理查詢結果總筆數.
      *
-     * @param roleVo RoleVo
-     * @param userName 使用者帳號
+     * @param roleVo         RoleVo
+     * @param userName       使用者帳號
      * @param keyCloakUserId keyCloak user UUID
      * @return 回傳總筆數
      */
@@ -62,8 +63,8 @@ public class JdRoleServiceImpl implements IJdRoleService {
     /**
      * 使用者角色管理-查詢.
      *
-     * @param roleVo RoleVo
-     * @param userName 使用者帳號
+     * @param roleVo         RoleVo
+     * @param userName       使用者帳號
      * @param keyCloakUserId keyCloak user UUID
      * @return 回傳查詢結果
      */
@@ -78,7 +79,7 @@ public class JdRoleServiceImpl implements IJdRoleService {
     /**
      * 使用者角色管理-依照使用者權限查詢.
      *
-     * @param userName 使用者帳號
+     * @param userName       使用者帳號
      * @param keyCloakUserId keyCloak user UUID
      * @return 回傳查詢結果
      */
@@ -110,8 +111,14 @@ public class JdRoleServiceImpl implements IJdRoleService {
      */
     @RequestLog
     @Override
+    @Transactional
     public int updateRole(RoleVo roleVo) {
-        return roleDao.updateRole(roleVo);
+        int updateRole = roleDao.updateRole(roleVo);
+        if (updateRole > 0) {
+            return roleDao.updateRoleDep(roleVo);
+        } else {
+            return roleDao.updateRole(roleVo);
+        }
     }
 
     /**
@@ -123,6 +130,11 @@ public class JdRoleServiceImpl implements IJdRoleService {
     @RequestLog
     @Override
     public int deleteRole(RoleVo roleVo) {
-        return roleDao.deleteRole(roleVo);
+        int deleteRole = roleDao.deleteRole(roleVo);
+        if (deleteRole > 0){
+            return roleDao.deleteRoleDep(roleVo);
+        }else {
+            return roleDao.updateRole(roleVo);
+        }
     }
 }

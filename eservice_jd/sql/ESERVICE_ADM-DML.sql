@@ -19,9 +19,9 @@ values
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm')),
 	'Y',
     'admin',
-    '2023-01-13',
+    GETDATE(),
     'admin',
-    '2023-01-13');
+    GETDATE());
 
 insert
 ESERVICE_ADM.dbo.FUNCTION_ITEM(
@@ -44,9 +44,9 @@ values
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm')),
 	'Y',
     'admin',
-    '2023-01-13',
+    GETDATE(),
     'admin',
-    '2023-01-13');
+    GETDATE());
 
 insert
 ESERVICE_ADM.dbo.FUNCTION_ITEM(
@@ -69,9 +69,9 @@ values
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm')),
 	'Y',
     'admin',
-    '2023-01-16',
+    GETDATE(),
     'admin',
-    '2023-01-16');
+    GETDATE());
 
 insert
 ESERVICE_ADM.dbo.FUNCTION_ITEM(
@@ -94,9 +94,9 @@ values
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm')),
 	'Y',
     'admin',
-    '2023-01-16',
+    GETDATE(),
     'admin',
-    '2023-01-16');
+    GETDATE());
 
 insert
 ESERVICE_ADM.dbo.FUNCTION_ITEM(
@@ -119,9 +119,9 @@ values
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm')),
 	'Y',
     'admin',
-    '2023-01-16',
+    GETDATE(),
     'admin',
-    '2023-01-16');
+    GETDATE());
 
 insert
 ESERVICE_ADM.dbo.FUNCTION_ITEM(
@@ -144,7 +144,7 @@ values
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 4),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'經代專區' and SYS_ID = 'eservice_adm')),
 	'Y',
     'admin',
-    '2023-01-16',
+    GETDATE(),
     'admin',
-    '2023-01-16');
+    GETDATE());
 

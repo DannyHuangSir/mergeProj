@@ -30,9 +30,9 @@
 		,D.DEP_NAME
 		,J.TITLE_NAME
 		FROM
-		ESERVICE_ADM.DBO.USER_DEPARTMENT UD
-		LEFT OUTER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID COLLATE database_default
-		LEFT OUTER JOIN ESERVICE_ADM.DBO.JOB_TITLE J ON UD.TITLE_ID = J.TITLE_ID
+		ESERVICE_JD.DBO.USER_DEPARTMENT UD
+		LEFT OUTER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID
+		LEFT OUTER JOIN ESERVICE_ADM.DBO.JOB_TITLE J ON UD.TITLE_ID = J.TITLE_ID COLLATE database_default
 		<include refid="whereClause" />
 	</sql>
 	
@@ -65,21 +65,21 @@
 	<!-- 取得人員職位管理查詢結果 -->
 	<select id="getUserDepartment" resultMap="UserDepartmentListMap">
 		SELECT
-			UD.USER_ID
-			,UD.DEP_ID
-			,UD.TITLE_ID
-			,D.DEP_NAME
-			,J.TITLE_NAME
+		UD.USER_ID
+		,UD.DEP_ID
+		,UD.TITLE_ID
+		,D.DEP_NAME
+		,J.TITLE_NAME
 		FROM
-			ESERVICE_ADM.DBO.USER_DEPARTMENT UD
-			LEFT OUTER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = d.DEP_ID COLLATE database_default
-			LEFT OUTER JOIN ESERVICE_ADM.DBO.JOB_TITLE J ON UD.TITLE_ID = J.TITLE_ID
+		ESERVICE_JD.DBO.USER_DEPARTMENT UD
+		INNER  JOIN ESERVICE_JD.dbo.DEPARTMENT D ON UD.DEP_ID = d.DEP_ID
+		LEFT  JOIN ESERVICE_ADM.DBO.JOB_TITLE J ON UD.TITLE_ID = J.TITLE_ID COLLATE database_default
 		<include refid="whereClause" />
 	</select>
 	
 	<!-- 人員職位管理-新增 -->
 	<insert id="insertUserDepartment">
-		INSERT INTO ESERVICE_ADM.DBO.USER_DEPARTMENT
+		INSERT INTO ESERVICE_JD.DBO.USER_DEPARTMENT
 		(
 			USER_ID
 			,DEP_ID
@@ -96,7 +96,7 @@
 	<!-- 人員職位管理-更新 -->
 	<update id="updateUserDepartment">
 		UPDATE
-			ESERVICE_ADM.DBO.USER_DEPARTMENT UD
+		ESERVICE_JD.DBO.USER_DEPARTMENT UD
 		<set>
 			<if test="userDepartmentVo.userId != null"> UD.USER_ID = #{userDepartmentVo.userId}, </if>
 			<if test="userDepartmentVo.depId != null"> UD.DEP_ID = #{userDepartmentVo.depId}, </if>
@@ -107,7 +107,7 @@
 	
 	<!-- 人員職位管理-刪除 -->
 	<delete id="deleteUserDepartment">
-		DELETE ESERVICE_ADM.DBO.USER_DEPARTMENT
+		DELETE ESERVICE_JD.DBO.USER_DEPARTMENT
 		WHERE 
 			USER_ID = #{userDepartmentVo.userId}
 			AND DEP_ID = #{userDepartmentVo.depId}

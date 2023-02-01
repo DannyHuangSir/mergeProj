@@ -37,7 +37,7 @@ public class JdRoleController extends BaseController {
      * @return
      */
     @RequestLog
-    @LoginCheck(value=@FuncUsageParam(
+    @LoginCheck(value = @FuncUsageParam(
             funcId = "698",
             systemId = ApConstants.SYSTEM_ID
     ))
