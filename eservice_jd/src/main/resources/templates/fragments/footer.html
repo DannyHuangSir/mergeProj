@@ -49,19 +49,26 @@
 <script th:inline="javascript">
 /*<![CDATA[*/
     pageNum = 1
-    function popoverCallback(scrollHeight) {
+    notifySearchStatus = null
+    notifySearchTime = null
+
+    function clickSearch() {
+        event.preventDefault(),
+		event.stopPropagation();
+        $("#messageContent").html("<div class='items' id='messages' style='overflow-y: hidden;'></div>")
+        pageNum = 1
+        notifySearchStatus = $('#notifyStatus option:selected').val()
+        notifySearchTime = $('#notifySearchTime').val() == '' ? null : $('#notifySearchTime').val()
+        appendNotifyItems(true)
+        return false;
+    }
+
+    function popoverCallback() {
         pageNum += 1
         appendNotifyItems()
-        $("#messages").mCustomScrollbar("destroy")
-        $("#messages").mCustomScrollbar({
-             callbacks:{
-                    onTotalScroll:function() {
-                        popoverCallback()
-                    }
-                }
-            })
     }
-    function appendNotifyItems() {
+
+    function appendNotifyItems(config = false) {
         $.ajax({
             type : 'POST',
             contentType : 'application/json',
@@ -70,7 +77,9 @@
             data: JSON.stringify(
                 {
                     pageSize: 5,
-                    pageNum: pageNum
+                    pageNum: pageNum,
+                    status: notifySearchStatus,
+                    notifySearchTime: notifySearchTime
                 }
             ),
             success : function(data) {
@@ -85,11 +94,42 @@
                         )
                     })
                 }
+                if (!config) {
+                    $("#messages").mCustomScrollbar("destroy")
+                }
+                 $("#messages").height("200px").mCustomScrollbar({
+                         callbacks:{
+                                onTotalScroll:function() {
+                                    popoverCallback()
+                                }
+                            }
+                    })
             }
         });
     }
+
+    function getNotRead() {
+            $.ajax({
+                type : 'POST',
+                contentType : 'application/json',
+                dataType : 'json',
+                url : /*[[@{/getNotRead}]]*/,
+                success : function(data) {
+                    if (data.result = 'SUCCESS') {
+                        $('#notRead').text(data.resultData)
+                    }
+                }
+            });
+        }
+
     $(function(){
         appendNotifyItems()
+        getNotRead()
+        $("body").on('focus', '#notifySearchTime', function(){
+            $(this).datepicker({
+                dateFormat: 'yy-mm-dd',
+            });
+        })
    })
 /*]]>*/
 </script>

@@ -15,6 +15,15 @@
 	<sql id="Base_Column_List">
 		ID,TITLE,MSG,STATUS,CREATE_DATE,USER_ID,NOTIFY_TIME
 	</sql>
+	<sql id="Where_Case">
+		WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= SYSDATETIME()
+		<if test="vo.notifySearchTime != null">
+			AND NOTIFY_TIME between #{vo.notifySearchTime} and DATEADD(day, 1, #{vo.notifySearchTime})
+		</if>
+		<if test="vo.status != null">
+			AND STATUS = #{vo.status}
+		</if>
+	</sql>
 	
 	<select id="getMessages" resultMap="MessageMap">
 		SELECT *
@@ -27,8 +36,8 @@
 				<include refid="Base_Column_List" />
 			FROM
 				ESERVICE_JD.DBO.MESSAGE
-				WHERE USER_ID = #{userId}
-				AND NOTIFY_TIME &lt;= SYSDATETIME()
+				<include refid="Where_Case"></include>
+
 		) A
 		) B
 		WHERE
@@ -44,9 +53,19 @@
 			<include refid="Base_Column_List" />
 			FROM
 			ESERVICE_JD.DBO.MESSAGE
-			WHERE USER_ID = #{userId}
-			AND NOTIFY_TIME &lt;= SYSDATETIME()
-			AND STATUS = '1'
+			<include refid="Where_Case"></include>
+		) t
+	</select>
+
+	<select id="getNotRead" resultType="int">
+		SELECT
+		COUNT(1) AS AMOUNT
+		FROM (
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		ESERVICE_JD.DBO.MESSAGE
+			WHERE STATUS = '1'
 		) t
 	</select>
 </mapper>

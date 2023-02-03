@@ -23,4 +23,9 @@ public class MessageServiceImpl implements IMessageService {
     public int getTotalCount(MessageVo vo, String userId) {
         return messageDao.getMessagesTotal(vo, userId);
     }
+
+    @Override
+    public int getNotRead(String id) {
+        return messageDao.getNotRead(id);
+    }
 }

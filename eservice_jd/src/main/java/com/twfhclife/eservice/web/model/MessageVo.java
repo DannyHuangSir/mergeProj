@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.web.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -12,7 +13,11 @@ public class MessageVo extends PageInfoVo {
 
     private String msg;
 
-    private int status;
+    private Integer status;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date notifySearchTime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd hh:mm:ss")
     private Date createDate;
@@ -48,11 +53,11 @@ public class MessageVo extends PageInfoVo {
         this.msg = msg;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -86,5 +91,13 @@ public class MessageVo extends PageInfoVo {
 
     public void setNotifyTime(Date notifyTime) {
         this.notifyTime = notifyTime;
+    }
+
+    public Date getNotifySearchTime() {
+        return notifySearchTime;
+    }
+
+    public void setNotifySearchTime(Date notifySearchTime) {
+        this.notifySearchTime = notifySearchTime;
     }
 }

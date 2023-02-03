@@ -38,4 +38,13 @@ public class MessageController extends BaseController {
         responseObj.setResultData(result);
         return responseObj;
     }
+
+    @PostMapping("/getNotRead")
+    public ResponseObj getNotRead() {
+        ResponseObj responseObj = new ResponseObj();
+        responseObj.setResult(ResponseObj.SUCCESS);
+        Map<String, Object> result = Maps.newHashMap();
+        responseObj.setResultData(messageService.getNotRead(keycloakService.getUserByUsername(getUserId()).getId()));
+        return responseObj;
+    }
 }

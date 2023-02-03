@@ -60,6 +60,7 @@
             <div id="notification" class="popover-template">
                 <div class="title">
                     線上通知
+                    <span class="note"><em class="badge" id="notRead"></em>封未讀取</span>
                     <a class="close">×</a>
                     <a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true" aria-controls="popoverSearchBar" class="pull-right">
                         <i class="fa fa-search orange"></i>
@@ -67,32 +68,33 @@
                 </div>
                 <div class="collapse grey" id="popoverSearchBar">
                     <div class="searchbar">
-                        <form class="form-inline" aria-expanded="true">
-                            <div class="col-sm-3">
-                                <div class="selector-box">
-                                    <select class="selector">
-                                        <option value="1">未讀取</option>
+                        <form class="form-inline" aria-expanded="true" action="#">
+                            <div class="col-sm-6" style="padding:0;">
+                                <label class="col-sm-4" style="padding:0; ">狀態：</label>
+                                <div class="col-sm-6" style="padding:0;">
+                                    <select id ="notifyStatus" style="width:100%;">
+                                        <option selected value="1">未讀取</option>
                                         <option value="2">已讀取</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-4 text-right">
-                                <div class="selector-box">
-                                    <select class="selector">
-                                        <option>通知月份</option>
-                                        <option>2015/一月</option>
-                                        <option>2015/二月</option>
-                                    </select>
+                            <div class="col-sm-6" style="padding:0px;">
+                                <label class="col-sm-5" style="padding-left:5px; padding-right:0px;">通知時間：</label>
+                                <div class="col-sm-7" style="padding:0px;">
+                                    <input type="text" style="width:100%;" id="notifySearchTime">
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <button class="btn-form btn-search">搜尋</button>
+                                <button class="btn-form btn-search" onclick="clickSearch()">搜尋</button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <div class="items " id="messages" style="overflow-y: hidden;">
+                <div id="messageContent">
+                    <div class="items " id="messages" style="overflow-y: hidden;">
+                    </div>
                 </div>
+
                 <p>※本畫面僅提供一年內之通知資料查詢</p>
             </div>
         </nav>
