@@ -82,6 +82,9 @@
         ESERVICE_JD.DBO.DEPARTMENT
         WHERE
         PARENT_DEP IS NOT NULL
+        <if test="vo.depId != null and vo.depId !=''">
+            AND PARENT_DEP = #{vo.depId}
+        </if>
         <if test="adminUserFlag == 'N'.toString()">
             AND DEP_ID IN (
             SELECT DEP_ID FROM ESERVICE_JD.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
@@ -175,4 +178,23 @@
             AND D.PARENT_DEP = 30000
         </where>
     </sql>
+
+    <select id="getDeptParentList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        DEP_ID
+        ,DEP_NAME
+        ,DESCRIPTION
+        ,PARENT_DEP
+        FROM
+        ESERVICE_JD.DBO.DEPARTMENT
+        WHERE
+        PARENT_DEP IS NOT NULL AND PARENT_DEP = '0'
+        <if test="adminUserFlag == 'N'.toString()">
+            AND DEP_ID IN (
+            SELECT DEP_ID FROM ESERVICE_JD.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
+            )
+        </if>
+        ORDER BY
+        DEP_ID
+    </select>
 </mapper>

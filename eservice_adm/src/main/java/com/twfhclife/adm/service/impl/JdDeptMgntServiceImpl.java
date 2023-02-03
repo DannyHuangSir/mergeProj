@@ -45,10 +45,10 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
      * @return 回傳所有部門.
      */
     @RequestLog
-    public List<DepartmentVo> getDeptList(String userId, String username) {
+    public List<DepartmentVo> getDeptList(String userId, String username,DepartmentVo vo) {
         // 判斷目前登入者是否有最高權限管理員
         String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
-        return departmentDao.getDeptList(userId, adminUserFlag);
+        return departmentDao.getDeptList(userId, adminUserFlag,vo);
     }
 
     /**
@@ -146,5 +146,12 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
     public int getDepartmentTotal(String username, String keyCloakUserId, DepartmentVo departmentVo) {
         String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
         return departmentDao.getDepartmentTotal(departmentVo, keyCloakUserId, adminUserFlag);
+    }
+
+    @Override
+    public List<DepartmentVo> getDeptParentList(String userId, String username) {
+        // 判斷目前登入者是否有最高權限管理員
+        String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
+        return departmentDao.getDeptParentList(userId, adminUserFlag);
     }
 }

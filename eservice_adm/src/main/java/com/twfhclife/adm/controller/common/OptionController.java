@@ -1,10 +1,7 @@
 package com.twfhclife.adm.controller.common;
 
 import com.twfhclife.adm.domain.ResponseObj;
-import com.twfhclife.adm.model.JobTitleVo;
-import com.twfhclife.adm.model.MessagingTemplateVo;
-import com.twfhclife.adm.model.ParameterCategoryVo;
-import com.twfhclife.adm.model.ParameterVo;
+import com.twfhclife.adm.model.*;
 import com.twfhclife.adm.service.*;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
@@ -17,6 +14,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
@@ -328,12 +326,12 @@ public class OptionController extends BaseController {
 
 	@RequestLog
 	@PostMapping("/jd/common/deptList")
-	public ResponseEntity<ResponseObj> jdDeptList() {
+	public ResponseEntity<ResponseObj> jdDeptList(@RequestBody DepartmentVo vo) {
 		try {
 			com.twfhclife.keycloak.model.KeycloakUser kuser = getLoginUser();
 			String username = kuser.getUsername();
 			String keyCloakUserId = kuser.getId();//此處查詢應使用id
-			processSuccess(jdDeptMgntService.getDeptList(keyCloakUserId, username));
+			processSuccess(jdDeptMgntService.getDeptList(keyCloakUserId, username,vo));
 		} catch (Exception e) {
 			logger.error("Unable to deptList: {}", ExceptionUtils.getStackTrace(e));
 			processSystemError();
@@ -350,6 +348,21 @@ public class OptionController extends BaseController {
 			processSuccess(jdRoleService.getRoleByAuth(userName, keyCloakUserId));
 		} catch (Exception e) {
 			logger.error("Unable to roleList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	@RequestLog
+	@PostMapping("/jd/common/dept/parentList")
+	public ResponseEntity<ResponseObj> jdDeptParentList() {
+		try {
+			com.twfhclife.keycloak.model.KeycloakUser kuser = getLoginUser();
+			String username = kuser.getUsername();
+			String keyCloakUserId = kuser.getId();//此處查詢應使用id
+			processSuccess(jdDeptMgntService.getDeptParentList(keyCloakUserId, username));
+		} catch (Exception e) {
+			logger.error("Unable to deptList: {}", ExceptionUtils.getStackTrace(e));
 			processSystemError();
 		}
 		return processResponseEntity();

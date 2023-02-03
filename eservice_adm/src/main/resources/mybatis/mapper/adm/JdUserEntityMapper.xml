@@ -65,6 +65,17 @@
 					)
 				)
 			</if>
+			<if test="userEntityVo.parentDep != null and userEntityVo.parentDep != ''">
+				AND ID  IN (
+					SELECT
+					udd.USER_ID
+					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd where udd.PARENT_DEP
+					in (
+					select d.DEP_ID from ESERVICE_JD.DBO.DEPARTMENT d
+					WHERE UPPER(d.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.parentDep}),'%'))
+					)
+				)
+			</if>
 			<if test="userEntityVo.department != null and userEntityVo.department != ''">
 				AND ID  IN (
 					SELECT

@@ -78,14 +78,16 @@ CREATE TABLE [ESERVICE_JD].[dbo].[MESSAGE](
 GO
 
 CREATE TABLE [ESERVICE_JD].[dbo].[USER_DEPARTMENT](
-	[USER_ID] [varchar](50) NOT NULL,
-	[DEP_ID] [varchar](50) NOT NULL,
-	[TITLE_ID] [varchar](50) NULL
-) ON [PRIMARY]
+    [USER_ID] [varchar](50) NOT NULL,
+    [DEP_ID] [varchar](50) NOT NULL,
+    [TITLE_ID] [varchar](50) NULL,
+    [PARENT_DEP] [varchar](50) NOT NULL
+    ) ON [PRIMARY]
 GO
 
 CREATE TABLE [ESERVICE_JD].[dbo].[ROLE_DEPARTMENT](
-	[ROLE_ID] [varchar](50) NOT NULL,
-	[DEP_ID] [varchar](50) NOT NULL,
-) ON [PRIMARY]
+    [ROLE_ID] [varchar](50) NOT NULL,
+    [DEP_ID] [varchar](50) NOT NULL,
+    [PARENT_DEP] [varchar](50) NOT NULL
+    ) ON [PRIMARY]
 GO

@@ -26,7 +26,7 @@ public interface JdDepartmentDao {
      * @param adminUserFlag 是否為管理員
      * @return 回傳所有部門.
      */
-    public List<DepartmentVo> getDeptList(@Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
+    public List<DepartmentVo> getDeptList(@Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag,@Param("vo")DepartmentVo vo);
 
     /**
      * 判斷部門名稱是否存在.
@@ -63,4 +63,12 @@ public interface JdDepartmentDao {
     List<Map<String, Object>> getDepartmentList(@Param("vo") DepartmentVo departmentVo, @Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
 
     int getDepartmentTotal(@Param("vo") DepartmentVo departmentVo, @Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
+
+    /**
+     * 獲取通路數組
+     * @param userId
+     * @param adminUserFlag
+     * @return
+     */
+    List<DepartmentVo> getDeptParentList(@Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
 }

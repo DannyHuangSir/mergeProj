@@ -22,7 +22,7 @@ public interface IJdDeptMgntService {
      * @param userId 使用者ID
      * @return 回傳所有部門.
      */
-    public List<DepartmentVo> getDeptList(String userId, String username);
+    public List<DepartmentVo> getDeptList(String userId, String username,DepartmentVo vo);
 
     /**
      * 經代專區判斷部門名稱是否存在.
@@ -67,4 +67,6 @@ public interface IJdDeptMgntService {
     List<Map<String, Object>> getDepartmentList(String username, String keyCloakUserId, DepartmentVo departmentVo);
 
     int getDepartmentTotal(String username, String keyCloakUserId, DepartmentVo departmentVo);
+
+    List<DepartmentVo> getDeptParentList(String userId, String username);
 }

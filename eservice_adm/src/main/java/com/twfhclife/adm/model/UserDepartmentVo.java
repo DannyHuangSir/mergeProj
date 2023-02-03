@@ -17,13 +17,10 @@ public class UserDepartmentVo extends Pagination {
 	/**
 	 * 通路别
 	 */
-	private String channel;
+	private String parentDep;
 	private String branch;
 	private String employeeNum;
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
 
 	public void setBranch(String branch) {
 		this.branch = branch;
@@ -37,8 +34,12 @@ public class UserDepartmentVo extends Pagination {
 		this.registerNum = registerNum;
 	}
 
-	public String getChannel() {
-		return channel;
+	public void setParentDep(String parentDep) {
+		this.parentDep = parentDep;
+	}
+
+	public String getParentDep() {
+		return parentDep;
 	}
 
 	public String getBranch() {

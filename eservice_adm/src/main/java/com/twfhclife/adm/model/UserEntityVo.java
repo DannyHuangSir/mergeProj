@@ -47,36 +47,14 @@ public class UserEntityVo extends Pagination {
 	/**
 	 * 通路别
 	 */
-	private String channel;
-	private String branch;
-	private String employeeNum;
+	private String parentDep;
 
-	public void setChannel(String channel) {
-		this.channel = channel;
+	public void setParentDep(String parentDep) {
+		this.parentDep = parentDep;
 	}
 
-	public void setBranch(String branch) {
-		this.branch = branch;
-	}
-
-	public void setEmployeeNum(String employeeNum) {
-		this.employeeNum = employeeNum;
-	}
-
-	public void setRegisterNum(String registerNum) {
-		this.registerNum = registerNum;
-	}
-
-	public String getChannel() {
-		return channel;
-	}
-
-	public String getBranch() {
-		return branch;
-	}
-
-	public String getEmployeeNum() {
-		return employeeNum;
+	public String getParentDep() {
+		return parentDep;
 	}
 
 	public String getRegisterNum() {

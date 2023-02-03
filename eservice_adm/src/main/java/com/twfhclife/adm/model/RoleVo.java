@@ -1,10 +1,9 @@
 package com.twfhclife.adm.model;
 
-import java.util.Date;
-
+import com.twfhclife.generic.model.Pagination;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.twfhclife.generic.model.Pagination;
+import java.util.Date;
 
 public class RoleVo extends Pagination {
 	private String id;
@@ -28,6 +27,14 @@ public class RoleVo extends Pagination {
 	private Date modifyDate;
 	
 	private String systemId;
+	private String parentDep;
+	public void setParentDep(String parentDep) {
+		this.parentDep = parentDep;
+	}
+
+	public String getParentDep() {
+		return parentDep;
+	}
 
 	public String getId() {
 		return id;

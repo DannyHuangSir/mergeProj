@@ -27,8 +27,7 @@
                 AND ROLE_ID = #{roleVo.roleId}
             </if>
             <if test="roleVo.roleName != null and roleVo.roleName != ''">
-                AND ROLE_NAME LIKE CONCAT(CONCAT('%',
-                #{roleVo.roleName}),'%')
+                AND ROLE_NAME LIKE CONCAT('%',#{roleVo.roleName},'%')
             </if>
             <if test="roleVo.description != null and roleVo.description != ''">
                 AND DESCRIPTION = #{roleVo.description}
@@ -160,7 +159,7 @@
         #{roleVo.modifyUser, jdbcType=VARCHAR},
         getdate()
         )
-        insert ESERVICE_JD.dbo.ROLE_DEPARTMENT (ROLE_ID,DEP_ID) values ((select * from @temp),#{roleVo.departmentId, jdbcType=VARCHAR})
+        insert ESERVICE_JD.dbo.ROLE_DEPARTMENT (ROLE_ID,DEP_ID,PARENT_DEP) values ((select * from @temp),#{roleVo.departmentId, jdbcType=VARCHAR},#{roleVo.parentDep, jdbcType=VARCHAR})
     </insert>
 
     <!-- 使用者角色管理-更新 -->
@@ -192,7 +191,8 @@
         ESERVICE_JD.DBO.ROLE_DEPARTMENT
         <set>
             <if test="roleVo.roleId != null">ROLE_ID = #{roleVo.roleId},</if>
-            <if test="roleVo.departmentId != null">DEP_ID = #{roleVo.departmentId}</if>
+            <if test="roleVo.departmentId != null">DEP_ID = #{roleVo.departmentId},</if>
+            <if test="roleVo.parentDep != null">PARENT_DEP = #{roleVo.parentDep},</if>
         </set>
         <include refid="wherePkClause"/>
     </update>

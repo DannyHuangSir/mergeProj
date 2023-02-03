@@ -81,7 +81,13 @@
 									</div>
 								</fieldset>
 								<fieldset>
-									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>部門名稱：</label>
+									<label class="col-sm-4 control-label no-padding-right">通路名稱：</label>
+									<div class="col-sm-8">
+										<select id="deptParentSelect" ></select>
+									</div>
+								</fieldset>
+								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>單位名稱：</label>
 									<div class="col-sm-8">
 										<select id="deptSelect"></select>
 									</div>
@@ -107,15 +113,46 @@
 		/*<![CDATA[*/
 		var grid;
 		$(function() {
+			// 獲取通路名稱下拉框
+			eserviceAdmOption.dept('#deptParentSelect', /*[[@{jd/common/dept/parentList}]]*/);
 			// 取得部門名稱下拉選單
-			eserviceAdmOption.dept('#deptSelect', /*[[@{jd/common/deptList}]]*/);
-			
+			// eserviceAdmOption.dept('#deptSelect', /*[[@{jd/common/deptList}]]*/);
+			$('#deptParentSelect').on('click', function() {
+			// function getNoticeBoardList() {
+				var formData = {
+					depId: $('#editForm #deptParentSelect').val()
+				};
+				$.ajax({
+					url: /*[[@{jd/common/deptList}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					data: JSON.stringify(formData),
+					success: function (response) {
+						$("#deptSelect").empty();
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
+									$("#deptSelect").append(option);
+								}
+							}else {
+								alertMsg('此通路下沒有單位');
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			});
+
+
 			// 初始 jqGridUtil 物件
 			grid = new jqGridUtil();
 			grid.id = '#grid';
 			grid.url = /*[[@{/jdRole/getRoleDetail}]]*/;
 			grid.caption = '角色查詢結果';
-			grid.colNames = ['角色名稱', '部門名稱', '角色描述', '操作'];
+			grid.colNames = ['角色名稱', '單位名稱', '角色描述', '操作'];
 			grid.colModel = [
 				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
 				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME', width: 100},
@@ -128,7 +165,7 @@
 					actionHtml += '<a href="javascript:deleteRole(\'' + row.ROLE_ID + '\');" class="green bigger-140 show-details-btn" title="刪除">';
 					actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
 					actionHtml += '</a>';
-					
+
 					return actionHtml;
 				}} 
 			];
@@ -147,17 +184,18 @@
 				$('#editForm #roleName').val('');
 				$('#editForm #description').val('');
 				$('#editForm #deptSelect').val('');
+				$('#editForm #deptParentSelect').val('');
 				var dialog = $('#editDiv').removeClass('hide').dialog({
 					modal: true,
 					title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-check'></i>新增角色</h4></div>",
 					title_html: true,
-					buttons: [ 
+					buttons: [
 						{
 							text: '取消',
 							'class' : 'btn',
 							click: function() {
 								$(this).dialog('close');
-							} 
+							}
 						},
 						{
 							text: '確定',
@@ -168,11 +206,12 @@
 									return false;
 								}
 								if ($('#editForm #deptSelect').val() == '') {
-									alertMsg("請輸入部門名稱");
+									alertMsg("請輸入單位名稱");
 									return false;
 								}
 								var formData = {
-									departmentId: $('#editForm #deptSelect').val(),
+									departmentId: $('#deptSelect option:selected').val(),
+									parentDep: $('#editForm #deptParentSelect').val(),
 									roleName : $('#editForm #roleName').val(),
 									description : $('#editForm #description').val()
 								};
@@ -181,18 +220,18 @@
 									$('#roleName').val('');
 									$('#qryBtn').click();
 								});
-								
+
 								$(this).dialog('close');
-							} 
+							}
 						}
 					],
 					width: 600
 				});
 			});
-			
+
 			eserviceAdmEvent.initDialog();
 		});
-		
+
 		// 更新
 		function editRole(roleId, roleName, departmentId, description) {
 			$('#editForm #roleName').val(roleName);
@@ -206,13 +245,13 @@
 				modal: true,
 				title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-pencil'></i>修改角色</h4></div>",
 				title_html: true,
-				buttons: [ 
+				buttons: [
 					{
 						text: '取消',
 						'class' : 'btn',
 						click: function() {
 							$('#editDiv').dialog('close');
-						} 
+						}
 					},
 					{
 						text: '確定',
@@ -223,14 +262,15 @@
 								return false;
 							}
 							if ($('#editForm #deptSelect').val() == '') {
-								alertMsg("請輸入部門名稱");
+								alertMsg("請輸入單位名稱");
 								return false;
 							}
 							confirmMsg('是否確認修改', function(r) {
 								if (r) {
 									var formData = {
 										roleId : roleId,
-										departmentId: $('#editForm #deptSelect').val(),
+										parentDep: $('#editForm #deptParentSelect').val(),
+										departmentId: $('#editForm #deptSelect option:selected').val(),
 										roleName : $('#editForm #roleName').val(),
 										description : $('#editForm #description').val()
 									};
@@ -243,13 +283,13 @@
 									return false;
 								}
 							});
-						} 
+						}
 					}
 				],
 				width: 600
 			});
 		}
-		
+
 		// 刪除
 		function deleteRole(roleId) {
 			confirmMsg('是否確認刪除', function(r) {

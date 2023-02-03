@@ -45,9 +45,17 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">部門 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">通路 </label>
 										<div class="col-sm-5">
-											<input type="text" id="department" placeholder="輸入欲查詢的部門" class="form-control" />
+											<input type="text" id="parentDep" placeholder="輸入欲查詢的通路" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">單位 </label>
+										<div class="col-sm-5">
+											<input type="text" id="department" placeholder="輸入欲查詢的單位" class="form-control" />
 										</div>
 										<div class="col-sm-4">
 										</div>
@@ -109,9 +117,20 @@
 											</div>
 										</fieldset>
 										<fieldset>
-											<label class="col-sm-2 control-label text-right no-padding-right">部門/職位 :</label>
-											<div class="col-sm-10">
+											<label class="col-sm-2 control-label text-right no-padding-right">通路名稱 :</label>
+											<div class="col-sm-8">
+												<select id="deptParentSelect" ></select>
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right">單位名稱 :</label>
+											<div class="col-sm-8">
 												<select id="deptSelect"></select>
+											</div>
+										</fieldset>
+										<fieldset>
+											<label class="col-sm-2 control-label text-right no-padding-right">職位名稱 :</label>
+											<div class="col-sm-10">
 												<select id="jobTitleSelect"></select>
 												<button type="button" id="addDeptBtn" class="btn btn-primary">
 													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
@@ -205,6 +224,35 @@
 		var qryGrid, deptGrid, roleGrid, deputyGrid;
 		var selectUserId;
 		$(function() {
+			// 動態獲取單位下拉框
+			$('#deptParentSelect').on('click', function() {
+				var formData = {
+					depId: $('#editDeptDialog #deptParentSelect').val()
+				};
+				$.ajax({
+					url: /*[[@{jd/common/deptList}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					data: JSON.stringify(formData),
+					success: function (response) {
+						$("#deptSelect").empty();
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
+									$("#deptSelect").append(option);
+								}
+							}else {
+								alertMsg('此通路下沒有單位');
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			});
+
 			initOption(); // 初始下拉選單
 			initGrid();   // 初始Grid
 			
@@ -213,6 +261,7 @@
 				// 設定查詢條件
 				qryGrid.setPostData('username', $('#username').val());
 				qryGrid.setPostData('lastName', $('#lastName').val());
+				qryGrid.setPostData('parentDep', $('#parentDep').val());
 				qryGrid.setPostData('department', $('#department').val());
 				qryGrid.setPostData('jobTitle', $('#jobTitle').val());
 				qryGrid.setPostData('roleName', $('#roleName').val());
@@ -221,7 +270,6 @@
 				// 顯示查詢結果區域
 				$('#show-detail-results').show();
 			});
-
 			// 新增人員部門
 			$('#addDeptBtn').click(function() {
 				if ($('#deptSelect').val() == '') {
@@ -238,7 +286,8 @@
 				
 				var formData = {
 					userId : selectUserId,
-					depId : $('#deptSelect').val(),
+					parentDep: $('#deptParentSelect').val(),
+					depId: $('#deptSelect option:selected').val(),
 					titleId : $('#jobTitleSelect').val()
 				};
 				eserviceForm.post(/*[[@{/jdUserMgnt/insertUserDepartment}]]*/, formData, function(response) {
@@ -299,12 +348,13 @@
                 });
 			});
 		});
-		
+
+
 		// 初始下拉選單
 		function initOption() {
-			// 取得部門名稱下拉選單
-			eserviceAdmOption.dept('#deptSelect', /*[[@{/jd/common/deptList}]]*/);
-			
+			// 獲取通路名稱下拉框
+			eserviceAdmOption.dept('#deptParentSelect', /*[[@{jd/common/dept/parentList}]]*/);
+
 			// 取得職位名稱下拉選單
 			eserviceAdmOption.jobTitle('#jobTitleSelect', /*[[@{/common/jobTitleList}]]*/);
 			

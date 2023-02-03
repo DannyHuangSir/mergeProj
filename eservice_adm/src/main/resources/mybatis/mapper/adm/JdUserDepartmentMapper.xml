@@ -84,12 +84,14 @@
 			USER_ID
 			,DEP_ID
 			,TITLE_ID
+			,PARENT_DEP
 		)
 		VALUES
 		(
 			#{userDepartmentVo.userId, jdbcType=VARCHAR},
 			#{userDepartmentVo.depId, jdbcType=VARCHAR},
-			#{userDepartmentVo.titleId, jdbcType=VARCHAR}
+			#{userDepartmentVo.titleId, jdbcType=VARCHAR},
+			#{userDepartmentVo.parentDep, jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -101,6 +103,7 @@
 			<if test="userDepartmentVo.userId != null"> UD.USER_ID = #{userDepartmentVo.userId}, </if>
 			<if test="userDepartmentVo.depId != null"> UD.DEP_ID = #{userDepartmentVo.depId}, </if>
 			<if test="userDepartmentVo.titleId != null"> UD.TITLE_ID = #{userDepartmentVo.titleId}, </if>
+			<if test="userDepartmentVo.parentDep != null"> UD.PARENT_DEP = #{userDepartmentVo.parentDep}, </if>
 		</set>
 		<include refid="whereClause" />
 	</update>
