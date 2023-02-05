@@ -1,5 +1,6 @@
 package com.twfhclife.adm.dao;
 
+import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.UserEntityVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -40,4 +41,6 @@ public interface JdUserEntityDao {
 	 * @return 回傳查詢結果
 	 */
 	List<UserEntityVo> getUserEntity(@Param("userEntityVo") UserEntityVo userEntityVo);
+
+    List<Map<String, Object>> getNotifyUsers(@Param("vo") NotifySearchVo userEntityVo);
 }

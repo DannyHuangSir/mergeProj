@@ -1,5 +1,6 @@
 package com.twfhclife.adm.dao;
 
+import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.RoleVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -82,4 +83,6 @@ public interface JdRoleDao {
     int updateRoleDep(@Param("roleVo") RoleVo roleVo);
 
     int deleteRoleDep(@Param("roleVo") RoleVo roleVo);
+
+    List<Map<String, Object>> getNotifyRoles(@Param("vo") NotifySearchVo notifySearchVo);
 }

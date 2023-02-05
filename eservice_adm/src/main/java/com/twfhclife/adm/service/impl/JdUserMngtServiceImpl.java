@@ -1,6 +1,7 @@
 package com.twfhclife.adm.service.impl;
 
 import com.twfhclife.adm.dao.JdUserEntityDao;
+import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.UserEntityVo;
 import com.twfhclife.adm.service.IJdUserMgntService;
 import com.twfhclife.generic.annotation.RequestLog;
@@ -75,4 +76,9 @@ public class JdUserMngtServiceImpl implements IJdUserMgntService {
 	public List<UserEntityVo> getUserEntity(UserEntityVo userEntityVo) {
 		return userEntityDao.getUserEntity(userEntityVo);
 	}
+
+    @Override
+    public List<Map<String, Object>> getNotifyUsers(NotifySearchVo userEntityVo) {
+        return userEntityDao.getNotifyUsers(userEntityVo);
+    }
 }

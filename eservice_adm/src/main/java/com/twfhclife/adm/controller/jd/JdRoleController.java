@@ -2,6 +2,7 @@ package com.twfhclife.adm.controller.jd;
 
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
+import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.RoleVo;
 import com.twfhclife.adm.service.IJdRoleService;
 import com.twfhclife.generic.annotation.FuncUsageParam;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @auther lihao
@@ -148,5 +152,20 @@ public class JdRoleController extends BaseController {
             processSystemError();
         }
         return processResponseEntity();
+    }
+
+    @RequestLog
+    @PostMapping("/jdRole/getNotifyRoles")
+    public ResponseEntity<PageResponseObj> getNotifyUsers(@RequestBody NotifySearchVo notifySearchVo) {
+        PageResponseObj pageResp = new PageResponseObj();
+        try {
+            List<Map<String, Object>> userList = roleService.getNotifyRoles(notifySearchVo);
+            pageResp.setRows(userList);
+            pageResp.setResult(PageResponseObj.SUCCESS);
+        } catch (Exception e) {
+            pageResp.setResult(PageResponseObj.ERROR);
+            logger.error("Unable to getNotifyRoles: {}", ExceptionUtils.getStackTrace(e));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(pageResp);
     }
 }

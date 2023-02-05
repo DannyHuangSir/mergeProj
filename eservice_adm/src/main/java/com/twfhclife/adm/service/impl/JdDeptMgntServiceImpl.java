@@ -137,21 +137,14 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
     }
 
     @Override
-    public List<Map<String, Object>> getDepartmentList(String username, String keyCloakUserId, DepartmentVo departmentVo) {
-        String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
-        return departmentDao.getDepartmentList(departmentVo, keyCloakUserId, adminUserFlag);
-    }
-
-    @Override
-    public int getDepartmentTotal(String username, String keyCloakUserId, DepartmentVo departmentVo) {
-        String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
-        return departmentDao.getDepartmentTotal(departmentVo, keyCloakUserId, adminUserFlag);
-    }
-
-    @Override
     public List<DepartmentVo> getDeptParentList(String userId, String username) {
         // 判斷目前登入者是否有最高權限管理員
         String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
         return departmentDao.getDeptParentList(userId, adminUserFlag);
+    }
+
+    @Override
+    public List<Map<String, Object>> getNotifyDepts() {
+        return departmentDao.getNotifyDepts();
     }
 }

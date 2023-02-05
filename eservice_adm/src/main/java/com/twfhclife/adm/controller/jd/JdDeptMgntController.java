@@ -75,17 +75,11 @@ public class JdDeptMgntController extends BaseController {
     }
 
     @RequestLog
-    @PostMapping("/department/getDepartment")
-    public ResponseEntity<PageResponseObj> getDepartment(@RequestBody DepartmentVo vo) {
+    @PostMapping("/jdDeptMgnt/getDepartment")
+    public ResponseEntity<PageResponseObj> getDepartment() {
         PageResponseObj pageResp = new PageResponseObj();
         try {
-            com.twfhclife.keycloak.model.KeycloakUser kuser = getLoginUser();
-            String username = kuser.getUsername();
-            String keyCloakUserId = kuser.getId();
-            pageResp.setRows(deptMgntService.getDepartmentList(username, keyCloakUserId, vo));
-            pageResp.setRecords(deptMgntService.getDepartmentTotal(username, keyCloakUserId, vo));
-            pageResp.setPage(vo.getPage());
-            pageResp.setTotal((pageResp.getRecords() + vo.getRows() - 1) / vo.getRows());
+            pageResp.setRows(deptMgntService.getNotifyDepts());
             pageResp.setResult(PageResponseObj.SUCCESS);
         } catch (Exception e) {
             logger.error("Unable to getDepartment: {}", ExceptionUtils.getStackTrace(e));

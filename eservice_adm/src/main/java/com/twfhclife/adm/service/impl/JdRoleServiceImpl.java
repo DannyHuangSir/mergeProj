@@ -1,6 +1,7 @@
 package com.twfhclife.adm.service.impl;
 
 import com.twfhclife.adm.dao.JdRoleDao;
+import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.RoleVo;
 import com.twfhclife.adm.service.IJdRoleService;
 import com.twfhclife.generic.annotation.RequestLog;
@@ -136,5 +137,10 @@ public class JdRoleServiceImpl implements IJdRoleService {
         }else {
             return roleDao.updateRole(roleVo);
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> getNotifyRoles(NotifySearchVo notifySearchVo) {
+        return roleDao.getNotifyRoles(notifySearchVo);
     }
 }

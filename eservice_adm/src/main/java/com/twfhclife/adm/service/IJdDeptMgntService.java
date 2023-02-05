@@ -64,9 +64,7 @@ public interface IJdDeptMgntService {
      */
     public List<DepartmentVo> getParentDepList(DepartmentVo departmentVo);
 
-    List<Map<String, Object>> getDepartmentList(String username, String keyCloakUserId, DepartmentVo departmentVo);
-
-    int getDepartmentTotal(String username, String keyCloakUserId, DepartmentVo departmentVo);
-
     List<DepartmentVo> getDeptParentList(String userId, String username);
+
+    List<Map<String, Object>> getNotifyDepts();
 }

@@ -1,5 +1,6 @@
 package com.twfhclife.adm.service;
 
+import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.UserEntityVo;
 
 import java.util.List;
@@ -37,4 +38,6 @@ public interface IJdUserMgntService {
 	 * @return 回傳查詢結果
 	 */
 	List<UserEntityVo> getUserEntity(UserEntityVo userEntityVo);
+
+	List<Map<String, Object>> getNotifyUsers(NotifySearchVo userEntityVo);
 }

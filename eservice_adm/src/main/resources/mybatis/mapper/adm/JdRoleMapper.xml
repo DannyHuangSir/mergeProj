@@ -201,5 +201,15 @@
         DELETE ESERVICE_JD.DBO.ROLE_DEPARTMENT
         <include refid="wherePkClause"/>
     </delete>
+
+    <select id="getNotifyRoles" resultType="hashmap">
+        SELECT
+        b.ROLE_ID,b.ROLE_NAME
+        FROM
+        ESERVICE_ADM.DBO.ROLE b
+        INNER JOIN ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA ON b.ROLE_ID = RSA.ROLE_ID
+        WHERE RSA.SYS_ID = 'eservice_jd'
+    </select>
+
 </mapper>
 

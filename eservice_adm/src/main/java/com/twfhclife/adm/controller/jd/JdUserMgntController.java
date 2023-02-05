@@ -2,10 +2,7 @@ package com.twfhclife.adm.controller.jd;
 
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
-import com.twfhclife.adm.model.UserDepartmentVo;
-import com.twfhclife.adm.model.UserDeputyVo;
-import com.twfhclife.adm.model.UserEntityVo;
-import com.twfhclife.adm.model.UserRoleVo;
+import com.twfhclife.adm.model.*;
 import com.twfhclife.adm.service.*;
 import com.twfhclife.generic.annotation.FuncUsageParam;
 import com.twfhclife.generic.annotation.LoginCheck;
@@ -96,6 +93,21 @@ public class JdUserMgntController extends BaseController {
         } catch (Exception e) {
             pageResp.setResult(PageResponseObj.ERROR);
             logger.error("Unable to getUserEntityPageList: {}", ExceptionUtils.getStackTrace(e));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(pageResp);
+    }
+
+    @RequestLog
+    @PostMapping("/jdUserMgnt/getNotifyUsers")
+    public ResponseEntity<PageResponseObj> getNotifyUsers(@RequestBody NotifySearchVo userEntityVo) {
+        PageResponseObj pageResp = new PageResponseObj();
+        try {
+            List<Map<String, Object>> userList = userMgntService.getNotifyUsers(userEntityVo);
+            pageResp.setRows(userList);
+            pageResp.setResult(PageResponseObj.SUCCESS);
+        } catch (Exception e) {
+            pageResp.setResult(PageResponseObj.ERROR);
+            logger.error("Unable to getNotifyUsers: {}", ExceptionUtils.getStackTrace(e));
         }
         return ResponseEntity.status(HttpStatus.OK).body(pageResp);
     }

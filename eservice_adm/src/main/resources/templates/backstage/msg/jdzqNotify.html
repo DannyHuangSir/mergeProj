@@ -24,277 +24,220 @@
 		z-index: 0;
 		border: 1px solid #eee;
 	}
+
 </style>
-	<head>
-		<th:block th:replace="fragments/head"/>
-	</head>
-	<body class="no-skin">
-		<th:block th:replace="fragments/navbar"/>
-		<div class="main-container my-save-state" id="main-container">
-			<script type="text/javascript">
+<link rel="stylesheet" th:href="@{/plugin/summernote-editor/summernote.css}"/>
+<head>
+    <th:block th:replace="fragments/head"/>
+</head>
+<body class="no-skin">
+<th:block th:replace="fragments/navbar"/>
+<div class="main-container my-save-state" id="main-container">
+    <script type="text/javascript">
 				try{my.settings.loadState('main-container')}catch(e){}
-			</script>
-			<div th:replace="fragments/sidebar :: sidebar (funId='communicationTemplateSearch')"></div>
-			<div class="main-content">
-				<div class="main-content-inner">
-					<div class="breadcrumbs my-save-state" id="breadcrumbs">
-						<ul class="breadcrumb">
-							<li>
-								<i class="fa fa-signal" aria-hidden="true"></i>
-									通信管理
-								<i class="my-icon fa fa-angle-double-right"></i>
-									經代專區通知管理
-							</li>
-						</ul>
-					</div>
-					<div class="page-content">
-						<div class="">
-							<ul class="tab">
-								<li class="tab1 active col-xs-4" bind="member">
-									<span class="hid1">人員</span>
-								</li>
-								<li class="tab1 col-xs-4"  bind="department">
-									<span class="hid1">分行</span>
-								</li>
-								<li class="tab1 col-xs-4" bind="role">
-									<span class="hid1">角色</span>
-								</li>
-							</ul>
-						</div>
-						<div class="page-content">
-							<div class="row">
-								<div class="col-xs-12 member">
-									<form class="form-horizontal" role="form" id="form1">
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者帳號：</label>
-											<div class="col-sm-5">
-												<input type="text" id="username" class="form-control" />
-											</div>
-											<div class="col-sm-4">
-											</div>
-										</div>
-										<div class="col-md-offset-3 col-md-1">
-											<button id="qryBtn" class="btn btn-success" type="button">
-												<i class="my-icon fa fa-check bigger-110"></i>
-												查詢
-											</button>
-										</div>
-										<div class="col-md-3">
-											<button class="btn btn-warning sendBtn">
-												<i class="my-icon fa fa-file-text-o bigger-110"></i>
-												發送通知
-											</button>
-										</div>
-									</form>
-								</div>
-								<div class="col-xs-12 department" hidden="true">
-									<form class="form-horizontal" id="form2" role="form" action="#">
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">查詢分行：</label>
-											<div class="col-sm-5">
-												<div>
-													<input type="text" name="depName" id="depName" class="form-control"/>
-												</div>
-											</div>
-											<div class="col-sm-4">
-											</div>
-										</div>
-										<div class="col-md-offset-3 col-md-1">
-											<button type="button" class="btn btn-success" id="qryBtn2">
-												<i class="my-icon fa fa-check bigger-110"></i>
-												查詢
-											</button>
-										</div>
-										<div class="col-md-3">
-											<button class="btn btn-warning sendBtn">
-												<i class="my-icon fa fa-file-text-o bigger-110"></i>
-												發送通知
-											</button>
-										</div>
-									</form>
-								</div>
-								<div class="col-xs-12 role" hidden="true">
-									<form class="form-horizontal" id="form3" role="form" action="#">
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">查詢角色：</label>
-											<div class="col-sm-5">
-												<div>
-													<input type="text" name="roleName" id="roleName" class="form-control"/>
-												</div>
-											</div>
-											<div class="col-sm-4">
-											</div>
-										</div>
-										<div class="col-md-offset-3 col-md-1">
-											<button type="button" class="btn btn-success" id="qryBtn3">
-												<i class="my-icon fa fa-check bigger-110"></i>
-												查詢
-											</button>
-										</div>
-										<div class="col-md-3">
-											<button class="btn btn-warning sendBtn">
-												<i class="my-icon fa fa-file-text-o bigger-110"></i>
-												發送通知
-											</button>
-										</div>
-									</form>
-								</div>
-							</div>
-							<div class="hr hr-18 dotted hr-double"></div>
-							<div class="row">
-								<div class="col-xs-12">
-									<div id="show-detail-results" hidden="true">
-										<div id="queryContent">
-											<table id="qryGrid"></table>
-											<div id="qryPager"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div id="msgDialog" class="hide">
-								<div class="widget-main no-padding">
-									<form id="notifyForm">
-										<fieldset style="margin-top:">
-											<label class="col-sm-2 control-label text-right no-padding-right">發送時間 :</label>
-											<div class="col-sm-8">
-												<input class="form-control" type="text" id="notifyTime" name="notifyTime" data-date-format="YYYY-MM-DD HH:mm:ss"/>
-											</div>
-										</fieldset>
-										<fieldset>
-											<label class="col-sm-2 control-label text-right no-padding-right">發送内容 :</label>
-											<div class="col-sm-8">
-												<textarea style="width: 100%" type="textarea" id="notifyMsg" name="msg" rows="5" placeholder="請輸入發送内容..."></textarea>
-											</div>
-										</fieldset>
-									</form>
-									<div class="col-md-offset-3 col-md-1">
-										<button id="confirmSendBtn" class="btn btn-success" type="button">
-											<i class="my-icon fa fa-check bigger-110"></i>
-											確定
-										</button>
-									</div>
-									<div class="col-md-offset-1 col-md-1">
-										<button onclick="closeMsgDialog()" class="btn" type="reset">
-											<i class="my-icon fa fa-undo bigger-110"></i>
-											取消
-										</button>
-									</div>
-								</div>
-								<div style="width: 750px">
-									<table id="roleGrid"></table>
-									<div id="rolePager"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div th:replace="fragments/footer"></div>
-			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
-			</a>
-		</div>
+
+    </script>
+    <div th:replace="fragments/sidebar :: sidebar (funId='jdzqNotifyManagement')"></div>
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs my-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="fa fa-signal" aria-hidden="true"></i>
+                        通信管理
+                        <i class="my-icon fa fa-angle-double-right"></i>
+                        經代專區通知管理
+                    </li>
+                </ul>
+            </div>
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12 member">
+                        <form class="form-horizontal" role="form" id="form1">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right no-padding-right"><span style="color: red;">*</span>通知顯示時間設定：</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" id="notifyTime" name="notifyTime"
+                                           data-date-format="YYYY-MM-DD HH:mm:ss"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right no-padding-right">通知接收人設定</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right no-padding-right">通路：</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="passageWay">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right no-padding-right"><span style="color: red;">*</span>通知接收人類型：</label>
+                                <div class="col-sm-7">
+                                    <div class="radio" style="float: left;padding-right: 20px;">
+                                        <label>
+                                            <div class="radio-btn"><i><input checked type="radio" name="notifyRadio"
+                                                                             value="member"></i></div>
+                                            指定員工編號
+                                        </label>
+                                    </div>
+                                    <div class="radio" style="float: left;padding-right: 20px;">
+                                        <label>
+                                            <div class="radio-btn"><i><input type="radio" name="notifyRadio"
+                                                                             value="department"></i></div>
+                                            指定分行
+                                        </label>
+                                    </div>
+                                    <div class="radio" style="float: left;padding-right: 20px;">
+                                        <label>
+                                            <div class="radio-btn"><i><input type="radio" name="notifyRadio"
+                                                                             value="role"></i></div>
+                                            指定角色
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right no-padding-right">通知內容設定</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right no-padding-right"><span style="color: red;">*</span>主旨：</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" id="notifyTitle" type="text"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right no-padding-right"><span style="color: red;">*</span>內文：</label>
+                                <div class="col-sm-7">
+                                    <div id="notifyMsgContent"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div id="show-detail-results" hidden="true">
+                                        <div id="queryContent">
+                                            <div style="margin:0 auto;">
+                                                <table id="qryGrid"></table>
+                                                <div id="qryPager"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-6" style="text-align: right;">
+                                    <button type="button" class="btn btn-success sendBtn">
+                                        <i class="my-icon fa fa-floppy-o"></i>
+                                        確定新增
+                                    </button>
+                                </div>
+                                <div class="col-sm-6" style="text-align: left;">
+                                    <button type="button" class="btn" onclick="resetTree()">
+                                        <i class="my-icon fa fa-remove"></i>
+                                        重新輸入
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                    <div class="hr hr-18 dotted hr-double"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer"></div>
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+</a>
+</div>
 
 <th:block th:replace="fragments/script"/>
 <script th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/plugin/summernote-editor/summernote.min.js}"></script>
+<script th:src="@{/plugin/summernote-editor/lang/summernote-zh-TW.js}"></script>
 <script th:inline="javascript">
 /*<![CDATA[*/
 		var qryGrid
 		var selectUserId;
 		var users, deps, roles
 		$(function() {
-
 			$('input[name=notifyTime]').datetimepicker();
-
-			$('#qryBtn').click(function() {
-				$("#queryContent").html('<table id="qryGrid"></table> <div id="qryPager"></div>')
-				initGrid();
-				qryGrid.setPostData('username', $('#username').val());
-				// 產生grid
-				qryGrid.create();
-				// 顯示查詢結果區域
-				$('#show-detail-results').show();
-			});
-
-			$('#qryBtn2').click(function(){
-				$("#queryContent").html('<table id="qryGrid"></table> <div id="qryPager"></div>')
-				qryGrid = new jqGridUtil();
-				qryGrid.id = '#qryGrid';
-				qryGrid.url = /*[[@{/department/getDepartment}]]*/;
-				qryGrid.pager = '#qryPager';
-				qryGrid.caption = '分行查詢結果';
-				qryGrid.colNames = ['', '分行代碼', '分行名稱', '分行描述'];
-				qryGrid.colModel = [
-					{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
-						var actionHtml = '';
-						actionHtml += '<input class="depCheckBox" type="checkbox" value="' + row.DEP_ID + '"/>';
-						return actionHtml;
-					}},
-					{name: 'DEP_ID', index: 'DEP_ID', width: 100},
-					{name: 'DEP_NAME', index: 'DEP_NAME', width: 100},
-					{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200}
-				];
-				qryGrid.setPostData('depName', $('#depName').val());
-				qryGrid.create();
-				$('#show-detail-results').show();
-			})
-
-			$('#qryBtn3').click(function(){
-				$("#queryContent").html('<table id="qryGrid"></table> <div id="qryPager"></div>')
-				qryGrid = new jqGridUtil();
-				qryGrid.id = '#qryGrid';
-				qryGrid.url = /*[[@{/jdRole/getRoleDetail}]]*/;
-				qryGrid.pager = '#qryPager';
-				qryGrid.caption = '角色查詢結果';
-				qryGrid.colNames = ['', '角色名稱', '部門名稱', '角色描述'];
-				qryGrid.colModel = [
-					{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
-						var actionHtml = '';
-						actionHtml += '<input class="roleCheckBox" type="checkbox" value="' + row.ROLE_ID + '"/>';
-						return actionHtml;
-					}},
-					{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
-					{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME', width: 100},
-					{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200}
-				];
-				qryGrid.setPostData('roleName', $('#roleName').val());
-				qryGrid.setPostData('systemId', 'eservice_jd');
-				qryGrid.create();
-				$('#show-detail-results').show();
-			})
-
 			// 顯示查詢結果區域
-			eserviceAdmEvent.initDialog();
-
-			$('.tab1').click(function() {
-				$('.tab1.active').removeClass('active')
-				$(this).addClass('active')
-				$('.member').hide()
-				$('.department').hide()
-				$('.role').hide()
-				$('.' +  $(this).attr('bind')).show()
-				$("#queryContent").html('<table id="qryGrid"></table> <div id="qryPager"></div>')
-			});
+			showMember()
+			$('#show-detail-results').show();
+            $("input[name='notifyRadio']").click(function(){
+                if ($(this).val() == 'member') {
+                    showMember()
+                } else if ($(this).val() == 'department') {
+                    showDept()
+                } else if ($(this).val() == 'role')(
+                    showRole()
+                )
+            })
 
 			$('.sendBtn').click(function(){
+
+                if ($("#notifyTime").val() == null || $("#notifyTime").val() == '') {
+                    alertMsg('未選擇發送時間');
+                    return false;
+                }
+
+                if ($("#notifyTitle").val() == null || $("#notifyTitle").val() == '') {
+                    alertMsg('未填寫主旨');
+                    return false;
+                }
+
+                if ($("#notifyMsgContent").summernote('isEmpty')) {
+                    alertMsg('未填寫發送内容');
+                    return false;
+                }
+                notifyTarget = ''
 				users = new Array()
 				$('.memberCheckBox:checked').each(function(key,value){
 						users[key] = $(value).val()
+						notifyTarget += $(this).attr('textName') + ','
 					}
 				)
 				roles = new Array()
 				$('.roleCheckBox:checked').each(function(key,value){
 						roles[key] = $(value).val()
+						notifyTarget += $(this).attr('textName') + ','
 					}
 				)
 				deps = new Array()
 				$('.depCheckBox:checked').each(function(key,value){
 						deps[key] = $(value).val()
+						notifyTarget += $(this).attr('textName') + ','
 					}
 				)
 				if ((users != undefined && users.length > 0) || (roles != undefined && roles.length > 0)
 					|| (deps != undefined && deps.length > 0)) {
-					openMsgDialog(users, deps, roles)
+
+					    data = {
+					        users: users,
+					        deps: deps,
+					        roles: roles,
+					        msg: $("#notifyMsgContent").summernote('code'),
+					        title: $("#notifyTitle").val(),
+					        notifyTime: $("#notifyTime").val(),
+					        notifyTarget: notifyTarget.substring(0, notifyTarget.length -1)
+					    }
+                        $.ajax({
+                            type : 'POST',
+                            contentType : 'application/json',
+                            url : /*[[@{/addJdzqMsgSchedule}]]*/,
+                            data : JSON.stringify(data),
+                            success : function(response) {
+                                if (response.result == 'SUCCESS') {
+                                   alertMsg('發送成功');
+                                   return false;
+                                }
+                            },
+                            error : function() {
+                                alertMsg('error!')
+                            }
+                        });
 					return false;
 				} else {
 					alertMsg('未選擇發送對象');
@@ -302,72 +245,95 @@
 				}
 			})
 
-			$("#confirmSendBtn").click(function(){
-				if ($("#notifyTime").val() == null || $("#notifyTime").val() == '') {
-					alertMsg('未選擇發送時間');
-					return false;
-				}
-
-				if ($("#notifyMsg").val() == null || $("#notifyMsg").val() == '') {
-					alertMsg('未填寫發送内容');
-					return false;
-				}
-				data = {
-					users: users,
-					deps: deps,
-					roles: roles,
-					notifyTime: $('#notifyTime').val(),
-					msg: $('#notifyMsg').val()
-				}
-
-				$.ajax({
-					type : 'POST',
-					contentType : 'application/json',
-					url : /*[[@{/jdzqSendMsg}]]*/,
-					data : JSON.stringify(data),
-					success : function(response) {
-						if (response.result == 'SUCCESS') {
-                           alertMsg('發送成功');
-                           return false;
-						}
-						closeMsgDialog()
-					},
-					error : function() {
-						alertMsg('error!')
-					}
-				});
-			})
+			$("#notifyMsgContent").summernote({
+			  minHeight: 100,             // set minimum height of editor
+			  maxHeight: 300,             // set maximum height of editor
+			  placeholder: '請輸入消息內容及格式...',
+			  lang: 'zh-TW',
+			  toolbar: [
+					// [groupName, [list of button]]
+					['style', ['bold', 'italic', 'underline', 'clear']],
+					['font', ['fontname', 'fontsize','color']],
+					['para', ['ul', 'ol']],
+					['Insert', ['link', 'hr']],
+					['height', ['height']],
+					['misc', ['codeview']]
+				],
+				fontNames: ['Arial', 'Consolas', 'Courier New', '新細明體', '微軟正黑體', '標楷體']
+			});
 		});
 
-		// 初始Grid
-		function initGrid() {
-			// 查詢結果grid
+		function showMember() {
+		    $("#queryContent").html('<div style="margin:0 auto; width:50%;"><table id="qryGrid"></table><div id="qryPager"></div></div>')
 			qryGrid = new jqGridUtil();
 			qryGrid.id = '#qryGrid';
-			qryGrid.pager = '#qryPager';
-			qryGrid.url = /*[[@{/jdUserMgnt/getUserEntityPageList}]]*/;
-			qryGrid.caption = '人員查詢結果';
-			qryGrid.colNames = ['', '使用者帳號', '使用者名稱', '角色', '部門', '職位'];
+			qryGrid.url = /*[[@{/jdUserMgnt/getNotifyUsers}]]*/;
+			qryGrid.caption = '員工查詢結果';
+			qryGrid.colNames = ['', '通路', '員工編號', '姓名'];
+			qryGrid.colModel = [
+				{width: 50, align: 'center', formatter: function(cellvalue, options, row) {
+					var actionHtml = '';
+					actionHtml += '<input class="memberCheckBox" textName="' + row.USER_NAME +'" type="checkbox" value="' + row.USER_ID + '"/>';
+					return actionHtml;
+				}},
+				{width: 200, formatter: function(cellvalue, options, row) {
+					var actionHtml = '通路';
+					return actionHtml;
+				}},
+				{name: 'SERIAL_NUM', index: 'SERIAL_NUM', width: 200},
+				{width: 200, formatter: function(cellvalue, options, row) {
+					return emptyIfNull(row.USER_NAME);
+				}}
+			];
+			qryGrid.create();
+		}
+
+		function showDept() {
+		    $("#queryContent").html('<div style="margin:0 auto; width:50%;"><table id="qryGrid"></table><div id="qryPager"></div></div>')
+			qryGrid = new jqGridUtil();
+			qryGrid.id = '#qryGrid';
+			qryGrid.url = /*[[@{/jdDeptMgnt/getDepartment}]]*/;
+			qryGrid.caption = '分行查詢結果';
+			qryGrid.colNames = ['', '通路', '分行'];
 			qryGrid.colModel = [
 				{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<input class="memberCheckBox" type="checkbox" value="' + row.ID + '"/>';
+					actionHtml += '<input class="depCheckBox" textName="' + row.DEP_NAME +'" type="checkbox" value="' + row.DEP_ID + '"/>';
 					return actionHtml;
 				}},
-				{name: 'USERNAME', index: 'USERNAME', width: 100},
-				{width: 90, formatter: function(cellvalue, options, row) {
-					return emptyIfNull(row.FIRST_NAME);
+				{width: 200, formatter: function(cellvalue, options, row) {
+                    var actionHtml = '通路';
+					return actionHtml;
 				}},
 				{width: 120, formatter: function(cellvalue, options, row) {
-					return breakLine(row.ROLE_NAME_LIST);
-				}},
-				{width: 100, formatter: function(cellvalue, options, row) {
-					return breakLine(row.DEP_NAME_LIST);
-				}},
-				{width: 100, formatter: function(cellvalue, options, row) {
-					return breakLine(row.TITLE_NAME_LIST);
+					return breakLine(row.DEP_NAME);
 				}}
 			];
+			qryGrid.create();
+		}
+
+		function showRole() {
+		    $("#queryContent").html('<div style="margin:0 auto; width:50%;"><table id="qryGrid"></table><div id="qryPager"></div></div>')
+			qryGrid = new jqGridUtil();
+			qryGrid.id = '#qryGrid';
+			qryGrid.url = /*[[@{/jdRole/getNotifyRoles}]]*/;
+			qryGrid.caption = '角色查詢結果';
+			qryGrid.colNames = ['', '通路', '角色'];
+			qryGrid.colModel = [
+				{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
+					var actionHtml = '';
+					actionHtml += '<input class="roleCheckBox" textName="' + row.ROLE_NAME +'" type="checkbox" value="' + row.ROLE_ID + '"/>';
+					return actionHtml;
+				}},
+				{width: 200, formatter: function(cellvalue, options, row) {
+					var actionHtml = '通路';
+					return actionHtml;
+				}},
+				{width: 200, formatter: function(cellvalue, options, row) {
+					return breakLine(row.ROLE_NAME);
+				}},
+			];
+			qryGrid.create();
 		}
 
 		function breakLine(data) {
@@ -377,21 +343,8 @@
 			}
 			return result;
 		}
-
-		function openMsgDialog(users, deps, roles) {
-			$('#msgDialog').removeClass('hide').dialog({
-				modal: true,
-				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>發送通知</h4></div>",
-				title_html: true,
-				width: 800,
-				height: 400
-			});
-		}
-
-		function closeMsgDialog() {
-			$('#msgDialog').dialog('close')
-		}
 /*]]>*/
-		</script>
-	</body>
+
+</script>
+</body>
 </html>

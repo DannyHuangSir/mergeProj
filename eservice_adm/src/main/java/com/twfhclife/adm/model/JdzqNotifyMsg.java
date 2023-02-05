@@ -17,6 +17,9 @@ public class JdzqNotifyMsg {
 
     private String msg;
 
+    private String title;
+    private String notifyTarget;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date notifyTime;
@@ -59,5 +62,21 @@ public class JdzqNotifyMsg {
 
     public void setNotifyTime(Date notifyTime) {
         this.notifyTime = notifyTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getNotifyTarget() {
+        return notifyTarget;
+    }
+
+    public void setNotifyTarget(String notifyTarget) {
+        this.notifyTarget = notifyTarget;
     }
 }

@@ -153,4 +153,8 @@
 			ESERVICE_ADM.DBO.USER_ENTITY
 		<include refid="whereClause" />
 	</select>
+
+	<select id="getNotifyUsers" resultType="hashmap">
+		SELECT USER_ID, SERIAL_NUM, USER_NAME FROM ESERVICE_JD.DBO.USERS
+	</select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.twfhclife.adm.service;
 
+import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.RoleVo;
 
 import java.util.List;
@@ -72,4 +73,6 @@ public interface IJdRoleService {
      * @return 回傳影響筆數
      */
     public int deleteRole(RoleVo roleVo);
+
+    List<Map<String, Object>> getNotifyRoles(NotifySearchVo userEntityVo);
 }

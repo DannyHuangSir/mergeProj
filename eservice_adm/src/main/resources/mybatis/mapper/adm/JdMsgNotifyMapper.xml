@@ -27,4 +27,94 @@
             </foreach>
         </if>
     </insert>
+
+    <insert id="addJdzqMsgSchedule">
+        INSERT INTO ESERVICE_JD.dbo.NOTIFY_SCHEDULE(TITLE, MSG_CONTENT, USERS,  ROLES, DEPS, NOTIFY_TIME, CREATE_DATE, STATUS, NOTIFY_TARGET)
+        VALUES(#{msg.title}, #{msg.msg},
+        <if test="msg.users != null and msg.users.size > 0">
+            CONCAT('',
+            <foreach collection="msg.users" separator="," item="u">
+                #{u}
+            </foreach>
+            )
+        </if>
+        <if test="msg.users == null or msg.users.size == 0">
+           ''
+        </if>
+        ,
+        <if test="msg.roles != null and msg.roles.size > 0">
+            CONCAT('',
+            <foreach collection="msg.roles" separator="," item="r">
+                #{r}
+            </foreach>
+            )
+        </if>
+        <if test="msg.roles == null or msg.roles.size == 0">
+            ''
+        </if>
+        ,
+        <if test="msg.deps != null and msg.deps.size > 0">
+            CONCAT('',
+            <foreach collection="msg.deps" separator="," item="d">
+                #{d}
+            </foreach>
+            )
+        </if>
+        <if test="msg.deps == null or msg.deps.size == 0">
+            ''
+        </if>
+        , #{msg.notifyTime}
+        , SYSDATETIME()
+        , '1'
+        , #{msg.notifyTarget}
+        )
+    </insert>
+
+
+    <select id="getJdzqMsgSchedule" resultType="hashmap">
+        SELECT
+         TITLE
+        ,CONVERT(VARCHAR, CREATE_DATE, 120) CREATE_DATE
+        ,CONVERT(VARCHAR, NOTIFY_TIME, 120) NOTIFY_TIME
+        ,NOTIFY_TARGET
+        ,MSG_CONTENT
+        ,STATUS
+        FROM (
+        SELECT
+        ROW_NUMBER() OVER (ORDER BY CREATE_DATE) AS ROW_NUM
+        ,A.*
+        FROM (
+        <include refid="INC1"/>
+        ) A
+        ) B
+        WHERE
+        B.ROW_NUM <![CDATA[<=]]> #{vo.page} * #{vo.rows}
+        AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows}
+    </select>
+
+    <select id="getJdzqMsgScheduleTotal" resultType="int">
+        SELECT
+        COUNT(1) AS AMOUNT
+        FROM (
+        <include refid="INC1"/>
+        ) t
+    </select>
+
+    <sql id="INC1">
+        SELECT
+         d.TITLE
+        ,d.CREATE_DATE
+        ,d.NOTIFY_TIME
+        ,d.NOTIFY_TARGET
+        ,d.MSG_CONTENT
+        ,d.STATUS
+        FROM
+        ESERVICE_JD.DBO.NOTIFY_SCHEDULE d
+        <where>
+            <if test="vo.title != null and vo.title != ''">
+                AND D.TITLE LIKE CONCAT('%', #{vo.title},'%')
+            </if>
+        </where>
+    </sql>
+
 </mapper>

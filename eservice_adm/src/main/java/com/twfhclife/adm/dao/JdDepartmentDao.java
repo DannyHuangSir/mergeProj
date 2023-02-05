@@ -60,9 +60,8 @@ public interface JdDepartmentDao {
      */
     int deleteDepartment(@Param("depId") String depId);
 
-    List<Map<String, Object>> getDepartmentList(@Param("vo") DepartmentVo departmentVo, @Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
+    List<Map<String, Object>> getNotifyDepts();
 
-    int getDepartmentTotal(@Param("vo") DepartmentVo departmentVo, @Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
 
     /**
      * 獲取通路數組
