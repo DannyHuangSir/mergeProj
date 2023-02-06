@@ -1,13 +1,17 @@
 package com.twfhclife.adm.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
 
 public class JdzqNotifyMsg {
+
+    private Long id;
 
     private List<String> users = Lists.newArrayList();
 
@@ -19,6 +23,24 @@ public class JdzqNotifyMsg {
 
     private String title;
     private String notifyTarget;
+
+    public void setRoleStr(String role) {
+        if (StringUtils.isNotBlank(role)) {
+            roles.addAll(Splitter.on(",").splitToList(role));
+        }
+    }
+
+    public void setDepStr(String depStr) {
+        if (StringUtils.isNotBlank(depStr)) {
+            deps.addAll(Splitter.on(",").splitToList(depStr));
+        }
+    }
+
+    public void setUserStr(String userStr) {
+        if (StringUtils.isNotBlank(userStr)) {
+            users.addAll(Splitter.on(",").splitToList(userStr));
+        }
+    }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -78,5 +100,13 @@ public class JdzqNotifyMsg {
 
     public void setNotifyTarget(String notifyTarget) {
         this.notifyTarget = notifyTarget;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

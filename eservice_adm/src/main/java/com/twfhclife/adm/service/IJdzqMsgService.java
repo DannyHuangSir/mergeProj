@@ -15,4 +15,6 @@ public interface IJdzqMsgService {
     List<Map<String, Object>> getMsgSchedule(NotifySearchVo vo);
 
     int getMsgScheduleTotal(NotifySearchVo vo);
+
+    int deleteNotifyMsg(Long id);
 }

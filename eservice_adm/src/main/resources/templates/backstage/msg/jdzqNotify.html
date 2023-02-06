@@ -230,7 +230,7 @@
                             data : JSON.stringify(data),
                             success : function(response) {
                                 if (response.result == 'SUCCESS') {
-                                   alertMsg('發送成功');
+                                   alertMsg('添加成功');
                                    return false;
                                 }
                             },
@@ -273,7 +273,7 @@
 			qryGrid.colModel = [
 				{width: 50, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<input class="memberCheckBox" textName="' + row.USER_NAME +'" type="checkbox" value="' + row.USER_ID + '"/>';
+					actionHtml += '<input class="memberCheckBox" textName="' + row.USER_NAME +'" type="checkbox" value="' + row.ID + '"/>';
 					return actionHtml;
 				}},
 				{width: 200, formatter: function(cellvalue, options, row) {

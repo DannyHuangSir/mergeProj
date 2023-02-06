@@ -18,4 +18,10 @@ public interface JdMsgNotifyDao {
     List<Map<String, Object>> getJdzqMsgSchedule(@Param("vo") NotifySearchVo vo);
 
     int getJdzqMsgScheduleTotal(@Param("vo") NotifySearchVo vo);
+
+    int deleteNotifyMsg(@Param("id") Long id);
+
+    List<JdzqNotifyMsg> getWillSendMsgs();
+
+    int updateNotifyMsgComplete(@Param("ids") List<Long> ids);
 }

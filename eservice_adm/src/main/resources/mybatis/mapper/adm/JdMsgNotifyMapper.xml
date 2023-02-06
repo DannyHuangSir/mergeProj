@@ -7,11 +7,11 @@
         <if test="msg.users != null and msg.users.size() >0 ">
             values
             <foreach collection="msg.users" item="user" separator=",">
-                ('後臺管理通知', #{msg.msg}, '1', SYSDATETIME(), #{user}, #{msg.notifyTime})
+                (#{msg.title}, #{msg.msg}, '1', SYSDATETIME(), #{user}, #{msg.notifyTime})
             </foreach>
         </if>
         <if test="msg.deps != null and msg.deps.size() >0 ">
-            SELECT '後臺管理通知', #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime} from ESERVICE_JD.DBO.DEPARTMENT D
+            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime} from ESERVICE_JD.DBO.DEPARTMENT D
             INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.DEP_ID = UD.DEP_ID
             WHERE D.DEP_ID IN
             <foreach collection="msg.deps" item="dep" separator="," close=")" open="(">
@@ -19,7 +19,7 @@
             </foreach>
         </if>
         <if test="msg.roles != null and msg.roles.size() >0 ">
-            SELECT '後臺管理通知', #{msg.msg}, '1', SYSDATETIME(), UR.USER_ID, #{msg.notifyTime} FROM  ESERVICE_ADM.DBO.ROLE R
+            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UR.USER_ID, #{msg.notifyTime} FROM  ESERVICE_ADM.DBO.ROLE R
             INNER JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON R.ROLE_ID = UR.ROLE_ID
             WHERE R.ROLE_ID IN
             <foreach collection="msg.roles" item="role" separator="," close=")" open="(">
@@ -33,8 +33,11 @@
         VALUES(#{msg.title}, #{msg.msg},
         <if test="msg.users != null and msg.users.size > 0">
             CONCAT('',
-            <foreach collection="msg.users" separator="," item="u">
+            <foreach collection="msg.users" separator="," item="u" index="idx">
                 #{u}
+                <if test="msg.users.size != (idx + 1)">
+                    , ','
+                </if>
             </foreach>
             )
         </if>
@@ -44,8 +47,11 @@
         ,
         <if test="msg.roles != null and msg.roles.size > 0">
             CONCAT('',
-            <foreach collection="msg.roles" separator="," item="r">
+            <foreach collection="msg.roles" separator="," item="r" index="idx">
                 #{r}
+                <if test="msg.roles.size != (idx + 1)">
+                    , ','
+                </if>
             </foreach>
             )
         </if>
@@ -55,8 +61,11 @@
         ,
         <if test="msg.deps != null and msg.deps.size > 0">
             CONCAT('',
-            <foreach collection="msg.deps" separator="," item="d">
+            <foreach collection="msg.deps" separator="," item="d" index="idx">
                 #{d}
+                <if test="msg.deps.size != (idx + 1)">
+                    , ','
+                </if>
             </foreach>
             )
         </if>
@@ -73,6 +82,7 @@
 
     <select id="getJdzqMsgSchedule" resultType="hashmap">
         SELECT
+         ID,
          TITLE
         ,CONVERT(VARCHAR, CREATE_DATE, 120) CREATE_DATE
         ,CONVERT(VARCHAR, NOTIFY_TIME, 120) NOTIFY_TIME
@@ -102,6 +112,7 @@
 
     <sql id="INC1">
         SELECT
+         d.ID,
          d.TITLE
         ,d.CREATE_DATE
         ,d.NOTIFY_TIME
@@ -116,5 +127,23 @@
             </if>
         </where>
     </sql>
+
+    <delete id="deleteNotifyMsg">
+        DELETE FROM ESERVICE_JD.DBO.NOTIFY_SCHEDULE
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="getWillSendMsgs" resultType="com.twfhclife.adm.model.JdzqNotifyMsg">
+        select ID id, TITLE title, MSG_CONTENT msg, USERS userStr, DEPS depStr, ROLES roleStr , NOTIFY_TIME notifyTime, CREATE_DATE createDate from
+        ESERVICE_JD.DBO.NOTIFY_SCHEDULE WHERE NOTIFY_TIME &lt;= SYSDATETIME() AND STATUS = 1
+    </select>
+
+    <update id="updateNotifyMsgComplete">
+        update ESERVICE_JD.DBO.NOTIFY_SCHEDULE
+        set status = 2 where ID IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>

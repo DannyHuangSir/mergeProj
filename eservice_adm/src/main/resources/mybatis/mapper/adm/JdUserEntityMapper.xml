@@ -155,6 +155,8 @@
 	</select>
 
 	<select id="getNotifyUsers" resultType="hashmap">
-		SELECT USER_ID, SERIAL_NUM, USER_NAME FROM ESERVICE_JD.DBO.USERS
+		SELECT A.ID, B.USER_ID, B.SERIAL_NUM, B.USER_NAME FROM ESERVICE_JD.DBO.USERS B
+		INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY A ON B.USER_ID = A.USERNAME COLLATE database_default
+		WHERE A.REALM_ID = 'elife_jd'
 	</select>
 </mapper>

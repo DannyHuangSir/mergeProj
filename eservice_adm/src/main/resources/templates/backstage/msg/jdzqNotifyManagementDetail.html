@@ -113,7 +113,7 @@
 					editHtml += '    <i class="my-icon fa fa-info bigger-120"></i> <span class="sr-only">Details</span>';
 					editHtml += '</a>';
 					if (row.STATUS == 1) {
-						editHtml += '<a href="javascript:toEdit(\'' + row.MESSAGING_TEMPLATE_ID + '\')" class="green bigger-140 show-details-btn" title="Edit">';
+						editHtml += '<a href="javascript:delNotifyMsg(\'' + row.ID + '\')" class="green bigger-140 show-details-btn" title="Edit">';
 						editHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span>';
 						editHtml += '</a>';
 					}
@@ -165,6 +165,22 @@
                 ],
                 width: 600
             });
+		}
+
+		function delNotifyMsg(id) {
+			confirmMsg('是否確認刪除', function(r) {
+				if (r) {
+					var formData = {
+						id : id
+					};
+					eserviceForm.post(/*[[@{/deleteNotifyMsg}]]*/, formData, function(response) {
+						alertMsg("刪除成功！");
+						grid.reload()
+					});
+				} else {
+					return false;
+				}
+			});
 		}
 
 		/*]]>*/

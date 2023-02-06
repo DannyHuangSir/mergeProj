@@ -70,4 +70,16 @@ public class JdzqMsgNotifyController extends BaseController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(pageResp);
     }
+
+    @RequestLog
+    @PostMapping("/deleteNotifyMsg")
+    public ResponseEntity<ResponseObj> deleteNotifyMsg(@RequestBody JdzqNotifyMsg vo) {
+        try {
+            jdzqMsgService.deleteNotifyMsg(vo.getId());
+        } catch (Exception e) {
+            logger.error("Unable to deleteNotifyMsg: {}", ExceptionUtils.getStackTrace(e));
+        }
+        processSuccessMsg("刪除成功！");
+        return processResponseEntity();
+    }
 }
