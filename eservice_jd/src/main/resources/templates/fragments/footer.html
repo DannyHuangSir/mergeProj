@@ -51,7 +51,7 @@
     pageNum = 1
     notifySearchStatus = null
     notifySearchTime = null
-
+    msgMap = {}
     function clickSearch() {
         event.preventDefault(),
 		event.stopPropagation();
@@ -76,7 +76,7 @@
             url : /*[[@{/message}]]*/,
             data: JSON.stringify(
                 {
-                    pageSize: 5,
+                    pageSize: 50,
                     pageNum: pageNum,
                     status: notifySearchStatus,
                     notifySearchTime: notifySearchTime
@@ -86,10 +86,14 @@
                 if (data.result = 'SUCCESS') {
                     $('#messageCount').text(data.resultData.count)
                     $(data.resultData.data).each(function(index, item){
+                        msgMap[item.id] = {
+                            msg: item.msg,
+                            title: item.title
+                        }
                         $('#messages').append(
-                            '<a href="#" class="item">' +
-                                '<div class="header"><em>' + item.title + '</em> ' + item.msg + '</div>' +
-                                '<div class="content text-right"><small>' + item.createDate + '</small></div>' +
+                            '<a href="#" class="item" onclick=\'msgDetail(' + item.id + ')\'>' +
+                                '<div class="header"><em>' + item.title + '</em></div>' +
+                                '<div class="content text-right"><small>' + item.notifyTime + '</small></div>' +
                              '</a>'
                         )
                     })
@@ -98,29 +102,50 @@
                     $("#messages").mCustomScrollbar("destroy")
                 }
                  $("#messages").height("200px").mCustomScrollbar({
-                         callbacks:{
-                                onTotalScroll:function() {
-                                    popoverCallback()
-                                }
-                            }
+<!--                         callbacks:{-->
+<!--                                onTotalScroll:function() {-->
+<!--                                    popoverCallback()-->
+<!--                                }-->
+<!--                            }-->
                     })
             }
         });
     }
 
     function getNotRead() {
-            $.ajax({
-                type : 'POST',
-                contentType : 'application/json',
-                dataType : 'json',
-                url : /*[[@{/getNotRead}]]*/,
-                success : function(data) {
-                    if (data.result = 'SUCCESS') {
-                        $('#notRead').text(data.resultData)
-                    }
+        $.ajax({
+            type : 'POST',
+            contentType : 'application/json',
+            dataType : 'json',
+            url : /*[[@{/getNotRead}]]*/,
+            success : function(data) {
+                if (data.result = 'SUCCESS') {
+                    $('#notRead').text(data.resultData)
                 }
-            });
-        }
+            }
+        });
+    }
+
+    function msgDetail(id) {
+        $('#msg-modal .title').text(msgMap[id].title)
+        $('#msg-modal .content').html(msgMap[id].msg)
+        $('#msg-modal').modal({
+            show: true,
+            backdrop: 'static',
+            keyboard: false
+        });
+        $.ajax({
+            type : 'POST',
+            contentType : 'application/json',
+            dataType : 'json',
+            url : /*[[@{/readNotifyMsg}]]*/,
+            data: JSON.stringify(
+                {
+                   id: id
+                }
+            )
+        });
+    }
 
     $(function(){
         appendNotifyItems()
@@ -131,6 +156,7 @@
             });
         })
    })
+
 /*]]>*/
 </script>
 </body>

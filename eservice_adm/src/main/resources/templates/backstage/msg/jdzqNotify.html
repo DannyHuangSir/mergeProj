@@ -67,7 +67,8 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label text-right no-padding-right">通路：</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="passageWay">
+                                    <select class="chosen-select form-control" id="passageWaySelect" data-placeholder="請選擇通路...">
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -75,7 +76,7 @@
                                 <div class="col-sm-7">
                                     <div class="radio" style="float: left;padding-right: 20px;">
                                         <label>
-                                            <div class="radio-btn"><i><input checked type="radio" name="notifyRadio"
+                                            <div class="radio-btn"><i><input type="radio" name="notifyRadio"
                                                                              value="member"></i></div>
                                             指定員工編號
                                         </label>
@@ -162,16 +163,30 @@
 		var selectUserId;
 		var users, deps, roles
 		$(function() {
+		    eserviceAdmOption.chosenCommon("#passageWaySelect", /*[[@{/jdDeptMgnt/getPassageWay}]]*/, 'VALUE');
 			$('input[name=notifyTime]').datetimepicker();
 			// 顯示查詢結果區域
-			showMember()
 			$('#show-detail-results').show();
             $("input[name='notifyRadio']").click(function(){
+                if ($("#passageWaySelect option:selected").val() == '') {
+                      alertMsg('請選擇通路！');
+                      return false;
+                }
                 if ($(this).val() == 'member') {
                     showMember()
                 } else if ($(this).val() == 'department') {
                     showDept()
                 } else if ($(this).val() == 'role')(
+                    showRole()
+                )
+            })
+
+            $("#passageWaySelect").change(function(){
+                if ($("input[name='notifyRadio']:checked").val() == 'member') {
+                    showMember()
+                } else if ($("input[name='notifyRadio']:checked").val() == 'department') {
+                    showDept()
+                } else if ($("input[name='notifyRadio']:checked").val() == 'role')(
                     showRole()
                 )
             })
@@ -221,7 +236,8 @@
 					        msg: $("#notifyMsgContent").summernote('code'),
 					        title: $("#notifyTitle").val(),
 					        notifyTime: $("#notifyTime").val(),
-					        notifyTarget: notifyTarget.substring(0, notifyTarget.length -1)
+					        notifyTarget: notifyTarget.substring(0, notifyTarget.length -1),
+					        passageWay: $('#passageWaySelect option:selected').val()
 					    }
                         $.ajax({
                             type : 'POST',
@@ -276,15 +292,15 @@
 					actionHtml += '<input class="memberCheckBox" textName="' + row.USER_NAME +'" type="checkbox" value="' + row.ID + '"/>';
 					return actionHtml;
 				}},
-				{width: 200, formatter: function(cellvalue, options, row) {
-					var actionHtml = '通路';
-					return actionHtml;
+				{width: 120, formatter: function(cellvalue, options, row) {
+					return breakLine(row.PASSAGE_WAY);
 				}},
 				{name: 'SERIAL_NUM', index: 'SERIAL_NUM', width: 200},
 				{width: 200, formatter: function(cellvalue, options, row) {
 					return emptyIfNull(row.USER_NAME);
 				}}
 			];
+			qryGrid.setPostData('passageWay', $('#passageWaySelect option:selected').val());
 			qryGrid.create();
 		}
 
@@ -301,14 +317,14 @@
 					actionHtml += '<input class="depCheckBox" textName="' + row.DEP_NAME +'" type="checkbox" value="' + row.DEP_ID + '"/>';
 					return actionHtml;
 				}},
-				{width: 200, formatter: function(cellvalue, options, row) {
-                    var actionHtml = '通路';
-					return actionHtml;
+				{width: 120, formatter: function(cellvalue, options, row) {
+					return breakLine(row.PASSAGE_WAY);
 				}},
 				{width: 120, formatter: function(cellvalue, options, row) {
 					return breakLine(row.DEP_NAME);
 				}}
 			];
+			qryGrid.setPostData('passageWay', $('#passageWaySelect option:selected').val());
 			qryGrid.create();
 		}
 
@@ -326,13 +342,13 @@
 					return actionHtml;
 				}},
 				{width: 200, formatter: function(cellvalue, options, row) {
-					var actionHtml = '通路';
-					return actionHtml;
+					return breakLine(row.PASSAGE_WAY);
 				}},
 				{width: 200, formatter: function(cellvalue, options, row) {
 					return breakLine(row.ROLE_NAME);
 				}},
 			];
+			qryGrid.setPostData('passageWay', $('#passageWaySelect option:selected').val());
 			qryGrid.create();
 		}
 

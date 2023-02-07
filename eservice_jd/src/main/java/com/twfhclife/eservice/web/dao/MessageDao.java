@@ -11,4 +11,6 @@ public interface MessageDao {
 
     int getMessagesTotal(@Param("vo") MessageVo vo, @Param("userId") String userId);
     int getNotRead(@Param("userId") String userId);
+
+    int readMsg(@Param("id") Long id);
 }

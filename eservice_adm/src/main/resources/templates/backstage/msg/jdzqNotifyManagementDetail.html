@@ -35,6 +35,13 @@
 											<div class="col-sm-4">
 											</div>
 										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label text-right no-padding-right">通路：</label>
+											<div class="col-sm-7">
+												<select class="chosen-select form-control" id="passageWaySelect" data-placeholder="請選擇通路...">
+												</select>
+											</div>
+										</div>
 										<div class="col-md-offset-3 col-md-9">
 											<button id="qryBtn" class="btn btn-success" type="button">
 												<i class="my-icon fa fa-check bigger-110"></i>
@@ -82,18 +89,7 @@
 		/*<![CDATA[*/
 		var grid;
 		$(function() {
-			// 載入系統功能下拉選單
-			eserviceAdmOption.chosenSystem('#systemsSelect', /*[[@{/common/systemList}]]*/);
-			
-			// 取得通信模板代碼下拉選單
-			eserviceAdmOption.chosenCommTempCode('#commTempCode', /*[[@{/common/msgTmpCodeList}]]*/);
-			
-			// 取得通信模板名稱下拉選單
-			eserviceAdmOption.chosenCommTempName('#commTempName', /*[[@{/common/msgTmpNameList}]]*/);
-			
-			// 取得通信模板狀態下拉選單
-			eserviceAdmOption.chosenCommon("#commTempStat", /*[[@{/common/optionList?categoryCode=MESG_TEMP_STATE}]]*/, 'VALUE');
-			
+			eserviceAdmOption.chosenCommon("#passageWaySelect", /*[[@{/jdDeptMgnt/getPassageWay}]]*/, 'VALUE');
 			// 初始 jqGridUtil 物件
 			grid = new jqGridUtil();
 			grid.id = '#grid';
@@ -125,6 +121,7 @@
 			$('#qryBtn').click(function() {
 				// 設定查詢條件
 				grid.setPostData('title', $('#commTempSubject').val());
+				grid.setPostData('passageWay', $('#passageWaySelect option:selected').val());
 				// 顯示查詢結果
 				grid.create();
 				$('#show-detail-results').show();

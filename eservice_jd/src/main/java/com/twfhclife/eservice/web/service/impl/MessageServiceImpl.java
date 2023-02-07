@@ -28,4 +28,9 @@ public class MessageServiceImpl implements IMessageService {
     public int getNotRead(String id) {
         return messageDao.getNotRead(id);
     }
+
+    @Override
+    public int readMsg(Long id) {
+        return messageDao.readMsg(id);
+    }
 }

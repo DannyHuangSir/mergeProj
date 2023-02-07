@@ -22,6 +22,8 @@ public class JdzqNotifyMsg {
     private String msg;
 
     private String title;
+
+    private String passageWay;
     private String notifyTarget;
 
     public void setRoleStr(String role) {
@@ -108,5 +110,13 @@ public class JdzqNotifyMsg {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPassageWay() {
+        return passageWay;
+    }
+
+    public void setPassageWay(String passageWay) {
+        this.passageWay = passageWay;
     }
 }

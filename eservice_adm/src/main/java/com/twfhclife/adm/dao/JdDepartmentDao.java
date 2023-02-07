@@ -1,6 +1,7 @@
 package com.twfhclife.adm.dao;
 
 import com.twfhclife.adm.model.DepartmentVo;
+import com.twfhclife.adm.model.ParameterVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -60,7 +61,7 @@ public interface JdDepartmentDao {
      */
     int deleteDepartment(@Param("depId") String depId);
 
-    List<Map<String, Object>> getNotifyDepts();
+    List<Map<String, Object>> getNotifyDepts(@Param("passageWay") String passageWay);
 
 
     /**
@@ -70,4 +71,6 @@ public interface JdDepartmentDao {
      * @return
      */
     List<DepartmentVo> getDeptParentList(@Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag);
+
+    List<ParameterVo> getPassageWay();
 }

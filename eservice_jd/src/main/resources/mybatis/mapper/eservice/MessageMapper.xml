@@ -65,7 +65,11 @@
 		<include refid="Base_Column_List" />
 		FROM
 		ESERVICE_JD.DBO.MESSAGE
-			WHERE STATUS = '1'
+			WHERE USER_ID = #{userId} AND STATUS = '1'
 		) t
 	</select>
+
+	<update id="readMsg">
+		UPDATE ESERVICE_JD.DBO.MESSAGE SET STATUS = '2' WHERE ID = #{id}
+	</update>
 </mapper>

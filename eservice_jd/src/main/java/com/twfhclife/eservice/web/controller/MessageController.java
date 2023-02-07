@@ -47,4 +47,11 @@ public class MessageController extends BaseController {
         responseObj.setResultData(messageService.getNotRead(keycloakService.getUserByUsername(getUserId()).getId()));
         return responseObj;
     }
+    @PostMapping("/readNotifyMsg")
+    public ResponseObj readNotifyMsg(@RequestBody MessageVo vo) {
+        ResponseObj responseObj = new ResponseObj();
+        responseObj.setResult(ResponseObj.SUCCESS);
+        responseObj.setResultData(messageService.readMsg(vo.getId()));
+        return responseObj;
+    }
 }

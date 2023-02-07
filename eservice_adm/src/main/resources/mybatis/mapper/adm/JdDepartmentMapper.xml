@@ -161,9 +161,13 @@
 
     <select id="getNotifyDepts" resultType="hashmap">
         SELECT
-          d.DEP_ID ,d.DEP_NAME
+          d.DEP_ID ,d.DEP_NAME, d1.DEP_NAME PASSAGE_WAY
         FROM
-        ESERVICE_JD.DBO.DEPARTMENT d
-        WHERE D.PARENT_DEP = 30000
+        ESERVICE_JD.DBO.DEPARTMENT d inner join ESERVICE_JD.DBO.DEPARTMENT d1 on d1.DEP_ID = d.PARENT_DEP
+        WHERE d.PARENT_DEP = #{passageWay}
+    </select>
+
+    <select id="getPassageWay" resultType="hashmap">
+        SELECT DEP_ID parameterValue , DEP_NAME parameterName FROM ESERVICE_JD.DBO.DEPARTMENT WHERE PARENT_DEP = 0
     </select>
 </mapper>

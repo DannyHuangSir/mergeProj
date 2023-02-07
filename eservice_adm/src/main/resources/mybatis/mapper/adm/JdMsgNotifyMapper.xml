@@ -29,7 +29,7 @@
     </insert>
 
     <insert id="addJdzqMsgSchedule">
-        INSERT INTO ESERVICE_JD.dbo.NOTIFY_SCHEDULE(TITLE, MSG_CONTENT, USERS,  ROLES, DEPS, NOTIFY_TIME, CREATE_DATE, STATUS, NOTIFY_TARGET)
+        INSERT INTO ESERVICE_JD.dbo.NOTIFY_SCHEDULE(TITLE, MSG_CONTENT, USERS,  ROLES, DEPS, NOTIFY_TIME, CREATE_DATE, STATUS, NOTIFY_TARGET, PASSAGE_WAY)
         VALUES(#{msg.title}, #{msg.msg},
         <if test="msg.users != null and msg.users.size > 0">
             CONCAT('',
@@ -76,6 +76,7 @@
         , SYSDATETIME()
         , '1'
         , #{msg.notifyTarget}
+        , #{msg.passageWay}
         )
     </insert>
 
@@ -124,6 +125,10 @@
         <where>
             <if test="vo.title != null and vo.title != ''">
                 AND D.TITLE LIKE CONCAT('%', #{vo.title},'%')
+            </if>
+
+            <if test="vo.passageWay != null and vo.passageWay != ''">
+                AND D.PASSAGE_WAY = #{vo.passageWay}
             </if>
         </where>
     </sql>

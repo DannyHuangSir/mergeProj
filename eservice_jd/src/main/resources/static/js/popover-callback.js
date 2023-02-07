@@ -28,11 +28,11 @@ $('*[data-toggle="popover"]').on('shown.bs.popover', function () {
 		pop.find(".payOnline").html($(payTarget).clone().html());
 	}
 	pop.find(".popover-content .items").height(_this.data("scroll-height")+"px").mCustomScrollbar({
-	     callbacks:{
-                onTotalScroll:function() {
-                    popoverCallback()
-                }
-            }
+//	     callbacks:{
+//                onTotalScroll:function() {
+//                    popoverCallback()
+//                }
+//            }
 	    }
 	);
 }).popover();

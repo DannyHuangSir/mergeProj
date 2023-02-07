@@ -1,6 +1,7 @@
 package com.twfhclife.adm.service;
 
 import com.twfhclife.adm.model.DepartmentVo;
+import com.twfhclife.adm.model.ParameterVo;
 
 import java.util.List;
 import java.util.Map;
@@ -66,5 +67,7 @@ public interface IJdDeptMgntService {
 
     List<DepartmentVo> getDeptParentList(String userId, String username);
 
-    List<Map<String, Object>> getNotifyDepts();
+    List<Map<String, Object>> getNotifyDepts(String passageWay);
+
+    List<ParameterVo> getPassageWay();
 }

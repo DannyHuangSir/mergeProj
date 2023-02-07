@@ -3,6 +3,7 @@ package com.twfhclife.adm.controller.jd;
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.DepartmentVo;
+import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.service.IJdDeptMgntService;
 import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.controller.BaseController;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -76,10 +78,10 @@ public class JdDeptMgntController extends BaseController {
 
     @RequestLog
     @PostMapping("/jdDeptMgnt/getDepartment")
-    public ResponseEntity<PageResponseObj> getDepartment() {
+    public ResponseEntity<PageResponseObj> getDepartment(@RequestBody NotifySearchVo vo) {
         PageResponseObj pageResp = new PageResponseObj();
         try {
-            pageResp.setRows(deptMgntService.getNotifyDepts());
+            pageResp.setRows(deptMgntService.getNotifyDepts(vo.getPassageWay()));
             pageResp.setResult(PageResponseObj.SUCCESS);
         } catch (Exception e) {
             logger.error("Unable to getDepartment: {}", ExceptionUtils.getStackTrace(e));
@@ -202,6 +204,18 @@ public class JdDeptMgntController extends BaseController {
             }
         } catch (Exception e) {
             logger.error("Unable to deleteDepartment: {}", ExceptionUtils.getStackTrace(e));
+            processSystemError();
+        }
+        return processResponseEntity();
+    }
+
+    @RequestLog
+    @PostMapping("/jdDeptMgnt/getPassageWay")
+    public ResponseEntity<ResponseObj> getPassageWay() {
+        try {
+            processSuccess(deptMgntService.getPassageWay());
+        } catch (Exception e) {
+            logger.error("Unable to getPassageWay: {}", ExceptionUtils.getStackTrace(e));
             processSystemError();
         }
         return processResponseEntity();

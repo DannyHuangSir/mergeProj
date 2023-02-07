@@ -11,4 +11,6 @@ public interface IMessageService {
 	int getTotalCount(MessageVo vo, String id);
 
 	int getNotRead(String id);
+
+    int readMsg(Long id);
 }

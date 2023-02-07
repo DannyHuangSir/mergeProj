@@ -2,6 +2,7 @@ package com.twfhclife.adm.service.impl;
 
 import com.twfhclife.adm.dao.JdDepartmentDao;
 import com.twfhclife.adm.model.DepartmentVo;
+import com.twfhclife.adm.model.ParameterVo;
 import com.twfhclife.adm.service.IJdDeptMgntService;
 import com.twfhclife.generic.annotation.RequestLog;
 import org.apache.commons.lang3.StringUtils;
@@ -144,7 +145,12 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
     }
 
     @Override
-    public List<Map<String, Object>> getNotifyDepts() {
-        return departmentDao.getNotifyDepts();
+    public List<Map<String, Object>> getNotifyDepts(String passageWay) {
+        return departmentDao.getNotifyDepts(passageWay);
+    }
+
+    @Override
+    public List<ParameterVo> getPassageWay() {
+        return departmentDao.getPassageWay();
     }
 }
