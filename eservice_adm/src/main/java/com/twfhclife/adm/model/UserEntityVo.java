@@ -49,6 +49,16 @@ public class UserEntityVo extends Pagination {
 	 */
 	private String parentDep;
 
+	private String branchId;
+
+	public void setBranchId(String branchId) {
+		this.branchId = branchId;
+	}
+
+	public String getBranchId() {
+		return branchId;
+	}
+
 	public void setParentDep(String parentDep) {
 		this.parentDep = parentDep;
 	}

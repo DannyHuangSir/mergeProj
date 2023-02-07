@@ -26,6 +26,7 @@
         ,DEP_NAME
         ,DESCRIPTION
         ,PARENT_DEP
+        ,BRANCH_ID
         FROM
         ESERVICE_JD.DBO.DEPARTMENT
         )
@@ -65,6 +66,7 @@
         ,d.DEP_NAME
         ,d.DESCRIPTION
         ,d.PARENT_DEP
+        ,BRANCH_ID
         FROM
         ESERVICE_JD.DBO.DEPARTMENT d
         ORDER BY
@@ -78,6 +80,7 @@
         ,DEP_NAME
         ,DESCRIPTION
         ,PARENT_DEP
+        ,BRANCH_ID
         FROM
         ESERVICE_JD.DBO.DEPARTMENT
         WHERE
@@ -107,6 +110,7 @@
         ,CREATE_DATE
         ,MODIFY_USER
         ,MODIFY_DATE
+        ,BRANCH_ID
         )
         VALUES
         (
@@ -118,6 +122,7 @@
         ,getdate()
         ,#{departmentVo.modifyUser,jdbcType=VARCHAR}
         ,getdate()
+        ,#{departmentVo.branchId,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -131,6 +136,7 @@
         ,PARENT_DEP = #{departmentVo.parentDep,jdbcType=VARCHAR}
         ,MODIFY_USER = #{departmentVo.modifyUser,jdbcType=VARCHAR}
         ,MODIFY_DATE = getdate()
+        ,BRANCH_ID =  #{departmentVo.branchId,jdbcType=VARCHAR}
         WHERE
         DEP_ID = #{departmentVo.depId,jdbcType=VARCHAR}
     </update>
@@ -146,6 +152,7 @@
         ,DEP_NAME
         ,DESCRIPTION
         ,PARENT_DEP
+        ,BRANCH_ID
         FROM
         ESERVICE_JD.DBO.DEPARTMENT
         WHERE
@@ -169,5 +176,13 @@
 
     <select id="getPassageWay" resultType="hashmap">
         SELECT DEP_ID parameterValue , DEP_NAME parameterName FROM ESERVICE_JD.DBO.DEPARTMENT WHERE PARENT_DEP = 0
+    </select>
+
+    <select id="getDepId" resultType="com.twfhclife.adm.model.DepartmentVo">
+        SELECT
+            d.*
+        FROM
+            ESERVICE_JD.DBO.DEPARTMENT d
+      where d.DEP_ID = #{depId}
     </select>
 </mapper>

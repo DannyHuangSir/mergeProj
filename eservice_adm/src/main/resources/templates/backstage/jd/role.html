@@ -75,6 +75,12 @@
 						<div class="widget-main no-padding">
 							<form id="editForm">
 								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right">角色ID：</label>
+									<div class="col-sm-8">
+										<input type="text" id="roleId" class="form-control" readonly="true"/>
+									</div>
+								</fieldset>
+								<fieldset>
 									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>角色名稱：</label>
 									<div class="col-sm-8">
 										<input type="text" id="roleName" class="form-control" />
@@ -101,6 +107,35 @@
 							</form>
 						</div>
 					</div>
+					<div id="insertDiv" class="hide">
+						<div class="widget-main no-padding">
+							<form id="insertForm">
+								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>角色名稱：</label>
+									<div class="col-sm-8">
+										<input type="text" id="roleName" class="form-control" />
+									</div>
+								</fieldset>
+								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right">通路名稱：</label>
+									<div class="col-sm-8">
+										<select id="deptParentSelect" ></select>
+									</div>
+								</fieldset>
+								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>單位名稱：</label>
+									<div class="col-sm-8">
+										<select id="deptSelect"></select>
+									</div>
+								</fieldset>
+								<fieldset>
+									<label class="col-sm-4 control-label no-padding-right">角色描述：</label>
+									<div class="col-sm-8">
+										<input type="text" id="description" class="form-control" />
+									</div>
+								</fieldset>
+							</form>
+						</div>
 				</div>
 			</div>
 			<div th:replace="fragments/footer"></div>
@@ -152,8 +187,9 @@
 			grid.id = '#grid';
 			grid.url = /*[[@{/jdRole/getRoleDetail}]]*/;
 			grid.caption = '角色查詢結果';
-			grid.colNames = ['角色名稱', '單位名稱', '角色描述', '操作'];
+			grid.colNames = ['角色ID','角色名稱', '單位名稱', '角色描述', '操作'];
 			grid.colModel = [
+				{name: 'ROLE_ID', index: 'ROLE_ID', width: 100},
 				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
 				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME', width: 100},
 				{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200},
@@ -181,11 +217,11 @@
 			
 			// 新增
 			$('#addRoleBtn').on('click', function() {
-				$('#editForm #roleName').val('');
-				$('#editForm #description').val('');
-				$('#editForm #deptSelect').val('');
-				$('#editForm #deptParentSelect').val('');
-				var dialog = $('#editDiv').removeClass('hide').dialog({
+				$('#insertForm #roleName').val('');
+				$('#insertForm #description').val('');
+				$('#insertForm #deptSelect').val('');
+				$('#insertForm #deptParentSelect').val('');
+				var dialog = $('#insertDiv').removeClass('hide').dialog({
 					modal: true,
 					title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-check'></i>新增角色</h4></div>",
 					title_html: true,
@@ -201,19 +237,19 @@
 							text: '確定',
 							'class' : 'btn btn-primary',
 							click: function() {
-								if ($('#editForm #roleName').val() == '') {
+								if ($('#insertForm #roleName').val() == '') {
 									alertMsg("請輸入角色名稱");
 									return false;
 								}
-								if ($('#editForm #deptSelect').val() == '') {
+								if ($('#insertForm #deptSelect').val() == '') {
 									alertMsg("請輸入單位名稱");
 									return false;
 								}
 								var formData = {
-									departmentId: $('#deptSelect option:selected').val(),
-									parentDep: $('#editForm #deptParentSelect').val(),
-									roleName : $('#editForm #roleName').val(),
-									description : $('#editForm #description').val()
+									departmentId: $('#insertForm #deptSelect option:selected').val(),
+									parentDep: $('#insertForm #deptParentSelect').val(),
+									roleName : $('#insertForm #roleName').val(),
+									description : $('#insertForm #description').val()
 								};
 								eserviceForm.post(/*[[@{/jdRole/insertRole}]]*/, formData, function(response) {
 									alertMsg(response.resultMsg);
@@ -234,6 +270,7 @@
 
 		// 更新
 		function editRole(roleId, roleName, departmentId, description) {
+			$('#editForm #roleId').val(roleId);
 			$('#editForm #roleName').val(roleName);
 			if (departmentId) {
 				$('#editForm #deptSelect').val(departmentId);

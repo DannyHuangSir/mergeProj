@@ -1,19 +1,14 @@
 package com.twfhclife.generic.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.twfhclife.adm.model.DepartmentVo;
+import com.twfhclife.adm.model.FunctionItemVo;
+import com.twfhclife.adm.model.FunctionVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.twfhclife.adm.model.DepartmentVo;
-import com.twfhclife.adm.model.FunctionItemVo;
-import com.twfhclife.adm.model.FunctionVo;
+import java.util.*;
 
 public class MenuUtil {
 
@@ -139,6 +134,7 @@ public class MenuUtil {
 				rootMap.put("par", "");
 				rootMap.put("text", func.getDepName());
 				rootMap.put("description", func.getDescription());
+				rootMap.put("branchId",func.getBranchId());
 				rootMap.put("type", "folder");
 				rootMap.put("notify", "R");
 
@@ -163,6 +159,7 @@ public class MenuUtil {
 				dataMap.put("par", parentFuncMap.get("text").toString()); // 上層功能名稱
 				dataMap.put("parentDep", func.getParentDep());
 				dataMap.put("text", func.getDepName());
+				dataMap.put("branchId",func.getBranchId());
 				dataMap.put("description", func.getDescription());
 				
 				setDeptSubAceTreeMap(dataList, dataMap);

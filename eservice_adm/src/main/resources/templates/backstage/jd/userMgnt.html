@@ -61,6 +61,14 @@
 										</div>
 									</div>
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">原分支機構代碼 </label>
+										<div class="col-sm-5">
+											<input type="text" id="branchId" placeholder="輸入欲查詢的原分支機構代碼" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">職位 </label>
 										<div class="col-sm-5">
 											<input type="text" id="jobTitle" placeholder="輸入欲查詢的職位" class="form-control" />
@@ -263,6 +271,7 @@
 				qryGrid.setPostData('lastName', $('#lastName').val());
 				qryGrid.setPostData('parentDep', $('#parentDep').val());
 				qryGrid.setPostData('department', $('#department').val());
+				qryGrid.setPostData('branchId', $('#branchId').val());
 				qryGrid.setPostData('jobTitle', $('#jobTitle').val());
 				qryGrid.setPostData('roleName', $('#roleName').val());
 				// 產生grid
@@ -393,6 +402,18 @@
 					actionHtml += '&nbsp;&nbsp;';
 					actionHtml += '<a href="javascript:openDeptDialog(\'' + row.ID + '\', \'' + row.USERNAME  + '\', \'' + (emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME)) +'\');" class="green bigger-140 show-details-btn" title="設定部門">';
 					actionHtml += '<i class="my-icon fa fa-sitemap bigger-120"></i> <span class="sr-only">設定部門</span> ';
+					actionHtml += '</a>';
+					actionHtml += '&nbsp;&nbsp;';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="資料詳情">';
+					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">資料詳情</span> ';
+					actionHtml += '</a>';
+					actionHtml += '&nbsp;&nbsp;';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="VIP客戶資料">';
+					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">VIP客戶資料</span> ';
+					actionHtml += '</a>';
+					actionHtml += '&nbsp;&nbsp;';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="負責分行">';
+					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">負責分行</span> ';
 					actionHtml += '</a>';
 					// actionHtml += '&nbsp;&nbsp;';
 					// actionHtml += '<a href="javascript:openDeputyDialog(\'' + row.ID + '\', \'' + row.USERNAME + '\', \'' + (emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME)) +'\');" class="green bigger-140 show-details-btn" title="設定代理人">';

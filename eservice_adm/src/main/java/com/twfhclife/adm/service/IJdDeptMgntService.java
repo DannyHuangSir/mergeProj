@@ -70,4 +70,8 @@ public interface IJdDeptMgntService {
     List<Map<String, Object>> getNotifyDepts(String passageWay);
 
     List<ParameterVo> getPassageWay();
+
+    boolean isBranchIdExist(DepartmentVo departmentVo);
+
+    DepartmentVo getDepId(String depId);
 }

@@ -76,13 +76,22 @@
 					)
 				)
 			</if>
-			<if test="userEntityVo.department != null and userEntityVo.department != ''">
+			<if test="userEntityVo.branchId != null and userEntityVo.branchId != ''">
 				AND ID  IN (
 					SELECT
 					udd.USER_ID
 					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
 					inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID
-					WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
+					WHERE dd.BRANCH_ID = #{userEntityVo.branchId}
+				)
+			</if>
+			<if test="userEntityVo.department != null and userEntityVo.department != ''">
+				AND ID  IN (
+				SELECT
+				udd.USER_ID
+				FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
+				inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID
+				WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
 				)
 			</if>
 			<if test="userEntityVo.jobTitle != null and userEntityVo.jobTitle != ''">

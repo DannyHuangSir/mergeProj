@@ -153,4 +153,26 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
     public List<ParameterVo> getPassageWay() {
         return departmentDao.getPassageWay();
     }
+
+    @RequestLog
+    public boolean isBranchIdExist(DepartmentVo departmentVo) {
+        boolean BranchIdExist = false;
+        String parentDep = departmentVo.getParentDep();
+        String branchId = departmentVo.getBranchId();
+        List<DepartmentVo> dataList = departmentDao.getDepts();
+        for (DepartmentVo depVo: dataList) {
+            if (StringUtils.isNotBlank(parentDep) && StringUtils.isNotBlank(branchId)) {
+                if (parentDep.equals(depVo.getParentDep()) && branchId.equals(depVo.getBranchId())) {
+                    BranchIdExist = true;
+                    break;
+                }
+            }
+        }
+        return BranchIdExist;
+    }
+
+    @Override
+    public DepartmentVo getDepId(String depId) {
+        return departmentDao.getDepId(depId);
+    }
 }

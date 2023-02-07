@@ -62,7 +62,8 @@ CREATE TABLE [ESERVICE_JD].[dbo].[DEPARTMENT](
     [CREATE_USER] [nvarchar](50) NULL,
     [CREATE_DATE] [date] NULL,
     [MODIFY_USER] [nvarchar](50) NULL,
-    [MODIFY_DATE] [date] NULL
+    [MODIFY_DATE] [date] NULL,
+    [BRANCH_ID] [nvarchar](50) NULL
     ) ON [PRIMARY]
 GO
 

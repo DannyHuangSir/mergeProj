@@ -74,6 +74,12 @@
 														<input type="hidden" id="notify"/>
 													</fieldset>
 													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right">通路代碼：</label>
+														<div class="col-sm-8">
+															<input type="text" id="parentDep" class="form-control" readonly="readonly"/>
+														</div>
+													</fieldset>
+													<fieldset>
 														<label class="col-sm-4 control-label no-padding-right">部門代碼：</label>
 														<div class="col-sm-8">
 															<input type="text" id="depId" class="form-control" readonly="readonly"/>
@@ -83,6 +89,12 @@
 														<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>部門名稱：</label>
 														<div class="col-sm-8">
 															<input type="text" id="depName" class="form-control" />
+														</div>
+													</fieldset>
+													<fieldset>
+														<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>原分支機構代碼：</label>
+														<div class="col-sm-8">
+															<input type="text" id="branchId" class="form-control" />
 														</div>
 													</fieldset>
 													<fieldset>
@@ -166,6 +178,12 @@
 											</div>
 										</fieldset>
 										<fieldset>
+											<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>原分支機構代碼：</label>
+											<div class="col-sm-8">
+												<input type="text" id="branchId" class="form-control" />
+											</div>
+										</fieldset>
+										<fieldset>
 											<label class="col-sm-4 control-label no-padding-right">附註說明：</label>
 											<div class="col-sm-8">
 												<input type="text" id="description" class="form-control" />
@@ -211,6 +229,7 @@
 			$('#nodeForm #parentDep').val(nodeData.target.parentDep);
 			$('#nodeForm #depId').val(nodeData.target.id);
 			$('#nodeForm #depName').val(nodeData.target.text);
+			$('#nodeForm #branchId').val(nodeData.target.branchId);
 			$('#nodeForm #description').val(nodeData.target.description);
 			$('#nodeForm #notify').val(nodeData.target.notify);
 			$('#nodeDiv').show();
@@ -270,6 +289,7 @@
 								parentDep : $('#nodeDiv #depId').val(),
 								depId : $('#addForm #depId').val(),
 								depName : $('#addForm #depName').val(),
+								branchId: $('#addForm #branchId').val(),
 								description : $('#addForm #description').val()
 							};
 							eserviceForm.post(/*[[@{/jdDeptMgnt/insertDepartment}]]*/, formData, function(response) {
@@ -324,6 +344,7 @@
 						depId :$('#nodeForm #depId').val(),
 						parentDep : $('#nodeForm #parentDep').val(),
 						depName : $('#nodeForm #depName').val(),
+						branchId: $('#nodeForm #branchId').val(),
 						description : $('#nodeForm #description').val()
 					};
 					eserviceForm.post(/*[[@{/jdDeptMgnt/updateDepartment}]]*/, formData, function(response) {

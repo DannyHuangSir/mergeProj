@@ -22,7 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -129,11 +128,15 @@ public class JdDeptMgntController extends BaseController {
             if (deptMgntService.isDeptNameExist(departmentVo)) {
                 processError("部門名稱重覆");
             } else {
-                int result = deptMgntService.addDepartment(departmentVo);
-                if (result > 0) {
-                    processSuccessMsg("新增成功");
-                } else {
-                    processError("新增失敗");
+                if (deptMgntService.isBranchIdExist(departmentVo)){
+                    processError("同通路下分支機構代碼重覆");
+                }else {
+                    int result = deptMgntService.addDepartment(departmentVo);
+                    if (result > 0) {
+                        processSuccessMsg("新增成功");
+                    } else {
+                        processError("新增失敗");
+                    }
                 }
             }
         } catch (Exception e) {
@@ -164,11 +167,19 @@ public class JdDeptMgntController extends BaseController {
             if (deptMgntService.isDeptNameExist(departmentVo)) {
                 processError("部門名稱重覆");
             } else {
-                int result = deptMgntService.updateDepartment(departmentVo);
-                if (result > 0) {
-                    processSuccessMsg("更新成功");
-                } else {
-                    processError("更新失敗");
+                DepartmentVo vo = deptMgntService.getDepId(departmentVo.getDepId());
+                int result = deptMgntService.deleteDepartment(departmentVo);
+                if (result > 0 && !deptMgntService.isBranchIdExist(departmentVo)){
+                    departmentVo.setCreateDate(vo.getCreateDate());
+                    int addDepartment = deptMgntService.addDepartment(departmentVo);
+                    if (addDepartment>0){
+                        processSuccessMsg("更新成功");
+                    } else {
+                        processError("更新失敗");
+                    }
+                }else {
+                    deptMgntService.addDepartment(vo);
+                    processError("同通路下分支機構代碼重覆");
                 }
             }
         } catch (Exception e) {

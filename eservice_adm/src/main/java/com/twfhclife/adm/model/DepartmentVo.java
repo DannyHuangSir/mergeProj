@@ -1,9 +1,9 @@
 package com.twfhclife.adm.model;
 
-import java.util.Date;
-
 import com.twfhclife.generic.model.Pagination;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Date;
 
 public class DepartmentVo extends Pagination {
 
@@ -15,6 +15,16 @@ public class DepartmentVo extends Pagination {
 	private Date createDate;
 	private String modifyUser;
 	private Date modifyDate;
+	private String branchId;
+	public void setBranchId(String branchId) {
+		this.branchId = branchId;
+	}
+
+	public String getBranchId() {
+		return branchId;
+	}
+
+
 	
 	public String getDepId() {
 		return depId;
