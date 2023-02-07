@@ -78,16 +78,6 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 	@Autowired
 	private IParameterService parameterService;
 
-	/**
-	 * 用身份證號取得用戶資料
-	 *
-	 * @param rocId 用戶證號
-	 * @return UsersVo
-	 */
-	@Override
-	public UsersVo getUserByRocId(String rocId) {
-		return userDao.getUserByRocId(rocId);
-	}
 
 	@Override
 	public String checkRegister(UsersVo user) {

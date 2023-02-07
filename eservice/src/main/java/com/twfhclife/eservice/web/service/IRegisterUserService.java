@@ -8,14 +8,6 @@ import com.twfhclife.eservice.web.model.RegisterQuestionVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 
 public interface IRegisterUserService {
-	
-	/**
-	 * 用身份證號取得用戶資料
-	 * 
-	 * @param rocId 用戶證號
-	 * @return UsersVo
-	 */
-	public UsersVo getUserByRocId(String rocId);
 
 	/**
 	 * 檢查身分證號碼是否已存在
@@ -35,10 +27,6 @@ public interface IRegisterUserService {
 	public UsersVo getUserByAccount(String account);
 	
 	public void updatePassword(String account, String newPassword) throws Exception;
-	
-	public UsersVo getUserByFbId(String fbId);
-	
-	public UsersVo getUserByCardSn(String cardSN);
 	
 	public boolean checkOldSystemUser(String rocId, String password);
 	

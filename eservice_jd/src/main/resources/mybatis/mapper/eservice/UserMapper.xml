@@ -29,44 +29,6 @@
 		u.online_flag, u.login_fail_count, u.status, u.LOGIN_TIME, u.CLAUSE_FLAG
 	</sql>
 
-	<select id="getUserByRocId" resultMap="UsersMap" parameterType="java.lang.String">
-		SELECT TOP 1
-		    <include refid="User_Column_List" />
-		FROM
-			ESERVICE_JD.DBO.USERS u
-		WHERE
-		    u.roc_id = #{rocId}
-	</select>
-	
-	<insert id="createUser" parameterType="com.twfhclife.eservice.web.model.UsersVo">
-		insert into
-		ESERVICE_JD.DBO.USERS
-		(user_id,
-		roc_id,
-		mobile,
-		email,
-		login_fail_count,
-		last_chang_password_date,
-		sms_flag,
-		mail_flag,
-		user_type,
-		create_date,
-		create_user) 
-		VALUES (
-		lower(#{vo.userId,jdbcType=VARCHAR}),
-		#{vo.rocId,jdbcType=VARCHAR},
-		ESERVICE_JD.DBO.FN_ENBASE64(#{vo.mobile,jdbcType=VARCHAR}),
-		ESERVICE_JD.DBO.FN_ENBASE64(#{vo.email,jdbcType=VARCHAR}),
-		0,
-		getdate(),
-		#{vo.smsFlag,jdbcType=VARCHAR},
-		#{vo.mailFlag,jdbcType=VARCHAR},
-		#{vo.userType,jdbcType=VARCHAR},
-		getdate(),
-		#{vo.userId,jdbcType=VARCHAR}
-		)
-	</insert>
-
 	<select id="getUserByAccount" resultMap="UsersMap" parameterType="java.lang.String">
 		SELECT 
 			<include refid="User_Column_List" />
@@ -90,12 +52,6 @@
 		where lower(user_id) = lower(#{account})
 	</update>
 
-	
-	<update id="updateUserType" parameterType="java.lang.String">
-		update ESERVICE_JD.DBO.USERS set
-		user_type = #{userType}
-		where lower(user_id) = lower(#{account})
-	</update>
 	
 	<!-- 變更基本資料 -->
 	<update id="updateCustInfo">
@@ -154,4 +110,39 @@
 		SET LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME(), STATUS = 'enable'
 		WHERE LOWER(USER_ID) = LOWER(#{userId})
 	</update>
+
+	<select id="checkUserRole" resultType="int">
+		SELECT COUNT(*) FROM ESERVICE_ADM.DBO.USER_ENTITY U
+			INNER JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON U.ID = UR.USER_ID
+			INNER JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
+			WHERE R.ROLE_NAME IN ('分行主管', 'IC人員') AND U.ID = #{userId}
+	</select>
+
+	<select id="getSerialNumsBySupervisor">
+		SELECT DISTINCT U.SERIAL_NUM FROM
+			ESERVICE_ADM.DBO.USER_ENTITY UE
+			INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UE.ID = UD.USER_ID COLLATE database_default
+			INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD1 ON UD.DEP_ID = UD1.DEP_ID COLLATE database_default
+			INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY UE1 ON UD1.USER_ID = UE1.ID COLLATE database_default
+			INNER JOIN ESERVICE_JD.DBO.USERS U ON UE1.USERNAME = U.USER_ID COLLATE database_default
+		WHERE UE.ID = #{userId}
+	</select>
+
+	<select id="getSerialNumsByIc">
+		SELECT DISTINCT U.SERIAL_NUM FROM
+		ESERVICE_ADM.DBO.USER_ENTITY UE
+		INNER JOIN ESERVICE_JD.DBO.USER_IC UD ON UE.ID = UD.USER_ID COLLATE database_default
+		INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD1 ON UD.DEP_ID = UD1.DEP_ID COLLATE database_default
+		INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY UE1 ON UD1.USER_ID = UE1.ID COLLATE database_default
+		INNER JOIN ESERVICE_JD.DBO.USERS U ON UE1.USERNAME = U.USER_ID COLLATE database_default
+		WHERE UE.ID = #{userId}
+	</select>
+
+	<select id="getSerialNumsByUser">
+		SELECT DISTINCT U.SERIAL_NUM FROM
+		ESERVICE_ADM.DBO.USER_ENTITY UE
+		INNER JOIN ESERVICE_JD.DBO.USERS U ON UE.USERNAME = U.USER_ID COLLATE database_default
+		WHERE UE.ID = #{userId}
+	</select>
+
 </mapper>

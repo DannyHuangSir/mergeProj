@@ -4,6 +4,7 @@ import com.twfhclife.eservice.web.model.UserTermVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface UsersDao {
@@ -11,8 +12,6 @@ public interface UsersDao {
 	public UsersVo getUserByRocId(@Param("rocId") String rocId);
 	
 	public UsersVo getUsers();
-	
-	public void createUser(@Param("vo") UsersVo user);
 	
 	public UsersVo getUserByAccount(@Param("account") String account);
 	
@@ -61,4 +60,12 @@ public interface UsersDao {
 	int updateLoginSuccess(@Param("userId") String userId);
 
 	int changePassword(String account);
+
+	int checkUserRole(@Param("userId") String id, @Param("roleName") String roleName);
+
+	List<String> getSerialNumsBySupervisor(@Param("userId") String id);
+
+	List<String> getSerialNumsByUser(@Param("userId") String id);
+
+	List<String> getSerialNumsByIc(@Param("userId") String id);
 }
