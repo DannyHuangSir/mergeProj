@@ -72,55 +72,9 @@
 											<th scope="col" class="item450">最新照會結果</th>
 										</tr>
 										</thead>
-										<tbody>
-										<tr onclick="window.document.location='caselisting1.html';">
-											<td class="table3">OU10001
-											</td>
-											<td class="hid1 hid2">王大明</td>
-											<td class="hid1 hid2">王小明</td>
-											<td class="hid1 hid2">家倍幸福定期壽險</td>
-											<td class="hid1 hid2 enThin">2022-01-21</td>
-											<td class="hid1 hid2">核保作業</td>
-											<td class="hid1 hid2">已照會</td>
-											<td class="hid1 hid2">核可</td>
-										</tr>
-										<tr  class="tr-odd" onclick="window.document.location='caselisting1.html';">
-											<td class="table3">UU10002
-											</td>
-											<td class="hid1 hid2">陳志強</td>
-											<td class="hid1 hid2">陳小強</td>
-											<td class="hid1 hid2">鑫富美外幣變額年金保險</td>
-											<td class="hid1 hid2 enThin">2022-01-22</td>
-											<td class="hid1 hid2">核保作業</td>
-											<td class="hid1 hid2">已照會</td>
-											<td class="hid1 hid2">不通過</td>
-										</tr>
-										<tr onclick="window.document.location='caselisting1.html';">
-											<td class="table3">UC10003
-											</td>
-											<td class="hid1 hid2">林阿呆</td>
-											<td class="hid1 hid2">李小龍</td>
-											<td class="hid1 hid2">家倍幸福定期壽險</td>
-											<td class="hid1 hid2 enThin">2022-02-01</td>
-											<td class="hid1 hid2">案件品管</td>
-											<td class="hid1 hid2">無</td>
-											<td class="hid1 hid2">無</td>
-										</tr>
-										<tr onclick="window.document.location='listing1.html';">
-											<td class="table3">UC10004
-											</td>
-											<td class="hid1 hid2">陳龍</td>
-											<td class="hid1 hid2">洪金寶</td>
-											<td class="hid1 hid2">鑫富美外幣變額年金保險</td>
-											<td class="hid1 hid2 enThin">2022-02-02</td>
-											<td class="hid1 hid2">對位登打</td>
-											<td class="hid1 hid2">無</td>
-											<td class="hid1 hid2">無</td>
-										</tr>
-
+										<tbody id="personalContent">
 										</tbody>
 									</table>
-
 								</div>
 							</div>
 						</div>
@@ -132,14 +86,32 @@
 
 </div>
 <footer th:replace="fragments/footer"></footer>
-<script>
-        var doughnutChart = document.getElementById('doughnutChart').getContext('2d'),
-            doughnutChart2 = document.getElementById('doughnutChart2').getContext('2d');
+<script th:src="@{/js/tablepand.js}"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+        var doughnutChart = document.getElementById('doughnutChart').getContext('2d');
+        var doughnutChart2 = document.getElementById('doughnutChart2').getContext('2d');
+        var myDoughnutChart2
+        var chart2Map = [
+        	{
+        		label: '無',
+        		policyNos: []
+        	},{
+        		label: '照會編輯中',
+        		policyNos: []
+        	},{
+        		label: '照會覆核中',
+        		policyNos: []
+        	},{
+        		label: '照會完成',
+        		policyNos: []
+        	}
+        ]
         var myDoughnutChart = new Chart(doughnutChart, {
 			type: 'doughnut',
 			data: {
 				datasets: [{
-					data: [2, 1,1],
+					data: [2, 1, 1],
 					backgroundColor: ['#1d7af3','#59d05d','#f3545d']
 				}],
 
@@ -165,37 +137,120 @@
 				}
 			}
 		});
-		var myDoughnutChart2 = new Chart(doughnutChart2, {
+
+
+		$(function(){
+			$("#doughnutChart2").click(function(evt){
+				 var activePoints = myDoughnutChart2.getElementsAtEvent(evt);
+				 $("#personalContent").children().each(function(){
+				 	if (chart2Map[activePoints[0]._index].policyNos.indexOf($(this).attr('policyNo')) != -1) {
+				 		$(this).show()
+				 	} else {
+				 		$(this).hide()
+				 	}
+				 })
+
+			})
+			$.ajax({
+				type : 'POST',
+				dataType : "JSON",
+				contentType : 'application/json',
+				url : /*[[@{/personalCaseList}]]*/,
+				success : function(response) {
+					console.log(response);
+					if(response.result == "SUCCESS"){
+						html = ''
+						response.resultData.forEach(function(item, index){
+								html += '<tr policyNo=' + item.policyNo + '>' +
+										'<td class="table3">' + item.policyNo  +'</td>' +
+										'<td class="hid1 hid2">'+ item.appName +'</td>' +
+										'<td class="hid1 hid2">' + item.insName +'</td>' +
+										'<td class="hid1 hid2">' + item.policyType +'</td>' +
+										'<td class="hid1 hid2 enThin">' + item.tBSubmitDate +'</td>' +
+										'<td class="hid1 hid2">' + item.flowStatus +'</td>' +
+										'<td class="hid1 hid2">' + noteStatusStr(item.policyNo, item.noteStatus) +'</td>' +
+										'<td class="hid1 hid2">' + noteVerifyResultStr(item.noteVerifyResult) +'</td>' +
+									'</tr>'
+							});
+						$("#personalContent").html(html)
+						initChart()
+					}
+				},
+				error : function() {
+					openAlert('error!')
+				}
+	    	});
+		})
+
+		function noteStatusStr(policyNo, noteStatus) {
+			if (noteStatus == null) {
+				chart2Map[0].policyNos.push(policyNo)
+				return '無'
+			}
+			if (noteStatus == '0') {
+				chart2Map[1].policyNos.push(policyNo)
+				return '照會編輯中'
+			}
+			if (noteStatus == '1') {
+				chart2Map[2].policyNos.push(policyNo)
+				return '照會覆核中'
+			}
+			if (noteStatus == '9') {
+				chart2Map[3].policyNos.push(policyNo)
+				return '照會完成'
+			}
+		}
+
+		function noteVerifyResultStr(status) {
+			if (status == null) {
+				return '無'
+			}
+			if (status == '0') {
+				return '未覆核'
+			}
+			if (status == 'V') {
+				return '核可'
+			}
+			if (status == 'R') {
+				return '退件'
+			}
+		}
+
+		function initChart() {
+			labels = []
+			data = []
+			chart2Map.forEach(function(item,index){
+				labels.push(item.label + ' ' + item.policyNos.length + '件')
+				data.push(item.policyNos.length)
+			})
+
+			myDoughnutChart2 = new Chart(doughnutChart2, {
 			type: 'doughnut',
 			data: {
 				datasets: [{
-					data: [20, 40,10],
+					data: data,
 					backgroundColor: ['#59d05d','#fdaf4b','#f3545d','#1d7af3']
 				}],
-
-				labels: [
-				'等待照會 1件',
-				'已照會-核可 2件',
-				'已照會-不通過 3件',
-
-				]
-			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				legend : {
-					position: 'left'
+					labels: labels
 				},
-				layout: {
-					padding: {
-						left: 20,
-						right: 0,
-						top: 20,
-						bottom: 10
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					legend : {
+						position: 'left'
+					},
+					layout: {
+						padding: {
+							left: 20,
+							right: 0,
+							top: 20,
+							bottom: 10
+						}
 					}
 				}
-			}
-		});
-	</script>
+			});
+		}
+/*]]>*/
+</script>
 </body>
 </html>

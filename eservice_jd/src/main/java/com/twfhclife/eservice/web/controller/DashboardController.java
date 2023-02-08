@@ -1,10 +1,16 @@
 package com.twfhclife.eservice.web.controller;
 
+import com.google.common.collect.Maps;
 import com.twfhclife.eservice.controller.BaseController;
+import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.service.ICaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 @Controller
 public class DashboardController extends BaseController {
@@ -13,7 +19,16 @@ public class DashboardController extends BaseController {
 	private ICaseService caseService;
 	@GetMapping(value = { "/", "index", "/dashboard" })
 	public String dashboard() {
-		addAttribute("caseList", caseService.getCaseList(getLoginUser()));
 		return "frontstage/dashboard";
+	}
+
+	@PostMapping(value = { "/personalCaseList" })
+	@ResponseBody
+	public ResponseObj personalCaseList() {
+		ResponseObj responseObj = new ResponseObj();
+		responseObj.setResult(ResponseObj.SUCCESS);
+		Map<String, Object> result = Maps.newHashMap();
+		responseObj.setResultData(caseService.getCaseList(getLoginUser()));
+		return responseObj;
 	}
 }

@@ -23,6 +23,7 @@ public class CaseServiceImpl implements ICaseService {
     @Override
     public List<CaseVo> getCaseList(KeycloakUser user) {
         int isSupervisor = usersDao.checkUserRole(user.getId(), "分行主管");
+        List<CaseVo> result = Lists.newArrayList();
         List<String> serialNums = Lists.newArrayList();
         if (isSupervisor > 0) {
             serialNums.addAll(usersDao.getSerialNumsBySupervisor(user.getId()));
@@ -35,9 +36,13 @@ public class CaseServiceImpl implements ICaseService {
             }
         }
         if (!CollectionUtils.isEmpty(serialNums)) {
-            return caseDao.getCaseList(serialNums);
+            result.addAll(caseDao.getCaseListBySerialNum(serialNums));
+            List<String> policyNos = usersDao.getPolicyNoBySerialNum(serialNums);
+            if (!CollectionUtils.isEmpty(policyNos)) {
+                result.addAll(caseDao.getCaseListByPolicyNo(policyNos));
+            }
         }
 
-        return Lists.newArrayList();
+        return result;
     }
 }

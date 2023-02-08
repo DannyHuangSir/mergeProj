@@ -6,5 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface JdzqDao {
-    List<CaseVo> getCaseList(@Param("serialNums") List<String> serialNums);
+    List<CaseVo> getCaseListBySerialNum(@Param("serialNums") List<String> serialNums);
+
+    List<CaseVo> getCaseListByPolicyNo(@Param("policyNos") List<String> serialNums);
 }

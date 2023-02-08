@@ -68,4 +68,5 @@ public interface UsersDao {
 	List<String> getSerialNumsByUser(@Param("userId") String id);
 
 	List<String> getSerialNumsByIc(@Param("userId") String id);
+	List<String> getPolicyNoBySerialNum(@Param("serialNums") List<String> serialNums);
 }

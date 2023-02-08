@@ -118,7 +118,7 @@
 			WHERE R.ROLE_NAME IN ('分行主管', 'IC人員') AND U.ID = #{userId}
 	</select>
 
-	<select id="getSerialNumsBySupervisor">
+	<select id="getSerialNumsBySupervisor" resultType="string">
 		SELECT DISTINCT U.SERIAL_NUM FROM
 			ESERVICE_ADM.DBO.USER_ENTITY UE
 			INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UE.ID = UD.USER_ID COLLATE database_default
@@ -128,7 +128,7 @@
 		WHERE UE.ID = #{userId}
 	</select>
 
-	<select id="getSerialNumsByIc">
+	<select id="getSerialNumsByIc" resultType="string">
 		SELECT DISTINCT U.SERIAL_NUM FROM
 		ESERVICE_ADM.DBO.USER_ENTITY UE
 		INNER JOIN ESERVICE_JD.DBO.USER_IC UD ON UE.ID = UD.USER_ID COLLATE database_default
@@ -138,11 +138,18 @@
 		WHERE UE.ID = #{userId}
 	</select>
 
-	<select id="getSerialNumsByUser">
+	<select id="getSerialNumsByUser" resultType="string">
 		SELECT DISTINCT U.SERIAL_NUM FROM
 		ESERVICE_ADM.DBO.USER_ENTITY UE
 		INNER JOIN ESERVICE_JD.DBO.USERS U ON UE.USERNAME = U.USER_ID COLLATE database_default
 		WHERE UE.ID = #{userId}
+	</select>
+
+	<select id="getPolicyNoBySerialNum" resultType="string">
+		SELECT DISTINCT POLICY_NO FROM USER_VIP WHERE SERIAL_NUM IN
+		<foreach collection="serialNums" item="num" open="(" close=")" separator=",">
+			#{num}
+		</foreach>
 	</select>
 
 </mapper>

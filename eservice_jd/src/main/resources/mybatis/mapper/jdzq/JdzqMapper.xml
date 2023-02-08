@@ -3,28 +3,31 @@
 <mapper namespace="com.twfhclife.eservice.jdzq.dao.JdzqDao">
 
     <resultMap id="CaseMap" type="com.twfhclife.eservice.web.model.CaseVo">
-        <result column="user_id" property="userId" />
-        <result column="roc_id" property="rocId" />
-        <result column="mobile" property="mobile" />
-        <result column="email" property="email" />
-        <result column="login_fail_count" property="loginFailCount" />
-        <result column="last_chang_password_date" property="lastChangPasswordDate" />
-        <result column="sms_flag" property="smsFlag" />
-        <result column="mail_flag" property="mailFlag" />
-        <result column="fb_id" property="fbId" />
-        <result column="moica_id" property="moicaId" />
-        <result column="user_type" property="userType" />
-        <result column="create_date" property="createDate" />
-        <result column="create_user" property="createUser" />
-        <result column="username" property="userName" />
-        <result column="encrypted_pwd" property="password" />
-        <result column="online_flag" property="onlineFlag"/>
-        <result column="status" property="status"/>
-        <result column="CLAUSE_FLAG" property="clauseFlag"/>
-        <result column="LOGIN_TIME" property="loginTime"/>
+        <result column="PolicyNo" property="policyNo" />
+        <result column="PolicyType" property="policyType" />
+        <result column="AppName" property="appName" />
+        <result column="InsName" property="insName" />
+        <result column="TBSubmitDate" property="tBSubmitDate" />
+        <result column="FlowStatus" property="flowStatus" />
+        <result column="NoteStatus" property="noteStatus" />
+        <result column="NoteVerifyResult" property="noteVerifyResult" />
     </resultMap>
 
-    <select id="getCaseList" resultMap="CaseMap">
+    <select id="getCaseListBySerialNum" resultMap="CaseMap">
+        SELECT A.PolicyNo, A.PolicyType, A.AppName, A.InsName, A.TBSubmitDate, A.FlowStatus, B.NoteStatus, B.NoteVerifyResult
+        FROM MainPolicy A LEFT JOIN PolicyNote B ON A.PolicyNo = B.PolicyNo
+        WHERE A.PSalesCode IN
+        <foreach collection="serialNums" item="num" open="(" close=")" separator=",">
+            #{num}
+        </foreach>
+    </select>
 
+    <select id="getCaseListByPolicyNo" resultMap="CaseMap">
+        SELECT A.PolicyNo, A.PolicyType, A.AppName, A.InsName, A.TBSubmitDate, A.FlowStatus, B.NoteStatus, B.NoteVerifyResult
+        FROM MainPolicy A LEFT JOIN PolicyNote B ON A.PolicyNo = B.PolicyNo
+        WHERE A.PolicyNo IN
+            <foreach collection="policyNos" item="no" open="(" close=")" separator=",">
+                #{no}
+            </foreach>
     </select>
 </mapper>
