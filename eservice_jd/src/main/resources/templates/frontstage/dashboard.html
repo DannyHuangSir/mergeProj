@@ -107,6 +107,7 @@
         		policyNos: []
         	}
         ]
+        var policyTypeMap = {}
         var myDoughnutChart = new Chart(doughnutChart, {
 			type: 'doughnut',
 			data: {
@@ -138,8 +139,20 @@
 			}
 		});
 
-
 		$(function(){
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/getPolicyTyps}]]*/,
+				success : function(response) {
+					if(response.result == "SUCCESS"){
+						response.resultData.forEach(function(item, index){
+							policyTypeMap[item.KEY] = item.VALUE
+						})
+					}
+				}
+			})
+
 			$("#doughnutChart2").click(function(evt){
 				 var activePoints = myDoughnutChart2.getElementsAtEvent(evt);
 				 $("#personalContent").children().each(function(){
@@ -165,9 +178,9 @@
 										'<td class="table3">' + item.policyNo  +'</td>' +
 										'<td class="hid1 hid2">'+ item.appName +'</td>' +
 										'<td class="hid1 hid2">' + item.insName +'</td>' +
-										'<td class="hid1 hid2">' + item.policyType +'</td>' +
+										'<td class="hid1 hid2">' + policyTypeMap[item.policyType] +'</td>' +
 										'<td class="hid1 hid2 enThin">' + item.tBSubmitDate +'</td>' +
-										'<td class="hid1 hid2">' + item.flowStatus +'</td>' +
+										'<td class="hid1 hid2">' + item.bPMCurrentTak +'</td>' +
 										'<td class="hid1 hid2">' + noteStatusStr(item.policyNo, item.noteStatus) +'</td>' +
 										'<td class="hid1 hid2">' + noteVerifyResultStr(item.noteVerifyResult) +'</td>' +
 									'</tr>'

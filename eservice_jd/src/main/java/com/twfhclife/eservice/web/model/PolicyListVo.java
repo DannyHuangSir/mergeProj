@@ -62,6 +62,9 @@ public class PolicyListVo extends PolicyVo {
 	/** 20211220 by 203990 保單是否擁有電子保單 */
 	private String pmdaEpoMk;
 
+	/** 貸款資訊 */
+	private PolicyExtraVo policyExtraVo;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd hh:mm:ss")
 	private Date beginDate;
 
@@ -243,6 +246,10 @@ public class PolicyListVo extends PolicyVo {
 
 	public void setLipmFlexRcpMk(String lipmFlexRcpMk) {
 		this.lipmFlexRcpMk = lipmFlexRcpMk;
+	}
+
+	public void setPolicyExtraVo(PolicyExtraVo policyExtraVo) {
+		this.policyExtraVo = policyExtraVo;
 	}
 
 	@Override

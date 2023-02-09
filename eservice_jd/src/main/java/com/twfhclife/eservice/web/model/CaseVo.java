@@ -9,7 +9,7 @@ public class CaseVo  implements Serializable {
     private String appName;
     private String insName;
     private String tBSubmitDate;
-    private String flowStatus;
+    private String bPMCurrentTak;
     private String noteStatus;
     private String noteVerifyResult;
 
@@ -53,12 +53,12 @@ public class CaseVo  implements Serializable {
         this.tBSubmitDate = tBSubmitDate;
     }
 
-    public String getFlowStatus() {
-        return flowStatus;
+    public String getbPMCurrentTak() {
+        return bPMCurrentTak;
     }
 
-    public void setFlowStatus(String flowStatus) {
-        this.flowStatus = flowStatus;
+    public void setbPMCurrentTak(String bPMCurrentTak) {
+        this.bPMCurrentTak = bPMCurrentTak;
     }
 
     public String getNoteStatus() {

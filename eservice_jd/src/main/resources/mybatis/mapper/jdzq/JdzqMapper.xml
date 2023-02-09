@@ -8,26 +8,30 @@
         <result column="AppName" property="appName" />
         <result column="InsName" property="insName" />
         <result column="TBSubmitDate" property="tBSubmitDate" />
-        <result column="FlowStatus" property="flowStatus" />
+        <result column="BPMCurrentTak" property="bPMCurrentTak" />
         <result column="NoteStatus" property="noteStatus" />
         <result column="NoteVerifyResult" property="noteVerifyResult" />
     </resultMap>
 
     <select id="getCaseListBySerialNum" resultMap="CaseMap">
-        SELECT A.PolicyNo, A.PolicyType, A.AppName, A.InsName, A.TBSubmitDate, A.FlowStatus, B.NoteStatus, B.NoteVerifyResult
-        FROM MainPolicy A LEFT JOIN PolicyNote B ON A.PolicyNo = B.PolicyNo
+        SELECT A.PolicyNo, A.PolicyType, A.AppName, A.InsName, A.TBSubmitDate, A.BPMCurrentTak, B.NoteStatus, B.NoteVerifyResult
+        FROM MainPolicy A
+        LEFT JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY, iscancel, NoteStatus,NoteVerifyResult FROM PolicyNote GROUP BY iscancel,NoteStatus,NoteVerifyResult, MAIN_KEY) B ON B.MAIN_KEY = A.MAIN_KEY
         WHERE A.PSalesCode IN
         <foreach collection="serialNums" item="num" open="(" close=")" separator=",">
             #{num}
         </foreach>
+        AND A.itemserial = 1 AND B.iscancel = 'N'
     </select>
 
     <select id="getCaseListByPolicyNo" resultMap="CaseMap">
-        SELECT A.PolicyNo, A.PolicyType, A.AppName, A.InsName, A.TBSubmitDate, A.FlowStatus, B.NoteStatus, B.NoteVerifyResult
-        FROM MainPolicy A LEFT JOIN PolicyNote B ON A.PolicyNo = B.PolicyNo
+        SELECT A.PolicyNo, A.PolicyType, A.AppName, A.InsName, A.TBSubmitDate, A.BPMCurrentTak, B.NoteStatus, B.NoteVerifyResult
+        FROM MainPolicy A
+        LEFT JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY, iscancel, NoteStatus,NoteVerifyResult FROM PolicyNote GROUP BY iscancel,NoteStatus,NoteVerifyResult, MAIN_KEY) B ON B.MAIN_KEY = A.MAIN_KEY
         WHERE A.PolicyNo IN
             <foreach collection="policyNos" item="no" open="(" close=")" separator=",">
                 #{no}
             </foreach>
+        AND A.itemserial = 1 AND B.iscancel = 'N'
     </select>
 </mapper>

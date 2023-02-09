@@ -1,9 +1,9 @@
-package com.twfhclife.eservice.web.dao;
+package com.twfhclife.eservice.web.service;
 
 import java.util.List;
 import java.util.Map;
 
-public interface OptionDao {
+public interface IOptionService {
 
 
 	List<Map<String, Object>> getPolicyTyps();

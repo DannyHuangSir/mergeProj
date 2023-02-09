@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.shouxian.dao.LilipiDao">
+
+	<resultMap id="LilipiMap" type="com.twfhclife.eservice.web.model.LilipiVo" >
+		<result column="LIPI_INSU_NO" property="lipiInsuNo"/>
+		<result column="LIPI_INSU_TYPE" property="lipiInsuType"/>
+		<result column="LIPI_INSU_GRP_NO" property="lipiInsuGrpNo"/>
+		<result column="LIPI_INSU_SEQ_NO" property="lipiInsuSeqNo"/>
+		<result column="LIPI_INSU_BEG_DATE" property="lipiInsuBegDate"/>
+		<result column="LIPI_INSU_END_DATE" property="lipiInsuEndDate"/>
+		<result column="LIPI_GP_NO" property="lipiGpNo"/>
+		<result column="LIPI_ID" property="lipiId"/>
+		<result column="LIPI_NAME" property="lipiName"/>
+		<result column="LIPI_BIRTH" property="lipiBirth"/>
+		<result column="LIPI_SEX" property="lipiSex"/>
+		<result column="LIPI_AGE" property="lipiAge"/>
+		<result column="LIPI_PREM_YEAR" property="lipiPremYear"/>
+		<result column="LIPI_METH_ANNU_PAY" property="lipiMethAnnuPay"/>
+		<result column="LIPI_LI_RATE" property="lipiLiRate"/>
+		<result column="LIPI_MAIN_AMT" property="lipiMainAmt"/>
+		<result column="LIPI_TABL_PREM" property="lipiTablPrem"/>
+		<result column="LIPI_UN_HEAL_PREM" property="lipiUnHealPrem"/>
+		<result column="LIPI_DANG_PREM" property="lipiDangPrem"/>
+		<result column="LIPI_ADD_MK" property="lipiAddMk"/>
+		<result column="LIPI_LO_MK" property="lipiLoMk"/>
+		<result column="LIPI_ST" property="lipiSt"/>
+		<result column="LIPI_ST_DATE" property="lipiStDate"/>
+		<result column="LIPI_CANCER_QUAN" property="lipiCancerQuan"/>
+		<result column="LIPI_HEAL_CODE" property="lipiHealCode"/>
+		<result column="LIPI_ADDR" property="lipiAddr"/>
+		<!-- 沒有隱碼的欄位 -->
+		<result column="NO_HIDDEN_LIPI_ID" property="noHiddenLipiId"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		LIPI_INSU_NO
+		,LIPI_INSU_TYPE
+		,LIPI_INSU_GRP_NO
+		,LIPI_INSU_SEQ_NO
+		,LIPI_INSU_BEG_DATE
+		,LIPI_INSU_END_DATE
+		,LIPI_GP_NO
+		,LIPI_ID  AS NO_HIDDEN_LIPI_ID
+		,ESERVICE.DBO.FN_GETHIDDENCODE(1, LIPI_ID, '*', 4, 5) AS LIPI_ID
+		,ESERVICE.DBO.FN_DEBASE64(LIPI_NAME) LIPI_NAME
+		,LIPI_BIRTH
+		,LIPI_SEX
+		,LIPI_AGE
+		,LIPI_PREM_YEAR
+		,LIPI_METH_ANNU_PAY
+		,LIPI_LI_RATE
+		,LIPI_MAIN_AMT
+		,LIPI_TABL_PREM
+		,LIPI_UN_HEAL_PREM
+		,LIPI_DANG_PREM
+		,LIPI_ADD_MK
+		,LIPI_LO_MK
+		,LIPI_ST
+		,LIPI_ST_DATE
+		,LIPI_CANCER_QUAN
+		,LIPI_HEAL_CODE
+		,ESERVICE.DBO.FN_DEBASE64(LIPI_ADDR) LIPI_ADDR
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="lilipiVo.lipiInsuNo != null and lilipiVo.lipiInsuNo != ''"> AND LIPI_INSU_NO = #{lilipiVo.lipiInsuNo} </if>
+			<if test="lilipiVo.lipiInsuType != null and lilipiVo.lipiInsuType != ''"> AND LIPI_INSU_TYPE = #{lilipiVo.lipiInsuType} </if>
+			<if test="lilipiVo.lipiInsuGrpNo != null"> AND LIPI_INSU_GRP_NO = #{lilipiVo.lipiInsuGrpNo} </if>
+			<if test="lilipiVo.lipiInsuSeqNo != null and lilipiVo.lipiInsuSeqNo != ''"> AND LIPI_INSU_SEQ_NO = #{lilipiVo.lipiInsuSeqNo} </if>
+			<if test="lilipiVo.lipiInsuBegDate != null"> AND LIPI_INSU_BEG_DATE = #{lilipiVo.lipiInsuBegDate} </if>
+			<if test="lilipiVo.lipiInsuEndDate != null"> AND LIPI_INSU_END_DATE = #{lilipiVo.lipiInsuEndDate} </if>
+			<if test="lilipiVo.lipiGpNo != null and lilipiVo.lipiGpNo != ''"> AND LIPI_GP_NO = #{lilipiVo.lipiGpNo} </if>
+			<if test="lilipiVo.lipiId != null and lilipiVo.lipiId != ''"> AND LIPI_ID = #{lilipiVo.lipiId} </if>
+			<if test="lilipiVo.lipiName != null and lilipiVo.lipiName != ''"> AND LIPI_NAME = #{lilipiVo.lipiName} </if>
+			<if test="lilipiVo.lipiBirth != null"> AND LIPI_BIRTH = #{lilipiVo.lipiBirth} </if>
+			<if test="lilipiVo.lipiSex != null and lilipiVo.lipiSex != ''"> AND LIPI_SEX = #{lilipiVo.lipiSex} </if>
+			<if test="lilipiVo.lipiAge != null and lilipiVo.lipiAge != ''"> AND LIPI_AGE = #{lilipiVo.lipiAge} </if>
+			<if test="lilipiVo.lipiPremYear != null"> AND LIPI_PREM_YEAR = #{lilipiVo.lipiPremYear} </if>
+			<if test="lilipiVo.lipiMethAnnuPay != null and lilipiVo.lipiMethAnnuPay != ''"> AND LIPI_METH_ANNU_PAY = #{lilipiVo.lipiMethAnnuPay} </if>
+			<if test="lilipiVo.lipiLiRate != null"> AND LIPI_LI_RATE = #{lilipiVo.lipiLiRate} </if>
+			<if test="lilipiVo.lipiMainAmt != null"> AND LIPI_MAIN_AMT = #{lilipiVo.lipiMainAmt} </if>
+			<if test="lilipiVo.lipiTablPrem != null"> AND LIPI_TABL_PREM = #{lilipiVo.lipiTablPrem} </if>
+			<if test="lilipiVo.lipiUnHealPrem != null"> AND LIPI_UN_HEAL_PREM = #{lilipiVo.lipiUnHealPrem} </if>
+			<if test="lilipiVo.lipiDangPrem != null"> AND LIPI_DANG_PREM = #{lilipiVo.lipiDangPrem} </if>
+			<if test="lilipiVo.lipiAddMk != null and lilipiVo.lipiAddMk != ''"> AND LIPI_ADD_MK = #{lilipiVo.lipiAddMk} </if>
+			<if test="lilipiVo.lipiLoMk != null and lilipiVo.lipiLoMk != ''"> AND LIPI_LO_MK = #{lilipiVo.lipiLoMk} </if>
+			<if test="lilipiVo.lipiSt != null and lilipiVo.lipiSt != ''"> AND LIPI_ST = #{lilipiVo.lipiSt} </if>
+			<if test="lilipiVo.lipiStDate != null"> AND LIPI_ST_DATE = #{lilipiVo.lipiStDate} </if>
+			<if test="lilipiVo.lipiCancerQuan != null"> AND LIPI_CANCER_QUAN = #{lilipiVo.lipiCancerQuan} </if>
+			<if test="lilipiVo.lipiHealCode != null and lilipiVo.lipiHealCode != ''"> AND LIPI_HEAL_CODE = #{lilipiVo.lipiHealCode} </if>
+			<if test="lilipiVo.lipiAddr != null and lilipiVo.lipiAddr != ''"> AND LIPI_ADDR = #{lilipiVo.lipiAddr} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND LIPI_INSU_NO = #{lilipiVo.lipiInsuNo}
+		</where>
+	</sql>
+	
+	<!-- 取得被保人查詢結果 -->
+	<select id="getLilipi" resultMap="LilipiMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.LILIPI
+		<include refid="whereClause" />
+	</select>
+	
+	<!-- 被保人-根據保單號碼查詢 -->
+	<select id="findByPolicyNo" resultMap="LilipiMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.LILIPI
+		WHERE
+			LIPI_INSU_NO = #{policyNo}
+	</select>
+
+<!--取消，使用模板
+<select id="findByUploadNumber" resultType="string" >
+		select PARAMETER_VALUE   FROM
+		ESERVICE_ADM.dbo.PARAMETER
+		where PARAMETER_CODE=#{elifeUpload012}
+		And  SYSTEM_ID=#{systemId}
+	</select>-->
+
+</mapper>

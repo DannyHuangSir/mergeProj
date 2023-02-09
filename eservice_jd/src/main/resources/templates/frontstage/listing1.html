@@ -30,14 +30,10 @@
 							<a th:href="'javascript:postPolicyListType(\'' + @{/listing1} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'">
 								<div class="col-xs-6 folder active">保單資料</div>
 							</a>
-							<th:block th:if="${param.policyListType} != null and ${param.policyListType[0]} == '1'">
-							<th:block th:if="${session.hideProdCode2} != null and ${#strings.indexOf(session.hideProdCode2, #strings.substring(policyNo,0,2))} == -1">
 							<a th:href="'javascript:postPolicyListType(\'' + @{/listing2} + '\', \'' + ${policyNo} + '\', \'' + ${policyListType} + '\')'">
 								<div class="col-xs-6 folder ">投資損益及投報率
 								</div>
 							</a>
-							</th:block>
-							</th:block>
 							<div class="tb3 mobile-toggle marginTop40" data-toggle="true">
 								<i class="fas fa-chevron-up hid2 mobile"></i>
 								<i class="fas fa-chevron-up hid1"></i> 保單資料
@@ -273,69 +269,6 @@
 									</tbody>
 								</table>
 							</div>
-							<!-- <div id="payerDiv1" class="tb3 top0 mobile-toggle" data-toggle="true" th:classappend="${payerVo == null} ? 'hide'">
-								<i class="fas fa-chevron-up hid2 mobile"></i>
-								<i class="fas fa-chevron-up hid1"></i> 付款人
-							</div>
-							<div id="payerDiv2" class="mobile-toggle-panel toggle-hide" th:classappend="${payerVo == null} ? 'hide'">
-								<table class="tablesaw tablesaw-stack wht table4row" data-tablesaw-mode="stack">
-									<thead>
-										<tr class="table2 noEvent">
-											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">付款人</th>
-											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">性別</th>
-											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">身分證字號</th>
-										</tr>
-									</thead>
-									<tbody>
-										<th:block th:if="${payerVo != null}">
-										<tr class="h65 noEvent">
-											<td class="text-left">
-												<div th:switch="${payerVo.payerNameBase64} != null and ${payerVo.payerNameBase64} != ''"> 
-													<div th:case="${true}">
-														<img th:width="${#strings.length(payerVo.payerName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${payerVo.payerNameBase64}|" />
-													</div>
-													<div th:case="${false}">
-														<th:block th:text="${payerVo.payerName != null} ? ${payerVo.payerName}"/>
-													</div>
-												</div>
-											</td>
-											<td>
-												<th:block th:text="${payerVo.sex != null and session.SYSTEM_PARAMETER['SEX'] != null} 
-													? ${session.SYSTEM_PARAMETER['SEX'][payerVo.sex].parameterValue}"/>
-											</td>
-											<td>
-												<th:block th:text="${payerVo.rocId != null}
-													? ${payerVo.rocId}"/>
-											</td>
-										</tr>
-										</th:block>
-									</tbody>
-								</table>
-								<table class="tablesaw tablesaw-stack wht table4row" data-tablesaw-mode="stack">
-									<thead>
-										<tr class="table2">
-											<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">付款金融機構</th>
-											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1" style="">銀行帳號/信用卡號</th>
-											<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" style="">有效期限</th>
-										</tr>
-									</thead>
-									<tbody>
-										<th:block th:if="${payerVo} != null">
-										<tr class="h65 noEvent">
-											<td class="text-left">
-												<th:block th:text="${payerVo.bankName} != null ? ${payerVo.bankName}"/>
-											</td>
-											<td>
-												<th:block th:text="${payerVo.acctNumber} != null ? ${payerVo.acctNumber}"/>
-											</td>
-											<td>
-												<th:block th:text="${payerVo.expireDate} != null ? ${payerVo.expireDate}"/>
-											</td>
-										</tr>
-										</th:block>
-									</tbody>
-								</table>
-							</div> -->
 							<!-- 受益人區塊 start -->
 							<div class="tb3 top0 mobile-toggle" data-toggle="true">
 								<i class="fas fa-chevron-up hid2 mobile"></i>
@@ -401,16 +334,6 @@
 									</tbody>
 								</table>
 							</div>
-							<!-- 僅被保人可使用 -->
-							<th:block th:if="${session.USER_DETAIL.identity.lilipi}">
-								<div class="wht h80 hid1 applyHide" id="button_update_base_info">
-								<div class="col-md-4 col-md-offset-4">
-									<a href="changeInfo1">
-										<button id="va2" class="btn-login col-md-4 col-md-offset-4">變更基本資料  <i class="fas fa-chevron-right"></i></button>
-									</a>
-								</div>
-							</div>
-							</th:block>
 						</div>
 						<div th:replace="fragments/listingReferOnly"></div>
 					</div>

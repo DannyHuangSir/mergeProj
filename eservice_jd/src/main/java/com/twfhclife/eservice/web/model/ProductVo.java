@@ -1,62 +1,85 @@
 package com.twfhclife.eservice.web.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class BenefitVo implements Serializable {
-
+public class ProductVo implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	/**  */
-	private String benefitCode;
+	private String productId;
 	/**  */
 	private String productCode;
 	/**  */
-	private String benefitName;
+	private String productType;
+	/** 1:主約, 2:附約 */
+	private String productTypeName;
 	/**  */
-	private String benefitDetail;
-
+	private String productName;
+	/**  */
+	private String prodCate;
+	
 	private String desiVersion;
-
-	@JsonFormat(pattern="yyyy-MM-dd")
+	
+	/**
+	 * 指定年月的開賣日
+	 */
 	private Date desiSaleDate;
-
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	
+	/**
+	 * 指定年月的結束販售日
+	 */
 	private Date desiChanVarDate;
-
-	public String getBenefitCode() {
-		return this.benefitCode;
+	
+	public String getProductId() {
+		return this.productId;
 	}
-
-	public void setBenefitCode(String benefitCode) {
-		this.benefitCode = benefitCode;
+	
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
-
+	
 	public String getProductCode() {
 		return this.productCode;
 	}
-
+	
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
 	}
-
-	public String getBenefitName() {
-		return this.benefitName;
+	
+	public String getProductType() {
+		return this.productType;
+	}
+	
+	public void setProductType(String productType) {
+		this.productType = productType;
+	}
+	
+	public String getProductTypeName() {
+		return productTypeName;
 	}
 
-	public void setBenefitName(String benefitName) {
-		this.benefitName = benefitName;
+	public void setProductTypeName(String productTypeName) {
+		this.productTypeName = productTypeName;
 	}
 
-	public String getBenefitDetail() {
-		return this.benefitDetail;
+	public String getProductName() {
+		return this.productName;
 	}
-
-	public void setBenefitDetail(String benefitDetail) {
-		this.benefitDetail = benefitDetail;
+	
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	
+	public String getProdCate() {
+		return this.prodCate;
+	}
+	
+	public void setProdCate(String prodCate) {
+		this.prodCate = prodCate;
 	}
 
 	public String getDesiVersion() {
@@ -88,3 +111,4 @@ public class BenefitVo implements Serializable {
 		return ToStringBuilder.reflectionToString(this);
 	}
 }
+
