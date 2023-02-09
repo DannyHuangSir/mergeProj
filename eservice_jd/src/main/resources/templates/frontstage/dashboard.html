@@ -92,11 +92,9 @@
         var doughnutChart = document.getElementById('doughnutChart').getContext('2d');
         var doughnutChart2 = document.getElementById('doughnutChart2').getContext('2d');
         var myDoughnutChart2
+        var myDoughnutChart
         var chart2Map = [
         	{
-        		label: '無',
-        		policyNos: []
-        	},{
         		label: '照會編輯中',
         		policyNos: []
         	},{
@@ -108,36 +106,7 @@
         	}
         ]
         var policyTypeMap = {}
-        var myDoughnutChart = new Chart(doughnutChart, {
-			type: 'doughnut',
-			data: {
-				datasets: [{
-					data: [2, 1, 1],
-					backgroundColor: ['#1d7af3','#59d05d','#f3545d']
-				}],
-
-				labels: [
-				'對位登打 2件',
-				'案件品管 1件',
-				'核保作業 2件',
-				]
-			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				legend : {
-					position: 'left'
-				},
-				layout: {
-					padding: {
-						left: 20,
-						right: 0,
-						top: 20,
-						bottom: 10
-					}
-				}
-			}
-		});
+        var levelStateMap = []
 
 		$(function(){
 			$.ajax({
@@ -153,7 +122,35 @@
 				}
 			})
 
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/getLevelStates}]]*/,
+				success : function(response) {
+					if(response.result == "SUCCESS"){
+						response.resultData.forEach(function(item, index){
+							levelStateMap.push({
+								label: item.VALUE,
+								value: item.KEY,
+								policyNos: []
+							})
+						})
+					}
+				}
+			})
+
 			$("#doughnutChart2").click(function(evt){
+				 var activePoints = myDoughnutChart.getElementsAtEvent(evt);
+				 $("#personalContent").children().each(function(){
+				 	if (levelStateMap[activePoints[0]._index].policyNos.indexOf($(this).attr('policyNo')) != -1) {
+				 		$(this).show()
+				 	} else {
+				 		$(this).hide()
+				 	}
+				 })
+			})
+
+			$("#doughnutChart").click(function(evt){
 				 var activePoints = myDoughnutChart2.getElementsAtEvent(evt);
 				 $("#personalContent").children().each(function(){
 				 	if (chart2Map[activePoints[0]._index].policyNos.indexOf($(this).attr('policyNo')) != -1) {
@@ -162,8 +159,8 @@
 				 		$(this).hide()
 				 	}
 				 })
-
 			})
+
 			$.ajax({
 				type : 'POST',
 				dataType : "JSON",
@@ -180,7 +177,7 @@
 										'<td class="hid1 hid2">' + item.insName +'</td>' +
 										'<td class="hid1 hid2">' + policyTypeMap[item.policyType] +'</td>' +
 										'<td class="hid1 hid2 enThin">' + item.tBSubmitDate +'</td>' +
-										'<td class="hid1 hid2">' + item.bPMCurrentTak +'</td>' +
+										'<td class="hid1 hid2">' + levelStateStr(item.policyNo, item.bPMCurrentTak) +'</td>' +
 										'<td class="hid1 hid2">' + noteStatusStr(item.policyNo, item.noteStatus) +'</td>' +
 										'<td class="hid1 hid2">' + noteVerifyResultStr(item.noteVerifyResult) +'</td>' +
 									'</tr>'
@@ -196,28 +193,21 @@
 		})
 
 		function noteStatusStr(policyNo, noteStatus) {
-			if (noteStatus == null) {
-				chart2Map[0].policyNos.push(policyNo)
-				return '無'
-			}
 			if (noteStatus == '0') {
-				chart2Map[1].policyNos.push(policyNo)
+				chart2Map[0].policyNos.push(policyNo)
 				return '照會編輯中'
 			}
 			if (noteStatus == '1') {
-				chart2Map[2].policyNos.push(policyNo)
+				chart2Map[1].policyNos.push(policyNo)
 				return '照會覆核中'
 			}
 			if (noteStatus == '9') {
-				chart2Map[3].policyNos.push(policyNo)
+				chart2Map[2].policyNos.push(policyNo)
 				return '照會完成'
 			}
 		}
 
 		function noteVerifyResultStr(status) {
-			if (status == null) {
-				return '無'
-			}
 			if (status == '0') {
 				return '未覆核'
 			}
@@ -229,6 +219,17 @@
 			}
 		}
 
+		function levelStateStr(policyNo, levelState) {
+			result = ''
+			levelStateMap.forEach(function(item,index){
+				if (item.value == levelState) {
+					item.policyNos.push(policyNo)
+					result = item.label
+				}
+			})
+			return result
+		}
+
 		function initChart() {
 			labels = []
 			data = []
@@ -238,30 +239,64 @@
 			})
 
 			myDoughnutChart2 = new Chart(doughnutChart2, {
-			type: 'doughnut',
-			data: {
-				datasets: [{
-					data: data,
-					backgroundColor: ['#59d05d','#fdaf4b','#f3545d','#1d7af3']
-				}],
-					labels: labels
-				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					legend : {
-						position: 'left'
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: data,
+						backgroundColor: ['#59d05d','#fdaf4b','#f3545d','#1d7af3']
+					}],
+						labels: labels
 					},
-					layout: {
-						padding: {
-							left: 20,
-							right: 0,
-							top: 20,
-							bottom: 10
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						legend : {
+							position: 'left'
+						},
+						layout: {
+							padding: {
+								left: 20,
+								right: 0,
+								top: 20,
+								bottom: 10
+							}
 						}
 					}
-				}
-			});
+				});
+
+				labels1 = []
+				data1 = []
+				levelStateMap.forEach(function(item,index){
+					labels1.push(item.label + ' ' + item.policyNos.length + '件')
+					data1.push(item.policyNos.length)
+				})
+
+				myDoughnutChart = new Chart(doughnutChart, {
+					type: 'doughnut',
+					data: {
+						datasets: [{
+							data: data1,
+							backgroundColor: ['#1d7af3','#59d05d','#f3545d']
+						}],
+
+						labels: labels1
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						legend : {
+							position: 'left'
+						},
+						layout: {
+							padding: {
+								left: 20,
+								right: 0,
+								top: 20,
+								bottom: 10
+							}
+						}
+					}
+				});
 		}
 /*]]>*/
 </script>

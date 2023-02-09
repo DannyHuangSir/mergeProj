@@ -7,4 +7,6 @@ public interface IOptionService {
 
 
 	List<Map<String, Object>> getPolicyTyps();
+
+	List<Map<String, Object>> getLevelStates();
 }

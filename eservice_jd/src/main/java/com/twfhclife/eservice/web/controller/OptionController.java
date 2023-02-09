@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Calendar;
+
 /**
  * 選單資料控制器.
  * 
@@ -36,6 +38,19 @@ public class OptionController extends BaseMvcController {
 			processSystemError();
 		}
 		return processResponseEntity();
+		}
+	}
+
+	@PostMapping("/getLevelStates")
+	public  ResponseEntity<ResponseObj> getLevelStates() {
+		synchronized(this){
+			try {
+				processSuccess(optionService.getLevelStates());
+			} catch (Exception e) {
+				logger.error("Unable to getPolicyTyps: {}", ExceptionUtils.getStackTrace(e));
+				processSystemError();
+			}
+			return processResponseEntity();
 		}
 	}
 }

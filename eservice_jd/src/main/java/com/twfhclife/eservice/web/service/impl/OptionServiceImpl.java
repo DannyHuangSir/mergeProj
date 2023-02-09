@@ -18,4 +18,9 @@ public class OptionServiceImpl implements IOptionService {
 	public List<Map<String, Object>> getPolicyTyps() {
 		return optionDao.getPolicyTyps();
 	}
+
+    @Override
+    public List<Map<String, Object>> getLevelStates() {
+        return optionDao.getLevelStates();
+    }
 }
