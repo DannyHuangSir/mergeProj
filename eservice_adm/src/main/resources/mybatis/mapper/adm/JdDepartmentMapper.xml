@@ -185,4 +185,24 @@
             ESERVICE_JD.DBO.DEPARTMENT d
       where d.DEP_ID = #{depId}
     </select>
+
+    <select id="getBranchList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        DEP_NAME,
+        BRANCH_ID
+        FROM
+        ESERVICE_JD.DBO.DEPARTMENT
+        WHERE
+        PARENT_DEP IS NOT NULL
+        <if test="vo.depId != null and vo.depId !=''">
+            AND PARENT_DEP = #{vo.depId}
+        </if>
+        <if test="adminUserFlag == 'N'.toString()">
+            AND DEP_ID IN (
+            SELECT DEP_ID FROM ESERVICE_JD.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
+            )
+        </if>
+        ORDER BY
+        DEP_ID
+    </select>
 </mapper>

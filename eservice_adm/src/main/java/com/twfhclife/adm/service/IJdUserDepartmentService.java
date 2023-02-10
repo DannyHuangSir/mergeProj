@@ -59,4 +59,6 @@ public interface IJdUserDepartmentService {
 	 * @return 回傳影響筆數
 	 */
 	public int deleteUserDepartment(UserDepartmentVo userDepartmentVo);
+
+	List<UserDepartmentVo> getUserBranch(UserDepartmentVo userDepartmentVo);
 }

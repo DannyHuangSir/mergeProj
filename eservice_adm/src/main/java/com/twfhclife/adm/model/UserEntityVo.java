@@ -51,6 +51,37 @@ public class UserEntityVo extends Pagination {
 
 	private String branchId;
 
+	private String userId;
+	//系統賬號狀態
+	private String status;
+
+	private String salespersonId;
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setSalespersonId(String salespersonId) {
+		this.salespersonId = salespersonId;
+	}
+
+	public String getSalespersonId() {
+		return salespersonId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+
+
 	public void setBranchId(String branchId) {
 		this.branchId = branchId;
 	}

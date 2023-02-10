@@ -30,20 +30,45 @@
 								<!-- PAGE CONTENT BEGINS -->
 								<form class="form-horizontal" id="form1" role="form" action="#">
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">查詢角色：</label>
+										<label class="col-sm-3 control-label " for="form-field-1">查詢角色：</label>
 										<div class="col-sm-6">
 											<div>
 												<input type="text" name="roleName" id="roleName"/>
-												<button type="button" class="btn btn-success" id="qryBtn">
-													<i class="my-icon fa fa-check bigger-110"></i>
-													查詢
-												</button>&nbsp&nbsp
-												<button type="button" id="addRoleBtn" class="btn btn-primary">
-													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
-													新增角色
-												</button>
 											</div>
 										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label " for="form-field-1">通路别：</label>
+										<div class="col-sm-6">
+											<div>
+												<input type="text" name="departmentName" id="departmentName"/>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-offset-3 col-md-9">
+											<button id="qryBtn" class="btn btn-success" type="button">
+												<i class="my-icon fa fa-check bigger-110"></i>
+												查詢
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<button id="addRoleBtn" class="btn btn-primary" type="button">
+												<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
+												新增角色
+											</button>
+										</div>
+<!--										<div class="col-sm-6">-->
+<!--											<div>-->
+<!--												<button type="button" class="btn btn-success" id="qryBtn">-->
+<!--													<i class="my-icon fa fa-check bigger-110"></i>-->
+<!--													查詢-->
+<!--												</button>&nbsp&nbsp-->
+<!--												<button type="button" id="addRoleBtn" class="btn btn-primary">-->
+<!--													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>-->
+<!--													新增角色-->
+<!--												</button>-->
+<!--											</div>-->
+<!--										</div>-->
 									</div>
 								</form>
 							</div>
@@ -75,9 +100,9 @@
 						<div class="widget-main no-padding">
 							<form id="editForm">
 								<fieldset>
-									<label class="col-sm-4 control-label no-padding-right">角色ID：</label>
+									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>角色代码：</label>
 									<div class="col-sm-8">
-										<input type="text" id="roleId" class="form-control" readonly="true"/>
+										<input type="text" id="divRoleId" class="form-control" />
 									</div>
 								</fieldset>
 								<fieldset>
@@ -87,17 +112,17 @@
 									</div>
 								</fieldset>
 								<fieldset>
-									<label class="col-sm-4 control-label no-padding-right">通路名稱：</label>
+									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>通路别：</label>
 									<div class="col-sm-8">
 										<select id="deptParentSelect" ></select>
 									</div>
 								</fieldset>
-								<fieldset>
-									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>單位名稱：</label>
-									<div class="col-sm-8">
-										<select id="deptSelect"></select>
-									</div>
-								</fieldset>
+<!--								<fieldset>-->
+<!--									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>單位名稱：</label>-->
+<!--									<div class="col-sm-8">-->
+<!--										<select id="deptSelect"></select>-->
+<!--									</div>-->
+<!--								</fieldset>-->
 								<fieldset>
 									<label class="col-sm-4 control-label no-padding-right">角色描述：</label>
 									<div class="col-sm-8">
@@ -107,36 +132,6 @@
 							</form>
 						</div>
 					</div>
-					<div id="insertDiv" class="hide">
-						<div class="widget-main no-padding">
-							<form id="insertForm">
-								<fieldset>
-									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>角色名稱：</label>
-									<div class="col-sm-8">
-										<input type="text" id="roleName" class="form-control" />
-									</div>
-								</fieldset>
-								<fieldset>
-									<label class="col-sm-4 control-label no-padding-right">通路名稱：</label>
-									<div class="col-sm-8">
-										<select id="deptParentSelect" ></select>
-									</div>
-								</fieldset>
-								<fieldset>
-									<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>單位名稱：</label>
-									<div class="col-sm-8">
-										<select id="deptSelect"></select>
-									</div>
-								</fieldset>
-								<fieldset>
-									<label class="col-sm-4 control-label no-padding-right">角色描述：</label>
-									<div class="col-sm-8">
-										<input type="text" id="description" class="form-control" />
-									</div>
-								</fieldset>
-							</form>
-						</div>
-				</div>
 			</div>
 			<div th:replace="fragments/footer"></div>
 			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
@@ -152,34 +147,34 @@
 			eserviceAdmOption.dept('#deptParentSelect', /*[[@{jd/common/dept/parentList}]]*/);
 			// 取得部門名稱下拉選單
 			// eserviceAdmOption.dept('#deptSelect', /*[[@{jd/common/deptList}]]*/);
-			$('#deptParentSelect').on('click', function() {
-			// function getNoticeBoardList() {
-				var formData = {
-					depId: $('#editForm #deptParentSelect').val()
-				};
-				$.ajax({
-					url: /*[[@{jd/common/deptList}]]*/,
-					contentType: 'application/json',
-					type: "POST",
-					async: true,
-					data: JSON.stringify(formData),
-					success: function (response) {
-						$("#deptSelect").empty();
-						if (response.result == 'SUCCESS'){
-							if (response.resultData.length >0){
-								for (var i = 0; i < response.resultData.length; i++) {
-									var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
-									$("#deptSelect").append(option);
-								}
-							}else {
-								alertMsg('此通路下沒有單位');
-							}
-						}else {
-							alertMsg('系統發生錯誤');
-						}
-					}
-				});
-			});
+			// $('#deptParentSelect').on('click', function() {
+			// // function getNoticeBoardList() {
+			// 	var formData = {
+			// 		depId: $('#editForm #deptParentSelect').val()
+			// 	};
+			// 	$.ajax({
+			// 		url: /*[[@{jd/common/deptList}]]*/,
+			// 		contentType: 'application/json',
+			// 		type: "POST",
+			// 		async: true,
+			// 		data: JSON.stringify(formData),
+			// 		success: function (response) {
+			// 			$("#deptSelect").empty();
+			// 			if (response.result == 'SUCCESS'){
+			// 				if (response.resultData.length >0){
+			// 					for (var i = 0; i < response.resultData.length; i++) {
+			// 						var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
+			// 						$("#deptSelect").append(option);
+			// 					}
+			// 				}else {
+			// 					alertMsg('此通路下沒有單位');
+			// 				}
+			// 			}else {
+			// 				alertMsg('系統發生錯誤');
+			// 			}
+			// 		}
+			// 	});
+			// });
 
 
 			// 初始 jqGridUtil 物件
@@ -187,7 +182,7 @@
 			grid.id = '#grid';
 			grid.url = /*[[@{/jdRole/getRoleDetail}]]*/;
 			grid.caption = '角色查詢結果';
-			grid.colNames = ['角色ID','角色名稱', '單位名稱', '角色描述', '操作'];
+			grid.colNames = ['角色ID','角色名稱', '通路名稱', '角色描述', '操作'];
 			grid.colModel = [
 				{name: 'ROLE_ID', index: 'ROLE_ID', width: 100},
 				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
@@ -211,17 +206,19 @@
 			$('#qryBtn').click(function() {
 				// 設定查詢條件
 				grid.setPostData('roleName', $('#roleName').val());
+				grid.setPostData('departmentName', $('#departmentName').val());
 				// 產生grid
 				grid.create();
 			});
 			
 			// 新增
 			$('#addRoleBtn').on('click', function() {
-				$('#insertForm #roleName').val('');
-				$('#insertForm #description').val('');
-				$('#insertForm #deptSelect').val('');
-				$('#insertForm #deptParentSelect').val('');
-				var dialog = $('#insertDiv').removeClass('hide').dialog({
+				// $('#divRoleId').val('');
+				$('#roleName').val('');
+				$('#description').val('');
+				// $('#deptSelect').val('');
+				$('#deptParentSelect').val('');
+				var dialog = $('#editDiv').removeClass('hide').dialog({
 					modal: true,
 					title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-check'></i>新增角色</h4></div>",
 					title_html: true,
@@ -237,19 +234,23 @@
 							text: '確定',
 							'class' : 'btn btn-primary',
 							click: function() {
-								if ($('#insertForm #roleName').val() == '') {
+								// if ($('#editDiv #divRoleId').val() == '') {
+								// 	alertMsg("請輸入角色代码");
+								// 	return false;
+								// }
+								if ($('#editDiv #roleName').val() == '') {
 									alertMsg("請輸入角色名稱");
 									return false;
 								}
-								if ($('#insertForm #deptSelect').val() == '') {
-									alertMsg("請輸入單位名稱");
+								if ($('#editDiv #deptParentSelect').val() == '') {
+									alertMsg("請輸入通路别");
 									return false;
 								}
 								var formData = {
-									departmentId: $('#insertForm #deptSelect option:selected').val(),
-									parentDep: $('#insertForm #deptParentSelect').val(),
-									roleName : $('#insertForm #roleName').val(),
-									description : $('#insertForm #description').val()
+									// departmentId: $('#deptSelect option:selected').val(),
+									departmentId: $('#editDiv #deptParentSelect').val(),
+									roleName : $('#editDiv #roleName').val(),
+									description : $('#editDiv #description').val()
 								};
 								eserviceForm.post(/*[[@{/jdRole/insertRole}]]*/, formData, function(response) {
 									alertMsg(response.resultMsg);
@@ -272,10 +273,11 @@
 		function editRole(roleId, roleName, departmentId, description) {
 			$('#editForm #roleId').val(roleId);
 			$('#editForm #roleName').val(roleName);
+			// $('#editForm #divRoleId').val();
 			if (departmentId) {
-				$('#editForm #deptSelect').val(departmentId);
+				$('#editForm #deptParentSelect').val(departmentId);
 			} else {
-				$('#editForm #deptSelect').val('');
+				$('#editForm #deptParentSelect').val('');
 			}
 			$('#editForm #description').val(description);
 			var dialog = $('#editDiv').removeClass('hide').dialog({
@@ -294,20 +296,23 @@
 						text: '確定',
 						'class' : 'btn btn-primary',
 						click: function() {
+							// if ($('#editForm #divRoleId').val() == '') {
+							// 	alertMsg("請輸入角色代码");
+							// 	return false;
+							// }
 							if ($('#editForm #roleName').val() == '') {
 								alertMsg("請輸入角色名稱");
 								return false;
 							}
-							if ($('#editForm #deptSelect').val() == '') {
-								alertMsg("請輸入單位名稱");
+							if ($('#editForm #deptParentSelect').val() == '') {
+								alertMsg("請輸入通路别");
 								return false;
 							}
 							confirmMsg('是否確認修改', function(r) {
 								if (r) {
 									var formData = {
 										roleId : roleId,
-										parentDep: $('#editForm #deptParentSelect').val(),
-										departmentId: $('#editForm #deptSelect option:selected').val(),
+										departmentId: $('#editForm #deptParentSelect').val(),
 										roleName : $('#editForm #roleName').val(),
 										description : $('#editForm #description').val()
 									};

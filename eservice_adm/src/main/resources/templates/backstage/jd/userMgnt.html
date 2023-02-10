@@ -29,13 +29,29 @@
 							<div class="col-xs-12">
 								<form class="form-horizontal" role="form" id="form1" action="func7-1.html">
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者帳號 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">系統帳號 </label>
 										<div class="col-sm-5">
-											<input type="text" id="username" placeholder="輸入欲查詢的使用者帳號" class="form-control" />
+											<input type="text" id="username" placeholder="輸入欲查詢的系統帳號" class="form-control" />
 										</div>
 										<div class="col-sm-4">
 										</div>
 									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">帳號狀態 </label>
+										<div class="col-sm-5">
+											<input type="text" id="status" placeholder="輸入欲查詢的帳號狀態" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+<!--									<div class="form-group">-->
+<!--										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者帳號 </label>-->
+<!--										<div class="col-sm-5">-->
+<!--											<input type="text" id="username" placeholder="輸入欲查詢的使用者帳號" class="form-control" />-->
+<!--										</div>-->
+<!--										<div class="col-sm-4">-->
+<!--										</div>-->
+<!--									</div>-->
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者名稱 </label>
 										<div class="col-sm-5">
@@ -45,37 +61,45 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">通路 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">業務員編號 </label>
+										<div class="col-sm-5">
+											<input type="text" id="salespersonId" placeholder="輸入欲查詢的業務員編號" class="form-control" />
+										</div>
+										<div class="col-sm-4">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">通路别 </label>
 										<div class="col-sm-5">
 											<input type="text" id="parentDep" placeholder="輸入欲查詢的通路" class="form-control" />
 										</div>
 										<div class="col-sm-4">
 										</div>
 									</div>
+<!--									<div class="form-group">-->
+<!--										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">單位 </label>-->
+<!--										<div class="col-sm-5">-->
+<!--											<input type="text" id="department" placeholder="輸入欲查詢的單位" class="form-control" />-->
+<!--										</div>-->
+<!--										<div class="col-sm-4">-->
+<!--										</div>-->
+<!--									</div>-->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">單位 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">分支機構 </label>
 										<div class="col-sm-5">
-											<input type="text" id="department" placeholder="輸入欲查詢的單位" class="form-control" />
+											<input type="text" id="branchId" placeholder="輸入欲查詢的分支機構代碼" class="form-control" />
 										</div>
 										<div class="col-sm-4">
 										</div>
 									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">原分支機構代碼 </label>
-										<div class="col-sm-5">
-											<input type="text" id="branchId" placeholder="輸入欲查詢的原分支機構代碼" class="form-control" />
-										</div>
-										<div class="col-sm-4">
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">職位 </label>
-										<div class="col-sm-5">
-											<input type="text" id="jobTitle" placeholder="輸入欲查詢的職位" class="form-control" />
-										</div>
-										<div class="col-sm-4">
-										</div>
-									</div>
+<!--									<div class="form-group">-->
+<!--										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">職位 </label>-->
+<!--										<div class="col-sm-5">-->
+<!--											<input type="text" id="jobTitle" placeholder="輸入欲查詢的職位" class="form-control" />-->
+<!--										</div>-->
+<!--										<div class="col-sm-4">-->
+<!--										</div>-->
+<!--									</div>-->
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">角色 </label>
 										<div class="col-sm-5">
@@ -130,21 +154,29 @@
 												<select id="deptParentSelect" ></select>
 											</div>
 										</fieldset>
+<!--										<fieldset>-->
+<!--											<label class="col-sm-2 control-label text-right no-padding-right">單位名稱 :</label>-->
+<!--											<div class="col-sm-8">-->
+<!--												<select id="deptSelect"></select>-->
+<!--											</div>-->
+<!--										</fieldset>-->
 										<fieldset>
-											<label class="col-sm-2 control-label text-right no-padding-right">單位名稱 :</label>
+											<label class="col-sm-2 control-label text-right no-padding-right">分支機構 :</label>
 											<div class="col-sm-8">
-												<select id="deptSelect"></select>
-											</div>
-										</fieldset>
-										<fieldset>
-											<label class="col-sm-2 control-label text-right no-padding-right">職位名稱 :</label>
-											<div class="col-sm-10">
-												<select id="jobTitleSelect"></select>
+												<select id="branchId"></select>
 												<button type="button" id="addDeptBtn" class="btn btn-primary">
 													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
 													新增
 												</button>
 											</div>
+<!--											<label class="col-sm-2 control-label text-right no-padding-right">職位名稱 :</label>-->
+<!--											<div class="col-sm-10">-->
+<!--												<select id="jobTitleSelect"></select>-->
+<!--												<button type="button" id="addDeptBtn" class="btn btn-primary">-->
+<!--													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>-->
+<!--													新增-->
+<!--												</button>-->
+<!--											</div>-->
 										</fieldset>
 									</form>
 								</div>
@@ -233,26 +265,54 @@
 		var selectUserId;
 		$(function() {
 			// 動態獲取單位下拉框
+			// $('#deptParentSelect').on('click', function() {
+			// 	var formData = {
+			// 		depId: $('#editDeptDialog #deptParentSelect').val()
+			// 	};
+			// 	$.ajax({
+			// 		url: /*[[@{jd/common/deptList}]]*/,
+			// 		contentType: 'application/json',
+			// 		type: "POST",
+			// 		async: true,
+			// 		data: JSON.stringify(formData),
+			// 		success: function (response) {
+			// 			$("#deptSelect").empty();
+			// 			if (response.result == 'SUCCESS'){
+			// 				if (response.resultData.length >0){
+			// 					for (var i = 0; i < response.resultData.length; i++) {
+			// 						var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
+			// 						$("#deptSelect").append(option);
+			// 					}
+			// 				}else {
+			// 					alertMsg('此通路下沒有單位');
+			// 				}
+			// 			}else {
+			// 				alertMsg('系統發生錯誤');
+			// 			}
+			// 		}
+			// 	});
+			// });
+
 			$('#deptParentSelect').on('click', function() {
 				var formData = {
 					depId: $('#editDeptDialog #deptParentSelect').val()
 				};
 				$.ajax({
-					url: /*[[@{jd/common/deptList}]]*/,
+					url: /*[[@{jd/common/branchList}]]*/,
 					contentType: 'application/json',
 					type: "POST",
 					async: true,
 					data: JSON.stringify(formData),
 					success: function (response) {
-						$("#deptSelect").empty();
+						$("#editDeptDialog #branchId").empty();
 						if (response.result == 'SUCCESS'){
 							if (response.resultData.length >0){
 								for (var i = 0; i < response.resultData.length; i++) {
-									var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
-									$("#deptSelect").append(option);
+									var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+									$("#editDeptDialog #branchId").append(option);
 								}
 							}else {
-								alertMsg('此通路下沒有單位');
+								alertMsg('此通路下沒有分支機構');
 							}
 						}else {
 							alertMsg('系統發生錯誤');
@@ -268,6 +328,9 @@
 			$('#qryBtn').click(function() {
 				// 設定查詢條件
 				qryGrid.setPostData('username', $('#username').val());
+				qryGrid.setPostData('userId', $('#userId').val());
+				qryGrid.setPostData('status', $('#status').val());
+				qryGrid.setPostData('salespersonId', $('#salespersonId').val());
 				qryGrid.setPostData('lastName', $('#lastName').val());
 				qryGrid.setPostData('parentDep', $('#parentDep').val());
 				qryGrid.setPostData('department', $('#department').val());
@@ -282,7 +345,7 @@
 			// 新增人員部門
 			$('#addDeptBtn').click(function() {
 				if ($('#deptSelect').val() == '') {
-					alertMsg("請輸入部門名稱");
+					alertMsg("請輸入通路名稱");
 					return false;
 				}
 				
@@ -295,9 +358,9 @@
 				
 				var formData = {
 					userId : selectUserId,
-					parentDep: $('#deptParentSelect').val(),
-					depId: $('#deptSelect option:selected').val(),
-					titleId : $('#jobTitleSelect').val()
+					depId: $('#deptParentSelect').val(),
+					branchId: $('#editDeptForm #branchId option:selected').val()
+					// titleId : $('#jobTitleSelect').val()
 				};
 				eserviceForm.post(/*[[@{/jdUserMgnt/insertUserDepartment}]]*/, formData, function(response) {
 					alertMsg(response.resultMsg);
@@ -365,7 +428,7 @@
 			eserviceAdmOption.dept('#deptParentSelect', /*[[@{jd/common/dept/parentList}]]*/);
 
 			// 取得職位名稱下拉選單
-			eserviceAdmOption.jobTitle('#jobTitleSelect', /*[[@{/common/jobTitleList}]]*/);
+			// eserviceAdmOption.jobTitle('#jobTitleSelect', /*[[@{/common/jobTitleList}]]*/);
 			
 			// 取得角色名稱下拉選單
 			eserviceAdmOption.role('#roleSelect', /*[[@{/jd/common/roleList}]]*/);
@@ -379,7 +442,7 @@
 			qryGrid.pager = '#qryPager';
 			qryGrid.url = /*[[@{/jdUserMgnt/getUserEntityPageList}]]*/;
 			qryGrid.caption = '人員查詢結果';
-			qryGrid.colNames = ['使用者帳號', '使用者名稱', '角色', '部門', '職位', '操作'];
+			qryGrid.colNames = ['使用者帳號', '使用者名稱', '角色', '通路別', '分支機構', '操作'];
 			qryGrid.colModel = [
 				{name: 'USERNAME', index: 'USERNAME', width: 100},
 				{width: 90, formatter: function(cellvalue, options, row) {
@@ -392,28 +455,28 @@
 					return breakLine(row.DEP_NAME_LIST);
 				}},
 				{width: 100, formatter: function(cellvalue, options, row) {
-					return breakLine(row.TITLE_NAME_LIST);
+					return breakLine(row.BRACH_NAME_LIST);
 				}},
 				{width: 90, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="設定角色">';
-					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">設定角色</span> ';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="人員角色設定">';
+					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">人員角色設定</span> ';
 					actionHtml += '</a>';
 					actionHtml += '&nbsp;&nbsp;';
-					actionHtml += '<a href="javascript:openDeptDialog(\'' + row.ID + '\', \'' + row.USERNAME  + '\', \'' + (emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME)) +'\');" class="green bigger-140 show-details-btn" title="設定部門">';
-					actionHtml += '<i class="my-icon fa fa-sitemap bigger-120"></i> <span class="sr-only">設定部門</span> ';
+					actionHtml += '<a href="javascript:openDeptDialog(\'' + row.ID + '\', \'' + row.USERNAME  + '\', \'' + (emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME)) +'\');" class="green bigger-140 show-details-btn" title="人員部門設定">';
+					actionHtml += '<i class="my-icon fa fa-sitemap bigger-120"></i> <span class="sr-only">人員部門設定</span> ';
 					actionHtml += '</a>';
 					actionHtml += '&nbsp;&nbsp;';
-					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="資料詳情">';
-					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">資料詳情</span> ';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="人員詳細資料">';
+					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">人員詳細資料</span> ';
 					actionHtml += '</a>';
 					actionHtml += '&nbsp;&nbsp;';
-					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="VIP客戶資料">';
-					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">VIP客戶資料</span> ';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="VIP客戶名單">';
+					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">VIP客戶名單</span> ';
 					actionHtml += '</a>';
 					actionHtml += '&nbsp;&nbsp;';
-					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="負責分行">';
-					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">負責分行</span> ';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="IC人員負責分行">';
+					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">IC人員負責分行</span> ';
 					actionHtml += '</a>';
 					// actionHtml += '&nbsp;&nbsp;';
 					// actionHtml += '<a href="javascript:openDeputyDialog(\'' + row.ID + '\', \'' + row.USERNAME + '\', \'' + (emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME)) +'\');" class="green bigger-140 show-details-btn" title="設定代理人">';
@@ -432,18 +495,18 @@
 			deptGrid.height = 122;
 			deptGrid.url = /*[[@{/jdUserMgnt/getUserDepartmentPageList}]]*/;
 			deptGrid.caption = '人員部門職位查詢';
-			deptGrid.colNames = ['部門', '職位', '操作'];
+			deptGrid.colNames = ['通路', '分支機構', '操作'];
 			deptGrid.colModel = [
 				{name: 'DEP_NAME', index: 'DEP_NAME', width: 100},
-				{name: 'TITLE_NAME', index: 'TITLE_NAME', width: 100},
+				{name: 'BRANCH_NAME', index: 'BRANCH_NAME', width: 100},
 				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<a href="javascript:deleteUserDepartment(\'' + row.DEP_ID + '\', \'' + emptyIfNull(row.TITLE_ID) + '\');" class="green bigger-140 show-details-btn" title="Edit">';
-					actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
+						actionHtml += '<a href="javascript:deleteUserDepartment(\'' + row.DEP_ID + '\', \'' + emptyIfNull(row.TITLE_ID) + '\', \''+ row.BRANCH_ID+'\');" class="green bigger-140 show-details-btn" title="Edit">';
+						actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
 					actionHtml += '</a>';
 					
 					return actionHtml;
-				}} 
+				}}
 			];
 			
 			roleGrid = new jqGridUtil();
@@ -527,13 +590,14 @@
 		}
 		
 		// 刪除人員部門
-		function deleteUserDepartment(depId, titleId) {
+		function deleteUserDepartment(depId,titleId,branchId) {
 			confirmMsg('是否確認刪除', function(r) {
 				if (r) {
 					var formData = {
 						userId : selectUserId,
 						depId : depId,
-						titleId : titleId
+						titleId : titleId,
+						branchId: branchId
 					};
 					eserviceForm.post(/*[[@{/jdUserMgnt/deleteUserDepartment}]]*/, formData, function(response) {
 						alertMsg(response.resultMsg);

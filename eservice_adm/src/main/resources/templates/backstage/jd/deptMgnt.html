@@ -73,12 +73,12 @@
 <!-- 														<input type="hidden" id="depId"/> -->
 														<input type="hidden" id="notify"/>
 													</fieldset>
-													<fieldset>
-														<label class="col-sm-4 control-label no-padding-right">通路代碼：</label>
-														<div class="col-sm-8">
-															<input type="text" id="parentDep" class="form-control" readonly="readonly"/>
-														</div>
-													</fieldset>
+<!--													<fieldset>-->
+<!--														<label class="col-sm-4 control-label no-padding-right">通路代碼：</label>-->
+<!--														<div class="col-sm-8">-->
+<!--															<input type="text" id="parentDep" class="form-control" readonly="readonly"/>-->
+<!--														</div>-->
+<!--													</fieldset>-->
 													<fieldset>
 														<label class="col-sm-4 control-label no-padding-right">部門代碼：</label>
 														<div class="col-sm-8">
@@ -226,7 +226,7 @@
 			$.ajaxSetup({async: true});
 
 			$('#addForm #parentDepDiv').html(nodeData.target.text);
-			$('#nodeForm #parentDep').val(nodeData.target.parentDep);
+			// $('#nodeForm #parentDep').val(nodeData.target.parentDep);
 			$('#nodeForm #depId').val(nodeData.target.id);
 			$('#nodeForm #depName').val(nodeData.target.text);
 			$('#nodeForm #branchId').val(nodeData.target.branchId);
@@ -342,7 +342,7 @@
 				if (r) {
 					var formData = {
 						depId :$('#nodeForm #depId').val(),
-						parentDep : $('#nodeForm #parentDep').val(),
+						// parentDep : $('#nodeForm #parentDep').val(),
 						depName : $('#nodeForm #depName').val(),
 						branchId: $('#nodeForm #branchId').val(),
 						description : $('#nodeForm #description').val()

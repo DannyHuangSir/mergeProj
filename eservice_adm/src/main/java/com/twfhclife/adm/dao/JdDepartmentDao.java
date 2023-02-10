@@ -74,4 +74,6 @@ public interface JdDepartmentDao {
 
     List<ParameterVo> getPassageWay();
     DepartmentVo getDepId(@Param("depId")String depId);
+
+    List<DepartmentVo> getBranchList(@Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag,@Param("vo")DepartmentVo vo);
 }

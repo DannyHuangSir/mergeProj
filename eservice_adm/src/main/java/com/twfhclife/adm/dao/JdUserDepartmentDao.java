@@ -60,5 +60,7 @@ public interface JdUserDepartmentDao {
 	 * @return 回傳影響筆數
 	 */
 	int deleteUserDepartment(@Param("userDepartmentVo") UserDepartmentVo userDepartmentVo);
+
+	List<UserDepartmentVo> getUserBranch(@Param("userDepartmentVo") UserDepartmentVo userDepartmentVo);
 }
 

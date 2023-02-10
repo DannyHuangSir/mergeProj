@@ -53,7 +53,10 @@
 		FROM
 			ESERVICE_ADM.DBO.USER_ENTITY
 		<where>
-			<if test="userEntityVo.username != null and userEntityVo.username != ''"> AND UPPER(USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.username}),'%'))</if>
+			<if test="userEntityVo.username != null and userEntityVo.username != ''">
+				 AND UPPER(USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.username}),'%'))
+			</if>
+			<if test="userEntityVo.userId != null and userEntityVo.userId != ''"> AND ID = #{userEntityVo.userId} </if>
 			<if test="userEntityVo.lastName != null and userEntityVo.lastName != ''"> AND UPPER(CONCAT(LAST_NAME, FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.lastName}),'%'))</if>
 			<if test="userEntityVo.realmId != null and userEntityVo.realmId != ''"> AND REALM_ID = #{userEntityVo.realmId} </if>
 			<if test="userEntityVo.systemId != null and userEntityVo.systemId != ''">
@@ -65,11 +68,21 @@
 					)
 				)
 			</if>
+			<if test="userEntityVo.status != null and userEntityVo.status != ''">
+				AND ID IN (
+				SELECT USER_ID FROM ESERVICE_JD.DBO.USERS WHERE STATUS = #{userEntityVo.status}
+				)
+			</if>
+			<if test="userEntityVo.salespersonId != null and userEntityVo.salespersonId != ''">
+				AND ID IN (
+				SELECT USER_ID FROM  ESERVICE_JD.DBO.USERS WHERE IC_ID = #{userEntityVo.salespersonId}
+				)
+			</if>
 			<if test="userEntityVo.parentDep != null and userEntityVo.parentDep != ''">
 				AND ID  IN (
 					SELECT
 					udd.USER_ID
-					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd where udd.PARENT_DEP
+					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd where udd.DEP_ID
 					in (
 					select d.DEP_ID from ESERVICE_JD.DBO.DEPARTMENT d
 					WHERE UPPER(d.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.parentDep}),'%'))
@@ -81,7 +94,7 @@
 					SELECT
 					udd.USER_ID
 					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
-					inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID
+					inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.PARENT_DEP
 					WHERE dd.BRANCH_ID = #{userEntityVo.branchId}
 				)
 			</if>

@@ -24,48 +24,51 @@
         <where>
                 a.DEP_NAME != ''
             <if test="roleVo.roleId != null and roleVo.roleId != ''">
-                AND ROLE_ID = #{roleVo.roleId}
+                AND b.ROLE_ID = #{roleVo.roleId}
             </if>
             <if test="roleVo.roleName != null and roleVo.roleName != ''">
-                AND ROLE_NAME LIKE CONCAT('%',#{roleVo.roleName},'%')
+                AND b.ROLE_NAME LIKE CONCAT('%',#{roleVo.roleName},'%')
             </if>
             <if test="roleVo.description != null and roleVo.description != ''">
-                AND DESCRIPTION = #{roleVo.description}
+                AND b.DESCRIPTION = #{roleVo.description}
             </if>
             <if test="roleVo.parentRoleId != null and roleVo.parentRoleId != ''">
-                AND PARENT_ROLE_ID =
+                AND b.PARENT_ROLE_ID =
                 #{roleVo.parentRoleId}
             </if>
             <if test="roleVo.departmentId != null and roleVo.departmentId != ''">
-                AND DEPARTMENT_ID =
+                AND b.DEPARTMENT_ID =
                 #{roleVo.departmentId}
             </if>
+            <if test="roleVo.departmentName != null and roleVo.departmentName != ''">
+                AND a.DEP_NAME LIKE CONCAT('%',#{roleVo.departmentName},'%')
+            </if>
             <if test="roleVo.createUser != null and roleVo.createUser != ''">
-                AND CREATE_USER = #{roleVo.createUser}
+                AND b.CREATE_USER = #{roleVo.createUser}
             </if>
             <if test="roleVo.createDate != null and roleVo.createDate != ''">
-                AND CREATE_DATE = #{roleVo.createDate}
+                AND b.CREATE_DATE = #{roleVo.createDate}
             </if>
             <if test="roleVo.modifyUser != null and roleVo.modifyUser != ''">
-                AND MODIFY_USER = #{roleVo.modifyUser}
+                AND b.MODIFY_USER = #{roleVo.modifyUser}
             </if>
             <if test="roleVo.modifyDate != null and roleVo.modifyDate != ''">
-                AND MODIFY_DATE = #{roleVo.modifyDate}
+                AND b.MODIFY_DATE = #{roleVo.modifyDate}
             </if>
             <if test="roleVo.systemId != null and roleVo.systemId != ''">
                 AND b.ROLE_ID IN (
                 SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH
                 WHERE SYS_ID = #{roleVo.systemId}
                 <if test="adminUserFlag == 'N'.toString()">
-                    AND ROLE_ID IN (
-                    SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
+                    AND b.ROLE_ID IN (
+                    SELECT b.ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
                     )
                 </if>
                 )
             </if>
             <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
             <if test="(roleVo.systemId == null or roleVo.systemId == '') and adminUserFlag == 'N'.toString()">
-                AND ROLE_ID IN (
+                AND b.ROLE_ID IN (
                 SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
                 )
             </if>
@@ -159,7 +162,7 @@
         #{roleVo.modifyUser, jdbcType=VARCHAR},
         getdate()
         )
-        insert ESERVICE_JD.dbo.ROLE_DEPARTMENT (ROLE_ID,DEP_ID,PARENT_DEP) values ((select * from @temp),#{roleVo.departmentId, jdbcType=VARCHAR},#{roleVo.parentDep, jdbcType=VARCHAR})
+        insert ESERVICE_JD.dbo.ROLE_DEPARTMENT (ROLE_ID,DEP_ID) values ((select * from @temp),#{roleVo.departmentId, jdbcType=VARCHAR})
     </insert>
 
     <!-- 使用者角色管理-更新 -->
@@ -192,7 +195,6 @@
         <set>
             <if test="roleVo.roleId != null">ROLE_ID = #{roleVo.roleId},</if>
             <if test="roleVo.departmentId != null">DEP_ID = #{roleVo.departmentId},</if>
-            <if test="roleVo.parentDep != null">PARENT_DEP = #{roleVo.parentDep},</if>
         </set>
         <include refid="wherePkClause"/>
     </update>

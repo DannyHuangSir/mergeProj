@@ -18,12 +18,19 @@ public class UserDepartmentVo extends Pagination {
 	 * 通路别
 	 */
 	private String parentDep;
-	private String branch;
+	private String branchId;
+	private String branchName;
 	private String employeeNum;
 
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
 
-	public void setBranch(String branch) {
-		this.branch = branch;
+	public String getBranchName() {
+		return branchName;
+	}
+	public void setBranchId(String branch) {
+		this.branchId = branch;
 	}
 
 	public void setEmployeeNum(String employeeNum) {
@@ -42,8 +49,8 @@ public class UserDepartmentVo extends Pagination {
 		return parentDep;
 	}
 
-	public String getBranch() {
-		return branch;
+	public String getBranchId() {
+		return branchId;
 	}
 
 	public String getEmployeeNum() {

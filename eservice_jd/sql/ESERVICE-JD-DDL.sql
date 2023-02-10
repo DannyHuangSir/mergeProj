@@ -27,7 +27,8 @@ CREATE TABLE [ESERVICE_JD].[dbo].[USERS](
 	[USER_NAME] [nvarchar](50) NULL,
 	[LOGIN_TIME] [datetime] NULL,
 	[CLAUSE_FLAG] [nchar](10) NULL,
-	[SERIAL_NUM] [nvarchar](50) NOT NULL
+	[SERIAL_NUM] [nvarchar](50) NOT NULL,
+    [IC_ID] [nvarchar](20) NOT NULL
 ) ON [PRIMARY]
 GO
 
@@ -106,7 +107,7 @@ CREATE TABLE [ESERVICE_JD].[dbo].[USER_DEPARTMENT](
     [USER_ID] [varchar](50) NOT NULL,
     [DEP_ID] [varchar](50) NOT NULL,
     [TITLE_ID] [varchar](50) NULL,
-    [PARENT_DEP] [varchar](50) NOT NULL
+    [BRANCH_ID] [varchar](50) NOT NULL
     ) ON [PRIMARY]
 GO
 
@@ -118,7 +119,6 @@ GO
 
 CREATE TABLE [ESERVICE_JD].[dbo].[ROLE_DEPARTMENT](
     [ROLE_ID] [varchar](50) NOT NULL,
-    [DEP_ID] [varchar](50) NOT NULL,
-    [PARENT_DEP] [varchar](50) NOT NULL
+    [DEP_ID] [varchar](50) NOT NULL
     ) ON [PRIMARY]
 GO

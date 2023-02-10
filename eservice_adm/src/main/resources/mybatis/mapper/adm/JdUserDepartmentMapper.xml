@@ -18,21 +18,30 @@
 			<if test="userDepartmentVo.userId != null and userDepartmentVo.userId != ''"> AND UD.USER_ID = #{userDepartmentVo.userId} </if>
 			<if test="userDepartmentVo.depId != null and userDepartmentVo.depId != ''"> AND UD.DEP_ID = #{userDepartmentVo.depId} </if>
 			<if test="userDepartmentVo.titleId != null and userDepartmentVo.titleId != ''"> AND UD.TITLE_ID = #{userDepartmentVo.titleId} </if>
+			<if test="userDepartmentVo.branchId != null and userDepartmentVo.branchId != ''">
+				UD.BRANCH_ID = #{userDepartmentVo.branchId}
+			</if>
 		</where>
 	</sql>
 	
 	<!-- include sql: 人員職位管理查詢結果 -->
 	<sql id="INC1">
 		SELECT
-		UD.USER_ID
-		,UD.DEP_ID
-		,UD.TITLE_ID
-		,D.DEP_NAME
-		,J.TITLE_NAME
+		UD.USER_ID,
+		UD.DEP_ID,
+		UD.DEP_NAME,
+		UD.BRANCH_ID,
+		D.DEP_NAME AS BRANCH_NAME
 		FROM
-		ESERVICE_JD.DBO.USER_DEPARTMENT UD
-		LEFT OUTER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID
-		LEFT OUTER JOIN ESERVICE_ADM.DBO.JOB_TITLE J ON UD.TITLE_ID = J.TITLE_ID COLLATE database_default
+		(SELECT
+		UDT.USER_ID
+		,UDT.DEP_ID
+		,DT.DEP_NAME
+		,UDT.BRANCH_ID
+		FROM
+		ESERVICE_JD.DBO.USER_DEPARTMENT UDT
+		LEFT OUTER JOIN ESERVICE_JD.DBO.DEPARTMENT DT ON UDT.DEP_ID = DT.DEP_ID) UD
+		INNER JOIN ESERVICE_JD.dbo.DEPARTMENT D ON UD.DEP_ID = D.PARENT_DEP AND UD.BRANCH_ID = D.BRANCH_ID
 		<include refid="whereClause" />
 	</sql>
 	
@@ -84,14 +93,14 @@
 			USER_ID
 			,DEP_ID
 			,TITLE_ID
-			,PARENT_DEP
+			,BRANCH_ID
 		)
 		VALUES
 		(
 			#{userDepartmentVo.userId, jdbcType=VARCHAR},
 			#{userDepartmentVo.depId, jdbcType=VARCHAR},
 			#{userDepartmentVo.titleId, jdbcType=VARCHAR},
-			#{userDepartmentVo.parentDep, jdbcType=VARCHAR}
+			#{userDepartmentVo.branchId, jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -103,7 +112,7 @@
 			<if test="userDepartmentVo.userId != null"> UD.USER_ID = #{userDepartmentVo.userId}, </if>
 			<if test="userDepartmentVo.depId != null"> UD.DEP_ID = #{userDepartmentVo.depId}, </if>
 			<if test="userDepartmentVo.titleId != null"> UD.TITLE_ID = #{userDepartmentVo.titleId}, </if>
-			<if test="userDepartmentVo.parentDep != null"> UD.PARENT_DEP = #{userDepartmentVo.parentDep}, </if>
+			<if test="userDepartmentVo.branchId != null"> UD.BRANCH_ID = #{userDepartmentVo.branchId},</if>
 		</set>
 		<include refid="whereClause" />
 	</update>
@@ -114,9 +123,24 @@
 		WHERE 
 			USER_ID = #{userDepartmentVo.userId}
 			AND DEP_ID = #{userDepartmentVo.depId}
+			AND BRANCH_ID = #{userDepartmentVo.branchId}
 			<if test="userDepartmentVo.titleId != null and userDepartmentVo.titleId != ''"> 
 			AND TITLE_ID = #{userDepartmentVo.titleId}
 			</if>
 	</delete>
 
+	<select id="getUserBranch" resultMap="UserDepartmentListMap">
+		SELECT
+		UD.USER_ID,
+		D.DEP_NAME AS branchName
+		FROM
+		ESERVICE_JD.DBO.USER_DEPARTMENT UD
+		INNER JOIN ESERVICE_JD.dbo.DEPARTMENT D ON UD.DEP_ID = D.PARENT_DEP AND UD.BRANCH_ID = D.BRANCH_ID
+		<where>
+			<if test="userDepartmentVo.userId != null and userDepartmentVo.userId != ''"> AND UD.USER_ID = #{userDepartmentVo.userId} </if>
+			<if test="userDepartmentVo.branchId != null and userDepartmentVo.branchId != ''">
+				D.BRANCH_ID = #{userDepartmentVo.branchId}
+			</if>
+		</where>
+	</select>
 </mapper>

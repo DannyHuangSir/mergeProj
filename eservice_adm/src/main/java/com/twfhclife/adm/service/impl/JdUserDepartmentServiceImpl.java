@@ -89,4 +89,9 @@ public class JdUserDepartmentServiceImpl implements IJdUserDepartmentService {
 	public int deleteUserDepartment(UserDepartmentVo userDepartmentVo) {
 		return userDepartmentDao.deleteUserDepartment(userDepartmentVo);
 	}
+
+	@Override
+	public List<UserDepartmentVo> getUserBranch(UserDepartmentVo userDepartmentVo) {
+		return userDepartmentDao.getUserBranch(userDepartmentVo);
+	}
 }

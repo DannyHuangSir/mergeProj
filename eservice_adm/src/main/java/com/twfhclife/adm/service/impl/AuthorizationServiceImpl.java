@@ -244,6 +244,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 			List<String> roleNameList = new ArrayList<>();
 			List<String> depNameList = new ArrayList<>();
 			List<String> titleNameList = new ArrayList<>();
+			List<String> branchNameList = new ArrayList<>();
 
 			// 取得使用者的角色清單
 			UserRoleVo qryVo = new UserRoleVo();
@@ -275,19 +276,29 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 				}
 			}
 
-			// 取得使用者的部門職位清單
+			// 取得使用者的通路分支機構清單
 			UserDepartmentVo deptQryVo = new UserDepartmentVo();
 			deptQryVo.setUserId(userId);
 			List<UserDepartmentVo> userDeptList = JdUserDepartmentDao.getUserDepartment(deptQryVo);
 			for (UserDepartmentVo userDeptVo : userDeptList) {
 				String depName = userDeptVo.getDepName();
 				String titleName = userDeptVo.getTitleName();
+
 				if (!StringUtils.isEmpty(depName) && !depNameList.contains(depName)) {
 					depNameList.add(depName);
 				}
 				if (!StringUtils.isEmpty(titleName) && !titleNameList.contains(titleName)) {
 					titleNameList.add(titleName);
 				}
+
+			}
+			List<UserDepartmentVo> userBranchList = JdUserDepartmentDao.getUserBranch(deptQryVo);
+			for (UserDepartmentVo vo:userBranchList) {
+				String branchName = vo.getBranchName();
+				if (!StringUtils.isEmpty(branchName) && !branchNameList.contains(branchName)) {
+					branchNameList.add(branchName);
+				}
+
 			}
 
 			// 設定系統跟角色資料
@@ -297,6 +308,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 			userMap.put("SYS_NAME_LIST", String.join(",", sysNameList));
 			userMap.put("DEP_NAME_LIST", String.join(",", depNameList));
 			userMap.put("TITLE_NAME_LIST", String.join(",", titleNameList));
+			userMap.put("BRACH_NAME_LIST",String.join(",", branchNameList));
 		}
 	}
 }

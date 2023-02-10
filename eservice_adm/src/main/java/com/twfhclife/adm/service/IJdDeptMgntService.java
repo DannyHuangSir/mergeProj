@@ -74,4 +74,6 @@ public interface IJdDeptMgntService {
     boolean isBranchIdExist(DepartmentVo departmentVo);
 
     DepartmentVo getDepId(String depId);
+
+    public List<DepartmentVo> getBranchList(String userId, String username,DepartmentVo vo);
 }
