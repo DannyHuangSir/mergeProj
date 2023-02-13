@@ -72,6 +72,12 @@
 					FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udd 
 					LEFT JOIN ESERVICE_ADM.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID 
 					WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
+					UNION ALL
+					SELECT
+					udd.USER_ID
+					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
+					LEFT JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID
+					WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
 			    )
 			</if>
 			<if test="userEntityVo.jobTitle != null and userEntityVo.jobTitle != ''">

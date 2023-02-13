@@ -182,15 +182,16 @@
 			grid.id = '#grid';
 			grid.url = /*[[@{/jdRole/getRoleDetail}]]*/;
 			grid.caption = '角色查詢結果';
-			grid.colNames = ['角色ID','角色名稱', '通路名稱', '角色描述', '操作'];
+			grid.colNames = ['角色代碼','角色名稱', '通路名稱', '角色描述', '操作'];
 			grid.colModel = [
-				{name: 'ROLE_ID', index: 'ROLE_ID', width: 100},
+				{name: 'DIV_ROLE_ID', index: 'DIV_ROLE_ID', width: 100},
 				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
 				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME', width: 100},
 				{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200},
 				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<a href="javascript:editRole(\'' + row.ROLE_ID + '\',\'' + emptyIfNull(row.ROLE_NAME) + '\',\'' + emptyIfNull(row.DEPARTMENT_ID) + '\',\'' + emptyIfNull(row.DESCRIPTION) + '\');" class="green bigger-140 show-details-btn" title="修改">';
+					// actionHtml += '<a href="javascript:editRole(\'' + row.ROLE_ID + '\',\'' + emptyIfNull(row.ROLE_NAME) + '\',\'' + emptyIfNull(row.DEPARTMENT_ID) + '\',\'' + emptyIfNull(row.DESCRIPTION) + '\');" class="green bigger-140 show-details-btn" title="修改">';
+					actionHtml += '<a href="javascript:editRole(\'' + row.ROLE_ID + '\',\'' + emptyIfNull(row.ROLE_NAME) + '\',\'' + emptyIfNull(row.DEPARTMENT_ID) + '\',\'' + emptyIfNull(row.DESCRIPTION) + '\',\'' + row.DIV_ROLE_ID+'\');" class="green bigger-140 show-details-btn" title="修改">';
 					actionHtml += '    <i class="my-icon fa fa-pencil bigger-120"></i> <span class="sr-only">Details</span> ';
 					actionHtml += '</a>';
 					actionHtml += '<a href="javascript:deleteRole(\'' + row.ROLE_ID + '\');" class="green bigger-140 show-details-btn" title="刪除">';
@@ -213,7 +214,7 @@
 			
 			// 新增
 			$('#addRoleBtn').on('click', function() {
-				// $('#divRoleId').val('');
+				$('#divRoleId').val('');
 				$('#roleName').val('');
 				$('#description').val('');
 				// $('#deptSelect').val('');
@@ -234,10 +235,10 @@
 							text: '確定',
 							'class' : 'btn btn-primary',
 							click: function() {
-								// if ($('#editDiv #divRoleId').val() == '') {
-								// 	alertMsg("請輸入角色代码");
-								// 	return false;
-								// }
+								if ($('#editDiv #divRoleId').val() == '') {
+									alertMsg("請輸入角色代码");
+									return false;
+								}
 								if ($('#editDiv #roleName').val() == '') {
 									alertMsg("請輸入角色名稱");
 									return false;
@@ -250,7 +251,8 @@
 									// departmentId: $('#deptSelect option:selected').val(),
 									departmentId: $('#editDiv #deptParentSelect').val(),
 									roleName : $('#editDiv #roleName').val(),
-									description : $('#editDiv #description').val()
+									description : $('#editDiv #description').val(),
+									divRoleId: $('#editDiv #divRoleId').val(),
 								};
 								eserviceForm.post(/*[[@{/jdRole/insertRole}]]*/, formData, function(response) {
 									alertMsg(response.resultMsg);
@@ -270,16 +272,16 @@
 		});
 
 		// 更新
-		function editRole(roleId, roleName, departmentId, description) {
+		function editRole(roleId, roleName, departmentId, description,divRoleId) {
 			$('#editForm #roleId').val(roleId);
 			$('#editForm #roleName').val(roleName);
-			// $('#editForm #divRoleId').val();
 			if (departmentId) {
 				$('#editForm #deptParentSelect').val(departmentId);
 			} else {
 				$('#editForm #deptParentSelect').val('');
 			}
 			$('#editForm #description').val(description);
+			$('#editForm #divRoleId').val(divRoleId);
 			var dialog = $('#editDiv').removeClass('hide').dialog({
 				modal: true,
 				title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='my-icon fa fa-pencil'></i>修改角色</h4></div>",
@@ -296,10 +298,10 @@
 						text: '確定',
 						'class' : 'btn btn-primary',
 						click: function() {
-							// if ($('#editForm #divRoleId').val() == '') {
-							// 	alertMsg("請輸入角色代码");
-							// 	return false;
-							// }
+							if ($('#editForm #divRoleId').val() == '') {
+								alertMsg("請輸入角色代码");
+								return false;
+							}
 							if ($('#editForm #roleName').val() == '') {
 								alertMsg("請輸入角色名稱");
 								return false;
@@ -314,7 +316,8 @@
 										roleId : roleId,
 										departmentId: $('#editForm #deptParentSelect').val(),
 										roleName : $('#editForm #roleName').val(),
-										description : $('#editForm #description').val()
+										description : $('#editForm #description').val(),
+										divRoleId: $('#editDiv #divRoleId').val()
 									};
 									eserviceForm.post(/*[[@{/jdRole/updateRole}]]*/, formData, function(response) {
 										alertMsg(response.resultMsg);
