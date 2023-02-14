@@ -17,7 +17,7 @@
 
     <sql id="Base_Column_List">
         ROLE_ID
-        ,ROLE_NAME,DESCRIPTION,PARENT_ROLE_ID,DEPARTMENT_ID,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE
+        ,ROLE_NAME,DESCRIPTION,PARENT_ROLE_ID,DEPARTMENT_ID,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE,DIV_ROLE_ID
     </sql>
 
     <sql id="whereClause">
@@ -84,7 +84,7 @@
     <!-- include sql: 使用者角色管理查詢結果 -->
     <sql id="INC1">
         SELECT
-        b.ROLE_ID,b.ROLE_NAME,b.DESCRIPTION,b.PARENT_ROLE_ID,b.DEPARTMENT_ID,b.CREATE_USER,b.CREATE_DATE,b.MODIFY_USER,b.MODIFY_DATE,a.DEP_NAME as DEPARTMENT_NAME
+        b.ROLE_ID,b.ROLE_NAME,b.DESCRIPTION,b.PARENT_ROLE_ID,b.DEPARTMENT_ID,b.CREATE_USER,b.CREATE_DATE,b.MODIFY_USER,b.MODIFY_DATE,a.DEP_NAME as DEPARTMENT_NAME,b.DIV_ROLE_ID
         FROM
         ESERVICE_ADM.DBO.ROLE b
         left join ESERVICE_JD.DBO.ROLE_DEPARTMENT RD ON RD.ROLE_ID = b.ROLE_ID COLLATE database_default
@@ -160,9 +160,19 @@
         #{roleVo.createUser, jdbcType=VARCHAR},
         getdate(),
         #{roleVo.modifyUser, jdbcType=VARCHAR},
-        getdate()
+        getdate(),
+        #{roleVo.divRoleId, jdbcType=VARCHAR}
         )
         insert ESERVICE_JD.dbo.ROLE_DEPARTMENT (ROLE_ID,DEP_ID) values ((select * from @temp),#{roleVo.departmentId, jdbcType=VARCHAR})
+        insert INTO ESERVICE_ADM.DBO.ROLE_SYS_AUTH
+        (ROLE_ID,
+        SYS_ID,
+        CREATE_USER,
+        CREATE_DATE)
+        VALUES ((select * from @temp),
+        #{roleVo.systemId, jdbcType=VARCHAR},
+        #{roleVo.createUser, jdbcType=VARCHAR},
+        getdate())
     </insert>
 
     <!-- 使用者角色管理-更新 -->
@@ -178,6 +188,7 @@
             <if test="roleVo.createUser != null">CREATE_USER = #{roleVo.createUser},</if>
             <if test="roleVo.createDate != null">CREATE_DATE = #{roleVo.createDate},</if>
             <if test="roleVo.modifyUser != null">MODIFY_USER = #{roleVo.modifyUser},</if>
+            <if test="roleVo.divRoleId != null">DIV_ROLE_ID = #{roleVo.divRoleId},</if>
             MODIFY_DATE = getdate()
         </set>
         <include refid="wherePkClause"/>
@@ -216,5 +227,8 @@
         WHERE RSA.SYS_ID = 'eservice_jd' AND D1.DEP_ID = #{vo.passageWay}
     </select>
 
+    <delete id="deleteRoleSysAuth">
+        DELETE ESERVICE_ADM.DBO.ROLE_SYS_AUTH
+    </delete>
 </mapper>
 

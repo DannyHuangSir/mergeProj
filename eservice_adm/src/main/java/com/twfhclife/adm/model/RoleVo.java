@@ -28,6 +28,16 @@ public class RoleVo extends Pagination {
 	
 	private String systemId;
 	private String parentDep;
+	private String divRoleId;
+	public void setDivRoleId(String divRoleId) {
+		this.divRoleId = divRoleId;
+	}
+
+	public String getDivRoleId() {
+		return divRoleId;
+	}
+
+
 	public void setParentDep(String parentDep) {
 		this.parentDep = parentDep;
 	}

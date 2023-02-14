@@ -1,14 +1,5 @@
 package com.twfhclife.adm.service.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.twfhclife.adm.dao.FunctionDivDao;
 import com.twfhclife.adm.dao.FunctionItemDao;
 import com.twfhclife.adm.model.FunctionDivVo;
@@ -18,6 +9,14 @@ import com.twfhclife.adm.service.IFuncMgntService;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.FuncMgmtClient;
 import com.twfhclife.generic.util.MyStringUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 權限管理-功能維護服務.
@@ -46,6 +45,7 @@ public class FuncMgntServiceImpl implements IFuncMgntService {
 		List<FunctionItemVo> funcItemList = null;
 		try {
 			funcItemList = funcMgmtClient.getSystemFunctions(sysId);
+			funcItemList = functionItemDao.getAllFuncBySysId(sysId);
 		} catch (Exception e) {
 			funcItemList = functionItemDao.getAllFuncBySysId(sysId);
 			List<FunctionDivVo> funcDivList = functionDivDao.findAll();

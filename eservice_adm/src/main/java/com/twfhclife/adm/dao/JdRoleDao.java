@@ -85,4 +85,6 @@ public interface JdRoleDao {
     int deleteRoleDep(@Param("roleVo") RoleVo roleVo);
 
     List<Map<String, Object>> getNotifyRoles(@Param("vo") NotifySearchVo notifySearchVo);
+
+    int deleteRoleSysAuth(@Param("roleVo") RoleVo roleVo);
 }
