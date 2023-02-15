@@ -8,5 +8,4 @@ import java.util.List;
 public interface JdzqDao {
     List<CaseVo> getCaseListBySerialNum(@Param("serialNums") List<String> serialNums);
 
-    List<CaseVo> getCaseListByPolicyNo(@Param("policyNos") List<String> serialNums);
 }

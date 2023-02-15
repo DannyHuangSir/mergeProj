@@ -2,32 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.twfhclife.adm.dao.JdMsgNotifyDao">
 
-    <insert id="addJdNotifyMsg">
-        INSERT INTO ESERVICE_JD.DBO.MESSAGE(TITLE, MSG, STATUS, CREATE_DATE, USER_ID, NOTIFY_TIME)
-        <if test="msg.users != null and msg.users.size() >0 ">
-            values
-            <foreach collection="msg.users" item="user" separator=",">
-                (#{msg.title}, #{msg.msg}, '1', SYSDATETIME(), #{user}, #{msg.notifyTime})
-            </foreach>
-        </if>
-        <if test="msg.deps != null and msg.deps.size() >0 ">
-            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime} from ESERVICE_JD.DBO.DEPARTMENT D
-            INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.DEP_ID = UD.DEP_ID
-            WHERE D.DEP_ID IN
-            <foreach collection="msg.deps" item="dep" separator="," close=")" open="(">
-                #{dep}
-            </foreach>
-        </if>
-        <if test="msg.roles != null and msg.roles.size() >0 ">
-            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UR.USER_ID, #{msg.notifyTime} FROM  ESERVICE_ADM.DBO.ROLE R
-            INNER JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON R.ROLE_ID = UR.ROLE_ID
-            WHERE R.ROLE_ID IN
-            <foreach collection="msg.roles" item="role" separator="," close=")" open="(">
-                #{role}
-            </foreach>
-        </if>
-    </insert>
-
     <insert id="addJdzqMsgSchedule">
         INSERT INTO ESERVICE_JD.dbo.NOTIFY_SCHEDULE(TITLE, MSG_CONTENT, USERS,  ROLES, DEPS, NOTIFY_TIME, CREATE_DATE, STATUS, NOTIFY_TARGET, PASSAGE_WAY)
         VALUES(#{msg.title}, #{msg.msg},
@@ -137,18 +111,5 @@
         DELETE FROM ESERVICE_JD.DBO.NOTIFY_SCHEDULE
         WHERE ID = #{id}
     </delete>
-
-    <select id="getWillSendMsgs" resultType="com.twfhclife.adm.model.JdzqNotifyMsg">
-        select ID id, TITLE title, MSG_CONTENT msg, USERS userStr, DEPS depStr, ROLES roleStr , NOTIFY_TIME notifyTime, CREATE_DATE createDate from
-        ESERVICE_JD.DBO.NOTIFY_SCHEDULE WHERE NOTIFY_TIME &lt;= SYSDATETIME() AND STATUS = 1
-    </select>
-
-    <update id="updateNotifyMsgComplete">
-        update ESERVICE_JD.DBO.NOTIFY_SCHEDULE
-        set status = 2 where ID IN
-        <foreach collection="ids" item="id" separator="," open="(" close=")">
-            #{id}
-        </foreach>
-    </update>
 
 </mapper>

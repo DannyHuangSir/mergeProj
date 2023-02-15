@@ -17,8 +17,11 @@
 	</sql>
 	<sql id="Where_Case">
 		WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= SYSDATETIME()
-		<if test="vo.notifySearchTime != null">
-			AND NOTIFY_TIME between #{vo.notifySearchTime} and DATEADD(day, 1, #{vo.notifySearchTime})
+		<if test="vo.notifyStartSearchTime != null and vo.notifyEndSearchTime != null">
+			AND NOTIFY_TIME between #{vo.notifyStartSearchTime} and #{vo.notifyEndSearchTime}
+		</if>
+		<if test="vo.notifyStartSearchTime == null or vo.notifyEndSearchTime == null">
+			AND NOTIFY_TIME &gt;= DATEADD(month, -6, SYSDATETIME())
 		</if>
 		<if test="vo.status != null">
 			AND STATUS = #{vo.status}
@@ -26,35 +29,11 @@
 	</sql>
 	
 	<select id="getMessages" resultMap="MessageMap">
-		SELECT *
-		FROM (
-		SELECT
-		ROW_NUMBER() OVER (ORDER BY CREATE_DATE) AS ROW_NUM
-		,A.*
-		FROM (
-			SELECT
-				<include refid="Base_Column_List" />
-			FROM
-				ESERVICE_JD.DBO.MESSAGE
-				<include refid="Where_Case"></include>
-
-		) A
-		) B
-		WHERE
-		B.ROW_NUM <![CDATA[<=]]> #{vo.pageNum} * #{vo.pageSize}
-		AND B.ROW_NUM <![CDATA[>]]> (#{vo.pageNum} - 1) * #{vo.pageSize}
-	</select>
-
-	<select id="getMessagesTotal" resultType="int">
-		SELECT
-		COUNT(1) AS AMOUNT
-		FROM (
 		SELECT
 			<include refid="Base_Column_List" />
-			FROM
+		FROM
 			ESERVICE_JD.DBO.MESSAGE
 			<include refid="Where_Case"></include>
-		) t
 	</select>
 
 	<select id="getNotRead" resultType="int">

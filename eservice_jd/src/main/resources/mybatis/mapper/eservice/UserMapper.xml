@@ -145,11 +145,4 @@
 		WHERE UE.ID = #{userId}
 	</select>
 
-	<select id="getPolicyNoBySerialNum" resultType="string">
-		SELECT DISTINCT POLICY_NO FROM USER_VIP WHERE SERIAL_NUM IN
-		<foreach collection="serialNums" item="num" open="(" close=")" separator=",">
-			#{num}
-		</foreach>
-	</select>
-
 </mapper>

@@ -37,12 +37,7 @@ public class CaseServiceImpl implements ICaseService {
         }
         if (!CollectionUtils.isEmpty(serialNums)) {
             result.addAll(caseDao.getCaseListBySerialNum(serialNums));
-            List<String> policyNos = usersDao.getPolicyNoBySerialNum(serialNums);
-            if (!CollectionUtils.isEmpty(policyNos)) {
-                result.addAll(caseDao.getCaseListByPolicyNo(policyNos));
-            }
         }
-
         return result;
     }
 }

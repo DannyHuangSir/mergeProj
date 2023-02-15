@@ -18,9 +18,10 @@
 <script th:src="@{/plugin/tablesaw.stackonly.js}"></script>
 <!--popover-->
 <script th:src="@{/plugin/scrollbar.js}"></script>
-<script th:src="@{/js/popover-callback.js}"></script>
+<script th:src="@{/js/popover.js}"></script>
 <script th:src="@{/js/eservice/timer.js}"></script>
 <script th:src="@{/plugin/timer.jquery.js}"></script>
+<script th:src="@{/js/travelPolicy/moment.js}"></script>
 <script th:inline="javascript">
 /*<![CDATA[*/
     document.oncontextmenu = function() {
@@ -45,27 +46,20 @@
         })
     }
 /*]]>*/
+
 </script>
 <script th:inline="javascript">
 /*<![CDATA[*/
-    pageNum = 1
     notifySearchStatus = null
-    notifySearchTime = null
     msgMap = {}
     function clickSearch() {
         event.preventDefault(),
 		event.stopPropagation();
         $("#messageContent").html("<div class='items' id='messages' style='overflow-y: hidden;'></div>")
-        pageNum = 1
         notifySearchStatus = $('#notifyStatus option:selected').val()
         notifySearchTime = $('#notifySearchTime').val() == '' ? null : $('#notifySearchTime').val()
         appendNotifyItems(true)
         return false;
-    }
-
-    function popoverCallback() {
-        pageNum += 1
-        appendNotifyItems()
     }
 
     function appendNotifyItems(config = false) {
@@ -76,15 +70,13 @@
             url : /*[[@{/message}]]*/,
             data: JSON.stringify(
                 {
-                    pageSize: 50,
-                    pageNum: pageNum,
                     status: notifySearchStatus,
-                    notifySearchTime: notifySearchTime
+                    notifyEndSearchTime: $("#notifyEndSearchTime").val(),
+                    notifyStartSearchTime: $("#notifyStartSearchTime").val()
                 }
             ),
             success : function(data) {
                 if (data.result = 'SUCCESS') {
-                    $('#messageCount').text(data.resultData.count)
                     $(data.resultData.data).each(function(index, item){
                         msgMap[item.id] = {
                             msg: item.msg,
@@ -101,15 +93,18 @@
                 if (!config) {
                     $("#messages").mCustomScrollbar("destroy")
                 }
-                 $("#messages").height("200px").mCustomScrollbar({
-<!--                         callbacks:{-->
-<!--                                onTotalScroll:function() {-->
-<!--                                    popoverCallback()-->
-<!--                                }-->
-<!--                            }-->
-                    })
+                $("#messages").height("200px").mCustomScrollbar()
             }
         });
+    }
+
+    function completeDate(value) {
+        return value < 10 ? "0" + value : value
+    }
+
+    function getNowTime() {
+        date = new Date()
+        return date.getFullYear() + '-' + completeDate(date.getMonth() + 1) + '-' + completeDate(date.getDate())
     }
 
     function getNotRead() {
@@ -121,6 +116,7 @@
             success : function(data) {
                 if (data.result = 'SUCCESS') {
                     $('#notRead').text(data.resultData)
+                    $('#messageCount').text(data.resultData)
                 }
             }
         });
@@ -150,14 +146,39 @@
     $(function(){
         appendNotifyItems()
         getNotRead()
-        $("body").on('focus', '#notifySearchTime', function(){
+        $("body").on('focus', '#notifyStartSearchTime', function(){
             $(this).datepicker({
                 dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                maxDate: new Date(),
+                onSelect: function(dateText, inst) {
+                     if (moment($("#notifyEndSearchTime").val()).diff(moment(dateText), 'month') > 6) {
+                        openAlert("時間間隔不能超過六個月");
+                        $("#notifyStartSearchTime").val(inst.lastVal)
+                        return false;
+                    }
+                }
+            });
+        })
+         $("body").on('focus', '#notifyEndSearchTime', function(){
+            $(this).datepicker({
+                dateFormat: 'yy-mm-dd',
+                maxDate: new Date(),
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function(dateText, inst) {
+                  if (moment(dateText).diff(moment($("#notifyStartSearchTime").val()), 'month') > 6) {
+                        openAlert("時間間隔不能超過六個月");
+                        $("#notifyEndSearchTime").val(inst.lastVal)
+                        return false;
+                   }
+                }
             });
         })
    })
-
 /*]]>*/
+
 </script>
 </body>
 </html>

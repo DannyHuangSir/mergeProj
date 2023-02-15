@@ -77,6 +77,13 @@
                                     <div class="radio" style="float: left;padding-right: 20px;">
                                         <label>
                                             <div class="radio-btn"><i><input type="radio" name="notifyRadio"
+                                                                             value="passageWay"></i></div>
+                                            指定通路
+                                        </label>
+                                    </div>
+                                    <div class="radio" style="float: left;padding-right: 20px;">
+                                        <label>
+                                            <div class="radio-btn"><i><input type="radio" name="notifyRadio"
                                                                              value="member"></i></div>
                                             指定員工編號
                                         </label>
@@ -176,8 +183,10 @@
                     showMember()
                 } else if ($(this).val() == 'department') {
                     showDept()
-                } else if ($(this).val() == 'role')(
+                } else if ($(this).val() == 'role') {
                     showRole()
+                } else if ($(this).val() == 'passageWay')(
+                    showPassageWay()
                 )
             })
 
@@ -207,64 +216,84 @@
                     alertMsg('未填寫發送内容');
                     return false;
                 }
-                notifyTarget = ''
-				users = new Array()
-				$('.memberCheckBox:checked').each(function(key,value){
-						users[key] = $(value).val()
-						notifyTarget += $(this).attr('textName') + ','
-					}
-				)
-				roles = new Array()
-				$('.roleCheckBox:checked').each(function(key,value){
-						roles[key] = $(value).val()
-						notifyTarget += $(this).attr('textName') + ','
-					}
-				)
-				deps = new Array()
-				$('.depCheckBox:checked').each(function(key,value){
-						deps[key] = $(value).val()
-						notifyTarget += $(this).attr('textName') + ','
-					}
-				)
-				if ((users != undefined && users.length > 0) || (roles != undefined && roles.length > 0)
-					|| (deps != undefined && deps.length > 0)) {
 
-					    data = {
-					        users: users,
-					        deps: deps,
-					        roles: roles,
-					        msg: $("#notifyMsgContent").summernote('code'),
-					        title: $("#notifyTitle").val(),
-					        notifyTime: $("#notifyTime").val(),
-					        notifyTarget: notifyTarget.substring(0, notifyTarget.length -1),
-					        passageWay: $('#passageWaySelect option:selected').val()
-					    }
-                        $.ajax({
-                            type : 'POST',
-                            contentType : 'application/json',
-                            url : /*[[@{/addJdzqMsgSchedule}]]*/,
-                            data : JSON.stringify(data),
-                            success : function(response) {
-                                if (response.result == 'SUCCESS') {
-                                   alertMsg('添加成功');
-                                   return false;
-                                }
-                            },
-                            error : function() {
-                                alertMsg('error!')
-                            }
-                        });
-					return false;
-				} else {
-					alertMsg('未選擇發送對象');
-					return false;
-				}
+                notifyTarget = ''
+                checked = $("input[name='notifyRadio']:checked")
+                deps = new Array()
+                users = new Array()
+                 roles = new Array()
+                if ($(checked).val() == 'passageWay') {
+                    notifyTarget = $('#passageWaySelect option:selected').text()
+                } else if ($(checked).val() == 'member') {
+                    $('.memberCheckBox:checked').each(function(key,value){
+                            users[key] = $(value).val()
+                            targetTd = $(this).parent()
+                            notifyTarget += $(targetTd).next().text() + ' ' + $(targetTd).next().next().text() + ' ' + $(targetTd).next().next().next().text() + ','
+                        }
+                    )
+                    if (users.length <= 0) {
+                        alertMsg('未選擇發送對象');
+					    return false;
+                    }
+                    notifyTarget = notifyTarget.substring(0, notifyTarget.length -1)
+                } else if ($(checked).val() == 'role') {
+                    $('.roleCheckBox:checked').each(function(key,value){
+                            roles[key] = $(value).val()
+                            targetTd = $(this).parent()
+                            notifyTarget += $(targetTd).next().text() + ' ' + $(targetTd).next().next().text() + ','
+                        }
+                    )
+                    if (roles.length <= 0) {
+                        alertMsg('未選擇發送對象');
+					    return false;
+                    }
+                    notifyTarget = notifyTarget.substring(0, notifyTarget.length -1)
+                } else if ($(checked).val() == 'department') {
+                    $('.depCheckBox:checked').each(function(key,value){
+                            deps[key] = $(value).val()
+                            targetTd = $(this).parent()
+                            notifyTarget += $(targetTd).next().text() + ' ' + $(targetTd).next().next().text() + ','
+                        }
+                    )
+                    if (deps.length <= 0) {
+                        alertMsg('未選擇發送對象');
+					    return false;
+                    }
+                    notifyTarget = notifyTarget.substring(0, notifyTarget.length -1)
+                }
+
+                data = {
+                    users: users,
+                    deps: deps,
+                    roles: roles,
+                    msg: $("#notifyMsgContent").summernote('code'),
+                    title: $("#notifyTitle").val(),
+                    notifyTime: $("#notifyTime").val(),
+                    notifyTarget: notifyTarget,
+                    passageWay: $('#passageWaySelect option:selected').val()
+                }
+                $.ajax({
+                    type : 'POST',
+                    contentType : 'application/json',
+                    url : /*[[@{/addJdzqMsgSchedule}]]*/,
+                    data : JSON.stringify(data),
+                    success : function(response) {
+                        if (response.result == 'SUCCESS') {
+                           alertMsg('添加成功');
+                           return false;
+                        }
+                    },
+                    error : function() {
+                        alertMsg('error!')
+                    }
+                });
+
 			})
 
 			$("#notifyMsgContent").summernote({
 			  minHeight: 100,             // set minimum height of editor
 			  maxHeight: 300,             // set maximum height of editor
-			  placeholder: '請輸入消息內容及格式...',
+			  placeholder: '請輸入通知内容及格式...',
 			  lang: 'zh-TW',
 			  toolbar: [
 					// [groupName, [list of button]]
@@ -289,7 +318,7 @@
 			qryGrid.colModel = [
 				{width: 50, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<input class="memberCheckBox" textName="' + row.USER_NAME +'" type="checkbox" value="' + row.ID + '"/>';
+					actionHtml += '<input class="memberCheckBox" type="checkbox" value="' + row.ID + '"/>';
 					return actionHtml;
 				}},
 				{width: 120, formatter: function(cellvalue, options, row) {
@@ -314,7 +343,7 @@
 			qryGrid.colModel = [
 				{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<input class="depCheckBox" textName="' + row.DEP_NAME +'" type="checkbox" value="' + row.DEP_ID + '"/>';
+					actionHtml += '<input class="depCheckBox" type="checkbox" value="' + row.DEP_ID + '"/>';
 					return actionHtml;
 				}},
 				{width: 120, formatter: function(cellvalue, options, row) {
@@ -338,7 +367,7 @@
 			qryGrid.colModel = [
 				{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<input class="roleCheckBox" textName="' + row.ROLE_NAME +'" type="checkbox" value="' + row.ROLE_ID + '"/>';
+					actionHtml += '<input class="roleCheckBox" type="checkbox" value="' + row.ROLE_ID + '"/>';
 					return actionHtml;
 				}},
 				{width: 200, formatter: function(cellvalue, options, row) {
@@ -350,6 +379,10 @@
 			];
 			qryGrid.setPostData('passageWay', $('#passageWaySelect option:selected').val());
 			qryGrid.create();
+		}
+
+		function showPassageWay() {
+		    $("#queryContent").html('<div style="margin:0 auto; width:50%;"><table id="qryGrid"></table><div id="qryPager"></div></div>')
 		}
 
 		function breakLine(data) {

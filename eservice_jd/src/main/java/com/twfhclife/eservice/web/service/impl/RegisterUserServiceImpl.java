@@ -61,62 +61,9 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 	@Autowired
 	private IParameterService parameterService;
 
-	/**
-	 * 用身份證號取得用戶資料
-	 *
-	 * @param rocId 用戶證號
-	 * @return UsersVo
-	 */
-	@Override
-	public UsersVo getUserByRocId(String rocId) {
-		return userDao.getUserByRocId(rocId);
-	}
-
-	@Override
-	public String checkRegister(UsersVo user) {
-		try {
-			UsersVo returnUser = userDao.getUserByRocId(user.getRocId());
-			if (returnUser != null) {
-				//身分證號已存在
-				logger.info("RocId("+user.getRocId()+") has been registered by username:"+user.getUserName());
-				return "rocid";
-			}
-			/*
-			KeycloakUser kuser = keycloakService.getUserByEmail(user.getEmail());
-			if (kuser != null && kuser.getUsername() != null && !user.getEmail().equals("")) {
-				logger.info("Email("+user.getEmail()+") has been registered by username:"+user.getUserName());
-				//email已存在
-				return "email";
-			}
-			*/
-
-			if(StringUtils.isBlank(BaseRestClient.getAccessKey())) {
-				try {
-					String encrypAccessKey = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "eservice_api.accessKey");
-					BaseRestClient.setAccessKey(EncryptionUtil.Decrypt(encrypAccessKey));
-				} catch(Exception e) {
-					logger.error("Set API access key error: ", e);
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-
-		return null;
-	}
-
 	@Override
 	public List<ParameterVo> getTerms() {
 		return parameterDao.getParameterByCategoryCode("eservice", ApConstants.REGISTER_TERM_PARAMETER_CATEGORY_CODE);
-	}
-
-	@Override
-	public boolean getPolicyByRocId(String policyNo, String rocId) {
-		String policy = userDao.getPolicyByRocId(rocId, policyNo);
-		if (policy == null) {
-			return false;
-		}
-		return true;
 	}
 
 	@Override
@@ -236,21 +183,6 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		return uservo;
 	}
 
-	@Override
-	public boolean checkOldSystemUser(String rocId, String password) {
-		return userDao.checkOldSystemUser(rocId, password) > 0;
-	}
-
-	@Override
-	public List<UsersVo> getMailPhoneByRocid(String rocId) {
-		return userDao.getMailPhoneByRocid(rocId);
-	}
-
-	@Override
-	public UsersVo getMailPhoneByRocidPolicyNo(String rocId, String policyNo) {
-		return userDao.getMailPhoneByRocidPolicyNo(rocId, policyNo);
-	}
-
     @Override
     public int incLoginFailCount(String userId) {
         return userDao.incLoginFailCount(userId);
@@ -283,5 +215,4 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		}
 		return "密碼變更成功";
 	}
-
 }

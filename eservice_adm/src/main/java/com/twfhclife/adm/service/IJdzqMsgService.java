@@ -8,8 +8,6 @@ import java.util.Map;
 
 public interface IJdzqMsgService {
 
-    int addJdzqMsg(JdzqNotifyMsg msg);
-
     int addJdzqMsgSchedule(JdzqNotifyMsg msg);
 
     List<Map<String, Object>> getMsgSchedule(NotifySearchVo vo);

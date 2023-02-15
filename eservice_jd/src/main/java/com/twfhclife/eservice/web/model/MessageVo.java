@@ -17,7 +17,10 @@ public class MessageVo extends PageInfoVo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date notifySearchTime;
+    private Date notifyStartSearchTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date notifyEndSearchTime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd hh:mm:ss")
     private Date createDate;
@@ -93,11 +96,19 @@ public class MessageVo extends PageInfoVo {
         this.notifyTime = notifyTime;
     }
 
-    public Date getNotifySearchTime() {
-        return notifySearchTime;
+    public Date getNotifyStartSearchTime() {
+        return notifyStartSearchTime;
     }
 
-    public void setNotifySearchTime(Date notifySearchTime) {
-        this.notifySearchTime = notifySearchTime;
+    public void setNotifyStartSearchTime(Date notifyStartSearchTime) {
+        this.notifyStartSearchTime = notifyStartSearchTime;
+    }
+
+    public Date getNotifyEndSearchTime() {
+        return notifyEndSearchTime;
+    }
+
+    public void setNotifyEndSearchTime(Date notifyEndSearchTime) {
+        this.notifyEndSearchTime = notifyEndSearchTime;
     }
 }

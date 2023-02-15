@@ -11,8 +11,6 @@ import java.util.Map;
 @Mapper
 public interface JdMsgNotifyDao {
 
-    int addJdNotifyMsg(@Param("msg") JdzqNotifyMsg msg);
-
     int addJdzqMsgSchedule(@Param("msg") JdzqNotifyMsg msg);
 
     List<Map<String, Object>> getJdzqMsgSchedule(@Param("vo") NotifySearchVo vo);
@@ -20,8 +18,4 @@ public interface JdMsgNotifyDao {
     int getJdzqMsgScheduleTotal(@Param("vo") NotifySearchVo vo);
 
     int deleteNotifyMsg(@Param("id") Long id);
-
-    List<JdzqNotifyMsg> getWillSendMsgs();
-
-    int updateNotifyMsgComplete(@Param("ids") List<Long> ids);
 }

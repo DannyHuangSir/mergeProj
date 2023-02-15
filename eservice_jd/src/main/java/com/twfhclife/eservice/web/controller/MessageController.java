@@ -6,12 +6,9 @@ import com.twfhclife.eservice.keycloak.service.KeycloakService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.MessageVo;
 import com.twfhclife.eservice.web.service.IMessageService;
-import com.twfhclife.eservice.web.service.IPolicyService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +31,6 @@ public class MessageController extends BaseController {
         responseObj.setResult(ResponseObj.SUCCESS);
         Map<String, Object> result = Maps.newHashMap();
         result.put("data", messageService.getMessages(vo, keycloakService.getUserByUsername(getUserId()).getId()));
-        result.put("count", messageService.getTotalCount(vo, keycloakService.getUserByUsername(getUserId()).getId()));
         responseObj.setResultData(result);
         return responseObj;
     }

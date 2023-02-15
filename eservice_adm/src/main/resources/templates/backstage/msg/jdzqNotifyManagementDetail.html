@@ -102,7 +102,7 @@
 				{name:'NOTIFY_TIME',index:'NOTIFY_TIME'},
 				{align: 'left', formatter: function(cellvalue, options, row) {
 					var editHtml = '';
-					editHtml += '<a onclick="showDialog(\'通知對象\', \'' +  row.NOTIFY_TARGET + '\')" class="green bigger-140 show-details-btn" title="Edit">';
+					editHtml += '<a onclick="showTarget(\'通知對象\', \'' +  row.NOTIFY_TARGET + '\')" class="green bigger-140 show-details-btn" title="Edit">';
 					editHtml += '    <i class="my-icon fa fa-user bigger-120"></i> <span class="sr-only">Details</span>';
 					editHtml += '</a>';
 					editHtml += '<a onclick="showDialog(\'通知内容\', \'' +  row.MSG_CONTENT + '\')" class="green bigger-140 show-details-btn" title="Edit">';
@@ -144,6 +144,15 @@
 
 		function closeMsgDialog() {
 			$('#msgDialog').dialog('close')
+		}
+
+		function showTarget(title, msg) {
+			html = '<ul style="list-style: none">'
+			msg.split(',').forEach(function(item, index) {
+				html += '<li>' + item + '</li>'
+			})
+			html += '</ul>'
+			showDialog(title, html)
 		}
 
 		function showDialog(title, msg) {

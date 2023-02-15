@@ -8,24 +8,8 @@ import java.util.Map;
 
 public interface IRegisterUserService {
 	
-	/**
-	 * 用身份證號取得用戶資料
-	 * 
-	 * @param rocId 用戶證號
-	 * @return UsersVo
-	 */
-	public UsersVo getUserByRocId(String rocId);
 
-	/**
-	 * 檢查身分證號碼是否已存在
-	 * @param user
-	 * @return boolean
-	 */
-	public String checkRegister(UsersVo user);
-	
 	public List<ParameterVo> getTerms();
-	
-	public boolean getPolicyByRocId(String policyNo, String rocId);
 	
 	public Map<String, String> registerUserData(UsersVo user);
 	
@@ -33,16 +17,6 @@ public interface IRegisterUserService {
 	
 	public String updatePassword(String account, String newPassword) throws Exception;
 	
-	public UsersVo getUserByFbId(String fbId);
-	
-	public UsersVo getUserByCardSn(String cardSN);
-	
-	public boolean checkOldSystemUser(String rocId, String password);
-	
-	public List<UsersVo> getMailPhoneByRocid(String rocId);
-	
-	public UsersVo getMailPhoneByRocidPolicyNo(String rocId, String policyNo);
-
     int incLoginFailCount(String userId);
 
 	int updateLoginSuccess(String userId);
