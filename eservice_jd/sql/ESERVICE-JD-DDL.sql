@@ -124,3 +124,5 @@ CREATE TABLE [ESERVICE_JD].[dbo].[ROLE_DEPARTMENT](
 GO
 
 alter table ESERVICE_ADM.dbo.ROLE add DIV_ROLE_ID  [nvarchar](50) NULL
+
+alter table ESERVICE_JD.DBO.USER_DEPARTMENT alter column BRANCH_ID [nvarchar](50) NULL;

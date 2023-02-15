@@ -41,7 +41,7 @@
 		FROM
 		ESERVICE_JD.DBO.USER_DEPARTMENT UDT
 		LEFT OUTER JOIN ESERVICE_JD.DBO.DEPARTMENT DT ON UDT.DEP_ID = DT.DEP_ID) UD
-		INNER JOIN ESERVICE_JD.dbo.DEPARTMENT D ON UD.DEP_ID = D.PARENT_DEP AND UD.BRANCH_ID = D.BRANCH_ID
+		LEFT JOIN ESERVICE_JD.dbo.DEPARTMENT D ON UD.DEP_ID = D.PARENT_DEP AND UD.BRANCH_ID = D.BRANCH_ID
 		<include refid="whereClause" />
 	</sql>
 	
@@ -123,7 +123,9 @@
 		WHERE 
 			USER_ID = #{userDepartmentVo.userId}
 			AND DEP_ID = #{userDepartmentVo.depId}
-			AND BRANCH_ID = #{userDepartmentVo.branchId}
+			<if test="userDepartmentVo.branchId != null and userDepartmentVo.branchId != ''">
+				AND BRANCH_ID = #{userDepartmentVo.branchId}
+			</if>
 			<if test="userDepartmentVo.titleId != null and userDepartmentVo.titleId != ''"> 
 			AND TITLE_ID = #{userDepartmentVo.titleId}
 			</if>
@@ -135,7 +137,7 @@
 		D.DEP_NAME AS branchName
 		FROM
 		ESERVICE_JD.DBO.USER_DEPARTMENT UD
-		INNER JOIN ESERVICE_JD.dbo.DEPARTMENT D ON UD.DEP_ID = D.PARENT_DEP AND UD.BRANCH_ID = D.BRANCH_ID
+		LEFT JOIN ESERVICE_JD.dbo.DEPARTMENT D ON UD.DEP_ID = D.PARENT_DEP AND UD.BRANCH_ID = D.BRANCH_ID
 		<where>
 			<if test="userDepartmentVo.userId != null and userDepartmentVo.userId != ''"> AND UD.USER_ID = #{userDepartmentVo.userId} </if>
 			<if test="userDepartmentVo.branchId != null and userDepartmentVo.branchId != ''">

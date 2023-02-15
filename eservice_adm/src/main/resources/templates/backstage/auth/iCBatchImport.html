@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>eService後台管理系統</title>
+
+    <meta name="description" content="overview &amp; stats" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="assets/css/daterangepicker.min.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css" />
+
+    <link rel="stylesheet" href="assets/css/ui.jqgrid.min.css" />
+
+    <!-- page specific plugin styles -->
+
+    <!-- text fonts -->
+    <link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
+
+    <!-- my styles -->
+    <link rel="stylesheet" href="assets/css/my.min.css" class="my-main-stylesheet" id="main-my-style" />
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="assets/css/my-part2.min.css" class="my-main-stylesheet" />
+    <![endif]-->
+    <link rel="stylesheet" href="assets/css/my-skins.min.css" />
+    <link rel="stylesheet" href="assets/css/my-rtl.min.css" />
+    <link rel="stylesheet" href="assets/css/fileinput.css" />
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="assets/css/my-ie.min.css" />
+    <![endif]-->
+
+    <!-- inline styles related to this page -->
+
+    <!-- my settings handler -->
+    <script src="assets/js/my-extra.min.js"></script>
+
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+    <!--[if lte IE 8]>
+    <script src="assets/js/html5shiv.min.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="assets/images/favor-icon.png">
+</head>
+
+<body class="no-skin">
+<div id="navbar" class="navbar navbar-default          my-save-state">
+    <div class="navbar-container my-save-state" id="navbar-container">
+        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+            <span class="sr-only">Toggle sidebar</span>
+
+            <span class="icon-bar"></span>
+
+            <span class="icon-bar"></span>
+
+            <span class="icon-bar"></span>
+        </button>
+
+        <div class="navbar-header pull-left">
+            <a href="index.html" class="navbar-brand">
+                <small>
+                    <i class="fa fa-leaf"></i>
+                    臺銀人壽保戶網路服務後台管理系統
+                </small>
+            </a>
+        </div>
+
+        <div class="navbar-buttons navbar-header pull-right" role="navigation">
+            <ul class="nav my-nav">
+                <li class="light-blue dropdown-modal">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                        <img class="nav-user-photo" src="assets/images/avatars/user.png" alt="Jason's Photo" />
+                        <span class="user-info">
+									<small>Welcome,</small>
+									Jason
+								</span>
+
+                        <i class="my-icon fa fa-caret-down"></i>
+                    </a>
+
+                    <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                        <li>
+                            <a href="#">
+                                <i class="my-icon fa fa-cog"></i>
+                                Settings
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="profile.html">
+                                <i class="my-icon fa fa-user"></i>
+                                Profile
+                            </a>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li>
+                            <a href="#">
+                                <i class="my-icon fa fa-power-off"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div><!-- /.navbar-container -->
+</div>
+
+<div class="main-container my-save-state" id="main-container">
+    <script type="text/javascript">
+        try{my.settings.loadState('main-container')}catch(e){}
+    </script>
+
+    <div id="sidebar" class="sidebar                  responsive                    my-save-state">
+        <script type="text/javascript">
+            try{my.settings.loadState('sidebar')}catch(e){}
+        </script>
+
+        <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+            <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                <button class="btn btn-success">
+                    <i class="my-icon fa fa-signal"></i>
+                </button>
+
+                <button class="btn btn-info">
+                    <i class="my-icon fa fa-pencil"></i>
+                </button>
+
+                <button class="btn btn-warning">
+                    <i class="my-icon fa fa-users"></i>
+                </button>
+
+                <button class="btn btn-danger">
+                    <i class="my-icon fa fa-cogs"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+                <span class="btn btn-success"></span>
+
+                <span class="btn btn-info"></span>
+
+                <span class="btn btn-warning"></span>
+
+                <span class="btn btn-danger"></span>
+            </div>
+        </div><!-- /.sidebar-shortcuts -->
+
+        <ul class="nav nav-list">
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <span class="menu-text"> 報表查詢 </span>
+
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                    <li class="">
+                        <a href="func1.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            登入記錄查詢
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li class="">
+                        <a href="func2.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            線上申請查詢
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="func10.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            保單理賠申請統計報表
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="func11.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            保單理賠申請明細報表
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="active open">
+                <a href="#" class="dropdown-toggle">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <span class="menu-text"> 權限管理 </span>
+
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="func3.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            功能管理
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="func4.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            角色權限管理
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="func5.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            權限查詢與報表
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="active">
+                        <a href="func12.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            使用者匯入批次作業
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li>
+                        <a href="func13.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            VIP客戶名單匯入批次作業
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <span class="menu-text"> 紀錄管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="func6.html">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            事件記錄查詢
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <span class="menu-text"> 參數管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            參數類型維護
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <b class="arrow"></b>
+                        <ul class="submenu">
+                            <li class="">
+                                <a href="func7.html">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    查詢參數類型
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="func7-1.html">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    新增參數類型
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            參數維護
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <b class="arrow"></b>
+                        <ul class="submenu">
+                            <li class="">
+                                <a href="func8.html">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    查詢參數
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="func8-1.html">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    新增參數
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <span class="menu-text"> 通信管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            通信模板維護
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <b class="arrow"></b>
+                        <ul class="submenu">
+                            <li class="">
+                                <a href="func9.html">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    查詢通信模板
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="func9-1.html">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    新增通信模板
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul><!-- /.nav-list -->
+
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+            <i id="sidebar-toggle-icon" class="my-icon fa fa-angle-double-left my-save-state" data-icon1="my-icon fa fa-angle-double-left" data-icon2="my-icon fa fa-angle-double-right"></i>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs my-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <a href="#">權限管理</a>
+                    </li>
+                </ul><!-- /.breadcrumb -->
+            </div>
+
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        權限管理
+                        <small>
+                            <i class="my-icon fa fa-angle-double-right"></i>
+                            使用者匯入批次作業
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+
+                <div class="row">
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form class="form-horizontal" id="form1" role="form" action="#">
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 選擇檔案 </label>
+                                    <div class="col-sm-5">
+                                        <input id="file" type="file" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                    </div>
+                                </div>
+
+
+                                <div class="clearfix form-actions">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <button class="btn btn-info" type="button">
+                                            <i class="my-icon fa fa-check bigger-110"></i>
+                                            加入排程
+                                        </button>
+
+                                        &nbsp; &nbsp; &nbsp;
+                                        <button class="btn" type="reset">
+                                            <i class="my-icon fa fa-undo bigger-110"></i>
+                                            重新輸入
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="hr hr-18 dotted hr-double"></div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="show-detail-results">
+                                <h3 class="header smaller lighter blue">排程結果</h3>
+                                <div>
+
+                                    <table id="grid-table"></table>
+                                    <div style="height:60px">
+                                        <div id="grid-pager"></div>
+                                    </div>
+
+                                    <!-- PAGE CONTENT ENDS -->
+                                </div><!-- /.col -->
+                            </div>
+                        </div>
+                    </div><!-- /.row -->
+                </div><!-- /.page-content -->
+            </div>
+        </div><!-- /.main-content -->
+
+        <div class="footer">
+            <div class="footer-inner">
+                <div class="footer-content">
+						<span class="bigger-120">
+							<i class="fa fa-copyright" aria-hidden="true"></i>2018 臺銀人壽保險股份有限公司
+						</span>
+
+                    &nbsp; &nbsp;
+                    <span class="action-buttons">
+							<a href="https://www.facebook.com/twfhclife/">
+								<i class="my-icon fa fa-facebook-square text-primary bigger-150"></i>
+							</a>
+						</span>
+                </div>
+            </div>
+        </div>
+
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+        </a>
+    </div><!-- /.main-container -->
+
+    <!-- basic scripts -->
+
+    <!--[if !IE]> -->
+    <script src="assets/js/jquery-2.1.4.min.js"></script>
+
+    <!-- <![endif]-->
+
+    <!--[if IE]>
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+        if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+    </script>
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <!-- page specific plugin scripts -->
+
+    <!--[if lte IE 8]>
+    <script src="assets/js/excanvas.min.js"></script>
+    <![endif]-->
+    <script src="assets/js/jquery-ui.custom.min.js"></script>
+    <script src="assets/js/jquery.ui.touch-punch.min.js"></script>
+    <script src="assets/js/jquery.easypiechart.min.js"></script>
+    <script src="assets/js/jquery.sparkline.index.min.js"></script>
+    <script src="assets/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/daterangepicker.min.js"></script>
+    <script src="assets/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/js/jquery.flot.min.js"></script>
+    <script src="assets/js/jquery.flot.pie.min.js"></script>
+    <script src="assets/js/jquery.flot.resize.min.js"></script>
+    <script src="assets/js/fileinput.js"></script>
+
+    <script src="assets/js/jquery.jqGrid.min.js"></script>
+    <script src="assets/js/grid.locale-en.js"></script>
+
+    <!-- my scripts -->
+    <script src="assets/js/my-elements.min.js"></script>
+    <script src="assets/js/my.min.js"></script>
+
+    <!-- inline scripts related to this page -->
+    <script type="text/javascript">
+        $('#file').fileinput({
+            language: 'fr',
+            browseClass: "btn btn-primary",
+        });
+
+        var grid_data =
+            [
+                {system:"001",userRole:"排程中",userName:"2022-06-30 12:00:00",userAcct:" ",status:" ",createTime:"", PermissionSetting:"<a href='原始档案.xls' class='green bigger-140 show-details-btn' title='Show Details'> <i class='my-icon fa fa-angle-double-down'></i> <span class='sr-only'>Details</span> </a>"},
+                {system:"002",userRole:"已完成",userName:"2022-06-30 12:00:00",userAcct:"2022-06-30 12:00:00",status:"2022-06-30 12:00:00",createTime:"<a href='原始档案.xls' class='green bigger-140 show-details-btn'>4</a>", PermissionSetting:"<a href='原始档案.xls' class='green bigger-140 show-details-btn' title='Show Details'> <i class='my-icon fa fa-angle-double-down'></i> <span class='sr-only'>Details</span> </a>"},
+            ];
+
+        jQuery(function($) {
+
+            var grid_selector = "#grid-table";
+            var pager_selector = "#grid-pager";
+
+
+            var pa = $(grid_selector).closest('[class*="col-"]');
+            $(grid_selector).jqGrid( 'setGridWidth', '1920');
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid( 'setGridWidth', pa.width() );
+            })
+
+            //resize on sidebar collapse/expand
+            $(document).on('settings.my.jqGrid' , function(ev, event_name, collapsed) {
+                if( event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed' ) {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function() {
+                        alert(parent_column.width());
+                        $(grid_selector).jqGrid( 'setGridWidth', parent_column.width() );
+                    }, 20);
+                }
+            })
+
+            //if your grid is inside another element, for example a tab pane, you should use its parent's width:
+            /**
+             $(window).on('resize.jqGrid', function () {
+					var parent_width = $(grid_selector).closest('.tab-pane').width();
+					$(grid_selector).jqGrid( 'setGridWidth', parent_width );
+				})
+             //and also set width when tab pane becomes visible
+             $('#myTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				  if($(e.target).attr('href') == '#mygrid') {
+					var parent_width = $(grid_selector).closest('.tab-pane').width();
+					$(grid_selector).jqGrid( 'setGridWidth', parent_width );
+				  }
+				})
+             */
+
+
+            jQuery(grid_selector).jqGrid({
+                //direction: "rtl",
+
+                //subgrid options
+                //subGrid : true,
+                //subGridModel: [{ name : ['No','Item Name','Qty'], width : [55,200,80] }],
+                //datatype: "xml",
+                subGridOptions : {
+                    plusicon : "my-icon fa fa-plus center bigger-110 blue",
+                    minusicon  : "my-icon fa fa-minus center bigger-110 blue",
+                    openicon : "my-icon fa fa-chevron-right center orange"
+                },
+                //for this example we are using local data
+                data: grid_data,
+                datatype: "local",
+                height: 250,
+                colNames:['批次號', '執行狀態','加入排程時間','執行開始時間','執行結束時間', '失敗筆數', '原始檔案'],
+                colModel:[
+                    {name:'system',index:'system', width:150, editable:true},
+                    {name:'userRole',index:'userRole', width:60, editable:true},
+                    {name:'userName',index:'userName', width:150, editable:true},
+                    {name:'userAcct',index:'userAcct',width:100, editable:true},
+                    {name:'status',index:'status', width:100, editable: true},
+                    {name:'createTime',index:'createTime', width:100, editable: true},
+                    {name:'PermissionSetting',index:'PermissionSetting', width:60, sortable:false, align:'center'}
+                ],
+
+                viewrecords : true,
+                rowNum:10,
+                rowList:[10,20,30],
+                pager : pager_selector,
+                altRows: true,
+                //toppager: true,
+
+                //multiselect: true,
+                //multikey: "ctrlKey",
+                multiboxonly: true,
+
+                loadComplete : function() {
+                    var table = this;
+                    setTimeout(function(){
+                        updatePagerIcons(table);
+
+                    }, 0);
+                },
+
+                editurl: "./dummy.php",//nothing is saved
+                caption: "使用者權限查詢"
+
+                //,autowidth: true,
+
+
+                /**
+                 ,
+                 grouping:true,
+                 groupingView : {
+						 groupField : ['name'],
+						 groupDataSorted : true,
+						 plusicon : 'fa fa-chevron-down bigger-110',
+						 minusicon : 'fa fa-chevron-up bigger-110'
+					},
+                 caption: "Grouping"
+                 */
+
+            });
+            $(window).triggerHandler('resize.jqGrid');//trigger window resize to make the grid get the correct size
+
+            //replace icons with FontAwesome icons like above
+            function updatePagerIcons(table) {
+                var replacement =
+                    {
+                        'ui-icon-seek-first' : 'my-icon fa fa-angle-double-left bigger-140',
+                        'ui-icon-seek-prev' : 'my-icon fa fa-angle-left bigger-140',
+                        'ui-icon-seek-next' : 'my-icon fa fa-angle-right bigger-140',
+                        'ui-icon-seek-end' : 'my-icon fa fa-angle-double-right bigger-140'
+                    };
+                $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
+                    var icon = $(this);
+                    var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+
+                    if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+                })
+            }
+        });
+
+        function getFormatDate(d){
+            return d.getMonth()+1 + '/' + d.getDate() + '/' + d.getFullYear();
+        }
+
+        $('input[name=date-range-picker]').daterangepicker({
+            'applyClass' : 'btn-sm btn-success',
+            'cancelClass' : 'btn-sm btn-default',
+            maxDate : new Date(),
+            format:'YYYY/MM/DD',
+            locale: {
+                applyLabel: 'Apply',
+                cancelLabel: 'Cancel',
+            }
+        });
+
+
+    </script>
+</body>
+</html>

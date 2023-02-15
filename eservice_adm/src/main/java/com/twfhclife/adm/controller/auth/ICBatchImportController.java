@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/vip/batch/import")
-public class VipBatchImportController extends BaseController {
+public class ICBatchImportController extends BaseController {
 
-    private static final Logger logger = LogManager.getLogger(VipBatchImportController.class);
+    private static final Logger logger = LogManager.getLogger(ICBatchImportController.class);
 
 
     @RequestLog
@@ -26,8 +26,8 @@ public class VipBatchImportController extends BaseController {
             funcId = "695",
             systemId = ApConstants.SYSTEM_ID
     ))
-    @GetMapping("/vipBatchImport")
+    @GetMapping("/iCBatchImport")
     public String vUserBatchImport() {
-        return "backstage/auth/vipBatchImport";
+        return "backstage/auth/iCBatchImport";
     }
 }
