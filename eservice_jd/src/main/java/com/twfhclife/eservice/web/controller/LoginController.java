@@ -120,7 +120,7 @@ public class LoginController extends BaseController {
 				calendar.setTime(userDetail.getLoginTime());
 				calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(expireDay));
 				if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-					addAttribute("errorMessage", "距離上次登錄過期，請重設密碼！");
+					addAttribute("errorMessage", "距離上次登入超過半年，請重設密碼！");
 					addAuditLog(userId, "0", loginRequestVo.getEuNationality());
 					return "login";
 				}

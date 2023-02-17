@@ -61,11 +61,13 @@ public interface UsersDao {
 
 	int changePassword(String account);
 
-	int checkUserRole(@Param("userId") String id, @Param("roleName") String roleName);
+	int checkUserRole(@Param("userId") String id);
 
 	List<String> getSerialNumsBySupervisor(@Param("userId") String id);
 
 	List<String> getSerialNumsByUser(@Param("userId") String id);
 
 	List<String> getSerialNumsByIc(@Param("userId") String id);
+
+	List<String> getSerialNumsByPassageWay(@Param("userId") String id);
 }

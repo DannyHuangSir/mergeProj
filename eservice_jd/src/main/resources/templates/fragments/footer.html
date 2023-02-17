@@ -123,8 +123,8 @@
     }
 
     function msgDetail(id) {
-        $('#msg-modal .title').text(msgMap[id].title)
-        $('#msg-modal .content').html(msgMap[id].msg)
+        $('#msg-modal #msgTitle').html(msgMap[id].title)
+        $('#msg-modal #msgContent').html(msgMap[id].msg)
         $('#msg-modal').modal({
             show: true,
             backdrop: 'static',
@@ -152,6 +152,7 @@
                 changeMonth: true,
                 changeYear: true,
                 maxDate: new Date(),
+                minDate: moment(new Date()).add(-6, 'month').toDate(),
                 onSelect: function(dateText, inst) {
                      if (moment($("#notifyEndSearchTime").val()).diff(moment(dateText), 'month') > 6) {
                         openAlert("時間間隔不能超過六個月");

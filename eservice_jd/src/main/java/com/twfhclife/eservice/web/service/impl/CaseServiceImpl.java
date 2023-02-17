@@ -20,20 +20,26 @@ public class CaseServiceImpl implements ICaseService {
 
     @Autowired
     private JdzqDao caseDao;
+
     @Override
     public List<CaseVo> getCaseList(KeycloakUser user) {
-        int isSupervisor = usersDao.checkUserRole(user.getId(), "分行主管");
+        // role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員
+        int role = usersDao.checkUserRole(user.getId());
         List<CaseVo> result = Lists.newArrayList();
         List<String> serialNums = Lists.newArrayList();
-        if (isSupervisor > 0) {
-            serialNums.addAll(usersDao.getSerialNumsBySupervisor(user.getId()));
-        } else {
-            int isIc = usersDao.checkUserRole(user.getId(), "IC人員");
-            if (isIc > 0) {
+        switch (role) {
+            case 2:
+                serialNums.addAll(usersDao.getSerialNumsBySupervisor(user.getId()));
+                break;
+            case 3:
+                serialNums.addAll(usersDao.getSerialNumsByPassageWay(user.getId()));
+                break;
+            case 4:
                 serialNums.addAll(usersDao.getSerialNumsByIc(user.getId()));
-            } else {
-                serialNums.addAll(usersDao.getSerialNumsByUser(user.getId()));
-            }
+                break;
+            default:
+                usersDao.getSerialNumsByUser(user.getId());
+                break;
         }
         if (!CollectionUtils.isEmpty(serialNums)) {
             result.addAll(caseDao.getCaseListBySerialNum(serialNums));
