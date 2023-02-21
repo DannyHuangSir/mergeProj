@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.shouxian.dao.ShouXianDao">
+
+    <resultMap id="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyVo">
+        <result column="POLICY_NO" property="policyNo"/>
+        <result column="POLICY_TYPE" property="policyType"/>
+        <result column="LIPM_NAME" property="lipmName"/>
+        <result column="LIPM_ID" property="lipmId"/>
+        <result column="LIPI_NAME" property="lipiName"/>
+        <result column="LIPI_ID" property="lipiId"/>
+        <result column="AGENT_CODE" property="agent"/>
+        <result column="STATUS" property="status"/>
+        <result column="EFFECTIVE_DATE" property="effectiveDate"/>
+        <result column="MAIN_AMOUNT" property="mainAmount"/>
+        <result column="LIPI_TABL_PREM" property="lipiTablPrem"/>
+        <result column="PAYMENT_MODE" property="paymentMode"/>
+        <result column="PREM_YEAR" property="premYear"/>
+        <result column="PROD_MODE" property="prodMode"/>
+        <result column="PROD_NAME" property="prodName"/>
+        <result column="LIPM_RCP_METH_CODE" property="paymentMethod"/>
+    </resultMap>
+
+    <select id="getPolicyList" resultMap="PolicyMap">
+        SELECT CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) POLICY_NO, lme.LIPM_INSU_TYPE POLICY_TYPE,
+        lme.LIPM_NAME_1  LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, lme.LIPM_AGEN_CODE AGENT_CODE, lme.LIPM_ST STATUS,
+        lie.LIPI_INSU_BEG_DATE EFFECTIVE_DATE, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
+        lie.LIPI_TABL_PREM, (CASE WHEN lme.LIPM_RCP_CODE = 'A' THEN Translate('T' USING NCHAR_CS) ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE,
+        lie.LIPI_PREM_YEAR PREM_YEAR, lpe.SETT_INSU_TYPE PROD_MODE, lpe.SETT_CH_NAME PROD_NAME, lme.LIPM_RCP_METH_CODE
+        FROM LIMIPM_ES_FLOWTEST lme
+        INNER JOIN LILIPI_ES_FLOWTEST lie
+        ON CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = CONCAT(CONCAT(lie.LIPI_INSU_TYPE, lie.LIPI_INSU_GRP_NO), lie.LIPI_INSU_SEQ_NO)
+        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
+        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
+    </select>
+</mapper>

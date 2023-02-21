@@ -1,15 +1,11 @@
 package com.twfhclife.eservice.web.controller;
 
-import com.google.common.collect.Lists;
-import com.sun.deploy.association.utility.AppConstants;
 import com.twfhclife.eservice.api_client.PolicyDataClient;
 import com.twfhclife.eservice.api_model.PolicyDataResponse;
 import com.twfhclife.eservice.controller.BaseController;
-import com.twfhclife.eservice.service.ICoverageService;
-import com.twfhclife.eservice.service.ILilipiService;
-import com.twfhclife.eservice.service.ILilipmService;
 import com.twfhclife.eservice.service.IUnicodeService;
 import com.twfhclife.eservice.util.ApConstants;
+import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.AgentVo;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.*;
@@ -19,7 +15,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +26,21 @@ public class JdzqController extends BaseController {
 
     private static final Logger logger = LogManager.getLogger(JdzqController.class);
 
+    @GetMapping("/policyQuery")
+    public String policyQuery() {
+        return "frontstage/jdzq/policyQuery/policy-query";
+    }
+
     @Autowired
     private IPolicyService policyService;
 
-    @GetMapping("/policyQuery")
-    public String policyInquiry() {
-        addAttribute("policyList", policyService.getPolicyList());
-        return "frontstage/jdzq/policyQuery/policy-query";
+    @PostMapping(value = { "/getPolicyList" })
+    @ResponseBody
+    public ResponseObj getPolicyList() {
+        ResponseObj responseObj = new ResponseObj();
+        responseObj.setResult(ResponseObj.SUCCESS);
+        responseObj.setResultData(policyService.getPolicyList());
+        return responseObj;
     }
 
     @GetMapping("/protectQuery")
@@ -52,27 +55,6 @@ public class JdzqController extends BaseController {
 
     @Autowired
     private PolicyDataClient policyDataClient;
-
-    @Autowired
-    private IPolicyListService policyListService;
-
-    @Autowired
-    private ICoverageService coverageService;
-
-    @Autowired
-    private IAgentService agentService;
-
-    @Autowired
-    private IPolicyPayerService policyPayerService;
-
-    @Autowired
-    private ILilipmService lilipmService;
-
-    @Autowired
-    private ILilipiService lilipiService;
-
-    @Autowired
-    private IBeneficiaryService beneficiaryService;
 
     @Autowired
     private ILoginService loginService;
@@ -139,9 +121,6 @@ public class JdzqController extends BaseController {
             //modify for 保單理賠-admin/agent登入-start
             String adminQueryRocId = null;
 
-
-			lilipmVo = lilipmService.findByPolicyNo(policyNo);
-			lilipiVo = lilipiService.findByPolicyNo(policyNo);
 
             //要保人ROCID為空，則取被保人ROCID
             if (lilipmVo != null && StringUtils.isNotBlank(lilipmVo.getNoHiddenLipmId())) {

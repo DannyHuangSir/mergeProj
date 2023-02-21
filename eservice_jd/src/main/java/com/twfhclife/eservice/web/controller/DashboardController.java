@@ -27,7 +27,6 @@ public class DashboardController extends BaseController {
 	public ResponseObj personalCaseList() {
 		ResponseObj responseObj = new ResponseObj();
 		responseObj.setResult(ResponseObj.SUCCESS);
-		Map<String, Object> result = Maps.newHashMap();
 		responseObj.setResultData(caseService.getCaseList(getLoginUser()));
 		return responseObj;
 	}

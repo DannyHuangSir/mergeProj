@@ -1,4 +1,4 @@
-package com.twfhclife.eservice.web.model;
+package com.twfhclife.eservice.api.shouxian.model;
 
 public class PolicyVo {
 

@@ -9,7 +9,7 @@ svg {
 }
 
 path {
-	/* fill: #fff; */
+	fill: #fff;
 	/*cursor: pointer;*/
 	opacity: 1;
 	stroke: #FFF;
@@ -51,10 +51,6 @@ path.active {
 
 /* COLORS */
 
-.product {
-	fill: #e4e4e4;
-}
-
 .product1 {
     fill: #e4e4e4;
 	/*fill: #00ADDD;*/
@@ -77,22 +73,11 @@ path.active {
 	fill: #e4e4e4;
 }
 
-.product6ˊ {
-	fill: #e4e4e4;
-}
-
-.product7 {
-	fill: #e4e4e4;
-}
-
-.product.active,
 .product1.active,
 .product2.active,
 .product3.active,
 .product4.active,
-.product5.active,
-.product6.active,
-.product7.active {
+.product5.active {
     fill: #1ACB5B;
 }
 
@@ -100,48 +85,37 @@ path.active {
 /* POSITIONS */
 .pdt1 {
     position: absolute;
-    top: -25px;
-    left: 205px;
-    width: 99px;
-    width: 110px;
+    top: 0;
+    left: 232px;
+    width: 95px;
+    /*color: #00ADDD;*/
+    width: 125px;
 }
 
 .pdt2 {
-    position: absolute;
-    left: 260px;
-    width: 150px;
-    top: 75px;
+	position: absolute;
+	left: 251px;
+	width: 194px;
+	top: 145px;
 }
 .pdt3 {
-    width: 100px;
+    width: 127px;
     position: absolute;
-    top: 195px;
-    left: 235px;
+    top: 250px;
+    left: 63px;
 }
 .pdt4 {
     position: absolute;
-    top: 255px;
+    top: 145px;
     width: 122px;
-    left: 100px;
+    left: -121px;
     /*color: #00addd;*/
 }
 .pdt5 {
-    position: absolute;
-    width: 100px;
-    left: -50px;
-    top: 195px;
-}
-.pdt6 {
-    position: absolute;
-    width: 110px;
-    left: -110px;
-    top: 75px;
-}
-.pdt7 {
-    position: absolute;
-    width: 110px;
-    left: -36px;
-    top: -24px;
+    position: absolute;      
+    width: 100px;   
+    left: -80px;
+    top: 0;
 }
 
 /* IE10-edge */
@@ -155,9 +129,7 @@ path.active {
 .pdt2.hover,
 .pdt3.hover,
 .pdt4.hover,
-.pdt5.hover,
-.pdt6.hover,
-.pdt7.hover {
+.pdt5.hover {
 	/*color: #00ADDD;*/
 }
 
@@ -308,14 +280,14 @@ span.dot {
 .pdt5 {
     position: absolute;      
     width: 100px;   
-    left: -50px;
-    top: 135px;
+    left: -55px;
+    top: -16px;
 }
-.pdt1{left: 140px;top: -25px}
-.pdt2{left: 210px;top: 50px; width: 130px}
-.pdt3{left: 165px;top: 140px}
-.pdt4{left:  45px;top: 185px;width: 100px;}
-.pdt6{left: -95px;top: 45px;width: 110px;}
+  .pdt1{left: 156px;top: -13px}
+  .pdt2{left: 181px;top: 107px; width: 130px}
+  .pdt3{left: 37px;top: 187px}
+  .pdt4{left: -103px;top: 104px;width: 100px;}
+ 
 
 }
 

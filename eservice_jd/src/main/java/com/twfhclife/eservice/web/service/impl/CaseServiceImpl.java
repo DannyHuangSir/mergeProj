@@ -1,12 +1,16 @@
 package com.twfhclife.eservice.web.service.impl;
 
 import com.google.common.collect.Lists;
-import com.twfhclife.eservice.jdzq.dao.JdzqDao;
+import com.google.gson.Gson;
+import com.twfhclife.eservice.api_client.BaseRestClient;
+import com.twfhclife.eservice.api_model.ApiResponseObj;
+import com.twfhclife.eservice.api_model.PersonalCaseDataResponse;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.CaseVo;
 import com.twfhclife.eservice.web.service.ICaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -19,7 +23,10 @@ public class CaseServiceImpl implements ICaseService {
     private UsersDao usersDao;
 
     @Autowired
-    private JdzqDao caseDao;
+    private BaseRestClient baseRestClient;
+
+    @Value("${eservice_api.personal.case.url}")
+    private String personalCaseUrl;
 
     @Override
     public List<CaseVo> getCaseList(KeycloakUser user) {
@@ -38,11 +45,12 @@ public class CaseServiceImpl implements ICaseService {
                 serialNums.addAll(usersDao.getSerialNumsByIc(user.getId()));
                 break;
             default:
-                usersDao.getSerialNumsByUser(user.getId());
+                serialNums.addAll(usersDao.getSerialNumsByUser(user.getId()));
                 break;
         }
         if (!CollectionUtils.isEmpty(serialNums)) {
-            result.addAll(caseDao.getCaseListBySerialNum(serialNums));
+            ApiResponseObj<PersonalCaseDataResponse> responseObj = baseRestClient.postApiResponse(new Gson().toJson(serialNums), personalCaseUrl, PersonalCaseDataResponse.class);
+            result.addAll(responseObj.getResult().getCaseList());
         }
         return result;
     }
