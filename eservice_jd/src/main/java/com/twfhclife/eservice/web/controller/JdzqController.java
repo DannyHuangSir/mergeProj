@@ -36,10 +36,10 @@ public class JdzqController extends BaseController {
 
     @PostMapping(value = { "/getPolicyList" })
     @ResponseBody
-    public ResponseObj getPolicyList() {
+    public ResponseObj getPolicyList(@RequestBody PolicyVo vo) {
         ResponseObj responseObj = new ResponseObj();
         responseObj.setResult(ResponseObj.SUCCESS);
-        responseObj.setResultData(policyService.getPolicyList());
+        responseObj.setResultData(policyService.getPolicyList(getLoginUser(), vo));
         return responseObj;
     }
 

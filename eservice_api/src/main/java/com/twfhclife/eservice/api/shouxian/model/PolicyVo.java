@@ -1,5 +1,9 @@
 package com.twfhclife.eservice.api.shouxian.model;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 public class PolicyVo {
 
     private String policyNo;
@@ -20,6 +24,8 @@ public class PolicyVo {
     private String prodName;
 
     private String paymentMethod;
+
+    private List<String> serialNums = Lists.newArrayList();
 
     public String getPolicyNo() {
         return policyNo;
@@ -147,5 +153,13 @@ public class PolicyVo {
 
     public void setProdName(String prodName) {
         this.prodName = prodName;
+    }
+
+    public List<String> getSerialNums() {
+        return serialNums;
+    }
+
+    public void setSerialNums(List<String> serialNums) {
+        this.serialNums = serialNums;
     }
 }

@@ -11,8 +11,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 選單資料控制器.
@@ -52,5 +55,17 @@ public class OptionController extends BaseMvcController {
 			}
 			return processResponseEntity();
 		}
+	}
+
+	@PostMapping("/getPayModeList")
+	public ResponseEntity<ResponseObj> getPayModeList() {
+		try {
+			List<Map<String, Object>> regionList = optionService.getPayModeList();
+			processSuccess(regionList);
+		} catch (Exception e) {
+			logger.error("Unable to getPayModeList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
 	}
 }

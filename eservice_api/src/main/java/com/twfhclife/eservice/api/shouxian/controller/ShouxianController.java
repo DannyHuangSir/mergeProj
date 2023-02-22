@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,11 +27,11 @@ public class ShouxianController extends BaseController {
     private ShouxianService shouxianService;
 
     @PostMapping(value = "/getPolicyList", produces = { "application/json" })
-    public ResponseEntity<?> getPolicyList() {
+    public ResponseEntity<?> getPolicyList(@RequestBody PolicyVo vo) {
         ApiResponseObj<PolicyListDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            List<PolicyVo> policyList = shouxianService.getPolicyList();
+            List<PolicyVo> policyList = shouxianService.getPolicyList(vo);
             PolicyListDataResponse resp = new PolicyListDataResponse();
             resp.setPolicyList(policyList);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");

@@ -23,4 +23,9 @@ public class OptionServiceImpl implements IOptionService {
     public List<Map<String, Object>> getLevelStates() {
         return optionDao.getLevelStates();
     }
+
+    @Override
+    public List<Map<String, Object>> getPayModeList() {
+        return optionDao.getPayModeList();
+    }
 }

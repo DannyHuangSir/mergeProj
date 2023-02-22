@@ -9,4 +9,6 @@ public interface OptionDao {
 	List<Map<String, Object>> getPolicyTyps();
 
 	List<Map<String, Object>> getLevelStates();
+
+	List<Map<String, Object>> getPayModeList();
 }

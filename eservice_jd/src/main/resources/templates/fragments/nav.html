@@ -10,14 +10,16 @@
                         <p>個人中心</p>
                         <span class="caret"></span>
                     </a>
+
                     <div class="collapse in" id="claimCases">
                         <ul class="nav nav-collapse">
-                            <li class="active">
+                            <li class=""th:classappend="${#httpServletRequest.requestURI.contains('dashboard')} ? 'active' : ''">
                                 <a href="dashboard">
+
                                     <span class="sub-item">個人案件列表</span>
                                 </a>
                             </li>
-                            <li>
+                            <li class=""th:classappend="${#httpServletRequest.requestURI.contains('changePassword1')} ? 'active' : ''">
                                 <a href="changePassword1">
                                     <span class="sub-item">變更密碼</span>
                                 </a>
@@ -33,14 +35,9 @@
                     </a>
                     <div class="collapse in" id="overdueNotes">
                         <ul class="nav nav-collapse">
-                            <li>
+                            <li class=""th:classappend="${#httpServletRequest.requestURI.contains('policyQuery')} ? 'active' : ''">
                                 <a href="policyQuery">
                                     <span class="sub-item">保單查詢</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="protectQuery">
-                                    <span class="sub-item">保戶查詢</span>
                                 </a>
                             </li>
                         </ul>
@@ -54,7 +51,7 @@
                     </a>
                     <div class="collapse in" id="Investigation">
                         <ul class="nav nav-collapse">
-                            <li>
+                            <li class=""th:classappend="${#httpServletRequest.requestURI.contains('caseQuery')} ? 'active' : ''">>
                                 <a href="caseQuery">
                                     <span class="sub-item">案件進度查詢</span>
                                 </a>
@@ -62,7 +59,6 @@
                         </ul>
                     </div>
                 </li>
-
             </ul>
         </div>
     </div>

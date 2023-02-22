@@ -9,7 +9,7 @@
         <result column="LIPM_ID" property="lipmId"/>
         <result column="LIPI_NAME" property="lipiName"/>
         <result column="LIPI_ID" property="lipiId"/>
-        <result column="AGENT_CODE" property="agent"/>
+        <result column="AGENT_NAME" property="agent"/>
         <result column="STATUS" property="status"/>
         <result column="EFFECTIVE_DATE" property="effectiveDate"/>
         <result column="MAIN_AMOUNT" property="mainAmount"/>
@@ -23,14 +23,38 @@
 
     <select id="getPolicyList" resultMap="PolicyMap">
         SELECT CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) POLICY_NO, lme.LIPM_INSU_TYPE POLICY_TYPE,
-        lme.LIPM_NAME_1  LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, lme.LIPM_AGEN_CODE AGENT_CODE, lme.LIPM_ST STATUS,
+        lme.LIPM_NAME_1  LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, LBE.BNAG_REC_CLERK AGENT_NAME, lme.LIPM_ST STATUS,
         lie.LIPI_INSU_BEG_DATE EFFECTIVE_DATE, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
         lie.LIPI_TABL_PREM, (CASE WHEN lme.LIPM_RCP_CODE = 'A' THEN Translate('T' USING NCHAR_CS) ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE,
         lie.LIPI_PREM_YEAR PREM_YEAR, lpe.SETT_INSU_TYPE PROD_MODE, lpe.SETT_CH_NAME PROD_NAME, lme.LIPM_RCP_METH_CODE
         FROM LIMIPM_ES_FLOWTEST lme
         INNER JOIN LILIPI_ES_FLOWTEST lie
-        ON CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = CONCAT(CONCAT(lie.LIPI_INSU_TYPE, lie.LIPI_INSU_GRP_NO), lie.LIPI_INSU_SEQ_NO)
+            ON CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = CONCAT(CONCAT(lie.LIPI_INSU_TYPE, lie.LIPI_INSU_GRP_NO), lie.LIPI_INSU_SEQ_NO)
+        INNER JOIN LIBNAG_ES_FLOWTEST lbe ON CONCAT(CONCAT(lbe.BNAG_INSU_TYPE , lbe.BNAG_INSU_GRP_NO), lbe.BNAG_INSU_SEQ_NO) = CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO)
         LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
         ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
+        WHERE lbe.BNAG_ID IN
+        <foreach collection="vo.serialNums" item="num" open="(" close=")" separator=",">
+            #{num}
+        </foreach>
+        <if test="vo.policyNo != null and vo.policyNo != ''">
+            AND CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO)
+                    LIKE CONCAT('%', CONCAT(#{vo.policyNo}, '%'))
+        </if>
+        <if test="vo.lipmName != null and vo.lipmName != ''">
+            AND lme.LIPM_NAME_1 LIKE CONCAT('%', CONCAT(#{vo.lipmName}, '%'))
+        </if>
+        <if test="vo.lipmId != null and vo.lipmId != ''">
+            AND lme.LIPM_ID LIKE CONCAT('%', CONCAT(#{vo.lipmId}, '%'))
+        </if>
+        <if test="vo.lipiName != null and vo.lipiName != ''">
+            AND lie.LIPI_NAME LIKE CONCAT('%', CONCAT(#{vo.lipiName}, '%'))
+        </if>
+        <if test="vo.lipiId != null and vo.lipiId != ''">
+            AND lie.LIPI_ID LIKE CONCAT('%', CONCAT(#{vo.lipiId}, '%'))
+        </if>
+        <if test="vo.prodName != null and vo.prodName != ''">
+            AND lpe.SETT_CH_NAME LIKE CONCAT('%', CONCAT(#{vo.prodName}, '%'))
+        </if>
     </select>
 </mapper>

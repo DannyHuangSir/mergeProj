@@ -42,27 +42,25 @@
 									<div class="form-group">
 										<label class="col-sm-3"> 保單號碼 </label>
 										<div class="col-sm-9">
-											<input type="text" placeholder="輸入欲查詢的保單號碼" class="form-control" />
+											<input name="policyNo" type="text" placeholder="輸入欲查詢的保單號碼" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 要保人姓名 </label>
-
 										<div class="col-sm-9">
-											<input type="text" placeholder="輸入欲查詢的要保人姓名" class="form-control" />
+											<input name="lipmName" type="text" placeholder="輸入欲查詢的要保人姓名" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 被保險人姓名 </label>
-
 										<div class="col-sm-9">
-											<input type="text" name="Insured" placeholder="輸入欲查詢的被保險人姓名" class="form-control" />
+											<input name="lipiName" type="text" placeholder="輸入欲查詢的被保險人姓名" class="form-control" />
 										</div>
 									</div>  
 									<div class="form-group">
 										<label class="col-sm-3"> 商品名稱  </label>
 										<div class="col-sm-9">
-											<input type="text" placeholder="輸入欲查詢的商品名稱 " class="form-control" />
+											<input name="prodName" type="text" placeholder="輸入欲查詢的商品名稱 " class="form-control" />
 										</div>
 									</div>
 								</div>
@@ -71,17 +69,15 @@
 									</div> 
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 要保人身分證號 </label>
-
 										<div class="col-sm-9">
-											<input type="text" placeholder="輸入欲查詢的要保人身分證號" class="form-control" />
+											<input name="lipmId" type="text" placeholder="輸入欲查詢的要保人身分證號" class="form-control" />
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 被保人身分證號 </label>
-
 										<div class="col-sm-9">
-											<input type="text" name="Insured_Card" placeholder="輸入欲查詢的被保人身分證號" class="form-control" />
+											<input name="lipiId" type="text" placeholder="輸入欲查詢的被保人身分證號" class="form-control" />
 										</div>
 									</div> 
 								</div>	
@@ -128,7 +124,7 @@
 				                    <ul>
 				                        <li class="pdt1"><i class="foo-medical_14 foo-2x"></i>意外險</li>
 				                        <li class="pdt2 active"><i class="foo-medical_4 foo-2x"></i><span>投資型</span></li>
-				                        <li class="pdt3"><i class="foo-medical_19 foo-2x"></i>萬能險/年金險</li>
+				                        <li class="pdt3" style="width:165px;"><i class="foo-medical_4 foo-2x"></i><span>萬能險/年金險</span></li>
 				                        <li class="pdt4 active"><i class="foo-medical_1 foo-2x"></i><span>健康險</span></li>
 				                        <li class="pdt5"><i class="foo-object_27 foo-2x"></i>壽險</li>
 				                    </ul>
@@ -150,10 +146,11 @@
 									</div> 
 								</div>
 							</div>
-							<div id="policyContent" class="card-body clearfix" style="padding: 0;">
+							<div class="card-body clearfix" style="padding: 0;">
                                 <div class="my1" style="margin-bottom:0">
-				                    <i class="foo-business_23 foo-lg"></i> 查詢結果清單 <span class="my2b">共 3 張</span>
+									<i class="foo-business_23 foo-lg"></i> 查詢結果清單 <span class="my2b" id="policyCount"></span>
 				                </div>
+								<div id="policyContent"></div>
 					        </div>
 						</div>
 					</div>
@@ -166,19 +163,44 @@
 <footer th:replace="fragments/footer"></footer>
 <script th:inline="javascript">
 /*<![CDATA[*/
+		var payModeMap = {}
 		$(function(){
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/getPayModeList}]]*/,
+				success : function(response) {
+					if(response.result == "SUCCESS"){
+						response.resultData.forEach(function(item, index){
+							payModeMap[item.KEY] = item.VALUE
+						})
+					}
+				}
+			})
+			search()
+		})
+
+		function search() {
 			$.ajax({
 				type : 'POST',
 				dataType : "JSON",
 				contentType : 'application/json',
+				data: JSON.stringify({
+					policyNo: $("input[name='policyNo']").val(),
+					lipmName: $("input[name='lipmName']").val(),
+					lipmId: $("input[name='lipmId']").val(),
+					lipiName: $("input[name='lipiName']").val(),
+					lipiId: $("input[name='lipiId']").val(),
+					prodName: $("input[name='prodName']").val(),
+				}),
 				url : /*[[@{/getPolicyList}]]*/,
 				success : function(response) {
 					console.log(response);
 					if(response.result == "SUCCESS"){
 						html = ''
+						$("#policyCount").text('共 ' + response.resultData.length + ' 張')
 						response.resultData.forEach(function(item, index){
-								$("#policyContent").append(
-									'<div class="">' +
+									html += '<div class="">' +
 										'<table class="tablesaw tablesaw-stack tablesawA">' +
 											'<thead>' +
 												'<tr class="table2">' +
@@ -199,7 +221,7 @@
 													'<td class="hid1 hid2">' + item.lipmId + '</td>' +
 													'<td class="hid1 hid2 enThin">' + item.lipiName + '</td>' +
 													'<td class="hid1 hid2">' + item.lipiId + '</td>' +
-													'<td class="hid1 hid2">陳文倫</td> ' +
+													'<td class="hid1 hid2">' + item.agent + '</td> ' +
 												'</tr> ' +
 											'</tbody> ' +
 											'<thead>' +
@@ -219,128 +241,32 @@
 													'<td class="hid1 hid2">' + item.effectiveDate + '</td>' +
 													'<td class="hid1 hid2">' + item.mainAmount + '</td>' +
 													'<td class="hid1 hid2">' + item.lipiTablPrem + '</td>' +
-													'<td class="hid1 hid2 enThin">年繳</td>' +
+													'<td class="hid1 hid2 enThin">' + payModeMap[item.paymentMode] +'</td>' +
 													'<td class="hid1 hid2">' + item.premYear + ' </td>' +
-													'<td class="hid1 hid2">信用卡</td> ' +
+													'<td class="hid1 hid2">' + (item.paymentMethod == null ? '' : item.paymentMethod) + '</td> ' +
 												'</tr> ' +
 											'</tbody>' +
 										'</table>' +
 									'</div>'
-								)
 							});
+							$("#policyContent").html(html)
 					}
 				},
 				error : function() {
 					openAlert('error!')
 				}
 	    	});
-		})
-
-		function noteStatusStr(policyNo, noteStatus) {
-			if (noteStatus == '0') {
-				chart2Map[0].policyNos.push(policyNo)
-				return '照會編輯中'
-			}
-			if (noteStatus == '1') {
-				chart2Map[1].policyNos.push(policyNo)
-				return '照會覆核中'
-			}
-			if (noteStatus == '9') {
-				chart2Map[2].policyNos.push(policyNo)
-				return '照會完成'
-			}
 		}
 
-		function noteVerifyResultStr(status) {
-			if (status == '0') {
-				return '未覆核'
+		function onSubmit(){
+			var Insured = $('input[name=lipiName]').val();
+			var Insured_Card = $('input[name=lipiId]').val();
+			if(Insured!=="" || Insured_Card!==""){
+				$("#dashboardContent").show()
+			} else {
+				$("#dashboardContent").hide()
 			}
-			if (status == 'V') {
-				return '核可'
-			}
-			if (status == 'R') {
-				return '退件'
-			}
-		}
-
-		function levelStateStr(policyNo, levelState) {
-			result = ''
-			levelStateMap.forEach(function(item,index){
-				if (item.value == levelState) {
-					item.policyNos.push(policyNo)
-					result = item.label
-				}
-			})
-			return result
-		}
-
-		function initChart() {
-			labels = []
-			data = []
-			chart2Map.forEach(function(item,index){
-				labels.push(item.label + ' ' + item.policyNos.length + '件')
-				data.push(item.policyNos.length)
-			})
-
-			myDoughnutChart2 = new Chart(doughnutChart2, {
-				type: 'doughnut',
-				data: {
-					datasets: [{
-						data: data,
-						backgroundColor: ['#59d05d','#fdaf4b','#f3545d','#1d7af3']
-					}],
-						labels: labels
-					},
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						legend : {
-							position: 'left'
-						},
-						layout: {
-							padding: {
-								left: 20,
-								right: 0,
-								top: 20,
-								bottom: 10
-							}
-						}
-					}
-				});
-
-				labels1 = []
-				data1 = []
-				levelStateMap.forEach(function(item,index){
-					labels1.push(item.label + ' ' + item.policyNos.length + '件')
-					data1.push(item.policyNos.length)
-				})
-
-				myDoughnutChart = new Chart(doughnutChart, {
-					type: 'doughnut',
-					data: {
-						datasets: [{
-							data: data1,
-							backgroundColor: ['#1d7af3','#59d05d','#f3545d']
-						}],
-
-						labels: labels1
-					},
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						legend : {
-							position: 'left'
-						},
-						layout: {
-							padding: {
-								left: 20,
-								right: 0,
-								top: 20,
-								bottom: 10
-							}
-						}
-					}
-				});
+			search()
 		}
 /*]]>*/
 </script>

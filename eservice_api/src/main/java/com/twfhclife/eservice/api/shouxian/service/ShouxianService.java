@@ -14,7 +14,7 @@ public class ShouxianService {
     @Autowired
     private ShouXianDao shouXianDao;
 
-    public List<PolicyVo> getPolicyList() {
-        return shouXianDao.getPolicyList();
+    public List<PolicyVo> getPolicyList(PolicyVo vo) {
+        return shouXianDao.getPolicyList(vo);
     }
 }
