@@ -5294,6 +5294,7 @@ input {
 
 .form-horizontal .form-group {
     line-height: 34px;
+    min-height:34px;
     margin-top: 8px;
     margin-bottom: 8px;
 }
@@ -9571,4 +9572,39 @@ input[type="checkbox"]:checked{
 	margin-left: 20px;
 }
 
-/**/
+/*20230206*/
+.btn-return{
+	color: #fff;
+    height: 38px;
+    line-height: 30px;
+    padding:10px;
+    border-radius: 3px;
+    font-size: 16px;
+    background-color: #CC7A00;
+}
+.btn-return:hover{
+	color: #fff; 
+}
+.card-title-span{}
+.card-title-span>span{
+	display: inline-block;
+	margin-right: 10px;
+	border: 2px solid #D0D8E0;
+	padding: 5px 10px;
+	border-radius: 5px;
+}
+.card-title-span>span.active{
+	color: #007AAF;
+}
+.card-title-span>span>span{
+	color: red;
+}
+.tablesawA.tablesaw:hover tr td{
+	background-color: #F2F1F1;
+}
+.wrapper>.main-panel>.content>.page-inner>.row #sidebar{
+	margin-top: -20px;
+}
+.wrapper>.main-panel>.content>.page-inner>.row #list2{
+	margin-top: -35px;
+}

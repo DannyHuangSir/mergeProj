@@ -1,6 +1,10 @@
 package com.twfhclife.eservice.api.shouxian.controller;
 
+import com.twfhclife.eservice.api.shouxian.domain.PolicyBaseDataResponse;
 import com.twfhclife.eservice.api.shouxian.domain.PolicyListDataResponse;
+import com.twfhclife.eservice.api.shouxian.domain.PolicySafeGuardDataResponse;
+import com.twfhclife.eservice.api.shouxian.model.PolicyBaseVo;
+import com.twfhclife.eservice.api.shouxian.model.PolicySafeGuardVo;
 import com.twfhclife.eservice.api.shouxian.model.PolicyVo;
 import com.twfhclife.eservice.api.shouxian.service.ShouxianService;
 import com.twfhclife.generic.controller.BaseController;
@@ -40,6 +44,48 @@ public class ShouxianController extends BaseController {
         } catch (Exception e) {
             returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
             logger.error("Unable to getPolicyList: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getPolicyBase", produces = { "application/json" })
+    public ResponseEntity<?> getPolicyBase(@RequestBody PolicyBaseVo vo) {
+        ApiResponseObj<PolicyBaseDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            PolicyBaseVo policyBase = shouxianService.getPolicyBase(vo.getPolicyNo());
+            PolicyBaseDataResponse resp = new PolicyBaseDataResponse();
+            resp.setPolicy(policyBase);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyBase: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getPolicySafeGuard", produces = { "application/json" })
+    public ResponseEntity<?> getPolicySafeGuard(@RequestBody PolicyBaseVo vo) {
+        ApiResponseObj<PolicySafeGuardDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            PolicySafeGuardVo policySafeGuardVo = shouxianService.getSafeGuard(vo.getPolicyNo());
+            PolicySafeGuardDataResponse resp = new PolicySafeGuardDataResponse();
+            resp.setSafeGuardVo(policySafeGuardVo);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicySafeGuard: {}", ExceptionUtils.getStackTrace(e));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
         } finally {
             apiResponseObj.setReturnHeader(returnHeader);

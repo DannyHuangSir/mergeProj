@@ -158,7 +158,6 @@
 			</div>
 		</div>
 	</div>
-
 </div>
 <footer th:replace="fragments/footer"></footer>
 <script th:inline="javascript">
@@ -214,7 +213,7 @@
 												'</tr>' +
 											'</thead>' +
 											'<tbody>' +
-												'<tr>' +
+												"<tr onclick=\"javascript:postPolicyListType('listing1', '" + item.policyNo + "')\">" +
 													'<td class="table3">' + item.policyNo + '</td>' +
 													'<td class="hid1 hid2">' + item.prodName + ' </td>' +
 													'<td class="hid1 hid2">' + item.lipmName + '</td>' +
@@ -236,7 +235,7 @@
 												'</tr>' +
 											'</thead>' +
 											'<tbody>' +
-												'<tr>' +
+												"<tr onclick=\"javascript:postPolicyListType('listing1', '" + item.policyNo + "')\">" +
 													'<td class="table3">有效</td>' +
 													'<td class="hid1 hid2">' + item.effectiveDate + '</td>' +
 													'<td class="hid1 hid2">' + item.mainAmount + '</td>' +

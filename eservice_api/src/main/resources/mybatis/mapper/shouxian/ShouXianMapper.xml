@@ -19,15 +19,16 @@
         <result column="PROD_MODE" property="prodMode"/>
         <result column="PROD_NAME" property="prodName"/>
         <result column="LIPM_RCP_METH_CODE" property="paymentMethod"/>
+        <result column="LIPI_INSU_END_DATE" property="endDate"/>
     </resultMap>
 
     <select id="getPolicyList" resultMap="PolicyMap">
         SELECT CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) POLICY_NO, lme.LIPM_INSU_TYPE POLICY_TYPE,
-        lme.LIPM_NAME_1  LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, LBE.BNAG_REC_CLERK AGENT_NAME, lme.LIPM_ST STATUS,
+        lme.LIPM_NAME_1 LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, LBE.BNAG_REC_CLERK AGENT_NAME, lme.LIPM_ST STATUS,
         lie.LIPI_INSU_BEG_DATE EFFECTIVE_DATE, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_TABL_PREM, (CASE WHEN lme.LIPM_RCP_CODE = 'A' THEN Translate('T' USING NCHAR_CS) ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE,
+        lie.LIPI_TABL_PREM, (CASE WHEN lme.LIPM_RCP_CODE = 'A' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE,
         lie.LIPI_PREM_YEAR PREM_YEAR, lpe.SETT_INSU_TYPE PROD_MODE, lpe.SETT_CH_NAME PROD_NAME, lme.LIPM_RCP_METH_CODE
-        FROM LIMIPM_ES_FLOWTEST lme
+        FROM LILIPM_ES_FLOWTEST lme
         INNER JOIN LILIPI_ES_FLOWTEST lie
             ON CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = CONCAT(CONCAT(lie.LIPI_INSU_TYPE, lie.LIPI_INSU_GRP_NO), lie.LIPI_INSU_SEQ_NO)
         INNER JOIN LIBNAG_ES_FLOWTEST lbe ON CONCAT(CONCAT(lbe.BNAG_INSU_TYPE , lbe.BNAG_INSU_GRP_NO), lbe.BNAG_INSU_SEQ_NO) = CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO)
@@ -56,5 +57,77 @@
         <if test="vo.prodName != null and vo.prodName != ''">
             AND lpe.SETT_CH_NAME LIKE CONCAT('%', CONCAT(#{vo.prodName}, '%'))
         </if>
+    </select>
+
+    <resultMap id="PolicyBaseMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyBaseVo">
+        <result column="POLICY_NO" property="policyNo"/>
+        <result column="POLICY_TYPE" property="policyType"/>
+        <result column="LIPM_NAME" property="lipmName"/>
+        <result column="LIPM_ID" property="lipmId"/>
+        <result column="PMDA_APPLICANT_CELLPHONE" property="lipmPhone"/>
+        <result column="PMDA_APPLICANT_EMAIL" property="lipmMail"/>
+        <result column="LIPM_ADDR" property="lipmAddr"/>
+        <result column="LIPI_NAME" property="lipiName"/>
+        <result column="LIPI_ID" property="lipiId"/>
+        <result column="LIPI_BIRTH" property="lipiBirth"/>
+        <result column="LIPI_AGE" property="lipiAge"/>
+        <result column="LIPI_SEX" property="lipiSex"/>
+        <result column="AGENT_NAME" property="agent"/>
+        <result column="STATUS" property="status"/>
+        <result column="EFFECTIVE_DATE" property="effectiveDate"/>
+        <result column="MAIN_AMOUNT" property="mainAmount"/>
+        <result column="LIPI_TABL_PREM" property="lipiTablPrem"/>
+        <result column="PAYMENT_MODE" property="paymentMode"/>
+        <result column="PREM_YEAR" property="premYear"/>
+        <result column="PROD_MODE" property="prodMode"/>
+        <result column="PROD_NAME" property="prodName"/>
+        <result column="LIPM_RCP_METH_CODE" property="paymentMethod"/>
+        <result column="LIPI_INSU_BEG_DATE" property="beginDate"/>
+        <result column="LIPI_INSU_END_DATE" property="endDate"/>
+        <result column="PMDA_EPO_MK" property="pmdaEpoMk"/>
+        <association property="beneficiaries" resultMap="PolicyBeneficiaryMap"></association>
+    </resultMap>
+
+    <resultMap id="PolicyBeneficiaryMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyBeneficiaryVo">
+        <result column="LIPB_NAME" property="lipbName"/>
+        <result column="LIPB_RELA" property="rela"/>
+        <result column="LIPB_BENI_CODE" property="code"/>
+        <result column="LIPB_SEQ" property="seq"/>
+    </resultMap>
+
+    <select id="getBasePolicy" resultMap="PolicyBaseMap">
+        SELECT lme.LIPM_ST STATUS, lme.LIPM_TEL_H, lip.PMDA_APPLICANT_CELLPHONE, lip.PMDA_APPLICANT_EMAIL,
+        lme.LIPM_ADDR, lie.LIPI_BIRTH, lie.LIPI_AGE, lie.LIPI_SEX, lbp.LIPB_NAME, lbp.LIPB_RELA,
+        lbp.LIPB_BENI_CODE, lbp.LIPB_SEQ, lme.LIPM_NAME_1  LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID,
+        (CASE WHEN lme.LIPM_RCP_CODE = 'A' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE, lip.PMDA_EPO_MK,
+        (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
+        lie.LIPI_INSU_BEG_DATE, lie.LIPI_INSU_END_DATE, lme.LIPM_RCP_METH_CODE, lie.LIPI_PREM_YEAR PREM_YEAR,
+        lpe.SETT_CH_NAME PROD_NAME, CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) POLICY_NO
+        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
+        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
+        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
+        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
+        LEFT JOIN LIPMDA_ES_FLOWTEST lip ON lme.LIPM_INSU_TYPE = lip.PMDA_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lip.PMDA_INSU_GRP_NO  AND lme.LIPM_INSU_SEQ_NO = lip.PMDA_INSU_SEQ_NO
+        LEFT JOIN LILIPB_ES_FLOWTEST lbp ON lme.LIPM_INSU_TYPE = lbp.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbp.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbp.LIPB_INSU_SEQ_NO
+        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+    </select>
+
+    <resultMap id="PolicySafeGuardMap" extends="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicySafeGuardVo">
+        <collection property="safeGuards" resultMap="SafeGuardMap"/>
+    </resultMap>
+
+    <resultMap id="SafeGuardMap" type="com.twfhclife.eservice.api.shouxian.model.SafeGuardVo">
+        <result column="DESI_DESC_CH" property="name"/>
+    </resultMap>
+
+    <select id="getSafeGuard" resultMap="PolicySafeGuardMap">
+        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
+        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM, lme.LIPM_ST STATUS, lde.DESI_DESC_CH, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME
+        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
+        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
+        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
+        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
+        LEFT JOIN LIDESI_ES_FLOWTEST lde ON lde.DESI_CODE = lpe.SETT_INSU_TYPE
+        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>
 </mapper>

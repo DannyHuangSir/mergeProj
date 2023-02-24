@@ -1,9 +1,6 @@
 package com.twfhclife.eservice.api_client;
 
-import com.twfhclife.eservice.api_model.ApiResponseObj;
-import com.twfhclife.eservice.api_model.PersonalCaseDataResponse;
-import com.twfhclife.eservice.api_model.PolicyDataResponse;
-import com.twfhclife.eservice.api_model.PolicyListDataResponse;
+import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakLoginResponse;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserSession;
 import com.twfhclife.eservice.util.MyJacksonUtil;
@@ -53,6 +50,8 @@ public class BaseRestClient {
 		map.put(PolicyDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyDataResponse>>() { });
 		map.put(PersonalCaseDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PersonalCaseDataResponse>>() { });
 		map.put(PolicyListDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyListDataResponse>>() { });
+		map.put(PolicyBaseDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyBaseDataResponse>>() { });
+		map.put(PolicySafeGuardDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicySafeGuardDataResponse>>() { });
 
 		return Collections.unmodifiableMap(map);
 	}

@@ -35,7 +35,7 @@
                     </a>
                     <div class="collapse in" id="overdueNotes">
                         <ul class="nav nav-collapse">
-                            <li class=""th:classappend="${#httpServletRequest.requestURI.contains('policyQuery')} ? 'active' : ''">
+                            <li class=""th:classappend="${#httpServletRequest.requestURI.contains('policyQuery') || #httpServletRequest.requestURI.contains('listing')} ? 'active' : ''">
                                 <a href="policyQuery">
                                     <span class="sub-item">保單查詢</span>
                                 </a>

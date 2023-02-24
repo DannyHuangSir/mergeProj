@@ -4,9 +4,13 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.eservice.api_client.BaseRestClient;
 import com.twfhclife.eservice.api_model.ApiResponseObj;
+import com.twfhclife.eservice.api_model.PolicyBaseDataResponse;
 import com.twfhclife.eservice.api_model.PolicyListDataResponse;
+import com.twfhclife.eservice.api_model.PolicySafeGuardDataResponse;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.web.dao.UsersDao;
+import com.twfhclife.eservice.web.model.PolicyBaseVo;
+import com.twfhclife.eservice.web.model.PolicySafeGuardVo;
 import com.twfhclife.eservice.web.model.PolicyVo;
 import com.twfhclife.eservice.web.service.IPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +58,21 @@ public class PolicyServiceImpl implements IPolicyService {
             result.addAll(responseObj.getPolicyList());
         }
         return result;
+    }
+
+    @Value("${eservice_api.policy.base.url}")
+    private String policyBaseUrl;
+    @Override
+    public PolicyBaseVo getPolicyBase(String policyNo) {
+        PolicyBaseDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyBaseUrl, PolicyBaseDataResponse.class);
+        return responseObj.getPolicy();
+    }
+
+    @Value("${eservice_api.policy.safe.guard.url}")
+    private String policySafeGuardUrl;
+    @Override
+    public PolicySafeGuardVo getPolicyGuard(String policyNo) {
+        PolicySafeGuardDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policySafeGuardUrl, PolicySafeGuardDataResponse.class);
+        return responseObj.getSafeGuardVo();
     }
 }

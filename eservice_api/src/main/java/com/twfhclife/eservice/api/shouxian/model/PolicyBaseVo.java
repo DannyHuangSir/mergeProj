@@ -1,10 +1,10 @@
-package com.twfhclife.eservice.web.model;
+package com.twfhclife.eservice.api.shouxian.model;
 
 import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class PolicyVo {
+public class PolicyBaseVo {
 
     private String policyNo;
     private String policyType;
@@ -21,11 +21,23 @@ public class PolicyVo {
     private String premYear;
     private String prodMode;
 
+    private String lipmPhone;
+
+    private String lipmMail;
+    private String lipmAddr;
+    private String lipiBirth;
+    private String lipiAge;
+    private String lipiSex;
+
     private String prodName;
 
     private String paymentMethod;
-
+    private String beginDate;
     private String endDate;
+
+    private String pmdaEpoMk;
+
+    private List<PolicyBeneficiaryVo> beneficiaries = Lists.newArrayList();
 
     private List<String> serialNums = Lists.newArrayList();
 
@@ -165,11 +177,83 @@ public class PolicyVo {
         this.serialNums = serialNums;
     }
 
+    public List<PolicyBeneficiaryVo> getBeneficiaries() {
+        return beneficiaries;
+    }
+
+    public void setBeneficiaries(List<PolicyBeneficiaryVo> beneficiaries) {
+        this.beneficiaries = beneficiaries;
+    }
+
+    public String getLipmPhone() {
+        return lipmPhone;
+    }
+
+    public void setLipmPhone(String lipmPhone) {
+        this.lipmPhone = lipmPhone;
+    }
+
+    public String getLipmMail() {
+        return lipmMail;
+    }
+
+    public void setLipmMail(String lipmMail) {
+        this.lipmMail = lipmMail;
+    }
+
+    public String getLipmAddr() {
+        return lipmAddr;
+    }
+
+    public void setLipmAddr(String lipmAddr) {
+        this.lipmAddr = lipmAddr;
+    }
+
+    public String getLipiBirth() {
+        return lipiBirth;
+    }
+
+    public void setLipiBirth(String lipiBirth) {
+        this.lipiBirth = lipiBirth;
+    }
+
+    public String getLipiAge() {
+        return lipiAge;
+    }
+
+    public void setLipiAge(String lipiAge) {
+        this.lipiAge = lipiAge;
+    }
+
+    public String getLipiSex() {
+        return lipiSex;
+    }
+
+    public void setLipiSex(String lipiSex) {
+        this.lipiSex = lipiSex;
+    }
+
+    public String getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
+    }
+
     public String getEndDate() {
         return endDate;
     }
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getPmdaEpoMk() {
+        return pmdaEpoMk;
+    }
+
+    public void setPmdaEpoMk(String pmdaEpoMk) {
+        this.pmdaEpoMk = pmdaEpoMk;
     }
 }

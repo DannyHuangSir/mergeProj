@@ -25,6 +25,8 @@ public class PolicyVo {
 
     private String paymentMethod;
 
+    private String endDate;
+
     private List<String> serialNums = Lists.newArrayList();
 
     public String getPolicyNo() {
@@ -161,5 +163,13 @@ public class PolicyVo {
 
     public void setSerialNums(List<String> serialNums) {
         this.serialNums = serialNums;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

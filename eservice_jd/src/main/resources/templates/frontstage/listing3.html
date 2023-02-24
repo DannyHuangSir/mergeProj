@@ -1,106 +1,121 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-Hant">
 
 <head>
 	<th:block th:replace="fragments/head"/>
-	<title>我的保單｜臺銀人壽保單網路服務</title>
 </head>
 
 <body>
+<div class="wrapper sidebar_minimize">
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
-	<th:block th:if="${showUserDataInfo}">
-		<div th:replace="fragments/header :: alert_mobile"></div>
-		<div th:replace="fragments/header :: alert_container"></div>
-		<div th:replace="fragments/header :: compensation_processing"></div>
-		<div th:replace="fragments/header :: compensation_incomplete"></div>
-		<div th:replace="fragments/header :: application_processing"></div>
-		<div th:replace="fragments/header :: application_complete"></div>
-		<div th:replace="fragments/header :: compensation_complete"></div>
-		<div th:replace="fragments/header :: payment_notification"></div>
-		<div th:replace="fragments/header :: payonline_template"></div>
-	</th:block>
-	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
-	<section class="grey fullContent">
-		<div class="container bg3 list1">
-			<div class="mystyle3 listing-area">
-				<div class="row-offcanvas row-offcanvas-left">
-					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing3')"></div>
-					<div th:replace="fragments/sidebar :: sidebar (funId='listing3')"></div>
-					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
-						<div class="box-border">
-							<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
-								<thead>
-									<div class="tb3 top0">
-										<i class="fas fa-chevron-down"></i> 繳費紀錄 
-										<span class="enNormal">(
-											<th:block th:if="${paymentRecordList != null}">
-												<th:block th:each="vo, rowStat : ${paymentRecordList}">
-													<th:block th:if="${rowStat.first}">
-														<th:block th:text="${#dates.format(vo.payDate, 'yyyy/MM')}"/> - 
-													</th:block>
-													<th:block th:if="${rowStat.last}">
-														<th:block th:text="${#dates.format(vo.payDate, 'yyyy/MM')}"/>
-													</th:block>
-												</th:block>
-											</th:block>)
-										</span>
-									</div>
-									<tr class="table2">
-										<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">繳納日期</th>
-										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right">繳費期別</th>
-										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right">應繳金額</th>
-										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right">實繳金額</th>
-										<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right">繳別</th>
-									</tr>
-								</thead>
-								<tbody>
-									<th:block th:if="${paymentRecordList} != null">
-									<th:block th:each="vo, rowStat : ${paymentRecordList}">
-									<tr class="h65" th:classappend="${rowStat.odd}? 'tr-odd-noEvent' : 'noEvent'">
-										<td class="text-left">
-											<th:block th:text="${vo.payDate != null} 
-												? ${#dates.format(vo.payDate, 'yyyy/MM/dd')}"/>
-										</td>
-										<td class="text-right">
-											<th:block th:text="${vo.payDesc != null} 
-												? ${vo.payDesc}"/>
-										</td>
-										<td class="text-right">
-											<th:block th:text="${vo.planAmount != null} 
-												? ${#numbers.formatDecimal(vo.planAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
-										</td>
-										<td class="text-right">
-											<th:block th:text="${vo.paidAmount != null} 
-												? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/>
-										</td>
-										<td>
-											<th:block th:text="${vo.payMethod != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.payMethod] != null} 
-												? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.payMethod].parameterValue}"/>
-										</td>
-									</tr>
-									</th:block>
-									</th:block>
-								</tbody>
-							</table>
-							<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20005'] != null} 
-								? ${session.PAGE_WORDING['WORDING_20005'].parameterValue}"/>
-							<div class="wht h80 hid1 applyHide">
-								<div class="col-md-4 col-md-offset-4">
-									<a href="paymentMode1">
-										<button id="va2" class="btn-login col-md-4 col-md-offset-4">變更繳別  <i class="fas fa-chevron-right"></i></button>
-									</a>
-								</div>
-							</div>
-						</div>
-						<div th:replace="fragments/listingReferOnly"></div>
-					</div>
+	<div th:replace="fragments/nav"></div>
+    <div class="main-panel" style="position: absolute;">
+		<div class="content">
+			<div class="page-inner">
+				<div class="mt-2 mb-4">
+		            <ul class="breadcrumb detail1">
+		                <li>
+		                    <a href="#">保單管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
+		                </li>
+		                <li>
+		                    <a href="policy-inquiry.html">保單查詢</a> <i class="fa fa-angle-right fa-lg ble"></i>
+		                </li>
+		                <li class="active">
+		                    <a href="javascript:;">保單詳細資訊</a>
+		                </li>
+		            </ul>
+				</div>
+				<div class="row mb-4" style="padding: 0 15px">
+					<!---->
+					<div class="grey listing1 fullContent">
+				        <div class="bg3 list1">
+				            <div class="mycigna3 listing-area">
+									<div th:replace="fragments/policy-nav"></div>
+				                    <div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+				                        <div class="box-border">
+				                            <table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+				                                <thead>
+				                                    <div class="tb3 top0">
+				                                        <i class="fa foo-angle-down"></i> 繳費紀錄
+				                                        <div class="dropdown pull-right r30">
+								                        	<a class="btn-return" href="policy-inquiry.html">回保單查詢結果清單</a>
+								                        </div>
+				                                    </div>
+				                                    <div class="my1 marginTop20">
+								                        <p class="pull-left visible-xs">
+								                            <button type="button" class="btn btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
+								                        </p>
+								                        <i class="foo-business_7 foo-2x hidden-xs"></i> 增值分紅養老壽險
+								                        <span class=""></span><span class="insuranceID_pc">(1450009053)</span>
+								                         <p style="margin-left: 40px;margin-top: -15px;">保單號碼:093423205 要保人:XXX 被保險人:AAA,BBB 保單幣別:新臺幣</p>
+								                        <div class="insuranceID_phone">(UC70000001)</div>
+								                    </div>
+				                                  
+				                                    <tr class="table2">
+				                                        <th class="text-left" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">險種名稱</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">保單號碼</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">要保人</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">被保險人</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">保單幣別</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="6">繳別</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="7">繳費方式</th>
+				                                    </tr>
+				                                </thead>
+				                                <tbody>
+				                                    <tr class="h65 noEvent">
+				                                        <td>百達基金(盧森堡)生物科技
+(CPES1)</td>
+				                                        <td>32542353</td>
+				                                        <td>張XX</td>
+				                                        <td>王X</td>
+				                                        <td>新臺幣</td>
+				                                        <td>年繳</td>
+				                                        <td>
+				                                        	轉賬件<br>
+				                                        	臺北富邦<br>
+				                                        	762321*****7870
+				                                        </td>
+				                                    </tr> 
+				                                </tbody>
+				                            </table>
+				                            <br>
+				                            <table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+				                                <thead>  
+				                                    <tr class="table2">
+				                                        <th class="text-left" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">繳納日期</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">繳費期別</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">應繳保費</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">實繳保費</th>
+				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">繳費方式</th>
+				                                    </tr>
+				                                </thead>
+				                                <tbody>
+				                                    <tr class="h65 noEvent">
+				                                        <td>2022/01/12</td>
+				                                        <td>第4期/共0期</td>
+				                                        <td>5,000</td>
+				                                        <td>5,000</td> 
+				                                    </tr>  
+				                                </tbody>
+				                            </table>
+				                            <div class="ps-area">
+				                                <p class="text-ps">※本畫面僅提供六個月內保費資料之查詢，如有其他需求，請與客服中心聯絡</p>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+				        		
+				        </div>
+				    </div>
 				</div>
 			</div>
 		</div>
-	</section>
-	<footer th:replace="fragments/footer"></footer>
-	<th:block th:replace="fragments/script"/>
-</body>
+	</div>
 
+</div>
+<footer th:replace="fragments/footer"></footer>
+</body>
 </html>
+
