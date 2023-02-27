@@ -205,4 +205,12 @@
         ORDER BY
         DEP_ID
     </select>
+
+    <select id="getBranchId" resultType="com.twfhclife.adm.model.DepartmentVo">
+        SELECT
+           *
+        FROM
+            ESERVICE_JD.DBO.DEPARTMENT
+        where PARENT_DEP = #{depId} and BRANCH_ID = #{branchId}
+    </select>
 </mapper>

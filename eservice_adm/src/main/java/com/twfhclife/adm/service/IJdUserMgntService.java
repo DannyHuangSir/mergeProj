@@ -1,5 +1,6 @@
 package com.twfhclife.adm.service;
 
+import com.twfhclife.adm.model.JdUserVo;
 import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.UserEntityVo;
 
@@ -40,4 +41,10 @@ public interface IJdUserMgntService {
 	List<UserEntityVo> getUserEntity(UserEntityVo userEntityVo);
 
 	List<Map<String, Object>> getNotifyUsers(NotifySearchVo userEntityVo);
+
+	JdUserVo getJdUser(String userId);
+
+	List<Map<String, Object>> getJdUserIcQuery(JdUserVo vo);
+
+	int countJdUserIc(JdUserVo vo);
 }

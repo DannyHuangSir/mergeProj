@@ -28,7 +28,10 @@ CREATE TABLE [ESERVICE_JD].[dbo].[USERS](
 	[LOGIN_TIME] [datetime] NULL,
 	[CLAUSE_FLAG] [nchar](10) NULL,
 	[SERIAL_NUM] [nvarchar](50) NOT NULL,
-    [IC_ID] [nvarchar](20) NOT NULL
+    [IC_ID] [nvarchar](20) NOT NULL,
+    [LOGIN_SIZE] [nvarchar](20)  NULL,
+    [EFFECTIVE_DATE] [datetime] NULL,
+    [EXPIRATION_DATE] [datetime] NULL,
 ) ON [PRIMARY]
 GO
 
@@ -114,6 +117,7 @@ GO
 CREATE TABLE [ESERVICE_JD].[dbo].[USER_IC](
 	[USER_ID] [varchar](50) NOT NULL,
 	[DEP_ID] [varchar](50) NOT NULL,
+    [BRANCH_ID] [varchar](50) NOT NULL
 ) ON [PRIMARY]
 GO
 
@@ -126,3 +130,16 @@ GO
 alter table ESERVICE_ADM.dbo.ROLE add DIV_ROLE_ID  [nvarchar](50) NULL
 
 alter table ESERVICE_JD.DBO.USER_DEPARTMENT alter column BRANCH_ID [nvarchar](50) NULL;
+
+CREATE TABLE [ESERVICE_JD].[dbo].[BATCH_PLAN](
+    [BATCH_ID] [varchar](50) NOT NULL,
+    [BATCH_STATUS] [varchar](50) NOT NULL,
+    [BATCH_JOIN_TIME] [datetime] NOT NULL,
+    [BATCH_START_TIME] [datetime] NULL,
+    [BATCH_END_TIME] [datetime] NULL,
+    [FAIL_NUM] [int] NULL,
+    [FAIL_LINK] [varbinary](max) NULL,
+    [TYPE] [varchar](50) NOT NULL,
+    [BATCH_FILE] [varbinary](max) NULL
+    ) ON [PRIMARY]
+    GO

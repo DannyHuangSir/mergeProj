@@ -144,4 +144,8 @@ public class JdRoleServiceImpl implements IJdRoleService {
     public List<Map<String, Object>> getNotifyRoles(NotifySearchVo notifySearchVo) {
         return roleDao.getNotifyRoles(notifySearchVo);
     }
+
+    public RoleVo getRoleId(String roleId){
+        return roleDao.getRoleId(roleId);
+    }
 }

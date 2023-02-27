@@ -219,10 +219,10 @@
 			grid.caption = '角色查詢結果';
 			grid.colNames = ['角色名稱', '部門名稱', '角色描述', '角色權限設定'];
 			grid.colModel = [
-				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
-				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME', width: 100},
-				{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200},
-				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+				{name: 'ROLE_NAME', index: 'ROLE_NAME'},
+				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME'},
+				{name: 'DESCRIPTION', index: 'DESCRIPTION'},
+				{ align: 'center', formatter: function(cellvalue, options, row) {
 					var editHtml = '';
 					editHtml += '<a href="javascript:openRoleTree(\'' + row.ROLE_ID + '\', \'' + row.ROLE_NAME + '\')" class="green bigger-140 show-details-btn" title="Edit">';
 					editHtml += '    <i class="my-icon fa fa-pencil bigger-120"></i> <span class="sr-only">Details</span>';

@@ -76,4 +76,6 @@ public interface IJdDeptMgntService {
     DepartmentVo getDepId(String depId);
 
     public List<DepartmentVo> getBranchList(String userId, String username,DepartmentVo vo);
+
+    DepartmentVo getBranchId(String depId,String branchId);
 }

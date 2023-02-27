@@ -227,8 +227,12 @@
         WHERE RSA.SYS_ID = 'eservice_jd' AND D1.DEP_ID = #{vo.passageWay}
     </select>
 
-    <delete id="deleteRoleSysAuth">
-        DELETE ESERVICE_ADM.DBO.ROLE_SYS_AUTH
-    </delete>
+<!--    <delete id="deleteRoleSysAuth">-->
+<!--        DELETE ESERVICE_ADM.DBO.ROLE_SYS_AUTH-->
+<!--    </delete>-->
+
+    <select id="getRoleId" resultType="com.twfhclife.adm.model.RoleVo">
+        select * from ESERVICE_ADM.DBO.ROLE where DIV_ROLE_ID = #{roleId}
+    </select>
 </mapper>
 

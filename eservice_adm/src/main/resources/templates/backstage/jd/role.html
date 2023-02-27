@@ -184,11 +184,11 @@
 			grid.caption = '角色查詢結果';
 			grid.colNames = ['角色代碼','角色名稱', '通路名稱', '角色描述', '操作'];
 			grid.colModel = [
-				{name: 'DIV_ROLE_ID', index: 'DIV_ROLE_ID', width: 100},
-				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
-				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME', width: 100},
-				{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 200},
-				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+				{name: 'DIV_ROLE_ID', index: 'DIV_ROLE_ID'},
+				{name: 'ROLE_NAME', index: 'ROLE_NAME'},
+				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME'},
+				{name: 'DESCRIPTION', index: 'DESCRIPTION'},
+				{align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
 					// actionHtml += '<a href="javascript:editRole(\'' + row.ROLE_ID + '\',\'' + emptyIfNull(row.ROLE_NAME) + '\',\'' + emptyIfNull(row.DEPARTMENT_ID) + '\',\'' + emptyIfNull(row.DESCRIPTION) + '\');" class="green bigger-140 show-details-btn" title="修改">';
 					actionHtml += '<a href="javascript:editRole(\'' + row.ROLE_ID + '\',\'' + emptyIfNull(row.ROLE_NAME) + '\',\'' + emptyIfNull(row.DEPARTMENT_ID) + '\',\'' + emptyIfNull(row.DESCRIPTION) + '\',\'' + row.DIV_ROLE_ID+'\');" class="green bigger-140 show-details-btn" title="修改">';

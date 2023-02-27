@@ -1,6 +1,8 @@
 package com.twfhclife.adm.service.impl;
 
+import com.twfhclife.adm.dao.JdUserBatchDao;
 import com.twfhclife.adm.dao.JdUserEntityDao;
+import com.twfhclife.adm.model.JdUserVo;
 import com.twfhclife.adm.model.NotifySearchVo;
 import com.twfhclife.adm.model.UserEntityVo;
 import com.twfhclife.adm.service.IJdUserMgntService;
@@ -23,7 +25,8 @@ public class JdUserMngtServiceImpl implements IJdUserMgntService {
 
 	@Autowired
 	private JdUserEntityDao userEntityDao;
-
+	@Autowired
+	private JdUserBatchDao jdUserBatchDao;
 	/**
 	 * 後台預設最高權限管理員帳號
 	 */
@@ -81,4 +84,19 @@ public class JdUserMngtServiceImpl implements IJdUserMgntService {
     public List<Map<String, Object>> getNotifyUsers(NotifySearchVo userEntityVo) {
         return userEntityDao.getNotifyUsers(userEntityVo);
     }
+
+	@Override
+	public JdUserVo getJdUser(String userId) {
+		return jdUserBatchDao.getJdUser(userId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getJdUserIcQuery(JdUserVo vo) {
+		return jdUserBatchDao.getJdUserIcQuery(vo);
+	}
+
+	@Override
+	public int countJdUserIc(JdUserVo vo) {
+		return jdUserBatchDao.countJdUserIc(vo);
+	}
 }

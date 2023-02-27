@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/head"/>
+    <style type="text/css">
+        .tree-container-min{
+            background-color:#FFF;
+            border:1px solid#DDD;
+            border-left-color:#67B2DD;
+            display:block;
+            padding:0;
+            max-width:600px;
+            max-height:500px;
+        }
+    </style>
+</head>
+<body class="no-skin">
+<th:block th:replace="fragments/navbar"/>
+<div class="main-container my-save-state" id="main-container">
+    <script type="text/javascript">
+        try{my.settings.loadState('main-container')}catch(e){}
+    </script>
+    <div th:replace="fragments/sidebar :: sidebar (funId='iCBatchImport')"></div>
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs my-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        權限管理
+                        <i class="my-icon fa fa-angle-double-right"></i>
+                        IC人員匯入批次作業
+                    </li>
+                </ul>
+            </div>
+            <div class="page-content">
+                <div class="row">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <!-- PAGE CONTENT BEGINS -->
+                            <form class="form-horizontal" id="form1" role="form" action="#" method="POST" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 檔案名稱 </label>
+                                    <div class="col-sm-5">
+                                        <input id="file" type="file" class="form-control" name="file"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div><!-- /.page-content -->
+            </div>
+            <div class="col-md-offset-3 col-md-9">
+                <button id="qryBtn" class="btn btn-success" type="button">
+                    <i class="my-icon fa fa-check bigger-110"></i>
+                    加入排程
+                </button>
+                &nbsp; &nbsp; &nbsp;
+                <button id="resetBtn" class="btn" type="reset">
+                    <i class="my-icon fa fa-undo bigger-110"></i>
+                    重新輸入
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="show-detail-results">
+                        <h3 class="header smaller lighter blue">排程結果</h3>
+                        <table id="deptGrid"></table>
+                        <div id="deptPager"></div>
+                    </div>
+                </div>
+                <div>
+                </div>
+            </div><!-- /.main-content -->
+            <div th:replace="fragments/footer"></div>
+            <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+                <i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+            </a>
+        </div>
+        <th:block th:replace="fragments/script"/>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            //
+            $(function(){
+                $('#qryBtn').click(function(){
+                    var form = $('#form1')[0];
+                    var data = new FormData(form);
+                    $.ajax({
+                        url: /*[[@{jdBatch/uploadICFile}]]*/,
+                        type: 'POST',
+                        enctype : 'multipart/form-data',
+                        data: data,
+                        processData : false,
+                        contentType : false,
+                        cache : false,
+                        timeout : 600000,
+                        success: function (response) {
+                            alertMsg('上傳文件成功');
+                        },
+                        error: function (response) {
+                            alertMsg('系統發生錯誤');
+                        }
+                    });
+                });
+
+
+                deptGrid = new jqGridUtil();
+                deptGrid.id = '#deptGrid';
+                deptGrid.pager = '#deptPager';
+                deptGrid.rowNum = 3;
+                deptGrid.height = 122;
+                deptGrid.url = /*[[@{/jdBatch/getICs/batch}]]*/;
+                deptGrid.caption = '使用者權限查詢';
+                deptGrid.colNames = ['批次號', '執行狀態','加入排程時間','執行開始時間','執行結束時間','失敗筆數','原始檔案'];
+                deptGrid.colModel = [
+                    {name: 'BATCH_ID', index: 'BATCH_ID'},
+                    {align: 'center', formatter: function(cellvalue, options, row) {
+                        var showBatchStatus = '';
+                        if (row.BATCH_STATUS == 'waiting'){
+                            showBatchStatus = '等待處理中'
+                        }
+                        if (row.BATCH_STATUS == 'processing'){
+                            showBatchStatus = '處理中'
+                        }
+                        if (row.BATCH_STATUS== 'completed'){
+                            showBatchStatus = '已完成'
+                        }
+                        return showBatchStatus;
+                        }},
+                    {name: 'BATCH_JOIN_TIME',index: 'BATCH_JOIN_TIME'},
+                    {name: 'BATCH_START_TIME',index: 'BATCH_START_TIME'},
+                    {name: 'BATCH_END_TIME',index: 'BATCH_END_TIME'},
+                    {align: 'center', formatter: function(cellvalue, options, row) {
+                            var actionHtml = '';
+                            if (!row.FAIL_NUM == ''){
+                                actionHtml += '<a href="/eservice_adm/jdBatch/exportICFile?batchId='+ row.BATCH_ID + '&type=false" target="_blank" class="green bigger-140 show-details-btn" title="失敗筆數鏈接">' + row.FAIL_NUM + '</a>';
+                            }
+                            return actionHtml;
+                        }},
+                    {align: 'center', formatter: function(cellvalue, options, row) {
+                            var actionHtml = '';
+                            actionHtml += '<a href="/eservice_adm/jdBatch/exportICFile?batchId='+ row.BATCH_ID + '&type=true" target="_blank" class="green bigger-140 show-details-btn" title="原始檔案"><i class="my-icon fa fa-angle-double-down"></i></a>';
+                            return actionHtml;
+                        }}
+                ];
+                deptGrid.create();
+
+            })
+
+
+            /*]]>*/</script>
+</body>
+</html>

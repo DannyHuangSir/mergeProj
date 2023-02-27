@@ -9,8 +9,6 @@ import com.twfhclife.generic.annotation.LoginCheck;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
-import com.twfhclife.generic.util.MyStringUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -260,105 +259,38 @@ public class JdUserMgntController extends BaseController {
         return processResponseEntity();
     }
 
-    /**
-     * 取得人員代理人查詢結果
-     * @param vo userDeputyVo
-     * @return
-     */
+
     @RequestLog
-    @PostMapping("/jdUserMgnt/getUserDeputyPageList")
-    public ResponseEntity<PageResponseObj> getUserDeputyList(@RequestBody UserDeputyVo userDeputyVo){
+    @PostMapping("/jdUserMgnt/getJdUser")
+    public ResponseEntity<ResponseObj> getJdUser(@RequestParam("userId") String userId) {
+        try {
+            userMgntService.getJdUser(userId);
+        } catch (Exception e) {
+            logger.error("Unable to getJdUser: {}", ExceptionUtils.getStackTrace(e));
+            processSystemError();
+        }
+        return processResponseEntity();
+    }
+
+    @RequestLog
+    @PostMapping("/jdUserMgnt/getJdUserIcQuery")
+    public ResponseEntity<PageResponseObj> getJdUserIcQuery(@RequestBody JdUserVo vo) {
         PageResponseObj pageResp = new PageResponseObj();
         try {
-            // Note: UserDeputyVo 需要繼承Pagination，接收 jqGrid 的page 跟 rows 屬性
+            // Note: UserRoleVo 需要繼承Pagination，接收 jqGrid 的page 跟 rows 屬性
             // 設定jqGrid 資料查詢集合
-            pageResp.setRows(userDeputyService.getUserDeputyPageList(userDeputyVo));
+            pageResp.setRows(userMgntService.getJdUserIcQuery(vo));
             // 設定jqGrid 資料查詢總筆數
-            pageResp.setRecords(userDeputyService.getUserDeputyPageTotal(userDeputyVo));
+            pageResp.setRecords(userMgntService.countJdUserIc(vo));
             // 設定jqGrid 目前頁數
-            pageResp.setPage(userDeputyVo.getPage());
+            pageResp.setPage(vo.getPage());
             // 設定jqGrid 總頁數
-            pageResp.setTotal((pageResp.getRecords() + userDeputyVo.getRows() - 1) / userDeputyVo.getRows());
+            pageResp.setTotal((pageResp.getRecords() + vo.getRows() - 1) / vo.getRows());
             pageResp.setResult(PageResponseObj.SUCCESS);
-        } catch(Exception e) {
+        } catch (Exception e) {
             pageResp.setResult(PageResponseObj.ERROR);
             logger.error("Unable to getUserRolePageList: {}", ExceptionUtils.getStackTrace(e));
         }
         return ResponseEntity.status(HttpStatus.OK).body(pageResp);
-    }
-
-    /**
-     * 人員管理-新增代理人
-     * @param userDeputyVo
-     * @return
-     */
-    @RequestLog
-    @PostMapping("/jdUserMgnt/addUserDeputy")
-    public ResponseEntity<ResponseObj> addUserDeputy(@RequestBody UserDeputyVo userDeputyVo){
-        try {
-            if(StringUtils.isEmpty(userDeputyVo.getUserId())
-                    || StringUtils.isEmpty(userDeputyVo.getDeputyId())) {
-                processError("代理人設置不正確，請確認");
-            } else {
-                int result = userDeputyService.insertUserDeputy(userDeputyVo);
-                if(result > 0) {
-                    processSuccessMsg("新增成功");
-                } else {
-                    processError("新增失敗");
-                }
-            }
-        } catch(Exception e) {
-            logger.error("Unable to addUserDeputy: {}", ExceptionUtils.getStackTrace(e));
-            processSystemError();
-        }
-        return processResponseEntity();
-    }
-
-    @RequestLog
-    @PostMapping("/jdUserMgnt/getUserCanDeputy")
-    public ResponseEntity<ResponseObj> getUserCanDeputyList(@RequestBody UserDeputyVo userDeputyVo){
-        try {
-            if(StringUtils.isEmpty(userDeputyVo.getUserId())) {
-                processError("沒有選擇使用者，請確認");
-            } else {
-                Object resultData = userDeputyService.getCanDeputyUser(userDeputyVo);
-                if(resultData == null) {
-                    processError("目前沒有可以使用的代理人");
-                } else {
-                    processSuccess(resultData);
-                }
-            }
-        } catch(Exception e) {
-            logger.error("Unable to getUserCanDeputyList: {}", ExceptionUtils.getStackTrace(e));
-            processSystemError();
-        }
-        return processResponseEntity();
-    }
-
-    /**
-     * 刪除代理人
-     * @param userDeputyVo
-     * @return
-     */
-    @RequestLog
-    @PostMapping("/jdUserMgnt/deleteUserDeputy")
-    public ResponseEntity<ResponseObj> deleteUserDeputy(@RequestBody UserDeputyVo userDeputyVo){
-        try {
-            if(MyStringUtil.isNotNullOrEmpty(userDeputyVo.getId()) && userDeputyVo.getId().matches("[0-9]+")) {
-                Integer intId = Integer.parseInt(userDeputyVo.getId());
-                int result = userDeputyService.deleteDeputyById(intId);
-                if(result > 0) {
-                    processSuccessMsg("刪除成功");
-                } else {
-                    processError("刪除失敗");
-                }
-            } else {
-                processError("刪除失敗");
-            }
-        } catch(Exception e) {
-            logger.error("Unable to deleteDeputy: {}", ExceptionUtils.getStackTrace(e));
-            processSystemError();
-        }
-        return processResponseEntity();
     }
 }

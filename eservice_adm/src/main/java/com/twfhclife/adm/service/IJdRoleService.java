@@ -75,4 +75,6 @@ public interface IJdRoleService {
     public int deleteRole(RoleVo roleVo);
 
     List<Map<String, Object>> getNotifyRoles(NotifySearchVo userEntityVo);
+
+    RoleVo getRoleId(String roleId);
 }

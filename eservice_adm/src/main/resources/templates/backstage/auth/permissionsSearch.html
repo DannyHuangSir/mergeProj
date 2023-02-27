@@ -166,24 +166,24 @@
 			grid.caption = '系統帳號查詢';
 			grid.colNames = ['系統功能', '使用者角色','使用者名稱','使用者帳號','狀態', '權限設定'];
 			grid.colModel = [
-				{width: 150, formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					return breakLine(row.SYS_NAME_LIST);
 				}},
-				{width: 150, formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					return breakLine(row.ROLE_NAME_LIST);
 				}},
-				{width: 200, formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					return emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME);
 				}},
-				{name: 'USERNAME', index: 'USERNAME', width: 100},
-				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+				{name: 'USERNAME', index: 'USERNAME'},
+				{align: 'center', formatter: function(cellvalue, options, row) {
 					var statusName = '停用';
 					if (row.ENABLED == '1') {
 						statusName = '啟用';
 					}
 					return statusName;
 				}},
-				{width: 60, align: 'center', formatter: function(cellvalue, options, row) {
+				{align: 'center', formatter: function(cellvalue, options, row) {
 					var editHtml = '';
 					editHtml += '<a href="javascript:openRoleTree(\'' + row.USERNAME + '\', \'' + row.ROLE_ID_LIST  + '\', \'' + row.ROLE_NAME_LIST  +'\')" class="green bigger-140 show-details-btn" title="Edit">';
 					editHtml += '<i class="my-icon fa fa-angle-double-down"></i> <span class="sr-only">Details</span>';

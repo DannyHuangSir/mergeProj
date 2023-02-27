@@ -181,4 +181,9 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
         String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
         return departmentDao.getBranchList(userId, adminUserFlag,vo);
     }
+
+    @Override
+    public DepartmentVo getBranchId(String depId, String branchId) {
+        return departmentDao.getBranchId(depId,branchId);
+    }
 }

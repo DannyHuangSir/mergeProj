@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.adm.dao.JdUserBatchDao">
+
+    <sql id="Base_Column_List">
+        USER_ID,USER_TYPE,ROC_ID,MOBILE,EMAIL,LOGIN_FAIL_COUNT,LAST_CHANG_PASSWORD_DATE,SMS_FLAG,MAIL_FLAG,FB_ID,MOICA_ID,CREATE_DATE,CREATE_USER
+        ,ONLINE_FLAG,STATUS,USER_NAME ,LOGIN_TIME,CLAUSE_FLAG,SERIAL_NUM,IC_ID,LOGIN_SIZE,EFFECTIVE_DATE,EXPIRATION_DATE
+    </sql>
+
+    <insert id="addUsers">
+        insert ESERVICE_JD.dbo.USERS(
+        <include refid="Base_Column_List"/>
+        )
+        values
+        (
+        #{jdUserVo.userId,jdbcType=VARCHAR},
+        #{jdUserVo.userType,jdbcType=VARCHAR},
+        #{jdUserVo.rocId,jdbcType=VARCHAR},
+        #{jdUserVo.mobile,jdbcType=VARCHAR},
+        #{jdUserVo.email,jdbcType=VARCHAR},
+        #{jdUserVo.loginFailCount,jdbcType=VARCHAR},
+        #{jdUserVo.lastChangPasswordDate,jdbcType=VARCHAR},
+        #{jdUserVo.smsFlag,jdbcType=VARCHAR},
+        #{jdUserVo.mailFlag,jdbcType=VARCHAR},
+        #{jdUserVo.fbId,jdbcType=VARCHAR},
+        #{jdUserVo.moicaId,jdbcType=VARCHAR},
+        getdate(),
+        #{jdUserVo.createUser,jdbcType=VARCHAR},
+        #{jdUserVo.onlineFlag,jdbcType=VARCHAR},
+        #{jdUserVo.status,jdbcType=VARCHAR},
+        #{jdUserVo.userName,jdbcType=VARCHAR},
+        getdate(),
+        #{jdUserVo.clauseFlag,jdbcType=VARCHAR},
+        #{jdUserVo.serialNum,jdbcType=VARCHAR},
+        #{jdUserVo.icId,jdbcType=VARCHAR},
+        #{jdUserVo.loginSize,jdbcType=VARCHAR},
+        #{jdUserVo.effectiveDate,jdbcType=VARCHAR},
+        #{jdUserVo.expirationDate,jdbcType=VARCHAR}
+        );
+    </insert>
+
+    <update id="updateUsers">
+        update ESERVICE_JD.dbo.USERS
+        <set>
+            <if test="jdUserVo.userId != null and jdUserVo.userId != ''"> USER_ID = #{jdUserVo.userId },</if>
+            <if test="jdUserVo.userType != null and jdUserVo.userType != ''"> USER_TYPE = #{jdUserVo.userType },</if>
+            <if test="jdUserVo.rocId != null and jdUserVo.rocId != ''"> ROC_ID = #{jdUserVo.rocId },</if>
+            <if test="jdUserVo.mobile != null and jdUserVo.mobile != ''"> MOBILE = #{jdUserVo.mobile },</if>
+            <if test="jdUserVo.email != null and jdUserVo.email != ''"> EMAIL = #{jdUserVo.email },</if>
+            <if test="jdUserVo.loginFailCount != null and jdUserVo.loginFailCount != ''"> LOGIN_FAIL_COUNT = #{jdUserVo.loginFailCount },</if>
+            <if test="jdUserVo.lastChangPasswordDate != null and jdUserVo.lastChangPasswordDate != ''"> LAST_CHANG_PASSWORD_DATE = #{jdUserVo.lastChangPasswordDate },</if>
+            <if test="jdUserVo.smsFlag != null and jdUserVo.smsFlag != ''"> SMS_FLAG = #{jdUserVo.smsFlag },</if>
+            <if test="jdUserVo.mailFlag != null and jdUserVo.mailFlag != ''"> MAIL_FLAG = #{jdUserVo.mailFlag },</if>
+            <if test="jdUserVo.fbId != null and jdUserVo.fbId != ''"> FB_ID = #{jdUserVo.fbId },</if>
+            <if test="jdUserVo.moicaId != null and jdUserVo.moicaId != ''"> MOICA_ID = #{jdUserVo.moicaId },</if>
+            <if test="jdUserVo.createUser != null and jdUserVo.createUser != ''"> CREATE_USER = #{jdUserVo.createUser },</if>
+            <if test="jdUserVo.onlineFlag != null and jdUserVo.onlineFlag != ''"> ONLINE_FLAG = #{jdUserVo.onlineFlag },</if>
+            <if test="jdUserVo.status != null and jdUserVo.status != ''"> STATUS = #{jdUserVo.status },</if>
+            <if test="jdUserVo.userName != null and jdUserVo.userName != ''"> USER_NAME = #{jdUserVo.userName },</if>
+            <if test="jdUserVo.clauseFlag != null and jdUserVo.clauseFlag != ''"> CLAUSE_FLAG = #{jdUserVo.clauseFlag },</if>
+            <if test="jdUserVo.serialNum != null and jdUserVo.serialNum != ''"> SERIAL_NUM = #{jdUserVo.serialNum },</if>
+            <if test="jdUserVo.icId != null and jdUserVo.icId != ''"> IC_ID = #{jdUserVo.icId },</if>
+            <if test="jdUserVo.loginSize != null and jdUserVo.loginSize != ''"> LOGIN_SIZE = #{jdUserVo.loginSize },</if>
+            <if test="jdUserVo.effectiveDate != null and jdUserVo.effectiveDate != ''"> EFFECTIVE_DATE = #{jdUserVo.effectiveDate },</if>
+            <if test="jdUserVo.expirationDate != null and jdUserVo.expirationDate != ''"> EXPIRATION_DATE = #{jdUserVo.expirationDate },</if>
+            LOGIN_TIME = getdate()
+        </set>
+        <where>
+            <if test="jdUserVo.userId != null and jdUserVo.userId != ''"> USER_ID = #{jdUserVo.userId }</if>
+        </where>
+
+    </update>
+
+    <delete id="deleteIC">
+        delete ESERVICE_JD.dbo.USERS where USER_ID = #{jdUserVo.userId}
+    </delete>
+
+    <delete id="deleteUserIC">
+        delete ESERVICE_JD.dbo.USER_IC where USER_ID = #{jdUserVo.userId}
+    </delete>
+
+    <select id="getJdUser" resultType="com.twfhclife.adm.model.JdUserVo">
+        select * from ESERVICE_JD.dbo.USERS where USER_ID  = #{userId}
+    </select>
+
+    <select id="getJdUserIcQuery" resultType="hashmap">
+        SELECT
+            *
+        FROM (
+                 SELECT
+                     ROW_NUMBER() OVER (ORDER BY DEP_ID) AS ROW_NUM
+        ,A.*
+                 FROM (
+                          select * from ESERVICE_JD.dbo.USER_IC where USER_ID = #{vo.userId}
+                      ) A
+             ) B
+        WHERE
+            B.ROW_NUM <![CDATA[<=]]> #{vo.page} * #{vo.rows}
+          AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows}
+    </select>
+
+    <select id="countJdUserIc" resultType="int">
+        SELECT
+        COUNT(1) AS AMOUNT
+        FROM (
+           select * from ESERVICE_JD.dbo.USER_IC where USER_ID = #{vo.userId}
+        ) t
+    </select>
+</mapper>
