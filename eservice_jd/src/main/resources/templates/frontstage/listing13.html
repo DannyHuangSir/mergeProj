@@ -1,231 +1,98 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-Hant">
+
 <head>
-    <th:block th:replace="fragments/head"/>
-
-    <!--<editor-fold desc="fragment head">-->
-    <!--/*-->
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=EDGE, chrome=1"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
-    <!-- Bootstrap -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" href="../../static/css/bootstrap.min.css"/>
-    <link th:href="@{/css/icon.css}" rel="stylesheet" href="../../static/css/icon.css"/>
-    <link th:href="@{/css/layout.css}" rel="stylesheet" href="../../static/css/layout.css"/>
-
-    <link th:href="@{/css/chosen.min.css}" rel="stylesheet" href="../../static/css/chosen.min.css"/>
-
-    <!--link rel="stylesheet" href="fontello/css/fontello.css"-->
-    <!--link rel="stylesheet" href="fontello/css/animation.css"-->
-
-    <!--[if IE 7]>
-    <link rel="stylesheet" href="css/fontello-ie7.css">
-    <![endif]-->
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-
-    <!--[if lt IE 9]>
-    <script src="js/plugin/html5shiv.min.js"></script>
-    <script src="plugin/respond.min.js"></script>
-    <![endif]-->
-
-    <link rel="stylesheet" th:href="@{/css/tablesaw.stackonly.css}"
-          href="../../static/css/tablesaw.stackonly.css"/>
-    <link rel="stylesheet" th:href="@{/css/scrollbar.css}" href="../../static/css/scrollbar.css"/>
-    <link rel="stylesheet" th:href="@{/css/jquery.sliderTabs.css}" href="../../static/css/jquery.sliderTabs.css"/>
-    <link rel="stylesheet" th:href="@{/css/datepicker.css}" href="../../static/css/datepicker.css"/>
-    <link rel="stylesheet" th:href="@{/css/custom.css}" href="../../static/css/custom.css"/>
-
-    <link rel="shortcut icon" th:href="@{/img/favor-icon.png}" href="../../static/img/favor-icon.png"/>
-    <!--*/-->
-    <!--</editor-fold>-->
-
-    <title>我的保單｜臺銀人壽保單網路服務</title>
+	<th:block th:replace="fragments/head"/>
 </head>
+
 <body>
-<div th:replace="fragments/header :: top"></div>
-<header th:replace="fragments/header :: header"></header>
-<th:block th:if="${showUserDataInfo}">
-    <div th:replace="fragments/header :: alert_mobile"></div>
-    <div th:replace="fragments/header :: alert_container"></div>
-    <div th:replace="fragments/header :: compensation_processing"></div>
-    <div th:replace="fragments/header :: compensation_incomplete"></div>
-    <div th:replace="fragments/header :: application_processing"></div>
-    <div th:replace="fragments/header :: application_complete"></div>
-    <div th:replace="fragments/header :: compensation_complete"></div>
-    <div th:replace="fragments/header :: payment_notification"></div>
-    <div th:replace="fragments/header :: payonline_template"></div>
-</th:block>
-<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
-<section class="grey listing6 fullContent">
-    <div class="container bg3 list1">
-        <div class="mystyle3 listing-area">
-            <div class="row-offcanvas row-offcanvas-left">
-                <div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing13')"></div>
-                <div th:replace="fragments/sidebar :: sidebar (funId='listing13')"></div>
-                <div class="col-xs-12 col-sm-9 col-md-10" id="list2">
-                    <div class="tb3 top0 mobile-toggle" data-toggle="true">
-                        <i class="fas fa-chevron-down hid2 mobile"></i>
-                        <i class="fas fa-chevron-up hid1"></i> 保單收益分配/撥回
-                    </div>
-                    <br/>
-                    <div class="mobile-toggle-panel specialHeight toggle-hide">
-                        <table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
-                            <thead>
-                            <tr class="table2">
-                                <th class="text-left" scope="col" data-tablesaw-priority="1">交易日期<br/></th>
-                                <th scope="col" data-tablesaw-priority="1">撥回方式<br/></th>
-                                <th scope="col" data-tablesaw-priority="1">單位數<br/></th>
-                                <th scope="col" data-tablesaw-priority="1">現金<br/></th>
-<!--                                 <th scope="col" data-tablesaw-priority="1">給付日期<br/></th> -->
-							 <th scope="col" data-tablesaw-priority="1">電匯日期<br/></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20009'] != null}
-								? ${session.PAGE_WORDING['WORDING_20009'].parameterValue}"/>
-                    </div>
-                    <div th:replace="fragments/listingReferOnly"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<footer th:replace="fragments/footer"></footer>
-<th:block th:replace="fragments/script"/>
+<div class="wrapper sidebar_minimize">
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<div th:replace="fragments/nav"></div>
+    <div class="main-panel" style="position: absolute;">
+		<div class="content">
+			<div class="page-inner">
+				<div class="mt-2 mb-4">
+		            <ul class="breadcrumb detail1">
+		                <li>
+		                    <a href="#">保單管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
+		                </li>
+		                <li>
+		                    <a href="policy-inquiry.html">保單查詢</a> <i class="fa fa-angle-right fa-lg ble"></i>
+		                </li>
+		                <li class="active">
+		                    <a href="javascript:;">保單詳細資訊</a>
+		                </li>
+		            </ul>
+				</div>
+				<div class="row mb-4" style="padding: 0 15px">
+					<!---->
+					<div class="grey listing1 fullContent">
+				        <div class="bg3 list1">
+				            <div class="mycigna3 listing-area">
+				                <div class="row-offcanvas row-offcanvas-left">
+									<div th:replace="fragments/policy-nav"></div>
+				                    <div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+				                        <div class="box-border">
+											<div class="tb3 mobile-toggle" data-toggle="true">
+												<i class="fa hid2 foo-angle-up mobile"></i>
+												<i class="fa foo-angle-up hid1"></i> 保障內容與金額
+												<div class="dropdown pull-right r30">
+													<a class="btn-return" href="policyQuery">回保單查詢結果清單</a>
+												</div>
+											</div>
+											<div class="my1 marginTop20">
+												<p class="pull-left visible-xs">
+													<button type="button" class="btn btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
+												</p>
+												<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
+												<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
+												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span> 保單幣別:<span th:text="${vo.currency}"></span></p>
+												<div class="insuranceID_phone" th:text="${policyNo}"></div>
+											</div>
+				                            <div class="wht">
+				                                 <table id="listing5" class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" cellspacing="0" width="100%">
+				                                    <thead>
+				                                        <tr>
+				                                            <th class="text-left">給付種類</th>
+				                                            <th>實付金額</th>
+				                                            <th>受款人</th> 
+				                                            <th>給付方式</th>
+				                                            <th class="item90">給付日期</th>
+				                                            <th class="item90">匯款資訊</th>
+				                                        </tr>
+				                                    </thead>
+				                                    <tbody>
+				                                        <tr class="h65 noEvent" th:each="vo1: ${vo.payments}">
+				                                            <td class="text-left table3" th:text="${vo1.payReas}">
+				                                            </td>
+				                                            <td th:text="${vo1.payAmount}"></td>
+				                                            <td th:text="${vo1.payName}">
+				                                            </td>
+				                                            <td th:text="${vo1.payMethod}">
+				                                            </td>
+				                                            <td th:text="${vo1.bookDate}"></td>
+				                                            <td th:text="${vo1.bank}">
+				                                            </td>
+				                                        </tr>
+				                                    </tbody>
+				                                </table>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+				        		
+				        </div>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<!--<editor-fold desc="fragments script">-->
-<!--/*-->
-<script th:src="@{/plugin/jquery-1.11.3.min.js}" src="../../static/plugin/jquery-1.11.3.min.js"></script>
-<script th:src="@{/plugin/jquery.placeholder.min.js}"
-        src="../../static/plugin/jquery.placeholder.min.js"></script>
-<script th:src="@{/plugin/detectmobilebrowser_jquery.js}"
-        src="/../../static/plugin/detectmobilebrowser_jquery.js"></script>
-<script th:src="@{/js/circle.js}" src="../../static/js/circle.js"></script>
-<script th:src="@{/plugin/scrollbar.js}" src="../../static/plugin/scrollbar.js"></script>
-<script th:src="@{/plugin/jquery-ui.min.js}" src="../../static/plugin/jquery-ui.min.js"></script>
-<script th:src="@{/plugin/datepicker-zh-TW.js}" src="../../static/plugin/datepicker-zh-TW.js"></script>
-<script th:src="@{/plugin/bootstrap.min.js}" src="../../static/plugin/bootstrap.min.js"></script>
-<script th:src="@{/plugin/tablesaw.stackonly.js}" src="../../static/plugin/tablesaw.stackonly.js"></script>
-<script th:src="@{/js/according.js}" src="../../static/js/according.js"></script>
-<script th:src="@{/js/onlinechange/accounting.min.js}"
-        src="../../static/js/onlinechange/accounting.min.js"></script>
-<script th:src="@{/js/popover.js}" src="../../static/js/popover.js"></script>
-<script th:src="@{/plugin/jquery.sliderTabs.min.js}" src="../../static/plugin/jquery.sliderTabs.min.js"></script>
-<script th:src="@{/plugin/bootstrap-multiselect.js}" src="../../static/plugin/bootstrap-multiselect.js"></script>
-<script th:src="@{/js/travelPolicy/moment.js}" src="../../static/js/travelPolicy/moment.js"></script>
-<script th:src="@{/plugin/bootstrap-datetimepicker.js}"
-        src="../../static/plugin/bootstrap-datetimepicker.js"></script>
-<script th:src="@{/js/chosen.jquery.js}" src="../../static/js/chosen.jquery.js"></script>
-<script th:src="@{/js/scripts.js}" src="../../static/js/scripts.js"></script>
-<script th:src="@{/js/tablepand.js}" src="../../static/js/tablepand.js"></script>
-<script th:src="@{/fontawesome-free-5.1.1-web/js/solid.js}"
-        src="../../static/fontawesome-free-5.1.1-web/js/solid.js"></script>
-<script th:src="@{/fontawesome-free-5.1.1-web/js/regular.js}"
-        src="../../static/fontawesome-free-5.1.1-web/js/regular.js"></script>
-<script th:src="@{/fontawesome-free-5.1.1-web/js/fontawesome.js}"
-        src="../../static/fontawesome-free-5.1.1-web/js/fontawesome.js"></script>
-<!-- eservice common-->
-<script th:src="@{/js/eservice/placeholder.js}" src="../../static/js/eservice/placeholder.js"></script>
-<script th:src="@{/js/eservice/render.js}" src="../../static/js/eservice/render.js"></script>
-<script th:src="@{/js/eservice/noticeBoard.js}" src="../../static/js/eservice/noticeBoard.js"></script>
-<script th:src="@{/js/eservice/option.js}" src="../../static/js/eservice/option.js"></script>
-<script th:src="@{/js/eservice/form.js}" src="../../static/js/eservice/form.js"></script>
-<script th:src="@{/js/eservice/pagebar.js}" src="../../static/js/eservice/pagebar.js"></script>
-<script th:src="@{/js/eservice/grid.js}" src="../../static/js/eservice/grid.js"></script>
-<script th:src="@{/js/eservice/applyGrid.js}" src="../../static/js/eservice/applyGrid.js"></script>
-<script th:src="@{/js/eservice/actionModal.js}" src="../../static/js/eservice/actionModal.js"></script>
-<script th:src="@{/js/eservice/timer.js}" src="../../static/js/eservice/timer.js"></script>
-<script th:src="@{/plugin/timer.jquery.js}" src="../../static/plugin/timer.jquery.js"></script>
-<script th:src="@{/js/eservice/validate.js}" src="../../static/js/eservice/validate.js"></script>
-<script th:src="@{/js/offcanvas.js}" src="../../static/js/offcanvas.js"></script>
-<script th:src="@{/js/countrySelect.min.js}" src="../../static/js/countrySelect.min.js"></script>
-<link rel="stylesheet" type="text/css" th:href="@{/plugin/loading-modal/loading-modal.css}"
-      href="../../static/plugin/loading-modal/loading-modal.css"/>
-<script th:src="@{/plugin/loading-modal/loading-modal.js}"
-        src="../../static/plugin/loading-modal/loading-modal.js"></script>
-<!--*/-->
-<!--</editor-fold>-->
-
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    $(function() {
-        // 建立撥回 grid
-        var grid1 = new eserviceGrid();
-        grid1.sGridId = '#grid1';
-        grid1.sQueryUrl = /*[[@{/getPolicyReversalList?policyNo=} + ${param.policyNo[0]}]]*/"";
-        grid1.aoColumns = [
-            {
-                // 交易日期
-                'fnRender': function(oRow) {
-                    return westDate(oRow.trDate);
-                },
-                'rwdName': '交易日期'
-            },
-            {
-                // 撥回方式
-                'fnRender': function(oRow) {
-                    return '<p class="marginTop25">' + oRow.trCodeName + '</p>';
-                },
-                'rwdName': '撥回方式'
-            },
-            {
-                //單位數
-                'fnRender': function(oRow) {
-                	if(oRow.isNewUnits){
-                    	return '<p class="marginTop25">' + formatNumber(oRow.newUnits, 4) + '</p>';
-                	}
-                	else{
-                		return '<p class="marginTop25">' + '</p>';
-                	}
-                },
-                'rwdName': '單位數'
-            },
-            {
-                // 現金
-                'fnRender': function(oRow) {
-                	if(oRow.isExpeNTD){
-                		return '<p class="marginTop25">' + formatNumber(oRow.expeNTD, 4) + '</p>';
-                	}
-                	else{
-                		return '<p class="marginTop25">' + '</p>';
-                	}               
-                },
-                'rwdName': '現金'
-            },
-//             {
-//                 // 給付日期
-//                 'fnRender': function(oRow) {
-//                     return westDate(oRow.payDate);
-//                 },
-//                 'rwdName': '給付日期'
-//             }
-            {
-                // 電匯日期
-                'fnRender': function(oRow) {
-                    return westDate(oRow.pattDate);
-                },
-                'rwdName': '電匯日期'
-            }
-        ];
-        grid1.fnInitComplete = function() {
-            if (grid1.rownum() == 0) {
-                /* openAlert('查無資料'); */
-                openAlert($('#E0035').val());
-                return false;
-            }
-        };
-        grid1.createSimple();
-    });
-
-
-
-    /*]]>*/
-</script>
+</div>
+<footer th:replace="fragments/footer"></footer></script>
 </body>
 </html>
+

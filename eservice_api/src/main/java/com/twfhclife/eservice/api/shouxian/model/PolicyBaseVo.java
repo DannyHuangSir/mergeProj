@@ -37,6 +37,8 @@ public class PolicyBaseVo {
 
     private String pmdaEpoMk;
 
+    private String currency;
+
     private List<PolicyBeneficiaryVo> beneficiaries = Lists.newArrayList();
 
     private List<String> serialNums = Lists.newArrayList();
@@ -255,5 +257,20 @@ public class PolicyBaseVo {
 
     public void setPmdaEpoMk(String pmdaEpoMk) {
         this.pmdaEpoMk = pmdaEpoMk;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public PolicyBaseVo(String policyNo) {
+        this.policyNo = policyNo;
+    }
+
+    public PolicyBaseVo() {
     }
 }

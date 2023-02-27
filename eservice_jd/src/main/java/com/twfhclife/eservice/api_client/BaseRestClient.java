@@ -4,6 +4,7 @@ import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakLoginResponse;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserSession;
 import com.twfhclife.eservice.util.MyJacksonUtil;
+import com.twfhclife.eservice.web.model.PolicyExpireOfPaymentVo;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -52,6 +53,9 @@ public class BaseRestClient {
 		map.put(PolicyListDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyListDataResponse>>() { });
 		map.put(PolicyBaseDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyBaseDataResponse>>() { });
 		map.put(PolicySafeGuardDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicySafeGuardDataResponse>>() { });
+		map.put(PolicyPaymentRecordDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyPaymentRecordDataResponse>>() { });
+		map.put(PolicyPremiumDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyPremiumDataResponse>>() { });
+		map.put(PolicyExpireOfPaymentDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyExpireOfPaymentDataResponse>>() { });
 
 		return Collections.unmodifiableMap(map);
 	}

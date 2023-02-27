@@ -1,9 +1,7 @@
 package com.twfhclife.eservice.web.service;
 
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
-import com.twfhclife.eservice.web.model.PolicyBaseVo;
-import com.twfhclife.eservice.web.model.PolicySafeGuardVo;
-import com.twfhclife.eservice.web.model.PolicyVo;
+import com.twfhclife.eservice.web.model.*;
 
 import java.util.List;
 
@@ -14,4 +12,10 @@ public interface IPolicyService {
     PolicyBaseVo getPolicyBase(String policyNo);
 
     PolicySafeGuardVo getPolicyGuard(String policyNo);
+
+    PolicyPaymentRecordVo getPolicyPaymentRecord(String policyNo);
+
+    PolicyPremiumVo getPolicyPremium(String policyNo);
+
+    PolicyExpireOfPaymentVo getPolicyExpireOfPayment(String policyNo);
 }

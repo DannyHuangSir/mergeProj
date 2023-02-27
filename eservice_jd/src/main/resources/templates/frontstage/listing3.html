@@ -38,19 +38,19 @@
 				                                <thead>
 				                                    <div class="tb3 top0">
 				                                        <i class="fa foo-angle-down"></i> 繳費紀錄
-				                                        <div class="dropdown pull-right r30">
-								                        	<a class="btn-return" href="policy-inquiry.html">回保單查詢結果清單</a>
-								                        </div>
+														<div class="dropdown pull-right r30">
+															<a class="btn-return" href="policyQuery">回保單查詢結果清單</a>
+														</div>
 				                                    </div>
-				                                    <div class="my1 marginTop20">
-								                        <p class="pull-left visible-xs">
-								                            <button type="button" class="btn btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
-								                        </p>
-								                        <i class="foo-business_7 foo-2x hidden-xs"></i> 增值分紅養老壽險
-								                        <span class=""></span><span class="insuranceID_pc">(1450009053)</span>
-								                         <p style="margin-left: 40px;margin-top: -15px;">保單號碼:093423205 要保人:XXX 被保險人:AAA,BBB 保單幣別:新臺幣</p>
-								                        <div class="insuranceID_phone">(UC70000001)</div>
-								                    </div>
+													<div class="my1 marginTop20">
+														<p class="pull-left visible-xs">
+															<button type="button" class="btn btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
+														</p>
+														<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
+														<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
+														<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span> 保單幣別:<span th:text="${vo.currency}"></span></p>
+														<div class="insuranceID_phone" th:text="${policyNo}"></div>
+													</div>
 				                                  
 				                                    <tr class="table2">
 				                                        <th class="text-left" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">險種名稱</th>
@@ -64,18 +64,13 @@
 				                                </thead>
 				                                <tbody>
 				                                    <tr class="h65 noEvent">
-				                                        <td>百達基金(盧森堡)生物科技
-(CPES1)</td>
-				                                        <td>32542353</td>
-				                                        <td>張XX</td>
-				                                        <td>王X</td>
-				                                        <td>新臺幣</td>
-				                                        <td>年繳</td>
-				                                        <td>
-				                                        	轉賬件<br>
-				                                        	臺北富邦<br>
-				                                        	762321*****7870
-				                                        </td>
+				                                        <td th:text="${vo.prodName}">
+				                                        <td th:text="${policyNo}"></td>
+				                                        <td th:text="${vo.lipmName}"></td>
+				                                        <td th:text="${vo.lipiName}"></td>
+				                                        <td th:text="${vo.currency}"></td>
+				                                        <td th:text="${vo.paymentMode}">年繳</td>
+				                                        <td th:text="${vo.paymentMethod}"></td>
 				                                    </tr> 
 				                                </tbody>
 				                            </table>
@@ -91,12 +86,13 @@
 				                                    </tr>
 				                                </thead>
 				                                <tbody>
-				                                    <tr class="h65 noEvent">
-				                                        <td>2022/01/12</td>
-				                                        <td>第4期/共0期</td>
-				                                        <td>5,000</td>
-				                                        <td>5,000</td> 
-				                                    </tr>  
+				                                    <tr th:each="vo1 : ${vo.paymentRecords}" class="h65 noEvent">
+				                                        <td th:text="${vo1.rcpDate}"></td>
+				                                        <td th:text="${vo1.desc}"></td>
+				                                        <td th:text="${vo1.paabAmt}"></td>
+				                                        <td th:text="${vo1.actAmt}"></td>
+														<td th:text="${vo.paymentMethod}"></td>
+				                                    </tr>
 				                                </tbody>
 				                            </table>
 				                            <div class="ps-area">

@@ -139,10 +139,10 @@
 							<div class="card-header">
 								<div class="card-head-row"> 
 									<div class="card-title tb1 card-title-span">
-										<span class="active">所有查詢結果保單(<span>X筆</span>) </span>
-										<span>有效保單(<span>X筆</span>) </span>
-										<span>停效保單(<span>X筆</span>) </span>
-										<span>失效保單(<span>X筆</span>) </span>
+										<span class="active">所有查詢結果保單(<span><span id="allCount">0</span>筆</span>) </span>
+										<span>有效保單(<span><span id="activeCount">0</span>筆</span>) </span>
+										<span>停效保單(<span><span id="stopCount">0</span>筆</span>) </span>
+										<span>失效保單(<span><span id="expireCount">0</span>筆</span>) </span>
 									</div> 
 								</div>
 							</div>
@@ -236,7 +236,7 @@
 											'</thead>' +
 											'<tbody>' +
 												"<tr onclick=\"javascript:postPolicyListType('listing1', '" + item.policyNo + "')\">" +
-													'<td class="table3">有效</td>' +
+													'<td class="table3">' + statusStr(item.status) + ' </td>' +
 													'<td class="hid1 hid2">' + item.effectiveDate + '</td>' +
 													'<td class="hid1 hid2">' + item.mainAmount + '</td>' +
 													'<td class="hid1 hid2">' + item.lipiTablPrem + '</td>' +
@@ -266,6 +266,21 @@
 				$("#dashboardContent").hide()
 			}
 			search()
+		}
+
+		function statusStr(status) {
+			$("#allCount").text(parseInt($("#allCount").text()) +1)
+			switch(status) {
+				case '1':
+					$("#activeCount").text(parseInt($("#activeCount").text()) +1)
+					return '有效'
+				case '2':
+					$("#stopCount").text(parseInt($("#stopCount").text()) +1)
+					return '停效'
+				case '3':
+					$("#expireCount").text(parseInt($("#expireCount").text()) +1)
+					return '失效'
+			}
 		}
 /*]]>*/
 </script>

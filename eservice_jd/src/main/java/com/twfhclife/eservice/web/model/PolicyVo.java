@@ -21,6 +21,8 @@ public class PolicyVo {
     private String premYear;
     private String prodMode;
 
+    private String currency;
+
     private String prodName;
 
     private String paymentMethod;
@@ -171,5 +173,13 @@ public class PolicyVo {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

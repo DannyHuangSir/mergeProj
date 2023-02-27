@@ -3,15 +3,10 @@ package com.twfhclife.eservice.web.service.impl;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.eservice.api_client.BaseRestClient;
-import com.twfhclife.eservice.api_model.ApiResponseObj;
-import com.twfhclife.eservice.api_model.PolicyBaseDataResponse;
-import com.twfhclife.eservice.api_model.PolicyListDataResponse;
-import com.twfhclife.eservice.api_model.PolicySafeGuardDataResponse;
+import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.web.dao.UsersDao;
-import com.twfhclife.eservice.web.model.PolicyBaseVo;
-import com.twfhclife.eservice.web.model.PolicySafeGuardVo;
-import com.twfhclife.eservice.web.model.PolicyVo;
+import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,5 +69,31 @@ public class PolicyServiceImpl implements IPolicyService {
     public PolicySafeGuardVo getPolicyGuard(String policyNo) {
         PolicySafeGuardDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policySafeGuardUrl, PolicySafeGuardDataResponse.class);
         return responseObj.getSafeGuardVo();
+    }
+
+    @Value("${eservice_api.policy.payment.record.url}")
+    private String policyPaymentRecordUrl;
+    @Override
+    public PolicyPaymentRecordVo getPolicyPaymentRecord(String policyNo) {
+        PolicyPaymentRecordDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyPaymentRecordUrl, PolicyPaymentRecordDataResponse.class);
+        return responseObj.getPolicyPaymentRecord();
+    }
+
+    @Value("${eservice_api.policy.premium.url}")
+    private String policyPremiumUrl;
+
+    @Override
+    public PolicyPremiumVo getPolicyPremium(String policyNo) {
+        PolicyPremiumDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyPremiumUrl, PolicyPremiumDataResponse.class);
+        return responseObj.getPolicyPremium();
+    }
+
+    @Value("${eservice_api.policy.expire.payment.url}")
+    private String policyExpireOfPaymentUrl;
+
+    @Override
+    public PolicyExpireOfPaymentVo getPolicyExpireOfPayment(String policyNo) {
+        PolicyExpireOfPaymentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyExpireOfPaymentUrl, PolicyExpireOfPaymentDataResponse.class);
+        return responseObj.getPolicyExpireOfPayment();
     }
 }
