@@ -45,6 +45,9 @@
 		<if test="loginLogVo.clientIp != null and loginLogVo.clientIp != ''" >
 			AND CLIENT_IP LIKE CONCAT(CONCAT('%', #{loginLogVo.clientIp}),'%')
 		</if>
+		<if test="loginLogVo.systemId != null and loginLogVo.systemId != ''">
+			AND SYSTEM_ID=  #{loginLogVo.systemId}
+		</if>
 		<if test="loginLogVo.startDate != null and loginLogVo.startDate != ''">
 			<if test="loginLogVo.endDate != null and loginLogVo.endDate != ''">
 				AND convert(varchar(10), LOGIN_DATE, 120) <![CDATA[>=]]> convert(varchar(10), #{loginLogVo.startDate}, 120)

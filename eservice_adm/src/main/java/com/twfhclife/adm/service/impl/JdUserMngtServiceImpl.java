@@ -85,9 +85,15 @@ public class JdUserMngtServiceImpl implements IJdUserMgntService {
         return userEntityDao.getNotifyUsers(userEntityVo);
     }
 
+
 	@Override
-	public JdUserVo getJdUser(String userId) {
-		return jdUserBatchDao.getJdUser(userId);
+	public List<Map<String, Object>> getJdUserQuery(JdUserVo vo) {
+		return jdUserBatchDao.getJdUserQuery(vo);
+	}
+
+	@Override
+	public int countJdUser(JdUserVo vo) {
+		return jdUserBatchDao.countJdUser(vo);
 	}
 
 	@Override

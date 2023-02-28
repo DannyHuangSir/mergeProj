@@ -83,7 +83,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
         JdBatchSchedulVO jdBatchSchedulVO = new JdBatchSchedulVO();
         Date date = new Date();
         // todo 加入排程時間
-        jdBatchSchedulVO.setBatchJoinTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date));
+        jdBatchSchedulVO.setBatchJoinTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
         // 等待處理中
         jdBatchSchedulVO.setBatchStatus("waiting");
         jdBatchSchedulVO.setType("IC");
@@ -137,7 +137,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                 //獲取數據
                 byte[] batchFile = batch.getBatchFile();
                 Date date = new Date();
-                batch.setBatchStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date));
+                batch.setBatchStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
                 // 處理中
                 batch.setBatchStatus("processing");
                 jdBatchPlanDao.updateBatchPlan(batch);
@@ -176,7 +176,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                         JdUserVo jdUserVo = new JdUserVo();
                         List<String> arrayList = list.get(i);
                         jdUserVo.setActionType(arrayList.get(0));
-                        jdUserVo.setDepId(arrayList.get(1));
+                        jdUserVo.setDepId(arrayList.get(1).replaceAll("[.](.*)",""));
                         jdUserVo.setIcId(arrayList.get(2));
                         // todo 通路+所屬人員Id
                         for (int k = 3; k < arrayList.size(); k++) {
@@ -198,7 +198,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                         jdUserVo.setFailResult("IC人員編號為必輸欄位，請檢查!");
                     }
                     if (jdUserVo.getActionType().equals("DELETE")) {
-                        DepartmentVo deleteDepId = jdDeptMgntService.getDepId(jdUserVo.getDepId().substring(0, jdUserVo.getDepId().lastIndexOf(".")));
+                        DepartmentVo deleteDepId = jdDeptMgntService.getDepId(jdUserVo.getDepId());
                         if (deleteDepId == null) {
                             jdUserVo.setFailResult("通路代碼不存在，請檢查!");
                         }
@@ -215,7 +215,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                             failLinkList.add(jdUserVo);
                         }
                     } else {
-                        DepartmentVo depId = jdDeptMgntService.getDepId(jdUserVo.getDepId().substring(0, jdUserVo.getDepId().lastIndexOf(".")));
+                        DepartmentVo depId = jdDeptMgntService.getDepId(jdUserVo.getDepId());
                         if (depId == null) {
                             jdUserVo.setFailResult("通路代碼不存在，請檢查!");
                         }
@@ -280,8 +280,8 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                 String fileName1 = "失敗檔案IC" + timeStr + ".xlsx";
                 //寫内容
                 try {
+                    readFailFilePath = filepath + File.separator + fileName1;
                     if (failLinkList.size() > 0) {
-                        readFailFilePath = filepath + File.separator + fileName1;
                         File file = new File(readFailFilePath);
                         // 換行
                         int k = 1;
@@ -329,7 +329,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                 Date endDate = new Date();
                 // todo 排程結束時間
                 batch.setFailNum(failLinkList.size());
-                batch.setBatchEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(endDate));
+                batch.setBatchEndTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endDate));
                 // 已完成
                 batch.setBatchStatus("completed");
                 jdBatchPlanDao.updateBatchPlan(batch);

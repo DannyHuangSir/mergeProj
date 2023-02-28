@@ -63,7 +63,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
         JdBatchSchedulVO jdBatchSchedulVO = new JdBatchSchedulVO();
         Date date = new Date();
         // todo 加入排程時間
-        jdBatchSchedulVO.setBatchJoinTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date));
+        jdBatchSchedulVO.setBatchJoinTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
         jdBatchSchedulVO.setBatchStatus("waiting");
         jdBatchSchedulVO.setType("user");
         byte[] buffer = null;
@@ -117,7 +117,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                 //獲取數據
                 byte[] batchFile = batch.getBatchFile();
                 Date date = new Date();
-                batch.setBatchStartTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date));
+                batch.setBatchStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
                 batch.setBatchStatus("processing");
                 jdBatchPlanDao.updateBatchPlan(batch);
 
@@ -157,18 +157,18 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                         jdUserVo.setActionType(list.get(i).get(0));
                         jdUserVo.setUserId(list.get(i).get(1));
                         jdUserVo.setStatus(list.get(i).get(2));
-                        jdUserVo.setInitPassword(list.get(i).get(3));
-                        jdUserVo.setRoleId(list.get(i).get(4));
+                        jdUserVo.setInitPassword(list.get(i).get(3).replaceAll("[.](.*)",""));
+                        jdUserVo.setRoleId(list.get(i).get(4).replaceAll("[.](.*)",""));
                         jdUserVo.setEffectiveDate(list.get(i).get(5));
                         jdUserVo.setExpirationDate(list.get(i).get(6));
-                        jdUserVo.setDepId(list.get(i).get(7));
-                        jdUserVo.setBranchId(list.get(i).get(8));
+                        jdUserVo.setDepId(list.get(i).get(7).replaceAll("[.](.*)",""));
+                        jdUserVo.setBranchId(list.get(i).get(8).replaceAll("[.](.*)",""));
                         jdUserVo.setUserName(list.get(i).get(9));
                         jdUserVo.setIcId(list.get(i).get(10));
                         jdUserVo.setLoginSize(list.get(i).get(11));
-                        jdUserVo.setRocId(list.get(i).get(12));
+                        jdUserVo.setRocId(list.get(i).get(12).replaceAll("[.](.*)",""));
                         jdUserVo.setEmail(list.get(i).get(13));
-                        jdUserVo.setMobile(list.get(i).get(14));
+                        jdUserVo.setMobile(list.get(i).get(14).replaceAll("[.](.*)",""));
                         userList.add(jdUserVo);
                     }
                 } catch (Exception e) {
@@ -371,8 +371,8 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                 String fileName1 = "失敗檔案"+ timeStr + ".xlsx";
                 //寫内容
                 try {
+                    readFailFilePath = filepath + File.separator + fileName1;
                     if (failLinkList.size() > 0){
-                        readFailFilePath = filepath + File.separator + fileName1;
                         File file = new File(readFailFilePath);
                         int k = 1;
                         for (JdUserVo jdUserVo : failLinkList) {
@@ -423,7 +423,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                 Date endDate = new Date();
                 // todo 加入結束時間
                 batch.setFailNum(failLinkList.size());
-                batch.setBatchEndTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(endDate));
+                batch.setBatchEndTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endDate));
                 batch.setBatchStatus("completed");
                 jdBatchPlanDao.updateBatchPlan(batch);
             }
@@ -431,59 +431,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
 
         }
     }
-
-//    @Override
-//    public void exportFailFile(String batchId, Boolean type, HttpServletResponse response) throws IOException {
-//        String DATE_FORMAT = "yyyyMMddHHmmss";
-//        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-//        Calendar c1 = Calendar.getInstance(); // today
-//        String timeStr = sdf.format(c1.getTime());
-//        String csvFileName;
-//        String filepath = FILE_SAVE_PATH;
-//        String headers;
-//        JdBatchSchedulVO batch;
-//        // 解決中文亂碼問題
-////        byte[] b = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
-//        byte[] batchFile = new byte[0];
-//        BufferedOutputStream bufferedOutputStream = null;
-//        // todo 獲取數據
-//        if (type) {
-//            // 處理原始檔案數據
-//            csvFileName = "原始檔案" + timeStr + ".xlsx";
-////            headers = "動作別, 系統帳號, 帳號狀態, 初始密碼,系統平台角色,帳號生效日,帳號失效日,所屬通路,分支機構,姓名,業務員編號,登錄字號,身份證字號,EMAIL,行動電話";
-//            batch = jdBatchPlanDao.getBatchLink(batchId);
-//            if (batch != null) {
-//                batchFile = batch.getBatchFile();
-//            }
-//        } else {
-//            // 處理失敗檔案數據
-//            csvFileName = "失敗檔案" + timeStr + ".xlsx";
-//            batch = jdBatchPlanDao.getBatchFailLink(batchId);
-//            if (batch != null) {
-//                batchFile = batch.getFailLink();
-//            }
-//            headers = "失敗原因,動作別, 系統帳號, 帳號狀態, 初始密碼,系統平台角色,帳號生效日,帳號失效日,所屬通路,分支機構,姓名,業務員編號,登錄字號,身份證字號,EMAIL,行動電話";
-//        }
-//        response.setContentType("text/csv");
-//        response.setHeader("Content-disposition", "attachment;filename=" + java.net.URLEncoder.encode(csvFileName, "UTF-8"));
-//        try {
-//            File server_file = new File(filepath + File.separator + csvFileName);
-//            if (server_file.exists()) {
-//                SimpleDateFormat fmdate = new SimpleDateFormat("yyyyMMddHHmmss");
-//                csvFileName = csvFileName.split("\\.")[0] + fmdate.format(new Date()) + "." + csvFileName.split("\\.")[1];
-//                server_file = new File(filepath + File.separator + csvFileName);
-//            }
-//            bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(server_file));
-//            for (int i = 0; i < batchFile.length; i++) {
-//                bufferedOutputStream.write(batchFile[i]);
-//            }
-//        } catch (Exception e) {
-//            logger.error("Unable to downloadFunctionsCsv: {}", ExceptionUtils.getStackTrace(e));
-//        } finally {
-//            bufferedOutputStream.close();
-//        }
-//    }
-
+    
 
     @Override
     public int addUsers(JdUserVo jdUserVo) {

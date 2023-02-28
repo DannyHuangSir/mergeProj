@@ -1,27 +1,18 @@
 package com.twfhclife.adm.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.twfhclife.adm.dao.JobMgmtDao;
+import com.twfhclife.adm.model.*;
+import com.twfhclife.adm.service.IJobMgmtService;
+import com.twfhclife.adm.service.IParameterService;
+import com.twfhclife.generic.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.twfhclife.adm.dao.JobMgmtDao;
-import com.twfhclife.adm.model.BusinessEventJobVo;
-import com.twfhclife.adm.model.ParameterVo;
-import com.twfhclife.adm.model.ReportJobConditionVo;
-import com.twfhclife.adm.model.ReportJobHistoryVo;
-import com.twfhclife.adm.model.ReportJobScheduleVo;
-import com.twfhclife.adm.service.IJobMgmtService;
-import com.twfhclife.adm.service.IParameterService;
-import com.twfhclife.generic.util.ApConstants;
-import com.twfhclife.generic.util.KeycloakUtil;
-import com.twfhclife.generic.util.MyStringUtil;
-import com.twfhclife.generic.util.SshUtil;
-import com.twfhclife.generic.util.ValidateUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class JobMgmtServiceImpl implements IJobMgmtService {
@@ -40,6 +31,9 @@ public class JobMgmtServiceImpl implements IJobMgmtService {
 	@Value("${keycloak.elife-realm:elife}")
 	protected String ELIFE_REALM;
 
+	@Value("${keycloak.elife-realm:elife}_jd")
+	protected String JD_REALM;
+
 	@Autowired
 	private SshUtil sshUtil;
 
@@ -48,6 +42,7 @@ public class JobMgmtServiceImpl implements IJobMgmtService {
 		Map<String, String> statMap = new HashMap<>();
 		statMap.putAll(keycloakUtil.getSessionStats(ELIFE_REALM));
 		statMap.putAll(keycloakUtil.getSessionStats(ADM_REALM));
+		statMap.putAll(keycloakUtil.getSessionStats(JD_REALM));
 		return statMap;
 	}
 

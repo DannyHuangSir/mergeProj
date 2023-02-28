@@ -79,8 +79,28 @@
         delete ESERVICE_JD.dbo.USER_IC where USER_ID = #{jdUserVo.userId}
     </delete>
 
-    <select id="getJdUser" resultType="com.twfhclife.adm.model.JdUserVo">
-        select * from ESERVICE_JD.dbo.USERS where USER_ID  = #{userId}
+    <select id="getJdUserQuery" resultType="hashmap">
+        SELECT
+            *
+        FROM (
+                 SELECT
+                     ROW_NUMBER() OVER (ORDER BY USER_ID) AS ROW_NUM
+        ,A.*
+                 FROM (
+                          select * from ESERVICE_JD.dbo.USERS where USER_ID  = #{vo.userId}
+                      ) A
+             ) B
+        WHERE
+            B.ROW_NUM <![CDATA[<=]]> #{vo.page} * #{vo.rows}
+          AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows}
+    </select>
+
+    <select id="countJdUser" resultType="int">
+        SELECT
+            COUNT(1) AS AMOUNT
+        FROM (
+                 select * from ESERVICE_JD.dbo.USERS where USER_ID  = #{vo.userId}
+             ) t
     </select>
 
     <select id="getJdUserIcQuery" resultType="hashmap">
@@ -91,7 +111,11 @@
                      ROW_NUMBER() OVER (ORDER BY DEP_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                          select * from ESERVICE_JD.dbo.USER_IC where USER_ID = #{vo.userId}
+                          select c.DEP_NAME as depName,d.branchName,c.DEP_ID,d.BRANCH_ID
+                          from ESERVICE_JD.dbo.DEPARTMENT c,(select a.DEP_NAME as branchName,a.PARENT_DEP,a.BRANCH_ID from ESERVICE_JD.dbo.DEPARTMENT a
+                                                                                                                               left join ESERVICE_JD.dbo.USER_IC b on a.PARENT_DEP = b.DEP_ID and a.BRANCH_ID = b.BRANCH_ID
+                                                             where b.USER_ID =  '3237098.0'
+                          ) d where c.DEP_ID = d.PARENT_DEP
                       ) A
              ) B
         WHERE

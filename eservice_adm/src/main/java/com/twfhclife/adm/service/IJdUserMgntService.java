@@ -42,7 +42,9 @@ public interface IJdUserMgntService {
 
 	List<Map<String, Object>> getNotifyUsers(NotifySearchVo userEntityVo);
 
-	JdUserVo getJdUser(String userId);
+	List<Map<String, Object>> getJdUserQuery(JdUserVo vo);
+
+	int countJdUser(JdUserVo vo);
 
 	List<Map<String, Object>> getJdUserIcQuery(JdUserVo vo);
 

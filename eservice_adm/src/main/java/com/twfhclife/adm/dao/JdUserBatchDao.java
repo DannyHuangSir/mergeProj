@@ -20,7 +20,9 @@ public interface JdUserBatchDao {
 
     int deleteUserIC(@Param("jdUserVo") JdUserVo jdUserVo);
 
-    JdUserVo getJdUser(@Param("userId")String userId);
+    List<Map<String, Object>> getJdUserQuery(@Param("vo") JdUserVo vo);
+
+    int countJdUser(@Param("vo") JdUserVo vo);
 
     List<Map<String, Object>> getJdUserIcQuery(@Param("vo") JdUserVo vo);
 

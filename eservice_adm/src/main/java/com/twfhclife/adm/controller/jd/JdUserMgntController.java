@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -261,15 +260,25 @@ public class JdUserMgntController extends BaseController {
 
 
     @RequestLog
-    @PostMapping("/jdUserMgnt/getJdUser")
-    public ResponseEntity<ResponseObj> getJdUser(@RequestParam("userId") String userId) {
+    @PostMapping("/jdUserMgnt/getJdUserQuery")
+    public  ResponseEntity<PageResponseObj> getJdUserQuery(@RequestBody JdUserVo vo) {
+        PageResponseObj pageResp = new PageResponseObj();
         try {
-            userMgntService.getJdUser(userId);
+            // Note: UserRoleVo 需要繼承Pagination，接收 jqGrid 的page 跟 rows 屬性
+            // 設定jqGrid 資料查詢集合
+            pageResp.setRows(userMgntService.getJdUserQuery(vo));
+            // 設定jqGrid 資料查詢總筆數
+            pageResp.setRecords(userMgntService.countJdUser(vo));
+            // 設定jqGrid 目前頁數
+            pageResp.setPage(vo.getPage());
+            // 設定jqGrid 總頁數
+            pageResp.setTotal((pageResp.getRecords() + vo.getRows() - 1) / vo.getRows());
+            pageResp.setResult(PageResponseObj.SUCCESS);
         } catch (Exception e) {
-            logger.error("Unable to getJdUser: {}", ExceptionUtils.getStackTrace(e));
-            processSystemError();
+            pageResp.setResult(PageResponseObj.ERROR);
+            logger.error("Unable to getJdUserQuery: {}", ExceptionUtils.getStackTrace(e));
         }
-        return processResponseEntity();
+        return ResponseEntity.status(HttpStatus.OK).body(pageResp);
     }
 
     @RequestLog

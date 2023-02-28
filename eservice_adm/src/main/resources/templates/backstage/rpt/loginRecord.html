@@ -48,6 +48,12 @@
 										</div>
 									</div>
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1"> 系統別 </label>
+										<div class="col-sm-9">
+											<select class="form-control"  id="systemId" ></select>
+										</div>
+									</div>
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 使用者帳號 </label>
 										<div class="col-sm-9">
 											<input type="text" id="userName" name="userName" placeholder="輸入欲查詢的使用者帳號" class="form-control" />
@@ -122,6 +128,27 @@
 				$("#startDate").val("");
 				$("#endDate").val("");
 				$(this).val("");
+			});
+		});
+
+		$('#systemId').on('click', function() {
+			$.ajax({
+				url: /*[[@{/common/systemList}]]*/,
+				contentType: 'application/json',
+				type: "POST",
+				async: true,
+				success: function (response) {
+					if (response.result == 'SUCCESS'){
+						if (response.resultData.length >0){
+							for (var i = 0; i < response.resultData.length; i++) {
+								var option = "<option value='" + response.resultData[i].sysId + "'>" +  response.resultData[i].sysName + "</option>";
+								$("#systemId").append(option);
+							}
+						}
+					}else {
+						alertMsg('系統發生錯誤');
+					}
+				}
 			});
 		});
 		
