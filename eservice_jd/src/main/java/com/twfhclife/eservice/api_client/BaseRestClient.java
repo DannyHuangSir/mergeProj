@@ -4,7 +4,6 @@ import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakLoginResponse;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserSession;
 import com.twfhclife.eservice.util.MyJacksonUtil;
-import com.twfhclife.eservice.web.model.PolicyExpireOfPaymentVo;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -48,7 +47,6 @@ public class BaseRestClient {
 		ArrayList<KeycloakUserSession> userSessionResponse = new ArrayList<KeycloakUserSession>();
 		map.put(KeycloakLoginResponse.class, new ParameterizedTypeReference<ApiResponseObj<KeycloakLoginResponse>>() { });
 		map.put(userSessionResponse.getClass(), new ParameterizedTypeReference<ApiResponseObj<List<KeycloakUserSession>>>() { });
-		map.put(PolicyDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyDataResponse>>() { });
 		map.put(PersonalCaseDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PersonalCaseDataResponse>>() { });
 		map.put(PolicyListDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyListDataResponse>>() { });
 		map.put(PolicyBaseDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyBaseDataResponse>>() { });
@@ -56,6 +54,9 @@ public class BaseRestClient {
 		map.put(PolicyPaymentRecordDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyPaymentRecordDataResponse>>() { });
 		map.put(PolicyPremiumDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyPremiumDataResponse>>() { });
 		map.put(PolicyExpireOfPaymentDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyExpireOfPaymentDataResponse>>() { });
+		map.put(PolicyChangeInfoDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyChangeInfoDataResponse>>() { });
+		map.put(PolicyIncomeDistributionDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyIncomeDistributionDataResponse>>() { });
+		map.put(PolicyFundTransactionResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyFundTransactionResponse>>() { });
 
 		return Collections.unmodifiableMap(map);
 	}

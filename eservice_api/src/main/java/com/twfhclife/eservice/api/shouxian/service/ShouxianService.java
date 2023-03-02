@@ -3,6 +3,7 @@ package com.twfhclife.eservice.api.shouxian.service;
 
 import com.twfhclife.eservice.api.shouxian.dao.ShouXianDao;
 import com.twfhclife.eservice.api.shouxian.model.*;
+import com.twfhclife.eservice.policy.model.FundTransactionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +37,24 @@ public class ShouxianService {
 
     public PolicyExpireOfPaymentVo getExpireOfPayment(String policyNo) {
         return shouXianDao.getExpireOfPayment(policyNo);
+    }
+
+    public PolicyChangeInfoVo getPolicyChangeInfo(String policyNo) {
+        return shouXianDao.getPolicyChangeInfo(policyNo);
+    }
+
+    public PolicyIncomeDistributionVo getPolicyIncomeDistribution(String policyNo) {
+        PolicyIncomeDistributionVo vo = new PolicyIncomeDistributionVo();
+        vo.setPolicy(shouXianDao.getPolicyInfo(policyNo));
+        vo.setIncomeDistributions(shouXianDao.getIncomeDistribution(policyNo));
+        return vo;
+    }
+
+    public List<FundTransactionVo> getFundTransactionPageList(String policyNo, String transType, String startDate, String endDate, Integer pageNum, Integer pageSize) {
+        return shouXianDao.getFundTransactionPageList(policyNo, transType, startDate, endDate, pageNum, pageSize);
+    }
+
+    public int getFundTransactionTotal(String policyNo, String transType, String startDate, String endDate) {
+        return shouXianDao.getFundTransactionTotal(policyNo, transType, startDate, endDate);
     }
 }

@@ -7,7 +7,6 @@ function getPageBarHtml(response) {
     var pageInfoHtml = '';
     var prevHtml = '<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>';
     var nextHtml = '<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>';
-    
     if ($(response.resultData).size() == 0) {
         pageInfoHtml += prevHtml;
         pageInfoHtml += '<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>';

@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.twfhclife.eservice.api_client.BaseRestClient;
 import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
+import com.twfhclife.eservice.util.ApConstants;
+import com.twfhclife.eservice.web.model.PolicyChangeInfoVo;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IPolicyService;
@@ -95,5 +97,41 @@ public class PolicyServiceImpl implements IPolicyService {
     public PolicyExpireOfPaymentVo getPolicyExpireOfPayment(String policyNo) {
         PolicyExpireOfPaymentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyExpireOfPaymentUrl, PolicyExpireOfPaymentDataResponse.class);
         return responseObj.getPolicyExpireOfPayment();
+    }
+
+    @Value("${eservice_api.policy.change.info.url}")
+    private String policyChangeInfoUrl;
+
+    @Override
+    public PolicyChangeInfoVo getChangeInfo(String policyNo) {
+        PolicyChangeInfoDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyChangeInfoUrl, PolicyChangeInfoDataResponse.class);
+        return responseObj.getChangeInfo();
+    }
+
+    @Value("${eservice_api.policy.income.distribution.url}")
+    private String policyIncomeDistributionUrl;
+
+    @Override
+    public PolicyIncomeDistributionVo getIncomeDistribution(String policyNo) {
+        PolicyIncomeDistributionDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyIncomeDistributionUrl, PolicyIncomeDistributionDataResponse.class);
+        return responseObj.getIncomeDistribution();
+    }
+
+    @Value("${eservice_api.policy.transation.history.url}")
+    private String transationHistroyUrl;
+
+    @Override
+    public PolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String transType, String startDate, String endDate, int pageNum, int pageSize) {
+        PolicyFundTransactionRequest apiReq = new PolicyFundTransactionRequest();
+        apiReq.setTransType(transType);
+        apiReq.setPolicyNo(policyNo);
+        apiReq.setTransType(transType);
+        apiReq.setStartDate(startDate);
+        apiReq.setEndDate(endDate);
+        apiReq.setPageNum(pageNum);
+        apiReq.setPageSize(pageSize);
+        apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
+        apiReq.setUserId(userId);
+        return baseRestClient.postApi(new Gson().toJson(apiReq), transationHistroyUrl, PolicyFundTransactionResponse.class);
     }
 }

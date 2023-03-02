@@ -1,80 +1,102 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-Hant">
+
 <head>
 	<th:block th:replace="fragments/head"/>
-	<title>我的保單｜臺銀人壽保單網路服務</title>
 </head>
+
 <body>
+<div class="wrapper sidebar_minimize">
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
-	<th:block th:if="${showUserDataInfo}">
-		<div th:replace="fragments/header :: alert_mobile"></div>
-		<div th:replace="fragments/header :: alert_container"></div>
-		<div th:replace="fragments/header :: compensation_processing"></div>
-		<div th:replace="fragments/header :: compensation_incomplete"></div>
-		<div th:replace="fragments/header :: application_processing"></div>
-		<div th:replace="fragments/header :: application_complete"></div>
-		<div th:replace="fragments/header :: compensation_complete"></div>
-		<div th:replace="fragments/header :: payment_notification"></div>
-		<div th:replace="fragments/header :: payonline_template"></div>
-	</th:block>
-	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
-	<section class="grey listing5 fullContent">
-		<div class="container bg3 list1">
-			<div class="mystyle3 listing-area">
-				<div class="row-offcanvas row-offcanvas-left">
-					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing5_3')"></div>
-					<div th:replace="fragments/sidebar :: sidebar (funId='listing5_3')"></div>
-					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
-						<div class="box-border">
-							<div class="tb3 top0">
-								<i class="fas fa-chevron-down"></i> 契約變更資料
-							</div>
-							<div class="wht marginTop20">
-								 <table id="listing5-3" class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" cellspacing="0" width="100%">
-									<thead>
-										<tr>
-											<th class="text-left">申請方式</th>
-											<th>申請項目</th>
-											<th>申請時間</th>
-											<th>處理進度</th>
-										</tr>
-									</thead>
-									<tbody>
-										<th:block th:if="${rcdcChangeVoList} != null">
-											<th:block th:each="rcdcChangeVo, rowStat : ${rcdcChangeVoList}">
-											<tr class="h65 noEvent">
-												<!-- 申請方式 -->
-												<td class="text-left">
-													<th:block th:text="${rcdcChangeVo.deliveryAgenCode != null} ? ${rcdcChangeVo.deliveryAgenCode}"/>
-												</td>
-												<!-- 申請項目 -->
-												<td>
-													<th:block th:text="${rcdcChangeVo.changeItem != null} ? ${rcdcChangeVo.changeItem}"/>
-												</td>
-												<!-- 申請時間 -->
-												<td>
-													<th:block th:text="${rcdcChangeVo.accDate != null} ? ${#dates.format(rcdcChangeVo.accDate, 'yyyy/MM/dd')}"/>
-												</td>
-												<!-- 處理進度 -->
-												<td>
-													<th:block th:text="${rcdcChangeVo.procMk != null} ? ${rcdcChangeVo.procMk}"/>
-												</td>
-											</tr>
-											</th:block>
-										</th:block>
-									</tbody>
-								</table>
+	<div th:replace="fragments/nav"></div>
+	<div class="main-panel" style="position: absolute;">
+		<div class="content">
+			<div class="page-inner">
+				<div class="mt-2 mb-4">
+					<ul class="breadcrumb detail1">
+						<li>
+							<a href="#">保單管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
+						</li>
+						<li>
+							<a href="policy-inquiry.html">保單查詢</a> <i class="fa fa-angle-right fa-lg ble"></i>
+						</li>
+						<li class="active">
+							<a href="javascript:;">保單詳細資訊</a>
+						</li>
+					</ul>
+				</div>
+				<div class="row mb-4" style="padding: 0 15px">
+					<!---->
+					<div class="grey listing1 fullContent">
+						<div class="bg3 list1">
+							<div class="mycigna3 listing-area">
+								<div class="row-offcanvas row-offcanvas-left">
+									<div th:replace="fragments/policy-nav"></div>
+									<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+										<div class="box-border">
+											<div class="tb3 mobile-toggle" data-toggle="true">
+												<i class="fa hid2 foo-angle-up mobile"></i>
+												<i class="fa foo-angle-up hid1"></i> 契約變更資料
+												<div class="dropdown pull-right r30">
+													<a class="btn-return" href="policyQuery">回保單查詢結果清單</a>
+												</div>
+											</div>
+											<div class="my1 marginTop20">
+												<p class="pull-left visible-xs">
+													<button type="button" class="btn btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
+												</p>
+												<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
+												<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
+												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span> 保單幣別:<span th:text="${vo.currency}"></span></p>
+												<div class="insuranceID_phone" th:text="${policyNo}"></div>
+											</div>
+											<div class="wht">
+												<table id="listing5" class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" cellspacing="0" width="100%">
+														<thead>
+														<tr>
+															<th class="text-left">申請方式</th>
+															<th>申請項目</th>
+															<th>申請時間</th>
+															<th>處理進度</th>
+														</tr>
+														</thead>
+													<tbody>
+													<th:block th:each="vo1 : ${vo.changeInfos}">
+														<tr class="h65 noEvent">
+															<!-- 申請方式 -->
+															<td class="text-left">
+																<th:block th:text="${vo1.applyType != null} ? ${vo1.applyType}"/>
+															</td>
+															<!-- 申請項目 -->
+															<td>
+																<th:block th:text="${vo1.item1 != null} ? ${vo1.item1}"/>
+															</td>
+															<!-- 申請時間 -->
+															<td>
+																<th:block th:text="${vo1.accDate}"/>
+															</td>
+															<!-- 處理進度 -->
+															<td>
+																<th:block th:text="${vo1.procMk}"/>
+															</td>
+														</tr>
+													</th:block>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div th:replace="fragments/listingReferOnly"></div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</section>
-	<footer th:replace="fragments/footer"></footer>
-	<th:block th:replace="fragments/script"/>
+	</div>
+</div>
+<footer th:replace="fragments/footer"></footer></script>
 </body>
-
 </html>
+

@@ -1,11 +1,15 @@
 package com.twfhclife.eservice.api.shouxian.controller;
 
+import com.twfhclife.eservice.api.elife.domain.PolicyFundTransactionRequest;
+import com.twfhclife.eservice.api.elife.domain.PolicyFundTransactionResponse;
 import com.twfhclife.eservice.api.shouxian.domain.*;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.api.shouxian.service.ShouxianService;
+import com.twfhclife.eservice.policy.model.FundTransactionVo;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -145,6 +150,88 @@ public class ShouxianController extends BaseController {
         } catch (Exception e) {
             returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
             logger.error("Unable to getPolicyExpireOfPayment: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getPolicyChangeInfo", produces = { "application/json" })
+    public ResponseEntity<?> getPolicyChangeInfo(@RequestBody PolicyBaseVo vo) {
+        ApiResponseObj<PolicyChangeInfoDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            PolicyChangeInfoVo policyChangeInfoVo = shouxianService.getPolicyChangeInfo(vo.getPolicyNo());
+            PolicyChangeInfoDataResponse resp = new PolicyChangeInfoDataResponse();
+            resp.setChangeInfo(policyChangeInfoVo);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyChangeInfo: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getIncomeDistribution", produces = { "application/json" })
+    public ResponseEntity<?> getIncomeDistribution(@RequestBody PolicyBaseVo vo) {
+        ApiResponseObj<PolicyIncomeDistributionDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            PolicyIncomeDistributionVo policyIncomeDistributionVo = shouxianService.getPolicyIncomeDistribution(vo.getPolicyNo());
+            PolicyIncomeDistributionDataResponse resp = new PolicyIncomeDistributionDataResponse();
+            resp.setIncomeDistribution(policyIncomeDistributionVo);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getIncomeDistribution: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getPolicyTransactionHistory", produces = {"application/json"})
+    public ResponseEntity<?> getPolicyTransactionHistory(
+            @Valid @RequestBody PolicyFundTransactionRequest req) {
+        ApiResponseObj<PolicyFundTransactionResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        PolicyFundTransactionResponse resp = new PolicyFundTransactionResponse();
+
+        try {
+            String policyNo = req.getPolicyNo();
+            String transType = req.getTransType();
+            String startDate = req.getStartDate();
+            String endDate = req.getEndDate();
+            Integer pageNum = req.getPageNum();
+            Integer pageSize = req.getPageSize();
+
+            if (!StringUtils.isEmpty(policyNo)) {
+                int total = shouxianService.
+                        getFundTransactionTotal(policyNo, transType, startDate, endDate);
+                List<FundTransactionVo> fundTransactionList = shouxianService.
+                        getFundTransactionPageList(policyNo, transType, startDate, endDate, pageNum, pageSize);
+                for (FundTransactionVo fundTransactionVo : fundTransactionList) {
+                    fundTransactionVo.setPageNum(req.getPageNum());
+                    fundTransactionVo.setPageSize(req.getPageSize());
+                    fundTransactionVo.setTotalRow(total);
+                }
+                resp.setFundTransactionList(fundTransactionList);
+                returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+                apiResponseObj.setReturnHeader(returnHeader);
+                apiResponseObj.setResult(resp);
+            }
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyFundTransaction: {}", ExceptionUtils.getStackTrace(e));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
         } finally {
             apiResponseObj.setReturnHeader(returnHeader);

@@ -37,7 +37,7 @@
 				                        <div class="box-border">
 											<div class="tb3 mobile-toggle" data-toggle="true">
 												<i class="fa hid2 foo-angle-up mobile"></i>
-												<i class="fa foo-angle-up hid1"></i> 保障內容與金額
+												<i class="fa foo-angle-up hid1"></i> 生存/滿期給付資料
 												<div class="dropdown pull-right r30">
 													<a class="btn-return" href="policyQuery">回保單查詢結果清單</a>
 												</div>
@@ -65,16 +65,12 @@
 				                                    </thead>
 				                                    <tbody>
 				                                        <tr class="h65 noEvent" th:each="vo1: ${vo.payments}">
-				                                            <td class="text-left table3" th:text="${vo1.payReas}">
-				                                            </td>
+				                                            <td class="" th:text="${vo1.payReas}"></td>
 				                                            <td th:text="${vo1.payAmount}"></td>
-				                                            <td th:text="${vo1.payName}">
-				                                            </td>
-				                                            <td th:text="${vo1.payMethod}">
-				                                            </td>
+				                                            <td th:text="${vo1.payName}"></td>
+				                                            <td th:text="${vo1.payMethod}"></td>
 				                                            <td th:text="${vo1.bookDate}"></td>
-				                                            <td th:text="${vo1.bank}">
-				                                            </td>
+				                                            <td th:text="${vo1.bank}"></td>
 				                                        </tr>
 				                                    </tbody>
 				                                </table>
@@ -83,7 +79,6 @@
 				                    </div>
 				                </div>
 				            </div>
-				        		
 				        </div>
 				    </div>
 				</div>

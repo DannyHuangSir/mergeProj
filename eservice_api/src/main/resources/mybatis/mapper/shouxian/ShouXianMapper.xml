@@ -246,4 +246,164 @@
         LEFT JOIN LIPAYF_ES_FLOWTEST lbf ON CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = lbf.PAYF_INSU_NO
         WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>
+
+    <resultMap id="PolicyChangeInfoMap" extends="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyChangeInfoVo">
+        <collection property="changeInfos" resultMap="ChangeInfoMap"/>
+    </resultMap>
+
+    <resultMap id="ChangeInfoMap" type="com.twfhclife.eservice.api.shouxian.model.ChangeInfoVo">
+        <result column="RCDC_DELIVERY_AGEN_CODE" property="applyType"/>
+        <result column="RCDC_ACC_DATE" property="accDate"/>
+        <result column="RCDC_PROC_MK" property="procMk"/>
+        <result column="RCDC_CHAN_ITEM_1" property="item1"/>
+        <result column="RCDC_CHAN_ITEM_2" property="item2"/>
+        <result column="RCDC_CHAN_ITEM_3" property="item3"/>
+        <result column="RCDC_CHAN_ITEM_4" property="item4"/>
+        <result column="RCDC_CHAN_ITEM_5" property="item5"/>
+        <result column="RCDC_CHAN_ITEM_6" property="item6"/>
+        <result column="RCDC_CHAN_ITEM_7" property="item7"/>
+        <result column="RCDC_CHAN_ITEM_8" property="item8"/>
+        <result column="RCDC_CHAN_ITEM_9" property="item9"/>
+        <result column="RCDC_CHAN_ITEM_10" property="item10"/>
+    </resultMap>
+
+    <select id="getPolicyChangeInfo" resultMap="PolicyChangeInfoMap">
+        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
+        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
+        CASE
+        WHEN lme.LIPM_ST &lt;= 18 THEN 1
+        WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
+        WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
+        END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY,
+        lrc.RCDC_DELIVERY_AGEN_CODE, lrc.RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
+        lrc.RCDC_CHAN_ITEM_1, lrc.RCDC_CHAN_ITEM_2, lrc.RCDC_CHAN_ITEM_3, lrc.RCDC_CHAN_ITEM_4, lrc.RCDC_CHAN_ITEM_5, lrc.RCDC_CHAN_ITEM_6, lrc.RCDC_CHAN_ITEM_7, lrc.RCDC_CHAN_ITEM_8, lrc.RCDC_CHAN_ITEM_9, lrc.RCDC_CHAN_ITEM_10
+        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
+        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
+        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
+        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
+        LEFT JOIN LIRCDC_ES_FLOWTEST lrc ON lme.LIPM_INSU_TYPE = lrc.RCDC_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lrc.RCDC_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lrc.RCDC_INSU_SEQ_NO
+        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+    </select>
+
+    <select id="getPolicyInfo" resultMap="PolicyMap">
+        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
+        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
+        CASE
+        WHEN lme.LIPM_ST &lt;= 18 THEN 1
+        WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
+        WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
+        END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY
+        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
+        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
+        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
+        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
+        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+    </select>
+
+    <resultMap id="IncomeDistributionMap" type="com.twfhclife.eservice.api.shouxian.model.IncomeDistributionVo">
+        <result column="INVT_NAME" property="invtName"/>
+        <result column="INVT_NO" property="invtNo"/>
+        <result column="INPD_INT_COMPU_DATE" property="compuDate"/>
+        <result column="CLUP_TR_DATE" property="trDate"/>
+        <result column="INVT_EXCH_CURR" property="currency"/>
+        <result column="CLUP_EXPE_UNITS" property="expeUnits"/>
+        <result column="CLUP_INPR_RATE" property="inprRate"/>
+        <result column="CLUP_TR_DATE" property="trDate"/>
+        <result column="CLUP_EXPE_NTD" property="expeNtd"/>
+        <result column="CLUP_EXCH_RATE" property="exchRate"/>
+    </resultMap>
+
+    <select id="getIncomeDistribution" resultMap="IncomeDistributionMap">
+        SELECT DISTINCT lin.INVT_NAME, lin.INVT_NO,
+        to_char(lcp.CLUP_TR_DATE, 'yyyy-MM-dd') CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
+        lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
+        to_char(lip.INPD_INT_COMPU_DATE - numtodsinterval(1, 'day'), 'yyyy-MM-dd') INPD_INT_COMPU_DATE
+        FROM LICLUP_ES_FLOWTEST lcp
+        LEFT JOIN LIINPD_ES_FLOWTEST lip ON lcp.CLUP_INVT_NO = lip.INPD_INVT_NO AND lip.INPD_DATE = lcp.CLUP_DATE
+        LEFT JOIN LIINVT_ES_FLOWTEST lin ON lcp.CLUP_INVT_NO = lin.INVT_NO
+        WHERE lcp.CLUP_INSU_NO = #{policyNo}
+        ORDER BY lcp.CLUP_TR_DATE DESC
+    </select>
+
+    <resultMap id="FundTransactionListMap" type="com.twfhclife.eservice.policy.model.FundTransactionVo">
+        <result column="INVT_NAME" property="invtName"/>
+        <result column="INVT_NO" property="invtNo"/>
+        <result column="SADP_TR_DATE" property="sadpTrDate"/>
+        <result column="SADP_TR_CODE" property="sadpTrCode"/>
+        <result column="SADP_TR_UNITS" property="sadpTrUnits"/>
+        <result column="FUND_VALUE" property="fundValue"/>
+        <result column="SADP_EXCH_DATE" property="sadpExchDate"/>
+    </resultMap>
+
+    <select id="getFundTransactionPageList" resultMap="FundTransactionListMap">
+        SELECT * FROM (
+            SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
+            CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
+            ELSE SADP_TR_UNITS
+            END SADP_TR_UNITS,
+            CASE WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
+            WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
+            END FUND_VALUE, lsp.SADP_EXCH_DATE
+            FROM LISADP_ES_FLOWTEST lsp
+            LEFT JOIN LIINVT_ES_FLOWTEST lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
+            LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE
+            <where>
+                <if test="trCode != null">
+                    <choose>
+                        <when test="trCode == 'INV101'">
+                            AND lsp.SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')
+                        </when>
+                        <otherwise>
+                            AND lsp.SADP_TR_CODE = #{trCode}
+                        </otherwise>
+                    </choose>
+                </if>
+                <if test="startDate != null">
+                    AND lsp.SADP_TR_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
+                </if>
+                <if test="endDate != null">
+                    AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
+                </if>
+            </where>
+        )
+        <if test="pageNum != null and pageSize != null">
+            WHERE
+            ROW_NUM <![CDATA[>=]]> ((#{pageNum} - 1) * #{pageSize}) + 1
+            AND ROW_NUM <![CDATA[<=]]> (#{pageNum} * #{pageSize})
+        </if>
+    </select>
+
+    <select id="getFundTransactionTotal" resultType="int">
+        SELECT COUNT(*) FROM (
+        SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
+        CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
+        ELSE SADP_TR_UNITS
+        END SADP_TR_UNITS,
+        CASE WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
+        WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
+        END FUND_VALUE, lsp.SADP_EXCH_DATE
+        FROM LISADP_ES_FLOWTEST lsp
+        LEFT JOIN LIINVT_ES_FLOWTEST lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
+        LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE
+        <where>
+            <if test="trCode != null">
+                <choose>
+                    <when test="trCode == 'INV101'">
+                        AND lsp.SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')
+                    </when>
+                    <otherwise>
+                        AND lsp.SADP_TR_CODE = #{trCode}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="startDate != null">
+                AND lsp.SADP_TR_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
+            </if>
+            <if test="endDate != null">
+                AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
+            </if>
+        </where>
+        )
+    </select>
+    
 </mapper>

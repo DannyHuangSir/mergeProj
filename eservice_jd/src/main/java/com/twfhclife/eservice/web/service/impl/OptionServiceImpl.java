@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.web.service.impl;
 
+import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.web.dao.OptionDao;
 import com.twfhclife.eservice.web.service.IOptionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,9 @@ public class OptionServiceImpl implements IOptionService {
     @Override
     public List<Map<String, Object>> getPayModeList() {
         return optionDao.getPayModeList();
+    }
+
+    public List<Map<String, Object>> getTransactionCodeList() {
+        return optionDao.getTransactionCodeList(ApConstants.TRANSACTION_PARAMETER_CATEGORY_CODE);
     }
 }

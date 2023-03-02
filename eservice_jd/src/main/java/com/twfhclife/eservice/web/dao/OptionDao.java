@@ -1,5 +1,7 @@
 package com.twfhclife.eservice.web.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,4 +13,6 @@ public interface OptionDao {
 	List<Map<String, Object>> getLevelStates();
 
 	List<Map<String, Object>> getPayModeList();
+
+    List<Map<String, Object>> getTransactionCodeList(@Param("categoryCode") String categoryCode);
 }

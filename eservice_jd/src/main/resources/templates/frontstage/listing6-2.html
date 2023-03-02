@@ -1,176 +1,141 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-Hant">
+
 <head>
 	<th:block th:replace="fragments/head"/>
-	<title>我的保單｜臺銀人壽保單網路服務</title>
 </head>
+
 <body>
+<div class="wrapper sidebar_minimize">
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
-	<th:block th:if="${showUserDataInfo}">
-		<div th:replace="fragments/header :: alert_mobile"></div>
-		<div th:replace="fragments/header :: alert_container"></div>
-		<div th:replace="fragments/header :: compensation_processing"></div>
-		<div th:replace="fragments/header :: compensation_incomplete"></div>
-		<div th:replace="fragments/header :: application_processing"></div>
-		<div th:replace="fragments/header :: application_complete"></div>
-		<div th:replace="fragments/header :: compensation_complete"></div>
-		<div th:replace="fragments/header :: payment_notification"></div>
-		<div th:replace="fragments/header :: payonline_template"></div>
-	</th:block>
-	<div th:replace="fragments/header :: majorTabs (funId='mylist1')"></div>
-	<section class="grey listing6 fullContent">
-		<div class="container bg3 list1">
-			<div class="mystyle3 listing-area">
-				<div class="row-offcanvas row-offcanvas-left">
-					<div th:replace="fragments/policyNoInfo :: policyNoInfo (funId='listing6_2')"></div>
-					<div th:replace="fragments/sidebar :: sidebar (funId='listing6_2')"></div>
-					<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
-						<div class="tb3 top0 mobile-toggle" data-toggle="true">
-							<i class="fas fa-chevron-down hid2 mobile"></i>
-							<i class="fas fa-chevron-up hid1"></i> 保單收益分配
+	<div th:replace="fragments/nav"></div>
+	<div class="main-panel" style="position: absolute;">
+		<div class="content">
+			<div class="page-inner">
+				<div class="mt-2 mb-4">
+					<ul class="breadcrumb detail1">
+						<li>
+							<a href="#">保單管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
+						</li>
+						<li>
+							<a href="policy-inquiry.html">保單查詢</a> <i class="fa fa-angle-right fa-lg ble"></i>
+						</li>
+						<li class="active">
+							<a href="javascript:;">保單詳細資訊</a>
+						</li>
+					</ul>
+				</div>
+				<div class="row mb-4" style="padding: 0 15px">
+					<!---->
+					<div class="grey listing1 fullContent">
+						<div class="bg3 list1">
+							<div class="mycigna3 listing-area">
+								<div class="row-offcanvas row-offcanvas-left">
+									<div th:replace="fragments/policy-nav"></div>
+									<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
+										<div class="box-border">
+											<div class="tb3 mobile-toggle" data-toggle="true">
+												<i class="fa hid2 foo-angle-up mobile"></i>
+												<i class="fa foo-angle-up hid1"></i> 保單收益分配
+												<div class="dropdown pull-right r30">
+													<a class="btn-return" href="policyQuery">回保單查詢結果清單</a>
+												</div>
+											</div>
+											<div class="my1 marginTop20">
+												<p class="pull-left visible-xs">
+													<button type="button" class="btn btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
+												</p>
+												<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
+												<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
+												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span> 保單幣別:<span th:text="${vo.currency}"></span></p>
+												<div class="insuranceID_phone" th:text="${policyNo}"></div>
+											</div>
+											<div style="padding: 20px;background: #FFFFFF;">
+												累計單位撥回數：<span style="margin-right: 30px;">3</span> 累計現金撥回金額：
+											</div>
+											<div class="wht">
+												<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+													<thead>
+													<tr>
+														<th class="text-left item180" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的名稱/代碼</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">基準日<br></th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">發放日<br></th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3" width="120">帳戶單位<br></th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">配息率<br></th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">匯率使用日<hr style="margin: 0;">參考匯率 <br></th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">台幣(NTD)/<BR>外幣價值(USD)</th>
+<!--														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">撥回方式<br></th>-->
+<!--														<th scope="col item80" data-tablesaw-sortable-col="" data-tablesaw-priority="8">單位數<br></th>-->
+<!--														<th scope="col item80" data-tablesaw-sortable-col="" data-tablesaw-priority="9">現金<br></th>-->
+<!--														<th class="text-left item80" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="10">電匯日期</th>-->
+													</tr>
+													</thead>
+													<tbody>
+													<tr class="h65 noEvent" th:each="vo1 : ${info}">
+														<td class="text-left table3">
+															<span th:text="${vo1.invtName}"></span>
+															<p class="enSmall" th:text="${vo1.invtNo}"></p>
+														</td>
+														<td>
+															<span class="enSmall enSmallDate" th:text="${vo1.compuDate}"></span>
+														</td>
+														<td>
+															<span class="enSmall enSmallDate" th:text="${vo1.trDate}"></span>
+														</td>
+														<td>
+															<p class="marginTop25" th:text="${vo1.expeUnits}"></p>
+														</td>
+														<td>
+															<span class="enSmall enSmallDate" th:text="${vo1.inprRate}"></span>
+														</td>
+														<td>
+															<span th:text="${vo1.trDate}"></span>
+															<p class="marginTop25 enSmall enSmallDate" th:text="${vo1.exchRate}"></p>
+														</td>
+														<td>
+															<p th:text="${vo1.expeNtd}"></p>
+															<p th:text="${vo1.exchRate != 0 ? vo1.expeNtd / vo1.exchRate : 0}"></p>
+														</td>
+<!--														<td class="text-left table3">單位-->
+<!--														</td>-->
+<!--														<td class="text-left table3">4,678,973-->
+<!--														</td>-->
+<!--														<td class="text-left table3">-->
+<!--														</td>-->
+<!--														<td class="text-left table3">-->
+<!--														</td>-->
+													</tr>
+													<tr class="h80 tr-blue tr-total">
+														<td class="text-left table3">總計</td>
+														<td class="hid1 hid2"></td>
+														<td class="hid1 hid2"></td>
+														<td class="hid1 hid2"></td>
+														<td class="hid1 hid2"></td>
+														<td class="hid1 hid2"></td>
+<!--														<td class="hid1 hid2"></td>-->
+<!--														<td class="hid1 hid2"></td>-->
+<!--														<td class="hid1 hid2"></td>-->
+														<td th:text="${sumAmount}"><i class="my5">NTD</i></td>
+													</tr>
+													</tbody>
+												</table>
+												<div class="ps-area">
+													<p class="text-ps">※所有數值顯示至小數第二位，因系統實際計算至小數第六位，故參考帳戶價值可能會有些微誤差</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<br/>
-						<div class="mobile-toggle-panel specialHeight toggle-hide">
-							<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
-								<thead>
-									<tr class="table2">
-										<th class="text-left item180" scope="col" data-tablesaw-priority="persist">投資標的名稱/代碼</th>
-										<th scope="col" data-tablesaw-priority="1">基準日<br/></th>
-										<th scope="col" data-tablesaw-priority="1">發放日<br/></th>
-										<th scope="col" data-tablesaw-priority="1">幣別<br/></th>
-										<th scope="col" data-tablesaw-priority="1">帳戶單位<br/></th>
-										<th scope="col" data-tablesaw-priority="1">配息率/撥回率<br/></th>
-										<th scope="col" data-tablesaw-priority="1">匯率<br/></th>
-										<th scope="col" data-tablesaw-priority="3">台幣(NTD)/<br/>外幣價值(USD)</th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-								<tbody>
-									<tr class="h80 tr-blue tr-total">
-										<td class="text-left table3">總計</td>
-										<td class="hid1 hid2"></td>
-										<td class="hid1 hid2"></td>
-										<td class="hid1 hid2"></td>
-										<td class="hid1 hid2"></td>
-										<td class="hid1 hid2"></td>
-										<td class="hid1 hid2"></td>
-										<td><span id="acctValueSum"></span><i class="my5">NTD</i></td>
-									</tr>
-								</tbody>
-							</table>
-							<th:block th:utext="${session.PAGE_WORDING != null and session.PAGE_WORDING['WORDING_20009'] != null} 
-								? ${session.PAGE_WORDING['WORDING_20009'].parameterValue}"/>
-						</div>
-						<div th:replace="fragments/listingReferOnly"></div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</section>
-	<footer th:replace="fragments/footer"></footer>
-	<th:block th:replace="fragments/script"/>
-	<script th:inline="javascript">
-	/*<![CDATA[*/
-	$(function() {
-		// 建立保障項目 grid
-		var grid1 = new eserviceGrid();
-		grid1.sGridId = '#grid1';
-		grid1.sQueryUrl = /*[[@{/getPolicyDividendList?policyNo=} + ${param.policyNo[0]}]]*/;
-		grid1.aoColumns = [
-			{
-				// 投資標的名稱/代碼
-				'fnRender': function(oRow) {
-					return emptyIfNull(oRow.invtName) + '<p class="enSmall">(' + emptyIfNull(oRow.invtNo) + ')</p>';
-				},
-				'rwdName': '投資標的名稱/代碼'
-			},
-			{
-				// 基準日
-				'fnRender': function(oRow) {
-					return westDate(oRow.inpdIntDividendDate);
-				},
-				'rwdName': '基準日'
-			},
-			{
-				// 發放日
-				'fnRender': function(oRow) {
-					return westDate(oRow.clupTrDate);
-				},
-				'rwdName': '發放日'
-			},
-			{
-				// 幣別
-				'fnRender': function(oRow) {
-					return getInvtCurrName(oRow.invtCurr);
-				},
-				'rwdName': '幣別'
-			},
-			{
-				// 帳戶單位
-				'fnRender': function(oRow) {
-					return '<p class="marginTop25">' + formatNumber(oRow.clupExpeUnits, 4) + '</p>';
-				},
-				'rwdName': '帳戶單位'
-			},
-			{
-				// 配息率
-				'fnRender': function(oRow) {
-					return '<span class="enSmall enSmallDate">' + formatNumber(oRow.clupInprRate, 4) + '</span>';
-				},
-				'rwdName': '配息率'
-			},
-			{
-				// 匯率
-				'fnRender': function(oRow) {
-					return '<p class="marginTop25">' + formatNumber(oRow.clupExchRate, 4) + '</p>';
-				},
-				'rwdName': '匯率'
-			},
-			{
-				// 台幣(NTD)/外幣價值(USD)
-				'fnRender': function(oRow) {
-					var acctValueHtml = '';
-					acctValueHtml += ('<p>' + formatNumber(oRow.clupExpeNtd, 2) + '</p>');
-					if (oRow.clupExpeNtd != null && oRow.clupExchRate != null) {
-						acctValueHtml += '<p>' + formatNumber(oRow.clupExpeNtd / oRow.clupExchRate, 2) + '</p>';
-					}
-					return acctValueHtml;
-				},
-				'rwdName': '台幣(NTD)/外幣價值(USD)'
-			}
-		];
-		grid1.fnInitComplete = function() { 
-			showAcctValueSum(grid1);
-			if (grid1.rownum() == 0) {
-				/* openAlert('查無資料'); */
-				openAlert($('#E0035').val());
-				return false;
-			}
-		};
-		grid1.createSimple();
-	});
-	
-	// 顯示帳戶價值合計
-	function showAcctValueSum(grid1) {
-		$('#acctValueSum').html(formatNumber(grid1.sumByField('clupExpeNtd'), 2));
-	}
-	
-	// 顯示幣別名稱
-	function getInvtCurrName(invtCurr) {
-		var invtCurrName = emptyIfNull(invtCurr);
-		$.each(/*[[${session.SYSTEM_PARAMETER['CURRENCY']}]]*/, function(i, obj) {
-			if (obj.parameterCode == invtCurr) {
-				invtCurrName = emptyIfNull(obj.parameterName);
-				return;
-			}
-		});
-		
-		return invtCurrName;
-	}
-	
-	/*]]>*/
-	</script>
+	</div>
+
+</div>
+<footer th:replace="fragments/footer"></footer></script>
 </body>
 </html>

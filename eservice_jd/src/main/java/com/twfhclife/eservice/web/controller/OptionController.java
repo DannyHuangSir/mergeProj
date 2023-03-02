@@ -68,4 +68,16 @@ public class OptionController extends BaseMvcController {
 		}
 		return processResponseEntity();
 	}
+
+	@PostMapping("/getTransactionCodeList")
+	public ResponseEntity<ResponseObj> getTransactionCodeList() {
+		try {
+			processSuccess(optionService.getTransactionCodeList());
+		} catch (Exception e) {
+			logger.error("Unable to getTransactionCodeList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
 }
