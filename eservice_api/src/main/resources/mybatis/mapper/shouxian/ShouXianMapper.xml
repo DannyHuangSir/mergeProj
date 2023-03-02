@@ -348,6 +348,7 @@
             LEFT JOIN LIINVT_ES_FLOWTEST lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
             LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE
             <where>
+                AND lsp.SADP_INSU_NO = #{policyNo}
                 <if test="trCode != null">
                     <choose>
                         <when test="trCode == 'INV101'">
@@ -386,6 +387,7 @@
         LEFT JOIN LIINVT_ES_FLOWTEST lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
         LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE
         <where>
+            AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">
                 <choose>
                     <when test="trCode == 'INV101'">
@@ -401,6 +403,70 @@
             </if>
             <if test="endDate != null">
                 AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
+            </if>
+        </where>
+        )
+    </select>
+
+    <resultMap id="FundPrdtListMap" type="com.twfhclife.eservice.api.shouxian.model.FundPrdtVo">
+        <result column="PRDT_BOOK_DATE" property="prdtBookDate"/>
+        <result column="PRDT_RCP_AMT" property="prdtRcpAmt"/>
+        <result column="INT_AMOUNT" property="prdtInvestAmt"/>
+        <result column="PAID_AMOUNT" property="cost"/>
+    </resultMap>
+
+    <select id="getFundPrdtPageList" resultMap="FundPrdtListMap">
+        SELECT * FROM (
+            SELECT rownum ROW_NUM, lpt.PRDT_BOOK_DATE, lpt.PRDT_RCP_AMT, lti.TRHI_INT - lti.TRHI_INT_TAX - lti.TRHI_SUPPLE_PREM INT_AMOUNT,
+            lpt.PRDT_RCP_AMT -
+            lpt.PRDT_TARGET_LOADING -
+            lpt.PRDT_INCRE_LOADING -
+            - (lti.TRHI_INSU_PREM + lti.TRHI_2ND_CHARGE)
+            - lti.TRHI_TR_FEE + (
+            lti.TRHI_INT
+            - lti.TRHI_INT_TAX
+            -  lti.TRHI_SUPPLE_PREM
+            ) PAID_AMOUNT
+            FROM LIPRDT_ES_FLOWTEST lpt
+            LEFT JOIN LITRHI_ES_FLOWTEST lti ON lpt.PRDT_INSU_NO = lti.TRHI_INSU_NO AND lti.TRHI_DATE = lpt.PRDT_BOOK_DATE
+        <where>
+                AND lpt.PRDT_INSU_NO = #{policyNo}
+                <if test="startDate != null">
+                    AND lpt.PRDT_BOOK_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
+                </if>
+                <if test="endDate != null">
+                    AND lpt.PRDT_BOOK_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
+                </if>
+            </where>
+        )
+        <if test="pageNum != null and pageSize != null">
+            WHERE
+            ROW_NUM <![CDATA[>=]]> ((#{pageNum} - 1) * #{pageSize}) + 1
+            AND ROW_NUM <![CDATA[<=]]> (#{pageNum} * #{pageSize})
+        </if>
+    </select>
+
+    <select id="getFundPrdtTotal" resultType="int">
+        SELECT COUNT(*) FROM (
+        SELECT rownum ROW_NUM, lpt.PRDT_BOOK_DATE, lpt.PRDT_RCP_AMT, lti.TRHI_INT - lti.TRHI_INT_TAX - lti.TRHI_SUPPLE_PREM INT_AMOUNT,
+        lpt.PRDT_RCP_AMT -
+        lpt.PRDT_TARGET_LOADING -
+        lpt.PRDT_INCRE_LOADING -
+        - (lti.TRHI_INSU_PREM + lti.TRHI_2ND_CHARGE)
+        - lti.TRHI_TR_FEE + (
+        lti.TRHI_INT
+        - lti.TRHI_INT_TAX
+        -  lti.TRHI_SUPPLE_PREM
+        ) PAID_AMOUNT
+        FROM LIPRDT_ES_FLOWTEST lpt
+        LEFT JOIN LITRHI_ES_FLOWTEST lti ON lpt.PRDT_INSU_NO = lti.TRHI_INSU_NO
+        <where>
+            AND lpt.PRDT_INSU_NO = #{policyNo}
+            <if test="startDate != null">
+                AND lpt.PRDT_BOOK_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
+            </if>
+            <if test="endDate != null">
+                AND lpt.PRDT_BOOK_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
             </if>
         </where>
         )

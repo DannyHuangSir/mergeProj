@@ -57,4 +57,12 @@ public class ShouxianService {
     public int getFundTransactionTotal(String policyNo, String transType, String startDate, String endDate) {
         return shouXianDao.getFundTransactionTotal(policyNo, transType, startDate, endDate);
     }
+
+    public List<FundPrdtVo> getFundPrdtPageList(String policyNo, String startDate, String endDate, Integer pageNum, Integer pageSize) {
+        return shouXianDao.getFundPrdtPageList(policyNo, startDate, endDate, pageNum, pageSize);
+    }
+
+    public int getFundPrdtTotal(String policyNo, String startDate, String endDate) {
+        return shouXianDao.getFundPrdtTotal(policyNo, startDate, endDate);
+    }
 }

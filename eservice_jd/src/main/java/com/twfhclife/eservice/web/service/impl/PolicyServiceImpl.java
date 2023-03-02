@@ -10,6 +10,7 @@ import com.twfhclife.eservice.web.model.PolicyChangeInfoVo;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IPolicyService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -133,5 +134,21 @@ public class PolicyServiceImpl implements IPolicyService {
         apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
         apiReq.setUserId(userId);
         return baseRestClient.postApi(new Gson().toJson(apiReq), transationHistroyUrl, PolicyFundTransactionResponse.class);
+    }
+
+    @Value("${eservice_api.policy.premium.cost.url}")
+    private String premiumCostUrl;
+
+    @Override
+    public PolicyPremiumCostResponse getPolicyPremiumTransaction(String userId, String policyNo, String startDate, String endDate, int pageNum, int pageSize) {
+        PolicyPremiumTransactionRequest apiReq = new PolicyPremiumTransactionRequest();
+        apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
+        apiReq.setUserId(userId);
+        apiReq.setPolicyNo(policyNo);
+        apiReq.setStartDate(startDate);
+        apiReq.setEndDate(endDate);
+        apiReq.setPageNum(pageNum);
+        apiReq.setPageSize(pageSize);
+        return baseRestClient.postApi(new Gson().toJson(apiReq), premiumCostUrl, PolicyPremiumCostResponse.class);
     }
 }

@@ -1,6 +1,8 @@
 package com.twfhclife.eservice.web.controller;
 
 import com.twfhclife.eservice.api_model.PolicyFundTransactionResponse;
+import com.twfhclife.eservice.api_model.PolicyPremiumCostResponse;
+import com.twfhclife.eservice.api_model.PolicyPremiumTransactionResponse;
 import com.twfhclife.eservice.controller.BaseController;
 import com.twfhclife.eservice.util.DateUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
@@ -164,8 +166,8 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing10")
     public String listing10(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyIncomeDistributionVo vo = policyService.getIncomeDistribution(policyNo);
-            addAttribute("vo", vo.getPolicy());
+            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
+            addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing10: {}", ExceptionUtils.getStackTrace(e));
@@ -210,6 +212,53 @@ public class JdzqController extends BaseController {
             }
         } catch (Exception e) {
             logger.error("Unable to getTxLogList: {}", ExceptionUtils.getStackTrace(e));
+            processSystemError();
+        }
+        return processResponseEntity();
+    }
+
+    @RequestMapping("/listing7")
+    public String listing7(@RequestParam("policyNo") String policyNo) {
+        try {
+            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
+            addAttribute("vo", vo);
+            addAttribute("policyNo", policyNo);
+        } catch (Exception e) {
+            logger.error("Unable to get data from listing7: {}", ExceptionUtils.getStackTrace(e));
+            addDefaultSystemError();
+        }
+        return "frontstage/listing7";
+    }
+
+    @PostMapping("/getPremTransList")
+    public ResponseEntity<ResponseObj> getPremTransList(@RequestParam("policyNo") String policyNo,
+                                                        @RequestParam(value = "startDate", required = false) String startDate,
+                                                        @RequestParam(value = "endDate", required = false) String endDate,
+                                                        @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum) {
+        try {
+            String errorMessage = "";
+            int defaultPageSize = 4;
+            startDate = (StringUtils.isEmpty(startDate) ? null : startDate);
+            endDate = (StringUtils.isEmpty(endDate) ? null : endDate);
+
+            if (startDate != null && endDate != null) {
+                if (startDate.compareTo(endDate) > 0) {
+                    errorMessage = "結束日期不能小於開始日期";
+                }
+            }
+            if (StringUtils.isEmpty(errorMessage)) {
+                String userId = getUserId();
+                List<FundPrdtVo> premiumTransactionList = null;
+                PolicyPremiumCostResponse policyPremiumTransactionResponse = policyService
+                        .getPolicyPremiumTransaction(userId, policyNo, startDate, endDate, pageNum, defaultPageSize);
+                logger.info("Get user[{}] data from eservice_api[getPolicyPremiumTransactionPageList]", userId);
+                premiumTransactionList = policyPremiumTransactionResponse.getPremiumTransactionList();
+                processSuccess(premiumTransactionList);
+            } else {
+                processError(errorMessage);
+            }
+        } catch (Exception e) {
+            logger.error("Unable to getPremTransList: {}", ExceptionUtils.getStackTrace(e));
             processSystemError();
         }
         return processResponseEntity();

@@ -34,4 +34,14 @@ public interface ShouXianDao {
             @Param("trCode") String trCode,
             @Param("startDate") String startDate,
             @Param("endDate") String endDate);
+
+    List<FundPrdtVo> getFundPrdtPageList(@Param("policyNo") String policyNo,
+                                          @Param("startDate") String startDate,
+                                          @Param("endDate") String endDate,
+                                          @Param("pageNum") Integer pageNum,
+                                          @Param("pageSize") Integer pageSize);
+
+    int getFundPrdtTotal(@Param("policyNo") String policyNo,
+                                      @Param("startDate") String startDate,
+                                      @Param("endDate") String endDate);
 }

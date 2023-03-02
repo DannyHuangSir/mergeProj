@@ -2,10 +2,12 @@ package com.twfhclife.eservice.api.shouxian.controller;
 
 import com.twfhclife.eservice.api.elife.domain.PolicyFundTransactionRequest;
 import com.twfhclife.eservice.api.elife.domain.PolicyFundTransactionResponse;
+import com.twfhclife.eservice.api.elife.domain.PolicyPremiumTransactionRequest;
 import com.twfhclife.eservice.api.shouxian.domain.*;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.api.shouxian.service.ShouxianService;
 import com.twfhclife.eservice.policy.model.FundTransactionVo;
+import com.twfhclife.generic.annotation.ApiRequest;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
@@ -232,6 +234,46 @@ public class ShouxianController extends BaseController {
         } catch (Exception e) {
             returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
             logger.error("Unable to getPolicyFundTransaction: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @ApiRequest
+    @PostMapping(value = "/getPolicyPremiumCost", produces = { "application/json" })
+    public ResponseEntity<?> getPolicyPremiumCost(
+            @Valid @RequestBody PolicyPremiumTransactionRequest req) {
+        ApiResponseObj<PolicyPremiumCostResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        PolicyPremiumCostResponse resp = new PolicyPremiumCostResponse();
+
+        try {
+            String policyNo = req.getPolicyNo();
+            String startDate = req.getStartDate();
+            String endDate = req.getEndDate();
+            Integer pageNum = req.getPageNum();
+            Integer pageSize = req.getPageSize();
+
+            if (!StringUtils.isEmpty(policyNo)) {
+                int total = shouxianService.getFundPrdtTotal(policyNo, startDate, endDate);
+                List<FundPrdtVo> premiumTransactionList = shouxianService.
+                        getFundPrdtPageList(policyNo, startDate, endDate, pageNum, pageSize);
+                for (FundPrdtVo fundPrdtVo : premiumTransactionList) {
+                    fundPrdtVo.setPageNum(req.getPageNum());
+                    fundPrdtVo.setPageSize(req.getPageSize());
+                    fundPrdtVo.setTotalRow(total);
+                }
+                resp.setPremiumTransactionList(premiumTransactionList);
+
+                returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+                apiResponseObj.setReturnHeader(returnHeader);
+                apiResponseObj.setResult(resp);
+            }
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyPremiumCost: {}", ExceptionUtils.getStackTrace(e));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
         } finally {
             apiResponseObj.setReturnHeader(returnHeader);
