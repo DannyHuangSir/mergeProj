@@ -51,24 +51,23 @@
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div class="wht">
-											<div style="padding: 20px;">計算至 年/月/日 止</div>
 											<div class="mobile-toggle-panel specialHeight toggle-hide">
-												<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+												<table id="grid1" class="tablesaw tablesaw-stack wht w100p" data-tablesaw-mode="stack">
 													<thead>
-													<tr class="table2">
-														<th> 投資標的</th>
-														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">幣別</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">投資效益等級</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">持有成本(A)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">單位數/金額(B)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">參考匯率(D)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">參考帳戶價值(E=B*C*D)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">累計投資收益(F=E-A)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">參考報酬率((F/A)*100%)</th>
+													<tr class="table2 orange2">
+														<th class="text-left " scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的</th>
+														<th>參考報酬率</th>
+														<th class="item180">報酬率通知設定<br>(通知上限)</th>
+														<th class="item180">報酬率通知設定<br>(通知下限)</th>
+														<th class="item90"></th>
 													</tr>
 													</thead>
-													<tbody></tbody>
+													<tbody id="notifyContent">
+													</tbody>
 												</table>
+											</div>
+											<div style="text-align: center;padding: 50px 0;">
+												<a id="btn-update" class="btn-cancel orange-bg" style="width: 200px;display: inline-block;">更新</a>
 											</div>
 											</div>
 										</div>
@@ -91,61 +90,14 @@
     // 建立保障項目 grid
     var grid1 = new eserviceGrid();
     grid1.sGridId = '#grid1';
-    grid1.sQueryUrl = /*[[@{/getPortfolioList?policyNo=} + ${param.policyNo[0]}]]*/;
+    grid1.sQueryUrl = /*[[@{/getNotifyPortfolioList?policyNo=} + ${param.policyNo[0]}]]*/;
     grid1.aoColumns = [
       {
         // 投資標的
         'fnRender': function(oRow) {
-          return emptyIfNull(oRow.invtName) + '<p class="enSmall">(' + emptyIfNull(oRow.invtNo) + ')</p>';
+          return emptyIfNull(oRow.invtName) + '<p class="enSmall">(' + emptyIfNull(oRow.invtNo) + ')</p><input type="hidden" name="invtNo" value="' + oRow.invtNo + '"/>';
         },
         'rwdName': '投資標的'
-      },
-      {
-        // 幣別
- 		'fnRender': function(oRow) {
-          return /*[[${vo.currency}]]*/
-        },
-        'rwdName': '幣別'
-      },
-      {
-        // 投資效益等級
-        'mDataProp': 'riskBeneLevel',
-        'rwdName': '投資效益等級'
-      },
-      {
-        // 平均成本
-        'fnRender': function(oRow) {
-          return showAvgPval(oRow);
-        },
-        'rwdName': '持有成本'
-      },
-      {
-        // 單位數/金額
-        'fnRender': function(oRow) {
-          return showNetUnits(oRow);
-        },
-        'rwdName': '單位數/金額'
-      },
-      {
-        // 參考匯率/日期
-        'fnRender': function(oRow) {
-          return showExchRateDate(oRow);
-        },
-        'rwdName': '參考匯率/日期'
-      },
-      {
-        // 參考帳戶價值
-        'fnRender': function(oRow) {
-          return showAcctValue(oRow);
-        },
-        'rwdName': '參考帳戶價值'
-      },
-      {
-        // 累計投資收益
-        'fnRender': function(oRow) {
-          return showClupExpeNtdSum(oRow);
-        },
-        'rwdName': '累計投資收益'
       },
       {
         // 參考報酬率(%)
@@ -153,8 +105,24 @@
           return showRoiRate(oRow);
         },
         'rwdName': '參考報酬率(%)'
+      },
+      {
+        'fnRender': function(oRow) {
+          return '<div><input type="text" value="' + oRow.upRate +  '" name="upRate" class="col-sm-8 lineHigh28"><span class="sub1">%</span></div>';
+        }
+      },
+      {
+        'fnRender': function(oRow) {
+          return '<div><input type="text"  value="' + oRow.downRate +  '" name="downRate" class="col-sm-8 lineHigh28"><span class="sub1">%</span></div>';
+        }
+      },
+      {
+        'fnRender': function(oRow) {
+          return '<a class="btn-cancel btn-reset orange-bg">重設</a>';
+        }
       }
     ];
+
     grid1.fnInitComplete = function() {
       showAcctValueSum(grid1);
       if (grid1.sQueryUrl.indexOf('policyNo=UH') != -1) {
@@ -171,6 +139,44 @@
       }
     };
     grid1.createSimple();
+
+    $("body").on('click', '.btn-reset', function(){
+		parent = $(this).parent().parent().parent()
+		$(parent).find('input[name=upRate]').val('')
+		$(parent).find('input[name=downRate]').val('')
+    })
+
+    $("#btn-update").click(function(){
+    	notifyConfig = new Array()
+    	$("#notifyContent").children().each(function(index, e1) {
+    		notifyConfig.push(
+    			{
+    				policyNo: [[${policyNo}]],
+    				invtNo: $(this).find('input[name=invtNo]').val(),
+    				upRate: $(this).find('input[name=upRate]').val(),
+    				downRate: $(this).find('input[name=downRate]').val()
+    			}
+    		)
+    	})
+    	$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : /*[[@{/updateNotifyConfig}]]*/,
+			data : JSON.stringify(notifyConfig),
+			success : function(response) {
+			if(response.result == "SUCCESS"){
+				openAlert('更新成功');
+					return;
+				} else {
+				openAlert('更新失敗');
+					return;
+				}
+			},
+			error : function() {
+				openAlert('系統發生錯誤!');
+			},
+		});
+    })
   });
 
   // 單位數 / 金額  (單位數/金額：FD－小數4位／RT(台幣)－整數；RT(非台幣)－小數2位
@@ -243,6 +249,7 @@
     } else {
       fractionDigits = 2;
     }
+    debugger
     return '<p class="marginTop26">' + formatNumber(oRow.ownPval, fractionDigits) +'</p>';
   }
 

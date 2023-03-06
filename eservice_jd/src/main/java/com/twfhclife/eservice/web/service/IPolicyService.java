@@ -1,8 +1,6 @@
 package com.twfhclife.eservice.web.service;
 
-import com.twfhclife.eservice.api_model.PolicyFundTransactionResponse;
-import com.twfhclife.eservice.api_model.PolicyPremiumCostResponse;
-import com.twfhclife.eservice.api_model.PolicyPremiumTransactionResponse;
+import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.web.model.PolicyChangeInfoVo;
 import com.twfhclife.eservice.web.model.*;
@@ -30,4 +28,16 @@ public interface IPolicyService {
     PolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String trCode, String startDate, String endDate, int pageNum, int defaultPageSize);
 
     PolicyPremiumCostResponse getPolicyPremiumTransaction(String userId, String policyNo, String startDate, String endDate, int pageNum, int defaultPageSize);
+
+    PolicyInvtFundVo getPolicyInvtFund(String policyNo);
+
+    PortfolioResponse getPolicyRateOfReturn(String userId, String policyNo);
+
+    PolicyCancellationMoneyDataResponse getPolicyCancellationMoney(String policyNo);
+
+    int updateNotifyConfig(List<NotifyConfigVo> confs);
+
+    NotifyConfigVo getNotifyConfig(String id, String policyNo, String invtNo);
+
+    List<ExchangeRateVo> getExchangeRate(String userId, ExchangeRateVo exchangeRateVo);
 }

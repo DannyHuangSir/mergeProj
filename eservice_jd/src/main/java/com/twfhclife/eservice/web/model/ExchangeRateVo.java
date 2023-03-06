@@ -1,11 +1,11 @@
-package com.twfhclife.eservice.policy.model;
-
-import java.util.Date;
-import java.io.Serializable;
-import java.math.BigDecimal;
+package com.twfhclife.eservice.web.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 public class ExchangeRateVo implements Serializable {
 	
@@ -14,6 +14,8 @@ public class ExchangeRateVo implements Serializable {
 	/**  */
 	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date effectiveDate;
+
+	private String policyNo;
 	/**  */
 	private String exchangeCode;
 	/**  */
@@ -86,5 +88,13 @@ public class ExchangeRateVo implements Serializable {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public String getPolicyNo() {
+		return policyNo;
+	}
+
+	public void setPolicyNo(String policyNo) {
+		this.policyNo = policyNo;
 	}
 }

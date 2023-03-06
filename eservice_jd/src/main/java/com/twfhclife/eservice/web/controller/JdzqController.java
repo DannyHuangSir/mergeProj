@@ -1,22 +1,27 @@
 package com.twfhclife.eservice.web.controller;
 
-import com.twfhclife.eservice.api_model.PolicyFundTransactionResponse;
-import com.twfhclife.eservice.api_model.PolicyPremiumCostResponse;
-import com.twfhclife.eservice.api_model.PolicyPremiumTransactionResponse;
+import com.google.common.collect.Lists;
+import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.controller.BaseController;
+import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.util.DateUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IPolicyService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +39,7 @@ public class JdzqController extends BaseController {
     @Autowired
     private IPolicyService policyService;
 
-    @PostMapping(value = { "/getPolicyList" })
+    @PostMapping(value = {"/getPolicyList"})
     @ResponseBody
     public ResponseObj getPolicyList(@RequestBody PolicyVo vo) {
         ResponseObj responseObj = new ResponseObj();
@@ -134,7 +139,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing2")
     public String listing2(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyChangeInfoVo vo = policyService.getChangeInfo(policyNo);
+            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -259,6 +264,127 @@ public class JdzqController extends BaseController {
             }
         } catch (Exception e) {
             logger.error("Unable to getPremTransList: {}", ExceptionUtils.getStackTrace(e));
+            processSystemError();
+        }
+        return processResponseEntity();
+    }
+
+    @RequestMapping("/listing16")
+    public String listing16(@RequestParam("policyNo") String policyNo) {
+        try {
+            PolicyInvtFundVo vo = policyService.getPolicyInvtFund(policyNo);
+            addAttribute("portfolioList", policyService.getPolicyRateOfReturn(getUserId(), policyNo).getPortfolioList());
+            addAttribute("vo", vo.getPolicy());
+            String dateStr = "1911/01/01";
+            List<String> rocYearMenu = DateUtil.getYearOpitonByEffectDate(dateStr);
+            addAttribute("rocYearMenu", rocYearMenu);
+            addAttribute("policyNo", policyNo);
+        } catch (Exception e) {
+            logger.error("Unable to get data from listing16: {}", ExceptionUtils.getStackTrace(e));
+            addDefaultSystemError();
+        }
+        return "frontstage/listing16";
+    }
+
+    @PostMapping("/getExchRateChartList")
+    public ResponseEntity<ResponseObj> getExchRateChartList(@RequestBody ExchangeRateVo exchangeRateVo) {
+        try {
+            processSuccess(policyService.getExchangeRate(getUserId(), exchangeRateVo));
+        } catch (Exception e) {
+            logger.error("Unable to getExchRateChartList: {}", ExceptionUtils.getStackTrace(e));
+            processSystemError();
+        }
+        return processResponseEntity();
+    }
+
+    @RequestMapping("/listing17")
+    public String listing17(@RequestParam("policyNo") String policyNo) {
+        try {
+            PolicyCancellationMoneyDataResponse resp = policyService.getPolicyCancellationMoney(policyNo);
+            addAttribute("vo", resp.getPolicyVo());
+            addAttribute("cancelMoneys", resp.getCancellationMoneyVos());
+            addAttribute("policyNo", policyNo);
+        } catch (Exception e) {
+            logger.error("Unable to get data from listing17: {}", ExceptionUtils.getStackTrace(e));
+            addDefaultSystemError();
+        }
+        return "frontstage/listing17";
+    }
+
+    @PostMapping("/getPortfolioList")
+    public ResponseEntity<ResponseObj> getPortfolioList(@RequestParam("policyNo") String policyNo) {
+        try {
+            String userId = getUserId();
+            List<PortfolioVo> portfolioList = null;
+
+            // Call api 取得資料
+            PortfolioResponse portfolioResponse = policyService.getPolicyRateOfReturn(userId, policyNo);
+            // 若無資料，嘗試由內部服務取得資料
+            if (portfolioResponse != null) {
+                logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);
+                portfolioList = portfolioResponse.getPortfolioList();
+            }
+            processSuccess(portfolioList);
+        } catch (Exception e) {
+            logger.error("Unable to getPortfolioList: {}", ExceptionUtils.getStackTrace(e));
+            processSystemError();
+        }
+        return processResponseEntity();
+    }
+
+    @RequestMapping("/listing18")
+    public String listing18(@RequestParam("policyNo") String policyNo) {
+        try {
+            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
+            addAttribute("vo", vo);
+            addAttribute("policyNo", policyNo);
+        } catch (Exception e) {
+            logger.error("Unable to get data from listing18: {}", ExceptionUtils.getStackTrace(e));
+            addDefaultSystemError();
+        }
+        return "frontstage/listing18";
+    }
+
+    @ResponseBody
+    @PostMapping("/updateNotifyConfig")
+    public ResponseEntity<ResponseObj> updateNotifyConfig(
+            @RequestBody List<NotifyConfigVo> confs) {
+        try {
+            if (!CollectionUtils.isEmpty(confs)) {
+                confs.forEach(c -> c.setUserId(getLoginUser().getId()));
+                policyService.updateNotifyConfig(confs);
+                this.setResponseObj(ResponseObj.SUCCESS, "", null);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
+    }
+
+    @PostMapping("/getNotifyPortfolioList")
+    public ResponseEntity<ResponseObj> getNotifyPortfolioList(@RequestParam("policyNo") String policyNo) {
+        try {
+            String userId = getUserId();
+            List<PortfolioVo> result = Lists.newArrayList();
+
+            // Call api 取得資料
+            PortfolioResponse portfolioResponse = policyService.getPolicyRateOfReturn(userId, policyNo);
+            // 若無資料，嘗試由內部服務取得資料
+            if (portfolioResponse != null) {
+                logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);
+                List<PortfolioVo> portfolioList = portfolioResponse.getPortfolioList();
+                if (CollectionUtils.isNotEmpty(portfolioList)) {
+                    for (PortfolioVo portfolioVo : portfolioList) {
+                        NotifyConfigVo configVo = policyService.getNotifyConfig(getLoginUser().getId(), policyNo, portfolioVo.getInvtNo());
+                        BeanUtils.copyProperties(portfolioVo, configVo);
+                        result.add(configVo);
+                    }
+                }
+            }
+            processSuccess(result);
+        } catch (Exception e) {
+            logger.error("Unable to getPortfolioList: {}", ExceptionUtils.getStackTrace(e));
             processSystemError();
         }
         return processResponseEntity();

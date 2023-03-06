@@ -8,14 +8,6 @@ svg {
 	text-align: center;
 }
 
-path {
-	fill: #fff;
-	/*cursor: pointer;*/
-	opacity: 1;
-	stroke: #FFF;
-	stroke-width: 2px;
-}
-
 path:hover {
 	/*fill: #00ADDD;*/
 }

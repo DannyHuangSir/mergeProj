@@ -1,12 +1,12 @@
 package com.twfhclife.eservice.api.shouxian.controller;
 
-import com.twfhclife.eservice.api.elife.domain.PolicyFundTransactionRequest;
-import com.twfhclife.eservice.api.elife.domain.PolicyFundTransactionResponse;
-import com.twfhclife.eservice.api.elife.domain.PolicyPremiumTransactionRequest;
+import com.twfhclife.eservice.api.elife.domain.*;
 import com.twfhclife.eservice.api.shouxian.domain.*;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.api.shouxian.service.ShouxianService;
+import com.twfhclife.eservice.policy.model.ExchangeRateVo;
 import com.twfhclife.eservice.policy.model.FundTransactionVo;
+import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.generic.annotation.ApiRequest;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
@@ -274,6 +274,96 @@ public class ShouxianController extends BaseController {
         } catch (Exception e) {
             returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
             logger.error("Unable to getPolicyPremiumCost: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getPolicyInvtFund", produces = { "application/json" })
+    public ResponseEntity<?> getPolicyInvtFund(@RequestBody PolicyBaseVo vo) {
+        ApiResponseObj<PolicyInvtFundDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            PolicyInvtFundVo policyInvtFund = shouxianService.getPolicyInvtFund(vo.getPolicyNo());
+            PolicyInvtFundDataResponse resp = new PolicyInvtFundDataResponse();
+            resp.setInvtFund(policyInvtFund);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyInvtFund: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+
+    @PostMapping(value = "/getPolicyPortfolioNew", produces = { "application/json" })
+    public ResponseEntity<?> getPolicyPortfolioNew(@Valid @RequestBody PortfolioRequest req) {
+        ApiResponseObj<PortfolioResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        PortfolioResponse resp = new PortfolioResponse();
+
+        try {
+            String policyNo = req.getPolicyNo();
+            if (!StringUtils.isEmpty(policyNo)) {
+                List<PortfolioVo> portfolioList = shouxianService.getPortfolioList(policyNo);
+                resp.setPortfolioList(portfolioList);
+                returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+                apiResponseObj.setReturnHeader(returnHeader);
+                apiResponseObj.setResult(resp);
+            }
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyPortfolioNew: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getPolicyCancellationMoney", produces = { "application/json" })
+    public ResponseEntity<?> getPolicyCancellationMoney(@RequestBody PolicyBaseVo vo) {
+        ApiResponseObj<PolicyCancellationMoneyDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            List<CancellationMoneyVo> cancellationMoneyVos = shouxianService.getPolicyCancellationMoney(vo.getPolicyNo());
+            PolicyCancellationMoneyDataResponse resp = new PolicyCancellationMoneyDataResponse();
+            resp.setCancellationMoneyVos(cancellationMoneyVos);
+            resp.setPolicyVo(shouxianService.getPolicyInfo(vo.getPolicyNo()));
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyCancellationMoney: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getExchangeRate", produces = { "application/json" })
+    public ResponseEntity<?> getExchangeRate(@Valid @RequestBody ExchangeRateRequest vo) {
+        ApiResponseObj<ExchangeRateDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            List<ExchangeRateVo> cancellationMoneyVos = shouxianService.getExchangeRate(vo);
+            ExchangeRateDataResponse resp = new ExchangeRateDataResponse();
+            resp.setExchangeRates(cancellationMoneyVos);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getExchangeRate: {}", ExceptionUtils.getStackTrace(e));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
         } finally {
             apiResponseObj.setReturnHeader(returnHeader);

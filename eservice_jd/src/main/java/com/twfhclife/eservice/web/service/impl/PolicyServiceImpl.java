@@ -6,11 +6,11 @@ import com.twfhclife.eservice.api_client.BaseRestClient;
 import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.util.ApConstants;
+import com.twfhclife.eservice.web.dao.JdNotifyConfigDao;
 import com.twfhclife.eservice.web.model.PolicyChangeInfoVo;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IPolicyService;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -150,5 +150,63 @@ public class PolicyServiceImpl implements IPolicyService {
         apiReq.setPageNum(pageNum);
         apiReq.setPageSize(pageSize);
         return baseRestClient.postApi(new Gson().toJson(apiReq), premiumCostUrl, PolicyPremiumCostResponse.class);
+    }
+
+    @Value("${eservice_api.policy.invt.fund.url}")
+    private String policyInvtFundUrl;
+
+    @Override
+    public PolicyInvtFundVo getPolicyInvtFund(String policyNo) {
+        PolicyInvtFundDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyInvtFundUrl, PolicyInvtFundDataResponse.class);
+        return responseObj.getInvtFund();
+    }
+
+    @Value("${eservice_api.policy.portfolio.new.url}")
+    private String portfolioNewUrl;
+
+
+    @Override
+    public PortfolioResponse getPolicyRateOfReturn(String userId, String policyNo) {
+        PortfolioRequest apiReq = new PortfolioRequest();
+        apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
+        apiReq.setUserId(userId);
+        apiReq.setPolicyNo(policyNo);
+        return baseRestClient.postApi(new Gson().toJson(apiReq), portfolioNewUrl, PortfolioResponse.class);
+    }
+
+    @Value("${eservice_api.policy.cancel.money.url}")
+    private String cancelMoneyUrl;
+
+    @Override
+    public PolicyCancellationMoneyDataResponse getPolicyCancellationMoney(String policyNo) {
+        PolicyCancellationMoneyDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), cancelMoneyUrl, PolicyCancellationMoneyDataResponse.class);
+        return responseObj;
+    }
+
+    @Autowired
+    private JdNotifyConfigDao jdNotifyConfigDao;
+
+    @Override
+    public int updateNotifyConfig(List<NotifyConfigVo> confs) {
+        return jdNotifyConfigDao.updateNotifyConfig(confs);
+    }
+
+    @Override
+    public NotifyConfigVo getNotifyConfig(String userId, String policyNo, String invtNo) {
+        return jdNotifyConfigDao.getNotifyConfig(userId, policyNo, invtNo);
+    }
+
+    @Value("${eservice_api.policy.exchange.rate.url}")
+    private String exchangeRateUrl;
+
+    @Override
+    public List<ExchangeRateVo> getExchangeRate(String userId, ExchangeRateVo exchangeRateVo) {
+        ExchangeRateRequest apiReq = new ExchangeRateRequest();
+        apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
+        apiReq.setUserId(userId);
+        apiReq.setPolicyNo(exchangeRateVo.getPolicyNo());
+        apiReq.setQueryMonth(exchangeRateVo.getQueryMonth());
+        apiReq.setExchangeCode(exchangeRateVo.getExchangeCode());
+        return baseRestClient.postApi(new Gson().toJson(apiReq), exchangeRateUrl, ExchangeRateDataResponse.class).getExchangeRates();
     }
 }

@@ -1,10 +1,10 @@
-package com.twfhclife.eservice.policy.model;
+package com.twfhclife.eservice.web.model;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PortfolioVo implements Serializable {
 	

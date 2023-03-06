@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.web.dao.JdNotifyConfigDao">
+    <insert id="updateNotifyConfig">
+        INSERT INTO ESERVICE_JD.DBO.NOTIFY_CONFIG(POLICY_NO, INVT_NO, USER_ID, UP_RATE, DOWN_RATE)
+        <if test="list != null and list.size() >0 ">
+            values
+            <foreach collection="list" item="conf" separator=",">
+                (#{conf.policyNo}, #{conf.invtNo}, #{conf.userId}, #{conf.upRate}, #{conf.downRate})
+            </foreach>
+        </if>
+    </insert>
+
+    <select id="getNotifyConfig" resultType="com.twfhclife.eservice.web.model.NotifyConfigVo">
+        SELECT UP_RATE upRate, DOWN_RATE downRate FROM ESERVICE_JD.DBO.NOTIFY_CONFIG
+        WHERE ID = (SELECT MAX(ID) FROM ESERVICE_JD.DBO.NOTIFY_CONFIG
+            WHERE POLICY_NO = #{policyNo} AND INVT_NO = #{invtNo} AND USER_ID = #{userId})
+    </select>
+
+</mapper>

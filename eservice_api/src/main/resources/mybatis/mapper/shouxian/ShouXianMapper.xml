@@ -471,5 +471,49 @@
         </where>
         )
     </select>
-    
+
+    <select id="getExchangeRate" resultType="com.twfhclife.eservice.policy.model.ExchangeRateVo">
+        SELECT INPR_TRAN_DATE effectiveDate, INPR_UNIT_PURPRICE buyPrice, INPR_UNIT_SOLPRICE sellPrice
+        FROM LIINPR_ES_FLOWTEST
+        <where>
+            <if test="exchangeRateVo.effectiveDate != null"> AND INPR_TRAN_DATE = #{exchangeRateVo.effectiveDate} </if>
+            <if test="exchangeRateVo.exchangeCode != null and exchangeRateVo.exchangeCode != ''"> AND INPR_INVT_NO = #{exchangeRateVo.exchangeCode} </if>
+            <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'A'.toString()">
+                AND INPR_TRAN_DATE > DATEADD(month, -1, getdate()) + 1
+            </if>
+            <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'B'.toString()">
+                AND INPR_TRAN_DATE > DATEADD(month, -3, getdate()) + 1
+            </if>
+            <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'C'.toString()">
+                AND convert(varchar(7), EFFECTIVE_DATE, 126) = #{exchangeRateVo.queryMonth}
+            </if>
+        </where>
+    </select>
+
+    <select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo">
+        SELECT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr,
+        lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval, lip.SAFP_AVG_PVAL avgPval,
+        lin.INVT_RISK_BENE_LEVEL riskBeneLevel, lin.INVT_NO invtNo, lin.INVT_NAME invtName,
+        leh.EXCH_SPEBK_PURATE exchRateBuy, SUM(lcp.CLUP_EXPE_NTD) clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
+        FROM LISAFP_ES_FLOWTEST lip
+        LEFT JOIN LIINVT_ES_FLOWTEST lin ON lip.SAFP_INVT_NO = lin.INVT_NO
+        LEFT JOIN (
+        SELECT A.INPR_INVT_NO,B.INPR_TRAN_DATE_MAX,A.INPR_UNIT_SOLPRICE
+        FROM LIINPR_ES_FLOWTEST A
+        JOIN
+        (
+        SELECT INPR_INVT_NO AS POLICY_NO, MAX(INPR_TRAN_DATE) INPR_TRAN_DATE_MAX
+        FROM LIINPR_ES_FLOWTEST
+        GROUP BY INPR_INVT_NO
+        ) B
+        ON A.INPR_INVT_NO = B.POLICY_NO
+        AND A.INPR_TRAN_DATE = B.INPR_TRAN_DATE_MAX
+        ) lir ON lir.INPR_INVT_NO = lip.SAFP_INVT_NO
+        LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lip.SAFP_INIT_DATE = leh.EXCH_DATE
+        LEFT JOIN LICLUP_ES_FLOWTEST lcp ON lcp.CLUP_INVT_NO = lip.SAFP_INVT_NO AND lip.SAFP_INSU_NO = lcp.CLUP_INSU_NO
+        WHERE lip.SAFP_INSU_NO = #{policyNo}
+        GROUP BY lir.INPR_UNIT_SOLPRICE, lip.SAFP_NET_UNITS, lip.SAFP_NET_UNITS,
+        lin.INVT_RISK_BENE_LEVEL, lin.INVT_NAME, lip.SAFP_ACCU_INVEST_BFEXCH,
+        leh.EXCH_SPEBK_PURATE, lip.SAFP_AVG_PNTDVAL, lip.SAFP_NET_AMT, lin.INVT_NO, lin.INVT_EXCH_CURR, lip.SAFP_AVG_PVAL
+    </select>
 </mapper>
