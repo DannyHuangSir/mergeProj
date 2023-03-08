@@ -15,4 +15,6 @@ public interface OptionDao {
 	List<Map<String, Object>> getPayModeList();
 
     List<Map<String, Object>> getTransactionCodeList(@Param("categoryCode") String categoryCode);
+
+	List<Map<String, String>> getBankList();
 }

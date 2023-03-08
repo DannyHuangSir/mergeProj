@@ -7,6 +7,7 @@ import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.util.DateUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
+import com.twfhclife.eservice.web.service.IOptionService;
 import com.twfhclife.eservice.web.service.IPolicyService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class JdzqController extends BaseController {
@@ -114,6 +116,17 @@ public class JdzqController extends BaseController {
     public String listing13(@RequestParam("policyNo") String policyNo) {
         try {
             PolicyExpireOfPaymentVo vo = policyService.getPolicyExpireOfPayment(policyNo);
+            if (vo != null && CollectionUtils.isNotEmpty(vo.getPayments())) {
+                List<Map<String, String>> bankList = optionService.getBankList();
+                for (ExpireOfPaymentVo vo1 : vo.getPayments()) {
+                    for (Map<String, String> map : bankList) {
+                        if (StringUtils.equals(map.get("KEY"), vo1.getBankCode())) {
+                            vo1.setBankCode(map.get("VALUE"));
+                            break;
+                        }
+                    }
+                }
+            }
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -123,6 +136,8 @@ public class JdzqController extends BaseController {
         return "frontstage/listing13";
     }
 
+    @Autowired
+    private IOptionService optionService;
     @RequestMapping("/listing5_3")
     public String listing5_3(@RequestParam("policyNo") String policyNo) {
         try {

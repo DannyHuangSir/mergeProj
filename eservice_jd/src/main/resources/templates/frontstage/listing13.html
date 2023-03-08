@@ -48,7 +48,8 @@
 												</p>
 												<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
 												<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
-												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span> 保單幣別:<span th:text="${vo.currency}"></span></p>
+												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span>
+													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span></p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 				                            <div class="wht">
@@ -59,8 +60,10 @@
 				                                            <th>實付金額</th>
 				                                            <th>受款人</th> 
 				                                            <th>給付方式</th>
-				                                            <th class="item90">給付日期</th>
-				                                            <th class="item90">匯款資訊</th>
+				                                            <th>給付日期</th>
+				                                            <th>匯款資訊</th>
+				                                            <th>入款銀行</th>
+				                                            <th>入款帳號</th>
 				                                        </tr>
 				                                    </thead>
 				                                    <tbody>
@@ -68,9 +71,11 @@
 				                                            <td class="" th:text="${vo1.payReas}"></td>
 				                                            <td th:text="${vo1.payAmount}"></td>
 				                                            <td th:text="${vo1.payName}"></td>
-				                                            <td th:text="${vo1.payMethod}"></td>
+				                                            <td th:text="${vo1.payMethod != null ? session.SYSTEM_PARAMETER['LIPAYF_METH'][vo1.payMethod].parameterValue : ''}"></td>
 				                                            <td th:text="${vo1.bookDate}"></td>
 				                                            <td th:text="${vo1.bank}"></td>
+				                                            <td th:text="${vo1.bankCode}"></td>
+				                                            <td th:text="${vo1.remitAt}"></td>
 				                                        </tr>
 				                                    </tbody>
 				                                </table>

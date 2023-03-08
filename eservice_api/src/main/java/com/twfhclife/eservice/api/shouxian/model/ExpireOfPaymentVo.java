@@ -10,6 +10,9 @@ public class ExpireOfPaymentVo {
     private String payName;
     private String bank;
 
+    private String remitAt;
+    private String bankCode;
+
     public String getPayReas() {
         return payReas;
     }
@@ -56,5 +59,21 @@ public class ExpireOfPaymentVo {
 
     public void setPayName(String payName) {
         this.payName = payName;
+    }
+
+    public String getRemitAt() {
+        return remitAt;
+    }
+
+    public void setRemitAt(String remitAt) {
+        this.remitAt = remitAt;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
     }
 }

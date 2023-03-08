@@ -47,7 +47,8 @@
 												</p>
 												<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
 												<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
-												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span> 保單幣別:<span th:text="${vo.currency}"></span></p>
+												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span>
+													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span></p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div class="wht">
@@ -189,13 +190,6 @@ else{
 			// (-)保單費用
 			'fnRender': function(oRow) {
  				return formatNumber( oRow.prdtTargetLoading+oRow.prdtIncreLoading, fractionDigits);
-/* 			   if(oRow.rowNum == 1){
-					return formatNumber(oRow.prdtTargetLoading, fractionDigits);
-				}else
-					{
-						return formatNumber(oRow.prdtIncreLoading, fractionDigits);
-					} */
-
 			},
 			'rwdName': '(-)保單費用'
 		},
@@ -217,8 +211,7 @@ else{
 		}
 		grid1.fnInitComplete = function() {
 			if (grid1.rownum() == 0) {
-				/* openAlert('查無資料'); */
-				openAlert($('#E0035').val());
+				openAlert('查無資料');
 				return false;
 			}
 		};

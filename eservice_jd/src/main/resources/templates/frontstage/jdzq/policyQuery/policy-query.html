@@ -109,24 +109,20 @@
 				            </div>
 				            <div class="blocked">
 				                <div id="qtpie-list" class="centered">
-				                    <div id="circleAll">
-				                        <svg viewbox="0 0 200 200">
-				                            <path class="product1" data-pie="20" data-desc="意外險" />
-				                            <path class="product2 active" data-pie="20" data-desc="投資型" />
-				                            <path class="product3" data-pie="20" data-desc="萬能險/年金險" />
-				                            <path class="product4 active" data-pie="20" data-desc="健康險" />
-				                            <path class="product5" data-pie="20" data-desc="壽險" />
+				                    <div>
+				                        <svg id="circleAll" viewbox="0 0 200 200">
+				                            <path class="product1" data-pie="30" data-desc="傳統型" />
+				                            <path class="product2" data-pie="30" data-desc="利率變動型" />
+				                            <path class="product3" data-pie="40" data-desc="投資型" />
 				                        </svg>
 				                        <div class="circle">
-				                            <a href="protect2.html" class="btn-circle"><span>我的保障</span></a>
+				                            <a href="#" class="btn-circle"><span>我的保障</span></a>
 				                        </div>
 				                    </div>
 				                    <ul>
-				                        <li class="pdt1"><i class="foo-medical_14 foo-2x"></i>意外險</li>
-				                        <li class="pdt2 active"><i class="foo-medical_4 foo-2x"></i><span>投資型</span></li>
-				                        <li class="pdt3" style="width:165px;"><i class="foo-medical_4 foo-2x"></i><span>萬能險/年金險</span></li>
-				                        <li class="pdt4 active"><i class="foo-medical_1 foo-2x"></i><span>健康險</span></li>
-				                        <li class="pdt5"><i class="foo-object_27 foo-2x"></i>壽險</li>
+				                        <li class="pdt1"><i class="foo-medical_14 foo-2x"></i>傳統型</li>
+				                        <li class="pdt2"><i class="foo-medical_4 foo-2x"></i><span>利率變動型</span></li>
+				                        <li class="pdt3"><i class="foo-medical_4 foo-2x"></i><span>投資型</span></li>
 				                    </ul>
 				                </div>
 				            </div>
@@ -162,20 +158,10 @@
 <footer th:replace="fragments/footer"></footer>
 <script th:inline="javascript">
 /*<![CDATA[*/
-		var payModeMap = {}
+		var paymentMap = [[${session.SYSTEM_PARAMETER.PAYMENT_METHOD_TYPE}]]
+		var payModeMap = [[${session.SYSTEM_PARAMETER.PAYMODE_TYPE}]]
+
 		$(function(){
-			$.ajax({
-				type : 'POST',
-				contentType : 'application/json',
-				url : /*[[@{/getPayModeList}]]*/,
-				success : function(response) {
-					if(response.result == "SUCCESS"){
-						response.resultData.forEach(function(item, index){
-							payModeMap[item.KEY] = item.VALUE
-						})
-					}
-				}
-			})
 			search()
 		})
 
@@ -194,7 +180,13 @@
 				}),
 				url : /*[[@{/getPolicyList}]]*/,
 				success : function(response) {
-					console.log(response);
+					$("#allCount").text(0)
+					$("#activeCount").text(0)
+					$("#stopCount").text(0)
+					$("#expireCount").text(0)
+					$("#circleAll").children().each(function(index, item) {
+						item.classList.remove('active')
+					})
 					if(response.result == "SUCCESS"){
 						html = ''
 						$("#policyCount").text('共 ' + response.resultData.length + ' 張')
@@ -240,13 +232,15 @@
 													'<td class="hid1 hid2">' + item.effectiveDate + '</td>' +
 													'<td class="hid1 hid2">' + item.mainAmount + '</td>' +
 													'<td class="hid1 hid2">' + item.lipiTablPrem + '</td>' +
-													'<td class="hid1 hid2 enThin">' + payModeMap[item.paymentMode] +'</td>' +
+													'<td class="hid1 hid2 enThin">' + (item.paymentMode != null ? payModeMap[item.paymentMode].parameterValue : '') +'</td>' +
 													'<td class="hid1 hid2">' + item.premYear + ' </td>' +
-													'<td class="hid1 hid2">' + (item.paymentMethod == null ? '' : item.paymentMethod) + '</td> ' +
+													'<td class="hid1 hid2">' + (item.paymentMethod != null ? paymentMap[item.paymentMethod].parameterValue : '') + '</td> ' +
 												'</tr> ' +
 											'</tbody>' +
 										'</table>' +
 									'</div>'
+
+									changeCircle(item.policyNo)
 							});
 							$("#policyContent").html(html)
 					}
@@ -267,6 +261,19 @@
 			}
 			search()
 		}
+
+		function changeCircle(policyNo) {
+			chuantong = ['01', '02', '03', '21', '05', '06']
+			touzi = ['11', '12', '13', '14', '15', '00']
+			policyType = policyNo.substring(0, 2)
+			if (chuantong.indexOf(policyType) != -1) {
+				$("#circleAll").children().get(0).classList.add("active")
+			} else if (touzi.indexOf(policyType) != -1) {
+				$("#circleAll").children().get(1).classList.add("active")
+			} else {
+				$("#circleAll").children().get(2).classList.add("active")
+			}
+ 		}
 
 		function statusStr(status) {
 			$("#allCount").text(parseInt($("#allCount").text()) +1)

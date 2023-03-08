@@ -11,6 +11,7 @@ public class PolicyBaseVo {
     private String lipmName;
     private String lipmId;
     private String lipiName;
+    private String lipmTelH;
     private String lipiId;
     private String agent;
     private String status;
@@ -26,6 +27,8 @@ public class PolicyBaseVo {
     private String lipmMail;
     private String lipmAddr;
     private String lipiBirth;
+
+    private String lipmBirth;
     private String lipiAge;
     private String lipiSex;
 
@@ -36,12 +39,79 @@ public class PolicyBaseVo {
     private String endDate;
 
     private String pmdaEpoMk;
+    private String pmdaPiTel;
 
     private String currency;
+    private String printDate;
+    private String assnDate;
+    private String pmdaMail;
+    private String assnTrDate;
+    private String assnStatus;
+    private String lipmGp;
+    private String autoMk;
+
+    private String branchName;
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getAutoMk() {
+        return autoMk;
+    }
+
+    public void setAutoMk(String autoMk) {
+        this.autoMk = autoMk;
+    }
+
+    public String getLipmGp() {
+        return lipmGp;
+    }
+
+    public void setLipmGp(String lipmGp) {
+        this.lipmGp = lipmGp;
+    }
+
+    public String getAssnDate() {
+        return assnDate;
+    }
+
+    public void setAssnDate(String assnDate) {
+        this.assnDate = assnDate;
+    }
+
+    public String getPmdaMail() {
+        return pmdaMail;
+    }
+
+    public void setPmdaMail(String pmdaMail) {
+        this.pmdaMail = pmdaMail;
+    }
+
+    public String getAssnTrDate() {
+        return assnTrDate;
+    }
+
+    public void setAssnTrDate(String assnTrDate) {
+        this.assnTrDate = assnTrDate;
+    }
+
+    public String getAssnStatus() {
+        return assnStatus;
+    }
+
+    public void setAssnStatus(String assnStatus) {
+        this.assnStatus = assnStatus;
+    }
 
     private List<PolicyBeneficiaryVo> beneficiaries = Lists.newArrayList();
 
     private List<String> serialNums = Lists.newArrayList();
+
 
     public String getPolicyNo() {
         return policyNo;
@@ -89,6 +159,14 @@ public class PolicyBaseVo {
 
     public void setLipiId(String lipiId) {
         this.lipiId = lipiId;
+    }
+
+    public String getLipmTelH() {
+        return lipmTelH;
+    }
+
+    public void setLipmTelH(String lipmTelH) {
+        this.lipmTelH = lipmTelH;
     }
 
     public String getAgent() {
@@ -157,6 +235,14 @@ public class PolicyBaseVo {
 
     public String getPaymentMethod() {
         return paymentMethod;
+    }
+
+    public String getPmdaPiTel() {
+        return pmdaPiTel;
+    }
+
+    public void setPmdaPiTel(String pmdaPiTel) {
+        this.pmdaPiTel = pmdaPiTel;
     }
 
     public void setPaymentMethod(String paymentMethod) {
@@ -265,6 +351,22 @@ public class PolicyBaseVo {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public String getPrintDate() {
+        return printDate;
+    }
+
+    public void setPrintDate(String printDate) {
+        this.printDate = printDate;
+    }
+
+    public String getLipmBirth() {
+        return lipmBirth;
+    }
+
+    public void setLipmBirth(String lipmBirth) {
+        this.lipmBirth = lipmBirth;
     }
 
     public PolicyBaseVo(String policyNo) {

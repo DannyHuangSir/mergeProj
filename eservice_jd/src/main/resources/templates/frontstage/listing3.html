@@ -48,10 +48,10 @@
 														</p>
 														<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
 														<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
-														<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span> 保單幣別:<span th:text="${vo.currency}"></span></p>
+														<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span>
+															保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span></p>
 														<div class="insuranceID_phone" th:text="${policyNo}"></div>
 													</div>
-				                                  
 				                                    <tr class="table2">
 				                                        <th class="text-left" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">險種名稱</th>
 				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">保單號碼</th>
@@ -68,9 +68,9 @@
 				                                        <td th:text="${policyNo}"></td>
 				                                        <td th:text="${vo.lipmName}"></td>
 				                                        <td th:text="${vo.lipiName}"></td>
-				                                        <td th:text="${vo.currency}"></td>
-				                                        <td th:text="${vo.paymentMode}">年繳</td>
-				                                        <td th:text="${vo.paymentMethod}"></td>
+				                                        <td th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></td>
+				                                        <td th:text="${vo.paymentMode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue : ''}">年繳</td>
+														<td th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : ''}"></td>
 				                                    </tr> 
 				                                </tbody>
 				                            </table>
@@ -91,7 +91,7 @@
 				                                        <td th:text="${vo1.desc}"></td>
 				                                        <td th:text="${vo1.paabAmt}"></td>
 				                                        <td th:text="${vo1.actAmt}"></td>
-														<td th:text="${vo.paymentMethod}"></td>
+														<td th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : ''}"></td>
 				                                    </tr>
 				                                </tbody>
 				                            </table>

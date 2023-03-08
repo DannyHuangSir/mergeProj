@@ -30,7 +30,13 @@ public class OptionServiceImpl implements IOptionService {
         return optionDao.getPayModeList();
     }
 
+    @Override
     public List<Map<String, Object>> getTransactionCodeList() {
         return optionDao.getTransactionCodeList(ApConstants.TRANSACTION_PARAMETER_CATEGORY_CODE);
+    }
+
+    @Override
+    public List<Map<String, String>> getBankList() {
+        return optionDao.getBankList();
     }
 }

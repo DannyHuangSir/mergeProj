@@ -15,6 +15,10 @@ public class IncomeDistributionVo {
     private BigDecimal expeNtd;
     private BigDecimal exchRate;
 
+    private BigDecimal units;
+    private String trCode;
+    private String payDate;
+
     public String getInvtNo() {
         return invtNo;
     }
@@ -85,5 +89,29 @@ public class IncomeDistributionVo {
 
     public void setExchRate(BigDecimal exchRate) {
         this.exchRate = exchRate;
+    }
+
+    public BigDecimal getUnits() {
+        return units;
+    }
+
+    public void setUnits(BigDecimal units) {
+        this.units = units;
+    }
+
+    public String getTrCode() {
+        return trCode;
+    }
+
+    public void setTrCode(String trCode) {
+        this.trCode = trCode;
+    }
+
+    public String getPayDate() {
+        return payDate;
+    }
+
+    public void setPayDate(String payDate) {
+        this.payDate = payDate;
     }
 }

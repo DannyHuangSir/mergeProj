@@ -25,13 +25,13 @@
 
     <select id="getPolicyList" resultMap="PolicyMap">
         SELECT CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) POLICY_NO, lme.LIPM_INSU_TYPE POLICY_TYPE,
-        lme.LIPM_NAME_1 LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, LBE.BNAG_REC_CLERK AGENT_NAME,
+        lme.LIPM_NAME_1 LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, lbe.BNAG_REC_CLERK AGENT_NAME,
         CASE
             WHEN lme.LIPM_ST &lt;= 18 THEN 1
             WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
             WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
             END AS STATUS,
-        lie.LIPI_INSU_BEG_DATE EFFECTIVE_DATE, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
+        to_char(lie.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
         lie.LIPI_TABL_PREM, (CASE WHEN lme.LIPM_RCP_CODE = 'A' AND lme.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE, lpe.PROD_CURRENCY CURRENCY,
         lie.LIPI_PREM_YEAR PREM_YEAR, lpe.SETT_INSU_TYPE PROD_MODE, lpe.SETT_CH_NAME PROD_NAME, lme.LIPM_RCP_METH_CODE
         FROM LILIPM_ES_FLOWTEST lme
@@ -87,11 +87,22 @@
         <result column="PREM_YEAR" property="premYear"/>
         <result column="PROD_MODE" property="prodMode"/>
         <result column="PROD_NAME" property="prodName"/>
+        <result column="LIPM_TEL_H" property="lipmTelH"/>
         <result column="LIPM_RCP_METH_CODE" property="paymentMethod"/>
         <result column="LIPI_INSU_BEG_DATE" property="beginDate"/>
         <result column="LIPI_INSU_END_DATE" property="endDate"/>
         <result column="PMDA_EPO_MK" property="pmdaEpoMk"/>
         <result column="CURRENCY" property="currency"/>
+        <result column="PMDA_PRINT_DATE" property="printDate"/>
+        <result column="LIPM_BIRTH" property="lipmBirth"/>
+        <result column="PMDA_PI_TEL" property="pmdaPiTel"/>
+        <result column="ASSN_ARRI_DATE" property="assnDate"/>
+        <result column="ASSN_TR_ARRI_DATE" property="assnTrDate"/>
+        <result column="PMDA_MAIL" property="pmdaMail"/>
+        <result column="ASSN_STATUS" property="assnStatus"/>
+        <result column="LIPM_5_GP" property="lipmGp"/>
+        <result column="LIPM_AUTO_RCP_MK" property="autoMk"/>
+        <result column="NEDR_BRANCH_NAME" property="branchName"/>
         <association property="beneficiaries" resultMap="PolicyBeneficiaryMap"></association>
     </resultMap>
 
@@ -107,20 +118,25 @@
             WHEN lme.LIPM_ST &lt;= 18 THEN 1
             WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
             WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-            END AS STATUS
-        , lme.LIPM_TEL_H, lip.PMDA_APPLICANT_CELLPHONE, lip.PMDA_APPLICANT_EMAIL,
-        lme.LIPM_ADDR, lie.LIPI_BIRTH, lie.LIPI_AGE, lie.LIPI_SEX, lbp.LIPB_NAME, lbp.LIPB_RELA, lpe.PROD_CURRENCY CURRENCY,
+            END AS STATUS,
+        lme.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME,
+        to_char(lsn.ASSN_ARRI_DATE, 'yyyy-MM-dd') ASSN_ARRI_DATE, to_char(lsn.ASSN_TR_ARRI_DATE, 'yyyy-MM-dd') ASSN_TR_ARRI_DATE, lip.PMDA_MAIL, lsn.ASSN_STATUS,
+        lme.LIPM_TEL_H, lip.PMDA_APPLICANT_CELLPHONE, lip.PMDA_APPLICANT_EMAIL, lme.LIPM_5_GP,
+        lme.LIPM_ADDR, to_char(lie.LIPI_BIRTH, 'yyyy-MM-dd') LIPI_BIRTH, lie.LIPI_AGE, lie.LIPI_SEX, lbp.LIPB_NAME, lbp.LIPB_RELA, lpe.PROD_CURRENCY CURRENCY,
         lbp.LIPB_BENI_CODE, lbp.LIPB_SEQ, lme.LIPM_NAME_1  LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID,
         (CASE WHEN lme.LIPM_RCP_CODE = 'A' AND lme.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE, lip.PMDA_EPO_MK,
-        (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_INSU_BEG_DATE, lie.LIPI_INSU_END_DATE, lme.LIPM_RCP_METH_CODE, lie.LIPI_PREM_YEAR PREM_YEAR,
-        lpe.SETT_CH_NAME PROD_NAME, CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) POLICY_NO
+        (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT, lip.PMDA_PI_TEL,
+        to_char(lie.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') LIPI_INSU_BEG_DATE, to_char(lie.LIPI_INSU_END_DATE, 'yyyy-MM-dd') LIPI_INSU_END_DATE, lme.LIPM_RCP_METH_CODE, lie.LIPI_PREM_YEAR PREM_YEAR,
+        lpe.SETT_CH_NAME PROD_NAME, CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) POLICY_NO, to_char(lip.PMDA_PRINT_DATE, 'yyyy-MM-dd') PMDA_PRINT_DATE
         FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
         ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
         LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
         ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
         LEFT JOIN LIPMDA_ES_FLOWTEST lip ON lme.LIPM_INSU_TYPE = lip.PMDA_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lip.PMDA_INSU_GRP_NO  AND lme.LIPM_INSU_SEQ_NO = lip.PMDA_INSU_SEQ_NO
         LEFT JOIN LILIPB_ES_FLOWTEST lbp ON lme.LIPM_INSU_TYPE = lbp.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbp.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbp.LIPB_INSU_SEQ_NO
+        LEFT JOIN LIASSN_ES_FLOWTEST lsn ON lsn.ASSN_INSU_NO = CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO)
+        LEFT JOIN LIBNAG_ES_FLOWTEST lbe ON lbe.BNAG_INSU_TYPE = lme.LIPM_INSU_TYPE AND lbe.BNAG_INSU_GRP_NO = lme.LIPM_INSU_GRP_NO AND lbe.BNAG_INSU_SEQ_NO = lme.LIPM_INSU_SEQ_NO
+        LEFT JOIN LINEDR_ES_FLOWTEST lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
         WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>
 
@@ -134,7 +150,8 @@
 
     <select id="getSafeGuard" resultMap="PolicySafeGuardMap">
         SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
+        to_char(lie.LIPI_INSU_END_DATE, 'yyyy-MM-dd') LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
+        to_char(lme.LIPM_ST_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE,
         CASE
             WHEN lme.LIPM_ST &lt;= 18 THEN 1
             WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
@@ -162,13 +179,13 @@
 
     <select id="getPaymentRecord" resultMap="PolicyPaymentRecordMap">
         SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM, CASE
+        lie.LIPI_TABL_PREM, CASE
             WHEN lme.LIPM_ST &lt;= 18 THEN 1
             WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
             WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
         END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lme.LIPM_RCP_METH_CODE,
         lpe.PROD_CURRENCY CURRENCY, (CASE WHEN lme.LIPM_RCP_CODE = 'A' AND lme.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE,
-        lpp.PRPA_RCP_DATE, lpp.PRPA_PAAB_AMT, lpp.PRPA_ACT_AMT, lpp.PRPA_RCP_CODE,
+        to_char(lpp.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE, lpp.PRPA_PAAB_AMT, lpp.PRPA_ACT_AMT, lpp.PRPA_RCP_CODE,
         CONCAT('第', CONCAT(lpp.PRPA_TMS, CONCAT('期/共', CONCAT(
             CASE	WHEN lpp.PRPA_RCP_CODE = N'A' THEN lie.LIPI_PREM_YEAR * 1
             WHEN lpp.PRPA_RCP_CODE = N'S' THEN lie.LIPI_PREM_YEAR * 2
@@ -228,6 +245,8 @@
         <result column="PAYF_NAME" property="payName"/>
         <result column="PAYF_PAY_METH" property="payMethod"/>
         <result column="PAYF_BANK" property="bank"/>
+        <result column="PAHI_REMIT_AT" property="remitAt"/>
+        <result column="PAHI_BANK_CODE" property="bankCode"/>
     </resultMap>
 
     <select id="getExpireOfPayment" resultMap="PolicyExpireOfPaymentMap">
@@ -238,12 +257,15 @@
         WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
         WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
         END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY,
-        lbf.PAYF_PAY_REAS, lbf.PAYF_PAY_AMT, '' PAHI_DEP_I_BOOK_DATE, lbf.PAYF_PAY_METH, lbf.PAYF_BANK, lbf.PAYF_NAME
+        lph.PAHI_PAY_CODE PAYF_PAY_REAS, lbf.PAYF_PAY_AMT,
+        to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyyy-MM-dd') PAHI_DEP_I_BOOK_DATE, lbf.PAYF_PAY_METH, lbf.PAYF_BANK, lbf.PAYF_NAME,
+        lph.PAHI_REMIT_AT, lph.PAHI_BANK_CODE
         FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
         ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
         LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
         ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
         LEFT JOIN LIPAYF_ES_FLOWTEST lbf ON CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = lbf.PAYF_INSU_NO
+        LEFT JOIN LIPAHI lph ON lph.PAHI_INSU_TYPE = lme.LIPM_INSU_TYPE AND lph.PAHI_INSU_GRP_NO = lme.LIPM_INSU_GRP_NO AND lph.PAHI_INSU_SEQ_NO = lme.LIPM_INSU_SEQ_NO
         WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>
 
@@ -311,10 +333,18 @@
         <result column="CLUP_TR_DATE" property="trDate"/>
         <result column="CLUP_EXPE_NTD" property="expeNtd"/>
         <result column="CLUP_EXCH_RATE" property="exchRate"/>
+        <result column="UNITS" property="units"/>
+        <result column="CLUP_F_PAY_DATE" property="payDate"/>
+        <result column="CLUP_TR_CODE" property="trCode"/>
     </resultMap>
 
     <select id="getIncomeDistribution" resultMap="IncomeDistributionMap">
-        SELECT DISTINCT lin.INVT_NAME, lin.INVT_NO,
+        SELECT DISTINCT lin.INVT_NAME, lin.INVT_NO, lcp.CLUP_TR_CODE,
+        CASE
+        WHEN lcp.CLUP_DEDT_INPR != 0 THEN  lcp.CLUP_EXPE_UNITS * (lcp.CLUP_INPR_RATE - lcp.CLUP_OW_UNIT_INT ) / lcp.CLUP_DEDT_INPR
+        ELSE 0
+        END AS UNITS,
+        lcp.CLUP_EXPE_NTD, to_char(lcp.CLUP_F_PAY_DATE, 'yyyy-MM-dd') CLUP_F_PAY_DATE,
         to_char(lcp.CLUP_TR_DATE, 'yyyy-MM-dd') CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
         to_char(lip.INPD_INT_COMPU_DATE - numtodsinterval(1, 'day'), 'yyyy-MM-dd') INPD_INT_COMPU_DATE

@@ -13,4 +13,7 @@ public interface IOptionService {
     List<Map<String, Object>> getPayModeList();
 
     List<Map<String, Object>> getTransactionCodeList();
+
+
+    List<Map<String, String>> getBankList();
 }

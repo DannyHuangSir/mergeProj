@@ -63,4 +63,14 @@
 		a.SORT_NO
 	</select>
 
+	<select id="getBankList" resultType="hashmap">
+		SELECT
+		BANK_ID AS "KEY", BANK_NAME AS "VALUE"
+		FROM
+		ESERVICE.DBO.BANK_INFO
+		WHERE BRANCH_ID = 'root'
+		AND DISPLAY = 'Y'
+		ORDER BY BANK_ID
+	</select>
+
 </mapper>

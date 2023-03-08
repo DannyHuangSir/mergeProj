@@ -48,7 +48,8 @@
 												</p>
 												<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
 												<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
-												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span> 保單幣別:<span th:text="${vo.currency}"></span></p>
+												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span>
+													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span></p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div style="padding: 20px;background: #FFFFFF;">
@@ -58,17 +59,17 @@
 												<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
 													<thead>
 													<tr>
-														<th class="text-left item180" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的名稱/代碼</th>
+														<th style="width: 300px;" class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的名稱/代碼</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">基準日<br></th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">發放日<br></th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3" width="120">帳戶單位<br></th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">配息率<br></th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">匯率使用日<hr style="margin: 0;">參考匯率 <br></th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">台幣(NTD)/<BR>外幣價值(USD)</th>
-<!--														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">撥回方式<br></th>-->
-<!--														<th scope="col item80" data-tablesaw-sortable-col="" data-tablesaw-priority="8">單位數<br></th>-->
-<!--														<th scope="col item80" data-tablesaw-sortable-col="" data-tablesaw-priority="9">現金<br></th>-->
-<!--														<th class="text-left item80" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="10">電匯日期</th>-->
+														<th scope="col" style="width: 140px;" data-tablesaw-sortable-col="" data-tablesaw-priority="3" width="120">帳戶單位<br></th>
+														<th scope="col" style="width: 120px;" data-tablesaw-sortable-col="" data-tablesaw-priority="4">配息率<br></th>
+														<th scope="col" style="width: 150px;" data-tablesaw-sortable-col="" data-tablesaw-priority="5">匯率使用日<hr style="margin: 0;">參考匯率 <br></th>
+														<th scope="col" style="width: 200px;" data-tablesaw-sortable-col="" data-tablesaw-priority="6">台幣(NTD)/<BR>外幣價值(USD)</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">撥回方式<br></th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">單位數<br></th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">現金<br></th>
+														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="10">電匯日期</th>
 													</tr>
 													</thead>
 													<tbody>
@@ -97,14 +98,16 @@
 															<p th:text="${vo1.expeNtd}"></p>
 															<p th:text="${vo1.exchRate != 0 ? vo1.expeNtd / vo1.exchRate : 0}"></p>
 														</td>
-<!--														<td class="text-left table3">單位-->
-<!--														</td>-->
-<!--														<td class="text-left table3">4,678,973-->
-<!--														</td>-->
-<!--														<td class="text-left table3">-->
-<!--														</td>-->
-<!--														<td class="text-left table3">-->
-<!--														</td>-->
+														<td class="text-left table3">
+															<th:block th:if="${vo1.trCode == '01'}">現金</th:block>
+															<th:block th:if="${vo1.trCode == '00'}">再投資</th:block>
+														</td>
+														<td class="text-left table3" th:text="${vo1.units}">
+														</td>
+														<td class="text-left table3" th:text="${vo1.expeNtd}">
+														</td>
+														<td class="text-left table3" th:text="${vo1.payDate}">
+														</td>
 													</tr>
 													<tr class="h80 tr-blue tr-total">
 														<td class="text-left table3">總計</td>
@@ -113,10 +116,11 @@
 														<td class="hid1 hid2"></td>
 														<td class="hid1 hid2"></td>
 														<td class="hid1 hid2"></td>
-<!--														<td class="hid1 hid2"></td>-->
-<!--														<td class="hid1 hid2"></td>-->
-<!--														<td class="hid1 hid2"></td>-->
-														<td th:text="${sumAmount}"><i class="my5">NTD</i></td>
+														<td class="hid1 hid2"></td>
+														<td class="hid1 hid2"></td>
+														<td class="hid1 hid2"></td>
+														<td class="hid1 hid2"></td>
+														<td th:text="${sumAmount}"><i class="my5"></i></td>
 													</tr>
 													</tbody>
 												</table>
