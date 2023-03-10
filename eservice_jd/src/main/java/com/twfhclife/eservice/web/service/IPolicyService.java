@@ -25,7 +25,7 @@ public interface IPolicyService {
 
     PolicyIncomeDistributionVo getIncomeDistribution(String policyNo);
 
-    PolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String trCode, String startDate, String endDate, int pageNum, int defaultPageSize);
+    JdPolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String trCode, String startDate, String endDate, int pageNum, int defaultPageSize);
 
     PolicyPremiumCostResponse getPolicyPremiumTransaction(String userId, String policyNo, String startDate, String endDate, int pageNum, int defaultPageSize);
 

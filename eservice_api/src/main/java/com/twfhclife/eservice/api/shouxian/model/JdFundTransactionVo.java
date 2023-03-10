@@ -1,13 +1,14 @@
-package com.twfhclife.eservice.web.model;
+package com.twfhclife.eservice.api.shouxian.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.twfhclife.eservice.web.model.PageInfoVo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class FundTransactionVo extends PageInfoVo implements Serializable {
+public class JdFundTransactionVo extends PageInfoVo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -16,7 +17,7 @@ public class FundTransactionVo extends PageInfoVo implements Serializable {
 	/** 保單號碼 */
 	private String policyNo;
 	/** 交易日期 */
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date sadpTrDate;
 	/** 交易種類 */
 	private String sadpTrCode;

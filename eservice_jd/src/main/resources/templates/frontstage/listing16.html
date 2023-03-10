@@ -215,10 +215,11 @@
 <script th:src="@{/plugin/highcharts/modules/exporting.js}"></script>
 <script th:inline="javascript">
   /*<![CDATA[*/
+    var paymentMap = [[${session.SYSTEM_PARAMETER.CURRENCY}]]
 	$(function() {
 		$('#invtList').change(function() {
 			// 基金幣別
-			$('#invtExchCurrNameTd').html("<b class='tablesaw-cell-label mobile-b'>基金幣別</b><span class='mobile-span'>" + $(this).find('option:selected').data('exchcurr') + "</span>");
+			$('#invtExchCurrNameTd').html("<b class='tablesaw-cell-label mobile-b'>基金幣別</b><span class='mobile-span'>" + paymentMap[$(this).find('option:selected').data('exchcurr')].parameterValue + "</span>");
 			// 風險收益等級
 			$('#riskBeneLevelTd').html("<b class='tablesaw-cell-label mobile-b'>風險收益等級</b><span class='mobile-span'>" + $(this).find('option:selected').data('riskbenelevel') + "</span>");
 		});

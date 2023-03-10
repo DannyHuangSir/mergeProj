@@ -16,6 +16,7 @@ function eserviceGrid() {
 	obj.fnRowClick;             // row點擊事件
 	obj.bNoEventStyle = true;   // 預設沒有小手點擊圖示，若要小手點擊圖示設定為false
 	obj.iDisplayLength = 4;     // 分頁預設顯示筆數
+	obj.resp = null
 
 	// 無分頁grid
 	obj.createSimple = function(pageMode) {
@@ -24,6 +25,7 @@ function eserviceGrid() {
 			url: obj.sQueryUrl,
 			data : formData
 		}).done(function (response) {
+		    obj.resp = response
 			if (response.result == 'SUCCESS') {
 				$(obj.sGridId).find('tbody').eq(0).html('');
 				rownum = $(response.resultData).size();

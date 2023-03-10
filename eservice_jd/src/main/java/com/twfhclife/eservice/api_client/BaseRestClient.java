@@ -56,7 +56,7 @@ public class BaseRestClient {
 		map.put(PolicyExpireOfPaymentDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyExpireOfPaymentDataResponse>>() { });
 		map.put(PolicyChangeInfoDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyChangeInfoDataResponse>>() { });
 		map.put(PolicyIncomeDistributionDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyIncomeDistributionDataResponse>>() { });
-		map.put(PolicyFundTransactionResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyFundTransactionResponse>>() { });
+		map.put(JdPolicyFundTransactionResponse.class, new ParameterizedTypeReference<ApiResponseObj<JdPolicyFundTransactionResponse>>() { });
 		map.put(PolicyPremiumCostResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyPremiumCostResponse>>() { });
 		map.put(PolicyInvtFundDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyInvtFundDataResponse>>() { });
 		map.put(PortfolioResponse.class, new ParameterizedTypeReference<ApiResponseObj<PortfolioResponse>>() { });

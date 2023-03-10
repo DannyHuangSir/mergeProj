@@ -73,10 +73,9 @@
 													<thead>
 													<tr class="table2">
 														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">交易日期</th>
-														<th class="text-center" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">繳納金額</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-right">保費費用</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6" class="text-right">(+)利息</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7" class="text-right">(=)實繳金額</th>
+														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">實繳金額</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="left">保費費用</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6" class="text-left">(+)利息</th>
 													</tr>
 													</thead>
 													<tbody></tbody>
@@ -127,28 +126,25 @@
 		grid1.sGridId = '#grid1';
 		grid1.sQueryUrl = /*[[@{/getPremTransList?policyNo=} + ${param.policyNo[0]}]]*/;
 		grid1.sRowClass = 'h65';
-		if(policyType !="US"){
 		grid1.aoColumns = [
 			{
 				// 交易日期
 				'fnRender': function(oRow) {
-					return westDate(oRow.prdtBookDate);
+					return oRow.prdtBookDate;
 				},
 				'tdClass': 'enThin text-left',
 				'rwdName': '交易日期'
 			},
 			{
-				// 繳納金額
 				'fnRender': function(oRow) {
 					return formatNumber(oRow.prdtRcpAmt, fractionDigits);
 				},
-				'tdClass': 'text-center',
-				'rwdName': '繳納金額'
+				'tdClass': 'enThin text-left',
+				'rwdName': '實繳金額'
 			},
 			{
-				// (-)首期保費費用
 				'fnRender': function(oRow) {
-					return ''
+					return formatNumber(oRow.cost, fractionDigits);
 				},
 				'rwdName': '保費費用'
 			},
@@ -158,57 +154,8 @@
 					return formatNumber(oRow.prdtInvestAmt, fractionDigits);
 				},
 				'rwdName': '(+)利息'
-			},
-			{
-				// (=)投入金額
-				'fnRender': function(oRow) {
-					return formatNumber(oRow.cost);
-				},
-				'rwdName': '(=)投入金額'
 			}
 		];
-	}
-else{
-	grid1.aoColumns = [
-		{
-			// 交易日期
-			'fnRender': function(oRow) {
-				return westDate(oRow.prdtBookDate);
-			},
-			'tdClass': 'enThin text-left',
-			'rwdName': '交易日期'
-		},
-		{
-			// 繳納金額
-			'fnRender': function(oRow) {
-				return formatNumber(oRow.prdtRcpAmt, fractionDigits);
-			},
-			'tdClass': 'text-center',
-			'rwdName': '繳納金額'
-		},
-		{
-			// (-)保單費用
-			'fnRender': function(oRow) {
- 				return formatNumber( oRow.prdtTargetLoading+oRow.prdtIncreLoading, fractionDigits);
-			},
-			'rwdName': '(-)保單費用'
-		},
-		{
-			// (+)利息
-			'fnRender': function(oRow) {
-				return formatNumber(oRow.interest, fractionDigits);
-			},
-			'rwdName': '(+)利息'
-		},
-		{
-			// (=)投入金額
-			'fnRender': function(oRow) {
-				return formatNumber(oRow.prdtRcpAmt - oRow.prdtTargetLoading - oRow.prdtIncreLoading - oRow.cost - oRow.maintenanceFee + oRow.interest, fractionDigits);
-			},
-			'rwdName': '(=)投入金額'
-		}
-	];
-		}
 		grid1.fnInitComplete = function() {
 			if (grid1.rownum() == 0) {
 				openAlert('查無資料');

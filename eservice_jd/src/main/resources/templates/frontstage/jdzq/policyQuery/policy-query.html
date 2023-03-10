@@ -105,24 +105,28 @@
 				        <div class="container bg3 bgSpace box-border">-->
 				            <div class="my1">
 				                <i class="foo-business_1 foo-2x"></i> 保障總覽
-				                <span class="my2">共 4 張</span> 
+				                <span class="my2">共 <span id="zonglanCount">0</span> 張</span>
 				            </div>
 				            <div class="blocked">
 				                <div id="qtpie-list" class="centered">
 				                    <div>
 				                        <svg id="circleAll" viewbox="0 0 200 200">
-				                            <path class="product1" data-pie="30" data-desc="傳統型" />
-				                            <path class="product2" data-pie="30" data-desc="利率變動型" />
-				                            <path class="product3" data-pie="40" data-desc="投資型" />
+				                            <path class="product1" data-pie="20" data-desc="壽險" />
+				                            <path class="product2" data-pie="20" data-desc="意外險" />
+				                            <path class="product3" data-pie="20" data-desc="投資型" />
+				                            <path class="product3" data-pie="20" data-desc="萬能險/年金險" />
+				                            <path class="product3" data-pie="20" data-desc="健康險" />
 				                        </svg>
 				                        <div class="circle">
 				                            <a href="#" class="btn-circle"><span>我的保障</span></a>
 				                        </div>
 				                    </div>
-				                    <ul>
-				                        <li class="pdt1"><i class="foo-medical_14 foo-2x"></i>傳統型</li>
-				                        <li class="pdt2"><i class="foo-medical_4 foo-2x"></i><span>利率變動型</span></li>
+				                    <ul id="circleText">
+				                        <li class="pdt1"><i class="foo-object_27 foo-2x"></i>壽險</li>
+				                        <li class="pdt2"><i class="foo-medical_14 foo-2x"></i><span>意外險</span></li>
 				                        <li class="pdt3"><i class="foo-medical_4 foo-2x"></i><span>投資型</span></li>
+				                        <li class="pdt4" style="width: 180px;"><i class="foo-medical_19 foo-2x"></i><span>萬能險/年金險</span></li>
+				                        <li class="pdt5"><i class="foo-medical_1 foo-2x"></i><span>健康險</span></li>
 				                    </ul>
 				                </div>
 				            </div>
@@ -181,10 +185,14 @@
 				url : /*[[@{/getPolicyList}]]*/,
 				success : function(response) {
 					$("#allCount").text(0)
+					$("#zonglanCount").text(0)
 					$("#activeCount").text(0)
 					$("#stopCount").text(0)
 					$("#expireCount").text(0)
 					$("#circleAll").children().each(function(index, item) {
+						item.classList.remove('active')
+					})
+					$("#cirText").children().each(function(index, item) {
 						item.classList.remove('active')
 					})
 					if(response.result == "SUCCESS"){
@@ -263,20 +271,33 @@
 		}
 
 		function changeCircle(policyNo) {
-			chuantong = ['01', '02', '03', '21', '05', '06']
-			touzi = ['11', '12', '13', '14', '15', '00']
+			shouxian = ['EH','10','11','12','13','14','15','16','17','18','19','1A','1J','1K','1N','20','21','22','23','24','25','26','27','30','31','33','34','35','36','37','38','41','42','43','46','47','64','73','AA','AB','AC','AD','AE','AF','AH','AJ','AK','AM','AN','AP','AQ','AR','AS','AT','AU','AW','AX','AY','AZ','BA','BD','BE','BF','BG','BH','BJ','BK','BL','BN','BP','BQ','BU','BV','BW','BX','CA','CF','CG','CH','CJ','CK','CL','CN','CP','CU','CV','CW','CX','CY','CZ','DA','DB','DC','DD','DE','DF','DG','DH','DJ','DK','DL','DM','DP','DW','DX','DY','DZ','EA','EB','ED','EE','EL','EN','EP','EQ','EV','EW','EX','EY','EZ','FA','FC','FD','FE']
+			yiwai = ['08','DQ','02','03','04','06','1G','1L','1M','1S','5B','51','53','55','58','5C','5D','5E','5K','5L','60','61','69','70','72','74','75','76','83']
+			touzi = ['UA','UC','UH','UP','UQ','UR','US','UU']
+			wanneng = ['UB','UD','UE','UG','UJ','UK','UL','UT']
+			jiankang = ['ER','ES','57','07','28','39','56','5J','BM','BR','CB','CM','DN','EM','01','05','09','1C','1E','1F','1P','1Q','52','54','59','5A','5F','5M','5N','5P','5Q','EG','EJ','1B','49','CE','CR','DT','EC','EF','EK','ET','EU','FB']
 			policyType = policyNo.substring(0, 2)
-			if (chuantong.indexOf(policyType) != -1) {
+			if (shouxian.indexOf(policyType) != -1) {
 				$("#circleAll").children().get(0).classList.add("active")
-			} else if (touzi.indexOf(policyType) != -1) {
+				$("#circleText").children().get(0).classList.add("active")
+			} else if (yiwai.indexOf(policyType) != -1) {
 				$("#circleAll").children().get(1).classList.add("active")
-			} else {
+				$("#circleText").children().get(1).classList.add("active")
+			} else if (touzi.indexOf(policyType) != -1) {
 				$("#circleAll").children().get(2).classList.add("active")
+				$("#circleText").children().get(2).classList.add("active")
+			} else if (wanneng.indexOf(policyType) != -1) {
+				$("#circleAll").children().get(3).classList.add("active")
+				$("#circleText").children().get(3).classList.add("active")
+			} else if (jiankang.indexOf(policyType) != -1) {
+				$("#circleAll").children().get(4).classList.add("active")
+				$("#circleText").children().get(4).classList.add("active")
 			}
  		}
 
 		function statusStr(status) {
 			$("#allCount").text(parseInt($("#allCount").text()) +1)
+			$("#zonglanCount").text(parseInt($("#zonglanCount").text()) +1)
 			switch(status) {
 				case '1':
 					$("#activeCount").text(parseInt($("#activeCount").text()) +1)

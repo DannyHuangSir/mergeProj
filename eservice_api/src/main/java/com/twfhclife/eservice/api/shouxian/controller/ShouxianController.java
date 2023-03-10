@@ -5,7 +5,6 @@ import com.twfhclife.eservice.api.shouxian.domain.*;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.api.shouxian.service.ShouxianService;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
-import com.twfhclife.eservice.policy.model.FundTransactionVo;
 import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.generic.annotation.ApiRequest;
 import com.twfhclife.generic.controller.BaseController;
@@ -204,9 +203,9 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getPolicyTransactionHistory", produces = {"application/json"})
     public ResponseEntity<?> getPolicyTransactionHistory(
             @Valid @RequestBody PolicyFundTransactionRequest req) {
-        ApiResponseObj<PolicyFundTransactionResponse> apiResponseObj = new ApiResponseObj<>();
+        ApiResponseObj<JdPolicyFundTransactionResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
-        PolicyFundTransactionResponse resp = new PolicyFundTransactionResponse();
+        JdPolicyFundTransactionResponse resp = new JdPolicyFundTransactionResponse();
 
         try {
             String policyNo = req.getPolicyNo();
@@ -219,9 +218,9 @@ public class ShouxianController extends BaseController {
             if (!StringUtils.isEmpty(policyNo)) {
                 int total = shouxianService.
                         getFundTransactionTotal(policyNo, transType, startDate, endDate);
-                List<FundTransactionVo> fundTransactionList = shouxianService.
+                List<JdFundTransactionVo> fundTransactionList = shouxianService.
                         getFundTransactionPageList(policyNo, transType, startDate, endDate, pageNum, pageSize);
-                for (FundTransactionVo fundTransactionVo : fundTransactionList) {
+                for (JdFundTransactionVo fundTransactionVo : fundTransactionList) {
                     fundTransactionVo.setPageNum(req.getPageNum());
                     fundTransactionVo.setPageSize(req.getPageSize());
                     fundTransactionVo.setTotalRow(total);
@@ -307,13 +306,10 @@ public class ShouxianController extends BaseController {
     public ResponseEntity<?> getPolicyPortfolioNew(@Valid @RequestBody PortfolioRequest req) {
         ApiResponseObj<PortfolioResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
-        PortfolioResponse resp = new PortfolioResponse();
-
         try {
             String policyNo = req.getPolicyNo();
             if (!StringUtils.isEmpty(policyNo)) {
-                List<PortfolioVo> portfolioList = shouxianService.getPortfolioList(policyNo);
-                resp.setPortfolioList(portfolioList);
+                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo);
                 returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
                 apiResponseObj.setReturnHeader(returnHeader);
                 apiResponseObj.setResult(resp);
@@ -337,6 +333,7 @@ public class ShouxianController extends BaseController {
             PolicyCancellationMoneyDataResponse resp = new PolicyCancellationMoneyDataResponse();
             resp.setCancellationMoneyVos(cancellationMoneyVos);
             resp.setPolicyVo(shouxianService.getPolicyInfo(vo.getPolicyNo()));
+            resp.setPolicyAmountVo(shouxianService.getPolicyAmount(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);

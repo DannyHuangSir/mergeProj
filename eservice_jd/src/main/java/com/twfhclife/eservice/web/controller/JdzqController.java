@@ -5,6 +5,7 @@ import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.controller.BaseController;
 import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.util.DateUtil;
+import com.twfhclife.eservice.web.domain.PortfolioResponseObj;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IOptionService;
@@ -172,10 +173,13 @@ public class JdzqController extends BaseController {
             addAttribute("info", vo.getIncomeDistributions());
             addAttribute("policyNo", policyNo);
             BigDecimal sumAmount = BigDecimal.valueOf(0);
+            BigDecimal sumUnits = BigDecimal.valueOf(0);
             for (IncomeDistributionVo incomeDistribution : vo.getIncomeDistributions()) {
                 sumAmount = sumAmount.add(incomeDistribution.getExpeNtd());
+                sumUnits = sumUnits.add(incomeDistribution.getUnits());
             }
             addAttribute("sumAmount", sumAmount);
+            addAttribute("sumUnits", sumUnits);
         } catch (Exception e) {
             logger.error("Unable to get data from listing6_2: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -221,8 +225,8 @@ public class JdzqController extends BaseController {
             }
 
             if (StringUtils.isEmpty(errorMessage)) {
-                List<FundTransactionVo> fundTransactionList = null;
-                PolicyFundTransactionResponse policyFundTransactionResponse = policyService
+                List<JdFundTransactionVo> fundTransactionList = null;
+                JdPolicyFundTransactionResponse policyFundTransactionResponse = policyService
                         .getPolicyFundTransaction(getUserId(), policyNo, trCode, startDate, endDate, pageNum, defaultPageSize);
                 logger.info("Get user[{}] data from eservice_api[getPolicyFundTransactionPageList]");
                 fundTransactionList = policyFundTransactionResponse.getFundTransactionList();
@@ -290,8 +294,7 @@ public class JdzqController extends BaseController {
             PolicyInvtFundVo vo = policyService.getPolicyInvtFund(policyNo);
             addAttribute("portfolioList", policyService.getPolicyRateOfReturn(getUserId(), policyNo).getPortfolioList());
             addAttribute("vo", vo.getPolicy());
-            String dateStr = "1911/01/01";
-            List<String> rocYearMenu = DateUtil.getYearOpitonByEffectDate(dateStr);
+            List<String> rocYearMenu = DateUtil.getYearOpitonByEffectDate("1911/01/01");
             addAttribute("rocYearMenu", rocYearMenu);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -318,6 +321,7 @@ public class JdzqController extends BaseController {
             PolicyCancellationMoneyDataResponse resp = policyService.getPolicyCancellationMoney(policyNo);
             addAttribute("vo", resp.getPolicyVo());
             addAttribute("cancelMoneys", resp.getCancellationMoneyVos());
+            addAttribute("amountVo", resp.getPolicyAmountVo());
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing17: {}", ExceptionUtils.getStackTrace(e));
@@ -327,24 +331,25 @@ public class JdzqController extends BaseController {
     }
 
     @PostMapping("/getPortfolioList")
-    public ResponseEntity<ResponseObj> getPortfolioList(@RequestParam("policyNo") String policyNo) {
+    public ResponseEntity<PortfolioResponseObj> getPortfolioList(@RequestParam("policyNo") String policyNo) {
+        PortfolioResponseObj responseObj = new PortfolioResponseObj();
         try {
             String userId = getUserId();
             List<PortfolioVo> portfolioList = null;
-
             // Call api 取得資料
             PortfolioResponse portfolioResponse = policyService.getPolicyRateOfReturn(userId, policyNo);
-            // 若無資料，嘗試由內部服務取得資料
             if (portfolioResponse != null) {
                 logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);
                 portfolioList = portfolioResponse.getPortfolioList();
             }
-            processSuccess(portfolioList);
+            responseObj.setEndDate(portfolioResponse.getEndDate());
+            responseObj.setResultData(portfolioList);
+            responseObj.setResult(ResponseObj.SUCCESS);
         } catch (Exception e) {
             logger.error("Unable to getPortfolioList: {}", ExceptionUtils.getStackTrace(e));
             processSystemError();
         }
-        return processResponseEntity();
+        return ResponseEntity.status(HttpStatus.OK).body(responseObj);
     }
 
     @RequestMapping("/listing18")

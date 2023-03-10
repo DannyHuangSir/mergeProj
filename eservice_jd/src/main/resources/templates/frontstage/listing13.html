@@ -62,20 +62,19 @@
 				                                            <th>給付方式</th>
 				                                            <th>給付日期</th>
 				                                            <th>匯款資訊</th>
-				                                            <th>入款銀行</th>
-				                                            <th>入款帳號</th>
 				                                        </tr>
 				                                    </thead>
 				                                    <tbody>
 				                                        <tr class="h65 noEvent" th:each="vo1: ${vo.payments}">
-				                                            <td class="" th:text="${vo1.payReas}"></td>
+				                                            <td th:text="${vo1.payReas != null ? session.SYSTEM_PARAMETER['LIPAYF_REAS'][vo1.payReas].parameterValue : ''}"></td>
 				                                            <td th:text="${vo1.payAmount}"></td>
 				                                            <td th:text="${vo1.payName}"></td>
 				                                            <td th:text="${vo1.payMethod != null ? session.SYSTEM_PARAMETER['LIPAYF_METH'][vo1.payMethod].parameterValue : ''}"></td>
 				                                            <td th:text="${vo1.bookDate}"></td>
-				                                            <td th:text="${vo1.bank}"></td>
-				                                            <td th:text="${vo1.bankCode}"></td>
-				                                            <td th:text="${vo1.remitAt}"></td>
+															<td><span class="tablesaw-cell-content">
+				                                                <th:block th:text="${vo1.bankCode}"></th:block><br>
+				                                                <th:block th:text="${vo1.remitAt}"></th:block>
+				                                            </span></td>
 				                                        </tr>
 				                                    </tbody>
 				                                </table>

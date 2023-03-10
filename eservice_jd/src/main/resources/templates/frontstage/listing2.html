@@ -52,7 +52,7 @@
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div class="wht">
-											<div style="padding: 20px;">計算至 年/月/日 止</div>
+											<div style="padding: 20px;">計算至 <span id="endDate"></span> 止</div>
 											<div class="mobile-toggle-panel specialHeight toggle-hide">
 												<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
 													<thead>
@@ -169,6 +169,7 @@
         openAlert('查無資料');
         return false;
       }
+      $("#endDate").text(grid1.resp.endDate)
     };
     grid1.createSimple();
   });

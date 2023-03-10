@@ -53,23 +53,23 @@
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div style="padding: 20px;background: #FFFFFF;">
-												累計單位撥回數：<span style="margin-right: 30px;">3</span> 累計現金撥回金額：
+												累計單位撥回數：<span style="margin-right: 30px;" th:text="${sumUnits}"></span> 累計現金撥回金額：<span style="margin-right: 30px;" th:text="${sumAmount}"></span>
 											</div>
 											<div class="wht">
 												<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
 													<thead>
 													<tr>
-														<th style="width: 300px;" class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的名稱/代碼</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">基準日<br></th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">發放日<br></th>
-														<th scope="col" style="width: 140px;" data-tablesaw-sortable-col="" data-tablesaw-priority="3" width="120">帳戶單位<br></th>
+														<th style="width: 400px;" class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">投資標的名稱/代碼</th>
+														<th scope="col" style="width: 150px;" data-tablesaw-sortable-col="" data-tablesaw-priority="1">基準日<br></th>
+														<th scope="col" style="width: 150px;" data-tablesaw-sortable-col="" data-tablesaw-priority="2">發放日<br></th>
+														<th scope="col" style="width: 180px;" data-tablesaw-sortable-col="" data-tablesaw-priority="3" width="120">帳戶單位<br></th>
 														<th scope="col" style="width: 120px;" data-tablesaw-sortable-col="" data-tablesaw-priority="4">配息率<br></th>
-														<th scope="col" style="width: 150px;" data-tablesaw-sortable-col="" data-tablesaw-priority="5">匯率使用日<hr style="margin: 0;">參考匯率 <br></th>
-														<th scope="col" style="width: 200px;" data-tablesaw-sortable-col="" data-tablesaw-priority="6">台幣(NTD)/<BR>外幣價值(USD)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">撥回方式<br></th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">單位數<br></th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">現金<br></th>
-														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="10">電匯日期</th>
+														<th scope="col" style="width: 200px;" data-tablesaw-sortable-col="" data-tablesaw-priority="5">匯率使用日<hr style="margin: 0;">參考匯率 <br></th>
+														<th scope="col" style="width: 350px;" data-tablesaw-sortable-col="" data-tablesaw-priority="6">台幣(NTD)/<BR>外幣價值(USD)</th>
+														<th scope="col" data-tablesaw-priority="7">撥回方式<br></th>
+														<th scope="col" data-tablesaw-priority="8">單位數<br></th>
+														<th scope="col" data-tablesaw-priority="9">現金<br></th>
+														<th class="text-left" scope="col" data-tablesaw-priority="10">電匯日期</th>
 													</tr>
 													</thead>
 													<tbody>

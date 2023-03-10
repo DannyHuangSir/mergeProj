@@ -119,7 +119,7 @@
             WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
             WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
             END AS STATUS,
-        lme.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME,
+        lme.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(lbe.BNAG_BIRTH, 'yyyy-MM-dd') LIPM_BIRTH,
         to_char(lsn.ASSN_ARRI_DATE, 'yyyy-MM-dd') ASSN_ARRI_DATE, to_char(lsn.ASSN_TR_ARRI_DATE, 'yyyy-MM-dd') ASSN_TR_ARRI_DATE, lip.PMDA_MAIL, lsn.ASSN_STATUS,
         lme.LIPM_TEL_H, lip.PMDA_APPLICANT_CELLPHONE, lip.PMDA_APPLICANT_EMAIL, lme.LIPM_5_GP,
         lme.LIPM_ADDR, to_char(lie.LIPI_BIRTH, 'yyyy-MM-dd') LIPI_BIRTH, lie.LIPI_AGE, lie.LIPI_SEX, lbp.LIPB_NAME, lbp.LIPB_RELA, lpe.PROD_CURRENCY CURRENCY,
@@ -291,13 +291,13 @@
 
     <select id="getPolicyChangeInfo" resultMap="PolicyChangeInfoMap">
         SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
+        lie.LIPI_TABL_PREM,
         CASE
         WHEN lme.LIPM_ST &lt;= 18 THEN 1
         WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
         WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
         END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY,
-        lrc.RCDC_DELIVERY_AGEN_CODE, lrc.RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
+        lrc.RCDC_DELIVERY_AGEN_CODE, to_char(lrc.RCDC_ACC_DATE, 'yyyy-MM-dd') RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
         lrc.RCDC_CHAN_ITEM_1, lrc.RCDC_CHAN_ITEM_2, lrc.RCDC_CHAN_ITEM_3, lrc.RCDC_CHAN_ITEM_4, lrc.RCDC_CHAN_ITEM_5, lrc.RCDC_CHAN_ITEM_6, lrc.RCDC_CHAN_ITEM_7, lrc.RCDC_CHAN_ITEM_8, lrc.RCDC_CHAN_ITEM_9, lrc.RCDC_CHAN_ITEM_10
         FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
         ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
@@ -355,7 +355,7 @@
         ORDER BY lcp.CLUP_TR_DATE DESC
     </select>
 
-    <resultMap id="FundTransactionListMap" type="com.twfhclife.eservice.policy.model.FundTransactionVo">
+    <resultMap id="FundTransactionListMap" type="com.twfhclife.eservice.api.shouxian.model.JdFundTransactionVo">
         <result column="INVT_NAME" property="invtName"/>
         <result column="INVT_NO" property="invtNo"/>
         <result column="SADP_TR_DATE" property="sadpTrDate"/>
@@ -363,6 +363,8 @@
         <result column="SADP_TR_UNITS" property="sadpTrUnits"/>
         <result column="FUND_VALUE" property="fundValue"/>
         <result column="SADP_EXCH_DATE" property="sadpExchDate"/>
+        <result column="SADP_EXCH_CURR" property="invtExchCurr"/>
+        <result column="FUND_VALUE" property="exchRate"/>
     </resultMap>
 
     <select id="getFundTransactionPageList" resultMap="FundTransactionListMap">
@@ -373,7 +375,7 @@
             END SADP_TR_UNITS,
             CASE WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
             WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
-            END FUND_VALUE, lsp.SADP_EXCH_DATE
+            END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
             FROM LISADP_ES_FLOWTEST lsp
             LEFT JOIN LIINVT_ES_FLOWTEST lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
             LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE
@@ -442,32 +444,26 @@
         <result column="PRDT_BOOK_DATE" property="prdtBookDate"/>
         <result column="PRDT_RCP_AMT" property="prdtRcpAmt"/>
         <result column="INT_AMOUNT" property="prdtInvestAmt"/>
-        <result column="PAID_AMOUNT" property="cost"/>
+        <result column="PREMIUM_COST" property="cost"/>
+        <result column="PRDT_RCP_AMT" property="prdtRcpAmt"/>
     </resultMap>
 
     <select id="getFundPrdtPageList" resultMap="FundPrdtListMap">
         SELECT * FROM (
-            SELECT rownum ROW_NUM, lpt.PRDT_BOOK_DATE, lpt.PRDT_RCP_AMT, lti.TRHI_INT - lti.TRHI_INT_TAX - lti.TRHI_SUPPLE_PREM INT_AMOUNT,
-            lpt.PRDT_RCP_AMT -
-            lpt.PRDT_TARGET_LOADING -
-            lpt.PRDT_INCRE_LOADING -
-            - (lti.TRHI_INSU_PREM + lti.TRHI_2ND_CHARGE)
-            - lti.TRHI_TR_FEE + (
-            lti.TRHI_INT
-            - lti.TRHI_INT_TAX
-            -  lti.TRHI_SUPPLE_PREM
-            ) PAID_AMOUNT
+            SELECT rownum ROW_NUM, lpt.PRDT_BOOK_DATE, lpt.PRDT_RCP_AMT,
+            lpt.PRDT_TARGET_LOADING  + lpt.PRDT_INCRE_LOADING PREMIUM_COST,
+            NVL(lti.TRHI_INT, 0) - NVL(lti.TRHI_INT_TAX, 0) - NVL(lti.TRHI_SUPPLE_PREM, 0) INT_AMOUNT
             FROM LIPRDT_ES_FLOWTEST lpt
             LEFT JOIN LITRHI_ES_FLOWTEST lti ON lpt.PRDT_INSU_NO = lti.TRHI_INSU_NO AND lti.TRHI_DATE = lpt.PRDT_BOOK_DATE
         <where>
-                AND lpt.PRDT_INSU_NO = #{policyNo}
-                <if test="startDate != null">
-                    AND lpt.PRDT_BOOK_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
-                </if>
-                <if test="endDate != null">
-                    AND lpt.PRDT_BOOK_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
-                </if>
-            </where>
+            AND lpt.PRDT_INSU_NO = #{policyNo}
+            <if test="startDate != null">
+                AND lpt.PRDT_BOOK_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
+            </if>
+            <if test="endDate != null">
+                AND lpt.PRDT_BOOK_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
+            </if>
+        </where>
         )
         <if test="pageNum != null and pageSize != null">
             WHERE
@@ -478,18 +474,12 @@
 
     <select id="getFundPrdtTotal" resultType="int">
         SELECT COUNT(*) FROM (
-        SELECT rownum ROW_NUM, lpt.PRDT_BOOK_DATE, lpt.PRDT_RCP_AMT, lti.TRHI_INT - lti.TRHI_INT_TAX - lti.TRHI_SUPPLE_PREM INT_AMOUNT,
-        lpt.PRDT_RCP_AMT -
-        lpt.PRDT_TARGET_LOADING -
-        lpt.PRDT_INCRE_LOADING -
-        - (lti.TRHI_INSU_PREM + lti.TRHI_2ND_CHARGE)
-        - lti.TRHI_TR_FEE + (
-        lti.TRHI_INT
-        - lti.TRHI_INT_TAX
-        -  lti.TRHI_SUPPLE_PREM
-        ) PAID_AMOUNT
-        FROM LIPRDT_ES_FLOWTEST lpt
-        LEFT JOIN LITRHI_ES_FLOWTEST lti ON lpt.PRDT_INSU_NO = lti.TRHI_INSU_NO
+            SELECT rownum ROW_NUM, lpt.PRDT_BOOK_DATE, lpt.PRDT_RCP_AMT,
+            lpt.PRDT_TARGET_LOADING  + lpt.PRDT_INCRE_LOADING PREMIUM_COST,
+            NVL(lti.TRHI_INT, 0) - NVL(lti.TRHI_INT_TAX, 0) - NVL(lti.TRHI_SUPPLE_PREM, 0) INT_AMOUNT,
+            lpt.PRDT_RCP_AMT PAID_AMOUNT
+            FROM LIPRDT_ES_FLOWTEST lpt
+        LEFT JOIN LITRHI_ES_FLOWTEST lti ON lpt.PRDT_INSU_NO = lti.TRHI_INSU_NO AND lti.TRHI_DATE = lpt.PRDT_BOOK_DATE
         <where>
             AND lpt.PRDT_INSU_NO = #{policyNo}
             <if test="startDate != null">
@@ -506,22 +496,22 @@
         SELECT INPR_TRAN_DATE effectiveDate, INPR_UNIT_PURPRICE buyPrice, INPR_UNIT_SOLPRICE sellPrice
         FROM LIINPR_ES_FLOWTEST
         <where>
+            AND INPR_INVT_NO = #{exchangeRateVo.exchangeCode}
             <if test="exchangeRateVo.effectiveDate != null"> AND INPR_TRAN_DATE = #{exchangeRateVo.effectiveDate} </if>
-            <if test="exchangeRateVo.exchangeCode != null and exchangeRateVo.exchangeCode != ''"> AND INPR_INVT_NO = #{exchangeRateVo.exchangeCode} </if>
             <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'A'.toString()">
-                AND INPR_TRAN_DATE > DATEADD(month, -1, getdate()) + 1
+                AND INPR_TRAN_DATE >= add_months(SYSDATE, -1)
             </if>
             <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'B'.toString()">
-                AND INPR_TRAN_DATE > DATEADD(month, -3, getdate()) + 1
+                AND INPR_TRAN_DATE >= add_months(SYSDATE, -3)
             </if>
             <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'C'.toString()">
-                AND convert(varchar(7), EFFECTIVE_DATE, 126) = #{exchangeRateVo.queryMonth}
+                AND to_char(INPR_TRAN_DATE, 'yyyy/MM') = #{exchangeRateVo.queryMonth}
             </if>
         </where>
     </select>
 
     <select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo">
-        SELECT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr,
+        SELECT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, lir.INPR_TRAN_DATE_MAX netValueDate,
         lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval, lip.SAFP_AVG_PVAL avgPval,
         lin.INVT_RISK_BENE_LEVEL riskBeneLevel, lin.INVT_NO invtNo, lin.INVT_NAME invtName,
         leh.EXCH_SPEBK_PURATE exchRateBuy, SUM(lcp.CLUP_EXPE_NTD) clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
@@ -542,8 +532,16 @@
         LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lip.SAFP_INIT_DATE = leh.EXCH_DATE
         LEFT JOIN LICLUP_ES_FLOWTEST lcp ON lcp.CLUP_INVT_NO = lip.SAFP_INVT_NO AND lip.SAFP_INSU_NO = lcp.CLUP_INSU_NO
         WHERE lip.SAFP_INSU_NO = #{policyNo}
-        GROUP BY lir.INPR_UNIT_SOLPRICE, lip.SAFP_NET_UNITS, lip.SAFP_NET_UNITS,
+        GROUP BY lir.INPR_UNIT_SOLPRICE, lir.INPR_TRAN_DATE_MAX,  lip.SAFP_NET_UNITS, lip.SAFP_NET_UNITS,
         lin.INVT_RISK_BENE_LEVEL, lin.INVT_NAME, lip.SAFP_ACCU_INVEST_BFEXCH,
         leh.EXCH_SPEBK_PURATE, lip.SAFP_AVG_PNTDVAL, lip.SAFP_NET_AMT, lin.INVT_NO, lin.INVT_EXCH_CURR, lip.SAFP_AVG_PVAL
+    </select>
+
+    <select id="selectPolicyAmount" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyAmountVo">
+        SELECT to_char(MAX(MAX_DATE), 'yyyy-MM-dd') policyDate, NVL(SUM(VAL * INPR_UNIT_SOLPRICE), 0) policyVal FROM (
+        SELECT MAX(POEV_EDATE) MAX_DATE, NVL(SUM(POEV_SAFP_UNITS * POEV_STATE_EXCH_RATE), 0) VAL, POEV_INVT_NO  FROM LIPOEV_ES_FLOWTEST
+        WHERE POEV_INSU_NO = #{policyNo}
+        GROUP BY POEV_INVT_NO
+        ) lov LEFT JOIN LIINPR_ES_FLOWTEST lpr ON lov.POEV_INVT_NO = lpr.INPR_INVT_NO AND lov.MAX_DATE = lpr.INPR_TRAN_DATE
     </select>
 </mapper>

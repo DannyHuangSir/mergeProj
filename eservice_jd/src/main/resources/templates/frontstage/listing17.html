@@ -37,7 +37,7 @@
 										<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
 											<thead>
 											<div class="tb3 top0">
-												<i class="fa foo-angle-down"></i> 投資標的淨值
+												<i class="fa foo-angle-down"></i> 解約金試算
 												<div class="dropdown pull-right r30">
 													<a class="btn-return" href="policyQuery">回保單查詢結果清單</a>
 												</div>
@@ -51,6 +51,16 @@
 												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span>
 													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span></p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
+											</div>
+											<div class="col-sm-12 nopd all-left-list">
+												<table class="tablesaw tablesaw-stack no-border wht col-table" data-tablesaw-mode="stack">
+													<tbody>
+													<tr class="noEvent borderTop">
+														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">解約金試算</th>
+														<td><b class="tablesaw-cell-label mobile-b">解約金試算</b> <span class="mobile-span">計算至 <th:block th:text="${amountVo.policyDate}"></th:block> 止</span></td>
+													</tr>
+													</tbody>
+												</table>
 											</div>
 											<div class="tb3 top0 mobile-toggle" data-toggle="true">
 												<i class="fa hid2 foo-angle-down mobile"></i>
@@ -66,7 +76,7 @@
 													</thead>
 													<tbody>
 													<tr class="h55 noEvent" th:each="vo1: ${cancelMoneys}">
-														<td class="text-left">0</td>
+														<td class="text-left"><th:block th:text="${amountVo.policyVal}"></th:block></td>
 														<td th:text="${vo1.FSZ2_AMT}"></td>
 													</tr>
 													</tbody>

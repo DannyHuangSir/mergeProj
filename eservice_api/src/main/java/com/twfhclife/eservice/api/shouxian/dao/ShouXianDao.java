@@ -2,9 +2,9 @@ package com.twfhclife.eservice.api.shouxian.dao;
 
 
 import com.twfhclife.eservice.api.shouxian.domain.ExchangeRateRequest;
+import com.twfhclife.eservice.api.shouxian.model.JdFundTransactionVo;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
-import com.twfhclife.eservice.policy.model.FundTransactionVo;
 import com.twfhclife.eservice.policy.model.PortfolioVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,7 +24,7 @@ public interface ShouXianDao {
 
     List<IncomeDistributionVo> getIncomeDistribution(@Param("policyNo") String policyNo);
 
-    List<FundTransactionVo> getFundTransactionPageList(
+    List<JdFundTransactionVo> getFundTransactionPageList(
             @Param("policyNo") String policyNo,
             @Param("trCode") String trCode,
             @Param("startDate") String startDate,
@@ -51,4 +51,5 @@ public interface ShouXianDao {
     List<PortfolioVo> getPortfolioList(@Param("policyNo") String policyNo);
 
     List<ExchangeRateVo> getExchangeRate(@Param("exchangeRateVo") ExchangeRateRequest vo);
+    PolicyAmountVo selectPolicyAmount(@Param("policyNo") String policyNo);
 }

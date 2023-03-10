@@ -67,11 +67,18 @@
 														<tr class="h65 noEvent">
 															<!-- 申請方式 -->
 															<td class="text-left">
-																<th:block th:text="${vo1.applyType != null} ? ${vo1.applyType}"/>
+																<th:block th:text="${vo1.applyType != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'][vo1.applyType].parameterValue : ''}"/>
 															</td>
 															<!-- 申請項目 -->
 															<td>
-																<th:block th:text="${vo1.item1 != null} ? ${vo1.item1}"/>
+																<th:block th:text="${vo1.item1 != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_CHAN_ITEM'][vo1.item1].parameterValue : ''}"/>
+																<th:block th:text="${vo1.item2 != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_CHAN_ITEM'][vo1.item2].parameterValue : ''}"/>
+																<th:block th:text="${vo1.item3 != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_CHAN_ITEM'][vo1.item3].parameterValue : ''}"/>
+																<th:block th:text="${vo1.item4 != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_CHAN_ITEM'][vo1.item4].parameterValue : ''}"/>
+																<th:block th:text="${vo1.item5 != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_CHAN_ITEM'][vo1.item5].parameterValue : ''}"/>
+																<th:block th:text="${vo1.item6 != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_CHAN_ITEM'][vo1.item6].parameterValue : ''}"/>
+																<th:block th:text="${vo1.item7 != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_CHAN_ITEM'][vo1.item7].parameterValue : ''}"/>
+																<th:block th:text="${vo1.item8 != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_CHAN_ITEM'][vo1.item8].parameterValue : ''}"/>
 															</td>
 															<!-- 申請時間 -->
 															<td>
@@ -79,7 +86,7 @@
 															</td>
 															<!-- 處理進度 -->
 															<td>
-																<th:block th:text="${vo1.procMk}"/>
+																<th:block th:text="${vo1.procMk != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_PROC_MK'][vo1.procMk].parameterValue : ''}"/>
 															</td>
 														</tr>
 													</th:block>

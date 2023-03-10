@@ -4,11 +4,12 @@ package com.twfhclife.eservice.api.shouxian.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import com.twfhclife.eservice.api.elife.domain.PortfolioResponse;
 import com.twfhclife.eservice.api.shouxian.dao.ShouXianDao;
 import com.twfhclife.eservice.api.shouxian.domain.ExchangeRateRequest;
+import com.twfhclife.eservice.api.shouxian.model.JdFundTransactionVo;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
-import com.twfhclife.eservice.policy.model.FundTransactionVo;
 import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.generic.util.RoiRateUtil;
 import com.twfhclife.generic.utils.MyJacksonUtil;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -73,7 +75,7 @@ public class ShouxianService {
         return vo;
     }
 
-    public List<FundTransactionVo> getFundTransactionPageList(String policyNo, String transType, String startDate, String endDate, Integer pageNum, Integer pageSize) {
+    public List<JdFundTransactionVo> getFundTransactionPageList(String policyNo, String transType, String startDate, String endDate, Integer pageNum, Integer pageSize) {
         return shouXianDao.getFundTransactionPageList(policyNo, transType, startDate, endDate, pageNum, pageSize);
     }
 
@@ -93,50 +95,6 @@ public class ShouxianService {
         PolicyInvtFundVo vo = new PolicyInvtFundVo();
         vo.setPolicy(shouXianDao.getPolicyInfo(policyNo));
         return vo;
-    }
-
-    public List<PortfolioVo> getPortfolioList(String policyNo) {
-        List<PortfolioVo> portfolioList = shouXianDao.getPortfolioList(policyNo);
-        Iterator var4 = portfolioList.iterator();
-
-        while (var4.hasNext()) {
-            PortfolioVo portfolioVo = (PortfolioVo) var4.next();
-            BigDecimal netAmt = portfolioVo.getSafpNetAmt();
-            BigDecimal netUnits = portfolioVo.getSafpNetUnits();
-            BigDecimal ntdVal = portfolioVo.getSafpAvgPntdval();
-            BigDecimal netValue = portfolioVo.getNetValueSell();
-            BigDecimal exchRate = portfolioVo.getExchRateBuy();
-            BigDecimal expeNtd = portfolioVo.getClupExpeNtdSum();
-            BigDecimal[] values = new BigDecimal[3];
-            if ("NTD".equals(portfolioVo.getInvtExchCurr())) {
-                exchRate = BigDecimal.valueOf(1L);
-            }
-
-            BigDecimal roiRate;
-            BigDecimal acctValue;
-            BigDecimal avgPval;
-            try {
-                if (portfolioVo.getInvtNo().startsWith("RT")) {
-                    values = this.formula2(netAmt, exchRate, ntdVal);
-                    portfolioVo.setSafpNetUnits(netAmt);
-                } else {
-                    values = this.formula1(netUnits, netValue, exchRate, ntdVal, expeNtd);
-                }
-
-                roiRate = values[0];
-                acctValue = values[1];
-                avgPval = values[2];
-            } catch (Exception var17) {
-                roiRate = new BigDecimal(0);
-                acctValue = new BigDecimal(0);
-                avgPval = new BigDecimal(0);
-            }
-
-            portfolioVo.setRoiRate(roiRate);
-            portfolioVo.setAcctValue(acctValue);
-            portfolioVo.setAvgPval(avgPval);
-        }
-        return portfolioList;
     }
 
     private BigDecimal[] getZero() {
@@ -242,5 +200,66 @@ public class ShouxianService {
 
     public List<ExchangeRateVo> getExchangeRate(ExchangeRateRequest vo) {
         return shouXianDao.getExchangeRate(vo);
+    }
+
+    public PortfolioResponse getPortfolioResp(String policyNo) {
+        PortfolioResponse resp = new PortfolioResponse();
+        List<PortfolioVo> portfolioList = shouXianDao.getPortfolioList(policyNo);
+        Date maxDate = null;
+        Iterator var4 = portfolioList.iterator();
+        while (var4.hasNext()) {
+            PortfolioVo portfolioVo = (PortfolioVo) var4.next();
+            BigDecimal netAmt = portfolioVo.getSafpNetAmt();
+            BigDecimal netUnits = portfolioVo.getSafpNetUnits();
+            BigDecimal ntdVal = portfolioVo.getSafpAvgPntdval();
+            BigDecimal netValue = portfolioVo.getNetValueSell();
+            BigDecimal exchRate = portfolioVo.getExchRateBuy();
+            BigDecimal expeNtd = portfolioVo.getClupExpeNtdSum();
+            BigDecimal[] values = new BigDecimal[3];
+            if ("NTD".equals(portfolioVo.getInvtExchCurr())) {
+                exchRate = BigDecimal.valueOf(1L);
+            }
+
+            BigDecimal roiRate;
+            BigDecimal acctValue;
+            BigDecimal avgPval;
+            try {
+                if (portfolioVo.getInvtNo().startsWith("RT")) {
+                    values = this.formula2(netAmt, exchRate, ntdVal);
+                    portfolioVo.setSafpNetUnits(netAmt);
+                } else {
+                    values = this.formula1(netUnits, netValue, exchRate, ntdVal, expeNtd);
+                }
+
+                roiRate = values[0];
+                acctValue = values[1];
+                avgPval = values[2];
+            } catch (Exception var17) {
+                roiRate = new BigDecimal(0);
+                acctValue = new BigDecimal(0);
+                avgPval = new BigDecimal(0);
+            }
+
+            portfolioVo.setRoiRate(roiRate);
+            portfolioVo.setAcctValue(acctValue);
+            portfolioVo.setAvgPval(avgPval);
+
+            if (maxDate == null && portfolioVo.getNetValueDate() != null) {
+                maxDate = portfolioVo.getNetValueDate();
+            } else if (maxDate != null && portfolioVo.getNetValueDate() != null
+                && portfolioVo.getNetValueDate().getTime() > maxDate.getTime()) {
+                maxDate = portfolioVo.getNetValueDate();
+            }
+        }
+        if (maxDate != null && maxDate.getTime() > new Date().getTime()) {
+            maxDate = new Date();
+        }
+        resp.setPortfolioList(portfolioList);
+        resp.setEndDate(new SimpleDateFormat("yyyy-MM-dd").format(maxDate));
+        return resp;
+    }
+
+    public PolicyAmountVo getPolicyAmount(String policyNo) {
+        return shouXianDao.selectPolicyAmount(policyNo);
     }
 }
