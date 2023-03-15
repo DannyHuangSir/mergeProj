@@ -1,8 +1,11 @@
 package com.twfhclife.eservice.api.jdzq.controller;
 
+import com.twfhclife.eservice.api.jdzq.domain.CaseProcessDataResponse;
+import com.twfhclife.eservice.api.jdzq.domain.CaseQueryRequest;
 import com.twfhclife.eservice.api.jdzq.domain.PersonalCaseDataResponse;
 import com.twfhclife.eservice.api.jdzq.model.CaseVo;
 import com.twfhclife.eservice.api.jdzq.service.JdzqService;
+import com.twfhclife.eservice.web.model.PolicyVo;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
@@ -27,11 +30,11 @@ public class JdzqController extends BaseController {
     private JdzqService jdzqService;
 
     @PostMapping(value = "/getPersonalCaseList", produces = { "application/json" })
-    public ResponseEntity<?> getPersonalCaseList(@RequestBody List<String> serialNums) {
+    public ResponseEntity<?> getPersonalCaseList(@RequestBody CaseQueryRequest caseQuery) {
         ApiResponseObj<PersonalCaseDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            List<CaseVo> caseList = jdzqService.getCaseList(serialNums);
+            List<CaseVo> caseList = jdzqService.getCaseList(caseQuery);
             PersonalCaseDataResponse resp = new PersonalCaseDataResponse();
             resp.setCaseList(caseList);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
@@ -40,6 +43,48 @@ public class JdzqController extends BaseController {
         } catch (Exception e) {
             returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
             logger.error("Unable to getPersonalCaseList: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/getCaseProcess", produces = { "application/json" })
+    public ResponseEntity<?> getCaseProcess(@RequestBody PolicyVo policyVo) {
+        ApiResponseObj<CaseProcessDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            CaseVo caseVo = jdzqService.getCaseProcess(policyVo);
+            CaseProcessDataResponse resp = new CaseProcessDataResponse();
+            resp.setCaseVo(caseVo);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getCaseProcess: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/jdzqGetPolicyInfo", produces = { "application/json" })
+    public ResponseEntity<?> jdzqGetPolicyInfo(@RequestBody PolicyVo policyVo) {
+        ApiResponseObj<CaseProcessDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            CaseVo caseVo = jdzqService.getPolicyInfo(policyVo);
+            CaseProcessDataResponse resp = new CaseProcessDataResponse();
+            resp.setCaseVo(caseVo);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to jdzqGetPolicyInfo: {}", ExceptionUtils.getStackTrace(e));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
         } finally {
             apiResponseObj.setReturnHeader(returnHeader);

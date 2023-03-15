@@ -31,19 +31,6 @@ public class OptionController extends BaseMvcController {
 	@Autowired
 	private IOptionService optionService;
 
-	@PostMapping("/getPolicyTyps")
-	public  ResponseEntity<ResponseObj> getPolicyTyps() {
-		synchronized(this){
-		try {
-			processSuccess(optionService.getPolicyTyps());
-		} catch (Exception e) {
-			logger.error("Unable to getPolicyTyps: {}", ExceptionUtils.getStackTrace(e));
-			processSystemError();
-		}
-		return processResponseEntity();
-		}
-	}
-
 	@PostMapping("/getLevelStates")
 	public  ResponseEntity<ResponseObj> getLevelStates() {
 		synchronized(this){

@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.api.shouxian.model;
 
 import com.google.common.collect.Lists;
+import com.twfhclife.eservice.api.jdzq.model.PermQueryVo;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class PolicyVo {
 
     private String endDate;
 
-    private List<String> serialNums = Lists.newArrayList();
+    private List<PermQueryVo> permQuery = Lists.newArrayList();
 
     public String getPolicyNo() {
         return policyNo;
@@ -159,12 +160,12 @@ public class PolicyVo {
         this.prodName = prodName;
     }
 
-    public List<String> getSerialNums() {
-        return serialNums;
+    public List<PermQueryVo> getPermQuery() {
+        return permQuery;
     }
 
-    public void setSerialNums(List<String> serialNums) {
-        this.serialNums = serialNums;
+    public void setPermQuery(List<PermQueryVo> permQuery) {
+        this.permQuery = permQuery;
     }
 
     public String getEndDate() {

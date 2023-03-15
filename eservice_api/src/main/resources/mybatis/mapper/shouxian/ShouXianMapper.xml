@@ -40,29 +40,40 @@
         INNER JOIN LIBNAG_ES_FLOWTEST lbe ON CONCAT(CONCAT(lbe.BNAG_INSU_TYPE , lbe.BNAG_INSU_GRP_NO), lbe.BNAG_INSU_SEQ_NO) = CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO)
         LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
         ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-        WHERE lbe.BNAG_ID IN
-        <foreach collection="vo.serialNums" item="num" open="(" close=")" separator=",">
-            #{num}
-        </foreach>
-        <if test="vo.policyNo != null and vo.policyNo != ''">
-            AND CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO)
-                    LIKE CONCAT('%', CONCAT(#{vo.policyNo}, '%'))
-        </if>
-        <if test="vo.lipmName != null and vo.lipmName != ''">
-            AND lme.LIPM_NAME_1 LIKE CONCAT('%', CONCAT(#{vo.lipmName}, '%'))
-        </if>
-        <if test="vo.lipmId != null and vo.lipmId != ''">
-            AND lme.LIPM_ID LIKE CONCAT('%', CONCAT(#{vo.lipmId}, '%'))
-        </if>
-        <if test="vo.lipiName != null and vo.lipiName != ''">
-            AND lie.LIPI_NAME LIKE CONCAT('%', CONCAT(#{vo.lipiName}, '%'))
-        </if>
-        <if test="vo.lipiId != null and vo.lipiId != ''">
-            AND lie.LIPI_ID LIKE CONCAT('%', CONCAT(#{vo.lipiId}, '%'))
-        </if>
-        <if test="vo.prodName != null and vo.prodName != ''">
-            AND lpe.SETT_CH_NAME LIKE CONCAT('%', CONCAT(#{vo.prodName}, '%'))
-        </if>
+        <where>
+            <foreach collection="vo.permQuery" item="item" open="(" close=")" separator=",">
+                <trim prefixOverrides="AND">
+                    <if test="item.serialNum != null and item.serialNum != ''">
+                        AND lbe.BNAG_ID = #{item.serialNum}
+                    </if>
+                    <if test="item.branchCode != null and item.branchCode != ''">
+                        AND lbe.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
+                    </if>
+                    <if test="item.agentCode != null and item.agentCode != ''">
+                        AND lme.LIPM_AGEN_CODE = #{item.agentCode}
+                    </if>
+                </trim>
+            </foreach>
+            <if test="vo.policyNo != null and vo.policyNo != ''">
+                AND CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO)
+                        LIKE CONCAT('%', CONCAT(#{vo.policyNo}, '%'))
+            </if>
+            <if test="vo.lipmName != null and vo.lipmName != ''">
+                AND lme.LIPM_NAME_1 LIKE CONCAT('%', CONCAT(#{vo.lipmName}, '%'))
+            </if>
+            <if test="vo.lipmId != null and vo.lipmId != ''">
+                AND lme.LIPM_ID LIKE CONCAT('%', CONCAT(#{vo.lipmId}, '%'))
+            </if>
+            <if test="vo.lipiName != null and vo.lipiName != ''">
+                AND lie.LIPI_NAME LIKE CONCAT('%', CONCAT(#{vo.lipiName}, '%'))
+            </if>
+            <if test="vo.lipiId != null and vo.lipiId != ''">
+                AND lie.LIPI_ID LIKE CONCAT('%', CONCAT(#{vo.lipiId}, '%'))
+            </if>
+            <if test="vo.prodName != null and vo.prodName != ''">
+                AND lpe.SETT_CH_NAME LIKE CONCAT('%', CONCAT(#{vo.prodName}, '%'))
+            </if>
+        </where>
     </select>
 
     <resultMap id="PolicyBaseMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyBaseVo">

@@ -6,21 +6,109 @@
         <result column="PolicyNo" property="policyNo" />
         <result column="PolicyType" property="policyType" />
         <result column="AppName" property="appName" />
+        <result column="AppID" property="appId" />
+        <result column="AppBirth" property="appBirth" />
         <result column="InsName" property="insName" />
+        <result column="InsID" property="insId" />
+        <result column="InsBirth" property="insBirth" />
         <result column="TBSubmitDate" property="tBSubmitDate" />
         <result column="BPMCurrentTak" property="bPMCurrentTak" />
         <result column="NoteStatus" property="noteStatus" />
-        <result column="NoteVerifyResult" property="noteVerifyResult" />
+        <result column="StampResult" property="stampResult" />
+        <result column="Manager" property="manager" />
+        <result column="TransPayDate" property="transPayDate" />
+        <result column="PolicyActiveDate" property="policyActiveDate" />
+        <result column="PrintDate" property="printDate" />
+        <result column="ReviewResult" property="reviewResult" />
+        <result column="RFeeApplyDate" property="applyDate" />
+        <result column="AccDocNo" property="accDocNo" />
+        <result column="PayType" property="payType" />
+        <result column="PolicyAmountNTD" property="policyAmountNTD" />
+        <result column="PolicyAmount" property="policyAmount" />
+        <result column="PM_PRME_NEW_OLD_SW" property="paymentMode" />
+        <result column="PrmeNewOldSW" property="prmeNewOldSW" />
     </resultMap>
 
-    <select id="getCaseListBySerialNum" resultMap="CaseMap">
-        SELECT A.PolicyNo, A.PolicyType, A.AppName, A.InsName, A.TBSubmitDate, A.BPMCurrentTak, B.NoteStatus, B.NoteVerifyResult
+    <select id="getCaseList" resultMap="CaseMap">
+        SELECT DISTINCT A.PolicyNo, A.AppName, E.InsName, A.TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, D.PolicyType
         FROM MainPolicy A
-        LEFT JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY, iscancel, NoteStatus,NoteVerifyResult FROM PolicyNote GROUP BY iscancel,NoteStatus,NoteVerifyResult, MAIN_KEY) B ON B.MAIN_KEY = A.MAIN_KEY
-        WHERE A.PSalesCode IN
-        <foreach collection="serialNums" item="num" open="(" close=")" separator=",">
-            #{num}
-        </foreach>
-        AND A.itemserial = 1 AND B.iscancel = 'N'
+        LEFT JOIN (
+        SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM PolicyNote B
+        INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
+        ) D ON A.MAIN_KEY = D.MAIN_KEY
+        LEFT JOIN PolicyFinancial E ON A.PolicyNo = E.PolicyNo
+        <where>
+            <foreach collection="vo.caseQuery" item="item" open="(" close=")" separator="OR">
+                  <trim prefixOverrides="AND">
+                      <if test="item.serialNum != null and item.serialNum != ''">
+                          AND A.PSalesCode = #{item.serialNum}
+                      </if>
+                      <if test="item.branchCode != null and item.branchCode != ''">
+                          AND A.BranchCode = #{item.branchCode}
+                      </if>
+                      <if test="item.agentCode != null and item.agentCode != ''">
+                          AND A.AgentCode = #{item.agentCode}
+                      </if>
+                  </trim>
+            </foreach>
+            <if test="vo.policyNo != null and vo.policyNo != ''">
+                AND A.PolicyNo LIKE CONCAT('%', #{vo.policyNo}, '%')
+            </if>
+            <if test="vo.lipmName != null and vo.lipmName != ''">
+                AND A.AppName LIKE CONCAT('%', #{vo.lipmName}, '%')
+            </if>
+            <if test="vo.lipmId != null and vo.lipmId != ''">
+                AND A.AppId LIKE CONCAT('%', #{vo.lipmId}, '%')
+            </if>
+            <if test="vo.lipiName != null and vo.lipiName != ''">
+                AND E.InsName LIKE CONCAT('%', #{vo.lipiName}, '%')
+            </if>
+            <if test="vo.lipiId != null and vo.lipiId != ''">
+                AND E.InsID LIKE CONCAT('%', #{vo.lipiId}, '%')
+            </if>
+            <if test="vo.caseStatus != null and vo.caseStatus != ''">
+                   AND A.BPMCurrentTak = #{vo.caseStatus}
+            </if>
+            AND A.itemserial = 1 AND D.iscancel = 'N'
+        </where>
+    </select>
+
+    <select id="getCaseProcess" resultMap="CaseMap">
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, E.InsName, E.InsID, A.TBSubmitDate,
+            D.NoteStatus, D.NoteVerifyResult, D.PolicyType, A.PrintDate, A.PolicyActiveDate, A.TransPayDate, A.Manager,
+            A.StampResult,
+        (SELECT TOP (1) ReviewResult
+            FROM PolicyReviewLog
+                where Main_Key = (select Main_Key from MainPolicy where policyNo = #{policyNo})
+                and LogType = 'B'
+                and Sub_Serial = '0'
+            order by ReviewTimes desc, ReviewType desc
+        ) ReviewResult,
+        (SELECT TOP(1) RFeeApplyDate FROM PolicyReject WHERE MAIN_KEY = A.MAIN_KEY AND RFeeApplyDate IS NOT NULL) RFeeApplyDate
+        FROM MainPolicy A
+        LEFT JOIN (
+        SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM
+        PolicyNote B
+        INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C
+            ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
+        ) D ON A.MAIN_KEY = D.MAIN_KEY
+        LEFT JOIN PolicyFinancial E ON A.PolicyNo = E.PolicyNo
+        WHERE A.PolicyNo = #{policyNo}
+    </select>
+    
+    <select id="getPolicyInfo" resultMap="CaseMap">
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.AppBirth, A.TBSubmitDate, A.BPMCurrentTak,
+        A.AccDocNo, A.PM_PRME_NEW_OLD_SW,
+        (SELECT TOP(1) PrmeNewOldSW FROM PolicyFormData WHERE MAIN_KEY = A.MAIN_KEY) PrmeNewOldSW,
+        D.PolicyType, A.StampResult, A.PayType, E.InsBirth, E.InsName, E.InsID, A.PolicyAmount, A.PolicyAmountNTD
+        FROM MainPolicy A
+        LEFT JOIN (
+            SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM
+            PolicyNote B
+            INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C
+        ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
+        ) D ON A.MAIN_KEY = D.MAIN_KEY
+        LEFT JOIN PolicyFinancial E ON A.PolicyNo = E.PolicyNo
+        WHERE A.PolicyNo = #{policyNo}
     </select>
 </mapper>

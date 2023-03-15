@@ -301,7 +301,6 @@ public class ShouxianController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
-
     @PostMapping(value = "/getPolicyPortfolioNew", produces = { "application/json" })
     public ResponseEntity<?> getPolicyPortfolioNew(@Valid @RequestBody PortfolioRequest req) {
         ApiResponseObj<PortfolioResponse> apiResponseObj = new ApiResponseObj<>();

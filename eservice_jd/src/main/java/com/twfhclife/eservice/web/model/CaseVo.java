@@ -2,16 +2,92 @@ package com.twfhclife.eservice.web.model;
 
 import java.io.Serializable;
 
-public class CaseVo  implements Serializable {
+public class CaseVo implements Serializable {
 
     private String policyNo;
     private String policyType;
     private String appName;
+    private String appId;
+
+    private String paymentMode;
+
+    private String appBirth;
     private String insName;
+    private String insId;
+    private String insBirth;
     private String tBSubmitDate;
     private String bPMCurrentTak;
     private String noteStatus;
     private String noteVerifyResult;
+    private String printDate;
+    private String policyActiveDate;
+    private String transPayDate;
+    private String manager;
+    private String stampResult;
+    private String reviewResult;
+    private String applyDate;
+    private String accDocNo;
+    private String payType;
+    private String policyAmountNTD;
+    private String policyAmount;
+
+    public String getPrmeNewOldSW() {
+        return prmeNewOldSW;
+    }
+
+    public void setPrmeNewOldSW(String prmeNewOldSW) {
+        this.prmeNewOldSW = prmeNewOldSW;
+    }
+
+    private String prmeNewOldSW;
+
+    public String getPolicyAmountNTD() {
+        return policyAmountNTD;
+    }
+
+    public void setPolicyAmountNTD(String policyAmountNTD) {
+        this.policyAmountNTD = policyAmountNTD;
+    }
+
+    public String getPolicyAmount() {
+        return policyAmount;
+    }
+
+    public void setPolicyAmount(String policyAmount) {
+        this.policyAmount = policyAmount;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public String getAppBirth() {
+        return appBirth;
+    }
+
+    public void setAppBirth(String appBirth) {
+        this.appBirth = appBirth;
+    }
+
+    public String getInsBirth() {
+        return insBirth;
+    }
+
+    public void setInsBirth(String insBirth) {
+        this.insBirth = insBirth;
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
 
     public String getPolicyNo() {
         return policyNo;
@@ -75,5 +151,85 @@ public class CaseVo  implements Serializable {
 
     public void setNoteVerifyResult(String noteVerifyResult) {
         this.noteVerifyResult = noteVerifyResult;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getInsId() {
+        return insId;
+    }
+
+    public void setInsId(String insId) {
+        this.insId = insId;
+    }
+
+    public String getPrintDate() {
+        return printDate;
+    }
+
+    public void setPrintDate(String printDate) {
+        this.printDate = printDate;
+    }
+
+    public String getPolicyActiveDate() {
+        return policyActiveDate;
+    }
+
+    public void setPolicyActiveDate(String policyActiveDate) {
+        this.policyActiveDate = policyActiveDate;
+    }
+
+    public String getTransPayDate() {
+        return transPayDate;
+    }
+
+    public void setTransPayDate(String transPayDate) {
+        this.transPayDate = transPayDate;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
+
+    public String getStampResult() {
+        return stampResult;
+    }
+
+    public void setStampResult(String stampResult) {
+        this.stampResult = stampResult;
+    }
+
+    public String getReviewResult() {
+        return reviewResult;
+    }
+
+    public void setReviewResult(String reviewResult) {
+        this.reviewResult = reviewResult;
+    }
+
+    public String getApplyDate() {
+        return applyDate;
+    }
+
+    public void setApplyDate(String applyDate) {
+        this.applyDate = applyDate;
+    }
+
+    public String getAccDocNo() {
+        return accDocNo;
+    }
+
+    public void setAccDocNo(String accDocNo) {
+        this.accDocNo = accDocNo;
     }
 }

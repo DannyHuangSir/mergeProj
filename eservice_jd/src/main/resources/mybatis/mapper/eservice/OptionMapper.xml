@@ -2,21 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.twfhclife.eservice.web.dao.OptionDao">
 
-	<select id="getPolicyTyps" resultType="map">
-		SELECT
-		 a.PARAMETER_CODE AS "KEY"
-		,a.PARAMETER_NAME AS "VALUE"
-		FROM ESERVICE_ADM.DBO.PARAMETER a
-		JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b ON a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
-		WHERE 1 = 1
-		AND a.SYSTEM_ID = b.SYSTEM_ID
-		AND a.STATUS = b.STATUS
-		AND b.STATUS = 1
-		AND b.SYSTEM_ID = 'eservice_jd'
-		AND b.CATEGORY_CODE = 'JDZQ_POLICY_TYPE_CATEGORY'
-		ORDER BY a.SORT_NO
-	</select>
-
 	<select id="getLevelStates" resultType="map">
 		SELECT
 		a.PARAMETER_CODE AS "KEY"

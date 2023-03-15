@@ -2,225 +2,25 @@
 <html lang="zh-Hant">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=9, chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>保單進度及照會管理｜臺銀人壽經代支援系統</title>
-    <link rel="shortcut icon" href="assets/img/favor-icon.png">
-    <!-- Bootstrap -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/atlantis.css" rel="stylesheet">
-    <link href="assets/css/icon.css" rel="stylesheet">
-    <link href="assets/css/layout.css" rel="stylesheet"> 
-    <link rel="stylesheet" href="assets/css/mobile.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-icons.css">
-
-    <link rel="stylesheet" href="assets/css/tablesaw.stackonly.css">
-    
+	<th:block th:replace="fragments/head"/>
+	<link rel="stylesheet" th:href="@{/css/tablesaw.stackonly.css}">
 </head>
 
 <body>
-<div class="wrapper sidebar_minimize">	
-	<div class="main-header">
-		<div class="row hid1" id="top1"></div>
-		<!-- Logo Header -->
-		<div class="logo-header">
-			<a href="index.html" class="logo">
-				<img src="assets/img/my-logo.png" height="50px" alt="navbar brand" class="navbar-brand">
-			</a>
-			<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon">
-					<i class="bi bi-grid-1x2"></i>
-				</span>
-			</button>
-			<button class="topbar-toggler more"><i class="bi bi-grip-horizontal"></i></button>
-			<div class="nav-toggle">
-				<button class="btn btn-toggle toggle-sidebar">
-					<i class="bi bi-grid-1x2"></i>
-				</button>
-			</div>
-		</div>
-		<div class="n1 inlineBlock float-left">經代支援系統</div>
-		<!-- End Logo Header -->
-
-		<!-- Navbar Header -->
-		<nav class="navbar navbar-header navbar-expand-lg hello1-list">
-	        <div class="hello1-list">
-            	<div class="list members">
-            		<a href="#" class="b3">
-            			<img src="assets/img/icon-members.png" width="26" alt="member">
-            		</a>
-            	</div>
-                <div class="list hid2">Hi, (使用者名字) 您好</div>
-                <div class="list marginRight20">
-                    <a href="#"  data-target="#notification" data-toggle="popover" data-width="520" data-scroll-height="200" data-class="to-right" data-content="43greyrtu" data-placement="bottom" class="b3" data-original-title="" title=""><span class="badge b4 pull-right">4</span>我的通知</a>
-                </div>
-                <div class="list">
-                    <a href="index.html">
-                        <button class="btn-login pull-right">登出</button>
-                        <button class="pull-right btn-reset">
-                            <div class="rp1"><i class="foo-cw"></i>293秒</div>
-                        </button>
-                    </a>
-                </div>
-            </div> 
-            <div id="notification" class="popover-template">
-		        <div class="title">
-		            線上通知
-		            <span class="note"><em class="badge">2</em>封未讀取</span>
-		            <a class="close">×</a>
-		            <a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true" aria-controls="popoverSearchBar" class="pull-right">
-		                <i class="fa fa-search orange"></i>
-		            </a>
-		        </div>
-		        <div class="collapse grey" id="popoverSearchBar">
-		            <div class="searchbar">
-		                <form class="form-inline" aria-expanded="true">
-		                    <div class="col-sm-3">
-		                        <div class="selector-box">
-		                            <select class="selector">
-		                                <option>通知種類</option>
-		                                <option>種類111111111</option>
-		                                <option>種類2222222222</option>
-		                                <option>種類3</option>
-		                            </select>
-		                        </div>
-		                    </div>
-		                    <div class="col-sm-3">
-		                        <div class="selector-box">
-		                            <select class="selector">
-		                                <option>未讀取1111111</option>
-		                                <option>已讀取2222222</option>
-		                            </select>
-		                        </div>
-		                    </div>
-		                    <div class="col-sm-4 text-right">
-		                        <div class="selector-box">
-		                            <select class="selector">
-		                                <option>通知月份</option>
-		                                <option>2015/一月</option>
-		                                <option>2015/二月</option>
-		                            </select>
-		                        </div>
-		                    </div>
-		                    <div class="col-sm-2">
-		                        <button class="btn-form btn-search">搜尋</button>
-		                    </div>
-		                </form>
-		            </div>
-		        </div>
-		
-		        <div class="searchResult">
-		            <p class="">查無符合資料，請重新搜尋</p>
-		        </div>
-		
-		        <div class="items">
-		        	<a href="#" class="item">
-		                <div class="header">
-		                    <em>案件狀態通知</em> 新契約（OU1005）已完成
-		                </div>
-		                <div class="content text-right">
-		                    <small>2020年/12月份</small>
-		                </div>
-		            </a>
-		            <a href="#" class="item">
-		                <div class="header">
-		                    <em>案件狀態通知</em> 新契約（OU1003）照會中
-		                </div>
-		                <div class="content text-right">
-		                    <small>2015年/1月份</small>
-		                </div>
-		            </a>
-		            
-		        </div>
-		        <p>※本畫面僅提供一年內之通知資料查詢</p>
-		    </div>
-
-		</nav>
-		<!-- End Navbar -->
-		
-	</div>
-
-	<!-- Sidebar -->
-	<div class="sidebar sidebar-style-2">
-		<div class="sidebar-wrapper scrollbar scrollbar-inner">
-			<div class="sidebar-content">
-				<ul class="nav nav-primary">
-					<li class="nav-item submenu">
-						<a data-toggle="collapse" href="#claimCases">
-							<i class="bi bi-bullseye"></i>
-							<p>個人中心</p>
-							<span class="caret"></span>
-						</a>
-						<div class="collapse in" id="claimCases">
-							<ul class="nav nav-collapse">
-								<li>
-									<a href="dashboard.html">
-										<span class="sub-item">個人案件列表</span>
-									</a>
-								</li>
-								<li>
-									<a href="change-password1.html">
-										<span class="sub-item">變更密碼</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</li>
-					<li class="nav-item">
-						<a data-toggle="collapse" href="#overdueNotes">
-							<i class="bi bi-infinity"></i>
-							<p>客戶管理</p>
-							<span class="caret"></span>
-						</a>
-						<div class="collapse in" id="overdueNotes">
-							<ul class="nav nav-collapse">
-								<li>
-									<a href="policy-inquiry.html">
-										<span class="sub-item">保單查詢</span>
-									</a>
-								</li>
-                                <li>
-									<a href="protect-query.html">
-										<span class="sub-item">保戶查詢</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</li>
-					<li class="nav-item active">
-						<a data-toggle="collapse" href="#Investigation">
-							<i class="bi bi-journal-richtext"></i>
-							<p>保單進度及照會管理</p>
-							<span class="caret"></span>
-						</a>
-						<div class="collapse in" id="Investigation">
-							<ul class="nav nav-collapse">
-								<li class="active">
-									<a href="caseInquiry.html">
-										<span class="sub-item">案件進度查詢</span>
-									</a>
-								</li>
-
-							</ul>
-						</div>
-					</li>
-					
-				</ul>
-			</div>
-		</div>
-	</div>
-	<!-- End Sidebar -->
+<div class="wrapper sidebar_minimize">
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<div th:replace="fragments/nav"></div>
     <div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
 				<div class="mt-2 mb-4">
 		            <ul class="breadcrumb detail1">
 		                <li>
-		                    <a href="#">保單進度及照會管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
+		                    <a href="#">案件管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
 		                </li>
 		                <li class="active">
-		                    <a href="caseInquiry.html">案件進度查詢</a>
+		                    <a href="caseInquiry.html">保單進度及照會查詢</a>
 		                </li>
 		            </ul>
 				</div>
@@ -235,35 +35,23 @@
 				                            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
 				                        </p>
 				                        <i class="foo-business_7 foo-2x hidden-xs"></i> 增值分紅養老壽險
-				                        <span class=""></span><span class="insuranceID_pc">(1450009053)</span>
+				                        <span class=""></span><span class="insuranceID_pc"></span>
 				                        <div class="dropdown pull-right r30">
-				                        	<a class="nav-link" href="policy-inquiry.html" style="color: #FFFFFF;">回保單查詢結果清單</a>
-				                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-				                                <i class="hidden-xs r31">其他保單</i>
-				                                <i class="foo-down-dir r32"></i>
-				                            </button>
-				                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">慶福還本終生保險 
-				                        (AD30000598)</a></li>
-				                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">鴻福還本終身壽險 
-				                        (3110109193)</a></li>
-				                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">臺銀人壽長富人生利率變動型年金保險 
-				                        (UC70000001)</a></li>
-				                            </ul>
+				                        	<a class="btn-return" href="policy-inquiry.html">回保單查詢結果清單</a>
 				                        </div>
 				                        <div class="insuranceID_phone">(UC70000001)</div>
 				                    </div>
-				                    <div class="col-md-12"  id="list2">
+				                    <div class="list col-md-12">
 				                        <div class="box-border">
-				                        	<a href="caselisting1.html">
-				                                <div class="col-xs-4 folder">案件進度</div>
-				                            </a>
-				                            <a href="caselisting2.html">
-				                                <div class="col-xs-4 folder">保單資訊</div>
-				                            </a>
-				                            <a href="caselisting3.html">
-				                                <div class="col-xs-4 folder active">照會資訊</div>
-				                            </a>
+											<a th:onclick="'javascript:postPolicyListType(\'caselisting1\',\'' + ${policyNo} + '\');'">
+												<div class="col-xs-4 folder">案件進度</div>
+											</a>
+											<a th:onclick="'javascript:postPolicyListType(\'caselisting2\',\'' + ${policyNo} + '\');'">
+												<div class="col-xs-4 folder">保單資訊</div>
+											</a>
+											<a th:onclick="'javascript:postPolicyListType(\'caselisting3\',\'' + ${policyNo} + '\');'">
+												<div class="col-xs-4 folder active">照會內容</div>
+											</a>
 				                         <!-- 照會清單-->
 				                           
 				                            <div class="tb3 top0 mobile-toggle" data-toggle="true">
@@ -280,7 +68,7 @@
 				                                            <th scope="col" class="item360">照會日期</th>
 				                                            <th scope="col" class="item360">主約險種</th>
 				                                            <th scope="col" class="item300">照會狀態</th>
-				                                            <th scope="col" class="item300">照會結果</th>
+				                                            
 				                                            <th scope="col" class="item300">照會單</th>
 				                                        </tr>
 				                                    </thead>
@@ -292,7 +80,7 @@
 				                                            <td>2015/01/16</td>
 				                                            <td>家倍幸福定期壽險</td>
 				                                            <td>已照會</td>
-				                                            <td>核可</td>
+				                                            
 				                                            <td><i class="bi bi-journal-richtext"  onclick="window.open('assets/img/核保照會單.jpg')"></i></td>
 				                                        </tr>
 				                                    </tbody>
@@ -314,27 +102,7 @@
 	</div>
 
 </div>
-<!--   Core JS Files   -->
-	<script src="assets/js/core/jquery-1.11.3.min.js"></script>
-	<script src="assets/js/core/bootstrap.min.js"></script>
-	<script src="assets/js/bootstrap-datepicker.min.js"></script>
-	
-	<script src="assets/js/demo.js"></script>
-	<!-- jQuery UI -->
-	<script src="assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-	<!-- jQuery Scrollbar -->
-	<script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-	<!-- Chart JS -->
-	<script src="assets/js/plugin/chart.js/chart.min.js"></script>
-   <!-- tablesaw -->
-	<script src="assets/js/atlantis.js"></script>
-	<script src="assets/js/tablesaw.stackonly.js"></script>
-	<!--popover-->
-	<script src="assets/js/scrollbar.js"></script>
-	<script src="assets/js/popover.js"></script>
-	<!--menu-->
-	<script src="assets/js/offcanvas.js"></script>
-	<script src="assets/js/according.js"></script>
+<footer th:replace="fragments/footer"></footer>
 </body>
 
 </html>

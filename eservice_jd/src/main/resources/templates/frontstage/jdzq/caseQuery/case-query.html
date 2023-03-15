@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 
 <head>
-	<th:block th:replace="fragments/head"/>
+    <th:block th:replace="fragments/head"/>
     <link rel="stylesheet" th:href="@{/css/tablesaw.stackonly.css}">
 </head>
 
@@ -43,117 +43,57 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3"> 保單號碼 </label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" placeholder="輸入欲查詢的保單號碼"
+                                                    <input name="policyNo" type="text" placeholder="輸入欲查詢的保單號碼"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 no-padding-right"> 受理日期 </label>
-                                                <div class="col-sm-9 input-icon date datepicker">
-                                                    <input type="text" class="form-control" placeholder="保單生效日">
-                                                    <div class="input-group-addon input-icon-addon date"
-                                                         style="width: 60px;">
-                                                        <i class="bi bi-calendar-heart"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                             <div class="form-group">
                                                 <label class="col-sm-3 no-padding-right"> 要保人姓名 </label>
-
                                                 <div class="col-sm-9">
-                                                    <input type="text" placeholder="輸入欲查詢的要保人姓名"
+                                                    <input name="lipmName" type="text" placeholder="輸入欲查詢的要保人姓名"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 no-padding-right"> 被保險人姓名 </label>
-
                                                 <div class="col-sm-9">
-                                                    <input type="text" placeholder="輸入欲查詢的被保險人姓名"
+                                                    <input name="lipiName" type="text" placeholder="輸入欲查詢的被保險人姓名"
                                                            class="form-control"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 no-padding-right"> 照會序號 </label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" placeholder="輸入欲查詢的照會序號"
-                                                           class="form-control"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 no-padding-right"> 照會日期 </label>
-                                                <div class="col-sm-9 input-icon date datepicker">
-                                                    <input type="text" class="form-control" placeholder="保單生效日">
-                                                    <div class="input-group-addon input-icon-addon date"
-                                                         style="width: 60px;">
-                                                        <i class="bi bi-calendar-heart"></i>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6 clearfix">
                                             <div class="form-group">
-                                                <label class="col-sm-3"> 案件關卡狀態 </label>
+                                                <label class="col-sm-3"> 案件狀態 </label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control">
+                                                    <select name="caseStatus" class="form-control">
                                                         <option value=""></option>
-                                                        <option value="">對位登打</option>
-                                                        <option value="">案件品管</option>
-                                                        <option value="">核保作業</option>
+
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3"> 受理編號 </label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" placeholder="輸入欲查詢的受理編號"
-                                                           class="form-control"/>
-                                                </div>
-                                            </div>
+
                                             <div class="form-group">
                                                 <label class="col-sm-3 no-padding-right"> 要保人身分證號 </label>
-
                                                 <div class="col-sm-9">
-                                                    <input type="text" placeholder="輸入欲查詢的要保人身分證號"
+                                                    <input name="lipmId" type="text" placeholder="輸入欲查詢的要保人身分證號"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="col-sm-3 no-padding-right"> 被保人身分證號 </label>
-
                                                 <div class="col-sm-9">
-                                                    <input type="text" placeholder="輸入欲查詢的被保險人身分證號"
+                                                    <input name="lipiId" type="text" placeholder="輸入欲查詢的被保險人身分證號"
                                                            class="form-control"/>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="form-group">
-                                                <label class="col-sm-3 no-padding-right"> 照會狀態 </label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option value=""></option>
-                                                        <option value="">等待照會</option>
-                                                        <option value="">已照會</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 no-padding-right"> 照會結果 </label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option value=""></option>
-                                                        <option value="">核可</option>
-                                                        <option value="">不通過</option>
-                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="clearfix form-actions">
                                             <div class="col-md-offset-5 col-md-7">
                                                 <button class="btn btn-info" type="button"
-                                                        onclick="$('#form1').submit()">
+                                                        onclick="search()">
                                                     <i class="my-icon fa fa-check bigger-110"></i>
                                                     查詢
                                                 </button>
@@ -166,7 +106,6 @@
                                     </form>
                                     <!-- PAGE CONTENT ENDS -->
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -174,63 +113,26 @@
                 <div class="row mb-4">
                     <div class="col-md-12">
                         <div class="card">
-                            <!--<div class="card-header">
-                                <div class="card-head-row">
-                                    <div class="card-title tb3 my1" id="titleList">
-                                        <i class="foo-business_23 foo-lg"></i> 查詢結果清單  <span class="my2b">共 3 張</span>
-                                    </div>
-                                </div>
-                            </div>-->
                             <div class="card-body clearfix" style="padding: 0;">
                                 <div class="my1" style="margin-bottom:0">
                                     <i class="foo-business_23 foo-lg"></i> 查詢結果清單 <span
-                                        class="my2b">共 3 張</span>
+                                        class="my2b">共 <span id="caseCount">0</span> 張</span>
                                 </div>
                                 <div class=" ">
 
                                     <table class="tablesaw tablesaw-stack">
                                         <thead>
                                         <tr class="table2">
-                                            <th class="text-left item300">保單</th>
+                                            <th class="text-left item300">保單號碼</th>
                                             <th scope="col" class="item360">要保人</th>
                                             <th scope="col" class="item400">被保險人</th>
                                             <th scope="col" class="item500">主約險種</th>
-                                            <th scope="col" class="item360">建檔人員</th>
                                             <th scope="col" class="item450">受理日期</th>
-                                            <th scope="col" class="item450">案件關卡狀態</th>
-                                            <th scope="col" class="item450">最新照會狀態</th>
-                                            <th scope="col" class="item450">最新照會結果</th>
+                                            <th scope="col" class="item450">案件狀態</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr onclick="window.document.location='caselisting1.html';">
-                                            <td class="table3">OU10001
-                                            </td>
-                                            <td class="hid1 hid2">王大明</td>
-                                            <td class="hid1 hid2">王小明</td>
-                                            <td class="hid1 hid2">家倍幸福定期壽險</td>
-                                            <td class="hid1 hid2">林大山</td>
-                                            <td class="hid1 hid2 enThin">2022-01-21</td>
-                                            <td class="hid1 hid2">核保作業</td>
-                                            <td class="hid1 hid2">已照會</td>
-                                            <td class="hid1 hid2">核可</td>
-                                        </tr>
-                                        <tr class="tr-odd" onclick="window.document.location='caselisting1.html';">
-                                            <td class="table3">UU10002
-                                            </td>
-                                            <td class="hid1 hid2">陳志強</td>
-                                            <td class="hid1 hid2">陳小強</td>
-                                            <td class="hid1 hid2">鑫富美外幣變額年金保險</td>
-                                            <td class="hid1 hid2">林大山</td>
-                                            <td class="hid1 hid2 enThin">2022-01-21</td>
-                                            <td class="hid1 hid2">核保作業</td>
-                                            <td class="hid1 hid2">已照會</td>
-                                            <td class="hid1 hid2">不通過</td>
-                                        </tr>
-
-                                        </tbody>
+                                        <tbody id="caseContent"></tbody>
                                     </table>
-
                                 </div>
                             </div>
                         </div>
@@ -239,9 +141,90 @@
             </div>
         </div>
     </div>
-
 </div>
 <footer th:replace="fragments/footer"></footer>
-</body>
+<script th:inline="javascript">
+/*<![CDATA[*/
+        var levelStateMap = []
+		$(function(){
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : /*[[@{/getLevelStates}]]*/,
+				success : function(response) {
+					if(response.result == "SUCCESS"){
+						response.resultData.forEach(function(item, index){
+						    $("[name='caseStatus']").append("<option value=\""  + item.KEY +  "\">" + item.VALUE + "</option>")
+							levelStateMap.push({
+								label: item.VALUE,
+								value: item.KEY
+							})
+						})
+					}
+				}
+			})
+		})
 
+		function levelStateStr(levelState) {
+			result = ''
+			levelStateMap.forEach(function(item,index){
+				if (item.value == levelState) {
+					result = item.label
+				}
+			})
+			return result
+		}
+
+		function search() {
+		    policyNo = $("input[name='policyNo']").val()
+		    lipmName = $("input[name='lipmName']").val()
+		    lipmId = $("input[name='lipmId']").val()
+		    lipiName = $("input[name='lipiName']").val()
+		    lipiId = $("input[name='lipiId']").val()
+		    caseStatus = $("[name='caseStatus']").val()
+		    if ((policyNo == null || policyNo == '') &&  (lipmName == null || lipmName == '') &&
+		        (lipmId == null || lipmId == '') && (lipiName == null || lipiName == '') &&
+                (lipiId == null || lipiId == '') && (caseStatus == null || caseStatus == '')) {
+                 openAlert('請至少輸入一個查詢條件!')
+                 return
+            }
+
+			$.ajax({
+				type : 'POST',
+				dataType : "JSON",
+				contentType : 'application/json',
+				url : /*[[@{/caseList}]]*/,
+				data: JSON.stringify({
+					policyNo: $("input[name='policyNo']").val(),
+					lipmName: $("input[name='lipmName']").val(),
+					lipmId: $("input[name='lipmId']").val(),
+					lipiName: $("input[name='lipiName']").val(),
+					lipiId: $("input[name='lipiId']").val(),
+					caseStatus: $("[name='caseStatus']").val(),
+				}),
+				success : function(response) {
+					if(response.result == "SUCCESS"){
+						html = ''
+						$("#caseCount").text(response.resultData.length)
+						response.resultData.forEach(function(item, index){
+								html += "<tr onclick=\"javascript:postPolicyListType('caselisting1', '" + item.policyNo + "')\">" +
+										'<td class="table3">' + item.policyNo  +'</td>' +
+										'<td class="hid1 hid2">'+ item.appName +'</td>' +
+										'<td class="hid1 hid2">' + item.insName +'</td>' +
+										'<td class="hid1 hid2">' + item.policyType +'</td>' +
+										'<td class="hid1 hid2 enThin">' + item.tBSubmitDate +'</td>' +
+										'<td class="hid1 hid2">' + levelStateStr(item.bPMCurrentTak) +'</td>' +
+									'</tr>'
+							});
+						$("#caseContent").html(html)
+					}
+				},
+				error : function() {
+					openAlert('error!')
+				}
+	    	});
+		}
+/*]]>*/
+</script>
+</body>
 </html>

@@ -2,21 +2,8 @@
 <html lang="zh-Hant">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=9, chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>保單進度及照會管理｜臺銀人壽經代支援系統</title>
-    <link rel="shortcut icon" href="assets/img/favor-icon.png">
-    <!-- Bootstrap -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/atlantis.css" rel="stylesheet">
-    <link href="assets/css/icon.css" rel="stylesheet">
-    <link href="assets/css/layout.css" rel="stylesheet"> 
-    <link rel="stylesheet" href="assets/css/mobile.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-icons.css">
-
-    <link rel="stylesheet" href="assets/css/tablesaw.stackonly.css">
-    
+	<th:block th:replace="fragments/head"/>
+	<link rel="stylesheet" th:href="@{/css/tablesaw.stackonly.css}">
 </head>
 
 <body>
@@ -30,10 +17,10 @@
 				<div class="mt-2 mb-4">
 		            <ul class="breadcrumb detail1">
 		                <li>
-		                    <a href="#">保單進度及照會管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
+		                    <a href="#">案件管理  </a> <i class="fa fa-angle-right fa-lg ble"></i>
 		                </li>
 		                <li class="active">
-		                    <a href="caseInquiry.html">案件進度查詢</a>
+		                    <a href="caseInquiry.html">保單進度及照會查詢</a>
 		                </li>
 		            </ul>
 				</div>
@@ -47,35 +34,22 @@
 				                        <p class="pull-left visible-xs">
 				                            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
 				                        </p>
-				                        <i class="foo-business_7 foo-2x hidden-xs"></i> 增值分紅養老壽險
-				                        <span class=""></span><span class="insuranceID_pc">(1450009053)</span>
+				                        <i class="foo-business_7 foo-2x hidden-xs"></i> <th:block th:text="${vo.policyType}"></th:block>
+				                        <span class=""></span><span class="insuranceID_pc"></span>
 				                        <div class="dropdown pull-right r30">
-				                        	<a class="nav-link" href="caseInquiry.html" style="color: #FFFFFF;">回保單查詢結果清單</a>
-				                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-				                                <i class="hidden-xs r31">其他保單</i>
-				                                <i class="foo-down-dir r32"></i>
-				                            </button>
-				                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">慶福還本終生保險 
-				                        (AD30000598)</a></li>
-				                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">鴻福還本終身壽險 
-				                        (3110109193)</a></li>
-				                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">臺銀人壽長富人生利率變動型年金保險 
-				                        (UC70000001)</a></li>
-				                            </ul>
+				                        	<a class="btn-return" href="policy-inquiry.html">回保單查詢結果清單</a>
 				                        </div>
-				                        <div class="insuranceID_phone">(UC70000001)</div>
 				                    </div>
 				                    <div class="list col-md-12">
 				                        <div class="box-border">
-				                        	<a href="caselisting1.html">
+				                        	<a th:onclick="'javascript:postPolicyListType(\'caselisting1\',\'' + ${policyNo} + '\');'">
 				                                <div class="col-xs-4 folder active">案件進度</div>
 				                            </a>
-				                            <a href="caselisting2.html">
+				                            <a th:onclick="'javascript:postPolicyListType(\'caselisting2\',\'' + ${policyNo} + '\');'">
 				                                <div class="col-xs-4 folder">保單資訊</div>
 				                            </a>
-				                            <a href="caselisting3.html">
-				                                <div class="col-xs-4 folder ">照會資訊</div>
+				                            <a th:onclick="'javascript:postPolicyListType(\'caselisting3\',\'' + ${policyNo} + '\');'">
+				                                <div class="col-xs-4 folder ">照會內容</div>
 				                            </a>
 				
 				                            <div class="mobile-toggle-panel  marginTop60">
@@ -86,27 +60,45 @@
 				                                                <tbody>
 				                                                    <tr class="noEvent borderTop">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">保單號碼</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">保單號碼</b> <span class="mobile-span">1450009053</span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">保單號碼</b> <span class="mobile-span" th:text="${vo.policyNo}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">申請日期</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">申請日期</b> <span class="mobile-span">2021/08/23</span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">申請日期</b> <span class="mobile-span" th:text="${vo.applyDate}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">受理日期</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">受理日期</b> <span class="mobile-span">2021/09/23</span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">受理日期</b> <span class="mobile-span" th:text="${vo.tBSubmitDate}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">受理單位</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">受理單位</b> <span class="mobile-span">臺銀人壽</span></td>
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">案件狀態</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">案件狀態</b> <span class="mobile-span">
+																			<th:block th:if="${vo.noteStatus == '0'}">
+																				未覆核
+																			</th:block>
+																			<th:block th:if="${vo.noteStatus == 'V'}">
+																				核可
+																			</th:block>
+																			<th:block th:if="${vo.noteStatus == 'R'}">
+																				退件
+																			</th:block>
+																		</span></td>
 				                                                    </tr>
-				                                                    <tr class="noEvent">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">代理人代號</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">代理人代號</b> <span class="mobile-span">WWA144180006</span></td>
+<!--																	 <tr class="noEvent">-->
+<!--				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">契約狀態</th>-->
+<!--				                                                        <td><b class="tablesaw-cell-label mobile-b">契約狀態</b> <span class="mobile-span">有效</span></td>-->
+<!--				                                                    </tr>-->
+																	<tr class="noEvent">
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">保單出單日</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">保單出單日</b> <span class="mobile-span" th:text="${vo.printDate}"></span></td>
 				                                                    </tr>
-				                                                    <tr class="noEvent">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">案件關卡狀態</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">案件關卡狀態</b> <span class="mobile-span">核保作業</span></td>
+																	<tr class="noEvent">
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">匯款日期</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">匯款日期</b> <span class="mobile-span" th:text="${vo.transPayDate}"></span></td>
+				                                                    </tr>
+																	<tr class="noEvent">
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">核印結果</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b" ></b> <span class="mobile-span" th:text="${vo.stampResult}">&nbsp;</span></td>
 				                                                    </tr>
 				                                                </tbody>
 				                                            </table>
@@ -115,28 +107,36 @@
 				                                            <table class="tablesaw tablesaw-stack no-border wht col-table" data-tablesaw-mode="stack">
 				                                                <tbody>
 				                                                    <tr class="noEvent borderTop">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">被保險人</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">被保險人</b> <span class="mobile-span">陳文倫</span></td>
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">要保人</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">要保人</b> <span class="mobile-span" th:text="${vo.appName}">陳文倫</span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">要保險人</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">要保險人</b> <span class="mobile-span">陳文倫</span></td>
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">被保險人</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">被保險人</b> <span class="mobile-span" th:text="${vo.insName}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">被保險人身分證號</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">被保險人身分證號</b> <span class="mobile-span">A123456789</span></td>
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">要保人身分證號</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">要保人身分證號</b> <span class="mobile-span" th:text="${vo.appId}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">要保險人身分證號</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">要保險人身分證號</b> <span class="mobile-span">A123456789</span></td>
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">被保險人身分證號</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">被保險人身分證號</b> <span class="mobile-span" th:text="${vo.insId}"></span></td>
+				                                                    </tr>
+<!--																	<tr class="noEvent">-->
+<!--				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">結案方式</th>-->
+<!--				                                                        <td><b class="tablesaw-cell-label mobile-b" th:text="${vo.policyActiveDate}">結案方式</b> <span class="mobile-span">&nbsp;</span></td>-->
+<!--				                                                    </tr>-->
+				                                                   <tr class="noEvent">
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">保單生效日</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">保單生效日</b> <span class="mobile-span" th:text="${vo.policyActiveDate}"></span></td>
+				                                                    </tr>
+																	<tr class="noEvent">
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">核保員</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">核保員</b> <span class="mobile-span" th:text="${vo.manager}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">契約狀態</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">契約狀態</b> <span class="mobile-span">有效</span></td>
-				                                                    </tr>
-				                                                    <tr class="noEvent">
-				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4"></th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b"></b> <span class="mobile-span">&nbsp;</span></td>
+				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">核保結果</th>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">核保結果</b> <span class="mobile-span" th:text="${vo.reviewResult}"></span></td>
 				                                                    </tr>
 				                                                </tbody>
 				                                            </table>
@@ -160,29 +160,7 @@
 			</div>
 		</div>
 	</div>
-
 </div>
-<!--   Core JS Files   -->
-	<script src="assets/js/core/jquery-1.11.3.min.js"></script>
-	<script src="assets/js/core/bootstrap.min.js"></script>
-	<script src="assets/js/bootstrap-datepicker.min.js"></script>
-	
-	<script src="assets/js/demo.js"></script>
-	<!-- jQuery UI -->
-	<script src="assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-	<!-- jQuery Scrollbar -->
-	<script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-	<!-- Chart JS -->
-	<script src="assets/js/plugin/chart.js/chart.min.js"></script>
-   <!-- tablesaw -->
-	<script src="assets/js/atlantis.js"></script>
-	<script src="assets/js/tablesaw.stackonly.js"></script>
-	<!--popover-->
-	<script src="assets/js/scrollbar.js"></script>
-	<script src="assets/js/popover.js"></script>
-	<!--menu-->
-	<script src="assets/js/offcanvas.js"></script>
-	<script src="assets/js/according.js"></script>
+<footer th:replace="fragments/footer"></footer>
 </body>
-
 </html>

@@ -51,16 +51,6 @@ public class JdzqController extends BaseController {
         return responseObj;
     }
 
-    @GetMapping("/protectQuery")
-    public String protectQuery() {
-        return "frontstage/jdzq/protectQuery/protect-query";
-    }
-
-    @GetMapping("/caseQuery")
-    public String caseQuery() {
-        return "frontstage/jdzq/caseQuery/case-query";
-    }
-
     @RequestMapping("/listing1")
     public String listing1(@RequestParam("policyNo") String policyNo) {
         try {
