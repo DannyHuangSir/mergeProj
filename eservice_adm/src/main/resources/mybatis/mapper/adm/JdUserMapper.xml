@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.twfhclife.adm.dao.JdUserDao">
 
+    <sql id="Base_Column_List">
+        USER_ID,USER_TYPE,ESERVICE.DBO.FN_DEBASE64(ROC_ID) AS ROC_ID,MOBILE,EMAIL,LOGIN_FAIL_COUNT,LAST_CHANG_PASSWORD_DATE,SMS_FLAG,MAIL_FLAG,FB_ID,MOICA_ID,CREATE_DATE,CREATE_USER
+        ,ONLINE_FLAG,STATUS,USER_NAME ,LOGIN_TIME,CLAUSE_FLAG,SERIAL_NUM,IC_ID,LOGIN_SIZE,EFFECTIVE_DATE,EXPIRATION_DATE
+    </sql>
+
     <select id="getUser" resultType="com.twfhclife.adm.model.JdUserVo">
         select * from ESERVICE_JD.dbo.USERS
             <where>

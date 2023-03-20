@@ -12,4 +12,5 @@ public interface JdzqDao {
     CaseVo getCaseProcess(@Param("policyNo") String policyNo);
     CaseVo getPolicyInfo(@Param("policyNo") String policyNo);
 
+//    List<PolicyClaimDetailVo> getPolicyClaimDetail(@Param("vo") PolicyClaimDetailVo vo,@Param("columnItem")String columnItem);
 }

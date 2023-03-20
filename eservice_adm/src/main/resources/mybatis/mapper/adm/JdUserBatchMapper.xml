@@ -15,7 +15,7 @@
         (
         #{jdUserVo.userId,jdbcType=VARCHAR},
         #{jdUserVo.userType,jdbcType=VARCHAR},
-        #{jdUserVo.rocId,jdbcType=VARCHAR},
+        ESERVICE.DBO.FN_ENBASE64(#{jdUserVo.rocId,jdbcType=VARCHAR}),
         #{jdUserVo.mobile,jdbcType=VARCHAR},
         #{jdUserVo.email,jdbcType=VARCHAR},
         #{jdUserVo.loginFailCount,jdbcType=VARCHAR},

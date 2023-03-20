@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.jdzq.dao.JdzqPolicyDao">
+
+    <resultMap id="PolicyMap" type="com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo">
+        <result column="PolicyNo" property="policyNo" />
+        <result column="PolicyType" property="policyType" />
+        <result column="PolicyTypeName" property="policyTypeName" />
+        <result column="AccDocNo" property="accDocNo" />
+        <result column="TBSubmitDate" property="tBSubmitDate" />
+        <result column="CaseReceviceDate" property="caseReceviceDate" />
+        <result column="PolicyActiveDate" property="policyActiveDate" />
+        <result column="PrintDate" property="printDate" />
+        <result column="AgentCode" property="agentCode" />
+        <result column="BrokerName" property="brokerName" />
+        <result column="BranchCode" property="branchCode" />
+        <result column="NEBK_Branch_Name" property="nebkBranchName" />
+        <result column="AgentSalesID" property="agentSalesID" />
+        <result column="AgentSalesName" property="agentSalesName" />
+        <result column="UserName" property="userName" />
+        <result column="BPMCurrentTak" property="bpmcurrenttak" />
+        <result column="AccUnit" property="accUnit" />
+        <result column="ReviewResult" property="reviewResult" />
+        <result column="PSalesCode" property="pSalesCode" />
+        <result column="AppName" property="appName" />
+        <result column="AppID" property="appID" />
+        <result column="AppCountry" property="appCountry" />
+        <result column="AppPolicyAge" property="appPolicyAge" />
+        <result column="InsName" property="insName" />
+        <result column="InsID" property="insID" />
+        <result column="AppCountry" property="appCountry" />
+        <result column="LIPI_AGE" property="lipiAge" />
+        <result column="PolicyAmountNTD" property="policyAmountNTD" />
+        <result column="PolicyFee" property="policyFee" />
+        <result column="PayType" property="payType" />
+        <result column="PermYear" property="permYear" />
+        <result column="NoteDate" property="noteDate" />
+        <result column="DueDate" property="dueDate" />
+        <result column="ItemContent" property="itemContent" />
+        <result column="ContentMemo" property="contentMemo" />
+        <result column="PType_Code" property="pTypeCode" />
+        <result column="PTypeName" property="pTypeName" />
+    </resultMap>
+
+
+    <select id="getPolicyClaimDetail" resultMap="PolicyMap"
+            parameterType="com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo" statementType="STATEMENT">
+        select ${columnItem} from (
+        select c.PolicyNo,c.PolicyType,pn.PolicyTypeName,c.AccDocNo,c.TBSubmitDate,c.CaseReceviceDate,c.PolicyActiveDate,c.PrintDate,
+        c.AgentCode,br.BrokerName,c.BranchCode,nk.NEBK_Branch_Name AS nebkBranchName,c.AgentSalesID,c.AgentSalesName,ur.UserName,
+        (CASE c.BPMCurrentTak
+        WHEN '150000P' THEN	'受理'
+        WHEN '200000S' THEN	'收件通報'
+        WHEN '230000S' THEN	'待掃描'
+        WHEN '250000P' THEN	'品管'
+        WHEN '300000P' THEN	'登打流程'
+        WHEN '300500P' THEN	'一登(自行取件)'
+        WHEN '300500S' THEN	'人員取件'
+        WHEN '301000S' THEN	'登打分件標籤 '
+        WHEN '301500P' THEN	'一登(系統派件)'
+        WHEN '302000P' THEN	'二登'
+        WHEN '302500P' THEN	'二校'
+        WHEN '303000P' THEN	'三校'
+        WHEN '350500S' THEN	'財務核保'
+        WHEN '351000S' THEN	'黑名單即時查詢 '
+        WHEN '351500S' THEN	'核心資料準備'
+        WHEN '352000S' THEN	'體檢註記'
+        WHEN '400000S' THEN	'核保分派'
+        WHEN '450000S' THEN	'自動核保'
+        WHEN '500000P' THEN	'核保承辦'
+        WHEN '500500P' THEN	'核保作業 '
+        WHEN '501011P' THEN	'照會覆核'
+        WHEN '501012P' THEN	'照會核定 '
+        WHEN '501500P' THEN	'醫師會簽'
+        WHEN '502000P' THEN	'會簽結果登錄'
+        WHEN '550500P' THEN	'核保人員覆核 '
+        WHEN '550505P' THEN	'科長覆核'
+        WHEN '550510P' THEN	'副理覆核'
+        WHEN '550515P' THEN	'經理覆核'
+        WHEN '550520P' THEN	'高階覆核'
+        WHEN '551012P' THEN	'照會核定'
+        WHEN '600500P' THEN	'繳費核印作業'
+        WHEN '601500S' THEN	'核心系統資料更新'
+        WHEN '602000S' THEN	'出單日更新'
+        WHEN '602500S' THEN	'案件結案'
+        ELSE '' END) AS BPMCurrentTak,
+        (CASE c.AccUnit
+        WHEN '01' THEN '總公司'
+        WHEN '02' THEN '高雄分公司'
+        WHEN '03' THEN '台中分公司'
+        WHEN '04' THEN '花蓮分公司'
+        WHEN '05' THEN '桃園分公司'
+        WHEN '06' THEN '台南分公司'
+        WHEN '07' THEN '新竹分公司'
+        WHEN '08' THEN '嘉義分公司'
+        WHEN '09' THEN '台北分公司'
+        ELSE '' END)as AccUnit,
+        (CASE prl.ReviewResult
+        WHEN 'A1' THEN '核保通過'
+        WHEN 'C1' THEN '退保(撤銷要保)'
+        WHEN 'D1' THEN '延保'
+        WHEN 'N1' THEN '退保(照會逾期退件)'
+        WHEN 'N2' THEN '批註說明'
+        WHEN 'R1' THEN '拒保'
+        WHEN '5' THEN '承保'
+        WHEN '9' THEN '不予承保'
+        ELSE '' END) AS ReviewResult,
+        c.PSalesCode,c.AppName,c.AppID,c.AppCountry,c.AppPolicyAge,
+        c.InsName,c.InsID,c.LIPI_AGE AS lipiAge,
+        c.PolicyAmountNTD,c.PolicyFee,
+        (CASE c.PayType
+        WHEN 'A' THEN '年繳'
+        WHEN 'F' THEN '彈性繳'
+        WHEN 'M' THEN '月繳'
+        WHEN 'Q' THEN '季繳'
+        WHEN 'S' THEN '半年繳'
+        WHEN 'T' THEN '躉繳'
+        ELSE '' END) AS PayType,
+        c.PermYear,pn.NoteDate,pn.DueDate,pni.ItemContent,pni.ContentMemo
+        from underwriting.dbo.MainPolicy c
+        left join underwriting.dbo.PolicyFinancial pf on c.PolicyNo = pf.PolicyNo
+        left join underwriting.dbo.PolicyReviewLog prl on prl.Main_Key = c.Main_Key
+        left join underwriting.dbo.BrokerProfile br on c.AgentCode = br.Broker_ID
+        left join underwriting.dbo.NBUDWLINEBK nk on c.BranchCode = nk.NEBK_Branch_Code
+        left join underwriting.dbo.UserProfile ur on c.Manager = ur.User_ID
+        left join underwriting.dbo.PolicyNote pn on c.Main_Key = pn.Main_Key
+        left join underwriting.dbo.PolicyNoteItems  pni on  pn.Note_Key = pni.Note_Key
+        <where>
+            pn.IsCancel = 'N'
+            AND prl.LogType = 'B'
+            AND prl.Sub_Serial = '0'
+            <if test="vo.appName != null and vo.appName != ''">
+                AND UPPER( c.AppName) LIKE '%${vo.appName}%'
+            </if>
+            <if test="vo.appID != null and vo.appID !=''">
+                AND c.AppID = '${vo.appID}'
+            </if>
+            <if test="vo.tBStartTime != null and vo.tBStartTime != ''">
+                AND CONVERT(DATETIME,c.TBSubmitDate,120) <![CDATA[>=]]> '${vo.tBStartTime}'
+            </if>
+            <if test="vo.tBEndTime != null and vo.tBEndTime != ''">
+                AND CONVERT(DATETIME,c.TBSubmitDate,120) <![CDATA[<=]]> '${vo.tBEndTime}'
+            </if>
+            <if test="vo.policyActiveStartTime != null and vo.policyActiveStartTime != ''">
+                AND CONVERT(DATETIME,c.PolicyActiveDate,120) <![CDATA[>=]]> '${vo.policyActiveStartTime}'
+            </if>
+            <if test="vo.policyActiveEndTime != null and vo.policyActiveEndTime !=''">
+                AND CONVERT(DATETIME,c.PolicyActiveDate,120) <![CDATA[<=]]> '${vo.policyActiveEndTime}'
+            </if>
+            <if test="vo.bpmcurrenttak != null and vo.bpmcurrenttak != ''">
+                AND c.BPMCurrentTak = '${vo.bpmcurrenttak}'
+            </if>
+            <if test="vo.policyNo != null and vo.policyNo != ''">
+                AND c.PolicyNo = '${vo.policyNo}'
+            </if>
+            <if test="vo.pSalesCode != null and vo.pSalesCode != ''">
+                AND c.PSalesCode = '${vo.pSalesCode}'
+            </if>
+            <if  test="vo.agentCode != null and vo.agentCode != ''">
+                AND c.AgentCode =  '${vo.agentCode}'
+            </if>
+            <if test="vo.branchCode != null and vo.branchCode != ''">
+                AND c.BranchCode = '${vo.branchCode}'
+            </if>
+            <if test="vo.noteStatus != null and vo.noteStatus != ''">
+                AND pn.NoteStatus = '${vo.noteStatus}'
+            </if>
+            <if test="vo.noteVerifyResult != null and vo.noteVerifyResult != ''">
+                AND pn.NoteVerifyResult = '${vo.noteVerifyResult}'
+            </if>
+            <if test="vo.policyType != null and vo.policyType != ''">
+                AND c.PolicyType = '${vo.policyType}'
+            </if>
+            <if test="vo.insName != null and vo.insName != ''">
+                AND UPPER( c.InsName) LIKE '%${vo.insName}%'
+            </if>
+            <if test="vo.insID != null and vo.insID != ''">
+                AND c.InsID = '${vo.insID}'
+            </if>
+        </where>)ff
+        group by ${columnItem}
+    </select>
+
+    <select id="getPolicyTypeNameList" resultMap="PolicyMap">
+        SELECT pt.PType_Code,pt.PTypeName FROM underwriting.dbo.MainPolicy c left join underwriting.dbo.PolicyType pt on c.PolicyType = pt.PType_Code where pt.PType_Code IS NOT NULL and pt.PTypeName IS NOT NULL group by pt.PType_Code,pt.PTypeName
+    </select>
+</mapper>

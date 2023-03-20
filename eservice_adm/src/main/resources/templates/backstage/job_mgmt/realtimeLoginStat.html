@@ -43,6 +43,7 @@
 											<tr class=""><th scope="row">1</th><td>保戶網路服務系統(eservice)</td><td><span id="es_num">0</span></td></tr>
 											<tr class=""><th scope="row">2</th><td>後台管理系統(eservice_adm)</td><td><span id="adm_num">0</span></td></tr>
 											<tr class=""><th scope="row">3</th><td>電子表單系統(eform)</td><td><span id="eform_num">0</span></td></tr>
+											<tr class=""><th scope="row">4</th><td>經代支援系統(eservice_jd)</td><td><span id="jd_num">0</span></td></tr>
 										</tbody>
 									</table>
 								</div>
@@ -92,6 +93,7 @@
 						$("#es_num").html(sessionStats.eservice);
 						$("#adm_num").html(sessionStats.eservice_adm);
 						$("#eform_num").html(sessionStats.eform);
+						$("#jd_num").html(sessionStats.eservice_jd);
 						setChart(sessionStats);
 					}
 					removeLoading();
@@ -104,10 +106,10 @@
 					type: 'horizontalBar',
 				    //type: 'bar',
 				    data: {
-				        labels: ["eservice", "eservice_adm", "eform"],
+				        labels: ["eservice", "eservice_adm", "eform","eservice_jd"],
 				        datasets: [{
 				            label: '# of Login Sessions',
-				            data: [sessionStats.eservice, sessionStats.eservice_adm, sessionStats.eform],
+				            data: [sessionStats.eservice, sessionStats.eservice_adm, sessionStats.eform,sessionStats.eservice_jd],
 				            backgroundColor: [
 				                'rgba(255, 99, 132, 0.2)',
 				                'rgba(54, 162, 235, 0.2)',

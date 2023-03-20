@@ -6,9 +6,10 @@ insert ESERVICE_JD.dbo.[DEPARTMENT](
     CREATE_USER,
     CREATE_DATE,
     MODIFY_USER,
-    MODIFY_DATE
+    MODIFY_DATE,
+    BRANCH_ID
 )values
-('0', N'Root', '', '', 'admin', GETDATE(), 'admin', GETDATE());
+('0', N'Root', '', '', 'admin', GETDATE(), 'admin', GETDATE(),'');
 insert ESERVICE_JD.dbo.[DEPARTMENT](
     DEP_ID,
     DEP_NAME,
@@ -17,179 +18,706 @@ insert ESERVICE_JD.dbo.[DEPARTMENT](
     CREATE_USER,
     CREATE_DATE,
     MODIFY_USER,
-    MODIFY_DATE
+    MODIFY_DATE,
+    BRANCH_ID
 )values
-('30000', N'臺灣銀行國內營業單位', '', '0', 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'營業部', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'館前分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺南分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高雄分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'基隆分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中興新村分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'嘉義分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新竹分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'彰化分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'屏東分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'花蓮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'延平分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高雄加工出口區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'宜蘭分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺東分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'澎湖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'鳳山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'桃園分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'板橋分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新營分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'苗栗分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'豐原分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'斗六分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南投分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南門分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'公館分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'左營分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北投分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'霧峰分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'金門分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'馬祖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'安平分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中壢分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'三重分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'頭份分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'前鎮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'城中分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'民權分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'潭子分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'連城分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'員林分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'松江分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'鼓山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'龍山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'忠孝分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'信義分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'復興分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'三民分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'羅東分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'埔里分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'岡山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新興分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'苓雅分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'松山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'健行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中和分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'太保分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'竹北分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'士林分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新莊分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大甲分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新竹科學園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'樹林分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新店分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'黎明分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'民生分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'永康分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'三多分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺北世貿中心分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大安分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'華江分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'潮州分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'蘇澳分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大雅分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'楠梓分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中工業區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'敦化分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'和平分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'水湳分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中崙分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'土城分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'桃園國際機場分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大昌分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'五甲分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'博愛分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中庄分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'平鎮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'仁愛分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南崁分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'圓山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'五股分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大里分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'安南分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'西屯分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'天母分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'鹿港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'內壢分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺南科學園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'虎尾分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'淡水分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'內湖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'嘉北分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'東港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'汐止分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'梧棲分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'小港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中屏分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'群賢分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北大路分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'文山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'太平分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'德芳分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'建國分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'屏東農科園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'東桃園分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'蘆洲分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高雄國際機場分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'永吉簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'東門簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'愛國簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'台電簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北府簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺北港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中科學園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高雄科學園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'東湖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高榮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南港軟體園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'龍潭分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'仁德分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'林口分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'木柵分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺南創新園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'武昌分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺北分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'金山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'信安分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'劍潭分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'萬華分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'板新分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新永和分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南新莊分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新明分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'六家分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北臺中分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'嘉南分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南都分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北高雄分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'成功分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北花蓮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新湖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'五福分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'六甲頂分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中都分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺北國際機場分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新莊副都心分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'仁武分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中國際機場分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中精密園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'亞矽創新分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'臺銀人壽', '', '0', 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'總公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'台南分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'台中分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'高雄分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'嘉義分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'新竹分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'花蓮服務中心', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE());
-insert ESERVICE_JD.dbo.[DEPARTMENT](     DEP_ID,     DEP_NAME,     DESCRIPTION,     PARENT_DEP,     CREATE_USER,     CREATE_DATE,     MODIFY_USER,     MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'桃園分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE());
+('30000', N'臺灣銀行國內營業單位', '', '0', 'admin', GETDATE(), 'admin', GETDATE(),'');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'營業部', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'003');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'館前分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'007');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺南分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'009');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'010');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高雄分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'011');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'基隆分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'012');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中興新村分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'013');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'嘉義分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'014');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新竹分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'015');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'彰化分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'016');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'屏東分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'017');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'花蓮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'018');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'延平分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'019');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'020');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高雄加工出口區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'021');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'宜蘭分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'022');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺東分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'023');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'澎湖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'024');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'鳳山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'025');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'桃園分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'026');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'板橋分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'027');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新營分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'028');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'苗栗分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'029');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'豐原分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'030');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'斗六分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'031');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南投分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'032');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南門分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'033');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'公館分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'034');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'左營分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'035');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北投分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'036');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'霧峰分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'037');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'金門分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'038');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'馬祖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'039');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'安平分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'040');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中壢分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'041');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'三重分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'042');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'頭份分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'043');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'前鎮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'044');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'城中分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'045');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'民權分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'046');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'潭子分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'047');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'連城分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'048');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'員林分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'049');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'松江分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'050');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'鼓山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'051');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'龍山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'052');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'忠孝分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'053');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'信義分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'054');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'復興分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'055');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'三民分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'056');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'057');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'羅東分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'058');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'埔里分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'059');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'岡山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'060');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新興分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'061');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'苓雅分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'062');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'松山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'064');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'健行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'065');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中和分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'066');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'太保分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'067');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'竹北分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'068');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'士林分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'070');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新莊分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'071');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大甲分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'072');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新竹科學園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'073');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'樹林分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'074');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新店分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'075');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'黎明分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'079');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'民生分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'080');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'永康分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'081');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'三多分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'082');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺北世貿中心分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'085');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大安分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'086');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'華江分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'087');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'潮州分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'088');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'蘇澳分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'089');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大雅分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'090');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'楠梓分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'091');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中工業區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'092');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'敦化分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'106');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'107');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'和平分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'108');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'水湳分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'109');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中崙分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'110');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'土城分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'111');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'桃園國際機場分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'115');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大昌分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'116');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'五甲分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'118');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'博愛分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'119');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中庄分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'120');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'平鎮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'121');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'仁愛分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'122');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南崁分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'123');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'圓山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'124');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'五股分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'135');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'大里分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'136');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'安南分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'137');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'西屯分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'141');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'天母分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'142');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'鹿港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'143');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'內壢分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'144');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺南科學園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'146');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'虎尾分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'147');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'淡水分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'148');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'內湖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'153');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'嘉北分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'154');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'東港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'155');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'汐止分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'156');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'梧棲分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'157');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'小港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'159');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中屏分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'160');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'群賢分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'162');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北大路分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'164');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'文山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'165');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'太平分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'170');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'德芳分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'171');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'建國分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'172');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'屏東農科園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'176');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'東桃園分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'186');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'蘆洲分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'187');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高雄國際機場分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'191');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'永吉簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'193');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'東門簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'194');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'愛國簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'195');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'台電簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'198');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北府簡易型分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'205');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺北港分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'218');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中科學園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'220');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高雄科學園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'221');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'東湖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'223');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'高榮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'224');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南港軟體園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'225');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'龍潭分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'226');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'仁德分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'227');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'林口分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'228');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'木柵分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'229');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺南創新園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'230');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'武昌分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'236');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺北分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'238');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'金山分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'239');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'信安分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'240');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'劍潭分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'241');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'萬華分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'242');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'板新分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'243');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新永和分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'244');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南新莊分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'245');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新明分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'247');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'六家分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'248');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北臺中分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'249');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'嘉南分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'252');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'南都分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'253');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北高雄分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'255');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'成功分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'256');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'北花蓮分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'257');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新湖分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'270');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'五福分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'271');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'六甲頂分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'272');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'中都分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'278');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺北國際機場分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'279');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'新莊副都心分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'280');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'仁武分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'283');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中國際機場分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'289');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'臺中精密園區分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'290');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values  ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]), N'亞矽創新分行', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣銀行國內營業單位'), 'admin', GETDATE(), 'admin', GETDATE(),'297');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'臺銀人壽', '', '0', 'admin', GETDATE(), 'admin', GETDATE(),'');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'總公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE(),'1');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'台南分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE(),'2');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'台中分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE(),'3');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'高雄分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE(),'4');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'嘉義分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE(),'5');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'新竹分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE(),'6');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'花蓮服務中心', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE(),'7');
+insert ESERVICE_JD.dbo.[DEPARTMENT](DEP_ID,DEP_NAME,DESCRIPTION,PARENT_DEP,CREATE_USER,CREATE_DATE,MODIFY_USER,MODIFY_DATE )values ((select Max(DEP_ID)+1 from ESERVICE_JD.dbo.[DEPARTMENT]),N'桃園分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀人壽'), 'admin', GETDATE(), 'admin', GETDATE(),'8');
+
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('50000', N'臺銀證券國內營業單位', '', '0', 'admin',  GETDATE(), 'admin',  GETDATE(),''),
+('50001',N'總公司經紀部民權分公司', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'010'),
+('50002',N'金山分公司', '', (SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'012'),
+('50003',N'總公司經紀部', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺銀證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'005');
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('60000'	,N'土地銀行國內營業單位', '','0', 'admin',	GETDATE()	, 'admin',	GETDATE(),	''),
+('60001'	,N'財富管理部', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位'), 'admin',	GETDATE()	, 'admin',	GETDATE(),	'000'),
+('60002'	,N'土銀保代',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'000'),
+('60003'	,N'基隆分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'002'),
+('60004'	,N'中和分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'003'),
+('60005'	,N'南港分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'004'),
+('60006'	,N'臺北分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'005'),
+('60007'	,N'民權分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'006'),
+('60008'	,N'古亭分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'007'),
+('60009'	,N'長安分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'008'),
+('60010'	,N'士林分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'009'),
+('60011'	,N'三重分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'010'),
+('60012'	,N'宜蘭分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'011'),
+('60013'	,N'羅東分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'012'),
+('60014'	,N'桃園分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'013'),
+('60015'	,N'中壢分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'014'),
+('60016'	,N'石門分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'015'),
+('60017'	,N'新竹分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'016'),
+('60018'	,N'竹東分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'017'),
+('60019'	,N'花蓮分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'018'),
+('60020'	,N'玉里分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'019'),
+('60021'	,N'苗栗分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'020'),
+('60022'	,N'頭份分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'021'),
+('60023'	,N'豐原分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'022'),
+('60024'	,N'大甲分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'023'),
+('60025'	,N'臺中分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'024'),
+('60026'	,N'南投分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'025'),
+('60027'	,N'員林分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'026'),
+('60028'	,N'斗六分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'027'),
+('60029'	,N'北港分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'028'),
+('60030'	,N'嘉義分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'029'),
+('60031'	,N'新營分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'030'),
+('60032'	,N'永康分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'031'),
+('60033'	,N'臺南分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'032'),
+('60034'	,N'高雄分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'033'),
+('60035'	,N'岡山分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'034'),
+('60036'	,N'美濃分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'035'),
+('60037'	,N'屏東分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'036'),
+('60038'	,N'台東分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'037'),
+('60039'	,N'青年分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'038'),
+('60040'	,N'金門分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'039'),
+('60041'	,N'澎湖分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'040'),
+('60042'	,N'營業部',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',  GETDATE(),	'admin',  GETDATE(),	'041'),
+('60043'	,N'和平分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'045'),
+('60044'	,N'潮州分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'046'),
+('60045'	,N'彰化分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'047'),
+('60046'	,N'中山分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'048'),
+('60047'	,N'永和分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'049'),
+('60048'	,N'板橋分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'050'),
+('60049'	,N'鳳山分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'051'),
+('60050'	,N'湖口分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'052'),
+('60051'	,N'蘇澳分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'053'),
+('60052'	,N'新興分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'054'),
+('60053'	,N'西臺中分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'055'),
+('60054'	,N'虎尾分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'056'),
+('60055'	,N'仁愛分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'057'),
+('60056'	,N'忠孝分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'058'),
+('60057'	,N'中正分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'059'),
+('60058'	,N'新店分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'061'),
+('60059'	,N'北臺南分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'062'),
+('60060'	,N'松山分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'063'),
+('60061'	,N'內湖分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'064'),
+('60062'	,N'三民分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'065'),
+('60063'	,N'民雄分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'066'),
+('60064'	,N'大社分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'067'),
+('60065'	,N'前鎮分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'069'),
+('60066'	,N'路竹分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'070'),
+('60067'	,N'五甲分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'071'),
+('60068'	,N'太平分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'072'),
+('60069'	,N'正濱分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'073'),
+('60070'	,N'敦化分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'074'),
+('60071'	,N'蘆洲分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'076'),
+('60072'	,N'北臺中分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'077'),
+('60073'	,N'苓雅分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'078'),
+('60074'	,N'信義分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'079'),
+('60075'	,N'土城分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'080'),
+('60076'	,N'淡水分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'081'),
+('60077'	,N'草屯分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'082'),
+('60078'	,N'東臺南分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'083'),
+('60079'	,N'通霄分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'084'),
+('60080'	,N'學甲分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'085'),
+('60081'	,N'新莊分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'086'),
+('60082'	,N'雙和分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'087'),
+('60083'	,N'白河分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'089'),
+('60084'	,N'復興分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'090'),
+('60085'	,N'平鎮分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'091'),
+('60086'	,N'文山分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'093'),
+('60087'	,N'中港分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'094'),
+('60088'	,N'東板橋分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'095'),
+('60089'	,N'南崁分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'096'),
+('60090'	,N'建國分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'097'),
+('60091'	,N'樹林分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'098'),
+('60092'	,N'東台北分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'099'),
+('60093'	,N'西三重分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'100'),
+('60094'	,N'南台中分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'101'),
+('60095'	,N'長春分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'102'),
+('60096'	,N'東新竹分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'103'),
+('60097'	,N'新市分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'104'),
+('60098'	,N'博愛分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'105'),
+('60099'	,N'中崙分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'106'),
+('60100'	,N'華江分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'107'),
+('60101'	,N'竹北分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'108'),
+('60102'	,N'安平分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'109'),
+('60103'	,N'嘉興分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'110'),
+('60104'	,N'南新莊分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'111'),
+('60105'	,N'三峽分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'112'),
+('60106'	,N'沙鹿分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'113'),
+('60107'	,N'南桃園分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'114'),
+('60108'	,N'汐止分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'115'),
+('60109'	,N'萬華分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'116'),
+('60110'	,N'小港分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'117'),
+('60111'	,N'新工分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'118'),
+('60112'	,N'烏日分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'119'),
+('60113'	,N'西湖分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'120'),
+('60114'	,N'八德分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'121'),
+('60115'	,N'北屯分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'122'),
+('60116'	,N'大安分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'123'),
+('60117'	,N'北中壢分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'124'),
+('60118'	,N'高樹分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'125'),
+('60119'	,N'枋寮分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'126'),
+('60120'	,N'金城分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'128'),
+('60121'	,N'光復分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'129'),
+('60122'	,N'左營分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'130'),
+('60123'	,N'北桃園分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'131'),
+('60124'	,N'東港分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'132'),
+('60125'	,N'天母分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'133'),
+('60126'	,N'泰山分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'134'),
+('60127'	,N'中科分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'135'),
+('60128'	,N'大園分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'136'),
+('60129'	,N'楊梅分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'137'),
+('60130'	,N'城東分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'140'),
+('60131'	,N'松南分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'141'),
+('60132'	,N'福興分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'142'),
+('60133'	,N'林口分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'143'),
+('60134'	,N'西屯分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'144'),
+('60135'	,N'內壢分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'145'),
+('60136'	,N'竹南分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'146'),
+('60137'	,N'安南分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'147'),
+('60138'	,N'汐科分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'148'),
+('60139'	,N'楠梓分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'149'),
+('60140'	,N'大里分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'150'),
+('60141'	,N'大灣分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'151'),
+('60142'	,N'大發分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'153'),
+('60143'	,N'工研院分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'156'),
+('60144'	,N'北三重分行'	, '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位')	, 'admin',	GETDATE()	, 'admin',	GETDATE(),	'157'),
+('60145'	,N'圓通分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'158'),
+('60146'	,N'大直分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'160'),
+('60147'	,N'南屯分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'161'),
+('60148'	,N'寶中分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'163'),
+('60149'	,N'中清分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'164'),
+('60150'	,N'南京東路分行	', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME	= N'土地銀行國內營業單位'	), 'admin',	GETDATE(	), 'admin',	GETDATE(),	'165'),
+('60151'	,N'仁武分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'166'),
+('60152'	,N'青埔分行',	'',(SELECT	DEP_ID	from	ESERVICE_JD.dbo.[DEPARTMENT]	WHERE	DEP_NAME	=	N'土地銀行國內營業單位'),	'admin',	GETDATE(),	'admin',	GETDATE(),	'167');
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('70000',N'華銀保代部IC', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('70001'	,N'南松山分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'110'),
+('70002'	,N'仁愛路分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'111'),
+('70003'	,N'新生分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'113'),
+('70004'	,N'台北南門分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'117'),
+('70005'	,N'忠孝東路分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'120'),
+('70006'	,N'和平分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'121'),
+('70007'	,N'大安分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'125'),
+('70008'	,N'永吉分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'129'),
+('70009'	,N'敦化分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'130'),
+('70010'	,N'敦和分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'133'),
+('70011'	,N'懷生分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'147'),
+('70012'	,N'信維分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'149'),
+('70013'	,N'台大分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'154'),
+('70014'	,N'世貿分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'156'),
+('70015'	,N'營運總部分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'888'),
+('70016'	,N'華銀保險代理人部', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華銀保代部IC'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'9999');
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('80000',N'農漁會營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('80001',N'台北市大安區農會', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'農漁會營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'6239001'),
+('80002',N'台北市農會', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'農漁會營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'6239003');
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('90000',N'華泰銀行國內營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),'');
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('90001	',N'大安分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華泰銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'	1020065'),
+('90002	',N'信義分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華泰銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'	1020117'),
+('90003	',N'永吉分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華泰銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'	1020126'),
+('90004	',N'和平分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華泰銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'	1020135'),
+('90005	',N'松德分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華泰銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'	1020205'),
+('90006	',N'敦化分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'華泰銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'	1020250');
+
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('11000',N'陽信銀行國內營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('11001',N'羅東分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'1053'),
+('11002',N'竹北分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'1062'),
+('11003',N'重新分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'1071'),
+('11004',N'彰化分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1080'),
+('11005',N'苗栗分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1336'),
+('11006',N'龍井分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1354'),
+('11007',N'雲林分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1363'),
+('11008',N'南投分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1372'),
+('11009',N'台東分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1503'),
+('11010',N'宜蘭分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1512'),
+('11011',N'林口分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1567'),
+('11012',N'豐原分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1576'),
+('11013',N'竹科分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'陽信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'1585');
+
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('12000',N'台中銀行國內營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('12001',N'松山分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'台中銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'101');
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('13000',N'三信銀行國內營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),	'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('13001',N'台北分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470183'),
+('13002',N'板橋分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470208'),
+('13003',N'新莊分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470314'),
+('13004',N'新竹分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470323'),
+('13005',N'桃園分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470192'),
+('13006',N'台中分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470013'),
+('13007',N'營業部', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'1470022'),
+('13008',N'大智分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470077'),
+('13009',N'國光分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470068'),
+('13010',N'南門分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470095'),
+('13011',N'林森分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470086'),
+('13012',N'成功分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470040'),
+('13013',N'進化分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470101'),
+('13014',N'北屯分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470138'),
+('13015',N'西屯分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470059'),
+('13016',N'南屯分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470110'),
+('13017',N'豐原分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470147'),
+('13018',N'豐信分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470253'),
+('13019',N'中山分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470262'),
+('13020',N'大雅分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470341'),
+('13021',N'彰化分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470156'),
+('13022',N'員林分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470165'),
+('13023',N'台南分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470299'),
+('13024',N'高雄分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470305'),
+('13025',N'鳳山分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470332'),
+('13026',N'橋頭分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470350'),
+('13027',N'大肚分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470369'),
+('13028',N'龍井分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470378'),
+('13029',N'太平分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470396'),
+('13030',N'田中分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'1470387'),
+('13031',N'財富管理中心', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'*******'),
+('13032',N'三信商銀保代部', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'三信銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),'16832487');
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('14000',N'群益證券國內營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),	'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('14001',N'忠孝', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'群益證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'05'),
+('14002',N'松山', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'群益證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'44'),
+('14003',N'大安', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'群益證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'45'),
+('14004',N'大興', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'群益證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'49'),
+('14005',N'西松', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'群益證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'55'),
+('14006',N'敦南', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'群益證券國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'57');
+
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('15000',N'板信商銀國內營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),	'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('15001',N'信義分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'板信商銀國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'0279');
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('16000',N'臺灣企銀國內營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),	'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('16001'	,N'仁愛分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣企銀國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'020'),
+('16002'	,N'忠孝分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣企銀國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'100'),
+('16003'	,N'世貿分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣企銀國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'102'),
+('16004'	,N'松南分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣企銀國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'110'),
+('16005'	,N'大安分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'臺灣企銀國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'120');
+
+
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('17000',N'彰化銀行國內營業單位', '','0', 'admin',  GETDATE(), 'admin',  GETDATE(),	'');
+insert ESERVICE_JD.dbo.DEPARTMENT(
+    DEP_ID,
+    DEP_NAME,
+    DESCRIPTION,
+    PARENT_DEP,
+    CREATE_USER,
+    CREATE_DATE,
+    MODIFY_USER,
+    MODIFY_DATE,
+	BRANCH_ID
+)values
+('17001'	,N'東門分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5109'),
+('17002'	,N'古亭分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5116'),
+('17003'	,N'五分埔分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5123'),
+('17004'	,N'大安分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5130'),
+('17005'	,N'中崙分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5154'),
+('17006'	,N'松山分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5192'),
+('17007'	,N'忠孝東路分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5203'),
+('17008',N'信義分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5210'),
+('17009',N'復興分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5258'),
+('17010'	,N'台北世貿中心分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5265'),
+('17011'	,N'建國分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5289'),
+('17012'	,N'中正分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5314'),
+('17013'	,N'仁和分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5321'),
+('17014'	,N'永春分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5338'),
+('17015'	,N'和平分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5401'),
+('17016'	,N'東興分行', '',(SELECT DEP_ID from ESERVICE_JD.dbo.[DEPARTMENT] WHERE DEP_NAME = N'彰化銀行國內營業單位'), 'admin',  GETDATE(), 'admin',  GETDATE(),	'5418');
+
