@@ -4,6 +4,7 @@ import com.twfhclife.eservice.api.jdzq.domain.*;
 import com.twfhclife.eservice.api.jdzq.model.CaseVo;
 import com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo;
 import com.twfhclife.eservice.api.jdzq.model.NotePdfVo;
+import com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo;
 import com.twfhclife.eservice.api.jdzq.service.JdzqService;
 import com.twfhclife.eservice.web.model.PolicyVo;
 import com.twfhclife.generic.controller.BaseController;
@@ -113,6 +114,27 @@ public class JdzqController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @PostMapping(value = "/jdGetPolicyClaimDetail", produces = { "application/json" })
+    public ResponseEntity<?> jdGetPolicyClaimDetail(@RequestBody PolicyClaimDetailVo vo){
+        ApiResponseObj<PolicyClaimDetailResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            List<PolicyClaimDetailVo> policyClaimDetail = jdzqService.getPolicyClaimDetail(vo);
+            PolicyClaimDetailResponse resp = new PolicyClaimDetailResponse();
+            resp.setPolicyClaimDetailVo(policyClaimDetail);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        }catch (Exception e){
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to jdGetPolicyClaimDetail: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        }finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
     @PostMapping(value = "/getNotePdf", produces = { "application/json" })
     public ResponseEntity<?> getNotePdf(@RequestBody PolicyVo policyVo) {
         ApiResponseObj<NotePdfDataResponse> apiResponseObj = new ApiResponseObj<>();
@@ -150,6 +172,27 @@ public class JdzqController extends BaseController {
             logger.error("Unable to getNoteSchedule: {}", ExceptionUtils.getStackTrace(e));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
         } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @PostMapping(value = "/jdGetPolicyTypeNameList", produces = { "application/json" })
+    public ResponseEntity<?> jdGetPolicyTypeNameList(@RequestBody PolicyClaimDetailVo vo){
+        ApiResponseObj<PolicyClaimDetailResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            List<PolicyClaimDetailVo> policyClaimDetail = jdzqService.getPolicyTypeNameList(vo);
+            PolicyClaimDetailResponse resp = new PolicyClaimDetailResponse();
+            resp.setPolicyClaimDetailVo(policyClaimDetail);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        }catch (Exception e){
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to jdGetPolicyTypeNameList: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        }finally {
             apiResponseObj.setReturnHeader(returnHeader);
         }
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);

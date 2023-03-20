@@ -95,5 +95,6 @@
 		<mapper resource="mybatis/mapper/adm/JdBatchPlanMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/JdUserBatchMapper.xml"/>
 		<mapper resource="mybatis/mapper/adm/JdUserMapper.xml"/>
+		<mapper resource="mybatis/mapper/adm/JdPolicyClaimDetailMapper.xml"></mapper>
 	</mappers>
 </configuration>

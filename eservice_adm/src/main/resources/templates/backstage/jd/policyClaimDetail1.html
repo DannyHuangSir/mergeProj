@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<th:block th:replace="fragments/head"/>
+	</head>
+	<body class="no-skin">
+		<th:block th:replace="fragments/navbar"/>
+		<div class="main-container my-save-state" id="main-container">
+			<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+			<div th:replace="fragments/sidebar :: sidebar (funId='policyClaimDetail')"></div>
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs my-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="fa fa-search" aria-hidden="true"></i>
+								<a href="#">報表查詢</a>
+							</li>
+						</ul><!-- /.breadcrumb -->
+					</div>
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								報表查詢
+								<small>
+									<i class="my-icon fa fa-angle-double-right"></i>
+									保單及照會明細報表
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+                        <div class="">
+			                <ul class="step">
+			                    <li class="step1 active col-xs-4">
+			                        1<span class="hid1">. 選擇報表條件</span>
+			                    </li>
+			                    <li class="step2 col-xs-4">
+			                        2<span class="hid1">. 選擇匯出資料欄位</span>
+			                    </li>
+			                    <li class="step3 col-xs-4">
+			                        3<span class="hid1">. 下載開啓報表</span>
+			                    </li>
+			                </ul>
+			            </div>
+						<div class="row" id="editDialog">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form class="form-horizontal" role="form" id="form1" action="func2-2.html">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-4">受理日期區間</label>
+
+										<div class="col-sm-9">
+											<div class="input-group">
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+
+												<input class="form-control" type="text" name="date-range-picker" id="id-date-range-picker-1" />
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-4">保單生效日期區間</label>
+
+										<div class="col-sm-9">
+											<div class="input-group">
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+
+												<input class="form-control" type="text" name="date-range-picker" id="id-date-range-picker-2" />
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="deptSelect"> 通路名稱 </label>
+
+										<div class="col-sm-9">
+											<select class="form-control" id="deptSelect">
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="branchSelect"> 分支機構 </label>
+
+										<div class="col-sm-9">
+											<select class="form-control" id="branchSelect">
+											</select>
+										</div>
+									</div>
+                                    <div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">業務員編號</label>
+										<div class="col-sm-9">
+											<input type="text" id="pSalesCodeInp" placeholder="輸入欲查詢的業務員編號" class="form-control" />
+										</div>
+									</div>
+						
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="policyNoInp"> 保單號碼 </label>
+
+										<div class="col-sm-9">
+											<input type="text" id="policyNoInp" placeholder="輸入欲查詢的保單號碼" class="form-control" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="insIDInp"> 被保人身分證字號 </label>
+										<div class="col-sm-9">
+											<input type="text" id="insIDInp" placeholder="輸入欲查詢的被保人身分證字號" class="form-control" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="insNameInp"> 被保人姓名 </label>
+										<div class="col-sm-9">
+											<input type="text" id="insNameInp" placeholder="輸入欲查詢的被保人姓名" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="appIDInp"> 要保人身分證字號 </label>
+										<div class="col-sm-9">
+											<input type="text" id="appIDInp" placeholder="輸入欲查詢的身分證字號" class="form-control" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="appNameInp"> 要保人姓名 </label>
+										<div class="col-sm-9">
+											<input type="text" id="appNameInp" placeholder="輸入欲查詢的要保人姓名" class="form-control" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="policyTypeNameSelect"> 主約險種 </label>
+										<div class="col-sm-9">
+											<select class="form-control" id="policyTypeNameSelect">
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="bpmcurrenttakSelect" > 案件状态 </label>
+										<div class="col-sm-9">
+											<select class="form-control" id="bpmcurrenttakSelect">
+											</select>
+										</div>
+									</div>
+<!--									下拉框-->
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="noteStatusSelect" > 最新照會狀態 </label>
+										<div class="col-sm-9">
+											<select class="form-control" id="noteStatusSelect" style="display: block">
+												<option selected="noteStatusSelect" disabled="disabled" style='display: none' value=''></option>
+												<option value="0">照會編輯中</option>
+												<option value="1">照會覆核中</option>
+												<option value="9">照會完成</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+
+										<label class="col-sm-3 control-label no-padding-right" for="noteVerifyResultSelect"> 最新照會結果  </label>
+										<div class="col-sm-9">
+											<select class="form-control" id="noteVerifyResultSelect" style="display: block">
+												<option selected="noteVerifyResultSelect" disabled="disabled" style='display: none' value=''></option>
+												<option value="0">未覆核</option>
+												<option value="V">核可 </option>
+												<option value="R">退件</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-md-offset-3 col-md-9" style="text-align: center;margin-top: 20px;">
+										<a class="btn bgGrey" type="button" style="border: 0;margin-right: 20px;"  onclick="resetOnlineChange()">
+											取消
+										</a>
+										<a class="btn bgOrange" type="reset" style="border: 0;" onclick="searchOnlineChange()">
+											下一步
+										</a>
+									</div>
+				
+								</form>
+								<!-- PAGE CONTENT ENDS -->
+								<form role="form" id="onlineChangeForm" method="post" action="/eservice_adm/policyClaimDetail/filter">
+									<input type="hidden" id="tBStartTime" name="tBStartTime"/>
+									<input type="hidden" id="tBEndTime"   name="tBEndTime"/>
+									<input type="hidden" id="policyActiveStartTime"   name="policyActiveStartTime"/>
+									<input type="hidden" id="policyActiveEndTime"   name="policyActiveEndTime"/>
+									<input type="hidden" id="agentCode" name="agentCode"/>
+									<input type="hidden" id="branchCode" name="branchCode">
+									<input type="hidden" id="pSalesCode" name="pSalesCode">
+									<input type="hidden" id="policyNo"   name="policyNo"/>
+									<input type="hidden" id="appName" name="appName"/>
+									<input type="hidden" id="appID" name="appID"/>
+									<input type="hidden" id="insName" name="insName"/>
+									<input type="hidden" id="insID" name="insID"/>
+									<input type="hidden" id="bpmcurrenttak" name="bpmcurrenttak"/>
+									<input type="hidden" id="policyType" name="policyType"/>
+									<input type="hidden" id="noteStatus" name="noteStatus"/>
+									<input type="hidden" id="noteVerifyResult" name="noteVerifyResult"/>
+								</form>
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+			<div th:replace="fragments/footer"></div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div>
+		<th:block th:replace="fragments/script"/>
+		<script th:inline="javascript">
+		
+		/*<![CDATA[*/
+		$(function() {
+
+			$('#deptSelect').click(function() {
+				$.ajax({
+					url: /*[[@{jd/common/dept/parentList}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					success: function (response) {
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
+									$("#editDialog #deptSelect").append(option);
+								}
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			});
+
+
+			$('#branchSelect').click(function() {
+				var formData = {
+					depId: $('#editDialog #deptSelect').val()
+				};
+				$.ajax({
+					url: /*[[@{jd/common/branchList}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					data: JSON.stringify(formData),
+					success: function (response) {
+						$("#editDialog #branchSelect").empty();
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+									$("#editDialog #branchSelect").append(option);
+								}
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			});
+
+
+			$("#policyTypeNameSelect").click(function(){
+				$.ajax({
+					url: /*[[@{/jd/getPolicyTypeNameList}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					success: function (response) {
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].pTypeCode + "'>" +  response.resultData[i].pTypeName + "</option>";
+									$("#editDialog #policyTypeNameSelect").append(option);
+								}
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			});
+
+			$("#bpmcurrenttakSelect").click(function(){
+				$.ajax({
+					url: /*[[@{getBpmcurrenttak}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					success: function (response) {
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].parameterCode + "'>" +  response.resultData[i].parameterName + "</option>";
+									$("#editDialog #bpmcurrenttakSelect").append(option);
+								}
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			});
+
+
+
+
+			$('input[name=date-range-picker]').daterangepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				maxDate : new Date(),
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel'
+				}
+			});
+
+			// $("#noteStatusSelect").bsMultiSelect();
+			// $("#noteVerifyResultSelect").bsMultiSelect();
+
+		});
+
+		function searchOnlineChange() {
+			var tBstartTime = Date.parse($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYY/MM/DD'));
+			var tBendTime = Date.parse($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYY/MM/DD'));
+			var iDays=parseInt(Math.abs(tBendTime-tBstartTime)/(24*60*60*1000));
+			if (iDays > 90){
+				alertMsg("受理日期區間請在3個月以内");
+				return false;
+			}else {
+				$("#tBStartTime").val($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYYMMDD'));
+				$("#tBEndTime").val($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYYMMDD'));
+			}
+			var tBstartTime1 = Date.parse($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYY/MM/DD'));
+			var tBendTime1 = Date.parse($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYY/MM/DD'));
+			var iDays1=parseInt(Math.abs(tBendTime1-tBstartTime1)/(24*60*60*1000));
+			if (iDays1 > 90){
+				alertMsg("保單生效日期區間請在3個月以内");
+				return false;
+			}else {
+				$("#policyActiveStartTime").val($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYYMMDD'));
+				$("#policyActiveEndTime").val($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYYMMDD'));
+			}
+			if ($('#deptSelect').val() != '') {
+				$("#agentCode").val($('#deptSelect option:selected').val());
+			}
+			if ($('#branchSelect').val() != '') {
+				$("#branchCode").val($('#branchSelect option:selected').val());
+			}
+
+			$("#pSalesCode").val($('#pSalesCodeInp').val());
+			$("#policyNo").val($('#policyNoInp').val().trim());
+			$("#appName").val($('#appNameInp').val().trim());
+			$("#appID").val($('#appIDInp').val().trim());
+			$("#insName").val($('#insNameInp').val().trim());
+			$("#insID").val($('#insIDInp').val().trim());
+			if ($('#policyTypeNameSelect').val() != ''){
+				$("#policyType").val($('#policyTypeNameSelect option:selected').val())
+			}
+
+			if ($('#noteStatusSelect').val() != ''){
+				$("#noteStatus").val($('#noteStatusSelect option:selected').val())
+			}
+
+			if ($('#bpmcurrenttakSelect').val() != ''){
+				$("#bpmcurrenttak").val($('#bpmcurrenttakSelect option:selected').val())
+			}
+
+			if ($('#noteVerifyResultSelect').val() != ''){
+				$("#noteVerifyResult").val($('#noteVerifyResultSelect option:selected').val())
+			}
+			$('#onlineChangeForm').submit();
+		}
+
+		function resetOnlineChange(){
+
+			$('#deptSelect').val('');
+			$('#branchSelect').val('');
+			$('#pSalesCodeInp').val('');
+			$('#policyNoInp').val('');
+			$('#insIDInp').val('');
+			$('#insNameInp').val('');
+			$('#appIDInp').val('');
+			$('#appNameInp').val('');
+			$('#noteVerifyResultSelect').val('');
+			$('.close').each(function(i,val) {
+				val.click();
+			});
+		}
+
+
+		/*]]>*/
+		</script>
+	</body>
+</html>

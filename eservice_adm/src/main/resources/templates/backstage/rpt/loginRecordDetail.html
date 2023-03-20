@@ -95,7 +95,8 @@
 					}
 				}
 			];
-			
+
+			grid.setPostData('systemId', /*[[${param.systemId} != null ? ${param.systemId[0]}]]*/);
 			grid.setPostData('userName', /*[[${param.userName} != null ? ${param.userName[0]}]]*/);
 			grid.setPostData('loginStatus', /*[[${param.loginStatus} != null ? ${param.loginStatus[0]}]]*/);
 			grid.setPostData('clientIp', /*[[${param.loginIp} != null ? ${param.loginIp[0]}]]*/);

@@ -10,7 +10,7 @@
 			<script type="text/javascript">
 				try{my.settings.loadState('main-container')}catch(e){}
 			</script>
-			<div th:replace="fragments/sidebar :: sidebar (funId='rptInsClaimDetail')"></div>
+			<div th:replace="fragments/sidebar :: sidebar (funId='policyClaimDetail')"></div>
 			<div class="main-content">
 				<div class="main-content-inner">
 					<div class="breadcrumbs my-save-state" id="breadcrumbs">
@@ -19,7 +19,7 @@
 								<i class="fa fa-search-plus" aria-hidden="true"></i>
 								報表查詢
 								<i class="my-icon fa fa-angle-double-right"></i>
-								保單理賠申請明細報表
+								保單及照會明細報表
 							</li>
 						</ul>
 					</div>
@@ -62,52 +62,80 @@
 		
 		/*<![CDATA[*/
 	
-		var vo = /*[[${claimVo}]]*/;
+		var vo = /*[[${vo}]]*/;
 		var data = /*[[${reportList}]]*/;
 		var CSV = '';
-		var fileName = "保單理賠申請明細報表";
+		var fileName = "保單及照會明細報表";
+		// $(function() {
+		// 	CSV = '報表名稱 , 保單及照會明細報表 \r\n';
+		// 	CSV += '受理日期區間：,' + vo.tBStartTime + '~' + vo.tBEndTime + '\r\n';
+		// 	CSV += '保單生效日期區間：,' + vo.policyActiveStartTime + '~' + vo.policyActiveEndTime + '\r\n';
+		// 	var row = "【報表內容】";
+		// 	var title = vo.columnName;
+		// 	var title1 = '';
+		// 	var title2 = '';
+		// 	var column = vo.column;
+		// 	var column1 = '';
+		// 	var column2 = '';
+		//
+		// 	for (var i = 0; i < title.length; i++) {
+		// 		if(title[i]){
+		// 			if (title[i] == '照會日期' && title[i+1] == '照會回復截止日'
+		// 					&& title[i+2] == '照會項目' && title[i+3] == '內容補充'){
+		// 				title1 = '照會日期,' + '照會回復截止日,'+'照會項目,'+'內容補充';
+		// 				i = i+3;
+		// 			}else {
+		// 				title2 += title[i] + ',';
+		// 				// row += title[i] + ',';
+		// 			}
+		// 		}
+		// 	}
+		//
+		// 	// row = row.slice(0, -1);
+		// 	CSV += row;
+		// 	for (var i = 0; i < data.length; i++) {
+		// 		var row = "";
+		// 		for (var j = 0; j < column.length; j++) {
+		// 			if(column[j]){
+		// 				if (column[j] == 'NoteDate' && column[j+1] == 'DueDate' && column[j+2] == 'Note_Key' && column[j+3] == 'ContentMemo'){
+		// 						column1 = '"'+data[i][column[j]]+'"\t,' + '"'+data[i][column[j+1]]+'"\t,' + '"'+data[i][column[j+2]]+'"\t,' + '"'+data[i][column[j+3]]+'"\t,';
+		// 						j = j+3;
+		// 				}else {
+		// 					column2 += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
+		// 					// row += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
+		// 				}
+		//
+		// 			}
+		// 		}
+		// 		row += '\r\n'+title2;
+		// 		row += '\r\n'+column2;
+		// 		column2 = '';
+		// 		row += '\r\n'+title1;
+		// 		row += '\r\n'+column1;
+		// 		// CSV += row + '\r\n';
+		// 		row.slice(0, row.length - 1);
+		// 		CSV += row + '\r\n';
+		// 	}
+		// });
+
 		$(function() {
-			CSV = '報表名稱 , 保單理賠申請明細報表 \r\n';
-			CSV += '申請日期區間：,' + vo.startDate + '~' + vo.endDate + '\r\n';
-			CSV += '申請項目：,'+ vo.applyItemName +'\r\n\r\n'
-			var row = "【報表內容】\r\n";
+			var row = '';
 			var title = vo.columnName;
 			var column = vo.column;
-			
+
 			for (var i = 0; i < title.length; i++) {
 			if(title[i]){
-			row += title[i] + ',';
+				row += title[i] + ',';
 			}
 			}
 			row = row.slice(0, -1);
 			CSV += row + '\r\n';
-			
 			for (var i = 0; i < data.length; i++) {
+				debugger
 				var row = "";
 				for (var j = 0; j < column.length; j++) {
 				if(column[j]){
-					if (data[i][column[j]] != undefined && data[i][column[j]] != null && 
-					   (column[j] == 'APPLYITEM'|| column[j] == 'TO_COMPANY_ID')) {
-						var str = data[i][column[j]].split(',');
-						var strName = []
-						str.forEach(element => {
-							
-							var data = /*[[${session.APPLICATION_ITEMS}]]*/;
-							if(column[j] == 'TO_COMPANY_ID'){
-								data = /*[[${session.SEND_COMPANY_ITEMS}]]*/;
-							}
-							$.each(data,function(i,item){
-								if(item.parameterValue == element){
-									strName.push(item.parameterName)
-								}
-							});
-						});
-						row += '"' + strName.toString() + '"\t,';
-					}else{
-						row += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
-					}
-					
-					
+					row += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
 				}
 				}
 				row.slice(0, row.length - 1);
@@ -128,7 +156,7 @@
 			return;
 			}
 			console.log(data);
-			var fileName = fileName;
+			var fileName = "保單及照會明細報表";
 			var uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURI(CSV);
 			var link = document.createElement("a");
 			link.href = uri;

@@ -17,4 +17,5 @@ public interface JdzqDao {
     NotePdfVo getNotePdf(@Param("policyNo") String policyNo);
     List<NoteNotifyVo> getNoteSchedule();
 
+//    List<PolicyClaimDetailVo> getPolicyClaimDetail(@Param("vo") PolicyClaimDetailVo vo,@Param("columnItem")String columnItem);
 }

@@ -1,16 +1,15 @@
 package com.twfhclife.generic.api_client;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import com.twfhclife.generic.api_model.ApiResponseObj;
+import com.twfhclife.generic.errorhandler.RestTemplateResponseErrorHandler;
+import com.twfhclife.generic.model.PolicyClaimDetailResponse;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.twfhclife.adm.controller.LoginController;
-import com.twfhclife.generic.errorhandler.RestTemplateResponseErrorHandler;
+import java.util.*;
 
 @Service
 public class BaseRestClient {
@@ -101,6 +99,12 @@ public class BaseRestClient {
 	 */
 	public void setEserviceAccessKey(String accessKey) {
 		this.ESERVICE_API_SECRET = accessKey;
+	}
+
+	protected Map<Class<?>, ParameterizedTypeReference> typeReferences() {
+		final Map<Class<?>, ParameterizedTypeReference> map = new HashMap<>();
+		map.put(PolicyClaimDetailResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyClaimDetailResponse>>() { });
+		return Collections.unmodifiableMap(map);
 	}
 	
 }
