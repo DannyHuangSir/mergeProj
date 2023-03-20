@@ -4,6 +4,8 @@ package com.twfhclife.eservice.api.jdzq.service;
 import com.twfhclife.eservice.api.jdzq.dao.JdzqDao;
 import com.twfhclife.eservice.api.jdzq.domain.CaseQueryRequest;
 import com.twfhclife.eservice.api.jdzq.model.CaseVo;
+import com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo;
+import com.twfhclife.eservice.api.jdzq.model.NotePdfVo;
 import com.twfhclife.eservice.web.model.PolicyVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,5 +28,17 @@ public class JdzqService {
 
     public CaseVo getPolicyInfo(PolicyVo policyVo) {
         return jdzqDao.getPolicyInfo(policyVo.getPolicyNo());
+    }
+
+    public List<CaseVo> getNoteContent(PolicyVo policyVo) {
+        return jdzqDao.getNoteContent(policyVo.getPolicyNo());
+    }
+
+    public NotePdfVo getNotePdf(PolicyVo policyVo) {
+        return jdzqDao.getNotePdf(policyVo.getPolicyNo());
+    }
+
+    public List<NoteNotifyVo> getNoteSchedule() {
+        return jdzqDao.getNoteSchedule();
     }
 }

@@ -35,10 +35,6 @@
 				                            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
 				                        </p>
 				                        <i class="foo-business_7 foo-2x hidden-xs"></i> <th:block th:text="${vo.policyType}"></th:block>
-				                        <span class=""></span><span class="insuranceID_pc"></span>
-				                        <div class="dropdown pull-right r30">
-				                        	<a class="btn-return" href="policy-inquiry.html">回保單查詢結果清單</a>
-				                        </div>
 				                    </div>
 				                    <div class="list col-md-12">
 				                        <div class="box-border">
@@ -98,7 +94,11 @@
 				                                                    </tr>
 																	<tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">核印結果</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b" ></b> <span class="mobile-span" th:text="${vo.stampResult}">&nbsp;</span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b" ></b>
+																			<span class="mobile-span">
+																				<th:block th:if="${vo.stampResult == 'Y'}">核印完成</th:block>
+																				<th:block th:if="${vo.stampResult == 'N'}">未完成</th:block>
+																			</span></td>
 				                                                    </tr>
 				                                                </tbody>
 				                                            </table>
@@ -136,7 +136,17 @@
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">核保結果</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">核保結果</b> <span class="mobile-span" th:text="${vo.reviewResult}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">核保結果</b>
+																			<span class="mobile-span">
+																				<th:block th:if="${vo.reviewResult == 'A1'}">核保通過</th:block>
+																				<th:block th:if="${vo.reviewResult == 'C1'}">退保(撤銷要保)</th:block>
+																				<th:block th:if="${vo.reviewResult == 'D1'}">延保</th:block>
+																				<th:block th:if="${vo.reviewResult == 'N1'}">退保(照會逾期退件)</th:block>
+																				<th:block th:if="${vo.reviewResult == 'N2'}">批註說明</th:block>
+																				<th:block th:if="${vo.reviewResult == 'R1'}">拒保</th:block>
+																				<th:block th:if="${vo.reviewResult == '5'}">承保</th:block>
+																				<th:block th:if="${vo.reviewResult == '9'}">不予承保</th:block>
+																			</span></td>
 				                                                    </tr>
 				                                                </tbody>
 				                                            </table>

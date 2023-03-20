@@ -38,7 +38,7 @@ public class MailServiceImpl implements IMailService {
 		String ssl = ""; // 是否SSL協議
 
 		// 2.給參數賦值
-		// 測試用
+		// 測試用v
 //		smtpServer = "smtp.gmail.com"; 
 //		smtpServerPort = "587"; 
 //		sender = "eService.twfhclife@gmail.com"; 
@@ -197,15 +197,4 @@ public class MailServiceImpl implements IMailService {
 			}
 		}
 	}
-
-	public static void main(String[] agrs) throws AddressException, MessagingException {
-
-		try {
-			MailServiceImpl mail = new MailServiceImpl();
-			mail.sendMail("此為測試信件內容!!!!", "測試信件主旨!!!", "thaing37@gmail.com", "", null);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
 }

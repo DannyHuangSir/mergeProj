@@ -37,10 +37,6 @@
                                         </p>
                                         <i class="foo-business_7 foo-2x hidden-xs"></i>
                                         <th:block th:text="${vo.policyType}"></th:block>
-                                        <span class=""></span><span class="insuranceID_pc"></span>
-                                        <div class="dropdown pull-right r30">
-                                            <a class="btn-return" href="policy-inquiry.html">回保單查詢結果清單</a>
-                                        </div>
                                     </div>
                                     <div class="list col-md-12">
                                         <div class="box-border">
@@ -130,12 +126,10 @@
                                                                     <td>
                                                                         <b class="tablesaw-cell-label mobile-b">繳費方式</b>
                                                                         <span class="mobile-span">
-                                                                            <th:block th:if="${vo.paymentMode == '1'}">轉帳</th:block>
-                                                                            <th:block th:if="${vo.paymentMode == '2'}">信用卡</th:block>
-                                                                            <th:block th:if="${vo.paymentMode == '3'}">現金</th:block>
-                                                                            <th:block th:if="${vo.paymentMode == '4'}">劃撥</th:block>
-                                                                            <th:block th:if="${vo.paymentMode == '5'}">支票</th:block>
-                                                                            <th:block th:if="${vo.paymentMode == '6'}">匯款</th:block>
+                                                                            <th:block th:if="${vo.paymentMode=='3'}">郵局劃撥</th:block>
+                                                                            <th:block th:if="${vo.paymentMode=='A'}">銀行(郵局)轉帳</th:block>
+                                                                            <th:block th:if="${vo.paymentMode=='H'}">信用卡</th:block>
+                                                                            <th:block th:if="${vo.paymentMode=='Y'}">匯款</th:block>
                                                                         </span></td>
                                                                 </tr>
                                                                 <tr class="noEvent">

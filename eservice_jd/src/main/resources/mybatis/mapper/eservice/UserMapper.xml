@@ -166,4 +166,16 @@
 		WHERE UE.ID = #{userId}
 	</select>
 
+	<select id="getUserBySaleId" resultMap="UsersMap">
+		SELECT
+		ue.ID user_id,u.roc_id,ESERVICE_JD.DBO.FN_DEBASE64(u.mobile) mobile,ESERVICE_JD.DBO.FN_DEBASE64(u.email) email,u.login_fail_count,u.last_chang_password_date,
+		u.sms_flag,u.mail_flag,u.fb_id,u.moica_id,u.user_type,u.create_date,u.create_user, u.user_name username,
+		u.online_flag, u.login_fail_count, u.status, u.LOGIN_TIME, u.CLAUSE_FLAG
+		FROM
+		ESERVICE_JD.DBO.USERS u INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY UE
+		ON UE.USERNAME = U.USER_ID COLLATE database_default AND UE.REALM_ID = 'elife_jd'
+		WHERE
+			u.SERIAL_NUM = #{saleId}
+	</select>
+
 </mapper>

@@ -187,15 +187,13 @@
 		}
 
 		function noteVerifyResultStr(status) {
-			if (status == '0') {
-				return '未覆核'
+			if (status == '0' || status == 'R') {
+				return '核保中'
 			}
 			if (status == 'V') {
-				return '核可'
+				return '照會中'
 			}
-			if (status == 'R') {
-				return '退件'
-			}
+			return ''
 		}
 
 		function levelStateStr(policyNo, levelState) {

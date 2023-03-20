@@ -44,7 +44,7 @@
 		<include refid="Base_Column_List" />
 		FROM
 		ESERVICE_JD.DBO.MESSAGE
-			WHERE USER_ID = #{userId} AND STATUS = '1'
+			WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= SYSDATETIME() AND STATUS = '1'
 		) t
 	</select>
 

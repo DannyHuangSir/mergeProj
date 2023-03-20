@@ -8,8 +8,14 @@ import com.twfhclife.eservice.web.model.PolicySafeGuardVo;
 import com.twfhclife.eservice.web.service.ICaseService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
 
 @Controller
 public class CaseController extends BaseController {
@@ -57,6 +63,18 @@ public class CaseController extends BaseController {
 	@RequestMapping(value = { "/caselisting3" })
 	public String caselisting3(@RequestParam("policyNo") String policyNo) {
 		addAttribute("policyNo", policyNo);
+		addAttribute("list",  caseService.getNoteContent(policyNo));
 		return "frontstage/jdzq/caseQuery/caselisting3";
+	}
+
+	@RequestMapping(value = { "/notePdf" })
+	public @ResponseBody HttpEntity<byte[]> downloadPolicyClaimPDF(@RequestParam("policyNo") String policyNo) throws Exception {
+		HttpHeaders header = new HttpHeaders();
+		String fileName = String.format("inline; filename=照會單-%s.pdf", policyNo);
+		byte[] document = caseService.getNotePdf(policyNo);
+		header.setContentType(new MediaType("application", "pdf"));
+		header.set("Content-Disposition", new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
+		header.setContentLength(document.length);
+		return new HttpEntity<byte[]>(document, header);
 	}
 }

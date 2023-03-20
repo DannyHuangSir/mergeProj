@@ -34,12 +34,7 @@
 				                        <p class="pull-left visible-xs">
 				                            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
 				                        </p>
-				                        <i class="foo-business_7 foo-2x hidden-xs"></i> 增值分紅養老壽險
-				                        <span class=""></span><span class="insuranceID_pc"></span>
-				                        <div class="dropdown pull-right r30">
-				                        	<a class="btn-return" href="policy-inquiry.html">回保單查詢結果清單</a>
-				                        </div>
-				                        <div class="insuranceID_phone">(UC70000001)</div>
+				                        <i class="foo-business_7 foo-2x hidden-xs"></i> <th:block th:text="${list.get(0).policyType}"></th:block>
 				                    </div>
 				                    <div class="list col-md-12">
 				                        <div class="box-border">
@@ -73,15 +68,17 @@
 				                                        </tr>
 				                                    </thead>
 				                                    <tbody>
-				                                        <tr class="h65 noEvent">
-				                                            <td class="text-left">01</td>
-				                                            <td>陳文倫</td>
-				                                            <td>陳文倫</td>
-				                                            <td>2015/01/16</td>
-				                                            <td>家倍幸福定期壽險</td>
-				                                            <td>已照會</td>
-				                                            
-				                                            <td><i class="bi bi-journal-richtext"  onclick="window.open('assets/img/核保照會單.jpg')"></i></td>
+				                                        <tr class="h65 noEvent" th:each="vo : ${list}">
+				                                            <td class="text-left" th:text="${vo.mainKey}"></td>
+				                                            <td th:text="${vo.appName}"></td>
+				                                            <td th:text="${vo.insName}"></td>
+				                                            <td th:text="${vo.printDate}"></td>
+				                                            <td th:text="${vo.policyType}"></td>
+				                                            <td>
+																<th:block th:if="${vo.noteVerifyResult == '0' || vo.noteVerifyResult == 'R'}">核保中</th:block>
+																<th:block th:if="${vo.noteVerifyResult == 'V'}">照會中</th:block>
+															</td>
+				                                            <td><i class="bi bi-journal-richtext" th:onclick="'window.open(\'notePdf?policyNo=' + ${policyNo} + '\')'"></i></td>
 				                                        </tr>
 				                                    </tbody>
 				                                </table>

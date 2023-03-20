@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class CaseVo implements Serializable {
 
+    private String mainKey;
     private String policyNo;
     private String policyType;
     private String appName;
@@ -30,6 +31,15 @@ public class CaseVo implements Serializable {
     private String payType;
     private String policyAmountNTD;
     private String policyAmount;
+    private String prmeNewOldSW;
+
+    public String getMainKey() {
+        return mainKey;
+    }
+
+    public void setMainKey(String mainKey) {
+        this.mainKey = mainKey;
+    }
 
     public String getPrmeNewOldSW() {
         return prmeNewOldSW;
@@ -39,7 +49,6 @@ public class CaseVo implements Serializable {
         this.prmeNewOldSW = prmeNewOldSW;
     }
 
-    private String prmeNewOldSW;
 
     public String getPolicyAmountNTD() {
         return policyAmountNTD;

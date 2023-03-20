@@ -12,4 +12,8 @@ public interface ICaseService {
     CaseVo getCaseProcess(String policyNo);
 
     CaseVo getCasePolicyInfo(String policyNo);
+
+    List<CaseVo> getNoteContent(String policyNo);
+
+    byte[] getNotePdf(String policyNo) throws Exception;
 }

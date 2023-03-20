@@ -27,16 +27,17 @@
         <result column="PolicyAmount" property="policyAmount" />
         <result column="PM_PRME_NEW_OLD_SW" property="paymentMode" />
         <result column="PrmeNewOldSW" property="prmeNewOldSW" />
+        <result column="NoteVerifyResult" property="noteVerifyResult" />
+        <result column="Main_Key" property="mainKey" />
     </resultMap>
 
     <select id="getCaseList" resultMap="CaseMap">
-        SELECT DISTINCT A.PolicyNo, A.AppName, E.InsName, A.TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, D.PolicyType
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.InsName, A.TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, D.PolicyType
         FROM MainPolicy A
         LEFT JOIN (
         SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM PolicyNote B
         INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
         ) D ON A.MAIN_KEY = D.MAIN_KEY
-        LEFT JOIN PolicyFinancial E ON A.PolicyNo = E.PolicyNo
         <where>
             <foreach collection="vo.caseQuery" item="item" open="(" close=")" separator="OR">
                   <trim prefixOverrides="AND">
@@ -61,10 +62,10 @@
                 AND A.AppId LIKE CONCAT('%', #{vo.lipmId}, '%')
             </if>
             <if test="vo.lipiName != null and vo.lipiName != ''">
-                AND E.InsName LIKE CONCAT('%', #{vo.lipiName}, '%')
+                AND A.InsName LIKE CONCAT('%', #{vo.lipiName}, '%')
             </if>
             <if test="vo.lipiId != null and vo.lipiId != ''">
-                AND E.InsID LIKE CONCAT('%', #{vo.lipiId}, '%')
+                AND A.InsID LIKE CONCAT('%', #{vo.lipiId}, '%')
             </if>
             <if test="vo.caseStatus != null and vo.caseStatus != ''">
                    AND A.BPMCurrentTak = #{vo.caseStatus}
@@ -74,9 +75,9 @@
     </select>
 
     <select id="getCaseProcess" resultMap="CaseMap">
-        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, E.InsName, E.InsID, A.TBSubmitDate,
-            D.NoteStatus, D.NoteVerifyResult, D.PolicyType, A.PrintDate, A.PolicyActiveDate, A.TransPayDate, A.Manager,
-            A.StampResult,
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.InsName, A.InsID, A.TBSubmitDate,
+            D.NoteStatus, D.NoteVerifyResult, D.PolicyType, FORMAT(A.PrintDate, 'yyyyMMdd') PrintDate, A.PolicyActiveDate, A.TransPayDate,
+            P.UserName Manager, A.StampResult,
         (SELECT TOP (1) ReviewResult
             FROM PolicyReviewLog
                 where Main_Key = (select Main_Key from MainPolicy where policyNo = #{policyNo})
@@ -92,7 +93,7 @@
         INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C
             ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
         ) D ON A.MAIN_KEY = D.MAIN_KEY
-        LEFT JOIN PolicyFinancial E ON A.PolicyNo = E.PolicyNo
+        LEFT JOIN UserProfile P ON P.User_ID = A.Manager
         WHERE A.PolicyNo = #{policyNo}
     </select>
     
@@ -100,7 +101,7 @@
         SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.AppBirth, A.TBSubmitDate, A.BPMCurrentTak,
         A.AccDocNo, A.PM_PRME_NEW_OLD_SW,
         (SELECT TOP(1) PrmeNewOldSW FROM PolicyFormData WHERE MAIN_KEY = A.MAIN_KEY) PrmeNewOldSW,
-        D.PolicyType, A.StampResult, A.PayType, E.InsBirth, E.InsName, E.InsID, A.PolicyAmount, A.PolicyAmountNTD
+        D.PolicyType, A.StampResult, A.PayType, A.InsBirth, A.InsName, A.InsID, A.PolicyAmount, A.PolicyAmountNTD
         FROM MainPolicy A
         LEFT JOIN (
             SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM
@@ -108,7 +109,39 @@
             INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C
         ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
         ) D ON A.MAIN_KEY = D.MAIN_KEY
-        LEFT JOIN PolicyFinancial E ON A.PolicyNo = E.PolicyNo
         WHERE A.PolicyNo = #{policyNo}
+    </select>
+    
+    <select id="getNoteContent" resultMap="CaseMap">
+        SELECT D.Note_key Main_key, D.APPName, D.InsName, D.NoteDate PrintDate, D.PolicyTypeName PolicyType, D.NoteVerifyResult FROM MainPolicy A
+        LEFT JOIN (
+            SELECT B.APPName, B.InsName, B.NoteDate, B.PolicyTypeName, B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM
+            PolicyNote B
+            INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C
+            ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
+        ) D ON A.MAIN_KEY = D.MAIN_KEY
+        WHERE A.PolicyNo = #{policyNo}
+    </select>
+
+    <select id="getNotePdf" resultType="com.twfhclife.eservice.api.jdzq.model.NotePdfVo">
+        SELECT DISTINCT A.PolicyNo policyNo, A.AppName appName, A.InsName insName, A.AgentCode agentCode, P.BrokerName agentName, A.AgentSalesName agentSalesName, A.AgentSalesID agentSalesID,
+        A.AccDocNo accDocNo, D.BranchDesc branchDesc, D.PolicyTypeName policyTypeName, D.ManageDate manageDate, D.ProcessorName processorName, D.ExtNumber extNumber, D.Note_Key note_Key, E.ContentMemo contentMemo,
+        D.DueDate dueDate, D.NoteVerifyMemo noteVerifyMemo
+        FROM MainPolicy A
+        LEFT JOIN (
+        SELECT B.NOTE_KEY, B.MAIN_KEY, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName,
+        B.ManageDate, B.ProcessorName, B.ExtNumber, B.DueDate, B.NoteVerifyMemo, B.BranchDesc FROM PolicyNote B
+        INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
+        ) D ON A.MAIN_KEY = D.MAIN_KEY
+        LEFT JOIN PolicyNoteItems E ON D.Note_Key = E.Note_Key AND A.ItemSerial = E.item_Serial
+        LEFT JOIN BrokerProfile P ON A.AgentCode = P.Broker_ID
+        WHERE A.PolicyNo = #{policyNo}
+    </select>
+
+    <select id="getNoteSchedule" resultType="com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo">
+        SELECT A.AppName, A.InsName, A.PolicyNo, B.DueDate, A.PSalesCode FROM MainPolicy A INNER JOIN
+        PolicyNote B ON A.Main_Key = B.Main_Key
+        WHERE A.BPMCurrentTak IN ('602000S', '602500S')
+        AND B.DueDate = FORMAT(DATEADD(day, -2, SYSDATETIME()), 'yyyyMMdd')
     </select>
 </mapper>
