@@ -76,6 +76,20 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
         return depNameExist;
     }
 
+    @Override
+    public boolean isDeptIdExist(DepartmentVo departmentVo) {
+        boolean depNameExist = false;
+        String depId = departmentVo.getDepId();
+        List<DepartmentVo> dataList = departmentDao.getDepts();
+        for (DepartmentVo depVo: dataList) {
+            if (depVo.getDepId().equals(depId)) {
+                    depNameExist = true;
+                    break;
+            }
+        }
+        return depNameExist;
+    }
+
     /**
      * 新增部門節點.
      *

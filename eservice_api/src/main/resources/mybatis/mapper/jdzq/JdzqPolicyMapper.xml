@@ -105,7 +105,7 @@
         WHEN '5' THEN '承保'
         WHEN '9' THEN '不予承保'
         ELSE '' END) AS ReviewResult,
-        c.PSalesCode,c.AppName,c.AppID,c.AppCountry,c.AppPolicyAge,
+        c.AppName,c.AppID,c.AppCountry,c.AppPolicyAge,
         c.InsName,c.InsID,c.LIPI_AGE AS lipiAge,
         c.PolicyAmountNTD,c.PolicyFee,
         (CASE c.PayType
@@ -126,11 +126,10 @@
         left join underwriting.dbo.PolicyNote pn on c.Main_Key = pn.Main_Key
         left join underwriting.dbo.PolicyNoteItems  pni on  pn.Note_Key = pni.Note_Key
         <where>
-            pn.IsCancel = 'N'
-            AND prl.LogType = 'B'
+            prl.LogType = 'B'
             AND prl.Sub_Serial = '0'
             <if test="vo.appName != null and vo.appName != ''">
-                AND UPPER( c.AppName) LIKE '%${vo.appName}%'
+                AND UPPER( c.AppName) LIKE N'%${vo.appName}%'
             </if>
             <if test="vo.appID != null and vo.appID !=''">
                 AND c.AppID = '${vo.appID}'
@@ -172,7 +171,7 @@
                 AND c.PolicyType = '${vo.policyType}'
             </if>
             <if test="vo.insName != null and vo.insName != ''">
-                AND UPPER( c.InsName) LIKE '%${vo.insName}%'
+                AND UPPER( c.InsName) LIKE N'%${vo.insName}%'
             </if>
             <if test="vo.insID != null and vo.insID != ''">
                 AND c.InsID = '${vo.insID}'

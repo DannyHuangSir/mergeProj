@@ -1,9 +1,11 @@
 package com.twfhclife.generic.api_client;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.twfhclife.adm.model.FunctionItemVo;
+import com.twfhclife.adm.model.FunctionVo;
+import com.twfhclife.generic.api_model.ApiResponseObj;
+import com.twfhclife.generic.api_model.ReturnHeader;
+import com.twfhclife.generic.api_model.UserFuncAuthReqVo;
+import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,12 +16,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.twfhclife.adm.model.FunctionItemVo;
-import com.twfhclife.adm.model.FunctionVo;
-import com.twfhclife.generic.api_model.ApiResponseObj;
-import com.twfhclife.generic.api_model.ReturnHeader;
-import com.twfhclife.generic.api_model.UserFuncAuthReqVo;
-import com.twfhclife.generic.util.MyJacksonUtil;
+import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class FuncMgmtClient extends BaseRestClient {
@@ -131,6 +131,8 @@ public class FuncMgmtClient extends BaseRestClient {
 		vo.setUserId(userId);
 		vo.setIsAdmin(isAdmin);
 		Map<String, String> headerMap = new HashMap<>();
+		headerMap.put("Authorization", "Bearer " + new String(WSO2_API_KEY));
+		headerMap.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
 		headerMap.put("secret", this.ESERVICE_API_SECRET);
 		HttpHeaders headers = this.setHeader(headerMap);
 		HttpEntity<?> entity = new HttpEntity<>(vo, headers);

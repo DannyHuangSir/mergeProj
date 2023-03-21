@@ -38,7 +38,7 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'VIP客戶名單匯入批次作業', 'F', 'vipBatchImport',
+    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'IC人員匯入批次作業', 'F', 'ICBatchImport',
 	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm'),
 	'eservice_adm',
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 0),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'權限管理' and SYS_ID = 'eservice_adm')),

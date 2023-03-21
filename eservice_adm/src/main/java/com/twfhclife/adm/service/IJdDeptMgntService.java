@@ -33,6 +33,8 @@ public interface IJdDeptMgntService {
      */
     public boolean isDeptNameExist(DepartmentVo departmentVo);
 
+    public boolean isDeptIdExist(DepartmentVo departmentVo);
+
     /**
      * 經代專區新增部門節點.
      *

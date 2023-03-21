@@ -38,14 +38,12 @@ public class JdPolicyClaimDetailServiceImpl extends BaseRestClient implements IJ
     @Value("${eservice_api.jd.policy.policyTypeUrl}")
     private String policyTypeUrl;
 
-    @Value("${eservice_api.accessKey}")
-    private static String ESERVICE_API_SECRET;
 
     public <T> T getInsClaimStatisticsReport(JdPolicyClaimDetailVo jdPolicyClaimDetailVo) {
         logger.debug("Invoke eservice api[{}]: {}", policyUrl, MyJacksonUtil.object2Json(jdPolicyClaimDetailVo));
 
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Authorization", "Bearer " + this.ESERVICE_API_SECRET);
+        headerMap.put("Authorization", "Bearer " + WSO2_API_KEY);
         headerMap.put("Content-Type", "application/json;charset=UTF-8");
         HttpHeaders headers = this.setHeader(headerMap);
         HttpEntity<JdPolicyClaimDetailVo> entity = new HttpEntity<>(jdPolicyClaimDetailVo, headers);
@@ -68,7 +66,7 @@ public class JdPolicyClaimDetailServiceImpl extends BaseRestClient implements IJ
         logger.debug("Invoke eservice api[{}]: {}", policyUrl, MyJacksonUtil.object2Json(jdPolicyClaimDetailVo));
 
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Authorization", "Bearer " + this.ESERVICE_API_SECRET);
+        headerMap.put("Authorization", "Bearer " + WSO2_API_KEY);
         headerMap.put("Content-Type", "application/json;charset=UTF-8");
         HttpHeaders headers = this.setHeader(headerMap);
         HttpEntity<JdPolicyClaimDetailVo> entity = new HttpEntity<>(jdPolicyClaimDetailVo, headers);
