@@ -53,6 +53,8 @@ public class PolicyServiceImpl implements IPolicyService {
         }
         if (!CollectionUtils.isEmpty(caseQuery)) {
             vo.setPermQuery(caseQuery);
+            vo.setUserId(user.getUsername());
+            vo.setSysId(ApConstants.SYSTEM_ID);
             PolicyListDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(vo), policyListUrl, PolicyListDataResponse.class);
             result.addAll(responseObj.getPolicyList());
         }
@@ -62,24 +64,24 @@ public class PolicyServiceImpl implements IPolicyService {
     @Value("${eservice_api.policy.base.url}")
     private String policyBaseUrl;
     @Override
-    public PolicyBaseVo getPolicyBase(String policyNo) {
-        PolicyBaseDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyBaseUrl, PolicyBaseDataResponse.class);
+    public PolicyBaseVo getPolicyBase(String userId, String policyNo) {
+        PolicyBaseDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyBaseUrl, PolicyBaseDataResponse.class);
         return responseObj.getPolicy();
     }
 
     @Value("${eservice_api.policy.safe.guard.url}")
     private String policySafeGuardUrl;
     @Override
-    public PolicySafeGuardVo getPolicyGuard(String policyNo) {
-        PolicySafeGuardDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policySafeGuardUrl, PolicySafeGuardDataResponse.class);
+    public PolicySafeGuardVo getPolicyGuard(String userId, String policyNo) {
+        PolicySafeGuardDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policySafeGuardUrl, PolicySafeGuardDataResponse.class);
         return responseObj.getSafeGuardVo();
     }
 
     @Value("${eservice_api.policy.payment.record.url}")
     private String policyPaymentRecordUrl;
     @Override
-    public PolicyPaymentRecordVo getPolicyPaymentRecord(String policyNo) {
-        PolicyPaymentRecordDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyPaymentRecordUrl, PolicyPaymentRecordDataResponse.class);
+    public PolicyPaymentRecordVo getPolicyPaymentRecord(String userId, String policyNo) {
+        PolicyPaymentRecordDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyPaymentRecordUrl, PolicyPaymentRecordDataResponse.class);
         return responseObj.getPolicyPaymentRecord();
     }
 
@@ -87,8 +89,8 @@ public class PolicyServiceImpl implements IPolicyService {
     private String policyPremiumUrl;
 
     @Override
-    public PolicyPremiumVo getPolicyPremium(String policyNo) {
-        PolicyPremiumDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyPremiumUrl, PolicyPremiumDataResponse.class);
+    public PolicyPremiumVo getPolicyPremium(String userId, String policyNo) {
+        PolicyPremiumDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyPremiumUrl, PolicyPremiumDataResponse.class);
         return responseObj.getPolicyPremium();
     }
 
@@ -96,8 +98,8 @@ public class PolicyServiceImpl implements IPolicyService {
     private String policyExpireOfPaymentUrl;
 
     @Override
-    public PolicyExpireOfPaymentVo getPolicyExpireOfPayment(String policyNo) {
-        PolicyExpireOfPaymentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyExpireOfPaymentUrl, PolicyExpireOfPaymentDataResponse.class);
+    public PolicyExpireOfPaymentVo getPolicyExpireOfPayment(String userId, String policyNo) {
+        PolicyExpireOfPaymentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyExpireOfPaymentUrl, PolicyExpireOfPaymentDataResponse.class);
         return responseObj.getPolicyExpireOfPayment();
     }
 
@@ -105,8 +107,8 @@ public class PolicyServiceImpl implements IPolicyService {
     private String policyChangeInfoUrl;
 
     @Override
-    public PolicyChangeInfoVo getChangeInfo(String policyNo) {
-        PolicyChangeInfoDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyChangeInfoUrl, PolicyChangeInfoDataResponse.class);
+    public PolicyChangeInfoVo getChangeInfo(String userId, String policyNo) {
+        PolicyChangeInfoDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyChangeInfoUrl, PolicyChangeInfoDataResponse.class);
         return responseObj.getChangeInfo();
     }
 
@@ -114,8 +116,8 @@ public class PolicyServiceImpl implements IPolicyService {
     private String policyIncomeDistributionUrl;
 
     @Override
-    public PolicyIncomeDistributionVo getIncomeDistribution(String policyNo) {
-        PolicyIncomeDistributionDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyIncomeDistributionUrl, PolicyIncomeDistributionDataResponse.class);
+    public PolicyIncomeDistributionVo getIncomeDistribution(String userId, String policyNo) {
+        PolicyIncomeDistributionDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyIncomeDistributionUrl, PolicyIncomeDistributionDataResponse.class);
         return responseObj.getIncomeDistribution();
     }
 
@@ -132,7 +134,7 @@ public class PolicyServiceImpl implements IPolicyService {
         apiReq.setEndDate(endDate);
         apiReq.setPageNum(pageNum);
         apiReq.setPageSize(pageSize);
-        apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
+        apiReq.setSysId(ApConstants.SYSTEM_ID);
         apiReq.setUserId(userId);
         return baseRestClient.postApi(new Gson().toJson(apiReq), transationHistroyUrl, JdPolicyFundTransactionResponse.class);
     }
@@ -143,7 +145,7 @@ public class PolicyServiceImpl implements IPolicyService {
     @Override
     public PolicyPremiumCostResponse getPolicyPremiumTransaction(String userId, String policyNo, String startDate, String endDate, int pageNum, int pageSize) {
         PolicyPremiumTransactionRequest apiReq = new PolicyPremiumTransactionRequest();
-        apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
+        apiReq.setSysId(ApConstants.SYSTEM_ID);
         apiReq.setUserId(userId);
         apiReq.setPolicyNo(policyNo);
         apiReq.setStartDate(startDate);
@@ -157,8 +159,8 @@ public class PolicyServiceImpl implements IPolicyService {
     private String policyInvtFundUrl;
 
     @Override
-    public PolicyInvtFundVo getPolicyInvtFund(String policyNo) {
-        PolicyInvtFundDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), policyInvtFundUrl, PolicyInvtFundDataResponse.class);
+    public PolicyInvtFundVo getPolicyInvtFund(String userId, String policyNo) {
+        PolicyInvtFundDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyInvtFundUrl, PolicyInvtFundDataResponse.class);
         return responseObj.getInvtFund();
     }
 
@@ -179,8 +181,8 @@ public class PolicyServiceImpl implements IPolicyService {
     private String cancelMoneyUrl;
 
     @Override
-    public PolicyCancellationMoneyDataResponse getPolicyCancellationMoney(String policyNo) {
-        PolicyCancellationMoneyDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), cancelMoneyUrl, PolicyCancellationMoneyDataResponse.class);
+    public PolicyCancellationMoneyDataResponse getPolicyCancellationMoney(String userId, String policyNo) {
+        PolicyCancellationMoneyDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), cancelMoneyUrl, PolicyCancellationMoneyDataResponse.class);
         return responseObj;
     }
 

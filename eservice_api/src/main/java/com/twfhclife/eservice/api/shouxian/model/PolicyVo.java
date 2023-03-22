@@ -1,13 +1,13 @@
 package com.twfhclife.eservice.api.shouxian.model;
 
 import com.google.common.collect.Lists;
+import com.twfhclife.eservice.api.elife.domain.AbstractBasePolicyNoDomain;
 import com.twfhclife.eservice.api.jdzq.model.PermQueryVo;
 
 import java.util.List;
 
-public class PolicyVo {
+public class PolicyVo extends AbstractBasePolicyNoDomain {
 
-    private String policyNo;
     private String policyType;
     private String lipmName;
     private String lipmId;
@@ -31,14 +31,6 @@ public class PolicyVo {
     private String endDate;
 
     private List<PermQueryVo> permQuery = Lists.newArrayList();
-
-    public String getPolicyNo() {
-        return policyNo;
-    }
-
-    public void setPolicyNo(String policyNo) {
-        this.policyNo = policyNo;
-    }
 
     public String getPolicyType() {
         return policyType;

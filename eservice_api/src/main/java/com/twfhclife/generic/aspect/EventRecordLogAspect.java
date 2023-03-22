@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -248,11 +249,20 @@ public class EventRecordLogAspect {
 					if (eventCode.contains("AA")) {
 						se.setExecMsg(ssoExecMsg);
 					}
-					
+
+					List<String> jdEvents = Lists.newArrayList();
+					List<String> shouxianEvents = Lists.newArrayList("JD-006", "JD-007");
+
 					if (!StringUtils.isEmpty(sqlId)) {
 						try {
-							se.setExecSql(mybatisSqlUtil.getNativeSql(sqlId, runSqlParams));
-							logger.info("sysId: {}, userId: {}, eventCode: {}, sqlId: {}, running sql: {}", 
+							if (jdEvents.contains(eventCode)) {
+								se.setExecSql(mybatisSqlUtil.getJdNativeSql(sqlId, runSqlParams));
+							} else if (shouxianEvents.contains(eventCode)) {
+								se.setExecSql(mybatisSqlUtil.getShouxianNativeSql(sqlId, runSqlParams));
+							} else {
+								se.setExecSql(mybatisSqlUtil.getNativeSql(sqlId, runSqlParams));
+							}
+							logger.info("sysId: {}, userId: {}, eventCode: {}, sqlId: {}, running sql: {}",
 										sysId, userId, eventCode, sqlId, se.getExecSql());
 						} catch (Exception e) {
 							se.setExecStatus("0");

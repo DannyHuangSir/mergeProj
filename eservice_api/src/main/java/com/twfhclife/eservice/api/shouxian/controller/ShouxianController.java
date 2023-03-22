@@ -6,7 +6,7 @@ import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.api.shouxian.service.ShouxianService;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
 import com.twfhclife.eservice.policy.model.PortfolioVo;
-import com.twfhclife.generic.annotation.ApiRequest;
+import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
@@ -33,6 +33,20 @@ public class ShouxianController extends BaseController {
     private ShouxianService shouxianService;
 
     @PostMapping(value = "/getPolicyList", produces = { "application/json" })
+    @ApiRequest
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-006",
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getPolicyList",
+                            execMethod = "保單查詢",
+                            sqlVoType = "com.twfhclife.eservice.api.shouxian.model.PolicyVo",
+                            sqlVoKey = "vo",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )
+            }))
     public ResponseEntity<?> getPolicyList(@RequestBody PolicyVo vo) {
         ApiResponseObj<PolicyListDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -54,6 +68,16 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyBase", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-007",
+            systemEventParams = {
+            @SystemEventParam(
+                    sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getBasePolicy",
+                    execMethod = "保單基本資料",
+                    sqlParams = {
+                            @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                    }
+            )}))
     public ResponseEntity<?> getPolicyBase(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyBaseDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -75,6 +99,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicySafeGuard", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-008",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicySafeGuard(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicySafeGuardDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -96,6 +123,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPaymentRecord", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-009",
+            systemEventParams = {}))
     public ResponseEntity<?> getPaymentRecord(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyPaymentRecordDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -117,6 +147,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyPremium", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-010",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicyPremium(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyPremiumDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -138,6 +171,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyExpireOfPayment", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-011",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicyExpireOfPayment(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyExpireOfPaymentDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -159,6 +195,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyChangeInfo", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-012",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicyChangeInfo(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyChangeInfoDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -180,6 +219,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getIncomeDistribution", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-013",
+            systemEventParams = {}))
     public ResponseEntity<?> getIncomeDistribution(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyIncomeDistributionDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -201,6 +243,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyTransactionHistory", produces = {"application/json"})
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-014",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicyTransactionHistory(
             @Valid @RequestBody PolicyFundTransactionRequest req) {
         ApiResponseObj<JdPolicyFundTransactionResponse> apiResponseObj = new ApiResponseObj<>();
@@ -242,6 +287,9 @@ public class ShouxianController extends BaseController {
 
     @ApiRequest
     @PostMapping(value = "/getPolicyPremiumCost", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-015",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicyPremiumCost(
             @Valid @RequestBody PolicyPremiumTransactionRequest req) {
         ApiResponseObj<PolicyPremiumCostResponse> apiResponseObj = new ApiResponseObj<>();
@@ -281,6 +329,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyInvtFund", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-016",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicyInvtFund(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyInvtFundDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -302,6 +353,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyPortfolioNew", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-017",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicyPortfolioNew(@Valid @RequestBody PortfolioRequest req) {
         ApiResponseObj<PortfolioResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -324,6 +378,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyCancellationMoney", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-018",
+            systemEventParams = {}))
     public ResponseEntity<?> getPolicyCancellationMoney(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyCancellationMoneyDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -347,6 +404,9 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getExchangeRate", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-019",
+            systemEventParams = {}))
     public ResponseEntity<?> getExchangeRate(@Valid @RequestBody ExchangeRateRequest vo) {
         ApiResponseObj<ExchangeRateDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();

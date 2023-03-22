@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
 @Component
 public class MybatisSqlUtil {
 
@@ -20,9 +22,39 @@ public class MybatisSqlUtil {
 	
 	@Autowired
 	private SqlSessionFactory sessionFactory;
-	
+
+	@Resource(name = "jdzqSqlSessionFactory")
+	private SqlSessionFactory jdzqSqlSessionFactory;
+
+	@Resource(name = "shouxianSqlSessionFactory")
+	private SqlSessionFactory shouxianSqlSessionFactory;
+
+
+	private SqlSessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	private SqlSessionFactory getJdzqSqlSessionFactory() {
+		return jdzqSqlSessionFactory;
+	}
+
+	private SqlSessionFactory getShouxianSqlSessionFactory() {
+		return shouxianSqlSessionFactory;
+	}
+
+	public String getJdNativeSql(String sqlId, Object param) {
+		return getNativeSql(getJdzqSqlSessionFactory(), sqlId, param);
+	}
+
+	public String getShouxianNativeSql(String sqlId, Object param) {
+		return getNativeSql(getShouxianSqlSessionFactory(), sqlId, param);
+	}
 	public String getNativeSql(String sqlId, Object param) {
-		MappedStatement ms = sessionFactory.getConfiguration().getMappedStatement(sqlId);
+		return getNativeSql(getSessionFactory(), sqlId, param);
+	}
+
+	public String getNativeSql(SqlSessionFactory sqlSessionFactory, String sqlId, Object param) {
+		MappedStatement ms = sqlSessionFactory.getConfiguration().getMappedStatement(sqlId);
 		BoundSql boundSql = ms.getBoundSql(param);
 		
 		String nativeSql = boundSql.getSql();

@@ -153,7 +153,7 @@
 					if(response.result == "SUCCESS"){
 						html = ''
 						response.resultData.forEach(function(item, index){
-								html += '<tr policyNo=' + item.policyNo + '>' +
+								html += "<tr onclick=\"javascript:postPolicyListType('caselisting1', '" + item.policyNo + "')\">" +
 										'<td class="table3">' + item.policyNo  +'</td>' +
 										'<td class="hid1 hid2">'+ item.appName +'</td>' +
 										'<td class="hid1 hid2">' + item.insName +'</td>' +

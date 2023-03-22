@@ -86,10 +86,9 @@ public class MessageServiceImpl implements IMessageService {
                 try {
                     UsersVo vo = usersDao.getUserBySaleId(noteNotify.getpSalesCode());
                     if (vo != null) {
-                        String title = String.format("要保人%s/被保險人%s 照會截止日通知", noteNotify.getAppName(), noteNotify.getInsName());
                         JdzqNotifyMsg msg = new JdzqNotifyMsg();
                         msg.setUsers(Lists.newArrayList(vo.getUserId()));
-                        msg.setTitle(title);
+                        msg.setTitle("照會截止日通知");
                         msg.setMsg(String.format("要保人%s/被保險人%s-保單號碼%s案件的照會回覆截止日期為%s，再請確認是否已回覆。", noteNotify.getAppName(), noteNotify.getInsName(), noteNotify.getPolicyNo(), noteNotify.getDueDate()));
                         msg.setNotifyTime(new Date());
                         jdMsgNotifyDao.addJdNotifyMsg(msg);
@@ -114,34 +113,38 @@ public class MessageServiceImpl implements IMessageService {
 
     @Autowired
     private IPolicyService policyService;
-    @Scheduled( cron = "0 0 2 ? * *")
-//    @Scheduled( cron = "0/20 * * * * ?")
+//    @Scheduled( cron = "0 0 2 ? * *")
+    @Scheduled( cron = "0/20 * * * * ?")
     public void notifyStopProfitAndStopLoss() {
         List<NotifyScheduleVo> notifyScheduleVos = notifyConfigDao.getNotifyConfigSchedule();
         if(CollectionUtils.isNotEmpty(notifyScheduleVos)) {
             for (NotifyScheduleVo notifyScheduleVo : notifyScheduleVos) {
-                Set<String> notifyPolicyNos = Sets.newHashSet();
-                if (CollectionUtils.isNotEmpty(notifyScheduleVo.getInvts())) {
-                    for (SubNotifyScheduleVo invt : notifyScheduleVo.getInvts()) {
-                        List<PortfolioVo> portfolioVos = policyService.getPolicyRateSchedule(invt.getPolicyNo());
-                        if (CollectionUtils.isNotEmpty(portfolioVos)) {
-                            for (PortfolioVo portfolioVo : portfolioVos) {
-                                if (StringUtils.equals(portfolioVo.getInvtNo(), invt.getInvtNo()) && checkROI(portfolioVo, invt)) {
-                                    notifyPolicyNos.add(portfolioVo.getPolicyNo());
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (CollectionUtils.isNotEmpty(notifyPolicyNos)) {
-                    JdzqNotifyMsg msg = new JdzqNotifyMsg();
-                    msg.setUsers(Lists.newArrayList(notifyScheduleVo.getUserId()));
-                    msg.setTitle("停利停損通知");
-                    msg.setMsg("保單：" + notifyPolicyNos + " 達到停利停損設定，請知悉！");
-                    msg.setNotifyTime(new Date());
-                    jdMsgNotifyDao.addJdNotifyMsg(msg);
-                }
+               try {
+                   Set<String> notifyPolicyNos = Sets.newHashSet();
+                   if (CollectionUtils.isNotEmpty(notifyScheduleVo.getInvts())) {
+                       for (SubNotifyScheduleVo invt : notifyScheduleVo.getInvts()) {
+                           List<PortfolioVo> portfolioVos = policyService.getPolicyRateSchedule(invt.getPolicyNo());
+                           if (CollectionUtils.isNotEmpty(portfolioVos)) {
+                               for (PortfolioVo portfolioVo : portfolioVos) {
+                                   if (StringUtils.equals(portfolioVo.getInvtNo(), invt.getInvtNo()) && checkROI(portfolioVo, invt)) {
+                                       notifyPolicyNos.add(portfolioVo.getPolicyNo());
+                                       break;
+                                   }
+                               }
+                           }
+                       }
+                   }
+                   if (CollectionUtils.isNotEmpty(notifyPolicyNos)) {
+                       JdzqNotifyMsg msg = new JdzqNotifyMsg();
+                       msg.setUsers(Lists.newArrayList(notifyScheduleVo.getUserId()));
+                       msg.setTitle("停利停損通知");
+                       msg.setMsg("保單：" + notifyPolicyNos + " 達到停利停損設定，請知悉！");
+                       msg.setNotifyTime(new Date());
+                       jdMsgNotifyDao.addJdNotifyMsg(msg);
+                   }
+               } catch (Exception e) {
+                   logger.error("notifyStopProfitAndStopLoss error: {}", e);
+               }
             }
         }
     }

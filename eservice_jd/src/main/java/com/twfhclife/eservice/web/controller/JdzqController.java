@@ -22,8 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +52,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing1")
     public String listing1(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
+            PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -67,7 +65,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing11")
     public String listing11(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicySafeGuardVo vo = policyService.getPolicyGuard(policyNo);
+            PolicySafeGuardVo vo = policyService.getPolicyGuard(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -80,7 +78,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing3")
     public String listing3(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyPaymentRecordVo vo = policyService.getPolicyPaymentRecord(policyNo);
+            PolicyPaymentRecordVo vo = policyService.getPolicyPaymentRecord(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -93,7 +91,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing5")
     public String listing5(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyPremiumVo vo = policyService.getPolicyPremium(policyNo);
+            PolicyPremiumVo vo = policyService.getPolicyPremium(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -106,7 +104,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing13")
     public String listing13(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyExpireOfPaymentVo vo = policyService.getPolicyExpireOfPayment(policyNo);
+            PolicyExpireOfPaymentVo vo = policyService.getPolicyExpireOfPayment(getUserId(), policyNo);
             if (vo != null && CollectionUtils.isNotEmpty(vo.getPayments())) {
                 List<Map<String, String>> bankList = optionService.getBankList();
                 for (ExpireOfPaymentVo vo1 : vo.getPayments()) {
@@ -132,7 +130,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing5_3")
     public String listing5_3(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyChangeInfoVo vo = policyService.getChangeInfo(policyNo);
+            PolicyChangeInfoVo vo = policyService.getChangeInfo(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -145,7 +143,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing2")
     public String listing2(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
+            PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -158,7 +156,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing6_2")
     public String listing6_2(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyIncomeDistributionVo vo = policyService.getIncomeDistribution(policyNo);
+            PolicyIncomeDistributionVo vo = policyService.getIncomeDistribution(getUserId(), policyNo);
             addAttribute("vo", vo.getPolicy());
             addAttribute("info", vo.getIncomeDistributions());
             addAttribute("policyNo", policyNo);
@@ -180,7 +178,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing10")
     public String listing10(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
+            PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -234,7 +232,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing7")
     public String listing7(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
+            PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
@@ -281,7 +279,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing16")
     public String listing16(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyInvtFundVo vo = policyService.getPolicyInvtFund(policyNo);
+            PolicyInvtFundVo vo = policyService.getPolicyInvtFund(getUserId(), policyNo);
             addAttribute("portfolioList", policyService.getPolicyRateOfReturn(getUserId(), policyNo).getPortfolioList());
             addAttribute("vo", vo.getPolicy());
             List<String> rocYearMenu = DateUtil.getYearOpitonByEffectDate("1911/01/01");
@@ -308,7 +306,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing17")
     public String listing17(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyCancellationMoneyDataResponse resp = policyService.getPolicyCancellationMoney(policyNo);
+            PolicyCancellationMoneyDataResponse resp = policyService.getPolicyCancellationMoney(getUserId(), policyNo);
             addAttribute("vo", resp.getPolicyVo());
             addAttribute("cancelMoneys", resp.getCancellationMoneyVos());
             addAttribute("amountVo", resp.getPolicyAmountVo());
@@ -345,7 +343,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing18")
     public String listing18(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyBaseVo vo = policyService.getPolicyBase(policyNo);
+            PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
