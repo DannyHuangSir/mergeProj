@@ -524,7 +524,7 @@
     <select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo">
         SELECT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, lir.INPR_TRAN_DATE_MAX netValueDate,
         lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval, lip.SAFP_AVG_PVAL avgPval,
-        lin.INVT_RISK_BENE_LEVEL riskBeneLevel, lin.INVT_NO invtNo, lin.INVT_NAME invtName,
+        lin.INVT_RISK_BENE_LEVEL riskBeneLevel, lin.INVT_NO invtNo, lin.INVT_NAME invtName, lip.SAFP_INSU_NO policyNo,
         leh.EXCH_SPEBK_PURATE exchRateBuy, SUM(lcp.CLUP_EXPE_NTD) clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
         FROM LISAFP_ES_FLOWTEST lip
         LEFT JOIN LIINVT_ES_FLOWTEST lin ON lip.SAFP_INVT_NO = lin.INVT_NO
@@ -545,7 +545,7 @@
         WHERE lip.SAFP_INSU_NO = #{policyNo}
         GROUP BY lir.INPR_UNIT_SOLPRICE, lir.INPR_TRAN_DATE_MAX,  lip.SAFP_NET_UNITS, lip.SAFP_NET_UNITS,
         lin.INVT_RISK_BENE_LEVEL, lin.INVT_NAME, lip.SAFP_ACCU_INVEST_BFEXCH,
-        leh.EXCH_SPEBK_PURATE, lip.SAFP_AVG_PNTDVAL, lip.SAFP_NET_AMT, lin.INVT_NO, lin.INVT_EXCH_CURR, lip.SAFP_AVG_PVAL
+        leh.EXCH_SPEBK_PURATE, lip.SAFP_AVG_PNTDVAL, lip.SAFP_NET_AMT, lin.INVT_NO, lin.INVT_EXCH_CURR, lip.SAFP_AVG_PVAL, lip.SAFP_INSU_NO
     </select>
 
     <select id="selectPolicyAmount" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyAmountVo">

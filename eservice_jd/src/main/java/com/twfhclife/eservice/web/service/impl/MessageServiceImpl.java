@@ -113,8 +113,8 @@ public class MessageServiceImpl implements IMessageService {
 
     @Autowired
     private IPolicyService policyService;
-//    @Scheduled( cron = "0 0 2 ? * *")
-    @Scheduled( cron = "0/20 * * * * ?")
+    @Scheduled( cron = "0 0 2 ? * *")
+//    @Scheduled( cron = "0/20 * * * * ?")
     public void notifyStopProfitAndStopLoss() {
         List<NotifyScheduleVo> notifyScheduleVos = notifyConfigDao.getNotifyConfigSchedule();
         if(CollectionUtils.isNotEmpty(notifyScheduleVos)) {
@@ -138,7 +138,7 @@ public class MessageServiceImpl implements IMessageService {
                        JdzqNotifyMsg msg = new JdzqNotifyMsg();
                        msg.setUsers(Lists.newArrayList(notifyScheduleVo.getUserId()));
                        msg.setTitle("停利停損通知");
-                       msg.setMsg("保單：" + notifyPolicyNos + " 達到停利停損設定，請知悉！");
+                       msg.setMsg("保單：" + notifyPolicyNos.toString() + " 達到停利停損設定，請知悉！");
                        msg.setNotifyTime(new Date());
                        jdMsgNotifyDao.addJdNotifyMsg(msg);
                    }

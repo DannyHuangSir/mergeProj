@@ -385,6 +385,9 @@ public class JdzqController extends BaseController {
                 if (CollectionUtils.isNotEmpty(portfolioList)) {
                     for (PortfolioVo portfolioVo : portfolioList) {
                         NotifyConfigVo configVo = policyService.getNotifyConfig(getLoginUser().getId(), policyNo, portfolioVo.getInvtNo());
+                        if (configVo == null) {
+                            configVo = new NotifyConfigVo();
+                        }
                         BeanUtils.copyProperties(portfolioVo, configVo);
                         result.add(configVo);
                     }
