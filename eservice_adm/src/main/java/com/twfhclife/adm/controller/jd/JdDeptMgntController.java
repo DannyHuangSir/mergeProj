@@ -125,20 +125,25 @@ public class JdDeptMgntController extends BaseController {
             departmentVo.setCreateUser(getUserId());
             departmentVo.setModifyUser(getUserId());
 
-            if (deptMgntService.isDeptNameExist(departmentVo)) {
-                processError("部門名稱重覆");
-            } else {
-                if (deptMgntService.isBranchIdExist(departmentVo)){
-                    processError("同通路下分支機構代碼重覆");
-                }else {
-                    int result = deptMgntService.addDepartment(departmentVo);
-                    if (result > 0) {
-                        processSuccessMsg("新增成功");
-                    } else {
-                        processError("新增失敗");
+            if (deptMgntService.isDeptIdExist(departmentVo)){
+                processError("部門ID重覆");
+            }else {
+                if (deptMgntService.isDeptNameExist(departmentVo)) {
+                    processError("部門名稱重覆");
+                } else {
+                    if (deptMgntService.isBranchIdExist(departmentVo)){
+                        processError("同通路下分支機構代碼重覆");
+                    }else {
+                        int result = deptMgntService.addDepartment(departmentVo);
+                        if (result > 0) {
+                            processSuccessMsg("新增成功");
+                        } else {
+                            processError("新增失敗");
+                        }
                     }
                 }
             }
+
         } catch (Exception e) {
             logger.error("Unable to insertDepartment: {}", ExceptionUtils.getStackTrace(e));
             processSystemError();
