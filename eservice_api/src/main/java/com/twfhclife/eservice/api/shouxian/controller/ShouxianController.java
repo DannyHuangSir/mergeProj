@@ -366,4 +366,26 @@ public class ShouxianController extends BaseController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
+
+    @PostMapping(value = "/getPolicyPortfolioSchedule", produces = { "application/json" })
+    public ResponseEntity<?> getPolicyPortfolioSchedule(@RequestBody PolicyBaseVo req) {
+        ApiResponseObj<PortfolioResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            String policyNo = req.getPolicyNo();
+            if (!StringUtils.isEmpty(policyNo)) {
+                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo);
+                returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+                apiResponseObj.setReturnHeader(returnHeader);
+                apiResponseObj.setResult(resp);
+            }
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyPortfolioSchedule: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
 }

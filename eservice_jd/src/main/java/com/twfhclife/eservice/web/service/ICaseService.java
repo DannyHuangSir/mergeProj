@@ -9,11 +9,11 @@ import java.util.List;
 public interface ICaseService {
     List<CaseVo> getCaseList(KeycloakUser user, CaseQueryVo vo);
 
-    CaseVo getCaseProcess(String policyNo);
+    CaseVo getCaseProcess(String userId, String policyNo);
 
-    CaseVo getCasePolicyInfo(String policyNo);
+    CaseVo getCasePolicyInfo(String userId, String policyNo);
 
-    List<CaseVo> getNoteContent(String policyNo);
+    List<CaseVo> getNoteContent(String userId, String policyNo);
 
-    byte[] getNotePdf(String policyNo) throws Exception;
+    byte[] getNotePdf(String userId, String policyNo) throws Exception;
 }

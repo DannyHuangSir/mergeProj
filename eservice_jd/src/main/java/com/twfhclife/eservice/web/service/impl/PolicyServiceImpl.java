@@ -211,4 +211,12 @@ public class PolicyServiceImpl implements IPolicyService {
         apiReq.setQueryType(exchangeRateVo.getQueryType());
         return baseRestClient.postApi(new Gson().toJson(apiReq), exchangeRateUrl, ExchangeRateDataResponse.class).getExchangeRates();
     }
+
+    @Value("${eservice_api.policy.portfolio.schedule.url}")
+    private String portfolioScheduleUrl;
+
+    @Override
+    public List<PortfolioVo> getPolicyRateSchedule(String policyNo) {
+        return baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), portfolioScheduleUrl, PortfolioResponse.class).getPortfolioList();
+    }
 }

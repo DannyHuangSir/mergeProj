@@ -14,6 +14,8 @@ import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.generic.util.RoiRateUtil;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -36,6 +38,8 @@ import java.util.Map;
 
 @Service
 public class ShouxianService {
+
+    private static Logger logger = LoggerFactory.getLogger(ShouxianService.class);
 
     @Autowired
     private ShouXianDao shouXianDao;
@@ -103,22 +107,18 @@ public class ShouxianService {
         return values;
     }
 
-    /**
-     * 公式1: FD 基金: {[((單位數*單位淨值*匯率) + 累積投資收益)/(平均台幣買價*總單位數)] – 1}%
-     */
+    /** 公式1: FD 基金: {[((單位數*單位淨值*匯率) + 累積投資收益)/(平均台幣買價*總單位數)] – 1}% */
     private BigDecimal[] formula1(BigDecimal netUnits, BigDecimal netValue, BigDecimal exchRate, BigDecimal ntdVal, BigDecimal accumAmt) {
         BigDecimal[] values = new BigDecimal[3];
         if (netUnits != null && netValue != null && exchRate != null && ntdVal != null && accumAmt != null) {
             values = RoiRateUtil.formula1(netUnits, netValue, exchRate, ntdVal, accumAmt);
         } else {
-            values = this.getZero();
+            values = getZero();
         }
         return values;
     }
 
-    /**
-     * 公式2: RT 貨幣帳戶: {[(帳戶金額*匯率)/平均台幣買價]-1}%
-     */
+    /** 公式2: RT 貨幣帳戶: {[(帳戶金額*匯率)/平均台幣買價]-1}% */
     private BigDecimal[] formula2(BigDecimal netAmt, BigDecimal exchRate, BigDecimal ntdVal) {
         BigDecimal[] values = new BigDecimal[3];
         if (netAmt != null && exchRate != null && ntdVal != null) {
@@ -209,37 +209,48 @@ public class ShouxianService {
         Iterator var4 = portfolioList.iterator();
         while (var4.hasNext()) {
             PortfolioVo portfolioVo = (PortfolioVo) var4.next();
-            BigDecimal netAmt = portfolioVo.getSafpNetAmt();
-            BigDecimal netUnits = portfolioVo.getSafpNetUnits();
-            BigDecimal ntdVal = portfolioVo.getSafpAvgPntdval();
-            BigDecimal netValue = portfolioVo.getNetValueSell();
-            BigDecimal exchRate = portfolioVo.getExchRateBuy();
-            BigDecimal expeNtd = portfolioVo.getClupExpeNtdSum();
+            BigDecimal netAmt = portfolioVo.getSafpNetAmt(); // 目前金額
+            BigDecimal netUnits = portfolioVo.getSafpNetUnits(); // 目前單位數
+            BigDecimal ntdVal = portfolioVo.getSafpAvgPntdval(); // 平均台幣買價
+            BigDecimal netValue = portfolioVo.getNetValueSell(); // 淨值
+            BigDecimal exchRate = portfolioVo.getExchRateBuy(); // 匯率
+            BigDecimal expeNtd = portfolioVo.getClupExpeNtdSum(); // 累計投資收益(不一定是台幣)
+
             BigDecimal[] values = new BigDecimal[3];
+            BigDecimal roiRate; // 參考報酬率(%)
+            BigDecimal acctValue; // 帳戶價值
+            BigDecimal avgPval; // 平均成本
+
+            // 台幣時匯率為1
             if ("NTD".equals(portfolioVo.getInvtExchCurr())) {
-                exchRate = BigDecimal.valueOf(1L);
+                exchRate = BigDecimal.valueOf(1);
             }
 
-            BigDecimal roiRate;
-            BigDecimal acctValue;
-            BigDecimal avgPval;
             try {
-                if (portfolioVo.getInvtNo().startsWith("RT")) {
+                if (portfolioVo.getInvtNo().startsWith("RT")) { // RT： {[(帳戶金額*匯率)/平均台幣買價]-1}%
                     values = this.formula2(netAmt, exchRate, ntdVal);
-                    portfolioVo.setSafpNetUnits(netAmt);
+                    portfolioVo.setSafpNetUnits(netAmt); // RT 不會有單位數 請顯示SAFP_NET_AMT & RT不會有淨值
                 } else {
+                    // {[(單位數*單位淨值*匯率)/(平均台幣買價*總單位數)]–1}%
                     values = this.formula1(netUnits, netValue, exchRate, ntdVal, expeNtd);
+                    if (values[2] != null && values[1] != null) {
+                        values[0] = values[1].subtract(values[2]).divide(values[2], 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100));
+                    }
                 }
 
+                // 從Array指定變數
                 roiRate = values[0];
                 acctValue = values[1];
                 avgPval = values[2];
-            } catch (Exception var17) {
+
+            } catch (Exception ex) {
+                logger.error("policyNo:" + portfolioVo.getPolicyNo() + "invtNo :" + portfolioVo.getInvtNo());
                 roiRate = new BigDecimal(0);
                 acctValue = new BigDecimal(0);
                 avgPval = new BigDecimal(0);
             }
 
+            // 放入vo
             portfolioVo.setRoiRate(roiRate);
             portfolioVo.setAcctValue(acctValue);
             portfolioVo.setAvgPval(avgPval);

@@ -115,7 +115,7 @@ public class EventRecordLogAspect {
 							ssoExecMsg = returnHeader.getReturnMesg();
 						}
 					}
-					
+
 					if (method.getName().equals("logout") && apiResponseObj.getResult() != null) {
 						if (apiResponseObj.getResult() instanceof String) {
 							userName = (String) apiResponseObj.getResult();
@@ -143,6 +143,8 @@ public class EventRecordLogAspect {
 					sysId = "eservice";
 				} else if (sysIdObj.equals("twfhclife")) {
 					sysId = "eservice_adm";
+				} else if (sysIdObj.equals("elife_jd")) {
+					sysId = "eservice_jd";
 				} else {
 					sysId = (String) sysIdObj;
 				}

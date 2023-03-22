@@ -128,16 +128,6 @@
         </div>
     </div>
 </header>
-<th:block
-        th:if="${SYSTEM_CONSTANTS} != null and ${SYSTEM_CONSTANTS['MAINTAIN_MSG'] != null} and ${SYSTEM_CONSTANTS['MAINTAIN_MSG'].status = 1}">
-    <div class="row alert1 alert-new">
-        <div class="container">
-            <div class="list"><a><i class="foo-attention"></i>
-                <th:block th:text="${SYSTEM_CONSTANTS['MAINTAIN_MSG'].parameterValue}"/>
-            </a></div>
-        </div>
-    </div>
-</th:block>
 <div class="container-fluid c1 fullContent">
     <div class="bg1">
         <div class="index-bg">

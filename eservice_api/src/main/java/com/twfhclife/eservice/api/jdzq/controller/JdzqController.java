@@ -6,7 +6,9 @@ import com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo;
 import com.twfhclife.eservice.api.jdzq.model.NotePdfVo;
 import com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo;
 import com.twfhclife.eservice.api.jdzq.service.JdzqService;
+import com.twfhclife.eservice.api.shouxian.model.PolicyBaseVo;
 import com.twfhclife.eservice.web.model.PolicyVo;
+import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
@@ -30,7 +32,13 @@ public class JdzqController extends BaseController {
     @Autowired
     private JdzqService jdzqService;
 
+
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-001",
+            systemEventParams = {}
+    ))
     @PostMapping(value = "/getPersonalCaseList", produces = { "application/json" })
+    @ApiRequest
     public ResponseEntity<?> getPersonalCaseList(@RequestBody CaseQueryRequest caseQuery) {
         ApiResponseObj<PersonalCaseDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -51,12 +59,16 @@ public class JdzqController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @ApiRequest
     @PostMapping(value = "/getCaseProcess", produces = { "application/json" })
-    public ResponseEntity<?> getCaseProcess(@RequestBody PolicyVo policyVo) {
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-002",
+            systemEventParams = {}))
+    public ResponseEntity<?> getCaseProcess(@RequestBody PolicyBaseVo policyVo) {
         ApiResponseObj<CaseProcessDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            CaseVo caseVo = jdzqService.getCaseProcess(policyVo);
+            CaseVo caseVo = jdzqService.getCaseProcess(policyVo.getPolicyNo());
             CaseProcessDataResponse resp = new CaseProcessDataResponse();
             resp.setCaseVo(caseVo);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
@@ -72,12 +84,16 @@ public class JdzqController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @ApiRequest
     @PostMapping(value = "/jdzqGetPolicyInfo", produces = { "application/json" })
-    public ResponseEntity<?> jdzqGetPolicyInfo(@RequestBody PolicyVo policyVo) {
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-003",
+            systemEventParams = {}))
+    public ResponseEntity<?> jdzqGetPolicyInfo(@RequestBody PolicyBaseVo policyVo) {
         ApiResponseObj<CaseProcessDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            CaseVo caseVo = jdzqService.getPolicyInfo(policyVo);
+            CaseVo caseVo = jdzqService.getPolicyInfo(policyVo.getPolicyNo());
             CaseProcessDataResponse resp = new CaseProcessDataResponse();
             resp.setCaseVo(caseVo);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
@@ -93,12 +109,16 @@ public class JdzqController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @ApiRequest
     @PostMapping(value = "/getNoteContent", produces = { "application/json" })
-    public ResponseEntity<?> getNoteContent(@RequestBody PolicyVo policyVo) {
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-004",
+            systemEventParams = {}))
+    public ResponseEntity<?> getNoteContent(@RequestBody PolicyBaseVo policyVo) {
         ApiResponseObj<NoteContentDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            List<CaseVo> caseVo = jdzqService.getNoteContent(policyVo);
+            List<CaseVo> caseVo = jdzqService.getNoteContent(policyVo.getPolicyNo());
             NoteContentDataResponse resp = new NoteContentDataResponse();
             resp.setCases(caseVo);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
@@ -135,12 +155,16 @@ public class JdzqController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @ApiRequest
     @PostMapping(value = "/getNotePdf", produces = { "application/json" })
-    public ResponseEntity<?> getNotePdf(@RequestBody PolicyVo policyVo) {
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-005",
+            systemEventParams = {}))
+    public ResponseEntity<?> getNotePdf(@RequestBody PolicyBaseVo policyVo) {
         ApiResponseObj<NotePdfDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            NotePdfVo notePdf = jdzqService.getNotePdf(policyVo);
+            NotePdfVo notePdf = jdzqService.getNotePdf(policyVo.getPolicyNo());
             NotePdfDataResponse resp = new NotePdfDataResponse();
             resp.setNotePdf(notePdf);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");

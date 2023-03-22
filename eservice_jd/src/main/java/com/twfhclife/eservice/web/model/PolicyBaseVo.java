@@ -1,12 +1,12 @@
 package com.twfhclife.eservice.web.model;
 
 import com.google.common.collect.Lists;
+import com.twfhclife.eservice.api_model.AbstractBasePolicyNoDomain;
 
 import java.util.List;
 
-public class PolicyBaseVo {
+public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
 
-    private String policyNo;
     private String policyType;
     private String lipmName;
     private String lipmId;
@@ -111,15 +111,6 @@ public class PolicyBaseVo {
     private List<PolicyBeneficiaryVo> beneficiaries = Lists.newArrayList();
 
     private List<String> serialNums = Lists.newArrayList();
-
-
-    public String getPolicyNo() {
-        return policyNo;
-    }
-
-    public void setPolicyNo(String policyNo) {
-        this.policyNo = policyNo;
-    }
 
     public String getPolicyType() {
         return policyType;
@@ -369,8 +360,14 @@ public class PolicyBaseVo {
         this.lipmBirth = lipmBirth;
     }
 
+    public PolicyBaseVo(String policyNo, String systemId, String userId) {
+        setPolicyNo(policyNo);
+        setSysId(systemId);
+        setUserId(userId);
+    }
+
     public PolicyBaseVo(String policyNo) {
-        this.policyNo = policyNo;
+        setPolicyNo(policyNo);
     }
 
     public PolicyBaseVo() {

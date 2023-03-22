@@ -11,10 +11,10 @@ public interface ApConstants {
 
 	final String NEW_LINE_SEPARATOR = "\n";
 	
-	final String KEYCLOAK_REALM = "elife";
+	final String KEYCLOAK_REALM = "elife_jd";
 	
 	/** 系統別 */
-	final String SYSTEM_ID = "eservice";
+	final String SYSTEM_ID = "eservice_jd";
 	
 	/** 系統別 */
 	final String SYSTEM_ID_ADM = "eservice_adm";

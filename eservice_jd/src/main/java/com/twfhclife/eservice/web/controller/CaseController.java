@@ -1,21 +1,15 @@
 package com.twfhclife.eservice.web.controller;
 
 import com.twfhclife.eservice.controller.BaseController;
-import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.domain.CaseQueryVo;
-import com.twfhclife.eservice.web.model.CaseVo;
-import com.twfhclife.eservice.web.model.PolicySafeGuardVo;
+import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.service.ICaseService;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.UnsupportedEncodingException;
 
 @Controller
 public class CaseController extends BaseController {
@@ -49,21 +43,21 @@ public class CaseController extends BaseController {
 	@RequestMapping(value = { "/caselisting1" })
 	public String caselisting1(@RequestParam("policyNo") String policyNo) {
 		addAttribute("policyNo", policyNo);
-		addAttribute("vo",  caseService.getCaseProcess(policyNo));
+		addAttribute("vo",  caseService.getCaseProcess(getUserId(), policyNo));
 		return "frontstage/jdzq/caseQuery/caselisting1";
 	}
 
 	@RequestMapping(value = { "/caselisting2" })
 	public String caselisting2(@RequestParam("policyNo") String policyNo) {
 		addAttribute("policyNo", policyNo);
-		addAttribute("vo",  caseService.getCasePolicyInfo(policyNo));
+		addAttribute("vo",  caseService.getCasePolicyInfo(getUserId(), policyNo));
 		return "frontstage/jdzq/caseQuery/caselisting2";
 	}
 
 	@RequestMapping(value = { "/caselisting3" })
 	public String caselisting3(@RequestParam("policyNo") String policyNo) {
 		addAttribute("policyNo", policyNo);
-		addAttribute("list",  caseService.getNoteContent(policyNo));
+		addAttribute("list",  caseService.getNoteContent(getUserId(), policyNo));
 		return "frontstage/jdzq/caseQuery/caselisting3";
 	}
 
@@ -71,7 +65,7 @@ public class CaseController extends BaseController {
 	public @ResponseBody HttpEntity<byte[]> downloadPolicyClaimPDF(@RequestParam("policyNo") String policyNo) throws Exception {
 		HttpHeaders header = new HttpHeaders();
 		String fileName = String.format("inline; filename=照會單-%s.pdf", policyNo);
-		byte[] document = caseService.getNotePdf(policyNo);
+		byte[] document = caseService.getNotePdf(getUserId(), policyNo);
 		header.setContentType(new MediaType("application", "pdf"));
 		header.set("Content-Disposition", new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
 		header.setContentLength(document.length);

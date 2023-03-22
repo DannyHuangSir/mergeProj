@@ -27,20 +27,20 @@ public class JdzqService {
         return jdzqDao.getCaseList(caseQuery);
     }
 
-    public CaseVo getCaseProcess(PolicyVo policyVo) {
-        return jdzqDao.getCaseProcess(policyVo.getPolicyNo());
+    public CaseVo getCaseProcess(String policyNo) {
+        return jdzqDao.getCaseProcess(policyNo);
     }
 
-    public CaseVo getPolicyInfo(PolicyVo policyVo) {
-        return jdzqDao.getPolicyInfo(policyVo.getPolicyNo());
+    public CaseVo getPolicyInfo(String policyNo) {
+        return jdzqDao.getPolicyInfo(policyNo);
     }
 
-    public List<CaseVo> getNoteContent(PolicyVo policyVo) {
-        return jdzqDao.getNoteContent(policyVo.getPolicyNo());
+    public List<CaseVo> getNoteContent(String policyNo) {
+        return jdzqDao.getNoteContent(policyNo);
     }
 
-    public NotePdfVo getNotePdf(PolicyVo policyVo) {
-        return jdzqDao.getNotePdf(policyVo.getPolicyNo());
+    public NotePdfVo getNotePdf(String policyNo) {
+        return jdzqDao.getNotePdf(policyNo);
     }
 
     public List<NoteNotifyVo> getNoteSchedule() {

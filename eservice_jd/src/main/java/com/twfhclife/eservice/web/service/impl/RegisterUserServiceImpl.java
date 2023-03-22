@@ -1,7 +1,5 @@
 package com.twfhclife.eservice.web.service.impl;
 
-import com.twfhclife.common.util.EncryptionUtil;
-import com.twfhclife.eservice.api_client.BaseRestClient;
 import com.twfhclife.eservice.api_client.KeycloakRegisterClient;
 import com.twfhclife.eservice.api_client.SsoClient;
 import com.twfhclife.eservice.api_model.ApiResponseObj;
@@ -30,7 +28,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class RegisterUserServiceImpl implements IRegisterUserService {

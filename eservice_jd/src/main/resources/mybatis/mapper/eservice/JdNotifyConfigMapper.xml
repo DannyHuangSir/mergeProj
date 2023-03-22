@@ -17,4 +17,21 @@
             WHERE POLICY_NO = #{policyNo} AND INVT_NO = #{invtNo} AND USER_ID = #{userId})
     </select>
 
+    <resultMap id="NotifyScheduleMap" type="com.twfhclife.eservice.web.model.NotifyScheduleVo">
+        <result property="userId" column="USER_ID"/>
+        <collection property="invts" resultMap="SubNotifyScheduleMap"></collection>
+    </resultMap>
+
+    <resultMap id="SubNotifyScheduleMap" type="com.twfhclife.eservice.web.model.SubNotifyScheduleVo">
+        <result property="policyNo" column="POLICY_NO"/>
+        <result property="upRate" column="UP_RATE"/>
+        <result property="downRate" column="DOWN_RATE"/>
+        <result property="invtNo" column="INVT_NO"/>
+    </resultMap>
+
+    <select id="getNotifyConfigSchedule" resultMap="NotifyScheduleMap">
+        SELECT POLICY_NO, INVT_NO, USER_ID, UP_RATE, DOWN_RATE FROM ESERVICE_JD.DBO.NOTIFY_CONFIG
+        WHERE ID IN (SELECT MAX(ID) FROM ESERVICE_JD.DBO.NOTIFY_CONFIG GROUP BY POLICY_NO, INVT_NO, USER_ID)
+    </select>
+
 </mapper>

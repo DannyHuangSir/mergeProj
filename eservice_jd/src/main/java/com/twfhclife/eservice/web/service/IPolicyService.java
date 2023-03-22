@@ -40,4 +40,6 @@ public interface IPolicyService {
     NotifyConfigVo getNotifyConfig(String id, String policyNo, String invtNo);
 
     List<ExchangeRateVo> getExchangeRate(String userId, ExchangeRateVo exchangeRateVo);
+
+    List<PortfolioVo> getPolicyRateSchedule(String policyNo);
 }

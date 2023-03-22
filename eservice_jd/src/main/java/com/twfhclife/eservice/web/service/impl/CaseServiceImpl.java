@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.twfhclife.eservice.api_client.BaseRestClient;
@@ -13,6 +12,7 @@ import com.twfhclife.eservice.api_model.NoteContentDataResponse;
 import com.twfhclife.eservice.api_model.NotePdfDataResponse;
 import com.twfhclife.eservice.api_model.PersonalCaseDataResponse;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
+import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.util.RptUtils2;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.domain.NotePdfVo;
@@ -68,6 +68,8 @@ public class CaseServiceImpl implements ICaseService {
                 vo = new CaseQueryVo();
             }
             vo.setCaseQuery(caseQuery);
+            vo.setUserId(user.getUsername());
+            vo.setSysId(ApConstants.SYSTEM_ID);
             PersonalCaseDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(vo), personalCaseUrl, PersonalCaseDataResponse.class);
             result.addAll(responseObj.getCaseList());
         }
@@ -78,31 +80,31 @@ public class CaseServiceImpl implements ICaseService {
     private String caseProcessUrl;
 
     @Override
-    public CaseVo getCaseProcess(String policyNo) {
-        CaseProcessDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), caseProcessUrl, CaseProcessDataResponse.class);
+    public CaseVo getCaseProcess(String userId, String policyNo) {
+        CaseProcessDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), caseProcessUrl, CaseProcessDataResponse.class);
         return responseObj.getCaseVo();
     }
 
     @Value("${eservice_api.case.policy.info.url}")
     private String casePolicyInfoUrl;
     @Override
-    public CaseVo getCasePolicyInfo(String policyNo) {
-        CaseProcessDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), casePolicyInfoUrl, CaseProcessDataResponse.class);
+    public CaseVo getCasePolicyInfo(String userId, String policyNo) {
+        CaseProcessDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), casePolicyInfoUrl, CaseProcessDataResponse.class);
         return responseObj.getCaseVo();
     }
     @Value("${eservice_api.case.note.content.url}")
     private String noteContentUrl;
     @Override
-    public List<CaseVo> getNoteContent(String policyNo) {
-        NoteContentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), noteContentUrl, NoteContentDataResponse.class);
+    public List<CaseVo> getNoteContent(String userId, String policyNo) {
+        NoteContentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), noteContentUrl, NoteContentDataResponse.class);
         return responseObj.getCases();
     }
 
     @Value("${eservice_api.note.pdf.url}")
     private String notePdfUrl;
     @Override
-    public byte[] getNotePdf(String policyNo) throws Exception {
-        NotePdfDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo)), notePdfUrl, NotePdfDataResponse.class);
+    public byte[] getNotePdf(String userId, String policyNo) throws Exception {
+        NotePdfDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), notePdfUrl, NotePdfDataResponse.class);
         return generatePDF(responseObj.getNotePdf());
     }
 

@@ -1,13 +1,13 @@
 package com.twfhclife.eservice.web.domain;
 
 import com.google.common.collect.Lists;
+import com.twfhclife.eservice.api_model.AbstractBasePolicyNoDomain;
 import com.twfhclife.eservice.web.model.PermQueryVo;
 
 import java.util.List;
 
-public class CaseQueryVo {
+public class CaseQueryVo extends AbstractBasePolicyNoDomain {
 
-    private String policyNo;
     private String lipmName;
     private String lipmId;
     private String lipiName;
@@ -15,14 +15,6 @@ public class CaseQueryVo {
     private String caseStatus;
 
     private List<PermQueryVo> caseQuery = Lists.newArrayList();
-
-    public String getPolicyNo() {
-        return policyNo;
-    }
-
-    public void setPolicyNo(String policyNo) {
-        this.policyNo = policyNo;
-    }
 
     public String getLipmName() {
         return lipmName;
