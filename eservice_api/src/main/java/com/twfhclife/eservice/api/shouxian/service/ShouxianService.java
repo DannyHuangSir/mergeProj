@@ -52,7 +52,7 @@ public class ShouxianService {
         return shouXianDao.getBasePolicy(policyNo);
     }
 
-    public PolicySafeGuardVo getSafeGuard(String policyNo) {
+    public List<SafeGuardVo> getSafeGuard(String policyNo) {
         return shouXianDao.getSafeGuard(policyNo);
     }
 

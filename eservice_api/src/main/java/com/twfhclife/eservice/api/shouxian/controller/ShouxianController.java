@@ -106,9 +106,9 @@ public class ShouxianController extends BaseController {
         ApiResponseObj<PolicySafeGuardDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            PolicySafeGuardVo policySafeGuardVo = shouxianService.getSafeGuard(vo.getPolicyNo());
             PolicySafeGuardDataResponse resp = new PolicySafeGuardDataResponse();
-            resp.setSafeGuardVo(policySafeGuardVo);
+            resp.setSafeGuard(shouxianService.getSafeGuard(vo.getPolicyNo()));
+            resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);

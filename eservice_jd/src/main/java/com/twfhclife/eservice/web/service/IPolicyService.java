@@ -13,7 +13,7 @@ public interface IPolicyService {
 
     PolicyBaseVo getPolicyBase(String userId, String policyNo);
 
-    PolicySafeGuardVo getPolicyGuard(String userId, String policyNo);
+    PolicySafeGuardDataResponse getPolicyGuard(String userId, String policyNo);
 
     PolicyPaymentRecordVo getPolicyPaymentRecord(String userId, String policyNo);
 

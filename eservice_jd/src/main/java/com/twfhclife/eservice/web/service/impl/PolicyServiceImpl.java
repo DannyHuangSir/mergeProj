@@ -72,9 +72,9 @@ public class PolicyServiceImpl implements IPolicyService {
     @Value("${eservice_api.policy.safe.guard.url}")
     private String policySafeGuardUrl;
     @Override
-    public PolicySafeGuardVo getPolicyGuard(String userId, String policyNo) {
+    public PolicySafeGuardDataResponse getPolicyGuard(String userId, String policyNo) {
         PolicySafeGuardDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policySafeGuardUrl, PolicySafeGuardDataResponse.class);
-        return responseObj.getSafeGuardVo();
+        return responseObj;
     }
 
     @Value("${eservice_api.policy.payment.record.url}")

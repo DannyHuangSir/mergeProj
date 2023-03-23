@@ -125,7 +125,7 @@
 			$("#doughnutChart").click(function(evt){
 				 var activePoints = myDoughnutChart.getElementsAtEvent(evt);
 				 $("#personalContent").children().each(function(){
-				 	if (chart2Map[activePoints[0]._index].policyNos.indexOf($(this).attr('policyNo')) != -1) {
+				 	if (levelStateMap[activePoints[0]._index].policyNos.indexOf($(this).attr('policyNo')) != -1) {
 				 		$(this).show()
 				 	} else {
 				 		$(this).hide()
@@ -136,7 +136,7 @@
 			$("#doughnutChart2").click(function(evt){
 				 var activePoints = myDoughnutChart2.getElementsAtEvent(evt);
 				 $("#personalContent").children().each(function(){
-				 	if (levelStateMap[activePoints[0]._index].policyNos.indexOf($(this).attr('policyNo')) != -1) {
+				 	if (chart2Map[activePoints[0]._index].policyNos.indexOf($(this).attr('policyNo')) != -1) {
 				 		$(this).show()
 				 	} else {
 				 		$(this).hide()
@@ -153,7 +153,7 @@
 					if(response.result == "SUCCESS"){
 						html = ''
 						response.resultData.forEach(function(item, index){
-								html += "<tr onclick=\"javascript:postPolicyListType('caselisting1', '" + item.policyNo + "')\">" +
+								html += "<tr policyNo=\"" + item.policyNo + "\" onclick=\"javascript:postPolicyListType('caselisting1', '" + item.policyNo + "')\">" +
 										'<td class="table3">' + item.policyNo  +'</td>' +
 										'<td class="hid1 hid2">'+ item.appName +'</td>' +
 										'<td class="hid1 hid2">' + item.insName +'</td>' +
@@ -243,11 +243,10 @@
 
 				labels1 = []
 				data1 = []
+				levelStateMap = levelStateMap.filter(f => f.policyNos.length > 0 )
 				levelStateMap.forEach(function(item,index){
-					if (item.policyNos.length > 0) {
-						labels1.push(item.label + ' ' + item.policyNos.length + '件')
-						data1.push(item.policyNos.length)
-					}
+					labels1.push(item.label + ' ' + item.policyNos.length + '件')
+					data1.push(item.policyNos.length)
 				})
 
 				myDoughnutChart = new Chart(doughnutChart, {

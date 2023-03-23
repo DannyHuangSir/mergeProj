@@ -129,7 +129,8 @@
             WHEN lme.LIPM_ST &lt;= 18 THEN 1
             WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
             WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-            END AS STATUS,
+            END AS STATUS, lie.LIPI_TABL_PREM,
+        to_char(lie.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE,
         lme.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(lbe.BNAG_BIRTH, 'yyyy-MM-dd') LIPM_BIRTH,
         to_char(lsn.ASSN_ARRI_DATE, 'yyyy-MM-dd') ASSN_ARRI_DATE, to_char(lsn.ASSN_TR_ARRI_DATE, 'yyyy-MM-dd') ASSN_TR_ARRI_DATE, lip.PMDA_MAIL, lsn.ASSN_STATUS,
         lme.LIPM_TEL_H, lip.PMDA_APPLICANT_CELLPHONE, lip.PMDA_APPLICANT_EMAIL, lme.LIPM_5_GP,
@@ -151,25 +152,13 @@
         WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>
 
-    <resultMap id="PolicySafeGuardMap" extends="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicySafeGuardVo">
-        <collection property="safeGuards" resultMap="SafeGuardMap"/>
-    </resultMap>
-
     <resultMap id="SafeGuardMap" type="com.twfhclife.eservice.api.shouxian.model.SafeGuardVo">
         <result column="DESI_DESC_CH" property="name"/>
     </resultMap>
 
-    <select id="getSafeGuard" resultMap="PolicySafeGuardMap">
-        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        to_char(lie.LIPI_INSU_END_DATE, 'yyyy-MM-dd') LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
-        to_char(lme.LIPM_ST_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE,
-        CASE
-            WHEN lme.LIPM_ST &lt;= 18 THEN 1
-            WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-            WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-            END AS STATUS, lde.DESI_DESC_CH, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY
-        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
-        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
+    <select id="getSafeGuard" resultMap="SafeGuardMap">
+        SELECT lde.DESI_DESC_CH
+        FROM LILIPM_ES_FLOWTEST lme
         LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
         ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
         LEFT JOIN LIDESI_ES_FLOWTEST lde ON lde.DESI_CODE = lpe.SETT_INSU_TYPE

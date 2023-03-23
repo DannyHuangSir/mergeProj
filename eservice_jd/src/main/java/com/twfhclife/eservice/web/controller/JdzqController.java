@@ -65,8 +65,9 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing11")
     public String listing11(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicySafeGuardVo vo = policyService.getPolicyGuard(getUserId(), policyNo);
-            addAttribute("vo", vo);
+            PolicySafeGuardDataResponse vo = policyService.getPolicyGuard(getUserId(), policyNo);
+            addAttribute("vo", vo.getPolicyBase());
+            addAttribute("safeGuards", vo.getSafeGuard());
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing11: {}", ExceptionUtils.getStackTrace(e));

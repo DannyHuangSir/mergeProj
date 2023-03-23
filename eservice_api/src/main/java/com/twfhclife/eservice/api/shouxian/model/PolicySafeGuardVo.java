@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class PolicySafeGuardVo extends PolicyVo {
+public class PolicySafeGuardVo {
 
     private List<SafeGuardVo> safeGuards = Lists.newArrayList();
 
