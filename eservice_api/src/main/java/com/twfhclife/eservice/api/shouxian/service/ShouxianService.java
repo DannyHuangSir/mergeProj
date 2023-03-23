@@ -56,11 +56,11 @@ public class ShouxianService {
         return shouXianDao.getSafeGuard(policyNo);
     }
 
-    public PolicyPaymentRecordVo getPaymentRecord(String policyNo) {
+    public List<PaymentRecordVo> getPaymentRecord(String policyNo) {
         return shouXianDao.getPaymentRecord(policyNo);
     }
 
-    public PolicyPremiumVo getPolicyPremium(String policyNo) {
+    public List<PremiumVo> getPolicyPremium(String policyNo) {
         return shouXianDao.getPolicyPremium(policyNo);
     }
 

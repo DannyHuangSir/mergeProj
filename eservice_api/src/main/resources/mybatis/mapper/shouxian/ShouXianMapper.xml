@@ -165,10 +165,6 @@
         WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>
 
-    <resultMap id="PolicyPaymentRecordMap" extends="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyPaymentRecordVo">
-        <collection property="paymentRecords" resultMap="PaymentRecordMap"/>
-    </resultMap>
-
     <resultMap id="PaymentRecordMap" type="com.twfhclife.eservice.api.shouxian.model.PaymentRecordVo">
         <result column="PRPA_RCP_DATE" property="rcpDate"/>
         <result column="PRPA_PAAB_AMT" property="paabAmt"/>
@@ -177,35 +173,22 @@
         <result column="PRPA_DESC" property="desc"/>
     </resultMap>
 
-    <select id="getPaymentRecord" resultMap="PolicyPaymentRecordMap">
-        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_TABL_PREM, CASE
-            WHEN lme.LIPM_ST &lt;= 18 THEN 1
-            WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-            WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-        END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lme.LIPM_RCP_METH_CODE,
-        lpe.PROD_CURRENCY CURRENCY, (CASE WHEN lme.LIPM_RCP_CODE = 'A' AND lme.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE,
-        to_char(lpp.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE, lpp.PRPA_PAAB_AMT, lpp.PRPA_ACT_AMT, lpp.PRPA_RCP_CODE,
+    <select id="getPaymentRecord" resultMap="PaymentRecordMap">
+        SELECT to_char(lpp.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE, lpp.PRPA_PAAB_AMT, lpp.PRPA_ACT_AMT, lpp.PRPA_RCP_CODE,
         CONCAT('第', CONCAT(lpp.PRPA_TMS, CONCAT('期/共', CONCAT(
             CASE	WHEN lpp.PRPA_RCP_CODE = N'A' THEN lie.LIPI_PREM_YEAR * 1
             WHEN lpp.PRPA_RCP_CODE = N'S' THEN lie.LIPI_PREM_YEAR * 2
             WHEN lpp.PRPA_RCP_CODE = N'Q' THEN lie.LIPI_PREM_YEAR * 4
             WHEN lpp.PRPA_RCP_CODE = N'M' THEN lie.LIPI_PREM_YEAR * 12
             WHEN lpp.PRPA_RCP_CODE = N'T' THEN 1
-            END, '期'
+        END, '期'
         ))))
         PRPA_DESC
         FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
         ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
-        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
         LEFT JOIN LIPRPA_ES_FLOWTEST lpp ON lme.LIPM_INSU_TYPE = lpp.PRPA_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lpp.PRPA_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lpp.PRPA_INSU_SEQ_NO
         WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>
-
-    <resultMap id="PolicyPremiumMap" extends="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyPremiumVo">
-        <collection property="premiums" resultMap="PremiumMap"/>
-    </resultMap>
 
     <resultMap id="PremiumMap" type="com.twfhclife.eservice.api.shouxian.model.PremiumVo">
         <result column="BONF_FILE_BEG_DATE" property="beginDate"/>
@@ -215,21 +198,12 @@
         <result column="PREMIUM" property="premium"/>
     </resultMap>
 
-    <select id="getPolicyPremium" resultMap="PolicyPremiumMap">
-        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
-        CASE
-        WHEN lme.LIPM_ST &lt;= 18 THEN 1
-        WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-        WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-        END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY,
+    <select id="getPolicyPremium" resultMap="PremiumMap">
+        SELECT
         TO_CHAR(lbf.BONF_FILE_BEG_DATE, 'yyyy-MM-dd') BONF_FILE_BEG_DATE, lbf.BONF_BON_BAL, lbf.BONF_TAKE_CODE,
         TO_CHAR(lbf.BONF_BON_DATE, 'yyyy-MM-dd') BONF_BON_DATE,
         lbf.BONF_BON + NVL(lbf.BONF_RIDER_CODE_1,0) + NVL(lbf.BONF_RIDER_CODE_2,0) + NVL(lbf.BONF_RIDER_CODE_3,0) + NVL(lbf.BONF_RIDER_CODE_4,0) PREMIUM
-        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
-        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
-        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
+        FROM LILIPM_ES_FLOWTEST lme
         LEFT JOIN LIBONF_ES_FLOWTEST lbf ON lme.LIPM_INSU_TYPE = lbf.BONF_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbf.BONF_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbf.BONF_INSU_SEQ_NO
         WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>

@@ -79,8 +79,9 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing3")
     public String listing3(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyPaymentRecordVo vo = policyService.getPolicyPaymentRecord(getUserId(), policyNo);
-            addAttribute("vo", vo);
+            PolicyPaymentRecordDataResponse vo = policyService.getPolicyPaymentRecord(getUserId(), policyNo);
+            addAttribute("vo", vo.getPolicyBaseVo());
+            addAttribute("paymentRecords", vo.getPaymentRecords());
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing3: {}", ExceptionUtils.getStackTrace(e));
@@ -92,8 +93,9 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing5")
     public String listing5(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyPremiumVo vo = policyService.getPolicyPremium(getUserId(), policyNo);
-            addAttribute("vo", vo);
+            PolicyPremiumDataResponse vo = policyService.getPolicyPremium(getUserId(), policyNo);
+            addAttribute("vo", vo.getPolicyBase());
+            addAttribute("premiums", vo.getPremiums());
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing5: {}", ExceptionUtils.getStackTrace(e));
@@ -378,7 +380,7 @@ public class JdzqController extends BaseController {
             List<PortfolioVo> result = Lists.newArrayList();
 
             // Call api 取得資料
-            PortfolioResponse portfolioResponse = policyService.getPolicyRateOfReturn(userId, policyNo);
+            PortfolioResponse portfolioResponse = policyService.getPolicyNotifyPortfolio(userId, policyNo);
             // 若無資料，嘗試由內部服務取得資料
             if (portfolioResponse != null) {
                 logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);

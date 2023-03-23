@@ -80,18 +80,16 @@ public class PolicyServiceImpl implements IPolicyService {
     @Value("${eservice_api.policy.payment.record.url}")
     private String policyPaymentRecordUrl;
     @Override
-    public PolicyPaymentRecordVo getPolicyPaymentRecord(String userId, String policyNo) {
-        PolicyPaymentRecordDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyPaymentRecordUrl, PolicyPaymentRecordDataResponse.class);
-        return responseObj.getPolicyPaymentRecord();
+    public PolicyPaymentRecordDataResponse getPolicyPaymentRecord(String userId, String policyNo) {
+        return baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyPaymentRecordUrl, PolicyPaymentRecordDataResponse.class);
     }
 
     @Value("${eservice_api.policy.premium.url}")
     private String policyPremiumUrl;
 
     @Override
-    public PolicyPremiumVo getPolicyPremium(String userId, String policyNo) {
-        PolicyPremiumDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyPremiumUrl, PolicyPremiumDataResponse.class);
-        return responseObj.getPolicyPremium();
+    public PolicyPremiumDataResponse getPolicyPremium(String userId, String policyNo) {
+        return baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyPremiumUrl, PolicyPremiumDataResponse.class);
     }
 
     @Value("${eservice_api.policy.expire.payment.url}")
@@ -162,6 +160,19 @@ public class PolicyServiceImpl implements IPolicyService {
     public PolicyInvtFundVo getPolicyInvtFund(String userId, String policyNo) {
         PolicyInvtFundDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyInvtFundUrl, PolicyInvtFundDataResponse.class);
         return responseObj.getInvtFund();
+    }
+
+    @Value("${eservice_api.policy.notify.portfolio.url}")
+    private String notifyPortfolioUrl;
+
+
+    @Override
+    public PortfolioResponse getPolicyNotifyPortfolio(String userId, String policyNo) {
+        PortfolioRequest apiReq = new PortfolioRequest();
+        apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
+        apiReq.setUserId(userId);
+        apiReq.setPolicyNo(policyNo);
+        return baseRestClient.postApi(new Gson().toJson(apiReq), notifyPortfolioUrl, PortfolioResponse.class);
     }
 
     @Value("${eservice_api.policy.portfolio.new.url}")

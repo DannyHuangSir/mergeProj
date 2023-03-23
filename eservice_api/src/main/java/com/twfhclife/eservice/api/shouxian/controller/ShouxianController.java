@@ -41,10 +41,7 @@ public class ShouxianController extends BaseController {
                             sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getPolicyList",
                             execMethod = "保單查詢",
                             sqlVoType = "com.twfhclife.eservice.api.shouxian.model.PolicyVo",
-                            sqlVoKey = "vo",
-                            sqlParams = {
-                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
-                            }
+                            sqlVoKey = "vo"
                     )
             }))
     public ResponseEntity<?> getPolicyList(@RequestBody PolicyVo vo) {
@@ -101,7 +98,14 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getPolicySafeGuard", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-008",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getSafeGuard",
+                            execMethod = "經代保障內容與金額",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )}))
     public ResponseEntity<?> getPolicySafeGuard(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicySafeGuardDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -125,14 +129,21 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getPaymentRecord", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-009",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getPaymentRecord",
+                            execMethod = "經代繳費紀錄",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )}))
     public ResponseEntity<?> getPaymentRecord(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyPaymentRecordDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            PolicyPaymentRecordVo policyPaymentRecordVo = shouxianService.getPaymentRecord(vo.getPolicyNo());
             PolicyPaymentRecordDataResponse resp = new PolicyPaymentRecordDataResponse();
-            resp.setPolicyPaymentRecord(policyPaymentRecordVo);
+            resp.setPaymentRecords(shouxianService.getPaymentRecord(vo.getPolicyNo()));
+            resp.setPolicyBaseVo(shouxianService.getPolicyBase(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);
@@ -149,14 +160,21 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getPolicyPremium", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-010",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getPolicyPremium",
+                            execMethod = "經代保單紅利資料",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )}))
     public ResponseEntity<?> getPolicyPremium(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyPremiumDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            PolicyPremiumVo policyPremiumVo = shouxianService.getPolicyPremium(vo.getPolicyNo());
             PolicyPremiumDataResponse resp = new PolicyPremiumDataResponse();
-            resp.setPolicyPremium(policyPremiumVo);
+            resp.setPremiums(shouxianService.getPolicyPremium(vo.getPolicyNo()));
+            resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);
@@ -173,7 +191,14 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getPolicyExpireOfPayment", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-011",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getExpireOfPayment",
+                            execMethod = "經代生存/滿期給付資料",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )}))
     public ResponseEntity<?> getPolicyExpireOfPayment(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyExpireOfPaymentDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -197,7 +222,14 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getPolicyChangeInfo", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-012",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getPolicyChangeInfo",
+                            execMethod = "經代契約變更資料",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )}))
     public ResponseEntity<?> getPolicyChangeInfo(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyChangeInfoDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -221,7 +253,14 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getIncomeDistribution", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-013",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getIncomeDistribution",
+                            execMethod = "經代保單收益分配",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )}))
     public ResponseEntity<?> getIncomeDistribution(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyIncomeDistributionDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -245,7 +284,19 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getPolicyTransactionHistory", produces = {"application/json"})
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-014",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getFundTransactionPageList",
+                            execMethod = "經代交易歷史記錄",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo"),
+                                    @SqlParam(requestParamkey = "transType", sqlParamkey = "transType"),
+                                    @SqlParam(requestParamkey = "startDate", sqlParamkey = "startDate"),
+                                    @SqlParam(requestParamkey = "endDate", sqlParamkey = "endDate"),
+                                    @SqlParam(requestParamkey = "pageNum", sqlParamkey = "pageNum"),
+                                    @SqlParam(requestParamkey = "pageSize", sqlParamkey = "pageSize")
+                            }
+                    )}))
     public ResponseEntity<?> getPolicyTransactionHistory(
             @Valid @RequestBody PolicyFundTransactionRequest req) {
         ApiResponseObj<JdPolicyFundTransactionResponse> apiResponseObj = new ApiResponseObj<>();
@@ -289,7 +340,18 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getPolicyPremiumCost", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-015",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getFundPrdtPageList",
+                            execMethod = "經代保費費用",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo"),
+                                    @SqlParam(requestParamkey = "startDate", sqlParamkey = "startDate"),
+                                    @SqlParam(requestParamkey = "endDate", sqlParamkey = "endDate"),
+                                    @SqlParam(requestParamkey = "pageNum", sqlParamkey = "pageNum"),
+                                    @SqlParam(requestParamkey = "pageSize", sqlParamkey = "pageSize")
+                            }
+                    )}))
     public ResponseEntity<?> getPolicyPremiumCost(
             @Valid @RequestBody PolicyPremiumTransactionRequest req) {
         ApiResponseObj<PolicyPremiumCostResponse> apiResponseObj = new ApiResponseObj<>();
@@ -329,9 +391,6 @@ public class ShouxianController extends BaseController {
     }
 
     @PostMapping(value = "/getPolicyInvtFund", produces = { "application/json" })
-    @EventRecordLog(value = @EventRecordParam(
-            eventCode = "JD-016",
-            systemEventParams = {}))
     public ResponseEntity<?> getPolicyInvtFund(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyInvtFundDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -352,10 +411,49 @@ public class ShouxianController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @PostMapping(value = "/getPolicyNotifyPortfolio", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-016",
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getPortfolioList",
+                            execMethod = "經代報酬率通知設定",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )}))
+    public ResponseEntity<?> getPolicyNotifyPortfolio(@Valid @RequestBody PortfolioRequest req) {
+        ApiResponseObj<PortfolioResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            String policyNo = req.getPolicyNo();
+            if (!StringUtils.isEmpty(policyNo)) {
+                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo);
+                returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+                apiResponseObj.setReturnHeader(returnHeader);
+                apiResponseObj.setResult(resp);
+            }
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyPortfolioNew: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
     @PostMapping(value = "/getPolicyPortfolioNew", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-017",
-            systemEventParams = {}))
+            systemEventParams = {
+            @SystemEventParam(
+                    sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getPortfolioList",
+                    execMethod = "經代投資損益及投報率",
+                    sqlParams = {
+                            @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                    }
+            )}))
     public ResponseEntity<?> getPolicyPortfolioNew(@Valid @RequestBody PortfolioRequest req) {
         ApiResponseObj<PortfolioResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -377,10 +475,18 @@ public class ShouxianController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+
     @PostMapping(value = "/getPolicyCancellationMoney", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-018",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.selectPolicyAmount",
+                            execMethod = "經代解約金試算",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo")
+                            }
+                    )}))
     public ResponseEntity<?> getPolicyCancellationMoney(@RequestBody PolicyBaseVo vo) {
         ApiResponseObj<PolicyCancellationMoneyDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -406,7 +512,17 @@ public class ShouxianController extends BaseController {
     @PostMapping(value = "/getExchangeRate", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-019",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.shouxian.dao.ShouXianDao.getExchangeRate",
+                            execMethod = "經代投資標的淨值",
+                            sqlVoKey = "exchangeRateVo",
+                            sqlVoType = "com.twfhclife.eservice.api.shouxian.domain.ExchangeRateRequest",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "effectiveDate", sqlParamkey = "effectiveDate"),
+                                    @SqlParam(requestParamkey = "queryType", sqlParamkey = "queryType"),
+                            }
+                    )}))
     public ResponseEntity<?> getExchangeRate(@Valid @RequestBody ExchangeRateRequest vo) {
         ApiResponseObj<ExchangeRateDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();

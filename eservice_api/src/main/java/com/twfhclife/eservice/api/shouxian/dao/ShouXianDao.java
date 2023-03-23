@@ -16,8 +16,8 @@ public interface ShouXianDao {
 
     PolicyBaseVo getBasePolicy(@Param("policyNo") String policyNo);
     List<SafeGuardVo> getSafeGuard(@Param("policyNo") String policyNo);
-    PolicyPaymentRecordVo getPaymentRecord(@Param("policyNo") String policyNo);
-    PolicyPremiumVo getPolicyPremium(@Param("policyNo") String policyNo);
+    List<PaymentRecordVo> getPaymentRecord(@Param("policyNo") String policyNo);
+    List<PremiumVo> getPolicyPremium(@Param("policyNo") String policyNo);
     PolicyExpireOfPaymentVo getExpireOfPayment(@Param("policyNo") String policyNo);
     PolicyChangeInfoVo getPolicyChangeInfo(@Param("policyNo") String policyNo);
     PolicyVo getPolicyInfo(@Param("policyNo") String policyNo);

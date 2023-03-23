@@ -15,9 +15,9 @@ public interface IPolicyService {
 
     PolicySafeGuardDataResponse getPolicyGuard(String userId, String policyNo);
 
-    PolicyPaymentRecordVo getPolicyPaymentRecord(String userId, String policyNo);
+    PolicyPaymentRecordDataResponse getPolicyPaymentRecord(String userId, String policyNo);
 
-    PolicyPremiumVo getPolicyPremium(String userId, String policyNo);
+    PolicyPremiumDataResponse getPolicyPremium(String userId, String policyNo);
 
     PolicyExpireOfPaymentVo getPolicyExpireOfPayment(String userId, String policyNo);
 
@@ -30,6 +30,8 @@ public interface IPolicyService {
     PolicyPremiumCostResponse getPolicyPremiumTransaction(String userId, String policyNo, String startDate, String endDate, int pageNum, int defaultPageSize);
 
     PolicyInvtFundVo getPolicyInvtFund(String userId, String policyNo);
+
+    PortfolioResponse getPolicyNotifyPortfolio(String userId, String policyNo);
 
     PortfolioResponse getPolicyRateOfReturn(String userId, String policyNo);
 

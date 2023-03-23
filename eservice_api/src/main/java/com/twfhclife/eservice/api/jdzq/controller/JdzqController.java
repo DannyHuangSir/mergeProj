@@ -33,9 +33,48 @@ public class JdzqController extends BaseController {
     private JdzqService jdzqService;
 
 
+    @ApiRequest
+    @PostMapping(value = "/getCaseProcess", produces = { "application/json" })
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-002",
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.jdzq.dao.JdzqDao.getCaseProcess",
+                            execMethod = "經代案件進度查詢",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo"),
+                            }
+                    )}))
+    public ResponseEntity<?> getCaseProcess(@RequestBody PolicyBaseVo policyVo) {
+        ApiResponseObj<CaseProcessDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            CaseVo caseVo = jdzqService.getCaseProcess(policyVo.getPolicyNo());
+            CaseProcessDataResponse resp = new CaseProcessDataResponse();
+            resp.setCaseVo(caseVo);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getCaseProcess: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-001",
-            systemEventParams = {}
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlVoType = "com.twfhclife.eservice.api.jdzq.domain.CaseQueryRequest",
+                            sqlVoKey = "vo",
+                            sqlId = "com.twfhclife.eservice.api.jdzq.dao.JdzqDao.getCaseList",
+                            execMethod= "經代案件列表查詢"
+                    )
+            }
     ))
     @PostMapping(value = "/getPersonalCaseList", produces = { "application/json" })
     @ApiRequest
@@ -60,35 +99,17 @@ public class JdzqController extends BaseController {
     }
 
     @ApiRequest
-    @PostMapping(value = "/getCaseProcess", produces = { "application/json" })
-    @EventRecordLog(value = @EventRecordParam(
-            eventCode = "JD-002",
-            systemEventParams = {}))
-    public ResponseEntity<?> getCaseProcess(@RequestBody PolicyBaseVo policyVo) {
-        ApiResponseObj<CaseProcessDataResponse> apiResponseObj = new ApiResponseObj<>();
-        ReturnHeader returnHeader = new ReturnHeader();
-        try {
-            CaseVo caseVo = jdzqService.getCaseProcess(policyVo.getPolicyNo());
-            CaseProcessDataResponse resp = new CaseProcessDataResponse();
-            resp.setCaseVo(caseVo);
-            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
-            apiResponseObj.setReturnHeader(returnHeader);
-            apiResponseObj.setResult(resp);
-        } catch (Exception e) {
-            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
-            logger.error("Unable to getCaseProcess: {}", ExceptionUtils.getStackTrace(e));
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
-        } finally {
-            apiResponseObj.setReturnHeader(returnHeader);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
-    }
-
-    @ApiRequest
     @PostMapping(value = "/jdzqGetPolicyInfo", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-003",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.jdzq.dao.JdzqDao.getPolicyInfo",
+                            execMethod = "經代保單資訊查詢",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo"),
+                            }
+                    )}))
     public ResponseEntity<?> jdzqGetPolicyInfo(@RequestBody PolicyBaseVo policyVo) {
         ApiResponseObj<CaseProcessDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -113,7 +134,14 @@ public class JdzqController extends BaseController {
     @PostMapping(value = "/getNoteContent", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-004",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.jdzq.dao.JdzqDao.getNoteContent",
+                            execMethod = "經代照會查詢",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo"),
+                            }
+                    )}))
     public ResponseEntity<?> getNoteContent(@RequestBody PolicyBaseVo policyVo) {
         ApiResponseObj<NoteContentDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
@@ -159,7 +187,14 @@ public class JdzqController extends BaseController {
     @PostMapping(value = "/getNotePdf", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-005",
-            systemEventParams = {}))
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlId = "com.twfhclife.eservice.api.jdzq.dao.JdzqDao.getNotePdf",
+                            execMethod = "經代照會單",
+                            sqlParams = {
+                                    @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo"),
+                            }
+                    )}))
     public ResponseEntity<?> getNotePdf(@RequestBody PolicyBaseVo policyVo) {
         ApiResponseObj<NotePdfDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();

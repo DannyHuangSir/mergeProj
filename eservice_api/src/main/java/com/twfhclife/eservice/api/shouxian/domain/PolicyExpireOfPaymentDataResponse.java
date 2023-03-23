@@ -1,7 +1,6 @@
 package com.twfhclife.eservice.api.shouxian.domain;
 
 import com.twfhclife.eservice.api.shouxian.model.PolicyExpireOfPaymentVo;
-import com.twfhclife.eservice.api.shouxian.model.PolicyPaymentRecordVo;
 
 import java.io.Serializable;
 

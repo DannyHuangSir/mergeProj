@@ -250,8 +250,8 @@ public class EventRecordLogAspect {
 						se.setExecMsg(ssoExecMsg);
 					}
 
-					List<String> jdEvents = Lists.newArrayList();
-					List<String> shouxianEvents = Lists.newArrayList("JD-006", "JD-007");
+					List<String> jdEvents = Lists.newArrayList("JD-001", "JD-002", "JD-003", "JD-004", "JD-005");
+					List<String> shouxianEvents = Lists.newArrayList("JD-006", "JD-007", "JD-008", "JD-009", "JD-010", "JD-011", "JD-012", "JD-013", "JD-014", "JD-015", "JD-016", "JD-017", "JD-018", "JD-019");
 
 					if (!StringUtils.isEmpty(sqlId)) {
 						try {
