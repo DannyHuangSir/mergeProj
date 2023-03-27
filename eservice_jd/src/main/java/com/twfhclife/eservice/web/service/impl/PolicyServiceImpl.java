@@ -47,11 +47,13 @@ public class PolicyServiceImpl implements IPolicyService {
             case 4:
                 caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId()));
                 break;
+            case 5:
+                break;
             default:
                 caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
                 break;
         }
-        if (!CollectionUtils.isEmpty(caseQuery)) {
+        if (!CollectionUtils.isEmpty(caseQuery) || role != 5) {
             vo.setPermQuery(caseQuery);
             vo.setUserId(user.getUsername());
             vo.setSysId(ApConstants.SYSTEM_ID);

@@ -113,16 +113,17 @@
 
 	<select id="checkUserRole" resultType="int">
 		SELECT TOP 1
-			CASE R.ROLE_NAME
-				WHEN 'IC人員' then 4
-				WHEN '通路主管' then 3
-				WHEN '分行主管' then 2
-				WHEN '一般人員' then 1
+			CASE R.DIV_ROLE_ID
+				WHEN 'IC_PERSONNEL' then 4
+				WHEN 'CHANNEL_LEADER' then 3
+				WHEN 'BRANCH_LEADER' then 2
+				WHEN 'GENERAL_PERSONNEL' then 1
+				WHEN 'ADMINISTRATOR' then 5
 			ELSE 1 END
 		FROM ESERVICE_ADM.DBO.USER_ENTITY U
 			INNER JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON U.ID = UR.USER_ID
 			INNER JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
-			WHERE U.ID = #{userId} ORDER BY CHARINDEX(R.ROLE_NAME, 'IC人員,通路主管,分行主管,一般人員')
+			WHERE U.ID = #{userId} ORDER BY CHARINDEX(R.DIV_ROLE_ID, 'ADMINISTRATOR,IC_PERSONNEL,CHANNEL_LEADER,BRANCH_LEADER,GENERAL_PERSONNEL')
 	</select>
 
 	<select id="getCaseQueryBySupervisor" resultType="com.twfhclife.eservice.web.model.PermQueryVo">

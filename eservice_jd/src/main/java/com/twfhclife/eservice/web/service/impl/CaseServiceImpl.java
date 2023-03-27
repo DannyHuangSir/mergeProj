@@ -59,11 +59,14 @@ public class CaseServiceImpl implements ICaseService {
             case 4:
                 caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId()));
                 break;
+            case 5:
+                break;
             default:
                 caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
                 break;
         }
-        if (!CollectionUtils.isEmpty(caseQuery)) {
+
+        if (!CollectionUtils.isEmpty(caseQuery) || role == 5) {
             if (vo == null) {
                 vo = new CaseQueryVo();
             }
@@ -75,6 +78,7 @@ public class CaseServiceImpl implements ICaseService {
         }
         return result;
     }
+
 
     @Value("${eservice_api.case.process.url}")
     private String caseProcessUrl;

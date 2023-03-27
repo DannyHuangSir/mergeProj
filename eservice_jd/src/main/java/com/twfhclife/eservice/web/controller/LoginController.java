@@ -136,8 +136,8 @@ public class LoginController extends BaseController {
             }
 
             if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
-                if (userDetail.getStatus().equals("locked")) {
-                    String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0099");
+                if (userDetail.getStatus().equals("Disabled") || userDetail.getStatus().equals("Unenabled")) {
+                    String errorMessage = "賬號未啓用或已停用";
                     addAttribute("errorMessage", errorMessage);
                     addAuditLog(userId, "0", loginRequestVo.getEuNationality());
                     return "login";
@@ -170,8 +170,8 @@ public class LoginController extends BaseController {
                 }
                 addAttribute("errorMessage", "");
             } else {
-                if ("password".equals(loginType) || (userDetail != null && userDetail.getStatus().equals("locked"))) {
-                    String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0099");
+                if ("password".equals(loginType) || (userDetail != null && userDetail.getStatus().equals("Disabled") || userDetail.getStatus().equals("Unenabled"))) {
+                    String errorMessage = "賬號未啓用或已停用";
                     addAttribute("errorMessage", errorMessage);
                 } else {
                     if (returnCode.equals("API_ERROR")) {
