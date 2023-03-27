@@ -150,4 +150,9 @@ public class JdRoleServiceImpl implements IJdRoleService {
         String adminUserFlag = (StringUtils.equals(userName, systemAdminUser) ? "Y" : "N");
         return roleDao.getDepRole(keyCloakUserId, adminUserFlag,depId);
     }
+
+    @Override
+    public int insertUserRole(String userId, String roleId) {
+        return roleDao.insertUserRole(userId,roleId);
+    }
 }

@@ -11,7 +11,7 @@ GO
 CREATE TABLE [ESERVICE_JD].[dbo].[USERS](
 	[USER_ID] [nvarchar](50) NOT NULL,
 	[USER_TYPE] [nvarchar](6) NULL,
-	[ROC_ID] [nvarchar](10) NOT NULL,
+	[ROC_ID] [nvarchar](100) NOT NULL,
 	[MOBILE] [nvarchar](50) NULL,
 	[EMAIL] [nvarchar](100) NULL,
 	[LOGIN_FAIL_COUNT] [numeric](38, 4) NULL,
@@ -26,12 +26,13 @@ CREATE TABLE [ESERVICE_JD].[dbo].[USERS](
 	[STATUS] [nvarchar](10) NULL,
 	[USER_NAME] [nvarchar](50) NULL,
 	[LOGIN_TIME] [datetime] NULL,
-	[CLAUSE_FLAG] [nchar](10) NULL,
+	[CLAUSE_FLAG] [nchar](50) NULL,
 	[SERIAL_NUM] [nvarchar](50) NOT NULL,
-    [IC_ID] [nvarchar](20) NOT NULL,
-    [LOGIN_SIZE] [nvarchar](20)  NULL,
-    [EFFECTIVE_DATE] [datetime] NULL,
-    [EXPIRATION_DATE] [datetime] NULL,
+    [IC_ID] [nvarchar](50) NOT NULL,
+    [LOGIN_SIZE] [nvarchar](50)  NULL,
+    [EFFECTIVE_DATE] [nvarchar](50) NULL,
+    [EXPIRATION_DATE] [nvarchar](50) NULL,
+    [INITPASSWORD] [nvarchar](100) NULL
 ) ON [PRIMARY]
 GO
 

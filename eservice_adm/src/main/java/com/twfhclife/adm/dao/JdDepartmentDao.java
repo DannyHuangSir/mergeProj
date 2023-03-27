@@ -80,4 +80,14 @@ public interface JdDepartmentDao {
     DepartmentVo getBranchId(@Param("depId") String depId,@Param("branchId")String branchId);
 
     int getDepLevel(@Param("departmentVo") DepartmentVo departmentVo);
+
+    int getDepBranch(@Param("departmentVo")DepartmentVo departmentVo);
+
+    DepartmentVo getDivDep(@Param("parentDep") String parentDep,@Param("branchId")String branchId);
+
+    int insertUserDep(@Param("userId")String userId,@Param("depId")String depId,@Param("titleId")String titleId,@Param("branchId")String branchId);
+
+    int countDepName(@Param("depId") String depId,@Param("depName") String depName);
+
+    int countBranchName(@Param("parentDep") String parentDep,@Param("depName") String depName,@Param("branchId") String branchId);
 }

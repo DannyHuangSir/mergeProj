@@ -91,4 +91,6 @@ public interface JdRoleDao {
     RoleVo getRoleId(@Param("roleId") String roleId);
 
     List<RoleVo> getDepRole(@Param("keyCloakUserId") String keyCloakUserId, @Param("adminUserFlag") String adminUserFlag,@Param("depId")String depId);
+
+    int insertUserRole(@Param("userId")String userId,@Param("roleId")String roleId);
 }

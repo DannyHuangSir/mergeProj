@@ -243,5 +243,9 @@
         </if>
         </where>
     </select>
+
+    <insert id="insertUserRole">
+        insert ESERVICE_ADM.dbo.USER_ROLE (USER_ID,ROLE_ID)values(#{userId, jdbcType=VARCHAR},#{roleId, jdbcType=VARCHAR})
+    </insert>
 </mapper>
 

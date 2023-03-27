@@ -82,4 +82,14 @@ public interface IJdDeptMgntService {
     DepartmentVo getBranchId(String depId,String branchId);
 
     int getDepLevel(DepartmentVo departmentVo);
+
+    int getDepBranch(DepartmentVo departmentVo);
+
+    DepartmentVo getDivDep(String parentDep,String branchId);
+
+    int insertUserDep(String userId,String depId,String titleId,String branchId);
+
+    int countDeptName(String depId,String depName);
+
+    int countDBranchName(String parentDep,String branchId, String depName);
 }

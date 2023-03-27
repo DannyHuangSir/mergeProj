@@ -4,7 +4,7 @@
 
     <sql id="Base_Column_List">
         USER_ID,USER_TYPE,ROC_ID,MOBILE,EMAIL,LOGIN_FAIL_COUNT,LAST_CHANG_PASSWORD_DATE,SMS_FLAG,MAIL_FLAG,FB_ID,MOICA_ID,CREATE_DATE,CREATE_USER
-        ,ONLINE_FLAG,STATUS,USER_NAME ,LOGIN_TIME,CLAUSE_FLAG,SERIAL_NUM,IC_ID,LOGIN_SIZE,EFFECTIVE_DATE,EXPIRATION_DATE
+        ,ONLINE_FLAG,STATUS,USER_NAME ,LOGIN_TIME,CLAUSE_FLAG,SERIAL_NUM,IC_ID,LOGIN_SIZE,EFFECTIVE_DATE,EXPIRATION_DATE,INITPASSWORD
     </sql>
 
     <insert id="addUsers">
@@ -35,7 +35,8 @@
         #{jdUserVo.icId,jdbcType=VARCHAR},
         #{jdUserVo.loginSize,jdbcType=VARCHAR},
         #{jdUserVo.effectiveDate,jdbcType=VARCHAR},
-        #{jdUserVo.expirationDate,jdbcType=VARCHAR}
+        #{jdUserVo.expirationDate,jdbcType=VARCHAR},
+        ESERVICE.DBO.FN_ENBASE64(#{jdUserVo.initPassword,jdbcType=VARCHAR})
         );
     </insert>
 

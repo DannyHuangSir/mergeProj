@@ -124,18 +124,18 @@ public class JdDeptMgntController extends BaseController {
         try {
             departmentVo.setCreateUser(getUserId());
             departmentVo.setModifyUser(getUserId());
-            if (deptMgntService.getDepLevel(departmentVo)>0){
+            if (deptMgntService.getDepLevel(departmentVo) > 0) {
                 processError("不允許新增第三層分支機構！");
-            }else {
-                if (deptMgntService.isDeptIdExist(departmentVo)){
+            } else {
+                if (deptMgntService.isDeptIdExist(departmentVo)) {
                     processError("通路的原機構代碼不可重覆");
-                }else {
+                } else {
                     if (deptMgntService.isDeptNameExist(departmentVo)) {
                         processError("部門名稱重覆");
                     } else {
-                        if (deptMgntService.isBranchIdExist(departmentVo)){
+                        if (deptMgntService.isBranchIdExist(departmentVo)) {
                             processError("通路的原機構代碼已存在！");
-                        }else {
+                        } else {
                             int result = deptMgntService.addDepartment(departmentVo);
                             if (result > 0) {
                                 processSuccessMsg("新增成功");
@@ -172,16 +172,16 @@ public class JdDeptMgntController extends BaseController {
     public ResponseEntity<ResponseObj> updateDepartment(@RequestBody DepartmentVo departmentVo) {
         try {
             departmentVo.setModifyUser(getUserId());
-            if (deptMgntService.isDeptNameExist(departmentVo)) {
+            if (deptMgntService.countDeptName(departmentVo.getParentDep(), departmentVo.getDepName()) > 1) {
                 processError("通路的原機構代碼不可重覆");
             } else {
-                if (deptMgntService.isBranchIdExist(departmentVo)){
-                    processError("通路的原機構代碼已存在！");
-                }else {
+                if (deptMgntService.countDBranchName(departmentVo.getParentDep(), departmentVo.getBranchId(), departmentVo.getDepName()) > 1) {
+                    processError("分行的原機構代碼已存在！");
+                } else {
                     int updateDepartment = deptMgntService.updateDepartment(departmentVo);
-                    if (updateDepartment>0){
+                    if (updateDepartment > 0) {
                         processError("更新成功");
-                    }else {
+                    } else {
                         processError("更新失敗");
                     }
                 }

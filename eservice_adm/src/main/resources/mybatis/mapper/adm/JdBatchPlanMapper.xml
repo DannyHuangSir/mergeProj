@@ -27,7 +27,7 @@
              ) B
         WHERE
             B.ROW_NUM <![CDATA[<=]]> #{vo.page} * #{vo.rows}
-          AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows}
+          AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows} ORDER BY B.BATCH_JOIN_TIME DESC
     </select>
 
 
@@ -45,7 +45,7 @@
              ) B
         WHERE
             B.ROW_NUM <![CDATA[<=]]> #{vo.page} * #{vo.rows}
-          AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows}
+          AND B.ROW_NUM <![CDATA[>]]> (#{vo.page} - 1) * #{vo.rows} ORDER BY B.BATCH_JOIN_TIME DESC
     </select>
 
 

@@ -218,4 +218,24 @@
     <select id="getDepLevel" resultType="int">
         SELECT COUNT(1) FROM ESERVICE_JD.dbo.DEPARTMENT WHERE PARENT_DEP != '0' AND DEP_ID = #{departmentVo.parentDep}
     </select>
+
+    <select id="getDepBranch" resultType="int">
+        select count(1) from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{departmentVo.branchId}
+    </select>
+
+    <select id="getDivDep" resultType="com.twfhclife.adm.model.DepartmentVo">
+        select DEP_ID from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{branchId} and PARENT_DEP = #{parentDep}
+    </select>
+    
+    <insert id="insertUserDep">
+        insert ESERVICE_JD.dbo.USER_DEPARTMENT (USER_ID,DEP_ID,TITLE_ID,BRANCH_ID)values(#{userId},#{depId},#{titleId},#{branchId})
+    </insert>
+
+    <select id="countDepName" resultType="int">
+        select count(1) from ESERVICE_JD.dbo.DEPARTMENT where DEP_ID = #{depId}  and DEP_NAME = #{depName} and PARENT_DEP = '0'
+    </select>
+
+    <select id="countBranchName" resultType="int">
+        select count(1) from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{branchId}  and DEP_NAME = #{depName} and PARENT_DEP = #{parentDep}
+    </select>
 </mapper>

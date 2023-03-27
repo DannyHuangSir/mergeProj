@@ -79,11 +79,14 @@ public class ExcelUtils {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Sheet sheet = wb.getSheetAt(0);
             Row row = sheet.getRow(0);
-            int rowNum = sheet.getLastRowNum();
+            int rowNum = sheet.getPhysicalNumberOfRows();
             int colNum = row.getPhysicalNumberOfCells();
             // 正文内容应该从第二行开始, 第一行为表头的标题
             for (int ri = 1; ri <= rowNum; ri++) {
                 row = sheet.getRow(ri);
+                if (row == null){
+                    continue;
+                }
                 int ci = 0;
                 List<String> col = new ArrayList<>();
                 while (ci < colNum) {

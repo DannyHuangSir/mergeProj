@@ -49,4 +49,6 @@ public interface IJdUserMgntService {
 	List<Map<String, Object>> getJdUserIcQuery(JdUserVo vo);
 
 	int countJdUserIc(JdUserVo vo);
+
+	UserEntityVo getUser(String userName,String realId);
 }

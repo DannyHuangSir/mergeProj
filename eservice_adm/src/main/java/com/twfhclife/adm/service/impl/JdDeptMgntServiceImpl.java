@@ -205,4 +205,31 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
     public int getDepLevel(DepartmentVo departmentVo) {
         return departmentDao.getDepLevel(departmentVo);
     }
+
+    @Override
+    public int getDepBranch(DepartmentVo departmentVo) {
+        return 0;
+    }
+
+    @Override
+    public DepartmentVo getDivDep(String parentDep, String branchId) {
+        return departmentDao.getDivDep(parentDep,branchId);
+    }
+
+    @Override
+    public int insertUserDep(String userId,String depId,String titleId,String branchId) {
+        return departmentDao.insertUserDep(userId,depId,titleId,branchId);
+    }
+
+    @Override
+    public int countDeptName(String depId, String depName) {
+        return departmentDao.countDepName(depId,depName);
+    }
+
+    @Override
+    public int countDBranchName(String parentDep, String branchId, String depName) {
+        return departmentDao.countBranchName(parentDep,branchId,depName);
+    }
+
+
 }

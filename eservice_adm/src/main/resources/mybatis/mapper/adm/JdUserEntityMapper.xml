@@ -189,4 +189,8 @@
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = RD.DEP_ID COLLATE database_default
 		WHERE A.REALM_ID = 'elife_jd' AND D.DEP_ID = #{vo.passageWay} AND D.PARENT_DEP = '0'
 	</select>
+
+	<select id="getUser" resultMap="UserEntityMap">
+		select * from ESERVICE_ADM.dbo.USER_ENTITY where REALM_ID = #{reamId} and USERNAME = #{userName}
+	</select>
 </mapper>

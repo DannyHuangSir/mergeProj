@@ -43,4 +43,6 @@ public interface JdUserEntityDao {
 	List<UserEntityVo> getUserEntity(@Param("userEntityVo") UserEntityVo userEntityVo);
 
     List<Map<String, Object>> getNotifyUsers(@Param("vo") NotifySearchVo userEntityVo);
+
+	UserEntityVo getUser(@Param("userName")String userName,@Param("reamId")String reamId);
 }

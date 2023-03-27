@@ -105,4 +105,10 @@ public class JdUserMngtServiceImpl implements IJdUserMgntService {
 	public int countJdUserIc(JdUserVo vo) {
 		return jdUserBatchDao.countJdUserIc(vo);
 	}
+
+	@Override
+	public UserEntityVo getUser(String userName, String realId) {
+		return userEntityDao.getUser(userName,realId);
+	}
+
 }
