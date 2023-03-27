@@ -108,23 +108,23 @@ public class LoginController extends BaseController {
             }
 
             UsersVo userDetail = registerUserService.getUserByAccount(userId);
-			if (userDetail == null) {
-				addAttribute("errorMessage", "帳號或密碼有誤，請重新確認！");
-				resetVerifyCode();
-				return "login";
-			}
+            if (userDetail == null) {
+                addAttribute("errorMessage", "帳號或密碼有誤，請重新確認！");
+                resetVerifyCode();
+                return "login";
+            }
 
-			String expireDay = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "LOGIN_EXPIRE_DAY");
-			if (StringUtils.isNotBlank(expireDay) && userDetail.getLoginTime() != null) {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(userDetail.getLoginTime());
-				calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(expireDay));
-				if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-					addAttribute("errorMessage", "距離上次登入超過半年，請重設密碼！");
-					addAuditLog(userId, "0", loginRequestVo.getEuNationality());
-					return "login";
-				}
-			}
+            String expireDay = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "LOGIN_EXPIRE_DAY");
+            if (StringUtils.isNotBlank(expireDay) && userDetail.getLoginTime() != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(userDetail.getLoginTime());
+                calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(expireDay));
+                if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+                    addAttribute("errorMessage", "距離上次登入超過半年，請重設密碼！");
+                    addAuditLog(userId, "0", loginRequestVo.getEuNationality());
+                    return "login";
+                }
+            }
 
             String failCount = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "LOGIN_FAIL_COUNT");
             if (StringUtils.isNotBlank(failCount) && userDetail.getLoginFailCount() != null) {
@@ -136,8 +136,8 @@ public class LoginController extends BaseController {
             }
 
             if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
-                if (userDetail.getStatus().equals("Disabled") || userDetail.getStatus().equals("Unenabled")) {
-                    String errorMessage = "賬號未啓用或已停用";
+                if (userDetail.getStatus().equals("Disabled")) {
+                    String errorMessage = "賬號已停用";
                     addAttribute("errorMessage", errorMessage);
                     addAuditLog(userId, "0", loginRequestVo.getEuNationality());
                     return "login";
@@ -170,9 +170,14 @@ public class LoginController extends BaseController {
                 }
                 addAttribute("errorMessage", "");
             } else {
-                if ("password".equals(loginType) || (userDetail != null && userDetail.getStatus().equals("Disabled") || userDetail.getStatus().equals("Unenabled"))) {
-                    String errorMessage = "賬號未啓用或已停用";
-                    addAttribute("errorMessage", errorMessage);
+                if ("password".equals(loginType)) {
+                    if (userDetail != null && (userDetail.getStatus().equals("Disabled"))) {
+                        String errorMessage = "賬號已停用";
+                        addAttribute("errorMessage", errorMessage);
+                    } else {
+                        String errorMessage = "帳號或密碼有誤，請重新確認！";
+                        addAttribute("errorMessage", errorMessage);
+                    }
                 } else {
                     if (returnCode.equals("API_ERROR")) {
                         addAttribute("errorMessage", returnMsg);
@@ -182,7 +187,7 @@ public class LoginController extends BaseController {
                     }
                 }
                 resetVerifyCode();
-				registerUserService.incLoginFailCount(userId);
+                registerUserService.incLoginFailCount(userId);
                 addAuditLog(userId, "0", loginRequestVo.getEuNationality());
                 return "login";
             }
@@ -193,12 +198,12 @@ public class LoginController extends BaseController {
                 keycloakService.logout(keycloakUser.getId());
             }
             resetVerifyCode();
-			registerUserService.incLoginFailCount(userId);
+            registerUserService.incLoginFailCount(userId);
             return "login";
         }
 
         addAuditLog(userId, "1", loginRequestVo.getEuNationality());
-		registerUserService.updateLoginSuccess(userId);
+        registerUserService.updateLoginSuccess(userId);
         return loginSuccessPage;
     }
 

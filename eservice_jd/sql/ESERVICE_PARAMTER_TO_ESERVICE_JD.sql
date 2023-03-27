@@ -127,6 +127,7 @@ INSERT INTO  ESERVICE_ADM.[dbo].[MESSAGING_PARAMETER]
 GO
 
 delete from parameter where parameter_code = 'AUTH_CODE_CONT' and system_id = 'eservice_jd'
+delete from parameter where parameter_code = 'AUTH_CODE_SUB' and system_id = 'eservice_jd'
 
 --- 事件參數管理
 DELETE FROM PARAMETER WHERE PARAMETER_CATEGORY_ID = (SELECT PARAMETER_CATEGORY_ID FROM PARAMETER_CATEGORY WHERE CATEGORY_CODE = 'EVENT_TYPE' AND SYSTEM_ID = 'eservice_jd')
