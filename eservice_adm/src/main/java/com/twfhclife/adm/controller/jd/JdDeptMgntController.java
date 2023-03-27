@@ -124,25 +124,29 @@ public class JdDeptMgntController extends BaseController {
         try {
             departmentVo.setCreateUser(getUserId());
             departmentVo.setModifyUser(getUserId());
-
-            if (deptMgntService.isDeptIdExist(departmentVo)){
-                processError("通路的原機構代碼不可重覆");
+            if (deptMgntService.getDepLevel(departmentVo)>0){
+                processError("不允許新增第三層分支機構！");
             }else {
-                if (deptMgntService.isDeptNameExist(departmentVo)) {
-                    processError("部門名稱重覆");
-                } else {
-                    if (deptMgntService.isBranchIdExist(departmentVo)){
-                        processError("相同通路下原分支機構代碼不可重覆 ");
-                    }else {
-                        int result = deptMgntService.addDepartment(departmentVo);
-                        if (result > 0) {
-                            processSuccessMsg("新增成功");
-                        } else {
-                            processError("新增失敗");
+                if (deptMgntService.isDeptIdExist(departmentVo)){
+                    processError("通路的原機構代碼不可重覆");
+                }else {
+                    if (deptMgntService.isDeptNameExist(departmentVo)) {
+                        processError("部門名稱重覆");
+                    } else {
+                        if (deptMgntService.isBranchIdExist(departmentVo)){
+                            processError("通路的原機構代碼已存在！");
+                        }else {
+                            int result = deptMgntService.addDepartment(departmentVo);
+                            if (result > 0) {
+                                processSuccessMsg("新增成功");
+                            } else {
+                                processError("新增失敗");
+                            }
                         }
                     }
                 }
             }
+
 
         } catch (Exception e) {
             logger.error("Unable to insertDepartment: {}", ExceptionUtils.getStackTrace(e));
@@ -168,23 +172,18 @@ public class JdDeptMgntController extends BaseController {
     public ResponseEntity<ResponseObj> updateDepartment(@RequestBody DepartmentVo departmentVo) {
         try {
             departmentVo.setModifyUser(getUserId());
-
             if (deptMgntService.isDeptNameExist(departmentVo)) {
-                processError("部門名稱重覆");
+                processError("通路的原機構代碼不可重覆");
             } else {
-                DepartmentVo vo = deptMgntService.getDepId(departmentVo.getDepId());
-                int result = deptMgntService.deleteDepartment(departmentVo);
-                if (result > 0 && !deptMgntService.isBranchIdExist(departmentVo)){
-                    departmentVo.setCreateDate(vo.getCreateDate());
-                    int addDepartment = deptMgntService.addDepartment(departmentVo);
-                    if (addDepartment>0){
-                        processSuccessMsg("更新成功");
-                    } else {
+                if (deptMgntService.isBranchIdExist(departmentVo)){
+                    processError("通路的原機構代碼已存在！");
+                }else {
+                    int updateDepartment = deptMgntService.updateDepartment(departmentVo);
+                    if (updateDepartment>0){
+                        processError("更新成功");
+                    }else {
                         processError("更新失敗");
                     }
-                }else {
-                    deptMgntService.addDepartment(vo);
-                    processError("同通路下分支機構代碼重覆");
                 }
             }
         } catch (Exception e) {

@@ -78,4 +78,6 @@ public interface JdDepartmentDao {
     List<DepartmentVo> getBranchList(@Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag,@Param("vo")DepartmentVo vo);
 
     DepartmentVo getBranchId(@Param("depId") String depId,@Param("branchId")String branchId);
+
+    int getDepLevel(@Param("departmentVo") DepartmentVo departmentVo);
 }

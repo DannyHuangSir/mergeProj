@@ -77,4 +77,6 @@ public interface IJdRoleService {
     List<Map<String, Object>> getNotifyRoles(NotifySearchVo userEntityVo);
 
     RoleVo getRoleId(String roleId);
+
+    List<RoleVo> getDepRole(String userName, String keyCloakUserId,String depId);
 }

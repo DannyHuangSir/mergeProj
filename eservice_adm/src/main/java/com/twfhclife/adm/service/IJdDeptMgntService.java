@@ -80,4 +80,6 @@ public interface IJdDeptMgntService {
     public List<DepartmentVo> getBranchList(String userId, String username,DepartmentVo vo);
 
     DepartmentVo getBranchId(String depId,String branchId);
+
+    int getDepLevel(DepartmentVo departmentVo);
 }

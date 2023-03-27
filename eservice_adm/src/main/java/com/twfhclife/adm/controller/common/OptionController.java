@@ -362,7 +362,7 @@ public class OptionController extends BaseController {
 			String keyCloakUserId = kuser.getId();//此處查詢應使用id
 			processSuccess(jdDeptMgntService.getDeptParentList(keyCloakUserId, username));
 		} catch (Exception e) {
-			logger.error("Unable to deptList: {}", ExceptionUtils.getStackTrace(e));
+			logger.error("Unable to jdDeptParentList: {}", ExceptionUtils.getStackTrace(e));
 			processSystemError();
 		}
 		return processResponseEntity();
@@ -378,6 +378,20 @@ public class OptionController extends BaseController {
 			processSuccess(jdDeptMgntService.getBranchList(keyCloakUserId, username,vo));
 		} catch (Exception e) {
 			logger.error("Unable to branchList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	@RequestLog
+	@PostMapping("/jd/common/depRoleList")
+	public ResponseEntity<ResponseObj> jdDepRoleList(@RequestBody DepartmentVo vo) {
+		try {
+			String userName = getUserId();
+			String keyCloakUserId = getLoginUser().getId();
+			processSuccess(jdRoleService.getDepRole(userName, keyCloakUserId,vo.getDepId()));
+		} catch (Exception e) {
+			logger.error("Unable to jdDepRoleList: {}", ExceptionUtils.getStackTrace(e));
 			processSystemError();
 		}
 		return processResponseEntity();

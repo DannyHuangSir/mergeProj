@@ -200,4 +200,9 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
     public DepartmentVo getBranchId(String depId, String branchId) {
         return departmentDao.getBranchId(depId,branchId);
     }
+
+    @Override
+    public int getDepLevel(DepartmentVo departmentVo) {
+        return departmentDao.getDepLevel(departmentVo);
+    }
 }
