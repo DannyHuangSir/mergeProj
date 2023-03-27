@@ -90,33 +90,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-        <!-- Modify CVE-2021-44228 start
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.16.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.16.0</version>
-        </dependency>
-         Modify CVE-2021-44228 end-->
-
         <dependency>
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
@@ -299,63 +272,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--maven jar plugin elife-mybatis.jar start -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <useDefaultManifestFile>true</useDefaultManifestFile>
-                    <includes>
-                        <include>**/eservice/onlineChange/util/**</include>
-                        <include>**/generic/service/**</include>
-                        <include>**/eservice/auth/model/*</include>
-                        <include>**/eservice/auth/dao/*</include>
-                        <include>**/eservice/auth/service/**</include>
-                        <include>**/eservice/dashboard/model/*</include>
-                        <include>**/eservice/dashboard/dao/*</include>
-                        <include>**/eservice/dashboard/service/**</include>
-                        <include>**/eservice/onlineChange/model/*</include>
-                        <include>**/eservice/onlineChange*/dao/*</include>
-                        <include>**/eservice/onlineChange/service/**</include>
-                        <include>**/eservice/partner/model/*</include>
-                        <include>**/eservice/partner/dao/*</include>
-                        <include>**/eservice/partner/service/**</include>
-                        <include>**/eservice/policy/model/*</include>
-                        <include>**/eservice/policy/dao/*</include>
-                        <include>**/eservice/policy/service/**</include>
-                        <include>**/eservice/user/model/*</include>
-                        <include>**/eservice/user/dao/*</include>
-                        <include>**/eservice/user/service/**</include>
-                        <include>**/eservice/web/model/*</include>
-                        <include>**/eservice/web/dao/*</include>
-                        <include>**/eservice/web/service/IParameterService*</include>
-                        <include>**/eservice/web/service/impl/ParameterService*</include>
-                        <include>**/generic/util/PdfUtil*</include>
-                        <include>**/generic/util/RoiRateUtil*</include>
-                        <include>**/generic/util/MathUtil*</include>
-                        <include>**/generic/util/HttpUtil*</include>
-
-                        <include>**/generic/annotation/*</include>
-
-                        <!--include>**/generic/annotation/EserviceEventParam*</include-->
-                    </includes>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                    </archive>
-                    <finalName>elife-mybatis</finalName>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-a-jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -365,7 +281,7 @@
                         WEB-INF/classes/log4j2*.xml
                         <!--WEB-INF/classes/fonts/**-->
                     </packagingExcludes>
-                    <warName>${project.artifactId}-${timestamp}</warName>
+                    <warName>${project.artifactId}-1.0</warName>
                 </configuration>
             </plugin>
 

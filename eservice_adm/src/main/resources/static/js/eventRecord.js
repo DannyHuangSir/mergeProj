@@ -254,12 +254,12 @@
 					height: 250,
 					colNames:['系統別', '記錄時間','事件代碼','事件名稱', '帳號', '業務事件記錄'],
 					colModel:[
-						{name:'systemId',index:'systemId', width:80, editable:true},
-						{name:'recordTime',index:'recordTime',width:100, editable:true},
-						{name:'eventCode',index:'eventCode', width:100,editable: true},
-						{name:'eventName',index:'eventName', width:100, editable: true},
-						{name:'userId',index:'userId', width:80, editable: true},
-						{name:'busineRecord',index:'busineRecord', width:60, sortable:false, align:'center'} 
+						{name:'systemId',index:'systemId', editable:true},
+						{name:'recordTime',index:'recordTime',editable:true},
+						{name:'eventCode',index:'eventCode',editable: true},
+						{name:'eventName',index:'eventName', editable: true},
+						{name:'userId',index:'userId', editable: true},
+						{name:'busineRecord',index:'busineRecord', sortable:false, align:'left'}
 					], 
 			
 					viewrecords : true,
