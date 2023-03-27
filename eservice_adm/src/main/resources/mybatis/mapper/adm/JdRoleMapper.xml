@@ -217,14 +217,13 @@
 
     <select id="getNotifyRoles" resultType="hashmap">
         SELECT
-        b.ROLE_ID,b.ROLE_NAME, d1.DEP_NAME PASSAGE_WAY
+        b.ROLE_ID, b.ROLE_NAME, d.DEP_NAME PASSAGE_WAY
         FROM
         ESERVICE_ADM.DBO.ROLE b
         INNER JOIN ESERVICE_ADM.DBO.ROLE_SYS_AUTH RSA ON b.ROLE_ID = RSA.ROLE_ID
         INNER JOIN ESERVICE_JD.DBO.ROLE_DEPARTMENT RD ON b.ROLE_ID = RD.ROLE_ID COLLATE database_default
         INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = RD.DEP_ID COLLATE database_default
-        INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D1 ON D1.DEP_ID = D.PARENT_DEP COLLATE database_default
-        WHERE RSA.SYS_ID = 'eservice_jd' AND D1.DEP_ID = #{vo.passageWay}
+        WHERE RSA.SYS_ID = 'eservice_jd' AND D.DEP_ID = #{vo.passageWay}
     </select>
 
 <!--    <delete id="deleteRoleSysAuth">-->

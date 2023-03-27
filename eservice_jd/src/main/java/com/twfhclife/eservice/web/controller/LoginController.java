@@ -109,7 +109,7 @@ public class LoginController extends BaseController {
 
             UsersVo userDetail = registerUserService.getUserByAccount(userId);
 			if (userDetail == null) {
-				addAttribute("errorMessage", "用戶不存在！");
+				addAttribute("errorMessage", "帳號或密碼有誤，請重新確認！");
 				resetVerifyCode();
 				return "login";
 			}

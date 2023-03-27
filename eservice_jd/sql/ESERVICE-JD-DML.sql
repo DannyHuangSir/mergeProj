@@ -93,7 +93,7 @@ go
 
 insert ESERVICE_ADM.[dbo].[FUNCTION_ITEM] select
 (select max(FUNCTION_ID)+1 from ESERVICE_ADM.[dbo].[FUNCTION_ITEM]),
-N'經代專區通知管理',
+N'經代支援系統通知管理',
 N'F',
 'jdzqNotifyManagement',
 PARENT_FUNC_ID,
@@ -109,7 +109,7 @@ go
 
 insert ESERVICE_ADM.[dbo].[FUNCTION_ITEM] select
 (select max(FUNCTION_ID)+1 from ESERVICE_ADM.[dbo].[FUNCTION_ITEM]),
-N'經代專區通知記錄',
+N'經代支援系統通知記錄',
 N'F',
 'jdzqNotifyManagementDetail',
 PARENT_FUNC_ID,

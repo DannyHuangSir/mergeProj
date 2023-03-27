@@ -175,7 +175,7 @@
     </select>
 
     <select id="getPassageWay" resultType="hashmap">
-        SELECT DEP_ID parameterValue , DEP_NAME parameterName FROM ESERVICE_JD.DBO.DEPARTMENT WHERE PARENT_DEP = 0
+        SELECT DEP_ID parameterValue , DEP_NAME parameterName FROM ESERVICE_JD.DBO.DEPARTMENT WHERE PARENT_DEP = '0'
     </select>
 
     <select id="getDepId" resultType="com.twfhclife.adm.model.DepartmentVo">

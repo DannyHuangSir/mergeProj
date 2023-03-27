@@ -27,7 +27,7 @@ public class CaseController extends BaseController {
 	public ResponseObj personalCaseList() {
 		ResponseObj responseObj = new ResponseObj();
 		responseObj.setResult(ResponseObj.SUCCESS);
-		responseObj.setResultData(caseService.getCaseList(getLoginUser(), null));
+		responseObj.setResultData(caseService.getPersonalCaseList(getLoginUser()));
 		return responseObj;
 	}
 

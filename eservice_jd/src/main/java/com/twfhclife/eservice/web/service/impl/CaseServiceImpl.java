@@ -108,6 +108,22 @@ public class CaseServiceImpl implements ICaseService {
         return generatePDF(responseObj.getNotePdf());
     }
 
+    @Override
+    public List<CaseVo> getPersonalCaseList(KeycloakUser user) {
+        List<CaseVo> result = Lists.newArrayList();
+        List<PermQueryVo> caseQuery = Lists.newArrayList();
+        caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
+        if (!CollectionUtils.isEmpty(caseQuery)) {
+            CaseQueryVo vo = new CaseQueryVo();
+            vo.setCaseQuery(caseQuery);
+            vo.setUserId(user.getUsername());
+            vo.setSysId(ApConstants.SYSTEM_ID);
+            PersonalCaseDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(vo), personalCaseUrl, PersonalCaseDataResponse.class);
+            result.addAll(responseObj.getCaseList());
+        }
+        return result;
+    }
+
     private byte[] generatePDF(NotePdfVo pdfVo) throws Exception {
         Resource kaiuResource = new ClassPathResource("fonts/kaiu.ttf");
         String kaiuFontPath = kaiuResource.getFile().getPath();

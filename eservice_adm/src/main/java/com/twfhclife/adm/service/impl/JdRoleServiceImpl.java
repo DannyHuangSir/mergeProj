@@ -101,7 +101,7 @@ public class JdRoleServiceImpl implements IJdRoleService {
     @RequestLog
     @Override
     public int insertRole(RoleVo roleVo) {
-        roleVo.setSystemId("eservice_adm");
+        roleVo.setSystemId("eservice_jd");
         return roleDao.insertRole(roleVo);
     }
 

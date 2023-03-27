@@ -85,14 +85,14 @@
                                         <label>
                                             <div class="radio-btn"><i><input type="radio" name="notifyRadio"
                                                                              value="member"></i></div>
-                                            指定員工編號
+                                            指定業務員編號
                                         </label>
                                     </div>
                                     <div class="radio" style="float: left;padding-right: 20px;">
                                         <label>
                                             <div class="radio-btn"><i><input type="radio" name="notifyRadio"
                                                                              value="department"></i></div>
-                                            指定分行
+                                            指定分支機構
                                         </label>
                                     </div>
                                     <div class="radio" style="float: left;padding-right: 20px;">
@@ -314,7 +314,7 @@
 			qryGrid.id = '#qryGrid';
 			qryGrid.url = /*[[@{/jdUserMgnt/getNotifyUsers}]]*/;
 			qryGrid.caption = '員工查詢結果';
-			qryGrid.colNames = ['', '通路', '員工編號', '姓名'];
+			qryGrid.colNames = ['', '通路', '業務員編號', '姓名'];
 			qryGrid.colModel = [
 				{width: 50, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
@@ -339,7 +339,7 @@
 			qryGrid.id = '#qryGrid';
 			qryGrid.url = /*[[@{/jdDeptMgnt/getDepartment}]]*/;
 			qryGrid.caption = '分行查詢結果';
-			qryGrid.colNames = ['', '通路', '分行'];
+			qryGrid.colNames = ['', '通路', '分支機構'];
 			qryGrid.colModel = [
 				{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
