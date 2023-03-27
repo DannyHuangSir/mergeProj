@@ -22,7 +22,6 @@
 
     <sql id="whereClause">
         <where>
-                a.DEP_NAME != ''
             <if test="roleVo.roleId != null and roleVo.roleId != ''">
                 AND b.ROLE_ID = #{roleVo.roleId}
             </if>
@@ -33,12 +32,10 @@
                 AND b.DESCRIPTION = #{roleVo.description}
             </if>
             <if test="roleVo.parentRoleId != null and roleVo.parentRoleId != ''">
-                AND b.PARENT_ROLE_ID =
-                #{roleVo.parentRoleId}
+                AND b.PARENT_ROLE_ID = #{roleVo.parentRoleId}
             </if>
             <if test="roleVo.departmentId != null and roleVo.departmentId != ''">
-                AND b.DEPARTMENT_ID =
-                #{roleVo.departmentId}
+                AND a.DEP_ID = #{roleVo.departmentId}
             </if>
             <if test="roleVo.departmentName != null and roleVo.departmentName != ''">
                 AND a.DEP_NAME LIKE CONCAT('%',#{roleVo.departmentName},'%')
@@ -77,14 +74,14 @@
 
     <sql id="wherePkClause">
         <where>
-            AND ROLE_ID = #{roleVo.roleId}
+            AND ROLE_ID = #{roleVo.roleId} AND DEP_ID = #{roleVo.departmentId}
         </where>
     </sql>
 
     <!-- include sql: 使用者角色管理查詢結果 -->
     <sql id="INC1">
         SELECT
-        b.ROLE_ID,b.ROLE_NAME,b.DESCRIPTION,b.PARENT_ROLE_ID,b.DEPARTMENT_ID,b.CREATE_USER,b.CREATE_DATE,b.MODIFY_USER,b.MODIFY_DATE,a.DEP_NAME as DEPARTMENT_NAME,b.DIV_ROLE_ID
+        b.ROLE_ID,b.ROLE_NAME,b.DESCRIPTION,b.PARENT_ROLE_ID,a.DEP_ID,b.CREATE_USER,b.CREATE_DATE,b.MODIFY_USER,b.MODIFY_DATE,a.DEP_NAME as DEPARTMENT_NAME,b.DIV_ROLE_ID
         FROM
         ESERVICE_ADM.DBO.ROLE b
         left join ESERVICE_JD.DBO.ROLE_DEPARTMENT RD ON RD.ROLE_ID = b.ROLE_ID COLLATE database_default
@@ -232,6 +229,19 @@
 
     <select id="getRoleId" resultType="com.twfhclife.adm.model.RoleVo">
         select * from ESERVICE_ADM.DBO.ROLE where DIV_ROLE_ID = #{roleId}
+    </select>
+
+    <select id="getDepRole" resultMap="RoleMap">
+        SELECT * FROM ESERVICE_ADM.dbo.ROLE a left join ESERVICE_JD.dbo.ROLE_DEPARTMENT b on a.ROLE_ID = b.ROLE_ID COLLATE database_default
+        <where>
+            b.DEP_ID = #{depId}
+        <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
+        <if test="adminUserFlag == 'N'.toString()">
+            AND ROLE_ID IN (
+            SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
+            )
+        </if>
+        </where>
     </select>
 </mapper>
 

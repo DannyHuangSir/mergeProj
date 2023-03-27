@@ -25,7 +25,7 @@
 						</ul>
 					</div>
 					<div class="page-content">
-						<div class="row">
+						<div class="row" id="selectNode">
 							<div class="col-xs-12">
 								<form class="form-horizontal" role="form" id="form1" action="func7-1.html">
 									<div class="form-group">
@@ -39,19 +39,18 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">帳號狀態 </label>
 										<div class="col-sm-5">
-											<input type="text" id="status" placeholder="輸入欲查詢的帳號狀態" class="form-control" />
+											<div>
+												<select id="statusSelect" >
+													<option selected="statusSelect" disabled="disabled" style='display: none' value=''></option>
+													<option value="Unenabled">未啟用</option>
+													<option value="Enabled">已啟用</option>
+													<option value="Disabled">已停用</option>
+												</select>
+											</div>
 										</div>
 										<div class="col-sm-4">
 										</div>
 									</div>
-<!--									<div class="form-group">-->
-<!--										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者帳號 </label>-->
-<!--										<div class="col-sm-5">-->
-<!--											<input type="text" id="username" placeholder="輸入欲查詢的使用者帳號" class="form-control" />-->
-<!--										</div>-->
-<!--										<div class="col-sm-4">-->
-<!--										</div>-->
-<!--									</div>-->
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">使用者名稱 </label>
 										<div class="col-sm-5">
@@ -69,41 +68,31 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">通路别 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="parentDepSelect">通路别 </label>
 										<div class="col-sm-5">
-											<input type="text" id="parentDep" placeholder="輸入欲查詢的通路" class="form-control" />
+											<div>
+												<select id="parentDepSelect" ></select>
+											</div>
 										</div>
 										<div class="col-sm-4">
 										</div>
 									</div>
-<!--									<div class="form-group">-->
-<!--										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">單位 </label>-->
-<!--										<div class="col-sm-5">-->
-<!--											<input type="text" id="department" placeholder="輸入欲查詢的單位" class="form-control" />-->
-<!--										</div>-->
-<!--										<div class="col-sm-4">-->
-<!--										</div>-->
-<!--									</div>-->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">分支機構 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="branchIdSelect">分支機構 </label>
 										<div class="col-sm-5">
-											<input type="text" id="branchId" placeholder="輸入欲查詢的分支機構代碼" class="form-control" />
+											<div>
+											<select id="branchIdSelect" ></select>
+											</div>
 										</div>
 										<div class="col-sm-4">
 										</div>
 									</div>
-<!--									<div class="form-group">-->
-<!--										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">職位 </label>-->
-<!--										<div class="col-sm-5">-->
-<!--											<input type="text" id="jobTitle" placeholder="輸入欲查詢的職位" class="form-control" />-->
-<!--										</div>-->
-<!--										<div class="col-sm-4">-->
-<!--										</div>-->
-<!--									</div>-->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1">角色 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="roleNameSelect">角色 </label>
 										<div class="col-sm-5">
-											<input type="text" id="roleName" placeholder="輸入欲查詢的角色" class="form-control" />
+											<div>
+											<select id="roleNameSelect" ></select>
+											</div>
 										</div>
 										<div class="col-sm-4">
 										</div>
@@ -300,6 +289,60 @@
 			// 	});
 			// });
 
+			eserviceAdmOption.dept('#parentDepSelect', /*[[@{jd/common/dept/parentList}]]*/);
+
+			$('#selectNode #roleNameSelect').on('click', function() {
+				var formData = {
+					depId: $('#selectNode #parentDepSelect').val()
+				};
+				$.ajax({
+					url: /*[[@{/jd/common/depRoleList}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					data: JSON.stringify(formData),
+					success: function (response) {
+						$("#selectNode #roleNameSelect").empty();
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].roleId + "'>" +  response.resultData[i].roleName + "</option>";
+									$("#selectNode #roleNameSelect").append(option);
+								}
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			});
+
+			$('#branchIdSelect').on('click', function() {
+				var formData = {
+					depId: $('#selectNode #parentDepSelect').val()
+				};
+				$.ajax({
+					url: /*[[@{jd/common/branchList}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					data: JSON.stringify(formData),
+					success: function (response) {
+						$("#selectNode #branchIdSelect").empty();
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+									$("#selectNode #branchIdSelect").append(option);
+								}
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			});
+
 			$('#deptParentSelect').on('click', function() {
 				var formData = {
 					depId: $('#editDeptDialog #deptParentSelect').val()
@@ -334,13 +377,14 @@
 				// 設定查詢條件
 				qryGrid.setPostData('username', $('#username').val());
 				qryGrid.setPostData('userId', $('#userId').val());
-				qryGrid.setPostData('status', $('#status').val());
+				qryGrid.setPostData('status', $('#statusSelect option:selected').val());
 				qryGrid.setPostData('salespersonId', $('#salespersonId').val());
 				qryGrid.setPostData('lastName', $('#lastName').val());
-				qryGrid.setPostData('parentDep', $('#parentDep').val());
+				qryGrid.setPostData('parentDep', $('#selectNode #parentDepSelect').val());
 				qryGrid.setPostData('department', $('#department').val());
-				qryGrid.setPostData('branchId', $('#branchId').val());
+				qryGrid.setPostData('branchId', $('#selectNode #branchIdSelect').val());
 				qryGrid.setPostData('jobTitle', $('#jobTitle').val());
+				qryGrid.setPostData('roleId', $('#selectNode #roleNameSelect').val());
 				qryGrid.setPostData('roleName', $('#roleName').val());
 				// 產生grid
 				qryGrid.create();

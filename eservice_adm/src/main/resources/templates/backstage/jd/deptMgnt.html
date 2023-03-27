@@ -92,7 +92,7 @@
 														</div>
 													</fieldset>
 													<fieldset>
-														<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>原分支機構代碼：</label>
+														<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>原機構代碼：</label>
 														<div class="col-sm-8">
 															<input type="text" id="branchId" class="form-control" />
 														</div>
@@ -178,7 +178,7 @@
 											</div>
 										</fieldset>
 										<fieldset>
-											<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>原分支機構代碼：</label>
+											<label class="col-sm-4 control-label no-padding-right"><label class="red">*</label>原機構代碼：</label>
 											<div class="col-sm-8">
 												<input type="text" id="branchId" class="form-control" />
 											</div>
@@ -226,7 +226,7 @@
 			$.ajaxSetup({async: true});
 
 			$('#addForm #parentDepDiv').html(nodeData.target.text);
-			// $('#nodeForm #parentDep').val(nodeData.target.parentDep);
+			$('#nodeForm #parentDep').val(nodeData.target.parentDep);
 			$('#nodeForm #depId').val(nodeData.target.id);
 			$('#nodeForm #depName').val(nodeData.target.text);
 			$('#nodeForm #branchId').val(nodeData.target.branchId);
@@ -342,7 +342,7 @@
 				if (r) {
 					var formData = {
 						depId :$('#nodeForm #depId').val(),
-						// parentDep : $('#nodeForm #parentDep').val(),
+						parentDep : $('#nodeForm #parentDep').val(),
 						depName : $('#nodeForm #depName').val(),
 						branchId: $('#nodeForm #branchId').val(),
 						description : $('#nodeForm #description').val()

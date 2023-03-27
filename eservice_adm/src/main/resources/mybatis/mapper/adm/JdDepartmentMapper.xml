@@ -213,4 +213,9 @@
             ESERVICE_JD.DBO.DEPARTMENT
         where PARENT_DEP = #{depId} and BRANCH_ID = #{branchId}
     </select>
+
+
+    <select id="getDepLevel" resultType="int">
+        SELECT COUNT(1) FROM ESERVICE_JD.dbo.DEPARTMENT WHERE PARENT_DEP != '0' AND DEP_ID = #{departmentVo.parentDep}
+    </select>
 </mapper>

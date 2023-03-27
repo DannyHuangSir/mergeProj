@@ -80,12 +80,12 @@
 			</if>
 			<if test="userEntityVo.parentDep != null and userEntityVo.parentDep != ''">
 				AND ID  IN (
-					SELECT
-					udd.USER_ID
-					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd where udd.DEP_ID
-					in (
-					select d.DEP_ID from ESERVICE_JD.DBO.DEPARTMENT d
-					WHERE UPPER(d.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.parentDep}),'%'))
+				SELECT
+				udd.USER_ID
+				FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd where udd.DEP_ID
+				in (
+				select d.DEP_ID from ESERVICE_JD.DBO.DEPARTMENT d
+				WHERE d.PARENT_DEP = #{userEntityVo.parentDep}
 					)
 				)
 			</if>
@@ -116,13 +116,12 @@
 			        WHERE UPPER(jt.TITLE_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.jobTitle}),'%'))
 			    )
 			</if>
-			<if test="userEntityVo.roleName != null and userEntityVo.roleName != ''">
+			<if test="userEntityVo.roleId != null and userEntityVo.roleId != ''">
 				AND ID IN (
-			        SELECT
-			        	urr.USER_ID
-			        FROM ESERVICE_ADM.DBO.USER_ROLE urr
-			        LEFT JOIN ESERVICE_ADM.DBO.ROLE rr on urr.ROLE_ID=rr.ROLE_ID
-			        WHERE UPPER(rr.ROLE_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.roleName}),'%'))
+				SELECT
+				urr.USER_ID
+				FROM ESERVICE_ADM.DBO.USER_ROLE urr
+				LEFT JOIN ESERVICE_ADM.DBO.ROLE rr on urr.ROLE_ID=rr.ROLE_ID where rr.ROLE_ID = #{userEntityVo.roleId}
 			    )
 			</if>
 			<!-- 非系統最高權限管理員，只能查詢角色所屬部門的人員 -->

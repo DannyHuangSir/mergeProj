@@ -132,12 +132,7 @@ public class JdRoleServiceImpl implements IJdRoleService {
     @RequestLog
     @Override
     public int deleteRole(RoleVo roleVo) {
-        int deleteRole = roleDao.deleteRole(roleVo);
-        if (deleteRole > 0){
-            return roleDao.deleteRoleDep(roleVo);
-        }else {
-            return roleDao.updateRole(roleVo);
-        }
+        return roleDao.deleteRoleDep(roleVo);
     }
 
     @Override
@@ -147,5 +142,12 @@ public class JdRoleServiceImpl implements IJdRoleService {
 
     public RoleVo getRoleId(String roleId){
         return roleDao.getRoleId(roleId);
+    }
+
+    @Override
+    public List<RoleVo> getDepRole(String userName, String keyCloakUserId,String depId) {
+        // 判斷目前登入者是否有最高權限管理員
+        String adminUserFlag = (StringUtils.equals(userName, systemAdminUser) ? "Y" : "N");
+        return roleDao.getDepRole(keyCloakUserId, adminUserFlag,depId);
     }
 }
