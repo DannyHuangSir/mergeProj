@@ -158,8 +158,17 @@ public class JdRoleServiceImpl implements IJdRoleService {
 
     @Override
     public int updateUserRole(String userId, String roleId) {
-        return 0;
+        return roleDao.updateUserRole(userId,roleId);
     }
 
+    @Override
+    public int countRoleDep(String roleId, String depId) {
+        return roleDao.countRoleDep(roleId,depId);
+    }
+
+    @Override
+    public int countUserRole(String roleId, String userId) {
+        return roleDao.countUserRole(roleId,userId);
+    }
 
 }

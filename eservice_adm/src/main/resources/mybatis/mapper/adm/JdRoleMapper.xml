@@ -22,6 +22,7 @@
 
     <sql id="whereClause">
         <where>
+            b.DIV_ROLE_ID IS NOT NULL and  a.DEP_NAME IS NOT NULL
             <if test="roleVo.roleId != null and roleVo.roleId != ''">
                 AND b.ROLE_ID = #{roleVo.roleId}
             </if>
@@ -234,7 +235,7 @@
 <!--    </delete>-->
 
     <select id="getRoleId" resultType="com.twfhclife.adm.model.RoleVo">
-        select * from ESERVICE_ADM.DBO.ROLE where DIV_ROLE_ID = #{roleId}
+        select r.ROLE_ID from ESERVICE_ADM.DBO.ROLE r left  join ESERVICE_JD.dbo.ROLE_DEPARTMENT rd on r.ROLE_ID = rd.ROLE_ID where r.DIV_ROLE_ID = #{roleId} group by r.ROLE_ID
     </select>
 
     <select id="getDepRole" resultMap="RoleMap">
@@ -254,9 +255,17 @@
         insert ESERVICE_ADM.dbo.USER_ROLE (USER_ID,ROLE_ID)values(#{userId, jdbcType=VARCHAR},#{roleId, jdbcType=VARCHAR})
     </insert>
 
-    <insert id="updateUserRole">
-        update ESERVICE_ADM.dbo.USER_ROLE set USER_ID,ROLE_ID where ROLE_ID = #{roleId} and USER_ID = #{userId}
-        insert ESERVICE_ADM.dbo.USER_ROLE (USER_ID,ROLE_ID)values(#{userId, jdbcType=VARCHAR},#{roleId, jdbcType=VARCHAR})
-    </insert>
+    <update id="updateUserRole">
+        update ESERVICE_ADM.dbo.USER_ROLE set ROLE_ID = #{roleId} where  USER_ID = #{userId}
+    </update>
+
+    <select id="countRoleDep" resultType="int">
+        select count(1) from ESERVICE_ADM.dbo.ROLE r left join ESERVICE_JD.dbo.ROLE_DEPARTMENT dr on r.ROLE_ID = dr.ROLE_ID
+                        where r.DIV_ROLE_ID = #{roleId} and dr.DEP_ID = #{depId}
+    </select>
+
+    <select id="countUserRole" resultType="int">
+        select COUNT(1) from ESERVICE_ADM.dbo.USER_ROLE where USER_ID = #{userId} and ROLE_ID = #{roleId}
+    </select>
 </mapper>
 

@@ -538,9 +538,9 @@
 			deptGrid.caption = '人員部門職位查詢';
 			deptGrid.colNames = ['通路', '分支機構', '操作'];
 			deptGrid.colModel = [
-				{name: 'DEP_NAME', index: 'DEP_NAME', width: 100},
-				{name: 'BRANCH_NAME', index: 'BRANCH_NAME', width: 100},
-				{align: 'center', formatter: function(cellvalue, options, row) {
+				{name: 'DEP_NAME', index: 'DEP_NAME'},
+				{name: 'BRANCH_NAME', index: 'BRANCH_NAME'},
+				{formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
 						actionHtml += '<a href="javascript:deleteUserDepartment(\'' + row.DEP_ID + '\', \'' + emptyIfNull(row.TITLE_ID) + '\', \''+ row.BRANCH_ID+'\');" class="green bigger-140 show-details-btn" title="Edit">';
 						actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
@@ -561,7 +561,7 @@
 			roleGrid.colModel = [
 				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
 				{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 100},
-				{align: 'center', formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
 					actionHtml += '<a href="javascript:deleteUserRole(\'' + row.ROLE_ID + '\');" class="green bigger-140 show-details-btn" title="Edit">';
 					actionHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span> ';
@@ -604,7 +604,7 @@
 			jdUserGrid.colModel = [
 				{name: 'USER_ID', index: 'USER_ID'},
 				// {name: 'STATUS', index: 'STATUS'},
-				{align: 'center', formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 						var accountType = '';
 						if (row.STATUS == 'Unenabled'){
 							accountType = '未啟用'

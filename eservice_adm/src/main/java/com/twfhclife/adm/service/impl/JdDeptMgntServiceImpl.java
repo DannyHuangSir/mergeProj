@@ -236,5 +236,15 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
         return departmentDao.countBranchId(parentDep,branchId);
     }
 
+    @Override
+    public int updateUserDep(String userId, String depId, String branchId) {
+        return departmentDao.updateUserDep(userId,depId,branchId);
+    }
+
+    @Override
+    public int countUserDep(String userId, String depId, String branchId) {
+        return departmentDao.countUserDep(userId,depId,branchId);
+    }
+
 
 }

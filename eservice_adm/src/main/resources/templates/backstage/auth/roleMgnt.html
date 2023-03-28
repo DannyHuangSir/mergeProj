@@ -75,6 +75,15 @@
 											<div class="col-sm-4">
 											</div>
 										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="depSelect"> 系統別 </label>
+											<div class="col-sm-5">
+												<select class="form-control" id="depSelect">
+												</select>
+											</div>
+											<div class="col-sm-4">
+											</div>
+										</div>
 										<div id="responseBody"></div>
 										<div class="clearfix form-actions">
 											<div class="col-md-offset-3 col-md-9">
@@ -207,6 +216,9 @@
 			// 載入系統功能下拉選單
 			eserviceAdmOption.system('#systemsSelect', /*[[@{/common/systemList}]]*/);
 
+			//通路下拉框
+			eserviceAdmOption.dept('#depSelect', /*[[@{jd/common/dept/parentList}]]*/);
+
 			// 取得角色名稱下拉選單
 			eserviceAdmOption.chosenRole('#roleSelect', /*[[@{/common/roleList}]]*/, function() {
 				eserviceAdmEvent.initChosenSelect();
@@ -238,6 +250,9 @@
 				// 設定查詢條件
 				grid.setPostData('systemId', $('#systemsSelect').val());
 				grid.setPostData('roleName', $('#roleName').val());
+				grid.setPostData('parentDep',$('#depSelect').val())
+				//通路名查詢
+
 				// 產生grid
 				grid.create();
 				// 顯示查詢結果區域

@@ -148,11 +148,15 @@ public class JdUserMgntController extends BaseController {
     @PostMapping("/jdUserMgnt/insertUserDepartment")
     public ResponseEntity<ResponseObj> insertUserDepartment(@RequestBody UserDepartmentVo userDepartmentVo) {
         try {
-            int result = userDepartmentService.insertUserDepartment(userDepartmentVo);
-            if (result > 0) {
-                processSuccessMsg("新增成功");
-            } else {
-                processError("新增失敗");
+            if (userDepartmentService.countUserDep(userDepartmentVo.getUserId()) >= 1){
+                processSuccessMsg("每個人員只允許一個通路和分支機構");
+            }else {
+                int result = userDepartmentService.insertUserDepartment(userDepartmentVo);
+                if (result > 0) {
+                    processSuccessMsg("新增成功");
+                } else {
+                    processError("新增失敗");
+                }
             }
         } catch (Exception e) {
             logger.error("Unable to insertUserDepartment: {}", ExceptionUtils.getStackTrace(e));
@@ -222,11 +226,15 @@ public class JdUserMgntController extends BaseController {
     @PostMapping("/jdUserMgnt/insertUserRole")
     public ResponseEntity<ResponseObj> insertUserRole(@RequestBody UserRoleVo userRoleVo) {
         try {
-            int result = userRoleService.insertUserRole(userRoleVo);
-            if (result > 0) {
-                processSuccessMsg("新增成功");
+            if (userRoleService.countUserRole(userRoleVo.getUserId()) >= 1) {
+                processError("每個人只允許一個角色");
             } else {
-                processError("新增失敗");
+                int result = userRoleService.insertUserRole(userRoleVo);
+                if (result > 0) {
+                    processSuccessMsg("新增成功");
+                } else {
+                    processError("新增失敗");
+                }
             }
         } catch (Exception e) {
             logger.error("Unable to insertUserRole: {}", ExceptionUtils.getStackTrace(e));
@@ -261,7 +269,7 @@ public class JdUserMgntController extends BaseController {
 
     @RequestLog
     @PostMapping("/jdUserMgnt/getJdUserQuery")
-    public  ResponseEntity<PageResponseObj> getJdUserQuery(@RequestBody JdUserVo vo) {
+    public ResponseEntity<PageResponseObj> getJdUserQuery(@RequestBody JdUserVo vo) {
         PageResponseObj pageResp = new PageResponseObj();
         try {
             // Note: UserRoleVo 需要繼承Pagination，接收 jqGrid 的page 跟 rows 屬性

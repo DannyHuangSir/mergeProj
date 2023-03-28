@@ -60,5 +60,7 @@ public interface JdUserRoleDao {
 	 * @return 回傳影響筆數
 	 */
 	int deleteUserRole(@Param("userRoleVo") UserRoleVo userRoleVo);
+
+	int countUserRole(@Param("userId")String userId);
 }
 

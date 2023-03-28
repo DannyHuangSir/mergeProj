@@ -59,4 +59,6 @@ public interface IJdUserRoleService {
 	 * @return 回傳影響筆數
 	 */
 	public int deleteUserRole(UserRoleVo userRoleVo);
+
+	int countUserRole(String userId);
 }

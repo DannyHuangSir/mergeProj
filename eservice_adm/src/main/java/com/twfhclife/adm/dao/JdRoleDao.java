@@ -95,4 +95,10 @@ public interface JdRoleDao {
     int insertUserRole(@Param("userId")String userId,@Param("roleId")String roleId);
 
     int updateUserRole(@Param("userId")String userId,@Param("roleId")String roleId);
+
+    int countRoleDep(@Param("roleId") String roleId,@Param("depId") String depId);
+
+    int countUserRole(@Param("roleId") String roleId,@Param("userId") String userId);
+
+
 }

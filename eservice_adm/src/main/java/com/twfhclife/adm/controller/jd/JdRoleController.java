@@ -93,12 +93,16 @@ public class JdRoleController extends BaseController {
         try {
             roleVo.setCreateUser(getUserId());
             roleVo.setModifyUser(getUserId());
-
-            int result = roleService.insertRole(roleVo);
-            if (result > 0) {
-                processSuccessMsg("新增成功");
-            } else {
-                processError("新增失敗");
+            //如果角色代碼存在,不允許新增
+            if (roleService.countRoleDep(roleVo.getDivRoleId(),roleVo.getDepartmentId())>=1){
+                processSuccessMsg("通路下角色代碼已存在");
+            }else {
+                int result = roleService.insertRole(roleVo);
+                if (result > 0) {
+                    processSuccessMsg("新增成功");
+                } else {
+                    processError("新增失敗");
+                }
             }
         } catch (Exception e) {
             logger.error("Unable to insertRole: {}", ExceptionUtils.getStackTrace(e));

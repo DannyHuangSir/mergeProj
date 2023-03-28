@@ -89,4 +89,11 @@ public class JdUserRoleServiceImpl implements IJdUserRoleService {
 	public int deleteUserRole(UserRoleVo userRoleVo) {
 		return userRoleDao.deleteUserRole(userRoleVo);
 	}
+
+	@Override
+	public int countUserRole(String userId) {
+		return userRoleDao.countUserRole(userId);
+	}
+
+
 }

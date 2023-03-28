@@ -47,6 +47,11 @@
 				SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
 			)
 			</if>
+			<if test="roleVo.parentDep != null and roleVo.parentDep != ''">
+				AND ROLE_ID IN(
+				select ROLE_ID from ESERVICE_JD.DBO.ROLE_DEPARTMENT where DEP_ID = #{roleVo.parentDep}
+				)
+			</if>
 		</where>
 	</sql>
 	

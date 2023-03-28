@@ -94,4 +94,8 @@ public interface IJdDeptMgntService {
     int countBranchName(String parentDep,String depName);
 
     int countBranchId(String parentDep,String branchId);
+
+    int updateUserDep(String userId,String depId,String branchId);
+
+    int countUserDep(String userId,String depId,String branchId);
 }

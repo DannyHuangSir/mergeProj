@@ -94,4 +94,9 @@ public class JdUserDepartmentServiceImpl implements IJdUserDepartmentService {
 	public List<UserDepartmentVo> getUserBranch(UserDepartmentVo userDepartmentVo) {
 		return userDepartmentDao.getUserBranch(userDepartmentVo);
 	}
+
+	@Override
+	public int countUserDep(String userId) {
+		return userDepartmentDao.countUserDep(userId);
+	}
 }

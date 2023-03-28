@@ -11,7 +11,7 @@
         select * from ESERVICE_JD.dbo.USERS
             <where>
                 <if test="rocId != null and rocId != ''">
-                    USER_ID = #{rocId} AND ROC_ID = #{rocId}
+                    USER_ID = #{rocId}
                 </if>
             </where>
 
@@ -70,5 +70,14 @@
 
     <select id="countUserIc" resultType="int">
         select COUNT(1) from ESERVICE_JD.dbo.USER_IC where USER_ID in(select USER_ID from ESERVICE_JD.dbo.USERS where IC_ID = #{icId})
+    </select>
+
+    <select id="countUser" resultType="int">
+        select count(1) from ESERVICE_JD.dbo.USERS
+        <where>
+            <if test="rocId != null and rocId != ''">
+                USER_ID = #{rocId}
+            </if>
+        </where>
     </select>
 </mapper>

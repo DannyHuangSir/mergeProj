@@ -62,5 +62,7 @@ public interface JdUserDepartmentDao {
 	int deleteUserDepartment(@Param("userDepartmentVo") UserDepartmentVo userDepartmentVo);
 
 	List<UserDepartmentVo> getUserBranch(@Param("userDepartmentVo") UserDepartmentVo userDepartmentVo);
+
+	int countUserDep(@Param("userId")String userId);
 }
 

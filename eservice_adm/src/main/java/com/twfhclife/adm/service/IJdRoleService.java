@@ -83,4 +83,8 @@ public interface IJdRoleService {
     int insertUserRole(String userId,String roleId);
 
     int updateUserRole(String userId,String roleId);
+
+    int countRoleDep(String roleId,String depId);
+
+    int countUserRole(String roleId, String userId);
 }

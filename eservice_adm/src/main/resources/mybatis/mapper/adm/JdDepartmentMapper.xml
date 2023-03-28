@@ -242,4 +242,12 @@
     <select id="countBranchId" resultType="int">
         select count(BRANCH_ID) from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{branchId}  and PARENT_DEP = #{parentDep}
     </select>
+
+    <update id="updateUserDep">
+        update ESERVICE_JD.dbo.USER_DEPARTMENT set DEP_ID = #{depId},BRANCH_ID = #{branchId} where USER_ID = #{userId}
+    </update>
+
+    <select id="countUserDep" resultType="int">
+        select count(1) from ESERVICE_JD.dbo.USER_DEPARTMENT where BRANCH_ID = #{branchId} and DEP_ID =  #{depId}  and USER_ID = #{userId}
+    </select>
 </mapper>

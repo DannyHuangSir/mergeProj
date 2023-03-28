@@ -61,4 +61,6 @@ public interface IJdUserDepartmentService {
 	public int deleteUserDepartment(UserDepartmentVo userDepartmentVo);
 
 	List<UserDepartmentVo> getUserBranch(UserDepartmentVo userDepartmentVo);
+
+	int countUserDep(String userId);
 }

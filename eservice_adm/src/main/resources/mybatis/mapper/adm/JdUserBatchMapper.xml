@@ -17,7 +17,7 @@
         #{jdUserVo.userType,jdbcType=VARCHAR},
         ESERVICE.DBO.FN_ENBASE64(#{jdUserVo.rocId,jdbcType=VARCHAR}),
         #{jdUserVo.mobile,jdbcType=VARCHAR},
-        #{jdUserVo.email,jdbcType=VARCHAR},
+        ESERVICE.DBO.FN_ENBASE64(#{jdUserVo.email,jdbcType=VARCHAR}),
         #{jdUserVo.loginFailCount,jdbcType=VARCHAR},
         #{jdUserVo.lastChangPasswordDate,jdbcType=VARCHAR},
         #{jdUserVo.smsFlag,jdbcType=VARCHAR},
@@ -89,8 +89,8 @@
                      ROW_NUMBER() OVER (ORDER BY USER_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                          select * from ESERVICE_JD.dbo.USERS where USER_ID  = #{vo.userId}
-                      ) A
+                          select USER_ID,STATUS,EFFECTIVE_DATE,EXPIRATION_DATE,USER_NAME,IC_ID,LOGIN_SIZE,ESERVICE.DBO.FN_DEBASE64(ROC_ID) AS ROC_ID,ESERVICE.DBO.FN_DEBASE64(EMAIL) AS EMAIL,MOBILE
+                          from ESERVICE_JD.dbo.USERS where USER_ID  = #{vo.userId}                      ) A
              ) B
         WHERE
             B.ROW_NUM <![CDATA[<=]]> #{vo.page} * #{vo.rows}
@@ -115,8 +115,8 @@
                  FROM (
                           select c.DEP_NAME as depName,d.branchName,c.DEP_ID,d.BRANCH_ID
                           from ESERVICE_JD.dbo.DEPARTMENT c,(select a.DEP_NAME as branchName,a.PARENT_DEP,a.BRANCH_ID from ESERVICE_JD.dbo.DEPARTMENT a
-                                                                                                                               left join ESERVICE_JD.dbo.USER_IC b on a.PARENT_DEP = b.DEP_ID and a.BRANCH_ID = b.BRANCH_ID
-                                                             where b.USER_ID =  '3237098.0'
+                          left join ESERVICE_JD.dbo.USER_IC b on a.PARENT_DEP = b.DEP_ID and a.BRANCH_ID = b.BRANCH_ID
+                          where b.USER_ID =  #{vo.userId}
                           ) d where c.DEP_ID = d.PARENT_DEP
                       ) A
              ) B

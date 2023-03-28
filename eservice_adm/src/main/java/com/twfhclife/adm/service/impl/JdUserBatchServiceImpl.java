@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -159,7 +160,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                         jdUserVo.setUserId(list.get(i).get(1));
                         jdUserVo.setStatus(list.get(i).get(2));
                         jdUserVo.setInitPassword(list.get(i).get(3).replaceAll("[.](.*)",""));
-                        jdUserVo.setRoleId(list.get(i).get(4).replaceAll("[.](.*)",""));
+                        jdUserVo.setRoleId(list.get(i).get(4));
                         jdUserVo.setEffectiveDate(list.get(i).get(5));
                         jdUserVo.setExpirationDate(list.get(i).get(6));
                         jdUserVo.setDepId(list.get(i).get(7).replaceAll("[.](.*)",""));
@@ -167,9 +168,11 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                         jdUserVo.setUserName(list.get(i).get(9));
                         jdUserVo.setIcId(list.get(i).get(10));
                         jdUserVo.setLoginSize(list.get(i).get(11));
-                        jdUserVo.setRocId(list.get(i).get(12).replaceAll("[.](.*)",""));
+                        jdUserVo.setRocId(list.get(i).get(12));
                         jdUserVo.setEmail(list.get(i).get(13));
-                        jdUserVo.setMobile(list.get(i).get(14).replaceAll("[.](.*)",""));
+                        BigDecimal bd = new BigDecimal(list.get(i).get(14));
+                        String checkValue = bd.toPlainString();
+                        jdUserVo.setMobile(checkValue);
                         userList.add(jdUserVo);
                     }
                 } catch (Exception e) {
@@ -235,19 +238,18 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
 
                             }
                             // 檢查身份證號碼是否存在就已經檢查了系統賬號
-                            JdUserVo userVo = jdUserDao.getUser(vo.getRocId());
-                            if (userVo != null) {
+                            if (jdUserDao.countUser(vo.getRocId()) > 0) {
                                 vo.setFailResult("身分證字號已存在，請檢查!");
                             }
-                            if (userVo != null && StringUtils.isNotEmpty(userVo.getUserId())) {
-                                vo.setFailResult("系統帳號已存在，請檢查!");
-
-                            }
-                            // 檢查登錄字號
-                            if (userVo != null && StringUtils.isNotEmpty(userVo.getLoginSize())) {
-                                vo.setFailResult("登錄字號已存在，請檢查!");
-
-                            }
+//                            if (StringUtils.isNotEmpty(userVo.getUserId())) {
+//                                vo.setFailResult("系統帳號已存在，請檢查!");
+//
+//                            }
+//                            // 檢查登錄字號
+//                            if (StringUtils.isNotEmpty(userVo.getLoginSize())) {
+//                                vo.setFailResult("登錄字號已存在，請檢查!");
+//
+//                            }
                             // 檢查所屬通路」+「業務員編號是否存在
                             JdUserVo userIC = jdUserDao.getUserIC(vo.getRocId(),
                                     vo.getDepId());
@@ -267,6 +269,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                 keycloakService.createUser("elife_jd", keycloakUser);
                                 vo.setSerialNum("1");
                                 vo.setUserId(vo.getRocId());
+                                vo.setStatus("Unenabled");
                                 jdUserBatchDao.addUsers(vo);
                                 UserEntityVo user = jdUserMgntService.getUser(vo.getRocId(), "elife_jd");
                                 //新增user_role表数据
@@ -352,7 +355,11 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                             }
                             if (StringUtils.isEmpty(vo.getFailResult())) {
                                 jdUserBatchDao.updateUsers(vo);
-
+                                UserEntityVo user = jdUserMgntService.getUser(vo.getRocId(), "elife_jd");
+                                //更新user_role表数据
+                                jdRoleService.updateUserRole(user.getId(),updateRoleId.getRoleId());
+                                //更新user_dep表数据
+                                jdDeptMgntService.updateUserDep(user.getId(),updateDepId.getDepId(),updateBranchId.getDepId());
                             } else {
                                 failLinkList.add(vo);
                             }

@@ -145,4 +145,8 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="countUserDep" resultType="int">
+		select count(1) from ESERVICE_JD.dbo.USER_DEPARTMENT WHERE USER_ID = #{userId}
+	</select>
 </mapper>

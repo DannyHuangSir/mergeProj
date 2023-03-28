@@ -32,8 +32,8 @@
 		,R.DESCRIPTION
 		FROM
 		ESERVICE_ADM.DBO.USER_ROLE UR
-		LEFT OUTER JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
-		INNER JOIN  ESERVICE_JD.dbo.DEPARTMENT D on R.DEPARTMENT_ID = D.DEP_ID COLLATE database_default
+		LEFT JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
+-- 		INNER JOIN  ESERVICE_JD.dbo.ROLE_DEPARTMENT D on R.ROLE_ID = D.ROLE_ID COLLATE database_default
 		<include refid="whereClause" />
 	</sql>
 	
@@ -109,4 +109,7 @@
 		</where>
 	</delete>
 
+	<select id="countUserRole" resultType="int">
+		select COUNT(1) from ESERVICE_ADM.dbo.USER_ROLE where USER_ID = #{userId}
+	</select>
 </mapper>
