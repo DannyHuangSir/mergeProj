@@ -74,7 +74,10 @@
 
     <sql id="wherePkClause">
         <where>
-            AND ROLE_ID = #{roleVo.roleId} AND DEP_ID = #{roleVo.departmentId}
+            AND ROLE_ID = #{roleVo.roleId}
+            <if test="roleVo.departmentId != null and roleVo.departmentId != ''">
+                AND DEPARTMENT_ID = #{roleVo.departmentId}
+            </if>
         </where>
     </sql>
 
@@ -202,14 +205,17 @@
         ESERVICE_JD.DBO.ROLE_DEPARTMENT
         <set>
             <if test="roleVo.roleId != null">ROLE_ID = #{roleVo.roleId},</if>
-            <if test="roleVo.departmentId != null">DEP_ID = #{roleVo.departmentId},</if>
+            <if test="roleVo.departmentId != null">DEP_ID = #{roleVo.departmentId}</if>
         </set>
         <include refid="wherePkClause"/>
     </update>
 
     <delete id="deleteRoleDep">
         DELETE ESERVICE_JD.DBO.ROLE_DEPARTMENT
-        <include refid="wherePkClause"/>
+        where ROLE_ID = #{roleVo.roleId}
+        <if test="roleVo.departmentId != null and roleVo.departmentId != ''">
+        AND DEP_ID = #{roleVo.departmentId}
+        </if>
     </delete>
 
     <select id="getNotifyRoles" resultType="hashmap">
@@ -245,6 +251,11 @@
     </select>
 
     <insert id="insertUserRole">
+        insert ESERVICE_ADM.dbo.USER_ROLE (USER_ID,ROLE_ID)values(#{userId, jdbcType=VARCHAR},#{roleId, jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="updateUserRole">
+        update ESERVICE_ADM.dbo.USER_ROLE set USER_ID,ROLE_ID where ROLE_ID = #{roleId} and USER_ID = #{userId}
         insert ESERVICE_ADM.dbo.USER_ROLE (USER_ID,ROLE_ID)values(#{userId, jdbcType=VARCHAR},#{roleId, jdbcType=VARCHAR})
     </insert>
 </mapper>

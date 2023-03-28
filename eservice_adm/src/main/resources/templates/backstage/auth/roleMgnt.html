@@ -8,11 +8,11 @@
 		.jstree-default .jstree-clicked > .jstree-checkbox2 {
 			background-position: -36px -66px;
 		}
-		
+
 		.jstree-default .jstree-checkbox2 {
 			background-position: -164px -4px;
 		}
-		
+
 		.jstree-anchor2 {
 			display: inline-block;
 			color: black;
@@ -104,7 +104,7 @@
 											</div>
 											<div class="row">
 												<div class="col-xs-12">
-													<div id="dynamic-table_filter" class="dataTables_filter"> 
+													<div id="dynamic-table_filter" class="dataTables_filter">
 														<button id="exportBtn" class="btn btn-purple">
 															<i class="my-icon fa fa-cloud-upload bigger-110"></i>匯出結果
 														</button>
@@ -206,21 +206,22 @@
 		$(function() {
 			// 載入系統功能下拉選單
 			eserviceAdmOption.system('#systemsSelect', /*[[@{/common/systemList}]]*/);
-			
+
 			// 取得角色名稱下拉選單
 			eserviceAdmOption.chosenRole('#roleSelect', /*[[@{/common/roleList}]]*/, function() {
 				eserviceAdmEvent.initChosenSelect();
 			});
-			
+
 			// 初始 jqGridUtil 物件
 			grid = new jqGridUtil();
 			grid.id = '#grid';
 			grid.url = /*[[@{/role/getRoleDetail}]]*/;
 			grid.caption = '角色查詢結果';
-			grid.colNames = ['角色名稱', '部門名稱', '角色描述', '角色權限設定'];
+			grid.colNames = ['角色名稱', '部門名稱',"通路名稱", '角色描述', '角色權限設定'];
 			grid.colModel = [
 				{name: 'ROLE_NAME', index: 'ROLE_NAME'},
 				{name: 'DEPARTMENT_NAME', index: 'DEPARTMENT_NAME'},
+				{name: 'DEP_NAME', index: 'DEP_NAME'},
 				{name: 'DESCRIPTION', index: 'DESCRIPTION'},
 				{ align: 'center', formatter: function(cellvalue, options, row) {
 					var editHtml = '';
@@ -228,10 +229,10 @@
 					editHtml += '    <i class="my-icon fa fa-pencil bigger-120"></i> <span class="sr-only">Details</span>';
 					editHtml += '</a>';
 					return editHtml;
-				}} 
+				}}
 			];
 			grid.create();
-			
+
 			// 查詢
 			$('#qryBtn').click(function() {
 				// 設定查詢條件
@@ -242,12 +243,12 @@
 				// 顯示查詢結果區域
 				$('#show-detail-results').show();
 			});
-			
+
 			// 重新輸入
 			$('#resetBtn').click(function() {
 				$('#roleMgntForm')[0].reset();
 			});
-			
+
 			// 匯出結果
 			$('#exportBtn').click(function() {
 				if (grid.rownum() > 0) {
@@ -259,15 +260,15 @@
 
 			eserviceAdmEvent.initDialog();
 		});
-		
+
 		// 開啟角色權限設定 Dialog
 		function openRoleTree(roleId, roleName) {
 			popupLoading();
 			$('#roleSelect_chosen').css('width', '150px');
-			
+
 			// 顯示角色功能 tree
 			showRoleFunctionTree(roleId);
-			
+
 			$('#dialog-message').removeClass('hide').dialog({
 				modal: true,
 				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>角色(" + roleName + ")權限設定</h4></div>",
@@ -277,14 +278,14 @@
 			});
 			removeLoading();
 		}
-		
+
 		// 顯示角色功能 tree
 		function showRoleFunctionTree(roleId) {
 			popupLoading();
 			selectRoleId = roleId;
 			// 清空角色功能 tree
 			$('.tree-container-min').html('<div id="cat-tree"></div>');
-			
+
 			// 建立jsTreeUtil工具類別
 			var actionUrl = /*[[@{/common/getFunctionAuthByRoleId}]]*/
 			treeUtil = new jsTreeUtil();
@@ -295,7 +296,7 @@
 			};
 			treeUtil.fnAfterOpen = function() {
 				treeUtil.removeDivItemSelect();
-				
+
 				$.each($('li[id^=div]'), function(i, e) {
 					// 處理 div 勾選
 					$.each(treeUtil.getDataList(), function(i, obj) {
@@ -314,17 +315,17 @@
 			treeUtil.show();
 			removeLoading();
 		}
-		
+
 		// 複製角色功能
 		function copyRole() {
 			if ($("#roleSelect").val() == '') {
 				alertMsg('請選擇角色...');
 				return false;
 			}
-			
+
 			showRoleFunctionTree($("#roleSelect").val());
 		}
-		
+
 		// 展開/收起
 		function openTree(obj){
 			if (obj == "open") {
@@ -337,7 +338,7 @@
 				$('#cat-tree').jstree('close_all');
 			}
 		}
-		
+
 		// 清除
 		function resetTree() {
 			$('#cat-tree').jstree('deselect_all');
@@ -346,13 +347,13 @@
 				 $(test).removeClass("jstree-clicked");
 			});
 		}
-		
+
 		// 更新角色權限
 		function updateRole() {
 			var funIds = treeUtil.getSelectFuncId();
 			var divIds = treeUtil.getSelectDivId();
 			var sysIds = treeUtil.getSelectSysId();
-			
+
 			var formData = {
 				roleId : selectRoleId,
 				sysIds : sysIds,
@@ -364,7 +365,7 @@
 				alertMsg(response.resultMsg);
 			});
 		}
-		
+
 		function checkNon(obj){
 			var test = $("#"+obj).find('.jstree-anchor2');
 			if($(test).hasClass("jstree-clicked")){

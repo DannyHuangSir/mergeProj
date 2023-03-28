@@ -40,22 +40,26 @@
 	</Appenders>
 	<Loggers>
 		<!-- mybatis loggers -->  
-		<logger name="com.ibatis" level="DEBUG" />  
-		<logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG" />  
-		<logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG" />  
-		<logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" />  
+		<logger name="com.ibatis" level="INFO" />  
+		<logger name="com.ibatis.common.jdbc.SimpleDataSource" level="INFO" />  
+		<logger name="com.ibatis.common.jdbc.ScriptRunner" level="INFO" />  
+		<logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="INFO" />  
 		<!-- sql loggers -->  
-		<logger name="java.sql.Connection" level="DEBUG"  additivity="true"/>  
-		<logger name="java.sql.Statement" level="DEBUG" additivity="true" />  
-		<logger name="java.sql.PreparedStatement" level="=debug,stdout"  additivity="true"/>  
-		<logger name="java.sql.ResultSet" level="DEBUG"  additivity="true"/> 
+		<logger name="java.sql.Connection" level="INFO"  additivity="true"/>  
+		<logger name="java.sql.Statement" level="INFO" additivity="true" />  
+		<logger name="java.sql.PreparedStatement" level="=INFO,stdout"  additivity="true"/>  
+		<logger name="java.sql.ResultSet" level="INFO"  additivity="true"/> 
 		<!-- File -->
-		<Logger name="com.twfhclife" level="debug"	additivity="false">
+		<Logger name="com.twfhclife" level="INFO"	additivity="false">
 			<AppenderRef ref="ESADM-File-Appender" />
 			<AppenderRef ref="ConsoleAppender" />
 		</Logger>
+		<AsyncLogger name="com.twfhclife.adm.dao" level="debug"          additivity="false">
+			<AppenderRef ref="ESADM-File-Appender" />
+			<AppenderRef ref="ConsoleAppender" />
+		</AsyncLogger>
 
-		<Root level="debug">
+		<Root level="INFO">
 			<AppenderRef ref="ESADM-File-Appender" />
 			<AppenderRef ref="ConsoleAppender" />
 		</Root>

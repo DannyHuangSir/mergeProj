@@ -232,10 +232,14 @@
     </insert>
 
     <select id="countDepName" resultType="int">
-        select count(1) from ESERVICE_JD.dbo.DEPARTMENT where DEP_ID = #{depId}  and DEP_NAME = #{depName} and PARENT_DEP = '0'
+        select count(DEP_NAME) from ESERVICE_JD.dbo.DEPARTMENT where DEP_NAME = #{depName} and PARENT_DEP = '0'
     </select>
 
     <select id="countBranchName" resultType="int">
-        select count(1) from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{branchId}  and DEP_NAME = #{depName} and PARENT_DEP = #{parentDep}
+        select count(DEP_NAME) from ESERVICE_JD.dbo.DEPARTMENT where  DEP_NAME = #{depName} and PARENT_DEP = #{parentDep}
+    </select>
+
+    <select id="countBranchId" resultType="int">
+        select count(BRANCH_ID) from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{branchId}  and PARENT_DEP = #{parentDep}
     </select>
 </mapper>

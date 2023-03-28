@@ -222,13 +222,18 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
     }
 
     @Override
-    public int countDeptName(String depId, String depName) {
-        return departmentDao.countDepName(depId,depName);
+    public int countDeptName(String depName) {
+        return departmentDao.countDepName(depName);
     }
 
     @Override
-    public int countDBranchName(String parentDep, String branchId, String depName) {
-        return departmentDao.countBranchName(parentDep,branchId,depName);
+    public int countBranchName(String parentDep,String depName) {
+        return departmentDao.countBranchName(parentDep,depName);
+    }
+
+    @Override
+    public int countBranchId(String parentDep, String branchId) {
+        return departmentDao.countBranchId(parentDep,branchId);
     }
 
 

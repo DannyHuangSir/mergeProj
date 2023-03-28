@@ -81,4 +81,6 @@ public interface IJdRoleService {
     List<RoleVo> getDepRole(String userName, String keyCloakUserId,String depId);
 
     int insertUserRole(String userId,String roleId);
+
+    int updateUserRole(String userId,String roleId);
 }

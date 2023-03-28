@@ -67,14 +67,14 @@
 			ESERVICE_ADM.DBO.DEPARTMENT a
 			WHERE
 			a.DEP_ID = DEPARTMENT_ID
--- 			union all
--- 			SELECT
--- 			a.DEP_NAME
--- 			FROM
--- 			ESERVICE_JD.DBO.DEPARTMENT a
--- 			WHERE
--- 			a.DEP_ID = DEPARTMENT_ID
-			 ) AS DEPARTMENT_NAME FROM
+			) AS DEPARTMENT_NAME,
+			(SELECT
+			a.DEP_NAME
+			FROM
+			ESERVICE_JD.DBO.DEPARTMENT a
+			WHERE
+			a.DEP_ID = DEPARTMENT_ID) AS DEP_NAME
+		    FROM
 			ESERVICE_ADM.DBO.ROLE
 		<include refid="whereClause" />
 	</sql>

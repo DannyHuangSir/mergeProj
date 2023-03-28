@@ -231,7 +231,8 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                     String[] strings = jdUserVo.getDepBranchList().get(i).split("@");
                                     String depId1 = strings[0];
                                     String branchId1 = strings[1];
-                                    DepartmentVo branchId = jdDeptMgntService.getBranchId(depId1, branchId1);
+                                    DepartmentVo divDep = jdDeptMgntService.getDivDep("0",depId1);
+                                    DepartmentVo branchId = jdDeptMgntService.getBranchId(divDep.getDepId(), branchId1);
                                     if (branchId == null) {
                                         jdUserVo.setFailResult("分支機構代碼不存在，請檢查!");
                                     }

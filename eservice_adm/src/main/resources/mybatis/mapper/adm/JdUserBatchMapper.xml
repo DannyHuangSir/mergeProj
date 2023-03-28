@@ -64,6 +64,7 @@
             <if test="jdUserVo.loginSize != null and jdUserVo.loginSize != ''"> LOGIN_SIZE = #{jdUserVo.loginSize },</if>
             <if test="jdUserVo.effectiveDate != null and jdUserVo.effectiveDate != ''"> EFFECTIVE_DATE = #{jdUserVo.effectiveDate },</if>
             <if test="jdUserVo.expirationDate != null and jdUserVo.expirationDate != ''"> EXPIRATION_DATE = #{jdUserVo.expirationDate },</if>
+            <if test="jdUserVo.initPassword != null and jdUserVo.initPassword != ''">INITPASSWORD = #{jdUserVo.initPassword},</if>
             LOGIN_TIME = getdate()
         </set>
         <where>

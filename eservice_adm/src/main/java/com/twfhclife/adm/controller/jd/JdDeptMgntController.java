@@ -134,7 +134,7 @@ public class JdDeptMgntController extends BaseController {
                         processError("部門名稱重覆");
                     } else {
                         if (deptMgntService.isBranchIdExist(departmentVo)) {
-                            processError("通路的原機構代碼已存在！");
+                            processError("分行的原機構代碼已存在！");
                         } else {
                             int result = deptMgntService.addDepartment(departmentVo);
                             if (result > 0) {
@@ -172,17 +172,21 @@ public class JdDeptMgntController extends BaseController {
     public ResponseEntity<ResponseObj> updateDepartment(@RequestBody DepartmentVo departmentVo) {
         try {
             departmentVo.setModifyUser(getUserId());
-            if (deptMgntService.countDeptName(departmentVo.getParentDep(), departmentVo.getDepName()) > 1) {
-                processError("通路的原機構代碼不可重覆");
+            DepartmentVo vo = deptMgntService.getDepId(departmentVo.getDepId());
+            int updateDepartment = deptMgntService.updateDepartment(departmentVo);
+            if (deptMgntService.countDeptName(departmentVo.getDepName()) >  1) {
+                deptMgntService.updateDepartment(vo);
+                processError("通路的部門名稱重複");
             } else {
-                if (deptMgntService.countDBranchName(departmentVo.getParentDep(), departmentVo.getBranchId(), departmentVo.getDepName()) > 1) {
-                    processError("分行的原機構代碼已存在！");
+                if (deptMgntService.countBranchName(departmentVo.getParentDep(), departmentVo.getDepName()) >  1) {
+                    deptMgntService.updateDepartment(vo);
+                    processError("同通路下的部門名稱重複");
                 } else {
-                    int updateDepartment = deptMgntService.updateDepartment(departmentVo);
-                    if (updateDepartment > 0) {
-                        processError("更新成功");
-                    } else {
-                        processError("更新失敗");
+                    if (deptMgntService.countBranchId(departmentVo.getParentDep(),departmentVo.getBranchId()) > 1){
+                        deptMgntService.updateDepartment(vo);
+                        processError("原機構代碼重複");
+                    }else {
+                        processSuccessMsg("更新成功");
                     }
                 }
             }

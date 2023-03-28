@@ -87,7 +87,9 @@ public interface JdDepartmentDao {
 
     int insertUserDep(@Param("userId")String userId,@Param("depId")String depId,@Param("titleId")String titleId,@Param("branchId")String branchId);
 
-    int countDepName(@Param("depId") String depId,@Param("depName") String depName);
+    int countDepName(@Param("depName") String depName);
 
-    int countBranchName(@Param("parentDep") String parentDep,@Param("depName") String depName,@Param("branchId") String branchId);
+    int countBranchName(@Param("parentDep") String parentDep,@Param("depName") String depName);
+
+    int countBranchId(@Param("parentDep") String parentDep,@Param("branchId") String branchId);
 }

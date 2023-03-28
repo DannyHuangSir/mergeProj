@@ -318,7 +318,10 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                             //登錄字號
                             if (updateUser != null && StringUtils.isNotEmpty(vo.getLoginSize()) && StringUtils.isNotBlank(updateUser.getLoginSize())) {
                                 vo.setFailResult("登錄字號已存在，請檢查!");
-
+                            }else {
+                                if (vo.getLoginSize().equals("X")){
+                                    vo.setLoginSize("");
+                                }
                             }
                             // 系統平臺角色代碼是否存在
                             RoleVo updateRoleId = jdRoleService.getRoleId(vo.getRoleId());

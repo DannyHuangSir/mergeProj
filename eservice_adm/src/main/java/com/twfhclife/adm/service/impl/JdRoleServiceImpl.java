@@ -155,4 +155,11 @@ public class JdRoleServiceImpl implements IJdRoleService {
     public int insertUserRole(String userId, String roleId) {
         return roleDao.insertUserRole(userId,roleId);
     }
+
+    @Override
+    public int updateUserRole(String userId, String roleId) {
+        return 0;
+    }
+
+
 }

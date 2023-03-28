@@ -89,7 +89,9 @@ public interface IJdDeptMgntService {
 
     int insertUserDep(String userId,String depId,String titleId,String branchId);
 
-    int countDeptName(String depId,String depName);
+    int countDeptName(String depName);
 
-    int countDBranchName(String parentDep,String branchId, String depName);
+    int countBranchName(String parentDep,String depName);
+
+    int countBranchId(String parentDep,String branchId);
 }
