@@ -98,9 +98,9 @@ public class PolicyServiceImpl implements IPolicyService {
     private String policyExpireOfPaymentUrl;
 
     @Override
-    public PolicyExpireOfPaymentVo getPolicyExpireOfPayment(String userId, String policyNo) {
+    public PolicyExpireOfPaymentDataResponse getPolicyExpireOfPayment(String userId, String policyNo) {
         PolicyExpireOfPaymentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyExpireOfPaymentUrl, PolicyExpireOfPaymentDataResponse.class);
-        return responseObj.getPolicyExpireOfPayment();
+        return responseObj;
     }
 
     @Value("${eservice_api.policy.change.info.url}")

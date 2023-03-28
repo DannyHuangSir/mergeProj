@@ -65,7 +65,7 @@
 				                                        </tr>
 				                                    </thead>
 				                                    <tbody>
-				                                        <tr class="h65 noEvent" th:each="vo1: ${vo.payments}">
+				                                        <tr class="h65 noEvent" th:each="vo1: ${payments}">
 				                                            <td th:text="${vo1.payReas != null ? session.SYSTEM_PARAMETER['LIPAYF_REAS'][vo1.payReas].parameterValue : ''}"></td>
 				                                            <td th:text="${vo1.payAmount}"></td>
 				                                            <td th:text="${vo1.payName}"></td>

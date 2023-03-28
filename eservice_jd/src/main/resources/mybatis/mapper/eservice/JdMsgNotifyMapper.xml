@@ -11,8 +11,9 @@
             </foreach>
         </if>
         <if test="msg.deps != null and msg.deps.size() >0 ">
-            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime} from ESERVICE_JD.DBO.DEPARTMENT D
-            INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.DEP_ID = UD.DEP_ID
+            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime}
+            FROM ESERVICE_JD.DBO.DEPARTMENT D
+            INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.BRANCH_ID = UD.BRANCH_ID
             WHERE D.DEP_ID IN
             <foreach collection="msg.deps" item="dep" separator="," close=")" open="(">
                 #{dep}
@@ -27,12 +28,14 @@
             </foreach>
         </if>
         <if test="msg.roles.size() &lt;=0 and msg.users.size() &lt;=0 and msg.deps.size() &lt;=0">
-           SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime} from ESERVICE_JD.DBO.DEPARTMENT D
+           SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime}
+            from ESERVICE_JD.DBO.DEPARTMENT D
             INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.DEP_ID = UD.DEP_ID
             WHERE D.DEP_ID = #{msg.passageWay}
             UNION
-            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime} from ESERVICE_JD.DBO.DEPARTMENT D
-            INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.DEP_ID = UD.DEP_ID
+            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime}
+            from ESERVICE_JD.DBO.DEPARTMENT D
+            INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.BRANCH_ID = UD.BRANCH_ID
             WHERE D.PARENT_DEP = #{msg.passageWay}
         </if>
     </insert>

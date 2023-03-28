@@ -171,7 +171,10 @@
 		var users, deps, roles
 		$(function() {
 		    eserviceAdmOption.chosenCommon("#passageWaySelect", /*[[@{/jdDeptMgnt/getPassageWay}]]*/, 'VALUE');
-			$('input[name=notifyTime]').datetimepicker();
+			$('input[name=notifyTime]').datetimepicker(
+			{
+			    minDate: new Date()
+			});
 			// 顯示查詢結果區域
 			$('#show-detail-results').show();
             $("input[name='notifyRadio']").click(function(){
@@ -316,16 +319,16 @@
 			qryGrid.caption = '員工查詢結果';
 			qryGrid.colNames = ['', '通路', '業務員編號', '姓名'];
 			qryGrid.colModel = [
-				{width: 50, align: 'center', formatter: function(cellvalue, options, row) {
+				{align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
 					actionHtml += '<input class="memberCheckBox" type="checkbox" value="' + row.ID + '"/>';
 					return actionHtml;
 				}},
-				{width: 120, formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					return breakLine(row.PASSAGE_WAY);
 				}},
-				{name: 'SERIAL_NUM', index: 'SERIAL_NUM', width: 200},
-				{width: 200, formatter: function(cellvalue, options, row) {
+				{name: 'SERIAL_NUM', index: 'SERIAL_NUM'},
+				{formatter: function(cellvalue, options, row) {
 					return emptyIfNull(row.USER_NAME);
 				}}
 			];
@@ -341,15 +344,15 @@
 			qryGrid.caption = '分行查詢結果';
 			qryGrid.colNames = ['', '通路', '分支機構'];
 			qryGrid.colModel = [
-				{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
+				{align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
 					actionHtml += '<input class="depCheckBox" type="checkbox" value="' + row.DEP_ID + '"/>';
 					return actionHtml;
 				}},
-				{width: 120, formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					return breakLine(row.PASSAGE_WAY);
 				}},
-				{width: 120, formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					return breakLine(row.DEP_NAME);
 				}}
 			];
@@ -365,15 +368,15 @@
 			qryGrid.caption = '角色查詢結果';
 			qryGrid.colNames = ['', '通路', '角色'];
 			qryGrid.colModel = [
-				{width: 20, align: 'center', formatter: function(cellvalue, options, row) {
+				{align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
 					actionHtml += '<input class="roleCheckBox" type="checkbox" value="' + row.ROLE_ID + '"/>';
 					return actionHtml;
 				}},
-				{width: 200, formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					return breakLine(row.PASSAGE_WAY);
 				}},
-				{width: 200, formatter: function(cellvalue, options, row) {
+				{formatter: function(cellvalue, options, row) {
 					return breakLine(row.ROLE_NAME);
 				}},
 			];

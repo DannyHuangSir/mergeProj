@@ -88,6 +88,7 @@
 		<script th:inline="javascript">
 		/*<![CDATA[*/
 		var grid;
+		var msgMap = {}
 		$(function() {
 			eserviceAdmOption.chosenCommon("#passageWaySelect", /*[[@{/jdDeptMgnt/getPassageWay}]]*/, 'VALUE');
 			// 初始 jqGridUtil 物件
@@ -102,14 +103,15 @@
 				{name:'NOTIFY_TIME',index:'NOTIFY_TIME'},
 				{align: 'left', formatter: function(cellvalue, options, row) {
 					var editHtml = '';
-					editHtml += '<a onclick="showTarget(\'通知接收人設定\', \'' +  row.NOTIFY_TARGET + '\')" class="green bigger-140 show-details-btn" title="Edit">';
+					msgMap[row.ID] = row
+					editHtml += '<a onclick="showTarget(\'通知接收人設定\', \'' +  row.NOTIFY_TARGET + '\')" class="green bigger-140 show-details-btn" title="通知接收人設定">';
 					editHtml += '    <i class="my-icon fa fa-user bigger-120"></i> <span class="sr-only">Details</span>';
 					editHtml += '</a>';
-					editHtml += '<a onclick="showDialog(\'通知內容設定\', \'' +  row.MSG_CONTENT + '\')" class="green bigger-140 show-details-btn" title="Edit">';
+					editHtml += '<a onclick="showMsg(\'通知內容設定\', \'' +  row.ID + '\')" class="green bigger-140 show-details-btn" title="通知內容設定">';
 					editHtml += '    <i class="my-icon fa fa-info bigger-120"></i> <span class="sr-only">Details</span>';
 					editHtml += '</a>';
 					if (row.STATUS == 1) {
-						editHtml += '<a href="javascript:delNotifyMsg(\'' + row.ID + '\')" class="green bigger-140 show-details-btn" title="Edit">';
+						editHtml += '<a href="javascript:delNotifyMsg(\'' + row.ID + '\')" class="green bigger-140 show-details-btn" title="刪除通知">';
 						editHtml += '    <i class="my-icon fa fa-trash bigger-120"></i> <span class="sr-only">Details</span>';
 						editHtml += '</a>';
 					}
@@ -153,6 +155,10 @@
 			})
 			html += '</ul>'
 			showDialog(title, html)
+		}
+
+		function showMsg(title, rowId) {
+			showDialog(title, msgMap[rowId].MSG_CONTENT)
 		}
 
 		function showDialog(title, msg) {

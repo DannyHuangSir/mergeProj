@@ -44,20 +44,33 @@
                 ON (lme.LIPM_INSU_TYPE ||lme.LIPM_INSU_GRP_NO || lme.LIPM_INSU_SEQ_NO) = (lpb.LIPB_INSU_TYPE || lpb.LIPB_INSU_GRP_NO || lpb.LIPB_INSU_SEQ_NO)
             LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
             ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
+            LEFT JOIN LINEDR_ES_FLOWTEST lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
             ]]>
             <where>
-                <foreach collection="vo.permQuery" item="item" open="(" close=")" separator=",">
-                    <trim prefixOverrides="AND">
-                        <if test="item.serialNum != null and item.serialNum != ''">
-                            AND lbe.BNAG_ID = #{item.serialNum}
-                        </if>
-                        <if test="item.branchCode != null and item.branchCode != ''">
-                            AND lbe.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
-                        </if>
-                        <if test="item.agentCode != null and item.agentCode != ''">
-                            AND lme.LIPM_AGEN_CODE = #{item.agentCode}
-                        </if>
-                    </trim>
+                <foreach collection="vo.permQuery" item="item" separator="OR">
+                    (
+                        <trim prefixOverrides="AND">
+                            <if test="item.serialNum != null and item.serialNum != ''">
+                                AND lbe.BNAG_ID = #{item.serialNum}
+                            </if>
+                            <if test="item.branchCode != null and item.branchCode != ''">
+                                AND lbe.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
+                            </if>
+                            <if test="item.agentCode != null and item.agentCode != ''">
+                                <choose>
+                                    <when test="item.agentCode == '86900'">
+                                        AND lme.LIPM_AGEN_CODE = '869' AND lnr.NEDR_BRANCH = '00'
+                                    </when>
+                                    <when test="item.agentCode == '86901'">
+                                        AND lme.LIPM_AGEN_CODE = '869' AND lnr.NEDR_BRANCH = '01'
+                                    </when>
+                                    <otherwise>
+                                            AND lme.LIPM_AGEN_CODE = #{item.agentCode}
+                                    </otherwise>
+                                </choose>
+                            </if>
+                        </trim>
+                    )
                 </foreach>
                 <if test="vo.policyNo != null and vo.policyNo != ''">
                     AND (lme.LIPM_INSU_TYPE||lme.LIPM_INSU_GRP_NO||lme.LIPM_INSU_SEQ_NO)
@@ -186,7 +199,7 @@
     <select id="getPaymentRecord" resultMap="PaymentRecordMap">
         SELECT to_char(lpp.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE, lpp.PRPA_PAAB_AMT, lpp.PRPA_ACT_AMT, lpp.PRPA_RCP_CODE,
         CONCAT('第', CONCAT(lpp.PRPA_TMS, CONCAT('期/共', CONCAT(
-            CASE	WHEN lpp.PRPA_RCP_CODE = N'A' THEN lie.LIPI_PREM_YEAR * 1
+            CASE WHEN lpp.PRPA_RCP_CODE = N'A' THEN lie.LIPI_PREM_YEAR * 1
             WHEN lpp.PRPA_RCP_CODE = N'S' THEN lie.LIPI_PREM_YEAR * 2
             WHEN lpp.PRPA_RCP_CODE = N'Q' THEN lie.LIPI_PREM_YEAR * 4
             WHEN lpp.PRPA_RCP_CODE = N'M' THEN lie.LIPI_PREM_YEAR * 12
@@ -209,18 +222,17 @@
     </resultMap>
 
     <select id="getPolicyPremium" resultMap="PremiumMap">
-        SELECT
-        TO_CHAR(lbf.BONF_FILE_BEG_DATE, 'yyyy-MM-dd') BONF_FILE_BEG_DATE, lbf.BONF_BON_BAL, lbf.BONF_TAKE_CODE,
-        TO_CHAR(lbf.BONF_BON_DATE, 'yyyy-MM-dd') BONF_BON_DATE,
-        lbf.BONF_BON + NVL(lbf.BONF_RIDER_CODE_1,0) + NVL(lbf.BONF_RIDER_CODE_2,0) + NVL(lbf.BONF_RIDER_CODE_3,0) + NVL(lbf.BONF_RIDER_CODE_4,0) PREMIUM
-        FROM LILIPM_ES_FLOWTEST lme
-        LEFT JOIN LIBONF_ES_FLOWTEST lbf ON lme.LIPM_INSU_TYPE = lbf.BONF_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbf.BONF_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbf.BONF_INSU_SEQ_NO
-        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+        <![CDATA[
+            SELECT
+            TO_CHAR(BONF_BON_DATE, 'yyyy-MM-dd') BONF_BON_DATE,
+            TO_CHAR(BONF_FILE_BEG_DATE, 'yyyy-MM-dd') BONF_FILE_BEG_DATE,
+            BONF_BON || NVL(BONF_RIDER_CODE_1, '') || NVL(BONF_RIDER_CODE_2,'') || NVL(BONF_RIDER_CODE_3, '') || NVL(BONF_RIDER_CODE_4,'') PREMIUM,
+            BONF_BON_BAL, BONF_TAKE_CODE
+            FROM LIBONF WHERE
+            BONF_INSU_TYPE ||BONF_INSU_GRP_NO ||BONF_INSU_SEQ_NO = #{policyNo}
+            AND BONF_BON_BAL<>0 AND BONF_BON_DATE IS NOT NULL
+           ]]>
     </select>
-
-    <resultMap id="PolicyExpireOfPaymentMap" extends="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyExpireOfPaymentVo">
-        <collection property="payments" resultMap="ExpireOfPaymentMap"/>
-    </resultMap>
 
     <resultMap id="ExpireOfPaymentMap" type="com.twfhclife.eservice.api.shouxian.model.ExpireOfPaymentVo">
         <result column="PAYF_PAY_REAS" property="payReas"/>
@@ -233,24 +245,13 @@
         <result column="PAHI_BANK_CODE" property="bankCode"/>
     </resultMap>
 
-    <select id="getExpireOfPayment" resultMap="PolicyExpireOfPaymentMap">
-        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
-        CASE
-        WHEN lme.LIPM_ST &lt;= 18 THEN 1
-        WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-        WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-        END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY,
-        lph.PAHI_PAY_CODE PAYF_PAY_REAS, lbf.PAYF_PAY_AMT,
-        to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyyy-MM-dd') PAHI_DEP_I_BOOK_DATE, lbf.PAYF_PAY_METH, lbf.PAYF_BANK, lbf.PAYF_NAME,
-        lph.PAHI_REMIT_AT, lph.PAHI_BANK_CODE
-        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
-        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
-        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-        LEFT JOIN LIPAYF_ES_FLOWTEST lbf ON CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = lbf.PAYF_INSU_NO
-        LEFT JOIN LIPAHI lph ON lph.PAHI_INSU_TYPE = lme.LIPM_INSU_TYPE AND lph.PAHI_INSU_GRP_NO = lme.LIPM_INSU_GRP_NO AND lph.PAHI_INSU_SEQ_NO = lme.LIPM_INSU_SEQ_NO
-        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+    <select id="getExpireOfPayment" resultMap="ExpireOfPaymentMap">
+        SELECT lbf.PAYF_PAY_AMT,
+            to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyyy-MM-dd') PAHI_DEP_I_BOOK_DATE, lbf.PAYF_PAY_METH, lbf.PAYF_BANK, lbf.PAYF_NAME,
+            lph.PAHI_REMIT_AT, lph.PAHI_BANK_CODE, PAHI_PAY_CODE PAYF_PAY_REAS
+            FROM LIPAYF_ES_FLOWTEST lbf
+            LEFT JOIN LIPAHI lph ON lph.PAHI_INSU_TYPE||lph.PAHI_INSU_GRP_NO||lph.PAHI_INSU_SEQ_NO = lbf.PAYF_INSU_NO
+        WHERE lbf.PAYF_INSU_NO = #{policyNo}
     </select>
 
     <resultMap id="PolicyChangeInfoMap" extends="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyChangeInfoVo">

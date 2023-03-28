@@ -107,7 +107,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing13")
     public String listing13(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyExpireOfPaymentVo vo = policyService.getPolicyExpireOfPayment(getUserId(), policyNo);
+            PolicyExpireOfPaymentDataResponse vo = policyService.getPolicyExpireOfPayment(getUserId(), policyNo);
             if (vo != null && CollectionUtils.isNotEmpty(vo.getPayments())) {
                 List<Map<String, String>> bankList = optionService.getBankList();
                 for (ExpireOfPaymentVo vo1 : vo.getPayments()) {
@@ -119,7 +119,8 @@ public class JdzqController extends BaseController {
                     }
                 }
             }
-            addAttribute("vo", vo);
+            addAttribute("vo", vo.getPolicyBase());
+            addAttribute("payments", vo.getPayments());
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing13: {}", ExceptionUtils.getStackTrace(e));

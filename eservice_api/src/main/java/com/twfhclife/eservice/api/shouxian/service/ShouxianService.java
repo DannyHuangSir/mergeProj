@@ -64,7 +64,7 @@ public class ShouxianService {
         return shouXianDao.getPolicyPremium(policyNo);
     }
 
-    public PolicyExpireOfPaymentVo getExpireOfPayment(String policyNo) {
+    public List<ExpireOfPaymentVo> getExpireOfPayment(String policyNo) {
         return shouXianDao.getExpireOfPayment(policyNo);
     }
 
@@ -266,7 +266,9 @@ public class ShouxianService {
             maxDate = new Date();
         }
         resp.setPortfolioList(portfolioList);
-        resp.setEndDate(new SimpleDateFormat("yyyy-MM-dd").format(maxDate));
+        if (maxDate != null) {
+            resp.setEndDate(new SimpleDateFormat("yyyy-MM-dd").format(maxDate));
+        }
         return resp;
     }
 

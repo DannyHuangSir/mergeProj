@@ -19,7 +19,7 @@ public interface IPolicyService {
 
     PolicyPremiumDataResponse getPolicyPremium(String userId, String policyNo);
 
-    PolicyExpireOfPaymentVo getPolicyExpireOfPayment(String userId, String policyNo);
+    PolicyExpireOfPaymentDataResponse getPolicyExpireOfPayment(String userId, String policyNo);
 
     PolicyChangeInfoVo getChangeInfo(String userId, String policyNo);
 

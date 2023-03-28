@@ -203,9 +203,9 @@ public class ShouxianController extends BaseController {
         ApiResponseObj<PolicyExpireOfPaymentDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            PolicyExpireOfPaymentVo policyExpireOfPaymentVo = shouxianService.getExpireOfPayment(vo.getPolicyNo());
             PolicyExpireOfPaymentDataResponse resp = new PolicyExpireOfPaymentDataResponse();
-            resp.setPolicyExpireOfPayment(policyExpireOfPaymentVo);
+            resp.setPayments(shouxianService.getExpireOfPayment(vo.getPolicyNo()));
+            resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);
