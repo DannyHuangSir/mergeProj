@@ -1,4 +1,5 @@
 use ESERVICE_ADM
+GO
 
 create sequence JD_PARAMETER_CATEGORY_SEQ
 minvalue 1
