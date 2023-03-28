@@ -262,6 +262,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                 // keylock中username是系統賬號  firstname是用戶名稱
                                 keycloakUser.setUsername(vo.getRocId());
                                 keycloakUser.setFirstName(vo.getUserName());
+                                keycloakUser.setPassword(vo.getInitPassword());
                                 // todo 添加到users中
                                 keycloakService.createUser("elife_jd", keycloakUser);
                                 vo.setSerialNum("1");
