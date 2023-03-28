@@ -59,10 +59,10 @@
                             <if test="item.agentCode != null and item.agentCode != ''">
                                 <choose>
                                     <when test="item.agentCode == '86900'">
-                                        AND lme.LIPM_AGEN_CODE = '869' AND lnr.NEDR_BRANCH = '00'
+                                        AND lme.LIPM_AGEN_CODE = '869' AND lme.LIPM_AGEN_CODE_BRANCH = '00'
                                     </when>
                                     <when test="item.agentCode == '86901'">
-                                        AND lme.LIPM_AGEN_CODE = '869' AND lnr.NEDR_BRANCH = '01'
+                                        AND lme.LIPM_AGEN_CODE = '869' AND lme.LIPM_AGEN_CODE_BRANCH = '01'
                                     </when>
                                     <otherwise>
                                             AND lme.LIPM_AGEN_CODE = #{item.agentCode}
