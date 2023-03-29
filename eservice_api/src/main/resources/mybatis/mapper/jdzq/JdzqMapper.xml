@@ -49,9 +49,6 @@
                           AND A.BranchCode = #{item.branchCode}
                       </if>
                       <if test="item.agentCode != null and item.agentCode != ''">
-                          AND A.AgentCode = #{item.agentCode}
-                      </if>
-                      <if test="item.agentCode != null and item.agentCode != ''">
                           <choose>
                               <when test="item.agentCode == '86900'">
                                   AND A.AgentCode = '869' AND A.AgentBranchM = '00'

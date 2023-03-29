@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.web.controller;
 
 import com.google.common.base.Splitter;
+import com.twfhclife.eservice.api_client.FuncMgmtClient;
 import com.twfhclife.eservice.controller.BaseController;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.keycloak.service.KeycloakService;
@@ -10,6 +11,7 @@ import com.twfhclife.eservice.util.ValidateCodeUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.ILoginService;
+import com.twfhclife.eservice.web.service.IMenuService;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +52,10 @@ public class LoginController extends BaseController {
 
     @Autowired
     private ILoginService loginService;
+
+
+    @Autowired
+    private IMenuService menuService;
 
     /**
      * 登入.
@@ -204,6 +210,11 @@ public class LoginController extends BaseController {
 
         addAuditLog(userId, "1", loginRequestVo.getEuNationality());
         registerUserService.updateLoginSuccess(userId);
+        try {
+            getRequest().getSession().setAttribute("MENUS", menuService.getMenuList(ApConstants.SYSTEM_ID, keycloakUser.getId()));
+        } catch (Exception e) {
+            logger.error("get menus error: {}", e);
+        }
         return loginSuccessPage;
     }
 

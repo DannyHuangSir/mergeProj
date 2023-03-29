@@ -31,7 +31,10 @@ public class BaseRestClient {
 	private static final Logger logger = LogManager.getLogger(BaseRestClient.class);
 
 	@Value("${eservice_api.accessKey}")
-	private static String ESERVICE_API_SECRET;
+	protected static String ESERVICE_API_SECRET;
+
+	@Value("${wso2.accessKey}")
+	protected static String WSO2_API_KEY;
 
 	public static String getAccessKey() {
 		return BaseRestClient.ESERVICE_API_SECRET;
@@ -70,7 +73,7 @@ public class BaseRestClient {
 		return Collections.unmodifiableMap(map);
 	}
 
-	private RestTemplate restTemplate;
+	protected RestTemplate restTemplate;
 
 	@Autowired
 	public BaseRestClient() {

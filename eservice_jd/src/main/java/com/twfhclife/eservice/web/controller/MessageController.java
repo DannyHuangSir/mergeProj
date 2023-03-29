@@ -30,7 +30,7 @@ public class MessageController extends BaseController {
         ResponseObj responseObj = new ResponseObj();
         responseObj.setResult(ResponseObj.SUCCESS);
         Map<String, Object> result = Maps.newHashMap();
-        result.put("data", messageService.getMessages(vo, keycloakService.getUserByUsername(getUserId()).getId()));
+        result.put("data", messageService.getMessages(vo, getLoginUser().getId()));
         responseObj.setResultData(result);
         return responseObj;
     }
@@ -39,7 +39,7 @@ public class MessageController extends BaseController {
     public ResponseObj getNotRead() {
         ResponseObj responseObj = new ResponseObj();
         responseObj.setResult(ResponseObj.SUCCESS);
-        responseObj.setResultData(messageService.getNotRead(keycloakService.getUserByUsername(getUserId()).getId()));
+        responseObj.setResultData(messageService.getNotRead(getLoginUser().getId()));
         return responseObj;
     }
     @PostMapping("/readNotifyMsg")
