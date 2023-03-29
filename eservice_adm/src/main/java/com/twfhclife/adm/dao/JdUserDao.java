@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
 public interface JdUserDao {
     JdUserVo getUser(@Param("rocId") String rocId);
 
-    JdUserVo getUserIC(@Param("userId")String userId,@Param("depId") String depId);
+    JdUserVo getUserIC(@Param("depId") String depId,@Param("icId")String icId);
 
     int insertUserIC(@Param("jdUserVo") JdUserVo jdUserVo);
 
@@ -24,4 +24,6 @@ public interface JdUserDao {
     int countUserIc(@Param("icId")String icId);
 
     int countUser(@Param("rocId") String rocId);
+
+
 }

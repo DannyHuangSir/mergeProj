@@ -352,6 +352,7 @@
 						initFunction();
 						treeUtil.show();
 						$('#nodeDiv').show();
+						window.location.reload();
 					});
 				} else {
 					return false;
@@ -382,23 +383,24 @@
 		};
 		eserviceForm.post(/*[[@{/jdDeptMgnt/getParentDepList}]]*/, formData, function(response) {
 			if (response.result == 'SUCCESS') {
-				if (response.resultData.length <= 1) {
-					$('#nodeForm #parentDepDiv').html(nodeData.target.par);
-				} else {
-					$('#nodeForm #parentDepDiv').html('');
-					var optHtml = '';
-					optHtml += '<select id="parentDepOpt" class="form-control" onchange="$(\'#nodeForm #parentDep\').val(this.value);">';
-					
-					$.each(response.resultData, function(i, obj) {
-						var selected = '';
-						if (obj.depId == nodeData.target.parentDep) {
-							selected = 'selected="selected"';
-						}
-						optHtml += ('<option value="' + obj.depId + '" ' + selected + '>' + obj.depName + '</option>');
-					});
-					optHtml += '</select>';
-					$('#nodeForm #parentDepDiv').html(optHtml);
-				}
+				$('#nodeForm #parentDepDiv').html(nodeData.target.par);
+				// if (response.resultData.length <= 1) {
+				//
+				// } else {
+				// 	$('#nodeForm #parentDepDiv').html('');
+				// 	var optHtml = '';
+				// 	optHtml += '<select id="parentDepOpt" class="form-control" onchange="$(\'#nodeForm #parentDep\').val(this.value);">';
+				//
+				// 	$.each(response.resultData, function(i, obj) {
+				// 		var selected = '';
+				// 		if (obj.depId == nodeData.target.parentDep) {
+				// 			selected = 'selected="selected"';
+				// 		}
+				// 		optHtml += ('<option value="' + obj.depId + '" ' + selected + '>' + obj.depName + '</option>');
+				// 	});
+				// 	optHtml += '</select>';
+				// 	$('#nodeForm #parentDepDiv').html(optHtml);
+				// }
 			}
 		});
 	}

@@ -14,17 +14,18 @@
                     USER_ID = #{rocId}
                 </if>
             </where>
-
     </select>
 
     <select id="getUserIC" resultType="com.twfhclife.adm.model.JdUserVo">
-        select a.USER_ID,b.DEP_ID from ESERVICE_JD.dbo.USERS a left join ESERVICE_JD.dbo.USER_IC b on  a.USER_ID = b.USER_ID
+        select * from ESERVICE_JD.dbo.USERS a
+            left join ESERVICE_ADM.dbo.USER_ENTITY c on a.USER_ID = c.USERNAME
+            left join  ESERVICE_JD.dbo.USER_DEPARTMENT b on c.ID = b.USER_ID
         <where>
-            <if test="userId != null and userId != ''">
-                a.USER_ID = #{userId}
-            </if>
             <if test="depId != null and depId != ''">
                 AND b.DEP_ID = #{depId}
+            </if>
+            <if test="icId != null and icId != ''">
+                AND a.IC_ID = #{icId}
             </if>
         </where>
 

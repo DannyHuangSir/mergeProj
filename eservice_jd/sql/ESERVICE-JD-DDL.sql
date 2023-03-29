@@ -138,6 +138,7 @@ alter table ESERVICE_JD.DBO.USER_DEPARTMENT alter column BRANCH_ID [nvarchar](50
 CREATE TABLE [ESERVICE_JD].[dbo].[BATCH_PLAN](
     [BATCH_ID] [varchar](50) NOT NULL,
     [BATCH_STATUS] [varchar](50) NOT NULL,
+    [BATCH_NAME] [varchar](50) NOT NULL,
     [BATCH_JOIN_TIME] [datetime] NOT NULL,
     [BATCH_START_TIME] [datetime] NULL,
     [BATCH_END_TIME] [datetime] NULL,

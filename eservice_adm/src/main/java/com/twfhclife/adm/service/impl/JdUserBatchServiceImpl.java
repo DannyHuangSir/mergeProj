@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -72,6 +71,8 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
         byte[] bytes = null;
         if (file != null) {
             String fileName = file.getOriginalFilename();
+            //添加名称
+            jdBatchSchedulVO.setBatchName(fileName);
             String filepath = FILE_SAVE_PATH;
             File localFile = new File(filepath);
             if (!localFile.exists()) {
@@ -170,9 +171,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                         jdUserVo.setLoginSize(list.get(i).get(11));
                         jdUserVo.setRocId(list.get(i).get(12));
                         jdUserVo.setEmail(list.get(i).get(13));
-                        BigDecimal bd = new BigDecimal(list.get(i).get(14));
-                        String checkValue = bd.toPlainString();
-                        jdUserVo.setMobile(checkValue);
+                        jdUserVo.setMobile(list.get(i).get(14));
                         userList.add(jdUserVo);
                     }
                 } catch (Exception e) {
@@ -180,88 +179,89 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                 }
                 //todo 數據處理
                 List<JdUserVo> failLinkList = new ArrayList<>();
+                RoleVo roleId = new RoleVo();
+                DepartmentVo depId = new DepartmentVo();
                 for (JdUserVo vo : userList) {
                     if (vo.getActionType().equals("ADD")) {
                         try {
-                            if (StringUtils.isEmpty(vo.getInitPassword())){
-                                vo.setFailResult("初始密碼為必輸欄位，請檢查");
+                            if (StringUtils.isEmpty(vo.getMobile())){
+                                vo.setFailResult("行動電話欄位為必輸欄位，請檢查!");
                             }
-                            if (StringUtils.isEmpty(vo.getRoleId())){
-                                vo.setFailResult("系統平台角色為必輸欄位，請檢查");
-                            }
-                            if (StringUtils.isEmpty(vo.getEffectiveDate())){
-                                vo.setFailResult("賬號生效日為必輸欄位，請檢查");
-                            }
-                            if (StringUtils.isEmpty(vo.getExpirationDate())){
-                                vo.setFailResult("賬號失效日必輸欄位，請檢查");
-                            }
-                            if (StringUtils.isEmpty(vo.getDepId())){
-                                vo.setFailResult("通路的原機構代碼必輸欄位，請檢查");
-                            }
-                            if (StringUtils.isEmpty(vo.getUserName())){
-                                vo.setFailResult("姓名必輸欄位，請檢查");
-                            }
-                            if (StringUtils.isEmpty(vo.getIcId())){
-                                vo.setFailResult("業務員編號為必輸欄位，請檢查");
+                            if (StringUtils.isEmpty(vo.getEmail())) {
+                                vo.setFailResult("EMAIL欄位為必輸欄位，請檢查!");
                             }
                             if (StringUtils.isEmpty(vo.getRocId())) {
                                 vo.setFailResult("身份證字號為必輸欄位，請檢查");
                             }
-                            if (StringUtils.isEmpty(vo.getEmail()) && StringUtils.isEmpty(vo.getMobile())) {
-                                vo.setFailResult("郵箱或者電話任選一個為必輸欄位，請檢查");
-
+                            if (StringUtils.isEmpty(vo.getIcId())){
+                                vo.setFailResult("業務員編號為必輸欄位，請檢查");
                             }
-                            if (StringUtils.isNotBlank(vo.getUserId())) {
-                                vo.setFailResult("系統帳號欄位為留空欄位，請檢查!");
-
+                            if (StringUtils.isEmpty(vo.getUserName())){
+                                vo.setFailResult("姓名必輸欄位，請檢查");
+                            }
+                            if (StringUtils.isEmpty(vo.getDepId())){
+                                vo.setFailResult("通路的原機構代碼必輸欄位，請檢查");
+                            }else {
+                                // 檢查通路代碼是否存在
+                                depId = jdDeptMgntService.getDivDep("0",vo.getDepId());
+                                if (depId == null) {
+                                    vo.setFailResult("通路的原機構代碼不存在，請檢查!");
+                                }
+                            }
+                            if (StringUtils.isEmpty(vo.getExpirationDate())){
+                                vo.setFailResult("帳號失效日必輸欄位，請檢查");
+                            }
+                            if (StringUtils.isEmpty(vo.getEffectiveDate())){
+                                vo.setFailResult("帳號生效日為必輸欄位，請檢查");
+                            }
+                            if (StringUtils.isEmpty(vo.getRoleId())){
+                                vo.setFailResult("系統平臺角色欄位為必輸欄位，請檢查!");
+                            }else {
+                                // 系統平臺角色代碼是否存在
+                                roleId = jdRoleService.getRoleId(vo.getRoleId());
+                                if (roleId == null) {
+                                    vo.setFailResult("系統平臺角色代碼不存在，請檢查!");
+                                }
+                            }
+                            if (StringUtils.isEmpty(vo.getInitPassword())){
+                                vo.setFailResult("初始密碼為必輸欄位，請檢查");
                             }
                             if (StringUtils.isNotBlank(vo.getStatus())){
                                 vo.setFailResult("帳號狀態欄位為留空欄位，請檢查!");
                             }
-                            // 系統平臺角色代碼是否存在
-                            RoleVo roleId = jdRoleService.getRoleId(vo.getRoleId());
-                            if (roleId == null) {
-                                vo.setFailResult("系統平臺角色代碼不存在，請檢查!");
-
-                            }
-                            // 檢查通路代碼是否存在
-                            DepartmentVo depId = jdDeptMgntService.getDivDep("0",vo.getDepId());
-                            if (depId == null) {
-                                vo.setFailResult("通路的原機構代碼不存在，請檢查!");
-
+                            if (StringUtils.isNotBlank(vo.getUserId())) {
+                                vo.setFailResult("系統帳號欄位為留空欄位，請檢查!");
                             }
                             // 檢查分支機構代碼
                             DepartmentVo branchId = jdDeptMgntService.getBranchId(depId.getDepId(),
                                     vo.getBranchId());
                             if (branchId == null) {
                                 vo.setFailResult("分支機構代碼不存在，請檢查!");
-
                             }
-                            // 檢查身份證號碼是否存在就已經檢查了系統賬號
-                            if (jdUserDao.countUser(vo.getRocId()) > 0) {
-                                vo.setFailResult("身分證字號已存在，請檢查!");
+                            // 檢查身份證號碼是否存在就已經檢查了系統帳號
+                            JdUserVo jdUserVo = jdUserDao.getUser(vo.getRocId());
+                            if (jdUserVo != null){
+                                // 檢查登錄字號
+                                if (StringUtils.isNotEmpty(jdUserVo.getLoginSize())) {
+                                    vo.setFailResult("登錄字號已存在，請檢查!");
+                                }
+                                if (StringUtils.isNotEmpty(jdUserVo.getRocId())) {
+                                    vo.setFailResult("身分證字號已存在，請檢查!");
+                                }
+                                if (StringUtils.isNotEmpty(jdUserVo.getUserId())) {
+                                    vo.setFailResult("系統帳號已存在，請檢查!");
+                                }
                             }
-//                            if (StringUtils.isNotEmpty(userVo.getUserId())) {
-//                                vo.setFailResult("系統帳號已存在，請檢查!");
-//
-//                            }
-//                            // 檢查登錄字號
-//                            if (StringUtils.isNotEmpty(userVo.getLoginSize())) {
-//                                vo.setFailResult("登錄字號已存在，請檢查!");
-//
-//                            }
                             // 檢查所屬通路」+「業務員編號是否存在
-                            JdUserVo userIC = jdUserDao.getUserIC(vo.getRocId(),
-                                    vo.getDepId());
+                            JdUserVo userIC = jdUserDao.getUserIC(depId.getDepId(),vo.getIcId());
                             if (userIC != null) {
                                 vo.setFailResult("所屬通路+業務員編號已存在，請檢查!");
-
                             }
                             if (StringUtils.isEmpty(vo.getFailResult())) {
                                 // todo 添加到userEntity
                                 KeycloakUser keycloakUser = new KeycloakUser();
                                 BeanUtils.copyProperties(vo, keycloakUser);
-                                // keylock中username是系統賬號  firstname是用戶名稱
+                                // keylock中username是系統帳號  firstname是用戶名稱
                                 keycloakUser.setUsername(vo.getRocId());
                                 keycloakUser.setFirstName(vo.getUserName());
                                 keycloakUser.setPassword(vo.getInitPassword());
@@ -270,6 +270,8 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                 vo.setSerialNum("1");
                                 vo.setUserId(vo.getRocId());
                                 vo.setStatus("Unenabled");
+                                vo.setSmsFlag("1");
+                                vo.setMailFlag("1");
                                 jdUserBatchDao.addUsers(vo);
                                 UserEntityVo user = jdUserMgntService.getUser(vo.getRocId(), "elife_jd");
                                 //新增user_role表数据
@@ -289,8 +291,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                         try {
                             // todo 處理更新邏輯
                             if (StringUtils.isEmpty(vo.getUserId())) {
-                                vo.setFailResult("系統賬號為必輸欄位，請檢查");
-
+                                vo.setFailResult("系統帳號為必輸欄位，請檢查");
                             }
                             if (StringUtils.isNotBlank(vo.getInitPassword())) {
                                 vo.setFailResult("初始密碼為留空欄位，請檢查!");
@@ -306,62 +307,54 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                     && StringUtils.isEmpty(vo.getLoginSize()) && StringUtils.isEmpty(vo.getEmail())
                                     && StringUtils.isEmpty(vo.getMobile())) {
                                 vo.setFailResult("選填欄位需至少一個，請檢查!");
-
-                            }
-                            vo.setRocId(vo.getUserId());
-                            JdUserVo updateUser = jdUserDao.getUser(vo.getRocId());
-                            //賬號狀態
-                            if (updateUser == null) {
-                                vo.setFailResult("系統帳號不存在，請檢查!");
-
-                            }
-                            if (updateUser != null && StringUtils.isNotBlank(updateUser.getStatus())) {
-                                vo.setFailResult("帳號狀態代碼不存在，請檢查!");
-
-                            }
-                            //登錄字號
-                            if (updateUser != null && StringUtils.isNotEmpty(vo.getLoginSize()) && StringUtils.isNotBlank(updateUser.getLoginSize())) {
-                                vo.setFailResult("登錄字號已存在，請檢查!");
                             }else {
-                                if (vo.getLoginSize().equals("X")){
-                                    vo.setLoginSize("");
+                                vo.setRocId(vo.getUserId());
+                                JdUserVo updateUser = jdUserDao.getUser(vo.getRocId());
+                                //帳號狀態
+                                if (updateUser == null) {
+                                    vo.setFailResult("系統帳號不存在，請檢查!");
+                                }else {
+                                    //登錄字號
+                                    if (vo.getLoginSize().equals("X") && StringUtils.isNotBlank(updateUser.getLoginSize())) {
+                                        vo.setLoginSize("");
+                                    }else {
+                                        vo.setFailResult("登錄字號已存在，請檢查!");
+                                    }
+                                    if (updateUser != null && StringUtils.isNotBlank(updateUser.getStatus())) {
+                                        vo.setFailResult("帳號狀態代碼不存在，請檢查!");
+                                    }
                                 }
-                            }
-                            // 系統平臺角色代碼是否存在
-                            RoleVo updateRoleId = jdRoleService.getRoleId(vo.getRoleId());
-                            if (updateRoleId == null) {
-                                vo.setFailResult("系統平台角色代碼不存在，請檢查!");
-
-                            }
-                            //所屬通路
-                            DepartmentVo updateDepId = jdDeptMgntService.getDivDep("0",vo.getDepId());
-                            if (updateDepId == null) {
-                                vo.setFailResult("所屬通路代碼不存在，請檢查!");
-
-                            }
-                            //分支機構
-                            DepartmentVo updateBranchId = jdDeptMgntService.getBranchId(updateDepId.getDepId(),
-                                    vo.getBranchId());
-                            if (updateBranchId == null) {
-                                vo.setFailResult("分支機構代碼不存在，請檢查!");
-
-                            }
-                            //所屬通路+業務員賬號
-                            JdUserVo updateUserIC = jdUserDao.getUserIC(vo.getRocId(),
-                                    vo.getDepId());
-                            if (updateUserIC != null) {
-                                vo.setFailResult("所屬通路+業務員編號已存在，請檢查!");
-
-                            }
-                            if (StringUtils.isEmpty(vo.getFailResult())) {
-                                jdUserBatchDao.updateUsers(vo);
-                                UserEntityVo user = jdUserMgntService.getUser(vo.getRocId(), "elife_jd");
-                                //更新user_role表数据
-                                jdRoleService.updateUserRole(user.getId(),updateRoleId.getRoleId());
-                                //更新user_dep表数据
-                                jdDeptMgntService.updateUserDep(user.getId(),updateDepId.getDepId(),updateBranchId.getDepId());
-                            } else {
-                                failLinkList.add(vo);
+                                //所屬通路+業務員帳號
+                                JdUserVo updateUserIC = jdUserDao.getUserIC(depId.getDepId(),vo.getIcId());
+                                if (updateUserIC != null) {
+                                    vo.setFailResult("所屬通路+業務員編號已存在，請檢查!");
+                                }
+                                //分支機構
+                                DepartmentVo updateDepId = jdDeptMgntService.getDivDep("0",vo.getDepId());
+                                DepartmentVo updateBranchId = jdDeptMgntService.getBranchId(updateDepId.getDepId(),
+                                        vo.getBranchId());
+                                if (updateBranchId == null) {
+                                    vo.setFailResult("分支機構代碼不存在，請檢查!");
+                                }
+                                //所屬通路
+                                if (updateDepId == null) {
+                                    vo.setFailResult("所屬通路代碼不存在，請檢查!");
+                                }
+                                // 系統平臺角色代碼是否存在
+                                RoleVo updateRoleId = jdRoleService.getRoleId(vo.getRoleId());
+                                if (updateRoleId == null) {
+                                    vo.setFailResult("系統平台角色代碼不存在，請檢查!");
+                                }
+                                if (StringUtils.isEmpty(vo.getFailResult())) {
+                                    jdUserBatchDao.updateUsers(vo);
+                                    UserEntityVo user = jdUserMgntService.getUser(vo.getRocId(), "elife_jd");
+                                    //更新user_role表数据
+                                    jdRoleService.updateUserRole(user.getId(),updateRoleId.getRoleId());
+                                    //更新user_dep表数据
+                                    jdDeptMgntService.updateUserDep(user.getId(),updateDepId.getDepId(),updateBranchId.getDepId());
+                                } else {
+                                    failLinkList.add(vo);
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

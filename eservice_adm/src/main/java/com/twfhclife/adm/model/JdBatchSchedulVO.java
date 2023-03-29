@@ -9,6 +9,9 @@ import com.twfhclife.generic.model.Pagination;
 public class JdBatchSchedulVO extends Pagination {
     private String batchId;
     private String batchStatus;
+
+    private String batchName;
+
     @JsonFormat(pattern = "yyyy/MM/dd hh:mm:ss")
     private String batchStartTime;
     @JsonFormat(pattern = "yyyy/MM/dd hh:mm:ss")
@@ -25,6 +28,13 @@ public class JdBatchSchedulVO extends Pagination {
 
     private byte[] batchFile;
 
+    public String getBatchName() {
+        return batchName;
+    }
+
+    public void setBatchName(String batchName) {
+        this.batchName = batchName;
+    }
 
     public void setBatchFile(byte[] batchFile) {
         this.batchFile = batchFile;

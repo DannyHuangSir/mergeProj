@@ -22,7 +22,9 @@
                      ROW_NUMBER() OVER (ORDER BY BATCH_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                          SELECT c.* FROM ESERVICE_JD.dbo.BATCH_PLAN c where c.type = 'user'
+                          SELECT BATCH_ID,BATCH_STATUS,BATCH_NAME,FORMAT(BATCH_JOIN_TIME, 'yyyy/MM/dd hh:mm:ss') AS BATCH_JOIN_TIME,
+                                 FORMAT(BATCH_START_TIME, 'yyyy/MM/dd hh:mm:ss') AS BATCH_START_TIME,
+                                 FORMAT(BATCH_END_TIME, 'yyyy/MM/dd hh:mm:ss') AS BATCH_END_TIME,FAIL_NUM,TYPE,BATCH_FILE FROM ESERVICE_JD.dbo.BATCH_PLAN  where TYPE = 'user'
                           ) A
              ) B
         WHERE
@@ -40,7 +42,7 @@
                      ROW_NUMBER() OVER (ORDER BY BATCH_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                          SELECT c.* FROM ESERVICE_JD.dbo.BATCH_PLAN c where c.type = 'IC'
+                          SELECT c.* FROM ESERVICE_JD.dbo.BATCH_PLAN c where TYPE = 'IC'
                       ) A
              ) B
         WHERE
@@ -66,10 +68,11 @@
     </select>
 
     <insert id="addBatchPlan">
-        insert ESERVICE_JD.dbo.BATCH_PLAN(BATCH_ID,BATCH_STATUS,BATCH_JOIN_TIME,BATCH_START_TIME,BATCH_END_TIME,FAIL_NUM,FAIL_LINK,TYPE,BATCH_FILE)
+        insert ESERVICE_JD.dbo.BATCH_PLAN(BATCH_ID,BATCH_STATUS,BATCH_NAME,BATCH_JOIN_TIME,BATCH_START_TIME,BATCH_END_TIME,FAIL_NUM,FAIL_LINK,TYPE,BATCH_FILE)
             values(
         NEWID(),
         #{jdBatchSchedulVO.batchStatus,jdbcType=VARCHAR},
+        #{jdBatchSchedulVO.batchName,jdbcType=VARCHAR},
         #{jdBatchSchedulVO.batchJoinTime,jdbcType=VARCHAR},
         #{jdBatchSchedulVO.batchStartTime,jdbcType=VARCHAR},
         #{jdBatchSchedulVO.batchEndTime,jdbcType=VARCHAR},
@@ -80,7 +83,7 @@
     </insert>
 
     <select id="getBatch" resultMap="BaseResultMap">
-        SELECT BATCH_ID,BATCH_STATUS,BATCH_JOIN_TIME,BATCH_START_TIME,BATCH_END_TIME,FAIL_NUM,TYPE,BATCH_FILE FROM ESERVICE_JD.dbo.BATCH_PLAN  where BATCH_STATUS = 'waiting' and TYPE = 'USER'
+        SELECT BATCH_ID,BATCH_STATUS,BATCH_NAME,BATCH_JOIN_TIME,BATCH_START_TIME,BATCH_END_TIME,FAIL_NUM,TYPE,BATCH_FILE FROM ESERVICE_JD.dbo.BATCH_PLAN  where BATCH_STATUS = 'waiting' and TYPE = 'USER'
     </select>
 
     <update id="updateBatchPlan">
@@ -116,6 +119,6 @@
     </select>
 
     <select id="getICBatch" resultMap="BaseResultMap">
-        SELECT BATCH_ID,BATCH_STATUS,BATCH_JOIN_TIME,BATCH_START_TIME,BATCH_END_TIME,FAIL_NUM,TYPE,BATCH_FILE FROM ESERVICE_JD.dbo.BATCH_PLAN  where BATCH_STATUS = 'waiting' and TYPE = 'IC'
+        SELECT BATCH_ID,BATCH_STATUS,BATCH_NAME,BATCH_JOIN_TIME,BATCH_START_TIME,BATCH_END_TIME,FAIL_NUM,TYPE,BATCH_FILE FROM ESERVICE_JD.dbo.BATCH_PLAN  where BATCH_STATUS = 'waiting' and TYPE = 'IC'
     </select>
 </mapper>
