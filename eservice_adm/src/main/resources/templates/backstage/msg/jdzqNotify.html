@@ -283,6 +283,7 @@
                     success : function(response) {
                         if (response.result == 'SUCCESS') {
                            alertMsg('新增成功');
+                           setTimeout(function() { window.location.reload(); }, 1000)
                            return false;
                         }
                     },
