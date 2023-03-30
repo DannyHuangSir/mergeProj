@@ -235,7 +235,13 @@
 <!--    </delete>-->
 
     <select id="getRoleId" resultType="com.twfhclife.adm.model.RoleVo">
-        select r.ROLE_ID from ESERVICE_ADM.DBO.ROLE r left  join ESERVICE_JD.dbo.ROLE_DEPARTMENT rd on r.ROLE_ID = rd.ROLE_ID where r.DIV_ROLE_ID = #{roleId} group by r.ROLE_ID
+        select r.ROLE_ID from ESERVICE_ADM.DBO.ROLE r
+            left  join ESERVICE_JD.dbo.ROLE_DEPARTMENT rd on
+                r.ROLE_ID = rd.ROLE_ID where r.DIV_ROLE_ID = #{roleId}
+                <if test="depId != null and depId != ''">
+                    and rd.DEP_ID = #{depId}
+                </if>
+                group by r.ROLE_ID
     </select>
 
     <select id="getDepRole" resultMap="RoleMap">

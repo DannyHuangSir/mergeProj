@@ -19,7 +19,7 @@ public interface JdUserDao {
 
     int updateUserIC(@Param("jdUserVo") JdUserVo jdUserVo);
 
-    JdUserVo getIcId(@Param("icId")String icId);
+    JdUserVo getIcId(@Param("icId")String icId,@Param("depId")String depId);
 
     int countUserIc(@Param("icId")String icId);
 

@@ -90,6 +90,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
         byte[] buffer = null;
         if (file != null) {
             String fileName = file.getOriginalFilename();
+            jdBatchSchedulVO.setBatchName(fileName);
             String filepath = FILE_SAVE_PATH;
             File localFile = new File(filepath);
             if (!localFile.exists()) {
@@ -171,8 +172,8 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                 ArrayList<JdUserVo> userList = new ArrayList<>();
                 try {
                     List<List<String>> list = ExcelUtils.readExcel(readFilePath);
-                    List<String> stringList = new ArrayList<>();
                     for (int i = 0; i < list.size(); i++) {
+                        List<String> stringList = new ArrayList<>();
                         JdUserVo jdUserVo = new JdUserVo();
                         List<String> arrayList = list.get(i);
                         jdUserVo.setActionType(arrayList.get(0));
@@ -180,7 +181,9 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                         jdUserVo.setIcId(arrayList.get(2));
                         // todo 通路+所屬人員Id
                         for (int k = 3; k < arrayList.size(); k++) {
-                            stringList.add(arrayList.get(k - 2));
+                            if (!StringUtils.isBlank(arrayList.get(k))){
+                                stringList.add(arrayList.get(k));
+                            }
                         }
                         jdUserVo.setDepBranchList(stringList);
                         userList.add(jdUserVo);
@@ -191,74 +194,102 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                 // 數據處理
                 List<JdUserVo> failLinkList = new ArrayList<>();
                 for (JdUserVo jdUserVo : userList) {
-                    if (StringUtils.isEmpty(jdUserVo.getDepId())) {
-                        jdUserVo.setFailResult("所屬IC人員通路為必輸欄位，請檢查!");
-                    }
-                    if (StringUtils.isEmpty(jdUserVo.getIcId())) {
-                        jdUserVo.setFailResult("IC人員編號為必輸欄位，請檢查!");
-                    }
-                    if (jdUserVo.getActionType().equals("DELETE")) {
-                        DepartmentVo deleteDepId = jdDeptMgntService.getDepId(jdUserVo.getDepId());
-                        if (deleteDepId == null) {
-                            jdUserVo.setFailResult("通路代碼不存在，請檢查!");
-                        }
-                        JdUserVo deleteIcId = jdUserDao.getIcId(jdUserVo.getIcId());
-                        if (deleteIcId == null) {
-                            jdUserVo.setFailResult("IC人員編號不存在，請檢查!");
-                        }
-                        if (jdUserVo.getDepBranchList().size() > 0) {
-                            jdUserVo.setFailResult("通路@分支機構為留空字段，請檢查!");
-                        }
-                        if (StringUtils.isEmpty(jdUserVo.getFailResult())) {
-                            jdUserDao.deleteUserIC(jdUserVo);
-                        } else {
+                    if (StringUtils.isBlank(jdUserVo.getActionType())){
+                        jdUserVo.setFailResult("動作別欄位為必輸欄位，請檢查!");
+                        failLinkList.add(jdUserVo);
+                    }else {
+                        if (!jdUserVo.getActionType().equals("MODIFY") && !jdUserVo.getActionType().equals("DELETE")){
+                            jdUserVo.setFailResult("動作別只允許MODIFY及DELETE!");
                             failLinkList.add(jdUserVo);
-                        }
-                    } else {
-                        DepartmentVo depId = jdDeptMgntService.getDepId(jdUserVo.getDepId());
-                        if (depId == null) {
-                            jdUserVo.setFailResult("通路代碼不存在，請檢查!");
-                        }
-                        JdUserVo icId = jdUserDao.getIcId(jdUserVo.getIcId());
-                        if (icId == null){
-                            jdUserVo.setFailResult("IC人員編號不存在，請檢查!");
-                        }
-                        if (jdUserVo.getDepBranchList().size() > 0) {
-                            boolean deleteType = true;
-                            JdUserVo jdUserVo1 = new JdUserVo();
-                            for (int i = 0; i < jdUserVo.getDepBranchList().size(); i++) {
-                                if (!StringUtils.isEmpty(jdUserVo.getDepBranchList().get(i))) {
-                                    String[] strings = jdUserVo.getDepBranchList().get(i).split("@");
-                                    String depId1 = strings[0];
-                                    String branchId1 = strings[1];
-                                    DepartmentVo divDep = jdDeptMgntService.getDivDep("0",depId1);
-                                    DepartmentVo branchId = jdDeptMgntService.getBranchId(divDep.getDepId(), branchId1);
-                                    if (branchId == null) {
-                                        jdUserVo.setFailResult("分支機構代碼不存在，請檢查!");
-                                    }
-                                    if (StringUtils.isEmpty(jdUserVo.getFailResult())) {
-                                        jdUserVo.setUserId(icId.getUserId());
-                                        BeanUtils.copyProperties(jdUserVo,jdUserVo1);
-                                        jdUserVo1.setDepId(depId1);
-                                        jdUserVo1.setBranchId(branchId1);
-                                        int countUserIc = jdUserDao.countUserIc(jdUserVo1.getIcId());
-                                        if (countUserIc > 0 && deleteType) {
-                                            if (jdUserDao.deleteUserIC(jdUserVo1) > 0){
-                                                jdUserDao.insertUserIC(jdUserVo1);
-                                                deleteType = false;
+                        }else {
+                            if (StringUtils.isEmpty(jdUserVo.getDepId())) {
+                                jdUserVo.setFailResult("所屬IC人員通路為必輸欄位，請檢查!");
+                                failLinkList.add(jdUserVo);
+                            }else {
+                                if (StringUtils.isEmpty(jdUserVo.getIcId())) {
+                                    jdUserVo.setFailResult("IC人員編號為必輸欄位，請檢查!");
+                                    failLinkList.add(jdUserVo);
+                                }else {
+                                    if (jdUserVo.getActionType().equals("DELETE")) {
+                                        if (jdUserVo.getDepBranchList().size() > 0) {
+                                            jdUserVo.setFailResult("通路@分支機構為留空字段，請檢查!");
+                                            failLinkList.add(jdUserVo);
+                                        }else {
+                                            DepartmentVo deleteDepId = jdDeptMgntService.getDivDep("0",jdUserVo.getDepId());
+                                            if (deleteDepId == null) {
+                                                jdUserVo.setFailResult("所屬IC人員通路代碼不存在，請檢查!");
+                                                failLinkList.add(jdUserVo);
+                                            }else {
+                                                JdUserVo deleteIcId = jdUserDao.getIcId(jdUserVo.getIcId(),deleteDepId.getDepId());
+                                                if (deleteIcId == null) {
+                                                    jdUserVo.setFailResult("IC人員編號不存在，請檢查!");
+                                                }
+                                                if (StringUtils.isEmpty(jdUserVo.getFailResult())) {
+                                                    jdUserDao.deleteUserIC(jdUserVo);
+                                                } else {
+                                                    failLinkList.add(jdUserVo);
+                                                }
                                             }
-                                        } else {
-                                            jdUserDao.insertUserIC(jdUserVo1);
-                                            deleteType = false;
+                                        }
+                                    } else {
+                                        if (jdUserVo.getDepBranchList().size() == 0 && jdUserVo.getDepBranchList().isEmpty()){
+                                            jdUserVo.setFailResult("通路@分支機構欄位需至少一組，請檢查!");
+                                            failLinkList.add(jdUserVo);
+                                        }else {
+                                            DepartmentVo depId = jdDeptMgntService.getDivDep("0",jdUserVo.getDepId());
+                                            if (depId == null) {
+                                                jdUserVo.setFailResult("所屬IC人員通路代碼不存在，請檢查!");
+                                                failLinkList.add(jdUserVo);
+                                            }else {
+                                                JdUserVo icId = jdUserDao.getIcId(jdUserVo.getIcId(),depId.getDepId());
+                                                if (icId == null){
+                                                    jdUserVo.setFailResult("IC人員編號不存在，請檢查!");
+                                                    failLinkList.add(jdUserVo);
+                                                }else {
+                                                    boolean deleteType = true;
+                                                    JdUserVo jdUserVo1 = new JdUserVo();
+                                                    for (int i = 0; i < jdUserVo.getDepBranchList().size(); i++) {
+                                                        if (!StringUtils.isEmpty(jdUserVo.getDepBranchList().get(i))) {
+                                                            String[] strings = jdUserVo.getDepBranchList().get(i).split("@");
+                                                            String depId1 = strings[0];
+                                                            String branchId1 = strings[1];
+                                                            DepartmentVo divDep = jdDeptMgntService.getDivDep("0",depId1);
+                                                            if (divDep == null){
+                                                                jdUserVo.setFailResult("通路代碼不存在，請檢查!");
+                                                                break;
+                                                            }else {
+                                                                DepartmentVo branchId = jdDeptMgntService.getBranchId(divDep.getDepId(), branchId1);
+                                                                if (branchId == null) {
+                                                                    jdUserVo.setFailResult("分支機構代碼不存在，請檢查!");
+                                                                }
+                                                                if (StringUtils.isBlank(jdUserVo.getFailResult())) {
+                                                                    jdUserVo.setUserId(icId.getUserId());
+                                                                    BeanUtils.copyProperties(jdUserVo,jdUserVo1);
+                                                                    jdUserVo1.setDepId(depId1);
+                                                                    jdUserVo1.setBranchId(branchId1);
+                                                                    int countUserIc = jdUserDao.countUserIc(jdUserVo1.getIcId());
+                                                                    if (countUserIc > 0 && deleteType) {
+                                                                        if (jdUserDao.deleteUserIC(jdUserVo1) > 0){
+                                                                            jdUserDao.insertUserIC(jdUserVo1);
+                                                                            deleteType = false;
+                                                                        }
+                                                                    } else {
+                                                                        jdUserDao.insertUserIC(jdUserVo1);
+                                                                        deleteType = false;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    if (!StringUtils.isEmpty(jdUserVo.getFailResult())){
+                                                        failLinkList.add(jdUserVo);
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }else {
-                            jdUserVo.setFailResult("通路@分支機構為必填字段，請檢查!");
-                        }
-                        if (!StringUtils.isEmpty(jdUserVo.getFailResult())){
-                            failLinkList.add(jdUserVo);
                         }
                     }
                 }
@@ -337,5 +368,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
             }
         }
     }
+
+
 }
 

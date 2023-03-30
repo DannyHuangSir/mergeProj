@@ -88,7 +88,7 @@ public interface JdRoleDao {
 
 //    int deleteRoleSysAuth(@Param("roleVo") RoleVo roleVo);
 
-    RoleVo getRoleId(@Param("roleId") String roleId);
+    RoleVo getRoleId(@Param("roleId") String roleId,@Param("depId")String depId);
 
     List<RoleVo> getDepRole(@Param("keyCloakUserId") String keyCloakUserId, @Param("adminUserFlag") String adminUserFlag,@Param("depId")String depId);
 

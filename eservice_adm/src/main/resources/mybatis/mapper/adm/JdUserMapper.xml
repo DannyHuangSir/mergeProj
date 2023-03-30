@@ -8,12 +8,11 @@
     </sql>
 
     <select id="getUser" resultType="com.twfhclife.adm.model.JdUserVo">
-        select * from ESERVICE_JD.dbo.USERS
-            <where>
-                <if test="rocId != null and rocId != ''">
-                    USER_ID = #{rocId}
-                </if>
-            </where>
+        select a.LOGIN_SIZE,ROC_ID,a.USER_ID,a.STATUS,a.IC_ID,c.DEP_ID,e.BRANCH_ID from ESERVICE_JD.dbo.USERS a left join ESERVICE_ADM.dbo.USER_ENTITY b on a.USER_ID = b.USERNAME
+        left join ESERVICE_JD.dbo.USER_DEPARTMENT c on b.ID = c.USER_ID
+        left join ESERVICE_ADM.dbo.USER_ROLE d on b.ID = d.USER_ID
+        left join ESERVICE_JD.dbo.DEPARTMENT e on e.DEP_ID = c.DEP_ID
+        where a.USER_ID = #{rocId} group by a.LOGIN_SIZE,ROC_ID,a.USER_ID,a.STATUS,a.IC_ID,c.DEP_ID,e.BRANCH_ID
     </select>
 
     <select id="getUserIC" resultType="com.twfhclife.adm.model.JdUserVo">
@@ -45,7 +44,7 @@
 
     <insert id="deleteUserIC">
         delete
-        ESERVICE_JD.dbo.USER_IC where USER_ID in(select USER_ID from ESERVICE_JD.dbo.USERS where IC_ID = #{jdUserVo.icId})
+        ESERVICE_JD.dbo.USER_IC where USER_ID in(select IC_ID from ESERVICE_JD.dbo.USERS where IC_ID = #{jdUserVo.icId})
     </insert>
 
     <update id="updateUserIC">
@@ -61,16 +60,23 @@
     </update>
 
     <select id="getIcId" resultType="com.twfhclife.adm.model.JdUserVo">
-        select * from ESERVICE_JD.dbo.USERS
+        select a.IC_ID,c.DEP_ID from ESERVICE_JD.dbo.USERS a
+        left join ESERVICE_ADM.dbo.USER_ENTITY b on a.USER_ID = b.USERNAME
+        left join ESERVICE_JD.dbo.USER_DEPARTMENT c on b.ID = c.USER_ID
         <where>
             <if test="icId != null and icId != ''">
-                 IC_ID = #{icId}
+                a.IC_ID = #{icId}
+            </if>
+            <if test="depId != null and depId != ''">
+                and c.DEP_ID = #{depId}
             </if>
         </where>
     </select>
 
     <select id="countUserIc" resultType="int">
-        select COUNT(1) from ESERVICE_JD.dbo.USER_IC where USER_ID in(select USER_ID from ESERVICE_JD.dbo.USERS where IC_ID = #{icId})
+        select COUNT(1) from ESERVICE_JD.dbo.USERS a
+            left join ESERVICE_JD.dbo.USER_IC b
+            on a.IC_ID = b.USER_ID where IC_ID = #{icId}
     </select>
 
     <select id="countUser" resultType="int">

@@ -99,6 +99,7 @@
                         timeout : 600000,
                         success: function (response) {
                             alertMsg('上傳文件成功');
+                            deptGrid.reload();
                         },
                         error: function (response) {
                             alertMsg('系統發生錯誤');
@@ -110,11 +111,10 @@
                 deptGrid = new jqGridUtil();
                 deptGrid.id = '#deptGrid';
                 deptGrid.pager = '#deptPager';
-                deptGrid.rowNum = 3;
-                deptGrid.height = 122;
+                deptGrid.rowNum = 10;
                 deptGrid.url = /*[[@{/jdBatch/getICs/batch}]]*/;
                 deptGrid.caption = '使用者權限查詢';
-                deptGrid.colNames = ['批次號', '執行狀態','加入排程時間','執行開始時間','執行結束時間','失敗筆數','原始檔案'];
+                deptGrid.colNames = ['批次號', '執行狀態','加入的檔案名稱','加入排程時間','執行開始時間','執行結束時間','失敗筆數','原始檔案'];
                 deptGrid.colModel = [
                     {name: 'BATCH_ID', index: 'BATCH_ID'},
                     {align: 'center', formatter: function(cellvalue, options, row) {
@@ -130,6 +130,7 @@
                         }
                         return showBatchStatus;
                         }},
+                    {name: 'BATCH_NAME', index: 'BATCH_NAME'},
                     {name: 'BATCH_JOIN_TIME',index: 'BATCH_JOIN_TIME'},
                     {name: 'BATCH_START_TIME',index: 'BATCH_START_TIME'},
                     {name: 'BATCH_END_TIME',index: 'BATCH_END_TIME'},

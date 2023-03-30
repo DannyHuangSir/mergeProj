@@ -140,8 +140,8 @@ public class JdRoleServiceImpl implements IJdRoleService {
         return roleDao.getNotifyRoles(notifySearchVo);
     }
 
-    public RoleVo getRoleId(String roleId){
-        return roleDao.getRoleId(roleId);
+    public RoleVo getRoleId(String roleId,String depId){
+        return roleDao.getRoleId(roleId,depId);
     }
 
     @Override
