@@ -63,7 +63,6 @@ USE [ESERVICE_JD]
 GO
 CREATE TABLE [ESERVICE_JD].[dbo].[DEPARTMENT](
     [DEP_ID] [nvarchar](50) NOT NULL,
-    CONSTRAINT AK_TransactionID UNIQUE(DEP_ID),
     [DEP_NAME] [nvarchar](100) NOT NULL,
     [DESCRIPTION] [nvarchar](200) NULL,
     [PARENT_DEP] [nvarchar](50) NULL,
