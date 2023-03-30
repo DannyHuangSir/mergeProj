@@ -320,8 +320,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                                 vo.setFailResult("系統帳號為必輸欄位，請檢查");
                                                 failLinkList.add(vo);
                                             }else {
-                                                vo.setRocId(vo.getUserId());
-                                                JdUserVo updateUser = jdUserDao.getUser(vo.getRocId());
+                                                JdUserVo updateUser = jdUserDao.getUser(vo.getUserId());
                                                 if (updateUser == null){
                                                     vo.setFailResult("系統帳號不存在，請檢查!");
                                                     failLinkList.add(vo);
