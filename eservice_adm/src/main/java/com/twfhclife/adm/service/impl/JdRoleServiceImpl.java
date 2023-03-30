@@ -171,4 +171,7 @@ public class JdRoleServiceImpl implements IJdRoleService {
         return roleDao.countUserRole(roleId,userId);
     }
 
+    public List<RoleVo> roleByUserList(RoleVo roleVo){
+        return roleDao.roleByUserList(roleVo);
+    }
 }

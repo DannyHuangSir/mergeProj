@@ -267,5 +267,20 @@
     <select id="countUserRole" resultType="int">
         select COUNT(1) from ESERVICE_ADM.dbo.USER_ROLE where USER_ID = #{userId} and ROLE_ID = #{roleId}
     </select>
+
+    <select id="roleByUserList" resultMap="RoleMap">
+        SELECT
+        R.ROLE_ID,R.ROLE_NAME,R.DESCRIPTION,R.PARENT_ROLE_ID,R.DEPARTMENT_ID,R.CREATE_USER,R.CREATE_DATE,R.MODIFY_USER,R.MODIFY_DATE
+        FROM
+        ESERVICE_ADM.DBO.ROLE R
+        inner join ESERVICE_JD.dbo.ROLE_DEPARTMENT rd on R.ROLE_ID = rd.ROLE_ID
+        INNER JOIN  ESERVICE_JD.dbo.DEPARTMENT D on rd.DEP_ID = D.DEP_ID  COLLATE database_default
+        where
+        <if test="roleVo.departmentName != null and roleVo.departmentName != ''">
+            D.PARENT_DEP IN ( SELECT DEP_ID FROM ESERVICE_JD.dbo.DEPARTMENT
+            where DEP_NAME = #{roleVo.departmentName} )
+        </if>
+        group by R.ROLE_ID,R.ROLE_NAME,R.DESCRIPTION,R.PARENT_ROLE_ID,R.DEPARTMENT_ID,R.CREATE_USER,R.CREATE_DATE,R.MODIFY_USER,R.MODIFY_DATE
+    </select>
 </mapper>
 

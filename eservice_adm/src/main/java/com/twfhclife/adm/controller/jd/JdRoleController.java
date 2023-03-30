@@ -53,7 +53,6 @@ public class JdRoleController extends BaseController {
     /**
      * 取得使用者角色管理查詢結果.
      *
-     * @param roleVo RoleVo
      * @return
      */
     @RequestLog
@@ -171,5 +170,17 @@ public class JdRoleController extends BaseController {
             logger.error("Unable to getNotifyRoles: {}", ExceptionUtils.getStackTrace(e));
         }
         return ResponseEntity.status(HttpStatus.OK).body(pageResp);
+    }
+
+    @RequestLog
+    @PostMapping("/jdRole/roleByUserList")
+    public ResponseEntity<ResponseObj> jdRoleByUserList(@RequestBody RoleVo roleVo){
+        try {
+            processSuccess(roleService.roleByUserList(roleVo));
+        } catch (Exception e) {
+            logger.error("Unable to roleByUserList: {}", ExceptionUtils.getStackTrace(e));
+            processSystemError();
+        }
+        return processResponseEntity();
     }
 }

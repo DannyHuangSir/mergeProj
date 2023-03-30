@@ -87,4 +87,6 @@ public interface IJdRoleService {
     int countRoleDep(String roleId,String depId);
 
     int countUserRole(String roleId, String userId);
+
+    List<RoleVo> roleByUserList(RoleVo roleVo);
 }

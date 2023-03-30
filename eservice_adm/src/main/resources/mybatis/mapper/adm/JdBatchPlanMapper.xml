@@ -22,9 +22,9 @@
                      ROW_NUMBER() OVER (ORDER BY BATCH_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                          SELECT BATCH_ID,BATCH_STATUS,BATCH_NAME,FORMAT(BATCH_JOIN_TIME, 'yyyy/MM/dd hh:mm:ss') AS BATCH_JOIN_TIME,
-                                 FORMAT(BATCH_START_TIME, 'yyyy/MM/dd hh:mm:ss') AS BATCH_START_TIME,
-                                 FORMAT(BATCH_END_TIME, 'yyyy/MM/dd hh:mm:ss') AS BATCH_END_TIME,FAIL_NUM,TYPE,BATCH_FILE FROM ESERVICE_JD.dbo.BATCH_PLAN  where TYPE = 'user'
+                          SELECT BATCH_ID,BATCH_STATUS,BATCH_NAME,FORMAT(BATCH_JOIN_TIME, 'yyyy/MM/dd HH:mm:ss') AS BATCH_JOIN_TIME,
+                                 FORMAT(BATCH_START_TIME, 'yyyy/MM/dd HH:mm:ss') AS BATCH_START_TIME,
+                                 FORMAT(BATCH_END_TIME, 'yyyy/MM/dd HH:mm:ss') AS BATCH_END_TIME,FAIL_NUM,TYPE,BATCH_FILE FROM ESERVICE_JD.dbo.BATCH_PLAN  where TYPE = 'user'
                           ) A
              ) B
         WHERE
@@ -42,7 +42,9 @@
                      ROW_NUMBER() OVER (ORDER BY BATCH_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                          SELECT c.* FROM ESERVICE_JD.dbo.BATCH_PLAN c where TYPE = 'IC'
+                          SELECT BATCH_ID,BATCH_STATUS,BATCH_NAME,FORMAT(BATCH_JOIN_TIME, 'yyyy/MM/dd HH:mm:ss') AS BATCH_JOIN_TIME,
+                                 FORMAT(BATCH_START_TIME, 'yyyy/MM/dd HH:mm:ss') AS BATCH_START_TIME,
+                                 FORMAT(BATCH_END_TIME, 'yyyy/MM/dd HH:mm:ss') AS BATCH_END_TIME,FAIL_NUM,TYPE,BATCH_FILE FROM ESERVICE_JD.dbo.BATCH_PLAN where TYPE = 'IC'
                       ) A
              ) B
         WHERE
@@ -55,7 +57,7 @@
         SELECT
             COUNT(1) AS AMOUNT
         FROM (
-                 SELECT c.* FROM ESERVICE_JD.dbo.BATCH_PLAN c where c.type = 'user'
+                 SELECT c.* FROM ESERVICE_JD.dbo.BATCH_PLAN c where c.TYPE = 'user'
                  ) t
     </select>
 
@@ -63,7 +65,7 @@
         SELECT
             COUNT(1) AS AMOUNT
         FROM (
-                 SELECT c.* FROM ESERVICE_JD.dbo.BATCH_PLAN c where c.type = 'IC'
+                 SELECT c.* FROM ESERVICE_JD.dbo.BATCH_PLAN c where c.TYPE = 'IC'
                  ) t
     </select>
 

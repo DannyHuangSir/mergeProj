@@ -49,18 +49,18 @@
 	<!-- include sql: 人員管理查詢結果 -->
 	<sql id="INC1">
 		SELECT
-			<include refid="Base_Column_List" />
+		a.ID,a.EMAIL,a.EMAIL_CONSTRAINT,a.EMAIL_VERIFIED,a.ENABLED,a.FEDERATION_LINK,a.FIRST_NAME,a.LAST_NAME,a.REALM_ID,b.USER_ID AS USERNAME,a.CREATED_TIMESTAMP,a.SERVICE_ACCOUNT_CLIENT_LINK,a.NOT_BEFORE
 		FROM
-			ESERVICE_ADM.DBO.USER_ENTITY
+		ESERVICE_ADM.DBO.USER_ENTITY a left join ESERVICE_JD.dbo.USERS b on USERNAME = b.USER_ID
 		<where>
 			<if test="userEntityVo.username != null and userEntityVo.username != ''">
-				 AND UPPER(USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.username}),'%'))
+				 AND UPPER(a.USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.username}),'%'))
 			</if>
-			<if test="userEntityVo.userId != null and userEntityVo.userId != ''"> AND ID = #{userEntityVo.userId} </if>
-			<if test="userEntityVo.lastName != null and userEntityVo.lastName != ''"> AND UPPER(CONCAT(LAST_NAME, FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.lastName}),'%'))</if>
-			<if test="userEntityVo.realmId != null and userEntityVo.realmId != ''"> AND REALM_ID = #{userEntityVo.realmId} </if>
+			<if test="userEntityVo.userId != null and userEntityVo.userId != ''"> AND a.ID = #{userEntityVo.userId} </if>
+			<if test="userEntityVo.lastName != null and userEntityVo.lastName != ''"> AND UPPER(CONCAT(a.LAST_NAME, a.FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.lastName}),'%'))</if>
+			<if test="userEntityVo.realmId != null and userEntityVo.realmId != ''"> AND a.REALM_ID = #{userEntityVo.realmId} </if>
 			<if test="userEntityVo.systemId != null and userEntityVo.systemId != ''">
-				AND ID IN (
+				AND a.ID IN (
 					SELECT USER_ID FROM ESERVICE_ADM.DBO.USER_ROLE
 					WHERE ROLE_ID IN (
 						SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH
@@ -69,17 +69,17 @@
 				)
 			</if>
 			<if test="userEntityVo.status != null and userEntityVo.status != ''">
-				AND ID IN (
+				AND a.ID IN (
 				SELECT USER_ID FROM ESERVICE_JD.DBO.USERS WHERE STATUS = #{userEntityVo.status}
 				)
 			</if>
 			<if test="userEntityVo.salespersonId != null and userEntityVo.salespersonId != ''">
-				AND ID IN (
+				AND a.USERNAME IN (
 				SELECT USER_ID FROM  ESERVICE_JD.DBO.USERS WHERE IC_ID = #{userEntityVo.salespersonId}
 				)
 			</if>
 			<if test="userEntityVo.parentDep != null and userEntityVo.parentDep != ''">
-				AND ID  IN (
+				AND a.ID  IN (
 				SELECT
 				udd.USER_ID
 				FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd where udd.DEP_ID
@@ -90,7 +90,7 @@
 				)
 			</if>
 			<if test="userEntityVo.branchId != null and userEntityVo.branchId != ''">
-				AND ID  IN (
+				AND a.ID  IN (
 					SELECT
 					udd.USER_ID
 					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
@@ -99,7 +99,7 @@
 				)
 			</if>
 			<if test="userEntityVo.department != null and userEntityVo.department != ''">
-				AND ID  IN (
+				AND a.ID  IN (
 				SELECT
 				udd.USER_ID
 				FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
@@ -108,7 +108,7 @@
 				)
 			</if>
 			<if test="userEntityVo.jobTitle != null and userEntityVo.jobTitle != ''">
-				AND ID IN (
+				AND a.ID IN (
 			        SELECT
 			        	udt.USER_ID
 			        FROM ESERVICE_JD.DBO.USER_DEPARTMENT udt
@@ -117,7 +117,7 @@
 			    )
 			</if>
 			<if test="userEntityVo.roleId != null and userEntityVo.roleId != ''">
-				AND ID IN (
+				AND a.ID IN (
 				SELECT
 				urr.USER_ID
 				FROM ESERVICE_ADM.DBO.USER_ROLE urr
@@ -126,7 +126,7 @@
 			</if>
 			<!-- 非系統最高權限管理員，只能查詢角色所屬部門的人員 -->
 			<if test="adminUserFlag == 'N'.toString()">
-				AND ID IN (
+				AND a.ID IN (
 					SELECT
 						USER_ID
 					FROM ESERVICE_JD.DBO.USER_DEPARTMENT

@@ -100,5 +100,5 @@ public interface JdRoleDao {
 
     int countUserRole(@Param("roleId") String roleId,@Param("userId") String userId);
 
-
+    List<RoleVo> roleByUserList(@Param("roleVo")RoleVo roleVo);
 }
