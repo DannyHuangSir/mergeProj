@@ -123,7 +123,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
         jdBatchPlanDao.addBatchPlan(jdBatchSchedulVO);
     }
 
-    @Scheduled(cron = "0 */10 * * * ?")
+    @Scheduled(cron = "*/5 * * * * *")
     private void scheduledICWork() throws IOException {
         workICFile();
     }
@@ -222,7 +222,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                             }else {
                                                 JdUserVo deleteIcId = jdUserDao.getIcId(jdUserVo.getIcId(),deleteDepId.getDepId());
                                                 if (deleteIcId == null) {
-                                                    jdUserVo.setFailResult("IC人員編號不存在，請檢查!");
+                                                    jdUserVo.setFailResult("IC人員不存在，請檢查!");
                                                 }
                                                 if (StringUtils.isEmpty(jdUserVo.getFailResult())) {
                                                     jdUserDao.deleteUserIC(jdUserVo);
@@ -241,9 +241,10 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                 jdUserVo.setFailResult("所屬IC人員通路代碼不存在，請檢查!");
                                                 failLinkList.add(jdUserVo);
                                             }else {
+                                                //
                                                 JdUserVo icId = jdUserDao.getIcId(jdUserVo.getIcId(),depId.getDepId());
                                                 if (icId == null){
-                                                    jdUserVo.setFailResult("IC人員編號不存在，請檢查!");
+                                                    jdUserVo.setFailResult("IC人員不存在，請檢查!");
                                                     failLinkList.add(jdUserVo);
                                                 }else {
                                                     boolean deleteType = true;
@@ -286,27 +287,27 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                             }else {
                                                                 if (strings.length == 1){
                                                                     depId1 = strings[0];
-                                                                }
-                                                            }
-                                                            DepartmentVo divDep = jdDeptMgntService.getDivDep("0",depId1);
-                                                            if (divDep == null){
-                                                                jdUserVo.setFailResult("通路代碼不存在，請檢查!");
-                                                                break;
-                                                            }else {
-                                                                if (StringUtils.isBlank(jdUserVo.getFailResult())) {
-                                                                    jdUserVo.setUserId(icId.getUserId());
-                                                                    BeanUtils.copyProperties(jdUserVo,jdUserVo1);
-                                                                    jdUserVo1.setDepId(depId1);
-                                                                    jdUserVo1.setBranchId(branchId1);
-                                                                    int countUserIc = jdUserDao.countUserIc(jdUserVo1.getIcId());
-                                                                    if (countUserIc > 0 && deleteType) {
-                                                                        if (jdUserDao.deleteUserIC(jdUserVo1) > 0){
-                                                                            jdUserDao.insertUserIC(jdUserVo1);
-                                                                            deleteType = false;
+                                                                    DepartmentVo divDep = jdDeptMgntService.getDivDep("0",depId1);
+                                                                    if (divDep == null){
+                                                                        jdUserVo.setFailResult("通路代碼不存在，請檢查!");
+                                                                        break;
+                                                                    }else {
+                                                                        if (StringUtils.isBlank(jdUserVo.getFailResult())) {
+                                                                            jdUserVo.setUserId(icId.getUserId());
+                                                                            BeanUtils.copyProperties(jdUserVo,jdUserVo1);
+                                                                            jdUserVo1.setDepId(depId1);
+                                                                            jdUserVo1.setBranchId(branchId1);
+                                                                            int countUserIc = jdUserDao.countUserIc(jdUserVo1.getIcId());
+                                                                            if (countUserIc > 0 && deleteType) {
+                                                                                if (jdUserDao.deleteUserIC(jdUserVo1) > 0){
+                                                                                    jdUserDao.insertUserIC(jdUserVo1);
+                                                                                    deleteType = false;
+                                                                                }
+                                                                            } else {
+                                                                                jdUserDao.insertUserIC(jdUserVo1);
+                                                                                deleteType = false;
+                                                                            }
                                                                         }
-                                                                    } else {
-                                                                        jdUserDao.insertUserIC(jdUserVo1);
-                                                                        deleteType = false;
                                                                     }
                                                                 }
                                                             }

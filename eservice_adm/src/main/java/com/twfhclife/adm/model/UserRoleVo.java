@@ -14,7 +14,17 @@ public class UserRoleVo extends Pagination {
 	private String roleName;
 	
 	private String description;
-	
+
+	private String divRoleId;
+
+	public void setDivRoleId(String divRoleId) {
+		this.divRoleId = divRoleId;
+	}
+
+	public String getDivRoleId() {
+		return divRoleId;
+	}
+
 	public String getUserId() {
 		return this.userId;
 	}

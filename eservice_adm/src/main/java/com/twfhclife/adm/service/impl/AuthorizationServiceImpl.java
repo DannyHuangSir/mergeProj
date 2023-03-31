@@ -245,6 +245,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 			List<String> depNameList = new ArrayList<>();
 			List<String> titleNameList = new ArrayList<>();
 			List<String> branchNameList = new ArrayList<>();
+			List<String> divRoleIdList = new ArrayList<>();
 
 			// 取得使用者的角色清單
 			UserRoleVo qryVo = new UserRoleVo();
@@ -253,13 +254,16 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 			for (UserRoleVo userRoleVo : userRoleList) {
 				String roleId = userRoleVo.getRoleId();
 				String roleName = MyStringUtil.nullToString(userRoleVo.getRoleName());
+				String divRoleId = userRoleVo.getDivRoleId();
 				if (!roleIdList.contains(roleId)) {
 					roleIdList.add(roleId);
 				}
 				if (!roleNameList.contains(roleName)) {
 					roleNameList.add(roleName);
 				}
-
+				if (!divRoleIdList.contains(divRoleId)){
+					divRoleIdList.add(divRoleId);
+				}
 				// 取得使用者的系統清單
 				RoleSysAuthVo sysQryVo = new RoleSysAuthVo();
 				sysQryVo.setRoleId(roleId);
@@ -309,6 +313,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 			userMap.put("DEP_NAME_LIST", String.join(",", depNameList));
 			userMap.put("TITLE_NAME_LIST", String.join(",", titleNameList));
 			userMap.put("BRACH_NAME_LIST",String.join(",", branchNameList));
+			userMap.put("DIV_ROLE_ID_LIST",String.join(",", divRoleIdList));
 		}
 	}
 }

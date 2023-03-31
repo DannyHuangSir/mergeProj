@@ -37,7 +37,7 @@
         DEP_ID,
         BRANCH_ID)
         VALUES
-        (#{jdUserVo.userId,jdbcType=VARCHAR},
+        (#{jdUserVo.icId,jdbcType=VARCHAR},
         #{jdUserVo.depId,jdbcType=VARCHAR},
         #{jdUserVo.branchId,jdbcType=VARCHAR})
     </insert>
@@ -77,9 +77,7 @@
     </select>
 
     <select id="countUserIc" resultType="int">
-        select COUNT(1) from ESERVICE_JD.dbo.USERS a
-            left join ESERVICE_JD.dbo.USER_IC b
-            on a.IC_ID = b.USER_ID where IC_ID = #{icId}
+        select COUNT(1) from ESERVICE_JD.dbo.USER_IC where USER_ID = (select IC_ID from ESERVICE_JD.dbo.USERS where IC_ID = #{icId})
     </select>
 
     <select id="countUser" resultType="int">

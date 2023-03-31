@@ -115,7 +115,7 @@
                  FROM (
                           select c.DEP_NAME as depName,d.branchName,c.DEP_ID,d.BRANCH_ID
                           from ESERVICE_JD.dbo.DEPARTMENT c,(select a.DEP_NAME as branchName,a.PARENT_DEP,a.BRANCH_ID from ESERVICE_JD.dbo.DEPARTMENT a
-                          left join ESERVICE_JD.dbo.USER_IC b on a.PARENT_DEP = b.DEP_ID and a.BRANCH_ID = b.BRANCH_ID
+                          left join ESERVICE_JD.dbo.USER_IC b on a.BRANCH_ID = b.BRANCH_ID
                           where b.USER_ID =  #{vo.userId}
                           ) d where c.DEP_ID = d.PARENT_DEP
                       ) A
