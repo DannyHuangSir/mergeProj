@@ -87,4 +87,8 @@
             </if>
         </where>
     </select>
+
+    <select id="countLoginSize" resultType="int">
+        select count(1) from ESERVICE_JD.dbo.USERS where LOGIN_SIZE = #{loginSize}
+    </select>
 </mapper>

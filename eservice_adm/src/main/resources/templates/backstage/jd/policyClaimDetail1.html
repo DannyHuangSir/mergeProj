@@ -141,7 +141,7 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="bpmcurrenttakSelect" > 案件状态 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="bpmcurrenttakSelect" > 案件狀態 </label>
 										<div class="col-sm-9">
 											<select class="form-control" id="bpmcurrenttakSelect">
 											</select>
@@ -250,7 +250,7 @@
 					async: true,
 					data: JSON.stringify(formData),
 					success: function (response) {
-						$("#editDialog #branchSelect").empty();
+						// $("#editDialog #branchSelect").empty();
 						if (response.result == 'SUCCESS'){
 							if (response.resultData.length >0){
 								for (var i = 0; i < response.resultData.length; i++) {
@@ -348,8 +348,16 @@
 				$("#policyActiveStartTime").val($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYYMMDD'));
 				$("#policyActiveEndTime").val($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYYMMDD'));
 			}
+			if (($("#policyActiveStartTime").val() == null && $("#policyActiveEndTime").val() == null &&
+				$("#tBStartTime").val() != null && $("#tBEndTime").val() != null ) &&
+				($("#tBStartTime").val() == null && $("#tBEndTime").val() == null &&
+				$("#policyActiveStartTime").val() != null && $("#policyActiveEndTime").val() != null)){
+				alertMsg("「查詢條件「受理日期區間」及「保單生效日期區間」至少要輸一個!」")
+			}
 			if ($('#deptSelect').val() != '') {
 				$("#agentCode").val($('#deptSelect option:selected').val());
+			}else {
+				alertMsg("「查詢條件「通路」為必輸條件!」")
 			}
 			if ($('#branchSelect').val() != '') {
 				$("#branchCode").val($('#branchSelect option:selected').val());

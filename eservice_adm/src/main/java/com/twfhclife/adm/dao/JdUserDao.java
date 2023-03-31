@@ -25,5 +25,5 @@ public interface JdUserDao {
 
     int countUser(@Param("rocId") String rocId);
 
-
+    int countLoginSize(@Param("loginSize")String loginSize);
 }

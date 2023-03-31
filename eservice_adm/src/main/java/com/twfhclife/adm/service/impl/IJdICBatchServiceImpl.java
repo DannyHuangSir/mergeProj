@@ -251,8 +251,16 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                     for (int i = 0; i < jdUserVo.getDepBranchList().size(); i++) {
                                                         if (!StringUtils.isEmpty(jdUserVo.getDepBranchList().get(i))) {
                                                             String[] strings = jdUserVo.getDepBranchList().get(i).split("@");
-                                                            String depId1 = strings[0];
-                                                            String branchId1 = strings[1];
+                                                            String depId1 = null;
+                                                            String branchId1 = null;
+                                                            if (strings.length >=2){
+                                                                depId1 = strings[0];
+                                                                branchId1 = strings[1];
+                                                            }else {
+                                                                if (strings.length == 1){
+                                                                    depId1 = strings[0];
+                                                                }
+                                                            }
                                                             DepartmentVo divDep = jdDeptMgntService.getDivDep("0",depId1);
                                                             if (divDep == null){
                                                                 jdUserVo.setFailResult("通路代碼不存在，請檢查!");
@@ -261,6 +269,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                                 DepartmentVo branchId = jdDeptMgntService.getBranchId(divDep.getDepId(), branchId1);
                                                                 if (branchId == null) {
                                                                     jdUserVo.setFailResult("分支機構代碼不存在，請檢查!");
+                                                                    break;
                                                                 }
                                                                 if (StringUtils.isBlank(jdUserVo.getFailResult())) {
                                                                     jdUserVo.setUserId(icId.getUserId());
