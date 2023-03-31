@@ -77,7 +77,7 @@ GO
 CREATE TABLE [ESERVICE_JD].[dbo].[MESSAGE](
 	[ID] [bigint] IDENTITY(1,1) NOT NULL,
 	[TITLE] [nvarchar](50) NOT NULL,
-	[MSG_CONTENT] [ntext] NOT NULL,
+	[MSG] [ntext] NOT NULL,
 	[STATUS] [numeric](38, 4) NOT NULL,
 	[CREATE_DATE] [datetime] NULL,
 	[USER_ID] [varchar](50) NOT NULL,
