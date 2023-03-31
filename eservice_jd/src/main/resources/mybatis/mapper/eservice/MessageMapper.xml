@@ -19,7 +19,7 @@
 	<sql id="Where_Case">
 		WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= #{date}
 		<if test="vo.notifyStartSearchTime != null and vo.notifyEndSearchTime != null">
-			AND NOTIFY_TIME between #{vo.notifyStartSearchTime} and DATEADD(month, 1, #{vo.notifyEndSearchTime})
+			AND NOTIFY_TIME between #{vo.notifyStartSearchTime} and DATEADD(day, 1, #{vo.notifyEndSearchTime})
 		</if>
 		<if test="vo.notifyStartSearchTime == null or vo.notifyEndSearchTime == null">
 			AND NOTIFY_TIME >= DATEADD(month, -1, #{date})
