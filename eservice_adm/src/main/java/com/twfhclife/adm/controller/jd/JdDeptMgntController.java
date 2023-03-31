@@ -128,13 +128,13 @@ public class JdDeptMgntController extends BaseController {
                 processError("不允許新增第三層分支機構！");
             } else {
                 if (deptMgntService.isDeptIdExist(departmentVo)) {
-                    processError("通路的原機構代碼不可重覆");
+                    processError("通路部門代碼不可重覆");
                 } else {
                     if (deptMgntService.isDeptNameExist(departmentVo)) {
                         processError("部門名稱重覆");
                     } else {
                         if (deptMgntService.isBranchIdExist(departmentVo)) {
-                            processError("分行的原機構代碼已存在！");
+                            processError("通路原機構代碼不可重覆！");
                         } else {
                             int result = deptMgntService.addDepartment(departmentVo);
                             if (result > 0) {
