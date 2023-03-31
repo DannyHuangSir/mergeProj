@@ -120,7 +120,7 @@ GO
 CREATE TABLE [ESERVICE_JD].[dbo].[USER_IC](
 	[USER_ID] [varchar](50) NOT NULL,
 	[DEP_ID] [varchar](50) NOT NULL,
-    [BRANCH_ID] [varchar](50) NOT NULL
+    [BRANCH_ID] [varchar](50)  NULL
 ) ON [PRIMARY]
 GO
 

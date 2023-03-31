@@ -296,7 +296,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                                             jdUserVo.setUserId(icId.getUserId());
                                                                             BeanUtils.copyProperties(jdUserVo,jdUserVo1);
                                                                             jdUserVo1.setDepId(depId1);
-                                                                            jdUserVo1.setBranchId(branchId1);
+                                                                            jdUserVo1.setBranchId("");
                                                                             int countUserIc = jdUserDao.countUserIc(jdUserVo1.getIcId());
                                                                             if (countUserIc > 0 && deleteType) {
                                                                                 if (jdUserDao.deleteUserIC(jdUserVo1) > 0){
