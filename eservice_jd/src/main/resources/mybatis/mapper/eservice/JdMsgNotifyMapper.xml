@@ -7,11 +7,11 @@
         <if test="msg.users != null and msg.users.size() >0 ">
             values
             <foreach collection="msg.users" item="user" separator=",">
-                (#{msg.title}, #{msg.msg}, '1', SYSDATETIME(), #{user}, #{msg.notifyTime})
+                (#{msg.title}, #{msg.msg}, '1', #{date}, #{user}, #{msg.notifyTime})
             </foreach>
         </if>
         <if test="msg.deps != null and msg.deps.size() >0 ">
-            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime}
+            SELECT #{msg.title}, #{msg.msg}, '1', #{date}, UD.USER_ID, #{msg.notifyTime}
             FROM ESERVICE_JD.DBO.DEPARTMENT D
             INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.BRANCH_ID = UD.BRANCH_ID
             WHERE D.DEP_ID IN
@@ -20,7 +20,7 @@
             </foreach>
         </if>
         <if test="msg.roles != null and msg.roles.size() >0 ">
-            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UR.USER_ID, #{msg.notifyTime} FROM  ESERVICE_ADM.DBO.ROLE R
+            SELECT #{msg.title}, #{msg.msg}, '1', #{date}, UR.USER_ID, #{msg.notifyTime} FROM  ESERVICE_ADM.DBO.ROLE R
             INNER JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON R.ROLE_ID = UR.ROLE_ID
             WHERE R.ROLE_ID IN
             <foreach collection="msg.roles" item="role" separator="," close=")" open="(">
@@ -28,12 +28,12 @@
             </foreach>
         </if>
         <if test="msg.roles.size() &lt;=0 and msg.users.size() &lt;=0 and msg.deps.size() &lt;=0">
-           SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime}
+           SELECT #{msg.title}, #{msg.msg}, '1', #{date}, UD.USER_ID, #{msg.notifyTime}
             from ESERVICE_JD.DBO.DEPARTMENT D
             INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.DEP_ID = UD.DEP_ID
             WHERE D.DEP_ID = #{msg.passageWay}
             UNION
-            SELECT #{msg.title}, #{msg.msg}, '1', SYSDATETIME(), UD.USER_ID, #{msg.notifyTime}
+            SELECT #{msg.title}, #{msg.msg}, '1', #{date}, UD.USER_ID, #{msg.notifyTime}
             from ESERVICE_JD.DBO.DEPARTMENT D
             INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.BRANCH_ID = UD.BRANCH_ID
             WHERE D.PARENT_DEP = #{msg.passageWay}
@@ -42,7 +42,7 @@
 
     <select id="getWillSendMsgs" resultType="com.twfhclife.eservice.web.model.JdzqNotifyMsg">
         select ID id, TITLE title, MSG_CONTENT msg, USERS userStr, DEPS depStr, ROLES roleStr , NOTIFY_TIME notifyTime, CREATE_DATE createDate from
-        ESERVICE_JD.DBO.NOTIFY_SCHEDULE WHERE NOTIFY_TIME &lt;= SYSDATETIME() AND STATUS = 1
+        ESERVICE_JD.DBO.NOTIFY_SCHEDULE WHERE NOTIFY_TIME &lt;= #{date} AND STATUS = 1
     </select>
 
     <update id="updateNotifyMsgComplete">

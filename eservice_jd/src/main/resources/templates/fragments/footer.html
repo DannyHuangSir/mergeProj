@@ -66,7 +66,7 @@
     function clickSearch() {
         event.preventDefault(),
 		event.stopPropagation();
-        $("#messageContent").html("<div class='items' id='messages' style='overflow-y: hidden;'></div>")
+        $(".messageContent").html('<div class="items" style="overflow-y: hidden;"></div>')
         notifySearchStatus = $('#notifyStatus option:selected').val()
         notifySearchTime = $('#notifySearchTime').val() == '' ? null : $('#notifySearchTime').val()
         appendNotifyItems(true)
@@ -93,12 +93,21 @@
                             msg: item.msg,
                             title: item.title
                         }
-                        $('#messages').append(
-                            '<a href="#" class="item" onclick=\'msgDetail(' + item.id + ')\'>' +
-                                '<div class="header"><em>' + item.title + '</em></div>' +
-                                '<div class="content text-right"><small>' + item.notifyTime + '</small></div>' +
-                             '</a>'
-                        )
+                        if (item.status == 2) {
+                             $('.messageContent .items').append(
+                                '<a href="#" class="item" onclick=\'msgDetail(' + item.id + ')\'>' +
+                                    '<div class="header"><em style="color: black;"><b>' + item.title + '</b></em></div>' +
+                                    '<div class="content text-right"><small>' + item.notifyTime + '</small></div>' +
+                                 '</a>'
+                            )
+                        } else {
+                             $('.messageContent .items').append(
+                                '<a href="#" class="item" onclick=\'msgDetail(' + item.id + ')\'>' +
+                                    '<div class="header"><b style="color: coral;">' + item.title + '</b></div>' +
+                                    '<div class="content text-right"><small>' + item.notifyTime + '</small></div>' +
+                                 '</a>'
+                            )
+                        }
                     })
                 }
                 if (!config) {
@@ -126,7 +135,7 @@
             url : /*[[@{/getNotRead}]]*/,
             success : function(data) {
                 if (data.result = 'SUCCESS') {
-                    $('#notRead').text(data.resultData)
+                    $('em.badge').text(data.resultData)
                     $('#messageCount').text(data.resultData)
                 }
             }
@@ -150,7 +159,11 @@
                 {
                    id: id
                 }
-            )
+            ),
+            success : function(response) {
+                getNotRead()
+                clickSearch()
+            }
         });
     }
 

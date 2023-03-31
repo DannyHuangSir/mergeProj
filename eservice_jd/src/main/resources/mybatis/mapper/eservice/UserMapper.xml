@@ -155,7 +155,7 @@
 	</select>
 
 	<select id="getCaseQueryByUser" resultType="com.twfhclife.eservice.web.model.PermQueryVo">
-		SELECT DISTINCT U.SERIAL_NUM serialNum, UD.BRANCH_ID branchCode,D1.BRANCH_ID agentCode  FROM
+		SELECT DISTINCT U.IC_ID serialNum, UD.BRANCH_ID branchCode,D1.BRANCH_ID agentCode  FROM
 		ESERVICE_ADM.DBO.USER_ENTITY UE
 		INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UE.ID = UD.USER_ID COLLATE database_default
 		INNER JOIN ESERVICE_JD.DBO.USERS U ON UE.USERNAME = U.USER_ID COLLATE database_default
@@ -172,7 +172,7 @@
 		ESERVICE_JD.DBO.USERS u INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY UE
 		ON UE.USERNAME = U.USER_ID COLLATE database_default AND UE.REALM_ID = 'elife_jd'
 		WHERE
-			u.SERIAL_NUM = #{saleId}
+			u.IC_ID = #{saleId}
 	</select>
 
 </mapper>

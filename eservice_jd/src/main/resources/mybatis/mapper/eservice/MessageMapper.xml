@@ -15,13 +15,14 @@
 	<sql id="Base_Column_List">
 		ID,TITLE,MSG,STATUS,CREATE_DATE,USER_ID,NOTIFY_TIME
 	</sql>
+
 	<sql id="Where_Case">
-		WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= SYSDATETIME()
+		WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= #{date}
 		<if test="vo.notifyStartSearchTime != null and vo.notifyEndSearchTime != null">
-			AND NOTIFY_TIME between #{vo.notifyStartSearchTime} and #{vo.notifyEndSearchTime}
+			AND NOTIFY_TIME between #{vo.notifyStartSearchTime} and DATEADD(month, 1, #{vo.notifyEndSearchTime})
 		</if>
 		<if test="vo.notifyStartSearchTime == null or vo.notifyEndSearchTime == null">
-			AND NOTIFY_TIME &gt;= DATEADD(month, -1, SYSDATETIME())
+			AND NOTIFY_TIME >= DATEADD(month, -1, #{date})
 		</if>
 		<if test="vo.status != null">
 			AND STATUS = #{vo.status}
@@ -34,6 +35,7 @@
 		FROM
 			ESERVICE_JD.DBO.MESSAGE
 			<include refid="Where_Case"></include>
+		ORDER BY STATUS, NOTIFY_TIME DESC
 	</select>
 
 	<select id="getNotRead" resultType="int">
@@ -44,7 +46,7 @@
 		<include refid="Base_Column_List" />
 		FROM
 		ESERVICE_JD.DBO.MESSAGE
-			WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= SYSDATETIME() AND STATUS = '1'
+			WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= #{date} AND STATUS = '1'
 		) t
 	</select>
 

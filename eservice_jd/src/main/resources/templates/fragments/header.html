@@ -60,7 +60,7 @@
             <div id="notification" class="popover-template">
                 <div class="title">
                     線上通知
-                    <span class="note"><em class="badge" id="notRead"></em>封未讀取</span>
+                    <span class="note"><em class="badge"></em>封未讀取</span>
                     <a class="close">×</a>
                     <a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true" aria-controls="popoverSearchBar" class="pull-right">
                         <i class="fa fa-search orange"></i>
@@ -97,37 +97,37 @@
                         </form>
                     </div>
                 </div>
-                <div id="messageContent">
-                    <div class="items " id="messages" style="overflow-y: hidden;">
+                <div class="messageContent">
+                    <div class="items" style="overflow-y: hidden;">
                     </div>
                 </div>
-                <div class="modal fade in" id="msg-modal" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;"  aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content lock-up">
-                            <div class="modal-header"> 通知詳情
-                                <button type="button" class="close"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body center1 grey2">
-                                <h3></h3><div class="title"></div>
-                                <div class="marginBottom30 modal-container-locked-messsage content">
-                                    <div class="modal-body apply2 center1 grey2">
-                                        <div class="container grey nopd">
-                                            <div class="col-xs-4">主旨：</div>
-                                            <div class="col-xs-8" id="msgTitle"></div>
-                                            <div class="col-xs-4">内文：</div>
-                                            <div class="col-xs-8" id="msgContent"></div>
-                                            <div>
-                                            </div>
-                                        </div>
+        </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="modal fade in" id="msg-modal" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;"  aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content lock-up">
+                    <div class="modal-header"> 通知詳情
+                        <button type="button" class="close"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body center1 grey2">
+                        <h3></h3><div class="title"></div>
+                        <div class="marginBottom30 modal-container-locked-messsage content">
+                            <div class="modal-body apply2 center1 grey2">
+                                <div class="container grey nopd">
+                                    <div class="col-xs-4">主旨：</div>
+                                    <div class="col-xs-8" id="msgTitle" style="color:black"></div>
+                                    <div class="col-xs-4">内文：</div>
+                                    <div class="col-xs-8" style="color:black" id="msgContent"></div>
+                                    <div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <p>※本畫面僅提供六個月內之通知資料查詢</p>
             </div>
-        </nav>
-        <!-- End Navbar -->
+        </div>
     </div>
 </header>
 </html>

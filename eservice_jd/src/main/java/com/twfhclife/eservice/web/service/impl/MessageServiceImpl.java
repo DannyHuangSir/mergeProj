@@ -34,12 +34,12 @@ public class MessageServiceImpl implements IMessageService {
 
     @Override
     public List<MessageVo> getMessages(MessageVo vo, String userId) {
-        return messageDao.getMessages(vo, userId);
+        return messageDao.getMessages(vo, userId, new Date());
     }
 
     @Override
     public int getNotRead(String id) {
-        return messageDao.getNotRead(id);
+        return messageDao.getNotRead(id, new Date());
     }
 
     @Override
@@ -51,12 +51,12 @@ public class MessageServiceImpl implements IMessageService {
     private JdMsgNotifyDao jdMsgNotifyDao;
     @Scheduled( cron = "0/20 * * * * ?")
     public void notifyMsgSchedule() {
-        List<JdzqNotifyMsg> msgs = jdMsgNotifyDao.getWillSendMsgs();
+        List<JdzqNotifyMsg> msgs = jdMsgNotifyDao.getWillSendMsgs(new Date());
         List<Long> ids = Lists.newArrayList();
         if (!org.apache.commons.collections.CollectionUtils.isEmpty(msgs)) {
             for (JdzqNotifyMsg msg : msgs) {
                 ids.add(msg.getId());
-                jdMsgNotifyDao.addJdNotifyMsg(msg);
+                jdMsgNotifyDao.addJdNotifyMsg(msg, new Date());
             }
             jdMsgNotifyDao.updateNotifyMsgComplete(ids);
         }
@@ -91,7 +91,7 @@ public class MessageServiceImpl implements IMessageService {
                         msg.setTitle("照會截止日通知");
                         msg.setMsg(String.format("要保人%s/被保險人%s-保單號碼%s案件的照會回覆截止日期為%s，再請確認是否已回覆。", noteNotify.getAppName(), noteNotify.getInsName(), noteNotify.getPolicyNo(), noteNotify.getDueDate()));
                         msg.setNotifyTime(new Date());
-                        jdMsgNotifyDao.addJdNotifyMsg(msg);
+                        jdMsgNotifyDao.addJdNotifyMsg(msg, new Date());
                         Map<String, String> paramMap = new HashMap();
                         List<String> receivers = new ArrayList<>();
                         receivers.add(vo.getEmail());
@@ -140,7 +140,7 @@ public class MessageServiceImpl implements IMessageService {
                        msg.setTitle("停利停損通知");
                        msg.setMsg("保單：" + notifyPolicyNos.toString() + " 達到停利停損設定，請知悉！");
                        msg.setNotifyTime(new Date());
-                       jdMsgNotifyDao.addJdNotifyMsg(msg);
+                       jdMsgNotifyDao.addJdNotifyMsg(msg, new Date());
                    }
                } catch (Exception e) {
                    logger.error("notifyStopProfitAndStopLoss error: {}", e);
