@@ -1,18 +1,31 @@
 package com.twfhclife.eservice.api_model;
 
-import com.twfhclife.eservice.web.model.PolicyChangeInfoVo;
+import com.google.common.collect.Lists;
+import com.twfhclife.eservice.web.model.ChangeInfoVo;
+import com.twfhclife.eservice.web.model.PolicyBaseVo;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PolicyChangeInfoDataResponse implements Serializable {
 
-    private PolicyChangeInfoVo changeInfo;
+    private List<ChangeInfoVo> changeInfos = Lists.newArrayList();
 
-    public PolicyChangeInfoVo getChangeInfo() {
-        return changeInfo;
+    public List<ChangeInfoVo> getChangeInfos() {
+        return changeInfos;
     }
 
-    public void setChangeInfo(PolicyChangeInfoVo changeInfo) {
-        this.changeInfo = changeInfo;
+    public void setChangeInfos(List<ChangeInfoVo> changeInfos) {
+        this.changeInfos = changeInfos;
+    }
+
+    private PolicyBaseVo policyBase;
+
+    public PolicyBaseVo getPolicyBase() {
+        return policyBase;
+    }
+
+    public void setPolicyBase(PolicyBaseVo policyBase) {
+        this.policyBase = policyBase;
     }
 }

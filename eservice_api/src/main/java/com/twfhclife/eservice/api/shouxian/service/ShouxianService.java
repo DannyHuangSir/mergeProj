@@ -68,7 +68,7 @@ public class ShouxianService {
         return shouXianDao.getExpireOfPayment(policyNo);
     }
 
-    public PolicyChangeInfoVo getPolicyChangeInfo(String policyNo) {
+    public List<ChangeInfoVo> getPolicyChangeInfo(String policyNo) {
         return shouXianDao.getPolicyChangeInfo(policyNo);
     }
 

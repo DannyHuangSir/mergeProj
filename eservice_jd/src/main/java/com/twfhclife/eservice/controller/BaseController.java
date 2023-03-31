@@ -207,19 +207,8 @@ public class BaseController extends BaseMvcController {
      */
     protected String getUserId() {
         String userId = "";
-        String loginUserType = getUserType();
-        if ("member".equals(loginUserType)) {
-            KeycloakUser keycloakUser = getLoginUser();
-            userId = (keycloakUser != null ? keycloakUser.getUsername() : null);
-        } else {
-            //admin or agent
-            Object adminQryUsersObj = getSession("ADMIN_QUERY_USERS");
-            if (adminQryUsersObj != null) {
-                UsersVo usersVo = (UsersVo) adminQryUsersObj;
-                userId = usersVo.getUserId();
-            }
-        }
-
+        KeycloakUser keycloakUser = getLoginUser();
+        userId = (keycloakUser != null ? keycloakUser.getUsername() : null);
         return userId;
     }
 

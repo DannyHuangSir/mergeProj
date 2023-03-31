@@ -134,8 +134,9 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing5_3")
     public String listing5_3(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyChangeInfoVo vo = policyService.getChangeInfo(getUserId(), policyNo);
-            addAttribute("vo", vo);
+            PolicyChangeInfoDataResponse vo = policyService.getChangeInfo(getUserId(), policyNo);
+            addAttribute("vo", vo.getPolicyBase());
+            addAttribute("changeInfos", vo.getChangeInfos());
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing5_3: {}", ExceptionUtils.getStackTrace(e));

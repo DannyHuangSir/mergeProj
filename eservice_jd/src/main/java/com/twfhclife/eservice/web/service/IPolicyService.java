@@ -2,7 +2,6 @@ package com.twfhclife.eservice.web.service;
 
 import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
-import com.twfhclife.eservice.web.model.PolicyChangeInfoVo;
 import com.twfhclife.eservice.web.model.*;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public interface IPolicyService {
 
     PolicyExpireOfPaymentDataResponse getPolicyExpireOfPayment(String userId, String policyNo);
 
-    PolicyChangeInfoVo getChangeInfo(String userId, String policyNo);
+    PolicyChangeInfoDataResponse getChangeInfo(String userId, String policyNo);
 
     PolicyIncomeDistributionVo getIncomeDistribution(String userId, String policyNo);
 

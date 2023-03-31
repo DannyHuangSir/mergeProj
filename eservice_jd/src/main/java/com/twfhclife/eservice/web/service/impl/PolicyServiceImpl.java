@@ -8,7 +8,6 @@ import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.web.dao.JdNotifyConfigDao;
 import com.twfhclife.eservice.web.model.PermQueryVo;
-import com.twfhclife.eservice.web.model.PolicyChangeInfoVo;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IPolicyService;
@@ -107,9 +106,8 @@ public class PolicyServiceImpl implements IPolicyService {
     private String policyChangeInfoUrl;
 
     @Override
-    public PolicyChangeInfoVo getChangeInfo(String userId, String policyNo) {
-        PolicyChangeInfoDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyChangeInfoUrl, PolicyChangeInfoDataResponse.class);
-        return responseObj.getChangeInfo();
+    public PolicyChangeInfoDataResponse getChangeInfo(String userId, String policyNo) {
+        return baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyChangeInfoUrl, PolicyChangeInfoDataResponse.class);
     }
 
     @Value("${eservice_api.policy.income.distribution.url}")

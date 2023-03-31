@@ -234,9 +234,9 @@ public class ShouxianController extends BaseController {
         ApiResponseObj<PolicyChangeInfoDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            PolicyChangeInfoVo policyChangeInfoVo = shouxianService.getPolicyChangeInfo(vo.getPolicyNo());
             PolicyChangeInfoDataResponse resp = new PolicyChangeInfoDataResponse();
-            resp.setChangeInfo(policyChangeInfoVo);
+            resp.setChangeInfos(shouxianService.getPolicyChangeInfo(vo.getPolicyNo()));
+            resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);

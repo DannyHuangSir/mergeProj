@@ -254,10 +254,6 @@
         WHERE lbf.PAYF_INSU_NO = #{policyNo}
     </select>
 
-    <resultMap id="PolicyChangeInfoMap" extends="PolicyMap" type="com.twfhclife.eservice.api.shouxian.model.PolicyChangeInfoVo">
-        <collection property="changeInfos" resultMap="ChangeInfoMap"/>
-    </resultMap>
-
     <resultMap id="ChangeInfoMap" type="com.twfhclife.eservice.api.shouxian.model.ChangeInfoVo">
         <result column="RCDC_DELIVERY_AGEN_CODE" property="applyType"/>
         <result column="RCDC_ACC_DATE" property="accDate"/>
@@ -274,14 +270,8 @@
         <result column="RCDC_CHAN_ITEM_10" property="item10"/>
     </resultMap>
 
-    <select id="getPolicyChangeInfo" resultMap="PolicyChangeInfoMap">
-        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_TABL_PREM,
-        CASE
-        WHEN lme.LIPM_ST &lt;= 18 THEN 1
-        WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-        WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-        END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY,
+    <select id="getPolicyChangeInfo" resultMap="ChangeInfoMap">
+        SELECT
         lrc.RCDC_DELIVERY_AGEN_CODE, to_char(lrc.RCDC_ACC_DATE, 'yyyy-MM-dd') RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
         lrc.RCDC_CHAN_ITEM_1, lrc.RCDC_CHAN_ITEM_2, lrc.RCDC_CHAN_ITEM_3, lrc.RCDC_CHAN_ITEM_4, lrc.RCDC_CHAN_ITEM_5, lrc.RCDC_CHAN_ITEM_6, lrc.RCDC_CHAN_ITEM_7, lrc.RCDC_CHAN_ITEM_8, lrc.RCDC_CHAN_ITEM_9, lrc.RCDC_CHAN_ITEM_10
         FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
@@ -289,22 +279,15 @@
         LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
         ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
         LEFT JOIN LIRCDC_ES_FLOWTEST lrc ON lme.LIPM_INSU_TYPE = lrc.RCDC_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lrc.RCDC_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lrc.RCDC_INSU_SEQ_NO
-        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+        WHERE (lme.LIPM_INSU_TYPE || lme.LIPM_INSU_GRP_NO || lme.LIPM_INSU_SEQ_NO) = #{policyNo}
     </select>
 
     <select id="getPolicyInfo" resultMap="PolicyMap">
-        SELECT lpe.SETT_CH_NAME PROD_NAME, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-        lie.LIPI_INSU_END_DATE, lie.LIPI_TABL_PREM,
-        CASE
-        WHEN lme.LIPM_ST &lt;= 18 THEN 1
-        WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-        WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-        END AS STATUS, lme.LIPM_NAME_1 LIPM_NAME, lie.LIPI_NAME, lpe.PROD_CURRENCY CURRENCY
-        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
-        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
-        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+        SELECT
+        lrc.RCDC_DELIVERY_AGEN_CODE, to_char(lrc.RCDC_ACC_DATE, 'yyyy-MM-dd') RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
+        lrc.RCDC_CHAN_ITEM_1, lrc.RCDC_CHAN_ITEM_2, lrc.RCDC_CHAN_ITEM_3, lrc.RCDC_CHAN_ITEM_4, lrc.RCDC_CHAN_ITEM_5, lrc.RCDC_CHAN_ITEM_6, lrc.RCDC_CHAN_ITEM_7, lrc.RCDC_CHAN_ITEM_8, lrc.RCDC_CHAN_ITEM_9, lrc.RCDC_CHAN_ITEM_10
+        FROM LIRCDC_ES_FLOWTEST lrc
+        WHERE (lrc.RCDC_INSU_TYPE || lrc.RCDC_INSU_GRP_NO  || lrc.RCDC_INSU_SEQ_NO) = #{policyNo}
     </select>
 
     <resultMap id="IncomeDistributionMap" type="com.twfhclife.eservice.api.shouxian.model.IncomeDistributionVo">
