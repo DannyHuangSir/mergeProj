@@ -14,7 +14,7 @@
         <result column="AgentCode" property="agentCode" />
         <result column="BrokerName" property="brokerName" />
         <result column="BranchCode" property="branchCode" />
-        <result column="NEBK_Branch_Name" property="nebkBranchName" />
+        <result column="nebkBranchName" property="nebkBranchName" />
         <result column="AgentSalesID" property="agentSalesID" />
         <result column="AgentSalesName" property="agentSalesName" />
         <result column="UserName" property="userName" />
@@ -29,7 +29,7 @@
         <result column="InsName" property="insName" />
         <result column="InsID" property="insID" />
         <result column="AppCountry" property="appCountry" />
-        <result column="LIPI_AGE" property="lipiAge" />
+        <result column="lipiAge" property="lipiAge" />
         <result column="PolicyAmountNTD" property="policyAmountNTD" />
         <result column="PolicyFee" property="policyFee" />
         <result column="PayType" property="payType" />
@@ -156,7 +156,17 @@
                 AND c.PSalesCode = '${vo.pSalesCode}'
             </if>
             <if  test="vo.agentCode != null and vo.agentCode != ''">
-                AND c.AgentCode =  '${vo.agentCode}'
+                <choose>
+                    <when test="vo.agentCode == '86900'">
+                        AND c.AgentCode = '869' AND c.AgentBranchM = '00'
+                    </when>
+                    <when test="vo.agentCode == '86901'">
+                        AND c.AgentCode = = '869' AND c.AgentBranchM = '01'
+                    </when>
+                    <otherwise>
+                        AND c.AgentCode =  '${vo.agentCode}'
+                    </otherwise>
+                </choose>
             </if>
             <if test="vo.branchCode != null and vo.branchCode != ''">
                 AND c.BranchCode = '${vo.branchCode}'

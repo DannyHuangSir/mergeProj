@@ -227,7 +227,7 @@
 						if (response.result == 'SUCCESS'){
 							if (response.resultData.length >0){
 								for (var i = 0; i < response.resultData.length; i++) {
-									var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
+									var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
 									$("#editDialog #deptSelect").append(option);
 								}
 							}
@@ -244,7 +244,7 @@
 					depId: $('#editDialog #deptSelect').val()
 				};
 				$.ajax({
-					url: /*[[@{jd/common/branchList}]]*/,
+					url: /*[[@{/jd/common/branchByList}]]*/,
 					contentType: 'application/json',
 					type: "POST",
 					async: true,

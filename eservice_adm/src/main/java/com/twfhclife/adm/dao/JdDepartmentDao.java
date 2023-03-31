@@ -96,4 +96,7 @@ public interface JdDepartmentDao {
     int updateUserDep(@Param("userId") String userId,@Param("depId") String depId,@Param("branchId") String branchId);
 
     int countUserDep(@Param("userId") String userId,@Param("depId") String depId,@Param("branchId") String branchId);
+
+    List<DepartmentVo> getBranchByList(@Param("userId") String userId, @Param("adminUserFlag") String adminUserFlag,@Param("vo")DepartmentVo vo);
+
 }

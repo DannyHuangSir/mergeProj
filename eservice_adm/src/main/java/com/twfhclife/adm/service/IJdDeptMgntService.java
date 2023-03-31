@@ -98,4 +98,6 @@ public interface IJdDeptMgntService {
     int updateUserDep(String userId,String depId,String branchId);
 
     int countUserDep(String userId,String depId,String branchId);
+
+    List<DepartmentVo> getBranchByList(String userId, String username,DepartmentVo vo);
 }

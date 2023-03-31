@@ -396,4 +396,19 @@ public class OptionController extends BaseController {
 		}
 		return processResponseEntity();
 	}
+
+	@RequestLog
+	@PostMapping("/jd/common/branchByList")
+	public ResponseEntity<ResponseObj> jdBranchByList(@RequestBody DepartmentVo vo) {
+		try {
+			com.twfhclife.keycloak.model.KeycloakUser kuser = getLoginUser();
+			String username = kuser.getUsername();
+			String keyCloakUserId = kuser.getId();//此處查詢應使用id
+			processSuccess(jdDeptMgntService.getBranchByList(keyCloakUserId, username,vo));
+		} catch (Exception e) {
+			logger.error("Unable to jdBranchByList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
 }

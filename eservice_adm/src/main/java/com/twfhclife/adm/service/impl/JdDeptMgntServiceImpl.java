@@ -246,5 +246,11 @@ public class JdDeptMgntServiceImpl implements IJdDeptMgntService {
         return departmentDao.countUserDep(userId,depId,branchId);
     }
 
+    @Override
+    public List<DepartmentVo> getBranchByList(String userId, String username, DepartmentVo vo) {
+        String adminUserFlag = (StringUtils.equals(username, systemAdminUser) ? "Y" : "N");
+        return departmentDao.getBranchByList(userId, adminUserFlag,vo);
+    }
+
 
 }

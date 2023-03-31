@@ -250,4 +250,24 @@
     <select id="countUserDep" resultType="int">
         select count(1) from ESERVICE_JD.dbo.USER_DEPARTMENT where BRANCH_ID = #{branchId} and DEP_ID =  #{depId}  and USER_ID = #{userId}
     </select>
+
+    <select id="getBranchByList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        DEP_NAME,
+        BRANCH_ID
+        FROM
+        ESERVICE_JD.DBO.DEPARTMENT
+        WHERE
+        PARENT_DEP IS NOT NULL
+        <if test="vo.depId != null and vo.depId !=''">
+            AND PARENT_DEP = (select DEP_ID from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{vo.depId})
+        </if>
+        <if test="adminUserFlag == 'N'.toString()">
+            AND DEP_ID IN (
+            SELECT DEP_ID FROM ESERVICE_JD.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
+            )
+        </if>
+        ORDER BY
+        DEP_ID
+    </select>
 </mapper>
