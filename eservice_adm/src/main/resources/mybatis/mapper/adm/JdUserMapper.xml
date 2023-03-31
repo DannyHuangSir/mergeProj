@@ -63,9 +63,12 @@
         select a.IC_ID,c.DEP_ID from ESERVICE_JD.dbo.USERS a
         left join ESERVICE_ADM.dbo.USER_ENTITY b on a.USER_ID = b.USERNAME
         left join ESERVICE_JD.dbo.USER_DEPARTMENT c on b.ID = c.USER_ID
+        left join ESERVICE_ADM.dbo.USER_ROLE d  on b.ID = d.USER_ID
+        left join ESERVICE_ADM.dbo.ROLE e on d.ROLE_ID = e.ROLE_ID
         <where>
+            e.DIV_ROLE_ID = 'IC_PERSONNEL'
             <if test="icId != null and icId != ''">
-                a.IC_ID = #{icId}
+              and  a.IC_ID = #{icId}
             </if>
             <if test="depId != null and depId != ''">
                 and c.DEP_ID = #{depId}

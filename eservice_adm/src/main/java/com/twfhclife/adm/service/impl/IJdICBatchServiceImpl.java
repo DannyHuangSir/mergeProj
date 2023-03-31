@@ -256,6 +256,33 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                             if (strings.length >=2){
                                                                 depId1 = strings[0];
                                                                 branchId1 = strings[1];
+                                                                DepartmentVo divDep = jdDeptMgntService.getDivDep("0",depId1);
+                                                                if (divDep == null){
+                                                                    jdUserVo.setFailResult("通路代碼不存在，請檢查!");
+                                                                    break;
+                                                                }else {
+                                                                    DepartmentVo branchId = jdDeptMgntService.getBranchId(divDep.getDepId(), branchId1);
+                                                                    if (branchId == null) {
+                                                                        jdUserVo.setFailResult("分支機構代碼不存在，請檢查!");
+                                                                        break;
+                                                                    }
+                                                                    if (StringUtils.isBlank(jdUserVo.getFailResult())) {
+                                                                        jdUserVo.setUserId(icId.getUserId());
+                                                                        BeanUtils.copyProperties(jdUserVo,jdUserVo1);
+                                                                        jdUserVo1.setDepId(depId1);
+                                                                        jdUserVo1.setBranchId(branchId1);
+                                                                        int countUserIc = jdUserDao.countUserIc(jdUserVo1.getIcId());
+                                                                        if (countUserIc > 0 && deleteType) {
+                                                                            if (jdUserDao.deleteUserIC(jdUserVo1) > 0){
+                                                                                jdUserDao.insertUserIC(jdUserVo1);
+                                                                                deleteType = false;
+                                                                            }
+                                                                        } else {
+                                                                            jdUserDao.insertUserIC(jdUserVo1);
+                                                                            deleteType = false;
+                                                                        }
+                                                                    }
+                                                                }
                                                             }else {
                                                                 if (strings.length == 1){
                                                                     depId1 = strings[0];
@@ -266,11 +293,6 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                                 jdUserVo.setFailResult("通路代碼不存在，請檢查!");
                                                                 break;
                                                             }else {
-                                                                DepartmentVo branchId = jdDeptMgntService.getBranchId(divDep.getDepId(), branchId1);
-                                                                if (branchId == null) {
-                                                                    jdUserVo.setFailResult("分支機構代碼不存在，請檢查!");
-                                                                    break;
-                                                                }
                                                                 if (StringUtils.isBlank(jdUserVo.getFailResult())) {
                                                                     jdUserVo.setUserId(icId.getUserId());
                                                                     BeanUtils.copyProperties(jdUserVo,jdUserVo1);
