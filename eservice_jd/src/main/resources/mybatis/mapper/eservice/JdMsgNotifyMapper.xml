@@ -41,8 +41,9 @@
     </insert>
 
     <select id="getWillSendMsgs" resultType="com.twfhclife.eservice.web.model.JdzqNotifyMsg">
-        select ID id, TITLE title, MSG_CONTENT msg, USERS userStr, DEPS depStr, ROLES roleStr , NOTIFY_TIME notifyTime, CREATE_DATE createDate from
-        ESERVICE_JD.DBO.NOTIFY_SCHEDULE WHERE NOTIFY_TIME &lt;= #{date} AND STATUS = 1
+        select ID id, TITLE title, MSG_CONTENT msg, USERS userStr, DEPS depStr, ROLES roleStr
+        ,NOTIFY_TIME notifyTime, CREATE_DATE createDate, PASSAGE_WAY passageWay
+        from ESERVICE_JD.DBO.NOTIFY_SCHEDULE WHERE NOTIFY_TIME &lt;= #{date} AND STATUS = 1
     </select>
 
     <update id="updateNotifyMsgComplete">
