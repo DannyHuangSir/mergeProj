@@ -19,7 +19,7 @@
             *
         FROM (
                  SELECT
-                     ROW_NUMBER() OVER (ORDER BY BATCH_ID) AS ROW_NUM
+                     ROW_NUMBER() OVER (ORDER BY BATCH_JOIN_TIME DESC) AS ROW_NUM
         ,A.*
                  FROM (
                           SELECT BATCH_ID,BATCH_STATUS,BATCH_NAME,FORMAT(BATCH_JOIN_TIME, 'yyyy/MM/dd HH:mm:ss') AS BATCH_JOIN_TIME,
