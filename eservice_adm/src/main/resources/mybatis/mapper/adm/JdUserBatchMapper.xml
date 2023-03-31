@@ -113,11 +113,12 @@
                      ROW_NUMBER() OVER (ORDER BY DEP_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                          select c.DEP_NAME as depName,d.branchName,c.DEP_ID,d.BRANCH_ID
-                          from ESERVICE_JD.dbo.DEPARTMENT c,(select a.DEP_NAME as branchName,a.PARENT_DEP,a.BRANCH_ID from ESERVICE_JD.dbo.DEPARTMENT a
+                          select c.DEP_NAME as depName,d.branchName,c.DEP_ID,d.BRANCH_ID from ESERVICE_JD.dbo.DEPARTMENT c,
+                          (select a.DEP_NAME as branchName,a.PARENT_DEP,a.BRANCH_ID from ESERVICE_JD.dbo.DEPARTMENT a
                           left join ESERVICE_JD.dbo.USER_IC b on a.BRANCH_ID = b.BRANCH_ID
-                          where b.USER_ID =  #{vo.userId}
-                          ) d where c.DEP_ID = d.PARENT_DEP
+                          left join ESERVICE_JD.dbo.USERS d on b.USER_ID = d.IC_ID
+                          where d.USER_ID = #{vo.userId} )
+                          d where c.DEP_ID = d.PARENT_DEP
                       ) A
              ) B
         WHERE
