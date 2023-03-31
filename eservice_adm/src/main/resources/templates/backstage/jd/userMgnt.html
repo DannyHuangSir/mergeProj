@@ -588,7 +588,11 @@
 					}},
 				{align: 'center', formatter: function(cellvalue, options, row) {
 						var branchName = '';
-						branchName = row.BRANCH_ID+'('+row.branchName+')'
+						if (row.BRANCH_ID == '' && row.branchName == ''){
+							branchName;
+						}else {
+							branchName = row.BRANCH_ID+'('+row.branchName+')'
+						}
 						return branchName;
 					}}
 			];
