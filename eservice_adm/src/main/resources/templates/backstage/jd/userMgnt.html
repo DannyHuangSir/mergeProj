@@ -302,7 +302,6 @@
 					async: true,
 					data: JSON.stringify(formData),
 					success: function (response) {
-						$("#selectNode #roleNameSelect").empty();
 						if (response.result == 'SUCCESS'){
 							if (response.resultData.length >0){
 								for (var i = 0; i < response.resultData.length; i++) {
@@ -512,10 +511,12 @@
 					actionHtml += '<a href="javascript:openJdUser(\'' + row.USERNAME + '\');" class="green bigger-140 show-details-btn" title="人員詳細資料">';
 					actionHtml += '<i class="my-icon fa fa-file bigger-120"></i> <span class="sr-only">人員詳細資料</span> ';
 					actionHtml += '</a>';
-					actionHtml += '&nbsp;&nbsp;';
-					actionHtml += '<a href="javascript:openJdIc(\'' + row.USERNAME + '\');" class="green bigger-140 show-details-btn" title="IC人員負責分行">';
-					actionHtml += '<i class="my-icon fa fa-bookmark bigger-120"></i> <span class="sr-only">IC人員負責分行</span> ';
-					actionHtml += '</a>';
+					if (row.ROLE_NAME_LIST == 'IC_PERSONNEL'){
+						actionHtml += '&nbsp;&nbsp;';
+						actionHtml += '<a href="javascript:openJdIc(\'' + row.USERNAME + '\');" class="green bigger-140 show-details-btn" title="IC人員負責分行">';
+						actionHtml += '<i class="my-icon fa fa-bookmark bigger-120"></i> <span class="sr-only">IC人員負責分行</span> ';
+						actionHtml += '</a>';
+					}
 					// actionHtml += '&nbsp;&nbsp;';
 					// actionHtml += '<a href="javascript:openDeputyDialog(\'' + row.ID + '\', \'' + row.USERNAME + '\', \'' + (emptyIfNull(row.LAST_NAME) + emptyIfNull(row.FIRST_NAME)) +'\');" class="green bigger-140 show-details-btn" title="設定代理人">';
 					// actionHtml += '<i class="my-icon fa fa-user bigger-120"></i><span class="sr-only">設定代理人</span>';
@@ -559,8 +560,8 @@
 			roleGrid.caption = '人員角色職位查詢';
 			roleGrid.colNames = ['角色', '角色描述', '操作'];
 			roleGrid.colModel = [
-				{name: 'ROLE_NAME', index: 'ROLE_NAME', width: 100},
-				{name: 'DESCRIPTION', index: 'DESCRIPTION', width: 100},
+				{name: 'ROLE_NAME', index: 'ROLE_NAME'},
+				{name: 'DESCRIPTION', index: 'DESCRIPTION'},
 				{formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
 					actionHtml += '<a href="javascript:deleteUserRole(\'' + row.ROLE_ID + '\');" class="green bigger-140 show-details-btn" title="Edit">';
