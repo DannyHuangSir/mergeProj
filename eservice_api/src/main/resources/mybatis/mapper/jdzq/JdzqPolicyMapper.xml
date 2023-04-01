@@ -47,7 +47,21 @@
             parameterType="com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo" statementType="STATEMENT">
         select ${columnItem} from (
         select c.PolicyNo,c.PolicyType,pn.PolicyTypeName,c.AccDocNo,c.TBSubmitDate,c.CaseReceviceDate,c.PolicyActiveDate,c.PrintDate,
-        c.AgentCode,br.BrokerName,c.BranchCode,nk.NEBK_Branch_Name AS nebkBranchName,c.AgentSalesID,c.AgentSalesName,ur.UserName,
+        c.AgentCode,(select  br.BrokerName from underwriting.dbo.BrokerProfile br where br.Broker_ID = c.AgentCode) AS BrokerName
+        ,c.BranchCode,
+        (select distinct nk.NEBK_Branch_Name from underwriting.dbo.NBUDWLINEBK nk where nk.NEBK_Branch_Code = c.BranchCode) AS NEBK_Branch_Name,
+        c.AgentSalesID,c.AgentSalesName,(CASE c.AccUnit
+        WHEN '01' THEN '總公司'
+        WHEN '02' THEN '高雄分公司'
+        WHEN '03' THEN '台中分公司'
+        WHEN '04' THEN '花蓮分公司'
+        WHEN '05' THEN '桃園分公司'
+        WHEN '06' THEN '台南分公司'
+        WHEN '07' THEN '新竹分公司'
+        WHEN '08' THEN '嘉義分公司'
+        WHEN '09' THEN '台北分公司'
+        ELSE '' END)as AccUnit,
+        (select ur.UserName from underwriting.dbo.UserProfile ur where ur.User_ID = c.Manager) AS UserName,
         (CASE c.BPMCurrentTak
         WHEN '150000P' THEN	'受理'
         WHEN '200000S' THEN	'收件通報'
@@ -84,18 +98,12 @@
         WHEN '602000S' THEN	'出單日更新'
         WHEN '602500S' THEN	'案件結案'
         ELSE '' END) AS BPMCurrentTak,
-        (CASE c.AccUnit
-        WHEN '01' THEN '總公司'
-        WHEN '02' THEN '高雄分公司'
-        WHEN '03' THEN '台中分公司'
-        WHEN '04' THEN '花蓮分公司'
-        WHEN '05' THEN '桃園分公司'
-        WHEN '06' THEN '台南分公司'
-        WHEN '07' THEN '新竹分公司'
-        WHEN '08' THEN '嘉義分公司'
-        WHEN '09' THEN '台北分公司'
-        ELSE '' END)as AccUnit,
-        (CASE prl.ReviewResult
+        (CASE (SELECT TOP (1) prl.ReviewResult
+        FROM underwriting.dbo.PolicyReviewLog prl
+        where prl.Main_Key = (select Main_Key from underwriting.dbo.MainPolicy where PolicyNo = c.PolicyNo)
+        and prl.LogType = 'B'
+        and prl.Sub_Serial = '0'
+        order by prl.ReviewTimes desc, prl.ReviewType desc)
         WHEN 'A1' THEN '核保通過'
         WHEN 'C1' THEN '退保(撤銷要保)'
         WHEN 'D1' THEN '延保'
@@ -118,16 +126,9 @@
         ELSE '' END) AS PayType,
         c.PermYear,pn.NoteDate,pn.DueDate,pni.ItemContent,pni.ContentMemo
         from underwriting.dbo.MainPolicy c
-        left join underwriting.dbo.PolicyFinancial pf on c.PolicyNo = pf.PolicyNo
-        left join underwriting.dbo.PolicyReviewLog prl on prl.Main_Key = c.Main_Key
-        left join underwriting.dbo.BrokerProfile br on c.AgentCode = br.Broker_ID
-        left join underwriting.dbo.NBUDWLINEBK nk on c.BranchCode = nk.NEBK_Branch_Code
-        left join underwriting.dbo.UserProfile ur on c.Manager = ur.User_ID
         left join underwriting.dbo.PolicyNote pn on c.Main_Key = pn.Main_Key
         left join underwriting.dbo.PolicyNoteItems  pni on  pn.Note_Key = pni.Note_Key
         <where>
-            prl.LogType = 'B'
-            AND prl.Sub_Serial = '0'
             <if test="vo.appName != null and vo.appName != ''">
                 AND UPPER( c.AppName) LIKE N'%${vo.appName}%'
             </if>
