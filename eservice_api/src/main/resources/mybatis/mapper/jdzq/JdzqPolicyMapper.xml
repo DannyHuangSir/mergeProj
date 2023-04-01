@@ -49,7 +49,7 @@
         select c.PolicyNo,c.PolicyType,pn.PolicyTypeName,c.AccDocNo,c.TBSubmitDate,c.CaseReceviceDate,c.PolicyActiveDate,c.PrintDate,
         c.AgentCode,(select  br.BrokerName from underwriting.dbo.BrokerProfile br where br.Broker_ID = c.AgentCode) AS BrokerName
         ,c.BranchCode,
-        (select distinct nk.NEBK_Branch_Name from underwriting.dbo.NBUDWLINEBK nk where nk.NEBK_Branch_Code = c.BranchCode) AS NEBK_Branch_Name,
+        (select distinct nk.NEBK_Branch_Name from underwriting.dbo.NBUDWLINEBK nk where nk.NEBK_Branch_Code = c.BranchCode) AS nebkBranchName,
         c.AgentSalesID,c.AgentSalesName,(CASE c.AccUnit
         WHEN '01' THEN '總公司'
         WHEN '02' THEN '高雄分公司'
