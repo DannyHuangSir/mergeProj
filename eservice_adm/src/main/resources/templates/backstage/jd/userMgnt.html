@@ -575,7 +575,7 @@
 			jdUserIcGrid = new jqGridUtil();
 			jdUserIcGrid.id = '#jdUserIcGrid';
 			jdUserIcGrid.pager = '#jdUserIcPager';
-			jdUserIcGrid.rowNum = 3;
+			jdUserIcGrid.rowNum = 10;
 			jdUserIcGrid.height = 122;
 			jdUserIcGrid.url = /*[[@{/jdUserMgnt/getJdUserIcQuery}]]*/;
 			jdUserIcGrid.caption = 'IC人員負責分行'
@@ -588,7 +588,7 @@
 					}},
 				{align: 'center', formatter: function(cellvalue, options, row) {
 						var branchName = '';
-						if (row.BRANCH_ID == '' && row.branchName == ''){
+						if (row.BRANCH_ID == null){
 							branchName;
 						}else {
 							branchName = row.BRANCH_ID+'('+row.branchName+')'
