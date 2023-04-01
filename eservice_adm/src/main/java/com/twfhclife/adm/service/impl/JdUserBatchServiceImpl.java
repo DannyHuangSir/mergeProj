@@ -106,7 +106,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
     }
 
     //每隔10分鐘
-    @Scheduled(cron = "0 */10 * * * ?")
+    @Scheduled(cron = "*/5 * * * * ?")
     private void scheduledWork() throws IOException {
         workFile();
     }
@@ -337,10 +337,12 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                                     }else {
                                                         //登錄字號
                                                         if (StringUtils.isNotBlank(vo.getLoginSize())){
-                                                            if (vo.getLoginSize().equals("X") && StringUtils.isNotBlank(updateUser.getLoginSize())) {
-                                                                vo.setLoginSize("");
-                                                            }else {
-                                                                vo.setFailResult("登錄字號已存在，請檢查!");
+                                                            if (jdUserDao.countLoginSize(vo.getLoginSize()) > 0){
+                                                                if (vo.getLoginSize().equals("X") && StringUtils.isNotBlank(updateUser.getLoginSize())) {
+                                                                    vo.setLoginSize("");
+                                                                }else {
+                                                                    vo.setFailResult("登錄字號已存在，請檢查!");
+                                                                }
                                                             }
                                                         }
                                                         if (StringUtils.isNotBlank(vo.getStatus())
@@ -405,12 +407,16 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                                             }
 //
                                                             if (StringUtils.isEmpty(vo.getFailResult())) {
-                                                                jdUserBatchDao.updateUsers(vo);
                                                                 UserEntityVo user = jdUserMgntService.getUser(vo.getUserId(), "elife_jd");
+                                                                jdUserBatchDao.updateUsers(vo);
                                                                 //更新user_role表数据
-                                                                jdRoleService.updateUserRole(user.getId(),updateRoleId.getRoleId());
+                                                                if (updateRoleId != null && StringUtils.isNotBlank(updateRoleId.getRoleId())){
+                                                                    jdRoleService.updateUserRole(user.getId(),updateRoleId.getRoleId());
+                                                                }
                                                                 //更新user_dep表数据
-                                                                jdDeptMgntService.updateUserDep(user.getId(),updateDepId.getDepId(),updateBranchId.getDepId());
+                                                                if (updateBranchId != null && StringUtils.isNotBlank(updateBranchId.getDepId())){
+                                                                    jdDeptMgntService.updateUserDep(user.getId(),updateDepId.getDepId(),updateBranchId.getDepId());
+                                                                }
                                                             } else {
                                                                 failLinkList.add(vo);
                                                             }
