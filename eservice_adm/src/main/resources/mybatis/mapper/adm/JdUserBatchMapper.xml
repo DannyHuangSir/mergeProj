@@ -61,7 +61,7 @@
             <if test="jdUserVo.clauseFlag != null and jdUserVo.clauseFlag != ''"> CLAUSE_FLAG = #{jdUserVo.clauseFlag },</if>
             <if test="jdUserVo.serialNum != null and jdUserVo.serialNum != ''"> SERIAL_NUM = #{jdUserVo.serialNum },</if>
             <if test="jdUserVo.icId != null and jdUserVo.icId != ''"> IC_ID = #{jdUserVo.icId },</if>
-            <if test="jdUserVo.loginSize != null and jdUserVo.loginSize != ''"> LOGIN_SIZE = #{jdUserVo.loginSize },</if>
+            LOGIN_SIZE = #{jdUserVo.loginSize },
             <if test="jdUserVo.effectiveDate != null and jdUserVo.effectiveDate != ''"> EFFECTIVE_DATE = #{jdUserVo.effectiveDate },</if>
             <if test="jdUserVo.expirationDate != null and jdUserVo.expirationDate != ''"> EXPIRATION_DATE = #{jdUserVo.expirationDate },</if>
             <if test="jdUserVo.initPassword != null and jdUserVo.initPassword != ''">INITPASSWORD = ESERVICE.DBO.FN_ENBASE64(#{jdUserVo.initPassword,jdbcType=VARCHAR}),</if>

@@ -337,10 +337,10 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                                     }else {
                                                         //登錄字號
                                                         if (StringUtils.isNotBlank(vo.getLoginSize())){
-                                                            if (jdUserDao.countLoginSize(vo.getLoginSize()) > 0){
-                                                                if (vo.getLoginSize().equals("X") && StringUtils.isNotBlank(updateUser.getLoginSize())) {
-                                                                    vo.setLoginSize("");
-                                                                }else {
+                                                            if (vo.getLoginSize().equals("X") && StringUtils.isNotBlank(updateUser.getLoginSize())) {
+                                                                vo.setLoginSize("");
+                                                            }else {
+                                                                if (jdUserDao.countLoginSize(vo.getLoginSize()) > 0){
                                                                     vo.setFailResult("登錄字號已存在，請檢查!");
                                                                 }
                                                             }
