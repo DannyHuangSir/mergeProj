@@ -84,16 +84,16 @@
 				udd.USER_ID
 				FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd where
 				udd.BRANCH_ID in ( select d.DEP_ID from ESERVICE_JD.DBO.DEPARTMENT d WHERE d.PARENT_DEP = #{userEntityVo.parentDep} ) )
-			</if>
-			<if test="userEntityVo.branchId != null and userEntityVo.branchId != ''">
-				AND a.ID  IN (
+				<if test="userEntityVo.branchId != null and userEntityVo.branchId != ''">
+					AND a.ID  IN (
 					SELECT
 					udd.USER_ID
 					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
-					inner JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.PARENT_DEP
-					WHERE dd.BRANCH_ID = #{userEntityVo.branchId}
-				)
+					WHERE udd.BRANCH_ID = #{userEntityVo.branchId}
+					)
+				</if>
 			</if>
+
 			<if test="userEntityVo.department != null and userEntityVo.department != ''">
 				AND a.ID  IN (
 				SELECT

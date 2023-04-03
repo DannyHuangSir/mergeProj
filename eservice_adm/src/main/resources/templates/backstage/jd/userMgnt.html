@@ -234,7 +234,7 @@
 							<div id="editJdUser" class="hide">
 								<div class="widget-main no-padding">
 								</div>
-								<div style="width: 750px">
+								<div>
 									<table id="jdUserGrid"></table>
 									<div id="jdUserPager"></div>
 								</div>
@@ -317,7 +317,7 @@
 				});
 			});
 
-			$('#branchIdSelect').on('click', function() {
+			$('#parentDepSelect').on('change', function() {
 				var formData = {
 					depId: $('#selectNode #parentDepSelect').val()
 				};
@@ -329,6 +329,7 @@
 					data: JSON.stringify(formData),
 					success: function (response) {
 						$("#selectNode #branchIdSelect").empty();
+						$("#selectNode #branchIdSelect").append('<option checked value="">請選擇分支機構</option>');
 						if (response.result == 'SUCCESS'){
 							if (response.resultData.length >0){
 								for (var i = 0; i < response.resultData.length; i++) {
@@ -636,7 +637,7 @@
 				modal: true,
 				title: "<div class='widget-header widget-header-small'><h4 class='smaller'>人員詳細資料</h4></div>",
 				title_html: true,
-				width: 800,
+				width: 1200,
 				height: 530
 			});
 		}
