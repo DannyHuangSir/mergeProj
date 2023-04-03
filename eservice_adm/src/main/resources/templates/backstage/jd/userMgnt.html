@@ -68,7 +68,7 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="parentDepSelect">通路别 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="parentDepSelect">通路别</label>
 										<div class="col-sm-5">
 											<div>
 												<select id="parentDepSelect" ></select>
@@ -152,7 +152,9 @@
 										<fieldset>
 											<label class="col-sm-2 control-label text-right no-padding-right">分支機構 :</label>
 											<div class="col-sm-8">
-												<select id="branchId"></select>
+												<select id="branchId">
+													<option checked value=''>請選擇分支機構</option>
+												</select>
 												<button type="button" id="addDeptBtn" class="btn btn-primary">
 													<i class="ace-icon glyphicon glyphicon-plus" aria-hidden="true"></i>
 													新增
@@ -288,7 +290,6 @@
 			// 		}
 			// 	});
 			// });
-
 			eserviceAdmOption.dept('#parentDepSelect', /*[[@{jd/common/dept/parentList}]]*/);
 
 			$('#selectNode #roleNameSelect').on('click', function() {
@@ -354,6 +355,7 @@
 					data: JSON.stringify(formData),
 					success: function (response) {
 						$("#editDeptDialog #branchId").empty();
+						$("#editDeptDialog #branchId").append("<option checked value=''>請選擇分支機構</option>");
 						if (response.result == 'SUCCESS'){
 							if (response.resultData.length >0){
 								for (var i = 0; i < response.resultData.length; i++) {
@@ -470,9 +472,6 @@
 
 			// 取得職位名稱下拉選單
 			// eserviceAdmOption.jobTitle('#jobTitleSelect', /*[[@{/common/jobTitleList}]]*/);
-			
-			// 取得角色名稱下拉選單
-			eserviceAdmOption.role('#roleSelect', /*[[@{/jd/common/roleList}]]*/);
 		}
 		
 		// 初始Grid
@@ -500,7 +499,7 @@
 				}},
 				{align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
-					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\');" class="green bigger-140 show-details-btn" title="人員角色設定">';
+					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\', \'' + row.DEP_ID  + '\');" class="green bigger-140 show-details-btn" title="人員角色設定">';
 					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">人員角色設定</span> ';
 					actionHtml += '</a>';
 					actionHtml += '&nbsp;&nbsp;';
@@ -525,9 +524,6 @@
 					return actionHtml;
 				}} 
 			];
-
-
-
 
 			// 部門grid
 			deptGrid = new jqGridUtil();
@@ -679,7 +675,8 @@
 		}
 		
 		// 角色設定
-		function openRoleDialog(userId) {
+		function openRoleDialog(userId, depId) {
+			roleList(depId)
 			selectUserId = userId;
 			$('#editRoleForm')[0].reset();
 			
@@ -824,6 +821,29 @@
 			});
 		}
 
+		function roleList(deptId) {
+            var formData1 = {
+                depId: deptId
+            };
+            $.ajax({
+                    url: /*[[@{/jd/common/optionDepRoleList}]]*/,
+                    contentType: 'application/json',
+                    type: "POST",
+                    data: JSON.stringify(formData1),
+                    success: function (res) {
+                        $("#roleSelect").empty();
+                        $("#roleSelect").append("<option checked value=''>請選擇角色</option>");
+                        if (res.result == 'SUCCESS'){
+                        	res.resultData.forEach(function(item,index){
+                        		opt = "<option value='" + item.roleId + "'>" +  item.roleName + "</option>"
+                        		$("#roleSelect").append(opt)
+                        	})
+                        } else {
+                            alertMsg('系統發生錯誤');
+                        }
+                    }
+                });
+			}
 
 		/*]]>*/
 		</script>

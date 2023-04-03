@@ -57,7 +57,7 @@ public class JdUserMgntController extends BaseController {
             systemId = ApConstants.SYSTEM_ID
     ))
     @GetMapping("/jdUserMgnt")
-    public String loginRecord() {
+    public String jdUserMgnt() {
         return "backstage/jd/userMgnt";
     }
 

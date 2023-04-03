@@ -244,16 +244,28 @@
                 group by r.ROLE_ID
     </select>
 
+    <select id="getOptionDepRole" resultMap="RoleMap">
+        SELECT * FROM ESERVICE_ADM.dbo.ROLE a
+            left join ESERVICE_JD.dbo.ROLE_DEPARTMENT b on a.ROLE_ID = b.ROLE_ID COLLATE database_default
+            left join ESERVICE_ADM.dbo.ROLE_SYS_AUTH s on a.ROLE_ID = s.ROLE_ID
+        <where>
+            <if test="depId != null and depId != ''">
+                AND b.DEP_ID = #{depId}
+            </if>
+            AND s.SYS_ID = 'eservice_jd'
+        </where>
+    </select>
+
     <select id="getDepRole" resultMap="RoleMap">
         SELECT * FROM ESERVICE_ADM.dbo.ROLE a left join ESERVICE_JD.dbo.ROLE_DEPARTMENT b on a.ROLE_ID = b.ROLE_ID COLLATE database_default
         <where>
             b.DEP_ID = #{depId}
-        <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
-        <if test="adminUserFlag == 'N'.toString()">
-            AND ROLE_ID IN (
-            SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
-            )
-        </if>
+            <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
+            <if test="adminUserFlag == 'N'.toString()">
+                AND ROLE_ID IN (
+                SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
+                )
+            </if>
         </where>
     </select>
 

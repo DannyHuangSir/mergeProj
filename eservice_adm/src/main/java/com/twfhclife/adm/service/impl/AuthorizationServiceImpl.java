@@ -314,6 +314,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 			userMap.put("TITLE_NAME_LIST", String.join(",", titleNameList));
 			userMap.put("BRACH_NAME_LIST",String.join(",", branchNameList));
 			userMap.put("DIV_ROLE_ID_LIST",String.join(",", divRoleIdList));
+			userMap.put("DEP_ID", userDeptList.size() > 0 ? userDeptList.get(0).getDepId() : "");
 		}
 	}
 }

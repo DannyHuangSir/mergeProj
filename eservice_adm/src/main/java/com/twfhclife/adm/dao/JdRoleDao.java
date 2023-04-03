@@ -47,6 +47,7 @@ public interface JdRoleDao {
     List<RoleVo> getRole(@Param("roleVo") RoleVo roleVo,
                          @Param("keyCloakUserId") String keyCloakUserId, @Param("adminUserFlag") String adminUserFlag);
 
+
     /**
      * 使用者角色管理-依照使用者權限查詢.
      *
@@ -91,6 +92,8 @@ public interface JdRoleDao {
     RoleVo getRoleId(@Param("roleId") String roleId,@Param("depId")String depId);
 
     List<RoleVo> getDepRole(@Param("keyCloakUserId") String keyCloakUserId, @Param("adminUserFlag") String adminUserFlag,@Param("depId")String depId);
+
+    List<RoleVo> getOptionDepRole(@Param("keyCloakUserId") String keyCloakUserId, @Param("adminUserFlag") String adminUserFlag,@Param("depId")String depId);
 
     int insertUserRole(@Param("userId")String userId,@Param("roleId")String roleId);
 

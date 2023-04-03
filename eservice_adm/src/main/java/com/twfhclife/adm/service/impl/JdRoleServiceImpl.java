@@ -151,6 +151,14 @@ public class JdRoleServiceImpl implements IJdRoleService {
         return roleDao.getDepRole(keyCloakUserId, adminUserFlag,depId);
     }
 
+    @RequestLog
+    @Override
+    public List<RoleVo> getOptionDepRole(String userName, String keyCloakUserId,String depId) {
+        // 判斷目前登入者是否有最高權限管理員
+        String adminUserFlag = (StringUtils.equals(userName, systemAdminUser) ? "Y" : "N");
+        return roleDao.getOptionDepRole(keyCloakUserId, adminUserFlag,depId);
+    }
+
     @Override
     public int insertUserRole(String userId, String roleId) {
         return roleDao.insertUserRole(userId,roleId);
