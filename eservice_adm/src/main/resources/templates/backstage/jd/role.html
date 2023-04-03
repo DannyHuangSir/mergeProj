@@ -41,7 +41,9 @@
 										<label class="col-sm-3 control-label " for="form-field-1">查詢角色：</label>
 										<div class="col-sm-9">
 											<div>
-												<select id="roleSelect" ></select>
+												<select id="roleSelect" >
+													<option value="" checked>請選擇</option>
+												</select>
 											</div>
 										</div>
 									</div>
@@ -184,6 +186,7 @@
 					data: JSON.stringify(formData),
 					success: function (response) {
 						$("#selectNode #roleSelect").empty();
+						$("#selectNode #roleSelect").append("<option checked value=''>請選擇</option>");
 						if (response.result == 'SUCCESS'){
 							if (response.resultData.length >0){
 								for (var i = 0; i < response.resultData.length; i++) {

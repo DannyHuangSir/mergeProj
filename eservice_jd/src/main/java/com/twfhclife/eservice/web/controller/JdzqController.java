@@ -161,8 +161,8 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing6_2")
     public String listing6_2(@RequestParam("policyNo") String policyNo) {
         try {
-            PolicyIncomeDistributionVo vo = policyService.getIncomeDistribution(getUserId(), policyNo);
-            addAttribute("vo", vo.getPolicy());
+            PolicyIncomeDistributionDataResponse vo = policyService.getIncomeDistribution(getUserId(), policyNo);
+            addAttribute("vo", vo.getPolicyBase());
             addAttribute("info", vo.getIncomeDistributions());
             addAttribute("policyNo", policyNo);
             BigDecimal sumAmount = BigDecimal.valueOf(0);

@@ -114,9 +114,8 @@ public class PolicyServiceImpl implements IPolicyService {
     private String policyIncomeDistributionUrl;
 
     @Override
-    public PolicyIncomeDistributionVo getIncomeDistribution(String userId, String policyNo) {
-        PolicyIncomeDistributionDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyIncomeDistributionUrl, PolicyIncomeDistributionDataResponse.class);
-        return responseObj.getIncomeDistribution();
+    public PolicyIncomeDistributionDataResponse getIncomeDistribution(String userId, String policyNo) {
+        return baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyIncomeDistributionUrl, PolicyIncomeDistributionDataResponse.class);
     }
 
     @Value("${eservice_api.policy.transation.history.url}")

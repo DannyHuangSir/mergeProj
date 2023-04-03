@@ -226,7 +226,7 @@
             SELECT
             TO_CHAR(BONF_BON_DATE, 'yyyy-MM-dd') BONF_BON_DATE,
             TO_CHAR(BONF_FILE_BEG_DATE, 'yyyy-MM-dd') BONF_FILE_BEG_DATE,
-            BONF_BON || NVL(BONF_RIDER_CODE_1, '') || NVL(BONF_RIDER_CODE_2,'') || NVL(BONF_RIDER_CODE_3, '') || NVL(BONF_RIDER_CODE_4,'') PREMIUM,
+            BONF_ACCU_BON,
             BONF_BON_BAL, BONF_TAKE_CODE
             FROM LIBONF WHERE
             BONF_INSU_TYPE ||BONF_INSU_GRP_NO ||BONF_INSU_SEQ_NO = #{policyNo}

@@ -265,9 +265,9 @@ public class ShouxianController extends BaseController {
         ApiResponseObj<PolicyIncomeDistributionDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            PolicyIncomeDistributionVo policyIncomeDistributionVo = shouxianService.getPolicyIncomeDistribution(vo.getPolicyNo());
             PolicyIncomeDistributionDataResponse resp = new PolicyIncomeDistributionDataResponse();
-            resp.setIncomeDistribution(policyIncomeDistributionVo);
+            resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
+            resp.setIncomeDistributions(shouxianService.getPolicyIncomeDistribution(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);

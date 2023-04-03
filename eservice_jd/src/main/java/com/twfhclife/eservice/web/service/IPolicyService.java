@@ -22,7 +22,7 @@ public interface IPolicyService {
 
     PolicyChangeInfoDataResponse getChangeInfo(String userId, String policyNo);
 
-    PolicyIncomeDistributionVo getIncomeDistribution(String userId, String policyNo);
+    PolicyIncomeDistributionDataResponse getIncomeDistribution(String userId, String policyNo);
 
     JdPolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String trCode, String startDate, String endDate, int pageNum, int defaultPageSize);
 

@@ -72,11 +72,8 @@ public class ShouxianService {
         return shouXianDao.getPolicyChangeInfo(policyNo);
     }
 
-    public PolicyIncomeDistributionVo getPolicyIncomeDistribution(String policyNo) {
-        PolicyIncomeDistributionVo vo = new PolicyIncomeDistributionVo();
-        vo.setPolicy(shouXianDao.getPolicyInfo(policyNo));
-        vo.setIncomeDistributions(shouXianDao.getIncomeDistribution(policyNo));
-        return vo;
+    public List<IncomeDistributionVo> getPolicyIncomeDistribution(String policyNo) {
+       return shouXianDao.getIncomeDistribution(policyNo);
     }
 
     public List<JdFundTransactionVo> getFundTransactionPageList(String policyNo, String transType, String startDate, String endDate, Integer pageNum, Integer pageSize) {
