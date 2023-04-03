@@ -125,27 +125,6 @@
 			});
 		});
 
-		$('#systemId').click(function() {
-			$.ajax({
-				url: /*[[@{/common/systemList}]]*/,
-				contentType: 'application/json',
-				type: "POST",
-				async: true,
-				success: function (response) {
-					if (response.result == 'SUCCESS'){
-						if (response.resultData.length >0){
-							for (var i = 0; i < response.resultData.length; i++) {
-								var option = "<option value='" + response.resultData[i].sysId + "'>" +  response.resultData[i].sysName + "</option>";
-								$("#systemId").append(option);
-							}
-						}
-					}else {
-						alertMsg('系統發生錯誤');
-					}
-				}
-			});
-		});
-		
 		function changeEventDate(){
 			var eventDate = $("#dateRangeDate").val();
 			$("#startDate").val(eventDate.substring(0,eventDate.indexOf("~")).trim());
