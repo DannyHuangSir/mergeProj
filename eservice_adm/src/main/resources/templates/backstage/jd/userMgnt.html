@@ -265,58 +265,63 @@
 
 			eserviceAdmOption.dept('#parentDepSelect', /*[[@{jd/common/dept/parentList}]]*/);
 			$('#parentDepSelect').on('change', function() {
-				var formData = {
-					depId: $('#selectNode #parentDepSelect').val()
-				};
-				$.ajax({
-					url: /*[[@{/jd/common/depRoleList}]]*/,
-					contentType: 'application/json',
-					type: "POST",
-					async: true,
-					data: JSON.stringify(formData),
-					success: function (response) {
-						$("#roleNameSelect").empty();
-						$("#roleNameSelect").append('<option checked value="">請選擇角色</option>');
-						if (response.result == 'SUCCESS'){
-							if (response.resultData.length >0){
-								for (var i = 0; i < response.resultData.length; i++) {
-									var option = "<option value='" + response.resultData[i].roleId + "'>" +  response.resultData[i].roleName + "</option>";
-									$("#selectNode #roleNameSelect").append(option);
+				$("#roleNameSelect").empty();
+				$("#roleNameSelect").append('<option checked value="">請選擇角色</option>');
+				if ($('#selectNode #parentDepSelect').val() != null && $('#selectNode #parentDepSelect').val() != '') {
+						var formData = {
+						depId: $('#selectNode #parentDepSelect').val()
+					};
+					$.ajax({
+						url: /*[[@{/jd/common/depRoleList}]]*/,
+						contentType: 'application/json',
+						type: "POST",
+						async: true,
+						data: JSON.stringify(formData),
+						success: function (response) {
+							if (response.result == 'SUCCESS'){
+								if (response.resultData.length >0){
+									for (var i = 0; i < response.resultData.length; i++) {
+										var option = "<option value='" + response.resultData[i].roleId + "'>" +  response.resultData[i].roleName + "</option>";
+										$("#selectNode #roleNameSelect").append(option);
+									}
 								}
+							}else {
+								alertMsg('系統發生錯誤');
 							}
-						}else {
-							alertMsg('系統發生錯誤');
 						}
-					}
-				});
+					});
+				}
 			});
 
 			$('#parentDepSelect').on('change', function() {
-				var formData = {
-					depId: $('#selectNode #parentDepSelect').val()
-				};
-				$.ajax({
-					url: /*[[@{jd/common/branchList}]]*/,
-					contentType: 'application/json',
-					type: "POST",
-					async: true,
-					data: JSON.stringify(formData),
-					success: function (response) {
-						$("#selectNode #branchIdSelect").empty();
-						$("#selectNode #branchIdSelect").append('<option checked value="">請選擇分支機構</option>');
-						if (response.result == 'SUCCESS'){
-							if (response.resultData.length >0){
-								for (var i = 0; i < response.resultData.length; i++) {
-									var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
-									$("#selectNode #branchIdSelect").append(option);
+				$("#selectNode #branchIdSelect").empty();
+				$("#selectNode #branchIdSelect").append('<option checked value="">請選擇分支機構</option>');
+				if ($('#selectNode #parentDepSelect').val() != null && $('#selectNode #parentDepSelect').val() != '') {
+					var formData = {
+						depId: $('#selectNode #parentDepSelect').val()
+					};
+					$.ajax({
+						url: /*[[@{jd/common/branchList}]]*/,
+						contentType: 'application/json',
+						type: "POST",
+						async: true,
+						data: JSON.stringify(formData),
+						success: function (response) {
+							if (response.result == 'SUCCESS'){
+								if (response.resultData.length >0){
+									for (var i = 0; i < response.resultData.length; i++) {
+										var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+										$("#selectNode #branchIdSelect").append(option);
+									}
 								}
+							}else {
+								alertMsg('系統發生錯誤');
 							}
-						}else {
-							alertMsg('系統發生錯誤');
 						}
-					}
-				});
+					});
+				}
 			});
+
 
 			$('#deptParentSelect').on('click', function() {
 				var formData = {
@@ -446,6 +451,31 @@
 			});
 		});
 
+		function roleList(deptId) {
+			$("#roleSelect").empty();
+			$("#roleSelect").append("<option checked value=''>請選擇角色</option>");
+			if (deptId != null && deptId != '') {
+				 var formData1 = {
+					depId: deptId
+				};
+				$.ajax({
+						url: /*[[@{/jd/common/depRoleList}]]*/,
+						contentType: 'application/json',
+						type: "POST",
+						data: JSON.stringify(formData1),
+						success: function (res) {
+							if (res.result == 'SUCCESS'){
+								res.resultData.forEach(function(item,index){
+									opt = "<option value='" + item.roleId + "'>" +  item.roleName + "</option>"
+									$("#roleSelect").append(opt)
+								})
+							} else {
+								alertMsg('系統發生錯誤');
+							}
+						}
+					});
+			}
+		}
 
 		// 初始下拉選單
 		function initOption() {
@@ -802,30 +832,6 @@
 				}
 			});
 		}
-
-		function roleList(deptId) {
-            var formData1 = {
-                depId: deptId
-            };
-            $.ajax({
-                    url: /*[[@{/jd/common/depRoleList}]]*/,
-                    contentType: 'application/json',
-                    type: "POST",
-                    data: JSON.stringify(formData1),
-                    success: function (res) {
-                        $("#roleSelect").empty();
-                        $("#roleSelect").append("<option checked value=''>請選擇角色</option>");
-                        if (res.result == 'SUCCESS'){
-                        	res.resultData.forEach(function(item,index){
-                        		opt = "<option value='" + item.roleId + "'>" +  item.roleName + "</option>"
-                        		$("#roleSelect").append(opt)
-                        	})
-                        } else {
-                            alertMsg('系統發生錯誤');
-                        }
-                    }
-                });
-			}
 
 		/*]]>*/
 		</script>

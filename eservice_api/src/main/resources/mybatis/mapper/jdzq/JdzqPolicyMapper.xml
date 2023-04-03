@@ -47,9 +47,9 @@
             parameterType="com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo" statementType="STATEMENT">
         select ${columnItem} from (
         select c.PolicyNo,c.PolicyType,pn.PolicyTypeName,c.AccDocNo,c.TBSubmitDate,c.CaseReceviceDate,c.PolicyActiveDate,c.PrintDate,
-        c.AgentCode,(select  br.BrokerName from underwriting.dbo.BrokerProfile br where br.Broker_ID = c.AgentCode) AS BrokerName
+        c.AgentCode,(select  br.BrokerName from BrokerProfile br where br.Broker_ID = c.AgentCode) AS BrokerName
         ,c.BranchCode,
-        (select distinct nk.NEBK_Branch_Name from underwriting.dbo.NBUDWLINEBK nk where nk.NEBK_Branch_Code = c.BranchCode) AS nebkBranchName,
+        (select distinct nk.NEBK_Branch_Name from NBUDWLINEBK nk where nk.NEBK_Branch_Code = c.BranchCode) AS nebkBranchName,
         c.AgentSalesID,c.AgentSalesName,(CASE c.AccUnit
         WHEN '01' THEN '總公司'
         WHEN '02' THEN '高雄分公司'
@@ -61,7 +61,7 @@
         WHEN '08' THEN '嘉義分公司'
         WHEN '09' THEN '台北分公司'
         ELSE '' END)as AccUnit,
-        (select ur.UserName from underwriting.dbo.UserProfile ur where ur.User_ID = c.Manager) AS UserName,
+        (select ur.UserName from UserProfile ur where ur.User_ID = c.Manager) AS UserName,
         (CASE c.BPMCurrentTak
         WHEN '150000P' THEN	'受理'
         WHEN '200000S' THEN	'收件通報'
@@ -99,8 +99,8 @@
         WHEN '602500S' THEN	'案件結案'
         ELSE '' END) AS BPMCurrentTak,
         (CASE (SELECT TOP (1) prl.ReviewResult
-        FROM underwriting.dbo.PolicyReviewLog prl
-        where prl.Main_Key = (select Main_Key from underwriting.dbo.MainPolicy where PolicyNo = c.PolicyNo)
+        FROM PolicyReviewLog prl
+        where prl.Main_Key = (select Main_Key from MainPolicy where PolicyNo = c.PolicyNo)
         and prl.LogType = 'B'
         and prl.Sub_Serial = '0'
         order by prl.ReviewTimes desc, prl.ReviewType desc)
@@ -125,9 +125,9 @@
         WHEN 'T' THEN '躉繳'
         ELSE '' END) AS PayType,
         c.PermYear,pn.NoteDate,pn.DueDate,pni.ItemContent,pni.ContentMemo
-        from underwriting.dbo.MainPolicy c
-        left join underwriting.dbo.PolicyNote pn on c.Main_Key = pn.Main_Key
-        left join underwriting.dbo.PolicyNoteItems  pni on  pn.Note_Key = pni.Note_Key
+        from MainPolicy c
+        left join PolicyNote pn on c.Main_Key = pn.Main_Key
+        left join PolicyNoteItems  pni on  pn.Note_Key = pni.Note_Key
         <where>
             <if test="vo.appName != null and vo.appName != ''">
                 AND UPPER( c.AppName) LIKE N'%${vo.appName}%'
@@ -192,6 +192,6 @@
     </select>
 
     <select id="getPolicyTypeNameList" resultMap="PolicyMap">
-        SELECT pt.PType_Code,pt.PTypeName FROM underwriting.dbo.MainPolicy c left join underwriting.dbo.PolicyType pt on c.PolicyType = pt.PType_Code where pt.PType_Code IS NOT NULL and pt.PTypeName IS NOT NULL group by pt.PType_Code,pt.PTypeName
+        SELECT pt.PType_Code,pt.PTypeName FROM MainPolicy c left join PolicyType pt on c.PolicyType = pt.PType_Code where pt.PType_Code IS NOT NULL and pt.PTypeName IS NOT NULL group by pt.PType_Code,pt.PTypeName
     </select>
 </mapper>

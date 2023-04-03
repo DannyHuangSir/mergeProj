@@ -231,14 +231,14 @@
 <!--        WHEN 'T' THEN '躉繳'-->
 <!--        ELSE '' END) AS PayType,-->
 <!--        c.PermYear,pn.NoteDate,pn.DueDate,pni.ItemContent AS Note_key,pni.ContentMemo-->
-<!--        from underwriting.dbo.MainPolicy c-->
-<!--        left join underwriting.dbo.PolicyFinancial pf on c.PolicyNo = pf.PolicyNo-->
-<!--        left join underwriting.dbo.PolicyReviewLog prl on prl.Main_Key = c.Main_Key-->
-<!--        left join underwriting.dbo.BrokerProfile br on c.AgentCode = br.Broker_ID-->
-<!--        left join underwriting.dbo.NBUDWLINEBK nk on c.BranchCode = nk.NEBK_Branch_Code-->
-<!--        left join underwriting.dbo.UserProfile ur on c.Manager = ur.User_ID-->
-<!--        left join underwriting.dbo.PolicyNote pn on c.Main_Key = pn.Main_Key-->
-<!--        left join underwriting.dbo.PolicyNoteItems  pni on  pn.Note_Key = pni.Note_Key-->
+<!--        from MainPolicy c-->
+<!--        left join PolicyFinancial pf on c.PolicyNo = pf.PolicyNo-->
+<!--        left join PolicyReviewLog prl on prl.Main_Key = c.Main_Key-->
+<!--        left join BrokerProfile br on c.AgentCode = br.Broker_ID-->
+<!--        left join NBUDWLINEBK nk on c.BranchCode = nk.NEBK_Branch_Code-->
+<!--        left join UserProfile ur on c.Manager = ur.User_ID-->
+<!--        left join PolicyNote pn on c.Main_Key = pn.Main_Key-->
+<!--        left join PolicyNoteItems  pni on  pn.Note_Key = pni.Note_Key-->
 <!--        <where>-->
 <!--            pn.IsCancel = 'N'-->
 <!--            AND prl.LogType = 'B'-->

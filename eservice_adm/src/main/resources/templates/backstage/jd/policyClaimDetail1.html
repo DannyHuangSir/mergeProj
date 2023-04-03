@@ -50,14 +50,15 @@
 								<form class="form-horizontal" role="form" id="form1" action="func2-2.html">
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-4">受理日期區間</label>
-
 										<div class="col-sm-9">
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar bigger-110"></i>
 												</span>
-
-												<input class="form-control" type="text" name="date-range-picker" id="id-date-range-picker-1" />
+												<input class="form-control" type="text" name="date-range-picker1" id="id-date-range-picker-1" />
+												<span class="input-group-addon" style="padding:0px;">
+													<button style="width:28px; height:28px;" type="button" onclick="$(this).parent().prev().val('')">x</button>
+												</span>
 											</div>
 										</div>
 									</div>
@@ -69,24 +70,27 @@
 												<span class="input-group-addon">
 													<i class="fa fa-calendar bigger-110"></i>
 												</span>
-
-												<input class="form-control" type="text" name="date-range-picker" id="id-date-range-picker-2" />
+												<input class="form-control" type="text" name="date-range-picker2" id="id-date-range-picker-2" />
+												<span class="input-group-addon" style="padding:0px;">
+													<button style="width:28px; height:28px;" type="button" onclick="$(this).parent().prev().val('')">x</button>
+												</span>
 											</div>
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="deptSelect"> 通路名稱 </label>
+										<label class="col-sm-3 control-label no-padding-right"> 通路名稱 </label>
 
 										<div class="col-sm-9">
 											<select class="form-control" id="deptSelect">
+												<option checked value="">請選擇通路</option>
 											</select>
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="branchSelect"> 分支機構 </label>
-
+										<label class="col-sm-3 control-label no-padding-right"> 分支機構 </label>
 										<div class="col-sm-9">
 											<select class="form-control" id="branchSelect">
+												<option checked value="">請選擇分支機構</option>
 											</select>
 										</div>
 									</div>
@@ -96,7 +100,6 @@
 											<input type="text" id="pSalesCodeInp" placeholder="輸入欲查詢的業務員編號" class="form-control" />
 										</div>
 									</div>
-						
 
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="policyNoInp"> 保單號碼 </label>
@@ -137,6 +140,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="policyTypeNameSelect"> 主約險種 </label>
 										<div class="col-sm-9">
 											<select class="form-control" id="policyTypeNameSelect">
+												<option checked value="">請選擇主約險種</option>
 											</select>
 										</div>
 									</div>
@@ -144,6 +148,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="bpmcurrenttakSelect" > 案件狀態 </label>
 										<div class="col-sm-9">
 											<select class="form-control" id="bpmcurrenttakSelect">
+												<option checked value="">請選擇案件狀態</option>
 											</select>
 										</div>
 									</div>
@@ -152,7 +157,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="noteStatusSelect" > 最新照會狀態 </label>
 										<div class="col-sm-9">
 											<select class="form-control" id="noteStatusSelect" style="display: block">
-												<option selected="noteStatusSelect" disabled="disabled" style='display: none' value=''></option>
+												<option checked value="">請選擇照會狀態</option>
 												<option value="0">照會編輯中</option>
 												<option value="1">照會覆核中</option>
 												<option value="9">照會完成</option>
@@ -164,7 +169,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="noteVerifyResultSelect"> 最新照會結果  </label>
 										<div class="col-sm-9">
 											<select class="form-control" id="noteVerifyResultSelect" style="display: block">
-												<option selected="noteVerifyResultSelect" disabled="disabled" style='display: none' value=''></option>
+												<option checked value="">請選擇照會結果</option>
 												<option value="0">未覆核</option>
 												<option value="V">核可 </option>
 												<option value="R">退件</option>
@@ -217,74 +222,73 @@
 		/*<![CDATA[*/
 		$(function() {
 
-			$('#deptSelect').click(function() {
-				$.ajax({
-					url: /*[[@{jd/common/dept/parentList}]]*/,
-					contentType: 'application/json',
-					type: "POST",
-					async: true,
-					success: function (response) {
-						if (response.result == 'SUCCESS'){
-							if (response.resultData.length >0){
-								for (var i = 0; i < response.resultData.length; i++) {
-									var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
-									$("#editDialog #deptSelect").append(option);
-								}
+			$.ajax({
+				url: /*[[@{jd/common/dept/parentList}]]*/,
+				contentType: 'application/json',
+				type: "POST",
+				async: true,
+				success: function (response) {
+					if (response.result == 'SUCCESS'){
+						if (response.resultData.length >0){
+							for (var i = 0; i < response.resultData.length; i++) {
+								var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+								$("#editDialog #deptSelect").append(option);
 							}
-						}else {
-							alertMsg('系統發生錯誤');
 						}
+					}else {
+						alertMsg('系統發生錯誤');
 					}
-				});
+				}
 			});
 
-
-			$('#branchSelect').click(function() {
-				var formData = {
-					depId: $('#editDialog #deptSelect').val()
-				};
-				$.ajax({
-					url: /*[[@{/jd/common/branchByList}]]*/,
-					contentType: 'application/json',
-					type: "POST",
-					async: true,
-					data: JSON.stringify(formData),
-					success: function (response) {
-						// $("#editDialog #branchSelect").empty();
-						if (response.result == 'SUCCESS'){
-							if (response.resultData.length >0){
-								for (var i = 0; i < response.resultData.length; i++) {
-									var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
-									$("#editDialog #branchSelect").append(option);
-								}
-							}
-						}else {
-							alertMsg('系統發生錯誤');
-						}
+			$('#deptSelect').change(function() {
+				$("#editDialog #branchSelect").empty();
+				$("#editDialog #branchSelect").append('<option checked value="">請選擇分支機構</option>');
+				if ($('#editDialog #deptSelect').val() != null && $('#editDialog #deptSelect').val() != '') {
+					var formData = {
+						depId: $('#editDialog #deptSelect').val()
 					}
-				});
+					$.ajax({
+						url: /*[[@{/jd/common/branchByList}]]*/,
+						contentType: 'application/json',
+						type: "POST",
+						async: true,
+						data: JSON.stringify(formData),
+						success: function (response) {
+							if (response.result == 'SUCCESS'){
+								if (response.resultData.length >0){
+									for (var i = 0; i < response.resultData.length; i++) {
+										var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+										$("#editDialog #branchSelect").append(option);
+									}
+								}
+							}else {
+								alertMsg('系統發生錯誤');
+							}
+						}
+					});
+				}
 			});
 
-
-			$("#policyTypeNameSelect").click(function(){
-				$.ajax({
-					url: /*[[@{/jd/getPolicyTypeNameList}]]*/,
-					contentType: 'application/json',
-					type: "POST",
-					async: true,
-					success: function (response) {
-						if (response.result == 'SUCCESS'){
-							if (response.resultData.length >0){
-								for (var i = 0; i < response.resultData.length; i++) {
-									var option = "<option value='" + response.resultData[i].pTypeCode + "'>" +  response.resultData[i].pTypeName + "</option>";
-									$("#editDialog #policyTypeNameSelect").append(option);
-								}
+			$.ajax({
+				url: /*[[@{/jd/getPolicyTypeNameList}]]*/,
+				contentType: 'application/json',
+				type: "POST",
+				async: true,
+				success: function (response) {
+					$("#editDialog #policyTypeNameSelect").empty();
+					$("#editDialog #policyTypeNameSelect").append('<option checked value="">請選擇主約險種</option>');
+					if (response.result == 'SUCCESS'){
+						if (response.resultData.length >0){
+							for (var i = 0; i < response.resultData.length; i++) {
+								var option = "<option value='" + response.resultData[i].pTypeCode + "'>" +  response.resultData[i].pTypeName + "</option>";
+								$("#editDialog #policyTypeNameSelect").append(option);
 							}
-						}else {
-							alertMsg('系統發生錯誤');
 						}
+					}else {
+						alertMsg('系統發生錯誤');
 					}
-				});
+				}
 			});
 
 			$("#bpmcurrenttakSelect").click(function(){
@@ -308,10 +312,7 @@
 				});
 			});
 
-
-
-
-			$('input[name=date-range-picker]').daterangepicker({
+			$('input[name=date-range-picker1]').daterangepicker({
 				'applyClass' : 'btn-sm btn-success',
 				'cancelClass' : 'btn-sm btn-default',
 				maxDate : new Date(),
@@ -322,42 +323,64 @@
 				}
 			});
 
+			$('input[name=date-range-picker2]').daterangepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				maxDate : new Date(),
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel'
+				}
+			});
+
+			$('input[name=date-range-picker1]').val('')
+			$('input[name=date-range-picker2]').val('')
 			// $("#noteStatusSelect").bsMultiSelect();
 			// $("#noteVerifyResultSelect").bsMultiSelect();
 
 		});
 
 		function searchOnlineChange() {
-			var tBstartTime = Date.parse($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYY/MM/DD'));
-			var tBendTime = Date.parse($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYY/MM/DD'));
-			var iDays=parseInt(Math.abs(tBendTime-tBstartTime)/(24*60*60*1000));
-			if (iDays > 90){
-				alertMsg("受理日期區間請在3個月以内");
-				return false;
-			}else {
-				$("#tBStartTime").val($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYYMMDD'));
-				$("#tBEndTime").val($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYYMMDD'));
-			}
-			var tBstartTime1 = Date.parse($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYY/MM/DD'));
-			var tBendTime1 = Date.parse($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYY/MM/DD'));
-			var iDays1=parseInt(Math.abs(tBendTime1-tBstartTime1)/(24*60*60*1000));
-			if (iDays1 > 90){
-				alertMsg("保單生效日期區間請在3個月以内");
-				return false;
-			}else {
-				$("#policyActiveStartTime").val($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYYMMDD'));
-				$("#policyActiveEndTime").val($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYYMMDD'));
-			}
-			if (($("#policyActiveStartTime").val() == null && $("#policyActiveEndTime").val() == null &&
-				$("#tBStartTime").val() != null && $("#tBEndTime").val() != null ) &&
-				($("#tBStartTime").val() == null && $("#tBEndTime").val() == null &&
-				$("#policyActiveStartTime").val() != null && $("#policyActiveEndTime").val() != null)){
+
+			if (($('#id-date-range-picker-1').val() == null || $('#id-date-range-picker-1').val() == '') &&
+				($('#id-date-range-picker-2').val() == null || $('#id-date-range-picker-2').val() == '')){
 				alertMsg("「查詢條件「受理日期區間」及「保單生效日期區間」至少要輸一個!」")
+				return false
 			}
+
+			if ($('#id-date-range-picker-1').val() != null && $('#id-date-range-picker-1').val() != '') {
+				var tBstartTime = Date.parse($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYY/MM/DD'));
+				var tBendTime = Date.parse($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYY/MM/DD'));
+				var iDays=parseInt(Math.abs(tBendTime-tBstartTime)/(24*60*60*1000));
+				if (iDays > 90){
+					alertMsg("受理日期區間請在3個月以内");
+					return false;
+				}else {
+					$("#tBStartTime").val($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYYMMDD'));
+					$("#tBEndTime").val($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYYMMDD'));
+				}
+			}
+
+			if ($('#id-date-range-picker-2').val() != null && $('#id-date-range-picker-2').val() != '') {
+				var tBstartTime1 = Date.parse($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYY/MM/DD'));
+				var tBendTime1 = Date.parse($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYY/MM/DD'));
+				var iDays1=parseInt(Math.abs(tBendTime1-tBstartTime1)/(24*60*60*1000));
+				if (iDays1 > 90){
+					alertMsg("保單生效日期區間請在3個月以内");
+					return false;
+				}else {
+					$("#policyActiveStartTime").val($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYYMMDD'));
+					$("#policyActiveEndTime").val($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYYMMDD'));
+				}
+			}
+
+
 			if ($('#deptSelect').val() != '') {
 				$("#agentCode").val($('#deptSelect option:selected').val());
 			}else {
 				alertMsg("「查詢條件「通路」為必輸條件!」")
+				return false
 			}
 			if ($('#branchSelect').val() != '') {
 				$("#branchCode").val($('#branchSelect option:selected').val());
