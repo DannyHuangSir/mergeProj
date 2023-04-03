@@ -262,37 +262,9 @@
 		var qryGrid, deptGrid, roleGrid, deputyGrid,jdUserGrid,jdUserIcGrid;
 		var selectUserId;
 		$(function() {
-			// 動態獲取單位下拉框
-			// $('#deptParentSelect').on('click', function() {
-			// 	var formData = {
-			// 		depId: $('#editDeptDialog #deptParentSelect').val()
-			// 	};
-			// 	$.ajax({
-			// 		url: /*[[@{jd/common/deptList}]]*/,
-			// 		contentType: 'application/json',
-			// 		type: "POST",
-			// 		async: true,
-			// 		data: JSON.stringify(formData),
-			// 		success: function (response) {
-			// 			$("#deptSelect").empty();
-			// 			if (response.result == 'SUCCESS'){
-			// 				if (response.resultData.length >0){
-			// 					for (var i = 0; i < response.resultData.length; i++) {
-			// 						var option = "<option value='" + response.resultData[i].depId + "'>" +  response.resultData[i].depName + "</option>";
-			// 						$("#deptSelect").append(option);
-			// 					}
-			// 				}else {
-			// 					alertMsg('此通路下沒有單位');
-			// 				}
-			// 			}else {
-			// 				alertMsg('系統發生錯誤');
-			// 			}
-			// 		}
-			// 	});
-			// });
-			eserviceAdmOption.dept('#parentDepSelect', /*[[@{jd/common/dept/parentList}]]*/);
 
-			$('#selectNode #roleNameSelect').on('click', function() {
+			eserviceAdmOption.dept('#parentDepSelect', /*[[@{jd/common/dept/parentList}]]*/);
+			$('#parentDepSelect').on('change', function() {
 				var formData = {
 					depId: $('#selectNode #parentDepSelect').val()
 				};
@@ -303,6 +275,8 @@
 					async: true,
 					data: JSON.stringify(formData),
 					success: function (response) {
+						$("#roleNameSelect").empty();
+						$("#roleNameSelect").append('<option checked value="">請選擇角色</option>');
 						if (response.result == 'SUCCESS'){
 							if (response.resultData.length >0){
 								for (var i = 0; i < response.resultData.length; i++) {
@@ -393,6 +367,13 @@
 				// 顯示查詢結果區域
 				$('#show-detail-results').show();
 			});
+
+			$('#resetBtn').click(function() {
+				$('#form1')[0].reset();
+				$("#selectNode #branchIdSelect").empty();
+				$("#roleNameSelect").empty();
+			});
+
 			// 新增人員部門
 			$('#addDeptBtn').click(function() {
 				var branchId1;
@@ -498,7 +479,7 @@
 				{formatter: function(cellvalue, options, row) {
 					return breakLine(row.BRACH_NAME_LIST);
 				}},
-				{align: 'center', formatter: function(cellvalue, options, row) {
+				{align: 'left', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';
 					actionHtml += '<a href="javascript:openRoleDialog(\'' + row.ID + '\', \'' + row.DEP_ID  + '\');" class="green bigger-140 show-details-btn" title="人員角色設定">';
 					actionHtml += '<i class="my-icon fa fa-group bigger-120"></i> <span class="sr-only">人員角色設定</span> ';
@@ -827,7 +808,7 @@
                 depId: deptId
             };
             $.ajax({
-                    url: /*[[@{/jd/common/optionDepRoleList}]]*/,
+                    url: /*[[@{/jd/common/depRoleList}]]*/,
                     contentType: 'application/json',
                     type: "POST",
                     data: JSON.stringify(formData1),
