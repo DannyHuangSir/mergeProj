@@ -24,7 +24,7 @@
 	<!-- 取得角色的功能ID清單 -->
 	<select id="getFunctionIdByRoleIdList" resultType="string">
 		SELECT 
-			FUNCTION_ID 
+			CONVERT(BIGINT,FUNCTION_ID)
 		FROM 
 			ESERVICE_ADM.DBO.ROLE_FUNC_AUTH 
 		WHERE 
