@@ -345,7 +345,7 @@
 
 			if (($('#id-date-range-picker-1').val() == null || $('#id-date-range-picker-1').val() == '') &&
 				($('#id-date-range-picker-2').val() == null || $('#id-date-range-picker-2').val() == '')){
-				alertMsg("「查詢條件「受理日期區間」及「保單生效日期區間」至少要輸一個!」")
+				alertMsg("查詢條件「受理日期區間」及「保單生效日期區間」至少要輸一個!")
 				return false
 			}
 
@@ -379,7 +379,7 @@
 			if ($('#deptSelect').val() != '') {
 				$("#agentCode").val($('#deptSelect option:selected').val());
 			}else {
-				alertMsg("「查詢條件「通路」為必輸條件!」")
+				alertMsg("查詢條件「通路」為必輸條件!")
 				return false
 			}
 			if ($('#branchSelect').val() != '') {

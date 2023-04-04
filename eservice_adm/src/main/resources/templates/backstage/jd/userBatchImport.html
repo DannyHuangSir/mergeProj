@@ -85,6 +85,12 @@
     //
     $(function(){
         $('#qryBtn').click(function(){
+
+            if ($("#file").val() == null || $("#file").val() == '') {
+                alertMsg('請選擇文件');
+                return false
+            }
+
             var form = $('#form1')[0];
             var data = new FormData(form);
             $.ajax({
@@ -97,14 +103,18 @@
                 cache : false,
                 timeout : 600000,
                 success: function (response) {
-                        alertMsg('上傳文件成功');
-                        deptGrid.reload();
+                    alertMsg('上傳文件成功');
+                    setTimeout(function() { window.location.reload(); }, 1000)
                 },
                 error: function (response) {
                     alertMsg('系統發生錯誤');
                 }
             });
         });
+
+        $('#resetBtn').click(function(){
+            $('#form1')[0].reset()
+        })
 
         deptGrid = new jqGridUtil();
         deptGrid.id = '#deptGrid';

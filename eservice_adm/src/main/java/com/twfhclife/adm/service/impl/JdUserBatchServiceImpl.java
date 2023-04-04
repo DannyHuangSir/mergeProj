@@ -107,6 +107,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
 
     //每隔10分鐘
     @Scheduled(cron = "*/5 * * * * ?")
+    //@Scheduled(cron = "0 */10 * * * ?")
     private void scheduledWork() throws IOException {
         workFile();
     }
