@@ -3,7 +3,7 @@ package com.twfhclife.eservice.api_model;
 import com.google.common.collect.Lists;
 import com.twfhclife.eservice.web.model.CancellationMoneyVo;
 import com.twfhclife.eservice.web.model.PolicyAmountVo;
-import com.twfhclife.eservice.web.model.PolicyVo;
+import com.twfhclife.eservice.web.model.PolicyBaseVo;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class PolicyCancellationMoneyDataResponse {
 
     private List<CancellationMoneyVo> cancellationMoneyVos = Lists.newArrayList();
 
-    private PolicyVo policyVo;
+    private PolicyBaseVo policyVo;
     private PolicyAmountVo policyAmountVo;
 
     public List<CancellationMoneyVo> getCancellationMoneyVos() {
@@ -22,11 +22,11 @@ public class PolicyCancellationMoneyDataResponse {
         this.cancellationMoneyVos = cancellationMoneyVos;
     }
 
-    public PolicyVo getPolicyVo() {
+    public PolicyBaseVo getPolicyVo() {
         return policyVo;
     }
 
-    public void setPolicyVo(PolicyVo policyVo) {
+    public void setPolicyVo(PolicyBaseVo policyVo) {
         this.policyVo = policyVo;
     }
 

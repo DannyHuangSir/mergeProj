@@ -435,7 +435,7 @@ public class ShouxianController extends BaseController {
             }
         } catch (Exception e) {
             returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
-            logger.error("Unable to getPolicyPortfolioNew: {}", ExceptionUtils.getStackTrace(e));
+            logger.error("Unable to getPolicyNotifyPortfolio: {}", ExceptionUtils.getStackTrace(e));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
         } finally {
             apiResponseObj.setReturnHeader(returnHeader);
@@ -494,7 +494,7 @@ public class ShouxianController extends BaseController {
             List<CancellationMoneyVo> cancellationMoneyVos = shouxianService.getPolicyCancellationMoney(vo.getPolicyNo());
             PolicyCancellationMoneyDataResponse resp = new PolicyCancellationMoneyDataResponse();
             resp.setCancellationMoneyVos(cancellationMoneyVos);
-            resp.setPolicyVo(shouxianService.getPolicyInfo(vo.getPolicyNo()));
+            resp.setPolicyVo(shouxianService.getPolicyBase(vo.getPolicyNo()));
             resp.setPolicyAmountVo(shouxianService.getPolicyAmount(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);

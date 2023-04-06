@@ -20,7 +20,6 @@ public interface ShouXianDao {
     List<PremiumVo> getPolicyPremium(@Param("policyNo") String policyNo);
     List<ExpireOfPaymentVo> getExpireOfPayment(@Param("policyNo") String policyNo);
     List<ChangeInfoVo> getPolicyChangeInfo(@Param("policyNo") String policyNo);
-    PolicyVo getPolicyInfo(@Param("policyNo") String policyNo);
 
     List<IncomeDistributionVo> getIncomeDistribution(@Param("policyNo") String policyNo);
 

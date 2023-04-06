@@ -94,7 +94,7 @@ public class ShouxianService {
 
     public PolicyInvtFundVo getPolicyInvtFund(String policyNo) {
         PolicyInvtFundVo vo = new PolicyInvtFundVo();
-        vo.setPolicy(shouXianDao.getPolicyInfo(policyNo));
+        vo.setPolicy(shouXianDao.getBasePolicy(policyNo));
         return vo;
     }
 
@@ -133,10 +133,6 @@ public class ShouxianService {
 //        postForEntity(policyNo);
         String strResponse = "[{\"FSZ2-SCN-NAME\": \"FSZ2\", \"FSZ2-FUNC-CODE\": \"IN\", \"FSZ2-INSU-NO\": \"BR10000075\", \"FSZ2-CALC-DATE\": \"01111104\", \"FSZ2-CALC-TYPE\": \"2\", \"FSZ2-AMT\": \"148500\", \"FSZ2-EFFECTIVE-DATE\": \"00000000\"} ]";
         return new Gson().fromJson(strResponse, new TypeReference<List<CancellationMoneyVo>>(){}.getType());
-    }
-
-    public PolicyVo getPolicyInfo(String policyNo) {
-        return shouXianDao.getPolicyInfo(policyNo);
     }
 
     @Value("${csp.api.provide.esrv-fsz2.url}")

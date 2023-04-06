@@ -57,15 +57,17 @@
 												<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
 													<thead>
 													<tr class="table2">
-														<th> 投資標的</th>
+														<th>投資標的</th>
 														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">幣別</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">投資效益等級</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">持有成本(A)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">單位數/金額(B)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">參考匯率(D)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">參考帳戶價值(E=B*C*D)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">累計投資收益(F=E-A)</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">參考報酬率((F/A)*100%)</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">持有成本</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">單位數/金額</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">參考淨值</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">匯率使用日</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">參考匯率</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">參考帳戶價值</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">累計投資收益</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">參考報酬率</th>
 													</tr>
 													</thead>
 													<tbody></tbody>
@@ -124,6 +126,16 @@
           return showNetUnits(oRow);
         },
         'rwdName': '單位數/金額'
+      },
+      {
+       'mDataProp': 'netValueSell',
+       'rwdName': '參考淨值'
+      },
+       {
+       'fnRender': function(oRow) {
+          return  westDate(oRow.netValueDate);
+        },
+       'rwdName': '匯率使用日'
       },
       {
         // 參考匯率/日期
@@ -217,20 +229,11 @@
   // 參考匯率/日期
   function showExchRateDate(oRow) {
     var html = '';
-    /* if (oRow.invtExchCurr == 'NTD') {
+    if (oRow.invtExchCurr == 'NTD') {
       html += '<p class="marginTop26">1</p>';
-      html += '<p class="marginTop26"></p>';
     } else {
       html += '<p class="marginTop26">' + formatNumber(oRow.exchRateBuy, 4) +'</p>';
-      html += '<p class="marginTop26">' + westDate(oRow.exchRateDate); +'</p>';
-    } */
-    html += '<p class="marginTop26">1.0000</p>';
-    html += '<p class="marginTop26"></p>';
-    if (s_currency == '') {
-      s_currency = formatNumber(oRow.exchRateBuy, 4);
-      $('#s_currency').html(s_currency);
     }
-
     return html;
   }
 

@@ -6,14 +6,14 @@ import java.util.List;
 
 public class PolicyInvtFundVo {
 
-    private PolicyVo policy;
+    private PolicyBaseVo policy;
     private List<InvtFundVo> funds = Lists.newArrayList();
 
-    public PolicyVo getPolicy() {
+    public PolicyBaseVo getPolicy() {
         return policy;
     }
 
-    public void setPolicy(PolicyVo policy) {
+    public void setPolicy(PolicyBaseVo policy) {
         this.policy = policy;
     }
 

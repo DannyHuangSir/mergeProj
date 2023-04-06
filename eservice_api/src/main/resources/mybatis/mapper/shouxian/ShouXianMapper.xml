@@ -274,20 +274,8 @@
         SELECT
         lrc.RCDC_DELIVERY_AGEN_CODE, to_char(lrc.RCDC_ACC_DATE, 'yyyy-MM-dd') RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
         lrc.RCDC_CHAN_ITEM_1, lrc.RCDC_CHAN_ITEM_2, lrc.RCDC_CHAN_ITEM_3, lrc.RCDC_CHAN_ITEM_4, lrc.RCDC_CHAN_ITEM_5, lrc.RCDC_CHAN_ITEM_6, lrc.RCDC_CHAN_ITEM_7, lrc.RCDC_CHAN_ITEM_8, lrc.RCDC_CHAN_ITEM_9, lrc.RCDC_CHAN_ITEM_10
-        FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
-        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES_FLOWTEST lie INNER JOIN LISETT_ES_FLOWTEST lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
-        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-        LEFT JOIN LIRCDC_ES_FLOWTEST lrc ON lme.LIPM_INSU_TYPE = lrc.RCDC_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lrc.RCDC_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lrc.RCDC_INSU_SEQ_NO
-        WHERE (lme.LIPM_INSU_TYPE || lme.LIPM_INSU_GRP_NO || lme.LIPM_INSU_SEQ_NO) = #{policyNo}
-    </select>
-
-    <select id="getPolicyInfo" resultMap="PolicyMap">
-        SELECT
-        lrc.RCDC_DELIVERY_AGEN_CODE, to_char(lrc.RCDC_ACC_DATE, 'yyyy-MM-dd') RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
-        lrc.RCDC_CHAN_ITEM_1, lrc.RCDC_CHAN_ITEM_2, lrc.RCDC_CHAN_ITEM_3, lrc.RCDC_CHAN_ITEM_4, lrc.RCDC_CHAN_ITEM_5, lrc.RCDC_CHAN_ITEM_6, lrc.RCDC_CHAN_ITEM_7, lrc.RCDC_CHAN_ITEM_8, lrc.RCDC_CHAN_ITEM_9, lrc.RCDC_CHAN_ITEM_10
         FROM LIRCDC_ES_FLOWTEST lrc
-        WHERE (lrc.RCDC_INSU_TYPE || lrc.RCDC_INSU_GRP_NO  || lrc.RCDC_INSU_SEQ_NO) = #{policyNo}
+        WHERE (lrc.RCDC_INSU_TYPE || lrc.RCDC_INSU_GRP_NO || lrc.RCDC_INSU_SEQ_NO) = #{policyNo}
     </select>
 
     <resultMap id="IncomeDistributionMap" type="com.twfhclife.eservice.api.shouxian.model.IncomeDistributionVo">
@@ -479,10 +467,10 @@
     </select>
 
     <select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo">
-        SELECT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, lir.INPR_TRAN_DATE_MAX netValueDate,
+        SELECT DISTINCT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, lir.INPR_TRAN_DATE_MAX netValueDate,
         lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval, lip.SAFP_AVG_PVAL avgPval,
         lin.INVT_RISK_BENE_LEVEL riskBeneLevel, lin.INVT_NO invtNo, lin.INVT_NAME invtName, lip.SAFP_INSU_NO policyNo,
-        leh.EXCH_SPEBK_PURATE exchRateBuy, SUM(lcp.CLUP_EXPE_NTD) clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
+        leh.EXCH_SPEBK_PURATE exchRateBuy, lcp.clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
         FROM LISAFP_ES_FLOWTEST lip
         LEFT JOIN LIINVT_ES_FLOWTEST lin ON lip.SAFP_INVT_NO = lin.INVT_NO
         LEFT JOIN (
@@ -497,12 +485,11 @@
         ON A.INPR_INVT_NO = B.POLICY_NO
         AND A.INPR_TRAN_DATE = B.INPR_TRAN_DATE_MAX
         ) lir ON lir.INPR_INVT_NO = lip.SAFP_INVT_NO
-        LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lip.SAFP_INIT_DATE = leh.EXCH_DATE
-        LEFT JOIN LICLUP_ES_FLOWTEST lcp ON lcp.CLUP_INVT_NO = lip.SAFP_INVT_NO AND lip.SAFP_INSU_NO = lcp.CLUP_INSU_NO
+        LEFT JOIN (SELECT lef.EXCH_SPEBK_PURATE, lef.EXCH_EXCH_CODE FROM LIEXCH_ES_FLOWTEST lef INNER JOIN (
+        select Max(EXCH_DATE) EXCH_DATE, EXCH_EXCH_CODE from LIEXCH_ES_FLOWTEST GROUP BY EXCH_EXCH_CODE
+        ) lef1 ON lef.EXCH_DATE = lef1.EXCH_DATE AND lef.EXCH_EXCH_CODE = lef1.EXCH_EXCH_CODE) leh ON lin.INVT_EXCH_CURR = leh.EXCH_EXCH_CODE
+        LEFT JOIN (SELECT SUM(CLUP_EXPE_NTD) clupExpeNtdSum, CLUP_INSU_NO, CLUP_INVT_NO FROM LICLUP_ES_FLOWTEST group by CLUP_INSU_NO, CLUP_INVT_NO ) lcp ON lcp.CLUP_INVT_NO = lip.SAFP_INVT_NO AND lip.SAFP_INSU_NO = lcp.CLUP_INSU_NO
         WHERE lip.SAFP_INSU_NO = #{policyNo}
-        GROUP BY lir.INPR_UNIT_SOLPRICE, lir.INPR_TRAN_DATE_MAX,  lip.SAFP_NET_UNITS, lip.SAFP_NET_UNITS,
-        lin.INVT_RISK_BENE_LEVEL, lin.INVT_NAME, lip.SAFP_ACCU_INVEST_BFEXCH,
-        leh.EXCH_SPEBK_PURATE, lip.SAFP_AVG_PNTDVAL, lip.SAFP_NET_AMT, lin.INVT_NO, lin.INVT_EXCH_CURR, lip.SAFP_AVG_PVAL, lip.SAFP_INSU_NO
     </select>
 
     <select id="selectPolicyAmount" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyAmountVo">

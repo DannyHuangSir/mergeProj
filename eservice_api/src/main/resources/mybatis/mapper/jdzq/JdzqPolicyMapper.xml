@@ -33,8 +33,7 @@
         <result column="PolicyAmountNTD" property="policyAmountNTD" />
         <result column="PolicyFee" property="policyFee" />
         <result column="PayType" property="payType" />
-        <result column="PermYear" property="permYear" />
-        <result column="NoteDate" property="noteDate" />
+        <result column="PermYear" property="permYear" />        <result column="NoteDate" property="noteDate" />
         <result column="DueDate" property="dueDate" />
         <result column="ItemContent" property="itemContent" />
         <result column="ContentMemo" property="contentMemo" />
