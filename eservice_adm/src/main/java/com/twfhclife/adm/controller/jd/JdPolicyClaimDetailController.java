@@ -1,5 +1,6 @@
 package com.twfhclife.adm.controller.jd;
 
+import com.google.common.collect.Lists;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.JdPolicyClaimDetailVo;
 import com.twfhclife.adm.service.IJdPolicyClaimDetailService;
@@ -46,9 +47,8 @@ public class JdPolicyClaimDetailController extends BaseController {
     @PostMapping("/policyClaimDetail/csv")
     public String policyClaimDetailCSV1(JdPolicyClaimDetailVo vo) {
         PolicyClaimDetailResponse report1 = jdPolicyClaimDetailService.getInsClaimStatisticsReport(vo);
-        List<JdPolicyClaimDetailVo> reportList = report1.getPolicyClaimDetailVo();
         addAttribute("vo", vo);
-        addAttribute("reportList", reportList);
+        addAttribute("reportList", report1 != null ? report1.getPolicyClaimDetailVo() : Lists.newArrayList());
         return   "backstage/jd/policyClaimDetail3";
     }
 

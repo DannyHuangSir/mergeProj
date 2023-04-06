@@ -493,10 +493,22 @@
     </select>
 
     <select id="selectPolicyAmount" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyAmountVo">
-        SELECT to_char(MAX(MAX_DATE), 'yyyy-MM-dd') policyDate, NVL(SUM(VAL * INPR_UNIT_SOLPRICE), 0) policyVal FROM (
-        SELECT MAX(POEV_EDATE) MAX_DATE, NVL(SUM(POEV_SAFP_UNITS * POEV_STATE_EXCH_RATE), 0) VAL, POEV_INVT_NO  FROM LIPOEV_ES_FLOWTEST
-        WHERE POEV_INSU_NO = #{policyNo}
-        GROUP BY POEV_INVT_NO
-        ) lov LEFT JOIN LIINPR_ES_FLOWTEST lpr ON lov.POEV_INVT_NO = lpr.INPR_INVT_NO AND lov.MAX_DATE = lpr.INPR_TRAN_DATE
+        <![CDATA[
+        SELECT POEV_EXCH_DATE policyDate, POEV_SAFP_UNITS * EXCH_SPEBK_PURATE * INPR_UNIT_SOLPRICE policyVal FROM
+        (Select
+        A.POEV_EXCH_DATE,
+        SUBSTR(A.POEV_INVT_NO,3,3),
+        A.POEV_INSU_NO,
+        A.POEV_SAFP_UNITS,
+        (select EXCH_SPEBK_PURATE from
+        (select EXCH_DATE, EXCH_EXCH_CODE, EXCH_SPEBK_PURATE from LIEXCH_ES_FLOWTEST where EXCH_EXCH_CODE = SUBSTR(A.POEV_INVT_NO,3,3) order by EXCH_DATE DESC)
+        WHERE ROWNUM < 2) as EXCH_SPEBK_PURATE,
+        (select INPR_UNIT_SOLPRICE from
+        (SELECT INPR_UNIT_SOLPRICE FROM LIINPR_ES_FLOWTEST WHERE INPR_INVT_NO = A.POEV_INVT_NO order by INPR_TRAN_DATE DESC)
+        WHERE ROWNUM < 2) as INPR_UNIT_SOLPRICE
+        from LIPOEV_ES_FLOWTEST A
+        where A.POEV_INSU_NO = #{policyNo} order by A.POEV_EXCH_DATE DESC)
+        WHERE ROWNUM < 2;
+        ]]>
     </select>
 </mapper>
