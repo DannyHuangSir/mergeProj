@@ -178,7 +178,6 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                         jdUserVo.setRocId(list.get(i).get(12));
                         jdUserVo.setEmail(list.get(i).get(13));
                         jdUserVo.setMobile(list.get(i).get(14));
-                        userList.add(jdUserVo);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
