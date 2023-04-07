@@ -160,7 +160,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                         JdUserVo jdUserVo = new JdUserVo();
                         userList.add(jdUserVo);
                         if (list.size() < 15) {
-                            jdUserVo.setFailResult("數據格式不符！");
+                            jdUserVo.setFailResult("資料格式不符！");
                             continue;
                         }
                         jdUserVo.setActionType(list.get(i).get(0));
