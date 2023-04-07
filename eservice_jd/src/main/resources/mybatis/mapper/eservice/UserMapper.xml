@@ -131,7 +131,7 @@
 			FROM
 			ESERVICE_JD.DBO.USER_DEPARTMENT UD
 			INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID
-		WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID AND D.BRANCH_ID IS NOT NULL
+		WHERE UD.USER_ID = #{userId} AND D.BRANCH_ID IS NOT NULL
 	</select>
 
 	<select id="getCaseQueryByPassageWay" resultType="com.twfhclife.eservice.web.model.PermQueryVo">

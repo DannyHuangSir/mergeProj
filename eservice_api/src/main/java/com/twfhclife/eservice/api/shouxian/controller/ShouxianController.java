@@ -173,8 +173,8 @@ public class ShouxianController extends BaseController {
         ReturnHeader returnHeader = new ReturnHeader();
         try {
             PolicyPremiumDataResponse resp = new PolicyPremiumDataResponse();
-            resp.setPremiums(shouxianService.getPolicyPremium(vo.getPolicyNo()));
             resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
+            resp.setPremiums(shouxianService.getPolicyPremium(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);
@@ -204,8 +204,8 @@ public class ShouxianController extends BaseController {
         ReturnHeader returnHeader = new ReturnHeader();
         try {
             PolicyExpireOfPaymentDataResponse resp = new PolicyExpireOfPaymentDataResponse();
-            resp.setPayments(shouxianService.getExpireOfPayment(vo.getPolicyNo()));
             resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
+            resp.setPayments(shouxianService.getExpireOfPayment(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);
@@ -235,8 +235,8 @@ public class ShouxianController extends BaseController {
         ReturnHeader returnHeader = new ReturnHeader();
         try {
             PolicyChangeInfoDataResponse resp = new PolicyChangeInfoDataResponse();
-            resp.setChangeInfos(shouxianService.getPolicyChangeInfo(vo.getPolicyNo()));
             resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
+            resp.setChangeInfos(shouxianService.getPolicyChangeInfo(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);

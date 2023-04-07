@@ -158,6 +158,11 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                     List<List<String>> list = ExcelUtils.readExcel(readFilePath);
                     for (int i = 0; i < list.size(); i++) {
                         JdUserVo jdUserVo = new JdUserVo();
+                        userList.add(jdUserVo);
+                        if (list.size() < 15) {
+                            jdUserVo.setFailResult("數據格式不符！");
+                            continue;
+                        }
                         jdUserVo.setActionType(list.get(i).get(0));
                         jdUserVo.setUserId(list.get(i).get(1));
                         jdUserVo.setStatus(list.get(i).get(2));
@@ -184,6 +189,10 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                 DepartmentVo depId = new DepartmentVo();
                 DepartmentVo branchId = new DepartmentVo();
                 for (JdUserVo vo : userList) {
+                    if (StringUtils.isNotBlank(vo.getFailResult())) {
+                        failLinkList.add(vo);
+                        continue;
+                    }
                     if (StringUtils.isBlank(vo.getActionType())){
                         vo.setFailResult("動作別欄位為必輸欄位，請檢查!");
                         failLinkList.add(vo);
