@@ -508,7 +508,7 @@
         WHERE ROWNUM < 2) as INPR_UNIT_SOLPRICE
         from LIPOEV_ES_FLOWTEST A
         where A.POEV_INSU_NO = #{policyNo} order by A.POEV_EXCH_DATE DESC)
-        WHERE ROWNUM < 2;
+        WHERE ROWNUM < 2
         ]]>
     </select>
 </mapper>

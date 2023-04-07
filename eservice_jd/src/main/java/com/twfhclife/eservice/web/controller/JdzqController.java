@@ -314,7 +314,7 @@ public class JdzqController extends BaseController {
             PolicyCancellationMoneyDataResponse resp = policyService.getPolicyCancellationMoney(getUserId(), policyNo);
             addAttribute("vo", resp.getPolicyVo());
             addAttribute("cancelMoneys", resp.getCancellationMoneyVos());
-            addAttribute("amountVo", resp.getPolicyAmountVo());
+            addAttribute("amountVo", resp.getPolicyAmountVo() != null ? resp.getPolicyAmountVo() : new PolicyAmountVo());
             addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing17: {}", ExceptionUtils.getStackTrace(e));
