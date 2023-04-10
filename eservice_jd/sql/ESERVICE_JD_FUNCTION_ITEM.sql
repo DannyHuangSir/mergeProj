@@ -1,8 +1,6 @@
 USE ESERVICE_ADM
 GO
 
-INSERT INTO ESERVICE_ADM.dbo.FUNCTION_ITEM values ((SELECT MAX(FUNCTION_ID) + 1 FROM  ESERVICE_ADM.dbo.FUNCTION_ITEM), N'經代支援系統', N'FG', '', 'eservice_jd', 'eservice_jd', 0, 'Y', 'admin', '2023-04-03',  'admin', '2023-04-03');
-
 insert
 ESERVICE_ADM.dbo.FUNCTION_ITEM(
     FUNCTION_ID,
