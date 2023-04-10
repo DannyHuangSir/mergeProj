@@ -245,11 +245,17 @@ public class CIOAllianceServiceTask {
 	public void setAPI_DISABLE(String aPI_DISABLE) {
 		API_DISABLE = aPI_DISABLE;
 	}
+
+	@Value("${cron.cio201.expression.enable: true}")
+	public boolean api201Enable;
 	/**
 	 * 保全契約變更申 請書上傳 
 	 */
 	@Scheduled(cron = "${cron.cio201.expression}")
 	public void callAPI201() {
+		if (!api201Enable) {
+			return;
+		}
 		log.info("Start API-201 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 		//testcode
@@ -530,11 +536,16 @@ public class CIOAllianceServiceTask {
     	log.info("End API-201 Task.");
 	}
 
+	@Value("${cron.cio202.expression.enable: true}")
+	public boolean api202Enable;
 	/**
 	 * 檔案上傳
 	 */
 	@Scheduled(cron = "${cron.cio202.expression}")
 	public void callAPI202() {
+		if (!api202Enable) {
+			return;
+		}
 		log.info("Start API-202 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 //		String strResponse=null;
@@ -646,11 +657,17 @@ public class CIOAllianceServiceTask {
 
 	}
 
+	@Value("${cron.cio203.expression.enable: true}")
+	public boolean api203Enable;
+
 	/**
 	 * 查詢案件
 	 */
 	@Scheduled(cron = "${cron.cio203.expression}")
 	public void callAPI203() {
+		if (!api203Enable) {
+			return;
+		}
 		log.info("Start API-203 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 
@@ -1022,11 +1039,16 @@ public class CIOAllianceServiceTask {
     	log.info("End API-203 Task.");
 	}
 
+	@Value("${cron.cio204.expression.enable: true}")
+	public boolean api204Enable;
 	/**
 	 * 檔案下載
 	 */
 	@Scheduled(cron = "${cron.cio204.expression}")
 	public void callAPI204() {
+		if (!api204Enable) {
+			return;
+		}
 		log.info("Start API-204 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 
@@ -1226,12 +1248,17 @@ public class CIOAllianceServiceTask {
 	}
 */
 
+	@Value("${cron.cio206.expression.enable: true}")
+	public boolean api206Enable;
 	/**
 	 * 回報案件(只有聯盟件要回報)
 	 * 轉收公司告知首家公司此案件已處理完畢  (即此案件已啟動轉收公司的保全流程)，或是無法處理及其原因。
 	 */
 	@Scheduled(cron = "${cron.cio206.expression}")
 	public void callAPI206() {
+		if (!api206Enable) {
+			return;
+		}
 		log.info("Start API-206 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 
@@ -1357,8 +1384,14 @@ public class CIOAllianceServiceTask {
 
 	}
 
+	@Value("${cron.saveCioToEserviceTrans.expression.enable: true}")
+	public boolean saveCioToEserviceTransEnable;
+
 	@Scheduled(cron = "${cron.saveCioToEserviceTrans.expression}")
 	public void saveCioToEserviceTrans() {
+		if (!saveCioToEserviceTransEnable) {
+			return;
+		}
 		//取得未加到eservice.TRANS的case
 		//檢核是否為保戶，是否為用戶
 		//1.聯盟通知件(NOTIFY_SEQ_ID!=null, CASE_ID!=null, CODE='0' ,MSG is null)
@@ -1615,8 +1648,14 @@ public class CIOAllianceServiceTask {
 		log.info("End saveCioToEserviceTrans.");
 	}
 
+	@Value("${cron.saveCioToEserviceUnionTempTable.expression.enable: true}")
+	public boolean saveCioToEserviceUnionTempTableEnable;
+
 	@Scheduled(cron = "${cron.saveCioToEserviceUnionTempTable.expression}")
 	public void saveCioToEserviceUnionTempTable() {
+		if (!saveCioToEserviceUnionTempTableEnable) {
+			return;
+		}
 		log.info("Start saveCioToEserviceUnionTempTable.");
 		log.info("API_DISABLE="+API_DISABLE);
 		if("N".equals(API_DISABLE)){

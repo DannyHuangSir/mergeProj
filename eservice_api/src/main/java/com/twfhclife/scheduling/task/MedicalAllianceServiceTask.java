@@ -206,12 +206,18 @@ public class MedicalAllianceServiceTask {
         }
     }
 
+    @Value("${cron.saveTransToMedical.enable: true}")
+    public boolean saveTransToMedicalEnable;
+
     /**
      * cron.saveToMedicalTrans.expression
      * 數據轉存到MEDICAL_TREATMENT_CLAIM表中
      */
     @Scheduled(cron = "${cron.saveTransToMedical.expression}")
     public  void  saveTransToMedical(){
+        if (!saveTransToMedicalEnable) {
+            return;
+        }
         log.info("Start saveTransToMedical.");
         log.info("API_DISABLE="+API_DISABLE);
 
@@ -229,6 +235,8 @@ public class MedicalAllianceServiceTask {
     }
 
 
+    @Value("${cron.saveToMedicalTrans.enable: true}")
+    public boolean saveToMedicalTransEnable;
 
     /**
      * cron.saveToMedicalTrans.expression
@@ -236,6 +244,10 @@ public class MedicalAllianceServiceTask {
      */
     @Scheduled(cron = "${cron.saveToMedicalTrans.expression}")
     public void saveToMedicalTrans(){
+
+        if (!saveToMedicalTransEnable) {
+            return;
+        }
         log.info("Start saveToMedicalTrans.");
         log.info("API_DISABLE="+API_DISABLE);
 
@@ -393,12 +405,17 @@ public class MedicalAllianceServiceTask {
 
     }
 
+    @Value("${cron.medical401.enable: true}")
+    public boolean medical401Enable;
     /**
      * API-401理賠申請上傳
      */
      @Scheduled(cron = "${cron.medical401.expression}")
     public void callAPI401() {
-        log.info("-----------Start API-401 Task.-----------");
+         if (!medical401Enable) {
+             return;
+         }
+         log.info("-----------Start API-401 Task.-----------");
         log.info("API_DISABLE=" + API_DISABLE);
         if ("N".equals(API_DISABLE)) {
             try {
@@ -450,12 +467,18 @@ public class MedicalAllianceServiceTask {
         }
     }
 
+    @Value("${cron.medical402.enable: true}")
+    public boolean medical402Enable;
+
     /**
      * API-402 回覆是否向醫院取資料
      */
     @Scheduled(cron = "${cron.medical402.expression}")
 	public void callAPI402() {
-    	log.info("-----------Start API-402 Task.-----------");
+        if (!medical402Enable) {
+            return;
+        }
+        log.info("-----------Start API-402 Task.-----------");
         log.info("API_DISABLE=" + API_DISABLE);
         if ("N".equals(API_DISABLE)) {
             try {
@@ -512,7 +535,10 @@ public class MedicalAllianceServiceTask {
             log.info("-----------End API-402 Task.-----------");
         }
     }
-   
+
+    @Value("${cron.medical403.enable: true}")
+    public boolean medical403Enable;
+
    /**
     * API-403 查詢案件資訊
     * 1.全新案件：儲存至MEDICAL_TREAMENT_XXX
@@ -520,6 +546,9 @@ public class MedicalAllianceServiceTask {
     */
 	@Scheduled(cron = "${cron.medical403.expression}")
 	public void callAPI403() {
+        if (!medical403Enable) {
+            return;
+        }
         log.info("-----------Start API-403 Task.-----------");
         log.info("API_DISABLE=" + API_DISABLE);
         if ("N".equals(API_DISABLE)) {
@@ -814,12 +843,17 @@ public class MedicalAllianceServiceTask {
         }
     }
 
+    @Value("${cron.medical404.enable: true}")
+    public boolean medical404Enable;
 
     /**
      * API-404 檔案下載
      * */
     @Scheduled(cron = "${cron.medical404.expression}")
     public void callAPI404() {
+        if (!medical404Enable) {
+            return;
+        }
         log.info("Start API-404 Task.");
         log.info("API_DISABLE="+API_DISABLE);
         if("N".equals(API_DISABLE)){
@@ -919,11 +953,17 @@ public class MedicalAllianceServiceTask {
 
     }
 
+    @Value("${cron.medical405.enable: true}")
+    public boolean medical405Enable;
+
     /**
      * API-405 申請醫療資料重新上傳
      * */
     @Scheduled(cron = "${cron.medical405.expression}")
     public void callAPI405() {
+        if (!medical405Enable) {
+            return;
+        }
         log.info("Start API-405 Task.");
         log.info("API_DISABLE="+API_DISABLE);
         if("N".equals(API_DISABLE)){
@@ -1027,12 +1067,17 @@ public class MedicalAllianceServiceTask {
 
     }
 
+    @Value("${cron.medical408.enable: true}")
+    public boolean medical408Enable;
 
     /**
      *  API-408 查詢保險公司清單
      * */
     @Scheduled(cron = "${cron.medical408.expression}")
     public void callAPI408() {
+        if (!medical408Enable) {
+            return;
+        }
         log.info("-----------Start API-408 Task.-----------");
         log.info("API_DISABLE=" + API_DISABLE);
         if ("N".equals(API_DISABLE)) {
@@ -1121,11 +1166,17 @@ public class MedicalAllianceServiceTask {
         }
     }
 
+    @Value("${cron.medical407.enable: true}")
+    public boolean medical407Enable;
+
     /**
      *  API-407 查詢醫院清單
      * */
     @Scheduled(cron = "${cron.medical407.expression}")
     public void callAPI407() {
+        if (!medical407Enable) {
+            return;
+        }
         log.info("-----------Start API-407 Task.-----------");
         log.info("API_DISABLE=" + API_DISABLE);
         if ("N".equals(API_DISABLE)) {

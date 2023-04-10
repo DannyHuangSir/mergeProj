@@ -165,14 +165,21 @@ public class AllianceServiceTask {
             });
     	}
 	}
+
+	@Value("${cron.api101.expression.enable: true}")
+	public boolean api101Enable;
+
 	/**
 	 * 理賠申請書上傳
 	 */
 	@Scheduled(cron = "${cron.api101.expression}")
 	public void callAPI101() {
+		if (!api101Enable) {
+			return;
+		}
 		log.info("Start API-101 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
-		
+
 		//testcode
 //		try {
 //			InsuranceClaimVo testicvo = new InsuranceClaimVo();
@@ -291,13 +298,19 @@ public class AllianceServiceTask {
 		
     	log.info("End API-101 Task.");
 	}
-	
+
+	@Value("${cron.api102.expression.enable: true}")
+	public boolean api102Eanbel;
+
 	/**
 	 * 上傳收到案件之紙本註記</br>
 	 * 首家收到所有紙本文件後，進行這個案件的註記
 	 */
 	@Scheduled(cron = "${cron.api102.expression}")
 	public void callAPI102() {
+		if (!api102Eanbel) {
+			return;
+		}
 		log.info("Start API-102 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 		
@@ -353,12 +366,17 @@ public class AllianceServiceTask {
     	log.info("End API-102 Task.");
 
 	}
-	
+
+	@Value("${cron.api103.expression.enable: true}")
+	public boolean api103Enable;
 	/**
 	 * 查詢是否收到案件之紙本
 	 */
 	@Scheduled(cron = "${cron.api103.expression}")
 	public void callAPI103() {
+		if (!api103Enable) {
+			return;
+		}
 		log.info("Start API-103 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 
@@ -428,12 +446,18 @@ public class AllianceServiceTask {
     	log.info("End API-103 Task.");
 
 	}
-	
+
+	@Value("${cron.api104.expression.enable: true}")
+	public boolean api104Enable;
+
 	/**
 	 * 檔案上傳
 	 */
 	@Scheduled(cron = "${cron.api104.expression}")
 	public void callAPI104() {
+		if (!api104Enable) {
+			return;
+		}
 		log.info("Start API-104 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 		
@@ -513,12 +537,17 @@ public class AllianceServiceTask {
     	log.info("End API-104 Task.");
 
 	}
-	
+
+	@Value("${cron.api105.expression.enable: true}")
+	public boolean api105Enable;
 	/**
 	 * 查詢理賠案件
 	 */
 	@Scheduled(cron = "${cron.api105.expression}")
 	public void callAPI105() {
+		if (!api105Enable) {
+			return;
+		}
 		log.info("Start API-105 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 		
@@ -678,12 +707,18 @@ public class AllianceServiceTask {
     	log.info("End API-105 Task.");
 
 	}
-	
+
+	@Value("${cron.api106.expression.enable: true}")
+	public boolean api106Enable;
+
 	/**
 	 * 檔案下載
 	 */
 	@Scheduled(cron = "${cron.api106.expression}")
 	public void callAPI106() {
+		if (!api106Enable) {
+			return;
+		}
 		log.info("Start API-106 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 		
@@ -807,9 +842,15 @@ public class AllianceServiceTask {
     	log.info("End API-106 Task.");
 
 	}
+
+	@Value("${cron.saveToEserviceTrans.expression.enable: true}")
+	public boolean saveToEserviceTransEnable;
 	
 	@Scheduled(cron = "${cron.saveToEserviceTrans.expression}")
 	public void saveToEserviceTrans() {
+		if (!saveToEserviceTransEnable) {
+			return;
+		}
 		//取得未加到eservice.TRANS的case
 		//檢核是否為保戶，是否為用戶
 		//1.聯盟通知件(NOTIFY_SEQ_ID!=null, CASE_ID!=null, CODE='0' ,MSG is null)

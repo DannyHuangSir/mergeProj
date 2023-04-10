@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -154,11 +155,17 @@ public class DnsAllianceServiceTask {
 	}
 
 
+	@Value("${cron.dnsFS62.expression.enable: true}")
+	public boolean dnsFS62Enable;
+
 	/**
 	 * DNS-FS62供死亡除戶通報通知寫入FS62相關通報訊息
 	 */
 	@Scheduled(cron = "${cron.dnsFS62.expression}")
 	public void callDNSFS62() {
+		if (!dnsFS62Enable) {
+			return;
+		}
 		log.info("Start DNS-FS62 Task.");
 		log.info("API_DNS_DISABLE="+API_DNS_DISABLE);
 
@@ -240,12 +247,17 @@ public class DnsAllianceServiceTask {
 		log.info("End DNS-FS62 Task.");
 	}
 
+	@Value("${cron.dnsFSZ1.expression.enable: true}")
+	public boolean dnsFSZ1Enable;
 
 	/**
 	 * DNS-FSZ1供死亡除戶通報取得最新契況
 	 */
 	@Scheduled(cron = "${cron.dnsFSZ1.expression}")
 	public void callDNSFSZ1() {
+		if (!dnsFSZ1Enable) {
+			return;
+		}
 		log.info("Start DNS-FSZ1 Task.");
 		log.info("API_DNS_DISABLE=" + API_DNS_DISABLE);
 
@@ -332,11 +344,17 @@ public class DnsAllianceServiceTask {
 		log.info("End DNS-FSZ1 Task.");
 	}
 
+	@Value("${cron.dns101.expression.enable: true}")
+	public boolean dns101Enable;
+
 	/**
 	 * DNS-101案件回報
 	 */
 	@Scheduled(cron = "${cron.dns101.expression}")
 	public void callDNS101() {
+		if (!dns101Enable) {
+			return;
+		}
 		log.info("Start DNS-101 Task.");
 		log.info("API_DNS_DISABLE="+API_DNS_DISABLE);
 		
@@ -396,12 +414,18 @@ public class DnsAllianceServiceTask {
 		
 		log.info("End DNS-101 Task.");
 	}
-	
+
+	@Value("${cron.dns201.expression.enable: true}")
+	public boolean dns201Enable;
+
 	/**
 	 * DNS-201 查詢案件資訊
 	 */
 	@Scheduled(cron = "${cron.dns201.expression}")
 	public void callDNS201() {
+		if (!dns201Enable) {
+			return;
+		}
 		log.info("Start DNS-201 Task.");
 		log.info("API_DNS_DISABLE="+API_DNS_DISABLE);
 		
@@ -499,9 +523,15 @@ public class DnsAllianceServiceTask {
 		
 		log.info("End DNS-201 Task.");
 	}
-	
+
+	@Value("${cron.dns.saveToEserviceTrans.expression.enable: true}")
+	public boolean saveToEserviceTransEnable;
+
 	@Scheduled(cron = "${cron.dns.saveToEserviceTrans.expression}")
 	public void saveToEserviceTransDns() {
+		if (!saveToEserviceTransEnable) {
+			return;
+		}
 		log.info("Start saveToEserviceTransDns Task.");
 		log.info("API_DNS_DISABLE="+API_DNS_DISABLE);
 		
@@ -559,11 +589,16 @@ public class DnsAllianceServiceTask {
 		log.info("End saveToEserviceTransDns Task.");
 	}
 
+	@Value("${cron.auto.expression.enable: true}")
+	public boolean autoEnable;
 	/**
 	 * 系統註記案件為「AUTO超時自動結案」
 	 */
 	@Scheduled(cron = "${cron.auto.expression}")
 	public void dnsAuto() {
+		if (!autoEnable) {
+			return;
+		}
 		log.info("Start DNS-AUTO Task.");
 		try {
 			//1.取得「收檔日+N天契況尚未變更」的案件

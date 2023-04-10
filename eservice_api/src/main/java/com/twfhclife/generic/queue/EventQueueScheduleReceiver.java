@@ -35,10 +35,10 @@ public class EventQueueScheduleReceiver {
 	public final static String INITIAL_CONTEXT_FACTORY = "org.jboss.naming.remote.client.InitialContextFactory";
 
 	public final static String CONNECTION_FACTORY = "jms/RemoteConnectionFactory";
-	
+
 	@Autowired
 	public IBusinessEventService businessEventService;
-	
+
 	@Autowired
 	public ISystemEventService systemEventService;
 
@@ -60,9 +60,15 @@ public class EventQueueScheduleReceiver {
 	@Value("${event.queue.receive.number}")
 	public int maxReceiveNumber;
 
+	@Value("${event.queue.schedule.receiver.enable: true}")
+	public boolean enable;
+
 	// 整點執行
 	@Scheduled(cron = "0 50 16 * * ?")
 	public void recevie() throws InterruptedException {
+		if (!enable) {
+			return;
+		}
 		JMSContext jmsContext = null;
 		try {
 			final Properties env = new Properties();
