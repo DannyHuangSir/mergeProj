@@ -1,6 +1,6 @@
 package com.twfhclife.adm.controller.jd;
 
-import com.sun.deploy.net.URLEncoder;
+import java.net.URLEncoder;
 import com.twfhclife.adm.dao.JdBatchPlanDao;
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
