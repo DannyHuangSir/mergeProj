@@ -51,6 +51,17 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
     private String autoMk;
 
     private String branchName;
+    private String charAt1;
+    private String charAt2;
+    private String bankCode;
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
 
     public String getBranchName() {
         return branchName;
@@ -359,6 +370,22 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
 
     public void setLipmBirth(String lipmBirth) {
         this.lipmBirth = lipmBirth;
+    }
+
+    public String getCharAt1() {
+        return charAt1;
+    }
+
+    public void setCharAt1(String charAt1) {
+        this.charAt1 = charAt1;
+    }
+
+    public String getCharAt2() {
+        return charAt2;
+    }
+
+    public void setCharAt2(String charAt2) {
+        this.charAt2 = charAt2;
     }
 
     public PolicyBaseVo() {

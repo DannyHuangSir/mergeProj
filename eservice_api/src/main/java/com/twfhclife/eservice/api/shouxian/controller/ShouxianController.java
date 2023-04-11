@@ -10,6 +10,7 @@ import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
+import com.twfhclife.generic.service.IOptionService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 public class ShouxianController extends BaseController {
@@ -126,6 +129,9 @@ public class ShouxianController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @Autowired
+    private IOptionService optionService;
+    
     @PostMapping(value = "/getPaymentRecord", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
             eventCode = "JD-009",
@@ -142,8 +148,14 @@ public class ShouxianController extends BaseController {
         ReturnHeader returnHeader = new ReturnHeader();
         try {
             PolicyPaymentRecordDataResponse resp = new PolicyPaymentRecordDataResponse();
+            PolicyBaseVo policyBase = shouxianService.getPolicyBase(vo.getPolicyNo());
+            List<Map<String, Object>> filter = optionService.getBankList().stream()
+                    .filter(f -> StringUtils.equals(String.valueOf(f.get("key")),  policyBase.getBankCode())).collect(Collectors.toList());
+            if (filter.size() > 0) {
+                policyBase.setBankCode(String.valueOf(filter.get(0).get("value")));
+            }
+            resp.setPolicyBaseVo(policyBase);
             resp.setPaymentRecords(shouxianService.getPaymentRecord(vo.getPolicyNo()));
-            resp.setPolicyBaseVo(shouxianService.getPolicyBase(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);

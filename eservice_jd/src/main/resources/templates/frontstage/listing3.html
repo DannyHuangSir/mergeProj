@@ -70,7 +70,13 @@
 				                                        <td th:text="${vo.lipiName}"></td>
 				                                        <td th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></td>
 				                                        <td th:text="${vo.paymentMode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue : ''}">年繳</td>
-														<td th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : ''}"></td>
+														<td>
+															<span class="tablesaw-cell-content">
+				                                        	<th:block th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : ''}"></th:block><br>
+				                                        	<th:block th:text="${vo.bankCode != null ? vo.bankCode : ''}"></th:block><br>
+				                                        	<th:block th:text="${vo.charAt1 != null ? vo.charAt1 : ''}"></th:block><th:block th:text="${vo.charAt2 != null ? vo.charAt2 : ''}"></th:block><br>
+				                                        </span>
+														</td>
 				                                    </tr> 
 				                                </tbody>
 				                            </table>
@@ -91,7 +97,7 @@
 				                                        <td th:text="${vo1.desc}"></td>
 				                                        <td th:text="${vo1.paabAmt}"></td>
 				                                        <td th:text="${vo1.actAmt}"></td>
-														<td th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : ''}"></td>
+														<td th:text="${vo1.rcpCode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo1.rcpCode].parameterValue : ''}"></td>
 				                                    </tr>
 				                                </tbody>
 				                            </table>

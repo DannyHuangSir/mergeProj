@@ -135,6 +135,9 @@
         <result column="LIPM_5_GP" property="lipmGp"/>
         <result column="LIPM_AUTO_RCP_MK" property="autoMk"/>
         <result column="NEDR_BRANCH_NAME" property="branchName"/>
+        <result column="LIPM_CHAR_AT_1" property="charAt1"/>
+        <result column="LIPM_CHAR_AT_2" property="charAt2"/>
+        <result column="LIPM_BANK_CODE" property="bankCode"/>
         <association property="beneficiaries" resultMap="PolicyBeneficiaryMap"></association>
     </resultMap>
 
@@ -151,7 +154,8 @@
             WHEN lme.LIPM_ST <= 18 THEN 1
             WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
             WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-            END AS STATUS, lie.LIPI_TABL_PREM,
+            END AS STATUS, lie.LIPI_TABL_PREM, lme.LIPM_BANK_CODE,
+            lme.LIPM_CHAR_AT_1, lme.LIPM_CHAR_AT_2,
         to_char(lie.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE,
         lme.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(lbe.BNAG_BIRTH, 'yyyy-MM-dd') LIPM_BIRTH,
         to_char(lsn.ASSN_ARRI_DATE, 'yyyy-MM-dd') ASSN_ARRI_DATE, to_char(lsn.ASSN_TR_ARRI_DATE, 'yyyy-MM-dd') ASSN_TR_ARRI_DATE, lip.PMDA_MAIL, lsn.ASSN_STATUS,
@@ -210,7 +214,7 @@
         FROM LILIPM_ES_FLOWTEST lme INNER JOIN LILIPI_ES_FLOWTEST lie
         ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
         LEFT JOIN LIPRPA_ES_FLOWTEST lpp ON lme.LIPM_INSU_TYPE = lpp.PRPA_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lpp.PRPA_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lpp.PRPA_INSU_SEQ_NO
-        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+        WHERE lme.LIPM_INSU_TYPE || lme.LIPM_INSU_GRP_NO || lme.LIPM_INSU_SEQ_NO = #{policyNo}
     </select>
 
     <resultMap id="PremiumMap" type="com.twfhclife.eservice.api.shouxian.model.PremiumVo">
@@ -305,10 +309,9 @@
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
         to_char(lip.INPD_INT_COMPU_DATE - numtodsinterval(1, 'day'), 'yyyy-MM-dd') INPD_INT_COMPU_DATE
         FROM LICLUP_ES_FLOWTEST lcp
-        LEFT JOIN (SELECT MAX(INPD_INT_COMPU_DATE) INPD_INT_COMPU_DATE, INPD_INVT_NO FROM LIINPD_ES_FLOWTEST GROUP BY INPD_INVT_NO ) lip ON
-             lcp.CLUP_INVT_NO = lip.INPD_INVT_NO AND lip.INPD_INT_COMPU_DATE = lcp.CLUP_DATE
+        LEFT JOIN LIINPD_ES_FLOWTEST lip ON lcp.CLUP_INVT_NO = lip.INPD_INVT_NO AND lcp.CLUP_DATE = lip.INPD_DATE
         LEFT JOIN LIINVT_ES_FLOWTEST lin ON lcp.CLUP_INVT_NO = lin.INVT_NO
-        WHERE lcp.CLUP_INSU_NO = #{policyNo}
+        WHERE lcp.CLUP_TR_DATE IS NOT NULL AND lcp.CLUP_INSU_NO = #{policyNo}
         ORDER BY lcp.CLUP_TR_DATE DESC
     </select>
 

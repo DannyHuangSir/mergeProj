@@ -53,7 +53,7 @@
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div style="padding: 20px;background: #FFFFFF;">
-												累計單位撥回數：<span style="margin-right: 30px;" th:text="${sumUnits}"></span> 累計現金撥回金額：<span style="margin-right: 30px;" th:text="${sumAmount}"></span>
+												累計單位撥回數：<span style="margin-right: 30px;" th:text="${#numbers.formatDecimal((sumUnits != null ? sumUnits : 0), 1,'COMMA',4,'POINT')}"></span> 累計現金撥回金額：<span style="margin-right: 30px;" th:text="${sumAmount}"></span>
 											</div>
 											<div class="wht">
 												<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
@@ -96,13 +96,13 @@
 														</td>
 														<td>
 															<p th:text="${vo1.expeNtd}"></p>
-															<p th:text="${vo1.exchRate != 0 ? vo1.expeNtd / vo1.exchRate : 0}"></p>
+															<p th:text="${#numbers.formatDecimal((vo1.exchRate != 0 ? vo1.expeNtd / vo1.exchRate : 0), 1,'COMMA',2,'POINT')}"></p>
 														</td>
 														<td class="text-left table3">
 															<th:block th:if="${vo1.trCode == '01'}">現金</th:block>
 															<th:block th:if="${vo1.trCode == '00'}">再投資</th:block>
 														</td>
-														<td class="text-left table3" th:text="${vo1.units}">
+														<td class="text-left table3" th:text="${#numbers.formatDecimal((vo1.units != null ? vo1.units : 0), 1,'COMMA',4,'POINT')}">
 														</td>
 														<td class="text-left table3" th:text="${vo1.expeNtd}">
 														</td>
