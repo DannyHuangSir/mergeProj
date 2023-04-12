@@ -93,15 +93,7 @@
         var doughnutChart2 = document.getElementById('doughnutChart2').getContext('2d');
         var myDoughnutChart
         var myDoughnutChart2
-        var chart2Map = [
-        	{
-        		label: '核保中',
-        		policyNos: []
-        	},{
-        		label: '照會中',
-        		policyNos: []
-        	}
-        ]
+        var chart2Map = [ { label: '照會編輯中', policyNos: [] },{ label: '照會覆核中', policyNos: [] },{ label: '照會完成', policyNos: [] } ]
         var levelStateMap = []
 
 		$(function(){
@@ -175,13 +167,17 @@
 		})
 
 		function noteStatusStr(policyNo, noteStatus) {
-			if (noteStatus == '0' || noteStatus == 'R') {
+			if (noteStatus == '0') {
 				chart2Map[0].policyNos.push(policyNo)
-				return '核保中'
+				return '照會編輯中'
 			}
-			if (noteStatus == 'V') {
+			if (noteStatus == '1') {
 				chart2Map[1].policyNos.push(policyNo)
-				return '照會中'
+				return '照會覆核中'
+			}
+			if (noteStatus == '9') {
+				chart2Map[2].policyNos.push(policyNo)
+				return '照會完成'
 			}
 			return ''
 		}
