@@ -76,6 +76,7 @@
 														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">實繳金額</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="left">保費費用</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6" class="text-left">(+)利息</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7" class="text-left">(=)實繳金額</th>
 													</tr>
 													</thead>
 													<tbody></tbody>
@@ -154,6 +155,13 @@
 					return formatNumber(oRow.prdtInvestAmt, fractionDigits);
 				},
 				'rwdName': '(+)利息'
+			},
+			{
+				// (=)實繳金額
+				'fnRender': function(oRow) {
+					return formatNumber(oRow.prdtRcpAmt, fractionDigits);
+				},
+				'rwdName': '(=)實繳金額'
 			}
 		];
 		grid1.fnInitComplete = function() {

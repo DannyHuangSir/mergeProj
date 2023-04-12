@@ -338,7 +338,7 @@
             END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
             FROM LISADP_ES_FLOWTEST lsp
             LEFT JOIN LIINVT_ES_FLOWTEST lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-            LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE
+            LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE AND lsp.SADP_TR_CURR = leh.EXCH_CURR_CODE
             <where>
                 AND lsp.SADP_INSU_NO = #{policyNo}
                 <if test="trCode != null">
@@ -377,7 +377,7 @@
         END FUND_VALUE, lsp.SADP_EXCH_DATE
         FROM LISADP_ES_FLOWTEST lsp
         LEFT JOIN LIINVT_ES_FLOWTEST lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE
+        LEFT JOIN LIEXCH_ES_FLOWTEST leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE AND lsp.SADP_TR_CURR = leh.EXCH_CURR_CODE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">
