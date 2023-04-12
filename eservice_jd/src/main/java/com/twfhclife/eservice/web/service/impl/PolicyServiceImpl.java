@@ -63,6 +63,7 @@ public class PolicyServiceImpl implements IPolicyService {
 
     @Value("${eservice_api.policy.base.url}")
     private String policyBaseUrl;
+
     @Override
     public PolicyBaseVo getPolicyBase(String userId, String policyNo) {
         PolicyBaseDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyBaseUrl, PolicyBaseDataResponse.class);
@@ -71,6 +72,7 @@ public class PolicyServiceImpl implements IPolicyService {
 
     @Value("${eservice_api.policy.safe.guard.url}")
     private String policySafeGuardUrl;
+
     @Override
     public PolicySafeGuardDataResponse getPolicyGuard(String userId, String policyNo) {
         PolicySafeGuardDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policySafeGuardUrl, PolicySafeGuardDataResponse.class);
@@ -79,6 +81,7 @@ public class PolicyServiceImpl implements IPolicyService {
 
     @Value("${eservice_api.policy.payment.record.url}")
     private String policyPaymentRecordUrl;
+
     @Override
     public PolicyPaymentRecordDataResponse getPolicyPaymentRecord(String userId, String policyNo) {
         return baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyPaymentRecordUrl, PolicyPaymentRecordDataResponse.class);

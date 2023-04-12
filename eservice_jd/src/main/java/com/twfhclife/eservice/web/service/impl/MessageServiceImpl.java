@@ -98,7 +98,7 @@ public class MessageServiceImpl implements IMessageService {
                         paramMap.put("AppName", noteNotify.getAppName());
                         paramMap.put("InsName", noteNotify.getInsName());
                         paramMap.put("DueDate", noteNotify.getDueDate());
-                        paramMap.put("POLICY_NO", noteNotify.getPolicyNo());
+                        paramMap.put("PolicyNo", noteNotify.getPolicyNo());
                         messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_JD_MAIL-001", receivers, paramMap, "email");
                     }
                 } catch (Exception e) {
