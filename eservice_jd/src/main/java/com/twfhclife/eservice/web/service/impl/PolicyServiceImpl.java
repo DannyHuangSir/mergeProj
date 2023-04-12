@@ -7,7 +7,6 @@ import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.web.dao.JdNotifyConfigDao;
-import com.twfhclife.eservice.web.model.PermQueryVo;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IPolicyService;
@@ -52,7 +51,7 @@ public class PolicyServiceImpl implements IPolicyService {
                 caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
                 break;
         }
-        if (!CollectionUtils.isEmpty(caseQuery) || role != 5) {
+        if (!CollectionUtils.isEmpty(caseQuery) || role == 5) {
             vo.setPermQuery(caseQuery);
             vo.setUserId(user.getUsername());
             vo.setSysId(ApConstants.SYSTEM_ID);
