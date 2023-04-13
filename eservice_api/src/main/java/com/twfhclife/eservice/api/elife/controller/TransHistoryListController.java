@@ -27,6 +27,7 @@ import com.twfhclife.generic.annotation.SystemEventParam;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
+import com.twfhclife.generic.utils.ValidateUtil;
 
 /**
  * 查詢線上申請紀錄.
@@ -68,6 +69,11 @@ public class TransHistoryListController extends BaseController {
 			}))
 	@PostMapping(value = "/getTransHistoryList", produces = { "application/json" })
 	public ResponseEntity<?> getTransHistoryList(@Valid @RequestBody TransHistoryListRequest req) {
+		String errorMessage = "";
+		if(!ValidateUtil.TransHistoryListRequestIsValid(req)) {
+			errorMessage = "參數異常，請洽客服人員。";
+		}
+		
 		ApiResponseObj<TransHistoryListResponse> apiResponseObj = new ApiResponseObj<>();
 		ReturnHeader returnHeader = new ReturnHeader();
 		TransHistoryListResponse resp = new TransHistoryListResponse();
@@ -81,7 +87,6 @@ public class TransHistoryListController extends BaseController {
 			Integer pageSize = req.getPageSize();
 			Integer pageNum = req.getPageNum();
 			
-			String errorMessage = "";
 			if (startDate != null && endDate != null) {
 				if (startDate.compareTo(endDate) > 0) {
 					errorMessage = "結束日期不能小於開始日期";

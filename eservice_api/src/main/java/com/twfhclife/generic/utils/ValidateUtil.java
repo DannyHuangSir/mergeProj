@@ -1,6 +1,10 @@
 package com.twfhclife.generic.utils;
 
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
+
+import com.twfhclife.eservice.api.elife.domain.TransHistoryListRequest;
 
 /**
  * 檢核工具.
@@ -8,6 +12,10 @@ import org.apache.commons.lang3.StringUtils;
  * @author all
  */
 public class ValidateUtil {
+	
+	static String reg = "(?:')|(?:--)|(///*(?:.|[//n//r])*?//*/)|"
+			+ "(//b(select|update|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|into|drop|execute)//b)";
+	static	Pattern sqlPattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * 檢查密碼格式(8～20碼混合之數字及英文字母和符號(須區分大小寫)).
@@ -75,5 +83,32 @@ public class ValidateUtil {
 			return  true;
 		}
 		return  false;
+	}
+	
+	public static boolean TransHistoryListRequestIsValid(TransHistoryListRequest request) {
+		if(StringUtils.isNotEmpty(request.getPolicyNo())) {
+			if(!isValid(request.getPolicyNo())) {
+				return false;
+			}
+		}
+		if(StringUtils.isNotEmpty(request.getUserId())) {
+			if(!isValid(request.getUserId())) {
+				return false;
+			}
+		}
+		if(StringUtils.isNotEmpty(request.getTransType())) {
+			if(!isValid(request.getTransType())) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static boolean isValid(String str) {
+
+		if (sqlPattern.matcher(str).find()) {
+			return false;
+		}
+		return true;
 	}
 }

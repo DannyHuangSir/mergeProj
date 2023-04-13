@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.elife.dao.TransCtcLineacDao">
+
+	<resultMap id="TransCtcLineacMap"	type="com.twfhclife.eservice.api.elife.domain.TransCtcLineacVo">
+		<result column="NEAC_INSU_NO" property="neacInsuNo" />
+		<result column="NEAC_CRE_DATE" property="neacCreDate" />
+		<result column="NEAC_CRE_CODE" property="neacCreCode" />
+		<result column="NEAC_SAME" property="neacSame" />
+		<result column="NEAC_BANK_CODE" property="neacBankCode" />
+		<result column="NEAC_BRANCH_CODE" property="neacBranchCode" />
+		<result column="NEAC_CHAR_AT" property="neacCharAt" />
+		<result column="NEAC_CHAR_ID" property="neacCharId" />
+		<result column="NEAC_NAME" property="neacName" />
+		<result column="NEAC_EN_NAME" property="neacEnName" />
+		<result column="NEAC_ACH_MK" property="neacAchMk" />
+		<result column="NEAC_ACH_BIC" property="neacAchBic" />
+		<result column="NEAC_STATUS" property="neacStatus" />
+		<result column="NEAC_CONF_DATE" property="neacConfDate" />
+		<result column="NEAC_RTN_DATE" property="neacRtnDate" />
+		<result column="NEAC_REPLY_1" property="neacReply1" />
+		<result column="NEAC_REPLY_2" property="neacReply2" />
+		<result column="NEAC_ACC_UNIT" property="neacAccUnit" />
+		<result column="NEAC_CURRENCY" property="neacCurrency" />
+		<result column="NEAC_UP_DATE" property="neacUpDate" />
+		<result column="NEAC_OP_CODE" property="neacOpCode" />
+		<result column="NEAC_CREDIT_MK" property="neacCreditMk" />
+		<result column="NEAC_CREDIT_NO" property="neacCreditNo" />
+		<result column="NEAC_CD_DUE_MY" property="neacCdDueMy" />
+		<result column="NEAC_BIRTH" property="neacBirth" />
+		<result column="NEAC_CELL_PHONE" property="neacCellPhone" />
+		<result column="NEAC_NATION" property="neacNation" />
+		<result column="NEAC_AUTH_NO" property="neacAuthNo" />
+		<result column="NEAC_AUTH_BIT" property="neacAuthBit" />
+	</resultMap>
+	
+	<select id="getRevokeByLineacForNeacInsuNo" resultMap="TransCtcLineacMap" parameterType="java.lang.String">
+	   select * from CTCMGR.LINEAC_ES_FLOWTEST where rownum <![CDATA[ < ]]> 2 and NEAC_INSU_NO = #{insuNo}
+	</select>
+
+</mapper>

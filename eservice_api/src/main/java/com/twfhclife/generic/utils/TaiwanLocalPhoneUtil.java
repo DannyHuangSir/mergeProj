@@ -39,7 +39,6 @@ public class TaiwanLocalPhoneUtil {
 	public static final String PATTERN_08 = "08\\d{6,8}";
 	
 	
-	
 	public static TaiwanLocalPhoneVo parseLocalPhone(String strPhone){
 		TaiwanLocalPhoneVo tLocalPhone = null;
 		
@@ -171,28 +170,28 @@ public class TaiwanLocalPhoneUtil {
 						tempStr = strPhone.replaceFirst("07", "");
 						tLocalPhone.setPhoneNo(tempStr);
 					}
-				}else {
+				}
+				else if(strPhone.startsWith("08")) {
+					pattern = Pattern.compile(PATTERN_08);
+					Matcher matcher = pattern.matcher(strPhone);
+					if(matcher.matches()) {
+						tLocalPhone = new TaiwanLocalPhoneVo();
+						tLocalPhone.setLocalCode("08");
+						tempStr = strPhone.replaceFirst("08", "");
+						tLocalPhone.setPhoneNo(tempStr);
+					}
+				}
+				else {
 					//do nothing.
 				}
 				
-				if(tLocalPhone==null) {
-					if(strPhone.startsWith("08")) {
-						pattern = Pattern.compile(PATTERN_08);
-						Matcher matcher = pattern.matcher(strPhone);
-						if(matcher.matches()) {
-							tLocalPhone = new TaiwanLocalPhoneVo();
-							tLocalPhone.setLocalCode("08");
-							tempStr = strPhone.replaceFirst("08", "");
-							tLocalPhone.setPhoneNo(tempStr);
-						}
-					}
-				}
 
 			}//end-if
 			
 			if(tLocalPhone==null) {//other phone format.
-					tLocalPhone = new TaiwanLocalPhoneVo();
-					tLocalPhone.setPhoneNo(tempStr);
+				tLocalPhone = new TaiwanLocalPhoneVo();
+				tLocalPhone.setLocalCode(tempStr.substring(0, 2));
+				tLocalPhone.setPhoneNo(tempStr.substring(2));
 			}
 		}catch(Exception e) {
 			logger.info(e.toString());

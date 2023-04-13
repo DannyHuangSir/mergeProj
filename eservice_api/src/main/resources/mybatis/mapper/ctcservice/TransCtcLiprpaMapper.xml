@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.elife.dao.TransCtcLiprpaDao">
+
+	
+	<resultMap id="TransCtcLiprpaMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLiprpaVo" >
+		<result column="PRPA_RCP_BATCH" property="prpaRcpBatch"/>
+		<result column="PRPA_ACT_AMT" property="prpaActAmt"/>
+		<result column="PRPK_RCP_TYPE_CODE" property="prpkRcpTypeCode"/>
+		<result column="PROD_CURRENCY" property="prodCurrency"/>
+	</resultMap>
+		
+	<select id="getRevokeByLiprpaForInsuSeqNo" resultMap="TransCtcLiprpaMap" parameterType="java.lang.String">
+		select PRPA_RCP_BATCH, sum(PRPA_ACT_AMT) as PRPA_ACT_AMT, PRPK_RCP_TYPE_CODE, PROD_CURRENCY 
+		from CTCMGR.LIPRPA_ES_FLOWTEST, CTCMGR.LIPRPK_ES_FLOWTEST, CTCMGR.LIPROD_ES_FLOWTEST 
+		where PRPA_DEAL_NO = PRPK_DEAL_NO and PRPA_RCP_BATCH = PRPK_RCP_BATCH 
+		and PROD_NO = #{prodNo}
+		and CONCAT(CONCAT(prpa_insu_type, to_char(prpa_insu_grp_no)),prpa_insu_seq_no) = #{prpaInsuSeqNo}
+		and rownum <![CDATA[ < ]]> 4 
+		group by  PRPA_RCP_BATCH, PRPK_RCP_TYPE_CODE, PROD_CURRENCY 
+		order by PRPA_RCP_BATCH
+	</select>
+	
+</mapper>

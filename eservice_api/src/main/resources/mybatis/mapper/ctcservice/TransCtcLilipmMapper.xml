@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.elife.dao.TransCtcLilipmDao">
+
+	<resultMap id="TransCtcLilipmMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLilipmVo" >
+		<result column="LIPM_INSU_TYPE" property="lipmInsuTyp"/>
+		<result column="LIPM_INSU_NO" property="lipmInsuNo"/>
+		<result column="LIPM_ST" property="lipmSt"/>
+		<result column="LIPM_LO_MK" property="lipmLoMk"/>
+		<result column="LIPA_ADD_CODE" property="lipaAddCode"/>
+		<result column="LIPF_ADD_CODE" property="lipfAddCode"/>
+		<result column="LIPM_ID" property="lipmId"/>
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate"/>
+		<result column="LIPM_TRED_RCP_DATE" property="lipmTredRcpDate"/>
+		<result column="LIPM_RCP_CODE" property="lipmRcpCode"/>
+		<result column="LIPM_TRED_PAAB_DATE" property="lipmTredPaabDate"/>
+		<result column="LIPI_MAIN_AMT" property="lipiMainAmt"/>
+		<result column="NEXT_LIPM_TRED_PAAB_DATE" property="nextLipmTredPaabDate"/>
+		<result column="NEXT_LIPM_TRED_PAAB_DATE2" property="nextLipmTredPaabDate2"/>
+	</resultMap>
+
+	<resultMap id="AcceptanceUnitMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLilipmVo">
+		<result column="LIPM_INSU_NO" property="lipmInsuNo" />
+		<result column="LIPM_ACC_UNIT" property="lipmAccUnit" />
+		<result column="LIPM_LO_MK" property="lipmLoMk" />
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate" />
+	</resultMap>
+
+	<resultMap id="AgentByLipmInsuNoMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLilipmVo">
+		<result column="LIPM_INSU_NO" property="lipmInsuNo" />
+		<result column="LIPM_AGEN_CODE" property="lipmAgenCode" />
+		<result column="AGIN_REC_CODE" property="aginRecCode" />
+		<result column="AGIN_AGEN_CODE" property="aginAgenCode" />
+		<result column="AGIN_INVE_AREA" property="aginInveArea" />
+		<result column="AGIN_SEQ" property="aginSeq" />
+	</resultMap>
+	
+	<resultMap id="OnlineTrialDetailMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLilipmVo">
+		<result column="LIPM_INSU_NO" property="lipmInsuNo"/>
+		<result column="LIPM_ST" property="lipmSt"/>
+		<result column="LIPM_ST_DATE" property="lipmStDate"/>
+		<result column="LIPM_LO_MK" property="lipmLoMk"/>
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate"/>
+		<result column="PROD_NO" property="prodNo"/>
+		<result column="PROD_TYPE" property="prodType"/>
+		<result column="PROD_KIND3" property="prodKind3"/>
+		<result column="ASSN_ARRI_DATE" property="assnArriDate"/>
+	</resultMap>
+	
+	
+	<select id="getCtcLilipm" resultMap="TransCtcLilipmMap" parameterType="java.lang.String">
+	select 
+		lipm_insu_type, 
+		CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as lipm_insu_no,
+	 	LIPM_ST, 
+		LIPM_LO_MK, 
+		(select LISTAGG(LIPA_ADD_CODE, ',') WITHIN GROUP (ORDER BY 1) AS names from CTCMGR.LILIPA_ES_FLOWTEST
+		  where CONCAT(CONCAT(lipa_insu_type, to_char(lipa_insu_grp_no)),lipa_insu_seq_no) 
+		  = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no))
+	 	  as LIPA_ADD_CODE, 
+		(select LISTAGG(LIPF_ADD_CODE, ',') WITHIN GROUP (ORDER BY 1) AS names from CTCMGR.LILIPF_ES_FLOWTEST
+		  where CONCAT(CONCAT(lipf_insu_type, to_char(lipf_insu_grp_no)),lipf_insu_seq_no) 
+		  = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no))
+	 	  as LIPF_ADD_CODE   
+	from CTCMGR.LILIPM_ES_FLOWTEST 
+	where lipm_id = #{lipmId}
+	</select>
+	
+	<select id="getCtcLilipmDetail" resultMap="TransCtcLilipmMap" parameterType="java.lang.String">
+		select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO,
+		 LIPM_ID, LIPM_ST, LIPM_INSU_BEG_DATE, LIPM_TRED_RCP_DATE, LIPM_RCP_CODE, LIPM_TRED_PAAB_DATE, LIPI_MAIN_AMT,
+		CASE
+			WHEN LIPM_RCP_CODE = 'A' THEN ADD_MONTHS(LIPM_TRED_PAAB_DATE, 12)
+			WHEN LIPM_RCP_CODE = 'S' THEN ADD_MONTHS(LIPM_TRED_PAAB_DATE, 6)
+			WHEN LIPM_RCP_CODE = 'Q' THEN ADD_MONTHS(LIPM_TRED_PAAB_DATE, 3)
+			WHEN LIPM_RCP_CODE = 'M' THEN ADD_MONTHS(LIPM_TRED_PAAB_DATE, 1)
+		END as NEXT_LIPM_TRED_PAAB_DATE,
+		ADD_MONTHS(LIPM_TRED_PAAB_DATE, 2) as NEXT_LIPM_TRED_PAAB_DATE2
+		from CTCMGR.LILIPM_ES_FLOWTEST a 
+		LEFT JOIN CTCMGR.LILIPI_ES_FLOWTEST b ON CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+		= CONCAT(CONCAT(lipi_insu_type, to_char(lipi_insu_grp_no)),lipi_insu_seq_no) 
+		where rownum &lt; 2 and CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) = #{policyNo}
+	</select>
+
+	<select id="getRevokeByLilipmForLipmInsuSeqNo" resultMap="AcceptanceUnitMap" parameterType="java.lang.String">
+	select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO,
+	 LIPM_ACC_UNIT, LIPM_LO_MK, LIPM_INSU_BEG_DATE from CTCMGR.LILIPM_ES_FLOWTEST 
+	 where rownum <![CDATA[ < ]]> 2 and CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) = #{lipmInsuSeqNo}	
+	</select>
+
+
+	<select id="getRevokeByLilipmForSeqNoAndAginRecCode" resultMap="AgentByLipmInsuNoMap" parameterType="java.lang.String">
+	select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO,
+	 LIPM_AGEN_CODE, AGIN_REC_CODE, AGIN_AGEN_CODE, AGIN_INVE_AREA, AGIN_SEQ from CTCMGR.LILIPM_ES_FLOWTEST 
+	 left join CTCMGR.LIAGIN_ES_FLOWTEST on LIPM_AGEN_CODE = AGIN_AGEN_CODE where rownum <![CDATA[ < ]]>  2
+	 and CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+	 = #{lipmInsuSeqNo} and AGIN_REC_CODE = '3'
+	</select>
+	
+	<select id="getOnlineTrialDetail" resultMap="OnlineTrialDetailMap" parameterType="java.lang.String">
+	select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO, LIPM_ST, LIPM_ST_DATE, LIPM_LO_MK, LIPM_INSU_BEG_DATE, PROD_NO, PROD_TYPE, PROD_KIND3, ASSN_ARRI_DATE 
+		from CTCMGR.LILIPM_ES_FLOWTEST 
+		left join CTCMGR.LIASSN_ES_FLOWTEST on ASSN_INSU_NO = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+		left join CTCMGR.LIPROD_ES_FLOWTEST on PROD_NO = lipm_insu_type
+		where CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) =  #{lipmInsuSeqNo}
+
+	</select>
+
+
+</mapper>

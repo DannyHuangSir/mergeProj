@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.elife.dao.TransCtcLibnagDao">
+
+	
+	<resultMap id="TransCtcLibnagMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLibnagVo" >
+		<result column="BNAG_ID" property="bnagId"/>
+		<result column="BNAG_REC_CLERK" property="bnagRecClerk"/>
+	</resultMap>
+		
+	<select id="getRevokeByLibnagForBnagInsuSeqNo" resultMap="TransCtcLibnagMap" parameterType="java.lang.String">
+		select BNAG_ID, BNAG_REC_CLERK from CTCMGR.LIBNAG_FLOWTEST where rownum  <![CDATA[ < ]]> 2 and 
+		CONCAT(CONCAT(bnag_insu_type, to_char(bnag_insu_grp_no)),bnag_insu_seq_no) 
+		= #{bnagInsuSeqNo}
+	</select>
+	
+</mapper>

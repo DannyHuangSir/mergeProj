@@ -1,4 +1,4 @@
-//package com.twfhclife.generic.configure;
+package com.twfhclife.generic.configure;//package com.twfhclife.generic.configure;
 //
 //import org.mybatis.spring.annotation.MapperScan;
 //import org.springframework.context.annotation.Configuration;

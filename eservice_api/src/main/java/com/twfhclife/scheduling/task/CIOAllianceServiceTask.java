@@ -463,7 +463,10 @@ public class CIOAllianceServiceTask {
 								}
 							}
 							//3-1.get api-201 response, update caseId, fileId to db.
-							if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+							// 20220629 by 203990
+							/// 非連線問題, 上傳失敗寄送信件給管理者
+							//if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+							if(checkLiaAPIResponseValueAndSendEmail(strResponse,"/code","0",icvo)) {
 								String caseId = MyJacksonUtil.readValue(strResponse, "/data/caseId");
 								log.info("caseId="+caseId);
 								String msg = MyJacksonUtil.readValue(strResponse, "/msg");
@@ -1692,7 +1695,9 @@ public class CIOAllianceServiceTask {
 					/**
 					 * 台银 ——> 联盟  数据的对比
 					 */
-					mapperVo.setPhone(checkChangeAttribute(mapperVo.getPhone(),mapperVo.getcPhone()));
+					// 20220908 by 203990
+					/// 保全變更資料Step3的Mobile用原資料,寫入ContantInfo的Phone為空值,導致送給聯盟的cPhone為空值的BUG調整
+					//mapperVo.setPhone(checkChangeAttribute(mapperVo.getPhone(),mapperVo.getcPhone()));
 					mapperVo.setMail(checkChangeAttribute(mapperVo.getMail(),mapperVo.getcMail()));
 					mapperVo.setrAddress(checkChangeAttribute(mapperVo.getrAddress(),mapperVo.getcAddress()));
 					mapperVo.setmAddress(checkChangeAttribute(mapperVo.getmAddress(),mapperVo.getCmAddress()));
@@ -1775,6 +1780,58 @@ public class CIOAllianceServiceTask {
 			System.out.println("checkLiaAPIResponseValue="+code);
 			if(checkValue.equals(code)) {//success
 				b = true;
+			}
+		}
+		System.out.println("checkLiaAPIResponseValue,return="+b);
+		return b;
+	}
+	/** 20220629 by 203990  非連線問題, 上傳失敗寄送信件給管理者
+	 * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
+	 * @param responseJsonString
+	 * @param pathFieldName ex:"/code"
+	 * @param checkValue ex:"0"
+	 * @return boolean
+	 */
+	private boolean checkLiaAPIResponseValueAndSendEmail(String responseJsonString,String pathFieldName,String checkValue,ContactInfoMapperVo icvo) throws Exception{
+		boolean b = false;
+
+		if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
+			String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);
+			System.out.println("checkLiaAPIResponseValue="+code);
+			String transNum = icvo.getTransNum();
+			if(checkValue.equals(code)) {//success
+				b = true;
+			}
+			else {
+				// 20220629 by 203990
+				// 非連線上傳失敗, 通知後台管理人員
+				Map<String, Object> mailInfo = transContactInfoService.getSendMailInfo();
+				//發送系統管理員
+				long timeMillis = System.currentTimeMillis();
+				List<String> receivers = new ArrayList<String>();
+				receivers = (List)mailInfo.get("receivers");
+				Map<String, String> paramMap = new HashMap<String, String>();
+				paramMap.put("EMAIL",EMailTemplate.INSURED_EMAIL_IS_NULL);
+				paramMap.put("DATA",transNum);
+				paramMap.put("EXCEPTION_LOG",responseJsonString);
+				MessageTriggerRequestVo voCIO = new MessageTriggerRequestVo();
+				voCIO.setMessagingTemplateCode(ApConstants.TRANSFER_MAIL_024);
+				voCIO.setSendType("email");
+				voCIO.setMessagingReceivers(receivers);
+				voCIO.setParameters(paramMap);
+				voCIO.setSystemId(ApConstants.SYSTEM_ID);
+				//進行發送通信
+				String resultSYSMailMsg = messagingTemplateService.triggerMessageTemplate(voCIO);
+				log.info(ApConstants.TRANSFER_MAIL_024 + resultSYSMailMsg);
+
+				String msg = MyJacksonUtil.readValue(responseJsonString, "/msg");
+				icvo.setCaseId("fake_pass");
+				icvo.setCode(code);
+				icvo.setMsg(msg);
+				icvo.setStatus(ContactInfoVo.STATUS_WAITING_FOR_UPLOAD);
+
+				log.info("===========UI件呼叫完 API201 非連線上傳失敗, 通知後台管理人員==========="+transNum+":fake_pass");
+				contactInfoService.updateCaseIdByContactSeqId(icvo);
 			}
 		}
 		System.out.println("checkLiaAPIResponseValue,return="+b);

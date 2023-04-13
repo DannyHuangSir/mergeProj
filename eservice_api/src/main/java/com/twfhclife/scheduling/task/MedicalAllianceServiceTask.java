@@ -11,6 +11,7 @@ import com.twfhclife.alliance.service.IExternalService;
 import com.twfhclife.alliance.service.IMedicalService;
 import com.twfhclife.alliance.service.impl.MedicalServiceImpl;
 import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
+import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
 import com.twfhclife.eservice.onlineChange.model.MedicalTreatmentClaimFileTypeEnum;
@@ -24,11 +25,14 @@ import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
 import com.twfhclife.eservice.web.model.HospitalVo;
 import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
 import com.twfhclife.eservice.web.model.OutpatientType;
+import com.twfhclife.eservice_api.service.IMessagingTemplateService;
 import com.twfhclife.eservice_api.service.IParameterService;
+import com.twfhclife.generic.dao.adm.ParameterDao;
 import com.twfhclife.generic.service.MailService;
 import com.twfhclife.generic.service.SmsService;
 import com.twfhclife.generic.utils.ApConstants;
 import com.twfhclife.generic.utils.CallApiCode;
+import com.twfhclife.generic.utils.EMailTemplate;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import com.twfhclife.generic.utils.StatuCode;
 
@@ -61,6 +65,9 @@ public class MedicalAllianceServiceTask {
 
     public static final String MSG_SUCCESS = "SUCCESS";
 
+    @Autowired
+    @Qualifier("apiParameterDao")
+    private ParameterDao parameterDao;
 
     @Autowired
     IClaimChainService claimChainService;
@@ -131,6 +138,9 @@ public class MedicalAllianceServiceTask {
     
     @Autowired
     private MedicalTreatmentExternalServiceImpl medicalExternalServiceImpl;
+
+	@Autowired
+	IMessagingTemplateService messagingTemplateService;
 
     @Autowired
     private SmsService smsService;
@@ -434,7 +444,10 @@ public class MedicalAllianceServiceTask {
                                 log.info("call URL_API401,strResponse="+strResponse);
                                 
                                 //3-1.get api-401 response, update caseId, fileId to db.
-                                if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+    							// 20220708 by 203990
+    							/// 非連線問題, 上傳失敗寄送信件給管理者
+                                //if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+                                if(checkLiaAPIResponseValueAndSendEmail(strResponse,"/code","0",vo)) {
                                     String caseId = MyJacksonUtil.readValue(strResponse, "/data/caseId");
                                     log.info("caseId="+caseId);
                                     String msg = MyJacksonUtil.readValue(strResponse, "/msg");
@@ -1408,6 +1421,67 @@ public class MedicalAllianceServiceTask {
             if(checkValue.equals(code)) {//success
                 b = true;
             }
+        }
+        log.info("-----------checkLiaAPIResponseValue-----return  ------"+b);
+        return b;
+    }
+    /** 20220708 by 203990  非連線問題, 上傳失敗寄送信件給管理者
+     * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
+     * @param responseJsonString
+     * @param pathFieldName ex:"/code"
+     * @param checkValue ex:"0"
+     * @return boolean
+     */
+    private boolean checkLiaAPIResponseValueAndSendEmail(String responseJsonString,String pathFieldName,String checkValue,MedicalTreatmentClaimVo vo) throws Exception{
+        boolean b = false;
+        if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
+            String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);
+            log.info("-----------checkLiaAPIResponseValue-----------"+code);
+			String transNum = vo.getTransNum();
+            if(checkValue.equals(code)) {//success
+                b = true;
+            }
+			else {
+				// 20220708 by 203990
+				// 非連線上傳失敗, 通知後台管理人員
+				//發送系統管理員
+				long timeMillis = System.currentTimeMillis();
+				List<String> receivers = new ArrayList<String>();
+				//Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo("1"); //這個預設上是取得 ApConstants.TWFHCLIFE_ADM 的管理者EMAIL, 因為在別處也有被用到, 所以就不動它
+				//receivers = (List)mailInfo.get("receivers");
+	            String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_AMD, ApConstants.MEDICAL_ALLIANCE_MAIL_TWFHCLIFE_ADM);
+	            String[] mails = mailTo.split(";");
+	            if(mails.length > 0) {
+	                for (String mail : mails) {
+	                    receivers.add(mail);
+	                    log.info("Mail Address : " + mail);
+	                }
+	            }
+
+				Map<String, String> paramMap = new HashMap<String, String>();
+				paramMap.put("EMAIL",EMailTemplate.INSURED_EMAIL_IS_NULL);
+				paramMap.put("DATA",transNum);
+				paramMap.put("EXCEPTION_LOG",responseJsonString);
+				MessageTriggerRequestVo voCIO = new MessageTriggerRequestVo();
+				voCIO.setMessagingTemplateCode(ApConstants.TRANSFER_MAIL_026);
+				voCIO.setSendType("email");
+				voCIO.setMessagingReceivers(receivers);
+				voCIO.setParameters(paramMap);
+				voCIO.setSystemId(ApConstants.SYSTEM_ID);
+				//進行發送通信
+				String resultSYSMailMsg = messagingTemplateService.triggerMessageTemplate(voCIO);
+				log.info(ApConstants.TRANSFER_MAIL_026 + resultSYSMailMsg);
+
+				String msg = MyJacksonUtil.readValue(responseJsonString, "/msg");
+				vo.setCaseId("fake_pass");
+				// 醫起通記錄表 ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM 沒有 code, msg 欄位 = 開發時就沒有記錄回傳狀態及回傳訊息
+				//vo.setCode(code);
+				//vo.setMsg(msg);
+				//vo.setStatus(ContactInfoVo.STATUS_WAITING_FOR_UPLOAD);
+
+				log.info("===========UI件呼叫完 API401 非連線上傳失敗, 通知後台管理人員==========="+transNum+":fake_pass");
+				iMedicalService.updateMedicalTreatmentClaimToAlliance(vo);
+			}
         }
         log.info("-----------checkLiaAPIResponseValue-----return  ------"+b);
         return b;

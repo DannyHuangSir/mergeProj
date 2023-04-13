@@ -1,4 +1,4 @@
-//package com.twfhclife.generic.aspect;
+package com.twfhclife.generic.aspect;//package com.twfhclife.generic.aspect;
 //
 //import java.lang.reflect.Method;
 //import java.util.Arrays;

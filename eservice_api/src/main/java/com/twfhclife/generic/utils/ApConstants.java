@@ -108,6 +108,16 @@ public interface ApConstants {
 	public static final String TRANSFER_MAIL_019="TRANSFER_MAIL_019";
 	/**【保全聯盟鏈 - 轉收件 - 擋件】通知後台管理人員 发送邮件*/
 	public static final String TRANSFER_MAIL_023="TRANSFER_MAIL_023";
+
+	/**【保全聯盟鏈 - 首家件上傳失敗】管理人員通知信  发送邮件*/
+	public static final String TRANSFER_MAIL_024="TRANSFER_MAIL_024";
+
+	/**【理賠聯盟鏈 - 首家件上傳失敗】管理人員通知信  发送邮件*/
+	public static final String TRANSFER_MAIL_025="TRANSFER_MAIL_025";
+
+	/**【醫起通聯盟鏈 - 首家件上傳失敗】管理人員通知信  发送邮件*/
+	public static final String TRANSFER_MAIL_026="TRANSFER_MAIL_026";
+
 	/**客戶通知  轉收件通知  臺銀人壽保單理賠申請通知*/
 	public static final String ELIFE_MAIL_023="ELIFE_MAIL_023";
 	/**客戶通知	首家件通知  臺銀人壽保單理賠申請通知*/
@@ -116,8 +126,8 @@ public interface ApConstants {
 	public static final String ELIFE_MAIL_025="ELIFE_MAIL_025";
 	/**內部人員通知	轉收件通知	理賠聯盟鏈轉收申請通知*/
 	public static final String ELIFE_MAIL_026="ELIFE_MAIL_026";
-
-	public static final String ELIFE_MAIL_036 ="ELIFE_MAIL_036";
+	/**內部人員通知	轉收件通知	醫起通轉收申請通知*/
+	public static final String ELIFE_MAIL_036 ="ELIFE_MAIL_0361";
 
 	/** 醫療日程安排-系統屬性 */
 	public static final String SYS_MEDICAL_SCH = "SYS_MEDICAL_SCH";

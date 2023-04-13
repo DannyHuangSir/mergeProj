@@ -31,6 +31,7 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.twfhclife.alliance.model.CompanyVo;
+import com.twfhclife.alliance.model.ContactInfoVo;
 import com.twfhclife.alliance.model.InsuranceClaimFileDataVo;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.InsuranceClaimVo;
@@ -38,10 +39,15 @@ import com.twfhclife.alliance.model.NotifyOfNewCaseVo;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.alliance.service.IExternalService;
 import com.twfhclife.alliance.service.impl.AllianceServiceImpl;
+import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
 import com.twfhclife.eservice.api.elife.domain.TransAddRequest;
 import com.twfhclife.eservice.api.elife.domain.TransAddResponse;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
+
+import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
+import com.twfhclife.eservice_api.service.IMessagingTemplateService;
+
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
@@ -52,6 +58,7 @@ import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.service.MailService;
 import com.twfhclife.generic.service.SmsService;
 import com.twfhclife.generic.utils.ApConstants;
+import com.twfhclife.generic.utils.EMailTemplate;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 
 @Component
@@ -112,6 +119,9 @@ public class AllianceServiceTask {
 	
 	@Autowired
 	private IInsuranceClaimService insuranceClaimService;
+
+	@Autowired
+	IMessagingTemplateService messagingTemplateService;
 
 	@Autowired
 	private SmsService smsService;
@@ -242,7 +252,10 @@ public class AllianceServiceTask {
 							String strResponse = allianceService.postForEntity(URL_API101, icvo, "API-101理賠申請書上傳");
 							log.info("call URL_API101,strResponse="+strResponse);
 							//3-1.get api-101 response, update caseId, fileId to db.
-							if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+							// 20220706 by 203990
+							/// 非連線問題, 上傳失敗寄送信件給管理者
+							//if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
+							if(checkLiaAPIResponseValueAndSendEmail(strResponse,"/code","0",icvo)) {
 								String caseId = MyJacksonUtil.readValue(strResponse, "/data/caseId");
 								log.info("caseId="+caseId);
 								String msg = MyJacksonUtil.readValue(strResponse, "/msg");
@@ -1026,6 +1039,58 @@ public class AllianceServiceTask {
 			System.out.println("checkLiaAPIResponseValue="+code);
 			if(checkValue.equals(code)) {//success
 				b = true;
+			}
+		}
+		System.out.println("checkLiaAPIResponseValue,return="+b);
+		return b;
+	}
+	/** 20220629 by 203990  非連線問題, 上傳失敗寄送信件給管理者
+	 * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
+	 * @param responseJsonString
+	 * @param pathFieldName ex:"/code"
+	 * @param checkValue ex:"0"
+	 * @return boolean
+	 */
+	private boolean checkLiaAPIResponseValueAndSendEmail(String responseJsonString,String pathFieldName,String checkValue, InsuranceClaimMapperVo icvo) throws Exception{
+		boolean b = false;
+
+		if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
+			String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);
+			System.out.println("checkLiaAPIResponseValue="+code);
+			String transNum = icvo.getTransNum();
+			if(checkValue.equals(code)) {//success
+				b = true;
+			}
+			else {
+				// 20220629 by 203990
+				// 非連線上傳失敗, 通知後台管理人員
+				Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
+				//發送系統管理員
+				long timeMillis = System.currentTimeMillis();
+				List<String> receivers = new ArrayList<String>();
+				receivers = (List)mailInfo.get("receivers");
+				Map<String, String> paramMap = new HashMap<String, String>();
+				paramMap.put("EMAIL",EMailTemplate.INSURED_EMAIL_IS_NULL);
+				paramMap.put("DATA",transNum);
+				paramMap.put("EXCEPTION_LOG",responseJsonString);
+				MessageTriggerRequestVo voCIO = new MessageTriggerRequestVo();
+				voCIO.setMessagingTemplateCode(ApConstants.TRANSFER_MAIL_025);
+				voCIO.setSendType("email");
+				voCIO.setMessagingReceivers(receivers);
+				voCIO.setParameters(paramMap);
+				voCIO.setSystemId(ApConstants.SYSTEM_ID);
+				//進行發送通信
+				String resultSYSMailMsg = messagingTemplateService.triggerMessageTemplate(voCIO);
+				log.info(ApConstants.TRANSFER_MAIL_025 + resultSYSMailMsg);
+
+				String msg = MyJacksonUtil.readValue(responseJsonString, "/msg");
+				icvo.setCaseId("fake_pass");
+				icvo.setCode(code);
+				icvo.setMsg(msg);
+				//icvo.setStatus(ContactInfoVo.STATUS_WAITING_FOR_UPLOAD);
+
+				log.info("===========UI件呼叫完 API101 非連線上傳失敗, 通知後台管理人員==========="+transNum+":fake_pass");
+				claimChainService.updateCaseIdByClaimSeqId(icvo);
 			}
 		}
 		System.out.println("checkLiaAPIResponseValue,return="+b);

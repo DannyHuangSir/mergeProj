@@ -552,7 +552,7 @@
 					B.ID AS SEQ_ID,
 			        B.BATCH_ID,		
 				    D.LIPM_ID AS CIDNO,		   
-					D.LIPM_BIRTH AS CBIRDATE,		
+					CAST(ESERVICE.DBO.FN_DEBASE64(D.LIPM_BIRTH) as date) AS CBIRDATE,		
 					ESERVICE.DBO.FN_DEBASE64(D.LIPM_NAME_1) CNAME,
 					ESERVICE.DBO.FN_DEBASE64(A.MOBILE) PHONE,
 					ESERVICE.DBO.FN_DEBASE64(A.EMAIL) MAIL,
@@ -575,7 +575,7 @@
 				    convert(varchar(8),getDate(),112) + replace(convert(varchar(8),getDate(),114),':','') 	 LOGDATETIME,
 					'PDCA(001)' LOGDESC1,
 					'W' SOURCE ,
-					Q.LIPI_BIRTH  LIPI_BIRTH,
+					CAST(ESERVICE.DBO.FN_DEBASE64(Q.LIPI_BIRTH) as date) AS LIPI_BIRTH,
 					E.TRANS_NUM  TRANS_NUM
 			FROM                                         		                               
 					ESERVICE.DBO.TRANS_CONTACT_INFO_DTL A                                       	

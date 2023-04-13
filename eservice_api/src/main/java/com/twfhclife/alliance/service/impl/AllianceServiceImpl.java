@@ -151,13 +151,24 @@ public class AllianceServiceImpl implements IExternalService{
 	        
 	        strRes= responseEntity.getBody();
 			logger.info("responseEntity.getBody()="+strRes);
-			boolean checkRes = this.checkResponseStatus(responseEntity);
+
+			// 20220907 by 203990
+			/// add checkCode0
+	        boolean checkRes  = this.checkResponseStatus(responseEntity);//check http status
+	        boolean checkCode0 = false;//check response code value.
+	        if(checkRes) {
+	        	if (responseEntity!=null && responseEntity.getBody()!=null) {
+		        	//String(10),0代表成功,錯誤代碼則自行定義
+		        	checkCode0 = checkLiaAPIResponseValue(responseEntity.getBody(), "/code", "0");
+		        }
+	        }
+	        
+	        if(checkCode0 && checkRes) {
+	        	uc.setNcStatus(uc.NC_STATUS_S);
+	        }else {
+	        	uc.setNcStatus(uc.NC_STATUS_F);
+	        }
 			
-			if(checkRes) {
-				uc.setNcStatus(uc.NC_STATUS_S);
-			}else {
-				uc.setNcStatus(uc.NC_STATUS_F);
-			}
 			uc.setCompleteDate(new Date());
 			MyJacksonUtil.getNodeString(strRes, "msg");
 			uc.setMsg(getResInfo(strRes));

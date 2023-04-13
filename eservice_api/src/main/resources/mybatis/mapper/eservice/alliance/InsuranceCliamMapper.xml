@@ -136,7 +136,7 @@
 	
 	<!-- 取得可上傳但未上傳eservie.TRANS的資料 -->
 	<select id="getInsuranceClaimByHasNotifySeqIdNoTransNum" resultMap="InsuranceClaimResultMap">
-		select 
+		select top(10)
 		<include refid="INSURANCE_CLAIM_ALL"></include>
 		from ESERVICE.DBO.INSURANCE_CLAIM
 		where NOTIFY_SEQ_ID is not null

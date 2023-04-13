@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper	namespace="com.twfhclife.eservice.api.elife.dao.TransCtcSelectUtilDao">
+
+	<resultMap id="TransCtcSelectData" type="com.twfhclife.eservice.api.elife.domain.TransCtcSelectDataVo">
+		<result column="LIPM_INSU_NO" property="lipmInsuNo" />
+		<result column="LIPM_NAME_1" property="lipmName1" />
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate" />
+		<result column="LIPM_RCP_CODE" property="lipmRcpCode" />
+		<result column="LIPM_ST" property="lipmSt" />
+		<result column="LIPI_ST_DATE" property="lipiStDate" />
+		<result column="LIPI_NAME" property="lipiName" />
+		<result column="LIPI_MAIN_AMT" property="lipiMainAmt" />
+		<result column="LIPI_TABL_PREM" property="lipiTablPrem" />
+		<result column="PMDA_E_INFO_N" property="pmdaEInfoN" />
+		<result column="PMDA_APPLICANT_CELLPHONE" property="pmdaApplicantCellphone" />
+		<result column="PMDA_APPLICANT_EMAIL" property="pmdaApplicantEmail" />
+		<result column="PMDA_EPO_MK" property="pmdaEpoMk" />
+		<result column="ASSN_ARRI_DATE" property="assnArriDate" />
+		<result column="SETT_CH_NAME" property="settChName" />
+		<result column="SETT_TERMINATE" property="settTerminate" />
+		<result column="PROD_CURRENCY" property="prodCurrency" />
+	</resultMap>
+	
+	<select id="getTransCtcSelectDataByLipmId" resultMap="TransCtcSelectData" parameterType="java.lang.String">
+		select distinct CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) lipm_insu_no,
+		 LIPM_NAME_1, LIPM_INSU_BEG_DATE, LIPM_RCP_CODE, LIPM_ST, LIPI_NAME, LIPI_MAIN_AMT, 
+		 LIPI_TABL_PREM, PMDA_E_INFO_N, PMDA_APPLICANT_CELLPHONE, PMDA_APPLICANT_EMAIL, PMDA_EPO_MK, ASSN_ARRI_DATE, sett_ch_name, SETT_TERMINATE, PROD_CURRENCY
+		 from CTCMGR.LILIPM_ES_FLOWTEST
+		 left join CTCMGR.LILIPI_ES_FLOWTEST on CONCAT(CONCAT(lipi_insu_type, to_char(lipi_insu_grp_no)),lipi_insu_seq_no) 
+		 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+		 left join CTCMGR.LIPMDA_ES_FLOWTEST on CONCAT(CONCAT(pmda_insu_type, to_char(pmda_insu_grp_no)),pmda_insu_seq_no)
+		 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+		 left join CTCMGR.LIASSN_ES_FLOWTEST on ASSN_INSU_NO 
+		 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+		 left join CTCMGR.LISETT_ES_FLOWTEST on sett_insu_type 
+		 = lipm_insu_type 
+		 left join CTCMGR.LIPROD_ES_FLOWTEST on PROD_NO 
+		 = lipm_insu_type where lipm_id = #{lipmId}
+		 and lipm_st  <![CDATA[ < ]]> 19
+	</select>
+	
+	<resultMap id="TransCtcSelectDetail" type="com.twfhclife.eservice.api.elife.domain.TransCtcSelectDetailVo">
+		<result column="LIPM_INSU_NO" property="lipmInsuNo" />
+		<result column="LIPM_NAME_1 " property="lipmName1 " />
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate" />
+		<result column="LIPM_RCP_CODE" property="lipmRcpCode" />
+		<result column="LIPM_ST" property="lipmSt" />
+		<result column="LIPM_ADDR " property="lipmAddr" />
+		<result column="LIPM_CHAR_ADDR" property="lipmCharAddr" />
+		<result column="LIPM_TEL_H" property="lipmTelH" />
+		<result column="LIPM_TEL_O " property="lipmTelO " />
+		<result column="LIPI_NAME " property="lipiName " />
+		<result column="LIPI_MAIN_AMT " property="lipiMainAmt " />
+		<result column="LIPI_TABL_PREM " property="lipiTablPrem " />
+		<result column="PMDA_E_INFO_N " property="pmdaEInfoN " />
+		<result column="PMDA_APPLICANT_CELLPHONE " property="pmdaApplicantCellphone " />
+		<result column="PMDA_APPLICANT_EMAIL " property="pmdaApplicantEmail" />
+		<result column="PMDA_EPO_MK" property="pmdaEpoMk" />
+		<result column="ASSN_ARRI_DATE" property="assnArriDate" />
+		<result column="SETT_CH_NAME" property="settChName" />
+		<result column="SETT_TERMINATE " property="settTerminate " />
+		<result column="PROD_CURRENCY" property="prodCurrency" />
+	</resultMap>
+	
+	<select id="getTransCtcSelectDetailByLipmInsuSeqNo" resultMap="TransCtcSelectDetail" parameterType="java.lang.String">
+		select distinct CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) lipm_insu_no,
+		 LIPM_NAME_1, LIPM_INSU_BEG_DATE, LIPM_RCP_CODE, LIPM_ST,LIPM_ADDR, LIPM_CHAR_ADDR,
+		 LIPM_TEL_H, LIPM_TEL_O, LIPI_NAME, LIPI_MAIN_AMT, 
+		 LIPI_TABL_PREM, PMDA_E_INFO_N, PMDA_APPLICANT_CELLPHONE, PMDA_APPLICANT_EMAIL, PMDA_EPO_MK, ASSN_ARRI_DATE, sett_ch_name, SETT_TERMINATE, PROD_CURRENCY
+		 from CTCMGR.LILIPM_ES_FLOWTEST 
+		 left join CTCMGR.LILIPI_ES_FLOWTEST on CONCAT(CONCAT(lipi_insu_type, to_char(lipi_insu_grp_no)),lipi_insu_seq_no) 
+		 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+		 left join CTCMGR.LIPMDA_ES_FLOWTEST on CONCAT(CONCAT(pmda_insu_type, to_char(pmda_insu_grp_no)),pmda_insu_seq_no)
+		 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+		 left join CTCMGR.LIASSN_ES_FLOWTEST on ASSN_INSU_NO 
+		 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+		 left join CTCMGR.LISETT_ES_FLOWTEST on sett_insu_type 
+		 = lipm_insu_type 
+		 left join CTCMGR.LIPROD_ES_FLOWTEST on PROD_NO 
+		 = lipm_insu_type where  CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no)  = #{lipmInsuSeqNo}
+	</select>
+
+	<resultMap id="TransCtcSelectDataAddCode" type="com.twfhclife.eservice.api.elife.domain.TransCtcSelectDataAddCodeVo">
+		<result column="LIPM_INSU_NO" property="lipmInsuNo" />
+		<result column="LIPM_NAME_1" property="lipmName1" />
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate" />
+		<result column="LIPM_RCP_CODE" property="lipmRcpCode" />
+		<result column="LIPM_ST" property="lipmSt" />
+		<result column="LIPM_ADDR" property="lipmAddr" />
+		<result column="LIPM_CHAR_ADDR" property="lipmCharAddr" />
+		<result column="LIPM_LO_MK" property="lipmLoMk" />
+		<result column="LIPM_INSU_TYPE" property="lipmInsuType" />
+		<result column="LIPM_TEL_H" property="lipmTelH" />
+		<result column="LIPM_TEL_O" property="lipmTelO" />
+		<result column="LIPI_NAME" property="lipiName" />
+		<result column="LIPI_MAIN_AMT" property="lipiMainAmt" />
+		<result column="LIPI_TABL_PREM" property="lipiTablPrem" />
+		<result column="LIPI_INSU_END_DATE" property="lipiInsuEndDate" />
+		<result column="PMDA_E_INFO_N" property="pmdaEInfoN" />
+		<result column="PMDA_APPLICANT_CELLPHONE" property="pmdaApplicantCellphone" />
+		<result column="PMDA_APPLICANT_EMAIL" property="pmdaApplicantEmail" />
+		<result column="PMDA_EPO_MK" property="pmdaEpoMk" />
+		<result column="ASSN_ARRI_DATE" property="assnArriDate" />
+		<result column="SETT_CH_NAME" property="settChName" />
+		<result column="SETT_TERMINATE" property="settTerminate" />
+		<result column="PROD_CURRENCY" property="prodCurrency" />
+		<result column="LIPM_FLEX_RCP_MK" property="lipmFlexRcpMk" />
+		<result column="LIPM_ORI_RCP_CODE" property="lipmOriRcpCode" />
+		<result column="LIPI_BIRTH" property="lipiBirth" />
+		<result column="LIPI_TRED_RCP_TMS" property="lipiTredRcpTms" />
+		<result column="LIPI_PREM_YEAR" property="lipiPremYear" />
+		<result column="PROD_IS_FATCA" property="prodIsFatca" />
+		<result column="LIPA_ADD_CODE" property="lipaAddCode" />
+		<result column="LIPF_ADD_CODE" property="lipfAddCode" />
+	</resultMap>
+
+	<select id="getTransCtcSelectDataAddCode" resultMap="TransCtcSelectDataAddCode" parameterType="java.lang.String">
+	select distinct CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) lipm_insu_no,
+	LIPM_NAME_1, LIPM_INSU_BEG_DATE, LIPM_RCP_CODE, LIPM_ST,LIPM_ADDR, LIPM_CHAR_ADDR, LIPM_LO_MK ,LIPM_INSU_TYPE,
+	LIPM_TEL_H, LIPM_TEL_O, LIPI_NAME, LIPI_MAIN_AMT, 
+	LIPI_TABL_PREM, LIPI_INSU_END_DATE ,
+	PMDA_E_INFO_N, PMDA_APPLICANT_CELLPHONE, PMDA_APPLICANT_EMAIL, PMDA_EPO_MK, 
+	 ASSN_ARRI_DATE, sett_ch_name, SETT_TERMINATE, PROD_CURRENCY,
+	 LIPM_FLEX_RCP_MK, LIPM_ORI_RCP_CODE, LIPI_BIRTH, LIPI_TRED_RCP_TMS, LIPI_PREM_YEAR, PROD_IS_FATCA ,
+	 (select LISTAGG(LIPA_ADD_CODE, ',') WITHIN GROUP (ORDER BY 1) AS names 
+	 from CTCMGR.LILIPA_ES_FLOWTEST where 
+	 CONCAT(CONCAT(lipa_insu_type, to_char(lipa_insu_grp_no)),lipa_insu_seq_no) 
+	 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no)) 
+	 as LIPA_ADD_CODE, (select LISTAGG(LIPF_ADD_CODE, ',') 
+	 WITHIN GROUP (ORDER BY 1) AS names 
+	 from CTCMGR.LILIPF_ES_FLOWTEST 
+	 where CONCAT(CONCAT(lipf_insu_type, to_char(lipf_insu_grp_no)),lipf_insu_seq_no) 
+	 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no)) 
+	 as LIPF_ADD_CODE from CTCMGR.LILIPM_ES_FLOWTEST 
+	 left join CTCMGR.LILIPI_ES_FLOWTEST on CONCAT(CONCAT(lipi_insu_type, to_char(lipi_insu_grp_no)),lipi_insu_seq_no)
+	 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+	 left join CTCMGR.LIPMDA_ES_FLOWTEST on CONCAT(CONCAT(pmda_insu_type, to_char(pmda_insu_grp_no)),pmda_insu_seq_no) 
+	 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+	 left join CTCMGR.LIASSN_ES_FLOWTEST on ASSN_INSU_NO 
+	 = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) 
+	 left join CTCMGR.LISETT_ES_FLOWTEST on sett_insu_type = lipm_insu_type 
+	 left join CTCMGR.LIPROD_ES_FLOWTEST on PROD_NO = lipm_insu_type 
+	 where lipm_id = #{lipmId} and LIPM_ST <![CDATA[ < ]]> 19
+	</select>
+	
+</mapper>

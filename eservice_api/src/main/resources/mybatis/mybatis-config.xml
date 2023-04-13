@@ -132,8 +132,16 @@
 		<mapper resource="mybatis/mapper/eservice/onlineChange/TransMedicalTreatmentClaimMapper.xml"/>
 		<mapper resource="mybatis/mapper/eservice/onlineChange/HospitalInsuranceCompanyMapper.xml"/>
 
-<mapper resource="mybatis/mapper/eservice/onlineChange/TransDnsMapper.xml"/>
+		<mapper resource="mybatis/mapper/eservice/onlineChange/TransDnsMapper.xml"/>
 		<mapper resource="mybatis/mapper/eservice/alliance/ContactInfoMapper.xml"/>
 		<mapper resource="mybatis/mapper/eservice/alliance/NotifyOfNewCaseChangeMapper.xml"/>
+		
+		<mapper resource="mybatis/mapper/ctcservice/TransCtcLilipmMapper.xml"/>
+		<mapper resource="mybatis/mapper/ctcservice/TransCtcLipmdaMapper.xml"/>
+		<mapper resource="mybatis/mapper/ctcservice/TransCtcSelectUtilMapper.xml"/>
+		<mapper resource="mybatis/mapper/ctcservice/TransCtcLibnagMapper.xml"/>
+		<mapper resource="mybatis/mapper/ctcservice/TransCtcLineacMapper.xml"/>
+		<mapper resource="mybatis/mapper/ctcservice/TransCtcLiprpaMapper.xml"/>
+
 	</mappers>
 </configuration>

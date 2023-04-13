@@ -1,8 +1,10 @@
 package com.twfhclife.alliance.service.impl;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.twfhclife.alliance.dao.IMedicalDao;
 import com.twfhclife.alliance.dao.NotifyOfNewCaseMedicalDao;
+import com.twfhclife.alliance.dao.UnionCourseDao;
 import com.twfhclife.alliance.model.*;
 import com.twfhclife.alliance.service.IMedicalService;
 import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
@@ -15,17 +17,29 @@ import com.twfhclife.eservice_api.service.IMessagingTemplateService;
 import com.twfhclife.generic.dao.adm.ParameterDao;
 import com.twfhclife.generic.utils.ApConstants;
 import com.twfhclife.generic.utils.CallApiCode;
+import com.twfhclife.generic.utils.MyJacksonUtil;
 import com.twfhclife.generic.utils.StatuCode;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;

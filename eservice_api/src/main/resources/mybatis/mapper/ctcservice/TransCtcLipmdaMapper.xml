@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.elife.dao.TransCtcLipmdaDao">
+
+	<resultMap id="TransCtcLipmdaMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLipmdaVo" >
+		<result column="PMDA_INSU_TYPE" property="pmdaInsuType"/>
+		<result column="PMDA_INSU_GRP_NO" property="pmdaInsuGrpNo"/>
+		<result column="PMDA_INSU_SEQ_NO" property="pmdaInsuSeqNo"/>
+		<result column="PMDA_3_NAME" property="pmda3Name"/>
+		<result column="PMDA_3_ADDR" property="pmda3Addr"/>
+		<result column="PMDA_3_ZIP_CODE" property="pmda3ZipCode"/>
+		<result column="PMDA_OP_CODE" property="pmdaOpCode"/>
+		<result column="PMDA_UP_DATE" property="pmdaUpDate"/>
+		<result column="PMDA_ATM_NO" property="pmdaAtmNo"/>
+		<result column="PMDA_APPLICANT_EMAIL" property="pmdaApplicantEmail"/>
+		<result column="PMDA_APPLICANT_CELLPHONE" property="pmdaApplicantCellphone"/>
+		<result column="PMDA_INSURED_EMAIL" property="pmdaInsuredEmail"/>
+		<result column="PMDA_INSURED_CELLPHONE" property="pmdaInsuredCellphone"/>
+		<result column="PMDA_SOURCE_POLICY" property="pmdaSourcePolicy"/>
+		<result column="PMDA_ASDA_CODE" property="pmdaAsdaCode"/>
+		<result column="PMDA_ASDA_UNIT" property="pmdaAsdaUnit"/>
+		<result column="PMDA_ASDA_SEQ" property="pmdaAsdaSeq"/>
+		<result column="PMDA_MINORITY_CODE" property="pmdaMinorityCode"/>
+		<result column="PMDA_LINK_CODE" property="pmdaLinkCode"/>
+		<result column="PMDA_CRE_DATE" property="pmdaCreDate"/>
+		<result column="PMDA_RECRE_MK" property="pmdaRecreMk"/>
+		<result column="PMDA_ARRI_DATE" property="pmdaArriDate"/>
+		<result column="PMDA_UP_DATE_A" property="pmdaUpDateA"/>
+		<result column="PMDA_OP_CODE_A" property="pmdaOpCodeA"/>
+		<result column="PMDA_FIRST_RCP_AMT" property="pmdaFirstRcpAmt"/>
+		<result column="PMDA_INSU_NEWS_MK" property="pmdaInsuNewsMk"/>
+		<result column="PMDA_E_INFO_N" property="pmdaEInfoN"/>
+		<result column="PMDA_E_INFO_C" property="pmdaEInfoC"/>
+		<result column="PMDA_E_INFO_P" property="pmdaEInfoP"/>
+		<result column="PMDA_E_STMT" property="pmdaEStmt"/>
+		<result column="PMDA_PI_TEL" property="pmdaPiTel"/>
+		<result column="PMDA_PI_ZIP_CODE" property="pmdaPiZipCode"/>
+		<result column="PMDA_PI_NAME_2" property="pmdaPiName2"/>
+		<result column="PMDA_REVIEW_DATE" property="pmdaReviewDate"/>
+		<result column="PMDA_APPLICANT_PEPS" property="pmdaApplicantPeps"/>
+		<result column="PMDA_INSURED_PEPS" property="pmdaInsuredPeps"/>
+		<result column="PMDA_INVE_ATTR" property="pmdaInveAttr"/>
+		<result column="PMDA_MAIL" property="pmdaMail"/>
+		<result column="PMDA_FIRST_TR_METHOD" property="pmdaFirstTrMethod"/>
+	</resultMap>
+	
+	<select id="getLipmda" resultMap="TransCtcLipmdaMap" parameterType="java.lang.String">
+	   select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) lipm_insu_no
+		, PMDA_E_INFO_N ,PMDA_APPLICANT_CELLPHONE, PMDA_APPLICANT_EMAIL from CTCMGR.LILIPM_ES_FLOWTEST 
+		left join CTCMGR.LIPMDA_ES_FLOWTEST on CONCAT(CONCAT(pmda_insu_type, to_char(pmda_insu_grp_no))
+		,pmda_insu_seq_no) = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),
+		lipm_insu_seq_no) where lipm_id = #{lipmId} and LIPM_ST in ('00','11','12','14','15','16','17','18')
+	</select>
+	
+</mapper>
