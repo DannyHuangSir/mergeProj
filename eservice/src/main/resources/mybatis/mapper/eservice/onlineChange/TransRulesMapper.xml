@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.twfhclife.eservice.onlineChange.dao.TransRulesDao">
+
+	<resultMap id="TransRulesMap"
+		type="com.twfhclife.eservice.onlineChange.model.TransRulesVo">
+		<result column="TRANS_TYPE" property="transType" />
+		<result column="TRANS_NAME" property="transName" />
+		<result column="POLICY_TYPE" property="policyType" />
+		<result column="TEXT1" property="text1" />
+		<result column="TEXT2" property="text2" />
+		<result column="TEXT3" property="text3" />
+		<result column="TEXT4" property="text4" />
+		<result column="DENY_MSG" property="denyMsg" />
+	</resultMap>
+
+	<select id="getTransRulesByTransType" resultMap="TransRulesMap">
+		SELECT * from TRANS_RULES
+		WHERE TRANS_TYPE = #{transType}
+		AND POLICY_TYPE = #{policyType}
+	</select>
+
+
+
+</mapper>
+
+

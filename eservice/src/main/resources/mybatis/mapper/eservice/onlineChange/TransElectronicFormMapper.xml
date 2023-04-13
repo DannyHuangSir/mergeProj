@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransElectronicFormDao">
+
+	<resultMap id="TransCertPrintMap" type="com.twfhclife.eservice.onlineChange.model.TransElectronicFormVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="E_INFO_N" property="eInfoN"/>
+		<result column="OLD_E_INFO_N" property="oldEInfoN"/>
+		<result column="EMAIL" property="email"/>
+	</resultMap>
+			
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertTransElectronicForm">
+		INSERT INTO ESERVICE.DBO.Trans_Electronic_Form
+		(
+			TRANS_NUM,E_INFO_N,OLD_E_INFO_N,EMAIL
+		)
+		VALUES
+		(
+			#{transElectronicFormVo.transNum, jdbcType=VARCHAR},
+			#{transElectronicFormVo.eInfoN, jdbcType=VARCHAR},
+			#{transElectronicFormVo.oldEInfoN, jdbcType=VARCHAR},
+			#{transElectronicFormVo.email, jdbcType=VARCHAR}
+		)
+	</insert>
+ 
+</mapper>

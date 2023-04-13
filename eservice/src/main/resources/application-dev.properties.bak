@@ -1,24 +1,21 @@
 #\u8cc7\u6599\u5eab\u914d\u7f6e
 #admin data source
-#spring.datasource.eservice.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
-#spring.datasource.eservice.url=jdbc:sqlserver://10.7.168.85:1433;databaseName=eservice
-#spring.datasource.eservice.username=eservice
-#spring.datasource.eservice.password=eservice
-#spring.datasource.eservice.mybatis.config-locations=/mybatis/mybatis-config.xml
-#spring.datasource.eservice.mybatis.mapper-locations=/mybatis/mapper/eservice/**/*.xml
-
-#embeddedjndi
-#spring.datasource.eservice.embeddedjndi=false
-
-#JNDI Name
-#spring.datasource.jndi-name=jboss/datasources/eservice
-#spring.datasource.eservice.jndi-name=datasources/eservice
-
-#eservice data source
-spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
-spring.datasource.url=jdbc:sqlserver://10.7.168.85:1433;databaseName=eservice
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@//10.7.168.145:1521/elifedb
 spring.datasource.username=eservice
 spring.datasource.password=eservice
+
+#embeddedjndi
+spring.datasource.embeddedjndi=false
+
+#JNDI Name
+spring.datasource.jndi-name=comp/env/jdbc/ELIFE_DS
+
+#eservice data source
+#spring.datasource.eservice.driver-class-name=oracle.jdbc.OracleDriver
+#spring.datasource.eservice.url=jdbc:oracle:thin:@//220.133.126.209:1521/ORCL
+#spring.datasource.eservice.username=ESERVICE_TEST
+#spring.datasource.eservice.password=ESERVICE_TEST
 
 #\u6307\u5b9abean\u6240\u5728package
 #mybatis.type-aliases-package=com.twfhclife.eservice.admin.model
@@ -26,7 +23,6 @@ spring.datasource.password=eservice
 mybatis.config-locations=classpath:/mybatis/mybatis-config.xml
 mybatis.mapper-locations=classpath:/mybatis/mapper/**/*.xml
 
-#keycloak configuration
 #keycloak.auth-server-url=https://10.7.168.66:8445/auth
 #keycloak.ssl-required=none
 keycloak.auth-server-url=http://10.7.168.66:8082/auth
@@ -43,7 +39,7 @@ keycloak.minTokenValidity=30
 #event.record=false
 #event.record.url=http://10.7.168.67:8080/eservice_api/event/quene/send
 event.record=true
-event.record.url=http://10.7.168.67:8080/eservice_api/eventAdd/quene/send
+event.record.url=https://10.7.168.67:8443/eservice_api/eventAdd/quene/send
 
 #MessagingTemplate
 communction.mail.domain=localhost:8080
@@ -62,8 +58,7 @@ communction.mail.domain=localhost:8080
 #eservice_api.accessKey=d41d1b15-b1a5-336b-b72f-e83c41861b1f
 
 #eservice api
-eservice.api.baseUrl=http://10.7.168.66:8280/eservice_api
-#eservice.api.baseUrl=http://10.7.168.67:8080/eservice_api
+eservice.api.baseUrl=https://10.7.168.66:8243/eservice_api
 
 eservice_api.es001.url=${eservice.api.baseUrl}/getPolicyDashBoard/v1.0/invoke
 eservice_api.es002.url=${eservice.api.baseUrl}/getPolicyBenefit/v1.0/invoke
@@ -92,7 +87,7 @@ eservice_api.sso.session.remove.url=${eservice.api.baseUrl}/sso/user-sessions/re
 
 eservice_api.register.url=${eservice.api.baseUrl}/elife/user/create/v1.0/invoke
 
-eservice_api.function.usage.add.url=http://10.7.168.67:8080/eservice_api/function/usage/add
+eservice_api.function.usage.add.url=https://10.7.168.67:8443/eservice_api/function/usage/add
 
 #eservice_api.accessKey=24027817-d690-3056-8deb-406c053bee23
 #eservice_api.accessKey=d41d1b15-b1a5-336b-b72f-e83c41861b1f
@@ -100,15 +95,19 @@ eservice_api.accessKey=bdc342de-5df2-3783-a0ac-4d4b64a03471
 #eservice_api.accessKey=51613942-2d05-31a3-bd66-d789ec5e0dfe
 #eservice_api.accessKey=a192c70f-4e7f-3a91-9761-8225297ed4da
 
-eservice_api.es409.url=http://10.7.168.67:8080/eservice_api/api409
-eservice_api.es410.url=http://10.7.168.67:8080/eservice_api/api410
-eservice_api.es411.url=http://10.7.168.67:8080/eservice_api/api411
+eservice_api.es409.url=https://10.7.168.67:8443/eservice_api/api409
+eservice_api.es410.url=https://10.7.168.67:8443/eservice_api/api410
+eservice_api.es411.url=https://10.7.168.67:8443/eservice_api/api411
+
+eservice_api.es501.url=https://10.7.168.67:8443/eservice_api/getCtcLipmda
+eservice_api.es502.url=http://10.7.168.67:8080/eservice_api/getCtcLilipm
+eservice_api.es503.url=http://10.7.168.67:8080/eservice_api/getCtcLilipmDetail
 
 #eservice_api.message-template.trigger.url=${eservice.api.baseUrl}/message-template/trigger
 eservice_api.message-template.trigger.url=${eservice.api.baseUrl}/comm/v1.0/invoke
 eservice_api.register.resetpassword.url=${eservice.api.baseUrl}/elife/password/reset/v1.0/invoke
 
-onlinechange.enable.entry=paymentMode1,annuityPayMethod1,chooseBonus1,returnBonus1,policyAutopay1,beneficiary1,renew1,paymentReduce1,changeContact1,notification1,policyResend1,paymentMethod1,paymentCardDate1,cancelAuth1,cancelContract1,surrender1,loanNew1,claim1,claimPayment1,maturity1,changePayAcct1,riskLevel1,policyHolderProfile1,fundSwitch1,policyClaims1,certificatePrint1,valuePrint1,medicalTreatment1,fund1,investment1,deposit1,cashPayment1,attribute1,changePremium1,electronicForm1,electronicForm2,electronicForm3,electronicForm4,deratePaidOff1,deratePaidOff2,rolloverPeriodically1,rolloverPeriodically2,contractRevocation1,contractRevocation2,onlineTrial1
+onlinechange.enable.entry=paymentMode1,annuityPayMethod1,chooseBonus1,returnBonus1,policyAutopay1,beneficiary1,renew1,paymentReduce1,changeContact1,notification1,policyResend1,paymentMethod1,paymentCardDate1,cancelAuth1,cancelContract1,surrender1,loanNew1,claim1,claimPayment1,maturity1,changePayAcct1,riskLevel1,policyHolderProfile1,fundSwitch1,policyClaims1,certificatePrint1,valuePrint1,medicalTreatment1,fund1,investment1,deposit1,cashPayment1,attribute1,changePremium1,electronicForm2,electronicForm3,deratePaidOff1,rolloverPeriodically1
 
 #applicant.onlinechange.enable.entry=paymentMode1,annuityPayMethod1,chooseBonus1,returnBonus1,policyAutopay1,beneficiary1,renew1,paymentReduce1,changeContact1,notification1,valuePrint1,certificatePrint1,policyResend1,paymentMethod1,paymentCardDate1,cancelAuth1,cancelContract1,surrender1,loanNew1,claim1,claimPayment1,maturity1,changePayAcct1,riskLevel1,policyHolderProfile1,fundSwitch1,policyClaims1
 insured.onlinechange.enable.entry=claimPayment1
@@ -116,5 +115,5 @@ insured.onlinechange.enable.entry=claimPayment1
 root=/home/twfhclife/eservice/claim/pending/
 #root=C:\\home\\un
 
-upload.file.save.path=D:/eservice/images/
-eservice.contractrevocation.path=D:/home/twfhclife/eservice/contractRevocation/
+upload.file.save.path=/eservice/images/
+

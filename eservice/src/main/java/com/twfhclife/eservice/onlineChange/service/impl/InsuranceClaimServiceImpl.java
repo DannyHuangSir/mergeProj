@@ -432,7 +432,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		int result = 0;
 		try {
 			// 新增線上申請主檔
-			java.util.Date toDay = new java.util.Date();
+			Date toDay = new Date();
 			TransVo transVo = new TransVo();
 			transVo.setTransNum(transNum);
 			transVo.setTransDate(toDay);

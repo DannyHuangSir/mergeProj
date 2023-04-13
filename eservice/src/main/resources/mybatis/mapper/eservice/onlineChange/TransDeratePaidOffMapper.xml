@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransDeratePaidOffDao">
+
+	<resultMap id="TransCertPrintMap" type="com.twfhclife.eservice.onlineChange.model.TransDeratePaidOffVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="DERATE_AMT" property="derateAmt"/>
+		<result column="EMAIL" property="email"/>
+		<result column="NEXT_TRED_PAAB_DATE" property="nextTredPaabDate"/>
+	</resultMap>
+			
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertTransDeratePaidOff">
+		INSERT INTO ESERVICE.DBO.TRANS_DERATE_PAID_OFF
+		(
+			TRANS_NUM,DERATE_AMT,EMAIL,NEXT_TRED_PAAB_DATE
+		)
+		VALUES
+		(
+			#{transDeratePaidOffVo.transNum, jdbcType=VARCHAR},
+			#{transDeratePaidOffVo.derateAmt, jdbcType=VARCHAR},
+			#{transDeratePaidOffVo.email, jdbcType=VARCHAR},
+			#{transDeratePaidOffVo.nextTredPaabDate, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="getTransDeratePaidOffDetail" resultMap="TransCertPrintMap">
+		SELECT * FROM 
+		ESERVICE.DBO.TRANS_DERATE_PAID_OFF 
+		WHERE 
+		TRANS_NUM = #{transNum}
+	</select>
+ </mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransRolloverPeriodicallyDao">
+
+	<resultMap id="TransCertPrintMap" type="com.twfhclife.eservice.onlineChange.model.TransRolloverPeriodicallyVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="ROLLOVER_AMT" property="rolloverAmt"/>
+		<result column="ROLLOVER_DATE" property="rolloverDate"/>
+		<result column="EMAIL" property="email"/>
+		<result column="NEXT_TRED_PAAB_DATE" property = "nextTredPaabDate"/>
+	</resultMap>
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertTransRolloverPeriodically">
+		INSERT INTO ESERVICE.DBO.TRANS_ROLLOVER_PERIODICALLY
+		(
+			TRANS_NUM,ROLLOVER_AMT,ROLLOVER_DATE,EMAIL , NEXT_TRED_PAAB_DATE
+		)
+		VALUES
+		(
+			#{transRolloverPeriodicallyVo.transNum, jdbcType=VARCHAR},
+			#{transRolloverPeriodicallyVo.rolloverAmt, jdbcType=VARCHAR},
+			#{transRolloverPeriodicallyVo.rolloverDate, jdbcType=VARCHAR},
+			#{transRolloverPeriodicallyVo.email, jdbcType=VARCHAR},
+			#{transRolloverPeriodicallyVo.nextTredPaabDate, jdbcType=VARCHAR}
+		)
+	</insert>
+ 
+ 	<select id="getTransRolloverPeriodicallyDetail" resultMap="TransCertPrintMap">
+ 		SELECT　* FROM 
+ 		TRANS_ROLLOVER_PERIODICALLY 
+ 		WHERE 
+ 		TRANS_NUM = #{transNum}
+ 	</select>
+ 
+</mapper>

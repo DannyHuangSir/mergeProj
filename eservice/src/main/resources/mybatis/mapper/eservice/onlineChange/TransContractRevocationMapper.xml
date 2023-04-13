@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransContractRevocationDao">
+
+	<resultMap id="TransContractRevocationMap" type="com.twfhclife.eservice.onlineChange.model.TransContractRevocationVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="SETT_CH_NAME" property="settChName"/>
+		<result column="LIPM_NAME" property="lipmName"/>
+		<result column="LIPI_NAME" property="lipiName"/>
+		<result column="PROD_CURRENCY" property="prodCurrency"/>
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate"/>
+		<result column="PRPA_ACT_AMT" property="prpaActAmt"/>
+		<result column="SWIFT_CODE" property="swiftCode"/>
+		<result column="ENGLISH_NAME" property="englishName"/>
+		<result column="NEAC_NAME" property="neacName"/>
+		<result column="BANK_CODE" property="bankCode"/>
+		<result column="BANK_NAME" property="bankName"/>
+		<result column="BRANCH_CODE" property="branchCode"/>
+		<result column="BRANCH_NAME" property="branchName"/>
+		<result column="ACCOUNT" property="account"/>
+		<result column="RCP_TYPE_CODE_FLAG" property="rcpTypeCodeFlag"/>
+		<result column="NEEDS_FLAG" property="needsFlag"/>
+		<result column="ECONOMY_FLAG" property="economyFlag"/>
+		<result column="FAMILY_FLAG" property="familyFlag"/>
+		<result column="COGNITION_FLAG" property="cognitionFlag"/>
+		<result column="OTHER_FLAG" property="otherFlag"/>
+		<result column="IMAGE1"  property="image1"/>
+		<result column="IMAGE2"  property="image2"/>
+		<result column="AGIN_INVE_AREA" property="aginInveArea" />
+		<result column="OLD_DETAILS" property="oldDetails" />	
+		<result column="OTHER_REASON" property="otherReason"/>
+		<result column="EMAIL" property="email"/>
+		<result column="LIPM_ID" property="lipmId"/>
+	</resultMap>
+			
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertTransContractRevocation">
+		INSERT INTO ESERVICE.DBO.TRANS_CONTRACT_REVOCATION
+		(
+			TRANS_NUM,SETT_CH_NAME,LIPM_NAME,LIPI_NAME,PROD_CURRENCY,LIPM_INSU_BEG_DATE,PRPA_ACT_AMT
+			,SWIFT_CODE,ENGLISH_NAME,NEAC_NAME,BANK_CODE,BANK_NAME,BRANCH_CODE,BRANCH_NAME,ACCOUNT,RCP_TYPE_CODE_FLAG
+			,NEEDS_FLAG,ECONOMY_FLAG,FAMILY_FLAG,COGNITION_FLAG,OTHER_FLAG,IMAGE1,IMAGE2,OLD_DETAILS,OTHER_REASON,EMAIL,LIPM_ID
+		)
+		VALUES
+		(
+			#{transContractRevocationVo.transNum, jdbcType=VARCHAR},
+			#{transContractRevocationVo.settChName, jdbcType=VARCHAR},
+			#{transContractRevocationVo.lipmName, jdbcType=VARCHAR},
+			#{transContractRevocationVo.lipiName, jdbcType=VARCHAR},
+			#{transContractRevocationVo.prodCurrency, jdbcType=VARCHAR},
+			#{transContractRevocationVo.lipmInsuBegDate, jdbcType=VARCHAR},
+			#{transContractRevocationVo.prpaActAmt, jdbcType=VARCHAR},
+			#{transContractRevocationVo.swiftCode, jdbcType=VARCHAR},
+			#{transContractRevocationVo.englishName, jdbcType=VARCHAR},
+			#{transContractRevocationVo.neacName, jdbcType=VARCHAR},
+			#{transContractRevocationVo.bankCode, jdbcType=VARCHAR},
+			#{transContractRevocationVo.bankName, jdbcType=VARCHAR},
+			#{transContractRevocationVo.branchCode, jdbcType=VARCHAR},
+			#{transContractRevocationVo.branchName, jdbcType=VARCHAR},
+			#{transContractRevocationVo.account, jdbcType=VARCHAR},
+			#{transContractRevocationVo.rcpTypeCodeFlag, jdbcType=VARCHAR},
+			#{transContractRevocationVo.needsFlag, jdbcType=VARCHAR},
+			#{transContractRevocationVo.economyFlag, jdbcType=VARCHAR},
+			#{transContractRevocationVo.familyFlag, jdbcType=VARCHAR},
+			#{transContractRevocationVo.cognitionFlag, jdbcType=VARCHAR},
+			#{transContractRevocationVo.otherFlag, jdbcType=VARCHAR},
+			#{transContractRevocationVo.image1, jdbcType=VARCHAR},
+			#{transContractRevocationVo.image2, jdbcType=VARCHAR},		
+			#{transContractRevocationVo.oldDetails, jdbcType=VARCHAR},	
+			#{transContractRevocationVo.otherReason, jdbcType=VARCHAR},				
+			#{transContractRevocationVo.email, jdbcType=VARCHAR},
+			#{transContractRevocationVo.lipmId, jdbcType=VARCHAR}	
+		)
+	</insert>
+
+	<select id="getTransContractRevocation"	resultMap="TransContractRevocationMap">
+		SELECT
+		*
+		FROM
+		ESERVICE.DBO.TRANS_CONTRACT_REVOCATION
+		WHERE
+		TRANS_NUM = #{transNum}
+	</select>
+
+	<update id="updateAginInveAreaforId" parameterType="com.twfhclife.eservice.onlineChange.model.TransContractRevocationVo">
+		update ESERVICE.dbo.TRANS_CONTRACT_REVOCATION 
+		   set  AGIN_INVE_AREA = #{aginInveArea , jdbcType=VARCHAR}
+		 where  1=1
+		   and Id = #{id}
+	</update>
+ </mapper>
