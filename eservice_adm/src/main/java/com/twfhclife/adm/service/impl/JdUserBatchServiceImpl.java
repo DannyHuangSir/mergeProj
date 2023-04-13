@@ -287,14 +287,14 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                         keycloakUser.setFirstName(vo.getUserName());
                                         keycloakUser.setPassword(vo.getInitPassword());
                                         // todo 添加到users中
-                                        keycloakService.createUser("elife_jd", keycloakUser);
+                                        keycloakService.createUser("elife_jdzq", keycloakUser);
                                         vo.setSerialNum("1");
                                         vo.setUserId(vo.getRocId());
                                         vo.setStatus("Unenabled");
                                         vo.setSmsFlag("1");
                                         vo.setMailFlag("1");
                                         jdUserBatchDao.addUsers(vo);
-                                        UserEntityVo user = jdUserMgntService.getUser(vo.getRocId(), "elife_jd");
+                                        UserEntityVo user = jdUserMgntService.getUser(vo.getRocId(), "elife_jdzq");
                                         //新增user_role表数据
                                         jdRoleService.insertUserRole(user.getId(),roleId.getRoleId());
                                         //新增user_dep表数据
@@ -416,7 +416,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                                             }
 //
                                                             if (StringUtils.isEmpty(vo.getFailResult())) {
-                                                                UserEntityVo user = jdUserMgntService.getUser(vo.getUserId(), "elife_jd");
+                                                                UserEntityVo user = jdUserMgntService.getUser(vo.getUserId(), "elife_jdzq");
                                                                 jdUserBatchDao.updateUsers(vo);
                                                                 //更新user_role表数据
                                                                 if (updateRoleId != null && StringUtils.isNotBlank(updateRoleId.getRoleId())){

@@ -11,7 +11,7 @@ public interface ApConstants {
 
 	final String NEW_LINE_SEPARATOR = "\n";
 	
-	final String KEYCLOAK_REALM = "elife_jd";
+	final String KEYCLOAK_REALM = "elife_jdzq";
 	
 	/** 系統別 */
 	final String SYSTEM_ID = "eservice_jd";

@@ -170,7 +170,7 @@
 		u.online_flag, u.login_fail_count, u.status, u.LOGIN_TIME, u.CLAUSE_FLAG
 		FROM
 		ESERVICE_JD.DBO.USERS u INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY UE
-		ON UE.USERNAME = U.USER_ID COLLATE database_default AND UE.REALM_ID = 'elife_jd'
+		ON UE.USERNAME = U.USER_ID COLLATE database_default AND UE.REALM_ID = 'elife_jdzq'
 		WHERE
 			u.IC_ID = #{saleId}
 	</select>

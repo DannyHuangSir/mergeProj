@@ -144,7 +144,7 @@ public class EventRecordLogAspect {
 					sysId = "eservice";
 				} else if (sysIdObj.equals("twfhclife")) {
 					sysId = "eservice_adm";
-				} else if (sysIdObj.equals("elife_jd")) {
+				} else if (sysIdObj.equals("elife_jdzq")) {
 					sysId = "eservice_jd";
 				} else {
 					sysId = (String) sysIdObj;

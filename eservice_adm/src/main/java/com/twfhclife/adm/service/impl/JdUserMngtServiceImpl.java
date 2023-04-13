@@ -48,7 +48,7 @@ public class JdUserMngtServiceImpl implements IJdUserMgntService {
 	public List<Map<String, Object>> getUserEntityPageList(String userId, UserEntityVo userEntityVo) {
 		// 判斷目前登入者是否有最高權限管理員
 		String adminUserFlag = (StringUtils.equals(userId, systemAdminUser) ? "Y" : "N");
-		userEntityVo.setRealmId("elife_jd");
+		userEntityVo.setRealmId("elife_jdzq");
 		return userEntityDao.getUserEntityPageList(userEntityVo, adminUserFlag);
 	}
 
@@ -64,7 +64,7 @@ public class JdUserMngtServiceImpl implements IJdUserMgntService {
 	public int getUserEntityPageTotal(String userId, UserEntityVo userEntityVo) {
 		// 判斷目前登入者是否有最高權限管理員
 		String adminUserFlag = (StringUtils.equals(userId, systemAdminUser) ? "Y" : "N");
-		userEntityVo.setRealmId("elife_jd");
+		userEntityVo.setRealmId("elife_jdzq");
 		return userEntityDao.getUserEntityPageTotal(userEntityVo, adminUserFlag);
 	}
 	

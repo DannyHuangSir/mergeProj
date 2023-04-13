@@ -177,7 +177,7 @@
 		INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY A ON B.USER_ID = A.USERNAME COLLATE database_default
 		INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT RD ON A.ID = RD.USER_ID COLLATE database_default
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D1 ON D1.DEP_ID = RD.DEP_ID COLLATE database_default
-		WHERE A.REALM_ID = 'elife_jd' AND D1.DEP_ID = #{vo.passageWay}
+		WHERE A.REALM_ID = 'elife_jdzq' AND D1.DEP_ID = #{vo.passageWay}
 	</select>
 
 	<select id="getUser" resultMap="UserEntityMap">
