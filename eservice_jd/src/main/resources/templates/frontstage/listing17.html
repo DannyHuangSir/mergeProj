@@ -76,7 +76,9 @@
 													</thead>
 													<tbody>
 													<tr class="h55 noEvent" th:each="vo1: ${cancelMoneys}">
-														<td class="text-left"><th:block th:text="${amountVo.policyVal}"></th:block></td>
+														<td class="text-left">
+															<th:block th:text="${amountVo.policyVal != null} ? ${#numbers.formatDecimal(amountVo.policyVal, 0, 'DEFAULT', 4, 'POINT')} : 0 "></th:block>
+														</td>
 														<td th:text="${vo1.FSZ2_AMT}"></td>
 													</tr>
 													</tbody>
