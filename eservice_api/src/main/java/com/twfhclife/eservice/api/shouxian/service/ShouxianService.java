@@ -179,7 +179,7 @@ public class ShouxianService {
         boolean checkRes = this.checkResponseStatus(responseEntity);
         if (checkRes) {
             logger.info("解約金API-RESP:{}", strRes);
-            return MyJacksonUtil.getNodeString(strRes, "data.valuse");
+            return MyJacksonUtil.readValueString(strRes, "/data/values");
         }
         return "";
     }

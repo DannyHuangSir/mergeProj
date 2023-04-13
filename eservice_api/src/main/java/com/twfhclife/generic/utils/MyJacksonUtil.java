@@ -13,6 +13,7 @@ import com.twfhclife.alliance.model.InsuranceClaimFileDataVo;
 import com.twfhclife.alliance.model.InsuranceClaimVo;
 import com.twfhclife.eservice.web.model.Division;
 import com.twfhclife.eservice.web.model.HospitalVo;
+import org.apache.commons.lang3.StringUtils;
 
 public class MyJacksonUtil {
 
@@ -62,6 +63,22 @@ public class MyJacksonUtil {
 			
 			if(jsonNode!=null) {
 				rtn = jsonNode.at(pathFieldName).asText();
+			}
+		}
+		return rtn;
+	}
+
+	public static String readValueString(String jsonString, String pathFieldName) throws Exception{
+		String rtn = null;
+		if(jsonString!=null && pathFieldName!=null) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(jsonString);
+
+			if(jsonNode!=null) {
+				JsonNode node = jsonNode.at(pathFieldName);
+				if (node != null) {
+					return node.toString();
+				}
 			}
 		}
 		return rtn;
