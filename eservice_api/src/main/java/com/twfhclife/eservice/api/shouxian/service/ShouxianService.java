@@ -126,7 +126,7 @@ public class ShouxianService {
         return values;
     }
 
-    @Value("${csp.api.provide.esrv-fsz2.token}")
+    @Value("${csp.api.provide.esrv-fsz2.url}")
     private String url;
     public List<CancellationMoneyVo> getPolicyCancellationMoney(String policyNo) throws Exception {
         initRestTemplate();
@@ -135,7 +135,7 @@ public class ShouxianService {
         return new Gson().fromJson(strResponse, new TypeReference<List<CancellationMoneyVo>>(){}.getType());
     }
 
-    @Value("${csp.api.provide.esrv-fsz2.url}")
+    @Value("${csp.api.provide.esrv-fsz2.token}")
     public String ACCESS_TOKEN;
 
     private RestTemplate restTemplate;
