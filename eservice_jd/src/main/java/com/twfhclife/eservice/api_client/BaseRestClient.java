@@ -4,9 +4,11 @@ import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakLoginResponse;
 import com.twfhclife.eservice.keycloak.model.KeycloakUserSession;
 import com.twfhclife.eservice.util.MyJacksonUtil;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -24,6 +26,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.net.ssl.SSLContext;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Service
@@ -77,8 +82,19 @@ public class BaseRestClient {
 
 	@Autowired
 	public BaseRestClient() {
-		HttpComponentsClientHttpRequestFactory requestFactory = generateHttpRequestFactory();
-		restTemplate = new RestTemplate(requestFactory);
+		try {
+			SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+					SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+					NoopHostnameVerifier.INSTANCE);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+			requestFactory.setHttpClient(httpClient);
+
+			restTemplate = new RestTemplate(requestFactory);
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			logger.debug("Create httpClient fail: {}", ExceptionUtils.getStackTrace(e));
+		}
 	}
 
 	public static HttpComponentsClientHttpRequestFactory generateHttpRequestFactory() {
