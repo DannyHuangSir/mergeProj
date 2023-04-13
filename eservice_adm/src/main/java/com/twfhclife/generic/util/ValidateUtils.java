@@ -5,7 +5,13 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.twfhclife.adm.model.TransVo;
+
 public class ValidateUtils {
+	
+	static String reg = "(?:')|(?:--)|(///*(?:.|[//n//r])*?//*/)|"
+			+ "(//b(select|update|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|into|drop|execute)//b)";
+	static	Pattern sqlPattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * 檢查 Email 合法性.
@@ -107,5 +113,66 @@ public class ValidateUtils {
 			}
 			return true;
 		}
+	}
+
+	/**
+	 * TransVo 檢核
+	 */
+	public static Boolean transIsValid(TransVo transVo) {
+
+		if (StringUtils.isNotEmpty(transVo.getTransNum())) {
+			if(!isValid(transVo.getTransNum())) {
+				return false;
+			}
+		}
+		if (StringUtils.isNotEmpty(transVo.getTransType())) {
+			if(!isValid(transVo.getTransType())) {
+				return false;
+			}
+		}
+		if (StringUtils.isNotEmpty(transVo.getPolicyNo())) {
+			if(!isValid(transVo.getPolicyNo())) {
+				return false;
+			}
+		}
+		if (StringUtils.isNotEmpty(transVo.getUserId())) {
+			if(!isValid(transVo.getUserId())) {
+				return false;
+			}
+		}
+		if (StringUtils.isNotEmpty(transVo.getStatus())) {
+			if(!isValid(transVo.getStatus())) {
+				return false;
+			}
+		}
+		if (StringUtils.isNotEmpty(transVo.getStartDate())) {
+			if(!isValid(transVo.getStartDate())) {
+				return false;
+			}
+		}
+		if (StringUtils.isNotEmpty(transVo.getEndDate())) {
+			if(!isValid(transVo.getEndDate())) {
+				return false;
+			}
+		}
+		if (StringUtils.isNotEmpty(transVo.getEndDate())) {
+			if(!isValid(transVo.getEndDate())) {
+				return false;
+			}
+		}
+		if (StringUtils.isNotEmpty(transVo.getPolicyHolderId())) {
+			if(!isValid(transVo.getPolicyHolderId())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isValid(String str) {
+
+		if (sqlPattern.matcher(str).find()) {
+			return false;
+		}
+		return true;
 	}
 }

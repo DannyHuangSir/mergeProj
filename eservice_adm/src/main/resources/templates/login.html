@@ -148,6 +148,7 @@
 					openAlert('請輸入圖形驗證碼');
 					return false;
 				}
+				
 				//$('#loginForm').submit();
 			});
 
@@ -155,6 +156,8 @@
 				this.src = 'getVerify?r=' + Math.random();
 			});
 
+			
+			
 			var accessTokenCookie = getCookie("sso-token");
 			if(accessTokenCookie) {
 				console.log("accessTokenCookie="+accessTokenCookie);

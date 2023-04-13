@@ -538,4 +538,13 @@ public interface IOnlineChangeService {
 	List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo(Double claimId);
 
 	MedicalTreatmentClaimFileDataVo getMedicalInfoBase64FileSize(Float fdId) throws Exception;
+	
+	public Map<String , Object> getTransElectronicFormMethod(TransVo transVo) throws Exception;
+	
+	public Map<String , Object> getTransDeratePaidOffMethod(TransVo transVo) throws Exception;
+	
+	public Map<String , Object> getTransRolloverPeriodicallyMethod(TransVo transVo) throws Exception;
+	
+	public Map<String , Object> getTransContractRevocationMethod(TransVo transVo) throws Exception;
+	
 }

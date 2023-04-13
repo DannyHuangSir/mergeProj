@@ -112,6 +112,10 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			// 判斷非会员
 			if(rowMap.get("ROC_ID") == null || "".equals(rowMap.get("ROC_ID"))) {
 				rowMap.put("ROC_ID", "非會員");
+			}else { //20221227 新增 身分證遮罩
+				String rocId2 =(String) rowMap.get("ROC_ID");
+				rocId2 = rocId2.substring(0,3) + "*****" + rocId2.substring(8,10);
+				rowMap.put("ROC_ID2", rocId2 );
 			}
 			//死亡除戶
 			if(null == transVo.getTransType() && ApConstants.TRANS_TYPE_DNS_ALLIANCE.equals((String)rowMap.get("TRANS_TYPE"))) {
@@ -615,6 +619,12 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 						if (file.exists()) {
 							//通过路径,获取图片
 							map.put("FileBase64", this.converFileToBase64Str(filePath));
+							try {
+								map.put("FILE_BASE64", this.imgBase64(file));
+							}catch(Exception e) {
+								logger.error("input file is null.");
+								logger.error(e);
+							}
 						}
 					}
 					newfileDatas.add(map);
@@ -1730,5 +1740,25 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	@Override
 	public int getOnlineChangeDnsDetailTotal(TransVo transVo) {
 		return onlineChangeDao.getOnlineChangeDnsDetailTotal(transVo);
+	}
+	
+	@Override
+	public Map<String , Object> getTransElectronicFormMethod(TransVo transVo){
+		return onlineChangeDao.getTransElectronicFormMethod(transVo);
+	}
+	
+	@Override
+	public Map<String , Object> getTransDeratePaidOffMethod(TransVo transVo){
+		return onlineChangeDao.getTransDeratePaidOffMethod(transVo);
+	}
+	
+	@Override
+	public Map<String , Object> getTransRolloverPeriodicallyMethod(TransVo transVo){
+		return onlineChangeDao.getTransRolloverPeriodicallyMethod(transVo);
+	}
+
+	@Override
+	public Map<String, Object> getTransContractRevocationMethod(TransVo transVo) throws Exception {
+		return onlineChangeDao.getTransContractRevocationMethod(transVo);
 	}
 }

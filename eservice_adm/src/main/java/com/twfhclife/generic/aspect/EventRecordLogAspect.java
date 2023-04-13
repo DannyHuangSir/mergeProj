@@ -2,6 +2,9 @@ package com.twfhclife.generic.aspect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
@@ -25,6 +34,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -239,10 +249,24 @@ public class EventRecordLogAspect {
 	 */
 	private void postEvent(EventRecordRequestVo erReq) {
 		if (needEventRecord) {
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<Object> entity = new HttpEntity<Object>(erReq, headers);
-			new RestTemplate().postForEntity(eventRecordApiUrl, entity, String.class);
+			try {
+				SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+					     SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(), 
+					        NoopHostnameVerifier.INSTANCE);
+				CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+				
+				HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+				requestFactory.setHttpClient(httpClient);
+
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+				HttpEntity<Object> entity = new HttpEntity<Object>(erReq, headers);
+				new RestTemplate(requestFactory).postForEntity(eventRecordApiUrl, entity, String.class);
+			} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+				// TODO Auto-generated catch block
+				logger.debug("Create httpClient fail: {}", ExceptionUtils.getStackTrace(e));
+			}
+
 		}
 	}
 

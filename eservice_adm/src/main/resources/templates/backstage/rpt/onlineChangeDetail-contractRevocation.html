@@ -1,0 +1,221 @@
+<tr class="detail-row even open" role="row">
+	<td colspan="7">
+		<div class="table-detail">
+			<div class="row" style="background-color: #fff; border-bottom: none">
+				<div class="col-xs-12 col-sm-11">
+					<div class="space visible-xs"></div>
+					<div class="profile-user-info profile-user-info-striped">
+						<div class="profile-info-row">
+							<div class="profile-info-name">申請日期</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['TRANS_DATE']}" /></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">申請項目</div>
+							<div class="profile-info-value">
+								<span><th:block
+										th:text="${detailData['TRANS_TYPE_NAME']}" /></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">申請狀態</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['STATUS_NAME']}" /></span>
+							</div>
+						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name">保單號碼</div>
+							<div class="profile-info-value">
+								<span><th:block th:text="${detailData['SHOW_POLICY_NO']}" /></span>
+							</div>
+						</div>
+					</div>
+				</div>
+						<div class="modal fade in" id="modal-container-imgConfirm" role="dialog" aria-labelledby="myModalLabel" 
+							aria-hidden="true" style="z-index: 1200;">
+							<div class="modal-dialog">
+								<div class="modal-content lock-up">
+									<div class="modal-header" style="width : 600px">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+									</div>
+									<div class="modal-body clearfix center1" id="imgOnPrint" style="max-height: 600px; overflow: auto; height: 600px;">
+									
+									</div>
+									<div class="modal-footer grey2" id>
+										<a href="javascript:void(0);" id="onMedicalPrint">
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+				<div th:id="${detailData['TRANS_NUM']}" class="col-xs-12 col-sm-11">
+					<div class="panel panel-default profile-user-info">
+						<div class="panel-heading">※ 申請資料</div>
+						<div class="panel-body clear1" id="contractRevocationDetail">
+							<div class="mycigna3">
+								<div class="col-md-12">
+									<div class="form-horizontal">
+										<div class="form-group">
+											<div class="col-sm-1">保單號碼：</div>
+											<div class="col-sm-10">
+												<th:block th:text="${detailData['SHOW_POLICY_NO']}" />
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-1">保單名稱：</div>
+											<div class="col-sm-10">
+												<th:block th:text="${detailData['SETT_CH_NAME']}" />
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-1">要保人姓名：</div>
+											<div class="col-sm-5">
+												<th:block th:text="${detailData['LIPM_NAME']}" />
+											</div>
+											<div class="col-sm-1">繳款人姓名：</div>
+											<div class="col-sm-5">
+												<th:block th:text="${detailData['LIPM_NAME']}" />
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-1">被保人姓名：</div>
+											<div class="col-sm-5">
+												<th:block th:text="${detailData['LIPI_NAME']}" />
+											</div>
+											<div class="col-sm-1">退費幣別：</div>
+											<div class="col-sm-5">
+												<th:block th:text="${detailData['PROD_CURRENCY']}" />
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-1">保單生效日：</div>
+											<div class="col-sm-5">
+												<th:block th:text="${detailData['LIPM_INSU_BEG_DATE']}" />
+											</div>
+											<div class="col-sm-1">退費金額：</div>
+											<div class="col-sm-5">
+												<th:block th:text="${detailData['PRPA_ACT_AMT']}" />
+											</div>
+										</div>
+										<th:block th:unless="${detailData['RCP_TYPE_CODE_FLAG'] eq 'H'}">
+											<section id="tab_frame_print1" class="tab-frame">
+											<div class="grey2">
+												<div class="check-title depo2">退回帳戶</div>
+												<div class="form-group">
+													<div class="col-sm-2">SWIFT CODE：</div>
+													<div class="col-sm-10">
+														<th:block th:text="${detailData['SWIFT_CODE']}" />
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-2">英文戶名：</div>
+													<div class="col-sm-10">
+														<th:block th:text="${detailData['ENGLISH_NAME']}" />
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-2">帳戶名稱：</div>
+													<div class="col-sm-10">
+														<th:block th:text="${detailData['NEAC_NAME']}" />
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-2">銀行名稱：</div>
+													<div class="col-sm-4">
+														<th:block th:text="${detailData['BANK_NAME']}" />
+													</div>
+													<div class="col-sm-2">分行名稱：</div>
+													<div class="col-sm-4">
+														<th:block th:text="${detailData['BRANCH_NAME']}" />
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-sm-2">帳號：</div>
+													<div class="col-sm-10">
+														<th:block th:text="${detailData['ACCOUNT']}" />
+													</div>
+												</div>
+												<div class="clearfix"></div>
+											</div>
+										</section>
+										</th:block>
+										<th:block th:if="${detailData['RCP_TYPE_CODE_FLAG'] eq 'H'}">
+											<div  style="margin-top : 15px ; margin-bottom : 15px">
+													<p class="text-ps" style="color: red">【信用卡繳費件】退回原繳費卡號。</p>									
+											</div>
+										</th:block>
+										<div class="form-group">
+											<div class="col-sm-3">契撤原因(可複選)：</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-1"></div>
+											<div class="col-sm-10">
+												<th:block th:text="${detailData['STATUSFLAG']}" />
+											</div>
+										</div>
+										<div class="form-group">
+											<th:block th:if="${detailData[OTHER_REASON] != null && detailData[OTHER_REASON] != ''}">
+												<div class="col-md-12">
+													<div class="col-sm-12">
+														<label>其他契撤原因：</label>
+													</div>
+													<div class="col-sm-1"></div>
+													<div class="col-sm-10">
+														<textarea th:text="${detailData[OTHER_REASON]}" rows="4" class="otherReasonCss"style="resize: none ; width :100%" readonly="readonly"></textarea>
+													</div>
+												</div>
+											</th:block>
+										</div>
+										<div class="col-md-8 col-md-offset-2 ptop30">
+											<div class="col-md-12">
+												<div class="col-md-6">
+													<th:block
+														th:if="${detailData['IMAGE1'] != null && detailData['IMAGE1'] != ''}">
+														<label class="col-sm-12">身分證明(正面)</label>
+														<div class="col-sm-12 upload-drop-zone boardDotted">
+															<img
+																th:onclick="'javascript:imgConfirm(\''+${detailData.IMAGE1}+'\')'"
+																th:src="${detailData['IMAGE1']}"
+																style="width: 240px; height: 180px">
+														</div>
+													</th:block>
+												</div>
+												<div class="col-md-6">
+													<th:block
+														th:if="${detailData['IMAGE2'] != null && detailData['IMAGE2'] != ''}">
+														<label class="col-sm-12">身分證明(背面)</label>
+														<div class="col-sm-12 upload-drop-zone boardDotted">
+															<img
+																th:onclick="'javascript:imgConfirm(\''+${detailData.IMAGE2}+'\')'"
+																th:src="${detailData['IMAGE2']}"
+																style="width: 240px; height: 180px">
+														</div>
+													</th:block>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</td>
+</tr>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+      function imgConfirm(obj){
+			var image = obj;
+			$('#modal-container-imgConfirm').modal({
+				show: true,
+				backdrop: 'static', 
+				keyboard: false
+			});
+	    	$("#imgOnPrint").html('<img id="imgsrc" src="'+image+'")/>');
+	    	$("#onMedicalPrint").show();
+		}			
+    /*]]>*/
+</script>

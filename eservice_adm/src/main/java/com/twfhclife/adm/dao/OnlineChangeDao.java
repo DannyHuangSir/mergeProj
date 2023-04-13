@@ -660,4 +660,19 @@ public interface OnlineChangeDao {
     List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfoByClaimId(@Param("claimSeqId") Double claimId);
 
 	MedicalTreatmentClaimFileDataVo getMedicalInfoDetailBase64(@Param("fdId") Float fdId);
+	
+	/**
+	 * 取得線上申請資料-變更保單聯絡資料.
+	 * 
+	 * @param transVo TransVo
+	 * @return 回傳線上申請資料-變更保單聯絡資料
+	 */
+	Map<String, Object> getTransElectronicFormMethod(@Param("transVo") TransVo transVo);
+	
+	Map<String, Object> getTransDeratePaidOffMethod(@Param("transVo") TransVo transVo);
+	
+	Map<String, Object> getTransRolloverPeriodicallyMethod(@Param("transVo") TransVo transVo);
+	
+	Map<String, Object> getTransContractRevocationMethod(@Param("transVo") TransVo transVo);
+	
 }

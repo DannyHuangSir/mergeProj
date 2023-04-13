@@ -1,10 +1,10 @@
 package com.twfhclife.generic.api_client;
 
-import com.twfhclife.generic.api_model.ApiResponseObj;
-import com.twfhclife.generic.api_model.KeycloakLoginRequest;
-import com.twfhclife.generic.api_model.KeycloakLoginResponse;
-import com.twfhclife.generic.api_model.ReturnHeader;
-import com.twfhclife.generic.util.MyJacksonUtil;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ws.rs.core.MediaType;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +15,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
-import java.util.Map;
+import com.twfhclife.generic.api_model.ApiResponseObj;
+import com.twfhclife.generic.api_model.KeycloakLoginRequest;
+import com.twfhclife.generic.api_model.KeycloakLoginResponse;
+import com.twfhclife.generic.api_model.ReturnHeader;
+import com.twfhclife.generic.util.MyJacksonUtil;
 
 @Service
 public class SsoClient extends BaseRestClient {
@@ -36,7 +38,6 @@ public class SsoClient extends BaseRestClient {
 		ApiResponseObj<KeycloakLoginResponse> apiResponseObj = new ApiResponseObj<KeycloakLoginResponse>();
 		ReturnHeader returnHeader = null;
 		String url = LOGIN_URI;//"http://220.133.126.209:8084/eservice_api/sso/login";//for test
-//		String url = "http://192.168.1.3:8243/jdzq/1.0/sso/login";
 		logger.debug("invoke login post api: url="+url+", requestBody="+MyJacksonUtil.object2Json(requestBody));
 		
 		Map<String, String> headerMap = new HashMap<>();

@@ -9,6 +9,7 @@
 			<script type="text/javascript">
 				try{my.settings.loadState('main-container')}catch(e){}
 			</script>
+			<div th:include="/backstage/rpt/modalAll :: rocIdMessage"></div>
 			<div th:replace="fragments/sidebar :: sidebar (funId='onlineChange')"></div>
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -56,6 +57,7 @@
 												<th>申請狀態</th>
 												<th class="hidden-480">保單號碼</th>
 												<th class="hidden-480">身分證字號</th>
+												<th class="hidden-480">查看身分證</th>
 											</tr>
 										</thead>
 									</table>
@@ -1192,8 +1194,6 @@
 			'REWARD': /*[[@{/onlineChange/getTransReward}]]*/,
 			'CUSHION': /*[[@{/onlineChange/getTransCushion}]]*/,
 			'BENEFICIARY': /*[[@{/onlineChange/getTransBeneficiary}]]*/,
-			'RENEW': /*[[@{/onlineChange/getTransRenew}]]*/,
-			'REDUCE': /*[[@{/onlineChange/getTransReduce}]]*/,
 			'REDUCE_POLICY': /*[[@{/onlineChange/getTransReducePolicy}]]*/,
 			'CONTACT_INFO': /*[[@{/onlineChange/getTransContactInfo}]]*/,
 			'FUND_NOTIFICATION': /*[[@{/onlineChange/getTransFundNotification}]]*/,
@@ -1221,6 +1221,11 @@
 			'CASH_PAYMENT':/*[[@{/onlineChange/getCashPaymentDetail}]]*/,
 			'DEPOSIT':/*[[@{/onlineChange/getDepositDetail}]]*/,
 			'CHANGE_PREMIUM':/*[[@{/onlineChange/getTransChangePremiumDetail}]]*/,
+			'ELECTRONIC_FORM_A': /*[[@{/onlineChange/getTransElectronicFormMethod}]]*/,
+			'ELECTRONIC_FORM_C': /*[[@{/onlineChange/getTransElectronicFormMethod}]]*/,
+			'DERATE_PAID_OFF': /*[[@{/onlineChange/getTransDeratePaidOffMethod}]]*/,
+			'ROLLOVER_PERIODICALLY': /*[[@{/onlineChange/getTransRolloverPeriodicallyMethod}]]*/,
+			'CONTRACT_REVOCATION': /*[[@{/onlineChange/getTransContractRevocationMethod}]]*/,
 		}
 		$(function() {
 			// 取得線上申請項目下拉選單
@@ -1286,7 +1291,17 @@
 				},
 				{
 					// 身分證字號
-					data: 'ROC_ID'
+					data: 'ROC_ID2'
+				},
+				{
+						render: function(data, type, row, meta) {
+						var detailBtnHtml = '';
+						detailBtnHtml += '<div class="action-buttons center">';
+						detailBtnHtml += '<button type="button" onclick ="showRocId( \''
+						+ row.ROC_ID + '\' )" style="position: relative;">查看<i></i></button>';
+						detailBtnHtml += '</div>';
+						return detailBtnHtml;
+					}
 				}
 			];
 			
@@ -1308,11 +1323,17 @@
 			grid.setPostData('fromHospitalId', /*[[${param.fromHospitalId} != null ? ${param.fromHospitalId[0]}]]*/);
 			grid.setPostData('sendToHospitalIdItem', /*[[${param.sendToHospitalIdItem} != null ? ${param.sendToHospitalIdItem[0]}]]*/);
 			grid.setPostData('medicalCaseStatus', /*[[${param.medicalCaseStatus} != null ? ${param.medicalCaseStatus[0]}]]*/);
-			grid.setPostData('dnsCode', /*[[${param.dnsCode} != null ? ${param.dnsCode[0]}]]*/);
 
 
 			grid.create();
 		});
+		
+		// 20221227 新增 身分證遮罩與提示
+		function showRocId(rocId ){
+				document.getElementById("rocIdMsg").innerHTML = "身分證字號: " + rocId;
+				$('.rocIdMessageModal').modal("show");
+		}
+		
 		var gridList = [];
 		// 點選顯示Detail區塊
 		function showDetail(detailBtnObj, statusName, status, transType, transNum, policyNo, transDate) {

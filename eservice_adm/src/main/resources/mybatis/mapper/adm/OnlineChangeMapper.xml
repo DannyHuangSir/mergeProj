@@ -3248,5 +3248,53 @@
 		where CLAIMS_SEQ_ID = #{claimSeqId}
 	</select>
 
+	<!-- 取得線上申請資料-電子表單開通服務 -->
+	<select id="getTransElectronicFormMethod" resultType="hashmap">
+		SELECT TOP 1 
+			E.*
+			,<include refid="INC2" />
+		FROM 
+			ESERVICE.DBO.TRANS_ELECTRONIC_FORM E
+			LEFT JOIN ESERVICE.DBO.TRANS T ON E.TRANS_NUM = T.TRANS_NUM
+		WHERE
+			E.TRANS_NUM = #{transVo.transNum}
+	</select>
+	
+		<!-- 取得線上申請資料-減額繳清保險 -->
+	<select id="getTransDeratePaidOffMethod" resultType="hashmap">
+		SELECT TOP 1 
+			DERATE.*
+			,<include refid="INC2" />
+		FROM 
+			ESERVICE.DBO.TRANS_DERATE_PAID_OFF DERATE
+			LEFT JOIN ESERVICE.DBO.TRANS T ON DERATE.TRANS_NUM = T.TRANS_NUM
+		WHERE
+			DERATE.TRANS_NUM = #{transVo.transNum}
+	</select>
+	
+		<!-- 取得線上申請資料-展期定期保險 -->
+	<select id="getTransRolloverPeriodicallyMethod" resultType="hashmap">
+		SELECT TOP 1 
+			ROLLOVER.*
+			,<include refid="INC2" />
+		FROM 
+			ESERVICE.DBO.TRANS_ROLLOVER_PERIODICALLY ROLLOVER
+			LEFT JOIN ESERVICE.DBO.TRANS T ON ROLLOVER.TRANS_NUM = T.TRANS_NUM
+		WHERE
+			ROLLOVER.TRANS_NUM = #{transVo.transNum}
+	</select>
+	
+			<!-- 取得線上申請資料-契約撤銷 -->
+	<select id="getTransContractRevocationMethod" resultType="hashmap">
+		SELECT TOP 1 
+			REVOCATION.*
+			,<include refid="INC2" />
+		FROM 
+			ESERVICE.DBO.TRANS_CONTRACT_REVOCATION REVOCATION
+			LEFT JOIN ESERVICE.DBO.TRANS T ON REVOCATION.TRANS_NUM = T.TRANS_NUM
+		WHERE
+			REVOCATION.TRANS_NUM = #{transVo.transNum}
+	</select>
+
 </mapper>
 

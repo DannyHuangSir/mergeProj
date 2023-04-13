@@ -1,0 +1,27 @@
+<!--/* 錯誤訊息 & 提示訊息 */-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<style>
+</style>
+	<body>
+		<th:block th:fragment="rocIdMessage">
+		<div class="modal fade rocIdMessageModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="height: 50px">
+						<span class="modal-title" id="myLargeModalLabel"></span>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div>
+						<div>
+							<p style="font-size : 20px; line-height : 24px; margin-right : 10px; margin-left : 10px ; margin-bottom : 10px;" id="rocIdMsg"></p>							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	</body>
+</html>

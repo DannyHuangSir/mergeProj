@@ -1,0 +1,114 @@
+#\u8cc7\u6599\u5eab\u914d\u7f6e
+#admin data source
+#spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+#spring.datasource.url=jdbc:oracle:thin:@//220.133.126.209:1521/orcl
+#spring.datasource.username=ESERVICE_ADM
+#spring.datasource.password=ESERVICE_ADM
+
+#spring.datasource.embeddedjndi=false
+#JNDI Name
+#spring.datasource.jndi-name=comp/env/jdbc/ELIFE_ADM_DS
+
+#eservice_adm data source
+spring.datasource.adm.driver-class-name=oracle.jdbc.OracleDriver
+spring.datasource.adm.url=jdbc:oracle:thin:@//10.7.168.145:1521/orcl
+spring.datasource.adm.username=ESERVICE_ADM
+spring.datasource.adm.password=ESERVICE_ADM
+spring.datasource.adm.embeddedjndi=true
+spring.datasource.adm.jndi-name=comp/env/jdbc/ELIFE_ADM_DS
+#For EsadmDatasourceConfig
+spring.datasource.adm.mybatis.config-locations=/mybatis/mybatis-config.xml
+spring.datasource.adm.mybatis.mapper-locations=/mybatis/mapper/**/*.xml
+
+#eservice data source
+spring.datasource.es.driver-class-name=oracle.jdbc.OracleDriver
+spring.datasource.es.url=jdbc:oracle:thin:@//10.7.168.145:1521/orcl
+spring.datasource.es.username=ESERVICE
+spring.datasource.es.password=ESERVICE
+#For EserviceDatasourceConfig
+spring.datasource.es.embeddedjndi=true
+spring.datasource.es.jndi-name=comp/env/jdbc/ELIFE_DS
+
+#spring.datasource.driverClassName=oracle.jdbc.driver.OracleDriver
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+
+eservice_api.domain=https://10.7.168.67:8443/eservice_api
+
+#Mybatis configuration (springboot default)
+mybatis.config-locations=classpath:/mybatis/mybatis-config.xml
+mybatis.mapper-locations=classpath:/mybatis/mapper/**/*.xml
+
+#keycloak configuration
+#keycloak.auth-server-url=https://10.7.168.66:8445/auth
+#keycloak.ssl-required=none
+keycloak.auth-server-url=http://10.7.168.66:8082/auth
+keycloak.admin-realm=master
+keycloak.admin-user=admin
+keycloak.admin-pwd=Aa123456
+keycloak.admin-security-client=security-admin-console
+keycloak.adm-realm=twfhclife
+keycloak.adm-clientId=eservice_adm
+keycloak.elife-realm=elife
+keycloak.elife-clientId=eservice
+keycloak.minTokenValidity=30
+
+#event configuration
+#event.record=false
+#event.record.url=http://10.7.168.67:8080/eservice_api/event/quene/send
+event.record=true
+event.record.url=https://10.7.168.67:8443/eservice_api/eventAdd/quene/send
+
+#MessagingTemplate
+communction.mail.domain=10.7.168.65:8083
+
+#jsch.ssh.host=10.7.168.67
+#jsch.ssh.port=8822
+#jsch.ssh.user=hpeadmin
+#jsch.ssh.pwd=hpe1234!@
+#jsch.ssh.tempcron.path=/home/hpeadmin/crontab.d/
+jsch.ssh.host=10.7.168.65
+jsch.ssh.port=22
+jsch.ssh.user=apiimg
+jsch.ssh.pwd=apiimg
+jsch.ssh.tempcron.path=/home/apiimg/crontab.d/
+
+#API Mode (dao/api)
+data-source.mode=api
+
+eservice_api.domain=https://10.7.168.67:8443/eservice_api
+#wso2.api.baseUrl=http://10.7.168.66:8280/eservice_api
+wso2.api.baseUrl=https://10.7.168.67:8443/eservice_api
+#wso2.accessKey=24027817-d690-3056-8deb-406c053bee23
+wso2.accessKey=24027817-d690-3056-8deb-406c053bee23
+
+#SSO API URLs
+eservice_api.sso.login.url=${wso2.api.baseUrl}/sso/login
+eservice_api.sso.logout.url=${wso2.api.baseUrl}/sso/logout/{realm}/{userId}
+eservice_api.sso.validatetoken.url=${wso2.api.baseUrl}/sso/validatetoken
+eservice_api.sso.session.get.url=${wso2.api.baseUrl}/sso/user-sessions
+eservice_api.sso.session.remove.url=${wso2.api.baseUrl}/sso/user-sessions/remove
+
+#Parameter-Category API URLs
+eservice_api.param-category.searches.url=${eservice_api.domain}/param-category/searches
+#eservice_api.param-category.searches.url=${wso2.api.baseUrl}/param-category/searches/1.0/invoke
+eservice_api.param-category.create.url=${eservice_api.domain}/param-category/create
+eservice_api.param-category.update.url=${eservice_api.domain}/param-category/update
+eservice_api.param-category.delete.url=${eservice_api.domain}/param-category/delete
+#Parameter API URLs
+eservice_api.param.searches.url=${eservice_api.domain}/param/searches
+#eservice_api.param.searches.url=${wso2.api.baseUrl}/param/searches/1.0/invoke
+eservice_api.param.create.url=${eservice_api.domain}/param/create
+eservice_api.param.update.url=${eservice_api.domain}/param/update
+eservice_api.param.delete.url=${eservice_api.domain}/param/delete
+
+#Function management
+eservice_api.func.sys-functions.url=${eservice_api.domain}/funcMgnt/{sysId}/getFunctions
+eservice_api.func.insert.url=${eservice_api.domain}/funcMgnt/insertFunctions
+eservice_api.func.update.url=${eservice_api.domain}/funcMgnt/updateFunctions
+eservice_api.func.delete.url=${eservice_api.domain}/funcMgnt/deleteFunctions
+eservice_api.func.function-auth.url=${eservice_api.domain}/user/function-auth
+
+eservice_api.message-template.trigger.url=${eservice_api.domain}/message-template/trigger
+eservice_api.APIAlliance-template.trigger.url=${eservice_api.domain}/alliance-template/APIAlliance
+
+partner-user-add.email.template=PartnerUser_Add_Email

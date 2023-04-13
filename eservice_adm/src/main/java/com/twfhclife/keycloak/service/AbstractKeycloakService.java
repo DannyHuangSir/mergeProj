@@ -1,7 +1,12 @@
 package com.twfhclife.keycloak.service;
 
-import com.twfhclife.keycloak.dao.KeycloakUserDao;
-import com.twfhclife.keycloak.model.KeycloakUser;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -18,11 +23,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.twfhclife.keycloak.dao.KeycloakUserDao;
+import com.twfhclife.keycloak.model.KeycloakUser;
 
 public abstract class AbstractKeycloakService {
 	private static final Logger logger = LogManager.getLogger(AbstractKeycloakService.class);
@@ -133,7 +135,7 @@ public abstract class AbstractKeycloakService {
 		user.setEnabled(true);
 		user.setCredentials(Arrays.asList(getCredentials(keycloakUser)));
 		
-		// 設定Attributem
+		// 設定Attribute
 		Map<String, List<String>> attributes = new HashMap<>();
 		if (!StringUtils.isEmpty(keycloakUser.getMobile())) {
 			attributes.put("mobile", Arrays.asList(new String[] { keycloakUser.getMobile() }));

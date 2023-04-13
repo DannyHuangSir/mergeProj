@@ -1,25 +1,34 @@
 package com.twfhclife.generic.api_client;
 
-import com.twfhclife.generic.api_model.ApiResponseObj;
-import com.twfhclife.generic.errorhandler.RestTemplateResponseErrorHandler;
-import com.twfhclife.generic.model.PolicyClaimDetailResponse;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.*;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class BaseRestClient {
@@ -44,8 +53,22 @@ public class BaseRestClient {
 
 	@Autowired
 	public BaseRestClient() {
-		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
-		restTemplate = restTemplateBuilder.errorHandler(new RestTemplateResponseErrorHandler()).build();
+		try {
+			//RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
+			//restTemplate = restTemplateBuilder.errorHandler(new RestTemplateResponseErrorHandler()).build();
+			SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+				     SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(), 
+				        NoopHostnameVerifier.INSTANCE);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+			
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+			requestFactory.setHttpClient(httpClient);
+
+			restTemplate = new RestTemplate(requestFactory);
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			// TODO Auto-generated catch block
+			logger.debug("Create httpClient fail: {}", ExceptionUtils.getStackTrace(e));
+		}
 
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 		// Add the Jackson Message converter

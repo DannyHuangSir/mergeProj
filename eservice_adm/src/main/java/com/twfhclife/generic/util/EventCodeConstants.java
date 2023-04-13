@@ -151,6 +151,18 @@ public interface EventCodeConstants {
 	public static final String ONLINECHANGE_041 = "ONLINECHANGE_041";
 	public static final String ONLINECHANGE_041_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getTransRiskLevel";
 
+	public static final String ONLINECHANGE_042 = "ONLINECHANGE_042";
+	public static final String ONLINECHANGE_042_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getTransElectronicFormMethod";
+	
+	public static final String ONLINECHANGE_043 = "ONLINECHANGE_043";
+	public static final String ONLINECHANGE_043_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getTransDeratePaidOffMethod";
+	
+	public static final String ONLINECHANGE_044 = "ONLINECHANGE_044";
+	public static final String ONLINECHANGE_044_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getTransRolloverPeriodicallyMethod";
+	
+	public static final String ONLINECHANGE_045 = "ONLINECHANGE_045";
+	public static final String ONLINECHANGE_045_SQL_ID = "com.twfhclife.adm.dao.OnlineChangeDao.getTransContractRevocationMethod";
+		
 	/** 功能維護-查詢 */
 	public static final String FUNCMGT_001 = "FUNCMGT_001";
 	public static final String FUNCMGT_001_SQL_ID = "com.twfhclife.adm.dao.FunctionItemDao.getAllFuncBySysId";

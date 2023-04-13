@@ -44,7 +44,6 @@ public class FuncMgntServiceImpl implements IFuncMgntService {
 	public List<FunctionItemVo> getAllFuncBySysId(String sysId) {
 		List<FunctionItemVo> funcItemList = null;
 		try {
-			funcItemList = funcMgmtClient.getSystemFunctions(sysId);
 			funcItemList = functionItemDao.getAllFuncBySysId(sysId);
 		} catch (Exception e) {
 			funcItemList = functionItemDao.getAllFuncBySysId(sysId);

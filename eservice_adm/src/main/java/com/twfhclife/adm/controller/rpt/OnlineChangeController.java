@@ -26,6 +26,8 @@ import com.twfhclife.generic.api_model.APIAllianceRequestVo;
 import com.twfhclife.generic.api_model.ApiResponseObj;
 import com.twfhclife.generic.api_model.ReturnHeader;
 import com.twfhclife.generic.util.MyJacksonUtil;
+import com.twfhclife.generic.util.ValidateUtils;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.collections.CollectionUtils;
@@ -177,6 +179,7 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransPaymode")
 	public String getTransPaymode(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			Map<String, Object> detail = onlineChangeService.getTransPaymode(transVo);
 			addAttribute("detailData", detail);
 			String INVESTMENT_TYPES = parameterService.getParameterValueByCode("eservice", "INVESTMENT_TYPE");
@@ -188,6 +191,10 @@ public class OnlineChangeController extends BaseController {
 			}*/
 			//目前暫時關閉顯示 2021/11/25 xianzhi
 			addAttribute("showAmount", false);
+			}else {
+				logger.error("Unable to getTransPaymode: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransPaymode: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -302,7 +309,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransAnnuityMethod")
 	public String getTransAnnuityMethod(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransAnnuityMethod(transVo));
+			if(ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransAnnuityMethod(transVo));
+			}else {
+				logger.error("Unable to getTransAnnuityMethod: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}			
 		} catch (Exception e) {
 			logger.error("Unable to getTransAnnuityMethod: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -325,7 +337,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransBonus")
 	public String getTransBonus(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			addAttribute("detailData", onlineChangeService.getTransBonus(transVo));
+			}else {
+				logger.error("Unable to getTransBonus: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}	
 		} catch (Exception e) {
 			logger.error("Unable to getTransBonus: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -348,7 +365,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransReward")
 	public String getTransReward(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			addAttribute("detailData", onlineChangeService.getTransReward(transVo));
+			}else {
+				logger.error("Unable to getTransReward: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}	
 		} catch (Exception e) {
 			logger.error("Unable to getTransReward: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -371,7 +393,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransCushion")
 	public String getTransCushion(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransCushion(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransCushion(transVo));
+			} else {
+				logger.error("Unable to getTransCushion: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransCushion: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -394,7 +421,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransBeneficiary")
 	public String getTransBeneficiary(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransBeneficiary(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransBeneficiary(transVo));
+			} else {
+				logger.error("Unable to getTransBeneficiary: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransBeneficiary: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -417,7 +449,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransRenew")
 	public String getTransRenew(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransRenew(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransRenew(transVo));
+			} else {
+				logger.error("Unable to getTransRenew: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransRenew: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -440,7 +477,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransReduce")
 	public String getTransReduce(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransReduce(transVo));
+			if(ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransReduce(transVo));
+			} else {
+				logger.error("Unable to getTransReduce: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransReduce: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -463,7 +505,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransReducePolicy")
 	public String getTransReducePolicy(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransReducePolicy(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransReducePolicy(transVo));
+			} else {
+				logger.error("Unable to getTransReducePolicy: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransReducePolicy: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -486,7 +533,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransContactInfo")
 	public String getTransContactInfo(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransContactInfo(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransContactInfo(transVo));
+			} else {
+				logger.error("Unable to getTransContactInfo: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransContactInfo: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -509,7 +561,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransFundNotification")
 	public String getTransFundNotification(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransFundNotification(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransFundNotification(transVo));
+			} else {
+				logger.error("Unable to getTransFundNotification: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransFundNotification: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -532,7 +589,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransPayMethod")
 	public String getTransPayMethod(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransPayMethod(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransPayMethod(transVo));
+			} else {
+				logger.error("Unable to getTransPayMethod: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransPayMethod: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -555,7 +617,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransCreditCardInfo")
 	public String getTransCreditCardInfo(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransCreditCardInfo(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransCreditCardInfo(transVo));
+			} else {
+				logger.error("Unable to getTransCreditCardInfo: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransCreditCardInfo: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -578,7 +645,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransCancelContract")
 	public String getTransCancelContract(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransCancelContract(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransCancelContract(transVo));
+			} else {
+				logger.error("Unable to getTransCancelContract: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransCancelContract: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -601,7 +673,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransSurrender")
 	public String getTransSurrender(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransSurrender(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransSurrender(transVo));
+			} else {
+				logger.error("Unable to getTransSurrender: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransSurrender: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -624,7 +701,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransLoan")
 	public String getTransLoan(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransLoan(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransLoan(transVo));
+			} else {
+				logger.error("Unable to getTransLoan: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransLoan: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -647,7 +729,12 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransLoanCustInfo")
 	public String getTransLoanCustInfo(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransLoanCustInfo(transVo));
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransLoanCustInfo(transVo));
+			} else {
+				logger.error("Unable to getTransLoanCustInfo: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransLoanCustInfo: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -671,8 +758,13 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransMaturity")
 	public String getTransMaturity(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransMaturity(transVo));
-		} catch(Exception e) {
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransMaturity(transVo));
+			} else {
+				logger.error("Unable to getMaturity: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+		} catch (Exception e) {
 			logger.error("Unable to getMaturity: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -695,8 +787,13 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransResendPolicy")
 	public String getTransResendPolicy(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			addAttribute("detailData", onlineChangeService.getTransResendPolicy(transVo));
-		} catch(Exception e) {
+			} else {
+				logger.error("Unable to getTransResendPolicy: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+			} catch(Exception e) {
 			logger.error("Unable to getTransResendPolicy: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -719,8 +816,13 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransCancelAuth")
 	public String getTransCancelAuth(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			addAttribute("detailData", onlineChangeService.getTransCancelAuth(transVo));
-		} catch(Exception e) {
+			} else {
+				logger.error("Unable to getTransCancelAuth: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+			} catch(Exception e) {
 			logger.error("Unable to getTransCancelAuth: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -743,8 +845,13 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransValuePrint")
 	public String getTransValuePrint(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			addAttribute("detailData", onlineChangeService.getTransValuePrint(transVo));
-		} catch(Exception e) {
+			} else {
+				logger.error("Unable to getTransValuePrint: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+			} catch(Exception e) {
 			logger.error("Unable to getTransValuePrint: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -767,8 +874,13 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransTravelPolicy")
 	public String getTransTravelPolicy(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransTravelPolicy(transVo));
-		} catch(Exception e) {
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransTravelPolicy(transVo));
+			} else {
+				logger.error("Unable to getTransTravelPolicy: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+		} catch (Exception e) {
 			logger.error("Unable to getTransTravelPolicy: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -951,8 +1063,13 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransChangePayAccount")
 	public String getTransChangePayAccount(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransChangePayAccount(transVo));
-		} catch(Exception e) {
+			if (ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransChangePayAccount(transVo));
+			} else {
+				logger.error("Unable to getTransChangePayAccount: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+		} catch (Exception e) {
 			logger.error("Unable to getTransChangePayAccount: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -1052,8 +1169,13 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransRiskLevel")
 	public String getTransRiskLevel(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			addAttribute("detailData", onlineChangeService.getTransRiskLevel(transVo));
-		} catch (Exception e) {
+			} else {
+				logger.error("Unable to getTransRiskLevel: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+			} catch (Exception e) {
 			logger.error("Unable to getTransRiskLevel: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -1068,8 +1190,13 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransPolicyHolderProfile")
 	public String getTransPolicyHolderProfile(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			addAttribute("detailData", onlineChangeService.getTransPolicyHolderProfile(transVo));
-		} catch (Exception e) {
+			} else {
+				logger.error("Unable to getTransPolicyHolderProfile: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+			} catch (Exception e) {
 			logger.error("Unable to getTransPolicyHolderProfile: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -1084,9 +1211,14 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransFundSwitch")
 	public String getTransFundSwitch(@RequestBody TransVo transVo) {
 		try {
+			if(ValidateUtils.transIsValid(transVo)) {
 			Map<String, Object> dataMap = onlineChangeService.getTransFundSwitch(transVo);
 			addAttribute("detailData", dataMap);
-		} catch (Exception e) {
+			} else {
+				logger.error("Unable to getTransFundSwitch: {}", new Exception("SQL Injection"));
+				addDefaultSystemError();
+			}
+			} catch (Exception e) {
 			logger.error("Unable to getTransFundSwitch: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
@@ -1974,4 +2106,139 @@ public class OnlineChangeController extends BaseController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(pageResp);
 	}
+	
+	/**
+	 * 取得線上申請單筆詳細資料(申請電子通知服務).
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_042, 
+			sqlId = EventCodeConstants.ONLINECHANGE_042_SQL_ID,
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
+	@PostMapping("/onlineChange/getTransElectronicFormMethod")
+	public String getTransElectronicFormMethod(@RequestBody TransVo transVo) {
+		try {
+			if(ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransElectronicFormMethod(transVo));
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getTransElectronicFormMethod: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return "backstage/rpt/onlineChangeDetail-electronicForm";
+	}
+	
+	/**
+	 * 取得線上申請單筆詳細資料(減額繳清保險).
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_043, 
+			sqlId = EventCodeConstants.ONLINECHANGE_043_SQL_ID,
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
+	@PostMapping("/onlineChange/getTransDeratePaidOffMethod")
+	public String getTransDeratePaidOffMethod(@RequestBody TransVo transVo) {
+		try {
+			if(ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransDeratePaidOffMethod(transVo));
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getTransDeratePaidOffMethod: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return "backstage/rpt/onlineChangeDetail-deratePaidOff";
+	}
+	
+	/**
+	 * 取得線上申請單筆詳細資料(展期定期保險).
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_044, 
+			sqlId = EventCodeConstants.ONLINECHANGE_044_SQL_ID,
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
+	@PostMapping("/onlineChange/getTransRolloverPeriodicallyMethod")
+	public String getTransRolloverPeriodicallyMethod(@RequestBody TransVo transVo) {
+		try {
+			if(ValidateUtils.transIsValid(transVo)) {
+				addAttribute("detailData", onlineChangeService.getTransRolloverPeriodicallyMethod(transVo));
+			}				
+		} catch (Exception e) {
+			logger.error("Unable to getTransRolloverPeriodicallyMethod: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return "backstage/rpt/onlineChangeDetail-rolloverPeriodically";
+	}
+	
+	/**
+	 * 取得線上申請單筆詳細資料(展期定期保險).
+	 * @return
+	 */
+	@RequestLog
+	@EventRecordLog(value = @EventRecordParam(
+			eventCode = EventCodeConstants.ONLINECHANGE_045, 
+			sqlId = EventCodeConstants.ONLINECHANGE_045_SQL_ID,
+			daoVoParamKey = "transVo",
+			systemEventParams = {}
+			))
+	@PostMapping("/onlineChange/getTransContractRevocationMethod")
+	public String getTransContractRevocationMethod(@RequestBody TransVo transVo) {
+		String IMAGE_HEAD = "data:image/png;base64,";
+		try {
+			if(ValidateUtils.transIsValid(transVo)) {
+				 Map<String , Object> transContractRevocation = onlineChangeService.getTransContractRevocationMethod(transVo);
+				 String needsFlag =(String) transContractRevocation.get("NEEDS_FLAG");
+				 String economyFlag =(String) transContractRevocation.get("ECONOMY_FLAG");
+				 String cognitionFlag =(String) transContractRevocation.get("COGNITION_FLAG");
+				 String familyFlag =(String) transContractRevocation.get("FAMILY_FLAG");
+				 String otherFlag =(String) transContractRevocation.get("OTHER_FLAG");
+				 
+					StringBuffer  flagMsg = new StringBuffer();
+					if(needsFlag.equals("1")) {
+						flagMsg.append("保單規劃不符需求、");				
+					}
+					if(economyFlag.equals("1")) {
+						flagMsg.append("經濟因素、");
+					}
+					if(familyFlag.equals("1")) {
+						flagMsg.append("家人反對、");
+					}
+					if(cognitionFlag.equals("1")) {
+						flagMsg.append("對商品認知有誤、");
+					}
+					if(otherFlag.equals("1")) {
+						flagMsg.append("其他、");
+					}
+					String msg = flagMsg.substring(0,flagMsg.length()-1);
+				 
+				String image1 = (String) transContractRevocation.get("IMAGE1");
+				if(StringUtils.isNotEmpty(image1)) {
+					 transContractRevocation.put("IMAGE1", IMAGE_HEAD + image1);
+				}
+				
+				String image2 = (String) transContractRevocation.get("IMAGE2");
+				if(StringUtils.isNotEmpty(image2)) {
+					transContractRevocation.put("IMAGE2", IMAGE_HEAD + image2);
+				}
+
+					
+				 transContractRevocation.put("STATUSFLAG", msg);
+				addAttribute("detailData", transContractRevocation	);
+			}	
+		} catch (Exception e) {
+			logger.error("Unable to getTransContractRevocationMethod: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return "backstage/rpt/onlineChangeDetail-contractRevocation";
+	}
+
 }
