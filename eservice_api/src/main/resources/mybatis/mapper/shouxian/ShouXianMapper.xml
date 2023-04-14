@@ -234,7 +234,6 @@
             BONF_BON_BAL, BONF_TAKE_CODE
             FROM LIBONF WHERE
             BONF_INSU_TYPE ||BONF_INSU_GRP_NO ||BONF_INSU_SEQ_NO = #{policyNo}
-            AND BONF_BON_BAL<>0 AND BONF_BON_DATE IS NOT NULL
            ]]>
     </select>
 

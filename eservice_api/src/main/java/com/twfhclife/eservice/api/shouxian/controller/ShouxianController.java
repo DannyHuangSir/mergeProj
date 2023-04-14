@@ -1,11 +1,13 @@
 package com.twfhclife.eservice.api.shouxian.controller;
 
-import com.twfhclife.eservice.api.elife.domain.*;
+import com.twfhclife.eservice.api.elife.domain.PolicyFundTransactionRequest;
+import com.twfhclife.eservice.api.elife.domain.PolicyPremiumTransactionRequest;
+import com.twfhclife.eservice.api.elife.domain.PortfolioRequest;
+import com.twfhclife.eservice.api.elife.domain.PortfolioResponse;
 import com.twfhclife.eservice.api.shouxian.domain.*;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.api.shouxian.service.ShouxianService;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
-import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
