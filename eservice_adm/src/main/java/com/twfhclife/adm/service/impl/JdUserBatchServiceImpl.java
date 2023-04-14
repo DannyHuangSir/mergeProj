@@ -299,9 +299,9 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                         jdRoleService.insertUserRole(user.getId(),roleId.getRoleId());
                                         //新增user_dep表数据
                                         if (branchId == null){
-                                            jdDeptMgntService.insertUserDep(user.getId(),depId.getDepId(),"","");
+                                            jdDeptMgntService.insertUserDep(user.getId(), depId.getDepId(),"","");
                                         }else {
-                                            jdDeptMgntService.insertUserDep(user.getId(),depId.getDepId(),"",branchId.getDepId());
+                                            jdDeptMgntService.insertUserDep(user.getId(),depId.getDepId(),"",branchId.getBranchId());
                                         }
                                     } else {
                                         failLinkList.add(vo);
