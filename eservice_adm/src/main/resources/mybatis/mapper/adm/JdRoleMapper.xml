@@ -57,17 +57,6 @@
                 AND b.ROLE_ID IN (
                 SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH
                 WHERE SYS_ID = #{roleVo.systemId}
-                <if test="adminUserFlag == 'N'.toString()">
-                    AND b.ROLE_ID IN (
-                    SELECT b.ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
-                    )
-                </if>
-                )
-            </if>
-            <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
-            <if test="(roleVo.systemId == null or roleVo.systemId == '') and adminUserFlag == 'N'.toString()">
-                AND b.ROLE_ID IN (
-                SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
                 )
             </if>
         </where>
