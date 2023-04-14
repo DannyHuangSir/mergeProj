@@ -31,7 +31,7 @@ public class JobMgmtServiceImpl implements IJobMgmtService {
 	@Value("${keycloak.elife-realm:elife}")
 	protected String ELIFE_REALM;
 
-	@Value("${keycloak.elife-realm:elife}_jd")
+	@Value("${keycloak.elife-realm:elife}_jdzq")
 	protected String JD_REALM;
 
 	@Autowired
