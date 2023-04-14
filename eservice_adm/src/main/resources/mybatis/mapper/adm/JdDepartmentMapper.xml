@@ -157,11 +157,11 @@
         ESERVICE_JD.DBO.DEPARTMENT
         WHERE
         PARENT_DEP IS NOT NULL AND PARENT_DEP = '0'
-        <if test="adminUserFlag == 'N'.toString()">
+      <!--  <if test="adminUserFlag == 'N'.toString()">
             AND DEP_ID IN (
             SELECT DEP_ID FROM ESERVICE_JD.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
             )
-        </if>
+        </if>-->
         ORDER BY
         DEP_ID
     </select>

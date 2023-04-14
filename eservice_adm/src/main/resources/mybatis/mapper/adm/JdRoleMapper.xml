@@ -261,11 +261,11 @@
         <where>
             b.DEP_ID = #{depId}
             <!-- 非系統最高權限管理員，只能查詢使用者所對應的角色 -->
-            <if test="adminUserFlag == 'N'.toString()">
+          <!--  <if test="adminUserFlag == 'N'.toString()">
                 AND a.ROLE_ID IN (
                 SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
                 )
-            </if>
+            </if>-->
         </where>
     </select>
 
