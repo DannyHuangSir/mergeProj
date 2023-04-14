@@ -113,6 +113,18 @@ public interface TransTypeUtil {
 	 */
 	final String DNS_PARAMETER_CODE = "DNS_ALLIANCE";
 
+	/** 線上申請-申請電子表單通知服務*/
+	final String ELECTRONIC_FORM_A_CODE = "ELECTRONIC_FORM_A";
+	/** 線上申請-取消電子表單通知服務*/
+	final String ELECTRONIC_FORM_C_CODE = "ELECTRONIC_FORM_C";
+	/** 展期定期保險 */
+	final String ROLLOVER_PERIODICALLY = "ROLLOVER_PERIODICALLY";
+	/** 減額繳清保險 */
+	final String DERATE_PAID_OFF = "DERATE_PAID_OFF";
+	/**	*/
+	final String CONTRACT_REVOCATION = "CONTRACT_REVOCATION";
+	/** */
+	final String ONLINE_TRIAL = "ONLINE_TRIAL";
 	/**
 	 *保單醫起通
 	 * */

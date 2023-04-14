@@ -282,4 +282,17 @@ public interface OnlineChangeNoteUtil {
 	/** 線上申請-投保證明列印-成功 */
 	final String CERTIFICATE_PARTICIPATION_SUCCESS_CODE = "WORDING_01303";
 		
+	/* -- 電子表單通知服務  -- */
+	
+	/** 線上申請-電子表單通知服務-申請電子表單通知服務	 */
+	final String ELECTRONIC_FORM_CODE_APPLICATION = "WORDING_30035" ;
+	/** 線上申請-電子表單通知服務-取消電子表單通知服務	 */
+	final String ELECTRONIC_FORM_CODE_CANCEL = "WORDING_30036" ;
+	/** 線上申請-電子表單通知服務-Email不存在請先申請*/
+	final String ELECTRONIC_FORM_CODE_MAIL="WORDING_30037";
+	/***/
+	final String ELECTRONIC_FORM_CODE_ERROR ="WORDING_30040";
+	/** 線上申請-線上試算-帳號異常提示訊息 */
+	final String  ONLINE_TRIAL_CODE= "WORDING_30045";
+	
 }

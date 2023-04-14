@@ -2,6 +2,9 @@ package com.twfhclife.generic.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -98,6 +101,18 @@ public class DateUtil {
 		}
 		return args;
 	}
+	/**
+	 * 取得系統日距離投保日有多少天(含投保當天)
+	 * @param date 保單投保日
+	 * @return 
+	 */
+	public static int getDateInterval(String date) {
+    	LocalDate a = LocalDate.parse(date , DateTimeFormatter.ISO_LOCAL_DATE);
+    	LocalDate b = LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE) , DateTimeFormatter.ISO_LOCAL_DATE);
 
+    	Duration diff = Duration.between(a.atStartOfDay() , b.atStartOfDay());
+    	long diffDays = diff.toDays()+1;
+    	return Integer.valueOf(String.valueOf(diffDays));
+	}
 
 }

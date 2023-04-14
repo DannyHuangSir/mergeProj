@@ -92,7 +92,7 @@ public interface OnlineChangMsgUtil {
 	final String MEDICAL_TREATMENT_CLAIM_APPLYING = "有申請中的保單醫起通,則不可再申請。";
 
 	final String MEDICAL_TREATMENT_CLAIM_PLAN = "此張保單不可申辦保單醫起通。";
-
+	
 	/**
 	 *投資型保單商品發送保戶人員參數-申請通知
 	 * */
@@ -104,6 +104,7 @@ public interface OnlineChangMsgUtil {
 	final String INVESTMENT_POLICY_APPLY_CAPACITY4 = "本公司已收受您的線上辦理定期超額保費變更申請案，本公司將為您辦理。";
 	final String INVESTMENT_POLICY_APPLY_CAPACITY5 = "本公司已收受您的線上辦理保單提領(贖回)變更申請案，本公司將為您辦理。";
 	final String INVESTMENT_POLICY_APPLY_CAPACITY6 = "本公司已收受您的線上辦理變更風險屬性申請案，本公司將為您辦理。";
+	final String INVESTMENT_POLICY_APPLY_CAPACITY7 = "本公司已收到您的線上辦理申請電子表單通知服務申請案，並將盡速為您辦理。";
 	final String INVESTMENT_POLICY_APPLY_CANCEL_TITLE = "取消申請通知";
 	final String INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY = "您已經取消已持有投資標的轉換申請案。";
 	final String INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY1 = "您已經取消未來保費投資標的與分配比例申請案。";
@@ -112,6 +113,38 @@ public interface OnlineChangMsgUtil {
 	final String INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY4 = "您已經取消定期超額保費申請案。";
 	final String INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY5 = "您已經取消保單提領(贖回)申請案。";
 	final String INVESTMENT_POLICY_APPLY_CANCEL_CAPACITY6 = "您已經取消變更風險屬性申請案。";
-
-
+	
+	//20220802新增 減額繳清保險 展期定期保險  規則訊息
+	/**
+	 * 減額繳清保險 - 規則錯誤訊息
+	 */
+	final String DERATE_PAID_OFF_STATUS = "保單契約狀況不符合";
+	final String DERATE_PAID_OFF_MK = "有借款狀態不符合";
+	final String DERATE_PAID_OFF_COVENANT = "主約險種狀態不符合";
+	final String DERATE_PAID_OFF_RIDER ="附約險種狀態不符合" ;
+	
+	/**
+	 * 展期定期保險 - 規則錯誤訊息
+	 */
+	final String ROLLOVER_PERIODICALLY_STATUS = "保單契約狀況不符合";
+	final String ROLLOVER_PERIODICALLY_MK = "有借款狀態不符合";
+	final String ROLLOVER_PERIODICALLY_COVENANT = "主約險種狀態不符合";
+	final String ROLLOVER_PERIODICALLY_RIDER = "附約險種狀態不符合";
+	
+	/**
+	 * 契約撤銷 - 規則錯誤訊息 
+	 */
+	final String TRANS_CONTRACT_REVOCATION_SETT_TERMINATE = "該保單不可契撤";
+	final String TRANS_CONTRACT_REVOCATION_PMDA_EPO_MK = "保戶尚未申請電子保單，請先至電子保單申請開通服務。";
+	final String TRANS_CONTRACT_REVOCATION_ASSN_ARRI_DATE = "保單已超過可以撤銷日期，請聯絡客服人員。";
+	
+	/**
+	 * 電子表單申請 - 規則錯誤訊息
+	 */
+	final String TRANS_ELECTRONIC_FORM_STATUS = "該保單狀態不可申請";
+	
+	/**
+	 * 線上試算 - 錯誤訊息
+	 */
+	final String TRANS_ONLINE_TRIAL_ERROR = "請洽詢客戶服務專線0800011966。";
 }

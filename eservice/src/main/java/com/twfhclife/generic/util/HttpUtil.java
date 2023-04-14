@@ -6,9 +6,13 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +27,12 @@ public class HttpUtil {
 		try {
 			logger.debug("postCommLogAdd:url={}, accessKey={}, req={}", url, accessKey, MyJacksonUtil.object2Json(req));
 			
-			CloseableHttpClient client = HttpClients.createDefault();
+			//CloseableHttpClient client = HttpClients.createDefault();
+			SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+				     SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(), 
+				        NoopHostnameVerifier.INSTANCE);
+			CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(scsf).build();
+
 			HttpPost httpPost = new HttpPost(url);
 			String json = MyJacksonUtil.object2Json(req);
 			StringEntity entity = new StringEntity(json, "UTF-8");

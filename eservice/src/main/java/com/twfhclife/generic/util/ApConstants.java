@@ -17,6 +17,9 @@ public interface ApConstants {
 	final String SYSTEM_ID = "eservice";
 	
 	/** 系統別 */
+	final String SYSTEM_ID_API = "eservice_api";
+	
+	/** 系統別 */
 	final String SYSTEM_ID_ADM = "eservice_adm";
 	
 	/** 事件類型 */

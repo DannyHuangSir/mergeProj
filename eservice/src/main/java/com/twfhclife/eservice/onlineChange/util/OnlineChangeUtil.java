@@ -127,6 +127,9 @@ public interface OnlineChangeUtil {
 	/** 線上申請-旅遊平安險條款4 */
 	final String TRAVEL_POLICY_TERM4_PARAMETER_CATEGORY_CODE = "TRAVEL_POLICY_TERM4";
 	
+	/** 業務員保全之照會公司 */
+	final String BUSINESS_SECURITY_COMPANY = "BUSINESS_SECURITY_COMPANY";
+	
 	/** 線上申請-首頁類型 */
 	final String ONLINE_CHANGE_HOME_PARAMETER_CATEGORY_CODE = "WORDING_3";
 	final String ONLINE_CHANGE_HOME_PARAMETER_INVESTMENT_CATEGORY_CODE = "WORDING_INVESTMENT";
@@ -148,6 +151,8 @@ public interface OnlineChangeUtil {
 	final String TWFHCLIFE_INVESTMENT_ADM = "twfhclife_investment_adm";
 
 	final String TWFHCLIFE_DEPOSIT_ADM = "twfhclife_deposit_adm";
+	
+	final String TWFHCLIFE_ELECTRONIC_ADM = "twfhclife_electronic_adm";
 
 	/** 系統收件人MAIL主題 */
 	final String SYS_MAIL_SUB = "SYS_MAIL_SUB";
@@ -224,6 +229,25 @@ public interface OnlineChangeUtil {
 	public static final String ELIFE_MAIL_027="ELIFE_MAIL_027";
 	/**投資型保單商品-保戶人員通知	接受申請/申請完成/取消申請*/
 	public static final String ELIFE_MAIL_028="ELIFE_MAIL_028";
+	/** 電子表單申辦服務-通知保戶人員*/
+	public static final String ELIFE_MAIL_029 = "ELIFE_MAIL_029";
+	/** 電子表單申辦服務-通知管理員*/
+	public static final String ELIFE_MAIL_030 = "ELIFE_MAIL_030";
+	/** 減額繳清保險-通知管理員*/
+	public static final String ELIFE_MAIL_032 = "ELIFE_MAIL_032";
+	/** 減額繳清保險-通知保戶人員*/
+	public static final String ELIFE_MAIL_033 = "ELIFE_MAIL_033";
+	/** 展期定期保險-通知管理員*/
+	public static final String ELIFE_MAIL_034 = "ELIFE_MAIL_034";
+	/** 展期定期保險-通知保戶人員*/
+	public static final String ELIFE_MAIL_035 = "ELIFE_MAIL_035";
+	
+	public static final String ELIFE_MAIL_036 = "ELIFE_MAIL_036";
+	/** 契約撤銷-通知保戶人員 */
+	public static final String ELIFE_MAIL_037 = "ELIFE_MAIL_037";
+	
+	/** 契約撤銷-通知管理員 */
+	public static final String ELIFE_MAIL_038 = "ELIFE_MAIL_038";
 	/**
 	 * 停泊賬號信息數據
 	 */
@@ -240,4 +264,43 @@ public interface OnlineChangeUtil {
 
 	public static final String CHANGE_PREMIUM_REMARK1 = "CHANGE_PREMIUM_REMARK1";
 	public static final String CHANGE_PREMIUM_SUCCESS1 = "CHANGE_PREMIUM_SUCCESS1";
+	
+	/**
+	 * 查詢CTC API功能
+	 */
+	//CTC API URL
+	public static final String CTC_URL= "CTC_URL";
+	//查詢登入者擁有保單
+	public static final String CTC_SELECT_DATA= "CTC_SELECT_DATA";
+	//查詢保單明細
+	public static final String CTC_SELECT_DETAIL= "CTC_SELECT_DETAIL";
+	//查詢申請電子表單狀態
+	public static final String CTC_LIPMDA= "CTC_LIPMDA";
+	//查詢減額、展期保單	
+	public static final String CTC_LILIPM= "CTC_LILIPM";
+	//減額、展期保單明細
+	public static final String CTC_LILIPM_DETAIL= "CTC_LILIPM_DETAIL";
+	//查詢撤銷保單明細資料
+	public static final String CTC_REVOKE_BY_LIPRPA= "REVOKE_BY_LIPRPA";
+	//查詢保戶轉帳紀錄
+	public static final String CTC_REVOKE_BY_LINEAC= "REVOKE_BY_LINEAC";
+	//查詢受理單位代碼
+	public static final String CTC_REVOKE_BY_LILIPM= "REVOKE_BY_LILIPM";
+	//查詢保單業務員姓名
+	public static final String CTC_REVOKE_BY_LIBNAG= "REVOKE_BY_LIBNAG";
+	//查詢經攬單位代理人
+	public static final String CTC_REVOKE_BY_LILIPM_AGIN_REC_CODE= "REVOKE_BY_LILIPM_AGIN_REC_CODE";
+	//查詢保單試算狀態
+	public static final String CTC_ONLINE_TRIAL_DETAIL= "ONLINE_TRIAL_DETAIL";
+	//查詢繳清、展期保單資料
+	public static final String CTC_SELECT_DATA_ADD_CODE = "SELECT_DATA_ADD_CODE";
+	/**
+	 * 查詢CSP API功能
+	 */
+	//CSP API URL
+	public static final String CSP_URL= "CSP_URL";
+	//展期定期及繳額繳清CSP
+	public static final String CSP_001_DETAIL= "CSP_001_DETAIL";
+	//線上試算CSP
+	public static final String CSP_002_DETAIL= "CSP_002_DETAIL";
 }
