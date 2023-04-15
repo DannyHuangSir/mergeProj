@@ -75,12 +75,12 @@ public class SendAuthenticationServiceImpl implements ISendAuthenticationService
 				if(!emails.equals("")){
 					//設定於代碼中 台銀人壽 驗證碼 寄送郵件
 					String subject = parameterService.getParameterValueByCode(null, "AUTH_CODE_SUB");
-					mailService.sendMail(content, subject, emails, "", null);
-					try {
-						httpUtil.postCommLogAdd(url, accessKey, new CommLogRequest(ApConstants.SYSTEM_ID, "email", emails, content));
-					} catch (Exception e) {
-						logger.error("Unable to postCommLogAdd(email) in SendAuthenticationServiceImpl: {}", ExceptionUtils.getStackTrace(e));
-					}
+//					mailService.sendMail(content, subject, emails, "", null);
+//					try {
+//						httpUtil.postCommLogAdd(url, accessKey, new CommLogRequest(ApConstants.SYSTEM_ID, "email", emails, content));
+//					} catch (Exception e) {
+//						logger.error("Unable to postCommLogAdd(email) in SendAuthenticationServiceImpl: {}", ExceptionUtils.getStackTrace(e));
+//					}
 				}
 			}
 		} catch(Exception e) {
@@ -93,12 +93,12 @@ public class SendAuthenticationServiceImpl implements ISendAuthenticationService
 				for (int i = 0; i < mobileTos.length; i++) {
 					String mobileTo = mobileTos[i];
 					if(mobileTo !=null && !mobileTo.equals("")){
-						sendSmsService.sendSms(mobileTo, content);
-						try {
-							httpUtil.postCommLogAdd(url, accessKey, new CommLogRequest(ApConstants.SYSTEM_ID, "sms", mobileTo, content));
-						} catch (Exception e) {
-							logger.error("Unable to postCommLogAdd(sms) in SendAuthenticationServiceImpl: {}", ExceptionUtils.getStackTrace(e));
-						}
+//						sendSmsService.sendSms(mobileTo, content);
+//						try {
+//							httpUtil.postCommLogAdd(url, accessKey, new CommLogRequest(ApConstants.SYSTEM_ID, "sms", mobileTo, content));
+//						} catch (Exception e) {
+//							logger.error("Unable to postCommLogAdd(sms) in SendAuthenticationServiceImpl: {}", ExceptionUtils.getStackTrace(e));
+//						}
 					}
 				}
 			}

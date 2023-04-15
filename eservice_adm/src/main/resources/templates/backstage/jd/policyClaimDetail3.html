@@ -61,62 +61,11 @@
 		<script th:inline="javascript">
 		
 		/*<![CDATA[*/
-	
+
 		var vo = /*[[${vo}]]*/;
 		var data = /*[[${reportList}]]*/;
 		var CSV = '';
 		var fileName = "保單及照會明細報表";
-		// $(function() {
-		// 	CSV = '報表名稱 , 保單及照會明細報表 \r\n';
-		// 	CSV += '受理日期區間：,' + vo.tBStartTime + '~' + vo.tBEndTime + '\r\n';
-		// 	CSV += '保單生效日期區間：,' + vo.policyActiveStartTime + '~' + vo.policyActiveEndTime + '\r\n';
-		// 	var row = "【報表內容】";
-		// 	var title = vo.columnName;
-		// 	var title1 = '';
-		// 	var title2 = '';
-		// 	var column = vo.column;
-		// 	var column1 = '';
-		// 	var column2 = '';
-		//
-		// 	for (var i = 0; i < title.length; i++) {
-		// 		if(title[i]){
-		// 			if (title[i] == '照會日期' && title[i+1] == '照會回復截止日'
-		// 					&& title[i+2] == '照會項目' && title[i+3] == '內容補充'){
-		// 				title1 = '照會日期,' + '照會回復截止日,'+'照會項目,'+'內容補充';
-		// 				i = i+3;
-		// 			}else {
-		// 				title2 += title[i] + ',';
-		// 				// row += title[i] + ',';
-		// 			}
-		// 		}
-		// 	}
-		//
-		// 	// row = row.slice(0, -1);
-		// 	CSV += row;
-		// 	for (var i = 0; i < data.length; i++) {
-		// 		var row = "";
-		// 		for (var j = 0; j < column.length; j++) {
-		// 			if(column[j]){
-		// 				if (column[j] == 'NoteDate' && column[j+1] == 'DueDate' && column[j+2] == 'Note_Key' && column[j+3] == 'ContentMemo'){
-		// 						column1 = '"'+data[i][column[j]]+'"\t,' + '"'+data[i][column[j+1]]+'"\t,' + '"'+data[i][column[j+2]]+'"\t,' + '"'+data[i][column[j+3]]+'"\t,';
-		// 						j = j+3;
-		// 				}else {
-		// 					column2 += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
-		// 					// row += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
-		// 				}
-		//
-		// 			}
-		// 		}
-		// 		row += '\r\n'+title2;
-		// 		row += '\r\n'+column2;
-		// 		column2 = '';
-		// 		row += '\r\n'+title1;
-		// 		row += '\r\n'+column1;
-		// 		// CSV += row + '\r\n';
-		// 		row.slice(0, row.length - 1);
-		// 		CSV += row + '\r\n';
-		// 	}
-		// });
 
 		$(function() {
 			var row = '';
@@ -130,12 +79,25 @@
 			}
 			row = row.slice(0, -1);
 			CSV += row + '\r\n';
+			var	lilipiColumn= ['noteDate','dueDate','itemContent','contentMemo'];
 			for (var i = 0; i < data.length; i++) {
+				var countMap = {
+					noteDate: 0,
+					dueDate: 0,
+					itemContent: 0,
+					contentMemo: 0,
+				}
 				var row = "";
 				for (var j = 0; j < column.length; j++) {
-				if(column[j]){
-					row += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
-				}
+					if(column[j]){
+						if (lilipiColumn.indexOf(column[j]) != -1) {
+							tmp = data[i]['notes'][countMap[column[j]]][column[j]]
+							row += '"' + (tmp ? tmp : "") + '"\t,';
+							countMap[column[j]] = countMap[column[j]] + 1
+						} else {
+							row += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '"\t,';
+						}
+					}
 				}
 				row.slice(0, row.length - 1);
 				CSV += row + '\r\n';

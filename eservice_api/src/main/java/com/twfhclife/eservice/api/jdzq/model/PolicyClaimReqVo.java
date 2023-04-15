@@ -1,14 +1,12 @@
 package com.twfhclife.eservice.api.jdzq.model;
 
-import com.google.common.collect.Lists;
-
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * @auther lihao
  */
-public class PolicyClaimDetailVo implements Serializable {
+public class PolicyClaimReqVo implements Serializable {
     private String agentCode;
 
     private String branchCode;
@@ -113,7 +111,31 @@ public class PolicyClaimDetailVo implements Serializable {
 
     private String lipiAge;
 
+    private String itemContent;
+
+    private String noteDate;
+
+    private String dueDate;
+
     private String noteKey;
+
+    private String contentMemo;
+
+    public String getNoteDate() {
+        return noteDate;
+    }
+
+    public void setNoteDate(String noteDate) {
+        this.noteDate = noteDate;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
 
     public String getNoteKey() {
         return noteKey;
@@ -122,19 +144,15 @@ public class PolicyClaimDetailVo implements Serializable {
     public void setNoteKey(String noteKey) {
         this.noteKey = noteKey;
     }
-    private List<PolicyClaimSubDetailVo> notes = Lists.newArrayList();
 
-    public List<PolicyClaimSubDetailVo> getNotes() {
-        return notes;
+    public String getContentMemo() {
+        return contentMemo;
     }
 
-    public void setNotes(List<PolicyClaimSubDetailVo> notes) {
-        this.notes = notes;
+    public void setContentMemo(String contentMemo) {
+        this.contentMemo = contentMemo;
     }
 
-    public String getAgentCode() {
-        return agentCode;
-    }
 
     public String getBranchCode() {
         return branchCode;
@@ -342,6 +360,10 @@ public class PolicyClaimDetailVo implements Serializable {
 
     public String getLipiAge() {
         return lipiAge;
+    }
+
+    public String getItemContent() {
+        return itemContent;
     }
 
     public void setAgentCode(String agentCode) {
@@ -556,6 +578,11 @@ public class PolicyClaimDetailVo implements Serializable {
         this.lipiAge = lipiAge;
     }
 
+    public void setItemContent(String itemContent) {
+        this.itemContent = itemContent;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
 }
-
-

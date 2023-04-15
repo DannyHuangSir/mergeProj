@@ -3,7 +3,12 @@
 <mapper namespace="com.twfhclife.eservice.api.jdzq.dao.JdzqPolicyDao">
 
     <resultMap id="PolicyMap" type="com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo">
-        <result column="PolicyNo" property="policyNo" />
+        <result column="PType_Code" property="pTypeCode" />
+        <result column="PTypeName" property="pTypeName" />
+    </resultMap>
+
+    <resultMap id="PolicyClaimMap" type="com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo">
+        <id column="PolicyNo" property="policyNo" />
         <result column="PolicyType" property="policyType" />
         <result column="PolicyTypeName" property="policyTypeName" />
         <result column="AccDocNo" property="accDocNo" />
@@ -33,17 +38,19 @@
         <result column="PolicyAmountNTD" property="policyAmountNTD" />
         <result column="PolicyFee" property="policyFee" />
         <result column="PayType" property="payType" />
-        <result column="PermYear" property="permYear" />        <result column="NoteDate" property="noteDate" />
-        <result column="DueDate" property="dueDate" />
+        <result column="PermYear" property="permYear" />
+        <collection property="notes" resultMap="PolicyClaimSubMap" />
+    </resultMap>
+
+    <resultMap id="PolicyClaimSubMap" type="com.twfhclife.eservice.api.jdzq.model.PolicyClaimSubDetailVo">
         <result column="ItemContent" property="itemContent" />
         <result column="ContentMemo" property="contentMemo" />
-        <result column="PType_Code" property="pTypeCode" />
-        <result column="PTypeName" property="pTypeName" />
+        <result column="NoteDate" property="noteDate" />
+        <result column="DueDate" property="dueDate" />
     </resultMap>
 
 
-    <select id="getPolicyClaimDetail" resultMap="PolicyMap"
-            parameterType="com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo" statementType="STATEMENT">
+    <select id="getPolicyClaimDetail" resultMap="PolicyClaimMap">
         select ${columnItem} from (
         select c.PolicyNo,c.PolicyType,pn.PolicyTypeName,c.AccDocNo,c.TBSubmitDate,c.CaseReceviceDate,c.PolicyActiveDate,c.PrintDate,
         c.AgentCode,(select  br.BrokerName from BrokerProfile br where br.Broker_ID = c.AgentCode) AS BrokerName

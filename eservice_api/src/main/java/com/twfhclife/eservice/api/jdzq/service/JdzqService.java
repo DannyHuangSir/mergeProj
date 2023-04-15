@@ -4,11 +4,7 @@ package com.twfhclife.eservice.api.jdzq.service;
 import com.twfhclife.eservice.api.jdzq.dao.JdzqDao;
 import com.twfhclife.eservice.api.jdzq.dao.JdzqPolicyDao;
 import com.twfhclife.eservice.api.jdzq.domain.CaseQueryRequest;
-import com.twfhclife.eservice.api.jdzq.model.CaseVo;
-import com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo;
-import com.twfhclife.eservice.api.jdzq.model.NotePdfVo;
-import com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo;
-import com.twfhclife.eservice.web.model.PolicyVo;
+import com.twfhclife.eservice.api.jdzq.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +47,7 @@ public class JdzqService {
         return jdzqPolicyDao.getPolicyTypeNameList(vo);
     }
 
-    public List<PolicyClaimDetailVo> getPolicyClaimDetail(PolicyClaimDetailVo vo){
+    public List<PolicyClaimDetailVo> getPolicyClaimDetail(PolicyClaimReqVo vo){
         String str = "";
         List<String> columns = vo.getColumn();
         int k = columns.size();

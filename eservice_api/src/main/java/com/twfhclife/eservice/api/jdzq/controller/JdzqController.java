@@ -1,13 +1,9 @@
 package com.twfhclife.eservice.api.jdzq.controller;
 
 import com.twfhclife.eservice.api.jdzq.domain.*;
-import com.twfhclife.eservice.api.jdzq.model.CaseVo;
-import com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo;
-import com.twfhclife.eservice.api.jdzq.model.NotePdfVo;
-import com.twfhclife.eservice.api.jdzq.model.PolicyClaimDetailVo;
+import com.twfhclife.eservice.api.jdzq.model.*;
 import com.twfhclife.eservice.api.jdzq.service.JdzqService;
 import com.twfhclife.eservice.api.shouxian.model.PolicyBaseVo;
-import com.twfhclife.eservice.web.model.PolicyVo;
 import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
@@ -163,7 +159,7 @@ public class JdzqController extends BaseController {
     }
 
     @PostMapping(value = "/jdGetPolicyClaimDetail", produces = { "application/json" })
-    public ResponseEntity<?> jdGetPolicyClaimDetail(@RequestBody PolicyClaimDetailVo vo){
+    public ResponseEntity<?> jdGetPolicyClaimDetail(@RequestBody PolicyClaimReqVo vo){
         ApiResponseObj<PolicyClaimDetailResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {

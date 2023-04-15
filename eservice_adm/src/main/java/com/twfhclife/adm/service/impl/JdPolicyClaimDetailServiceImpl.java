@@ -2,6 +2,7 @@ package com.twfhclife.adm.service.impl;
 
 import com.twfhclife.adm.dao.JdPolicyClaimDetailDao;
 import com.twfhclife.adm.model.JdPolicyClaimDetailVo;
+import com.twfhclife.adm.model.JdPolicyClaimReqVo;
 import com.twfhclife.adm.service.IJdPolicyClaimDetailService;
 import com.twfhclife.generic.api_client.BaseRestClient;
 import com.twfhclife.generic.api_model.ApiResponseObj;
@@ -39,14 +40,14 @@ public class JdPolicyClaimDetailServiceImpl extends BaseRestClient implements IJ
     private String policyTypeUrl;
 
 
-    public <T> T getInsClaimStatisticsReport(JdPolicyClaimDetailVo jdPolicyClaimDetailVo) {
+    public <T> T getInsClaimStatisticsReport(JdPolicyClaimReqVo jdPolicyClaimDetailVo) {
         logger.debug("Invoke eservice api[{}]: {}", policyUrl, MyJacksonUtil.object2Json(jdPolicyClaimDetailVo));
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Authorization", "Bearer " + WSO2_API_KEY);
         headerMap.put("Content-Type", "application/json;charset=UTF-8");
         HttpHeaders headers = this.setHeader(headerMap);
-        HttpEntity<JdPolicyClaimDetailVo> entity = new HttpEntity<>(jdPolicyClaimDetailVo, headers);
+        HttpEntity<JdPolicyClaimReqVo> entity = new HttpEntity<>(jdPolicyClaimDetailVo, headers);
         ResponseEntity<ApiResponseObj<PolicyClaimDetailResponse>> responseEntity = restTemplate.exchange(policyUrl,
                 HttpMethod.POST, entity, typeReferences().get(PolicyClaimDetailResponse.class));
         logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));

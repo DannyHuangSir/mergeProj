@@ -1,5 +1,7 @@
 package com.twfhclife.adm.model;
 
+import com.google.common.collect.Lists;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -89,14 +91,7 @@ public class JdPolicyClaimDetailVo implements Serializable {
 
     private String permYear;
 
-    private String noteDate;
-
-    private String dueDate;
-
     private String noteKey;
-
-    private String contentMemo;
-
     private String nebkBranchCode;
 
     private String nebkBranchName;
@@ -119,7 +114,15 @@ public class JdPolicyClaimDetailVo implements Serializable {
 
     private String lipiAge;
 
-    private String itemContent;
+    private List<JdClaimSubDetailVo> notes = Lists.newArrayList();
+
+    public List<JdClaimSubDetailVo> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<JdClaimSubDetailVo> notes) {
+        this.notes = notes;
+    }
 
     public String getAgentCode() {
         return agentCode;
@@ -289,22 +292,6 @@ public class JdPolicyClaimDetailVo implements Serializable {
         return permYear;
     }
 
-    public String getNoteDate() {
-        return noteDate;
-    }
-
-    public String getDueDate() {
-        return dueDate;
-    }
-
-    public String getNoteKey() {
-        return noteKey;
-    }
-
-    public String getContentMemo() {
-        return contentMemo;
-    }
-
     public String getNebkBranchCode() {
         return nebkBranchCode;
     }
@@ -347,10 +334,6 @@ public class JdPolicyClaimDetailVo implements Serializable {
 
     public String getLipiAge() {
         return lipiAge;
-    }
-
-    public String getItemContent() {
-        return itemContent;
     }
 
     public void setAgentCode(String agentCode) {
@@ -521,22 +504,6 @@ public class JdPolicyClaimDetailVo implements Serializable {
         this.permYear = permYear;
     }
 
-    public void setNoteDate(String noteDate) {
-        this.noteDate = noteDate;
-    }
-
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public void setNoteKey(String noteKey) {
-        this.noteKey = noteKey;
-    }
-
-    public void setContentMemo(String contentMemo) {
-        this.contentMemo = contentMemo;
-    }
-
     public void setNebkBranchCode(String nebkBranchCode) {
         this.nebkBranchCode = nebkBranchCode;
     }
@@ -581,7 +548,11 @@ public class JdPolicyClaimDetailVo implements Serializable {
         this.lipiAge = lipiAge;
     }
 
-    public void setItemContent(String itemContent) {
-        this.itemContent = itemContent;
+    public String getNoteKey() {
+        return noteKey;
+    }
+
+    public void setNoteKey(String noteKey) {
+        this.noteKey = noteKey;
     }
 }
