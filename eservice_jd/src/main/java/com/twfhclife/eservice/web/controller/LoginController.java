@@ -121,17 +121,31 @@ public class LoginController extends BaseController {
                 return "login";
             }
 
-            String expireDay = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "LOGIN_EXPIRE_DAY");
-            if (StringUtils.isNotBlank(expireDay) && userDetail.getLoginTime() != null) {
+            ParameterVo expireDay = parameterService.getParameterByCode(ApConstants.SYSTEM_ID_JD, "LOGIN_EXPIRE_DAY");
+            if (expireDay != null && userDetail.getLoginTime() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(userDetail.getLoginTime());
-                calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(expireDay));
+                calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(expireDay.getParameterValue()));
                 if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-                    addAttribute("errorMessage", "距離上次登入超過三個月，請重設密碼！");
+                    addAttribute("errorMessage", expireDay.getParameterName());
                     addAuditLog(userId, "0", loginRequestVo.getEuNationality());
                     return "login";
                 }
             }
+
+            ParameterVo lastChangePasswordDay = parameterService.getParameterByCode(ApConstants.SYSTEM_ID_JD,  "LAST_CHANGE_PASSWORD_DAY");
+            if (lastChangePasswordDay != null && userDetail.getLoginTime() != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(userDetail.getLastChangPasswordDate());
+                calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(lastChangePasswordDay.getParameterValue()));
+                if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+                    addAttribute("errorMessage", lastChangePasswordDay.getParameterName());
+                    addAuditLog(userId, "0", loginRequestVo.getEuNationality());
+                    return "login";
+                }
+            }
+
+
 
             String failCount = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "LOGIN_FAIL_COUNT");
             if (StringUtils.isNotBlank(failCount) && userDetail.getLoginFailCount() != null) {

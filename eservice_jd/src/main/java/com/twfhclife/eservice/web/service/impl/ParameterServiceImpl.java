@@ -81,12 +81,15 @@ public class ParameterServiceImpl implements IParameterService {
 
 	@Override
 	public String getParameterByCategoryCodeParameterValue(String systemIdAdm, String medicalAbnormalReasonMsg, String reject_reason) {
-
-
 		return parameterDao.getParameterByCategoryCodeParameterValue(systemIdAdm,medicalAbnormalReasonMsg, reject_reason);
 	}
 
-	@Override
+    @Override
+    public ParameterVo getParameterByCode(String systemId, String parameterCode) {
+		return parameterDao.getParameterByCode(systemId, parameterCode);
+    }
+
+    @Override
 	public ParameterVo getParameterByParameterValue(String systemId, String categoryCode, String parameterValue) {
 		// TODO Auto-generated method stub
 		return parameterDao.getParameterByParameterValue(systemId,categoryCode, parameterValue);

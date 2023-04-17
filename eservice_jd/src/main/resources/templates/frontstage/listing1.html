@@ -77,7 +77,7 @@
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">應繳保費</th>
-																	<td><b class="tablesaw-cell-label mobile-b">應繳保費</b> <span class="mobile-span" th:text="${vo.lipiTablPrem}"></span></td>
+																	<td th:onclick="'javascript:postPolicyListType(\'' + @{/listing3} + '\', \'' + ${policyNo} + '\')'"><b class="tablesaw-cell-label mobile-b">應繳保費</b><span class="mobile-span" th:text="${vo.lipiTablPrem}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">是否勾選自動墊繳保費 </th>

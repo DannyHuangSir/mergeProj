@@ -78,4 +78,6 @@ public interface ParameterDao {
 	 * @return
 	 */
     String getParameterByCategoryCodeParameterValue(@Param("systemId") String systemIdAdm, @Param("medicalAbnormal") String medicalAbnormalReasonMsg,@Param("reject")  String reject_reason);
+
+	ParameterVo getParameterByCode(@Param("sysId") String systemId, @Param("parameterCode") String parameterCode);
 }

@@ -77,4 +77,6 @@ public interface IParameterService {
 	 * @return
 	 */
 	String getParameterByCategoryCodeParameterValue(String systemIdAdm, String medicalAbnormalReasonMsg, String reject_reason);
+
+	ParameterVo getParameterByCode(String systemIdJd, String parameterCode);
 }
