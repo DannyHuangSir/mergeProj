@@ -143,7 +143,7 @@ public class LoginController extends BaseController {
             }
 
             if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
-                if (userDetail.getStatus().equals("Disabled")) {
+                if (StringUtils.equals(userDetail.getStatus(), "Disabled")) {
                     String errorMessage = "賬號已停用";
                     addAttribute("errorMessage", errorMessage);
                     addAuditLog(userId, "0", loginRequestVo.getEuNationality());

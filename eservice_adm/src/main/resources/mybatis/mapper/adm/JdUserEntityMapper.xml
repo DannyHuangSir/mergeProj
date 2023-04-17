@@ -83,7 +83,7 @@
 				SELECT
 				udd.USER_ID
 				FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd where
-				udd.BRANCH_ID in ( select d.DEP_ID from ESERVICE_JD.DBO.DEPARTMENT d WHERE d.PARENT_DEP = #{userEntityVo.parentDep} ) )
+				udd.DEP_ID in ( select d.PARENT_DEP from ESERVICE_JD.DBO.DEPARTMENT d WHERE d.PARENT_DEP = #{userEntityVo.parentDep} ) )
 				<if test="userEntityVo.branchId != null and userEntityVo.branchId != ''">
 					AND a.ID  IN (
 					SELECT
