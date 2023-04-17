@@ -12,15 +12,15 @@
         <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing13')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing13} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">生存/滿期保單給付資料 </a>
         <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing17')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing17} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">解約金試算</a>
         <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing5_3')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing5_3} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">契約變更資料</a>
-
-        <div class="tog2">投資型保單查詢</div>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing2')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing2} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">投資損益及投報率</a>
-
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing6_2')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing6_2} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保單收益分配</a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing7')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing7} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保費費用</a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing10')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing10} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">交易歷史記錄</a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing18')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing18} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">報酬率通知設定 </a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing16')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing16} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">投資標的淨值</a>
+        <th:block th:if="${#strings.contains(session.SYSTEM_PARAMETER['ESERVICE_JD_CATEGORY']['JD_POLICY_INVESTMENT_TYPE']['parameterValue'], #strings.substring(policyNo, 0, 2))}">
+            <div class="tog2">投資型保單查詢</div>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing2')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing2} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">投資損益及投報率</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing6_2')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing6_2} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保單收益分配</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing7')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing7} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保費費用</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing10')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing10} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">交易歷史記錄</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing18')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing18} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">報酬率通知設定 </a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing16')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing16} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">投資標的淨值</a>
+        </th:block>
     </div>
 </div>
 </html>
