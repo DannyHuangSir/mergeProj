@@ -143,15 +143,10 @@
 	</select>
 
 	<select id="getCaseQueryByIc" resultType="com.twfhclife.eservice.web.model.PermQueryVo">
-		SELECT DISTINCT D.BRANCH_ID branchCode, D1.BRANCH_ID agentCode FROM
-		ESERVICE_JD.DBO.USER_IC UD
-		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D1 ON D1.DEP_ID = UD.DEP_ID COLLATE database_default
-		WHERE UD.USER_ID = #{userId} AND D.PARENT_DEP != 0 AND D.PARENT_DEP IS NOT NULL
-		UNION
-		SELECT DISTINCT D.BRANCH_ID branchCode, NULL agentCode FROM
+		SELECT DISTINCT D.BRANCH_ID agentCode, UD.BRANCH_ID branchCode FROM
 		ESERVICE_JD.DBO.USER_IC UD
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
-		WHERE UE.ID = #{userId} AND (D.PARENT_DEP = 0 OR D.PARENT_DEP IS NULL)
+		WHERE UD.USER_ID = #{userId}
 	</select>
 
 	<select id="getCaseQueryByUser" resultType="com.twfhclife.eservice.web.model.PermQueryVo">

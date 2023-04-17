@@ -365,9 +365,20 @@
 						<include>**/generic/util/HttpUtil*</include>
 			
 						<include>**/generic/annotation/*</include>
-					
 						<!--include>**/generic/annotation/EserviceEventParam*</include-->
 					</includes>
+					<excludes>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/TransContractRevocationServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/TransDeratePaidOffServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/TransElectronicFormServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/TransOnlineTrialServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/TransRolloverPeriodicallyServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/ITransContractRevocationService.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/ITransDeratePaidOffService.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/ITransElectronicFormService.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/ITransOnlineTrialService.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/ITransRolloverPeriodicallyService.*</exclude>
+					</excludes>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
