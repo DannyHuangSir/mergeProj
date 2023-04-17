@@ -107,7 +107,7 @@
 
 	<update id="updateLoginSuccess">
 		UPDATE ESERVICE_JD.DBO.USERS
-		SET LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME(), STATUS = 'enable'
+		SET LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME(), STATUS = 'Enabled'
 		WHERE LOWER(USER_ID) = LOWER(#{userId})
 	</update>
 

@@ -93,6 +93,7 @@ public class LoginController extends BaseController {
             //IP address  validate
             if (StringUtils.isNotBlank(clientIp) && !StringUtils.equals("localhost", clientIp)
                     && !StringUtils.equals("127.0.0.1", clientIp) && !StringUtils.equals(clientIp, "0:0:0:0:0:0:0:1")) {
+                logger.info("client login ip is: {}", clientIp);
                 String whiteStr = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "ESERVICE_JD_IP_WHITE_LIST");
                 if (StringUtils.isNotBlank(whiteStr)) {
                     List<String> whiteList = Splitter.on(";").omitEmptyStrings().splitToList(whiteStr);
@@ -126,7 +127,7 @@ public class LoginController extends BaseController {
                 calendar.setTime(userDetail.getLoginTime());
                 calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(expireDay));
                 if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-                    addAttribute("errorMessage", "距離上次登入超過半年，請重設密碼！");
+                    addAttribute("errorMessage", "距離上次登入超過三個月，請重設密碼！");
                     addAuditLog(userId, "0", loginRequestVo.getEuNationality());
                     return "login";
                 }
