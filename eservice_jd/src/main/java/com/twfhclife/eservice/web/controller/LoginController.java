@@ -91,7 +91,7 @@ public class LoginController extends BaseController {
             String clientIp = getClientIp();
 
             //IP address  validate
-            if (StringUtils.isNotBlank(clientIp) && StringUtils.equals("localhost", clientIp)
+            if (StringUtils.isNotBlank(clientIp) && !StringUtils.equals("localhost", clientIp)
                     && !StringUtils.equals("127.0.0.1", clientIp) && !StringUtils.equals(clientIp, "0:0:0:0:0:0:0:1")) {
                 String whiteStr = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "ESERVICE_JD_IP_WHITE_LIST");
                 if (StringUtils.isNotBlank(whiteStr)) {
@@ -100,7 +100,7 @@ public class LoginController extends BaseController {
                         if (IpUtil.isInRange(clientIp, ip)) {
                             break;
                         }
-                        addAttribute("errorMessage", "不允許登錄");
+                        addAttribute("errorMessage", "IP不允許登錄");
                         resetVerifyCode();
                         return "login";
                     }
