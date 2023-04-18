@@ -36,7 +36,7 @@
         FROM MainPolicy A
         LEFT JOIN (
         SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM PolicyNote B
-        INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
+        INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote WHERE ISCANCEL = 'N' GROUP BY MAIN_KEY) C ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
         ) D ON A.MAIN_KEY = D.MAIN_KEY
         <where>
             <foreach collection="vo.caseQuery" item="item" separator="OR">
@@ -82,7 +82,7 @@
             <if test="vo.caseStatus != null and vo.caseStatus != ''">
                    AND A.BPMCurrentTak = #{vo.caseStatus}
             </if>
-            AND A.itemserial = 1 AND D.iscancel = 'N'
+            AND A.itemserial = 1
         </where>
     </select>
 

@@ -122,11 +122,11 @@
 				                        </div>
 				                    </div>
 				                    <ul id="circleText">
-				                        <li class="pdt1"><i class="foo-object_27 foo-2x"></i>壽險</li>
-				                        <li class="pdt2"><i class="foo-medical_14 foo-2x"></i><span>意外險</span></li>
-				                        <li class="pdt3"><i class="foo-medical_4 foo-2x"></i><span>投資型</span></li>
-				                        <li class="pdt4" style="width: 180px;"><i class="foo-medical_19 foo-2x"></i><span>萬能險/年金險</span></li>
-				                        <li class="pdt5"><i class="foo-medical_1 foo-2x"></i><span>健康險</span></li>
+				                        <li class="pdt1">壽險</li>
+				                        <li class="pdt2"><span>意外險</span></li>
+				                        <li class="pdt3"><span>投資型</span></li>
+				                        <li class="pdt4"><span>萬能險/年金險</span></li>
+				                        <li class="pdt5"><span>健康險</span></li>
 				                    </ul>
 				                </div>
 				            </div>
@@ -164,11 +164,6 @@
 /*<![CDATA[*/
 		var paymentMap = [[${session.SYSTEM_PARAMETER.PAYMENT_METHOD_TYPE}]]
 		var payModeMap = [[${session.SYSTEM_PARAMETER.PAYMODE_TYPE}]]
-
-		$(function(){
-			search()
-		})
-
 		function search() {
 			$.ajax({
 				type : 'POST',
