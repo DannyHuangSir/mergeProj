@@ -22,6 +22,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,6 +45,8 @@ import java.util.Map;
 public class DnsAllianceServiceTask {
 
 	Log log = LogFactory.getLog(DnsAllianceServiceTask.class);
+
+	Logger logger = LoggerFactory.getLogger(DnsAllianceServiceTask.class);
 	
 	public static final String CODE_SUCCESS = "0";
 	
@@ -147,6 +151,7 @@ public class DnsAllianceServiceTask {
         		}else {
         			//api's cron schedule set here.
         			if (System.getProperty(parameterItem.getParameterName()) == null) {
+						logger.info("set parameter: {}, {}", parameterItem.getParameterName(), parameterItem.getParameterValue());
         				System.setProperty(parameterItem.getParameterName(), parameterItem.getParameterValue());
         			}
         		}

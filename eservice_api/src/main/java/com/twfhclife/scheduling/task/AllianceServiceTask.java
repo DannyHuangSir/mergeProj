@@ -15,6 +15,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,7 +67,8 @@ import com.twfhclife.generic.utils.MyJacksonUtil;
 public class AllianceServiceTask {
 	
 	Log log = LogFactory.getLog(AllianceServiceTask.class);
-	
+	Logger logger = LoggerFactory.getLogger(AllianceServiceTask.class);
+
 	public static final String CODE_SUCCESS = "0";
 	
 	public static final String MSG_SUCCESS = "SUCCESS";
@@ -169,6 +172,7 @@ public class AllianceServiceTask {
         			this.setAPI_DISABLE(parameterItem.getParameterValue());
         		}else {
         			if (System.getProperty(parameterItem.getParameterName()) == null) {
+						logger.info("set parameter: {}, {}", parameterItem.getParameterName(), parameterItem.getParameterValue());
         				System.setProperty(parameterItem.getParameterName(), parameterItem.getParameterValue());
         			}
         		}

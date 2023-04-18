@@ -22,6 +22,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,6 +67,8 @@ import com.twfhclife.generic.service.SmsService;
 public class CIOAllianceServiceTask {
 
 	Log log = LogFactory.getLog(CIOAllianceServiceTask.class);
+	Logger logger = LoggerFactory.getLogger(CIOAllianceServiceTask.class);
+
 
 	public static final String CODE_SUCCESS = "0";
 
@@ -193,6 +197,7 @@ public class CIOAllianceServiceTask {
         			this.setAPI_DISABLE(parameterItem.getParameterValue());
         		}else {
         			if (System.getProperty(parameterItem.getParameterName()) == null) {
+						logger.info("set parameter: {}, {}", parameterItem.getParameterName(), parameterItem.getParameterValue());
         				System.setProperty(parameterItem.getParameterName(), parameterItem.getParameterValue());
         			}
         		}
