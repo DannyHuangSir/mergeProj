@@ -201,20 +201,17 @@
     </resultMap>
 
     <select id="getPaymentRecord" resultMap="PaymentRecordMap">
-        SELECT to_char(lpp.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE, lpp.PRPA_PAAB_AMT, lpp.PRPA_ACT_AMT, lpp.PRPA_RCP_CODE,
-        CONCAT('第', CONCAT(lpp.PRPA_TMS, CONCAT('期/共', CONCAT(
-            CASE WHEN lpp.PRPA_RCP_CODE = N'A' THEN lie.LIPI_PREM_YEAR * 1
-            WHEN lpp.PRPA_RCP_CODE = N'S' THEN lie.LIPI_PREM_YEAR * 2
-            WHEN lpp.PRPA_RCP_CODE = N'Q' THEN lie.LIPI_PREM_YEAR * 4
-            WHEN lpp.PRPA_RCP_CODE = N'M' THEN lie.LIPI_PREM_YEAR * 12
-            WHEN lpp.PRPA_RCP_CODE = N'T' THEN 1
-        END, '期'
-        ))))
-        PRPA_DESC
-        FROM LILIPM_ES lme INNER JOIN LILIPI_ES lie
-        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-        LEFT JOIN LIPRPA_ES lpp ON lme.LIPM_INSU_TYPE = lpp.PRPA_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lpp.PRPA_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lpp.PRPA_INSU_SEQ_NO
-        WHERE lme.LIPM_INSU_TYPE || lme.LIPM_INSU_GRP_NO || lme.LIPM_INSU_SEQ_NO = #{policyNo}
+        SELECT
+        to_char(lpp.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE,
+        lpp.PRPA_PAAB_AMT,
+        lpp.PRPA_ACT_AMT,
+        lpp.PRPA_RCP_CODE,
+        CONCAT('第', CONCAT(lpp.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN lpp.PRPA_RCP_CODE = N'A' THEN lie.LIPI_PREM_YEAR * 1 WHEN lpp.PRPA_RCP_CODE = N'S' THEN lie.LIPI_PREM_YEAR * 2 WHEN lpp.PRPA_RCP_CODE = N'Q' THEN lie.LIPI_PREM_YEAR * 4 WHEN lpp.PRPA_RCP_CODE = N'M' THEN lie.LIPI_PREM_YEAR * 12 WHEN lpp.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC
+        FROM
+        LIPRPA_ES lpp
+        LEFT JOIN LILIPI_ES lie ON (lpp.PRPA_INSU_TYPE || lpp.PRPA_INSU_GRP_NO || lpp.PRPA_INSU_SEQ_NO) = (lie.LIPI_INSU_TYPE || lie.LIPI_INSU_GRP_NO || lie.LIPI_INSU_SEQ_NO)
+        WHERE
+        lpp.PRPA_INSU_TYPE || lpp.PRPA_INSU_GRP_NO || lpp.PRPA_INSU_SEQ_NO = #{policyNo}
     </select>
 
     <resultMap id="PremiumMap" type="com.twfhclife.eservice.api.shouxian.model.PremiumVo">
