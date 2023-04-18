@@ -61,30 +61,32 @@ public class JdPolicyClaimDetailController extends BaseController {
             List<String> lilipiColumnName =  Lists.newArrayList("照會日期", "照會回復截止日", "照會項目", "內容補充");
 
             report1.getPolicyClaimDetailVo().forEach(data -> {
-                if (data.getNotes().size() < (size <= 0 ? 1 : size)) {
-                    IntStream.range(0, size - data.getNotes().size()).forEach(idx -> data.getNotes().add(new JdClaimSubDetailVo()));
+                int tmpSize = (size <= 0 ? 1 : size);
+                if (data.getNotes().size() < tmpSize) {
+                    IntStream.range(0, tmpSize - data.getNotes().size()).forEach(idx -> data.getNotes().add(new JdClaimSubDetailVo()));
                 }
             });
 
             if (size > 1) {
                 vo.getColumn().forEach(c -> {
                     if (lilipiColumn.contains(c)) {
-                        IntStream.range(0, size).forEach(idx ->  newColumn.add(c));
+                        IntStream.range(0, size).forEach(idx -> newColumn.add(c));
                     } else {
                         newColumn.add(c);
                     }
                 });
                 vo.getColumnName().forEach(c -> {
                     if (lilipiColumnName.contains(c)) {
-                        IntStream.range(0, size).forEach(idx ->  newColumnName.add(c));
+                        IntStream.range(0, size).forEach(idx -> newColumnName.add(c));
                     } else {
                         newColumnName.add(c);
                     }
-                });;
+                });
+                vo.setColumn(newColumn);
+                vo.setColumnName(newColumnName);
             }
-            vo.setColumn(newColumn);
-            vo.setColumnName(newColumnName);
         }
+
         addAttribute("vo", vo);
         addAttribute("reportList", report1 != null ? report1.getPolicyClaimDetailVo() : Lists.newArrayList());
         return   "backstage/jd/policyClaimDetail3";
