@@ -34,7 +34,8 @@
 				                        <p class="pull-left visible-xs">
 				                            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
 				                        </p>
-				                        <i class="foo-business_7 foo-2x hidden-xs"></i> <th:block th:text="${list.get(0).policyType}"></th:block>
+				                        <i class="foo-business_7 foo-2x hidden-xs"></i>
+										<th:block th:text="${list.size() > 0 ? list.get(0).policyType : ''}"></th:block>
 				                    </div>
 				                    <div class="list col-md-12">
 				                        <div class="box-border">
