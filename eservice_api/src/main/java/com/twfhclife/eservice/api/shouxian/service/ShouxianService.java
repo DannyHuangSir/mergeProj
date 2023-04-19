@@ -12,6 +12,7 @@ import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
 import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.generic.util.RoiRateUtil;
+import com.twfhclife.generic.utils.DateUtil;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -157,14 +158,14 @@ public class ShouxianService {
         Map<String, Object> map = Maps.newHashMap();
         map.put("FSZ2-SCN-NAME", "FSZ2");
         map.put("FSZ2-FUNC-CODE", "IN");
-        map.put("FSZ2-CALC-DATE", new Date());
+        map.put("FSZ2-CALC-DATE", DateUtil.getRocDate(new Date(), "yyyyMMdd"));
         map.put("FSZ2-INSU-NO", policyNo);
         map.put("FSZ2-CALC-TYPE", 3);
 
         ResponseEntity<String> responseEntity = null;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Access-token", ACCESS_TOKEN);
+        headers.set("Authorization", "Bearer " + ACCESS_TOKEN);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Gson gson = new Gson();
