@@ -14,6 +14,7 @@ import com.twfhclife.eservice.policy.model.PortfolioVo;
 import com.twfhclife.generic.util.RoiRateUtil;
 import com.twfhclife.generic.utils.DateUtil;
 import com.twfhclife.generic.utils.MyJacksonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,11 @@ public class ShouxianService {
     }
 
     public PolicyBaseVo getPolicyBase(String policyNo) {
-        return shouXianDao.getBasePolicy(policyNo);
+        if (StringUtils.isNotBlank(policyNo) && policyNo.length() > 3) {
+            return shouXianDao.getBasePolicy(policyNo, policyNo.substring(0, 2), policyNo.substring(2, 3), policyNo.substring(3, policyNo.length()));
+        } else {
+            return new PolicyBaseVo();
+        }
     }
 
     public List<SafeGuardVo> getSafeGuard(String policyNo) {
@@ -95,7 +100,7 @@ public class ShouxianService {
 
     public PolicyInvtFundVo getPolicyInvtFund(String policyNo) {
         PolicyInvtFundVo vo = new PolicyInvtFundVo();
-        vo.setPolicy(shouXianDao.getBasePolicy(policyNo));
+        vo.setPolicy(getPolicyBase(policyNo));
         return vo;
     }
 
