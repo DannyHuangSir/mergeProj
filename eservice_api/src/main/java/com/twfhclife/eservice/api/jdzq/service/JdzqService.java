@@ -8,6 +8,7 @@ import com.twfhclife.eservice.api.jdzq.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ public class JdzqService {
     }
 
     public List<NoteNotifyVo> getNoteSchedule() {
-        return jdzqDao.getNoteSchedule();
+        return jdzqDao.getNoteSchedule(new Date());
     }
 
     public List<PolicyClaimDetailVo> getPolicyTypeNameList(PolicyClaimDetailVo vo){

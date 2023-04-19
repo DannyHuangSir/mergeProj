@@ -154,7 +154,7 @@
         SELECT A.AppName, A.InsName, A.PolicyNo, B.DueDate, A.PSalesCode FROM MainPolicy A INNER JOIN
         PolicyNote B ON A.Main_Key = B.Main_Key
         WHERE A.BPMCurrentTak IN ('602000S', '602500S')
-        AND B.DueDate = FORMAT(DATEADD(day, -2, SYSDATETIME()), 'yyyyMMdd')
+        AND B.DueDate = FORMAT(DATEADD(day, -2, #{currDate}), 'yyyyMMdd')
     </select>
 
 </mapper>
