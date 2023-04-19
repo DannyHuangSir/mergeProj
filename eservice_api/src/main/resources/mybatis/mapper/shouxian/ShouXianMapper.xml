@@ -175,7 +175,7 @@
         LEFT JOIN LIASSN_ES lsn ON lsn.ASSN_INSU_NO = (lme.LIPM_INSU_TYPE || lme.LIPM_INSU_GRP_NO ||lme.LIPM_INSU_SEQ_NO)
         LEFT JOIN LIBNAG_ES lbe ON lbe.BNAG_INSU_TYPE = lme.LIPM_INSU_TYPE AND lbe.BNAG_INSU_GRP_NO = lme.LIPM_INSU_GRP_NO AND lbe.BNAG_INSU_SEQ_NO = lme.LIPM_INSU_SEQ_NO
         LEFT JOIN LINEDR_ES lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
-        WHERE (lme.LIPM_INSU_TYPE||lme.LIPM_INSU_GRP_NO||lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+        WHERE lme.LIPM_INSU_TYPE = #{policyType} AND lme.LIPM_INSU_GRP_NO = #{policyGrpNo} AND lme.LIPM_INSU_SEQ_NO = #{policySeqNo}
         ]]>
     </select>
 
