@@ -97,10 +97,15 @@ public class LoginController extends BaseController {
                 String whiteStr = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID_JD, "ESERVICE_JD_IP_WHITE_LIST");
                 if (StringUtils.isNotBlank(whiteStr)) {
                     List<String> whiteList = Splitter.on(";").omitEmptyStrings().splitToList(whiteStr);
+                    boolean inIpWhiteList = false;
                     for (String ip : whiteList) {
                         if (IpUtil.isInRange(clientIp, ip)) {
+                            inIpWhiteList = true;
                             break;
                         }
+
+                    }
+                    if (!inIpWhiteList) {
                         addAttribute("errorMessage", "IP不允許登錄");
                         resetVerifyCode();
                         return "login";
