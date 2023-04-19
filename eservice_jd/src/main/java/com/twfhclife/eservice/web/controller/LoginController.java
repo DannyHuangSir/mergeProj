@@ -139,7 +139,7 @@ public class LoginController extends BaseController {
             }
 
             ParameterVo lastChangePasswordDay = parameterService.getParameterByCode(ApConstants.SYSTEM_ID_JD,  "LAST_CHANGE_PASSWORD_DAY");
-            if (lastChangePasswordDay != null && userDetail.getLoginTime() != null) {
+            if (lastChangePasswordDay != null && userDetail.getLastChangPasswordDate() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(userDetail.getLastChangPasswordDate());
                 calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(lastChangePasswordDay.getParameterValue()));
