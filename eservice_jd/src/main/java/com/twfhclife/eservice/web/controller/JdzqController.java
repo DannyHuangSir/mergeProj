@@ -65,10 +65,10 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing11")
     public String listing11(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicySafeGuardDataResponse vo = policyService.getPolicyGuard(getUserId(), policyNo);
             addAttribute("vo", vo.getPolicyBase());
             addAttribute("safeGuards", vo.getSafeGuard());
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing11: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -79,10 +79,10 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing3")
     public String listing3(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyPaymentRecordDataResponse vo = policyService.getPolicyPaymentRecord(getUserId(), policyNo);
             addAttribute("vo", vo.getPolicyBaseVo());
             addAttribute("paymentRecords", vo.getPaymentRecords());
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing3: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -93,10 +93,10 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing5")
     public String listing5(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyPremiumDataResponse vo = policyService.getPolicyPremium(getUserId(), policyNo);
             addAttribute("vo", vo.getPolicyBase());
             addAttribute("premiums", vo.getPremiums());
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing5: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -107,6 +107,7 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing13")
     public String listing13(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyExpireOfPaymentDataResponse vo = policyService.getPolicyExpireOfPayment(getUserId(), policyNo);
             if (vo != null && CollectionUtils.isNotEmpty(vo.getPayments())) {
                 List<Map<String, String>> bankList = optionService.getBankList();
@@ -121,7 +122,6 @@ public class JdzqController extends BaseController {
             }
             addAttribute("vo", vo.getPolicyBase());
             addAttribute("payments", vo.getPayments());
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing13: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -134,10 +134,10 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing5_3")
     public String listing5_3(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyChangeInfoDataResponse vo = policyService.getChangeInfo(getUserId(), policyNo);
             addAttribute("vo", vo.getPolicyBase());
             addAttribute("changeInfos", vo.getChangeInfos());
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing5_3: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -148,9 +148,9 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing2")
     public String listing2(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing2: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -161,10 +161,10 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing6_2")
     public String listing6_2(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyIncomeDistributionDataResponse vo = policyService.getIncomeDistribution(getUserId(), policyNo);
             addAttribute("vo", vo.getPolicyBase());
             addAttribute("info", vo.getIncomeDistributions());
-            addAttribute("policyNo", policyNo);
             BigDecimal sumAmount = BigDecimal.valueOf(0);
             BigDecimal sumUnits = BigDecimal.valueOf(0);
             for (IncomeDistributionVo incomeDistribution : vo.getIncomeDistributions()) {
@@ -183,9 +183,9 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing10")
     public String listing10(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing10: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -237,9 +237,9 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing7")
     public String listing7(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing7: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -284,12 +284,12 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing16")
     public String listing16(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyInvtFundVo vo = policyService.getPolicyInvtFund(getUserId(), policyNo);
             addAttribute("portfolioList", policyService.getPolicyRateOfReturn(getUserId(), policyNo).getPortfolioList());
             addAttribute("vo", vo.getPolicy());
             List<String> rocYearMenu = DateUtil.getYearOpitonByEffectDate("1911/01/01");
             addAttribute("rocYearMenu", rocYearMenu);
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing16: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -311,11 +311,11 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing17")
     public String listing17(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyCancellationMoneyDataResponse resp = policyService.getPolicyCancellationMoney(getUserId(), policyNo);
             addAttribute("vo", resp.getPolicyVo());
             addAttribute("cancelMoneys", resp.getCancellationMoneyVos());
             addAttribute("amountVo", resp.getPolicyAmountVo() != null ? resp.getPolicyAmountVo() : new PolicyAmountVo());
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing17: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -348,9 +348,9 @@ public class JdzqController extends BaseController {
     @RequestMapping("/listing18")
     public String listing18(@RequestParam("policyNo") String policyNo) {
         try {
+            addAttribute("policyNo", policyNo);
             PolicyBaseVo vo = policyService.getPolicyBase(getUserId(), policyNo);
             addAttribute("vo", vo);
-            addAttribute("policyNo", policyNo);
         } catch (Exception e) {
             logger.error("Unable to get data from listing18: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
