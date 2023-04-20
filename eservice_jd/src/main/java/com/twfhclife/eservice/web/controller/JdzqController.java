@@ -34,6 +34,7 @@ public class JdzqController extends BaseController {
 
     @GetMapping("/policyQuery")
     public String policyQuery() {
+        addAttribute("queryPolicy", new PolicyVo());
         return "frontstage/jdzq/policyQuery/policy-query";
     }
 
@@ -46,7 +47,14 @@ public class JdzqController extends BaseController {
         ResponseObj responseObj = new ResponseObj();
         responseObj.setResult(ResponseObj.SUCCESS);
         responseObj.setResultData(policyService.getPolicyList(getLoginUser(), vo));
+        addSession("queryPolicy", vo);
         return responseObj;
+    }
+
+    @GetMapping("/returnPolicy")
+    public String returnPolicy() {
+        addAttribute("queryPolicy", getSession("queryPolicy"));
+        return "frontstage/jdzq/policyQuery/policy-query";
     }
 
     @RequestMapping("/listing1")

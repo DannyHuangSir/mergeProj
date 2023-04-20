@@ -42,25 +42,25 @@
 									<div class="form-group">
 										<label class="col-sm-3"> 保單號碼 </label>
 										<div class="col-sm-9">
-											<input name="policyNo" type="text" placeholder="輸入欲查詢的保單號碼" class="form-control" />
+											<input th:value="${queryPolicy.policyNo}" name="policyNo" type="text" placeholder="輸入欲查詢的保單號碼" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 要保人姓名 </label>
 										<div class="col-sm-9">
-											<input name="lipmName" type="text" placeholder="輸入欲查詢的要保人姓名" class="form-control" />
+											<input name="lipmName" th:value="${queryPolicy.lipmName}" type="text" placeholder="輸入欲查詢的要保人姓名" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 被保險人姓名 </label>
 										<div class="col-sm-9">
-											<input name="lipiName" type="text" placeholder="輸入欲查詢的被保險人姓名" class="form-control" />
+											<input name="lipiName" th:value="${queryPolicy.lipiName}" type="text" placeholder="輸入欲查詢的被保險人姓名" class="form-control" />
 										</div>
 									</div>  
 									<div class="form-group">
 										<label class="col-sm-3"> 商品名稱  </label>
 										<div class="col-sm-9">
-											<input name="prodName" type="text" placeholder="輸入欲查詢的商品名稱 " class="form-control" />
+											<input name="prodName" th:value="${queryPolicy.prodName}" type="text" placeholder="輸入欲查詢的商品名稱 " class="form-control" />
 										</div>
 									</div>
 								</div>
@@ -70,14 +70,14 @@
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 要保人身分證號 </label>
 										<div class="col-sm-9">
-											<input name="lipmId" type="text" placeholder="輸入欲查詢的要保人身分證號" class="form-control" />
+											<input name="lipmId" th:value="${queryPolicy.lipmId}" type="text" placeholder="輸入欲查詢的要保人身分證號" class="form-control" />
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 no-padding-right"> 被保人身分證號 </label>
 										<div class="col-sm-9">
-											<input name="lipiId" type="text" placeholder="輸入欲查詢的被保人身分證號" class="form-control" />
+											<input name="lipiId" th:value="${queryPolicy.lipiId}" type="text" placeholder="輸入欲查詢的被保人身分證號" class="form-control" />
 										</div>
 									</div> 
 								</div>	
