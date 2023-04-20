@@ -193,18 +193,20 @@
 					if(response.result == "SUCCESS"){
 						html = ''
 						$("#policyCount").text('共 ' + response.resultData.length + ' 張')
+						var isGreen = false
 						response.resultData.forEach(function(item, index){
+									isGreen = !isGreen
 									html += '<div class="">' +
 										'<table status="' + item.status + '" class="tablesaw tablesaw-stack tablesawA">' +
 											'<thead>' +
 												'<tr class="table2">' +
-													'<th class="text-left item400">保單號碼</th>' +
-													'<th scope="col" class="item400">險種名稱</th>' +
-													'<th scope="col" class="item400">要保人姓名</th>' +
-													'<th scope="col" class="item400">要保人ID</th>' +
-													'<th scope="col" class="item360">被保人姓名</th>' +
-													'<th scope="col" class="item450">被保人ID</th>' +
-													'<th scope="col" class="item400">招攬人</th> ' +
+													'<th class="text-left item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>保單號碼</th>' +
+													'<th scope="col" class="item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>險種名稱</th>' +
+													'<th scope="col" class="item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>要保人姓名</th>' +
+													'<th scope="col" class="item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>要保人ID</th>' +
+													'<th scope="col" class="item360"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>被保人姓名</th>' +
+													'<th scope="col" class="item450"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>被保人ID</th>' +
+													'<th scope="col" class="item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>招攬人</th> ' +
 												'</tr>' +
 											'</thead>' +
 											'<tbody>' +
@@ -220,13 +222,13 @@
 											'</tbody> ' +
 											'<thead>' +
 												'<tr class="table2">' +
-													'<th class="text-left item400">保單狀態</th>' +
-													'<th scope="col" class="item400">投保始期</th>' +
-													'<th scope="col" class="item400">保額</th>' +
-													'<th scope="col" class="item400">應繳保費</th>' +
-													'<th scope="col" class="item360">繳別</th>' +
-													'<th scope="col" class="item450">繳費年期</th>' +
-													'<th scope="col" class="item400">繳費方式</th> ' +
+													'<th class="text-left item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>保單狀態</th>' +
+													'<th scope="col" class="item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>投保始期</th>' +
+													'<th scope="col" class="item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>保額</th>' +
+													'<th scope="col" class="item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>應繳保費</th>' +
+													'<th scope="col" class="item360"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>繳別</th>' +
+													'<th scope="col" class="item450"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>繳費年期</th>' +
+													'<th scope="col" class="item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>繳費方式</th> ' +
 												'</tr>' +
 											'</thead>' +
 											'<tbody>' +
