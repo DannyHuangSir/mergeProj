@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IPolicyService {
 
-    List<PolicyVo> getPolicyList(KeycloakUser loginUser, PolicyVo vo);
+    PolicyListDataResponse getPolicyList(KeycloakUser loginUser, PolicyVo vo);
 
     PolicyBaseVo getPolicyBase(String userId, String policyNo);
 

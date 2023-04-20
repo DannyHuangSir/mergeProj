@@ -1,20 +1,20 @@
 package com.twfhclife.eservice.api.shouxian.domain;
 
-import com.google.common.collect.Lists;
+import com.twfhclife.eservice.api.shouxian.model.PolicyCountVo;
 import com.twfhclife.eservice.api.shouxian.model.PolicyVo;
+import com.twfhclife.generic.domain.PageResponseObj;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class PolicyListDataResponse implements Serializable {
+public class PolicyListDataResponse extends PageResponseObj<PolicyVo> implements Serializable  {
 
-    private List<PolicyVo> policyList = Lists.newArrayList();
+    private PolicyCountVo policyCountVo;
 
-    public List<PolicyVo> getPolicyList() {
-        return policyList;
+    public PolicyCountVo getPolicyCountVo() {
+        return policyCountVo;
     }
 
-    public void setPolicyList(List<PolicyVo> policyList) {
-        this.policyList = policyList;
+    public void setPolicyCountVo(PolicyCountVo policyCountVo) {
+        this.policyCountVo = policyCountVo;
     }
 }

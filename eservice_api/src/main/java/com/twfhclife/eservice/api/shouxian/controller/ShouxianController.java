@@ -53,9 +53,12 @@ public class ShouxianController extends BaseController {
         ApiResponseObj<PolicyListDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            List<PolicyVo> policyList = shouxianService.getPolicyList(vo);
             PolicyListDataResponse resp = new PolicyListDataResponse();
-            resp.setPolicyList(policyList);
+            PolicyCountVo countVo = shouxianService.getPolicyListTotal(vo);
+            resp.setTotalPage(countVo == null ? 0 : countVo.getTotal());
+            resp.setPolicyCountVo(countVo);
+            resp.setPageData(shouxianService.getPolicyList(vo));
+            resp.setPage(vo.getPageNum());
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);

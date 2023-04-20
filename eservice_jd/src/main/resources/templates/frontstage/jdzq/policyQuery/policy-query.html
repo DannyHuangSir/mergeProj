@@ -138,11 +138,11 @@
 						<div class="card">
 							<div class="card-header">
 								<div class="card-head-row"> 
-									<div class="card-title tb1 card-title-span">
-										<span onclick="chooseTab(this)" class="active">所有查詢結果保單(<span><span id="allCount">0</span>筆</span>) </span>
-										<span onclick="chooseTab(this, '1')" >有效保單(<span><span id="activeCount">0</span>筆</span>) </span>
-										<span onclick="chooseTab(this, '2')" >停效保單(<span><span id="stopCount">0</span>筆</span>) </span>
-										<span onclick="chooseTab(this, '3')" >失效保單(<span><span id="expireCount">0</span>筆</span>) </span>
+									<div id="statusCard" class="card-title tb1 card-title-span">
+										<span val="all" onclick="chooseTab(this)" class="active">所有查詢結果保單(<span><span id="allCount">0</span>筆</span>) </span>
+										<span val="1" onclick="chooseTab(this, '1')" >有效保單(<span><span id="activeCount">0</span>筆</span>) </span>
+										<span val="2" onclick="chooseTab(this, '2')" >停效保單(<span><span id="stopCount">0</span>筆</span>) </span>
+										<span val="3" onclick="chooseTab(this, '3')" >失效保單(<span><span id="expireCount">0</span>筆</span>) </span>
 									</div> 
 								</div>
 							</div>
@@ -152,6 +152,17 @@
 				                </div>
 								<div id="policyContent"></div>
 					        </div>
+							<div class="col-md-12 wht box-border no-borderTop">
+								<div class="col-md-5 col-md-offset-5">
+									<nav>
+										<ul class="pagination center1">
+											<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>
+											<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>
+											<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -176,14 +187,11 @@
 					lipiName: $("input[name='lipiName']").val(),
 					lipiId: $("input[name='lipiId']").val(),
 					prodName: $("input[name='prodName']").val(),
+					stat: $("#statusCard .active").attr('val'),
+					pageNum: 1
 				}),
 				url : /*[[@{/getPolicyList}]]*/,
 				success : function(response) {
-					$("#allCount").text(0)
-					$("#zonglanCount").text(0)
-					$("#activeCount").text(0)
-					$("#stopCount").text(0)
-					$("#expireCount").text(0)
 					$("#circleAll").children().each(function(index, item) {
 						item.classList.remove('active')
 					})
@@ -192,12 +200,17 @@
 					})
 					if(response.result == "SUCCESS"){
 						html = ''
-						$("#policyCount").text('共 ' + response.resultData.length + ' 張')
+						$("#allCount").text(response.resultData.totalPage)
+						$("#zonglanCount").text(response.resultData.totalPage)
+						$("#activeCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.effectiveCount:0)
+						$("#stopCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.stopCount:0)
+						$("#expireCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.expireCount:0)
+						$("#policyCount").text('共 ' + response.resultData.totalPage + ' 張')
 						var isGreen = false
-						response.resultData.forEach(function(item, index){
+						response.resultData.pageData.forEach(function(item, index){
 									isGreen = !isGreen
 									html += '<div class="">' +
-										'<table status="' + item.status + '" class="tablesaw tablesaw-stack tablesawA">' +
+										'<table status="' + item.stat + '" class="tablesaw tablesaw-stack tablesawA">' +
 											'<thead>' +
 												'<tr class="table2">' +
 													'<th class="text-left item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>保單號碼</th>' +
@@ -233,7 +246,7 @@
 											'</thead>' +
 											'<tbody>' +
 												"<tr onclick=\"javascript:postPolicyListType('listing1', '" + item.policyNo + "')\">" +
-													'<td class="table3">' + statusStr(item.status) + ' </td>' +
+													'<td class="table3">' + statusStr(item.stat) + ' </td>' +
 													'<td class="hid1 hid2">' + item.effectiveDate + '</td>' +
 													'<td class="hid1 hid2">' + item.mainAmount + '</td>' +
 													'<td class="hid1 hid2">' + item.lipiTablPrem + '</td>' +
@@ -247,6 +260,7 @@
 									changeCircle(item.policyNo)
 							});
 							$("#policyContent").html(html)
+							$('.pagination').html(getPageBarHtml(response.resultData))
 					}
 				},
 				error : function() {
@@ -292,17 +306,12 @@
  		}
 
 		function statusStr(status) {
-			$("#allCount").text(parseInt($("#allCount").text()) +1)
-			$("#zonglanCount").text(parseInt($("#zonglanCount").text()) +1)
 			switch(status) {
 				case '1':
-					$("#activeCount").text(parseInt($("#activeCount").text()) +1)
 					return '有效'
 				case '2':
-					$("#stopCount").text(parseInt($("#stopCount").text()) +1)
 					return '停效'
 				case '3':
-					$("#expireCount").text(parseInt($("#expireCount").text()) +1)
 					return '失效'
 			}
 		}
@@ -312,15 +321,7 @@
 				$(item).removeClass('active')
 			})
 			$(vm).addClass('active')
-			$(".tablesaw.tablesaw-stack.tablesawA").each(function(i,item){
-				if (!status) {
-					$(item).show()
-				} else if (status == $(item).attr("status")) {
-					$(item).show()
-				} else {
-					$(item).hide()
-				}
-			})
+			search()
 		}
 /*]]>*/
 </script>

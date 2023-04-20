@@ -14,6 +14,8 @@ public interface ShouXianDao {
 
     List<PolicyVo> getPolicyList(@Param("vo") PolicyVo vo);
 
+    PolicyCountVo getPolicyListTotal(@Param("vo") PolicyVo vo);
+
     PolicyBaseVo getBasePolicy(@Param("policyNo") String policyNo, @Param("policyType") String policyType, @Param("policyGrpNo") String policyGrpNo, @Param("policySeqNo") String policySeqNo);
     List<SafeGuardVo> getSafeGuard(@Param("policyNo") String policyNo);
     List<PaymentRecordVo> getPaymentRecord(@Param("policyNo") String policyNo);
@@ -51,4 +53,6 @@ public interface ShouXianDao {
 
     List<ExchangeRateVo> getExchangeRate(@Param("exchangeRateVo") ExchangeRateRequest vo);
     PolicyAmountVo selectPolicyAmount(@Param("policyNo") String policyNo);
+
+
 }

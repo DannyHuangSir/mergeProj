@@ -50,6 +50,10 @@ public class ShouxianService {
         return shouXianDao.getPolicyList(vo);
     }
 
+    public PolicyCountVo getPolicyListTotal(PolicyVo vo) {
+        return shouXianDao.getPolicyListTotal(vo);
+    }
+
     public PolicyBaseVo getPolicyBase(String policyNo) {
         if (StringUtils.isNotBlank(policyNo) && policyNo.length() > 3) {
             return shouXianDao.getBasePolicy(policyNo, policyNo.substring(0, 2), policyNo.substring(2, 3), policyNo.substring(3, policyNo.length()));
@@ -275,4 +279,6 @@ public class ShouxianService {
     public PolicyAmountVo getPolicyAmount(String policyNo) {
         return shouXianDao.selectPolicyAmount(policyNo);
     }
+
+
 }

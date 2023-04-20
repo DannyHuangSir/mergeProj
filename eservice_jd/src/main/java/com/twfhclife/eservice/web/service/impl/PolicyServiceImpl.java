@@ -30,10 +30,9 @@ public class PolicyServiceImpl implements IPolicyService {
 
 
     @Override
-    public List<PolicyVo> getPolicyList(KeycloakUser user, PolicyVo vo) {
+    public PolicyListDataResponse getPolicyList(KeycloakUser user, PolicyVo vo) {
         // role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員
         int role = usersDao.checkUserRole(user.getId());
-        List<PolicyVo> result = Lists.newArrayList();
         List<PermQueryVo> caseQuery = Lists.newArrayList();
         switch (role) {
             case 2:
@@ -55,10 +54,9 @@ public class PolicyServiceImpl implements IPolicyService {
             vo.setPermQuery(caseQuery);
             vo.setUserId(user.getUsername());
             vo.setSysId(ApConstants.SYSTEM_ID);
-            PolicyListDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(vo), policyListUrl, PolicyListDataResponse.class);
-            result.addAll(responseObj.getPolicyList());
+            return baseRestClient.postApi(new Gson().toJson(vo), policyListUrl, PolicyListDataResponse.class);
         }
-        return result;
+        return new PolicyListDataResponse();
     }
 
     @Value("${eservice_api.policy.base.url}")

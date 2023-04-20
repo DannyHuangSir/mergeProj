@@ -13,7 +13,7 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
     private String lipiName;
     private String lipiId;
     private String agent;
-    private String status;
+    private String stat;
     private String effectiveDate;
     private String mainAmount;
     private String lipiTablPrem;
@@ -28,6 +28,14 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
     private String paymentMethod;
 
     private String endDate;
+
+    private int totalRow;
+
+    private int pageSize = 10;
+
+    private int pageNum;
+
+    private List<Integer> pageNumList = Lists.newArrayList(10);
 
     private List<PermQueryVo> permQuery = Lists.newArrayList();
 
@@ -79,12 +87,12 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
         this.agent = agent;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStat() {
+        return stat;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStat(String stat) {
+        this.stat = stat;
     }
 
     public String getEffectiveDate() {
@@ -173,5 +181,37 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public int getTotalRow() {
+        return totalRow;
+    }
+
+    public void setTotalRow(int totalRow) {
+        this.totalRow = totalRow;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public List<Integer> getPageNumList() {
+        return pageNumList;
+    }
+
+    public void setPageNumList(List<Integer> pageNumList) {
+        this.pageNumList = pageNumList;
     }
 }
