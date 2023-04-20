@@ -139,10 +139,10 @@
 							<div class="card-header">
 								<div class="card-head-row"> 
 									<div class="card-title tb1 card-title-span">
-										<span class="active">所有查詢結果保單(<span><span id="allCount">0</span>筆</span>) </span>
-										<span>有效保單(<span><span id="activeCount">0</span>筆</span>) </span>
-										<span>停效保單(<span><span id="stopCount">0</span>筆</span>) </span>
-										<span>失效保單(<span><span id="expireCount">0</span>筆</span>) </span>
+										<span onclick="chooseTab(this)" class="active">所有查詢結果保單(<span><span id="allCount">0</span>筆</span>) </span>
+										<span onclick="chooseTab(this, '1')" >有效保單(<span><span id="activeCount">0</span>筆</span>) </span>
+										<span onclick="chooseTab(this, '2')" >停效保單(<span><span id="stopCount">0</span>筆</span>) </span>
+										<span onclick="chooseTab(this, '3')" >失效保單(<span><span id="expireCount">0</span>筆</span>) </span>
 									</div> 
 								</div>
 							</div>
@@ -195,7 +195,7 @@
 						$("#policyCount").text('共 ' + response.resultData.length + ' 張')
 						response.resultData.forEach(function(item, index){
 									html += '<div class="">' +
-										'<table class="tablesaw tablesaw-stack tablesawA">' +
+										'<table status="' + item.status + '" class="tablesaw tablesaw-stack tablesawA">' +
 											'<thead>' +
 												'<tr class="table2">' +
 													'<th class="text-left item400">保單號碼</th>' +
@@ -242,7 +242,6 @@
 											'</tbody>' +
 										'</table>' +
 									'</div>'
-
 									changeCircle(item.policyNo)
 							});
 							$("#policyContent").html(html)
@@ -304,6 +303,22 @@
 					$("#expireCount").text(parseInt($("#expireCount").text()) +1)
 					return '失效'
 			}
+		}
+
+		function chooseTab(vm, status) {
+			$(vm).parent().children().each(function(i,item){
+				$(item).removeClass('active')
+			})
+			$(vm).addClass('active')
+			$(".tablesaw.tablesaw-stack.tablesawA").each(function(i,item){
+				if (!status) {
+					$(item).show()
+				} else if (status == $(item).attr("status")) {
+					$(item).show()
+				} else {
+					$(item).hide()
+				}
+			})
 		}
 /*]]>*/
 </script>
