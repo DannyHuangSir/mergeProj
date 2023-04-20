@@ -174,11 +174,11 @@
 			grid.caption = '通知紀錄查詢';
 			grid.colNames = ['系統別', '發送類型', '發送目標', '發送內容', '發送日期'];
 			grid.colModel = [
-				{name:'SYSTEM_ID',index:'systemsSelect',width:100},
-				{name:'COMM_TYPE',index:'commType', width:100},
-				{name:'COMM_TARGET',index:'commTarget', width:100},
-				//{name:'COMM_CNT',index:'commCnt', width:200},
-				{width: 200, align: 'center', formatter: function(cellvalue, options, row) {
+				{name:'SYSTEM_ID',index:'systemsSelect'},
+				{name:'COMM_TYPE',index:'commType'},
+				{name:'COMM_TARGET',index:'commTarget'},
+				//{name:'COMM_CNT',index:'commCnt'},
+				{align: 'center', formatter: function(cellvalue, options, row) {
 					var popupHtml = '';
 					if(row.COMM_TYPE == 'email'){
 						popupHtml += '<input type="button" value="Click" onclick="winPopup(\'';
@@ -189,7 +189,7 @@
 					}
 					return popupHtml;
 				}},
-				{name:'COMM_DATE',index:'commDate', width:100}
+				{name:'COMM_DATE',index:'commDate'}
 				
 			];
 			

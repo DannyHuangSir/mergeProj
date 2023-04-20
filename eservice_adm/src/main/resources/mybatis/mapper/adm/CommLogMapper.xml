@@ -27,13 +27,20 @@
 			COMM_CNT,
 			convert(varchar(10), COMM_DATE, 120) COMM_DATE
 		FROM
-			ESERVICE_ADM.DBO.COMM_LOG
+			(SELECT
+			A.ID,
+			B.SYS_NAME SYSTEM_ID,
+			A.COMM_TYPE,
+			A.COMM_TARGET,
+			A.COMM_CNT,
+			COMM_DATE FROM
+			ESERVICE_ADM.DBO.COMM_LOG A LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS B ON A.SYSTEM_ID = B.SYS_ID
+			<if test="commLogVo.systemId != null and commLogVo.systemId != ''" >
+				AND A.SYSTEM_ID = #{commLogVo.systemId}
+			</if>
+		) A
 		WHERE
 			ID IS NOT NULL
-		<if test="commLogVo.systemId != null and commLogVo.systemId != ''" >
-			AND SYSTEM_ID = #{commLogVo.systemId}
-		</if>
-		
 		<choose>
 			<when test='commLogVo.userId != null and commLogVo.userId.contains("@")'>
 				AND COMM_TARGET = (select ESERVICE.DBO.fn_debase64(EMAIL) from ESERVICE.DBO.USERS where USER_ID=#{commLogVo.userId})
