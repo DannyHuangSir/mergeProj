@@ -24,7 +24,8 @@
                                 <li th:each="vo2: ${vo1.subMenuList}" class=""th:classappend="${(#httpServletRequest.requestURI.contains('dashboard') && vo2.functionUrl == 'dashboard')
                                 || ((#httpServletRequest.requestURI.contains('caseQuery') || #httpServletRequest.requestURI.startsWith(#httpServletRequest.getContextPath() +'/caselisting')) && vo2.functionUrl == 'caseQuery')
                                 || (#httpServletRequest.requestURI.contains('changePassword1') && vo2.functionUrl == 'changePassword1')
-                                || ((#httpServletRequest.requestURI.contains('policyQuery') || #httpServletRequest.requestURI.startsWith(#httpServletRequest.getContextPath() +'/listing')) && vo2.functionUrl == 'policyQuery')} ? 'active' : ''">
+                                || ((#httpServletRequest.requestURI.contains('policyQuery') || #httpServletRequest.requestURI.startsWith(#httpServletRequest.getContextPath() +'/listing')) && vo2.functionUrl == 'policyQuery')
+                                || (#httpServletRequest.requestURI.contains('returnPolicy') && vo2.functionUrl == 'policyQuery')} ? 'active' : ''">
                                     <a th:href="${vo2.functionUrl}">
                                         <span class="sub-item" th:text="${vo2.functionName}"></span>
                                     </a>
