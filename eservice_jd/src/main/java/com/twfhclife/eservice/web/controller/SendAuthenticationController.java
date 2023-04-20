@@ -6,6 +6,7 @@ import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.AuthenticationVo;
 import com.twfhclife.eservice.web.model.UsersVo;
+import com.twfhclife.eservice.web.service.IParameterService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -118,6 +119,8 @@ public class SendAuthenticationController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
     }
 
+    @Autowired
+    private IParameterService parameterService;
     /**
      * 認證碼驗證
      *
@@ -134,7 +137,7 @@ public class SendAuthenticationController extends BaseController {
 
             if (session.getAttribute(authenticationVo.getAuthenticationType() + "Authentication") == null) {
                 //message = "驗證碼已失效，請重新寄送驗碼。";
-                message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0021");
+                message = getParameterValue("ESERVICE_JD_CATEGORY", "E0021");
             } else {
                 String authentication_s = session.getAttribute(authenticationVo.getAuthenticationType() + "Authentication").toString();
                 Date now = new Date();
@@ -148,7 +151,7 @@ public class SendAuthenticationController extends BaseController {
                     if (!authenticationVo.getAuthenticationNum().equals(authentication_s)) {
                         //輸入錯誤
                         //message = "驗證碼輸入錯誤，請確認驗證碼或重新寄送驗證碼。";
-                        message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0022");
+                        message = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "E0022");
                     } else {
                         //驗證完成 清除驗證碼session
                         addSession(authenticationVo.getAuthenticationType() + "Authentication", null);
@@ -157,7 +160,7 @@ public class SendAuthenticationController extends BaseController {
                 } else {
                     //已超過五分鐘
                     //message = "驗證碼已失效，請重新寄送驗碼。";
-                    message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0021");
+                    message = getParameterValue(ApConstants.SYSTEM_ID, "E0021");
                 }
             }
 
