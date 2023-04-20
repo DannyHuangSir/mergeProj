@@ -36,7 +36,7 @@
 			COMM_DATE FROM
 			ESERVICE_ADM.DBO.COMM_LOG A LEFT JOIN ESERVICE_ADM.DBO.SYSTEMS B ON A.SYSTEM_ID = B.SYS_ID
 			<if test="commLogVo.systemId != null and commLogVo.systemId != ''" >
-				AND A.SYSTEM_ID = #{commLogVo.systemId}
+				WHERE A.SYSTEM_ID IS NOT NULL AND A.SYSTEM_ID = #{commLogVo.systemId}
 			</if>
 		) A
 		WHERE
