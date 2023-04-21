@@ -57,7 +57,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
     @Autowired
     private IJdUserMgntService jdUserMgntService;
 
-    private String FILE_SAVE_PATH = "C:/root/";
+    private String FILE_SAVE_PATH = "/Users/import/user";
 
     @Override
     public void upLoadFile(MultipartFile file) {

@@ -46,7 +46,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
     @Autowired
     private JdBatchPlanDao jdBatchPlanDao;
 
-    private String FILE_SAVE_PATH = "C:/root/";
+    private String FILE_SAVE_PATH = "/Users/import/ic";
 
     @Override
     public int addUsers(JdUserVo jdUserVo) {
