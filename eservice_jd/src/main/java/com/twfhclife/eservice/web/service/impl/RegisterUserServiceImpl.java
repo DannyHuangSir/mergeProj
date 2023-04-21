@@ -154,8 +154,9 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 				userDao.updatePassword(account);
 				logger.debug("update last password date success!");
 			} else {
-				if(resultmap.get("error_description") != null) {
-					return resultmap.get("error_description").toString();
+				if(resultmap.get("error_description") != null && resultmap.get("error_description").toString().indexOf("Invalid password: must not be equal to any of last") != -1) {
+					int end = resultmap.get("error_description").toString().indexOf(" passwords.");
+					return "密碼不可與前" + resultmap.get("error_description").toString().substring(end-1, end) + "次相同";
 				} else {
 					return "error";
 				}
