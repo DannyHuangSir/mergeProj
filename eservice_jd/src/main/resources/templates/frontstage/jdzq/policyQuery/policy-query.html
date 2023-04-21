@@ -170,12 +170,18 @@
 		</div>
 	</div>
 </div>
+<div class="modal fade" id="loadingModal" backdrop="static" keyboard="false">
+	<div class="progress progress-striped active" style="z-index: 20000; position: absolute; left: 50%; top: 50%; width:32px; height:32px; background: border-box;">
+		<img th:src="@{/plugin/loading-modal/ajax-loader.gif}"/>
+	</div>
+</div>
 <footer th:replace="fragments/footer"></footer>
 <script th:inline="javascript">
 /*<![CDATA[*/
 		var paymentMap = [[${session.SYSTEM_PARAMETER.PAYMENT_METHOD_TYPE}]]
 		var payModeMap = [[${session.SYSTEM_PARAMETER.PAYMODE_TYPE}]]
 		function search() {
+			$('#loadingModal').modal('show')
 			$.ajax({
 				type : 'POST',
 				dataType : "JSON",
@@ -265,6 +271,9 @@
 				},
 				error : function() {
 					openAlert('error!')
+				},
+				complete: function() {
+					$('#loadingModal').modal('hide')
 				}
 	    	});
 		}
@@ -326,5 +335,4 @@
 /*]]>*/
 </script>
 </body>
-
 </html>
