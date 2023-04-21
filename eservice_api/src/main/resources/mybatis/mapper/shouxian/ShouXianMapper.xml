@@ -41,13 +41,13 @@
                     FROM LILIPM_ES lme
                     LEFT JOIN LILIPI_ES lie
                         ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-                    LEFT JOIN LIBNAG_ES lbe
+                    LEFT JOIN LIBNAG_ES_NONCHAR lbe
                         ON lme.LIPM_INSU_TYPE = lbe.BNAG_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbe.BNAG_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbe.BNAG_INSU_SEQ_NO
-                    LEFT JOIN LILIPB_ES lpb
+                    LEFT JOIN LILIPB_ES_NONCHAR lpb
                         ON lme.LIPM_INSU_TYPE = lpb.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lpb.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lpb.LIPB_INSU_SEQ_NO
                     LEFT JOIN LISETT_ES lpe ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
                     LEFT JOIN LIPROD_ES lpr ON lpr.PROD_NO = lme.LIPM_INSU_TYPE
-                    LEFT JOIN LINEDR_ES lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
+                    LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
            ]]>
                 <include refid="whereCase1"></include>
              ) A
@@ -77,13 +77,13 @@
                     FROM LILIPM_ES lme
                     LEFT JOIN LILIPI_ES lie
                         ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-                    LEFT JOIN LIBNAG_ES lbe
+                    LEFT JOIN LIBNAG_ES_NONCHAR lbe
                         ON lme.LIPM_INSU_TYPE = lbe.BNAG_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbe.BNAG_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbe.BNAG_INSU_SEQ_NO
-                    LEFT JOIN LILIPB_ES lpb
+                    LEFT JOIN LILIPB_ES_NONCHAR lpb
                         ON lme.LIPM_INSU_TYPE = lpb.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lpb.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lpb.LIPB_INSU_SEQ_NO
                     LEFT JOIN LISETT_ES lpe ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
                     LEFT JOIN LIPROD_ES lpr ON lpr.PROD_NO = lme.LIPM_INSU_TYPE
-                    LEFT JOIN LINEDR_ES lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
+                    LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
                 ]]>
                 <include refid="whereCase1"></include>
             )
@@ -220,11 +220,11 @@
             ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
         LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES lie INNER JOIN LISETT_ES lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
             ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-        LEFT JOIN LIPMDA_ES lip ON lme.LIPM_INSU_TYPE = lip.PMDA_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lip.PMDA_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lip.PMDA_INSU_SEQ_NO
-        LEFT JOIN LILIPB_ES lbp ON lme.LIPM_INSU_TYPE = lbp.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbp.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbp.LIPB_INSU_SEQ_NO
-        LEFT JOIN LIASSN_ES lsn ON lsn.ASSN_INSU_NO = #{policyNo}
-        LEFT JOIN LIBNAG_ES lbe ON lbe.BNAG_INSU_TYPE = lme.LIPM_INSU_TYPE AND lbe.BNAG_INSU_GRP_NO = lme.LIPM_INSU_GRP_NO AND lbe.BNAG_INSU_SEQ_NO = lme.LIPM_INSU_SEQ_NO
-        LEFT JOIN LINEDR_ES lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
+        LEFT JOIN LIPMDA_ES_NONCHAR lip ON lme.LIPM_INSU_TYPE = lip.PMDA_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lip.PMDA_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lip.PMDA_INSU_SEQ_NO
+        LEFT JOIN LILIPB_ES_NONCHAR lbp ON lme.LIPM_INSU_TYPE = lbp.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbp.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbp.LIPB_INSU_SEQ_NO
+        LEFT JOIN LIASSN_ES_NONCHAR lsn ON lsn.ASSN_INSU_NO = #{policyNo}
+        LEFT JOIN LIBNAG_ES_NONCHAR lbe ON lbe.BNAG_INSU_TYPE = lme.LIPM_INSU_TYPE AND lbe.BNAG_INSU_GRP_NO = lme.LIPM_INSU_GRP_NO AND lbe.BNAG_INSU_SEQ_NO = lme.LIPM_INSU_SEQ_NO
+        LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
         WHERE lme.LIPM_INSU_TYPE = #{policyType} AND lme.LIPM_INSU_GRP_NO = #{policyGrpNo} AND lme.LIPM_INSU_SEQ_NO = #{policySeqNo}
         ]]>
     </select>
