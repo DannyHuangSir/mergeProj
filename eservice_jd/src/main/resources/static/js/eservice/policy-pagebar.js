@@ -3,7 +3,7 @@
  *
  * @param {Object} response 資料回覆物件
  */
-function getPageBarHtml(response) {
+function getPolicyPageBarHtml(response) {
     var pageInfoHtml = '';
     var prevHtml = '<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>';
     var nextHtml = '<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>';

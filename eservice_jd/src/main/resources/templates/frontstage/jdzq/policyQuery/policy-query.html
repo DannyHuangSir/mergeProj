@@ -176,11 +176,12 @@
 	</div>
 </div>
 <footer th:replace="fragments/footer"></footer>
+<script th:src="@{/js/eservice/policy-pagebar.js}"></script>
 <script th:inline="javascript">
 /*<![CDATA[*/
 		var paymentMap = [[${session.SYSTEM_PARAMETER.PAYMENT_METHOD_TYPE}]]
 		var payModeMap = [[${session.SYSTEM_PARAMETER.PAYMODE_TYPE}]]
-		function search() {
+		function queryDataByPage(pageNum) {
 			$('#loadingModal').modal('show')
 			$.ajax({
 				type : 'POST',
@@ -194,7 +195,7 @@
 					lipiId: $("input[name='lipiId']").val(),
 					prodName: $("input[name='prodName']").val(),
 					stat: $("#statusCard .active").attr('val'),
-					pageNum: 1
+					pageNum: pageNum
 				}),
 				url : /*[[@{/getPolicyList}]]*/,
 				success : function(response) {
@@ -206,14 +207,14 @@
 					})
 					if(response.result == "SUCCESS"){
 						html = ''
-						$("#allCount").text(response.resultData.totalPage)
-						$("#zonglanCount").text(response.resultData.totalPage)
+						$("#allCount").text(response.resultData.totalRow)
+						$("#zonglanCount").text(response.resultData.totalRow)
 						$("#activeCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.effectiveCount:0)
 						$("#stopCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.stopCount:0)
 						$("#expireCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.expireCount:0)
-						$("#policyCount").text('共 ' + response.resultData.totalPage + ' 張')
+						$("#policyCount").text('共 ' + response.resultData.totalRow + ' 張')
 						var isGreen = false
-						response.resultData.pageData.forEach(function(item, index){
+						response.resultData.rows.forEach(function(item, index){
 									isGreen = !isGreen
 									html += '<div class="">' +
 										'<table status="' + item.stat + '" class="tablesaw tablesaw-stack tablesawA">' +
@@ -266,7 +267,7 @@
 									changeCircle(item.policyNo)
 							});
 							$("#policyContent").html(html)
-							$('.pagination').html(getPageBarHtml(response.resultData))
+							$('.pagination').html(getPolicyPageBarHtml(response.resultData))
 					}
 				},
 				error : function() {
@@ -286,7 +287,7 @@
 			} else {
 				$("#dashboardContent").hide()
 			}
-			search()
+			queryDataByPage(1)
 		}
 
 		function changeCircle(policyNo) {
@@ -330,7 +331,7 @@
 				$(item).removeClass('active')
 			})
 			$(vm).addClass('active')
-			search()
+			queryDataByPage(1)
 		}
 /*]]>*/
 </script>
