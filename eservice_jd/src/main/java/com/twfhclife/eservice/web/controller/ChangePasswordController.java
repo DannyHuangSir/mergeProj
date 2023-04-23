@@ -89,6 +89,7 @@ public class ChangePasswordController extends BaseController {
                     message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0118");
                 }
             }
+            addBussinessEvent("JD-021", getUserId(), "經代變更密碼");
             this.setResponseObj(ResponseObj.SUCCESS, message, null);
         } catch (InvalidParameterException e) {
             this.setResponseObj(ResponseObj.ERROR, e.getMessage(), null);

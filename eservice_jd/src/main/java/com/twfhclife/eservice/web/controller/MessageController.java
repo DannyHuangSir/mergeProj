@@ -31,6 +31,7 @@ public class MessageController extends BaseController {
         responseObj.setResult(ResponseObj.SUCCESS);
         Map<String, Object> result = Maps.newHashMap();
         result.put("data", messageService.getMessages(vo, getLoginUser().getId()));
+        addBussinessEvent("JD-023", getUserId(), "經代我的通知");
         responseObj.setResultData(result);
         return responseObj;
     }

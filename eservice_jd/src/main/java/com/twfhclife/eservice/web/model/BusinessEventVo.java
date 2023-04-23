@@ -12,7 +12,7 @@ public class BusinessEventVo implements Serializable {
 
 	private Integer businessEventId;
 	private String userId;
-	private Date eventDate;
+	private String eventDate;
 	private String sourceIp;
 	private String targetIp;
 	private String targetSystemId;
@@ -20,7 +20,7 @@ public class BusinessEventVo implements Serializable {
 	private String eventCode;
 	private String eventStatus;
 	private String eventMsg;
-	private Date createDate;
+	private String createDate;
 	private String createUser;
 
 	private List<EventConditionVo> eventConditions;
@@ -45,14 +45,6 @@ public class BusinessEventVo implements Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public Date getEventDate() {
-		return eventDate;
-	}
-
-	public void setEventDate(Date eventDate) {
-		this.eventDate = eventDate;
 	}
 
 	public String getSourceIp() {
@@ -111,14 +103,6 @@ public class BusinessEventVo implements Serializable {
 		this.eventMsg = eventMsg;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
 	public String getCreateUser() {
 		return createUser;
 	}
@@ -157,6 +141,22 @@ public class BusinessEventVo implements Serializable {
 
 	public void setEventParameters(List<EventParameterVo> eventParameters) {
 		this.eventParameters = eventParameters;
+	}
+
+	public String getEventDate() {
+		return eventDate;
+	}
+
+	public void setEventDate(String eventDate) {
+		this.eventDate = eventDate;
+	}
+
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
 	}
 
 	@Override

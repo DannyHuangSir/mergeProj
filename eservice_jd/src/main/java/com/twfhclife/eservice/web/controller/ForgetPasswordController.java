@@ -196,6 +196,7 @@ public class ForgetPasswordController extends BaseController {
                     message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0101");
                 }
             }
+            addBussinessEvent("JD-022", account, "經代忘記密碼");
             this.setResponseObj(ResponseObj.SUCCESS, message, null);
         } catch (InvalidParameterException e) {
             this.setResponseObj(ResponseObj.ERROR, e.getMessage(), null);

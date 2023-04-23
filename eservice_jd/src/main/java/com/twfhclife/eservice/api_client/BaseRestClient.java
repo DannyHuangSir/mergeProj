@@ -76,6 +76,7 @@ public class BaseRestClient {
 		map.put(NoteNotifyDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<NoteNotifyDataResponse>>() { });
 		map.put(PolicyTypeListResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyTypeListResponse>>() { });
 		map.put(CaseListDataResponse.class, new ParameterizedTypeReference<ApiResponseObj<CaseListDataResponse>>() { });
+		map.put(Object.class, new ParameterizedTypeReference<ApiResponseObj<Object>>() { });
 
 		return Collections.unmodifiableMap(map);
 	}

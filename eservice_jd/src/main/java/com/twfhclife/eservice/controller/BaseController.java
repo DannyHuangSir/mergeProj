@@ -1,10 +1,15 @@
 package com.twfhclife.eservice.controller;
 
+import com.google.gson.Gson;
+import com.twfhclife.eservice.api_client.BaseRestClient;
+import com.twfhclife.eservice.api_model.EventRecordAddVo;
 import com.twfhclife.eservice.keycloak.model.KeycloakLoginResponse;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.keycloak.service.KeycloakService;
 import com.twfhclife.eservice.util.ApConstants;
+import com.twfhclife.eservice.util.DateUtil;
 import com.twfhclife.eservice.util.MyStringUtil;
+import com.twfhclife.eservice.web.model.BusinessEventVo;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
@@ -17,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
@@ -312,5 +318,31 @@ public class BaseController extends BaseMvcController {
             strMobile = mobile.substring(0, 3) + "***" + mobile.substring(6);
         }
         return strMobile;
+    }
+
+    @Resource(name = "baseRestClient")
+    private BaseRestClient restClient;
+
+    @Value("${event.record.url}")
+    private String eventRecordUrl;
+
+    protected void addBussinessEvent(String eventCode, String userId, String eventName) {
+        BusinessEventVo be = new BusinessEventVo();
+        be.setEventDate(DateUtil.formatDateTime(new Date(), "yyyy-MM-dd"));
+        be.setEventCode(eventCode);
+        be.setEventStatus("1");
+        be.setSourceIp(getClientIp());
+        be.setTargetIp(getRequest().getRemoteAddr());
+        be.setTargetSystemId(ApConstants.SYSTEM_ID);
+        be.setCreateDate(DateUtil.formatDateTime(new Date(), "yyyy/MM/dd HH:mm:ss"));
+        be.setUserId(userId);
+        be.setCreateUser(userId);
+        be.setEventName(eventName);
+        be.setEventMsg(eventName);
+        EventRecordAddVo vo = new EventRecordAddVo();
+        vo.getBusinessEventList().add(be);
+        vo.setSysId(ApConstants.SYSTEM_ID);
+        vo.setUserId(userId);
+        restClient.postApi(new Gson().toJson(vo).toString(), eventRecordUrl, Object.class);
     }
 }
