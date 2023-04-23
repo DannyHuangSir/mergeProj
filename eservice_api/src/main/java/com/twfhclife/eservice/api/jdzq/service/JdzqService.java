@@ -20,8 +20,8 @@ public class JdzqService {
     @Autowired
     private JdzqPolicyDao jdzqPolicyDao;
 
-    public List<CaseVo> getCaseList(CaseQueryRequest caseQuery) {
-        return jdzqDao.getCaseList(caseQuery);
+    public List<CaseVo> getPersonalCaseList(CaseQueryRequest caseQuery) {
+        return jdzqDao.getPersonalCaseList(caseQuery);
     }
 
     public CaseVo getCaseProcess(String policyNo) {
@@ -63,5 +63,13 @@ public class JdzqService {
             }
         }
         return jdzqPolicyDao.getPolicyClaimDetail(vo,str);
+    }
+
+    public List<CaseVo> getCaseList(CaseQueryRequest caseQuery) {
+        return jdzqDao.getCaseList(caseQuery);
+    }
+
+    public int getCaseTotal(CaseQueryRequest caseQuery) {
+        return jdzqDao.getCaseTotal(caseQuery);
     }
 }

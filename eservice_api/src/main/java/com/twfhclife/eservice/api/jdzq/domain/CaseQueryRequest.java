@@ -14,6 +14,10 @@ public class CaseQueryRequest extends AbstractBasePolicyNoDomain {
     private String lipiId;
     private String caseStatus;
 
+    private int pageSize = 10;
+
+    private int pageNum;
+
     private List<PermQueryVo> caseQuery = Lists.newArrayList();
 
     public String getLipmName() {
@@ -62,5 +66,21 @@ public class CaseQueryRequest extends AbstractBasePolicyNoDomain {
 
     public void setCaseQuery(List<PermQueryVo> caseQuery) {
         this.caseQuery = caseQuery;
+    }
+
+    public int getPageSize() {
+        return pageSize = 10;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 }

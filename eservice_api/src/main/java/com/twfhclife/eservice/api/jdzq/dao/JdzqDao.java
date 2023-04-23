@@ -11,12 +11,16 @@ import java.util.List;
 
 public interface JdzqDao {
 
-    List<CaseVo> getCaseList(@Param("vo") CaseQueryRequest caseQuery);
+    List<CaseVo> getPersonalCaseList(@Param("vo") CaseQueryRequest caseQuery);
     CaseVo getCaseProcess(@Param("policyNo") String policyNo);
     CaseVo getPolicyInfo(@Param("policyNo") String policyNo);
     List<CaseVo> getNoteContent(@Param("policyNo") String policyNo);
     NotePdfVo getNotePdf(@Param("policyNo") String policyNo);
     List<NoteNotifyVo> getNoteSchedule(@Param("currDate") Date date);
+
+    int getCaseTotal(@Param("vo") CaseQueryRequest caseQuery);
+
+    List<CaseVo> getCaseList(@Param("vo") CaseQueryRequest caseQuery);
 
 //    List<PolicyClaimDetailVo> getPolicyClaimDetail(@Param("vo") PolicyClaimDetailVo vo,@Param("columnItem")String columnItem);
 }

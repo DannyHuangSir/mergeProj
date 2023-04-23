@@ -7,10 +7,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.twfhclife.eservice.api_client.BaseRestClient;
-import com.twfhclife.eservice.api_model.CaseProcessDataResponse;
-import com.twfhclife.eservice.api_model.NoteContentDataResponse;
-import com.twfhclife.eservice.api_model.NotePdfDataResponse;
-import com.twfhclife.eservice.api_model.PersonalCaseDataResponse;
+import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.keycloak.model.KeycloakUser;
 import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.util.RptUtils2;
@@ -40,14 +37,13 @@ public class CaseServiceImpl implements ICaseService {
     @Autowired
     private BaseRestClient baseRestClient;
 
-    @Value("${eservice_api.personal.case.url}")
-    private String personalCaseUrl;
+    @Value("${eservice_api.policy.case.list.url}")
+    private String caseListUrl;
 
     @Override
-    public List<CaseVo> getCaseList(KeycloakUser user, CaseQueryVo vo) {
+    public CaseListDataResponse getCaseList(KeycloakUser user, CaseQueryVo vo) {
         // role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員
         int role = usersDao.checkUserRole(user.getId());
-        List<CaseVo> result = Lists.newArrayList();
         List<PermQueryVo> caseQuery = Lists.newArrayList();
         switch (role) {
             case 2:
@@ -73,10 +69,9 @@ public class CaseServiceImpl implements ICaseService {
             vo.setCaseQuery(caseQuery);
             vo.setUserId(user.getUsername());
             vo.setSysId(ApConstants.SYSTEM_ID);
-            PersonalCaseDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(vo), personalCaseUrl, PersonalCaseDataResponse.class);
-            result.addAll(responseObj.getCaseList());
+            return baseRestClient.postApi(new Gson().toJson(vo), caseListUrl, CaseListDataResponse.class);
         }
-        return result;
+        return new CaseListDataResponse();
     }
 
 
@@ -111,6 +106,9 @@ public class CaseServiceImpl implements ICaseService {
         NotePdfDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), notePdfUrl, NotePdfDataResponse.class);
         return generatePDF(responseObj.getNotePdf());
     }
+
+    @Value("${eservice_api.personal.case.url}")
+    private String personalCaseUrl;
 
     @Override
     public List<CaseVo> getPersonalCaseList(KeycloakUser user) {

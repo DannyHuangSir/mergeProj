@@ -31,8 +31,8 @@
         <result column="Main_Key" property="mainKey" />
     </resultMap>
 
-    <select id="getCaseList" resultMap="CaseMap">
-        SELECT DISTINCT A.PolicyNo, A.AppName, A.InsName, A.SubmitDate TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, D.PolicyType
+    <sql id="caseSql">
+        SELECT ROW_NUMBER() OVER (ORDER BY A.PolicyNo) AS ROW_NUM, A.PolicyNo, A.AppName, A.InsName, A.SubmitDate TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, D.PolicyType
         FROM MainPolicy A
         LEFT JOIN (
         SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM PolicyNote B
@@ -40,29 +40,29 @@
         ) D ON A.MAIN_KEY = D.MAIN_KEY
         <where>
             <foreach collection="vo.caseQuery" item="item" separator="OR">
-                  (
-                  <trim prefixOverrides="AND" >
-                      <if test="item.serialNum != null and item.serialNum != ''">
-                          AND A.PSalesCode = #{item.serialNum}
-                      </if>
-                      <if test="item.branchCode != null and item.branchCode != ''">
-                          AND A.BranchCode = #{item.branchCode}
-                      </if>
-                      <if test="item.agentCode != null and item.agentCode != ''">
-                          <choose>
-                              <when test="item.agentCode == '86900'">
-                                  AND A.AgentCode = '869' AND A.AgentBranchM = '00'
-                              </when>
-                              <when test="item.agentCode == '86901'">
-                                  AND A.AgentCode = = '869' AND A.AgentBranchM = '01'
-                              </when>
-                              <otherwise>
-                                  AND A.AgentCode = #{item.agentCode}
-                              </otherwise>
-                          </choose>
-                      </if>
-                  </trim>
-                  )
+                (
+                <trim prefixOverrides="AND" >
+                    <if test="item.serialNum != null and item.serialNum != ''">
+                        AND A.PSalesCode = #{item.serialNum}
+                    </if>
+                    <if test="item.branchCode != null and item.branchCode != ''">
+                        AND A.BranchCode = #{item.branchCode}
+                    </if>
+                    <if test="item.agentCode != null and item.agentCode != ''">
+                        <choose>
+                            <when test="item.agentCode == '86900'">
+                                AND A.AgentCode = '869' AND A.AgentBranchM = '00'
+                            </when>
+                            <when test="item.agentCode == '86901'">
+                                AND A.AgentCode = = '869' AND A.AgentBranchM = '01'
+                            </when>
+                            <otherwise>
+                                AND A.AgentCode = #{item.agentCode}
+                            </otherwise>
+                        </choose>
+                    </if>
+                </trim>
+                )
             </foreach>
             <if test="vo.policyNo != null and vo.policyNo != ''">
                 AND A.PolicyNo LIKE CONCAT('%', #{vo.policyNo}, '%')
@@ -80,10 +80,28 @@
                 AND A.InsID LIKE CONCAT('%', #{vo.lipiId}, '%')
             </if>
             <if test="vo.caseStatus != null and vo.caseStatus != ''">
-                   AND A.BPMCurrentTak = #{vo.caseStatus}
+                AND A.BPMCurrentTak = #{vo.caseStatus}
             </if>
             AND A.itemserial = 1
         </where>
+    </sql>
+
+    <select id="getPersonalCaseList" resultMap="CaseMap">
+       <include refid="caseSql"></include>
+    </select>
+
+    <select id="getCaseList" resultMap="CaseMap">
+        SELECT A.* FROM (
+            <include refid="caseSql"></include>
+        ) A
+        WHERE A.ROW_NUM <![CDATA[<=]]> #{vo.pageNum} * #{vo.pageSize}
+        AND A.ROW_NUM <![CDATA[>]]> (#{vo.pageNum} - 1) * #{vo.pageSize}
+    </select>
+
+    <select id="getCaseTotal" resultType="int">
+        SELECT COUNT(*)  FROM (
+            <include refid="caseSql"></include>
+        ) A
     </select>
 
     <select id="getCaseProcess" resultMap="CaseMap">

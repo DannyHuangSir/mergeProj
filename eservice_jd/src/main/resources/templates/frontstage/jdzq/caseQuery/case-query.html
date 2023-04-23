@@ -93,7 +93,7 @@
                                         <div class="clearfix form-actions">
                                             <div class="col-md-offset-5 col-md-7">
                                                 <button class="btn btn-info" type="button"
-                                                        onclick="search()">
+                                                        onclick="queryDataByPage(1)">
                                                     <i class="my-icon fa fa-check bigger-110"></i>
                                                     查詢
                                                 </button>
@@ -133,6 +133,17 @@
                                         </thead>
                                         <tbody id="caseContent"></tbody>
                                     </table>
+                                    <div class="col-md-12 wht box-border no-borderTop">
+                                        <div class="col-md-12" style="text-align:center;">
+                                            <nav>
+                                                <ul class="pagination center1">
+                                                    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>
+                                                    <li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                                                    <li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -148,6 +159,7 @@
     </div>
 </div>
 <footer th:replace="fragments/footer"></footer>
+<script th:src="@{/js/eservice/policy-pagebar.js}"></script>
 <script th:inline="javascript">
 /*<![CDATA[*/
         var levelStateMap = []
@@ -180,7 +192,7 @@
 			return result
 		}
 
-		function search() {
+		function queryDataByPage(pageNum) {
 		    policyNo = $("input[name='policyNo']").val()
 		    lipmName = $("input[name='lipmName']").val()
 		    lipmId = $("input[name='lipmId']").val()
@@ -206,12 +218,13 @@
 					lipiName: $("input[name='lipiName']").val(),
 					lipiId: $("input[name='lipiId']").val(),
 					caseStatus: $("[name='caseStatus']").val(),
+					pageNum: pageNum
 				}),
 				success : function(response) {
 					if(response.result == "SUCCESS"){
 						html = ''
-						$("#caseCount").text(response.resultData.length)
-						response.resultData.forEach(function(item, index){
+						$("#caseCount").text(response.resultData.totalRow)
+						response.resultData.rows.forEach(function(item, index){
 								html += "<tr onclick=\"javascript:postPolicyListType('caselisting1', '" + item.policyNo + "')\">" +
 										'<td class="table3">' + item.policyNo  +'</td>' +
 										'<td class="hid1 hid2">'+ item.appName +'</td>' +
@@ -223,6 +236,7 @@
 							});
 						$("#caseContent").html(html)
 					}
+					$('.pagination').html(getPolicyPageBarHtml(response.resultData))
 					$('#loadingModal').modal('hide')
 				},
 				error : function() {

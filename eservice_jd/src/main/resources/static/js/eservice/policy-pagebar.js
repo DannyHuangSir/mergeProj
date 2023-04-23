@@ -13,7 +13,6 @@ function getPolicyPageBarHtml(response) {
         pageInfoHtml += nextHtml;
     } else {
         var totalPageNumSize = $(response.rows[0].pageNumList).size();
-        debugger
         // 上一頁
         var currentPage = response.pageNum;
         if (response.prev) {

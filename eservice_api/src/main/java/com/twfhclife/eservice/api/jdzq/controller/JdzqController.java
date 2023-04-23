@@ -67,8 +67,8 @@ public class JdzqController extends BaseController {
                     @SystemEventParam(
                             sqlVoType = "com.twfhclife.eservice.api.jdzq.domain.CaseQueryRequest",
                             sqlVoKey = "vo",
-                            sqlId = "com.twfhclife.eservice.api.jdzq.dao.JdzqDao.getCaseList",
-                            execMethod= "經代案件列表查詢"
+                            sqlId = "com.twfhclife.eservice.api.jdzq.dao.JdzqDao.getPersonalCaseList",
+                            execMethod= "經代个人案件列表查詢"
                     )
             }
     ))
@@ -78,7 +78,7 @@ public class JdzqController extends BaseController {
         ApiResponseObj<PersonalCaseDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            List<CaseVo> caseList = jdzqService.getCaseList(caseQuery);
+            List<CaseVo> caseList = jdzqService.getPersonalCaseList(caseQuery);
             PersonalCaseDataResponse resp = new PersonalCaseDataResponse();
             resp.setCaseList(caseList);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
@@ -87,6 +87,41 @@ public class JdzqController extends BaseController {
         } catch (Exception e) {
             returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
             logger.error("Unable to getPersonalCaseList: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
+    @EventRecordLog(value = @EventRecordParam(
+            eventCode = "JD-020",
+            systemEventParams = {
+                    @SystemEventParam(
+                            sqlVoType = "com.twfhclife.eservice.api.jdzq.domain.CaseQueryRequest",
+                            sqlVoKey = "vo",
+                            sqlId = "com.twfhclife.eservice.api.jdzq.dao.JdzqDao.getCaseList",
+                            execMethod= "經代案件列表查詢"
+                    )
+            }
+    ))
+    @PostMapping(value = "/getCaseList", produces = { "application/json" })
+    @ApiRequest
+    public ResponseEntity<?> getCaseList(@RequestBody CaseQueryRequest caseQuery) {
+        ApiResponseObj<CaseListDataResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            CaseListDataResponse resp = new CaseListDataResponse();
+            resp.setRows(jdzqService.getCaseList(caseQuery));
+            resp.setTotalRow(jdzqService.getCaseTotal(caseQuery));
+            resp.setPageSize(caseQuery.getPageSize());
+            resp.setPageNum(caseQuery.getPageNum());
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getCaseList: {}", ExceptionUtils.getStackTrace(e));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
         } finally {
             apiResponseObj.setReturnHeader(returnHeader);

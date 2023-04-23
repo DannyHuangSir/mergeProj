@@ -62,9 +62,18 @@
 										<div class="col-sm-9">
 											<select name="prodName" class="form-control">
 												<option value=""></option>
-												<option th:each="policyType : ${policyTypeList}" th:value="${policyType.VALUE}">
-													<th:block th:text="${policyType.KEY}"></th:block>
-												</option>
+												<th:block th:each="policyType : ${policyTypeList}">
+													<th:block th:if="${policyType.VALUE} == ${queryPolicy.prodName}">
+														<option selected th:value="${policyType.VALUE}">
+															<th:block th:text="${policyType.KEY}"></th:block>
+														</option>
+													</th:block>
+													<th:block th:if="${policyType.VALUE} != ${queryPolicy.prodName}">
+														<option th:value="${policyType.VALUE}">
+															<th:block th:text="${policyType.KEY}"></th:block>
+														</option>
+													</th:block>
+												</th:block>
 											</select>
 										</div>
 									</div>
