@@ -24,126 +24,190 @@
     </resultMap>
 
     <select id="getPolicyList" resultMap="PolicyMap">
-           SELECT * FROM (
-             SELECT ROW_NUMBER() OVER (ORDER BY A.POLICY_NO) AS ROW_NUM, A.* FROM (
-            <![CDATA[
-                SELECT DISTINCT
-                    (lme.LIPM_INSU_TYPE ||lme.LIPM_INSU_GRP_NO || lme.LIPM_INSU_SEQ_NO) POLICY_NO, lme.LIPM_INSU_TYPE POLICY_TYPE,
-                    lme.LIPM_NAME_1 LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, lbe.BNAG_REC_CLERK AGENT_NAME,
-                    CASE
-                        WHEN lme.LIPM_ST <= 18 THEN 1
-                        WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-                        WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-                        END AS STAT,
-                    to_char(lie.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-                    lie.LIPI_TABL_PREM, (CASE WHEN lme.LIPM_RCP_CODE = 'A' AND lme.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE, lpr.PROD_CURRENCY CURRENCY,
-                    lie.LIPI_PREM_YEAR PREM_YEAR, lpe.SETT_INSU_TYPE PROD_MODE, lpe.SETT_CH_NAME PROD_NAME, lme.LIPM_RCP_METH_CODE
-                    FROM LILIPM_ES lme
-                    LEFT JOIN LILIPI_ES lie
-                        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-                    LEFT JOIN LIBNAG_ES_NONCHAR lbe
-                        ON lme.LIPM_INSU_TYPE = lbe.BNAG_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbe.BNAG_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbe.BNAG_INSU_SEQ_NO
-                    LEFT JOIN LILIPB_ES_NONCHAR lpb
-                        ON lme.LIPM_INSU_TYPE = lpb.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lpb.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lpb.LIPB_INSU_SEQ_NO
-                    LEFT JOIN LISETT_ES lpe ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-                    LEFT JOIN LIPROD_ES lpr ON lpr.PROD_NO = lme.LIPM_INSU_TYPE
-                    LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
-           ]]>
-                <include refid="whereCase1"></include>
-             ) A
-            ) WHERE
-            ROW_NUM <![CDATA[>=]]> ((#{vo.pageNum} - 1) * #{vo.pageSize}) + 1
-            AND ROW_NUM <![CDATA[<=]]> (#{vo.pageNum} * #{vo.pageSize})
+        SELECT DISTINCT
+        (A.LIPM_INSU_TYPE ||A.LIPM_INSU_GRP_NO || A.LIPM_INSU_SEQ_NO) POLICY_NO, A.LIPM_INSU_TYPE POLICY_TYPE,
+        A.LIPM_NAME_1 LIPM_NAME, A.LIPM_ID, A.LIPI_NAME, A.LIPI_ID, A.BNAG_REC_CLERK AGENT_NAME,
+        CASE
+        WHEN A.LIPM_ST <![CDATA[<=]]>  18 THEN 1
+        WHEN A.LIPM_ST BETWEEN 30 AND 34 THEN 2
+        WHEN add_months(A.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
+        END AS STAT,
+        to_char(A.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE, (CASE WHEN A.LIPI_MAIN_AMT = 0 THEN A.LIPI_CANCER_QUAN ELSE A.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
+        A.LIPI_TABL_PREM, (CASE WHEN A.LIPM_RCP_CODE = 'A' AND A.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE A.LIPM_RCP_CODE END) AS PAYMENT_MODE, lpr.PROD_CURRENCY CURRENCY,
+        A.LIPI_PREM_YEAR PREM_YEAR, A.LIPM_RCP_METH_CODE, lpe.SETT_INSU_TYPE PROD_MODE, lpe.SETT_CH_NAME PROD_NAME
+        FROM (
+        SELECT * FROM
+        (
+        SELECT A.*, ROW_NUMBER() OVER (ORDER BY A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO ) AS ROW_NUM
+        FROM (
+        <include refid="policyListSql"/>
+        ) A
+        )
+        WHERE
+        ROW_NUM <![CDATA[>=]]> ((#{vo.pageNum} - 1) * #{vo.pageSize}) + 1
+        AND ROW_NUM <![CDATA[<=]]> (#{vo.pageNum} * #{vo.pageSize})
+        ) A
+        LEFT JOIN LILIPB_ES_NONCHAR lpb ON A.LIPM_INSU_TYPE = lpb.LIPB_INSU_TYPE AND A.LIPM_INSU_GRP_NO = lpb.LIPB_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = lpb.LIPB_INSU_SEQ_NO
+        LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = A.BNAG_S_BANK_BRANCH_CODE AND A.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
+        LEFT JOIN LISETT_ES lpe ON lpe.SETT_INSU_TYPE = A.LIPM_INSU_TYPE
+        LEFT JOIN LIPROD_ES lpr ON lpr.PROD_NO = A.LIPM_INSU_TYPE
     </select>
 
     <select id="getPolicyListTotal" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyCountVo">
-
-            SELECT SUM(CASE WHEN STAT = 1 THEN 1 ELSE 0 END) effectiveCount,
-                   SUM(CASE WHEN STAT = 2 THEN 1 ELSE 0 END) stopCount,
-                   SUM(CASE WHEN STAT = 3 THEN 1 ELSE 0 END) expireCount
-            FROM (
-                <![CDATA[
-                 SELECT DISTINCT
-                    (lme.LIPM_INSU_TYPE ||lme.LIPM_INSU_GRP_NO || lme.LIPM_INSU_SEQ_NO) POLICY_NO, lme.LIPM_INSU_TYPE POLICY_TYPE,
-                    lme.LIPM_NAME_1 LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID, lbe.BNAG_REC_CLERK AGENT_NAME,
-                    CASE
-                        WHEN lme.LIPM_ST <= 18 THEN 1
-                        WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-                        WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-                        END AS STAT,
-                    to_char(lie.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE, (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
-                    lie.LIPI_TABL_PREM, (CASE WHEN lme.LIPM_RCP_CODE = 'A' AND lme.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE, lpr.PROD_CURRENCY CURRENCY,
-                    lie.LIPI_PREM_YEAR PREM_YEAR, lpe.SETT_INSU_TYPE PROD_MODE, lpe.SETT_CH_NAME PROD_NAME, lme.LIPM_RCP_METH_CODE
-                    FROM LILIPM_ES lme
-                    LEFT JOIN LILIPI_ES lie
-                        ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-                    LEFT JOIN LIBNAG_ES_NONCHAR lbe
-                        ON lme.LIPM_INSU_TYPE = lbe.BNAG_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbe.BNAG_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbe.BNAG_INSU_SEQ_NO
-                    LEFT JOIN LILIPB_ES_NONCHAR lpb
-                        ON lme.LIPM_INSU_TYPE = lpb.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lpb.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lpb.LIPB_INSU_SEQ_NO
-                    LEFT JOIN LISETT_ES lpe ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-                    LEFT JOIN LIPROD_ES lpr ON lpr.PROD_NO = lme.LIPM_INSU_TYPE
-                    LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
-                ]]>
-                <include refid="whereCase1"></include>
-            )
+        SELECT SUM(CASE WHEN LIPM_ST <![CDATA[<=]]> 18 THEN 1 ELSE 0 END) effectiveCount,
+        SUM(CASE WHEN LIPM_ST BETWEEN 30 AND 34 THEN 1 ELSE 0 END) stopCount,
+        SUM(CASE WHEN add_months(LIPI_INSU_END_DATE, 24) > sysdate THEN 1 ELSE 0 END) expireCount
+        FROM (
+        <include refid="policyListSql"/>
+        )
     </select>
+
+    <sql id="policyListSql">
+        SELECT A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO, A.LIPM_NAME_1, A.LIPM_ID, A.LIPM_ST, A.LIPM_AGEN_CODE, A.LIPM_RCP_METH_CODE,
+        A.LIPM_RCP_CODE, A.LIPM_FLEX_RCP_MK,
+        B.LIPI_NAME, B.LIPI_ID, B.LIPI_PREM_YEAR, B.LIPI_TABL_PREM, B.LIPI_INSU_END_DATE, B.LIPI_MAIN_AMT, B.LIPI_CANCER_QUAN, B.LIPI_INSU_BEG_DATE,
+        C.BNAG_REC_CLERK, C.BNAG_S_BANK_BRANCH_CODE
+        FROM LILIPM_ES_NONCHAR_FLOWTEST A
+        LEFT JOIN LILIPI_ES_NONCHAR_FLOWTEST B
+        ON A.LIPM_INSU_TYPE = B.LIPI_INSU_TYPE AND A.LIPM_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
+        LEFT JOIN LIBNAG_ES_NONCHAR C
+        ON A.LIPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.LIPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
+        <include refid="whereCase1"></include>
+        UNION ALL
+        SELECT A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO, A.LIPM_NAME_1, A.LIPM_ID, A.LIPM_ST, A.LIPM_AGEN_CODE, A.LIPM_RCP_METH_CODE,
+        A.LIPM_RCP_CODE, NULL,
+        B.LIPI_NAME, B.LIPI_ID, NULL, B.LIPI_TABL_PREM, B.LIPI_INSU_END_DATE, B.LIPI_MAIN_AMT, NULL, B.LIPI_INSU_BEG_DATE,
+        C.BNAG_REC_CLERK, C.BNAG_S_BANK_BRANCH_CODE
+        FROM LIMIPM_ES_NONCHAR_FLOWTEST A
+        LEFT JOIN LIMIPI_ES_NONCHAR_FLOWTEST B
+        ON A.LIPM_INSU_TYPE = B.LIPI_INSU_TYPE AND A.LIPM_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
+        LEFT JOIN LIBNAG_ES_NONCHAR C
+        ON A.LIPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.LIPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
+        <include refid="whereCase1"></include>
+        UNION ALL
+        SELECT A.NEPM_INSU_TYPE, A.NEPM_INSU_GRP_NO, A.NEPM_INSU_SEQ_NO, A.NEPM_NAME_1, A.NEPM_ID, A.NEPM_ST, A.NEPM_AGEN_CODE, A.NEPM_RCP_METH_CODE,
+        A.NEPM_RCP_CODE, A.NEPM_FLEX_RCP_MK,
+        B.NEPI_NAME, B.NEPI_ID, B.NEPI_PREM_YEAR, B.NEPI_TABL_PREM, B.NEPI_INSU_END_DATE, B.NEPI_MAIN_AMT, B.NEPI_CANCER_QUAN, B.NEPI_INSU_BEG_DATE,
+        C.BNAG_REC_CLERK, C.BNAG_S_BANK_BRANCH_CODE
+        FROM LINEPM_ES_NONCHAR_FLOWTEST A
+        LEFT JOIN LINEPI_ES_NONCHAR_FLOWTEST B
+        ON A.NEPM_INSU_TYPE = B.NEPI_INSU_TYPE AND A.NEPM_INSU_GRP_NO = B.NEPI_INSU_GRP_NO AND A.NEPM_INSU_SEQ_NO = B.NEPI_INSU_SEQ_NO
+        LEFT JOIN LIBNAG_ES_NONCHAR C
+        ON A.NEPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.NEPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.NEPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
+        <include refid="whereCase2"></include>
+    </sql>
 
     <sql id="whereCase1">
         <where>
+            <if test="vo.policyNo != null and vo.policyNo != ''">
+               AND A.LIPM_INSU_TYPE = substr(#{vo.policyNo}, 1, 2) AND A.LIPM_INSU_GRP_NO = substr(#{vo.policyNo}, 3, 1) AND A.LIPM_INSU_SEQ_NO = substr(#{vo.policyNo}, 4, 7)
+            </if>
+            <if test="vo.lipmName != null and vo.lipmName != ''">
+                AND A.LIPM_NAME_1 = #{vo.lipmName}
+            </if>
+            <if test="vo.lipmId != null and vo.lipmId != ''">
+                AND A.LIPM_ID = #{vo.lipmId}
+            </if>
+            <if test="vo.lipiName != null and vo.lipiName != ''">
+                AND B.LIPI_NAME = #{vo.lipiName}
+            </if>
+            <if test="vo.lipiId != null and vo.lipiId != ''">
+                AND B.LIPI_ID = #{vo.lipiId}
+            </if>
+            <if test="vo.prodName != null and vo.prodName != ''">
+                AND A.LIPM_INSU_TYPE = #{vo.prodName}
+            </if>
+            <if test="vo.stat != null and vo.stat == '1'.toString()">
+                AND A.LIPM_ST <![CDATA[<=]]>  18
+            </if>
+            <if test="vo.stat != null and vo.stat == '2'.toString()">
+                AND A.LIPM_ST BETWEEN 30 AND 34
+            </if>
+            <if test="vo.stat != null and vo.stat == '3'.toString()">
+                AND add_months(B.LIPI_INSU_END_DATE, 24) > sysdate
+            </if>
             <foreach collection="vo.permQuery" item="item" separator="OR">
                 (
                 <trim prefixOverrides="AND">
-                    <if test="item.serialNum != null and item.serialNum != ''">
-                        AND lbe.BNAG_ID = #{item.serialNum}
-                    </if>
-                    <if test="item.branchCode != null and item.branchCode != ''">
-                        AND lbe.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
-                    </if>
                     <if test="item.agentCode != null and item.agentCode != ''">
                         <choose>
                             <when test="item.agentCode == '86900'">
-                                AND lme.LIPM_AGEN_CODE = '869' AND lme.LIPM_AGEN_CODE_BRANCH = '00'
+                                AND A.LIPM_AGEN_CODE = '869' AND A.LIPM_AGEN_CODE_BRANCH = '00'
                             </when>
                             <when test="item.agentCode == '86901'">
-                                AND lme.LIPM_AGEN_CODE = '869' AND lme.LIPM_AGEN_CODE_BRANCH = '01'
+                                AND A.LIPM_AGEN_CODE = '869' AND A.LIPM_AGEN_CODE_BRANCH = '01'
                             </when>
                             <otherwise>
-                                AND lme.LIPM_AGEN_CODE = #{item.agentCode}
+                                AND A.LIPM_AGEN_CODE = #{item.agentCode}
                             </otherwise>
                         </choose>
+                    </if>
+                    <if test="item.serialNum != null and item.serialNum != ''">
+                        AND C.BNAG_ID = #{item.serialNum}
+                    </if>
+                    <if test="item.branchCode != null and item.branchCode != ''">
+                        AND C.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
                     </if>
                 </trim>
                 )
             </foreach>
+        </where>
+    </sql>
+
+    <sql id="whereCase2">
+        <where>
             <if test="vo.policyNo != null and vo.policyNo != ''">
-                AND (lme.LIPM_INSU_TYPE||lme.LIPM_INSU_GRP_NO||lme.LIPM_INSU_SEQ_NO)
-                LIKE CONCAT('%', CONCAT(#{vo.policyNo}, '%'))
+                AND A.NEPM_INSU_TYPE = substr(#{vo.policyNo}, 0, 2) AND A.NEPM_INSU_TYPE = substr(#{vo.policyNo}, 2, 3) AND A.NEPM_INSU_TYPE = substr(#{vo.policyNo}, 3, 10)
             </if>
             <if test="vo.lipmName != null and vo.lipmName != ''">
-                AND lme.LIPM_NAME_1 LIKE CONCAT('%', CONCAT(#{vo.lipmName}, '%'))
+                AND A.NEPM_NAME_1 = #{vo.lipmName}
             </if>
             <if test="vo.lipmId != null and vo.lipmId != ''">
-                AND lme.LIPM_ID LIKE CONCAT('%', CONCAT(#{vo.lipmId}, '%'))
+                AND A.NEPM_ID = #{vo.lipmId}
             </if>
             <if test="vo.lipiName != null and vo.lipiName != ''">
-                AND lie.LIPI_NAME LIKE CONCAT('%', CONCAT(#{vo.lipiName}, '%'))
+                AND B.NEPI_NAME = #{vo.lipiName}
             </if>
             <if test="vo.lipiId != null and vo.lipiId != ''">
-                AND lie.LIPI_ID LIKE CONCAT('%', CONCAT(#{vo.lipiId}, '%'))
+                AND B.NEPI_ID = #{vo.lipiId}
             </if>
             <if test="vo.prodName != null and vo.prodName != ''">
-                AND lpe.SETT_CH_NAME LIKE CONCAT('%', CONCAT(#{vo.prodName}, '%'))
+                AND A.NEPM_INSU_TYPE = #{vo.prodName}
             </if>
             <if test="vo.stat != null and vo.stat == '1'.toString()">
-                AND lme.LIPM_ST &lt;= 18
+                AND A.NEPM_ST <![CDATA[<=]]>  18
             </if>
             <if test="vo.stat != null and vo.stat == '2'.toString()">
-                AND lme.LIPM_ST BETWEEN 30 AND 34
+                AND A.NEPM_ST BETWEEN 30 AND 34
             </if>
             <if test="vo.stat != null and vo.stat == '3'.toString()">
-                AND add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate
+                AND add_months(B.NEPI_INSU_END_DATE, 24) > sysdate
             </if>
+            <foreach collection="vo.permQuery" item="item" separator="OR">
+                (
+                <trim prefixOverrides="AND">
+                    <if test="item.agentCode != null and item.agentCode != ''">
+                        <choose>
+                            <when test="item.agentCode == '86900'">
+                                AND A.NEPM_AGEN_CODE = '869' AND A.NEPM_AGEN_CODE_BRANCH = '00'
+                            </when>
+                            <when test="item.agentCode == '86901'">
+                                AND A.NEPM_AGEN_CODE = '869' AND A.NEPM_AGEN_CODE_BRANCH = '01'
+                            </when>
+                            <otherwise>
+                                AND A.NEPM_AGEN_CODE = #{item.agentCode}
+                            </otherwise>
+                        </choose>
+                    </if>
+                    <if test="item.serialNum != null and item.serialNum != ''">
+                        AND C.BNAG_ID = #{item.serialNum}
+                    </if>
+                    <if test="item.branchCode != null and item.branchCode != ''">
+                        AND C.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
+                    </if>
+                </trim>
+                )
+            </foreach>
         </where>
     </sql>
 
@@ -199,47 +263,78 @@
     </resultMap>
 
     <select id="getBasePolicy" resultMap="PolicyBaseMap">
-        <![CDATA[
         SELECT CASE
-            WHEN lme.LIPM_ST <= 18 THEN 1
-            WHEN lme.LIPM_ST BETWEEN 30 AND 34 THEN 2
-            WHEN add_months(lie.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
-            END AS STATUS, lie.LIPI_TABL_PREM, lme.LIPM_BANK_CODE,
-            lme.LIPM_CHAR_AT_1, lme.LIPM_CHAR_AT_2,
-        to_char(lie.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE,
-        lme.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(lbe.BNAG_BIRTH, 'yyyy-MM-dd') LIPM_BIRTH,
+            WHEN A.LIPM_ST <![CDATA[<= ]]> 18 THEN 1
+            WHEN A.LIPM_ST BETWEEN 30 AND 34 THEN 2
+            WHEN add_months(A.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
+            END AS STATUS, A.LIPI_TABL_PREM, A.LIPM_BANK_CODE,
+        A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2,
+        to_char(A.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE,
+        A.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(A.BNAG_BIRTH, 'yyyy-MM-dd') LIPM_BIRTH,
         to_char(lsn.ASSN_ARRI_DATE, 'yyyy-MM-dd') ASSN_ARRI_DATE, to_char(lsn.ASSN_TR_ARRI_DATE, 'yyyy-MM-dd') ASSN_TR_ARRI_DATE, lip.PMDA_MAIL, lsn.ASSN_STATUS,
-        lme.LIPM_TEL_H, lip.PMDA_APPLICANT_CELLPHONE, lip.PMDA_APPLICANT_EMAIL, lme.LIPM_5_GP,
-        lme.LIPM_ADDR, to_char(lie.LIPI_BIRTH, 'yyyy-MM-dd') LIPI_BIRTH, lie.LIPI_AGE, lie.LIPI_SEX, lbp.LIPB_NAME, lbp.LIPB_RELA, lpe.PROD_CURRENCY CURRENCY,
-        lbp.LIPB_BENI_CODE, lbp.LIPB_SEQ, lme.LIPM_NAME_1  LIPM_NAME, lme.LIPM_ID, lie.LIPI_NAME, lie.LIPI_ID,
-        (CASE WHEN lme.LIPM_RCP_CODE = 'A' AND lme.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE lme.LIPM_RCP_CODE END) AS PAYMENT_MODE, lip.PMDA_EPO_MK,
-        (CASE WHEN lie.LIPI_MAIN_AMT = 0 THEN lie.LIPI_CANCER_QUAN ELSE lie.LIPI_MAIN_AMT END) AS MAIN_AMOUNT, lip.PMDA_PI_TEL,
-        to_char(lie.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') LIPI_INSU_BEG_DATE, to_char(lie.LIPI_INSU_END_DATE, 'yyyy-MM-dd') LIPI_INSU_END_DATE, lme.LIPM_RCP_METH_CODE, lie.LIPI_PREM_YEAR PREM_YEAR,
-        lpe.SETT_CH_NAME PROD_NAME, CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) POLICY_NO, lip.PMDA_PRINT_DATE
-        FROM LILIPM_ES lme LEFT JOIN LILIPI_ES lie
-            ON lme.LIPM_INSU_TYPE = lie.LIPI_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lie.LIPI_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lie.LIPI_INSU_SEQ_NO
-        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES lie INNER JOIN LISETT_ES lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
-            ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-        LEFT JOIN LIPMDA_ES_NONCHAR lip ON lme.LIPM_INSU_TYPE = lip.PMDA_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lip.PMDA_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lip.PMDA_INSU_SEQ_NO
-        LEFT JOIN LILIPB_ES_NONCHAR lbp ON lme.LIPM_INSU_TYPE = lbp.LIPB_INSU_TYPE AND lme.LIPM_INSU_GRP_NO = lbp.LIPB_INSU_GRP_NO AND lme.LIPM_INSU_SEQ_NO = lbp.LIPB_INSU_SEQ_NO
+        A.LIPM_TEL_H, lip.PMDA_APPLICANT_CELLPHONE, lip.PMDA_APPLICANT_EMAIL, A.LIPM_5_GP,
+        A.LIPM_ADDR, to_char(A.LIPI_BIRTH, 'yyyy-MM-dd') LIPI_BIRTH, A.LIPI_AGE, A.LIPI_SEX, lbp.LIPB_NAME, lbp.LIPB_RELA, lpr.PROD_CURRENCY CURRENCY,
+        lbp.LIPB_BENI_CODE, lbp.LIPB_SEQ, A.LIPM_NAME_1  LIPM_NAME, A.LIPM_ID, A.LIPI_NAME, A.LIPI_ID,
+        (CASE WHEN A.LIPM_RCP_CODE = 'A' AND A.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE A.LIPM_RCP_CODE END) AS PAYMENT_MODE, lip.PMDA_EPO_MK,
+        (CASE WHEN A.LIPI_MAIN_AMT = 0 THEN A.LIPI_CANCER_QUAN ELSE A.LIPI_MAIN_AMT END) AS MAIN_AMOUNT, lip.PMDA_PI_TEL,
+        to_char(A.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') LIPI_INSU_BEG_DATE, to_char(A.LIPI_INSU_END_DATE, 'yyyy-MM-dd') LIPI_INSU_END_DATE, A.LIPM_RCP_METH_CODE, A.LIPI_PREM_YEAR PREM_YEAR,
+        lpe.SETT_CH_NAME PROD_NAME, CONCAT(CONCAT(A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO), A.LIPM_INSU_SEQ_NO) POLICY_NO, lip.PMDA_PRINT_DATE
+        FROM (
+            <include refid="policyBaseSql"/>
+        ) A
+        LEFT JOIN LIPMDA_ES_NONCHAR lip ON A.LIPM_INSU_TYPE = lip.PMDA_INSU_TYPE AND A.LIPM_INSU_GRP_NO = lip.PMDA_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = lip.PMDA_INSU_SEQ_NO
+        LEFT JOIN LILIPB_ES_NONCHAR lbp ON A.LIPM_INSU_TYPE = lbp.LIPB_INSU_TYPE AND A.LIPM_INSU_GRP_NO = lbp.LIPB_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = lbp.LIPB_INSU_SEQ_NO
+        LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = A.BNAG_S_BANK_BRANCH_CODE AND A.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
+        LEFT JOIN LISETT_ES lpe ON lpe.SETT_INSU_TYPE = A.LIPM_INSU_TYPE
+        LEFT JOIN LIPROD_ES lpr ON lpr.PROD_NO = A.LIPM_INSU_TYPE
         LEFT JOIN LIASSN_ES_NONCHAR lsn ON lsn.ASSN_INSU_NO = #{policyNo}
-        LEFT JOIN LIBNAG_ES_NONCHAR lbe ON lbe.BNAG_INSU_TYPE = lme.LIPM_INSU_TYPE AND lbe.BNAG_INSU_GRP_NO = lme.LIPM_INSU_GRP_NO AND lbe.BNAG_INSU_SEQ_NO = lme.LIPM_INSU_SEQ_NO
-        LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = lbe.BNAG_S_BANK_BRANCH_CODE AND lme.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
-        WHERE lme.LIPM_INSU_TYPE = #{policyType} AND lme.LIPM_INSU_GRP_NO = #{policyGrpNo} AND lme.LIPM_INSU_SEQ_NO = #{policySeqNo}
-        ]]>
     </select>
+
+    <sql id="policyBaseSql">
+        SELECT A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO, A.LIPM_NAME_1, A.LIPM_ID, A.LIPM_ST, A.LIPM_AGEN_CODE, A.LIPM_RCP_METH_CODE,
+        A.LIPM_RCP_CODE, A.LIPM_FLEX_RCP_MK, A.LIPM_ADDR, A.LIPM_5_GP, A.LIPM_TEL_H, A.LIPM_AUTO_RCP_MK, A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2, A.LIPM_BANK_CODE,
+        B.LIPI_SEX, B.LIPI_AGE, B.LIPI_BIRTH,
+        B.LIPI_NAME, B.LIPI_ID, B.LIPI_PREM_YEAR, B.LIPI_TABL_PREM, B.LIPI_INSU_END_DATE, B.LIPI_MAIN_AMT, B.LIPI_CANCER_QUAN, B.LIPI_INSU_BEG_DATE,
+        C.BNAG_REC_CLERK, C.BNAG_S_BANK_BRANCH_CODE, C.BNAG_BIRTH
+        FROM LILIPM_ES_NONCHAR_FLOWTEST A
+        LEFT JOIN LILIPI_ES_NONCHAR_FLOWTEST B
+        ON A.LIPM_INSU_TYPE = B.LIPI_INSU_TYPE AND A.LIPM_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
+        LEFT JOIN LIBNAG_ES_NONCHAR C
+        ON A.LIPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.LIPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
+        WHERE A.LIPM_INSU_TYPE = #{policyType} AND A.LIPM_INSU_GRP_NO = #{policyGrpNo} AND A.LIPM_INSU_SEQ_NO = #{policySeqNo}
+        UNION ALL
+        SELECT A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO, A.LIPM_NAME_1, A.LIPM_ID, A.LIPM_ST, A.LIPM_AGEN_CODE, A.LIPM_RCP_METH_CODE,
+        A.LIPM_RCP_CODE, NULL, A.LIPM_ADDR, A.LIPM_5_GP, A.LIPM_TEL_H, NULL, NULL, NULL, A.LIPM_BANK_CODE,
+        B.LIPI_SEX, B.LIPI_AGE, B.LIPI_BIRTH,
+        B.LIPI_NAME, B.LIPI_ID, NULL, B.LIPI_TABL_PREM, B.LIPI_INSU_END_DATE, B.LIPI_MAIN_AMT, NULL, B.LIPI_INSU_BEG_DATE,
+        C.BNAG_REC_CLERK, C.BNAG_S_BANK_BRANCH_CODE, C.BNAG_BIRTH
+        FROM LIMIPM_ES_NONCHAR_FLOWTEST A
+        LEFT JOIN LIMIPI_ES_NONCHAR_FLOWTEST B
+        ON A.LIPM_INSU_TYPE = B.LIPI_INSU_TYPE AND A.LIPM_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
+        LEFT JOIN LIBNAG_ES_NONCHAR C
+        ON A.LIPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.LIPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
+        WHERE A.LIPM_INSU_TYPE = #{policyType} AND A.LIPM_INSU_GRP_NO = #{policyGrpNo} AND A.LIPM_INSU_SEQ_NO = #{policySeqNo}
+        UNION ALL
+        SELECT A.NEPM_INSU_TYPE, A.NEPM_INSU_GRP_NO, A.NEPM_INSU_SEQ_NO, A.NEPM_NAME_1, A.NEPM_ID, A.NEPM_ST, A.NEPM_AGEN_CODE, A.NEPM_RCP_METH_CODE,
+        A.NEPM_RCP_CODE, A.NEPM_FLEX_RCP_MK, A.NEPM_ADDR, A.NEPM_5_GP, A.NEPM_TEL_H, A.NEPM_AUTO_RCP_MK, A.NEPM_CHAR_AT_1, A.NEPM_CHAR_AT_2, A.NEPM_BANK_CODE,
+        B.NEPI_SEX, B.NEPI_AGE, B.NEPI_BIRTH,
+        B.NEPI_NAME, B.NEPI_ID, B.NEPI_PREM_YEAR, B.NEPI_TABL_PREM, B.NEPI_INSU_END_DATE, B.NEPI_MAIN_AMT, B.NEPI_CANCER_QUAN, B.NEPI_INSU_BEG_DATE,
+        C.BNAG_REC_CLERK, C.BNAG_S_BANK_BRANCH_CODE, C.BNAG_BIRTH
+        FROM LINEPM_ES_NONCHAR_FLOWTEST A
+        LEFT JOIN LINEPI_ES_NONCHAR_FLOWTEST B
+        ON A.NEPM_INSU_TYPE = B.NEPI_INSU_TYPE AND A.NEPM_INSU_GRP_NO = B.NEPI_INSU_GRP_NO AND A.NEPM_INSU_SEQ_NO = B.NEPI_INSU_SEQ_NO
+        LEFT JOIN LIBNAG_ES_NONCHAR C
+        ON A.NEPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.NEPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.NEPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
+        WHERE A.NEPM_INSU_TYPE = #{policyType} AND A.NEPM_INSU_TYPE = #{policyGrpNo} AND A.NEPM_INSU_TYPE = #{policySeqNo}
+    </sql>
 
     <resultMap id="SafeGuardMap" type="com.twfhclife.eservice.api.shouxian.model.SafeGuardVo">
         <result column="DESI_DESC_CH" property="name"/>
     </resultMap>
 
     <select id="getSafeGuard" resultMap="SafeGuardMap">
-        SELECT lde.DESI_DESC_CH
-        FROM LILIPM_ES lme
-        LEFT JOIN (SELECT DISTINCT lse.SETT_INSU_TYPE, lse.SETT_CH_NAME, lie.PROD_CURRENCY FROM LIPROD_ES lie INNER JOIN LISETT_ES lse ON lie.PROD_NO = lse.SETT_INSU_TYPE) lpe
-        ON lme.LIPM_INSU_TYPE = lpe.SETT_INSU_TYPE
-        LEFT JOIN LIDESI_ES lde ON lde.DESI_CODE = lpe.SETT_INSU_TYPE
-        WHERE CONCAT(CONCAT(lme.LIPM_INSU_TYPE, lme.LIPM_INSU_GRP_NO), lme.LIPM_INSU_SEQ_NO) = #{policyNo}
+        SELECT lde.DESI_DESC_CH FROM LIDESI_ES lde
+            WHERE SUBSTR(DESI_CODE,1,2) = SUBSTR(#{policyNo}, 1, 2)
     </select>
 
     <resultMap id="PaymentRecordMap" type="com.twfhclife.eservice.api.shouxian.model.PaymentRecordVo">
@@ -250,18 +345,45 @@
         <result column="PRPA_DESC" property="desc"/>
     </resultMap>
 
+    <sql id="paymentRecordColumnSql">
+        to_char(A.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE,
+        A.PRPA_PAAB_AMT,
+        A.PRPA_ACT_AMT,
+        A.PRPA_RCP_CODE,
+        CONCAT('第', CONCAT(A.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN A.PRPA_RCP_CODE = N'A' THEN B.LIPI_PREM_YEAR * 1 WHEN A.PRPA_RCP_CODE = N'S' THEN B.LIPI_PREM_YEAR * 2 WHEN A.PRPA_RCP_CODE = N'Q' THEN B.LIPI_PREM_YEAR * 4 WHEN A.PRPA_RCP_CODE = N'M' THEN B.LIPI_PREM_YEAR * 12 WHEN A.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC
+    </sql>
     <select id="getPaymentRecord" resultMap="PaymentRecordMap">
-        SELECT
-        to_char(lpp.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE,
-        lpp.PRPA_PAAB_AMT,
-        lpp.PRPA_ACT_AMT,
-        lpp.PRPA_RCP_CODE,
-        CONCAT('第', CONCAT(lpp.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN lpp.PRPA_RCP_CODE = N'A' THEN lie.LIPI_PREM_YEAR * 1 WHEN lpp.PRPA_RCP_CODE = N'S' THEN lie.LIPI_PREM_YEAR * 2 WHEN lpp.PRPA_RCP_CODE = N'Q' THEN lie.LIPI_PREM_YEAR * 4 WHEN lpp.PRPA_RCP_CODE = N'M' THEN lie.LIPI_PREM_YEAR * 12 WHEN lpp.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC
-        FROM
-        LIPRPA_ES lpp
-        LEFT JOIN LILIPI_ES lie ON (lpp.PRPA_INSU_TYPE || lpp.PRPA_INSU_GRP_NO || lpp.PRPA_INSU_SEQ_NO) = (lie.LIPI_INSU_TYPE || lie.LIPI_INSU_GRP_NO || lie.LIPI_INSU_SEQ_NO)
-        WHERE
-        lpp.PRPA_INSU_TYPE || lpp.PRPA_INSU_GRP_NO || lpp.PRPA_INSU_SEQ_NO = #{policyNo}
+            SELECT
+            to_char(A.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE,
+            A.PRPA_PAAB_AMT,
+            A.PRPA_ACT_AMT,
+            A.PRPA_RCP_CODE,
+            CONCAT('第', CONCAT(A.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN A.PRPA_RCP_CODE = N'A' THEN B.LIPI_PREM_YEAR * 1 WHEN A.PRPA_RCP_CODE = N'S' THEN B.LIPI_PREM_YEAR * 2 WHEN A.PRPA_RCP_CODE = N'Q' THEN B.LIPI_PREM_YEAR * 4 WHEN A.PRPA_RCP_CODE = N'M' THEN B.LIPI_PREM_YEAR * 12 WHEN A.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC
+            FROM LIPRPA_ES A
+            LEFT JOIN LILIPI_ES_NONCHAR_FLOWTEST B
+                ON A.PRPA_INSU_TYPE = B.LIPI_INSU_TYPE AND A.PRPA_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.PRPA_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
+            WHERE A.PRPA_INSU_TYPE = substr(#{policyNo}, 1, 2) AND A.PRPA_INSU_GRP_NO = substr(#{policyNo}, 3, 1) AND A.PRPA_INSU_SEQ_NO = substr(#{policyNo}, 4, 7)
+            UNION ALL
+            SELECT
+            to_char(A.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE,
+            A.PRPA_PAAB_AMT,
+            A.PRPA_ACT_AMT,
+            A.PRPA_RCP_CODE,
+            '第0期/共0期' PRPA_DESC
+            FROM LIPRPA_ES A
+            LEFT JOIN LIMIPI_ES_NONCHAR_FLOWTEST B
+                ON A.PRPA_INSU_TYPE = B.LIPI_INSU_TYPE AND A.PRPA_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.PRPA_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
+            WHERE A.PRPA_INSU_TYPE = substr(#{policyNo}, 1, 2) AND A.PRPA_INSU_GRP_NO = substr(#{policyNo}, 3, 1) AND A.PRPA_INSU_SEQ_NO = substr(#{policyNo}, 4, 7)
+            UNION ALL
+            SELECT to_char(A.PRPA_RCP_DATE, 'yyyy-MM-dd') PRPA_RCP_DATE,
+            A.PRPA_PAAB_AMT,
+            A.PRPA_ACT_AMT,
+            A.PRPA_RCP_CODE,
+            CONCAT('第', CONCAT(A.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN A.PRPA_RCP_CODE = N'A' THEN B.NEPI_PREM_YEAR * 1 WHEN A.PRPA_RCP_CODE = N'S' THEN B.NEPI_PREM_YEAR * 2 WHEN A.PRPA_RCP_CODE = N'Q' THEN B.NEPI_PREM_YEAR * 4 WHEN A.PRPA_RCP_CODE = N'M' THEN B.NEPI_PREM_YEAR * 12 WHEN A.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC
+            FROM LIPRPA_ES A
+            LEFT JOIN LINEPI_ES_NONCHAR_FLOWTEST B
+                ON A.PRPA_INSU_TYPE = B.NEPI_INSU_TYPE AND A.PRPA_INSU_GRP_NO = B.NEPI_INSU_GRP_NO AND A.PRPA_INSU_SEQ_NO = B.NEPI_INSU_SEQ_NO
+            WHERE A.PRPA_INSU_TYPE = substr(#{policyNo}, 1, 2) AND A.PRPA_INSU_GRP_NO = substr(#{policyNo}, 3, 1) AND A.PRPA_INSU_SEQ_NO = substr(#{policyNo}, 4, 7)
     </select>
 
     <resultMap id="PremiumMap" type="com.twfhclife.eservice.api.shouxian.model.PremiumVo">
@@ -546,5 +668,9 @@
         where A.POEV_INSU_NO = #{policyNo} order by A.POEV_EXCH_DATE DESC)
         WHERE ROWNUM < 2
         ]]>
+    </select>
+
+    <select id="selectPolicyTypeList" resultType="hashmap">
+        SELECT SETT_INSU_TYPE AS VALUE, SETT_CH_NAME AS KEY FROM LISETT_ES
     </select>
 </mapper>

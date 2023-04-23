@@ -9,6 +9,7 @@ import com.twfhclife.eservice.policy.model.PortfolioVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ShouXianDao {
 
@@ -54,5 +55,5 @@ public interface ShouXianDao {
     List<ExchangeRateVo> getExchangeRate(@Param("exchangeRateVo") ExchangeRateRequest vo);
     PolicyAmountVo selectPolicyAmount(@Param("policyNo") String policyNo);
 
-
+    List<Map<String, String>> selectPolicyTypeList();
 }

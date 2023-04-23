@@ -1,9 +1,14 @@
 package com.twfhclife.eservice.web.service.impl;
 
+import com.google.gson.Gson;
+import com.twfhclife.eservice.api_client.BaseRestClient;
+import com.twfhclife.eservice.api_model.PersonalCaseDataResponse;
+import com.twfhclife.eservice.api_model.PolicyTypeListResponse;
 import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.web.dao.OptionDao;
 import com.twfhclife.eservice.web.service.IOptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +38,16 @@ public class OptionServiceImpl implements IOptionService {
     @Override
     public List<Map<String, String>> getBankList() {
         return optionDao.getBankList();
+    }
+
+    @Autowired
+    private BaseRestClient baseRestClient;
+
+    @Value("${eservice_api.policy.type.list.url}")
+    private String policyTypeListUrl;
+    @Override
+    public List<Map<String, String>> getPolicyTypeList() {
+        PolicyTypeListResponse responseObj = baseRestClient.postApi("", policyTypeListUrl, PolicyTypeListResponse.class);
+        return responseObj.getPolicyTypeList();
     }
 }

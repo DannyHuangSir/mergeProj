@@ -60,7 +60,12 @@
 									<div class="form-group">
 										<label class="col-sm-3"> 商品名稱  </label>
 										<div class="col-sm-9">
-											<input name="prodName" th:value="${queryPolicy.prodName}" type="text" placeholder="輸入欲查詢的商品名稱 " class="form-control" />
+											<select name="prodName" class="form-control">
+												<option value=""></option>
+												<option th:each="policyType : ${policyTypeList}" th:value="${policyType.VALUE}">
+													<th:block th:text="${policyType.KEY}"></th:block>
+												</option>
+											</select>
 										</div>
 									</div>
 								</div>
@@ -151,18 +156,18 @@
 									<i class="foo-business_23 foo-lg"></i> 查詢結果清單 <span class="my2b" id="policyCount"></span>
 				                </div>
 								<div id="policyContent"></div>
-					        </div>
-							<div class="col-md-12 wht box-border no-borderTop">
-								<div class="col-md-5 col-md-offset-5">
-									<nav>
-										<ul class="pagination center1">
-											<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>
-											<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>
-											<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>
-										</ul>
-									</nav>
+								<div class="col-md-12 wht box-border no-borderTop">
+									<div class="col-md-12" style="text-align:center;">
+										<nav>
+											<ul class="pagination center1">
+												<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>
+												<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>
+												<li class="disabled"><a href="#" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>
+											</ul>
+										</nav>
+									</div>
 								</div>
-							</div>
+					        </div>
 						</div>
 					</div>
 				</div>
@@ -182,23 +187,38 @@
 		var paymentMap = [[${session.SYSTEM_PARAMETER.PAYMENT_METHOD_TYPE}]]
 		var payModeMap = [[${session.SYSTEM_PARAMETER.PAYMODE_TYPE}]]
 		function queryDataByPage(pageNum) {
+			policyNo = $("input[name='policyNo']").val()
+		    lipmName = $("input[name='lipmName']").val()
+		    lipmId = $("input[name='lipmId']").val()
+		    lipiName = $("input[name='lipiName']").val()
+		    lipiId = $("input[name='lipiId']").val()
+		    prodName = $("select[name='prodName'] option:selected").val()
+
+		    if ((policyNo == null || policyNo == '') &&  (lipmName == null || lipmName == '') &&
+		        (lipmId == null || lipmId == '') && (lipiName == null || lipiName == '') &&
+                (lipiId == null || lipiId == '') && (prodName == null || prodName == '')) {
+                 openAlert('請至少輸入一個查詢條件!')
+                 return
+            }
+
 			$('#loadingModal').modal('show')
 			$.ajax({
 				type : 'POST',
 				dataType : "JSON",
 				contentType : 'application/json',
 				data: JSON.stringify({
-					policyNo: $("input[name='policyNo']").val(),
-					lipmName: $("input[name='lipmName']").val(),
-					lipmId: $("input[name='lipmId']").val(),
-					lipiName: $("input[name='lipiName']").val(),
-					lipiId: $("input[name='lipiId']").val(),
-					prodName: $("input[name='prodName']").val(),
+					policyNo: policyNo,
+					lipmName: lipmName,
+					lipmId: lipmId,
+					lipiName: lipiName,
+					lipiId: lipiId,
+					prodName: prodName,
 					stat: $("#statusCard .active").attr('val'),
 					pageNum: pageNum
 				}),
 				url : /*[[@{/getPolicyList}]]*/,
 				success : function(response) {
+					$('#loadingModal').modal('hide')
 					$("#circleAll").children().each(function(index, item) {
 						item.classList.remove('active')
 					})
@@ -271,10 +291,8 @@
 					}
 				},
 				error : function() {
-					openAlert('error!')
-				},
-				complete: function() {
 					$('#loadingModal').modal('hide')
+					openAlert('error!')
 				}
 	    	});
 		}

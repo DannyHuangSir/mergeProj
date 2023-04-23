@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.twfhclife.eservice.api.elife.domain.PortfolioResponse;
 import com.twfhclife.eservice.api.shouxian.dao.ShouXianDao;
 import com.twfhclife.eservice.api.shouxian.domain.ExchangeRateRequest;
+import com.twfhclife.eservice.api.shouxian.domain.PolicyTypeListResponse;
 import com.twfhclife.eservice.api.shouxian.model.JdFundTransactionVo;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
@@ -281,4 +282,7 @@ public class ShouxianService {
     }
 
 
+    public List<Map<String, String>> getPolicyTypeList() {
+        return shouXianDao.selectPolicyTypeList();
+    }
 }

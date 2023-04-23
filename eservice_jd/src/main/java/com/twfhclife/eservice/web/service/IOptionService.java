@@ -14,4 +14,6 @@ public interface IOptionService {
 
 
     List<Map<String, String>> getBankList();
+
+    List<Map<String, String>> getPolicyTypeList();
 }

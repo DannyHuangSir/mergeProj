@@ -13,7 +13,7 @@ function getPolicyPageBarHtml(response) {
         pageInfoHtml += nextHtml;
     } else {
         var totalPageNumSize = $(response.rows[0].pageNumList).size();
-
+        debugger
         // 上一頁
         var currentPage = response.pageNum;
         if (response.prev) {
@@ -26,7 +26,7 @@ function getPolicyPageBarHtml(response) {
         var pageCtrlNum = parseInt(pageDisplayMinNum / 2);
         if (totalPageNumSize <= pageDisplayMinNum) {
             // 若總頁數小於預設，則正常顯示所有頁數
-            $.each(response.rows[0].pageNumList, function(j, pageNumber) {
+            $.each(response.pageNumList, function(j, pageNumber) {
                 if (currentPage == pageNumber) {
                     pageInfoHtml += '<li class="active"><a href="#">';
                 } else {

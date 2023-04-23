@@ -582,4 +582,24 @@ public class ShouxianController extends BaseController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
+
+    @PostMapping(value = "/getPolicyTypeList", produces = { "application/json" })
+    public ResponseEntity<?> getPolicyTypeList() {
+        ApiResponseObj<PolicyTypeListResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            PolicyTypeListResponse resp = new PolicyTypeListResponse();
+            resp.setPolicyTypeList(shouxianService.getPolicyTypeList());
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        } catch (Exception e) {
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to getPolicyTypeList: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        } finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
 }

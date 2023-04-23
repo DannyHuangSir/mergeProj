@@ -29,13 +29,9 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
 
     private String endDate;
 
-    private int totalRow;
-
     private int pageSize = 10;
 
     private int pageNum;
-
-    private List<Integer> pageNumList = Lists.newArrayList(10);
 
     private List<PermQueryVo> permQuery = Lists.newArrayList();
 
@@ -183,14 +179,6 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
         this.currency = currency;
     }
 
-    public int getTotalRow() {
-        return totalRow;
-    }
-
-    public void setTotalRow(int totalRow) {
-        this.totalRow = totalRow;
-    }
-
     public int getPageSize() {
         return pageSize;
     }
@@ -207,11 +195,4 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
         this.pageNum = pageNum;
     }
 
-    public List<Integer> getPageNumList() {
-        return pageNumList;
-    }
-
-    public void setPageNumList(List<Integer> pageNumList) {
-        this.pageNumList = pageNumList;
-    }
 }

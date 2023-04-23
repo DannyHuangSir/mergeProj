@@ -142,6 +142,11 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="loadingModal" backdrop="static" keyboard="false">
+    <div class="progress progress-striped active" style="z-index: 20000; position: absolute; left: 50%; top: 50%; width:32px; height:32px; background: border-box;">
+        <img th:src="@{/plugin/loading-modal/ajax-loader.gif}"/>
+    </div>
+</div>
 <footer th:replace="fragments/footer"></footer>
 <script th:inline="javascript">
 /*<![CDATA[*/
@@ -188,7 +193,7 @@
                  openAlert('請至少輸入一個查詢條件!')
                  return
             }
-
+            $('#loadingModal').modal('show')
 			$.ajax({
 				type : 'POST',
 				dataType : "JSON",
@@ -218,9 +223,11 @@
 							});
 						$("#caseContent").html(html)
 					}
+					$('#loadingModal').modal('hide')
 				},
 				error : function() {
 					openAlert('error!')
+					$('#loadingModal').modal('hide')
 				}
 	    	});
 		}

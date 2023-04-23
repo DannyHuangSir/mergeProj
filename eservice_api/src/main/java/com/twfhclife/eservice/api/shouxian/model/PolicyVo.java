@@ -30,8 +30,6 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
 
     private String endDate;
 
-    private int totalRow;
-
     private int pageSize;
 
     private int pageNum;
@@ -180,14 +178,6 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
 
     public void setCurrency(String currency) {
         this.currency = currency;
-    }
-
-    public int getTotalRow() {
-        return totalRow;
-    }
-
-    public void setTotalRow(int totalRow) {
-        this.totalRow = totalRow;
     }
 
     public int getPageSize() {
