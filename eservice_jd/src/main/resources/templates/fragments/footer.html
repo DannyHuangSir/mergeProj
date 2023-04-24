@@ -66,10 +66,21 @@
     function clickSearch() {
         event.preventDefault(),
 		event.stopPropagation();
-        $(".messageContent").html('<div class="items" style="overflow-y: hidden;"></div>')
-        notifySearchStatus = $('#notifyStatus option:selected').val()
-        notifyEndSearchTime = $("#notifyEndSearchTime").val()
+		notifySearchStatus = $('#notifyStatus option:selected').val()
         notifyStartSearchTime = $("#notifyStartSearchTime").val()
+        notifyEndSearchTime = $("#notifyEndSearchTime").val()
+        var today = moment().hour(0).minute(0).seconds(0).milliseconds(0);
+        var beforeToday = today.subtract(1, 'milliseconds')
+        if (moment(notifyStartSearchTime).diff(today, 'day') > 0 || moment(notifyEndSearchTime).diff(today, 'day') > 0) {
+             openAlert("時間不允許超過當日");
+             return false;
+        }
+        if (beforeToday.diff(moment($("#notifyStartSearchTime").val()), 'month') > 5 || beforeToday.diff(moment($("#notifyEndSearchTime").val()), 'month') > 5) {
+             openAlert("只支持查詢6個月内通知");
+             return false;
+        }
+
+        $(".messageContent").html('<div class="items" style="overflow-y: hidden;"></div>')
         appendNotifyItems(true)
         return false;
     }
@@ -187,29 +198,16 @@
                 changeMonth: true,
                 changeYear: true,
                 maxDate: new Date(),
-                minDate: moment(new Date()).add(-6, 'month').toDate(),
-                onSelect: function(dateText, inst) {
-                     if (moment($("#notifyEndSearchTime").val()).diff(moment(dateText), 'month') > 6) {
-                        openAlert("時間間隔不能超過六個月");
-                        $("#notifyStartSearchTime").val(inst.lastVal)
-                        return false;
-                    }
-                }
+                minDate: moment(new Date()).add(-6, 'month').toDate()
             });
         })
          $("body").on('focus', '#notifyEndSearchTime', function(){
             $(this).datepicker({
                 dateFormat: 'yy-mm-dd',
                 maxDate: new Date(),
+                minDate: moment(new Date()).add(-6, 'month').toDate(),
                 changeMonth: true,
-                changeYear: true,
-                onSelect: function(dateText, inst) {
-                  if (moment(dateText).diff(moment($("#notifyStartSearchTime").val()), 'month') > 6) {
-                        openAlert("時間間隔不能超過六個月");
-                        $("#notifyEndSearchTime").val(inst.lastVal)
-                        return false;
-                   }
-                }
+                changeYear: true
             });
         })
    })
