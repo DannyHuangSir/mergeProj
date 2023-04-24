@@ -34,7 +34,7 @@
 			AND A.ROLE_ID IN (
 				SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH 
 				WHERE SYS_ID = #{roleVo.systemId}
-				<if test="adminUserFlag == 'N'.toString()">
+				<if test="adminUserFlag == 'N'.toString() and roleVo.systemId != 'eservice_jd'.toString()">
 				AND ROLE_ID IN (
 					SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
 				)
