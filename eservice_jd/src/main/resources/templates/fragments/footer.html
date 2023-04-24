@@ -68,7 +68,19 @@
 		event.stopPropagation();
         $(".messageContent").html('<div class="items" style="overflow-y: hidden;"></div>')
         notifySearchStatus = $('#notifyStatus option:selected').val()
-        notifySearchTime = $('#notifySearchTime').val() == '' ? null : $('#notifySearchTime').val()
+        notifyEndSearchTime = $("#notifyEndSearchTime").val()
+        notifyStartSearchTime = $("#notifyStartSearchTime").val()
+        appendNotifyItems(true)
+        return false;
+    }
+
+    function myNotify() {
+        event.preventDefault(),
+		event.stopPropagation();
+        $(".messageContent").html('<div class="items" style="overflow-y: hidden;"></div>')
+        notifySearchStatus = ''
+        notifyEndSearchTime = ''
+        notifyStartSearchTime = ''
         appendNotifyItems(true)
         return false;
     }
@@ -82,8 +94,8 @@
             data: JSON.stringify(
                 {
                     status: notifySearchStatus,
-                    notifyEndSearchTime: $("#notifyEndSearchTime").val(),
-                    notifyStartSearchTime: $("#notifyStartSearchTime").val()
+                    notifyStartSearchTime: notifyStartSearchTime,
+                    notifyEndSearchTime: notifyEndSearchTime
                 }
             ),
             success : function(data) {
@@ -168,7 +180,6 @@
     }
 
     $(function(){
-        appendNotifyItems()
         getNotRead()
         $("body").on('focus', '#notifyStartSearchTime', function(){
             $(this).datepicker({

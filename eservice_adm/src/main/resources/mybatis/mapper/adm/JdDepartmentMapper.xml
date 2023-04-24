@@ -257,11 +257,6 @@
         <if test="vo.depId != null and vo.depId !=''">
             AND PARENT_DEP = (select DEP_ID from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{vo.depId})
         </if>
-        <if test="adminUserFlag == 'N'.toString()">
-            AND DEP_ID IN (
-            SELECT DEP_ID FROM ESERVICE_JD.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
-            )
-        </if>
         ORDER BY
         DEP_ID
     </select>
