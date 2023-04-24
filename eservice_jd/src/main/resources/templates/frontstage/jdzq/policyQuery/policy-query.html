@@ -153,10 +153,10 @@
 							<div class="card-header">
 								<div class="card-head-row"> 
 									<div id="statusCard" class="card-title tb1 card-title-span">
-										<span val="all" onclick="chooseTab(this)" class="active">所有查詢結果保單(<span><span id="allCount">0</span>筆</span>) </span>
-										<span val="1" onclick="chooseTab(this, '1')" >有效保單(<span><span id="activeCount">0</span>筆</span>) </span>
-										<span val="2" onclick="chooseTab(this, '2')" >停效保單(<span><span id="stopCount">0</span>筆</span>) </span>
-										<span val="3" onclick="chooseTab(this, '3')" >失效保單(<span><span id="expireCount">0</span>筆</span>) </span>
+										<span val="all" onclick="chooseTab(this, false)" class="active">所有查詢結果保單(<span><span id="allCount">0</span>筆</span>) </span>
+										<span val="1" onclick="chooseTab(this, false)" >有效保單(<span><span id="activeCount">0</span>筆</span>) </span>
+										<span val="2" onclick="chooseTab(this, false)" >停效保單(<span><span id="stopCount">0</span>筆</span>) </span>
+										<span val="3" onclick="chooseTab(this, false)" >失效保單(<span><span id="expireCount">0</span>筆</span>) </span>
 									</div> 
 								</div>
 							</div>
@@ -195,7 +195,7 @@
 /*<![CDATA[*/
 		var paymentMap = [[${session.SYSTEM_PARAMETER.PAYMENT_METHOD_TYPE}]]
 		var payModeMap = [[${session.SYSTEM_PARAMETER.PAYMODE_TYPE}]]
-		function queryDataByPage(pageNum) {
+		function queryDataByPage(pageNum, resetStatus) {
 			policyNo = $("input[name='policyNo']").val()
 		    lipmName = $("input[name='lipmName']").val()
 		    lipmId = $("input[name='lipmId']").val()
@@ -236,11 +236,13 @@
 					})
 					if(response.result == "SUCCESS"){
 						html = ''
-						$("#allCount").text(response.resultData.totalRow)
+						if (resetStatus) {
+							$("#allCount").text(response.resultData.totalRow)
+							$("#activeCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.effectiveCount:0)
+							$("#stopCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.stopCount:0)
+							$("#expireCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.expireCount:0)
+						}
 						$("#zonglanCount").text(response.resultData.totalRow)
-						$("#activeCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.effectiveCount:0)
-						$("#stopCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.stopCount:0)
-						$("#expireCount").text(response.resultData.policyCountVo?response.resultData.policyCountVo.expireCount:0)
 						$("#policyCount").text('共 ' + response.resultData.totalRow + ' 張')
 						var isGreen = false
 						response.resultData.rows.forEach(function(item, index){
@@ -314,7 +316,7 @@
 			} else {
 				$("#dashboardContent").hide()
 			}
-			queryDataByPage(1)
+			chooseTab($("#statusCard span:first"), true)
 		}
 
 		function changeCircle(policyNo) {
@@ -351,14 +353,15 @@
 				case '3':
 					return '失效'
 			}
+			return ''
 		}
 
-		function chooseTab(vm, status) {
+		function chooseTab(vm, resetStatus) {
 			$(vm).parent().children().each(function(i,item){
 				$(item).removeClass('active')
 			})
 			$(vm).addClass('active')
-			queryDataByPage(1)
+			queryDataByPage(1, resetStatus)
 		}
 /*]]>*/
 </script>

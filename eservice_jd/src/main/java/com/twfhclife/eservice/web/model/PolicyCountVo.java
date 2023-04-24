@@ -5,6 +5,7 @@ public class PolicyCountVo {
     private int effectiveCount = 0;
     private int stopCount = 0;
     private int expireCount = 0;
+    private int total = 0;
 
     public int getEffectiveCount() {
         return effectiveCount;
@@ -31,6 +32,10 @@ public class PolicyCountVo {
     }
 
     public int getTotal() {
-        return effectiveCount + expireCount + stopCount;
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }
