@@ -327,22 +327,26 @@ public class BaseController extends BaseMvcController {
     private String eventRecordUrl;
 
     protected void addBussinessEvent(String eventCode, String userId, String eventName) {
-        BusinessEventVo be = new BusinessEventVo();
-        be.setEventDate(DateUtil.formatDateTime(new Date(), "yyyy-MM-dd"));
-        be.setEventCode(eventCode);
-        be.setEventStatus("1");
-        be.setSourceIp(getClientIp());
-        be.setTargetIp(getRequest().getRemoteAddr());
-        be.setTargetSystemId(ApConstants.SYSTEM_ID);
-        be.setCreateDate(DateUtil.formatDateTime(new Date(), "yyyy/MM/dd HH:mm:ss"));
-        be.setUserId(userId);
-        be.setCreateUser(userId);
-        be.setEventName(eventName);
-        be.setEventMsg(eventName);
-        EventRecordAddVo vo = new EventRecordAddVo();
-        vo.getBusinessEventList().add(be);
-        vo.setSysId(ApConstants.SYSTEM_ID);
-        vo.setUserId(userId);
-        restClient.postApi(new Gson().toJson(vo).toString(), eventRecordUrl, Object.class);
+        try {
+            BusinessEventVo be = new BusinessEventVo();
+            be.setEventDate(DateUtil.formatDateTime(new Date(), "yyyy-MM-dd"));
+            be.setEventCode(eventCode);
+            be.setEventStatus("1");
+            be.setSourceIp(getClientIp());
+            be.setTargetIp(getRequest().getRemoteAddr());
+            be.setTargetSystemId(ApConstants.SYSTEM_ID);
+            be.setCreateDate(DateUtil.formatDateTime(new Date(), "yyyy/MM/dd HH:mm:ss"));
+            be.setUserId(userId);
+            be.setCreateUser(userId);
+            be.setEventName(eventName);
+            be.setEventMsg(eventName);
+            EventRecordAddVo vo = new EventRecordAddVo();
+            vo.getBusinessEventList().add(be);
+            vo.setSysId(ApConstants.SYSTEM_ID);
+            vo.setUserId(userId);
+            restClient.postApi(new Gson().toJson(vo).toString(), eventRecordUrl, Object.class);
+        } catch (Exception e) {
+            logger.error("addBussinessEvent error: {} ", e);
+        }
     }
 }
