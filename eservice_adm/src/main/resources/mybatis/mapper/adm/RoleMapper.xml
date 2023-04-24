@@ -35,7 +35,7 @@
 				SELECT ROLE_ID FROM ESERVICE_ADM.DBO.ROLE_SYS_AUTH 
 				WHERE SYS_ID = #{roleVo.systemId}
 				<if test="adminUserFlag == 'N'.toString()">
-				AND A.ROLE_ID IN (
+				AND ROLE_ID IN (
 					SELECT ROLE_ID FROM ESERVICE_ADM.DBO.USER_ROLE WHERE USER_ID = #{keyCloakUserId}
 				)
 				</if>
@@ -49,7 +49,7 @@
 			</if>
 			<if test="roleVo.parentDep != null and roleVo.parentDep != ''">
 				AND A.ROLE_ID IN(
-				select ROLE_ID from ESERVICE_JD.DBO.ROLE_DEPARTMENT where DEP_ID = #{roleVo.parentDep}
+				SELECT ROLE_ID from ESERVICE_JD.DBO.ROLE_DEPARTMENT where DEP_ID = #{roleVo.parentDep}
 				)
 			</if>
 		</where>
