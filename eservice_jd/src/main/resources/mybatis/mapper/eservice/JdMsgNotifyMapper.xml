@@ -35,7 +35,7 @@
             UNION
             SELECT #{msg.title}, #{msg.msg}, '1', #{date}, UD.USER_ID, #{msg.notifyTime}
             from ESERVICE_JD.DBO.DEPARTMENT D
-            INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.BRANCH_ID = UD.BRANCH_ID
+            INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON D.PARENT_DEP = UD.DEP_ID AND D.BRANCH_ID = UD.BRANCH_ID
             WHERE D.PARENT_DEP = #{msg.passageWay}
         </if>
     </insert>
