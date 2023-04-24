@@ -260,13 +260,13 @@
 											'</thead>' +
 											'<tbody>' +
 												"<tr onclick=\"javascript:postPolicyListType('listing1', '" + item.policyNo + "')\">" +
-													'<td class="table3">' + item.policyNo + '</td>' +
-													'<td class="hid1 hid2">' + item.prodName + ' </td>' +
-													'<td class="hid1 hid2">' + item.lipmName + '</td>' +
-													'<td class="hid1 hid2">' + item.lipmId + '</td>' +
-													'<td class="hid1 hid2 enThin">' + item.lipiName + '</td>' +
-													'<td class="hid1 hid2">' + item.lipiId + '</td>' +
-													'<td class="hid1 hid2">' + item.agent + '</td> ' +
+													'<td class="table3">' + (item.policyNo ? item.policyNo : '') + '</td>' +
+													'<td class="hid1 hid2">' + (item.prodName ? item.prodName : '') + ' </td>' +
+													'<td class="hid1 hid2">' + (item.lipmName ? item.lipmName : '') + '</td>' +
+													'<td class="hid1 hid2">' + (item.lipmId ? item.lipmId : '') + '</td>' +
+													'<td class="hid1 hid2 enThin">' + (item.lipiName ? item.lipiName : '') + '</td>' +
+													'<td class="hid1 hid2">' + (item.lipiId ? item.lipiId : '') + '</td>' +
+													'<td class="hid1 hid2">' + (item.agent ? item.agent : '') + '</td> ' +
 												'</tr> ' +
 											'</tbody> ' +
 											'<thead>' +
@@ -283,11 +283,11 @@
 											'<tbody>' +
 												"<tr onclick=\"javascript:postPolicyListType('listing1', '" + item.policyNo + "')\">" +
 													'<td class="table3">' + statusStr(item.stat) + ' </td>' +
-													'<td class="hid1 hid2">' + item.effectiveDate + '</td>' +
-													'<td class="hid1 hid2">' + item.mainAmount + '</td>' +
-													'<td class="hid1 hid2">' + item.lipiTablPrem + '</td>' +
+													'<td class="hid1 hid2">' + (item.effectiveDate ? item.effectiveDate : '') + '</td>' +
+													'<td class="hid1 hid2">' + (item.mainAmount ? item.mainAmount : '') + '</td>' +
+													'<td class="hid1 hid2">' + (item.lipiTablPrem ? item.lipiTablPrem : '') + '</td>' +
 													'<td class="hid1 hid2 enThin">' + (item.paymentMode != null ? payModeMap[item.paymentMode].parameterValue : '') +'</td>' +
-													'<td class="hid1 hid2">' + item.premYear + ' </td>' +
+													'<td class="hid1 hid2">' + (item.premYear ? item.premYear : '') + ' </td>' +
 													'<td class="hid1 hid2">' + (item.paymentMethod != null ? paymentMap[item.paymentMethod].parameterValue : '') + '</td> ' +
 												'</tr> ' +
 											'</tbody>' +
