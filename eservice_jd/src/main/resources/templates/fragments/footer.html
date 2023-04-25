@@ -114,7 +114,8 @@
                     $(data.resultData.data).each(function(index, item){
                         msgMap[item.id] = {
                             msg: item.msg,
-                            title: item.title
+                            title: item.title,
+                            time: item.notifyTime
                         }
                         if (item.status == 2) {
                              $('.messageContent .items').append(
@@ -166,6 +167,7 @@
     }
 
     function msgDetail(id) {
+        $('#msg-modal #msgTime').html(msgMap[id].time)
         $('#msg-modal #msgTitle').html(msgMap[id].title)
         $('#msg-modal #msgContent').html(msgMap[id].msg)
         $('#msg-modal').modal({

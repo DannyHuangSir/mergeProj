@@ -45,7 +45,7 @@
                     <a href="#" onclick="myNotify()" data-target="#notification" data-toggle="popover" data-width="520"
                        data-scroll-height="200" data-class="to-right" data-content="43greyrtu"
                        data-placement="bottom" class="b3" data-original-title="" title=""><span id="messageCount"
-                            class="badge b4 pull-right">0</span>我的通知</a>
+                                                                                                class="badge b4 pull-right">0</span>我的通知</a>
                 </div>
                 <div id="logoutDiv" class="list" th:attr="data-timeout_seconds=${session.TIMEOUT_SECONDS}">
                     <a th:href="@{/doLogout}">
@@ -62,7 +62,8 @@
                     線上通知
                     <span class="note"><em class="badge"></em>封未讀取</span>
                     <a class="close">×</a>
-                    <a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true" aria-controls="popoverSearchBar" class="pull-right">
+                    <a data-toggle="collapse" data-target="#popoverSearchBar" aria-expanded="true"
+                       aria-controls="popoverSearchBar" class="pull-right">
                         <i class="fa fa-search orange"></i>
                     </a>
                 </div>
@@ -72,14 +73,14 @@
                             <div class="col-sm-12">
                                 <label class="col-sm-5">狀態：</label>
                                 <div class="col-sm-7" style="padding:0px;">
-                                    <select id ="notifyStatus" style="width:100%;">
+                                    <select id="notifyStatus" style="width:100%;">
                                         <option selected value="">全部</option>
                                         <option value="1">未讀取</option>
                                         <option value="2">已讀取</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-12" >
+                            <div class="col-sm-12">
                                 <label class="col-sm-5">通知時間：</label>
                                 <div class="col-sm-3" style="padding:0px;">
                                     <input type="text" style="width:100%;" id="notifyStartSearchTime">
@@ -101,26 +102,29 @@
                     <div class="items" style="overflow-y: hidden;">
                     </div>
                 </div>
-        </div>
+            </div>
         </nav>
         <!-- End Navbar -->
-        <div class="modal fade in" id="msg-modal" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;"  aria-hidden="true">
+        <div class="modal fade in" id="msg-modal" role="dialog" aria-labelledby="myModalLabel" style="z-index: 111111;"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content lock-up">
                     <div class="modal-header"> 通知詳情
-                        <button type="button" class="close"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body center1 grey2">
-                        <h3></h3><div class="title"></div>
+                        <h3></h3>
+                        <div class="title"></div>
                         <div class="marginBottom30 modal-container-locked-messsage content">
                             <div class="modal-body apply2 center1 grey2">
                                 <div class="container grey nopd">
+                                    <div class="col-xs-4">通知日期：</div>
+                                    <div class="col-xs-8" id="msgTime" style="color:black"></div>
                                     <div class="col-xs-4">主旨：</div>
                                     <div class="col-xs-8" id="msgTitle" style="color:black"></div>
                                     <div class="col-xs-4">内文：</div>
                                     <div class="col-xs-8" style="color:black" id="msgContent"></div>
-                                    <div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
