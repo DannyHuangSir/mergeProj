@@ -112,7 +112,7 @@
 		SELECT
 			<include refid="Base_Column_List" />
 		FROM
-			ESERVICE_ADM.DBO.ROLE
+			ESERVICE_ADM.DBO.ROLE A
 		<include refid="whereClause" />
 	</select>
 	
