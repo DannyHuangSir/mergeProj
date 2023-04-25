@@ -179,7 +179,15 @@
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">要保地址 </th>
-																<td><b class="tablesaw-cell-label mobile-b">要保地址 </b> <span class="mobile-span"  th:text="${vo.lipmAddr}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">要保地址 </b> <span class="mobile-span" th:text="${vo.lipmAddr}"></span></td>
+															</tr>
+															<tr class="noEvent">
+																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">風險屬性 </th>
+																<td><b class="tablesaw-cell-label mobile-b">風險屬性 </b> <span class="mobile-span">
+																	<th:block th:if="${vo.riskLevel == 'A'}">保守型</th:block>
+																	<th:block th:if="${vo.riskLevel == 'B'}">穩健型</th:block>
+																	<th:block th:if="${vo.riskLevel == 'C'}">積極型</th:block>
+																</span></td>
 															</tr>
 															</tbody>
 														</table>
