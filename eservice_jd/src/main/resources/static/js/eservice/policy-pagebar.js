@@ -15,11 +15,14 @@ function getPolicyPageBarHtml(response) {
         var totalPageNumSize = $(response.pageNumList).size();
         // 上一頁
         var currentPage = response.pageNum;
+        debugger
         if (response.prev) {
+            firstHtml = '<li class=""><a style="border:0; " href="javascript:queryDataByPage(' + ($(response.pageNumList).get(0)) + ');" aria-label="Previous"><span style="color: #CC7A00;" aria-hidden="true">第一頁</span></a></li>';
+            pageInfoHtml += firstHtml;
             prevHtml = '<li class=""><a href="javascript:queryDataByPage(' + (currentPage - 1) + ');" aria-label="Previous"><span aria-hidden="true">上一頁</span></a></li>';
+            pageInfoHtml += prevHtml;
         }
-        pageInfoHtml += prevHtml;
-        
+
         // 頁數清單 (控制頁數顯示不要過多)
         var pageDisplayMinNum = 5; // 設定奇數
         var pageCtrlNum = parseInt(pageDisplayMinNum / 2);
