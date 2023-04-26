@@ -37,8 +37,11 @@
         DEP_ID,
         BRANCH_ID)
         VALUES
-        (#{jdUserVo.icId,jdbcType=VARCHAR},
-        #{jdUserVo.depId,jdbcType=VARCHAR},
+        (
+        (SELECT A.ID FROM ESERVICE_ADM.DBO.USER_ENTITY A INNER JOIN ESERVICE_JD.DBO.USERS B ON A.USERNAME = B.USER_ID
+        AND A.REALM_ID = 'elife_jdzq'
+        WHERE B.IC_ID = #{jdUserVo.icId,jdbcType=VARCHAR}),
+        (SELECT TOP 1 DEP_ID FROM ESERVICE_JD.DBO.DEPARTMENT WHERE BRANCH_ID = #{jdUserVo.depId,jdbcType=VARCHAR}),
         #{jdUserVo.branchId,jdbcType=VARCHAR})
     </insert>
 

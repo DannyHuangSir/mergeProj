@@ -1,0 +1,22 @@
+@startuml
+
+class MessageController {
+    message()
+}
+interface IMessageService {
+    getMessages()
+}
+class MessageServiceImpl {
+    getMessages()
+}
+class MessageVo {
+  status
+  notifyStartSearchTime
+  notifyEndSearchTime
+}
+
+MessageController -|> MessageVo
+MessageController -|> IMessageService
+IMessageService <|-- MessageServiceImpl
+
+@enduml

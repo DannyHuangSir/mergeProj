@@ -146,7 +146,12 @@
 		SELECT DISTINCT D.BRANCH_ID agentCode, UD.BRANCH_ID branchCode FROM
 		ESERVICE_JD.DBO.USER_IC UD
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
-		WHERE UD.USER_ID = #{userId}
+		WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID IS NOT NULL
+		UNION ALL
+		SELECT DISTINCT D.BRANCH_ID agentCode, '' branchCode FROM
+		ESERVICE_JD.DBO.USER_IC UD
+		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
+		WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID IS NULL
 	</select>
 
 	<select id="getCaseQueryByUser" resultType="com.twfhclife.eservice.web.model.PermQueryVo">

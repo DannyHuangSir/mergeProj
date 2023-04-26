@@ -113,17 +113,16 @@
                      ROW_NUMBER() OVER (ORDER BY DEP_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                    select d.depName,c.DEP_NAME as branchName ,d.DEP_ID,d.BRANCH_ID from ESERVICE_JD.dbo.DEPARTMENT c,
-                    (select c.DEP_NAME as depName,a.BRANCH_ID,a.DEP_ID from ESERVICE_JD.dbo.DEPARTMENT c
-                    left join ESERVICE_JD.dbo.USER_IC a on c.BRANCH_ID = a.DEP_ID
-                    left join ESERVICE_JD.dbo.USERS b on a.USER_ID = b.IC_ID
-                    where b.USER_ID = #{vo.userId}  )
-                    d where c.BRANCH_ID = d.BRANCH_ID
-                    union all
-                    select c.DEP_NAME as depName,isnull('','') as branchName,c.BRANCH_ID  AS depId,a.BRANCH_ID from ESERVICE_JD.dbo.DEPARTMENT c
-                    left join ESERVICE_JD.dbo.USER_IC a on c.BRANCH_ID = a.DEP_ID
-                    left join ESERVICE_JD.dbo.USERS b on a.USER_ID = b.IC_ID
-                    where b.USER_ID = #{vo.userId} and a.BRANCH_ID IS NULL
+                    SELECT DISTINCT D.BRANCH_ID DEP_ID, D.DEP_NAME depName, UD.BRANCH_ID, D1.DEP_NAME branchName FROM
+                    ESERVICE_JD.DBO.USER_IC UD
+                    INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
+                    INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D1 ON UD.DEP_ID = D1.PARENT_DEP AND UD.BRANCH_ID = D1.BRANCH_ID
+                    WHERE UD.USER_ID = #{vo.userId} AND UD.BRANCH_ID IS NOT NULL
+                    UNION
+                    SELECT DISTINCT D.BRANCH_ID DEP_ID, D.DEP_NAME depName, '' BRANCH_ID, '' branchName FROM
+                    ESERVICE_JD.DBO.USER_IC UD
+                    INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
+                    WHERE UD.USER_ID = #{vo.userId} AND UD.BRANCH_ID IS NULL
                       ) A
              ) B
         WHERE

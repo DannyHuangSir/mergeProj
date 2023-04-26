@@ -126,31 +126,35 @@
             <if test="vo.stat != null and vo.stat == '3'.toString()">
                 AND add_months(B.LIPI_INSU_END_DATE, 24) > sysdate
             </if>
-            <foreach collection="vo.permQuery" item="item" separator="OR">
-                (
-                <trim prefixOverrides="AND">
-                    <if test="item.agentCode != null and item.agentCode != ''">
-                        <choose>
-                            <when test="item.agentCode == '86900'">
-                                AND A.LIPM_AGEN_CODE = '869' AND A.LIPM_AGEN_CODE_BRANCH = '00'
-                            </when>
-                            <when test="item.agentCode == '86901'">
-                                AND A.LIPM_AGEN_CODE = '869' AND A.LIPM_AGEN_CODE_BRANCH = '01'
-                            </when>
-                            <otherwise>
-                                AND A.LIPM_AGEN_CODE = #{item.agentCode}
-                            </otherwise>
-                        </choose>
-                    </if>
-                    <if test="item.serialNum != null and item.serialNum != ''">
-                        AND C.BNAG_ID = #{item.serialNum}
-                    </if>
-                    <if test="item.branchCode != null and item.branchCode != ''">
-                        AND C.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
-                    </if>
-                </trim>
+            <if test="vo.permQuery and vo.permQuery.size() > 0">
+                AND (
+                    <foreach collection="vo.permQuery" item="item" separator="OR">
+                    (
+                    <trim prefixOverrides="AND">
+                        <if test="item.agentCode != null and item.agentCode != ''">
+                            <choose>
+                                <when test="item.agentCode == '86900'">
+                                    AND A.LIPM_AGEN_CODE = '869' AND A.LIPM_AGEN_CODE_BRANCH = '00'
+                                </when>
+                                <when test="item.agentCode == '86901'">
+                                    AND A.LIPM_AGEN_CODE = '869' AND A.LIPM_AGEN_CODE_BRANCH = '01'
+                                </when>
+                                <otherwise>
+                                    AND A.LIPM_AGEN_CODE = #{item.agentCode}
+                                </otherwise>
+                            </choose>
+                        </if>
+                        <if test="item.serialNum != null and item.serialNum != ''">
+                            AND C.BNAG_ID = #{item.serialNum}
+                        </if>
+                        <if test="item.branchCode != null and item.branchCode != ''">
+                            AND C.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
+                        </if>
+                    </trim>
+                    )
+                </foreach>
                 )
-            </foreach>
+            </if>
         </where>
     </sql>
 
@@ -183,31 +187,34 @@
             <if test="vo.stat != null and vo.stat == '3'.toString()">
                 AND add_months(B.NEPI_INSU_END_DATE, 24) > sysdate
             </if>
-            <foreach collection="vo.permQuery" item="item" separator="OR">
-                (
-                <trim prefixOverrides="AND">
-                    <if test="item.agentCode != null and item.agentCode != ''">
-                        <choose>
-                            <when test="item.agentCode == '86900'">
-                                AND A.NEPM_AGEN_CODE = '869' AND A.NEPM_AGEN_CODE_BRANCH = '00'
-                            </when>
-                            <when test="item.agentCode == '86901'">
-                                AND A.NEPM_AGEN_CODE = '869' AND A.NEPM_AGEN_CODE_BRANCH = '01'
-                            </when>
-                            <otherwise>
-                                AND A.NEPM_AGEN_CODE = #{item.agentCode}
-                            </otherwise>
-                        </choose>
-                    </if>
-                    <if test="item.serialNum != null and item.serialNum != ''">
-                        AND C.BNAG_ID = #{item.serialNum}
-                    </if>
-                    <if test="item.branchCode != null and item.branchCode != ''">
-                        AND C.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
-                    </if>
-                </trim>
+            <if test="vo.permQuery and vo.permQuery.size() > 0">
+                AND ( <foreach collection="vo.permQuery" item="item" separator="OR">
+                    (
+                    <trim prefixOverrides="AND">
+                        <if test="item.agentCode != null and item.agentCode != ''">
+                            <choose>
+                                <when test="item.agentCode == '86900'">
+                                    AND A.NEPM_AGEN_CODE = '869' AND A.NEPM_AGEN_CODE_BRANCH = '00'
+                                </when>
+                                <when test="item.agentCode == '86901'">
+                                    AND A.NEPM_AGEN_CODE = '869' AND A.NEPM_AGEN_CODE_BRANCH = '01'
+                                </when>
+                                <otherwise>
+                                    AND A.NEPM_AGEN_CODE = #{item.agentCode}
+                                </otherwise>
+                            </choose>
+                        </if>
+                        <if test="item.serialNum != null and item.serialNum != ''">
+                            AND C.BNAG_ID = #{item.serialNum}
+                        </if>
+                        <if test="item.branchCode != null and item.branchCode != ''">
+                            AND C.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
+                        </if>
+                    </trim>
+                    )
+                </foreach>
                 )
-            </foreach>
+            </if>
         </where>
     </sql>
 

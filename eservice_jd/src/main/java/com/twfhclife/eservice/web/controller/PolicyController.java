@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class JdzqController extends BaseController {
+public class PolicyController extends BaseController {
 
-    private static final Logger logger = LogManager.getLogger(JdzqController.class);
+    private static final Logger logger = LogManager.getLogger(PolicyController.class);
 
     @GetMapping("/policyQuery")
     public String policyQuery() {

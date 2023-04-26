@@ -1,0 +1,21 @@
+@startuml
+
+class CaseController {
+    personalCaseList()
+}
+interface ICaseService {
+    getPersonalCaseList()
+}
+class CaseServiceImpl {
+    getPersonalCaseList()
+}
+class KeycloakUser {
+   userId
+   username
+}
+
+CaseController -|> KeycloakUser
+CaseController -|> ICaseService
+ICaseService <|-- CaseServiceImpl
+
+@enduml

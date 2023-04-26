@@ -1,0 +1,11 @@
+@startuml
+
+autonumber
+
+使用者 -> CaseController: getPersonalCaseList()
+CaseController --> CaseServiceImpl: getPersonalCaseList()
+CaseServiceImpl --> API: getPersonalCaseList()
+API --> CaseServiceImpl: return JSON
+CaseServiceImpl --> CaseController: String
+CaseController --> 使用者: ResponseObj
+@enduml
