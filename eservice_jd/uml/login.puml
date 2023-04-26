@@ -1,0 +1,22 @@
+@startuml
+
+class LoginController {
+    doLogin()
+}
+interface ILoginService {
+    doLogin()
+}
+class LoginServiceImpl {
+    doLogin()
+}
+class LoginRequestVo {
+   userId
+   password
+   validateCode
+}
+
+LoginController -|> LoginRequestVo
+LoginController -|> ILoginService
+ILoginService <|-- LoginServiceImpl
+
+@enduml

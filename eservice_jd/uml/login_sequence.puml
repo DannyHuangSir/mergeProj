@@ -1,0 +1,11 @@
+@startuml
+
+autonumber
+
+使用者 -> LoginController: doLogin()
+LoginController --> LoginServiceImpl: doLogin()
+LoginServiceImpl --> API: login()
+API --> LoginServiceImpl: return JSON
+LoginServiceImpl --> LoginController: LoginResultVo
+LoginController --> 使用者: LoginResultVo
+@enduml
