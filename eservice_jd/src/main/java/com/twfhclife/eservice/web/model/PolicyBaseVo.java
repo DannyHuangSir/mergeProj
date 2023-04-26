@@ -56,6 +56,15 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
     private String charAt2;
 
     private String bankCode;
+    private String riskLevel;
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
 
     public String getBankCode() {
         return bankCode;

@@ -252,6 +252,7 @@
         <result column="LIPM_CHAR_AT_1" property="charAt1"/>
         <result column="LIPM_CHAR_AT_2" property="charAt2"/>
         <result column="LIPM_BANK_CODE" property="bankCode"/>
+        <result column="PMDA_INVE_ATTR" property="riskLevel"/>
         <association property="beneficiaries" resultMap="PolicyBeneficiaryMap"></association>
     </resultMap>
 
@@ -268,7 +269,7 @@
             WHEN A.LIPM_ST BETWEEN 30 AND 34 THEN 2
             WHEN add_months(A.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
             END AS STATUS, A.LIPI_TABL_PREM, A.LIPM_BANK_CODE,
-        A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2,
+        A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2, lip.PMDA_INVE_ATTR,
         to_char(A.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE,
         A.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(A.BNAG_BIRTH, 'yyyy-MM-dd') LIPM_BIRTH,
         to_char(lsn.ASSN_ARRI_DATE, 'yyyy-MM-dd') ASSN_ARRI_DATE, to_char(lsn.ASSN_TR_ARRI_DATE, 'yyyy-MM-dd') ASSN_TR_ARRI_DATE, lip.PMDA_MAIL, lsn.ASSN_STATUS,
