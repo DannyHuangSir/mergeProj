@@ -82,7 +82,6 @@
             <if test="vo.caseStatus != null and vo.caseStatus != ''">
                 AND A.BPMCurrentTak = #{vo.caseStatus}
             </if>
-            AND A.itemserial = 1
         </where>
     </sql>
 
