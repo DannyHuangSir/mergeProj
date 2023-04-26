@@ -8,6 +8,7 @@ import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,5 +136,41 @@ public class FirstPasswordController extends BaseController {
     public String passwordSuccess() {
         logger.info("open frontstage/password-success.html");
         return "frontstage/firstPassword/password-success";
+    }
+
+    @PostMapping("/first/updatePassword")
+    public ResponseEntity<ResponseObj> updatePassword(@RequestBody String newPassword, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession();
+            String message = "";
+            String account = session.getAttribute("forget_account").toString();
+            if (StringUtils.equals(account, newPassword)) {
+                message = "密碼與代號 帳號不應相同";
+            } else if (ValidateUtil.simpleLetterAndNumCheck(newPassword, 2)) {
+                message = "不應訂為相同的英數字、連續英文字或連號數字";
+            } else {
+                boolean isCheck = getSession("forget_isChack") != null ? (boolean) getSession("forget_isChack") : false;
+                if (isCheck && getSession("forgetAuthentication") == null) {
+                    if (ValidateUtil.isPwd(newPassword)) {
+                        message = registerUserService.updatePassword(account, newPassword);
+                        addSession("forget_isChack", null);
+                    } else {
+                        /*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/
+                        message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0014");
+                    }
+                } else {
+                    /*message = "請完成驗證碼驗證!";*/
+                    message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0101");
+                }
+            }
+            addBussinessEvent("JD-022", account, "經代忘記密碼");
+            this.setResponseObj(ResponseObj.SUCCESS, message, null);
+        } catch (InvalidParameterException e) {
+            this.setResponseObj(ResponseObj.ERROR, e.getMessage(), null);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
     }
 }

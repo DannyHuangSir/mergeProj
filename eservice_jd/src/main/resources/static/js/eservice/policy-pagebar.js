@@ -12,7 +12,7 @@ function getPolicyPageBarHtml(response) {
         pageInfoHtml += '<li class=""><a href="#">1 <span class="sr-only">(current)</span></a></li>';
         pageInfoHtml += nextHtml;
     } else {
-        var totalPageNumSize = $(response.rows[0].pageNumList).size();
+        var totalPageNumSize = $(response.pageNumList).size();
         // 上一頁
         var currentPage = response.pageNum;
         if (response.prev) {
@@ -71,9 +71,13 @@ function getPolicyPageBarHtml(response) {
         
         // 下一頁
         if (response.next) {
-            nextHtml = '<li class=""><a href="javascript:queryDataByPage(' + (currentPage + 1) + ');" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>';
+            nextHtml = '<li><a href="javascript:queryDataByPage(' + (currentPage + 1) + ');" aria-label="next"><span aria-hidden="true">下一頁</span></a></li>';
+            pageInfoHtml += nextHtml;
+            endHtml = '<li><a href="javascript:queryDataByPage(' + ($(response.pageNumList).get($(response.pageNumList).size() -1 )) + ');" aria-label="next"><span style="color: #CC7A00; aria-hidden="true">最未頁</span></a></li>';
+            pageInfoHtml += endHtml;
         }
-        pageInfoHtml += nextHtml;
+
+        pageInfoHtml += '<li style="position: relative; float: left; padding: 4px 10px; margin-left: -1px; line-height: 1.42857143; text-decoration: none; background-color: #fff;">總共' + totalPageNumSize + '頁</li>'
     }
     
     return pageInfoHtml;
