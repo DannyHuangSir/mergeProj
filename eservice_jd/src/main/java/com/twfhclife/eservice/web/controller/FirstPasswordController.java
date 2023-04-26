@@ -54,6 +54,8 @@ public class FirstPasswordController extends BaseController {
             addSession(ApConstants.SYSTEM_MSG_PARAMETER, (Serializable) mapParam);
         }
         getUserByAccount(getSessionStr(ApConstants.LOGIN_USER_ID), getRequest());
+        addAttribute("JD_CLAUSE1", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "JD_CLAUSE1"));
+        addAttribute("JD_CLAUSE2", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "JD_CLAUSE2"));
         return "frontstage/firstPassword/password1";
     }
 
