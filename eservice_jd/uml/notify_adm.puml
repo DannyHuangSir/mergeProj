@@ -1,0 +1,31 @@
+@startuml
+
+class JdzqMsgNotifyController {
+    addJdzqMsgSchedule()
+}
+interface IJdzqMsgService {
+    addJdzqMsgSchedule()
+}
+class JdzqMsgService {
+    addJdzqMsgSchedule()
+}
+class JdzqNotifyMsg {
+  id
+  users
+  deps
+  roles
+  msg
+  title
+  passageWay
+  notifyTarget
+}
+
+class MessageServiceImpl {
+    notifyMsgSchedule()
+}
+
+JdzqMsgNotifyController -|> JdzqNotifyMsg
+JdzqMsgNotifyController -|> IJdzqMsgService
+IJdzqMsgService <|-- JdzqMsgService
+MessageServiceImpl -|> JdzqNotifyMsg
+@enduml

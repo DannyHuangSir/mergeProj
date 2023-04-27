@@ -46,7 +46,7 @@ public class JdzqMsgNotifyController extends BaseController {
     @RequestLog
     @PostMapping("/addJdzqMsgSchedule")
     @ResponseBody
-    public ResponseEntity<ResponseObj> jdzqSendMsg(@RequestBody JdzqNotifyMsg msg) {
+    public ResponseEntity<ResponseObj> addJdzqMsgSchedule(@RequestBody JdzqNotifyMsg msg) {
         jdzqMsgService.addJdzqMsgSchedule(msg);
         return processResponseEntity();
     }

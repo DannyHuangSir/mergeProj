@@ -1,0 +1,13 @@
+@startuml
+
+autonumber
+
+使用者 -> JdzqMsgNotifyController: addJdzqMsgSchedule()
+JdzqMsgNotifyController --> JdzqMsgService: addJdzqMsgSchedule()
+JdzqMsgService --> DB: addJdzqMsgSchedule()
+DB --> JdzqMsgService: return int
+JdzqMsgService --> JdzqMsgNotifyController: int
+JdzqMsgNotifyController --> 使用者: ResponseObj
+
+MessageServiceImpl --> DB: schedule insert NotifyMsg
+@enduml
