@@ -103,7 +103,7 @@ public class ForgetPasswordController extends BaseController {
             }
 
             //this.setResponseObj(ResponseObj.SUCCESS, message, user);//modify for Penetration Test
-            this.setResponseObj(ResponseObj.SUCCESS, message, null);
+            this.setResponseObj(ResponseObj.SUCCESS, message, user);
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -185,7 +185,7 @@ public class ForgetPasswordController extends BaseController {
                 boolean isCheck = getSession("forget_isChack") != null ? (boolean) getSession("forget_isChack") : false;
                 if (isCheck && getSession("forgetAuthentication") == null) {
                     if (ValidateUtil.isPwd(newPassword)) {
-                        message = registerUserService.updatePassword(account, newPassword);
+                        message = registerUserService.updatePassword(account, newPassword, null);
                         addSession("forget_isChack", null);
                     } else {
                         /*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/

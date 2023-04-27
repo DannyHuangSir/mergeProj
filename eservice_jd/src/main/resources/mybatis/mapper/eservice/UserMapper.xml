@@ -42,6 +42,9 @@
 		update ESERVICE_JD.DBO.USERS set
 		last_chang_password_date = getdate(),
 		LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME()
+		<if test="enable != null and enable != ''">
+			, STATUS = #{enable}
+		</if>
 		where lower(user_id) = lower(#{account})
 	</update>
 
@@ -107,7 +110,7 @@
 
 	<update id="updateLoginSuccess">
 		UPDATE ESERVICE_JD.DBO.USERS
-		SET LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME(), STATUS = 'Enabled'
+		SET LOGIN_FAIL_COUNT = 0, LOGIN_TIME = SYSDATETIME()
 		WHERE LOWER(USER_ID) = LOWER(#{userId})
 	</update>
 

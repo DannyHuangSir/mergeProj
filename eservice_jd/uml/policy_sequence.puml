@@ -1,0 +1,12 @@
+@startuml
+
+autonumber
+
+使用者 -> PolicyController: getPolicyList()
+PolicyController -> PolicyServiceImpl: getPolicyList()
+PolicyServiceImpl -> UserDao: checkUserRole() and set permQuery
+PolicyServiceImpl -> API: getPolicyList()
+API -> PolicyServiceImpl: return JSON
+PolicyServiceImpl -> PolicyController: PolicyListDataResponse
+PolicyController -> 使用者: PolicyListDataResponse
+@enduml

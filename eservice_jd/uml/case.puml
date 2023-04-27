@@ -1,0 +1,38 @@
+@startuml
+
+class CaseController {
+    caseList()
+}
+interface ICaseService {
+    getCaseList()
+}
+class CaseServiceImpl {
+    getCaseList()
+}
+
+class CaseQueryVo {
+  lipmId
+  lipmName
+  lipiId
+  lipiName
+  caseStatus
+  caseQuery
+}
+
+class KeycloakUser {
+  id
+}
+
+class PermQueryVo {
+  branchCode
+  agentCode
+  serialNum
+}
+
+CaseController -|> CaseQueryVo
+CaseQueryVo -|> PermQueryVo
+CaseController -|> KeycloakUser
+CaseController -|> ICaseService
+ICaseService <|-- CaseServiceImpl
+
+@enduml

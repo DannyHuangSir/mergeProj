@@ -13,7 +13,7 @@ public interface UsersDao {
 	
 	public UsersVo getUserByAccount(@Param("account") String account);
 	
-	public void updatePassword(@Param("account") String account);
+	public void updatePassword(@Param("account") String account, @Param("enable") String enable);
 	
 	public UsersVo getUserByFbId(@Param("realm") String realm, @Param("fbId") String fbId);
 	

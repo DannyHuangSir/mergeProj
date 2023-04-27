@@ -1,0 +1,39 @@
+@startuml
+
+class PolicyController {
+    getPolicyList()
+}
+interface IPolicyService {
+    getPolicyList()
+}
+class PolicyServiceImpl {
+    getPolicyList()
+}
+
+class PolicyVo {
+  lipmId
+  lipmName
+  lipiId
+  lipiName
+  prodName
+  stat
+  permQuery
+}
+
+class KeycloakUser {
+  id
+}
+
+class PermQueryVo {
+  branchCode
+  agentCode
+  serialNum
+}
+
+PolicyController -|> PolicyVo
+PolicyVo -|> PermQueryVo
+PolicyController -|> KeycloakUser
+PolicyController -|> IPolicyService
+IPolicyService <|-- PolicyServiceImpl
+
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+
+autonumber
+
+使用者 -> CaseController: caseList()
+CaseController -> CaseServiceImpl: getCaseList()
+CaseServiceImpl -> UserDao: checkUserRole() and set permQuery
+CaseServiceImpl -> API: getCaseList()
+API -> CaseServiceImpl: return JSON
+CaseServiceImpl -> CaseController: CaseListDataResponse
+CaseController -> 使用者: CaseListDataResponse
+@enduml

@@ -142,7 +142,7 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		return user;
 	}
 
-	public String updatePassword(String account, String password) throws Exception {
+	public String updatePassword(String account, String password, String enable) throws Exception {
 		KeycloakUser user = keycloakService.getUserByUsername(account);
 		if(user == null) {
 			return "使用者帳號不存在";
@@ -151,7 +151,7 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 			String result = resultmap.get("result").toString();
 			if(result.contentEquals("true")) {
 				logger.debug("update password success!");
-				userDao.updatePassword(account);
+				userDao.updatePassword(account, enable);
 				logger.debug("update last password date success!");
 			} else {
 				if(resultmap.get("error_description") != null && resultmap.get("error_description").toString().indexOf("Invalid password: must not be equal to any of last") != -1) {

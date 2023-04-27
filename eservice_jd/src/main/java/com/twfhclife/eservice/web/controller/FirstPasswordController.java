@@ -152,7 +152,7 @@ public class FirstPasswordController extends BaseController {
                 boolean isCheck = getSession("forget_isChack") != null ? (boolean) getSession("forget_isChack") : false;
                 if (isCheck && getSession("forgetAuthentication") == null) {
                     if (ValidateUtil.isPwd(newPassword)) {
-                        message = registerUserService.updatePassword(account, newPassword);
+                        message = registerUserService.updatePassword(account, newPassword, "Enabled");
                         addSession("forget_isChack", null);
                     } else {
                         /*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/

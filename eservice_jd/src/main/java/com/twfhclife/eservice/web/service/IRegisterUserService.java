@@ -15,7 +15,7 @@ public interface IRegisterUserService {
 	
 	public UsersVo getUserByAccount(String account);
 	
-	public String updatePassword(String account, String newPassword) throws Exception;
+	public String updatePassword(String account, String newPassword, String enable) throws Exception;
 	
     int incLoginFailCount(String userId);
 
