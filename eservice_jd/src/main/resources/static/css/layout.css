@@ -1061,6 +1061,8 @@ td.table3 {
     text-align: left!important;
     /*width: 210px;*/
     width: 250px;
+    color: black;
+    font-weight: normal;
 }
 
 th.table3 {
