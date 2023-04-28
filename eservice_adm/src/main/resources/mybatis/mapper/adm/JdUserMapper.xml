@@ -45,10 +45,10 @@
         #{jdUserVo.branchId,jdbcType=VARCHAR})
     </insert>
 
-    <insert id="deleteUserIC">
-        delete
-        ESERVICE_JD.dbo.USER_IC where USER_ID in(select IC_ID from ESERVICE_JD.dbo.USERS where IC_ID = #{jdUserVo.icId})
-    </insert>
+    <delete id="deleteUserIC">
+        DELETE
+        ESERVICE_JD.dbo.USER_IC WHERE USER_ID = #{jdUserVo.userId}
+    </delete>
 
     <update id="updateUserIC">
         update
@@ -63,7 +63,7 @@
     </update>
 
     <select id="getIcId" resultType="com.twfhclife.adm.model.JdUserVo">
-        select a.IC_ID,c.DEP_ID from ESERVICE_JD.dbo.USERS a
+        select b.ID userId, c.DEP_ID, a.IC_ID from ESERVICE_JD.dbo.USERS a
         left join ESERVICE_ADM.dbo.USER_ENTITY b on a.USER_ID = b.USERNAME
         left join ESERVICE_JD.dbo.USER_DEPARTMENT c on b.ID = c.USER_ID
         left join ESERVICE_ADM.dbo.USER_ROLE d  on b.ID = d.USER_ID
