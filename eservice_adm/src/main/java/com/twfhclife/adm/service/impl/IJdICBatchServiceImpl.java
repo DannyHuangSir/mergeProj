@@ -225,7 +225,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                     jdUserVo.setFailResult("IC人員不存在，請檢查!");
                                                 }
                                                 if (StringUtils.isEmpty(jdUserVo.getFailResult())) {
-                                                    jdUserDao.deleteUserIC(jdUserVo);
+                                                    jdUserDao.deleteUserIC(deleteIcId);
                                                 } else {
                                                     failLinkList.add(jdUserVo);
                                                 }
