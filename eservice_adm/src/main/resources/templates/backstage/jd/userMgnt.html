@@ -591,7 +591,7 @@
 			jdUserIcGrid.colModel = [
 				{align: 'center', formatter: function(cellvalue, options, row) {
 						var depName = '';
-						depName = row.DEP_ID+'('+row.depName+')'
+						depName = row.DEP_ID+ (row.depName ? '('+ row.depName +')' : '')
 						return depName;
 					}},
 				{align: 'center', formatter: function(cellvalue, options, row) {
@@ -599,7 +599,7 @@
 						if (row.BRANCH_ID == null){
 							branchName;
 						}else {
-							branchName = row.BRANCH_ID+'('+row.branchName+')'
+							branchName = row.BRANCH_ID +  (row.branchName ? '('+ row.branchName +')' : '')
 						}
 						return branchName;
 					}}

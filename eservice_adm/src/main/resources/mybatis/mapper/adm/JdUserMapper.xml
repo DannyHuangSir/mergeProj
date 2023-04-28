@@ -80,7 +80,7 @@
     </select>
 
     <select id="countUserIc" resultType="int">
-        select COUNT(1) from ESERVICE_JD.dbo.USER_IC where USER_ID = (select IC_ID from ESERVICE_JD.dbo.USERS where IC_ID = #{icId})
+        select COUNT(1) from ESERVICE_JD.dbo.USER_IC where USER_ID =  #{userId}
     </select>
 
     <select id="countUser" resultType="int">

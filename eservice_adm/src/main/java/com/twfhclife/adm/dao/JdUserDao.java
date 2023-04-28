@@ -21,7 +21,7 @@ public interface JdUserDao {
 
     JdUserVo getIcId(@Param("icId")String icId,@Param("depId")String depId);
 
-    int countUserIc(@Param("icId")String icId);
+    int countUserIc(@Param("userId")String userId);
 
     int countUser(@Param("rocId") String rocId);
 
