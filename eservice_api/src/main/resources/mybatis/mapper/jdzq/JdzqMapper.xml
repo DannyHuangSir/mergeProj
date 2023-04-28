@@ -32,12 +32,13 @@
     </resultMap>
 
     <sql id="caseSql">
-        SELECT ROW_NUMBER() OVER (ORDER BY A.PolicyNo) AS ROW_NUM, A.PolicyNo, A.AppName, A.InsName, A.SubmitDate TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, D.PolicyType
+        SELECT ROW_NUMBER() OVER (ORDER BY A.PolicyNo) AS ROW_NUM, A.PolicyNo, A.AppName, A.InsName, A.SubmitDate TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType
         FROM MainPolicy A
         LEFT JOIN (
-        SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM PolicyNote B
+        SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM PolicyNote B
         INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote WHERE ISCANCEL = 'N' GROUP BY MAIN_KEY) C ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
         ) D ON A.MAIN_KEY = D.MAIN_KEY
+        LEFT JOIN PolicyType E ON E.PType_Code = A.PolicyType
         <where>
             <if test="vo.caseQuery and vo.caseQuery.size() > 0">
                (
@@ -109,7 +110,7 @@
 
     <select id="getCaseProcess" resultMap="CaseMap">
         SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.InsName, A.InsID, A.SubmitDate TBSubmitDate,
-            D.NoteStatus, D.NoteVerifyResult, D.PolicyType, FORMAT(A.PrintDate, 'yyyyMMdd') PrintDate, A.PolicyActiveDate, A.TransPayDate,
+            A.BPMCurrentTak NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType, FORMAT(A.PrintDate, 'yyyyMMdd') PrintDate, A.PolicyActiveDate, A.TransPayDate,
             P.UserName Manager, A.StampResult,
         (SELECT TOP (1) ReviewResult
             FROM PolicyReviewLog
@@ -121,12 +122,13 @@
         (SELECT TOP(1) RFeeApplyDate FROM PolicyReject WHERE MAIN_KEY = A.MAIN_KEY AND RFeeApplyDate IS NOT NULL) RFeeApplyDate
         FROM MainPolicy A
         LEFT JOIN (
-        SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult, B.PolicyTypeName PolicyType FROM
+        SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM
         PolicyNote B
         INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C
             ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
         ) D ON A.MAIN_KEY = D.MAIN_KEY
         LEFT JOIN UserProfile P ON P.User_ID = A.Manager
+        LEFT JOIN PolicyType E ON E.PType_Code = A.PolicyType
         WHERE A.PolicyNo = #{policyNo}
     </select>
     

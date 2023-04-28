@@ -514,7 +514,7 @@
             END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
             FROM LISADP_ES lsp
             LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-            LEFT JOIN LIEXCH_ES leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE AND lsp.SADP_TR_CURR = leh.EXCH_CURR_CODE
+            LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_CURR_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
             <where>
                 AND lsp.SADP_INSU_NO = #{policyNo}
                 <if test="trCode != null">
@@ -553,7 +553,7 @@
         END FUND_VALUE, lsp.SADP_EXCH_DATE
         FROM LISADP_ES lsp
         LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LIEXCH_ES leh ON lsp.SADP_TR_DATE = leh.EXCH_DATE AND lsp.SADP_TR_CURR = leh.EXCH_CURR_CODE
+        LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_CURR_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">

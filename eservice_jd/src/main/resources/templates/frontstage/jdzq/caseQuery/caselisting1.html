@@ -68,17 +68,8 @@
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">案件狀態</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">案件狀態</b> <span class="mobile-span">
-																			<th:block th:if="${vo.noteStatus == '0'}">
-																				未覆核
-																			</th:block>
-																			<th:block th:if="${vo.noteStatus == 'V'}">
-																				核可
-																			</th:block>
-																			<th:block th:if="${vo.noteStatus == 'R'}">
-																				退件
-																			</th:block>
-																			<th:block th:if="${vo.noteStatus == null || #strings.trim(vo.noteStatus) == ''}">&nbsp;</th:block>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">案件狀態</b> <span class="mobile-span"
+																		   th:text="${vo.noteStatus != null ? session.SYSTEM_PARAMETER['JDZQ_LEVEL_STATES_CATEGORY'][vo.noteStatus].parameterName : ''}">
 																		</span></td>
 				                                                    </tr>
 <!--																	 <tr class="noEvent">-->
