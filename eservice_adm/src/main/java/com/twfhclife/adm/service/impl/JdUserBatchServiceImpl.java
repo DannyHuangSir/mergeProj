@@ -424,7 +424,10 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                                                 }
                                                                 //更新user_dep表数据
                                                                 if (updateBranchId != null && StringUtils.isNotBlank(updateBranchId.getDepId())){
-                                                                    jdDeptMgntService.updateUserDep(user.getId(),updateDepId.getDepId(),updateBranchId.getBranchId());
+                                                                    int result = jdDeptMgntService.updateUserDep(user.getId(),updateDepId.getDepId(),updateBranchId.getBranchId());
+                                                                    if (result == 0) {
+                                                                        jdDeptMgntService.insertUserDep(user.getId(),updateDepId.getDepId(),"", updateBranchId.getBranchId());
+                                                                    }
                                                                 }
                                                             } else {
                                                                 failLinkList.add(vo);
