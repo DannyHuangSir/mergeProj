@@ -212,6 +212,13 @@
                 changeYear: true
             });
         })
+
+        $('body').on('click', '#backToTopBtn', function(e) {
+            e.preventDefault();
+            $('html,body').animate({
+                scrollTop: 0
+            }, 700);
+        });
    })
 /*]]>*/
 
