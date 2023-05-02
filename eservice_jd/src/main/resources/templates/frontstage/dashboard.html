@@ -68,8 +68,7 @@
 											<th scope="col" class="item400">主約險種</th>
 											<th scope="col" class="item450">受理日期</th>
 											<th scope="col" class="item450">案件關卡狀態</th>
-											<th scope="col" class="item450">最新照會狀態</th>
-											<th scope="col" class="item450">最新照會結果</th>
+											<th scope="col" class="item450">照會狀態</th>
 										</tr>
 										</thead>
 										<tbody id="personalContent">
@@ -93,7 +92,7 @@
         var doughnutChart2 = document.getElementById('doughnutChart2').getContext('2d');
         var myDoughnutChart
         var myDoughnutChart2
-        var chart2Map = [ { label: '照會編輯中', policyNos: [] },{ label: '照會覆核中', policyNos: [] },{ label: '照會完成', policyNos: [] } ]
+        var chart2Map = [ { label: '未復核', policyNos: [] },{ label: '退件', policyNos: [] },{ label: '核可', policyNos: [] } ]
         var levelStateMap = []
 
 		$(function(){
@@ -152,8 +151,7 @@
 										'<td class="hid1 hid2">' + item.policyType +'</td>' +
 										'<td class="hid1 hid2 enThin">' + item.tBSubmitDate +'</td>' +
 										'<td class="hid1 hid2">' + levelStateStr(item.policyNo, item.bPMCurrentTak) +'</td>' +
-										'<td class="hid1 hid2">' + noteStatusStr(item.policyNo, item.noteStatus) +'</td>' +
-										'<td class="hid1 hid2">' + noteVerifyResultStr(item.noteVerifyResult) +'</td>' +
+										'<td class="hid1 hid2">' + noteVerifyResultStr(item.policyNo, item.noteVerifyResult) +'</td>' +
 									'</tr>'
 							});
 						$("#personalContent").html(html)
@@ -166,27 +164,19 @@
 	    	});
 		})
 
-		function noteStatusStr(policyNo, noteStatus) {
-			if (noteStatus == '0') {
+		function noteVerifyResultStr(policyNo, status) {
+			if (status == '0') {
 				chart2Map[0].policyNos.push(policyNo)
-				return '照會編輯中'
-			}
-			if (noteStatus == '1') {
-				chart2Map[1].policyNos.push(policyNo)
-				return '照會覆核中'
-			}
-			if (noteStatus == '9') {
-				chart2Map[2].policyNos.push(policyNo)
-				return '照會完成'
-			}
-			return ''
-		}
-
-		function noteVerifyResultStr(status) {
-			if (status == '0' || status == 'R') {
 				return '核保中'
 			}
+
+			if (status == 'R') {
+				chart2Map[1].policyNos.push(policyNo)
+				return '核保中'
+			}
+
 			if (status == 'V') {
+				chart2Map[2].policyNos.push(policyNo)
 				return '照會中'
 			}
 			return ''
