@@ -57,7 +57,7 @@
                                     AND A.AgentCode = '869' AND A.AgentBranchM = '00'
                                 </when>
                                 <when test="item.agentCode == '86901'">
-                                    AND A.AgentCode = = '869' AND A.AgentBranchM = '01'
+                                    AND A.AgentCode = '869' AND A.AgentBranchM = '01'
                                 </when>
                                 <otherwise>
                                     AND A.AgentCode = #{item.agentCode}
