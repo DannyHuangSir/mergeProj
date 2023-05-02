@@ -15,7 +15,7 @@ public interface JdzqDao {
     CaseVo getCaseProcess(@Param("policyNo") String policyNo);
     CaseVo getPolicyInfo(@Param("policyNo") String policyNo);
     List<CaseVo> getNoteContent(@Param("policyNo") String policyNo);
-    NotePdfVo getNotePdf(@Param("policyNo") String policyNo);
+    NotePdfVo getNotePdf(@Param("policyNo") String policyNo, @Param("noteKey") String noteKey);
     List<NoteNotifyVo> getNoteSchedule(@Param("currDate") Date date);
 
     int getCaseTotal(@Param("vo") CaseQueryRequest caseQuery);

@@ -79,7 +79,7 @@
 																<th:block th:if="${vo.noteVerifyResult == '0' || vo.noteVerifyResult == 'R'}">核保中</th:block>
 																<th:block th:if="${vo.noteVerifyResult == 'V'}">照會中</th:block>
 															</td>
-				                                            <td><i class="bi bi-journal-richtext" th:onclick="'window.open(\'notePdf?policyNo=' + ${policyNo} + '\')'"></i></td>
+				                                            <td><i class="bi bi-journal-richtext" th:onclick="'window.open(\'notePdf?policyNo=' + ${policyNo} + '&noteKey=' + ${vo.mainKey} +  '\')'"></i></td>
 				                                        </tr>
 				                                    </tbody>
 				                                </table>

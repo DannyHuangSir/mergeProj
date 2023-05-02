@@ -13,6 +13,7 @@ import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.util.RptUtils2;
 import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.domain.NotePdfVo;
+import com.twfhclife.eservice.web.domain.PdfVo;
 import com.twfhclife.eservice.web.model.PermQueryVo;
 import com.twfhclife.eservice.web.domain.CaseQueryVo;
 import com.twfhclife.eservice.web.model.CaseVo;
@@ -102,8 +103,8 @@ public class CaseServiceImpl implements ICaseService {
     @Value("${eservice_api.note.pdf.url}")
     private String notePdfUrl;
     @Override
-    public byte[] getNotePdf(String userId, String policyNo) throws Exception {
-        NotePdfDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), notePdfUrl, NotePdfDataResponse.class);
+    public byte[] getNotePdf(String userId, String policyNo, String noteKey) throws Exception {
+        NotePdfDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PdfVo(policyNo, noteKey, ApConstants.SYSTEM_ID, userId)), notePdfUrl, NotePdfDataResponse.class);
         return generatePDF(responseObj.getNotePdf());
     }
 
@@ -194,9 +195,12 @@ public class CaseServiceImpl implements ICaseService {
         table.addCell(RptUtils2.createCell("照會事項：", tableFont, Element.ALIGN_LEFT, 4, true));
         table.addCell(RptUtils2.createCell("照會項目", tableFont, Element.ALIGN_LEFT, 1, true));
         table.addCell(RptUtils2.createCell("照會訊息", tableFont, Element.ALIGN_LEFT, 3, true));
-
-        table.addCell(RptUtils2.createCell(pdfVo.getNote_Key(), tableFont, Element.ALIGN_LEFT, 1, true));
-        table.addCell(RptUtils2.createCell(pdfVo.getContentMemo(), tableFont, Element.ALIGN_LEFT, 3, true));
+        if (!CollectionUtils.isEmpty(pdfVo.getNoteItems())) {
+            pdfVo.getNoteItems().forEach(item -> {
+                table.addCell(RptUtils2.createCell(item.getItemCode(), tableFont, Element.ALIGN_LEFT, 1, true));
+                table.addCell(RptUtils2.createCell(item.getItemContent(), tableFont, Element.ALIGN_LEFT, 3, true));
+            });
+        }
 
         table.addCell(RptUtils2.createCell("備注：", tableFont, Element.ALIGN_LEFT, 4, false));
 

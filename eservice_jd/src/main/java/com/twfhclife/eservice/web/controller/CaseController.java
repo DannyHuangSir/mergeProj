@@ -67,10 +67,11 @@ public class CaseController extends BaseController {
 	}
 
 	@RequestMapping(value = { "/notePdf" })
-	public @ResponseBody HttpEntity<byte[]> downloadPolicyClaimPDF(@RequestParam("policyNo") String policyNo) throws Exception {
+	public @ResponseBody HttpEntity<byte[]> downloadPolicyClaimPDF(@RequestParam("policyNo") String policyNo,
+																   @RequestParam("noteKey") String noteKey) throws Exception {
 		HttpHeaders header = new HttpHeaders();
 		String fileName = String.format("inline; filename=照會單-%s.pdf", policyNo);
-		byte[] document = caseService.getNotePdf(getUserId(), policyNo);
+		byte[] document = caseService.getNotePdf(getUserId(), policyNo, noteKey);
 		header.setContentType(new MediaType("application", "pdf"));
 		header.set("Content-Disposition", new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
 		header.setContentLength(document.length);

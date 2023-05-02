@@ -36,8 +36,8 @@ public class JdzqService {
         return jdzqDao.getNoteContent(policyNo);
     }
 
-    public NotePdfVo getNotePdf(String policyNo) {
-        return jdzqDao.getNotePdf(policyNo);
+    public NotePdfVo getNotePdf(String policyNo, String noteKey) {
+        return jdzqDao.getNotePdf(policyNo, noteKey);
     }
 
     public List<NoteNotifyVo> getNoteSchedule() {

@@ -153,27 +153,47 @@
         INNER JOIN (
             SELECT B.APPName, B.InsName, B.NoteDate, B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM
             PolicyNote B
-            INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C
-            ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
         ) D ON A.MAIN_KEY = D.MAIN_KEY
         LEFT JOIN PolicyType E ON E.PType_Code = A.PolicyType
         WHERE A.PolicyNo = #{policyNo}
     </select>
 
-    <select id="getNotePdf" resultType="com.twfhclife.eservice.api.jdzq.model.NotePdfVo">
-        SELECT DISTINCT A.PolicyNo policyNo, A.AppName appName, A.InsName insName, A.AgentCode agentCode, P.BrokerName agentName, A.AgentSalesName agentSalesName, A.AgentSalesID agentSalesID,
-        A.AccDocNo accDocNo, D.BranchDesc branchDesc, F.PTypeName policyTypeName, D.ManageDate manageDate, D.ProcessorName processorName, D.ExtNumber extNumber, D.Note_Key note_Key, E.ContentMemo contentMemo,
-        D.DueDate dueDate, D.NoteVerifyMemo noteVerifyMemo
+    <resultMap id="notePdfMap" type="com.twfhclife.eservice.api.jdzq.model.NotePdfVo">
+        <result property="policyNo" column="PolicyNo"/>
+        <result property="appName" column="AppName"/>
+        <result property="insName" column="InsName"/>
+        <result property="agentName" column="BrokerName"/>
+        <result property="agentSalesName" column="AgentSalesName"/>
+        <result property="agentSalesID" column="AgentSalesID"/>
+        <result property="accDocNo" column="AccDocNo"/>
+        <result property="branchDesc" column="BranchDesc"/>
+        <result property="policyTypeName" column="PTypeName"/>
+        <result property="manageDate" column="ManageDate"/>
+        <result property="processorName" column="ProcessorName"/>
+        <result property="extNumber" column="ExtNumber"/>
+        <result property="dueDate" column="DueDate"/>
+        <result property="noteVerifyMemo" column="NoteVerifyMemo"/>
+        <collection property="noteItems" resultMap="NoteItemMap"/>
+    </resultMap>
+
+    <resultMap id="NoteItemMap" type="com.twfhclife.eservice.api.jdzq.model.NoteItemVo">
+        <result property="itemCode" column="ItemCode"/>
+        <result property="itemContent" column="ContentMemo"/>
+    </resultMap>
+
+    <select id="getNotePdf" resultMap="notePdfMap">
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.InsName, A.AgentCode agentCode, P.BrokerName, A.AgentSalesName, A.AgentSalesID,
+        A.AccDocNo, D.BranchDesc, F.PTypeName, D.ManageDate, D.ProcessorName, D.ExtNumber, D.DueDate, D.NoteVerifyMemo,
+        E.ItemCode, E.ContentMemo
         FROM MainPolicy A
         LEFT JOIN (
             SELECT B.NOTE_KEY, B.MAIN_KEY, B.NoteStatus, B.NoteVerifyResult,
             B.ManageDate, B.ProcessorName, B.ExtNumber, B.DueDate, B.NoteVerifyMemo, B.BranchDesc FROM PolicyNote B
-            INNER JOIN (SELECT MAX(NOTE_KEY) NOTE_KEY, MAIN_KEY FROM PolicyNote GROUP BY MAIN_KEY) C ON B.NOTE_KEY = C.NOTE_KEY AND B.MAIN_KEY = C.MAIN_KEY
         ) D ON A.MAIN_KEY = D.MAIN_KEY
-        LEFT JOIN PolicyNoteItems E ON D.Note_Key = E.Note_Key AND A.ItemSerial = E.item_Serial
+        LEFT JOIN PolicyNoteItems E ON D.Note_Key = E.Note_Key
         LEFT JOIN BrokerProfile P ON A.AgentCode = P.Broker_ID
         LEFT JOIN PolicyType F ON F.PType_Code = A.PolicyType
-        WHERE A.PolicyNo = #{policyNo}
+        WHERE A.PolicyNo = #{policyNo} and D.Note_Key = #{noteKey}
     </select>
 
     <select id="getNoteSchedule" resultType="com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo">

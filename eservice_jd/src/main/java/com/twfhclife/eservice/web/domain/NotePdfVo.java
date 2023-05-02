@@ -1,6 +1,9 @@
 package com.twfhclife.eservice.web.domain;
 
+import com.google.common.collect.Lists;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class NotePdfVo implements Serializable {
 
@@ -17,10 +20,10 @@ public class NotePdfVo implements Serializable {
     private String accDocNo;
     private String agentSalesName;
     private String agentSalesID;
-    private String note_Key;
-    private String contentMemo;
+
     private String dueDate;
     private String noteVerifyMemo;
+    private List<NoteItemVo> noteItems = Lists.newArrayList();
 
     public String getPolicyNo() {
         return policyNo;
@@ -126,22 +129,6 @@ public class NotePdfVo implements Serializable {
         this.agentSalesID = agentSalesID;
     }
 
-    public String getNote_Key() {
-        return note_Key;
-    }
-
-    public void setNote_Key(String note_Key) {
-        this.note_Key = note_Key;
-    }
-
-    public String getContentMemo() {
-        return contentMemo;
-    }
-
-    public void setContentMemo(String contentMemo) {
-        this.contentMemo = contentMemo;
-    }
-
     public String getDueDate() {
         return dueDate;
     }
@@ -156,5 +143,13 @@ public class NotePdfVo implements Serializable {
 
     public void setNoteVerifyMemo(String noteVerifyMemo) {
         this.noteVerifyMemo = noteVerifyMemo;
+    }
+
+    public List<NoteItemVo> getNoteItems() {
+        return noteItems;
+    }
+
+    public void setNoteItems(List<NoteItemVo> noteItems) {
+        this.noteItems = noteItems;
     }
 }

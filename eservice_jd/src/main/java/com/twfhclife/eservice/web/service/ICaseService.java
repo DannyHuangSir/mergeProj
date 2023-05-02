@@ -16,7 +16,7 @@ public interface ICaseService {
 
     List<CaseVo> getNoteContent(String userId, String policyNo);
 
-    byte[] getNotePdf(String userId, String policyNo) throws Exception;
+    byte[] getNotePdf(String userId, String policyNo, String noteKey) throws Exception;
 
     List<CaseVo> getPersonalCaseList(KeycloakUser loginUser);
 }

@@ -226,11 +226,11 @@ public class JdzqController extends BaseController {
                                     @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo"),
                             }
                     )}))
-    public ResponseEntity<?> getNotePdf(@RequestBody PolicyBaseVo policyVo) {
+    public ResponseEntity<?> getNotePdf(@RequestBody PdfVo pdfVo) {
         ApiResponseObj<NotePdfDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            NotePdfVo notePdf = jdzqService.getNotePdf(policyVo.getPolicyNo());
+            NotePdfVo notePdf = jdzqService.getNotePdf(pdfVo.getPolicyNo(), pdfVo.getNoteKey());
             NotePdfDataResponse resp = new NotePdfDataResponse();
             resp.setNotePdf(notePdf);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
