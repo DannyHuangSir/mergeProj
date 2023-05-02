@@ -1,0 +1,41 @@
+@startuml
+
+class JdRoleController {
+    jdRole()
+    getRoleDetail()
+    insertRole()
+    updateRole()
+    deleteRole()
+    getNotifyUsers()
+    jdRoleByUserList()
+}
+interface IJdRoleService {
+    getRolePageTotal()
+    getRolePageList()
+    insertRole()
+    updateRole()
+    deleteRole()
+    getNotifyRoles()
+    roleByUserList()
+}
+class JdRoleServiceImpl {
+    getRolePageTotal()
+    getRolePageList()
+    insertRole()
+    updateRole()
+    deleteRole()
+    getNotifyRoles()
+    roleByUserList()
+}
+
+
+class RoleVo {
+     id
+     divRoleId
+}
+
+JdRoleController -|> RoleVo
+JdRoleController -|> IJdRoleService
+JdRoleServiceImpl <|-- JdRoleServiceImpl
+
+@enduml

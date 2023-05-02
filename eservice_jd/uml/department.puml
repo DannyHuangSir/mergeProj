@@ -1,0 +1,47 @@
+@startuml
+
+class JdDeptMgntController {
+    funcMgnt()
+    getDepts()
+    getDepartment()
+    getParentDepList()
+    insertDepartment()
+    updateDepartment()
+    deleteDepartment()
+    getPassageWay()
+}
+interface IJdDeptMgntService {
+    getDepts()
+    getParentDepList()
+    addDepartment()
+    updateDepartment()
+    deleteDepartment()
+    getPassageWay()
+}
+class JdDeptMgntServiceImpl {
+    getDepts()
+    getParentDepList()
+    addDepartment()
+    updateDepartment()
+    deleteDepartment()
+    getPassageWay()()
+}
+
+
+class DepartmentVo {
+     depId
+     depName
+     description
+     parentDep
+     createUser
+     createDate
+     modifyUser
+     modifyDate
+     branchId
+}
+
+JdDeptMgntController -|> DepartmentVo
+JdDeptMgntController -|> IJdDeptMgntService
+IJdDeptMgntService <|-- JdDeptMgntServiceImpl
+
+@enduml

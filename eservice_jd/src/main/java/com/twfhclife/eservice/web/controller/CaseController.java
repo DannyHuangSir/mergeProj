@@ -3,6 +3,7 @@ package com.twfhclife.eservice.web.controller;
 import com.twfhclife.eservice.controller.BaseController;
 import com.twfhclife.eservice.web.domain.CaseQueryVo;
 import com.twfhclife.eservice.web.domain.ResponseObj;
+import com.twfhclife.eservice.web.model.CaseVo;
 import com.twfhclife.eservice.web.service.ICaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -43,20 +44,24 @@ public class CaseController extends BaseController {
 	@RequestMapping(value = { "/caselisting1" })
 	public String caselisting1(@RequestParam("policyNo") String policyNo) {
 		addAttribute("policyNo", policyNo);
-		addAttribute("vo",  caseService.getCaseProcess(getUserId(), policyNo));
+		CaseVo vo = caseService.getCaseProcess(getUserId(), policyNo);
+		addAttribute("policyName", vo.getPolicyType());
+		addAttribute("vo",  vo);
 		return "frontstage/jdzq/caseQuery/caselisting1";
 	}
 
 	@RequestMapping(value = { "/caselisting2" })
-	public String caselisting2(@RequestParam("policyNo") String policyNo) {
+	public String caselisting2(@RequestParam("policyNo") String policyNo, @RequestParam("policyName") String policyName) {
 		addAttribute("policyNo", policyNo);
+		addAttribute("policyName", policyName);
 		addAttribute("vo",  caseService.getCasePolicyInfo(getUserId(), policyNo));
 		return "frontstage/jdzq/caseQuery/caselisting2";
 	}
 
 	@RequestMapping(value = { "/caselisting3" })
-	public String caselisting3(@RequestParam("policyNo") String policyNo) {
+	public String caselisting3(@RequestParam("policyNo") String policyNo, @RequestParam("policyName") String policyName) {
 		addAttribute("policyNo", policyNo);
+		addAttribute("policyName", policyName);
 		addAttribute("list",  caseService.getNoteContent(getUserId(), policyNo));
 		return "frontstage/jdzq/caseQuery/caselisting3";
 	}

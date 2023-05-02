@@ -162,16 +162,16 @@
             <if test="vo.pSalesCode != null and vo.pSalesCode != ''">
                 AND c.PSalesCode = '${vo.pSalesCode}'
             </if>
-            <if  test="vo.agentCode != null and vo.agentCode != ''">
+            <if test="vo.agentCode != null and vo.agentCode != ''">
                 <choose>
                     <when test="vo.agentCode == '86900'">
                         AND c.AgentCode = '869' AND c.AgentBranchM = '00'
                     </when>
                     <when test="vo.agentCode == '86901'">
-                        AND c.AgentCode = = '869' AND c.AgentBranchM = '01'
+                        AND c.AgentCode = '869' AND c.AgentBranchM = '01'
                     </when>
                     <otherwise>
-                        AND c.AgentCode =  '${vo.agentCode}'
+                        AND c.AgentCode = '${vo.agentCode}'
                     </otherwise>
                 </choose>
             </if>

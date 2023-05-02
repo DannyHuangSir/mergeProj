@@ -46,7 +46,7 @@ public class JdRoleController extends BaseController {
             systemId = ApConstants.SYSTEM_ID
     ))
     @GetMapping("/jdRole")
-    public String loginRecord() {
+    public String jdRole() {
         return "backstage/jd/role";
     }
 
