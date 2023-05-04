@@ -3339,6 +3339,11 @@ form .form-control {
     border-radius: 0;
 }
 
+form .form-control::placeholder {
+   font-size: 16;
+   font-weight: 600
+}
+
 .radio.inline {
     display: inline-block;
     margin-right: 25px;
