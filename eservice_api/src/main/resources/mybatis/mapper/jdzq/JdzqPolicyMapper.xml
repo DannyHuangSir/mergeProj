@@ -55,7 +55,7 @@
         select c.PolicyNo,c.PolicyType,pn.PolicyTypeName,c.AccDocNo,c.SubmitDate TBSubmitDate,c.CaseReceviceDate,c.PolicyActiveDate,c.PrintDate,
         c.AgentCode,(select  br.BrokerName from BrokerProfile br where br.Broker_ID = c.AgentCode) AS BrokerName
         ,c.BranchCode,
-        (select distinct nk.NEBK_Branch_Name from NBUDWLINEBK nk where nk.NEBK_Branch_Code = c.BranchCode) AS nebkBranchName,
+        (select distinct nk.NEBK_Branch_Name from NBUDWLINEBK nk where nk.NEBK_Bank_Code = c.agentcode and nk.NEBK_Branch_Code = c.BranchCode) AS nebkBranchName,
         c.AgentSalesID,c.AgentSalesName,(CASE c.AccUnit
         WHEN '01' THEN N'總公司'
         WHEN '02' THEN N'高雄分公司'
