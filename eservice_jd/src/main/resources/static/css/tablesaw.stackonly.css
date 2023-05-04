@@ -39,8 +39,8 @@ table.tablesaw {
   border-top: 1px solid #ededed;
   border-bottom: 1px solid #ededed;
   color: #696969;
-  font-size: 14px;
-  font-weight: 100;
+  font-size: 16px;
+  font-weight: bold;
   padding-left: 26px;
   padding-right: 26px;
 }
@@ -122,6 +122,7 @@ table.tablesaw {
 
   .tablesaw-cell-label {
     display: block;
+    font-size: 16px;
   }
 
   /* Avoid double strokes when stacked */

@@ -30,7 +30,7 @@
                         <div class="bg3 list1">
                             <div class="mycigna3 listing-area">
                                 <div class="row-offcanvas row-offcanvas-left">
-                                    <div class="my1 marginTop20">
+                                    <div class="my1 marginTop20" style="font-weight: 600;">
                                         <p class="pull-left visible-xs">
                                             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"
                                                     id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
@@ -41,13 +41,13 @@
                                     <div class="list col-md-12">
                                         <div class="box-border">
                                             <a th:onclick="'javascript:postCaseListing(\'caselisting1\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
-                                                <div class="col-xs-4 folder">案件進度</div>
+                                                <div style="font-size:17px; font-weight: 600;"  class="col-xs-4 folder">案件進度</div>
                                             </a>
                                             <a th:onclick="'javascript:postCaseListing(\'caselisting2\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
-                                                <div class="col-xs-4 folder active">保單資訊</div>
+                                                <div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder active">保單資訊</div>
                                             </a>
                                             <a th:onclick="'javascript:postCaseListing(\'caselisting3\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
-                                                <div class="col-xs-4 folder ">照會內容</div>
+                                                <div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder ">照會內容</div>
                                             </a>
                                             <div class="mobile-toggle-panel">
                                                 <div class="row">
@@ -62,7 +62,7 @@
                                                                         data-tablesaw-priority="persist">險種名稱
                                                                     </th>
                                                                     <td><b class="tablesaw-cell-label mobile-b">險種名稱</b>
-                                                                        <span class="mobile-span"
+                                                                        <span style="font-size:16px; font-weight: 600;" class="mobile-span"
                                                                               th:text="${vo.policyType != null && #strings.trim(vo.policyType) != '' ? vo.policyType : '&nbsp;'}"></span></td>
                                                                 </tr>
                                                                 <tr class="noEvent">
@@ -72,7 +72,7 @@
                                                                     </th>
                                                                     <td>
                                                                         <b class="tablesaw-cell-label mobile-b">受理編號</b>
-                                                                        <span class="mobile-span"
+                                                                        <span style="font-size:16px; font-weight: 600;" class="mobile-span"
                                                                               th:text="${vo.accDocNo != null && #strings.trim(vo.accDocNo) != '' ? vo.accDocNo : '&nbsp;'}"></span></td>
                                                                 </tr>
                                                                 <tr class="noEvent">
@@ -82,7 +82,7 @@
                                                                     </th>
                                                                     <td>
                                                                         <b class="tablesaw-cell-label mobile-b">首期保費</b>
-                                                                        <span class="mobile-span" th:text="${vo.prmeNewOldSW != null && #strings.trim(vo.prmeNewOldSW) != '' ? vo.prmeNewOldSW : '&nbsp;'}"></span></td>
+                                                                        <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.prmeNewOldSW != null && #strings.trim(vo.prmeNewOldSW) != '' ? vo.prmeNewOldSW : '&nbsp;'}"></span></td>
                                                                 </tr>
                                                                 <tr class="noEvent">
                                                                     <th class="hid1 hid2" scope="col"
@@ -90,7 +90,7 @@
                                                                         data-tablesaw-priority="4">繳別
                                                                     </th>
                                                                     <td><b class="tablesaw-cell-label mobile-b">繳別</b>
-                                                                        <span class="mobile-span"
+                                                                        <span style="font-size:16px; font-weight: 600;"  class="mobile-span"
                                                                               th:text="${(vo.payType != null && #strings.trim(vo.payType) != '' ) ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.payType].parameterValue : ''}"></span></td>
                                                                 </tr>
                                                                 </tbody>
@@ -107,7 +107,7 @@
                                                                     </th>
                                                                     <td>
                                                                         <b class="tablesaw-cell-label mobile-b">保單號碼</b>
-                                                                        <span class="mobile-span" th:text="${vo.policyNo != null && #strings.trim(vo.policyNo) != '' ? vo.policyNo : '&nbsp;'}"></span></td>
+                                                                        <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.policyNo != null && #strings.trim(vo.policyNo) != '' ? vo.policyNo : '&nbsp;'}"></span></td>
                                                                 </tr>
                                                                 <tr class="noEvent">
                                                                     <th class="hid1 hid2" scope="col"
@@ -115,7 +115,7 @@
                                                                         data-tablesaw-priority="1">保額
                                                                     </th>
                                                                     <td><b class="tablesaw-cell-label mobile-b">保額</b>
-                                                                        <span class="mobile-span" th:text="${vo.PolicyAmountNTD != null && #strings.trim(vo.PolicyAmountNTD) != '' ? vo.PolicyAmountNTD : '&nbsp;'}"></span></td>
+                                                                        <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.PolicyAmountNTD != null && #strings.trim(vo.PolicyAmountNTD) != '' ? vo.PolicyAmountNTD : '&nbsp;'}"></span></td>
                                                                 </tr>
                                                                 <tr class="noEvent">
                                                                     <th class="hid1 hid2" scope="col"
@@ -124,7 +124,7 @@
                                                                     </th>
                                                                     <td>
                                                                         <b class="tablesaw-cell-label mobile-b">繳費方式</b>
-                                                                        <span class="mobile-span">
+                                                                        <span style="font-size:16px; font-weight: 600;" class="mobile-span">
                                                                             <th:block th:if="${vo.paymentMode=='3'}">郵局劃撥</th:block>
                                                                             <th:block th:if="${vo.paymentMode=='A'}">銀行(郵局)轉帳</th:block>
                                                                             <th:block th:if="${vo.paymentMode=='H'}">信用卡</th:block>
@@ -171,7 +171,7 @@
                                                                     data-tablesaw-priority="persist">姓名
                                                                 </th>
                                                                 <td><b class="tablesaw-cell-label mobile-b">姓名</b>
-                                                                    <span class="mobile-span" th:text="${vo.appName != null && #strings.trim(vo.appName) != '' ? vo.appName : '&nbsp;'}"></span></td>
+                                                                    <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.appName != null && #strings.trim(vo.appName) != '' ? vo.appName : '&nbsp;'}"></span></td>
                                                             </tr>
                                                             <tr class="noEvent">
                                                                 <th class="hid1 hid2" scope="col"
@@ -180,7 +180,7 @@
                                                                 </th>
                                                                 <td>
                                                                     <b class="tablesaw-cell-label mobile-b">身分證字號</b>
-                                                                    <span class="mobile-span" th:text="${vo.appId != null && #strings.trim(vo.appId) != '' ? vo.appId : '&nbsp;'}"></span></td>
+                                                                    <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.appId != null && #strings.trim(vo.appId) != '' ? vo.appId : '&nbsp;'}"></span></td>
                                                             </tr>
                                                             <tr class="noEvent">
                                                                 <th class="hid1 hid2" scope="col"
@@ -188,7 +188,7 @@
                                                                     data-tablesaw-priority="3">生日
                                                                 </th>
                                                                 <td><b class="tablesaw-cell-label mobile-b">生日</b>
-                                                                    <span class="mobile-span" th:text="${vo.appBirth != null && #strings.trim(vo.appBirth) != '' ? vo.appBirth : '&nbsp;'}"></span></td>
+                                                                    <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.appBirth != null && #strings.trim(vo.appBirth) != '' ? vo.appBirth : '&nbsp;'}"></span></td>
                                                             </tr>
 
                                                             </tbody>
@@ -211,7 +211,7 @@
                                                                     data-tablesaw-priority="persist">姓名
                                                                 </th>
                                                                 <td><b class="tablesaw-cell-label mobile-b">姓名</b>
-                                                                    <span class="mobile-span" th:text="${vo.insName != null && #strings.trim(vo.insName) != '' ? vo.insName : '&nbsp;'}"></span></td>
+                                                                    <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.insName != null && #strings.trim(vo.insName) != '' ? vo.insName : '&nbsp;'}"></span></td>
                                                             </tr>
                                                             <tr class="noEvent">
                                                                 <th class="hid1 hid2" scope="col"
@@ -220,7 +220,7 @@
                                                                 </th>
                                                                 <td>
                                                                     <b class="tablesaw-cell-label mobile-b">身分證字號</b>
-                                                                    <span class="mobile-span" th:text="${vo.insId != null && #strings.trim(vo.insId) != '' ? vo.insId : '&nbsp;'}"></span></td>
+                                                                    <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.insId != null && #strings.trim(vo.insId) != '' ? vo.insId : '&nbsp;'}"></span></td>
                                                             </tr>
                                                             <tr class="noEvent">
                                                                 <th class="hid1 hid2" scope="col"
@@ -228,7 +228,7 @@
                                                                     data-tablesaw-priority="3">生日
                                                                 </th>
                                                                 <td><b class="tablesaw-cell-label mobile-b">生日</b>
-                                                                    <span class="mobile-span" th:text="${vo.insBirth != null && #strings.trim(vo.insBirth) != '' ? vo.insBirth : '&nbsp;'}"></span></td>
+                                                                    <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.insBirth != null && #strings.trim(vo.insBirth) != '' ? vo.insBirth : '&nbsp;'}"></span></td>
                                                             </tr>
                                                             </tbody>
                                                         </table>

@@ -30,7 +30,7 @@
 				        <div class="bg3 list1">
 				            <div class="mycigna3 listing-area">
 				                <div class="row-offcanvas row-offcanvas-left">
-				                    <div class="my1 marginTop20">
+				                    <div class="my1 marginTop20" style="font-weight: 600;">
 				                        <p class="pull-left visible-xs">
 				                            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
 				                        </p>
@@ -39,13 +39,13 @@
 				                    <div class="list col-md-12">
 				                        <div class="box-border">
 				                        	<a th:onclick="'javascript:postCaseListing(\'caselisting1\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
-				                                <div class="col-xs-4 folder active">案件進度</div>
+				                                <div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder active">案件進度</div>
 				                            </a>
 				                            <a th:onclick="'javascript:postCaseListing(\'caselisting2\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
-				                                <div class="col-xs-4 folder">保單資訊</div>
+				                                <div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder">保單資訊</div>
 				                            </a>
 				                            <a th:onclick="'javascript:postCaseListing(\'caselisting3\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
-				                                <div class="col-xs-4 folder ">照會內容</div>
+				                                <div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder ">照會內容</div>
 				                            </a>
 				
 				                            <div class="mobile-toggle-panel  marginTop60">
@@ -56,19 +56,19 @@
 				                                                <tbody>
 				                                                    <tr class="noEvent borderTop">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">保單號碼</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">保單號碼</b> <span class="mobile-span" th:text="${vo.policyNo != null && #strings.trim(vo.policyNo) != '' ? vo.policyNo : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">保單號碼</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.policyNo != null && #strings.trim(vo.policyNo) != '' ? vo.policyNo : '&nbsp;'}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">申請日期</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">申請日期</b> <span class="mobile-span" th:text="${vo.applyDate != null && #strings.trim(vo.applyDate) != '' ? vo.applyDate : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">申請日期</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.applyDate != null && #strings.trim(vo.applyDate) != '' ? vo.applyDate : '&nbsp;'}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">受理日期</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">受理日期</b> <span class="mobile-span" th:text="${vo.tBSubmitDate != null && #strings.trim(vo.tBSubmitDate) != '' ? vo.tBSubmitDate : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">受理日期</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.tBSubmitDate != null && #strings.trim(vo.tBSubmitDate) != '' ? vo.tBSubmitDate : '&nbsp;'}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">案件狀態</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">案件狀態</b> <span class="mobile-span"
+				                                                        <td><b class="tablesaw-cell-label mobile-b">案件狀態</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;"
 																		   th:text="${vo.noteStatus != null ? session.SYSTEM_PARAMETER['JDZQ_LEVEL_STATES_CATEGORY'][vo.noteStatus].parameterName : ''}">
 																		</span></td>
 				                                                    </tr>
@@ -78,16 +78,16 @@
 <!--				                                                    </tr>-->
 																	<tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">保單出單日</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">保單出單日</b> <span class="mobile-span" th:text="${vo.printDate != null && #strings.trim(vo.printDate) != '' ? vo.printDate : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">保單出單日</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.printDate != null && #strings.trim(vo.printDate) != '' ? vo.printDate : '&nbsp;'}"></span></td>
 				                                                    </tr>
 																	<tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">匯款日期</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">匯款日期</b> <span class="mobile-span" th:text="${vo.transPayDate != null && #strings.trim(vo.transPayDate) != '' ? vo.transPayDate: '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">匯款日期</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.transPayDate != null && #strings.trim(vo.transPayDate) != '' ? vo.transPayDate: '&nbsp;'}"></span></td>
 				                                                    </tr>
 																	<tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">核印結果</th>
 				                                                        <td><b class="tablesaw-cell-label mobile-b" ></b>
-																			<span class="mobile-span">
+																			<span class="mobile-span" style="font-size:16px; font-weight: 600;" >
 																				<th:block th:if="${vo.stampResult == 'Y'}">核印完成</th:block>
 																				<th:block th:if="${vo.stampResult == 'N'}">未完成</th:block>
 																				<th:block th:if="${vo.stampResult == null || #strings.trim(vo.stampResult) == ''}">&nbsp;</th:block>
@@ -101,19 +101,19 @@
 				                                                <tbody>
 				                                                    <tr class="noEvent borderTop">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">要保人</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">要保人</b> <span class="mobile-span" th:text="${vo.appName != null && #strings.trim(vo.appName) != '' ? vo.appName : '&nbsp;'}">陳文倫</span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">要保人</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.appName != null && #strings.trim(vo.appName) != '' ? vo.appName : '&nbsp;'}">陳文倫</span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">被保險人</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">被保險人</b> <span class="mobile-span" th:text="${vo.insName != null && #strings.trim(vo.insName) != '' ? vo.insName : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">被保險人</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.insName != null && #strings.trim(vo.insName) != '' ? vo.insName : '&nbsp;'}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">要保人身分證號</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">要保人身分證號</b> <span class="mobile-span" th:text="${vo.appId != null && #strings.trim(vo.appId) != '' ? vo.appId : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">要保人身分證號</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.appId != null && #strings.trim(vo.appId) != '' ? vo.appId : '&nbsp;'}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">被保險人身分證號</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">被保險人身分證號</b> <span class="mobile-span" th:text="${vo.insId != null && #strings.trim(vo.insId) != '' ? vo.insId : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">被保險人身分證號</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.insId != null && #strings.trim(vo.insId) != '' ? vo.insId : '&nbsp;'}"></span></td>
 				                                                    </tr>
 <!--																	<tr class="noEvent">-->
 <!--				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">結案方式</th>-->
@@ -121,16 +121,16 @@
 <!--				                                                    </tr>-->
 				                                                   <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">保單生效日</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">保單生效日</b> <span class="mobile-span" th:text="${vo.policyActiveDate != null && #strings.trim(vo.policyActiveDate) != '' ? vo.policyActiveDate : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">保單生效日</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.policyActiveDate != null && #strings.trim(vo.policyActiveDate) != '' ? vo.policyActiveDate : '&nbsp;'}"></span></td>
 				                                                    </tr>
 																	<tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">核保員</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">核保員</b> <span class="mobile-span" th:text="${vo.manager != null && #strings.trim(vo.manager) != '' ? vo.manager : '&nbsp;'}"></span></td>
+				                                                        <td><b class="tablesaw-cell-label mobile-b">核保員</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;" th:text="${vo.manager != null && #strings.trim(vo.manager) != '' ? vo.manager : '&nbsp;'}"></span></td>
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">核保結果</th>
 				                                                        <td><b class="tablesaw-cell-label mobile-b">核保結果</b>
-																			<span class="mobile-span">
+																			<span class="mobile-span" style="font-size:16px; font-weight: 600;" >
 																				<th:block th:if="${vo.reviewResult == 'A1'}">核保通過</th:block>
 																				<th:block th:if="${vo.reviewResult == 'C1'}">退保(撤銷要保)</th:block>
 																				<th:block th:if="${vo.reviewResult == 'D1'}">延保</th:block>

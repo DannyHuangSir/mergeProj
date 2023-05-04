@@ -273,7 +273,7 @@ jQuery(document).ready(function($) {
     }
 
     function makeButton() {
-        $('body').append('<div id="backToTopBtn">Top</div>');
+        $('body').append('<div id="backToTopBtn" style="font-weight:600;">Top</div>');
     }
 
     function is_touch_device() {

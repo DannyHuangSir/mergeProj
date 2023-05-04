@@ -202,7 +202,7 @@ public class CaseServiceImpl implements ICaseService {
             });
         }
 
-        table.addCell(RptUtils2.createCell("備注：", tableFont, Element.ALIGN_LEFT, 4, false));
+        table.addCell(RptUtils2.createCell("備註：", tableFont, Element.ALIGN_LEFT, 4, false));
 
         table.addCell(RptUtils2.createCell(pdfVo.getNoteVerifyMemo(), tableFont, Element.ALIGN_LEFT, 4, false));
 

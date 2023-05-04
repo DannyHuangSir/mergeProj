@@ -54,7 +54,7 @@
 						<div class="card">
 							<div class="card-header">
 								<div class="card-head-row">
-									<div class="card-title" id="titleList"><i class="foo-business_15 foo-2x"></i>個人案件列表</div>
+									<div class="card-title" id="titleList" style="font-size: 19px; font-weight: bold;"><i class="foo-business_15 foo-2x"></i>個人案件列表</div>
 								</div>
 							</div>
 							<div class="card-body" style="padding: 0;">
@@ -67,8 +67,8 @@
 											<th scope="col" class="item400">被保險人</th>
 											<th scope="col" class="item400">主約險種</th>
 											<th scope="col" class="item450">受理日期</th>
-											<th scope="col" class="item450">案件關卡狀態</th>
-											<th scope="col" class="item450">照會狀態</th>
+											<th scope="col" class="item450">案件狀態</th>
+											<th scope="col" class="item450">最新照會狀態</th>
 										</tr>
 										</thead>
 										<tbody id="personalContent">
@@ -146,12 +146,12 @@
 						response.resultData.forEach(function(item, index){
 								html += "<tr policyNo=\"" + item.policyNo + "\" onclick=\"javascript:postPolicyListType('caselisting1', '" + item.policyNo + "')\">" +
 										'<td class="table3">' + item.policyNo  +'</td>' +
-										'<td class="hid1 hid2">'+ item.appName +'</td>' +
-										'<td class="hid1 hid2">' + item.insName +'</td>' +
-										'<td class="hid1 hid2">' + item.policyType +'</td>' +
-										'<td class="hid1 hid2 enThin">' + item.tBSubmitDate +'</td>' +
-										'<td class="hid1 hid2">' + levelStateStr(item.policyNo, item.bPMCurrentTak) +'</td>' +
-										'<td class="hid1 hid2">' + noteVerifyResultStr(item.policyNo, item.noteVerifyResult) +'</td>' +
+										'<td class="table3">'+ item.appName +'</td>' +
+										'<td class="table3">' + item.insName +'</td>' +
+										'<td class="table3">' + item.policyType +'</td>' +
+										'<td class="table3">' + item.tBSubmitDate +'</td>' +
+										'<td class="table3">' + levelStateStr(item.policyNo, item.bPMCurrentTak) +'</td>' +
+										'<td class="table3">' + noteVerifyResultStr(item.policyNo, item.noteVerifyResult) +'</td>' +
 									'</tr>'
 							});
 						$("#personalContent").html(html)
@@ -187,12 +187,12 @@
 			})
 			return result
 		}
-
+		Chart.defaults.global.defaultFontSize = 15;
 		function initChart() {
 			labels = []
 			data = []
 			chart2Map.forEach(function(item,index){
-				labels.push(item.label + ' ' + item.policyNos.length + '件')
+				labels.push(item.label + ' ' + item.policyNos.length + ' 件')
 				data.push(item.policyNos.length)
 			})
 
@@ -226,7 +226,7 @@
 				data1 = []
 				levelStateMap = levelStateMap.filter(f => f.policyNos.length > 0 )
 				levelStateMap.forEach(function(item,index){
-					labels1.push(item.label + ' ' + item.policyNos.length + '件')
+					labels1.push(item.label + ' ' + item.policyNos.length + ' 件')
 					data1.push(item.policyNos.length)
 				})
 
