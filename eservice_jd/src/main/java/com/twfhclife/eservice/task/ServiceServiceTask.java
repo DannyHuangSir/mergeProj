@@ -62,8 +62,10 @@ public class ServiceServiceTask {
     }
     @Scheduled(cron = "${cron.notify.note.expression:0 0 2 ? * *}")
     public void notifyNoteSchedule() {
+        logger.info("---- notifyNoteSchedule start ----");
         NoteNotifyDataResponse responseObj = baseRestClient.postApi("", noteScheduleUrl, NoteNotifyDataResponse.class);
         if (responseObj != null && org.apache.commons.collections.CollectionUtils.isNotEmpty(responseObj.getNoteNotifies())) {
+            logger.info("照會截止日通知 api response: {}", responseObj);
             for (NoteNotifyVo noteNotify : responseObj.getNoteNotifies()) {
                 try {
                     UsersVo vo = usersDao.getUserBySaleId(noteNotify.getpSalesCode());
