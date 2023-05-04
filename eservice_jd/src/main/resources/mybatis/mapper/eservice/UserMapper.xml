@@ -177,7 +177,13 @@
 		INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UE.ID = UD.USER_ID
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID
 		WHERE
-			u.IC_ID = #{saleId} AND D.BRANCH_ID = concat(#{agentCode}, #{agentBranchM})
+			u.IC_ID = #{saleId}
+		<if test="agentCode == '869'.toString()">
+			AND D.BRANCH_ID = concat(#{agentCode}, #{agentBranchM})
+		</if>
+		<if test="agentCode != '869'.toString()">
+			AND D.BRANCH_ID = #{agentCode}
+		</if>
 	</select>
 
 </mapper>
