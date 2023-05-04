@@ -50,7 +50,7 @@
 											</a>
 				                         <!-- 照會清單-->
 				                           
-				                            <div class="tb3 top0 mobile-toggle" data-toggle="true">
+				                            <div class="tb3 top0 mobile-toggle" data-toggle="true" style="font-weight: 600;">
 				                                <i class="fa hid2 foo-angle-down mobile"></i>
 				                                <i class="fa foo-angle-up hid1"></i> 照會清單
 				                            </div>
@@ -64,22 +64,21 @@
 				                                            <th scope="col" class="item360">照會日期</th>
 				                                            <th scope="col" class="item360">主約險種</th>
 				                                            <th scope="col" class="item300">照會狀態</th>
-				                                            
 				                                            <th scope="col" class="item300">照會單</th>
 				                                        </tr>
 				                                    </thead>
 				                                    <tbody>
 				                                        <tr class="h65 noEvent" th:each="vo : ${list}">
-				                                            <td class="text-left" th:text="${vo.mainKey}"></td>
-				                                            <td th:text="${vo.appName}"></td>
-				                                            <td th:text="${vo.insName}"></td>
-				                                            <td th:text="${vo.printDate}"></td>
-				                                            <td th:text="${vo.policyType}"></td>
-				                                            <td>
+				                                            <td class="table3" th:text="${vo.mainKey}"></td>
+				                                            <td class="table3" th:text="${vo.appName}"></td>
+				                                            <td class="table3" th:text="${vo.insName}"></td>
+				                                            <td class="table3" th:text="${vo.printDate}"></td>
+				                                            <td class="table3" th:text="${vo.policyType}"></td>
+				                                            <td class="table3" >
 																<th:block th:if="${vo.noteVerifyResult == '0' || vo.noteVerifyResult == 'R'}">核保中</th:block>
 																<th:block th:if="${vo.noteVerifyResult == 'V'}">照會中</th:block>
 															</td>
-				                                            <td><i class="bi bi-journal-richtext" th:onclick="'window.open(\'notePdf?policyNo=' + ${policyNo} + '&noteKey=' + ${vo.mainKey} +  '\')'"></i></td>
+				                                            <td class="table3"><i class="bi bi-journal-richtext" th:onclick="'window.open(\'notePdf?policyNo=' + ${policyNo} + '&noteKey=' + ${vo.mainKey} +  '\')'"></i></td>
 				                                        </tr>
 				                                    </tbody>
 				                                </table>

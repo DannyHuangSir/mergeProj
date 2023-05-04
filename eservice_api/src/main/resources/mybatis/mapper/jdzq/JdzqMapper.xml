@@ -32,7 +32,7 @@
     </resultMap>
 
     <sql id="caseSql">
-        SELECT ROW_NUMBER() OVER (ORDER BY A.PolicyNo) AS ROW_NUM, A.PolicyNo, A.AppName, A.InsName, A.SubmitDate TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType
+        SELECT ROW_NUMBER() OVER (ORDER BY A.PolicyNo) AS ROW_NUM, A.PolicyNo, A.AppName, A.InsName, A.TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType
         FROM MainPolicy A
         LEFT JOIN (
         SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM PolicyNote B
@@ -109,7 +109,7 @@
     </select>
 
     <select id="getCaseProcess" resultMap="CaseMap">
-        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.InsName, A.InsID, A.SubmitDate TBSubmitDate,
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.InsName, A.InsID, A.TBSubmitDate,
             A.BPMCurrentTak NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType, FORMAT(A.PrintDate, 'yyyyMMdd') PrintDate, A.PolicyActiveDate, A.TransPayDate,
             P.UserName Manager, A.StampResult,
         (SELECT TOP (1) ReviewResult
@@ -133,7 +133,7 @@
     </select>
     
     <select id="getPolicyInfo" resultMap="CaseMap">
-        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.AppBirth, A.SubmitDate TBSubmitDate, A.BPMCurrentTak,
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.AppBirth, A.TBSubmitDate, A.BPMCurrentTak,
         A.AccDocNo, A.PM_PRME_NEW_OLD_SW,
         (SELECT TOP(1) PrmeNewOldSW FROM PolicyFormData WHERE MAIN_KEY = A.MAIN_KEY) PrmeNewOldSW,
         E.PTypeName PolicyType, A.StampResult, A.PayType, A.InsBirth, A.InsName, A.InsID, A.PolicyAmount, A.PolicyAmountNTD
