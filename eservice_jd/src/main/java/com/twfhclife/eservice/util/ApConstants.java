@@ -179,4 +179,5 @@ public interface ApConstants {
 	public static final String WORDING_NA201 = "WORDING_NA201";
 
 	public static final String WORDING_NA202 = "WORDING_NA202";
+	public static final  String CRON_JOB = "CRON_JOB";
 }

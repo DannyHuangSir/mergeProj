@@ -1140,3 +1140,34 @@ INSERT ESERVICE_ADM.DBO.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARA
 
 INSERT ESERVICE_ADM.DBO.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER) VALUES ((select max(PARAMETER_ID)+1 from ESERVICE_ADM.DBO.PARAMETER), N'eservice_jd', N'JD_CLAUSE1', N'JD_CLAUSE1', N'<p align="center"><b>經代專區服務使用條款</b></p> <p>經代專區（以下簡稱「本專區」）為臺銀人壽保險股份有限公司（以下簡稱「本公司」）授權合作通路於保險招攬、保單服務之特定目的範圍內查詢客戶保單資料等業務之網站，合作通路授權人員使用</p><p>本專區各項網路資訊服務前（以下簡稱「本專區服務」），請務必詳細閱讀本條款內容，當您開始使用本專區服務時，即同意遵守本條款。</p> <p>一、本專區服務係透過網際網路提供各項保單資訊服務，您得於本專區瀏覽、查詢或使用本公司各項服務或取得相關資訊。</p> <p>二、您於使用本專區服務時，應遵守中華民國法令（包含但不限於保險法、保險代理人管理規則/保險經紀人管理規則、個人資料保護法、消費者保護法、金融消費者保護法及相關法令函釋與自律規範）及下列服務規範：如有違反致本公司遭他人求償或受主管機關裁罰者，應賠償本公司因此所受之損害（包括但不限於受第三人求償時之賠償金額、主管機關之裁罰金額、所支出之律師費、訴訟費用 <p>及商譽損失等）：</p> <p>（一）僅得於執行保經代業務之目的範圍內（即保險招攬、保單服務）使用本專區服務。</p> <p>（二）本專區內關於任何商品或服務之資訊及描述僅供一般性參考，有關商品或服務之詳細內容請詳閱保單條款。</p> <p>（三）禁止將本專區服務所提供含有客戶資料之資訊或電子檔案以任何形式留存或挪作他用。</p> <p>（四）應確實遵守本公司資訊安全之相關規範（包含但不限於本公司資訊安全政策、管理辦法）。</p> <p>（五）應配合本公司進行定期權限檢核機制，如無法配合者，本公司將逕行刪除帳號權限。</p> <p>（六）使用帳號僅限被授權者本人使用，不得有共用、分享或提供予他人使用或揭露予無關第三人之情事。</p> <p>（七）禁止截圖頁面、複製、轉載、轉售本專區之個人資訊。</p> <p>（八）為確保本專區系統相關資料數據之完整性，未經本公司同意，不得逕行變更、增刪、修改或有其他引人錯誤之情形。</p> <p>（九）禁止安設任何後門、惡意攻擊或病毒程式或其他未經授權之軟體，亦不得不法侵人、擷取或竄改本專區等。 </p> <p>三、您同意本公司於執行本專區服務所必須及依法令規定應為保存之期間，基於設定及檢核帳號權限之目的，蒐集您的個人資料（姓名、所屬單位、登入帳號、身分證字號、E-mail、授權角色及其他得 <p>以直接或間接方式識別該個人之資料），您得依據個人資料保護法第3條規定行使您的權利，惟您如不提供您的個人資料，將無法使用本專區服務。</p> <p>四、本公司與您所屬單位之合約關係經終止或本公司終止授權後，您不得再使用本專區服務。</p> <p>五、條款未盡事宜，依中華民國法律規定解釋補充之。如因本專區服務或本條款發生爭議而涉訟者，您及本公司同意以臺灣臺北地方法院為第一審管轄法院。</p>',(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.DBO.PARAMETER_CATEGORY where CATEGORY_CODE='ESERVICE_JD_CATEGORY' AND SYSTEM_ID = 'eservice_jd'), 0, NULL, 1, NULL, NULL, GETDATE(), N'admin', NULL, NULL);
 INSERT ESERVICE_ADM.DBO.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER) VALUES ((select max(PARAMETER_ID)+1 from ESERVICE_ADM.DBO.PARAMETER), N'eservice_jd', N'JD_CLAUSE2', N'JD_CLAUSE2', N'  <h2 class="text-left">一、 授權個人申請醫療理賠相關資料傳送</h2> <p>本人（即立同意書人）為申請醫療保險理賠所需，爰同意並授權貴公司經由「理賠醫起通」服務傳輸以下事項：</p> <p>1. 本人同意授權貴公司得將本人之個人資料 (包括姓名、出生日、身分證字號)傳輸予經本人指定之醫療院所，以取得本人已同意授權傳輸之就醫相關資料。</p> <p>2. 本人知悉，指定之醫療院所得將本人指定授權區間就診之「全部科別」之就醫相關資料(包括但不限於姓名、出生年月日、身分證字號、醫療費用證明或收據副本及相關診斷證明書文件等)，傳輸予貴公司。</p> <h2 class="text-left">二、 個人理賠醫療資料傳送</h2> <p>1. 本人同意授權貴公司得向醫療院所調閱申請醫療保險理賠所需之醫療單據資料(包括但不限於診斷證明書、醫療費用證明等)。</p> <p>2. 依貴公司網站公告之醫療院所為授權對象。</p> <h2 class="text-left">三、 個人理賠申請通知</h2> <p>1. 本人同意授權貴公司得將本人提供申請醫療保險金之理賠案件申請內容，傳送至本人所同意之其他保險公司，以申請各該保險公司中以本人為被保險人之醫療保險理賠。</p> <p>2. 依貴公司網站公告之合作保險公司為授權對象。</p> <p>3. 若貴公司未能自醫療院所取得醫療相關資料，本人將自行向指定之合作保險公司提出理賠申請。</p> <h2 class="text-left">四、 本人已詳閱並充分瞭解上述各事項，除同意貴公司於符合相關法令之規範內，得為蒐集、處理及利用上開本人各項資料外；另聲明同意依照下列事項辦理：</h2> <p>1. 若貴公司於收到申請後十個工作日仍未能自本人所指定之醫療院所取得醫療相關資料，本人知悉所提出理賠申請文件未齊備，並盡速備齊相關文件。</p> <p>2. 理賠申請之文件備齊日，係以貴公司收齊本人所指定之醫療院所提供醫療單據資料之日為準。</p> <p>3. 本人知悉並同意若貴公司未能自本人所指定之醫療院所取得醫療相關資料，不論貴公司或其他本人所指定之合作保險公司均無法透過本項理賠服務進行理賠作業，本人將自行另向其他保險公司提出理賠申請。</p> <h2 class="text-left">五、 本人知悉依各家公司保單條款約定，若需提供正本文件（如收據、調查文件等），將依各家保險公司通知配合提供。</h2> <h2 class="text-left">六、 本人已審閱蒐集、處理及利用個人資料告知事項</h2> <p class="text-center">【蒐集、處理及利用個人資料告知事項】</p> <p> 臺銀人壽保險股份有限公司(下稱本公司)依據個人資料保護法(以下稱個資法)第六條第二項、第八條第一項(間接蒐集者為個資法第九條第一項)及保險法第一百七十七條之一暨其授權辦法等相關規定，為辦理保險相關業務(含網路保險服務)之客戶服務、核保、理賠、契約保全、再保險、追償、申訴及爭議處理、辦理內部控制及稽核業務、提供除本公司外，於本公司網站公告之合作保險公司（利用對象）辦理理賠申請、理賠資料傳送爭議及更正、合於其營業項目或章程所訂業務需要等目的及為符合相關法令規範需要，而蒐集、處理、利用您的之病歷、醫療及健康檢查等個人相關資料。所蒐集之資料除再保險業務或委外業務執行之需要而於我國境外被處理及利用外，僅會於前開蒐集目的存續期間及依法令規定期間內，以合於法令規定之方式利用。您可以向本公司或同意傳送醫療單據資料之保險公司查詢、請求閱覽、製給複製本、補充或更正、請求停止蒐集、處理或利用及請求刪除個人資料，惟本公司及您同意傳送醫療單據資料之保險公司依法令規定或因執行業務所必須，得不依台端的請求處理。您若因未能提供相關個人資料，本公司及您同意傳送醫療單據資料之保險公司將可能延後或無法進行必要之審核及處理作業，將因此導致遲延或無法提供台端相關服務。</p>',(select PARAMETER_CATEGORY_ID from ESERVICE_ADM.DBO.PARAMETER_CATEGORY where CATEGORY_CODE='ESERVICE_JD_CATEGORY' AND SYSTEM_ID = 'eservice_jd'), 0, NULL, 1, NULL, NULL, GETDATE(), N'admin', NULL, NULL);
+
+
+INSERT ESERVICE_ADM.DBO.PARAMETER_CATEGORY(PARAMETER_CATEGORY_ID, SYSTEM_ID, CATEGORY_CODE, CATEGORY_NAME, REMARK, STATUS, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER) VALUES ((select max(PARAMETER_CATEGORY_ID)+1 from ESERVICE_ADM.DBO.PARAMETER_CATEGORY), 'eservice_jd', 'CRON_JOB', N'經代排程', NULL, '1.0000', GETDATE(), 'admin', NULL, NULL )
+
+INSERT ESERVICE_ADM.DBO.PARAMETER (
+     PARAMETER_ID, SYSTEM_ID,
+     PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE,
+     PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS,
+     ENCRYPT_TYPE, PARENT_PARAMETER_ID,
+     CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES (
+     (select max(PARAMETER_ID)+1 from ESERVICE_ADM.DBO.PARAMETER), N'eservice_jd',
+     N'cron.notify.note.expression', N'cron.notify.note.expression',  N'0 0 */1 * * ?',
+     (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.DBO.PARAMETER_CATEGORY where CATEGORY_CODE='CRON_JOB'), 0, NULL, 1,
+     NULL, NULL,
+     GETDATE(), N'admin', NULL, NULL)
+go
+
+INSERT ESERVICE_ADM.DBO.PARAMETER (
+     PARAMETER_ID, SYSTEM_ID,
+     PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE,
+     PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS,
+     ENCRYPT_TYPE, PARENT_PARAMETER_ID,
+     CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+VALUES (
+     (select max(PARAMETER_ID)+1 from ESERVICE_ADM.DBO.PARAMETER), N'eservice_jd',
+     N'cron.notify.config.expression', N'cron.notify.config.expression',  N'0 0 */1 * * ?',
+     (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.DBO.PARAMETER_CATEGORY where CATEGORY_CODE='CRON_JOB'), 0, NULL, 1,
+     NULL, NULL,
+     GETDATE(), N'admin', NULL, NULL)
+go
