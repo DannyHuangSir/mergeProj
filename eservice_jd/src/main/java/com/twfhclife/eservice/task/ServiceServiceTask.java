@@ -60,7 +60,7 @@ public class ServiceServiceTask {
             });
         }
     }
-    @Scheduled(cron = "${cron.notify.note.expression: '0 0 2 ? * *'}")
+    @Scheduled(cron = "${cron.notify.note.expression:0 0 2 ? * *}")
     public void notifyNoteSchedule() {
         NoteNotifyDataResponse responseObj = baseRestClient.postApi("", noteScheduleUrl, NoteNotifyDataResponse.class);
         if (responseObj != null && org.apache.commons.collections.CollectionUtils.isNotEmpty(responseObj.getNoteNotifies())) {
@@ -81,6 +81,7 @@ public class ServiceServiceTask {
                         paramMap.put("InsName", noteNotify.getInsName());
                         paramMap.put("DueDate", noteNotify.getDueDate());
                         paramMap.put("PolicyNo", noteNotify.getPolicyNo());
+                        logger.info("send 照會截止日通知: {}", paramMap);
                         messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_JD_MAIL-001", receivers, paramMap, "email");
                     }
                 } catch (Exception e) {
@@ -96,7 +97,7 @@ public class ServiceServiceTask {
     @Autowired
     private IPolicyService policyService;
 
-    @Scheduled(cron = "${cron.notify.config.expression: '0 0 2 ? * *'}")
+    @Scheduled(cron = "${cron.notify.config.expression:0 0 2 ? * *}")
     public void notifyStopProfitAndStopLoss() {
         List<NotifyScheduleVo> notifyScheduleVos = notifyConfigDao.getNotifyConfigSchedule();
         if(CollectionUtils.isNotEmpty(notifyScheduleVos)) {
