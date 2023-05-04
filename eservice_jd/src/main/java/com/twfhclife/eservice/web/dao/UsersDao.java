@@ -47,5 +47,5 @@ public interface UsersDao {
 
 	List<PermQueryVo> getCaseQueryByPassageWay(@Param("userId") String id);
 
-	UsersVo getUserBySaleId(@Param("saleId") String saleId);
+	UsersVo getUserBySaleId(@Param("saleId") String saleId, @Param("agentCode") String agentCode, @Param("agentBranchM") String agentBranchM);
 }

@@ -2,6 +2,7 @@ package com.twfhclife.eservice.task;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
 import com.twfhclife.eservice.api_client.BaseRestClient;
 import com.twfhclife.eservice.api_model.NoteNotifyDataResponse;
 import com.twfhclife.eservice.util.ApConstants;
@@ -65,10 +66,10 @@ public class ServiceServiceTask {
         logger.info("---- notifyNoteSchedule start ----");
         NoteNotifyDataResponse responseObj = baseRestClient.postApi("", noteScheduleUrl, NoteNotifyDataResponse.class);
         if (responseObj != null && org.apache.commons.collections.CollectionUtils.isNotEmpty(responseObj.getNoteNotifies())) {
-            logger.info("照會截止日通知 api response: {}", responseObj);
+            logger.info("照會截止日通知 api response: {}", new Gson().toJson(responseObj));
             for (NoteNotifyVo noteNotify : responseObj.getNoteNotifies()) {
                 try {
-                    UsersVo vo = usersDao.getUserBySaleId(noteNotify.getpSalesCode());
+                    UsersVo vo = usersDao.getUserBySaleId(noteNotify.getpSalesCode(), noteNotify.getAgentCode(), StringUtils.isBlank(noteNotify.getAgentBranchM()) ? "" : noteNotify.getAgentBranchM());
                     if (vo != null) {
                         JdzqNotifyMsg msg = new JdzqNotifyMsg();
                         msg.setUsers(Lists.newArrayList(vo.getUserId()));

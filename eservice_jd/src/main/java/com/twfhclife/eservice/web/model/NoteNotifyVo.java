@@ -8,6 +8,8 @@ public class NoteNotifyVo implements Serializable {
     private String appName;
     private String insName;
     private String dueDate;
+    private String agentCode;
+    private String agentBranchM;
     private String pSalesCode;
 
     public String getPolicyNo() {
@@ -48,5 +50,21 @@ public class NoteNotifyVo implements Serializable {
 
     public void setpSalesCode(String pSalesCode) {
         this.pSalesCode = pSalesCode;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
+    }
+
+    public String getAgentBranchM() {
+        return agentBranchM;
+    }
+
+    public void setAgentBranchM(String agentBranchM) {
+        this.agentBranchM = agentBranchM;
     }
 }

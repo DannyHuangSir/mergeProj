@@ -197,7 +197,9 @@
     </select>
 
     <select id="getNoteSchedule" resultType="com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo">
-        SELECT A.AppName, A.InsName, A.PolicyNo, B.DueDate, A.PSalesCode FROM MainPolicy A INNER JOIN
+        SELECT A.AppName, A.InsName, A.PolicyNo, B.DueDate, A.PSalesCode, A.AgentCode, A.AgentBranchM
+        FROM MainPolicy A
+        INNER JOIN
         PolicyNote B ON A.Main_Key = B.Main_Key
         WHERE A.BPMCurrentTak IN ('602000S', '602500S')
         AND B.DueDate = FORMAT(DATEADD(day, +2, #{currDate}), 'yyyyMMdd')
