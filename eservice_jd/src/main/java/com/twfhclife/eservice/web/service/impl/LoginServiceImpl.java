@@ -2,6 +2,7 @@ package com.twfhclife.eservice.web.service.impl;
 
 import com.twfhclife.common.util.EncryptionUtil;
 import com.twfhclife.eservice.api_client.BaseRestClient;
+import com.twfhclife.eservice.api_client.MessageTemplateClient;
 import com.twfhclife.eservice.api_client.SsoClient;
 import com.twfhclife.eservice.api_model.ApiResponseObj;
 import com.twfhclife.eservice.api_model.ReturnHeader;
@@ -21,7 +22,6 @@ import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
-import com.twfhclife.generic.api_client.MessageTemplateClient;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;

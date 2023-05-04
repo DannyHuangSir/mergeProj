@@ -12,7 +12,7 @@ import com.twfhclife.eservice.web.dao.UsersDao;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.eservice.web.service.IPolicyService;
-import com.twfhclife.generic.api_client.MessageTemplateClient;
+import com.twfhclife.eservice.api_client.MessageTemplateClient;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

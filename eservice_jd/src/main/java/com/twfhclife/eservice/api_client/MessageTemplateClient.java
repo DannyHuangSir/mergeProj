@@ -1,4 +1,4 @@
-package com.twfhclife.generic.api_client;
+package com.twfhclife.eservice.api_client;
 
 import java.util.List;
 import java.util.Map;
