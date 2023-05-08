@@ -1,0 +1,11 @@
+@startuml
+
+autonumber
+
+使用者 -> JdPolicyClaimDetailController: policyClaimDetailCSV1()
+JdPolicyClaimDetailController --> JdPolicyClaimDetailServiceImpl: getInsClaimStatisticsReport()
+JdPolicyClaimDetailServiceImpl --> API: getInsClaimStatisticsReport()
+API --> JdPolicyClaimDetailServiceImpl: return JSON
+JdPolicyClaimDetailServiceImpl --> JdPolicyClaimDetailController: PolicyClaimDetailResponse
+JdPolicyClaimDetailController --> 使用者: return ResponseObj to generate csv
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+
+class JdPolicyClaimDetailController {
+    rptInsClaimDetail()
+    policyClaimDetailFilter()
+    policyClaimDetailCSV1()
+    computeMaxNoteSize()
+    getBpmcurrenttak()
+    getPolicyTypeNameList()
+    jdPolicyClaimDetailService()
+}
+interface IJdPolicyClaimDetailService {
+    getBpmcurrenttak()
+    getPolicyTypeNameList()
+    getInsClaimStatisticsReport()
+}
+class JdPolicyClaimDetailServiceImpl {
+   getBpmcurrenttak()
+   getPolicyTypeNameList()
+   getInsClaimStatisticsReport()
+}
+class JdPolicyClaimDetailVo {
+
+}
+
+JdPolicyClaimDetailController -|> JdPolicyClaimDetailVo
+JdPolicyClaimDetailController -|> IJdPolicyClaimDetailService
+IJdPolicyClaimDetailService <|-- JdPolicyClaimDetailServiceImpl
+
+@enduml

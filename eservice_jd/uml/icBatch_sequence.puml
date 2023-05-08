@@ -1,0 +1,11 @@
+@startuml
+
+autonumber
+
+使用者 -> ICBatchImportController: uploadICFile()
+ICBatchImportController -> IJdICBatchServiceImpl: uploadFile()
+IJdICBatchServiceImpl -> ICBatchImportController: void
+ICBatchImportController -> 使用者: return ResponseObj
+IJdICBatchServiceImpl --> Schedule: workICFile()
+使用者 --> ICBatchImportController: getUsersBatch()
+@enduml

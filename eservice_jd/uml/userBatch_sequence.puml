@@ -1,0 +1,11 @@
+@startuml
+
+autonumber
+
+使用者 -> UserBatchImportController: uploadFile()
+UserBatchImportController -> JdUserBatchServiceImpl: uploadFile()
+JdUserBatchServiceImpl -> UserBatchImportController: void
+UserBatchImportController -> 使用者: return ResponseObj
+JdUserBatchServiceImpl --> Schedule: workFile()
+使用者 --> UserBatchImportController: getUsersBatch()
+@enduml

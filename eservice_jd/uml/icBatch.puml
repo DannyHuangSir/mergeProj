@@ -1,0 +1,45 @@
+@startuml
+
+class ICBatchImportController {
+    iCBatchImport()
+    getUsersBatch()
+    uploadICFile()
+    exportFile()
+}
+interface IJdICBatchService {
+    updateUsers()
+    getICs()
+    countICs()
+    upLoadFile()
+    scheduledICWork()
+    workFile()
+}
+class IJdICBatchServiceImpl {
+   updateUsers()
+   getICs()
+   countICs()
+   upLoadFile()
+   scheduledICWork()
+   workFile()
+}
+
+class JdBatchSchedulVO {
+  batchId
+  batchStatus
+  batchName
+  batchStartTime
+  batchEndTime
+  batchJoinTime
+  failNum
+  failLink
+  link
+  type
+  batchFile
+}
+
+
+ICBatchImportController -|> JdBatchSchedulVO
+ICBatchImportController -|> IJdICBatchService
+IJdICBatchService <|-- IJdICBatchServiceImpl
+
+@enduml

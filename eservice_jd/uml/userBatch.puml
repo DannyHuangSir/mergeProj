@@ -1,0 +1,43 @@
+@startuml
+
+class UserBatchImportController {
+    userBatchImport()
+    getUsersBatch()
+    uploadFile()
+    exportFile()
+}
+interface IJdUserBatchService {
+    updateUsers()
+    getUsers()
+    countUsers()
+    upLoadFile()
+    workFile()
+}
+class JdUserBatchServiceImpl {
+   updateUsers()
+   getUsers()
+   countUsers()
+   upLoadFile()
+   workFile()
+}
+
+class JdBatchSchedulVO {
+  batchId
+  batchStatus
+  batchName
+  batchStartTime
+  batchEndTime
+  batchJoinTime
+  failNum
+  failLink
+  link
+  type
+  batchFile
+}
+
+
+UserBatchImportController -|> JdBatchSchedulVO
+UserBatchImportController -|> IJdUserBatchService
+IJdUserBatchService <|-- JdUserBatchServiceImpl
+
+@enduml
