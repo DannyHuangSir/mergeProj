@@ -20,6 +20,14 @@ public class CaseController extends BaseController {
 
 	@GetMapping("/caseQuery")
 	public String caseQuery() {
+		addAttribute("queryCase", new CaseQueryVo());
+		return "frontstage/jdzq/caseQuery/case-query";
+	}
+
+
+	@GetMapping("/returnCase")
+	public String returnCase() {
+		addAttribute("queryCase", getSession("queryCase"));
 		return "frontstage/jdzq/caseQuery/case-query";
 	}
 
@@ -38,6 +46,7 @@ public class CaseController extends BaseController {
 		ResponseObj responseObj = new ResponseObj();
 		responseObj.setResult(ResponseObj.SUCCESS);
 		responseObj.setResultData(caseService.getCaseList(getLoginUser(), vo));
+		addSession("queryCase", vo);
 		return responseObj;
 	}
 

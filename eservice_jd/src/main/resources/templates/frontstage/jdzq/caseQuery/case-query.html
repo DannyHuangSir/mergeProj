@@ -43,7 +43,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3"> 保單號碼 </label>
                                                 <div class="col-sm-9">
-                                                    <input name="policyNo" type="text" placeholder="輸入欲查詢的保單號碼"
+                                                    <input th:value="${queryCase.policyNo}" name="policyNo" type="text" placeholder="輸入欲查詢的保單號碼"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
@@ -51,14 +51,14 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 no-padding-right"> 要保人姓名 </label>
                                                 <div class="col-sm-9">
-                                                    <input name="lipmName" type="text" placeholder="輸入欲查詢的要保人姓名"
+                                                    <input th:value="${queryCase.lipmName}" name="lipmName" type="text" placeholder="輸入欲查詢的要保人姓名"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 no-padding-right"> 被保險人姓名 </label>
                                                 <div class="col-sm-9">
-                                                    <input name="lipiName" type="text" placeholder="輸入欲查詢的被保險人姓名"
+                                                    <input th:value="${queryCase.lipiName}" name="lipiName" type="text" placeholder="輸入欲查詢的被保險人姓名"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
@@ -76,7 +76,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 no-padding-right"> 要保人身分證號 </label>
                                                 <div class="col-sm-9">
-                                                    <input name="lipmId" type="text" placeholder="輸入欲查詢的要保人身分證號"
+                                                    <input th:value="${queryCase.lipmId}" name="lipmId" type="text" placeholder="輸入欲查詢的要保人身分證號"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
@@ -84,7 +84,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 no-padding-right"> 被保人身分證號 </label>
                                                 <div class="col-sm-9">
-                                                    <input name="lipiId" type="text" placeholder="輸入欲查詢的被保險人身分證號"
+                                                    <input th:value="${queryCase.lipiId}" name="lipiId" type="text" placeholder="輸入欲查詢的被保險人身分證號"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
@@ -162,6 +162,7 @@
 <script th:inline="javascript">
 /*<![CDATA[*/
         var levelStateMap = []
+        var status = [[${queryCase.caseStatus}]]
 		$(function(){
 			$.ajax({
 				type : 'POST',
@@ -170,7 +171,11 @@
 				success : function(response) {
 					if(response.result == "SUCCESS"){
 						response.resultData.forEach(function(item, index){
-						    $("[name='caseStatus']").append("<option value=\""  + item.KEY +  "\">" + item.VALUE + "</option>")
+						    if (item.KEY == status) {
+						        $("[name='caseStatus']").append("<option selected value=\""  + item.KEY +  "\">" + item.VALUE + "</option>")
+						    } else {
+						        $("[name='caseStatus']").append("<option value=\""  + item.KEY +  "\">" + item.VALUE + "</option>")
+						    }
 							levelStateMap.push({
 								label: item.VALUE,
 								value: item.KEY

@@ -260,6 +260,7 @@
         <result column="LIPM_CHAR_AT_2" property="charAt2"/>
         <result column="LIPM_BANK_CODE" property="bankCode"/>
         <result column="PMDA_INVE_ATTR" property="riskLevel"/>
+        <result column="STATUS" property="status"/>
         <association property="beneficiaries" resultMap="PolicyBeneficiaryMap"></association>
     </resultMap>
 

@@ -25,7 +25,8 @@
                                 || ((#httpServletRequest.requestURI.contains('caseQuery') || #httpServletRequest.requestURI.startsWith(#httpServletRequest.getContextPath() +'/caselisting')) && vo2.functionUrl == 'caseQuery')
                                 || (#httpServletRequest.requestURI.contains('changePassword1') && vo2.functionUrl == 'changePassword1')
                                 || ((#httpServletRequest.requestURI.contains('policyQuery') || #httpServletRequest.requestURI.startsWith(#httpServletRequest.getContextPath() +'/listing')) && vo2.functionUrl == 'policyQuery')
-                                || (#httpServletRequest.requestURI.contains('returnPolicy') && vo2.functionUrl == 'policyQuery')} ? 'active' : ''">
+                                || (#httpServletRequest.requestURI.contains('returnPolicy') && vo2.functionUrl == 'policyQuery')
+                                || (#httpServletRequest.requestURI.contains('returnCase') && vo2.functionUrl == 'caseQuery') } ? 'active' : ''">
                                     <a th:href="${vo2.functionUrl}">
                                         <span class="sub-item" th:text="${vo2.functionName}"></span>
                                     </a>
