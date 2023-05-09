@@ -193,8 +193,17 @@
 <script th:src="@{/js/eservice/policy-pagebar.js}"></script>
 <script th:inline="javascript">
 /*<![CDATA[*/
+
+		$(function(){
+			var autoQuery = [[${autoQuery}]]
+			if (autoQuery) {
+			    onSubmit()
+			}
+		})
+
 		var paymentMap = [[${session.SYSTEM_PARAMETER.PAYMENT_METHOD_TYPE}]]
 		var payModeMap = [[${session.SYSTEM_PARAMETER.PAYMODE_TYPE}]]
+
 		function queryDataByPage(pageNum, resetStatus) {
 			policyNo = $("input[name='policyNo']").val()
 		    lipmName = $("input[name='lipmName']").val()

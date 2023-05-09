@@ -35,6 +35,7 @@ public class PolicyController extends BaseController {
     @GetMapping("/policyQuery")
     public String policyQuery() {
         addAttribute("queryPolicy", new PolicyVo());
+        addAttribute("autoQuery", false);
         addAttribute("policyTypeList", optionService.getPolicyTypeList());
         return "frontstage/jdzq/policyQuery/policy-query";
     }
@@ -42,6 +43,7 @@ public class PolicyController extends BaseController {
     @GetMapping("/returnPolicy")
     public String returnPolicy() {
         addAttribute("queryPolicy", getSession("queryPolicy"));
+        addAttribute("autoQuery", true);
         addAttribute("policyTypeList", optionService.getPolicyTypeList());
         return "frontstage/jdzq/policyQuery/policy-query";
     }

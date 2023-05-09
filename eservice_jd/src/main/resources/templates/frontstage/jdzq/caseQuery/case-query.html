@@ -181,9 +181,15 @@
 								value: item.KEY
 							})
 						})
+                        var autoQuery = [[${autoQuery}]]
+                        if (autoQuery) {
+                            queryDataByPage(1)
+                        }
 					}
 				}
 			})
+
+
 		})
 
 		function levelStateStr(levelState) {
@@ -202,7 +208,7 @@
 		    lipmId = $("input[name='lipmId']").val()
 		    lipiName = $("input[name='lipiName']").val()
 		    lipiId = $("input[name='lipiId']").val()
-		    caseStatus = $("[name='caseStatus']").val()
+		    caseStatus = $("select[name='caseStatus'] option:selected").val()
 		    if ((policyNo == null || policyNo == '') &&  (lipmName == null || lipmName == '') &&
 		        (lipmId == null || lipmId == '') && (lipiName == null || lipiName == '') &&
                 (lipiId == null || lipiId == '') && (caseStatus == null || caseStatus == '')) {

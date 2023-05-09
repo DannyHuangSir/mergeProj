@@ -21,6 +21,7 @@ public class CaseController extends BaseController {
 	@GetMapping("/caseQuery")
 	public String caseQuery() {
 		addAttribute("queryCase", new CaseQueryVo());
+		addAttribute("autoQuery", false);
 		return "frontstage/jdzq/caseQuery/case-query";
 	}
 
@@ -28,6 +29,7 @@ public class CaseController extends BaseController {
 	@GetMapping("/returnCase")
 	public String returnCase() {
 		addAttribute("queryCase", getSession("queryCase"));
+		addAttribute("autoQuery", true);
 		return "frontstage/jdzq/caseQuery/case-query";
 	}
 
