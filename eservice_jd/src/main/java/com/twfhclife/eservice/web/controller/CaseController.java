@@ -28,8 +28,9 @@ public class CaseController extends BaseController {
 
 	@GetMapping("/returnCase")
 	public String returnCase() {
-		addAttribute("queryCase", getSession("queryCase"));
-		addAttribute("autoQuery", true);
+		CaseQueryVo vo = (CaseQueryVo) getSession("queryCase");
+		addAttribute("queryCase", vo == null ? new CaseQueryVo() : vo);
+		addAttribute("autoQuery", vo == null ? false : true);
 		return "frontstage/jdzq/caseQuery/case-query";
 	}
 
@@ -51,6 +52,13 @@ public class CaseController extends BaseController {
 		addSession("queryCase", vo);
 		return responseObj;
 	}
+
+	@RequestMapping(value = { "/personalCaseListing1" })
+	public String personalCaseListing1(@RequestParam("policyNo") String policyNo) {
+		removeFromSession("queryCase");
+		return caselisting1(policyNo);
+	}
+
 
 	@RequestMapping(value = { "/caselisting1" })
 	public String caselisting1(@RequestParam("policyNo") String policyNo) {
