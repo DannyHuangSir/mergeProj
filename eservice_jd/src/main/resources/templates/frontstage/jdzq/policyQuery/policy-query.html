@@ -250,7 +250,6 @@
 				}),
 				url : /*[[@{/getPolicyList}]]*/,
 				success : function(response) {
-					$('#loadingModal').modal('hide')
 					$("#circleAll").children().each(function(index, item) {
 						item.classList.remove('active')
 					})
@@ -268,6 +267,7 @@
 						$("#zonglanCount").text(response.resultData.totalRow)
 						$("#policyCount").text('共 ' + response.resultData.totalRow + ' 張')
 						var isGreen = false
+						$("#dashboardContent").hide()
 						response.resultData.rows.forEach(function(item, index){
 									isGreen = !isGreen
 									html += '<div class="">' +
@@ -322,6 +322,7 @@
 							});
 							$("#policyContent").html(html)
 							$('.pagination').html(getPolicyPageBarHtml(response.resultData))
+							$('#loadingModal').modal('hide')
 					}
 				},
 				error : function() {
@@ -330,14 +331,19 @@
 				}
 	    	});
 		}
-
+		var showCircle = false;
 		function onSubmit(){
+			let policyNo1 = $("input[name='policyNo']").val()
+		    let lipmName1 = $("input[name='lipmName']").val()
+		    let lipmId1 = $("input[name='lipmId']").val()
+		    let prodName1 = $("select[name='prodName'] option:selected").val()
 			var Insured = $('input[name=lipiName]').val();
 			var Insured_Card = $('input[name=lipiId]').val();
-			if(Insured!=="" || Insured_Card!==""){
-				$("#dashboardContent").show()
+			if((Insured!=="" || Insured_Card!=="") && policyNo1 == '' && lipmName1 == '' && lipmId1 == '' &&
+				prodName1 == ''){
+				showCircle = true
 			} else {
-				$("#dashboardContent").hide()
+				showCircle = false
 			}
 			chooseTab($("#statusCard span:first"), true)
 		}
@@ -352,18 +358,23 @@
 			if (shouxian.indexOf(policyType) != -1) {
 				$("#circleAll").children().get(0).classList.add("active")
 				$("#circleText").children().get(0).classList.add("active")
+				showCircle == true ? $("#dashboardContent").show() : ""
 			} else if (yiwai.indexOf(policyType) != -1) {
 				$("#circleAll").children().get(1).classList.add("active")
 				$("#circleText").children().get(1).classList.add("active")
+				showCircle == true ? $("#dashboardContent").show() : ""
 			} else if (touzi.indexOf(policyType) != -1) {
 				$("#circleAll").children().get(2).classList.add("active")
 				$("#circleText").children().get(2).classList.add("active")
+				showCircle == true ? $("#dashboardContent").show() : ""
 			} else if (wanneng.indexOf(policyType) != -1) {
 				$("#circleAll").children().get(3).classList.add("active")
 				$("#circleText").children().get(3).classList.add("active")
+				showCircle == true ? $("#dashboardContent").show() : ""
 			} else if (jiankang.indexOf(policyType) != -1) {
 				$("#circleAll").children().get(4).classList.add("active")
 				$("#circleText").children().get(4).classList.add("active")
+				showCircle == true ? $("#dashboardContent").show() : ""
 			}
  		}
 
