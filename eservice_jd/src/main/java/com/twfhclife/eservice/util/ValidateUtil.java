@@ -71,8 +71,8 @@ public class ValidateUtil {
         int i = 0;
         int counter = 1;
         for (; i < value.length() - 1; ) {
-            int currentAscii = Integer.valueOf(value.charAt(i));
-            int nextAscii = Integer.valueOf(value.charAt(i + 1));
+            Integer currentAscii = Integer.valueOf(value.charAt(i));
+            Integer nextAscii = Integer.valueOf(value.charAt(i + 1));
             if ((rangeInDefined(currentAscii, 48, 57) || rangeInDefined(currentAscii, 65, 90) || rangeInDefined(currentAscii, 97, 122))
                     && (rangeInDefined(nextAscii, 48, 57) || rangeInDefined(nextAscii, 65, 90) || rangeInDefined(nextAscii, 97, 122))) {
                 if (Math.abs((nextAscii - currentAscii)) == 1) {

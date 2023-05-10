@@ -141,7 +141,7 @@ public class PolicyController extends BaseController {
                 }
             }
             addAttribute("vo", vo == null ? new PolicyBaseVo() : vo.getPolicyBase());
-            addAttribute("payments", vo.getPayments());
+            addAttribute("payments", vo == null ? Lists.newArrayList() : vo.getPayments());
         } catch (Exception e) {
             logger.error("Unable to get data from listing13: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
