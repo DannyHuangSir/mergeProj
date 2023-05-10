@@ -1,9 +1,10 @@
 package com.twfhclife.eservice.web.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class FunctionVo {
+public class FunctionVo implements Serializable {
 	
 	private BigDecimal functionId;
 	private String functionName;

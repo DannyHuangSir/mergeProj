@@ -140,7 +140,7 @@ public class PolicyController extends BaseController {
                     }
                 }
             }
-            addAttribute("vo", vo.getPolicyBase());
+            addAttribute("vo", vo == null ? new PolicyBaseVo() : vo.getPolicyBase());
             addAttribute("payments", vo.getPayments());
         } catch (Exception e) {
             logger.error("Unable to get data from listing13: {}", ExceptionUtils.getStackTrace(e));
@@ -355,7 +355,7 @@ public class PolicyController extends BaseController {
                 logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);
                 portfolioList = portfolioResponse.getPortfolioList();
             }
-            responseObj.setEndDate(portfolioResponse.getEndDate());
+            responseObj.setEndDate(portfolioResponse != null ? portfolioResponse.getEndDate() : "");
             responseObj.setResultData(portfolioList);
             responseObj.setResult(ResponseObj.SUCCESS);
         } catch (Exception e) {

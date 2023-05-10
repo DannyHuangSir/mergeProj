@@ -63,7 +63,7 @@ public class ChangePasswordController extends BaseController {
         try {
             String userId = "";
             String loginUserType = getUserType();
-            if ("member".equals(loginUserType)) {
+            if (StringUtils.equals("member", loginUserType)) {
                 userId = getUserId();
             } else {
                 //admin or agent
@@ -108,7 +108,7 @@ public class ChangePasswordController extends BaseController {
             SuccessMsg("changePassword", changePasswordSuccess);
 
             String loginUserType = getUserType();
-            if ("member".equals(loginUserType)) {
+            if (StringUtils.equals("member", loginUserType)) {
                 //userId = getUserId();
                 UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
                 userDetail.setLastChangPasswordDate(Calendar.getInstance().getTime());
