@@ -5,6 +5,7 @@ import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.controller.BaseController;
 import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.util.DateUtil;
+import com.twfhclife.eservice.web.domain.CaseQueryVo;
 import com.twfhclife.eservice.web.domain.PortfolioResponseObj;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
@@ -40,10 +41,17 @@ public class PolicyController extends BaseController {
         return "frontstage/jdzq/policyQuery/policy-query";
     }
 
+//    @PostMapping(value = { "/clearPolicySearch" })
+//    @ResponseBody
+//    public void clearPolicySearch() {
+//        removeFromSession("queryPolicy");
+//    }
+
     @GetMapping("/returnPolicy")
     public String returnPolicy() {
-        addAttribute("queryPolicy", getSession("queryPolicy"));
-        addAttribute("autoQuery", true);
+        PolicyVo vo = (PolicyVo) getSession("queryPolicy");
+        addAttribute("queryPolicy", vo == null ? new PolicyVo() : vo);
+        addAttribute("autoQuery", vo == null ? false : true);
         addAttribute("policyTypeList", optionService.getPolicyTypeList());
         return "frontstage/jdzq/policyQuery/policy-query";
     }

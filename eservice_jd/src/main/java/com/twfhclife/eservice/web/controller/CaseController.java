@@ -53,6 +53,12 @@ public class CaseController extends BaseController {
 		return responseObj;
 	}
 
+//	@PostMapping(value = { "/clearCaseSearch" })
+//	@ResponseBody
+//	public void clearCaseSearch() {
+//		removeFromSession("queryCase");
+//	}
+
 	@RequestMapping(value = { "/personalCaseListing1" })
 	public String personalCaseListing1(@RequestParam("policyNo") String policyNo) {
 		removeFromSession("queryCase");
