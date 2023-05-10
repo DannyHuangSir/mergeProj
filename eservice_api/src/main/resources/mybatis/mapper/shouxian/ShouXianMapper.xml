@@ -30,7 +30,7 @@
         CASE
         WHEN A.LIPM_ST <![CDATA[<=]]>  18 THEN 1
         WHEN A.LIPM_ST BETWEEN 30 AND 34 THEN 2
-        WHEN add_months(A.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
+        WHEN add_months(A.LIPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate THEN 3
         END AS STAT,
         to_char(A.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE, (CASE WHEN A.LIPI_MAIN_AMT = 0 THEN A.LIPI_CANCER_QUAN ELSE A.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
         A.LIPI_TABL_PREM, (CASE WHEN A.LIPM_RCP_CODE = 'A' AND A.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE A.LIPM_RCP_CODE END) AS PAYMENT_MODE, lpr.PROD_CURRENCY CURRENCY,
@@ -55,7 +55,7 @@
     <select id="getPolicyListTotal" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyCountVo">
         SELECT SUM(CASE WHEN LIPM_ST <![CDATA[<=]]> 18 THEN 1 ELSE 0 END) effectiveCount,
         SUM(CASE WHEN LIPM_ST BETWEEN 30 AND 34 THEN 1 ELSE 0 END) stopCount,
-        SUM(CASE WHEN add_months(LIPI_INSU_END_DATE, 24) > sysdate THEN 1 ELSE 0 END) expireCount,
+        SUM(CASE WHEN add_months(LIPI_INSU_END_DATE, 24) <![CDATA[<]]> sysdate THEN 1 ELSE 0 END) expireCount,
         count(1) total
         FROM (
         <include refid="policyListSql"/>
@@ -124,7 +124,7 @@
                 AND A.LIPM_ST BETWEEN 30 AND 34
             </if>
             <if test="vo.stat != null and vo.stat == '3'.toString()">
-                AND add_months(B.LIPI_INSU_END_DATE, 24) > sysdate
+                AND add_months(B.LIPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate
             </if>
             <if test="vo.permQuery and vo.permQuery.size() > 0">
                 AND (
@@ -185,7 +185,7 @@
                 AND A.NEPM_ST BETWEEN 30 AND 34
             </if>
             <if test="vo.stat != null and vo.stat == '3'.toString()">
-                AND add_months(B.NEPI_INSU_END_DATE, 24) > sysdate
+                AND add_months(B.NEPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate
             </if>
             <if test="vo.permQuery and vo.permQuery.size() > 0">
                 AND ( <foreach collection="vo.permQuery" item="item" separator="OR">
@@ -275,7 +275,7 @@
         SELECT CASE
             WHEN A.LIPM_ST <![CDATA[<= ]]> 18 THEN 1
             WHEN A.LIPM_ST BETWEEN 30 AND 34 THEN 2
-            WHEN add_months(A.LIPI_INSU_END_DATE, 24) > sysdate THEN 3
+            WHEN add_months(A.LIPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate THEN 3
             END AS STATUS, A.LIPI_TABL_PREM, A.LIPM_BANK_CODE,
         A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2, lip.PMDA_INVE_ATTR,
         to_char(A.LIPI_INSU_BEG_DATE, 'yyyy-MM-dd') EFFECTIVE_DATE,
