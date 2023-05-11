@@ -183,7 +183,7 @@ public class ClaimChainController{
 			}
 			rtnVo.setMsg(sb.toString());
 			
-			logger.info("input DnsRequestVo error:"+reqVo.toString());
+			logger.info("input DnsRequestVo error:"+ (reqVo == null ? "null" : reqVo.toString()));
 		}
 		
 		logger.info("End ClaimChainController.notifyOfNewCaseDns().");

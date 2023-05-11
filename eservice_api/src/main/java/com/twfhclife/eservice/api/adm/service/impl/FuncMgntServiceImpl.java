@@ -105,7 +105,7 @@ public class FuncMgntServiceImpl implements IFuncMgntService {
 		
 		int result = functionItemDao.addFunctionItem(functionVo);
 		if (result > 0) {
-			if (functionVo.getFunctionId() != null) {
+			if (functionVo != null && functionVo.getFunctionId() != null) {
 				functionDivDao.deleteByFunId(functionVo.getFunctionId());
 			}
 			//無法在新增function時同時新增div(因為沒有functionId)
@@ -146,8 +146,10 @@ public class FuncMgntServiceImpl implements IFuncMgntService {
 		
 		int result = functionItemDao.updateFunctionItem(functionVo);
 		if (result > 0) {
-			functionDivDao.deleteByFunId(functionVo.getFunctionId());
-			if(functionVo.getDivArr() != null) {
+			if (functionVo != null && functionVo.getFunctionId() != null) {
+				functionDivDao.deleteByFunId(functionVo.getFunctionId());
+			}
+			if(functionVo != null && functionVo.getDivArr() != null) {
 				String[] divArr = functionVo.getDivArr().split(",");
 				for (String divName : divArr) {
 					if (MyStringUtil.isNotNullOrEmpty(divName)) {

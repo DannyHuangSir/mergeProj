@@ -96,6 +96,8 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
             if (!localFile.exists()) {
                 localFile.mkdirs();
             }
+            ByteArrayOutputStream bos = null;
+            FileInputStream fis = null;
             try {
                 File server_file = new File(filepath + File.separator + fileName);
                 if (server_file.exists()) {
@@ -104,18 +106,32 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                     server_file = new File(filepath + File.separator + fileName);
                 }
                 file.transferTo(server_file);
-                FileInputStream fis = new FileInputStream(server_file);
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                fis = new FileInputStream(server_file);
+                bos = new ByteArrayOutputStream();
                 byte[] b = new byte[1024];
                 int n;
                 while ((n = fis.read(b)) != -1) {
                     bos.write(b, 0, n);
                 }
-                fis.close();
-                bos.close();
+
                 buffer = bos.toByteArray();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        logger.error("upLoadFile: " + e);
+                    }
+                }
+                if (bos != null) {
+                    try {
+                        bos.close();
+                    } catch (IOException e) {
+                        logger.error("upLoadFile: " + e);
+                    }
+                }
             }
             jdBatchSchedulVO.setBatchFile(buffer);
             jdBatchSchedulVO.setFailLink(buffer);
@@ -167,7 +183,9 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    bufferedOutputStream.close();
+                    if (bufferedOutputStream != null) {
+                        bufferedOutputStream.close();
+                    }
                 }
                 ArrayList<JdUserVo> userList = new ArrayList<>();
                 try {
@@ -371,22 +389,37 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                 } finally {
                     workbook.close();
                 }
+                FileInputStream fis = null;
+                ByteArrayOutputStream bos = null;
                 // todo 轉換成byte數組到數據庫
                 byte[] buffer = null;
                 try {
                     File fail_file = new File(readFailFilePath);
-                    FileInputStream fis = new FileInputStream(fail_file);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    fis = new FileInputStream(fail_file);
+                    bos = new ByteArrayOutputStream();
                     byte[] b1 = new byte[1024];
                     int n;
                     while ((n = fis.read(b1)) != -1) {
                         bos.write(b1, 0, n);
                     }
-                    fis.close();
-                    bos.close();
                     buffer = bos.toByteArray();
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                            logger.error("workICFile: " + e);
+                        }
+                    }
+                    if (bos != null) {
+                        try {
+                            bos.close();
+                        } catch (IOException e) {
+                            logger.error("workICFile: " + e);
+                        }
+                    }
                 }
                 batch.setFailLink(buffer);
                 Date endDate = new Date();

@@ -78,6 +78,9 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
             if (!localFile.exists()) {
                 localFile.mkdirs();
             }
+
+            FileInputStream fis = null;
+            ByteArrayOutputStream bos = null;
             try {
                 File server_file = new File(filepath + File.separator + fileName);
                 if (server_file.exists()) {
@@ -86,18 +89,31 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                     server_file = new File(filepath + File.separator + fileName);
                 }
                 file.transferTo(server_file);
-                FileInputStream fis = new FileInputStream(server_file);
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                fis = new FileInputStream(server_file);
+                bos = new ByteArrayOutputStream();
                 byte[] b = new byte[1024];
                 int n;
                 while ((n = fis.read(b)) != -1) {
                     bos.write(b, 0, n);
                 }
-                fis.close();
-                bos.close();
                 buffer = bos.toByteArray();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        logger.error("workICFile: " + e);
+                    }
+                }
+                if (bos != null) {
+                    try {
+                        bos.close();
+                    } catch (IOException e) {
+                        logger.error("workICFile: " + e);
+                    }
+                }
             }
             jdBatchSchedulVO.setBatchFile(buffer);
             jdBatchSchedulVO.setFailLink(buffer);
@@ -149,7 +165,9 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    bufferedOutputStream.close();
+                    if (bufferedOutputStream != null) {
+                        bufferedOutputStream.close();
+                    }
                 }
                 //todo 讀取csv
                 ArrayList<JdUserVo> userList = new ArrayList<>();
@@ -501,10 +519,12 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                 }
                 // todo 轉換成byte數組到數據庫
                 byte[] buffer = null;
+                FileInputStream fis = null;
+                ByteArrayOutputStream bos = null;
                 try {
                     File fail_file = new File(readFailFilePath);
-                    FileInputStream fis = new FileInputStream(fail_file);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    fis = new FileInputStream(fail_file);
+                    bos = new ByteArrayOutputStream();
                     byte[] b1 = new byte[1024];
                     int n;
                     while ((n = fis.read(b1)) != -1) {
@@ -515,6 +535,21 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                     buffer = bos.toByteArray();
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                            logger.error("workICFile: " + e);
+                        }
+                    }
+                    if (bos != null) {
+                        try {
+                            bos.close();
+                        } catch (IOException e) {
+                            logger.error("workICFile: " + e);
+                        }
+                    }
                 }
                 batch.setFailLink(buffer);
                 Date endDate = new Date();

@@ -184,7 +184,7 @@ public class DashboardController extends BaseController {
 	 */
 	private void setNoticeBoardList(DashboardResponse resp, String rocId) {
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
 			List<EstatmentVo> noticeBoardList = new ArrayList<>();
 			
 			if (!StringUtils.isEmpty(rocId)) {

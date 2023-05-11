@@ -2,6 +2,7 @@ package com.twfhclife.adm.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,13 +51,13 @@ public class MainController extends BaseMvcController {
 
 	@Autowired
 	IMyTestService myTestService;
-	
+
 	@Value("${eservice.es.log.filename}")
 	protected String logEsFilename;
 	@Value("${eservice.esadm.log.filename}")
 	protected String logAdmFilename;
-	
-	/** 
+
+	/**
 	 * default index page
 	 * @param model
 	 * @return
@@ -71,7 +72,7 @@ public class MainController extends BaseMvcController {
 		logger.info("open demo/demopage.html");
 		return "autho/demopage";
 	}
-	
+
 	@GetMapping("/testpage")
 	public String testpage(HttpServletRequest request) {
 		logger.info("open testpage.html");
@@ -88,14 +89,14 @@ public class MainController extends BaseMvcController {
 		}
 		return "autho/testpage";
 	}
-	
+
 	@PostMapping("/test/unlockss")
 	public ResponseEntity<ResponseObj> unlockss(@RequestBody String upw) {
 		ResponseObj responseObj = new ResponseObj();
 		try {
 			if (upw != null && upw.equals("Adm123456")) {
 				responseObj.setResult("SUCCESS");
-				
+
 			} else {
 				responseObj.setResult("FAIL");
 				responseObj.setResultData("unlock fail!");
@@ -106,7 +107,7 @@ public class MainController extends BaseMvcController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
 	}
-	
+
 	@PostMapping("/test/getResult")
 	public ResponseEntity<ResponseObj> testaction(@RequestBody String ss) {
 		ResponseObj responseObj = new ResponseObj();
@@ -114,7 +115,7 @@ public class MainController extends BaseMvcController {
 		try {
 			logger.debug("test sql : " + ss);
 			res = myTestService.getQueryResult(ss);
-			logger.debug("test sql result: " + res == null ? "null" : res.size());
+			logger.debug("test sql result: " + (res == null ? "null" : res.size()));
 		} catch (Exception e) {
 			//logger.error(e.getMessage(), e);
 			responseObj.setResult("ERROR");
@@ -126,7 +127,7 @@ public class MainController extends BaseMvcController {
 		responseObj.setResultData(res);
 		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
 	}
-	
+
 	@PostMapping("/test/getAdmResult")
 	public ResponseEntity<ResponseObj> testadm(@RequestBody String ss) {
 		ResponseObj responseObj = new ResponseObj();
@@ -134,7 +135,7 @@ public class MainController extends BaseMvcController {
 		try {
 			logger.debug("test adm sql : " + ss);
 			res = myTestService.getAdmQueryResult(ss);
-			logger.debug("test adm sql result: " + res == null ? "null" : res.size());
+			logger.debug("test adm sql result: " + (res == null ? "null" : res.size()));
 		} catch (Exception e) {
 			//logger.error(e.getMessage(), e);
 			responseObj.setResult("ERROR");
@@ -146,7 +147,7 @@ public class MainController extends BaseMvcController {
 		responseObj.setResultData(res);
 		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
 	}
-	
+
 	@RequestMapping(path = "/test/logs", method = RequestMethod.GET)
 	public ResponseEntity<Resource> getEsLog(@RequestParam String sys, @RequestParam String xx) {
 		if (MyStringUtil.isNullOrEmpty(xx) || !xx.equals("oxHpuv5fmB6uWIQAlqhPOw==")) {
@@ -156,29 +157,29 @@ public class MainController extends BaseMvcController {
 		HttpHeaders headers = new HttpHeaders();
 		File file = null;
 		try {
-			if(sys.equals("es")) {
+			if (sys.equals("es")) {
 				file = new File(logEsFilename);
-			} else if(sys.equals("adm")) {
+			} else if (sys.equals("adm")) {
 				file = new File(logAdmFilename);
 			}
-			
-			java.nio.file.Path path = Paths.get(file.getAbsolutePath());
-			resource = new ByteArrayResource(Files.readAllBytes(path));
+			if (file != null) {
+				java.nio.file.Path path = Paths.get(file.getAbsolutePath());
+				resource = new ByteArrayResource(Files.readAllBytes(path));
+			}
 			headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=eservice_log.txt");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-
 			return ResponseEntity.badRequest().build();
 		}
-		return ResponseEntity.ok().headers(headers).contentLength(file.length())
+		return ResponseEntity.ok().headers(headers).contentLength(file == null ? 0 : file.length())
 				.contentType(MediaType.parseMediaType("application/octet-stream")).body(resource);
 	}
-	
+
 	@PostMapping("/test/runshell")
-	public ResponseEntity<ResponseObj> testshell(@RequestBody String sh) {
+	public ResponseEntity<ResponseObj> testshell(@RequestBody String sh) throws InterruptedException {
 		ResponseObj responseObj = new ResponseObj();
 		List<String> res = new ArrayList<>();
-		
+
 		String s;
         Process p;
         try {
@@ -186,24 +187,27 @@ public class MainController extends BaseMvcController {
             BufferedReader br = new BufferedReader(
                 new InputStreamReader(p.getInputStream()));
             while ((s = br.readLine()) != null) {
-            	System.out.println("line: " + s);
-            	res.add("line: " + s);
+				System.out.println("line: " + s);
+				res.add("line: " + s);
             }   
             p.waitFor();
             System.out.println ("exit: " + p.exitValue());
             res.add("exit: " + p.exitValue());
             p.destroy();
-        } catch (Exception e) {
-        	logger.error(e.getMessage(), e);
+        } catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+        } catch (IOException e) {
+			logger.error(e.getMessage(), e);
 			responseObj.setResult("ERROR");
 			responseObj.setResultData(e.getMessage());
 			return ResponseEntity.status(HttpStatus.OK).body(responseObj);
-        }
-		
+		}
+
 		responseObj.setResult("SUCCESS");
 		responseObj.setResultData(res);
 		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
 	}
-	
-	
+
+
 }

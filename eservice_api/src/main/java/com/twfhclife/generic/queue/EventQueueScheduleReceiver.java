@@ -85,17 +85,18 @@ public class EventQueueScheduleReceiver {
 			List<String> jsonList = new LinkedList<>();
 			for (int i = 0; i < maxReceiveNumber; i++) {
 				jmsContext = connectionFactory.createContext(username, password);
-				JMSConsumer consumer = jmsContext.createConsumer(destination);
-				String text = consumer.receiveBody(String.class, timeout);
-				if (!StringUtils.isEmpty(text)) {
-					logger.info("Received message with content: {}", text);
-					jsonList.add(text);
-					jmsContext.close();
-				} else {
-					logger.warn("Unable to Receive message: {}", "No message Received!");
-					// 代表都收完了
-					jmsContext.close();
-					break;
+				try (JMSConsumer consumer = jmsContext.createConsumer(destination)) {
+					String text = consumer.receiveBody(String.class, timeout);
+					if (!StringUtils.isEmpty(text)) {
+						logger.info("Received message with content: {}", text);
+						jsonList.add(text);
+						jmsContext.close();
+					} else {
+						logger.warn("Unable to Receive message: {}", "No message Received!");
+						// 代表都收完了
+						jmsContext.close();
+						break;
+					}
 				}
 			}
 			

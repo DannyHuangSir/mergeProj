@@ -642,7 +642,7 @@ public class MedicalAllianceServiceTask {
                                         //toData
                                         String toValue = null;
                                         String allianceStatus = null;
-                                        if (medicalVo.getToData() != null && medicalVo.getToData().size() >= 0) {
+                                        if (medicalVo.getToData() != null && !CollectionUtils.isEmpty(medicalVo.getToData())) {
                                             for (MedicalTreatmentClaimToFromDataVo toData : medicalVo.getToData()) {
                                                 if (StringUtils.isNotBlank(toData.getTo()) && "L01".equals(toData.getTo())) {
                                                     toValue = toData.getTo();

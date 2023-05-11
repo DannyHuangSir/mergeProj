@@ -1,5 +1,7 @@
 package com.twfhclife.alliance.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -269,11 +271,11 @@ public class ContactInfoVo {
 		this.to = to;
 	}
 	public void setTo(String strTo) {
-		if(strTo!=null && strTo.trim()!="") {
+		if(StringUtils.isNotBlank(strTo)) {
 			String[] strs = strTo.split(",");
 			List<CompanyVo> tempto = new ArrayList<CompanyVo>();
 			for(String str : strs) {
-				if(str!=null && str.trim()!="") {
+				if(StringUtils.isNotBlank(str)) {
 					CompanyVo vo = new CompanyVo();
 					vo.setCompanyId(str);;
 					tempto.add(vo);

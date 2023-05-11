@@ -234,7 +234,8 @@ public class AllianceServiceImpl implements IExternalService{
 				return null;
 			}
 	        
-			strRes= responseEntity.getBody();
+
+			strRes = responseEntity != null ? responseEntity.getBody() : null;
 			//System.out.println("responseEntity.getBody()="+strRes);
 			
 //			Object obj = responseEntity.getBody();

@@ -367,7 +367,6 @@ public class EventRecordLogAspect {
 	 * 
 	 * @param erReq EventRecordRequestVo
 	 */
-	@Transactional
 	private void saveEvent(EventRecordRequestVo eventReq) {
 		try {
 			int nextBusinessEventId = businessEventService.getNextId();

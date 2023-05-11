@@ -4,7 +4,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.keycloak.representations.idm.UserRepresentation;
 
-public class KeycloakUser extends UserRepresentation {
+import java.io.Serializable;
+
+public class KeycloakUser extends UserRepresentation implements Serializable {
 
 	private String userId;//Keycloak User UUID
 	private String accessToken;
