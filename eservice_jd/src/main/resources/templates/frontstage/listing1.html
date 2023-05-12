@@ -50,7 +50,7 @@
 												<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
 												<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
 												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span>
-													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span></p>
+													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : '-'}"></span></p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div class="mobile-toggle-panel">
@@ -62,22 +62,25 @@
 																<tr class="noEvent borderTop">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">契約狀態</th>
 																	<td><b class="tablesaw-cell-label mobile-b">契約狀態</b> <span class="mobile-span">
-																		<th:block th:if="${vo.status == '1'}">有效</th:block>
-																		<th:block th:if="${vo.status == '2'}">停效</th:block>
-																		<th:block th:if="${vo.status == '3'}">失效</th:block>
+																		<th:block th:switch="${vo.status}">
+																				<th:block th:case="1">有效</th:block>
+																				<th:block th:case="2">停效</th:block>
+																				<th:block th:case="3">失效</th:block>
+																				<th:block th:case="*">-</th:block>
+																		</th:block>
 																	</span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">保險金額</th>
-																	<td><b class="tablesaw-cell-label mobile-b">保險金額</b> <span class="mobile-span" th:text="${vo.mainAmount}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">保險金額</b> <span class="mobile-span" th:text="${vo.mainAmount != null ? vo.mainAmount : '-'}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">繳費方式</th>
-																	<td><b class="tablesaw-cell-label mobile-b">繳費方式</b> <span class="mobile-span" th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : ''}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">繳費方式</b> <span class="mobile-span" th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : '-'}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">應繳保費</th>
-																	<td th:onclick="'javascript:postPolicyListType(\'' + @{/listing3} + '\', \'' + ${policyNo} + '\')'"><b class="tablesaw-cell-label mobile-b">應繳保費</b><span class="mobile-span" th:text="${vo.lipiTablPrem}"></span></td>
+																	<td th:onclick="'javascript:postPolicyListType(\'' + @{/listing3} + '\', \'' + ${policyNo} + '\')'"><b class="tablesaw-cell-label mobile-b">應繳保費</b><span class="mobile-span" th:text="${vo.lipiTablPrem != null ? vo.lipiTablPrem : '-'}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">是否勾選自動墊繳保費 </th>
@@ -85,7 +88,7 @@
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">招攬單位分支機構 </th>
-																	<td><b class="tablesaw-cell-label mobile-b">招攬單位分支機構 </b> <span class="mobile-span" th:text="${vo.branchName}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">招攬單位分支機構 </b> <span class="mobile-span" th:text="${vo.branchName != null ? vo.branchName : '-'}"></span></td>
 																</tr>
 																</tbody>
 															</table>
@@ -95,15 +98,15 @@
 																<tbody>
 																<tr class="noEvent borderTop">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">繳別</th>
-																	<td><b class="tablesaw-cell-label mobile-b">繳別</b> <span class="mobile-span" th:text="${vo.paymentMode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue : ''}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">繳別</b> <span class="mobile-span" th:text="${vo.paymentMode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue : '-'}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">投保始期</th>
-																	<td><b class="tablesaw-cell-label mobile-b">投保始期</b> <span class="mobile-span" th:text="${vo.beginDate}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">投保始期</b> <span class="mobile-span" th:text="${vo.beginDate != null ? vo.beginDate : '-'}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">繳費期滿日</th>
-																	<td><b class="tablesaw-cell-label mobile-b">繳費期滿日</b> <span class="mobile-span" th:text="${vo.endDate}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">繳費期滿日</b> <span class="mobile-span" th:text="${vo.endDate != null ? vo.endDate : '-'}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">電子表單</th>
@@ -111,18 +114,18 @@
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">集彙申請</th>
-																	<td><b class="tablesaw-cell-label mobile-b">集彙申請</b> <span class="mobile-span" th:text="${vo.lipmGp == null ? '' : vo.lipmGp}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">集彙申請</b> <span class="mobile-span" th:text="${vo.lipmGp == null ? '-' : vo.lipmGp}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">保單簽收日 </th>
 																	<td><b class="tablesaw-cell-label mobile-b">保單簽收日 </b> <span class="mobile-span">
-																		<th:block th:if="${vo.assnStatus == 'B'}" th:text="${vo.assnDate}"></th:block>
-																		<th:block th:if="${vo.pmdaMail == '3' or vo.pmdaMail == '4'}" th:text="${vo.assnTrDate}"></th:block>
+																		<th:block th:if="${vo.pmdaMail == '3' or vo.pmdaMail == '4' or vo.assnStatus == 'B'}" th:text="${vo.assnTrDate != null ? vo.assnTrDate : '-'}"></th:block>
+																		<th:block th:if="${vo.pmdaMail != '3' && vo.pmdaMail != '4' && vo.assnStatus != 'B'}">-</th:block>
 																	</span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">出單日 </th>
-																	<td><b class="tablesaw-cell-label mobile-b">出單日 </b> <span class="mobile-span" th:text="${vo.printDate}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">出單日 </b> <span class="mobile-span" th:text="${vo.printDate != null ? vo.printDate : '-' }"></span></td>
 																</tr>
 																</tbody>
 															</table>
@@ -151,42 +154,45 @@
 															<tbody>
 															<tr class="noEvent borderTop">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">姓名</th>
-																<td><b class="tablesaw-cell-label mobile-b">姓名</b> <span class="mobile-span" th:text="${vo.lipmName}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">姓名</b> <span class="mobile-span" th:text="${vo.lipmName != null ? vo.lipmName : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">身分證字號</th>
-																<td><b class="tablesaw-cell-label mobile-b">身分證字號</b> <span class="mobile-span" th:text="${vo.lipmId}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">身分證字號</b> <span class="mobile-span" th:text="${vo.lipmId != null ? vo.lipmId : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">生日</th>
-																<td><b class="tablesaw-cell-label mobile-b">生日</b> <span class="mobile-span" th:text="${vo.lipmBirth}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">生日</b> <span class="mobile-span" th:text="${vo.lipmBirth != null ? vo.lipmBirth : '-' }"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">電話</th>
-																<td><b class="tablesaw-cell-label mobile-b">電話</b> <span class="mobile-span" th:text="${vo.lipmTelH}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">電話</b> <span class="mobile-span" th:text="${vo.lipmTelH != null ? vo.lipmTelH : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">行動電話 </th>
-																<td><b class="tablesaw-cell-label mobile-b">行動電話 </b> <span class="mobile-span" th:text="${vo.lipmPhone}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">行動電話 </b> <span class="mobile-span" th:text="${vo.lipmPhone != null ? vo.lipmPhone : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">電子信箱 </th>
-																<td><b class="tablesaw-cell-label mobile-b">電子信箱 </b> <span class="mobile-span" th:text="${vo.lipmMail}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">電子信箱 </b> <span class="mobile-span" th:text="${vo.lipmMail != null ? vo.lipmMail : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">通訊地址 </th>
-																<td><b class="tablesaw-cell-label mobile-b">通訊地址 </b> <span class="mobile-span"  th:text="${vo.lipmAddr}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">通訊地址 </b> <span class="mobile-span"  th:text="${vo.lipmAddr != null ? vo.lipmAddr : '-' }"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">要保地址 </th>
-																<td><b class="tablesaw-cell-label mobile-b">要保地址 </b> <span class="mobile-span" th:text="${vo.lipmAddr}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">要保地址 </b> <span class="mobile-span" th:text="${vo.lipmAddr != null ? vo.lipmAddr : '-' }"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">風險屬性 </th>
 																<td><b class="tablesaw-cell-label mobile-b">風險屬性 </b> <span class="mobile-span">
-																	<th:block th:if="${vo.riskLevel == 'A'}">保守型</th:block>
-																	<th:block th:if="${vo.riskLevel == 'B'}">穩健型</th:block>
-																	<th:block th:if="${vo.riskLevel == 'C'}">積極型</th:block>
+																	<th:block th:switch="${vo.riskLevel}">
+																			<th:block th:case="A">保守型</th:block>
+																			<th:block th:case="B">穩健型</th:block>
+																			<th:block th:case="C">積極型</th:block>
+																			<th:block th:case="*">-</th:block>
+																	</th:block>
 																</span></td>
 															</tr>
 															</tbody>
@@ -204,19 +210,19 @@
 															<tbody>
 															<tr class="noEvent borderTop">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">姓名</th>
-																<td><b class="tablesaw-cell-label mobile-b">姓名</b> <span class="mobile-span" th:text="${vo.lipiName}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">姓名</b> <span class="mobile-span" th:text="${vo.lipiName != null ? vo.lipiName : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">身分證字號</th>
-																<td><b class="tablesaw-cell-label mobile-b">身分證字號</b> <span class="mobile-span" th:text="${vo.lipiId}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">身分證字號</b> <span class="mobile-span" th:text="${vo.lipiId != null ? vo.lipiId : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">生日</th>
-																<td><b class="tablesaw-cell-label mobile-b">生日</b> <span class="mobile-span" th:text="${vo.lipiBirth}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">生日</b> <span class="mobile-span" th:text="${vo.lipiBirth != null ? vo.lipiBirth : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">投保年齡</th>
-																<td><b class="tablesaw-cell-label mobile-b">投保年齡</b> <span class="mobile-span" th:text="${vo.lipiAge}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">投保年齡</b> <span class="mobile-span" th:text="${vo.lipiAge != null ? vo.lipiAge : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">性別 </th>
@@ -224,11 +230,11 @@
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">電話 </th>
-																<td><b class="tablesaw-cell-label mobile-b">電話 </b> <span class="mobile-span" th:text="${vo.pmdaPiTel}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">電話 </b> <span class="mobile-span" th:text="${vo.pmdaPiTel != null ? vo.pmdaPiTel : '-'}"></span></td>
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">行動電話 </th>
-																<td><b class="tablesaw-cell-label mobile-b">行動電話 </b> <span class="mobile-span" th:text="${vo.lipmPhone}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">行動電話 </b> <span class="mobile-span" th:text="${vo.lipmPhone != null ? vo.lipmPhone : '-'}"></span></td>
 															</tr>
 															</tbody>
 														</table>
@@ -253,7 +259,7 @@
 													<tr th:each="vo1 : ${vo.beneficiaries}" class="h65 noEvent">
 														<td class="text-left" th:text="${vo1.lipbName}"></td>
 														<td th:text="${vo1.rela}"></td>
-														<td th:text="${vo1.code != null ? session.SYSTEM_PARAMETER['BENEFICIARY_TYPE'][vo1.code].parameterValue : ''}">
+														<td th:text="${vo1.code != null ? session.SYSTEM_PARAMETER['BENEFICIARY_TYPE'][vo1.code].parameterValue : '-'}">
 														</td>
 														<td th:text="${vo1.seq}"></td>
 													</tr>
