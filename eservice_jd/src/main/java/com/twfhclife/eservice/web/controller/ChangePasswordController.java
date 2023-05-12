@@ -63,7 +63,7 @@ public class ChangePasswordController extends BaseController {
         try {
             String userId = "";
             String loginUserType = getUserType();
-            if ("member".equals(loginUserType)) {
+            if (StringUtils.equals("member", loginUserType)) {
                 userId = getUserId();
             } else {
                 //admin or agent
@@ -107,16 +107,8 @@ public class ChangePasswordController extends BaseController {
             String changePasswordSuccess = getParameterValue(ApConstants.PAGE_WORDING_CATEGORY_CODE, ApConstants.WORDING_NA202);
             SuccessMsg("changePassword", changePasswordSuccess);
 
-            String loginUserType = getUserType();
-            if ("member".equals(loginUserType)) {
-                //userId = getUserId();
-                UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
-                userDetail.setLastChangPasswordDate(Calendar.getInstance().getTime());
-            } else {
-                //admin or agent
-                UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
-                userDetail.setLastChangPasswordDate(Calendar.getInstance().getTime());
-            }
+            UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
+            userDetail.setLastChangPasswordDate(Calendar.getInstance().getTime());
         } catch (Exception e) {
             logger.error("changePasswordSuccess error! {}", e);
         }

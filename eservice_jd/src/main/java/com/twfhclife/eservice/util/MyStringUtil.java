@@ -136,7 +136,6 @@ public class MyStringUtil {
 	/**
 	 * 將資料(可能含有null)轉為空字串
 	 * 
-	 * @param inputStr
 	 * @return
 	 */
 	public static String nullToString(Object inputObj) {
@@ -418,58 +417,4 @@ public class MyStringUtil {
 		return string != null && string.toString().length() > 0;
 	}
 	
-	public static String getCheckCode(String policyNo) {
-		String checkCode = "";
-		int prefix = calcPrefix(policyNo);
-//		System.out.println("prefix="+prefix);
-		int suffix = calcSuffix(policyNo);
-//		System.out.println("suffix="+suffix);
-		
-		int code = prefix + suffix;
-//		System.out.println("code="+code);
-		
-		int calc = code % prefix;
-		if (calc < 10) {
-			checkCode = "0" + calc;
-		} else if (calc > 99) {
-			checkCode = String.valueOf(calc).substring(0,2);
-		} else {
-			checkCode = String.valueOf(calc);
-		}
-//		System.out.println("checkCode=" + checkCode);
-		return checkCode;
-	}
-	
-	public static int calcPrefix(String policyNo) {
-		String aaa = "";
-		char[] ch = policyNo.substring(0,2).toCharArray();
-		for (char c : ch) {
-			int temp = (int) c;
-			int temp_integer = 64; // for upper case
-			if (temp <= 90 & temp >= 65) {
-				aaa += temp - temp_integer;
-			} else {
-				aaa += temp;
-			}
-		}
-		return Integer.parseInt(aaa);
-	}
-	
-	public static int calcSuffix(String policyNo) {
-		String str = policyNo.substring(2);
-		int prefix = calcPrefix(policyNo);
-		int total = prefix;
-		int j = str.length();
-		for (int i=0; i < j; i++) {
-			int digit = Integer.parseInt(str.substring(i, i+1));
-			if (i == 0) {
-				total += prefix + 1;
-			} else if (i % 2 == 0) {
-				total += digit;
-			} else {
-				total = total * digit;
-			}
-		}
-		return total;
-	}
 }

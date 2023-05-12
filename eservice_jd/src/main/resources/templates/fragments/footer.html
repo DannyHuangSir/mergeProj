@@ -80,7 +80,7 @@
              return false;
         }
 
-        $(".messageContent").html('<div class="items" style="overflow-y: hidden;"></div>')
+        $(".messageContent .items").children().remove()
         appendNotifyItems(true)
         return false;
     }
@@ -137,7 +137,7 @@
                 if (!config) {
                     $("#messages").mCustomScrollbar("destroy")
                 }
-                $("#messages").height("200px").mCustomScrollbar()
+                $(".messageContent").height("400px").mCustomScrollbar()
             }
         });
     }

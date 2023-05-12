@@ -5,6 +5,7 @@ import com.twfhclife.eservice.api_model.*;
 import com.twfhclife.eservice.controller.BaseController;
 import com.twfhclife.eservice.util.ApConstants;
 import com.twfhclife.eservice.util.DateUtil;
+import com.twfhclife.eservice.web.domain.CaseQueryVo;
 import com.twfhclife.eservice.web.domain.PortfolioResponseObj;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
@@ -35,13 +36,22 @@ public class PolicyController extends BaseController {
     @GetMapping("/policyQuery")
     public String policyQuery() {
         addAttribute("queryPolicy", new PolicyVo());
+        addAttribute("autoQuery", false);
         addAttribute("policyTypeList", optionService.getPolicyTypeList());
         return "frontstage/jdzq/policyQuery/policy-query";
     }
 
+//    @PostMapping(value = { "/clearPolicySearch" })
+//    @ResponseBody
+//    public void clearPolicySearch() {
+//        removeFromSession("queryPolicy");
+//    }
+
     @GetMapping("/returnPolicy")
     public String returnPolicy() {
-        addAttribute("queryPolicy", getSession("queryPolicy"));
+        PolicyVo vo = (PolicyVo) getSession("queryPolicy");
+        addAttribute("queryPolicy", vo == null ? new PolicyVo() : vo);
+        addAttribute("autoQuery", vo == null ? false : true);
         addAttribute("policyTypeList", optionService.getPolicyTypeList());
         return "frontstage/jdzq/policyQuery/policy-query";
     }
@@ -130,8 +140,8 @@ public class PolicyController extends BaseController {
                     }
                 }
             }
-            addAttribute("vo", vo.getPolicyBase());
-            addAttribute("payments", vo.getPayments());
+            addAttribute("vo", vo == null ? new PolicyBaseVo() : vo.getPolicyBase());
+            addAttribute("payments", vo == null ? Lists.newArrayList() : vo.getPayments());
         } catch (Exception e) {
             logger.error("Unable to get data from listing13: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -345,7 +355,7 @@ public class PolicyController extends BaseController {
                 logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);
                 portfolioList = portfolioResponse.getPortfolioList();
             }
-            responseObj.setEndDate(portfolioResponse.getEndDate());
+            responseObj.setEndDate(portfolioResponse != null ? portfolioResponse.getEndDate() : "");
             responseObj.setResultData(portfolioList);
             responseObj.setResult(ResponseObj.SUCCESS);
         } catch (Exception e) {
