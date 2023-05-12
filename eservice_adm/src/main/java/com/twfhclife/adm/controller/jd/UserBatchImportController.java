@@ -123,7 +123,9 @@ public class UserBatchImportController extends BaseController {
         } catch (Exception e) {
             logger.error("Unable to downloadBatchExcel: {}", ExceptionUtils.getStackTrace(e));
         } finally {
-            outputStream.close();
+            if (outputStream != null) {
+                outputStream.close();
+            }
         }
     }
 

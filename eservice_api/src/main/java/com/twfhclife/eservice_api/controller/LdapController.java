@@ -1,5 +1,6 @@
 package com.twfhclife.eservice_api.controller;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -113,17 +114,24 @@ public class LdapController extends BaseController {
 		ReturnHeader returnHeader = new ReturnHeader();
 
 		// 连接LDAP
-		LdapConnection connection = new LdapNetworkConnection(ldapHost, 389);
+		connection = new LdapNetworkConnection(ldapHost, 389);
 
 		try {
 			EntryCursor cursor = this.testSearchWithDn(searchDN);
 
 			response.setReturnHeader(returnHeader);
 			response.setResult(cursor);
-			connection.close();
 		} catch (Exception e) {
 			Map<String, Object> error = Collections.singletonMap("error", e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 

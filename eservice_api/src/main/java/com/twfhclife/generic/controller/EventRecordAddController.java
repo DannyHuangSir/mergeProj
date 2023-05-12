@@ -48,7 +48,6 @@ public class EventRecordAddController extends BaseMvcController {
 		}
 	}
 
-	@Transactional
 	private void saveEvent(EventRecordRequestVo eventReq) {
 		try {
 			int nextBusinessEventId = businessEventService.getNextId();

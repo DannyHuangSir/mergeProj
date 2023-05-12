@@ -21,7 +21,7 @@ public class UnionCourseVo {
 	/**
 	 * 轉送聯盟鏈
 	 */
-	public static final String TYPE = "轉送聯盟鏈";
+	public static final String NC_TYPE = "轉送聯盟鏈";
 	
 	/**
 	 * 動作名稱

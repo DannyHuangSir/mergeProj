@@ -86,7 +86,6 @@ public class ChunghwaApiServiceimpl implements IChunghwaApiService{
 				return list;
 			}else {
 				logger.info("=======================Get CHUNGHWA_API_URL END=========================");
-				response.close();
 				client.close();
 				return null;
 			}

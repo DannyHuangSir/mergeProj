@@ -1223,6 +1223,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 
 						if (base64Type!=null &&  !"".equals(base64Type)) {
 							PDDocument doc = null;
+							PDDocument newDoc = null;
 							try {
 								filePath= PATH + File.separator + FILE_NAME;
 								if ("png".equals(base64Type) || "jpg".equals(base64Type)) {
@@ -1231,7 +1232,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 								}else{
 									doc = PDDocument.load(input);
 									PDPage page = doc.getPage(0);
-									PDDocument newDoc = new PDDocument();
+									newDoc = new PDDocument();
 									newDoc.addPage(page);
 									String miniatureBase64 = this.imgBase64(newDoc, baos);
 									logger.info("--------------------------------------------------PDF Base64转换为缩图-----Base64  is  not  null");
@@ -1242,6 +1243,13 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 							} catch (IOException e) {
 								e.printStackTrace();
 							}finally {
+								if (newDoc != null) {
+									try {
+										newDoc.close();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
 								try {
 									baos.flush();
 									baos.close();
@@ -1549,10 +1557,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 
 							if (base64Type!=null && ("pdf".equalsIgnoreCase(base64Type))) {
 								PDDocument doc = null;
+								PDDocument newDoc = null;
 								try {
 									doc = PDDocument.load(input);
 									PDPage page = doc.getPage(0);
-									PDDocument newDoc = new PDDocument();
+									newDoc = new PDDocument();
 									newDoc.addPage(page);
 									String miniatureBase64 = this.imgBase64(newDoc, baos);
 									logger.info("--------------------------------------------------PDF Base64转换为缩图-----Base64  is  not  null");
@@ -1561,6 +1570,13 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 								} catch (Exception e) {
 									e.printStackTrace();
 								} finally {
+									if (newDoc != null) {
+										try {
+											newDoc.close();
+										} catch (IOException e) {
+											e.printStackTrace();
+										}
+									}
 									try {
 										baos.flush();
 										baos.close();

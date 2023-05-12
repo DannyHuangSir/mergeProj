@@ -73,6 +73,7 @@ public class ValidateUtils {
 							}
 							break;
 						}
+						return false;
 					case 1:
 						if(arrayValue.matches("[0-9]{1,2}") || arrayValue.matches("[0-9]{1,2}-[0-9]{1,2}")) {
 							for(String value: values) {
@@ -83,6 +84,7 @@ public class ValidateUtils {
 							}
 							break;
 						}
+						return false;
 					case 2: 
 						if(arrayValue.matches("[0-9]{1,2}") || arrayValue.matches("[0-9]{1,2}-[0-9]{1,2}")) {
 							for(String value: values) {
@@ -93,6 +95,7 @@ public class ValidateUtils {
 							}
 							break;
 						}
+						return false;
 					case 3:
 						if(arrayValue.matches("[0-9]{1,2}") || arrayValue.matches("[0-9]{1,2}-[0-9]{1,2}")) {
 							for(String value: values) {
@@ -103,10 +106,12 @@ public class ValidateUtils {
 							}
 							break;
 						}
+						return false;
 					case 4:
 						if(arrayValue.matches("[1-7]{1}") || arrayValue.matches("[1-7]{1}-[1-7]{1}")) {
 							break;
 						}
+						return false;
 					default: return false;
 				}
 				index++;

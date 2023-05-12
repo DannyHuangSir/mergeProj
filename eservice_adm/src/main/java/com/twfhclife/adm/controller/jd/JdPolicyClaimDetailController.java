@@ -68,28 +68,32 @@ public class JdPolicyClaimDetailController extends BaseController {
             });
 
             if (size > 1) {
-                vo.getColumn().forEach(c -> {
-                    if (lilipiColumn.contains(c)) {
-                        IntStream.range(0, size).forEach(idx -> newColumn.add(c));
-                    } else {
-                        newColumn.add(c);
-                    }
-                });
-                vo.getColumnName().forEach(c -> {
-                    if (lilipiColumnName.contains(c)) {
-                        IntStream.range(0, size).forEach(idx -> newColumnName.add(c));
-                    } else {
-                        newColumnName.add(c);
-                    }
-                });
-                vo.setColumn(newColumn);
-                vo.setColumnName(newColumnName);
+                processColumns(vo, size, newColumn, newColumnName, lilipiColumn, lilipiColumnName);
             }
         }
 
         addAttribute("vo", vo);
         addAttribute("reportList", report1 != null ? report1.getPolicyClaimDetailVo() : Lists.newArrayList());
         return   "backstage/jd/policyClaimDetail3";
+    }
+
+    private static void processColumns(JdPolicyClaimReqVo vo, int size, List<String> newColumn, List<String> newColumnName, List<String> lilipiColumn, List<String> lilipiColumnName) {
+        vo.getColumn().forEach(c -> {
+            if (lilipiColumn.contains(c)) {
+                IntStream.range(0, size).forEach(idx -> newColumn.add(c));
+            } else {
+                newColumn.add(c);
+            }
+        });
+        vo.getColumnName().forEach(c -> {
+            if (lilipiColumnName.contains(c)) {
+                IntStream.range(0, size).forEach(idx -> newColumnName.add(c));
+            } else {
+                newColumnName.add(c);
+            }
+        });
+        vo.setColumn(newColumn);
+        vo.setColumnName(newColumnName);
     }
 
     private int computeMaxNoteSize(List<JdPolicyClaimDetailVo> claimDetailVos) {

@@ -673,7 +673,7 @@ public class AllianceServiceTask {
 									if (str.endsWith(",")) {
 										str = str.substring(0, str.length() - 1);
 									}
-									if(str!=null && str.trim()!="") {
+									if(StringUtils.isNotBlank(str)) {
 										mapperVo.setTo(str);
 									}
 								}

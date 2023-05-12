@@ -158,11 +158,11 @@ public class JobMgmtServiceImpl implements IJobMgmtService {
 					condition.setConditionValueCht(condition.getConditionValue());
 				}
 			}
-			if(MyStringUtil.isNullOrEmpty(condition.getConditionValue())) {
+			if(condition != null && MyStringUtil.isNullOrEmpty(condition.getConditionValue())) {
 				result = jobMgmtDao.deleteCondition(condition);
 				continue;
 			}
-			if(nowCondition.contains(condition.getCondition())) {
+			if(nowCondition != null && condition != null && nowCondition.contains(condition.getCondition())) {
 				result = jobMgmtDao.updateReportJobCondition(condition);
 			} else {
 				result = jobMgmtDao.insertReportJobCondition(reportJobScheduleVo, condition);

@@ -13,7 +13,7 @@ import com.twfhclife.generic.annotation.RequestLog;
 
 @Service
 public class CommLogServiceImpl implements ICommLogService{
-	
+
 	@Autowired
 	private CommLogDao commLogDao;
 
@@ -21,10 +21,10 @@ public class CommLogServiceImpl implements ICommLogService{
 	@Override
 	public List<Map<String, Object>> getCommLogDetail(CommLogVo vo) {
 		List<Map<String, Object>> list = commLogDao.getCommLogDetail(vo);
-		
+
 		return list;
 	}
-	
+
 	@RequestLog
 	@Override
 	public List<String> getAllCommType() {
@@ -34,17 +34,17 @@ public class CommLogServiceImpl implements ICommLogService{
 //		}
 		return list;
 	}
-	
+
 	@RequestLog
 	@Override
-	public List<String> getCommCntById(String id){
+	public List<String> getCommCntById(String id) {
 		CommLogVo vo = new CommLogVo();
 		vo.setId(id);
-		
+
 		List<String> list = commLogDao.getCommCntById(vo);
-		if(list!=null && !list.isEmpty()) {
-			System.out.println("list is not null");
-		}else{
+		if (list != null && !list.isEmpty()) {
+			System.out.println("list is null");
+		} else {
 			System.out.println("list is not null");
 		}
 		return list;

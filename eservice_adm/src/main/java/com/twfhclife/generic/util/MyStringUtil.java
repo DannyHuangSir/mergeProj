@@ -82,7 +82,7 @@ public class MyStringUtil {
 			DecimalFormatSymbols dfs = new DecimalFormatSymbols();
 			dfs.setGroupingSeparator(',');
 			df.setDecimalFormatSymbols(dfs);
-			return df.format(new BigDecimal(data));
+			return df.format(BigDecimal.valueOf(data));
 		}
 	}
 
@@ -93,7 +93,7 @@ public class MyStringUtil {
 	 * @return
 	 */
 	public static String double2String(double money) {
-		BigDecimal bd = new BigDecimal(money);
+		BigDecimal bd = BigDecimal.valueOf(money);
 		bd = bd.setScale(0, BigDecimal.ROUND_HALF_UP);// 小數後面0位, 四捨五入
 		return bd.toString();
 	}

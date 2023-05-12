@@ -106,7 +106,9 @@ public class SmsService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			post.releaseConnection();
+			if (post != null) {
+				post.releaseConnection();
+			}
 		}
 		
 	}

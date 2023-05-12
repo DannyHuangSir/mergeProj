@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -72,7 +74,12 @@ public class ValidateCodeUtil {
 		buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = buffImg.createGraphics();
 		// 生成隨機數
-		Random random = new Random();
+		Random random;
+		try {
+			random = SecureRandom.getInstanceStrong();
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
 		// 將圖像填充為白色
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);

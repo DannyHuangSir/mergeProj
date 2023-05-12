@@ -795,7 +795,7 @@ public class CIOAllianceServiceTask {
 							}
 							
 							String idNo = null;
-							if(icvo.getCondition()!=null) {
+							if(icvo != null && icvo.getCondition()!=null) {
 								idNo = icvo.getCondition().getCidNo();//取用舊ID
 							}
 							log.info("----cio203  查詢是否有案件未完結---------"+idNo);
@@ -898,7 +898,7 @@ public class CIOAllianceServiceTask {
 									if (str.endsWith(",")) {
 										str = str.substring(0, str.length() - 1);
 									}
-									if(str!=null && str.trim()!="") {
+									if(StringUtils.isNotBlank(str)) {
 										mapperVo.setTo(str);
 									}
 								}
@@ -1765,8 +1765,9 @@ public class CIOAllianceServiceTask {
 
 	private String checkContainRegion(List<String> regions, String address) {
 		for (String str : regions) {
-			address.contains(str);
-			return str;
+			if (address.contains(str)) {
+				return str;
+			}
 		}
 		return "";
 	}
