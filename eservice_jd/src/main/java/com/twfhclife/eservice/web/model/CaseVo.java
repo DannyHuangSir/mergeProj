@@ -1,5 +1,7 @@
 package com.twfhclife.eservice.web.model;
 
+import com.twfhclife.eservice.util.DateUtil;
+
 import java.io.Serializable;
 
 public class CaseVo implements Serializable {
@@ -74,7 +76,7 @@ public class CaseVo implements Serializable {
     }
 
     public String getAppBirth() {
-        return appBirth;
+        return DateUtil.westToTwDate(appBirth);
     }
 
     public void setAppBirth(String appBirth) {
@@ -82,7 +84,7 @@ public class CaseVo implements Serializable {
     }
 
     public String getInsBirth() {
-        return insBirth;
+        return DateUtil.westToTwDate(insBirth);
     }
 
     public void setInsBirth(String insBirth) {
@@ -130,7 +132,7 @@ public class CaseVo implements Serializable {
     }
 
     public String gettBSubmitDate() {
-        return tBSubmitDate;
+        return DateUtil.westToTwDate(tBSubmitDate);
     }
 
     public void settBSubmitDate(String tBSubmitDate) {
@@ -178,7 +180,7 @@ public class CaseVo implements Serializable {
     }
 
     public String getPrintDate() {
-        return printDate;
+        return DateUtil.westToTwDate(printDate);
     }
 
     public void setPrintDate(String printDate) {
@@ -186,7 +188,7 @@ public class CaseVo implements Serializable {
     }
 
     public String getPolicyActiveDate() {
-        return policyActiveDate;
+        return DateUtil.westToTwDate(policyActiveDate);
     }
 
     public void setPolicyActiveDate(String policyActiveDate) {
@@ -194,7 +196,7 @@ public class CaseVo implements Serializable {
     }
 
     public String getTransPayDate() {
-        return transPayDate;
+        return DateUtil.westToTwDate(transPayDate);
     }
 
     public void setTransPayDate(String transPayDate) {
@@ -226,7 +228,7 @@ public class CaseVo implements Serializable {
     }
 
     public String getApplyDate() {
-        return applyDate;
+        return DateUtil.westToTwDate(applyDate);
     }
 
     public void setApplyDate(String applyDate) {

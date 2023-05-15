@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.web.domain;
 
 import com.google.common.collect.Lists;
+import com.twfhclife.eservice.util.DateUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -82,7 +83,7 @@ public class NotePdfVo implements Serializable {
     }
 
     public String getManageDate() {
-        return manageDate;
+        return DateUtil.westToTwDate(manageDate);
     }
 
     public void setManageDate(String manageDate) {
@@ -130,7 +131,7 @@ public class NotePdfVo implements Serializable {
     }
 
     public String getDueDate() {
-        return dueDate;
+        return DateUtil.westToTwDate(dueDate);
     }
 
     public void setDueDate(String dueDate) {

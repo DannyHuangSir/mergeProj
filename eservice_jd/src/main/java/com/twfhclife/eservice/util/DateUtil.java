@@ -55,8 +55,11 @@ public class DateUtil {
 	 * @return 民國年 格式: YYY/MM/DD
 	 */
 	public static String westToTwDate(String westDate) {
+		if (StringUtils.isBlank(westDate)) {
+			return null;
+		}
 		String twYear = Integer.parseInt(westDate.substring(0, 4)) - 1911 + "";
-		return StringUtils.leftPad(twYear, 3, "0") + westDate.substring(4);
+		return twYear + "/" + Integer.valueOf(westDate.substring(4, 6)) + "/" + Integer.valueOf(westDate.substring(6, 8));
 	}
 
 	/**
