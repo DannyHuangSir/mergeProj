@@ -160,7 +160,7 @@
                 AND c.PolicyNo = '${vo.policyNo}'
             </if>
             <if test="vo.pSalesCode != null and vo.pSalesCode != ''">
-                AND c.PSalesCode = '${vo.pSalesCode}'
+                AND c.PSalesID = '${vo.pSalesCode}'
             </if>
             <if test="vo.agentCode != null and vo.agentCode != ''">
                 <choose>

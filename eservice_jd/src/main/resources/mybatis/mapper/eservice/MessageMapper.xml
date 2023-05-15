@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.twfhclife.eservice.web.dao.MessageDao">
+<mapper namespace="com.twfhclife.jd.web.dao.MessageDao">
 
-	<resultMap id="MessageMap" type="com.twfhclife.eservice.web.model.MessageVo" >
+	<resultMap id="MessageMap" type="com.twfhclife.jd.web.model.MessageVo" >
 		<result column="ID" property="id"/>
 		<result column="TITLE" property="title"/>
 		<result column="MSG" property="msg"/>

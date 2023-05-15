@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.twfhclife.eservice.web.dao.JdNotifyConfigDao">
+<mapper namespace="com.twfhclife.jd.web.dao.JdNotifyConfigDao">
     <insert id="updateNotifyConfig">
         INSERT INTO ESERVICE_JD.DBO.NOTIFY_CONFIG(POLICY_NO, INVT_NO, USER_ID, UP_RATE, DOWN_RATE)
         <if test="list != null and list.size() >0 ">
@@ -11,18 +11,18 @@
         </if>
     </insert>
 
-    <select id="getNotifyConfig" resultType="com.twfhclife.eservice.web.model.NotifyConfigVo">
+    <select id="getNotifyConfig" resultType="com.twfhclife.jd.web.model.NotifyConfigVo">
         SELECT UP_RATE upRate, DOWN_RATE downRate FROM ESERVICE_JD.DBO.NOTIFY_CONFIG
         WHERE ID = (SELECT MAX(ID) FROM ESERVICE_JD.DBO.NOTIFY_CONFIG
             WHERE POLICY_NO = #{policyNo} AND INVT_NO = #{invtNo} AND USER_ID = #{userId})
     </select>
 
-    <resultMap id="NotifyScheduleMap" type="com.twfhclife.eservice.web.model.NotifyScheduleVo">
+    <resultMap id="NotifyScheduleMap" type="com.twfhclife.jd.web.model.NotifyScheduleVo">
         <result property="userId" column="USER_ID"/>
         <collection property="invts" resultMap="SubNotifyScheduleMap"></collection>
     </resultMap>
 
-    <resultMap id="SubNotifyScheduleMap" type="com.twfhclife.eservice.web.model.SubNotifyScheduleVo">
+    <resultMap id="SubNotifyScheduleMap" type="com.twfhclife.jd.web.model.SubNotifyScheduleVo">
         <result property="policyNo" column="POLICY_NO"/>
         <result property="upRate" column="UP_RATE"/>
         <result property="downRate" column="DOWN_RATE"/>

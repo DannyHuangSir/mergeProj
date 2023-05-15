@@ -268,6 +268,9 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                     if (StringUtils.isNotBlank(vo.getUserId())) {
                                         vo.setFailResult("系統帳號欄位為留空欄位，請檢查!");
                                     }
+                                    if (StringUtils.isBlank(vo.getLoginSize())){
+                                        vo.setFailResult("登錄字號欄位為留空欄位，請檢查!");
+                                    }
                                     if (StringUtils.isNotBlank(vo.getLoginSize())){
                                         if (jdUserDao.countLoginSize(vo.getLoginSize()) > 0){
                                             vo.setFailResult("登錄字號已存在，請檢查!");
@@ -361,13 +364,13 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                                             && StringUtils.isEmpty(vo.getMobile())) {
                                                         vo.setFailResult("選填欄位需至少一個，請檢查!");
                                                         failLinkList.add(vo);
-                                                    }else {
+                                                    } else {
                                                         //登錄字號
-                                                        if (StringUtils.isNotBlank(vo.getLoginSize())){
+                                                        if (StringUtils.isNotBlank(vo.getLoginSize())) {
                                                             if (vo.getLoginSize().equals("X") && StringUtils.isNotBlank(updateUser.getLoginSize())) {
-                                                                vo.setLoginSize("");
-                                                            }else {
-                                                                if (jdUserDao.countLoginSize(vo.getLoginSize()) > 0){
+                                                                vo.setFailResult("登錄字號無法清除!");
+                                                            } else {
+                                                                if (jdUserDao.countLoginSize(vo.getLoginSize()) > 0) {
                                                                     vo.setFailResult("登錄字號已存在，請檢查!");
                                                                 }
                                                             }

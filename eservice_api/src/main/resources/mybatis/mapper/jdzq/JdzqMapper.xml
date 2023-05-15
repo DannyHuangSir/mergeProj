@@ -48,7 +48,7 @@
                     (
                     <trim prefixOverrides="AND" >
                         <if test="item.serialNum != null and item.serialNum != ''">
-                            AND A.PSalesCode = #{item.serialNum}
+                            AND A.PSalesID = #{item.serialNum}
                         </if>
                         <if test="item.branchCode != null and item.branchCode != ''">
                             AND A.BranchCode = #{item.branchCode}
@@ -214,7 +214,7 @@
     </select>
 
     <select id="getNoteSchedule" resultType="com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo">
-        SELECT A.AppName, A.InsName, A.PolicyNo, B.DueDate, A.PSalesCode, A.AgentCode, A.AgentBranchM
+        SELECT A.AppName, A.InsName, A.PolicyNo, B.DueDate, A.PSalesID PSalesCode, A.AgentCode, A.AgentBranchM
         FROM MainPolicy A
         INNER JOIN
         PolicyNote B ON A.Main_Key = B.Main_Key

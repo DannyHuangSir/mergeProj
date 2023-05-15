@@ -85,7 +85,7 @@
                                         <label>
                                             <div class="radio-btn"><i><input type="radio" name="notifyRadio"
                                                                              value="member"></i></div>
-                                            指定業務員編號
+                                            指定登錄字號
                                         </label>
                                     </div>
                                     <div class="radio" style="float: left;padding-right: 20px;">
@@ -318,7 +318,7 @@
 			qryGrid.id = '#qryGrid';
 			qryGrid.url = /*[[@{/jdUserMgnt/getNotifyUsers}]]*/;
 			qryGrid.caption = '員工查詢結果';
-			qryGrid.colNames = ['', '通路', '業務員編號', '姓名'];
+			qryGrid.colNames = ['', '通路', '登錄字號', '姓名'];
 			qryGrid.colModel = [
 				{align: 'center', formatter: function(cellvalue, options, row) {
 					var actionHtml = '';

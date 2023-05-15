@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.twfhclife.eservice.web.dao.UsersDao">
-	<resultMap id="UsersMap" type="com.twfhclife.eservice.web.model.UsersVo">
+<mapper namespace="com.twfhclife.jd.web.dao.UsersDao">
+	<resultMap id="UsersMap" type="com.twfhclife.jd.web.model.UsersVo">
 		<result column="user_id" property="userId" />
 		<result column="roc_id" property="rocId" />
 		<result column="mobile" property="mobile" />
@@ -21,6 +21,7 @@
 		<result column="status" property="status"/>
 		<result column="CLAUSE_FLAG" property="clauseFlag"/>
 		<result column="LOGIN_TIME" property="loginTime"/>
+		<result column="BRANCH_ID" property="branchId"/>
 	</resultMap>
 	
 	<sql id="User_Column_List">
@@ -71,7 +72,7 @@
 			LOWER(USER_ID) = LOWER(#{usersVo.userId})
 	</update>
 
-	<insert id="createUserTerm" parameterType="com.twfhclife.eservice.web.model.UserTermVo">
+	<insert id="createUserTerm" parameterType="com.twfhclife.jd.web.model.UserTermVo">
 		INSERT INTO ESERVICE_JD.DBO.USER_TERM
 		(ID, USER_ID, TERM_NAME, ACCEPT_DATE, MEMO) 
 		VALUES 
@@ -129,7 +130,7 @@
 			WHERE U.ID = #{userId} ORDER BY CHARINDEX(R.DIV_ROLE_ID, 'ADMINISTRATOR,IC_PERSONNEL,CHANNEL_LEADER,BRANCH_LEADER,GENERAL_PERSONNEL')
 	</select>
 
-	<select id="getCaseQueryBySupervisor" resultType="com.twfhclife.eservice.web.model.PermQueryVo">
+	<select id="getCaseQueryBySupervisor" resultType="com.twfhclife.jd.web.model.PermQueryVo">
 		SELECT DISTINCT UD.BRANCH_ID branchCode, D.BRANCH_ID agentCode
 			FROM
 			ESERVICE_JD.DBO.USER_DEPARTMENT UD
@@ -137,7 +138,7 @@
 		WHERE UD.USER_ID = #{userId} AND D.BRANCH_ID IS NOT NULL
 	</select>
 
-	<select id="getCaseQueryByPassageWay" resultType="com.twfhclife.eservice.web.model.PermQueryVo">
+	<select id="getCaseQueryByPassageWay" resultType="com.twfhclife.jd.web.model.PermQueryVo">
 		SELECT DISTINCT D.BRANCH_ID agentCode
 		FROM
 		ESERVICE_JD.DBO.USER_DEPARTMENT UD
@@ -145,7 +146,7 @@
 		WHERE UD.USER_ID = #{userId} AND D.BRANCH_ID IS NOT NULL
 	</select>
 
-	<select id="getCaseQueryByIc" resultType="com.twfhclife.eservice.web.model.PermQueryVo">
+	<select id="getCaseQueryByIc" resultType="com.twfhclife.jd.web.model.PermQueryVo">
 		SELECT DISTINCT D.BRANCH_ID agentCode, UD.BRANCH_ID branchCode FROM
 		ESERVICE_JD.DBO.USER_IC UD
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
@@ -157,8 +158,8 @@
 		WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID IS NULL
 	</select>
 
-	<select id="getCaseQueryByUser" resultType="com.twfhclife.eservice.web.model.PermQueryVo">
-		SELECT DISTINCT U.IC_ID serialNum, UD.BRANCH_ID branchCode,D1.BRANCH_ID agentCode  FROM
+	<select id="getCaseQueryByUser" resultType="com.twfhclife.jd.web.model.PermQueryVo">
+		SELECT DISTINCT U.LOGIN_SIZE serialNum, UD.BRANCH_ID branchCode,D1.BRANCH_ID agentCode  FROM
 		ESERVICE_ADM.DBO.USER_ENTITY UE
 		INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UE.ID = UD.USER_ID COLLATE database_default
 		INNER JOIN ESERVICE_JD.DBO.USERS U ON UE.USERNAME = U.USER_ID COLLATE database_default
@@ -167,23 +168,40 @@
 	</select>
 
 	<select id="getUserBySaleId" resultMap="UsersMap">
-		SELECT
-		ue.ID user_id,u.roc_id,ESERVICE_JD.DBO.FN_DEBASE64(u.mobile) mobile,ESERVICE_JD.DBO.FN_DEBASE64(u.email) email,u.login_fail_count,u.last_chang_password_date,
-		u.sms_flag,u.mail_flag,u.fb_id,u.moica_id,u.user_type,u.create_date,u.create_user, u.user_name username,
-		u.online_flag, u.login_fail_count, u.status, u.LOGIN_TIME, u.CLAUSE_FLAG
+		SELECT ue.ID user_id, ESERVICE_JD.DBO.FN_DEBASE64(u.email) email, UD.BRANCH_ID
 		FROM
 		ESERVICE_JD.DBO.USERS u
 		INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY UE ON UE.USERNAME = U.USER_ID COLLATE database_default AND UE.REALM_ID = 'elife_jdzq'
 		INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UE.ID = UD.USER_ID
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID
 		WHERE
-			u.IC_ID = #{saleId}
+			u.LOGIN_SIZE = #{saleId}
 		<if test="agentCode == '869'.toString()">
 			AND D.BRANCH_ID = concat(#{agentCode}, #{agentBranchM})
 		</if>
 		<if test="agentCode != '869'.toString()">
 			AND D.BRANCH_ID = #{agentCode}
 		</if>
+	</select>
+
+	<select id="getBranchLeaders" resultMap="UsersMap">
+		SELECT ue.ID user_id, ESERVICE_JD.DBO.FN_DEBASE64(u.email) email
+		FROM
+		ESERVICE_JD.DBO.USERS u
+		INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY UE ON UE.USERNAME = U.USER_ID COLLATE database_default AND UE.REALM_ID = 'elife_jdzq'
+		INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UE.ID = UD.USER_ID
+		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID
+		INNER JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON UR.USER_ID = UE.ID
+		INNER JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
+		<where>
+			<if test="agentCode == '869'.toString()">
+				AND D.BRANCH_ID = concat(#{agentCode}, #{agentBranchM})
+			</if>
+			<if test="agentCode != '869'.toString()">
+				AND D.BRANCH_ID = #{agentCode}
+			</if>
+			AND UD.BRANCH_ID = #{branchCode}
+		</where>
 	</select>
 
 </mapper>
