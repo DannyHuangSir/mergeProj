@@ -24,12 +24,12 @@ public class MessageServiceImpl implements IMessageService {
 
     @Override
     public List<MessageVo> getMessages(MessageVo vo, String userId) {
-        return messageDao.getMessages(vo, userId, new Date());
+        return messageDao.getMessages(vo, userId);
     }
 
     @Override
     public int getNotRead(String id) {
-        return messageDao.getNotRead(id, new Date());
+        return messageDao.getNotRead(id);
     }
 
     @Override

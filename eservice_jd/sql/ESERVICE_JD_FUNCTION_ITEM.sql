@@ -95,7 +95,7 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ((select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'個人案件列表', 'F', 'dashboard',
+    ((select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'送件列表', 'F', 'dashboard',
 	(select CONVERT(bigint, A.FUNCTION_ID)  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'個人中心' and SYS_ID = 'eservice_jd'),
 	'eservice_jd',
 	1,

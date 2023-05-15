@@ -21,9 +21,6 @@
 		<if test="vo.notifyStartSearchTime != null and vo.notifyEndSearchTime != null">
 			AND NOTIFY_TIME between #{vo.notifyStartSearchTime} and DATEADD(day, 1, #{vo.notifyEndSearchTime})
 		</if>
-		<if test="vo.notifyStartSearchTime == null or vo.notifyEndSearchTime == null">
-			AND NOTIFY_TIME >= DATEADD(month, -1, #{date})
-		</if>
 		<if test="vo.status != null">
 			AND STATUS = #{vo.status}
 		</if>
@@ -46,7 +43,7 @@
 		<include refid="Base_Column_List" />
 		FROM
 		ESERVICE_JD.DBO.MESSAGE
-			WHERE USER_ID = #{userId} AND NOTIFY_TIME &lt;= #{date} AND STATUS = '1'
+			WHERE USER_ID = #{userId} AND STATUS = '1'
 		) t
 	</select>
 

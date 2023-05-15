@@ -41,40 +41,6 @@ public class CaseServiceImpl implements ICaseService {
     @Value("${eservice_api.policy.case.list.url}")
     private String caseListUrl;
 
-    @Override
-    public CaseListDataResponse getCaseList(KeycloakUser user, CaseQueryVo vo) {
-        // role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員
-        int role = usersDao.checkUserRole(user.getId());
-        List<PermQueryVo> caseQuery = Lists.newArrayList();
-        switch (role) {
-            case 2:
-                caseQuery.addAll(usersDao.getCaseQueryBySupervisor(user.getId()));
-                break;
-            case 3:
-                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId()));
-                break;
-            case 4:
-                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId()));
-                break;
-            case 5:
-                break;
-            default:
-                caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
-                break;
-        }
-
-        if (!CollectionUtils.isEmpty(caseQuery) || role == 5) {
-            if (vo == null) {
-                vo = new CaseQueryVo();
-            }
-            vo.setCaseQuery(caseQuery);
-            vo.setUserId(user.getUsername());
-            vo.setSysId(ApConstants.SYSTEM_ID);
-            return baseRestClient.postApi(new Gson().toJson(vo), caseListUrl, CaseListDataResponse.class);
-        }
-        return new CaseListDataResponse();
-    }
-
 
     @Value("${eservice_api.case.process.url}")
     private String caseProcessUrl;
@@ -115,7 +81,24 @@ public class CaseServiceImpl implements ICaseService {
     public List<CaseVo> getPersonalCaseList(KeycloakUser user) {
         List<CaseVo> result = Lists.newArrayList();
         List<PermQueryVo> caseQuery = Lists.newArrayList();
-        caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
+        int role = usersDao.checkUserRole(user.getId());
+        switch (role) {
+            case 2:
+                caseQuery.addAll(usersDao.getCaseQueryBySupervisor(user.getId()));
+                break;
+            case 3:
+                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId()));
+                break;
+            case 4:
+                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId()));
+                break;
+            case 5:
+                break;
+            default:
+                caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
+                break;
+        }
+
         if (!CollectionUtils.isEmpty(caseQuery)) {
             CaseQueryVo vo = new CaseQueryVo();
             vo.setCaseQuery(caseQuery);
@@ -125,6 +108,40 @@ public class CaseServiceImpl implements ICaseService {
             result.addAll(responseObj.getCaseList());
         }
         return result;
+    }
+
+    @Override
+    public CaseListDataResponse getCaseList(KeycloakUser user, CaseQueryVo vo) {
+        // role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員
+        int role = usersDao.checkUserRole(user.getId());
+        List<PermQueryVo> caseQuery = Lists.newArrayList();
+        switch (role) {
+            case 2:
+                caseQuery.addAll(usersDao.getCaseQueryBySupervisor(user.getId()));
+                break;
+            case 3:
+                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId()));
+                break;
+            case 4:
+                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId()));
+                break;
+            case 5:
+                break;
+            default:
+                caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
+                break;
+        }
+
+        if (!CollectionUtils.isEmpty(caseQuery) || role == 5) {
+            if (vo == null) {
+                vo = new CaseQueryVo();
+            }
+            vo.setCaseQuery(caseQuery);
+            vo.setUserId(user.getUsername());
+            vo.setSysId(ApConstants.SYSTEM_ID);
+            return baseRestClient.postApi(new Gson().toJson(vo), caseListUrl, CaseListDataResponse.class);
+        }
+        return new CaseListDataResponse();
     }
 
     private byte[] generatePDF(NotePdfVo pdfVo) throws Exception {

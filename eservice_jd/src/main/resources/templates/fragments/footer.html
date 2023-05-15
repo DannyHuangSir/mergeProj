@@ -75,11 +75,6 @@
              openAlert("時間不允許超過當日");
              return false;
         }
-        if (beforeToday.diff(moment($("#notifyStartSearchTime").val()), 'month') > 5 || beforeToday.diff(moment($("#notifyEndSearchTime").val()), 'month') > 5) {
-             openAlert("只支持查詢6個月内通知");
-             return false;
-        }
-
         $(".messageContent .items").children().remove()
         appendNotifyItems(true)
         return false;
@@ -200,14 +195,12 @@
                 changeMonth: true,
                 changeYear: true,
                 maxDate: new Date(),
-                minDate: moment(new Date()).add(-6, 'month').toDate()
             });
         })
          $("body").on('focus', '#notifyEndSearchTime', function(){
             $(this).datepicker({
                 dateFormat: 'yy-mm-dd',
                 maxDate: new Date(),
-                minDate: moment(new Date()).add(-6, 'month').toDate(),
                 changeMonth: true,
                 changeYear: true
             });

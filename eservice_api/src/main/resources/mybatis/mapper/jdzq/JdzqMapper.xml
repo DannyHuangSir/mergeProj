@@ -85,13 +85,27 @@
                 AND A.InsID LIKE CONCAT('%', #{vo.lipiId}, '%')
             </if>
             <if test="vo.caseStatus != null and vo.caseStatus != ''">
-                AND A.BPMCurrentTak = #{vo.caseStatus}
+                <choose>
+                    <when test="vo.caseStatus == '1'.toString()">
+                        AND A.BPMCurrentTak IN ('150000P','200000S','230000S','250000P','300000P','300500P','300500S','301000S','301500P','302000P','302500P','303000P')
+                    </when>
+                    <when test="vo.caseStatus == '2'.toString()">
+                        AND A.BPMCurrentTak IN ('350500S', '351000S', '351500S', '352000S', '400000S', '450000S', '500000P', '500500P', '501011P', '501012P', '501500P', '600500P')
+                    </when>
+                    <when test="vo.caseStatus == '3'.toString()">
+                        AND A.BPMCurrentTak IN ('550500P', '550505P', '550510P', '550515P', '550520P')
+                    </when>
+                    <when test="vo.caseStatus == '4'.toString()">
+                        AND A.BPMCurrentTak IN ('601500S','602000S','602500S')
+                    </when>
+                </choose>
             </if>
         </where>
     </sql>
 
     <select id="getPersonalCaseList" resultMap="CaseMap">
        <include refid="caseSql"></include>
+        AND A.BPMCurrentTak != '602500S'
     </select>
 
     <select id="getCaseList" resultMap="CaseMap">
