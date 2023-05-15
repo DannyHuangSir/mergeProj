@@ -165,7 +165,11 @@
                                 <div class="my1" style="margin-bottom:0; font-weight: 600;">
 									<i class="foo-business_23 foo-lg"></i> 查詢結果清單 <span class="my2b" id="policyCount"></span>
 				                </div>
-								<div id="policyContent"></div>
+								<div >
+									<table id="policyContent">
+
+									</table>
+								</div>
 								<div class="col-md-12 wht box-border no-borderTop">
 									<div class="col-md-12" style="text-align:center;">
 										<nav>
@@ -270,8 +274,9 @@
 						$("#dashboardContent").hide()
 						response.resultData.rows.forEach(function(item, index){
 									isGreen = !isGreen
-									html += '<div class="">' +
-										'<table status="' + item.stat + '" class="tablesaw tablesaw-stack tablesawA">' +
+									html +=
+										// 	'<div class="">' +
+										// '<table status="' + item.stat + '" class="tablesaw tablesaw-stack tablesawA">' +
 											'<thead>' +
 												'<tr class="table2">' +
 													'<th class="text-left item400"' + (isGreen ? '' : 'style="background: #FDE3D2;"') + '>保單號碼</th>' +
@@ -316,8 +321,8 @@
 													'<td class="table3">' + (item.paymentMethod != null ? paymentMap[item.paymentMethod].parameterValue : '') + '</td> ' +
 												'</tr> ' +
 											'</tbody>' +
-										'</table>' +
-									'</div>'
+									// 	'</table>' +
+									// '</div>'
 									changeCircle(item.policyNo)
 							});
 							$("#policyContent").html(html)

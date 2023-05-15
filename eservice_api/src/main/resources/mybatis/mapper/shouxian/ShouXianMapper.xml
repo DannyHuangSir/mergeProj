@@ -680,6 +680,6 @@
     </select>
 
     <select id="selectPolicyTypeList" resultType="hashmap">
-        SELECT SETT_INSU_TYPE AS VALUE, SETT_CH_NAME AS KEY FROM LISETT_ES
+        SELECT SETT_INSU_TYPE AS VALUE, SETT_CH_NAME AS KEY FROM LISETT_ES ORDER BY SETT_CH_NAME
     </select>
 </mapper>

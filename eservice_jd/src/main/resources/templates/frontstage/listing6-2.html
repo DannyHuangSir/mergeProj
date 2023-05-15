@@ -39,7 +39,7 @@
 												<i class="fa hid2 foo-angle-up mobile"></i>
 												<i class="fa foo-angle-up hid1"></i> 保單收益分配
 												<div class="dropdown pull-right r30">
-													<a class="btn-return" href="returnPolicy">回保單查詢結果清單</a>
+													<a class="btn-return" href="returnPolicy">回保單查詢</a>
 												</div>
 											</div>
 											<div class="my1 marginTop20">
@@ -47,9 +47,13 @@
 													<button type="button" class="btn btn-xs" data-toggle="offcanvas" id="tog-nav"><i class="fa fa-bars fa-2x"></i></button>
 												</p>
 												<i class="foo-business_7 foo-2x hidden-xs"></i><span th:text="${vo.prodName}"></span>
-												<span class=""></span><span class="insuranceID_pc" th:text="${policyNo}"></span>
-												<p style="margin-left: 40px;margin-top: -15px;">保單號碼:<span th:text="${policyNo}"></span> 要保人:<span th:text="${vo.lipmName}"></span> 被保險人:<span th:text="${vo.lipiName}"></span>
-													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span></p>
+												<span class=""></span>
+												<p style="margin-left: 40px;margin-top: -15px;">
+													保單號碼:<span style="margin-right: 15px;" th:text="${policyNo}"></span>
+													要保人:<span style="margin-right: 15px;" th:text="${vo.lipmName}"></span>
+													被保險人:<span style="margin-right: 15px;" th:text="${vo.lipiName}"></span>
+													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span>
+												</p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div style="padding: 20px;background: #FFFFFF;">
