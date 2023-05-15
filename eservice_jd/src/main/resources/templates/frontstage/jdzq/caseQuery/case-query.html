@@ -243,7 +243,7 @@
 										'<td class="table3">'+ item.appName +'</td>' +
 										'<td class="table3">' + item.insName +'</td>' +
 										'<td class="table3">' + (item.policyType ? item.policyType : '') +'</td>' +
-										'<td class="table3">' + (item.tBSubmitDate ? item.tBSubmitDate :'' )  +'</td>' +
+										'<td class="table3">' + formatDate(item.tBSubmitDate)  +'</td>' +
 										'<td class="table3">' + levelStateStr(item.bPMCurrentTak) +'</td>' +
 									'</tr>'
 							});

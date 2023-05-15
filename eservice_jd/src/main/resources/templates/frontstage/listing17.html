@@ -35,7 +35,6 @@
 								<div class="col-xs-12 col-sm-9 col-md-10" id="list2">
 									<div class="box-border">
 										<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
-											<thead>
 											<div class="tb3 top0">
 												<i class="fa foo-angle-down"></i> 解約金試算
 												<div class="dropdown pull-right r30">
@@ -58,12 +57,12 @@
 											</div>
 											<div class="col-sm-12 nopd all-left-list">
 												<table class="tablesaw tablesaw-stack no-border wht col-table" data-tablesaw-mode="stack">
-													<tbody>
+													<thead>
 													<tr class="noEvent borderTop">
 														<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">解約金試算</th>
-														<td><b class="tablesaw-cell-label mobile-b">解約金試算</b> <span class="mobile-span">計算至 <th:block th:text="${amountVo.policyDate}"></th:block> 止</span></td>
+														<th style="background: #fff;"><b class="tablesaw-cell-label mobile-b">解約金試算</b> <span class="mobile-span">計算至 <th:block th:text="${amountVo.policyDate}"></th:block> 止</span></th>
 													</tr>
-													</tbody>
+													</thead>
 												</table>
 											</div>
 											<div class="tb3 top0 mobile-toggle" data-toggle="true">

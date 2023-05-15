@@ -9,9 +9,7 @@ public class CaseVo implements Serializable {
     private String policyType;
     private String appName;
     private String appId;
-
     private String paymentMode;
-
     private String appBirth;
     private String insName;
     private String insId;
@@ -32,6 +30,7 @@ public class CaseVo implements Serializable {
     private String policyAmountNTD;
     private String policyAmount;
     private String prmeNewOldSW;
+    private String pSalesName;
 
     public String getMainKey() {
         return mainKey;
@@ -240,5 +239,13 @@ public class CaseVo implements Serializable {
 
     public void setAccDocNo(String accDocNo) {
         this.accDocNo = accDocNo;
+    }
+
+    public String getpSalesName() {
+        return pSalesName;
+    }
+
+    public void setpSalesName(String pSalesName) {
+        this.pSalesName = pSalesName;
     }
 }

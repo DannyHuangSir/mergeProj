@@ -58,7 +58,6 @@
 													</div>
 				                                    <tr class="table2">
 				                                        <th class="text-left" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">險種名稱</th>
-				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">保單號碼</th>
 				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">要保人</th>
 				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">被保險人</th>
 				                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">保單幣別</th>
@@ -69,7 +68,6 @@
 				                                <tbody>
 				                                    <tr class="h65 noEvent">
 				                                        <td th:text="${vo.prodName}">
-				                                        <td th:text="${policyNo}"></td>
 				                                        <td th:text="${vo.lipmName}"></td>
 				                                        <td th:text="${vo.lipiName}"></td>
 				                                        <td th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></td>

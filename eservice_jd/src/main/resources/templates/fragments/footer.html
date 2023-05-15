@@ -187,6 +187,13 @@
         });
     }
 
+    function formatDate(date) {
+        if (date) {
+            return (date.substring(0, 4) - 1911) + '/' + parseInt(date.substring(4, 6)) + '/' +  parseInt(date.substring(6, 8))
+        }
+        return '-'
+    }
+
     $(function(){
         getNotRead()
         $("body").on('focus', '#notifyStartSearchTime', function(){

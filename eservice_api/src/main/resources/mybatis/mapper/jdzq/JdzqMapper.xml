@@ -29,10 +29,12 @@
         <result column="PrmeNewOldSW" property="prmeNewOldSW" />
         <result column="NoteVerifyResult" property="noteVerifyResult" />
         <result column="Main_Key" property="mainKey" />
+        <result column="PSalesName" property="pSalesName" />
     </resultMap>
 
     <sql id="caseSql">
-        SELECT ROW_NUMBER() OVER (ORDER BY A.PolicyNo) AS ROW_NUM, A.PolicyNo, A.AppName, A.InsName, A.TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType
+        SELECT ROW_NUMBER() OVER (ORDER BY A.PolicyNo) AS ROW_NUM, A.PolicyNo, A.AppName, A.InsName, A.TBSubmitDate, A.BPMCurrentTak, D.NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType,
+        A.PSalesName
         FROM MainPolicy A
         LEFT JOIN (
         SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM PolicyNote B
@@ -123,8 +125,9 @@
     </select>
 
     <select id="getCaseProcess" resultMap="CaseMap">
-        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.InsName, A.InsID, A.TBSubmitDate,
-            A.BPMCurrentTak NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType, FORMAT(A.PrintDate, 'yyyyMMdd') PrintDate, A.PolicyActiveDate, A.TransPayDate,
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.InsName, A.InsID, (A.TBSubmitDate - 19110000) TBSubmitDate,
+            A.BPMCurrentTak NoteStatus, D.NoteVerifyResult, E.PTypeName PolicyType, (FORMAT(A.PrintDate, 'yyyyMMdd') - 19110000) PrintDate,
+            (A.PolicyActiveDate - 19110000) PolicyActiveDate, (A.TransPayDate - 19110000) TransPayDate,
             P.UserName Manager, A.StampResult,
         (SELECT TOP (1) ReviewResult
             FROM PolicyReviewLog
@@ -133,7 +136,7 @@
                 and Sub_Serial = '0'
             order by ReviewTimes desc, ReviewType desc
         ) ReviewResult,
-        (SELECT TOP(1) RFeeApplyDate FROM PolicyReject WHERE MAIN_KEY = A.MAIN_KEY AND RFeeApplyDate IS NOT NULL) RFeeApplyDate
+        (SELECT TOP(1) (RFeeApplyDate - 19110000) RFeeApplyDate FROM PolicyReject WHERE MAIN_KEY = A.MAIN_KEY AND RFeeApplyDate IS NOT NULL) RFeeApplyDate
         FROM MainPolicy A
         LEFT JOIN (
         SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM
@@ -147,10 +150,10 @@
     </select>
     
     <select id="getPolicyInfo" resultMap="CaseMap">
-        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.AppBirth, A.TBSubmitDate, A.BPMCurrentTak,
+        SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, (A.AppBirth - 19110000) AppBirth, A.BPMCurrentTak,
         A.AccDocNo, A.PM_PRME_NEW_OLD_SW,
         (SELECT TOP(1) PrmeNewOldSW FROM PolicyFormData WHERE MAIN_KEY = A.MAIN_KEY) PrmeNewOldSW,
-        E.PTypeName PolicyType, A.StampResult, A.PayType, A.InsBirth, A.InsName, A.InsID, A.PolicyAmount, A.PolicyAmountNTD
+        E.PTypeName PolicyType, A.StampResult, A.PayType, (A.InsBirth - 19110000) InsBirth, A.InsName, A.InsID, A.PolicyAmount, A.PolicyAmountNTD
         FROM MainPolicy A
         LEFT JOIN (
             SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM
@@ -163,7 +166,7 @@
     </select>
     
     <select id="getNoteContent" resultMap="CaseMap">
-        SELECT D.Note_key Main_key, D.APPName, D.InsName, D.NoteDate PrintDate, E.PTypeName PolicyType, D.NoteVerifyResult FROM MainPolicy A
+        SELECT D.Note_key Main_key, D.APPName, D.InsName, (D.NoteDate - 19110000) PrintDate, E.PTypeName PolicyType, D.NoteVerifyResult FROM MainPolicy A
         INNER JOIN (
             SELECT B.APPName, B.InsName, B.NoteDate, B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM
             PolicyNote B
@@ -197,7 +200,7 @@
 
     <select id="getNotePdf" resultMap="notePdfMap">
         SELECT DISTINCT A.PolicyNo, A.AppName, A.InsName, A.AgentCode agentCode, P.BrokerName, A.AgentSalesName, A.AgentSalesID,
-        A.AccDocNo, D.BranchDesc, F.PTypeName, D.ManageDate, D.ProcessorName, D.ExtNumber, D.DueDate, D.NoteVerifyMemo,
+        A.AccDocNo, D.BranchDesc, F.PTypeName, D.ManageDate, D.ProcessorName, D.ExtNumber, (D.DueDate - 19110000) DueDate, D.NoteVerifyMemo,
         E.ItemCode, E.ContentMemo
         FROM MainPolicy A
         LEFT JOIN (

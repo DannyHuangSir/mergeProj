@@ -69,6 +69,7 @@
 											<th scope="col" class="item450">受理日期</th>
 											<th scope="col" class="item450">案件狀態</th>
 											<th scope="col" class="item450">最新照會狀態</th>
+											<th scope="col" class="item450">招攬人</th>
 										</tr>
 										</thead>
 										<tbody id="personalContent">
@@ -132,9 +133,10 @@
 										'<td class="table3">'+ (item.appName ? item.appName : '-') +'</td>' +
 										'<td class="table3">' + (item.insName ? item.insName : '-') +'</td>' +
 										'<td class="table3">' + (item.policyType ? item.policyType : '-') +'</td>' +
-										'<td class="table3">' + (item.tBSubmitDate ? item.tBSubmitDate : '-') +'</td>' +
+										'<td class="table3">' + formatDate(item.tBSubmitDate) +'</td>' +
 										'<td class="table3">' + levelStateStr(item.policyNo, item.bPMCurrentTak) +'</td>' +
 										'<td class="table3">' + noteVerifyResultStr(item.policyNo, item.noteVerifyResult) +'</td>' +
+										'<td class="table3">' + (item.pSalesName ? item.pSalesName : '-') +'</td>' +
 									'</tr>'
 							});
 						$("#personalContent").html(html)
