@@ -24,7 +24,7 @@ public class MessageServiceImpl implements IMessageService {
 
     @Override
     public List<MessageVo> getMessages(MessageVo vo, String userId) {
-        return messageDao.getMessages(vo, userId);
+        return messageDao.getMessages(vo, userId, new Date());
     }
 
     @Override
