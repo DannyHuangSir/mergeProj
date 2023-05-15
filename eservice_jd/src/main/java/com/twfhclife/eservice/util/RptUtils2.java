@@ -1,9 +1,6 @@
 package com.twfhclife.eservice.util;
 
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -34,6 +31,24 @@ public class RptUtils2 {
     }
 
 /**------------------------創建表格單元格的方法start----------------------------*/
+
+    /**
+     * 創建單元格(單元格跨x列合並)
+     * @param colspan
+     * @param boderFlag
+     * @return
+     */
+    public static PdfPCell createBlankCell(int colspan, boolean boderFlag) {
+        PdfPCell cell = new PdfPCell();
+        Paragraph blank = new Paragraph(" ");
+        cell.setPhrase(blank);
+        cell.setColspan(colspan);
+        if (!boderFlag) {
+            cell.setBorder(0);
+        }
+        return cell;
+    }
+
     /**
      * 創建單元格(指定字體)
      * @param value
