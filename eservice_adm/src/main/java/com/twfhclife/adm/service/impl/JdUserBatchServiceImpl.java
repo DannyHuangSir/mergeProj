@@ -269,7 +269,7 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                                         vo.setFailResult("系統帳號欄位為留空欄位，請檢查!");
                                     }
                                     if (StringUtils.isBlank(vo.getLoginSize())){
-                                        vo.setFailResult("登錄字號欄位為留空欄位，請檢查!");
+                                        vo.setFailResult("登錄字號欄位為必輸欄位，請檢查!");
                                     }
                                     if (StringUtils.isNotBlank(vo.getLoginSize())){
                                         if (jdUserDao.countLoginSize(vo.getLoginSize()) > 0){
