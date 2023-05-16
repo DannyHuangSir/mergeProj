@@ -272,11 +272,7 @@
     </resultMap>
 
     <select id="getBasePolicy" resultMap="PolicyBaseMap">
-        SELECT CASE
-            WHEN A.LIPM_ST <![CDATA[<= ]]> 18 THEN 1
-            WHEN A.LIPM_ST BETWEEN 30 AND 34 THEN 2
-            WHEN add_months(A.LIPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate THEN 3
-            END AS STATUS, A.LIPI_TABL_PREM, A.LIPM_BANK_CODE,
+        SELECT A.LIPM_ST STATUS, A.LIPI_TABL_PREM, A.LIPM_BANK_CODE,
         A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2, lip.PMDA_INVE_ATTR,
         to_char(A.LIPI_INSU_BEG_DATE, 'yyy/fmMM/dd') EFFECTIVE_DATE,
         A.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(A.BNAG_BIRTH, 'yyy/fmMM/dd') LIPM_BIRTH,

@@ -66,12 +66,7 @@
 																<tr class="noEvent borderTop">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">契約狀態</th>
 																	<td><b class="tablesaw-cell-label mobile-b">契約狀態</b> <span class="mobile-span">
-																		<th:block th:switch="${vo.status}">
-																				<th:block th:case="1">有效</th:block>
-																				<th:block th:case="2">停效</th:block>
-																				<th:block th:case="3">失效</th:block>
-																				<th:block th:case="*">-</th:block>
-																		</th:block>
+																		<th:block th:text="${vo.status != null ? session.SYSTEM_PARAMETER['INDENTURE_STATUS_CATEGORY'][vo.status].parameterValue : '-'}"></th:block>
 																	</span></td>
 																</tr>
 																<tr class="noEvent">
