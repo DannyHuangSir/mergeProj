@@ -186,7 +186,7 @@
 	</select>
 
 	<select id="getBranchLeaders" resultMap="UsersMap">
-		SELECT ue.ID user_id, ESERVICE_JD.DBO.FN_DEBASE64(u.email) email
+		SELECT DISTINCT ue.ID user_id, ESERVICE_JD.DBO.FN_DEBASE64(u.email) email
 		FROM
 		ESERVICE_JD.DBO.USERS u
 		INNER JOIN ESERVICE_ADM.DBO.USER_ENTITY UE ON UE.USERNAME = U.USER_ID COLLATE database_default AND UE.REALM_ID = 'elife_jdzq'
@@ -194,15 +194,14 @@
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID
 		INNER JOIN ESERVICE_ADM.DBO.USER_ROLE UR ON UR.USER_ID = UE.ID
 		INNER JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
-		<where>
-			<if test="agentCode == '869'.toString()">
-				AND D.BRANCH_ID = concat(#{agentCode}, #{agentBranchM})
-			</if>
-			<if test="agentCode != '869'.toString()">
-				AND D.BRANCH_ID = #{agentCode}
-			</if>
-			AND UD.BRANCH_ID = #{branchCode}
-		</where>
+		WHERE R.DIV_ROLE_ID = 'BRANCH_LEADER'
+		<if test="agentCode == '869'.toString()">
+			AND D.BRANCH_ID = concat(#{agentCode}, #{agentBranchM})
+		</if>
+		<if test="agentCode != '869'.toString()">
+			AND D.BRANCH_ID = #{agentCode}
+		</if>
+		AND UD.BRANCH_ID = #{branchCode}
 	</select>
 
 </mapper>
