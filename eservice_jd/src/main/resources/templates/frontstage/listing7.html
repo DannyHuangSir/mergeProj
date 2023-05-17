@@ -55,19 +55,19 @@
 												</p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
-											<div class="wht">
-												<form class="form-inline grey wht" id="collapseSearchBar">
-													<div class="col-sm-12 input-inline text-right">
-														<div>
-															<label>日期</label>
-															<input id="startDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>
-															<br class="hid2"/><span class="dateFix">至</span>
-															<input id="endDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>
-															<button id="searchBtn" type="button" class="btn-form btn-search">搜尋</button>
-														</div>
-													</div>
-												</form>
-											</div>
+<!--											<div class="wht">-->
+<!--												<form class="form-inline grey wht" id="collapseSearchBar">-->
+<!--													<div class="col-sm-12 input-inline text-right">-->
+<!--														<div>-->
+<!--															<label>日期</label>-->
+<!--															<input id="startDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>-->
+<!--															<br class="hid2"/><span class="dateFix">至</span>-->
+<!--															<input id="endDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>-->
+<!--															<button id="searchBtn" type="button" class="btn-form btn-search">搜尋</button>-->
+<!--														</div>-->
+<!--													</div>-->
+<!--												</form>-->
+<!--											</div>-->
 											<div class="tb3 top0 mobile-toggle" data-toggle="true">
 												<i class="fas fa-chevron-down hid2 mobile"></i>
 												<i class="fas fa-chevron-up hid1"></i> 交易明細
@@ -78,7 +78,7 @@
 													<tr class="table2">
 														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">交易日期</th>
 														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">實繳金額</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="left">保費費用</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="left">(-)保費費用</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6" class="text-left">(+)利息</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7" class="text-left">(=)實繳金額</th>
 													</tr>

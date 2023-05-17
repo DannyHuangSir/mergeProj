@@ -59,7 +59,7 @@ public class DateUtil {
 			return null;
 		}
 		String twYear = Integer.parseInt(westDate.substring(0, 4)) - 1911 + "";
-		return twYear + "/" + Integer.valueOf(westDate.substring(4, 6)) + "/" + Integer.valueOf(westDate.substring(6, 8));
+		return twYear + "/" + Integer.valueOf(westDate.substring(5, 7)) + "/" + Integer.valueOf(westDate.substring(8, 10));
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class DateUtil {
 	 * @return 回傳系統日至開賣日的民國年字串
 	 */
 	public static List<String> getYearOpitonByEffectDate(String effectDate) {
-		String sysRocYear = getRocDate(new Date()).substring(0, 3);
-		String effectDateYear = westToTwDate(effectDate).substring(0, 3);
+		String sysRocYear = getRocDate(new Date()).split("/")[0];
+		String effectDateYear = westToTwDate(effectDate).split("/")[0];
 
 		// 組出民國年(從系統日起算至開賣日的年)
 		List<String> rocYearList = new ArrayList<>();

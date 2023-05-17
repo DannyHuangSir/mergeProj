@@ -54,6 +54,17 @@ table.tablesaw {
     color: #DD792E;
 }
 
+.tablesaw tbody tr td.bold .tablesaw-cell-content, .tablesaw tbody tr td.bold .tablesaw-cell-content * {
+  font-weight: bold;
+}
+
+
+.splitLine {
+  margin: 0;
+  border-width: 5px;
+  padding: 3px;
+}
+
 .tablesaw-stack td .tablesaw-cell-label,
 .tablesaw-stack th .tablesaw-cell-label {
   display: none;
@@ -181,6 +192,11 @@ table.tablesaw {
   }
 }
 
+@media screen and (max-width: 1000px) and (min-width:768px) {
+  .tablesaw tbody tr td {
+    width: 100%;
+  }
+}
 /* Media query to show as a standard table at 560px (35em x 16px) or wider */
 /* no bigger than tablet size*/ 
 @media (min-width: 768px) {

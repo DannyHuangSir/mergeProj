@@ -64,14 +64,13 @@
 														<th>投資標的</th>
 														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">幣別</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">投資效益等級</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3">持有成本</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4">單位數/金額</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">參考淨值</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5">匯率使用日</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">參考匯率</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">參考帳戶價值</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8">累計投資收益</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9">參考報酬率</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3" style="width: 130px;">持有成本(A)</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4" style="width: 130px;">單位數/金額(B)</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5" style="width: 130px;">參考淨值(C)</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5" style="width: 130px;">匯率使用日<hr class="splitLine">參考匯率(D) <br></th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7" style="width: 130px;">參考帳戶價值(E=B*C*D</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="8" style="width: 130px;">累計投資收益(F=E-A)</th>
+														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="9" style="width: 130px;">參考報酬率(%)</th>
 													</tr>
 													</thead>
 													<tbody></tbody>
@@ -105,7 +104,8 @@
         'fnRender': function(oRow) {
           return emptyIfNull(oRow.invtName) + '<p class="enSmall">(' + emptyIfNull(oRow.invtNo) + ')</p>';
         },
-        'rwdName': '投資標的'
+        'rwdName': '投資標的',
+		'tdClass': 'bold'
       },
       {
         // 幣別
@@ -137,17 +137,17 @@
       },
        {
        'fnRender': function(oRow) {
-          return  westDate(oRow.netValueDate);
+          return  '<span>'+westDate(oRow.netValueDate)+'</span><hr class="splitLine">'+showExchRateDate(oRow);
         },
-       'rwdName': '匯率使用日'
+       'rwdName': '匯率使用日<hr class="splitLine">參考匯率/日期'
       },
-      {
-        // 參考匯率/日期
-        'fnRender': function(oRow) {
-          return showExchRateDate(oRow);
-        },
-        'rwdName': '參考匯率/日期'
-      },
+      // {
+      //   // 參考匯率/日期
+      //   'fnRender': function(oRow) {
+      //     return showExchRateDate(oRow);
+      //   },
+      //   'rwdName': '參考匯率/日期'
+      // },
       {
         // 參考帳戶價值
         'fnRender': function(oRow) {
