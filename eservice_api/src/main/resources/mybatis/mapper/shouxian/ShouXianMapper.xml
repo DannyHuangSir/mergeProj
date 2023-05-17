@@ -144,8 +144,8 @@
                                 </otherwise>
                             </choose>
                         </if>
-                        <if test="item.serialNum != null and item.serialNum != ''">
-                            AND C.BNAG_ID = #{item.serialNum}
+                        <if test="(item.serialNum != null and item.serialNum != '' ) or (item.idCard != null and item.idCard != '' )">
+                            AND (C.BNAG_ID = #{item.serialNum} OR C.BNAG_ID = #{item.idCard})
                         </if>
                         <if test="item.branchCode != null and item.branchCode != ''">
                             AND C.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}
@@ -204,8 +204,8 @@
                                 </otherwise>
                             </choose>
                         </if>
-                        <if test="item.serialNum != null and item.serialNum != ''">
-                            AND C.BNAG_ID = #{item.serialNum}
+                        <if test="(item.serialNum != null and item.serialNum != '' ) or (item.idCard != null and item.idCard != '' )">
+                            AND (C.BNAG_ID = #{item.serialNum} OR C.BNAG_ID = #{item.idCard})
                         </if>
                         <if test="item.branchCode != null and item.branchCode != ''">
                             AND C.BNAG_S_BANK_BRANCH_CODE = #{item.branchCode}

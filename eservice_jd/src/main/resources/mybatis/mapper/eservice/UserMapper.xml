@@ -159,12 +159,13 @@
 	</select>
 
 	<select id="getCaseQueryByUser" resultType="com.twfhclife.jd.web.model.PermQueryVo">
-		SELECT DISTINCT U.LOGIN_SIZE serialNum, UD.BRANCH_ID branchCode,D1.BRANCH_ID agentCode  FROM
+		SELECT DISTINCT U.LOGIN_SIZE serialNum, ESERVICE_JD.DBO.FN_DEBASE64(U.ROC_ID) idCard, UD.BRANCH_ID branchCode,D1.BRANCH_ID agentCode FROM
 		ESERVICE_ADM.DBO.USER_ENTITY UE
 		INNER JOIN ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UE.ID = UD.USER_ID COLLATE database_default
 		INNER JOIN ESERVICE_JD.DBO.USERS U ON UE.USERNAME = U.USER_ID COLLATE database_default
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D1 ON UD.DEP_ID = D1.DEP_ID COLLATE database_default
-		WHERE UE.ID = #{userId} AND U.LOGIN_SIZE IS NOT NULL AND U.LOGIN_SIZE != ''
+		WHERE UE.ID = #{userId} AND
+			U.LOGIN_SIZE IS NOT NULL AND U.LOGIN_SIZE != '' AND U.ROC_ID IS NOT NULL AND U.ROC_ID != ''
 	</select>
 
 	<select id="getUserBySaleId" resultMap="UsersMap">

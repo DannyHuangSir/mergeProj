@@ -5,6 +5,7 @@ public class PermQueryVo {
     private String branchCode;
     private String agentCode;
     private String serialNum;
+    private String idCard;
 
     public String getBranchCode() {
         return branchCode;
@@ -28,5 +29,13 @@ public class PermQueryVo {
 
     public void setSerialNum(String serialNum) {
         this.serialNum = serialNum;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 }

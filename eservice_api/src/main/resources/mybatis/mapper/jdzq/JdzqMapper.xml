@@ -47,8 +47,8 @@
                 <foreach collection="vo.caseQuery" item="item" separator="OR">
                     (
                     <trim prefixOverrides="AND" >
-                        <if test="item.serialNum != null and item.serialNum != ''">
-                            AND A.PSalesID = #{item.serialNum}
+                        <if test="(item.serialNum != null and item.serialNum != '' ) or (item.idCard != null and item.idCard != '' )">
+                            AND (A.PSalesID = #{item.serialNum} OR A.PSalesID = #{item.idCard})
                         </if>
                         <if test="item.branchCode != null and item.branchCode != ''">
                             AND A.BranchCode = #{item.branchCode}
