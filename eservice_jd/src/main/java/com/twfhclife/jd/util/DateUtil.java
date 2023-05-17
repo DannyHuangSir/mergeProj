@@ -59,7 +59,7 @@ public class DateUtil {
 			return null;
 		}
 		String twYear = Integer.parseInt(westDate.substring(0, 4)) - 1911 + "";
-		return twYear + "/" + Integer.valueOf(westDate.substring(5, 7)) + "/" + Integer.valueOf(westDate.substring(8, 10));
+		return twYear + "/" + Integer.valueOf(westDate.substring(4, 6)) + "/" + Integer.valueOf(westDate.substring(6, 8));
 	}
 
 	/**
