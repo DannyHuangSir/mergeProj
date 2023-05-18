@@ -71,8 +71,40 @@
 				                                                    </tr>
 				                                                    <tr class="noEvent">
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">案件狀態</th>
-				                                                        <td><b class="tablesaw-cell-label mobile-b">案件狀態</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;"
-																		   th:text="${vo.noteStatus != null ? session.SYSTEM_PARAMETER['JDZQ_LEVEL_STATES_CATEGORY'][vo.noteStatus].parameterName : ''}">
+				                                                        <td><b class="tablesaw-cell-label mobile-b">案件狀態</b> <span class="mobile-span" style="font-size:16px; font-weight: 600;">
+																				<th:block th:if="${vo.noteStatus == '150000P'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '200000S'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '230000S'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '250000P'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '300000P'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '300500P'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '300500S'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '301000S'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '301500P'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '302000P'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '302500P'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '303000P'}">受理中</th:block>
+																				<th:block th:if="${vo.noteStatus == '350500S'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '351000S'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '351500S'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '352000S'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '400000S'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '450000S'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '500000P'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '500500P'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '501011P'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '501012P'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '501500P'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '600500P'}">核保中</th:block>
+																				<th:block th:if="${vo.noteStatus == '550500P'}">覆核中</th:block>
+																				<th:block th:if="${vo.noteStatus == '550505P'}">覆核中</th:block>
+																				<th:block th:if="${vo.noteStatus == '550510P'}">覆核中</th:block>
+																				<th:block th:if="${vo.noteStatus == '550515P'}">覆核中</th:block>
+																				<th:block th:if="${vo.noteStatus == '550520P'}">覆核中</th:block>
+																				<th:block th:if="${vo.noteStatus == '601500S'}">核保完成</th:block>
+																				<th:block th:if="${vo.noteStatus == '602000S'}">核保完成</th:block>
+																				<th:block th:if="${vo.noteStatus == '602500S'}">核保完成</th:block>
+																				<th:block th:if="${vo.noteStatus == null || #strings.trim(vo.noteStatus) == ''}">-</th:block>
 																		</span></td>
 				                                                    </tr>
 <!--																	 <tr class="noEvent">-->
