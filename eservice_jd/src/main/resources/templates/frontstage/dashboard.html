@@ -135,7 +135,7 @@
 										'<td class="table3">' + (item.policyType ? item.policyType : '-') +'</td>' +
 										'<td class="table3">' + (item.tBSubmitDate ? item.tBSubmitDate : '-' ) +'</td>' +
 										'<td class="table3">' + levelStateStr(item.policyNo, item.bPMCurrentTak) +'</td>' +
-										'<td class="table3">' + noteVerifyResultStr(item.policyNo, item.noteVerifyResult) +'</td>' +
+										'<td class="table3">' + noteVerifyResultStr(item.policyNo, item.noteVerifyResult, item.bPMCurrentTak) +'</td>' +
 										'<td class="table3">' + (item.pSalesName ? item.pSalesName : '-') +'</td>' +
 									'</tr>'
 							});
@@ -149,7 +149,10 @@
 	    	});
 		})
 
-		function noteVerifyResultStr(policyNo, status) {
+		function noteVerifyResultStr(policyNo, status, noteStatus) {
+			if (status4.indexOf(noteStatus) != -1) {
+				return '-'
+			}
 			if (status == '0' || status == 'R') {
 				chart2Map[0].policyNos.push(policyNo)
 				return '核保中'
@@ -181,7 +184,7 @@
 				result = '覆核中'
 			} else if (status4.indexOf(levelState) != -1) {
 				chart1Map[3].policyNos.push(policyNo)
-				result = '-'
+				result = '核保完成'
 			}
 			return result
 		}
