@@ -1,24 +1,21 @@
 package com.twfhclife.eservice.web.controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.auth0.jwt.internal.org.bouncycastle.util.encoders.Base64Encoder;
+import com.google.gson.Gson;
+import com.twfhclife.eservice.web.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,12 +34,6 @@ import com.twfhclife.eservice.user.model.LilipmVo;
 import com.twfhclife.eservice.user.service.ILilipiService;
 import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
-import com.twfhclife.eservice.web.model.AuditLogVo;
-import com.twfhclife.eservice.web.model.LoginRequestVo;
-import com.twfhclife.eservice.web.model.LoginResultVo;
-import com.twfhclife.eservice.web.model.ParameterVo;
-import com.twfhclife.eservice.web.model.UserDataInfo;
-import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.eservice.web.service.IRegisterUserService;
@@ -749,8 +740,7 @@ public class LoginController extends BaseUserDataController {
 		return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
 		
 	}
-	
-	
+
 	/**
 	 * 加密自然人憑證卡號
 	 * @param cardSN
@@ -763,32 +753,59 @@ public class LoginController extends BaseUserDataController {
 		try {
 			logger.info("Start to enctypt moica cardSN.");
 			System.out.println("Start to enctypt moica cardSN.");
-			
+
 			//檢核session validate code是否仍有效
-			
-			
+
+
 			//加密
 			Map<String, Object> dataResult = new HashMap<>();
 			if(!StringUtils.isEmpty(sCardSN)) {
-				
+
 				//AES
 				afterEncryptCardSN = sCardSN+"ooxx";
 				dataResult.put("cardSN", afterEncryptCardSN);
-				
+
 				addSession("CARDSN", sCardSN);
-				
+
 			}
 
 			String message = "";
 			this.setResponseObj(ResponseObj.SUCCESS, message, dataResult);
-			
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
 	}
-	
+
+	@Value("${eservice.bxcz.login.url}")
+	private String bxczUrl;
+	@Value("${eservice.bxcz.login.client_id}")
+	private String client_id;
+
+	@PostMapping("/generateBxczLoginUrl")
+	public ResponseEntity<ResponseObj> generateBxczLoginUrl(HttpServletRequest request) {
+		try {
+			String actionId = UUID.randomUUID().toString().replaceAll("-", "");
+			addSession("actionId", actionId);
+			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
+			String url = bxczUrl + "?response_type=code&scope=openid&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
+					+ "&nonce=" + actionId + "&redirect_uri=" + eserviceBxczRedirectUri;
+			this.setResponseObj(ResponseObj.SUCCESS, "", url);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
+	}
+
+	@GetMapping("/bxczDoLogin")
+	public String bxczDoLogin(BxczRedirectParam param) {
+		String loginSuccessPage = "redirect:dashboard";
+		return loginSuccessPage;
+	}
+
 	/**
 	 * 加密解密演算法
 	 */

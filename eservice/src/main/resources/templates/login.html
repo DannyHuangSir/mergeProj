@@ -205,10 +205,11 @@
 							<h5><span id="login-status"></span></h5>
 							
 							<button id="loginBtn" class="col-xs-12 btn-login">登 入</button>
+							<button id="bxczLoginBtn" style="font-size:18px; background:#ADFF2F;" class="col-xs-12 btn-login">使用保險存摺登入</button>
 							<!-- <button type="button" id="icCardBtn" class="col-xs-12 btn-login1" onclick="openIcModal();">使用自然人憑證登入</button>--><!-- disable MOICA login -->
-  							<div class="fb-login-button" id="loginbutton" data-max-rows="1" data-size="large" data-scope="public_profile,email" data-button-type="login_with" 
+  							<div class="fb-login-button" id="loginbutton" data-max-rows="1" data-size="large" data-scope="public_profile,email" data-button-type="login_with"
   								data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState()"></div>
-							
+
 							<input type="hidden" id="fbId" name="fbId"/>
 							<input type="hidden" id="email" name="email"/>
 							<input type="hidden" id="fbAccessToken" name="fbAccessToken"/>
@@ -226,7 +227,7 @@
 							<!--<div class="ie-only">
 								需要允許IE執行指令檔或ActiveX控制項
 							</div>-->
-							
+
 						</form>
 					</div>
 				</div>
@@ -304,6 +305,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="modal fade in" data-backdrop="static" id="confirmBindFbIdModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content lock-up">
@@ -336,19 +338,49 @@
 				</div>
 			</div>
 		</div>
-		
-		<footer th:replace="fragments/footer"></footer>
-		
-		
+		<div class="modal fade in" id="confirmBxczModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content lock-up">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						</div>
+						<div class="modal-body apply2 center1 grey2">
+							<h3>使用此功能需已具備保險存摺帳號，如尚無帳號請先至保險存摺進行註冊。請確認是否仍繼續使用保險存摺登入?</h3>
+							<form method="POST" id="cancelTransForm" action="cancelApplyTrans">
+								<input type="hidden" id="cancelTransType" name="transType" value=""/>
+								<input type="hidden" id="cancelTransNum" name="transNum" value=""/>
+							</form>
+							<p class="marginTop20">
+								<a href="#">
+									<button class="btn-login lock2" onclick="$('#confirmBxczModal').modal('hide');">取消</button>
+								</a>
+								<a href="#">
+									<button class="btn-login lock2" id="confirmBxczLogin">确认</button>
+								</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<footer th:replace="fragments/footer"></footer>
+			<div id="bxczDialog" hidden="true" style="left:50%; top:50%; position:absolute; height: 600px; width:800px; margin-top: -300px; margin-left: -400px;">
+				<div class="row" style="background:#DD792E; height: 32px; padding: 3px;">
+					<button onclick="$('#bxczDialog').hide()" class="close" style="border-radius: 50%; width: 25px; height: 25px; display: block; line-height: 23px; border: 2px solid #FFF;"><span>×</span></button>
+				</div>
+				<div class="row" style="height:100%;">
+					<iframe style="border: 0" id="bxczIframe" height="100%" width="100%"></iframe>
+				</div>
+			</div>
+
 		<!-- my scripts -->
-		
+
 		<!-- inline scripts related to this page -->
 		<script>
 		$(function() {
 			$('input, textarea').placeholder();
 		});
 		</script>
-		
+
 		<script th:inline="javascript">
 		/*<![CDATA[*/
 		$(function() {
@@ -357,34 +389,34 @@
 			if (errorMessage != '') {
 				openAlert(errorMessage);
 			}
-			
+
 			var isOldUser = /*[[${isOldUser}]]*/;
 			isOldUser = (isOldUser == null? '': isOldUser);
 			if(isOldUser == true){
 				/* openAlert('因應系統改版以及法規規範，需要您重新檢視與同意相關使用條款與注意事項，並重新註冊與啟用您的帳號，系統將利用您的保單留存的電子郵件信箱或手機號碼進行身分驗證'
-						, "firstUseStart"); 
+						, "firstUseStart");
 				*/
 				message = $('#E0005').val();
 				openAlert(message, "firstUseStart");
 			}
-			
+
 			var noFbIdUser = /*[[${noFbIdUser}]]*/;
 			if (noFbIdUser) {
 				$('#confirmBindFbIdModal').modal();
 			}
-			
+
 			var noCardSnUser = /*[[${noCardSnUser}]]*/;
 			if (noCardSnUser) {
 				$('#confirmBindCardSnModal').modal();
 			}
-			
+
 			$('#loginBtn').click(function() {
 				if ($('#loginForm #userId').val() == '') {
 					//openAlert('請輸入用戶名稱');
 					openAlert($('#E0006').val());
 					return false;
 				}
-				
+
 				if ($('#loginForm #password').val() == '') {
 					//openAlert('請輸入用戶密碼');
 					openAlert($('#E0007').val());
@@ -392,7 +424,7 @@
 				}else{
 					$('#loginForm #password').val($.base64.encode($('#loginForm #password').val()));
 				}
-				
+
 				if ($('#validateCode').val() == '') {
 					//openAlert('請輸入圖形驗證碼');
 					openAlert($('#E0008').val());
@@ -409,11 +441,22 @@
 					loginForm.euNationality = euNationality;
 				}
 				//GDPR_end
-				
+
 				popupLoading();
 				$('#loginForm').submit();
 			});
-			
+
+			$("#bxczLoginBtn").click(function(){
+				$('#confirmBxczModal').modal('show');
+				return false;
+			})
+
+			$("#confirmBxczModal").click(function(){
+				$('#confirmBxczModal').modal('hide');
+				openBxczLoginDialog()
+				return false;
+			})
+
 			$('#bindFbIdBtn').click(function() {
 				$('#loginForm #userId').val("");
 				$('#loginForm #password').val("");
@@ -466,6 +509,27 @@
 		
 		function reloadValidateImage() {
 			$('#validateImage').click();
+		}
+
+		function openBxczLoginDialog() {
+			popupLoading();
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : 'generateBxczLoginUrl',
+				success : function(response) {
+					removeLoading()
+					if (response.result == 'SUCCESS') {
+						$("#bxczIframe").attr('src', response.resultData)
+						$("#bxczDialog").show()
+					} else {
+						openAlert(response.resultMsg)
+					}
+				},
+				error : function() {
+					openAlert('error!')
+				}
+			});
 		}
 
 		$('#userId').focus();
