@@ -25,7 +25,8 @@ public interface IRegisterUserService {
 	public Map<String, String> registerUserData(UsersVo user);
 	
 	public UsersVo getUserByAccount(String account);
-	
+	public UsersVo getUserByRocId(String rocId);
+
 	public void updatePassword(String account, String newPassword) throws Exception;
 	
 	public boolean checkOldSystemUser(String rocId, String password);

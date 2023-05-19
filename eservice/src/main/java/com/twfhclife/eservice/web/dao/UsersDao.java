@@ -11,7 +11,8 @@ import com.twfhclife.eservice.web.model.UsersVo;
 public interface UsersDao {
 
 	public UsersVo getUserByRocId(@Param("rocId") String rocId);
-	
+	public UsersVo getUserByBxczRocId(@Param("rocId") String rocId);
+
 	public UsersVo getUsers();
 	
 	public void createUser(@Param("vo") UsersVo user);

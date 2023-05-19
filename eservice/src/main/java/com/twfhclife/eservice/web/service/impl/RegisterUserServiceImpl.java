@@ -287,6 +287,12 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		return user;
 	}
 
+	@Override
+	public UsersVo getUserByRocId(String rocId) {
+		UsersVo user = userDao.getUserByBxczRocId(rocId);
+		return user;
+	}
+
 	public void updatePassword(String account, String password) throws Exception {
 		// call keycloak
 //		KeycloakUser user = keycloakService.getUserByUsername(account);

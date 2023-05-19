@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.generic.api_model.*;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -32,28 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.twfhclife.generic.api_model.ApiResponseObj;
-import com.twfhclife.generic.api_model.BenefitDetailResponse;
-import com.twfhclife.generic.api_model.DashboardResponse;
-import com.twfhclife.generic.api_model.FunctionUsageAddResponse;
-import com.twfhclife.generic.api_model.KeycloakLoginResponse;
-import com.twfhclife.generic.api_model.KeycloakUserResponse;
-import com.twfhclife.generic.api_model.OnlineChangePolicyListResponse;
-import com.twfhclife.generic.api_model.PolicyAcctValueResponse;
-import com.twfhclife.generic.api_model.PolicyBonusResponse;
-import com.twfhclife.generic.api_model.PolicyDataResponse;
-import com.twfhclife.generic.api_model.PolicyDividendResponse;
-import com.twfhclife.generic.api_model.PolicyFundTransactionResponse;
-import com.twfhclife.generic.api_model.PolicyListResponse;
-import com.twfhclife.generic.api_model.PolicyLoanResponse;
-import com.twfhclife.generic.api_model.PolicyPaidResponse;
-import com.twfhclife.generic.api_model.PolicyPaymentRecordResponse;
-import com.twfhclife.generic.api_model.PolicyPremiumTransactionResponse;
-import com.twfhclife.generic.api_model.PortfolioResponse;
-import com.twfhclife.generic.api_model.TransAddResponse;
-import com.twfhclife.generic.api_model.TransHistoryDetailResponse;
-import com.twfhclife.generic.api_model.TransHistoryListResponse;
-import com.twfhclife.generic.api_model.UserPolicyAcctValueResponse;
 import com.twfhclife.generic.model.KeycloakUserSession;
 import com.twfhclife.generic.util.MyJacksonUtil;
 
@@ -100,7 +79,8 @@ public class BaseRestClient {
 		map.put(FunctionUsageAddResponse.class, new ParameterizedTypeReference<ApiResponseObj<FunctionUsageAddResponse>>() {});
 		ArrayList<KeycloakUserSession> userSessionResponse = new ArrayList<KeycloakUserSession>();
 		map.put(userSessionResponse.getClass(), new ParameterizedTypeReference<ApiResponseObj<List<KeycloakUserSession>>>() { });
-		
+		map.put(BxczLoginResponse.class, new ParameterizedTypeReference<ApiResponseObj<List<BxczLoginResponse>>>() { });
+
 		return Collections.unmodifiableMap(map);
 	}
 

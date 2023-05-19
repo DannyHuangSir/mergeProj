@@ -102,4 +102,5 @@ public interface ILoginService {
 	 */
 	public List<AuditLogVo> getLastAuditLog(String userId, String row);
 
+    String doLoinBxcz(String code, String redirectUri);
 }

@@ -6,7 +6,6 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.auth0.jwt.internal.org.bouncycastle.util.encoders.Base64Encoder;
 import com.google.gson.Gson;
 import com.twfhclife.eservice.web.model.*;
 import org.apache.commons.lang3.StringUtils;
@@ -64,31 +63,31 @@ public class LoginController extends BaseUserDataController {
 
 	@Autowired
 	private KeycloakService keycloakService;
-	
+
 	@Autowired
 	private IRegisterUserService registerUserService;
-	
+
 	@Autowired
 	private IParameterService parameterService;
-	
+
 	@Autowired
 	private ILoginService loginService;
-	
+
 	@Autowired
 	private IFuctionAuthService fuctionAuthService;
 
 	@Autowired
 	private ILilipiService lilipiService;
-	
+
 	@Autowired
 	private ILilipmService lilipmService;
-	
+
 	@Autowired
 	private IUnicodeService unicodeService;
-	
+
 	/**
 	 * 登入.
-	 * 
+	 *
 	 * @param loginRequestVo LoginRequestVo
 	 * @return
 	 */
@@ -98,13 +97,13 @@ public class LoginController extends BaseUserDataController {
 		String loginSuccessPage = "redirect:dashboard";
 		String userId = loginRequestVo.getUserId();
 		String userType = "";
-		try {			
+		try {
 			// 取得session驗證碼
 			Object validateCodeObj = getSession(ApConstants.LOGIN_VALIDATE_CODE);
 			if (validateCodeObj != null) {
 				loginRequestVo.setSessionValidateCode((String) validateCodeObj);
 			}
-			
+
 			//SR_GDPR
 			if("".equals(StringUtils.trimToEmpty(loginRequestVo.getEuNationality()))) {
 				String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0134");
@@ -112,7 +111,7 @@ public class LoginController extends BaseUserDataController {
 				addAuditLog(userId, "0", "");
 				return "login";
 			}
-			
+
 			//decrypt pw,retset to loginRequestVo-start
 			String encryptPw = loginRequestVo.getPassword();
 			String decryptPw = decodeBase64(encryptPw);
@@ -120,81 +119,81 @@ public class LoginController extends BaseUserDataController {
 			System.out.println("decryptPw="+decryptPw);
 			logger.info("decryptPw="+decryptPw);
 			//decrypt pw,retset to loginRequestVo-end
-			
+
 			LoginResultVo loginResultVo = loginService.doLogin(loginRequestVo);
 			String returnCode = loginResultVo.getReturnCode();
 			String returnMsg = loginResultVo.getReturnMsg();
 			String loginType = loginResultVo.getLoginType();
 			keycloakUser = loginResultVo.getKeycloakUser();
 			boolean verifyValidateCode = loginResultVo.isVerifyValidateCode();
-			
+
 			// 驗證是否有綁定FB、自然人憑證及驗證碼是否輸入正確
 			if("moica".contains(loginType)) {
 				loginType  = "";//disable MMOICA login
 			}
 			switch (loginType) {
-			case "fb":
-				// Facebook 登入
-				if ("NO_DATA".equals(returnCode)) {
-					addSession("fbId", loginRequestVo.getFbId());
-					addSession("email", loginRequestVo.getEmail());
-					addAttribute("noFbIdUser", true);
-					resetVerifyCode();
-					return "login";
-				}
-				if(loginResultVo.getKeycloakUser() != null) {
-					userId = loginResultVo.getKeycloakUser().getUsername();
-				}
-				break;
-			case "moica":
-				// 自然人憑證登入
-				if ("NO_DATA".equals(returnCode)) {
-					addSession("cardSn", loginRequestVo.getCardSN());
-					addAttribute("noCardSnUser", true);
-					resetVerifyCode();
-					return "login";
-				}
+				case "fb":
+					// Facebook 登入
+					if ("NO_DATA".equals(returnCode)) {
+						addSession("fbId", loginRequestVo.getFbId());
+						addSession("email", loginRequestVo.getEmail());
+						addAttribute("noFbIdUser", true);
+						resetVerifyCode();
+						return "login";
+					}
+					if(loginResultVo.getKeycloakUser() != null) {
+						userId = loginResultVo.getKeycloakUser().getUsername();
+					}
+					break;
+				case "moica":
+					// 自然人憑證登入
+					if ("NO_DATA".equals(returnCode)) {
+						addSession("cardSn", loginRequestVo.getCardSN());
+						addAttribute("noCardSnUser", true);
+						resetVerifyCode();
+						return "login";
+					}
 
-				
-				//需於server side檢核
-				boolean checkMoica = false;
-				String cardSN = loginRequestVo.getCardSN();
-				String sessionCardSN  = "";
-				Object strObj = getSession("SESSION_CARDSN");
-				if(strObj!=null) {
-					sessionCardSN = (String)strObj;
-				}
-				logger.info("sessionCardSN="+sessionCardSN);
-				System.out.println("sessionCardSN="+sessionCardSN);
-				
-				if(!StringUtils.isEmpty(cardSN) && !StringUtils.isEmpty(sessionCardSN)
-						&& cardSN.equals(sessionCardSN)) {
-					checkMoica = true;
-				}
-				
-				if(!checkMoica) {
-					//前端值的驗證和最後傳到SERVER的不一致
-					String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0000");
-					addAttribute("errorMessage", errorMessage);
-					addAuditLog(userId, "0", "");
-					return "login";
-				}
-				
-				
-				if(loginResultVo.getKeycloakUser() != null) {
-					userId = loginResultVo.getKeycloakUser().getUsername();
-				}
-				break;
-			case "password":
-				// 帳號密碼登入
-				if (!verifyValidateCode) {
-					addAttribute("errorMessage", "驗證碼不正確");
-					resetVerifyCode();
-					return "login";
-				}
-				break;
+
+					//需於server side檢核
+					boolean checkMoica = false;
+					String cardSN = loginRequestVo.getCardSN();
+					String sessionCardSN  = "";
+					Object strObj = getSession("SESSION_CARDSN");
+					if(strObj!=null) {
+						sessionCardSN = (String)strObj;
+					}
+					logger.info("sessionCardSN="+sessionCardSN);
+					System.out.println("sessionCardSN="+sessionCardSN);
+
+					if(!StringUtils.isEmpty(cardSN) && !StringUtils.isEmpty(sessionCardSN)
+							&& cardSN.equals(sessionCardSN)) {
+						checkMoica = true;
+					}
+
+					if(!checkMoica) {
+						//前端值的驗證和最後傳到SERVER的不一致
+						String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0000");
+						addAttribute("errorMessage", errorMessage);
+						addAuditLog(userId, "0", "");
+						return "login";
+					}
+
+
+					if(loginResultVo.getKeycloakUser() != null) {
+						userId = loginResultVo.getKeycloakUser().getUsername();
+					}
+					break;
+				case "password":
+					// 帳號密碼登入
+					if (!verifyValidateCode) {
+						addAttribute("errorMessage", "驗證碼不正確");
+						resetVerifyCode();
+						return "login";
+					}
+					break;
 			}
-			
+
 			UsersVo userDetail = registerUserService.getUserByAccount(userId);
 			if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
 				if (userDetail != null && userDetail.getStatus().equals("locked")) {
@@ -204,7 +203,7 @@ public class LoginController extends BaseUserDataController {
 					addAuditLog(userId, "0", loginRequestVo.getEuNationality());
 					return "login";
 				}
-				
+
 				addSession(ApConstants.KEYCLOAK_USER, keycloakUser);
 				addSession(ApConstants.LOGIN_USER_ID, keycloakUser.getUsername());
 
@@ -223,7 +222,7 @@ public class LoginController extends BaseUserDataController {
 				addSession(ApConstants.MEDICAL_COMPANY_ITEMS, (Serializable) sysParamMap.get("MEDICAL_COMPANY_ITEMS"));
 				addSession(ApConstants.PAYMENT_METHOD, (Serializable) sysParamMap.get("PAYMENT_METHOD"));
 				addSession(ApConstants.INSURANCE_ACCIDENT, (Serializable) sysParamMap.get("INSURANCE_ACCIDENT"));
-				
+
 				// hide listing product code
 				Map<String, ParameterVo> paraMap = sysParamMap.get("SYSTEM_CONSTANTS");
 				Set<String> keySet = paraMap.keySet();
@@ -236,9 +235,9 @@ public class LoginController extends BaseUserDataController {
 						logger.debug("original key={}, mapKey={}, mapValue={}", key, mapKey, vo.getParameterValue());
 					}
 
-					if (key.equals ("DOWN_LISTING_2")) {					
+					if (key.equals ("DOWN_LISTING_2")) {
 						vo2 = (ParameterVo) paraMap.get(key);
-						addSession(key , vo2.getParameterValue());				
+						addSession(key , vo2.getParameterValue());
 						logger.debug("layout key={},  layou value={}", key, vo2.getParameterValue());
 						vo2 = null;
 					}
@@ -258,11 +257,11 @@ public class LoginController extends BaseUserDataController {
 //				addSession("hideProdCode6", vo6.getParameterValue());
 //				addSession("hideProdCode7", vo7.getParameterValue());
 //				addSession("hideProdCode12", vo12.getParameterValue());
-				
+
 				// 取得使用者不能訪問的DIV權限
 				List<String> rejectDivList = fuctionAuthService.getRejectDivName(keycloakUser.getId());
 				addSession("REJECT_DIV_LIST", (Serializable) rejectDivList);
-				
+
 				// 設定登出倒數秒數
 				long logutTimeoutSeconds = 0;
 				try {
@@ -273,7 +272,7 @@ public class LoginController extends BaseUserDataController {
 					logutTimeoutSeconds = ApConstants.LOGUT_TIME_DURATION_SECOND;
 				}
 				addSession(ApConstants.TIMEOUT_SECONDS, logutTimeoutSeconds);
-				
+
 				if (userDetail != null) {
 					Map<String, Boolean> identity = new HashMap<String, Boolean>();
 					LilipmVo lilipmVo = lilipmService.findByRocId(userDetail.getRocId());
@@ -297,7 +296,7 @@ public class LoginController extends BaseUserDataController {
 					}else {
 						identity.put("lilipi", false);
 					}
-					
+
 					logger.info("***userType="+userDetail.getUserType()+"***");
 					boolean isPartner = loginService.isPartnerRole(userDetail.getUserType());
 					if(isPartner) {//登入者為內部人員及保代角色(admin,agent)時強制給予要／被保人身份
@@ -306,11 +305,11 @@ public class LoginController extends BaseUserDataController {
 						identity.put("lilipi", true);
 						logger.info("***end force to setting user identity for admin.***");
 					}
-					
+
 					userDetail.setIdentity(identity);
 					logger.info("to setting userIdentity="+Arrays.asList(identity));
 					addSession(UserDataInfo.USER_DETAIL, userDetail);
-					
+
 					// 第一次登入需要變更密碼
 					if (userDetail.getLastChangPasswordDate() == null) {
 						//20190503 check in AuthenticationInterceptor
@@ -322,7 +321,7 @@ public class LoginController extends BaseUserDataController {
 							loginSuccessPage = "redirect:partner";
 						}
 					}
-					
+
 					// 設定一般及保戶會員的相關資訊
 					String userRocId = getUserRocId();
 					logger.debug("Find login user's rocId: {}", userRocId);
@@ -338,14 +337,14 @@ public class LoginController extends BaseUserDataController {
 						addSession(UserDataInfo.USER_MAIN_INSURED_NAME_LIST, (Serializable) loginService.getMainInsuredNameList(userRocId));
 						// 保戶所有保單
 						addSession(UserDataInfo.USER_ALL_POLICY_LIST, (Serializable) getUserOnlineChangePolicyList(userId, userRocId));
-						
+
 						PolicyListResponse policyListResponse = getPolicyListByUser(userId, userRocId);
 						// 投資型保單
 						addSession(UserDataInfo.USER_INVT_POLICY_LIST, (Serializable) policyListResponse.getInvtPolicyList());
 						// 保障型保單
 						addSession(UserDataInfo.USER_BENEFIT_POLICY_LIST, (Serializable) policyListResponse.getBenefitPolicyList());
 					}
-					
+
 					// 取得上次登入時間
 					Date lastLoginTime = loginService.getLastLoginTime(userId);
 					if (lastLoginTime != null) {
@@ -353,17 +352,17 @@ public class LoginController extends BaseUserDataController {
 					}
 					userType = userDetail.getUserType();
 				}
-				
+
 				addAttribute("errorMessage", "");
 			} else {
-				
+
 				boolean isOldSystemUser = registerUserService.checkOldSystemUser(userId, loginRequestVo.getPassword());
 				if (isOldSystemUser) {
 					addAttribute("isOldUser", isOldSystemUser);
 					addSession("register_rocId", userId);
 					return "login";
 				}
-				
+
 				if ("password".equals(loginType) || (userDetail != null && userDetail.getStatus().equals("locked"))) {
 					/*addAttribute("errorMessage", "帳號或密碼不正確");*/
 					String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0099");
@@ -384,23 +383,23 @@ public class LoginController extends BaseUserDataController {
 		} catch (Exception e) {
 			logger.error("Unable to doLogin: {}", ExceptionUtils.getStackTrace(e));
 			addAttribute("errorMessage", ApConstants.SYSTEM_ERROR);
-			
+
 			// 清除登入資訊
 			if (keycloakUser != null) {
 				keycloakService.logout(keycloakUser.getId());
 			}
-			
+
 			resetVerifyCode();
 			return "login";
 		}
-		
-		// 20180424 CR16 系統登入成功/失敗發送電子郵件至要保人信箱 
+
+		// 20180424 CR16 系統登入成功/失敗發送電子郵件至要保人信箱
 		// 3.登入成功後POP UP訊息告知最近三次登入時間及狀態
 		if (ApConstants.isNotice && "member".equals(userType)) {
 			List<AuditLogVo> auditLogList = loginService.getLastAuditLog(userId, "3");
 			addSession("auditLogList", (Serializable) auditLogList);
 		}
-		
+
 		// eservice 單一登入控制
 		try {
 			String keycloakUserId = keycloakUser.getId();
@@ -408,7 +407,7 @@ public class LoginController extends BaseUserDataController {
 			List<String> userSessionList = loginService.getKeycloakUserSessionIdList(keycloakUserId);
 			logger.debug("Find user[{}] this login sessionId: {}", userId, nowSessionId);
 			logger.debug("Find user[{}] sessionList: {}", userId, userSessionList);
-			
+
 			if (userSessionList != null && userSessionList.size() > 1) {
 				boolean hasLogined = false;
 				for (String sessionId : userSessionList) {
@@ -419,7 +418,7 @@ public class LoginController extends BaseUserDataController {
 						break;
 					}
 				}
-				
+
 				logger.debug("User[{}] hasLogined from other browser: {}", userId, hasLogined);
 				if (hasLogined) {
 					return "confirmLogout";
@@ -440,20 +439,20 @@ public class LoginController extends BaseUserDataController {
 			vo.setUserId(userId);
 			vo.setLoginStatus(status);
 			vo.setClientIp(getClientIp());
-			
+
 			//SR_GDPR_start
 			vo.setEuNationality("GDPR="+StringUtils.trimToEmpty(euNationality));
 			//SR_GDPR_end
-			
+
 			loginService.addAuditLog(vo);
 		} catch (Exception e) {
 			logger.error("Unable to add login audit log: {}", ExceptionUtils.getStackTrace(e));
 		}
 	}
-	
+
 	/**
 	 * 登出.
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -461,7 +460,7 @@ public class LoginController extends BaseUserDataController {
 	public String doLogout(HttpServletRequest request) {
 		try {
 			loginService.updateLogoutDate(getUserId());
-			
+
 			Object KeycloakUserObj = request.getSession().getAttribute(ApConstants.KEYCLOAK_USER);
 			if (KeycloakUserObj != null) {
 				KeycloakUser keycloakUser = (KeycloakUser) KeycloakUserObj;
@@ -473,7 +472,7 @@ public class LoginController extends BaseUserDataController {
 				}
 				logger.info(keycloakUser.getUsername()+" logout success!");
 			}
-			
+
 			Enumeration<String> em = request.getSession().getAttributeNames();
 			while (em.hasMoreElements()) {
 				request.getSession().removeAttribute(em.nextElement().toString());
@@ -481,14 +480,14 @@ public class LoginController extends BaseUserDataController {
 		} catch (Exception e) {
 			logger.error("Unable to doLogout: {}", ExceptionUtils.getStackTrace(e));
 		}
-		
+
 		resetVerifyCode();
 		return "redirect:login";
 	}
-	
+
 	/**
 	 * 取得圖形驗證碼.
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 */
@@ -508,17 +507,17 @@ public class LoginController extends BaseUserDataController {
 			logger.error("Unable to getVerify: {}", ExceptionUtils.getStackTrace(e));
 		}
 	}
-	
+
 	private void resetVerifyCode() {
 		// 設定驗證碼圖示
 		ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 40);
 		addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
 		addAttribute("validateImageBase64", vcUtil.imgToBase64String());
 	}
-	
+
 	/**
 	 * 綁定 Facebook ID.
-	 * 
+	 *
 	 * @param userId
 	 * @param password
 	 * @return
@@ -533,7 +532,7 @@ public class LoginController extends BaseUserDataController {
 			addAttribute(ApConstants.PAGE_WORDING, sysParamMap.get("PAGE_WORDING"));
 			addAttribute(ApConstants.SYSTEM_CONSTANTS, sysParamMap.get("SYSTEM_CONSTANTS"));
 			addAttribute(ApConstants.SYSTEM_MSG_PARAMETER, sysParamMap.get("SYSTEM_MSG_PARAMETER"));
-			
+
 			KeycloakUser keycloakUser = keycloakService.login(userId, password);
 			if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
 				String fbId = MyStringUtil.nullToString(getSessionStr("fbId"));
@@ -557,10 +556,10 @@ public class LoginController extends BaseUserDataController {
 		resetVerifyCode();
 		return "login";
 	}
-	
+
 	/**
 	 * 綁定自然人憑證.
-	 * 
+	 *
 	 * @param userId
 	 * @param password
 	 * @return
@@ -574,7 +573,7 @@ public class LoginController extends BaseUserDataController {
 			addAttribute(ApConstants.PAGE_WORDING, sysParamMap.get("PAGE_WORDING"));
 			addAttribute(ApConstants.SYSTEM_CONSTANTS, sysParamMap.get("SYSTEM_CONSTANTS"));
 			addAttribute(ApConstants.SYSTEM_MSG_PARAMETER, sysParamMap.get("SYSTEM_MSG_PARAMETER"));
-			
+
 			KeycloakUser keycloakUser = keycloakService.login(userId, password);
 			if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
 				String cardSn = MyStringUtil.nullToString(getSessionStr("cardSn"));
@@ -594,13 +593,13 @@ public class LoginController extends BaseUserDataController {
 		resetVerifyCode();
 		return "login";
 	}
-	
+
 	@RequestMapping("/login-timeout")
 	public String logout() {
 		logger.debug("force logout");
 		return "force_logout";
 	}
-	
+
 	@RequestMapping("/confirmLogout")
 	public String confirmLogout() {
 		return "confirmLogout";
@@ -622,7 +621,7 @@ public class LoginController extends BaseUserDataController {
 			List<String> userSessionList = loginService.getKeycloakUserSessionIdList(keycloakUserId);
 			logger.debug("logoutOtherUser: Find user[{}] this login sessionId: {}", userId, nowSessionId);
 			logger.debug("logoutOtherUser: Find user[{}] sessionList: {}", userId, userSessionList);
-			
+
 			List<String> removeSessionIdList = new ArrayList<>();
 			if (userSessionList != null && userSessionList.size() > 0) {
 				for (String sessionId : userSessionList) {
@@ -635,21 +634,21 @@ public class LoginController extends BaseUserDataController {
 			}
 			String returnCode = loginService.logoutOtherUser(removeSessionIdList);
 			logger.debug("Remove user[{}] other sessionList[{}] result: {}", userId, removeSessionIdList, returnCode);
-			
+
 			// 判斷是否為內部人員及保代角色
 			UsersVo userDetail = registerUserService.getUserByAccount(keycloakUser.getUsername());
 			boolean isPartnerRole = loginService.isPartnerRole(userDetail.getUserType());
 			if (isPartnerRole) {
 				loginSuccessPage = "redirect:partner";
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("Unable to logoutOtherUser: {}", ExceptionUtils.getStackTrace(e));
 			processSystemError();
 		}
 		return loginSuccessPage;
 	}
-	
+
 	/**
 	 * 放棄本次登入session
 	 * @param request
@@ -661,19 +660,19 @@ public class LoginController extends BaseUserDataController {
 		try {
 			String userId = getUserId();
 			loginService.updateLogoutDate(userId);
-			
+
 			Object KeycloakUserObj = request.getSession().getAttribute(ApConstants.KEYCLOAK_USER);
 			if (KeycloakUserObj != null) {
 				KeycloakUser keycloakUser = (KeycloakUser) KeycloakUserObj;
 				String nowSessionId = keycloakUser.getSessionState();
-				
+
 				List<String> removeSessionIdList = new ArrayList<>();
 				removeSessionIdList.add(nowSessionId);
-				
+
 				String returnCode = loginService.logoutOtherUser(removeSessionIdList);
 				logger.debug("Remove user[{}] sessionList[{}] result: {}", userId, removeSessionIdList, returnCode);
 			}
-			
+
 			Enumeration<String> em = request.getSession().getAttributeNames();
 			while (em.hasMoreElements()) {
 				request.getSession().removeAttribute(em.nextElement().toString());
@@ -685,7 +684,7 @@ public class LoginController extends BaseUserDataController {
 		resetVerifyCode();
 		return "redirect:login";
 	}
-	
+
 	// FB或自然人登入前先比對驗證碼
 	@PostMapping("/preCheckkValidateCode")
 	public ResponseEntity<ResponseObj> preCheckkValidateCode(@RequestBody String validateCode, HttpServletRequest request) {
@@ -703,12 +702,12 @@ public class LoginController extends BaseUserDataController {
 				addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
 				addAttribute("validateImageBase64", vcUtil.imgToBase64String());
 			}
-			
+
 			String message = "";
 			if (!isValidateCodeOk) {
 				message = "驗證碼不正確";
 			}
-			
+
 			this.setResponseObj(ResponseObj.SUCCESS, message, "");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -716,29 +715,29 @@ public class LoginController extends BaseUserDataController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
 	}
-	
+
 	@PostMapping("/setSessioinCardSN")
 	public ResponseEntity<ResponseObj> setSessioinCardSN(
 			@RequestBody String cardSn,
 			HttpServletRequest request) {
-		
+
 		//String afterEncryptCardSN = "";
-		
+
 		try {
 			System.out.println("In setSessioinCardSN.");
 			logger.info("In setSessioinCardSN,cardSn="+cardSn);
-			
+
 			if(!StringUtils.isEmpty(cardSn)) {
 				addSession("SESSION_CARDSN",cardSn.trim());
 			}
-			
+
 			this.setResponseObj(ResponseObj.SUCCESS, "", "");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
-		
+
 	}
 
 	/**
@@ -779,8 +778,10 @@ public class LoginController extends BaseUserDataController {
 		return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
 	}
 
-	@Value("${eservice.bxcz.login.url}")
-	private String bxczUrl;
+
+	@Value("${eservice.bxcz.pbs.101.url}")
+	private String pbs101url;
+
 	@Value("${eservice.bxcz.login.client_id}")
 	private String client_id;
 
@@ -790,7 +791,7 @@ public class LoginController extends BaseUserDataController {
 			String actionId = UUID.randomUUID().toString().replaceAll("-", "");
 			addSession("actionId", actionId);
 			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
-			String url = bxczUrl + "?response_type=code&scope=openid&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
+			String url = pbs101url + "?response_type=code&scope=openid&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
 					+ "&nonce=" + actionId + "&redirect_uri=" + eserviceBxczRedirectUri;
 			this.setResponseObj(ResponseObj.SUCCESS, "", url);
 		} catch (Exception e) {
@@ -801,10 +802,195 @@ public class LoginController extends BaseUserDataController {
 	}
 
 	@GetMapping("/bxczDoLogin")
-	public String bxczDoLogin(BxczRedirectParam param) {
+	public String bxczDoLogin(BxczRedirectParam param, HttpServletRequest request) {
+
 		String loginSuccessPage = "redirect:dashboard";
+		try {
+			if (StringUtils.isBlank(param.getCode())) {
+				resetVerifyCode();
+				addAttribute("errorMessage", "Code不能爲空！");
+				return "login";
+			}
+
+			if (StringUtils.isBlank(param.getState())) {
+				resetVerifyCode();
+				addAttribute("errorMessage", "State不能爲空！");
+				return "login";
+			}
+
+			BxczState bxczState = new Gson().fromJson(new String(Base64.getDecoder().decode(param.getState())), BxczState.class);
+			if (bxczState == null || !StringUtils.equals(getSessionStr("actionId"), bxczState.getActionId())) {
+				resetVerifyCode();
+				addAttribute("errorMessage", "ActionId錯誤！");
+				return "login";
+			}
+			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
+			String rocId = loginService.doLoinBxcz(param.getCode(), eserviceBxczRedirectUri);
+			UsersVo userDetail = registerUserService.getUserByRocId(rocId);
+			if (userDetail == null) {
+				addSession("BxczRegist", true);
+				return "redirect:firstUseStart";
+			}
+			KeycloakUser keycloakUser = keycloakService.getUser(userDetail.getUserId());
+			String userId = userDetail.getUserName();
+			if (keycloakUser != null) {
+				if (userDetail != null && userDetail.getStatus().equals("locked")) {
+					String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0099");
+					addAttribute("errorMessage", errorMessage);
+					return "login";
+				}
+
+				addSession(ApConstants.KEYCLOAK_USER, keycloakUser);
+				addSession(ApConstants.LOGIN_USER_ID, keycloakUser.getUsername());
+
+				// 設定系統參數
+				Map<String, Map<String, ParameterVo>> sysParamMap = parameterService.getSystemParameter(ApConstants.SYSTEM_ID);
+				addAttribute(ApConstants.SYSTEM_CONSTANTS, (Serializable) sysParamMap.get("SYSTEM_CONSTANTS"));
+				addSession(ApConstants.SYSTEM_PARAMETER, (Serializable) sysParamMap);
+				addSession(ApConstants.PAGE_WORDING, (Serializable) sysParamMap.get("PAGE_WORDING"));
+				addSession(ApConstants.SYSTEM_MSG_PARAMETER, (Serializable) sysParamMap.get("SYSTEM_MSG_PARAMETER"));
+				addSession(ApConstants.APPLICATION_ITEMS, (Serializable) sysParamMap.get("APPLICATION_ITEMS"));
+				addSession(ApConstants.INSURANCE_CLAIM_UPLOADFILE, (Serializable) sysParamMap.get("INSURANCE_CLAIM_UPLOADFILE"));
+				addSession(ApConstants.MEDICAL_TREATMENT_UPLOADFILE, (Serializable) sysParamMap.get("MEDICAL_TREATMENT_UPLOADFILE"));
+				addSession(ApConstants.RELATION_ITEMS, (Serializable) sysParamMap.get("RELATION_ITEMS"));
+				addSession(ApConstants.SEND_COMPANY_ITEMS, (Serializable) sysParamMap.get("SEND_COMPANY_ITEMS"));
+				addSession(ApConstants.SEND_COMPANY_ITEMS_CONTACT, (Serializable) sysParamMap.get("SEND_COMPANY_ITEMS_CONTACT"));
+				addSession(ApConstants.MEDICAL_COMPANY_ITEMS, (Serializable) sysParamMap.get("MEDICAL_COMPANY_ITEMS"));
+				addSession(ApConstants.PAYMENT_METHOD, (Serializable) sysParamMap.get("PAYMENT_METHOD"));
+				addSession(ApConstants.INSURANCE_ACCIDENT, (Serializable) sysParamMap.get("INSURANCE_ACCIDENT"));
+
+				// hide listing product code
+				Map<String, ParameterVo> paraMap = sysParamMap.get("SYSTEM_CONSTANTS");
+				Set<String> keySet = paraMap.keySet();
+				ParameterVo vo2 = null;
+				for (String key : keySet) {
+					if (key.indexOf("HIDE_LISTING") != -1) {
+						String mapKey = "hideProdCode" + key.replace("HIDE_LISTING", "").replace("_CODE", "");
+						ParameterVo vo = (ParameterVo) paraMap.get(key);
+						addSession(mapKey, vo.getParameterValue());
+						logger.debug("original key={}, mapKey={}, mapValue={}", key, mapKey, vo.getParameterValue());
+					}
+
+					if (key.equals("DOWN_LISTING_2")) {
+						vo2 = (ParameterVo) paraMap.get(key);
+						addSession(key, vo2.getParameterValue());
+						logger.debug("layout key={},  layou value={}", key, vo2.getParameterValue());
+						vo2 = null;
+					}
+					if (key.indexOf("SHOW_LISTING") != -1) {
+						String mapKey = "showProdCode" + key.replace("SHOW_LISTING", "").replace("_CODE", "");
+						ParameterVo vo = (ParameterVo) paraMap.get(key);
+						addSession(mapKey, vo.getParameterValue());
+						logger.debug("original key={}, mapKey={}, mapValue={}", key, mapKey, vo.getParameterValue());
+					}
+
+				}
+
+				// 取得使用者不能訪問的DIV權限
+				List<String> rejectDivList = fuctionAuthService.getRejectDivName(keycloakUser.getId());
+				addSession("REJECT_DIV_LIST", (Serializable) rejectDivList);
+
+				// 設定登出倒數秒數
+				long logutTimeoutSeconds = 0;
+				try {
+					String timeoutSeconds = sysParamMap.get("SYSTEM_CONSTANTS").get("TIMEOUT_SECONDS").getParameterValue();
+					logutTimeoutSeconds = Long.parseLong(timeoutSeconds);
+				} catch (Exception e) {
+					// 若發生錯誤，取預設值
+					logutTimeoutSeconds = ApConstants.LOGUT_TIME_DURATION_SECOND;
+				}
+				addSession(ApConstants.TIMEOUT_SECONDS, logutTimeoutSeconds);
+
+				if (userDetail != null) {
+					Map<String, Boolean> identity = new HashMap<String, Boolean>();
+					LilipmVo lilipmVo = lilipmService.findByRocId(userDetail.getRocId());
+					if (lilipmVo != null && !StringUtils.isEmpty(lilipmVo.getLipmName1())) {
+						userDetail.setUserName(lilipmVo.getLipmName1());
+						userDetail.setUserNameBase64(unicodeService.convertString2Unicode(lilipmVo.getLipmName1()));
+						identity.put("lilipm", true);
+					} else {
+						identity.put("lilipm", false);
+					}
+					LilipiVo tempLilipiVo = new LilipiVo();
+					tempLilipiVo.setLipiId(userDetail.getRocId());
+					List<LilipiVo> lilipiVoList = lilipiService.getLilipi(tempLilipiVo);
+					if (lilipiVoList != null && lilipiVoList.size() > 0) {
+						identity.put("lilipi", true);
+						if (lilipmVo == null) {
+							LilipiVo lilipiVo = lilipiVoList.get(0);
+							userDetail.setUserName(lilipiVo.getLipiName());
+							userDetail.setUserNameBase64(unicodeService.convertString2Unicode(lilipiVo.getLipiName()));
+						}
+					} else {
+						identity.put("lilipi", false);
+					}
+
+					logger.info("***userType=" + userDetail.getUserType() + "***");
+					boolean isPartner = loginService.isPartnerRole(userDetail.getUserType());
+					if (isPartner) {//登入者為內部人員及保代角色(admin,agent)時強制給予要／被保人身份
+						logger.info("***start force to setting user identity for admin.***");
+						identity.put("lilipm", true);
+						identity.put("lilipi", true);
+						logger.info("***end force to setting user identity for admin.***");
+					}
+
+					userDetail.setIdentity(identity);
+					logger.info("to setting userIdentity=" + Arrays.asList(identity));
+					addSession(UserDataInfo.USER_DETAIL, userDetail);
+
+					// 第一次登入需要變更密碼
+					if (userDetail.getLastChangPasswordDate() == null) {
+						//20190503 check in AuthenticationInterceptor
+						//loginSuccessPage = "redirect:changePassword1";
+					} else {
+						// 判斷是否為內部人員及保代角色
+						boolean isPartnerRole = loginService.isPartnerRole(userDetail.getUserType());
+						if (isPartnerRole) {
+							loginSuccessPage = "redirect:partner";
+						}
+					}
+
+					// 設定一般及保戶會員的相關資訊
+					String userRocId = getUserRocId();
+					logger.debug("Find login user's rocId: {}", userRocId);
+					if (!StringUtils.isEmpty(userRocId)) {
+						List<String> policyNos = lilipmService.getUserPolicyNos(userRocId);
+						if (policyNos != null && policyNos.size() > 0) {
+							// 使用者的保單號碼清單
+							addSession(UserDataInfo.USER_POLICY_NO_LIST, (Serializable) policyNos);
+						}
+						// 使用者的保單商品名稱
+						addSession(UserDataInfo.USER_PRODUCT_NAME_LIST, (Serializable) loginService.getProductNameList(userRocId));
+						// 使用者的保單主約被保人清單
+						addSession(UserDataInfo.USER_MAIN_INSURED_NAME_LIST, (Serializable) loginService.getMainInsuredNameList(userRocId));
+						// 保戶所有保單
+						addSession(UserDataInfo.USER_ALL_POLICY_LIST, (Serializable) getUserOnlineChangePolicyList(userId, userRocId));
+
+						PolicyListResponse policyListResponse = getPolicyListByUser(userId, userRocId);
+						// 投資型保單
+						addSession(UserDataInfo.USER_INVT_POLICY_LIST, (Serializable) policyListResponse.getInvtPolicyList());
+						// 保障型保單
+						addSession(UserDataInfo.USER_BENEFIT_POLICY_LIST, (Serializable) policyListResponse.getBenefitPolicyList());
+					}
+
+					// 取得上次登入時間
+					Date lastLoginTime = loginService.getLastLoginTime(userId);
+					if (lastLoginTime != null) {
+						addSession(UserDataInfo.LAST_LOGIN_TIME, lastLoginTime);
+					}
+				}
+
+				addAttribute("errorMessage", "");
+			}
+		} catch (Exception e) {
+			logger.error("Unable to doLogin: {}", ExceptionUtils.getStackTrace(e));
+			addAttribute("errorMessage", ApConstants.SYSTEM_ERROR);
+			resetVerifyCode();
+			return "login";
+		}
 		return loginSuccessPage;
 	}
+
 
 	/**
 	 * 加密解密演算法
@@ -826,5 +1012,5 @@ public class LoginController extends BaseUserDataController {
 		}
 		return mingwen;
 	}
-	
+
 }

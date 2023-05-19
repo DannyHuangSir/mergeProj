@@ -402,7 +402,7 @@ img.bg {
 
 .index-bg {
     width: 1020px;
-    height: 740px;
+    height: 782px;
     position: absolute;
     margin-right: auto;
     background-image: url(../img/bg1.png);
@@ -419,7 +419,7 @@ img.bg {
     background-color: #f2f1f1;
     padding-right: 55px;
     padding-left: 45px;
-    height: 740px;
+    height: 782px;
 }
 
 .alert1 {

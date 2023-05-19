@@ -207,7 +207,7 @@
 							<button id="loginBtn" class="col-xs-12 btn-login">登 入</button>
 							<button id="bxczLoginBtn" style="font-size:18px; background:#ADFF2F;" class="col-xs-12 btn-login">使用保險存摺登入</button>
 							<!-- <button type="button" id="icCardBtn" class="col-xs-12 btn-login1" onclick="openIcModal();">使用自然人憑證登入</button>--><!-- disable MOICA login -->
-  							<div class="fb-login-button" id="loginbutton" data-max-rows="1" data-size="large" data-scope="public_profile,email" data-button-type="login_with"
+  							<div style="margin-top: 15px;" class="fb-login-button" id="loginbutton" data-max-rows="1" data-size="large" data-scope="public_profile,email" data-button-type="login_with"
   								data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState()"></div>
 
 							<input type="hidden" id="fbId" name="fbId"/>
@@ -363,15 +363,6 @@
 				</div>
 			</div>
 			<footer th:replace="fragments/footer"></footer>
-			<div id="bxczDialog" hidden="true" style="left:50%; top:50%; position:absolute; height: 600px; width:800px; margin-top: -300px; margin-left: -400px;">
-				<div class="row" style="background:#DD792E; height: 32px; padding: 3px;">
-					<button onclick="$('#bxczDialog').hide()" class="close" style="border-radius: 50%; width: 25px; height: 25px; display: block; line-height: 23px; border: 2px solid #FFF;"><span>×</span></button>
-				</div>
-				<div class="row" style="height:100%;">
-					<iframe style="border: 0" id="bxczIframe" height="100%" width="100%"></iframe>
-				</div>
-			</div>
-
 		<!-- my scripts -->
 
 		<!-- inline scripts related to this page -->
@@ -451,7 +442,7 @@
 				return false;
 			})
 
-			$("#confirmBxczModal").click(function(){
+			$("#confirmBxczLogin").click(function(){
 				$('#confirmBxczModal').modal('hide');
 				openBxczLoginDialog()
 				return false;
@@ -520,8 +511,7 @@
 				success : function(response) {
 					removeLoading()
 					if (response.result == 'SUCCESS') {
-						$("#bxczIframe").attr('src', response.resultData)
-						$("#bxczDialog").show()
+						window.location.href = response.resultData
 					} else {
 						openAlert(response.resultMsg)
 					}

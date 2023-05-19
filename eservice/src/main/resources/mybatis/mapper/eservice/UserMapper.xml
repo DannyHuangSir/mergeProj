@@ -35,6 +35,14 @@
 		WHERE
 		    u.roc_id = #{rocId}
 	</select>
+
+	<select id="getUserByBxczRocId" resultMap="UsersMap" parameterType="java.lang.String">
+		select ue.ID USER_ID, ue.USERNAME USERNAME, u.roc_id, ESERVICE.DBO.FN_DEBASE64(u.mobile) mobile,ESERVICE.DBO.FN_DEBASE64(u.email) email,u.login_fail_count,u.last_chang_password_date,
+		u.sms_flag,u.mail_flag,u.fb_id,u.moica_id,u.user_type,u.create_date,u.create_user,
+		u.online_flag, u.login_fail_count, u.status
+		from ESERVICE_ADM.DBO.USER_ENTITY ue INNER JOIN ESERVICE.DBO.USERS U ON UE.USERNAME = U.USER_ID
+		where ue.REALM_ID='elife' and u.roc_id=#{rocId}
+	</select>
 	
 	<insert id="createUser" parameterType="com.twfhclife.eservice.web.model.UsersVo">
 		insert into 
