@@ -125,7 +125,7 @@
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1" class="text-left">交易類別</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4" class="text-center">單位數<br/><span class="point">(1)</span></th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5" class="text-center">淨值<br/><span class="point">(2)</span></th>
-														<th class="item90 text-center" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6">參考匯率<br/><span class="point">(3)</span></th>
+														<th class="item90 text-center" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="6" style="width: 130px;">匯率使用日<hr class="splitLine">參考匯率<br/><span class="point">(3)</span></th>
 														<th class="item90 text-center" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="7">合計<br/><span class="point">(4)=(1)*(2)*(3)</span></th>
 													</tr>
 													</thead>
@@ -240,18 +240,20 @@
 				// 匯率
 				'fnRender': function(oRow) {
 					// 台幣匯率直接為1
+					var rate = '';
 					if (emptyIfNull(oRow.sadpTrCode) == 'INV109') {
-						return '--';
+						rate = '--';
 					}
 					if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
-						return '1';
+						rate = '1';
 					} if (oRow.fundValue == null || oRow.fundValue == 0) {
-						return '--';
+						rate = '--';
 					} else {
-						return showNumberPointValue(oRow.fundValue);
+						rate = showNumberPointValue(oRow.fundValue);
 					}
+					return '<span>'+oRow.sadpExchDate+'</span><hr class="splitLine">'+rate;
 				},
-				'rwdName': '匯率'
+				'rwdName': '匯率使用日<hr class="splitLine">匯率'
 			},
 			{
 				// 合計

@@ -190,6 +190,7 @@
         <result property="extNumber" column="ExtNumber"/>
         <result property="dueDate" column="DueDate"/>
         <result property="noteVerifyMemo" column="NoteVerifyMemo"/>
+        <result property="agentCode" column="agentCode"/>
         <collection property="noteItems" resultMap="NoteItemMap"/>
     </resultMap>
 
