@@ -58,14 +58,17 @@ public class DateUtil {
 		if (StringUtils.isBlank(westDate)) {
 			return null;
 		}
+		if(westDate.length() == 10) {
+			westDate = westDate.replace("/", "");
+		}
 		String twYear = Integer.parseInt(westDate.substring(0, 4)) - 1911 + "";
-		return twYear + "/" + Integer.valueOf(westDate.substring(4, 6)) + "/" + Integer.valueOf(westDate.substring(6, 8));
+		return twYear + "/" + westDate.substring(4, 6) + "/" + westDate.substring(6, 8);
 	}
 
 	/**
 	 * 根據商品開賣日, 取回年字串.
 	 * 
-	 * @param effectDate 開賣日
+	 * @param effectDate 開賣日 YYYY/MM/dd
 	 * @return 回傳系統日至開賣日的民國年字串
 	 */
 	public static List<String> getYearOpitonByEffectDate(String effectDate) {

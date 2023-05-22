@@ -61,9 +61,9 @@
 												<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
 													<thead>
 													<tr class="table2">
-														<th>投資標的</th>
-														<th class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">幣別</th>
-														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">投資效益等級</th>
+														<th style="width: 100px;">投資標的</th>
+														<th style="width: 80px;" class="text-left" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">幣別</th>
+														<th style="width: 100px;" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">投資效益等級</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="3" style="width: 130px;">持有成本(A)</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="4" style="width: 130px;">單位數/金額(B)</th>
 														<th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="5" style="width: 130px;">參考淨值(C)</th>
@@ -120,14 +120,14 @@
       {
         // 平均成本
         'fnRender': function(oRow) {
-          return showAvgPval(oRow);
+          return oRow != null ? showAvgPval(oRow) : '-';
         },
         'rwdName': '持有成本'
       },
       {
         // 單位數/金額
         'fnRender': function(oRow) {
-          return showNetUnits(oRow);
+          return oRow != null ? showNetUnits(oRow) : '-';
         },
         'rwdName': '單位數/金額'
       },
@@ -137,28 +137,31 @@
       },
        {
        'fnRender': function(oRow) {
-          return  '<span>'+westDate(oRow.netValueDate)+'</span><hr class="splitLine">'+showExchRateDate(oRow);
+          return  '<span>'+
+				  (oRow != null ? westDate(oRow.netValueDate) : '-') +
+				  '</span><hr class="splitLine">'+
+				  (oRow != null ? showExchRateDate(oRow) : '-') ;
         },
        'rwdName': '匯率使用日<hr class="splitLine">參考匯率/日期'
       },
       {
         // 參考帳戶價值
         'fnRender': function(oRow) {
-          return showAcctValue(oRow);
+          return oRow != null ? showAcctValue(oRow) : '-';
         },
         'rwdName': '參考帳戶價值'
       },
       {
         // 累計投資收益
         'fnRender': function(oRow) {
-          return showClupExpeNtdSum(oRow);
+          return oRow != null ? showClupExpeNtdSum(oRow) : '0';
         },
         'rwdName': '累計投資收益'
       },
       {
         // 參考報酬率(%)
         'fnRender': function(oRow) {
-          return showRoiRate(oRow);
+          return oRow != null ? showRoiRate(oRow) : '-';
         },
         'rwdName': '參考報酬率(%)'
       }

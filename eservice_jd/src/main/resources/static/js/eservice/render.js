@@ -57,7 +57,7 @@ function westYear(obj) {
  * @param {Object} obj 需要判斷的屬性物件
  */
 function emptyIfNull(obj) {
-	return (obj == null ? '' : obj)
+	return (obj == null ? '-' : obj)
 }
 
 /**

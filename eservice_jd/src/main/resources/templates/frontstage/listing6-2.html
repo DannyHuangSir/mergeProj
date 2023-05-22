@@ -78,35 +78,36 @@
 													<tbody>
 													<tr class="h65 noEvent" th:each="vo1 : ${info}">
 														<td class="text-left table3" style="width:100px">
-															<span th:text="${vo1.invtName}"></span>
-															<p class="enSmall" th:text="${vo1.invtNo}"></p>
+															<span th:text="${vo1.invtName != null ? vo1.invtName : '-'}"></span>
+															<p class="enSmall" th:text="${vo1.invtNo != null ? vo1.invtNo : '-'}"></p>
 														</td>
 														<td>
-															<span class="enSmall enSmallDate" th:text="${vo1.compuDate}"></span>
+															<span class="enSmall enSmallDate" th:text="${vo1.compuDate != null ? vo1.compuDate : '-'}"></span>
 														</td>
 														<td>
-															<span class="enSmall enSmallDate" th:text="${vo1.trDate}"></span>
+															<span class="enSmall enSmallDate" th:text="${vo1.trDate != null ? vo1.trDate : '-'}"></span>
 														</td>
 														<td>
-															<p class="marginTop25" th:text="${vo1.expeUnits}"></p>
+															<p class="marginTop25" th:text="${vo1.expeUnits != null ? vo1.expeUnits  : '-'}"></p>
 														</td>
 														<td>
-															<span class="enSmall enSmallDate" th:text="${vo1.inprRate}"></span>
+															<span class="enSmall enSmallDate" th:text="${vo1.inprRate != null ? vo1.inprRate : '-'}"></span>
 														</td>
 														<td>
-															<span th:text="${vo1.trDate}"></span>
+															<span th:text="${vo1.trDate != null ? vo1.trDate : '-'}"></span>
 															<hr class="splitLine">
-															<p class="marginTop25 enSmall enSmallDate" th:text="${vo1.exchRate}"></p>
+															<p class="marginTop25 enSmall enSmallDate" th:text="${vo1.exchRate != null ? vo1.exchRate : '-'}"></p>
 														</td>
-														<td class="text-left table3" style="width:100px">
-															<th:block th:if="${vo1.trCode == '01'}">現金</th:block>
-															<th:block th:if="${vo1.trCode == '00'}">再投資</th:block>
+														<td class="text-left table3" style="width:100px" th:switch="${vo1.trCode}">
+															<th:block th:case="'01'">現金</th:block>
+															<th:block th:case="'00'">再投資</th:block>
+															<th:block th:case="*">-</th:block>
 														</td>
 														<td class="text-left " th:text="${#numbers.formatDecimal((vo1.units != null ? vo1.units : 0), 1,'COMMA',4,'POINT')}">
 														</td>
-														<td class="text-left " th:text="${vo1.expeNtd}">
+														<td class="text-left " th:text="${vo1.expeNtd != null ? vo1.expeNtd : '-'}">
 														</td>
-														<td class="text-left " th:text="${vo1.payDate}">
+														<td class="text-left " th:text="${vo1.payDate != null ? vo1.payDate : '-'}">
 														</td>
 													</tr>
 													</tbody>
