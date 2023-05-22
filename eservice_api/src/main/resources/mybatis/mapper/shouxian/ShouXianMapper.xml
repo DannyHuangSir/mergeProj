@@ -32,7 +32,7 @@
         WHEN A.LIPM_ST BETWEEN 30 AND 34 THEN 2
         WHEN add_months(A.LIPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate THEN 3
         END AS STAT,
-        to_char(A.LIPI_INSU_BEG_DATE, 'yyy/fmMM/dd') EFFECTIVE_DATE, (CASE WHEN A.LIPI_MAIN_AMT = 0 THEN A.LIPI_CANCER_QUAN ELSE A.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
+        to_char(A.LIPI_INSU_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') EFFECTIVE_DATE, (CASE WHEN A.LIPI_MAIN_AMT = 0 THEN A.LIPI_CANCER_QUAN ELSE A.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
         A.LIPI_TABL_PREM, (CASE WHEN A.LIPM_RCP_CODE = 'A' AND A.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE A.LIPM_RCP_CODE END) AS PAYMENT_MODE, lpr.PROD_CURRENCY CURRENCY,
         A.LIPI_PREM_YEAR PREM_YEAR, A.LIPM_RCP_METH_CODE, lpe.SETT_INSU_TYPE PROD_MODE, lpe.SETT_CH_NAME PROD_NAME
         FROM (
@@ -55,7 +55,7 @@
     <select id="getPolicyListTotal" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyCountVo">
         SELECT SUM(CASE WHEN LIPM_ST <![CDATA[<=]]> 18 THEN 1 ELSE 0 END) effectiveCount,
         SUM(CASE WHEN LIPM_ST BETWEEN 30 AND 34 THEN 1 ELSE 0 END) stopCount,
-        SUM(CASE WHEN add_months(LIPI_INSU_END_DATE, 24) <![CDATA[<]]> sysdate THEN 1 ELSE 0 END) expireCount,
+        SUM(CASE WHEN LIPM_ST BETWEEN 50 AND 81 THEN 1 ELSE 0 END)  expireCount,
         count(1) total
         FROM (
         <include refid="policyListSql"/>
@@ -223,7 +223,7 @@
         <result column="POLICY_TYPE" property="policyType"/>
         <result column="LIPM_NAME" property="lipmName"/>
         <result column="LIPM_ID" property="lipmId"/>
-        <result column="PMDA_APPLICANT_CELLPHONE" property="lipmPhone"/>
+        <result column="PMDA_INSURED_CELLPHONE" property="lipmPhone"/>
         <result column="PMDA_APPLICANT_EMAIL" property="lipmMail"/>
         <result column="LIPM_ADDR" property="lipmAddr"/>
         <result column="LIPI_NAME" property="lipiName"/>
@@ -274,16 +274,16 @@
     <select id="getBasePolicy" resultMap="PolicyBaseMap">
         SELECT A.LIPM_ST STATUS, A.LIPI_TABL_PREM, A.LIPM_BANK_CODE,
         A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2, lip.PMDA_INVE_ATTR,
-        to_char(A.LIPI_INSU_BEG_DATE, 'yyy/fmMM/dd') EFFECTIVE_DATE,
-        A.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(A.BNAG_BIRTH, 'yyy/fmMM/dd') LIPM_BIRTH,
-        to_char(lsn.ASSN_ARRI_DATE, 'yyy/fmMM/dd') ASSN_ARRI_DATE, to_char(lsn.ASSN_TR_ARRI_DATE, 'yyy/fmMM/dd') ASSN_TR_ARRI_DATE, lip.PMDA_MAIL, lsn.ASSN_STATUS,
-        A.LIPM_TEL_H, lip.PMDA_APPLICANT_CELLPHONE, lip.PMDA_APPLICANT_EMAIL, A.LIPM_5_GP,
-        A.LIPM_ADDR, to_char(A.LIPI_BIRTH, 'yyy/fmMM/dd') LIPI_BIRTH, A.LIPI_AGE, A.LIPI_SEX, lbp.LIPB_NAME, lbp.LIPB_RELA, lpr.PROD_CURRENCY CURRENCY,
+        to_char(A.LIPI_INSU_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') EFFECTIVE_DATE,
+        A.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, to_char(A.BNAG_BIRTH, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') LIPM_BIRTH,
+        to_char(lsn.ASSN_ARRI_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') ASSN_ARRI_DATE, to_char(lsn.ASSN_TR_ARRI_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') ASSN_TR_ARRI_DATE, lip.PMDA_MAIL, lsn.ASSN_STATUS,
+        A.LIPM_TEL_H, lip.PMDA_INSURED_CELLPHONE, lip.PMDA_APPLICANT_EMAIL, A.LIPM_5_GP,
+        A.LIPM_ADDR, to_char(A.LIPI_BIRTH, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') LIPI_BIRTH, A.LIPI_AGE, A.LIPI_SEX, lbp.LIPB_NAME, lbp.LIPB_RELA, lpr.PROD_CURRENCY CURRENCY,
         lbp.LIPB_BENI_CODE, lbp.LIPB_SEQ, A.LIPM_NAME_1  LIPM_NAME, A.LIPM_ID, A.LIPI_NAME, A.LIPI_ID,
         (CASE WHEN A.LIPM_RCP_CODE = 'A' AND A.LIPM_FLEX_RCP_MK = 'Y' THEN 'T' ELSE A.LIPM_RCP_CODE END) AS PAYMENT_MODE, lip.PMDA_EPO_MK,
         (CASE WHEN A.LIPI_MAIN_AMT = 0 THEN A.LIPI_CANCER_QUAN ELSE A.LIPI_MAIN_AMT END) AS MAIN_AMOUNT, lip.PMDA_PI_TEL,
-        to_char(A.LIPI_INSU_BEG_DATE, 'yyy/fmMM/dd') LIPI_INSU_BEG_DATE, to_char(A.LIPI_INSU_END_DATE, 'yyy/fmMM/dd') LIPI_INSU_END_DATE, A.LIPM_RCP_METH_CODE, A.LIPI_PREM_YEAR PREM_YEAR,
-        lpe.SETT_CH_NAME PROD_NAME, CONCAT(CONCAT(A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO), A.LIPM_INSU_SEQ_NO) POLICY_NO,  to_char(lip.PMDA_PRINT_DATE, 'yyy/fmMM/dd') PMDA_PRINT_DATE
+        to_char(A.LIPI_INSU_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') LIPI_INSU_BEG_DATE, to_char(A.LIPI_INSU_END_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') LIPI_INSU_END_DATE, A.LIPM_RCP_METH_CODE, A.LIPI_PREM_YEAR PREM_YEAR,
+        lpe.SETT_CH_NAME PROD_NAME, CONCAT(CONCAT(A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO), A.LIPM_INSU_SEQ_NO) POLICY_NO,  to_char(lip.PMDA_PRINT_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') PMDA_PRINT_DATE
         FROM (
             <include refid="policyBaseSql"/>
         ) A
@@ -351,7 +351,7 @@
     </resultMap>
 
     <sql id="paymentRecordColumnSql">
-        to_char(A.PRPA_RCP_DATE, 'yyy/fmMM/dd') PRPA_RCP_DATE,
+        to_char(A.PRPA_RCP_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') PRPA_RCP_DATE,
         A.PRPA_PAAB_AMT,
         A.PRPA_ACT_AMT,
         A.PRPA_RCP_CODE,
@@ -359,7 +359,7 @@
     </sql>
     <select id="getPaymentRecord" resultMap="PaymentRecordMap">
             SELECT
-            to_char(A.PRPA_RCP_DATE, 'yyy/fmMM/dd') PRPA_RCP_DATE,
+            to_char(A.PRPA_RCP_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') PRPA_RCP_DATE,
             A.PRPA_PAAB_AMT,
             A.PRPA_ACT_AMT,
             A.PRPA_RCP_CODE,
@@ -370,7 +370,7 @@
             WHERE A.PRPA_INSU_TYPE = substr(#{policyNo}, 1, 2) AND A.PRPA_INSU_GRP_NO = substr(#{policyNo}, 3, 1) AND A.PRPA_INSU_SEQ_NO = substr(#{policyNo}, 4, 7)
             UNION ALL
             SELECT
-            to_char(A.PRPA_RCP_DATE, 'yyy/fmMM/dd') PRPA_RCP_DATE,
+            to_char(A.PRPA_RCP_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') PRPA_RCP_DATE,
             A.PRPA_PAAB_AMT,
             A.PRPA_ACT_AMT,
             A.PRPA_RCP_CODE,
@@ -380,7 +380,7 @@
                 ON A.PRPA_INSU_TYPE = B.LIPI_INSU_TYPE AND A.PRPA_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.PRPA_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
             WHERE A.PRPA_INSU_TYPE = substr(#{policyNo}, 1, 2) AND A.PRPA_INSU_GRP_NO = substr(#{policyNo}, 3, 1) AND A.PRPA_INSU_SEQ_NO = substr(#{policyNo}, 4, 7)
             UNION ALL
-            SELECT to_char(A.PRPA_RCP_DATE, 'yyy/fmMM/dd') PRPA_RCP_DATE,
+            SELECT to_char(A.PRPA_RCP_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') PRPA_RCP_DATE,
             A.PRPA_PAAB_AMT,
             A.PRPA_ACT_AMT,
             A.PRPA_RCP_CODE,
@@ -402,8 +402,8 @@
     <select id="getPolicyPremium" resultMap="PremiumMap">
         <![CDATA[
             SELECT
-            TO_CHAR(BONF_BON_DATE, 'yyy/fmMM/dd') BONF_BON_DATE,
-            TO_CHAR(BONF_FILE_BEG_DATE, 'yyy/fmMM/dd') BONF_FILE_BEG_DATE,
+            TO_CHAR(BONF_BON_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') BONF_BON_DATE,
+            TO_CHAR(BONF_FILE_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') BONF_FILE_BEG_DATE,
             BONF_ACCU_BON PREMIUM,
             BONF_BON_BAL, BONF_TAKE_CODE
             FROM LIBONF WHERE
@@ -424,7 +424,7 @@
 
     <select id="getExpireOfPayment" resultMap="ExpireOfPaymentMap">
         SELECT lbf.PAYF_PAY_AMT,
-            to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyy/fmMM/dd') PAHI_DEP_I_BOOK_DATE, lbf.PAYF_PAY_METH, lbf.PAYF_BANK, lbf.PAYF_NAME,
+            to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') PAHI_DEP_I_BOOK_DATE, lbf.PAYF_PAY_METH, lbf.PAYF_BANK, lbf.PAYF_NAME,
             lph.PAHI_REMIT_AT, lph.PAHI_BANK_CODE, PAHI_PAY_CODE PAYF_PAY_REAS
             FROM LIPAYF_ES lbf
             LEFT JOIN LIPAHI lph ON lph.PAHI_INSU_TYPE||lph.PAHI_INSU_GRP_NO||lph.PAHI_INSU_SEQ_NO = lbf.PAYF_INSU_NO
@@ -449,7 +449,7 @@
 
     <select id="getPolicyChangeInfo" resultMap="ChangeInfoMap">
         SELECT
-        lrc.RCDC_DELIVERY_AGEN_CODE, to_char(lrc.RCDC_ACC_DATE, 'yyy/fmMM/dd') RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
+        lrc.RCDC_DELIVERY_AGEN_CODE, to_char(lrc.RCDC_ACC_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') RCDC_ACC_DATE, lrc.RCDC_PROC_MK,
         lrc.RCDC_CHAN_ITEM_1, lrc.RCDC_CHAN_ITEM_2, lrc.RCDC_CHAN_ITEM_3, lrc.RCDC_CHAN_ITEM_4, lrc.RCDC_CHAN_ITEM_5, lrc.RCDC_CHAN_ITEM_6, lrc.RCDC_CHAN_ITEM_7, lrc.RCDC_CHAN_ITEM_8, lrc.RCDC_CHAN_ITEM_9, lrc.RCDC_CHAN_ITEM_10
         FROM LIRCDC_ES lrc
         WHERE (lrc.RCDC_INSU_TYPE || lrc.RCDC_INSU_GRP_NO || lrc.RCDC_INSU_SEQ_NO) = #{policyNo}
@@ -477,10 +477,10 @@
         WHEN lcp.CLUP_DEDT_INPR != 0 THEN  lcp.CLUP_EXPE_UNITS * (lcp.CLUP_INPR_RATE - lcp.CLUP_OW_UNIT_INT ) / lcp.CLUP_DEDT_INPR
         ELSE 0
         END AS UNITS,
-        lcp.CLUP_EXPE_NTD, to_char(lcp.CLUP_F_PAY_DATE, 'yyy/fmMM/dd') CLUP_F_PAY_DATE,
-        to_char(lcp.CLUP_TR_DATE, 'yyy/fmMM/dd') CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
+        lcp.CLUP_EXPE_NTD, to_char(lcp.CLUP_F_PAY_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') CLUP_F_PAY_DATE,
+        to_char(lcp.CLUP_TR_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
-        to_char(lip.INPD_INT_COMPU_DATE - numtodsinterval(1, 'day'), 'yyy/fmMM/dd') INPD_INT_COMPU_DATE
+        to_char(lip.INPD_INT_COMPU_DATE - numtodsinterval(1, 'day'), 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') INPD_INT_COMPU_DATE
         FROM LICLUP_ES lcp
         LEFT JOIN LIINPD_ES lip ON lcp.CLUP_INVT_NO = lip.INPD_INVT_NO AND lcp.CLUP_DATE = lip.INPD_DATE
         LEFT JOIN LIINVT_ES lin ON lcp.CLUP_INVT_NO = lin.INVT_NO
@@ -657,7 +657,7 @@
 
     <select id="selectPolicyAmount" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyAmountVo">
         <![CDATA[
-        SELECT to_char(POEV_EXCH_DATE, 'yyy/fmMM/dd') policyDate, POEV_SAFP_UNITS * EXCH_SPEBK_PURATE * INPR_UNIT_SOLPRICE policyVal FROM
+        SELECT to_char(POEV_EXCH_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''') policyDate, POEV_SAFP_UNITS * EXCH_SPEBK_PURATE * INPR_UNIT_SOLPRICE policyVal FROM
         (Select
         A.POEV_EXCH_DATE,
         SUBSTR(A.POEV_INVT_NO,3,3),
