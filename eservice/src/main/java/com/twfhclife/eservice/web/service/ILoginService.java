@@ -7,6 +7,7 @@ import java.util.Map;
 import com.twfhclife.eservice.web.model.AuditLogVo;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
+import com.twfhclife.keycloak.model.KeycloakUser;
 
 /**
  * 前台登入服務.
@@ -103,4 +104,6 @@ public interface ILoginService {
 	public List<AuditLogVo> getLastAuditLog(String userId, String row);
 
     String doLoinBxcz(String code, String redirectUri);
+
+	void noitfyUser(String userId, KeycloakUser keycloakUser);
 }

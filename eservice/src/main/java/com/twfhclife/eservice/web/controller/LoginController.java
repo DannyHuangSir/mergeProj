@@ -801,6 +801,15 @@ public class LoginController extends BaseUserDataController {
 		return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
 	}
 
+	@GetMapping("/autoBxczLogin")
+	public String autoBxczLogin(HttpServletRequest request) {
+		String actionId = UUID.randomUUID().toString().replaceAll("-", "");
+		addSession("actionId", actionId);
+		String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
+		return "redirect:" + pbs101url + "?response_type=code&scope=openid&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
+				+ "&nonce=" + actionId + "&redirect_uri=" + eserviceBxczRedirectUri;
+	}
+
 	@GetMapping("/bxczDoLogin")
 	public String bxczDoLogin(BxczRedirectParam param, HttpServletRequest request) {
 
@@ -826,9 +835,15 @@ public class LoginController extends BaseUserDataController {
 			}
 			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
 			String rocId = loginService.doLoinBxcz(param.getCode(), eserviceBxczRedirectUri);
+			if (StringUtils.isBlank(rocId)) {
+				addAttribute("errorMessage", "login error!");
+				return "login";
+			}
 			UsersVo userDetail = registerUserService.getUserByRocId(rocId);
 			if (userDetail == null) {
-				addSession("BxczRegist", true);
+				addSession("BXCZ_REGISTER_FLAG", true);
+				addSession("rocId", rocId);
+				removeFromSession("actionId");
 				return "redirect:firstUseStart";
 			}
 			KeycloakUser keycloakUser = keycloakService.getUser(userDetail.getUserId());
@@ -836,9 +851,12 @@ public class LoginController extends BaseUserDataController {
 			if (keycloakUser != null) {
 				if (userDetail != null && userDetail.getStatus().equals("locked")) {
 					String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0099");
+					addAuditLog(userId, "0", "N");
 					addAttribute("errorMessage", errorMessage);
 					return "login";
 				}
+
+				loginService.noitfyUser(userId, keycloakUser);
 
 				addSession(ApConstants.KEYCLOAK_USER, keycloakUser);
 				addSession(ApConstants.LOGIN_USER_ID, keycloakUser.getUsername());
@@ -981,14 +999,22 @@ public class LoginController extends BaseUserDataController {
 				}
 
 				addAttribute("errorMessage", "");
+				addAuditLog(userId, "1", "N");
+				removeFromSession("actionId");
+
+				if (ApConstants.isNotice && "member".equals(userDetail.getUserType())) {
+					List<AuditLogVo> auditLogList = loginService.getLastAuditLog(userId, "3");
+					addSession("auditLogList", (Serializable) auditLogList);
+				}
+
+				return loginSuccessPage;
 			}
 		} catch (Exception e) {
 			logger.error("Unable to doLogin: {}", ExceptionUtils.getStackTrace(e));
 			addAttribute("errorMessage", ApConstants.SYSTEM_ERROR);
 			resetVerifyCode();
-			return "login";
 		}
-		return loginSuccessPage;
+		return "login";
 	}
 
 

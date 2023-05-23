@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import com.twfhclife.eservice.web.dao.BxczDao;
 import com.twfhclife.generic.api_model.*;
 import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -451,6 +452,8 @@ public class LoginServiceImpl implements ILoginService {
 	@Value("${eservice.bxcz.login.client_secret}")
 	private String clientSecret;
 
+	@Autowired
+	private BxczDao bxczDao;
     @Override
 	public String doLoinBxcz(String code, String redirectUri) {
 		try {
@@ -469,11 +472,13 @@ public class LoginServiceImpl implements ILoginService {
 			ResponseEntity<BxczLoginResponse> resp = restTemplate.exchange(pbs102url,
 					HttpMethod.POST, entity, BxczLoginResponse.class);
 			logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(resp));
+
 			if (!this.checkResponseStatus(resp)) {
 				return null;
 			}
 
 			BxczLoginResponse obj = resp.getBody();
+			bxczDao.insertBxczApiLog("call", "PBS-102", new Gson().toJson(bxczLoginRequest), new Gson().toJson(obj));
 			if (obj != null) {
 				return parseIdToken(obj.getId_token());
 			}
@@ -482,6 +487,79 @@ public class LoginServiceImpl implements ILoginService {
 			return null;
 		}
 		return null;
+	}
+
+	@Override
+	public void noitfyUser(String userId, KeycloakUser keycloakUser) {
+		if (ApConstants.isNotice && !"dev".equals(RUNNING_ENV)) {
+			UsersVo userVo = registerUserService.getUserByAccount(userId);
+			if (userVo != null && "member".equals(userVo.getUserType())) {
+				boolean isMail = "1".equals(userVo.getMailFlag());
+				boolean isSms = "1".equals(userVo.getSmsFlag());
+				String isSuccess = keycloakUser != null ? "成功" : "失敗";
+				String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+
+				HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+				String remoteAddr = req.getHeader("X-FORWARDED-FOR");
+				if (StringUtils.isEmpty(remoteAddr)) {
+					remoteAddr = req.getRemoteAddr();
+				}
+				Map<String, String> paramMap = new HashMap<String, String>();
+				paramMap.put("LoginTime", loginTime);
+				paramMap.put("LoginStatus", isSuccess);
+				paramMap.put("ClientIP", remoteAddr);
+
+				//1.不論成功或失敗皆發送電子郵件/簡訊通知保戶
+				if (userVo.getLoginFailCount() == null) {
+					userVo.setLoginFailCount(0);
+				}
+				if (isMail) {
+					try {
+						List<String> receivers = new ArrayList<String>();
+						receivers.add(userVo.getEmail());
+
+						if (userVo.getStatus().equals("enable")) {
+							messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_MAIL-002", receivers, paramMap, "email");
+						} else if (userVo.getStatus().equals("locked")) {
+							messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_MAIL-003", receivers, paramMap, "email");
+						}
+					} catch (Exception e) {
+						logger.error("send login notice mail error : ", e);
+					}
+				}
+				if (isSms) {
+					try {
+						List<String> receivers = new ArrayList<String>();
+						receivers.add(userVo.getMobile());
+						if (userVo.getStatus().equals("enable")) {
+							messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_SMS-002", receivers, paramMap, "sms");
+						} else if (userVo.getStatus().equals("locked")) {
+							messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_SMS-003", receivers, paramMap, "sms");
+						}
+					} catch (Exception e) {
+						logger.error("send login notice SMS error : ", e);
+					}
+				}
+
+				//2.登入失敗N次帳戶鎖定,需進線客服或臨櫃解鎖方可再次登入,且解鎖後隨機生成新密碼並於登入成功後強制變更密碼,且不可與前N次相同
+				UsersVo vo = new UsersVo();
+				vo.setUserId(userVo.getUserId());
+				if (keycloakUser != null) { //login success
+					if (userVo.getLoginFailCount() > 0 && !userVo.getStatus().equals("locked")) {
+						//login success, reset fail count
+						vo.setLoginFailCount(0);
+						userDao.updateCustInfo(vo);
+					}
+				} else { //login fail
+					vo.setLoginFailCount(userVo.getLoginFailCount() + 1);
+					if (vo.getLoginFailCount() == 5) {
+						//login fail 5 times, lock account and count + 1
+						vo.setStatus("locked");
+					}
+					userDao.updateCustInfo(vo);
+				}
+			}
+		}
 	}
 
 	private boolean checkResponseStatus(ResponseEntity<?> responseEntity) {

@@ -141,7 +141,7 @@
 		(ID, USER_ID, TERM_NAME, ACCEPT_DATE, MEMO) 
 		VALUES 
 		(
-			NEWID(),
+			REPLACE(NEWID(), '-', ''),
 			#{vo.userId,jdbcType=VARCHAR},
 			#{vo.termName,jdbcType=VARCHAR},
 			#{vo.acceptDate,jdbcType=TIMESTAMP},

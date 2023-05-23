@@ -52,7 +52,12 @@
                     <div class="form-group">
                         <div class="text-left colorBlack">身分證字號</div>
                         <!-- input class="form-control" id="rocId" style="text-transform: uppercase" placeholder="請輸入身分證字號" data-validation="required|rocId" th:value="${register_rocId}"></input-->
-                        <input class="form-control" id="rocId" style="text-transform: uppercase" placeholder="請輸入身分證字號" th:value="${register_rocId}" autocomplete="off" ></input><!-- by pass required rocid 20200507 -->
+                        <th:block th:if="${session.BXCZ_REGISTER_FLAG} != null and ${session.BXCZ_REGISTER_FLAG} == true">
+                            <input disabled class="form-control" id="rocId" style="text-transform: uppercase" placeholder="請輸入身分證字號" th:value="${session.rocId}" autocomplete="off" ></input><!-- by pass required rocid 20200507 -->
+                        </th:block>
+                        <th:block th:if="${session.BXCZ_REGISTER_FLAG} == null or ${session.BXCZ_REGISTER_FLAG} == false">
+                            <input class="form-control" id="rocId" style="text-transform: uppercase" placeholder="請輸入身分證字號" th:value="${register_rocId}" autocomplete="off" ></input><!-- by pass required rocid 20200507 -->
+                        </th:block>
                     </div>
                     <!-- 20180830 因應內部使用暫不檢核 -->
 <!--                     <div class="form-group"> -->

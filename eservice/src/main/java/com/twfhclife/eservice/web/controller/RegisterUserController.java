@@ -537,6 +537,12 @@ public class RegisterUserController extends BaseController{
 		logger.info("open frontstage/firstUse-success.html");
 		((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest().getSession().removeAttribute("register_rocId");
+		Boolean bxczLoginFlag = (Boolean) getSession("BXCZ_REGISTER_FLAG");
+		if (bxczLoginFlag != null && bxczLoginFlag) {
+			removeFromSession("rocId");
+			removeFromSession("BXCZ_REGISTER_FLAG");
+			return "redirect:autoBxczLogin";
+		}
 		return "frontstage/registerUser/firstUse-success";
 	}
 
