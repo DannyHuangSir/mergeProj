@@ -142,10 +142,10 @@
                 AND c.AppID = '${vo.appID}'
             </if>
             <if test="vo.tBStartTime != null and vo.tBStartTime != ''">
-                AND CONVERT(DATETIME,c.SubmitDate,120) <![CDATA[>=]]> '${vo.tBStartTime}'
+                AND CONVERT(DATETIME,c.TBSubmitDate,120) <![CDATA[>=]]> '${vo.tBStartTime}'
             </if>
             <if test="vo.tBEndTime != null and vo.tBEndTime != ''">
-                AND CONVERT(DATETIME,c.SubmitDate,120) <![CDATA[<=]]> '${vo.tBEndTime}'
+                AND CONVERT(DATETIME,c.TBSubmitDate,120) <![CDATA[<=]]> '${vo.tBEndTime}'
             </if>
             <if test="vo.policyActiveStartTime != null and vo.policyActiveStartTime != ''">
                 AND CONVERT(DATETIME,c.PolicyActiveDate,120) <![CDATA[>=]]> '${vo.policyActiveStartTime}'

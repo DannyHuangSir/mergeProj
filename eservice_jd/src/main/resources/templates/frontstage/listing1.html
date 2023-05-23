@@ -230,7 +230,7 @@
 															</tr>
 															<tr class="noEvent">
 																<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">行動電話 </th>
-																<td><b class="tablesaw-cell-label mobile-b">行動電話 </b> <span class="mobile-span" th:text="${vo.lipmPhone != null ? vo.lipmPhone : '-'}"></span></td>
+																<td><b class="tablesaw-cell-label mobile-b">行動電話 </b> <span class="mobile-span" th:text="${vo.lipmInsuredPhone != null ? vo.lipmInsuredPhone : '-'}"></span></td>
 															</tr>
 															</tbody>
 														</table>
@@ -253,11 +253,11 @@
 													</thead>
 													<tbody>
 													<tr th:each="vo1 : ${vo.beneficiaries}" class="h65 noEvent">
-														<td class="text-left" th:text="${vo1.lipbName}"></td>
-														<td th:text="${vo1.rela}"></td>
+														<td class="text-left" th:text="${vo1.lipbName != null ? vo1.lipbName : '-'}"></td>
+														<td th:text="${vo1.rela != null ? vo1.rela : '-'}"></td>
 														<td th:text="${vo1.code != null ? session.SYSTEM_PARAMETER['BENEFICIARY_TYPE'][vo1.code].parameterValue : '-'}">
 														</td>
-														<td th:text="${vo1.seq}"></td>
+														<td th:text="${vo1.seq != null ? vo1.seq : '-'}"></td>
 													</tr>
 													</tbody>
 												</table>

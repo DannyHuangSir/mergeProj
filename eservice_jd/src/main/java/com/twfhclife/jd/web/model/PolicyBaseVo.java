@@ -24,6 +24,8 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
 
     private String lipmPhone;
 
+    private String lipmInsuredPhone;
+
     private String lipmMail;
     private String lipmAddr;
     private String lipiBirth;
@@ -294,6 +296,9 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
         this.lipmPhone = lipmPhone;
     }
 
+    public String getLipmInsuredPhone() { return lipmInsuredPhone; }
+
+    public void setLipmInsuredPhone(String lipmInsuredPhone) { this.lipmInsuredPhone = lipmInsuredPhone; }
     public String getLipmMail() {
         return lipmMail;
     }

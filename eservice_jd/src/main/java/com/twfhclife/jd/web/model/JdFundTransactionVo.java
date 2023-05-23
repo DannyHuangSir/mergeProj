@@ -1,6 +1,7 @@
 package com.twfhclife.jd.web.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.twfhclife.jd.util.DateUtil;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
@@ -66,8 +67,8 @@ public class JdFundTransactionVo extends PageInfoVo implements Serializable {
 		this.policyNo = policyNo;
 	}
 	
-	public Date getSadpTrDate() {
-		return this.sadpTrDate;
+	public String getSadpTrDate() {
+		return DateUtil.getRocDate(this.sadpTrDate);
 	}
 	
 	public void setSadpTrDate(Date sadpTrDate) {
@@ -106,8 +107,8 @@ public class JdFundTransactionVo extends PageInfoVo implements Serializable {
 		this.sadpAfexchAmt = sadpAfexchAmt;
 	}
 	
-	public Date getSadpExchDate() {
-		return this.sadpExchDate;
+	public String getSadpExchDate() {
+		return DateUtil.getRocDate(this.sadpExchDate);
 	}
 	
 	public void setSadpExchDate(Date sadpExchDate) {

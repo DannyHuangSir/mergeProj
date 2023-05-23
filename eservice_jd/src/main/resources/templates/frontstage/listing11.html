@@ -78,10 +78,11 @@
 														<td th:text="${vo.endDate}"></td>
 														<td class="enThin" th:text="${vo.lipiTablPrem}"></td>
 														<td class="enThin">
-															<span class="mobile-span">
-																<th:block th:if="${vo.status == '1'}">有效</th:block>
-																<th:block th:if="${vo.status == '2'}">停效</th:block>
-																<th:block th:if="${vo.status == '3'}">失效</th:block>
+															<span class="mobile-span" th:switch="${vo.status}">
+																<th:block th:case="'1'">有效</th:block>
+																<th:block th:case="'2'">停效</th:block>
+																<th:block th:case="'3'">失效</th:block>
+																<th:block th:case="*">-</th:block>
 															</span>
 														</td>
 														<td th:text="${vo.effectiveDate}"></td>
