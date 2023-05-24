@@ -166,13 +166,8 @@ public class CaseServiceImpl implements ICaseService {
         document.open();
         PdfPTable table = new PdfPTable(new float[]{100f, 100f, 100f, 100f});
 
-        table.addCell(RptUtils2.createCell("地址：106 台北市大安區敦化南路二段 69 號 3 樓", zh, Element.ALIGN_LEFT, 3, false));
-        table.addCell(RptUtils2.createCell("受理人員: " + pdfVo.getProcessorName(), zh, Element.ALIGN_LEFT, 1, false));
-
-        table.addCell(RptUtils2.createCell("傳真：(02)2702-5420", zh, Element.ALIGN_LEFT, 1, false));
-        table.addCell(RptUtils2.createCell("(02)2706-0417", zh, Element.ALIGN_LEFT, 1, false));
-        table.addCell(RptUtils2.createCell("電話：(02)27849151", zh, Element.ALIGN_LEFT, 1, false));
-        table.addCell(RptUtils2.createCell("分機：2354", zh, Element.ALIGN_LEFT, 1, false));
+        table.addCell(RptUtils2.createCell("受理人員: " + pdfVo.getProcessorName(), zh, Element.ALIGN_LEFT, 2, false));
+        table.addCell(RptUtils2.createCell("分機：2354", zh, Element.ALIGN_LEFT, 2, false));
 
         table.addCell(RptUtils2.createBlankCell(4, false));
 
@@ -200,10 +195,10 @@ public class CaseServiceImpl implements ICaseService {
         table.addCell(RptUtils2.createCell("照會日期：", tableFont, Element.ALIGN_RIGHT, 1, true));
         table.addCell(RptUtils2.createCell(pdfVo.getManageDate(), tableFont, Element.ALIGN_LEFT, 3, true));
 
-        table.addCell(RptUtils2.createCell("經攬人-姓名：", tableFont, Element.ALIGN_RIGHT, 1, true));
+        table.addCell(RptUtils2.createCell("經攬人姓名：", tableFont, Element.ALIGN_RIGHT, 1, true));
         table.addCell(RptUtils2.createCell(pdfVo.getAgentSalesName(), tableFont, Element.ALIGN_LEFT, 1, true));
 
-        table.addCell(RptUtils2.createCell("經攬人-登錄字號：", tableFont, Element.ALIGN_RIGHT, 1, true));
+        table.addCell(RptUtils2.createCell("經攬人登錄字號：", tableFont, Element.ALIGN_RIGHT, 1, true));
         table.addCell(RptUtils2.createCell(pdfVo.getAgentSalesID(), tableFont, Element.ALIGN_LEFT, 1, true));
 
         table.addCell(RptUtils2.createBlankCell(4, false));
@@ -213,8 +208,8 @@ public class CaseServiceImpl implements ICaseService {
         table.addCell(RptUtils2.createBlankCell(4, false));
 
         table.addCell(RptUtils2.createCell("照會事項：", tableFont, Element.ALIGN_LEFT, 4, true));
-        table.addCell(RptUtils2.createCell("照會項目", tableFont, Element.ALIGN_LEFT, 1, true));
-        table.addCell(RptUtils2.createCell("照會訊息", tableFont, Element.ALIGN_LEFT, 3, true));
+        table.addCell(RptUtils2.createCell("照會項目", tableFont, Element.ALIGN_CENTER, 1, true));
+        table.addCell(RptUtils2.createCell("照會訊息", tableFont, Element.ALIGN_CENTER, 3, true));
         if (!CollectionUtils.isEmpty(pdfVo.getNoteItems())) {
             pdfVo.getNoteItems().forEach(item -> {
                 table.addCell(RptUtils2.createCell(item.getItemCode(), tableFont, Element.ALIGN_CENTER, 1, true));

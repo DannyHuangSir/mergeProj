@@ -24,6 +24,8 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
 
     private String lipmPhone;
 
+    private String lipmInsuredPhone;
+
     private String lipmMail;
     private String lipmAddr;
     private String lipiBirth;
@@ -37,6 +39,8 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
     private String paymentMethod;
     private String beginDate;
     private String endDate;
+
+    private String paymentDueDate;
 
     private String pmdaEpoMk;
     private String pmdaPiTel;
@@ -294,6 +298,9 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
         this.lipmPhone = lipmPhone;
     }
 
+    public String getLipmInsuredPhone() { return lipmInsuredPhone; }
+
+    public void setLipmInsuredPhone(String lipmInsuredPhone) { this.lipmInsuredPhone = lipmInsuredPhone; }
     public String getLipmMail() {
         return lipmMail;
     }
@@ -349,6 +356,10 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
+
+    public String getPaymentDueDate() { return paymentDueDate; }
+
+    public void setPaymentDueDate(String paymentDueDate) { this.paymentDueDate = paymentDueDate; }
 
     public String getPmdaEpoMk() {
         return pmdaEpoMk;

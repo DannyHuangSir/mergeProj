@@ -290,13 +290,13 @@
 											'</thead>' +
 											'<tbody>' +
 												"<tr onclick=\"javascript:postPolicyListType('listing1', '" + item.policyNo + "')\">" +
-													'<td class="table3">' + (item.policyNo ? item.policyNo : '') + '</td>' +
-													'<td class="table3">' + (item.prodName ? item.prodName : '') + ' </td>' +
-													'<td class="table3">' + (item.lipmName ? item.lipmName : '') + '</td>' +
-													'<td class="table3">' + (item.lipmId ? item.lipmId : '') + '</td>' +
-													'<td class="table3">' + (item.lipiName ? item.lipiName : '') + '</td>' +
-													'<td class="table3">' + (item.lipiId ? item.lipiId : '') + '</td>' +
-													'<td class="table3">' + (item.agent ? item.agent : '') + '</td> ' +
+													'<td class="table3">' + (item.policyNo ? item.policyNo : '-') + '</td>' +
+													'<td class="table3">' + (item.prodName ? item.prodName : '-') + ' </td>' +
+													'<td class="table3">' + (item.lipmName ? item.lipmName : '-') + '</td>' +
+													'<td class="table3">' + (item.lipmId ? item.lipmId : '-') + '</td>' +
+													'<td class="table3">' + (item.lipiName ? item.lipiName : '-') + '</td>' +
+													'<td class="table3">' + (item.lipiId ? item.lipiId : '-') + '</td>' +
+													'<td class="table3">' + (item.agent ? item.agent : '-') + '</td> ' +
 												'</tr> ' +
 											'</tbody> ' +
 											'<thead>' +
@@ -312,13 +312,13 @@
 											'</thead>' +
 											'<tbody>' +
 												"<tr onclick=\"javascript:postPolicyListType('listing1', '" + item.policyNo + "')\">" +
-													'<td class="table3">' + statusStr(item.stat) + ' </td>' +
-													'<td class="table3">' + (item.effectiveDate ? item.effectiveDate : '') + '</td>' +
-													'<td class="table3">' + (item.mainAmount ? item.mainAmount : '') + '</td>' +
-													'<td class="table3">' + (item.lipiTablPrem ? item.lipiTablPrem : '') + '</td>' +
-													'<td class="table3">' + (item.paymentMode != null ? payModeMap[item.paymentMode].parameterValue : '') +'</td>' +
-													'<td class="table3">' + (item.premYear ? item.premYear : '') + ' </td>' +
-													'<td class="table3">' + (item.paymentMethod != null ? paymentMap[item.paymentMethod].parameterValue : '') + '</td> ' +
+													'<td class="table3">' + (item.stat ? statusStr(item.stat) : '-') + ' </td>' +
+													'<td class="table3">' + (item.effectiveDate ? item.effectiveDate : '-') + '</td>' +
+													'<td class="table3">' + (item.mainAmount ? item.mainAmount : '-') + '</td>' +
+													'<td class="table3">' + (item.lipiTablPrem ? item.lipiTablPrem : '-') + '</td>' +
+													'<td class="table3">' + (item.paymentMode != null ? payModeMap[item.paymentMode].parameterValue : '-') +'</td>' +
+													'<td class="table3">' + (item.premYear ? item.premYear : '-') + ' </td>' +
+													'<td class="table3">' + (item.paymentMethod != null ? paymentMap[item.paymentMethod].parameterValue : '-') + '</td> ' +
 												'</tr> ' +
 											'</tbody>' +
 									// 	'</table>' +

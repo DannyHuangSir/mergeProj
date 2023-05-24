@@ -72,19 +72,20 @@
 													</thead>
 													<tbody>
 													<tr class="h65 noEvent">
-														<td th:text="${vo.prodName}"></td>
-														<td th:text="${vo.mainAmount}"></td>
-														<td th:text="${vo.endDate}"></td>
-														<td th:text="${vo.endDate}"></td>
-														<td class="enThin" th:text="${vo.lipiTablPrem}"></td>
+														<td th:text="${vo.prodName != null ? vo.prodName : '-'}"></td>
+														<td th:text="${vo.mainAmount != null ? vo.mainAmount : '-'}"></td>
+														<td th:text="${vo.paymentDueDate != null ? vo.paymentDueDate : '-'}"></td>
+														<td th:text="${vo.endDate != null ? vo.endDate : '-'}"></td>
+														<td class="enThin" th:text="${vo.lipiTablPrem != null ? vo.lipiTablPrem : '-'}"></td>
 														<td class="enThin">
-															<span class="mobile-span">
-																<th:block th:if="${vo.status == '1'}">有效</th:block>
-																<th:block th:if="${vo.status == '2'}">停效</th:block>
-																<th:block th:if="${vo.status == '3'}">失效</th:block>
+															<span class="mobile-span" th:switch="${vo.status != null ? vo.status : '-'}">
+																<th:block th:case="'1'">有效</th:block>
+																<th:block th:case="'2'">停效</th:block>
+																<th:block th:case="'3'">失效</th:block>
+																<th:block th:case="*">-</th:block>
 															</span>
 														</td>
-														<td th:text="${vo.effectiveDate}"></td>
+														<td th:text="${vo.status == '53' ? vo.effectiveDate : '-'}"></td>
 													</tr>
 													</tbody>
 												</table>

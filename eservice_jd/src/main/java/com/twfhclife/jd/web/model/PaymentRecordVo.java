@@ -8,6 +8,8 @@ public class PaymentRecordVo {
     private String actAmt;
     private String rcpCode;
 
+    private String paymentCode;
+
     public String getRcpDate() {
         return rcpDate;
     }
@@ -47,4 +49,8 @@ public class PaymentRecordVo {
     public void setRcpCode(String rcpCode) {
         this.rcpCode = rcpCode;
     }
+
+    public String getPaymentCode() { return paymentCode; }
+
+    public void setPaymentCode(String paymentCode) { this.paymentCode = paymentCode; }
 }
