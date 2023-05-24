@@ -40,6 +40,8 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
     private String beginDate;
     private String endDate;
 
+    private String paymentDueDate;
+
     private String pmdaEpoMk;
     private String pmdaPiTel;
 
@@ -354,6 +356,10 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
+
+    public String getPaymentDueDate() { return paymentDueDate; }
+
+    public void setPaymentDueDate(String paymentDueDate) { this.paymentDueDate = paymentDueDate; }
 
     public String getPmdaEpoMk() {
         return pmdaEpoMk;
