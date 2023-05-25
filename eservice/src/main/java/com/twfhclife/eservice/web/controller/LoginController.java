@@ -791,7 +791,7 @@ public class LoginController extends BaseUserDataController {
 			String actionId = UUID.randomUUID().toString().replaceAll("-", "");
 			addSession("actionId", actionId);
 			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
-			String url = pbs101url + "?response_type=code&scope=openid&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
+			String url = pbs101url + "?response_type=code&scope=openid&client_id=" + client_id + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
 					+ "&nonce=" + actionId + "&redirect_uri=" + eserviceBxczRedirectUri;
 			this.setResponseObj(ResponseObj.SUCCESS, "", url);
 		} catch (Exception e) {
@@ -806,7 +806,7 @@ public class LoginController extends BaseUserDataController {
 		String actionId = UUID.randomUUID().toString().replaceAll("-", "");
 		addSession("actionId", actionId);
 		String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
-		return "redirect:" + pbs101url + "?response_type=code&scope=openid&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
+		return "redirect:" + pbs101url + "?response_type=code&scope=openid&client_id=" + client_id + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
 				+ "&nonce=" + actionId + "&redirect_uri=" + eserviceBxczRedirectUri;
 	}
 
