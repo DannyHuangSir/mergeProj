@@ -1,36 +1,6 @@
 package com.twfhclife.eservice.web.service.impl;
 
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import com.twfhclife.eservice.web.dao.BxczDao;
-import com.twfhclife.generic.api_model.*;
-import com.twfhclife.generic.util.MyJacksonUtil;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.http.HttpStatus;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import com.twfhclife.common.util.EncryptionUtil;
 import com.twfhclife.eservice.web.dao.LoginDao;
 import com.twfhclife.eservice.web.dao.UserDataDao;
@@ -45,6 +15,7 @@ import com.twfhclife.eservice.web.service.IRegisterUserService;
 import com.twfhclife.generic.api_client.BaseRestClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.SsoClient;
+import com.twfhclife.generic.api_model.*;
 import com.twfhclife.generic.model.KeycloakUserSession;
 import com.twfhclife.generic.service.IMailService;
 import com.twfhclife.generic.service.ISendSmsService;
@@ -52,6 +23,21 @@ import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import com.twfhclife.keycloak.model.KeycloakUser;
 import com.twfhclife.keycloak.service.KeycloakService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * 前台登入服務.
@@ -112,26 +98,8 @@ public class LoginServiceImpl implements ILoginService {
 	 */
 	private static List<String> partnerTypeList = Arrays.asList(new String[] { "admin", "agent" });
 
-	private RestTemplate restTemplate;
 
-	public LoginServiceImpl() {
-		//Fix the RestTemplate to be a singleton instance.
-		restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
 
-		// Set the request factory.
-		// IMPORTANT: This section I had to add for POST request. Not needed for GET
-		int milliseconds = 20*1000;
-		HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-		httpRequestFactory.setConnectionRequestTimeout(milliseconds);
-		httpRequestFactory.setConnectTimeout(milliseconds);
-		httpRequestFactory.setReadTimeout(milliseconds);
-		restTemplate.setRequestFactory(httpRequestFactory);
-
-		// Add converters
-		// Note I use the Jackson Converter, I removed the http form converter
-		// because it is not needed when posting String, used for multipart forms.
-		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-	}
 
 	/**
 	 * 登入.
@@ -447,46 +415,12 @@ public class LoginServiceImpl implements ILoginService {
 
 	@Value("${eservice.bxcz.pbs.102.url}")
 	private String pbs102url;
-	@Value("${eservice.bxcz.login.client_id}")
-	private String clientId;
-	@Value("${eservice.bxcz.login.client_secret}")
-	private String clientSecret;
 
-	@Autowired
-	private BxczDao bxczDao;
+	@Resource(name = "baseRestClient")
+	private BaseRestClient baseRestClient;
     @Override
 	public String doLoinBxcz(String code, String redirectUri) {
-		try {
-
-			MultiValueMap<String, String> headerMap = new HttpHeaders();
-			headerMap.add("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
-			headerMap.add("Content-Type", "application/json;charset=UTF-8");
-
-			BxczLoginRequest bxczLoginRequest = new BxczLoginRequest();
-			bxczLoginRequest.setCode(code);
-			bxczLoginRequest.setGrant_type("authorization_code");
-			bxczLoginRequest.setRedirect_uri(redirectUri);
-
-			HttpEntity<BxczLoginRequest> entity = new HttpEntity<>(bxczLoginRequest, headerMap);
-
-			ResponseEntity<BxczLoginResponse> resp = restTemplate.exchange(pbs102url,
-					HttpMethod.POST, entity, BxczLoginResponse.class);
-			logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(resp));
-
-			if (!this.checkResponseStatus(resp)) {
-				return null;
-			}
-
-			BxczLoginResponse obj = resp.getBody();
-			bxczDao.insertBxczApiLog("call", "PBS-102", new Gson().toJson(bxczLoginRequest), new Gson().toJson(obj));
-			if (obj != null) {
-				return parseIdToken(obj.getId_token());
-			}
-		} catch (Exception e) {
-			logger.error("doLoinBxcz: " + e);
-			return null;
-		}
-		return null;
+		return baseRestClient.postApiResponse(new Gson().toJson(new BxczLoginRequest("authorization_code", code, redirectUri)), pbs102url, String.class).getResult();
 	}
 
 	@Override
@@ -560,36 +494,5 @@ public class LoginServiceImpl implements ILoginService {
 				}
 			}
 		}
-	}
-
-	private boolean checkResponseStatus(ResponseEntity<?> responseEntity) {
-		logger.info("http status=" + responseEntity.getStatusCodeValue());
-		if(responseEntity.getStatusCodeValue() == HttpStatus.SC_OK) {
-			// 200 OK
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private String parseIdToken(String idToken) throws Exception {
-
-		if (StringUtils.isBlank(idToken)) {
-			return null;
-		}
-
-		String[] split_string = idToken.split("\\.");
-		String base64EncodedHeader = split_string[0];
-		String base64EncodedBody = split_string[1];
-
-		logger.debug("~~~~~~~~~ JWT Header ~~~~~~~");
-		String header = new String(Base64.getUrlDecoder().decode(base64EncodedHeader));
-		logger.debug("JWT Header : " + header);
-
-
-		logger.debug("~~~~~~~~~ JWT Body ~~~~~~~");
-		String body = new String(Base64.getUrlDecoder().decode(base64EncodedBody));
-		logger.debug("JWT Body : " + body);
-		return MyJacksonUtil.readValue(body, "/userId");
 	}
 }

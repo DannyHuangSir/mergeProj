@@ -1,15 +1,20 @@
 package com.twfhclife.eservice_api.controller;
 
+import java.util.Base64;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import com.google.gson.Gson;
+import com.twfhclife.eservice.api.elife.domain.BxczLoginRequest;
+import com.twfhclife.eservice.api.elife.domain.BxczLoginResponse;
+import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -389,6 +394,11 @@ public class SsoController extends BaseController {
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	@PostMapping(value = "/lia-ids/oauth2/token", produces = { "application/json" })
+	public ResponseEntity<ApiResponseObj<String>> oauth2Token(@RequestBody BxczLoginRequest req) {
+		return ResponseEntity.status(HttpStatus.OK).body(authoService.doPostPbs102(req));
 	}
 
 }

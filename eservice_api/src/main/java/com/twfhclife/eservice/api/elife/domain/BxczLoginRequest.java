@@ -1,18 +1,8 @@
-package com.twfhclife.generic.api_model;
+package com.twfhclife.eservice.api.elife.domain;
 
 import java.io.Serializable;
 
 public class BxczLoginRequest implements Serializable {
-
-
-    public BxczLoginRequest(String grant_type, String code, String redirect_uri) {
-        this.grant_type = grant_type;
-        this.code = code;
-        this.redirect_uri = redirect_uri;
-    }
-
-    public BxczLoginRequest() {
-    }
 
     private String grant_type;
     private String code;

@@ -1,4 +1,4 @@
-package com.twfhclife.eservice.web.dao;
+package com.twfhclife.eservice.auth.dao;
 
 import org.apache.ibatis.annotations.Param;
 

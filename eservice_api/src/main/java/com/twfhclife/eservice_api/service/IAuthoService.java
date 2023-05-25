@@ -3,6 +3,8 @@ package com.twfhclife.eservice_api.service;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.eservice.api.elife.domain.BxczLoginRequest;
+import com.twfhclife.generic.domain.ApiResponseObj;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.eservice.api.adm.domain.FuncItemReqObj;
@@ -17,6 +19,7 @@ import com.twfhclife.eservice.api.adm.domain.UserRepresentation;
 import com.twfhclife.eservice.api.adm.model.DepartmentVo;
 import com.twfhclife.eservice.api.adm.model.JobTitleVo;
 import com.twfhclife.generic.model.UserVo;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Definite authorization service.
@@ -156,4 +159,6 @@ public interface IAuthoService {
 	List<DepartmentVo> getAllDepartments() throws Exception;
 	
 	List<UserVo> getUserByDepTitle(String realm, String depId, String titleId, String userId) throws Exception;
+
+    ApiResponseObj<String> doPostPbs102(BxczLoginRequest req);
 }

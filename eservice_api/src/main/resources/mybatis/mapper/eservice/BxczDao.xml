@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.twfhclife.eservice.web.dao.BxczDao">
+<mapper namespace="com.twfhclife.eservice.auth.dao.BxczDao">
 
 	<insert id="insertBxczApiLog">
 		INSERT INTO ESERVICE.DBO.BXCZ_API_LOG(TYPE, API_CODE, API_PARAM, API_RESPONSE)

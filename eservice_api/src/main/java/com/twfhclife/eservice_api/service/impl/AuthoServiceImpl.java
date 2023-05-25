@@ -1,17 +1,23 @@
 package com.twfhclife.eservice_api.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+import com.twfhclife.eservice.api.elife.domain.BxczLoginRequest;
+import com.twfhclife.eservice.api.elife.domain.BxczLoginResponse;
+import com.twfhclife.eservice.auth.dao.BxczDao;
+import com.twfhclife.generic.domain.ApiResponseObj;
+import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 import com.twfhclife.eservice.api.adm.domain.FuncItemReqObj;
@@ -38,6 +44,8 @@ import com.twfhclife.generic.model.UserAuthVoEntity;
 import com.twfhclife.generic.model.UserRepresentationEntity;
 import com.twfhclife.generic.model.UserVo;
 import com.twfhclife.generic.utils.MyStringUtil;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Authorization service implementation.
@@ -65,6 +73,22 @@ public class AuthoServiceImpl implements IAuthoService {
 	public AuthoServiceImpl(AuthoDao authoDao) {
 
 		this.authoDao = authoDao;
+
+		restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
+
+		// Set the request factory.
+		// IMPORTANT: This section I had to add for POST request. Not needed for GET
+		int milliseconds = 20*1000;
+		HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+		httpRequestFactory.setConnectionRequestTimeout(milliseconds);
+		httpRequestFactory.setConnectTimeout(milliseconds);
+		httpRequestFactory.setReadTimeout(milliseconds);
+		restTemplate.setRequestFactory(httpRequestFactory);
+
+		// Add converters
+		// Note I use the Jackson Converter, I removed the http form converter
+		// because it is not needed when posting String, used for multipart forms.
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
 	
 	@Override
@@ -484,6 +508,88 @@ public class AuthoServiceImpl implements IAuthoService {
 	@Override
 	public List<UserVo> getUserByDepTitle(String realm, String depId, String titleId, String userId) throws Exception {
 		return userDepartmentTitleDao.getUserByDepTitle(realm, depId, titleId, userId);
+	}
+
+	private RestTemplate restTemplate;
+
+
+	@Value("${eservice.bxcz.pbs.102.url}")
+	private String pbs102url;
+	@Value("${eservice.bxcz.login.client_id}")
+	private String clientId;
+	@Value("${eservice.bxcz.login.client_secret}")
+	private String clientSecret;
+
+	@Autowired
+	private BxczDao bxczDao;
+
+	@Override
+    public ApiResponseObj<String> doPostPbs102(BxczLoginRequest req) {
+
+		try {
+
+			MultiValueMap<String, String> headerMap = new HttpHeaders();
+			headerMap.add("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
+			headerMap.add("Content-Type", "application/json;charset=UTF-8");
+
+			BxczLoginRequest bxczLoginRequest = new BxczLoginRequest();
+			bxczLoginRequest.setCode(req.getCode());
+			bxczLoginRequest.setGrant_type("authorization_code");
+			bxczLoginRequest.setRedirect_uri(req.getRedirect_uri());
+
+			HttpEntity<BxczLoginRequest> entity = new HttpEntity<>(bxczLoginRequest, headerMap);
+
+			ResponseEntity<BxczLoginResponse> resp = restTemplate.exchange(pbs102url,
+					HttpMethod.POST, entity, BxczLoginResponse.class);
+			logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(resp));
+
+			if (!this.checkResponseStatus(resp)) {
+				return null;
+			}
+
+			BxczLoginResponse obj = resp.getBody();
+			bxczDao.insertBxczApiLog("call", "PBS-102", new Gson().toJson(bxczLoginRequest), new Gson().toJson(obj));
+			if (obj != null) {
+				ApiResponseObj responseObj = new ApiResponseObj();
+				responseObj.setResult(parseIdToken(obj.getId_token()));
+				return responseObj;
+			}
+		} catch (Exception e) {
+			logger.error("doLoinBxcz: " + e);
+			return new ApiResponseObj<>();
+		}
+		return new ApiResponseObj<>();
+    }
+
+	private String parseIdToken(String idToken) throws Exception {
+
+		if (StringUtils.isBlank(idToken)) {
+			return null;
+		}
+
+		String[] split_string = idToken.split("\\.");
+		String base64EncodedHeader = split_string[0];
+		String base64EncodedBody = split_string[1];
+
+		logger.debug("~~~~~~~~~ JWT Header ~~~~~~~");
+		String header = new String(Base64.getUrlDecoder().decode(base64EncodedHeader));
+		logger.debug("JWT Header : " + header);
+
+
+		logger.debug("~~~~~~~~~ JWT Body ~~~~~~~");
+		String body = new String(Base64.getUrlDecoder().decode(base64EncodedBody));
+		logger.debug("JWT Body : " + body);
+		return MyJacksonUtil.readValue(body, "/userId");
+	}
+
+	private boolean checkResponseStatus(ResponseEntity<?> responseEntity) {
+		logger.info("http status=" + responseEntity.getStatusCodeValue());
+		if(responseEntity.getStatusCodeValue() == org.apache.http.HttpStatus.SC_OK) {
+			// 200 OK
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

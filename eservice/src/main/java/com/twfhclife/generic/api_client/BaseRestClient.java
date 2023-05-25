@@ -79,7 +79,7 @@ public class BaseRestClient {
 		map.put(FunctionUsageAddResponse.class, new ParameterizedTypeReference<ApiResponseObj<FunctionUsageAddResponse>>() {});
 		ArrayList<KeycloakUserSession> userSessionResponse = new ArrayList<KeycloakUserSession>();
 		map.put(userSessionResponse.getClass(), new ParameterizedTypeReference<ApiResponseObj<List<KeycloakUserSession>>>() { });
-		map.put(BxczLoginResponse.class, new ParameterizedTypeReference<ApiResponseObj<List<BxczLoginResponse>>>() { });
+		map.put(String.class, new ParameterizedTypeReference<ApiResponseObj<String>>() { });
 
 		return Collections.unmodifiableMap(map);
 	}

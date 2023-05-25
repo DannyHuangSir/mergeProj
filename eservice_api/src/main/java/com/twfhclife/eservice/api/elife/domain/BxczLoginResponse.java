@@ -1,4 +1,4 @@
-package com.twfhclife.generic.api_model;
+package com.twfhclife.eservice.api.elife.domain;
 
 public class BxczLoginResponse {
 
