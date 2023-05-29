@@ -5,6 +5,8 @@ public class ExpireOfPaymentVo {
 
     private String payReas;
     private String payAmount;
+
+    private String amountActuallyPaid;
     private String bookDate;
     private String payMethod;
     private String payName;
@@ -27,6 +29,14 @@ public class ExpireOfPaymentVo {
 
     public void setPayAmount(String payAmount) {
         this.payAmount = payAmount;
+    }
+
+    public String getAmountActuallyPaid() {
+        return amountActuallyPaid;
+    }
+
+    public void setAmountActuallyPaid(String amountActuallyPaid) {
+        this.amountActuallyPaid = amountActuallyPaid;
     }
 
     public String getBookDate() {

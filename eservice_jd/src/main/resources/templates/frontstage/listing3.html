@@ -101,7 +101,7 @@
 				                                        <td th:text="${vo1.desc != null ? vo1.desc : '-'}"></td>
 				                                        <td th:text="${vo1.paabAmt != null ? vo1.paabAmt : '-'}"></td>
 				                                        <td th:text="${vo1.actAmt != null ? vo1.actAmt : '-'}"></td>
-														<td th:text="${vo1.paymentCode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo1.paymentCode].parameterValue : '-'}"></td>
+														<td th:text="${vo1.paymentCode != null ? session.SYSTEM_PARAMETER['PAYMENT_TYPE'][vo1.paymentCode].parameterValue : '-'}"></td>
 				                                    </tr>
 				                                </tbody>
 				                            </table>
@@ -122,6 +122,13 @@
 
 </div>
 <footer th:replace="fragments/footer"></footer>
+<script>
+	/*<![CDATA[*/
+	$(function() {
+		hideLoadingModal();
+	});
+	/*]]>*/
+</script>
 </body>
 </html>
 

@@ -221,6 +221,7 @@
   /*<![CDATA[*/
     var paymentMap = [[${session.SYSTEM_PARAMETER.CURRENCY}]]
 	$(function() {
+        hideLoadingModal();
 		$('#invtList').change(function() {
 			// 基金幣別
 			$('#invtExchCurrNameTd').html("<b class='tablesaw-cell-label mobile-b'>基金幣別</b><span class='mobile-span'>" + paymentMap[$(this).find('option:selected').data('exchcurr')].parameterValue + "</span>");

@@ -30,7 +30,7 @@
         CASE
         WHEN A.LIPM_ST <![CDATA[<=]]>  18 THEN 1
         WHEN A.LIPM_ST BETWEEN 30 AND 34 THEN 2
-        WHEN add_months(A.LIPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate THEN 3
+        WHEN A.LIPM_ST BETWEEN 50 AND 81  THEN 3
         END AS STAT,
         decode(nvl(A.LIPI_INSU_BEG_DATE,''), '', '', to_char(A.LIPI_INSU_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) EFFECTIVE_DATE, (CASE WHEN A.LIPI_MAIN_AMT = 0 THEN A.LIPI_CANCER_QUAN ELSE A.LIPI_MAIN_AMT END) AS MAIN_AMOUNT,
         A.LIPI_TABL_PREM, (CASE WHEN A.LIPM_RCP_CODE = 'A' AND A.LIPM_FLEX_RCP_MK = 'Y' THEN 'AY' ELSE A.LIPM_RCP_CODE END) AS PAYMENT_MODE, lpr.PROD_CURRENCY CURRENCY,
@@ -124,7 +124,7 @@
                 AND A.LIPM_ST BETWEEN 30 AND 34
             </if>
             <if test="vo.stat != null and vo.stat == '3'.toString()">
-                AND add_months(B.LIPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate
+                AND A.LIPM_ST BETWEEN 50 AND 81
             </if>
             <if test="vo.permQuery and vo.permQuery.size() > 0">
                 AND (
@@ -185,7 +185,7 @@
                 AND A.NEPM_ST BETWEEN 30 AND 34
             </if>
             <if test="vo.stat != null and vo.stat == '3'.toString()">
-                AND add_months(B.NEPI_INSU_END_DATE, 24) <![CDATA[<]]>  sysdate
+                AND A.NEPM_ST BETWEEN 50 AND 81
             </if>
             <if test="vo.permQuery and vo.permQuery.size() > 0">
                 AND ( <foreach collection="vo.permQuery" item="item" separator="OR">
@@ -263,6 +263,7 @@
         <result column="LIPM_BANK_CODE" property="bankCode"/>
         <result column="PMDA_INVE_ATTR" property="riskLevel"/>
         <result column="STATUS" property="status"/>
+        <result column="LIPM_ST_DATE" property="stDate"/>
         <association property="beneficiaries" resultMap="PolicyBeneficiaryMap"></association>
     </resultMap>
 
@@ -274,7 +275,9 @@
     </resultMap>
 
     <select id="getBasePolicy" resultMap="PolicyBaseMap">
-        SELECT A.LIPM_ST STATUS, A.LIPI_TABL_PREM, A.LIPM_BANK_CODE,
+        SELECT
+        decode(nvl(A.LIPM_ST_DATE,''), '', '', to_char(A.LIPM_ST_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) LIPM_ST_DATE,
+        A.LIPM_ST STATUS, A.LIPI_TABL_PREM, A.LIPM_BANK_CODE,
         A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2, lip.PMDA_INVE_ATTR,
         decode(nvl(A.LIPI_INSU_BEG_DATE,''), '', '', to_char(A.LIPI_INSU_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) EFFECTIVE_DATE,
         A.LIPM_AUTO_RCP_MK, lnr.NEDR_BRANCH_NAME, decode(nvl(A.BNAG_BIRTH,''), '', '', to_char(A.BNAG_BIRTH, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) LIPM_BIRTH,
@@ -299,7 +302,7 @@
     </select>
 
     <sql id="policyBaseSql">
-        SELECT A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO, A.LIPM_NAME_1, A.LIPM_ID, A.LIPM_ST, A.LIPM_AGEN_CODE, A.LIPM_RCP_METH_CODE,
+        SELECT A.LIPM_ST_DATE,A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO, A.LIPM_NAME_1, A.LIPM_ID, A.LIPM_ST, A.LIPM_AGEN_CODE, A.LIPM_RCP_METH_CODE,
         A.LIPM_RCP_CODE, A.LIPM_FLEX_RCP_MK, A.LIPM_ADDR, A.LIPM_5_GP, A.LIPM_TEL_H, A.LIPM_AUTO_RCP_MK, A.LIPM_CHAR_AT_1, A.LIPM_CHAR_AT_2, A.LIPM_BANK_CODE,
         B.LIPI_SEX, B.LIPI_AGE, B.LIPI_BIRTH,
         B.LIPI_NAME, B.LIPI_ID, B.LIPI_PREM_YEAR, B.LIPI_TABL_PREM, B.LIPI_INSU_END_DATE, B.LIPI_MAIN_AMT, B.LIPI_CANCER_QUAN, B.LIPI_INSU_BEG_DATE,
@@ -311,7 +314,7 @@
         ON A.LIPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.LIPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
         WHERE A.LIPM_INSU_TYPE = #{policyType} AND A.LIPM_INSU_GRP_NO = #{policyGrpNo} AND A.LIPM_INSU_SEQ_NO = #{policySeqNo}
         UNION ALL
-        SELECT A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO, A.LIPM_NAME_1, A.LIPM_ID, A.LIPM_ST, A.LIPM_AGEN_CODE, A.LIPM_RCP_METH_CODE,
+        SELECT A.LIPM_ST_DATE,A.LIPM_INSU_TYPE, A.LIPM_INSU_GRP_NO, A.LIPM_INSU_SEQ_NO, A.LIPM_NAME_1, A.LIPM_ID, A.LIPM_ST, A.LIPM_AGEN_CODE, A.LIPM_RCP_METH_CODE,
         A.LIPM_RCP_CODE, NULL, A.LIPM_ADDR, A.LIPM_5_GP, A.LIPM_TEL_H, NULL, NULL, NULL, A.LIPM_BANK_CODE,
         B.LIPI_SEX, B.LIPI_AGE, B.LIPI_BIRTH,
         B.LIPI_NAME, B.LIPI_ID, NULL, B.LIPI_TABL_PREM, B.LIPI_INSU_END_DATE, B.LIPI_MAIN_AMT, NULL, B.LIPI_INSU_BEG_DATE,
@@ -323,7 +326,7 @@
         ON A.LIPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.LIPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.LIPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
         WHERE A.LIPM_INSU_TYPE = #{policyType} AND A.LIPM_INSU_GRP_NO = #{policyGrpNo} AND A.LIPM_INSU_SEQ_NO = #{policySeqNo}
         UNION ALL
-        SELECT A.NEPM_INSU_TYPE, A.NEPM_INSU_GRP_NO, A.NEPM_INSU_SEQ_NO, A.NEPM_NAME_1, A.NEPM_ID, A.NEPM_ST, A.NEPM_AGEN_CODE, A.NEPM_RCP_METH_CODE,
+        SELECT A.NEPM_ST_DATE,A.NEPM_INSU_TYPE, A.NEPM_INSU_GRP_NO, A.NEPM_INSU_SEQ_NO, A.NEPM_NAME_1, A.NEPM_ID, A.NEPM_ST, A.NEPM_AGEN_CODE, A.NEPM_RCP_METH_CODE,
         A.NEPM_RCP_CODE, A.NEPM_FLEX_RCP_MK, A.NEPM_ADDR, A.NEPM_5_GP, A.NEPM_TEL_H, A.NEPM_AUTO_RCP_MK, A.NEPM_CHAR_AT_1, A.NEPM_CHAR_AT_2, A.NEPM_BANK_CODE,
         B.NEPI_SEX, B.NEPI_AGE, B.NEPI_BIRTH,
         B.NEPI_NAME, B.NEPI_ID, B.NEPI_PREM_YEAR, B.NEPI_TABL_PREM, B.NEPI_INSU_END_DATE, B.NEPI_MAIN_AMT, B.NEPI_CANCER_QUAN, B.NEPI_INSU_BEG_DATE,
@@ -411,6 +414,7 @@
         <result column="BONF_TAKE_CODE" property="code"/>
         <result column="BONF_BON_DATE" property="bonDate"/>
         <result column="PREMIUM" property="premium"/>
+        <result column="BONF_BON" property="currentYearDividend"/>
     </resultMap>
 
     <select id="getPolicyPremium" resultMap="PremiumMap">
@@ -419,7 +423,7 @@
             decode(nvl(BONF_BON_DATE,''), '', '', TO_CHAR(BONF_BON_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) BONF_BON_DATE,
             decode(nvl(BONF_FILE_BEG_DATE,''), '', '', TO_CHAR(BONF_FILE_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) BONF_FILE_BEG_DATE,
             BONF_ACCU_BON PREMIUM,
-            BONF_BON_BAL, BONF_TAKE_CODE
+            BONF_BON_BAL, BONF_TAKE_CODE , BONF_BON
             FROM LIBONF WHERE
             BONF_INSU_TYPE ||BONF_INSU_GRP_NO ||BONF_INSU_SEQ_NO = #{policyNo}
            ]]>
@@ -434,12 +438,19 @@
         <result column="PAYF_BANK" property="bank"/>
         <result column="PAHI_REMIT_AT" property="remitAt"/>
         <result column="PAHI_BANK_CODE" property="bankCode"/>
+        <result column="PAHI_ACT_AMT" property="amountActuallyPaid"/>
     </resultMap>
 
     <select id="getExpireOfPayment" resultMap="ExpireOfPaymentMap">
         SELECT lbf.PAYF_PAY_AMT,
-            decode(nvl(lph.PAHI_DEP_I_BOOK_DATE,''), '', '', to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) PAHI_DEP_I_BOOK_DATE, lbf.PAYF_PAY_METH, lbf.PAYF_BANK, lbf.PAYF_NAME,
-            lph.PAHI_REMIT_AT, lph.PAHI_BANK_CODE, PAHI_PAY_CODE PAYF_PAY_REAS
+            decode(nvl(lph.PAHI_DEP_I_BOOK_DATE,''), '', '', to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) PAHI_DEP_I_BOOK_DATE,
+            lbf.PAYF_PAY_METH,
+            lbf.PAYF_BANK,
+            lbf.PAYF_NAME,
+            lph.PAHI_REMIT_AT,
+            lph.PAHI_BANK_CODE,
+            PAHI_PAY_CODE PAYF_PAY_REAS,
+            lph.PAHI_ACT_AMT
             FROM LIPAYF_ES lbf
             LEFT JOIN LIPAHI lph ON lph.PAHI_INSU_TYPE||lph.PAHI_INSU_GRP_NO||lph.PAHI_INSU_SEQ_NO = lbf.PAYF_INSU_NO
         WHERE lbf.PAYF_INSU_NO = #{policyNo} AND lph.PAHI_PAY_CODE IN ('01', '02', '96')
@@ -495,7 +506,7 @@
         decode(nvl(lcp.CLUP_F_PAY_DATE,''), '', '', to_char(lcp.CLUP_F_PAY_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official'''))  CLUP_F_PAY_DATE,
         decode(nvl(lcp.CLUP_TR_DATE,''), '', '', to_char(lcp.CLUP_TR_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
-        decode(nvl(lip.INPD_INT_COMPU_DATE,''), '', '', to_char(lip.INPD_INT_COMPU_DATE - numtodsinterval(1, 'day'), 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) INPD_INT_COMPU_DATE
+        lip.INPD_INT_COMPU_DATE INPD_INT_COMPU_DATE
         FROM LICLUP_ES lcp
         LEFT JOIN LIINPD_ES lip ON lcp.CLUP_INVT_NO = lip.INPD_INVT_NO AND lcp.CLUP_DATE = lip.INPD_DATE
         LEFT JOIN LIINVT_ES lin ON lcp.CLUP_INVT_NO = lin.INVT_NO

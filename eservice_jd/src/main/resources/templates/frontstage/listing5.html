@@ -72,7 +72,7 @@
 				                                        <tr th:each="vo1: ${premiums}" class="h65 noEvent">
 				                                            <td th:text="${vo1.beginDate}"></td>
 				                                            <td>
-				                                                <p th:text="${vo1.premium}"></p>
+				                                                <p th:text="${vo1.currentYearDividend}"></p>
 				                                            </td>
 				                                            <td>
 																<p th:text="${vo1.balance}"></p>
@@ -97,6 +97,13 @@
 
 </div>
 <footer th:replace="fragments/footer"></footer>
+<script>
+	/*<![CDATA[*/
+	$(function() {
+		hideLoadingModal();
+	});
+	/*]]>*/
+</script>
 </body>
 </html>
 

@@ -16,6 +16,8 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
     private String agent;
     private String status;
     private String effectiveDate;
+
+    private String stDate;
     private String mainAmount;
     private String lipiTablPrem;
     private String paymentMode;
@@ -210,6 +212,10 @@ public class PolicyBaseVo extends AbstractBasePolicyNoDomain {
     public void setEffectiveDate(String effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
+
+    public String getStDate() { return stDate; }
+
+    public void setStDate(String stDate) { this.stDate = stDate; }
 
     public String getMainAmount() {
         return mainAmount;
