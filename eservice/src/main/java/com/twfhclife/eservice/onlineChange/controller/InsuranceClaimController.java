@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -509,7 +509,11 @@ public class InsuranceClaimController extends BaseUserDataController {
 			logger.error("Unable to init from policyClaims5: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
-		return "frontstage/onlineChange/policyClaims/policyClaims-success";
+		if (StringUtils.equals(claimVo.getSignAgree(), "Y")) {
+			return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
+		} else {
+			return "frontstage/onlineChange/policyClaims/policyClaims-success";
+		}
 	}
 	
 	@RequestLog

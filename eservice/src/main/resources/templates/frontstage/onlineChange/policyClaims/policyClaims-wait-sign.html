@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>保單理賠｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">保單理賠</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 保單理賠
+			</div>
+			<div class="col-sm-6 col-sm-offset-3 col-lg-6 col-lg-offset-3">
+				<div class="activated" style="text-align:center">
+					<a href="javascript:void(0);" id="downloadPolicyClaimsPDF"  >
+						<button id="go" class="btn-signup" style="margin:20px 0 20px">執行數位身份驗證
+						</button>
+					</a>
+					<h2 th:inline="text">綫上申請尚未完成！請先完成數位身份驗證！</h2>
+					<div style="text-align:left">
+						如未完成數位身份驗證，則視同放棄申請，本公司將不寧行通知。<br/>
+						需具備保險存摺會員賬號才可進行數位身份驗證<br/>
+						理賠給付申請流程及應具備完整文件可參考官網説明。給付理賠作業説明<br/>
+						如有疑問，請洽本公司電話服務中心0800-011966
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = /*[[${claimVo}]]*/;
+		$(function() {
+			// 下載申請書套印PDF
+			$('#downloadPolicyClaimsPDF').click(function() {
+				var fileDataList = "";
+				if(formData != null && formData.fileDatas != null){
+					var fileDatas = formData.fileDatas;
+					var k = fileDatas.length;
+					for(var i=0; i <  k; i++){
+						var fileTypeNames = /*[[ ${session.INSURANCE_CLAIM_UPLOADFILE}]]*/;
+						if(fileTypeNames != null){
+							$.each( fileTypeNames, function( prop, value ) {
+								if(value.parameterCode == fileDatas[i].type){
+									fileDataList += value.parameterName;
+									if(i < k-1){
+										fileDataList += ",";
+									}
+								}
+							});
+						}
+						
+					}
+				}
+					var items = "";
+					if(formData != null && formData.applyItem != null && formData.applyItem != ''){
+						var appStr = formData.applyItem.split(',');
+						var k1 = appStr.length;
+						for(var i=0; i <  k1; i++){
+							var appItemNames = /*[[ ${session.APPLICATION_ITEMS}]]*/;
+							if(appItemNames != null){
+								$.each( appItemNames, function( prop, value ) {
+									if(value.parameterValue == appStr[i]){
+										items += value.parameterName;
+										if(i < k1-1){
+											items += ",";
+										}
+									}
+								});
+							}
+
+						}
+					}
+				formData.fileDataList = fileDataList;
+				formData.applicationItem = items;
+
+				var form = document.createElement("form");
+				form.style.display = "none";
+				form.action = '/eservice/downloadPolicyClaimsPDF';
+				form.method = "post";
+				form.target="_blank";
+				document.body.appendChild(form);
+				// 动态创建input并给value赋值
+				for (var key in formData) {
+					var input = document.createElement("input");
+					input.type = "hidden";
+					input.name = key;
+					input.value = formData[key];
+					form.appendChild(input);
+				}
+
+				form.submit();
+				form.remove();
+
+				//var url = '/eservice/downloadPolicyClaimsPDF?' + $.param(formData);
+				//url = url.replace(/%5B/g, '').replace(/%5D/g, '');
+				//window.open(url);
+				//return false;
+				// var a = document.createElement("a");
+				// var blob = new Blob([formData], {'type':"application/octet-stream"});
+				// a.href = URL.createObjectURL(blob);
+				// a.download = "理賠"+".pdf";
+				// a.click();
+			});
+		});
+	/*]]>*/
+	</script>
+</body>
+
+</html>
