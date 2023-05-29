@@ -43,6 +43,15 @@ public interface OnlineChangeUtil {
 	/** 線上申請-申請中狀態-已接受 */
 	final String TRANS_STATUS_RECEIVED = "8";
 	/* 狀態 End */
+
+	/* 等待數位驗證 */
+	final String TRANS_STATUS_WAIT_SIGN = "41";
+	/* 數位驗證處理中 */
+	final String TRANS_STATUS_PROCESS_SIGN = "42";
+	/* 數位身份驗證失敗 */
+	final String TRANS_STATUS_FAIL_VERIFY = "43";
+	/* 數位簽署失敗 */
+	final String TRANS_STATUS_FAIL_SIGN = "44";
 	
 	//目前沒用不知道做啥的
 	//public static final String TRANS_TYPE_ANNUITY_METHOD = "TRANS_TYPE_ANNUITY_METHOD";

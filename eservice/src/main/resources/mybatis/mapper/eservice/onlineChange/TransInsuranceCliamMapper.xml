@@ -50,6 +50,7 @@
 		<result property="otherInsuClaim"  column="OTHERINSUCLAIM" />
 		<result property="accountName" column="ACCOUNTNAME" />
 		<result property="callPolice" column="CALLPOLICE" />
+		<result property="signAgree" column="SIGN_AGREE" />
 		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
 	</resultMap>
 	
@@ -99,7 +100,7 @@
 			RELATION,
 		ESERVICE.DBO.FN_DEBASE64(TEL) TEL,
 			DISEASENAME,HOSPITAL,OTHERCOMPANYINSURED,OTHERINSUCOMMPANY,OTHERINSUTYPE,OTHERINSUAMOUNT,
-			OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE
+			OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE, SIGN_AGREE
 		from ESERVICE.DBO.TRANS_INSURANCE_CLAIM
 		where TRANS_NUM = #{transNum}
 		order by CREATE_DATE desc

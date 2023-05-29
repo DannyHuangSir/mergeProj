@@ -284,6 +284,13 @@
 										</th:block>
 									</div>
 								</th:block>
+								<div class="form-group">
+									<label class="col-sm-4">是否進行數位身份驗證及數位簽署：</label>
+									<div class="col-sm-8">
+										<th:block th:if="${claimVo.signAgree eq 'Y'}">同意</th:block>
+										<th:block th:if="${claimVo.signAgree eq 'N'}">不同意</th:block>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="form-horizontal">
@@ -391,25 +398,36 @@
 		$(function() {
 			var List = JSON.parse($('#fileDataList').val());
 			var name ='';
+			var map = {}
 			for(var i=0; i < List.length ; i++){
-			 var imgHtml = '<div class="form-group" >'+
-						'<label class="col-sm-3" id="'+List[i].type+'"></label>'+
-						'<div class="col-sm-9">'+List[i].fileName+
-							'<div class="col-sm-12 upload-drop-zone boardDotted">';
+			var flag = false
+			if (map[List[i].type] != null) {
+				flag = true
+			}
+			map[List[i].type] = true
+			var imgHtml = ''
+			if (!flag) {
+				imgHtml += '<div class="form-group" >'+
+					'<label class="col-sm-3" id="'+List[i].type+'"></label>'+
+					'<div class="col-sm-9">'+List[i].fileName+
+						'<div class="col-sm-12 upload-drop-zone boardDotted" id="IMG_' + List[i].type  +  '">';
+			}
+
 			 if(List[i].fileOrPng == null || List[i].fileOrPng == ""){
-				imgHtml +='<img src="" width="50">';
+				imgHtml +='<img style="margin-left:3px;" src="" width="50">';
 			 }else if (List[i].fileOrPng.indexOf('.pdf') === -1 && List[i].fileOrPng.indexOf('.PDF') === -1) {
-				imgHtml +='<img src="data:image/png;base64, ' + List[i].fileBase64+'" width="50">';
+				imgHtml +='<img style="margin-left:3px;" src="data:image/png;base64, ' + List[i].fileBase64+'" width="50">';
 			 }else {
-				imgHtml +='<embed src="data:application/pdf;base64, ' + List[i].fileBase64+'" type="application/pdf" width=50>';
-				// var A = document.createElement("a");  
-				// A.setAttribute("href","data:application/pdf;base64, " + List[i].fileBase64);
-				// A.setAttribute("target","_blank");
-				// document.body.appendChild(A);
-				// A.click();
+				imgHtml +='<embed style="margin-left:3px;" src="data:application/pdf;base64, ' + List[i].fileBase64+'" type="application/pdf" width=50>';
 			 }
-			 imgHtml +='</div></div></div>';
-		     $('#fileDatas').append(imgHtml);
+
+			 if (!flag) {
+			 	imgHtml +='</div></div></div>';
+			 	$('#fileDatas').append(imgHtml);
+			 } else {
+			 	$('#IMG_' + List[i].type).append(imgHtml);
+			 }
+
 			}
 			var uploadFiles = /*[[${session.INSURANCE_CLAIM_UPLOADFILE}]]*/;
 			if (uploadFiles != undefined && uploadFiles != null) {

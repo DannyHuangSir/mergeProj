@@ -256,6 +256,13 @@
                                 </th:block>
                             </div>
                         </th:block>
+                        <div class="form-group">
+                            <label class="col-sm-4">是否進行數位身份驗證及數位簽署：</label>
+                            <div class="col-sm-8">
+                                <th:block th:if="${claimVo.signAgree == 'Y'}">同意</th:block>
+                                <th:block th:if="${claimVo.signAgree == 'N'}">不同意</th:block>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-horizontal">
@@ -316,41 +323,41 @@
                         <i class="fas fa-chevron-up hid1"></i> 上傳申請應備文件
                     </div>
                     <div class="mobile-toggle-panel">
-                        <th:block th:if="${not #lists.isEmpty(claimVo.fileDatas)}">
-                           <th:block th:each="vo, rowStat : ${claimVo.fileDatas}">
-                                <div class="form-group">
-                                    <label class="col-sm-3">
-                                        <th:block th:if="${vo.type == 'C'}">
-                                            補件：
-                                        </th:block>
-                                        <th:block Rth:if="${session.INSURANCE_CLAIM_UPLOADFILE != null}">
-                                            <th:block th:each="file : ${session.INSURANCE_CLAIM_UPLOADFILE}">
-                                                <th:block th:if="${vo.type != 'C' && vo.type eq file.value.parameterCode}">
-                                                    <th:block th:inline="text">[[${file.value.parameterName}]]</th:block> ：
-                                                </th:block>
-                                            </th:block>
-                                        </th:block>
-                                        <!-- <th:block th:if="${vo.type eq '1'}">數位服務同意書：</th:block>
-                                        <th:block th:if="${vo.type eq '2'}">診斷證明書:</th:block>
-                                        <th:block th:if="${vo.type eq '3'}">就醫收據:</th:block>
-                                        <th:block th:if="${vo.type eq '4'}">事故證明文件：(如警方軍方處理之文件，有關證明文件或報告等)</th:block>
-                                        <th:block th:if="${vo.type eq '5'}">受益人身份證明文件：(如身份證或胡記帳本)</th:block>
-                                        <th:block th:if="${vo.type eq '6'}">帳戶影本:</th:block> -->
-                                    </label>
-                                    <div class="col-sm-9">
-                                        <th:block th:text="${vo.fileName}"/>
-                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.pdf')}">
-                                             <embed th:src="'data:application/pdf;base64, '+${vo.fileBase64}" type="application/pdf" width="50">
+                       <th:block th:each="fileData:${fileData.entrySet()}">
+                           <div class="form-group">
+                               <label class="col-sm-3">
+                                   <th:block th:if="${fileData.key == 'C'}">
+                                       補件：
+                                   </th:block>
+                                   <th:block Rth:if="${session.INSURANCE_CLAIM_UPLOADFILE != null}">
+                                       <th:block th:each="file : ${session.INSURANCE_CLAIM_UPLOADFILE}">
+                                           <th:block th:if="${fileData.key != 'C' && fileData.key eq file.value.parameterCode}">
+                                               <th:block th:inline="text">[[${file.value.parameterName}]]</th:block> ：
+                                           </th:block>
+                                       </th:block>
+                                   </th:block>
+                                   <!-- <th:block th:if="${vo.type eq '1'}">數位服務同意書：</th:block>
+                                   <th:block th:if="${vo.type eq '2'}">診斷證明書:</th:block>
+                                   <th:block th:if="${vo.type eq '3'}">就醫收據:</th:block>
+                                   <th:block th:if="${vo.type eq '4'}">事故證明文件：(如警方軍方處理之文件，有關證明文件或報告等)</th:block>
+                                   <th:block th:if="${vo.type eq '5'}">受益人身份證明文件：(如身份證或胡記帳本)</th:block>
+                                   <th:block th:if="${vo.type eq '6'}">帳戶影本:</th:block> -->
+                               </label>
+                               <div class="col-sm-9">
+                                    <th:block th:each="vo1 : ${fileData.value}">
+                                        <th:block th:text="${vo1.fileName}"/>
+                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.pdf')}">
+                                             <embed th:src="'data:application/pdf;base64, '+${vo1.fileBase64}" type="application/pdf" width="50">
                                         </div>
-                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.jpg')}">
-                                            <img th:src="'data:image/png;base64, '+${vo.fileBase64}" width="50">
+                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.jpg')}">
+                                            <img th:src="'data:image/png;base64, '+${vo1.fileBase64}" width="50">
                                         </div>
-                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.fileOrPng,'.png')}">
-                                            <img th:src="'data:image/png;base64, '+${vo.fileBase64}" width="50">
+                                        <div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.png')}">
+                                            <img th:src="'data:image/png;base64, '+${vo1.fileBase64}" width="50">
                                         </div>
-                                    </div>
+                                    </th:block>
                                 </div>
-                            </th:block>
+                            </div>
                         </th:block>
                     </div>
                 </div>     
@@ -369,13 +376,6 @@
              if(fileDatas != null){
                 var k = fileDatas.length;
                 for(var i=0; i <  k; i++){
-                    // if (fileDatas[i].fileName.indexOf('.pdf') >= 0 || fileDatas[i].fileName.indexOf('.PDF') >= 0) {
-                    //     var A = document.createElement("a");
-                    //     A.setAttribute("href","/images/" + fileDatas[i].fileName);
-                    //     A.setAttribute("target","_blank");
-                    //     document.body.appendChild(A);
-                    //     A.click();
-                    // }
                     var fileTypeNames = /*[[ ${session.INSURANCE_CLAIM_UPLOADFILE}]]*/;
                     if(fileTypeNames != null){
                         $.each( fileTypeNames, function( prop, value ) {
@@ -416,10 +416,6 @@
 
             form.submit();
             form.remove();
-            // var url = '/eservice/downloadPolicyClaimsPDF?' + $.param(claimVo);
-            // url = url.replace(/%5B/g, '').replace(/%5D/g, '');
-            // window.open(url);
-            // return false;
         }
     /*]]>*/
 </script>

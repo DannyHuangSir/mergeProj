@@ -421,7 +421,10 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			flag = true;
 			//transNum = "000000000";
 			status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
-		} else {
+		} else if(StringUtils.equals("Y", transInsuranceClaimVo.getSignAgree())) {
+			status = OnlineChangeUtil.TRANS_STATUS_WAIT_SIGN;
+		}
+		else {
 			// 判斷聯盟件
 			if(fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
 				mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_2;

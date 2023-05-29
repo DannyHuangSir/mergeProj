@@ -240,6 +240,7 @@ public class TransInsuranceClaimVo extends AbstractOnlineChangeModelBean {
 	 * *聯盟通知件:always set "N".
 	 */
 	private String sendAlliance;
+	private String signAgree;
 
 	/**
 	 * 此案件的上傳檔案狀態清單
@@ -714,6 +715,14 @@ public class TransInsuranceClaimVo extends AbstractOnlineChangeModelBean {
 
 	public void setCreateDate(Timestamp createDate) {
 		this.createDate = createDate;
+	}
+
+	public String getSignAgree() {
+		return signAgree;
+	}
+
+	public void setSignAgree(String signAgree) {
+		this.signAgree = signAgree;
 	}
 
 	@Override

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -538,31 +541,23 @@ public class InsuranceClaimController extends BaseUserDataController {
 	@PostMapping("/getTransInsuranceClaimDetail")
 	public String getTransInsuranceClaimDetail(@RequestParam("transNum") String transNum) {
 		try {
-			String userId = getUserId();
 			TransInsuranceClaimVo claimVo = null;
-			
-			// Call api 取得資料
-//			TransHistoryDetailResponse transHistoryDetailResponse = transHistoryDetailClient
-//					.getTransHistoryDetail(userId, Arrays.asList(transNum));
-			// 若無資料，嘗試由內部服務取得資料
-//			if (transHistoryDetailResponse != null) {
-//				logger.info("Get user[{}] data from eservice_api[getTransInsuranceClaimDetail]", userId);
-//				List<TransDetailVo> transHistoryDetailList = transHistoryDetailResponse.getTransHistoryDetailList();
-//				if (transHistoryDetailList != null && transHistoryDetailList.size() > 0) {
-//					transInsuranceClaimVo = transHistoryDetailList.get(0).getTransInsuranceClaimVo();
-//				}
-//			} else {
-//				logger.info("Call internal service to get user[{}] getTransInsuranceClaimDetail data", userId);
+
 			claimVo = insuranceClaimService.getTransInsuranceClaimDetail(transNum);
-//			}
-//			if (claimVo.getFileDatas() != null) {
-//				for (TransInsuranceClaimFileDataVo fileData : claimVo.getFileDatas()) {
-//					logger.error("TransInsuranceClaimFileDataVo is: {}", fileData.toString());
-//				}
-//			}
 			logger.error("TransInsuranceClaimVo is: {}", claimVo.toString());
-			
+
 			addAttribute("claimVo", claimVo);
+			Map<String, List<TransInsuranceClaimFileDataVo>> fileData = Maps.newHashMap();
+			if (claimVo != null && !CollectionUtils.isEmpty(claimVo.getFileDatas())) {
+				claimVo.getFileDatas().forEach(f -> {
+					if (fileData.get(f.getType()) != null) {
+						fileData.get(f.getType()).add(f);
+					} else {
+						fileData.put(f.getType(), Lists.newArrayList(f));
+					}
+				});
+			}
+			addAttribute("fileData", fileData);
 		} catch (Exception e) {
 			logger.error("Unable to getTransInsuranceClaimDetail: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();

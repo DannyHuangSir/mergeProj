@@ -432,6 +432,21 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否進行數位身份驗證及數位簽署：</label>
+							<div class="col-sm-9">
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
+									</label>
+								</div>
+								<div class="radio inline">
+									<label>
+										<div class="radio-btn"><i><input id="cancelSign" checked type="radio" name="signAgree" value="N" ></i></div>不同意
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
 							<div class="tb3 top0 mobile-toggle" data-toggle="true">
 								<i class="fas fa-chevron-up hid2 mobile"></i>
 								<i class="fas fa-chevron-up hid1"></i> 給付方式
@@ -563,74 +578,12 @@
 											</div>
 											<div class="clearfix"></div>
 										</div>
-										<input type="hidden" th:id="${vo.value.parameterCode}">
+										<input type="hidden" th:id="${vo.value.parameterCode}" value="[]">
 									</th:block>
 								</th:block>
 								<input type="hidden" id="fileDataList" name="fileDataList">
 							</div>
-							<!-- <div class="mobile-toggle-panel toggle-hide">
-								<div class="form-group">
-									<label class="col-sm-3">數位服務同意書：</label>
-									<div class="col-sm-9">
-										<div class="dropdownFile" onclick="window.open('https://www.twfhclife.com.tw/wp-content/uploads/%E8%87%BA%E9%8A%80%E4%BA%BA%E5%A3%BD%E7%90%86%E8%B3%A0%E7%94%B3%E8%AB%8B%E8%BD%89%E9%80%81%E6%9A%A8%E5%80%8B%E8%B3%87%E8%92%90%E9%9B%86%E5%90%8C%E6%84%8F%E6%9B%B8.pdf')" 
-										style="position: absolute;top: 5px;right: 0px;"><i class="foo-down"></i>下載空白理賠申請轉送暨個資蒐集同意書
-									    </div>
-										<input  class="uploadfile" id="file-fr1" name="files" type="file" multiple>
-									</div>
-									<div class="clearfix"></div>
-								</div> 
-								<div class="form-group">
-									<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>診斷證明書：</label>
-									<div class="col-sm-9">
-											<input class="uploadfile" id="file-fr2" name="files"  type="file" multiple>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3">就醫收據：</label>
-									<div class="col-sm-9">
-
-										<input class="uploadfile" id="file-fr3" name="files" type="file" multiple>
-									
-									</div>
-									<div class="clearfix"></div>
-								</div> 
-								<div class="form-group">
-									<label class="col-sm-3">事故證明文件：(如警方軍方處理之文件，有關證明文件或報告等)</label>
-									<div class="col-sm-9">
-											<input class="uploadfile" id="file-fr4"  name="files" type="file" multiple>						
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3">受益人身份證明文件：(如身份證或胡記帳本)</label>
-									<div class="col-sm-9">
-											<input class="uploadfile" id="file-fr5" name="files" type="file" multiple>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3">帳戶影本：</label>
-									<div class="col-sm-9">
-										<div class="dropdownFile" onclick="window.open('https://www.twfhclife.com.tw/wp-content/uploads/%E6%8C%87%E5%AE%9A%E5%8C%AF%E6%AC%BE%E5%90%8C%E6%84%8F%E6%9B%B8.pdf')" 
-										style="position: absolute;top: 5px;
-	right: 0px;"><i class="foo-down"></i>下載空白保險給付指定匯款同意書</div>
-											<input class="uploadfile" id="file-fr6" name="files" type="file" multiple>
-									</div>
-									<div class="clearfix"></div>
-								</div> 
-								<input type="hidden" id="fileDatas1">
-								<input type="hidden" id="fileDatas2">
-								<input type="hidden" id="fileDatas3">
-								<input type="hidden" id="fileDatas4">
-								<input type="hidden" id="fileDatas5">
-								<input type="hidden" id="fileDatas6">
-								<input type="hidden" id="fileDataList" name="fileDataList">
-							</div> -->
 						</div>
-					
-						
-					
 					</form>
 				</div>
 				<div class="col-md-12 two-buttons">
@@ -652,6 +605,30 @@
 					</div>
 					<div class="modal-body apply2 center1 grey2">
 						<h3>無法送出理賠聯盟鏈申請，請改為"同意"</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade in" id="confirmBxczModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body apply2 center1 grey2">
+						<h3>需具備保險存摺會員帳號才可進行數位身份驗證及數位簽署，是否仍繼續執行?</h3>
+						<form method="POST" id="cancelTransForm" action="cancelApplyTrans">
+							<input type="hidden" id="cancelTransType" name="transType" value=""/>
+							<input type="hidden" id="cancelTransNum" name="transNum" value=""/>
+						</form>
+						<p class="marginTop20">
+							<a href="#">
+								<button class="btn-login lock2" onclick="confirmSignAgree('N')">取消</button>
+							</a>
+							<a href="#">
+								<button class="btn-login lock2" onclick="confirmSignAgree('Y')" >確認</button>
+							</a>
+						</p>
 					</div>
 				</div>
 			</div>
@@ -684,252 +661,29 @@
 					browseOnZoneClick: true,
 					showUpload: false,
 				}).on("filebatchselected", function(event, files) {
-
 					$(this).fileinput("upload");
 
 				}).on('filebatchuploaderror', function(event, data) {
 					openAlert("上傳有誤，請重新上傳！");
 				}).on("filebatchuploadsuccess", function (event, data, previewId, index) {
 							var  fileData = data.response;
-							var cons = [];
-							var con  = {};
 							for(var i=0 ; i < fileData.length ; i++ ){
 								if(fileData[i]!=null && fileData[i].filePath!=null && fileData[i].filePath!=""  ){
+									var con  = {};
 									con['claimSeqId'] = 0;
 									con['type']= key;
 									con['fileOrPng'] = fileData[i].fileOrPng;
 									con['fileName'] = fileData[i].fileName;
 									con['filePath'] = fileData[i].filePath;
 									con['fileBase64'] = fileData[i].fileBase64;
-									cons.push(con);
+									cons = JSON.parse($("#"+key).val())
+									cons.push(con)
+									$("#"+key).val(JSON.stringify(cons));
 								}
 							}
-							$("#"+key).val(JSON.stringify(cons).replace(/\[|]/g, '' ));
 						});
 				});
 		}
-        // $("#file-fr1").fileinput({
-		// 	language: "zh",
-	    //     showUpload : false,
-	    //     showRemove : false,
-	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
-		// 	showCaption: false,
-		// 	showPreview: true,
-	    //     dropZoneEnabled: true,//是否显示拖拽区域
-	    //     browseClass: "btn btn-primary btn-lg",
-	    //     uploadUrl: "/eservice/upLoadFiles",
-	    //     maxFileSize : 9999,
-		// 	maxFileCount: 10,
-	    //     enctype: 'multipart/form-data',
-	    //     allowedFileExtensions : ["jpg", "png","pdf"],
-		// 	showBrowse: true,
-		// 	fileType:"any",
-	    //     browseOnZoneClick: true,
-		// 	showUpload: false,
-	    // }).on("filebatchselected", function(event, files) {
-
-		// 	$(this).fileinput("upload");
-
-        // }).on('filebatchuploaderror', function(event, data) {
-		// 	openAlert("上傳有誤，請重新上傳！");
-		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
-		// 	        var  fileData = data.response;
-		// 				var cons = [];
-		// 				var con ={};
-		// 				for(var i=0 ; i < fileData.length ; i++ ){
-		// 					con['claimSeqId'] = 0;
-		// 					con['type']= '1';
-		// 					con['fileName'] = fileData[i].fileName;
-		// 					con['filePath'] = fileData[i].filePath;
-		// 					cons.push(con);
-		// 				}
-		// 		$("#fileDatas1").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
-		// });
-	    // $('#file-fr2').fileinput({
-	    //     language: "zh",
-	    //     showUpload : false,
-	    //     showRemove : false,
-	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
-		// 	showCaption: false,
-		// 	showPreview: true,
-	    //     dropZoneEnabled: true,//是否显示拖拽区域
-	    //     browseClass: "btn btn-primary btn-lg",
-	    //     uploadUrl: "/eservice/upLoadFiles",
-	    //     maxFileSize : 9999,
-		// 	maxFileCount: 10,
-	    //     enctype: 'multipart/form-data',
-	    //     allowedFileExtensions : ["jpg", "png","pdf"],
-		// 	showBrowse: true,
-		// 	fileType:"any",
-	    //     browseOnZoneClick: true,
-		// 	showUpload: false,
-	    // }).on("filebatchselected", function(event, files) {
-
-		// 	$(this).fileinput("upload");
-
-        // }).on('filebatchuploaderror', function(event, data) {
-		// 	openAlert("上傳有誤，請重新上傳！");
-		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
-		// 	        var  fileData = data.response;
-		// 				var cons = [];
-		// 				var con ={};
-		// 				for(var i=0 ; i < fileData.length ; i++ ){
-		// 					con['claimSeqId'] = 0;
-		// 					con['type']= '2';
-		// 					con['fileName'] = fileData[i].fileName;
-		// 					con['filePath'] = fileData[i].filePath;
-		// 					cons.push(con);
-		// 				}
-		// 		$("#fileDatas2").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
-		// });
-		// $('#file-fr3').fileinput({
-	    //     language: "zh",
-	    //     showUpload : false,
-	    //     showRemove : false,
-	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
-		// 	showCaption: false,
-		// 	showPreview: true,
-	    //     dropZoneEnabled: true,//是否显示拖拽区域
-	    //     browseClass: "btn btn-primary btn-lg",
-	    //     uploadUrl: "/eservice/upLoadFiles",
-	    //     maxFileSize : 9999,
-		// 	maxFileCount: 10,
-	    //     enctype: 'multipart/form-data',
-	    //     allowedFileExtensions : ["jpg", "png","pdf"],
-		// 	showBrowse: true,
-		// 	fileType:"any",
-	    //     browseOnZoneClick: true,
-		// 	showUpload: false,
-	    // }).on("filebatchselected", function(event, files) {
-
-		// 	$(this).fileinput("upload");
-
-        // }).on('filebatchuploaderror', function(event, data) {
-		// 	openAlert("上傳有誤，請重新上傳！");
-		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
-		// 	        var  fileData = data.response;
-		// 				var cons = [];
-		// 				var con ={};
-		// 				for(var i=0 ; i < fileData.length ; i++ ){
-		// 					con['claimSeqId'] = 0;
-		// 					con['type']= '3';
-		// 					con['fileName'] = fileData[i].fileName;
-		// 					con['filePath'] = fileData[i].filePath;
-		// 					cons.push(con);
-		// 				}
-		// 		$("#fileDatas3").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
-		// });
-		// $('#file-fr4').fileinput({
-	    //     language: "zh",
-	    //     showUpload : false,
-	    //     showRemove : false,
-	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
-		// 	showCaption: false,
-		// 	showPreview: true,
-	    //     dropZoneEnabled: true,//是否显示拖拽区域
-	    //     browseClass: "btn btn-primary btn-lg",
-	    //     uploadUrl: "/eservice/upLoadFiles",
-	    //     maxFileSize : 9999,
-		// 	maxFileCount: 10,
-	    //     enctype: 'multipart/form-data',
-	    //     allowedFileExtensions : ["jpg", "png","pdf"],
-		// 	showBrowse: true,
-		// 	fileType:"any",
-	    //     browseOnZoneClick: true,
-		// 	showUpload: false,
-	    // }).on("filebatchselected", function(event, files) {
-
-		// 	$(this).fileinput("upload");
-
-        // }).on('filebatchuploaderror', function(event, data) {
-		// 	openAlert("上傳有誤，請重新上傳！");
-		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
-		// 	        var  fileData = data.response;
-		// 				var cons = [];
-		// 				var con ={};
-		// 				for(var i=0 ; i < fileData.length ; i++ ){
-		// 					con['claimSeqId'] = 0;
-		// 					con['type']= '4';
-		// 					con['fileName'] = fileData[i].fileName;
-		// 					con['filePath'] = fileData[i].filePath;
-		// 					cons.push(con);
-		// 				}
-		// 		$("#fileDatas4").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
-		// });
-		// $('#file-fr5').fileinput({
-	    //     language: "zh",
-	    //     showUpload : false,
-	    //     showRemove : false,
-	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
-		// 	showCaption: false,
-		// 	showPreview: true,
-	    //     dropZoneEnabled: true,//是否显示拖拽区域
-	    //     browseClass: "btn btn-primary btn-lg",
-	    //     uploadUrl: "/eservice/upLoadFiles",
-	    //     maxFileSize : 9999,
-		// 	maxFileCount: 10,
-	    //     enctype: 'multipart/form-data',
-	    //     allowedFileExtensions : ["jpg", "png","pdf"],
-		// 	showBrowse: true,
-		// 	fileType:"any",
-	    //     browseOnZoneClick: true,
-		// 	showUpload: false,
-	    // }).on("filebatchselected", function(event, files) {
-
-		// 	$(this).fileinput("upload");
-
-        // }).on('filebatchuploaderror', function(event, data) {
-		// 	openAlert("上傳有誤，請重新上傳！");
-		//   }).on("filebatchuploadsuccess", function (event, data, previewId, index) {
-		// 	        var  fileData = data.response;
-		// 				var cons = [];
-		// 				var con ={};
-		// 				for(var i=0 ; i < fileData.length ; i++ ){
-		// 					con['claimSeqId'] = 0;
-		// 					con['type']= '5';
-		// 					con['fileName'] = fileData[i].fileName;
-		// 					con['filePath'] = fileData[i].filePath;
-		// 					cons.push(con);
-		// 				}
-		// 		$("#fileDatas5").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
-		// });
-		// $('#file-fr6').fileinput({
-	    //     language: "zh",
-	    //     showUpload : false,
-	    //     showRemove : false,
-	    //     uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
-		// 	showCaption: false,
-		// 	showPreview: true,
-	    //     dropZoneEnabled: true,//是否显示拖拽区域
-	    //     browseClass: "btn btn-primary btn-lg",
-	    //     uploadUrl: "/eservice/upLoadFiles",
-	    //     maxFileSize : 9999,
-		// 	maxFileCount: 10,
-	    //     enctype: 'multipart/form-data',
-	    //     allowedFileExtensions : ["jpg", "png","pdf"],
-		// 	showBrowse: true,
-		// 	fileType:"any",
-	    //     browseOnZoneClick: true,
-		// 	showUpload: false,
-	    // }).on("filebatchselected", function(event, files) {
-
-		// 	$(this).fileinput("upload");
-
-        // }).on('filebatchuploaderror', function(event, data) {
-		// 	openAlert("上傳有誤，請重新上傳！");
-		//   }).on("filebatchuploadsuccess", function (event, data, psereviewId, index) {
-		// 	        var  fileData = data.response;
-		// 				var cons = [];
-		// 				var con ={};
-		// 				for(var i=0 ; i < fileData.length ; i++ ){
-		// 					con['claimSeqId'] = 0;
-		// 					con['type']= '6';
-		// 					con['fileName'] = fileData[i].fileName;
-		// 					con['filePath'] = fileData[i].filePath;
-		// 					cons.push(con);
-		// 				}
-		// 		$("#fileDatas6").val(JSON.stringify(cons).replace(/\[|]/g, '' ));
-	    // });
 		$(function(){
 			$('#birdate').datepicker({//日期控件
 				changeMonth : true,
@@ -1106,49 +860,14 @@
 				var List = [];
 				if (uploadFiles != undefined && uploadFiles != null) {
 					$.each(uploadFiles,function(key,value){
-						if ($("#"+key).val() != ''){
-							List.push(JSON.parse($("#"+key).val()));
-						}else{
+						if ($("#"+key).val() != '' && $("#"+key).val() != '[]'){
+							List.push(...JSON.parse($("#"+key).val()));
+						} else {
 							List.push({claimSeqId: null, type: key, fileName: "", filePath: "", fileBase64: ""});
 						}
 					})
 				}
 				$('input[name="fileDataList"]').val(JSON.stringify(List));
-				//  if($("#fileDatas2").val()==''){
-				// 	openAlert("請選擇診斷證明書!");
-				//  	return false;
-				//  }else{
-				//         var List = [];
-				// 		if ($("#fileDatas1").val() != ''){
-				// 			List.push(JSON.parse($("#fileDatas1").val()));
-				// 		}else{
-				// 			List.push({claimSeqId: null, type: "1", fileName: "", filePath: ""});
-				// 		}
-
-				// 		List.push(JSON.parse($("#fileDatas2").val()));
-
-				// 		if ($("#fileDatas3").val() != ''){
-				// 			List.push(JSON.parse($("#fileDatas3").val()));
-				// 		}else{
-				// 			List.push({claimSeqId: null, type: "3", fileName: "", filePath: ""});
-				// 		}
-				// 		if ($("#fileDatas4").val() != ''){
-				// 			List.push(JSON.parse($("#fileDatas4").val()));
-				// 		}else{
-				// 			List.push({claimSeqId: null, type: "4", fileName: "", filePath: ""});
-				// 		}
-				// 		if ($("#fileDatas5").val() != ''){
-				// 			List.push(JSON.parse($("#fileDatas5").val()));
-				// 		}else{
-				// 			List.push({claimSeqId: null, type: "5", fileName: "", filePath: ""});
-				// 		}
-				// 		if ($("#fileDatas5").val() != ''){
-				// 			List.push(JSON.parse($("#fileDatas6").val()));
-				// 		}else{
-				// 			List.push({claimSeqId: null, type: "6", fileName: "", filePath: ""});
-				// 		}
-				// 		$('input[name="fileDataList"]').val(JSON.stringify(List));
-				// }
 				$('#step3Form').submit();
 			  }
 			});
@@ -1168,6 +887,17 @@
 				backdrop: 'static',
 				keyboard: false
 				});
+		}
+
+		function clickAgreeSign() {
+			$('#confirmBxczModal').modal('show')
+		}
+
+		function confirmSignAgree(sign) {
+			$('#confirmBxczModal').modal('hide')
+			if (sign == 'N') {
+				$("#cancelSign").click()
+			}
 		}
 
 		//計算中英文字長度
