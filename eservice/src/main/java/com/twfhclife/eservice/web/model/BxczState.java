@@ -9,15 +9,25 @@ public class BxczState {
         this.actionId = actionId;
     }
 
-    public BxczState(String actionId, String transNum, String type) {
+    public BxczState(String actionId, String transNum, String type, String id) {
         this.actionId = actionId;
         this.transNum = transNum;
         this.type = type;
+        this.id = id;
     }
 
     private String actionId;
     private String transNum;
     private String type;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getActionId() {
         return actionId;

@@ -551,7 +551,7 @@ public class AuthoServiceImpl implements IAuthoService {
 			bxczDao.insertBxczApiLog(req.getActionId(), "call", "PBS-102", new Gson().toJson(bxczLoginRequest), new Gson().toJson(obj));
 			if (obj != null) {
 				ApiResponseObj responseObj = new ApiResponseObj();
-				responseObj.setResult(parseIdToken(obj.getId_token()));
+				responseObj.setResult(obj.getId_token());
 				return responseObj;
 			}
 		} catch (Exception e) {
@@ -560,27 +560,6 @@ public class AuthoServiceImpl implements IAuthoService {
 		}
 		return new ApiResponseObj<>();
     }
-
-	private String parseIdToken(String idToken) throws Exception {
-
-		if (StringUtils.isBlank(idToken)) {
-			return null;
-		}
-
-		String[] split_string = idToken.split("\\.");
-		String base64EncodedHeader = split_string[0];
-		String base64EncodedBody = split_string[1];
-
-		logger.debug("~~~~~~~~~ JWT Header ~~~~~~~");
-		String header = new String(Base64.getUrlDecoder().decode(base64EncodedHeader));
-		logger.debug("JWT Header : " + header);
-
-
-		logger.debug("~~~~~~~~~ JWT Body ~~~~~~~");
-		String body = new String(Base64.getUrlDecoder().decode(base64EncodedBody));
-		logger.debug("JWT Body : " + body);
-		return MyJacksonUtil.readValue(body, "/userId");
-	}
 
 	private boolean checkResponseStatus(ResponseEntity<?> responseEntity) {
 		logger.info("http status=" + responseEntity.getStatusCodeValue());

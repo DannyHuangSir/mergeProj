@@ -2,6 +2,7 @@ package com.twfhclife.eservice.web.controller;
 
 import com.auth0.jwt.internal.org.apache.commons.codec.digest.HmacUtils;
 import com.google.gson.Gson;
+import com.twfhclife.eservice.util.AesUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.BxczState;
 import com.twfhclife.eservice.web.model.TransVo;
@@ -46,8 +47,10 @@ public class BxczController extends BaseController {
             } else {
                 String actionId = UUID.randomUUID().toString().replaceAll("-", "");
                 addSession("lipeiActionId", actionId);
+                String idToken = getSessionStr("BXCZ_ID_TOKEN");
+                String encId = StringUtils.isBlank(idToken) ? "" : AesUtil.encrypt(idToken, actionId);
                 String code = HmacUtils.hmacSha256Hex(secret, "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F");
-                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, transVo.getTransNum(), ApConstants.INSURANCE_CLAIM)).getBytes())
+                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, transVo.getTransNum(), ApConstants.INSURANCE_CLAIM, encId)).getBytes())
                         + "&code=" + code;
                 this.setResponseObj(ResponseObj.SUCCESS, "", url);
             }
