@@ -441,6 +441,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 					// 設定交易序號
 					String transNum = transService.getTransNum();
 					claimVo.setTransNum(transNum);
+					addAttribute("signTransNum", transNum);
 					// 狀態歷程
 					TransStatusHistoryVo hisVo = new TransStatusHistoryVo();
 					//hisVo.setCustomerName(OnlineChangeUtil.CUSTOMER_NAME);

@@ -11,11 +11,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +37,9 @@ import com.twfhclife.generic.util.ValidateUtil;
 
 @Controller
 @EnableAutoConfiguration
-public class forgetPasswordController extends BaseController {
+public class ForgetPasswordController extends BaseController {
 	
-	private static final Logger logger = LogManager.getLogger(forgetPasswordController.class);
+	private static final Logger logger = LogManager.getLogger(ForgetPasswordController.class);
 	
 	@Autowired
 	private IRegisterUserService registerUserService;
