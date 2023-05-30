@@ -149,7 +149,7 @@ public class CaseServiceImpl implements ICaseService {
         String kaiuFontPath = kaiuResource.getFile().getPath();
         BaseFont bfChinese = BaseFont.createFont(kaiuFontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         Document document = new Document(PageSize.A4);
-        Font zh = new Font(bfChinese, 10, Font.BOLD);
+        Font zh = new Font(bfChinese, 12, Font.BOLD);
         Font tableFont = new Font(bfChinese, 12, Font.BOLD);
         // 段落
         Paragraph paragraph = new Paragraph("臺銀人壽核保照會單", new Font(bfChinese, 20, Font.BOLD));

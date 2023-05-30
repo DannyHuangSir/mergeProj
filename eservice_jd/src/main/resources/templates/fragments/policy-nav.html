@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="col-xs-6 col-sm-3 col-md-2 sidebar-offcanvas nopd" id="sidebar">
-    <div th:replace="fragments/header :: loadingModal"></div>
     <div class="list-group tog1 box-border">
         <div class="tog2">保單資訊</div>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing1')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing1} + '\',\'' + ${policyNo} + '\')'" class="list-group-item tog3">保單基本資料</a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing11')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing11} + '\',\'' + ${policyNo} + '\')'" class="list-group-item tog3">保障內容與金額</a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing1')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing1} + '\',\'' + ${policyNo} + '\')'" class="list-group-item tog3">保單基本資料</a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing11')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing11} + '\',\'' + ${policyNo} + '\')'" class="list-group-item tog3">保障內容與金額</a>
 
         <div class="tog2">一般查詢</div>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing3')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing3} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">繳費紀錄</a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing5')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing5} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保單紅利資料</a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing13')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing13} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">生存/滿期保單給付資料 </a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing17')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing17} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">解約金試算</a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing5_3')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing5_3} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">契約變更資料</a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing3')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing3} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">繳費紀錄</a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing5')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing5} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保單紅利資料</a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing13')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing13} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">生存/滿期保單給付資料 </a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing17')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing17} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">解約金試算</a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing5_3')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing5_3} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">契約變更資料</a>
         <th:block th:if="${#strings.contains(session.SYSTEM_PARAMETER['ESERVICE_JD_CATEGORY']['JD_POLICY_INVESTMENT_TYPE']['parameterValue'], #strings.substring(policyNo, 0, 2))}">
             <div class="tog2">投資型保單查詢</div>
-            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing2')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing2} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">投資損益及投報率</a>
-            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing6_2')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing6_2} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保單收益分配</a>
-            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing7')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing7} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保費費用</a>
-            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing10')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing10} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">交易歷史記錄</a>
-            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing18')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing18} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">報酬率通知設定 </a>
-            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing16')} ? 'active' : ''" th:onclick="'javascript:getPolicyInfo(\'' + @{/listing16} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">投資標的淨值</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing2')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing2} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">投資損益及投報率</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing6_2')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing6_2} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保單收益分配</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing7')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing7} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保費費用</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing10')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing10} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">交易歷史記錄</a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing18')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing18} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">報酬率通知設定 </a>
+            <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing16')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing16} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">投資標的淨值</a>
         </th:block>
     </div>
 </div>

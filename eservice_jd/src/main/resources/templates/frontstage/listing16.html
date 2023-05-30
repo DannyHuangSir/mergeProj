@@ -9,6 +9,7 @@
 <div class="wrapper sidebar_minimize">
     <div th:replace="fragments/header :: top"></div>
     <header th:replace="fragments/header :: header"></header>
+    <div th:replace="fragments/header :: loadingModal"></div>
     <div th:replace="fragments/nav"></div>
     <div class="main-panel" style="position: absolute;">
         <div class="content">
@@ -221,7 +222,6 @@
   /*<![CDATA[*/
     var paymentMap = [[${session.SYSTEM_PARAMETER.CURRENCY}]]
 	$(function() {
-        hideLoadingModal();
 		$('#invtList').change(function() {
 			// 基金幣別
 			$('#invtExchCurrNameTd').html("<b class='tablesaw-cell-label mobile-b'>基金幣別</b><span class='mobile-span'>" + paymentMap[$(this).find('option:selected').data('exchcurr')].parameterValue + "</span>");
@@ -244,12 +244,15 @@
 				queryMonth : queryMonth,
 				policyNo: [[${policyNo}]]
 			};
+
+            showLoadingModal();
 			$.ajax({
 				url : /*[[@{/getExchRateChartList}]]*/,
 				contentType: 'application/json',
 				type: "POST",
 				data:  JSON.stringify(formData)
 			}).done(function(response) {
+                hideLoadingModal();
 				if (response.result == 'SUCCESS') {
 					if ($(response.resultData).size() == 0) {
 						openAlert('查無資料');

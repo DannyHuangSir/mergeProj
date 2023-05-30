@@ -309,8 +309,6 @@ public class ShouxianController extends BaseController {
                             sqlParams = {
                                     @SqlParam(requestParamkey = "policyNo", sqlParamkey = "policyNo"),
                                     @SqlParam(requestParamkey = "transType", sqlParamkey = "transType"),
-                                    @SqlParam(requestParamkey = "startDate", sqlParamkey = "startDate"),
-                                    @SqlParam(requestParamkey = "endDate", sqlParamkey = "endDate"),
                                     @SqlParam(requestParamkey = "pageNum", sqlParamkey = "pageNum"),
                                     @SqlParam(requestParamkey = "pageSize", sqlParamkey = "pageSize")
                             }

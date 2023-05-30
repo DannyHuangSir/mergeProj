@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
     <div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -96,13 +97,6 @@
 
 </div>
 <footer th:replace="fragments/footer"></footer>
-<script>
-	/*<![CDATA[*/
-	$(function() {
-		hideLoadingModal();
-	});
-	/*]]>*/
-</script>
 </body>
 </html>
 

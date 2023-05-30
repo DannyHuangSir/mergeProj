@@ -122,13 +122,11 @@ public class PolicyServiceImpl implements IPolicyService {
     private String transationHistroyUrl;
 
     @Override
-    public JdPolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String transType, String startDate, String endDate, int pageNum, int pageSize) {
+    public JdPolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String transType, int pageNum, int pageSize) {
         PolicyFundTransactionRequest apiReq = new PolicyFundTransactionRequest();
         apiReq.setTransType(transType);
         apiReq.setPolicyNo(policyNo);
         apiReq.setTransType(transType);
-        apiReq.setStartDate(startDate);
-        apiReq.setEndDate(endDate);
         apiReq.setPageNum(pageNum);
         apiReq.setPageSize(pageSize);
         apiReq.setSysId(ApConstants.SYSTEM_ID);
