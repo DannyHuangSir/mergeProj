@@ -305,6 +305,9 @@
 			<if test="transVo.sendToAlliance != null and transVo.sendToAlliance != ''" >
 				AND F.SEND_ALLIANCE = #{transVo.sendToAlliance}	
 			</if>
+			<if test="transVo.signAgree != null and transVo.signAgree != ''" >
+				AND F.SIGN_AGREE  = #{transVo.signAgree}
+			</if>
 	</sql>
 	
 	<!-- include sql: 線上申請明細查詢共用欄位 -->
@@ -590,6 +593,9 @@
 			select  distinct  CLAIMS_SEQ_ID  FROM  ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS FD  WHERE  FD.FILE_STATUS  = #{transVo.fromHospitalId}
 			)
 		</if>
+		<if test="transVo.signAgree != null and transVo.signAgree != ''" >
+			AND F.SIGN_AGREE  = #{transVo.signAgree}
+		</if>
 	</sql>
 	<!-- include sql: 取得醫療線上申請 -->
 	<sql id="MEDICAL02">
@@ -689,6 +695,9 @@
 			AND  F.CLAIMS_SEQ_ID  IN  (
 			select  distinct  CLAIMS_SEQ_ID  FROM  ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS FD  WHERE  FD.FILE_STATUS   = #{transVo.fromHospitalId}
 			)
+		</if>
+		<if test="transVo.signAgree != null and transVo.signAgree != ''" >
+			AND F.SIGN_AGREE  = #{transVo.signAgree}
 		</if>
 
 	</sql>

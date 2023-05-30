@@ -50,6 +50,7 @@ public class TransVo extends Pagination {
 	private String sendToHospitalIdItem;
 	//醫療資料介接案件狀態
 	private String medicalCaseStatus;
+	private String signAgree;
 
 	public String getAbnormalReason() {
 		return abnormalReason;
@@ -258,6 +259,14 @@ public class TransVo extends Pagination {
 
 	public void setDnsCode(String dnsCode) {
 		this.dnsCode = dnsCode;
+	}
+
+	public String getSignAgree() {
+		return signAgree;
+	}
+
+	public void setSignAgree(String signAgree) {
+		this.signAgree = signAgree;
 	}
 
 	@Override

@@ -1327,6 +1327,16 @@ a.btn-signup:focus {
     color: #fff;
 }
 
+.btn-sign {
+    border-radius: 3px;
+    color: #fff;
+    border: transparent;
+    cursor: pointer;
+    background-color: #DD792E;
+    padding: 5px 12px;
+    font-size: 13px;
+}
+
 hr {
     border-color: #CCC;
 }
