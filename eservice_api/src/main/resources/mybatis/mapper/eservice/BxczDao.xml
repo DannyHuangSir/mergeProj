@@ -3,7 +3,7 @@
 <mapper namespace="com.twfhclife.eservice.auth.dao.BxczDao">
 
 	<insert id="insertBxczApiLog">
-		INSERT INTO ESERVICE.DBO.BXCZ_API_LOG(TYPE, API_CODE, API_PARAM, API_RESPONSE)
-		VALUES (#{type}, #{apiCode}, #{apiParam}, #{apiResponse})
+		INSERT INTO ESERVICE.DBO.BXCZ_API_LOG(ACTION_ID, TYPE, API_CODE, API_PARAM, API_RESPONSE)
+		VALUES (#{actionId}, #{type}, #{apiCode}, #{apiParam}, #{apiResponse})
 	</insert>
 </mapper>

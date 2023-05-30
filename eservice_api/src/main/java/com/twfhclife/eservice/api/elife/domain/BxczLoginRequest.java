@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class BxczLoginRequest implements Serializable {
 
+    private String actionId;
     private String grant_type;
     private String code;
     private String redirect_uri;
@@ -30,5 +31,13 @@ public class BxczLoginRequest implements Serializable {
 
     public void setRedirect_uri(String redirect_uri) {
         this.redirect_uri = redirect_uri;
+    }
+
+    public String getActionId() {
+        return actionId;
+    }
+
+    public void setActionId(String actionId) {
+        this.actionId = actionId;
     }
 }

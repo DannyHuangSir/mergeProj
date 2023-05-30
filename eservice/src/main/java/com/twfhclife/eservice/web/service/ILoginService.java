@@ -103,7 +103,7 @@ public interface ILoginService {
 	 */
 	public List<AuditLogVo> getLastAuditLog(String userId, String row);
 
-    String doLoinBxcz(String code, String redirectUri);
+    String doLoinBxcz(String actionId, String code, String redirectUri);
 
 	void noitfyUser(String userId, KeycloakUser keycloakUser);
 }

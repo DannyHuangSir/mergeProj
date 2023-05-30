@@ -47,7 +47,7 @@ public class BxczController extends BaseController {
                 String actionId = UUID.randomUUID().toString().replaceAll("-", "");
                 addSession("lipeiActionId", actionId);
                 String code = HmacUtils.hmacSha256Hex(secret, "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F");
-                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, transVo.getTransNum())).getBytes())
+                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, transVo.getTransNum(), ApConstants.INSURANCE_CLAIM)).getBytes())
                         + "&code=" + code;
                 this.setResponseObj(ResponseObj.SUCCESS, "", url);
             }

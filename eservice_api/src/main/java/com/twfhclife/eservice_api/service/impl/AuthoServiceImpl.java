@@ -548,7 +548,7 @@ public class AuthoServiceImpl implements IAuthoService {
 			}
 
 			BxczLoginResponse obj = resp.getBody();
-			bxczDao.insertBxczApiLog("call", "PBS-102", new Gson().toJson(bxczLoginRequest), new Gson().toJson(obj));
+			bxczDao.insertBxczApiLog(req.getActionId(), "call", "PBS-102", new Gson().toJson(bxczLoginRequest), new Gson().toJson(obj));
 			if (obj != null) {
 				ApiResponseObj responseObj = new ApiResponseObj();
 				responseObj.setResult(parseIdToken(obj.getId_token()));
