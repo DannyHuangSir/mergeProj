@@ -54,6 +54,7 @@ import com.twfhclife.generic.model.UserAuthVoEntity;
 import com.twfhclife.generic.model.UserRepresentationEntity;
 import com.twfhclife.generic.model.UserVo;
 import com.twfhclife.generic.utils.MyStringUtil;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -535,19 +536,22 @@ public class AuthoServiceImpl implements IAuthoService {
 
 		try {
 
-			MultiValueMap<String, String> headerMap = new HttpHeaders();
-			headerMap.add("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
-			headerMap.add("Content-Type", "application/json;charset=UTF-8");
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 			BxczLoginRequest bxczLoginRequest = new BxczLoginRequest();
 			bxczLoginRequest.setCode(req.getCode());
 			bxczLoginRequest.setGrant_type("authorization_code");
 			bxczLoginRequest.setRedirect_uri(req.getRedirect_uri());
+			MultiValueMap<String, Object> requestData = new LinkedMultiValueMap<>();
+			requestData.add("code", req.getCode());
+			requestData.add("grant_type", req.getGrant_type());
+			requestData.add("redirect_uri", req.getRedirect_uri());
 
-			HttpEntity<BxczLoginRequest> entity = new HttpEntity<>(bxczLoginRequest, headerMap);
+			HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(requestData, headers);
 
-			ResponseEntity<BxczLoginResponse> resp = restTemplate.exchange(pbs102url,
-					HttpMethod.POST, entity, BxczLoginResponse.class);
+			ResponseEntity<BxczLoginResponse> resp = restTemplate.postForEntity(pbs102url, entity, BxczLoginResponse.class);
 			logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(resp));
 
 			if (!this.checkResponseStatus(resp)) {
