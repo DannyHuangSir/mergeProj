@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 import com.twfhclife.eservice.api.adm.domain.FuncItemReqObj;
@@ -540,10 +539,6 @@ public class AuthoServiceImpl implements IAuthoService {
 			headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-			BxczLoginRequest bxczLoginRequest = new BxczLoginRequest();
-			bxczLoginRequest.setCode(req.getCode());
-			bxczLoginRequest.setGrant_type("authorization_code");
-			bxczLoginRequest.setRedirect_uri(req.getRedirect_uri());
 			MultiValueMap<String, Object> requestData = new LinkedMultiValueMap<>();
 			requestData.add("code", req.getCode());
 			requestData.add("grant_type", req.getGrant_type());
@@ -559,7 +554,7 @@ public class AuthoServiceImpl implements IAuthoService {
 			}
 
 			BxczLoginResponse obj = resp.getBody();
-			bxczDao.insertBxczApiLog("call", "PBS-102", new Gson().toJson(bxczLoginRequest), new Gson().toJson(obj));
+			bxczDao.insertBxczApiLog("call", "PBS-102", new Gson().toJson(req), new Gson().toJson(obj));
 			if (obj != null) {
 				ApiResponseObj responseObj = new ApiResponseObj();
 				responseObj.setResult(parseIdToken(obj.getId_token()));
