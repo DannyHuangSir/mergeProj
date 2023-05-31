@@ -1,15 +1,8 @@
 package com.twfhclife.generic.api_client;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.twfhclife.generic.api_model.*;
+import com.twfhclife.generic.model.KeycloakUserSession;
+import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -20,35 +13,36 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.twfhclife.generic.model.KeycloakUserSession;
-import com.twfhclife.generic.util.MyJacksonUtil;
-
 import javax.net.ssl.SSLContext;
+import java.util.*;
 
 @Service
-public class BaseRestClient {
+public class BaseRestClient implements InitializingBean {
 	private static final Logger logger = LogManager.getLogger(BaseRestClient.class);
 
-	@Value("${eservice_api.accessKey}")
 	private static String ESERVICE_API_SECRET;
+
+	@Value("${eservice_api.accessKey}")
+	private String accessKey;
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		ESERVICE_API_SECRET = accessKey;
+	}
 
 	public static String getAccessKey() {
 		return BaseRestClient.ESERVICE_API_SECRET;
 	}
-	
+
 	public static void setAccessKey(String accessKey) {
 		BaseRestClient.ESERVICE_API_SECRET = accessKey;
 	}
@@ -356,4 +350,5 @@ public class BaseRestClient {
 			return false;
 		}
 	}
+
 }
