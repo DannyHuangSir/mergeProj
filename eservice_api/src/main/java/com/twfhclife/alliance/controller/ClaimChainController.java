@@ -5,14 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.alliance.model.*;
+import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
+import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.web.model.*;
+import com.twfhclife.generic.utils.AesUtil;
+import com.twfhclife.generic.utils.ApConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -389,6 +395,12 @@ public class ClaimChainController{
 		return fileGroups;
 	}
 
+
+	@Value("${eservice.bxcz.414.callback.url}")
+	private String callBack414;
+
+	@Autowired
+	private IInsuranceClaimService insuranceClaimService;
 	@ApiRequest
 	@RequestMapping("/api414")
 	public Bxcz414ReturnVo callApi414(
