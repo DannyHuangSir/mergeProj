@@ -1,5 +1,8 @@
 package com.twfhclife.eservice_api.service.impl;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,6 +14,13 @@ import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,22 +83,19 @@ public class AuthoServiceImpl implements IAuthoService {
 	public AuthoServiceImpl(AuthoDao authoDao) {
 
 		this.authoDao = authoDao;
+		try {
+			SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+					SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+					NoopHostnameVerifier.INSTANCE);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
 
-		restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+			requestFactory.setHttpClient(httpClient);
 
-		// Set the request factory.
-		// IMPORTANT: This section I had to add for POST request. Not needed for GET
-		int milliseconds = 20*1000;
-		HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-		httpRequestFactory.setConnectionRequestTimeout(milliseconds);
-		httpRequestFactory.setConnectTimeout(milliseconds);
-		httpRequestFactory.setReadTimeout(milliseconds);
-		restTemplate.setRequestFactory(httpRequestFactory);
-
-		// Add converters
-		// Note I use the Jackson Converter, I removed the http form converter
-		// because it is not needed when posting String, used for multipart forms.
-		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+			restTemplate = new RestTemplate(requestFactory);
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			logger.debug("Create httpClient fail: {}", ExceptionUtils.getStackTrace(e));
+		}
 	}
 	
 	@Override
