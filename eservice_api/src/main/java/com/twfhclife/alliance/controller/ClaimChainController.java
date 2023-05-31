@@ -1,12 +1,15 @@
 package com.twfhclife.alliance.controller;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
-import com.twfhclife.alliance.model.MedicalRequestVo;
+import com.twfhclife.alliance.model.*;
+import com.twfhclife.eservice.web.model.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +22,8 @@ import com.twfhclife.alliance.domain.ClaimRequestVo;
 import com.twfhclife.alliance.domain.ClaimResponseVo;
 import com.twfhclife.alliance.domain.DnsRequestVo;
 import com.twfhclife.alliance.domain.DnsResponseVo;
-import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
-import com.twfhclife.alliance.model.InsuranceClaimVo;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
-import com.twfhclife.eservice.web.model.Division;
-import com.twfhclife.eservice.web.model.HospitalVo;
-import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
-import com.twfhclife.eservice.web.model.OutpatientType;
 import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.annotation.ApiRequest;
 import com.twfhclife.generic.utils.MyJacksonUtil;
@@ -391,7 +388,50 @@ public class ClaimChainController{
 		logger.info("End ClaimChainController.callAPI411().");
 		return fileGroups;
 	}
-	
+
+	@ApiRequest
+	@RequestMapping("/api414")
+	public Bxcz414ReturnVo callApi414(
+			@RequestBody Bxcz414CallBackVo vo) {
+		logger.info("Start ClaimChainController.callApi414().");
+		Bxcz414ReturnVo ret = new Bxcz414ReturnVo();
+		try {
+			//TODO verify actionId
+			if (StringUtils.isBlank(vo.getState())) {
+				ret.setCode("1");
+				ret.setMsg("此活動代碼不存在。");
+				return ret;
+			}
+			BxczState state = new Gson().fromJson(Base64.getEncoder().encodeToString(vo.getState().getBytes()), BxczState.class);
+			if (StringUtils.equals(state.getType(), ApConstants.INSURANCE_CLAIM)) {
+				TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
+				if (claimVo == null) {
+					ret.setCode("2");
+					ret.setMsg("非本公司保戶！");
+					return ret;
+				}
+				logger.debug("api414 TransInsuranceClaimVo: ", new Gson().toJson(claimVo));
+				ret.setCode("0");
+				ret.setIdNo(claimVo.getIdNo());
+				ret.setName(claimVo.getName());
+				ret.setBirdate(claimVo.getBirdate());
+				ret.setAcExpiredSec("300");
+				ret.setTo(claimVo.getTo());
+				ret.setRedirectUri(callBack414);
+				ret.setCpoaContent(Lists.newArrayList(vo.getIdVerifyType()));
+				ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getActionId(), state.getId()));
+				ret.setSeNo(claimVo.getTransNum());
+				return ret;
+			}
+		} catch (Exception e) {
+			logger.error("ClaimChainController.callApi414 error: " + e);
+			ret.setCode("500");
+			ret.setMsg("error");
+		}
+		logger.info("End ClaimChainController.callAPI411().");
+		return ret;
+	}
+
 	/**
      * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
      * @param responseJsonString
