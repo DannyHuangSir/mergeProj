@@ -543,6 +543,7 @@ public class AuthoServiceImpl implements IAuthoService {
 			requestData.add("code", req.getCode());
 			requestData.add("grant_type", req.getGrant_type());
 			requestData.add("redirect_uri", req.getRedirect_uri());
+			requestData.add("state", req.getState());
 
 			HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(requestData, headers);
 

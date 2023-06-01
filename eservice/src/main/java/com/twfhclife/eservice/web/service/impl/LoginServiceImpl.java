@@ -419,8 +419,8 @@ public class LoginServiceImpl implements ILoginService {
 	@Resource(name = "baseRestClient")
 	private BaseRestClient baseRestClient;
     @Override
-	public String doLoinBxcz(String code, String redirectUri) {
-		return baseRestClient.postApiResponse(new Gson().toJson(new BxczLoginRequest("authorization_code", code, redirectUri)), pbs102url, String.class).getResult();
+	public String doLoinBxcz(String code, String redirectUri, String state) {
+		return baseRestClient.postApiResponse(new Gson().toJson(new BxczLoginRequest("authorization_code", code, redirectUri, state)), pbs102url, String.class).getResult();
 	}
 
 	@Override

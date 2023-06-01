@@ -5,10 +5,11 @@ import java.io.Serializable;
 public class BxczLoginRequest implements Serializable {
 
 
-    public BxczLoginRequest(String grant_type, String code, String redirect_uri) {
+    public BxczLoginRequest(String grant_type, String code, String redirect_uri, String state) {
         this.grant_type = grant_type;
         this.code = code;
         this.redirect_uri = redirect_uri;
+        this.state = state;
     }
 
     public BxczLoginRequest() {
@@ -17,6 +18,15 @@ public class BxczLoginRequest implements Serializable {
     private String grant_type;
     private String code;
     private String redirect_uri;
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getGrant_type() {
         return grant_type;

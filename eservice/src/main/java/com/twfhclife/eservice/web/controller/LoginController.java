@@ -834,7 +834,7 @@ public class LoginController extends BaseUserDataController {
 				return "login";
 			}
 			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
-			String rocId = loginService.doLoinBxcz(param.getCode(), eserviceBxczRedirectUri);
+			String rocId = loginService.doLoinBxcz(param.getCode(), eserviceBxczRedirectUri, param.getState());
 			if (StringUtils.isBlank(rocId)) {
 				addAttribute("errorMessage", "login error!");
 				return "login";

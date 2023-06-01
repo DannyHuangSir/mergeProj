@@ -1,25 +1,14 @@
 package com.twfhclife.eservice_api.service;
 
-import java.util.List;
-import java.util.Map;
-
-import com.twfhclife.eservice.api.elife.domain.BxczLoginRequest;
-import com.twfhclife.generic.domain.ApiResponseObj;
-import org.apache.ibatis.annotations.Param;
-
-import com.twfhclife.eservice.api.adm.domain.FuncItemReqObj;
-import com.twfhclife.eservice.api.adm.domain.FuncListReqObj;
-import com.twfhclife.eservice.api.adm.domain.Function;
-import com.twfhclife.eservice.api.adm.domain.Role;
-import com.twfhclife.eservice.api.adm.domain.RoleFuncAuthReqObj;
-import com.twfhclife.eservice.api.adm.domain.Systems;
-import com.twfhclife.eservice.api.adm.domain.UserAuth;
-import com.twfhclife.eservice.api.adm.domain.UserFuncAuthReqVo;
-import com.twfhclife.eservice.api.adm.domain.UserRepresentation;
+import com.twfhclife.eservice.api.adm.domain.*;
 import com.twfhclife.eservice.api.adm.model.DepartmentVo;
 import com.twfhclife.eservice.api.adm.model.JobTitleVo;
+import com.twfhclife.eservice.api.elife.domain.BxczLoginRequest;
+import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.model.UserVo;
-import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Definite authorization service.
