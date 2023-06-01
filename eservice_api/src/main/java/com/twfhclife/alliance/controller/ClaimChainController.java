@@ -440,9 +440,36 @@ public class ClaimChainController{
 			ret.setCode("500");
 			ret.setMsg("error");
 		}
-		logger.info("End ClaimChainController.callAPI411().");
+		logger.info("End ClaimChainController.callAPI414().");
 		return ret;
 	}
+
+
+	@ApiRequest
+	@RequestMapping("/api415")
+	public Bxcz415ReturnVo callApi415(
+			@RequestBody Bxcz415CallBackVo vo) {
+		logger.info("Start ClaimChainController.callApi415().");
+		Bxcz415ReturnVo ret = new Bxcz415ReturnVo();
+		try {
+			int result = insuranceClaimService.updateSignRecordStatus(vo.getCode(), vo.getMsg(), vo.getData());
+			if (result > 0) {
+				ret.setCode("0");
+				ret.setMsg("success");
+			} else {
+				ret.setCode("-1");
+				ret.setMsg("活動編碼不存在！");
+				return ret;
+			}
+		} catch (Exception e) {
+			logger.error("ClaimChainController.callApi415 error: " + e);
+			ret.setCode("500");
+			ret.setMsg("error");
+		}
+		logger.info("End ClaimChainController.callAPI415().");
+		return ret;
+	}
+
 
 	/**
      * 檢核回傳的聯盟API jsonString中,指定欄位的指定值

@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.logging.XMLFormatter;
 import java.util.stream.Collectors;
 
+import com.twfhclife.eservice.auth.dao.BxczDao;
+import com.twfhclife.eservice.onlineChange.model.*;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -32,11 +34,6 @@ import com.twfhclife.eservice.onlineChange.dao.OnlineChangeDao;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.dao.TransInsuranceClaimDao;
 import com.twfhclife.eservice.onlineChange.dao.TransPolicyDao;
-import com.twfhclife.eservice.onlineChange.model.BankInfoVo;
-import com.twfhclife.eservice.onlineChange.model.BlackListVo;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
-import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
@@ -1150,5 +1147,16 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		return i;
 	}
 
+	@Autowired
+	private BxczDao bxczDao;
 
+    @Override
+    public int addSignBxczRecord(String actionId, String transNum, Date date) {
+        return bxczDao.insertBxczSignRecord(actionId, transNum, date);
+    }
+
+	@Override
+	public int updateSignRecordStatus(String code, String msg, Bxcz415CallBackDataVo vo) {
+		return bxczDao.updateBxczSignRecordByActionId(vo, code, msg);
+	}
 }
