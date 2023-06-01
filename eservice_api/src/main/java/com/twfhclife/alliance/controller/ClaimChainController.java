@@ -414,7 +414,7 @@ public class ClaimChainController{
 				ret.setMsg("此活動代碼不存在。");
 				return ret;
 			}
-			BxczState state = new Gson().fromJson(Base64.getEncoder().encodeToString(vo.getState().getBytes()), BxczState.class);
+			BxczState state = new Gson().fromJson(new String(Base64.getDecoder().decode(vo.getState())), BxczState.class);
 			if (StringUtils.equals(state.getType(), ApConstants.INSURANCE_CLAIM)) {
 				TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
 				if (claimVo == null) {
@@ -431,7 +431,7 @@ public class ClaimChainController{
 				ret.setTo(claimVo.getTo());
 				ret.setRedirectUri(callBack414);
 				ret.setCpoaContent(Lists.newArrayList(vo.getIdVerifyType()));
-				ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getActionId(), state.getId()));
+				ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
 				ret.setSeNo(claimVo.getTransNum());
 				return ret;
 			}
