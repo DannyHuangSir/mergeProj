@@ -8,6 +8,15 @@ public class BxczLoginRequest implements Serializable {
     private String grant_type;
     private String code;
     private String redirect_uri;
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getGrant_type() {
         return grant_type;

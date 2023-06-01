@@ -14,6 +14,17 @@ public class BxczLoginRequest implements Serializable {
         this.grant_type = grant_type;
         this.code = code;
         this.redirect_uri = redirect_uri;
+        this.state = state;
+    }
+
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getGrant_type() {
