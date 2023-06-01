@@ -1,5 +1,8 @@
 package com.twfhclife.eservice_api.service.impl;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,13 +14,19 @@ import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 import com.twfhclife.eservice.api.adm.domain.FuncItemReqObj;
@@ -44,6 +53,7 @@ import com.twfhclife.generic.model.UserAuthVoEntity;
 import com.twfhclife.generic.model.UserRepresentationEntity;
 import com.twfhclife.generic.model.UserVo;
 import com.twfhclife.generic.utils.MyStringUtil;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -73,22 +83,19 @@ public class AuthoServiceImpl implements IAuthoService {
 	public AuthoServiceImpl(AuthoDao authoDao) {
 
 		this.authoDao = authoDao;
+		try {
+			SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+					SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+					NoopHostnameVerifier.INSTANCE);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
 
-		restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+			requestFactory.setHttpClient(httpClient);
 
-		// Set the request factory.
-		// IMPORTANT: This section I had to add for POST request. Not needed for GET
-		int milliseconds = 20*1000;
-		HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-		httpRequestFactory.setConnectionRequestTimeout(milliseconds);
-		httpRequestFactory.setConnectTimeout(milliseconds);
-		httpRequestFactory.setReadTimeout(milliseconds);
-		restTemplate.setRequestFactory(httpRequestFactory);
-
-		// Add converters
-		// Note I use the Jackson Converter, I removed the http form converter
-		// because it is not needed when posting String, used for multipart forms.
-		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+			restTemplate = new RestTemplate(requestFactory);
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			logger.debug("Create httpClient fail: {}", ExceptionUtils.getStackTrace(e));
+		}
 	}
 	
 	@Override
@@ -528,19 +535,18 @@ public class AuthoServiceImpl implements IAuthoService {
 
 		try {
 
-			MultiValueMap<String, String> headerMap = new HttpHeaders();
-			headerMap.add("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
-			headerMap.add("Content-Type", "application/json;charset=UTF-8");
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-			BxczLoginRequest bxczLoginRequest = new BxczLoginRequest();
-			bxczLoginRequest.setCode(req.getCode());
-			bxczLoginRequest.setGrant_type("authorization_code");
-			bxczLoginRequest.setRedirect_uri(req.getRedirect_uri());
+			MultiValueMap<String, Object> requestData = new LinkedMultiValueMap<>();
+			requestData.add("code", req.getCode());
+			requestData.add("grant_type", req.getGrant_type());
+			requestData.add("redirect_uri", req.getRedirect_uri());
 
-			HttpEntity<BxczLoginRequest> entity = new HttpEntity<>(bxczLoginRequest, headerMap);
+			HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(requestData, headers);
 
-			ResponseEntity<BxczLoginResponse> resp = restTemplate.exchange(pbs102url,
-					HttpMethod.POST, entity, BxczLoginResponse.class);
+			ResponseEntity<BxczLoginResponse> resp = restTemplate.postForEntity(pbs102url, entity, BxczLoginResponse.class);
 			logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(resp));
 
 			if (!this.checkResponseStatus(resp)) {
@@ -548,7 +554,7 @@ public class AuthoServiceImpl implements IAuthoService {
 			}
 
 			BxczLoginResponse obj = resp.getBody();
-			bxczDao.insertBxczApiLog(req.getActionId(), "call", "PBS-102", new Gson().toJson(bxczLoginRequest), new Gson().toJson(obj));
+			bxczDao.insertBxczApiLog(req.getActionId(), "call", "PBS-102", new Gson().toJson(req), new Gson().toJson(obj));
 			if (obj != null) {
 				ApiResponseObj responseObj = new ApiResponseObj();
 				responseObj.setResult(obj.getId_token());
