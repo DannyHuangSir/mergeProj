@@ -539,16 +539,18 @@ public class AuthoServiceImpl implements IAuthoService {
 			headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes()));
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-			MultiValueMap<String, Object> requestData = new LinkedMultiValueMap<>();
+			MultiValueMap<String, String> requestData = new LinkedMultiValueMap<>();
 			requestData.add("code", req.getCode());
 			requestData.add("grant_type", req.getGrant_type());
 			requestData.add("redirect_uri", req.getRedirect_uri());
 			requestData.add("state", req.getState());
 
-			HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(requestData, headers);
+			logger.info("call pbs-102 headers: {}", MyJacksonUtil.object2Json(headers));
+			logger.info("call pbs-102 param: {}", MyJacksonUtil.object2Json(requestData));
+			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(requestData, headers);
 
 			ResponseEntity<BxczLoginResponse> resp = restTemplate.postForEntity(pbs102url, entity, BxczLoginResponse.class);
-			logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(resp));
+			logger.info("API ResponseEntity=" + MyJacksonUtil.object2Json(resp));
 
 			if (!this.checkResponseStatus(resp)) {
 				return null;
