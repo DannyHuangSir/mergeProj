@@ -82,4 +82,6 @@ public interface ITransService {
     Date getLastCompleteTime(String investmentConversionCode, String userId);
 
     int updateTransStatus(String transNum, String status);
+
+	int checkTransInSignProcess(String transNum);
 }

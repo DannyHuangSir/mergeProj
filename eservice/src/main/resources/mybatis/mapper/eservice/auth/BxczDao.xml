@@ -20,6 +20,6 @@
 	</update>
 
 	<select id="getSignRecordByActionId" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
-		SELECT TOP 1 ACTION_ID_START signStart, ACTION_ID_END signEnd FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE ACTION_ID = #{actionId}
+		SELECT TOP 1 ACTION_ID_START signStart, ACTION_ID_END signEnd, VERIFY_CODE verifyCode, VERIFY_MSG verifyMsg FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE ACTION_ID = #{actionId}
 	</select>
 </mapper>

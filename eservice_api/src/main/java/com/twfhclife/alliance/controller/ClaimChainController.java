@@ -8,9 +8,12 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.alliance.model.*;
+import com.twfhclife.eservice.onlineChange.model.Bxcz415CallBackDataVo;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.generic.utils.AesUtil;
 import com.twfhclife.generic.utils.ApConstants;
@@ -441,7 +444,7 @@ public class ClaimChainController{
 					ret.setAcExpiredSec("0");
 				}
 				ret.setTo(claimVo.getTo());
-				ret.setRedirectUri(callBack414);
+				ret.setRedirectUri(callBack414 + "?actionId=" + vo.getActionId());
 				ret.setCpoaContent(Lists.newArrayList(vo.getIdVerifyType()));
 				ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
 				ret.setSeNo(claimVo.getTransNum());
@@ -456,23 +459,43 @@ public class ClaimChainController{
 		return ret;
 	}
 
+	@Autowired
+	private ITransService transService;
 
 	@ApiRequest
 	@RequestMapping("/api415")
 	public Bxcz415ReturnVo callApi415(
 			@RequestBody Bxcz415CallBackVo vo) {
-		logger.info("Start ClaimChainController.callApi415().");
+		logger.info("Start ClaimChainController.callApi415(). param: {}", vo);
 		Bxcz415ReturnVo ret = new Bxcz415ReturnVo();
 		try {
-			int result = insuranceClaimService.updateSignRecordStatus(vo.getCode(), vo.getMsg(), vo.getData());
-			if (result > 0) {
-				ret.setCode("0");
-				ret.setMsg("success");
-			} else {
-				ret.setCode("-1");
-				ret.setMsg("活動編碼不存在！");
-				return ret;
+			if (vo.getData() != null && StringUtils.isNotBlank(vo.getData().getState())) {
+				Bxcz415CallBackDataVo data = vo.getData();
+				BxczState state = new Gson().fromJson(new String(Base64.getDecoder().decode(data.getState())), BxczState.class);
+				if (StringUtils.isNotBlank(state.getTransNum())) {
+					int process = transService.checkTransInSignProcess(state.getTransNum());
+					if (process <= 0) {
+						ret.setCode("-2");
+						ret.setMsg("數位身分驗證已簽署！");
+						return ret;
+					}
+					if (StringUtils.equals(vo.getCode(), "0")) {
+						transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+					} else if (StringUtils.equals(vo.getCode(), "-2")) {
+						transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+					} else if (StringUtils.equals(vo.getCode(), "-3")) {
+						transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+					}
+					int result = insuranceClaimService.updateSignRecordStatus(vo.getCode(), vo.getMsg(), data);
+					if (result > 0) {
+						ret.setCode("0");
+						ret.setMsg("success");
+						return ret;
+					}
+				}
 			}
+			ret.setCode("-1");
+			ret.setMsg("系統錯誤！");
 		} catch (Exception e) {
 			logger.error("ClaimChainController.callApi415 error: " + e);
 			ret.setCode("500");

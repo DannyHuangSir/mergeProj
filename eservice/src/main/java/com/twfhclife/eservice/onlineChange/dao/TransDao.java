@@ -84,4 +84,6 @@ public interface TransDao {
     Date getLastCompleteTime(@Param("transType") String transType, @Param("user") String userId);
 
     int updateTransStatus(@Param("transNum") String transNum, @Param("status")  String status);
+
+    int countInSignTrans(@Param("transNum") String transNum);
 }

@@ -291,4 +291,9 @@ public class TransServiceImpl implements ITransService {
     public int updateTransStatus(String transNum, String status) {
         return transDao.updateTransStatus(transNum, status);
     }
+
+    @Override
+    public int checkTransInSignProcess(String transNum) {
+        return transDao.countInSignTrans(transNum);
+    }
 }

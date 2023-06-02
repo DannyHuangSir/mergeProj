@@ -162,4 +162,8 @@
 	<update id="updateTransStatus">
 		update ESERVICE.DBO.TRANS SET STATUS = #{status} WHERE TRANS_NUM = #{transNum}
 	</update>
+
+	<select id="countInSignTrans" resultType="int">
+		SELECT COUNT(*) FROM ESERVICE.DBO.TRANS WHERE TRANS_NUM = #{transNum} AND STATUS IN ('41', '42')
+	</select>
 </mapper>

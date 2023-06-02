@@ -2,6 +2,7 @@ package com.twfhclife.eservice.web.controller;
 
 import com.auth0.jwt.internal.org.apache.commons.codec.digest.HmacUtils;
 import com.google.gson.Gson;
+import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
@@ -20,6 +21,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -70,5 +72,16 @@ public class BxczController extends BaseController {
             this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
+    }
+
+    @GetMapping("api418")
+    public String api418(String actionId) {
+        try {
+          addAttribute("sign",  insuranceClaimService.getSignRecord(actionId));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
+        }
+        return "frontstage/onlineChange/call-back-418";
     }
 }

@@ -7,6 +7,9 @@ public class SignRecord {
     private Date signStart;
     private Date signEnd;
 
+    private String verifyCode;
+    private String verifyMsg;
+
     public Date getSignStart() {
         return signStart;
     }
