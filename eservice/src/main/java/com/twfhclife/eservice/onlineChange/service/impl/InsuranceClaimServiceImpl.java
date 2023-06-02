@@ -2,6 +2,7 @@ package com.twfhclife.eservice.onlineChange.service.impl;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.generic.util.DateUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -1157,6 +1159,27 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 
 	@Override
 	public int updateSignRecordStatus(String code, String msg, Bxcz415CallBackDataVo vo) {
-		return bxczDao.updateBxczSignRecordByActionId(vo, code, msg);
+		Date signTime = null;
+		Date verifyTime = null;
+		if (StringUtils.isNotBlank(vo.getSignTime())) {
+			try {
+				signTime = new SimpleDateFormat("yyyyMMddHHmm").parse(vo.getSignTime());
+			} catch (ParseException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		if (StringUtils.isNotBlank(vo.getIdVerifyTime())) {
+			try {
+				verifyTime = new SimpleDateFormat("yyyyMMddHHmm").parse(vo.getIdVerifyTime());
+			} catch (ParseException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return bxczDao.updateBxczSignRecordByActionId(vo, code, msg, verifyTime, signTime);
+	}
+
+	@Override
+	public SignRecord getSignRecord(String actionId) {
+		return bxczDao.getSignRecordByActionId(actionId);
 	}
 }

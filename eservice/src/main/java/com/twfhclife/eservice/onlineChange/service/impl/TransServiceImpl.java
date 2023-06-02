@@ -286,4 +286,9 @@ public class TransServiceImpl implements ITransService {
     public Date getLastCompleteTime(String transType, String userId) {
         return transDao.getLastCompleteTime(transType, userId);
     }
+
+    @Override
+    public int updateTransStatus(String transNum, String status) {
+        return transDao.updateTransStatus(transNum, status);
+    }
 }

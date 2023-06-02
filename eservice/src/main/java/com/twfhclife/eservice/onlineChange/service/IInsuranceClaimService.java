@@ -133,4 +133,6 @@ public interface IInsuranceClaimService {
     int addSignBxczRecord(String actionId, String transNum, Date date);
 	
     int updateSignRecordStatus(String code, String msg, Bxcz415CallBackDataVo vo);
+
+	SignRecord getSignRecord(String actionId);
 }

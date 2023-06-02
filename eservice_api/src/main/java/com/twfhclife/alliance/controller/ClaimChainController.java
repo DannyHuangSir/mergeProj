@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.alliance.model.*;
+import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.web.model.*;
@@ -408,12 +409,19 @@ public class ClaimChainController{
 		logger.info("Start ClaimChainController.callApi414().");
 		Bxcz414ReturnVo ret = new Bxcz414ReturnVo();
 		try {
-			//TODO verify actionId
 			if (StringUtils.isBlank(vo.getState())) {
 				ret.setCode("1");
 				ret.setMsg("此活動代碼不存在。");
 				return ret;
 			}
+			SignRecord signRecord = insuranceClaimService.getSignRecord(vo.getActionId());
+
+			if (signRecord == null) {
+				ret.setCode("1");
+				ret.setMsg("此活動代碼不存在。");
+				return ret;
+			}
+
 			BxczState state = new Gson().fromJson(new String(Base64.getDecoder().decode(vo.getState())), BxczState.class);
 			if (StringUtils.equals(state.getType(), ApConstants.INSURANCE_CLAIM)) {
 				TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
@@ -427,7 +435,11 @@ public class ClaimChainController{
 				ret.setIdNo(claimVo.getIdNo());
 				ret.setName(claimVo.getName());
 				ret.setBirdate(claimVo.getBirdate());
-				ret.setAcExpiredSec("300");
+				if (signRecord.getSignStart() != null && signRecord.getSignEnd() != null) {
+					ret.setAcExpiredSec(String.valueOf((signRecord.getSignEnd().getTime() - System.currentTimeMillis()) / 1000));
+				} else {
+					ret.setAcExpiredSec("0");
+				}
 				ret.setTo(claimVo.getTo());
 				ret.setRedirectUri(callBack414);
 				ret.setCpoaContent(Lists.newArrayList(vo.getIdVerifyType()));

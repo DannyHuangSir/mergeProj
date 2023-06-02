@@ -158,4 +158,8 @@
 		AND STATUS = '2' AND USER_ID = #{user}
 		AND UPDATE_DATE IS NOT NULL ORDER BY UPDATE_DATE DESC
 	</select>
+
+	<update id="updateTransStatus">
+		update ESERVICE.DBO.TRANS SET STATUS = #{status} WHERE TRANS_NUM = #{transNum}
+	</update>
 </mapper>

@@ -3,6 +3,8 @@ package com.twfhclife.eservice.web.controller;
 import com.auth0.jwt.internal.org.apache.commons.codec.digest.HmacUtils;
 import com.google.gson.Gson;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.util.AesUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.BxczState;
@@ -43,6 +45,8 @@ public class BxczController extends BaseController {
 
     @Autowired
     private IInsuranceClaimService insuranceClaimService;
+    @Autowired
+    private ITransService transService;
 
     @PostMapping("/generateLipeiSignUrl")
     public ResponseEntity<ResponseObj> generateLipeiSignUrl(@RequestBody TransVo transVo, HttpServletRequest request) {
@@ -58,6 +62,7 @@ public class BxczController extends BaseController {
                 String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, transVo.getTransNum(), ApConstants.INSURANCE_CLAIM, encId)).getBytes())
                         + "&code=" + code;
                 insuranceClaimService.addSignBxczRecord(actionId, transVo.getTransNum(), new Date());
+                transService.updateTransStatus(transVo.getTransNum(), OnlineChangeUtil.TRANS_STATUS_PROCESS_SIGN);
                 this.setResponseObj(ResponseObj.SUCCESS, "", url);
             }
         } catch (Exception e) {

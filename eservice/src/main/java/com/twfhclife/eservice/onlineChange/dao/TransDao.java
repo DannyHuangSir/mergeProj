@@ -82,4 +82,6 @@ public interface TransDao {
 	String isTransNum(@Param("policyNo")String policyNo);
 
     Date getLastCompleteTime(@Param("transType") String transType, @Param("user") String userId);
+
+    int updateTransStatus(@Param("transNum") String transNum, @Param("status")  String status);
 }

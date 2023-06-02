@@ -12,10 +12,14 @@
 		VALUES (#{actionId}, #{transNum}, #{date}, DATEADD(second, 300, #{date}), 'N')
 	</insert>
 
-	<insert id="updateBxczSignRecordByActionId">
+	<update id="updateBxczSignRecordByActionId">
 		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD
-		SET VERIFY_CODE = #{code}, VERIFY_MSG = #{msg}, ID_VERIFY_STATUS = #{vo.idVerifyStatus}, ID_VERIFY_TIME = #{vo.idVerifyTime},
-		ID_VERIFY_TYPE = #{vo.idVerifyType}, SIGN_FILEID = #{vo.signFileId}, SIGN_STATUS = #{vo.signStatus}, SIGN_TIME = #{vo.signTime}
+		SET VERIFY_CODE = #{code}, VERIFY_MSG = #{msg}, ID_VERIFY_STATUS = #{vo.idVerifyStatus}, ID_VERIFY_TIME = #{idVerifyTime},
+		ID_VERIFY_TYPE = #{vo.idVerifyType}, SIGN_FILEID = #{vo.signFileId}, SIGN_STATUS = #{vo.signStatus}, SIGN_TIME = #{signTime}
 		WHERE ACTION_ID = #{vo.actionId}
-	</insert>
+	</update>
+
+	<select id="getSignRecordByActionId" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
+		SELECT TOP 1 ACTION_ID_START signStart, ACTION_ID_END signEnd FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE ACTION_ID = #{actionId}
+	</select>
 </mapper>
