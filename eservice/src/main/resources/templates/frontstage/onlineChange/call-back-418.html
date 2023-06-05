@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+    <title>線上申請｜臺銀人壽保單網路服務</title>
+    <style type="text/css">
+        .sign-title {
+            color: orange;
+            font-size: 40px;
+            margin-top: 15%;
+            font-weight: 600;
+        }
+    </style>
+</head>
+    <body>
+        <div style="text-align: center;">
+            <div class="sign-title" th:if="${idVerifyStatus} =='CASE_I'">
+                尚未身分驗證
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='MID_S'">
+                MID身分驗證完成
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='PBS_S'">
+                保險存摺身分驗證完成
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='EZ_OTP_S'">
+                便利入口驗證完成
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='EZ_OTP_F'">
+                便利入口驗證失敗
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='EZ_OTP_E'">
+                便利入口有效期限逾期
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='IDS_S'">
+                身分驗證中心驗證完成
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='IDS_F'">
+                身分驗證中心驗證失敗
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='IDS_E'">
+                身分驗證中心有效期限逾期
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='ACT_E'">
+                活動編碼有效期限逾期
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='MID_F'">
+                MID驗證失敗
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='PBS_F'">
+                保險存摺登入/註冊失敗
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='PBS_N'">
+                保險存摺分非白金會員
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='MID_S_ID_F'">
+                MID身分驗證完成身分證字號不符
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='PBS_S_ID_F'">
+                保險存摺身分驗證身分證字號不符
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='EZ_OTP_S_ID_F '">
+                便利入口驗證完成身分證字號不符
+            </div>
+            <div class="sign-title" th:if ="${idVerifyStatus} =='IDS_S_ID_F'">
+                身分驗證中心驗證完成身分證字號不符
+            </div>
+            <div class="sign-title" th:if ="${signStatus} == 'SIGN_I'">
+                尚未簽署
+            </div>
+            <div class="sign-title" th:if ="${signStatus} == 'SIGN_U_S'">
+                保戶簽署完成
+            </div>
+            <div class="sign-title" th:if ="${signStatus} == 'SIGN_L_S'">
+                公會簽署完成
+            </div>
+            <div class="sign-title" th:if ="${signStatus} == 'SIGN_U_F'">
+                保戶簽署失敗
+            </div>
+            <div class="sign-title" th:if ="${signStatus} == 'SIGN_L_F'">
+                公會簽署失敗
+            </div>
+            <div class="sign-title" th:if ="${signStatus} == 'SIGN_E'">
+                文件簽署逾期
+            </div>
+            <div style="font-size: 16px;">
+                如有疑問，請先至臺銀人壽會員專區查詢或請電洽:<br/>
+                免費客服電話0800-011966，我們將竭誠爲您服務。<br/>
+            </div>
+        </div>
+    <script>
+        window.onload = function() {
+            setTimeout("javascript:closeWindow();", 3000)
+        }
+        firefox = navigator.userAgent.indexOf('Firefox')
+        function closeWindow() {
+            window.location.href="about:blank";
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+        }
+    </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.web.controller;
 
 import com.auth0.jwt.internal.org.apache.commons.codec.digest.HmacUtils;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
@@ -74,10 +75,16 @@ public class BxczController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
     }
 
-    @GetMapping("api418")
-    public String api418(String actionId) {
+    @GetMapping("callBack418")
+    public String callBack418(String idVerifyStatus, String signStatus) {
         try {
-          addAttribute("sign",  insuranceClaimService.getSignRecord(actionId));
+            if (StringUtils.isNotBlank(idVerifyStatus) && Lists.newArrayList("MID_S", "PBS_S", "EZ_OTP_S", "IDS_S").contains(idVerifyStatus)) {
+                addAttribute("signStatus", signStatus);
+                addAttribute("idVerifyStatus",  "");
+            } else {
+                addAttribute("signStatus",  "");
+                addAttribute("idVerifyStatus",  idVerifyStatus);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
