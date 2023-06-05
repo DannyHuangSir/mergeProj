@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.twfhclife.common.util.EncryptionUtil;
 import com.twfhclife.eservice.web.model.*;
+import com.twfhclife.generic.api_client.BaseRestClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -832,6 +834,14 @@ public class LoginController extends BaseUserDataController {
 				resetVerifyCode();
 				addAttribute("errorMessage", "ActionId錯誤！");
 				return "login";
+			}
+			if (StringUtils.isBlank(BaseRestClient.getAccessKey())) {
+				try {
+					String encrypAccessKey = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "eservice_api.accessKey");
+					BaseRestClient.setAccessKey(EncryptionUtil.Decrypt(encrypAccessKey));
+				} catch (Exception e) {
+					logger.error("Set API access key error: ", e);
+				}
 			}
 			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
 			String idToken = loginService.doLoinBxcz(bxczState.getActionId(), param.getCode(), eserviceBxczRedirectUri);
