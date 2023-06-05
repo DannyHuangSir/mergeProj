@@ -309,4 +309,25 @@ public class AllianceServiceImpl implements IExternalService{
 	
 	
 	
+
+	@Override
+	public String postForJson(String url, HttpHeaders headers, Map<String, String> params) throws Exception  {
+		Gson gson = new Gson();
+		String json = gson.toJson(params);
+		logger.info("resquest json="+json);
+		HttpEntity<String> entity = new HttpEntity<String>(json,headers);
+		ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
+		boolean checkResp  = this.checkResponseStatus(responseEntity);//check http status
+		boolean checkCode0 = false;
+		if(checkResp) {
+			if (responseEntity!=null && responseEntity.getBody()!=null) {
+				checkCode0 = checkLiaAPIResponseValue(responseEntity.getBody(), "/code", "0");
+			}
+		}
+		if (checkCode0 && checkResp) {
+			return MyJacksonUtil.readValue(responseEntity.getBody(), "/code/data/content");
+		} else {
+			return null;
+		}
+	}
 }

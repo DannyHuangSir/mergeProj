@@ -22,4 +22,17 @@
 	<select id="getSignRecordByActionId" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
 		SELECT TOP 1 ACTION_ID_START signStart, ACTION_ID_END signEnd, VERIFY_CODE verifyCode, VERIFY_MSG verifyMsg FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE ACTION_ID = #{actionId}
 	</select>
+
+	<select id="getNotDownloadSignFile" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
+		SELECT SIGN_FILEID fileId, ACTION_ID actionId FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE SIGN_FILEID IS NOT NULL AND SIGN_DOWNLOAD = 'N'
+	</select>
+
+	<update id="updateSignDownloaded">
+		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD SET SIGN_DOWNLOAD = 'Y' WHERE ACTION_ID = #{actionId}
+	</update>
+
+	<insert id="insertSignFileData">
+		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_RECORD(FILE_ID, COMPANY_ID, CONTENT_BASE64)
+		VALUES (#{fileId}, #{companyId}, #{fileBase64})
+	</insert>
 </mapper>

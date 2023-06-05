@@ -11,6 +11,9 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.google.common.collect.Maps;
+import com.twfhclife.eservice.onlineChange.model.SignRecord;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -21,6 +24,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -65,61 +70,61 @@ import com.twfhclife.generic.utils.MyJacksonUtil;
 
 @Component
 public class AllianceServiceTask {
-	
+
 	Log log = LogFactory.getLog(AllianceServiceTask.class);
 	Logger logger = LoggerFactory.getLogger(AllianceServiceTask.class);
 
 	public static final String CODE_SUCCESS = "0";
-	
+
 	public static final String MSG_SUCCESS = "SUCCESS";
-	
-	
+
+
 	@Autowired
 	IClaimChainService claimChainService;
 
 	@Autowired
 	IExternalService allianceService;
-	
+
 	@Value("${upload.file.save.path}")
 	private String FILE_SAVE_PATH;
-	
+
 	@Autowired
 	ITransService transService;
-	
+
 	@Autowired
 	ITransAddService transAddService;
-	
+
 	@Autowired
 	ILilipmService iLilipmService;
-	
+
 	//@Value("${alliance.api101.url}")
 	public String URL_API101;
-	
+
 	//@Value("${alliance.api102.url}")
 	public String URL_API102;
-	
+
 	//@Value("${alliance.api103.url}")
 	public String URL_API103;
-	
+
 	//@Value("${alliance.api104.url}")
 	public String URL_API104;
-	
+
 	//@Value("${alliance.api105.url}")
 	public String URL_API105;
-	
+
 	//@Value("${alliance.api106.url}")
 	public String URL_API106;
-	
+
 	//@Value("${cron.api.disable}")
 	public String API_DISABLE;
-	
+
 	@Autowired
 	@Qualifier("apiParameterService")
 	private IParameterService parameterService;
-	
+
 	@Autowired
     private AllianceServiceImpl allianceServiceImpl;
-	
+
 	@Autowired
 	private IInsuranceClaimService insuranceClaimService;
 
@@ -128,56 +133,56 @@ public class AllianceServiceTask {
 
 	@Autowired
 	private SmsService smsService;
-	
+
 	@Autowired
 	private MailService mailService;
-	
+
 	@PostConstruct
 	public void doAllianceServiceTask() {
 		List<ParameterVo> resultSCHList = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, ApConstants.SYS_PRO_SCH);
-    	List<ParameterVo> resultURLList = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, ApConstants.SYS_PRO_API_URL);
-    	List<ParameterVo> resultBASELList = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, ApConstants.SYS_PRO_BASE_URL);
-    	if (resultBASELList != null) {
-    		resultBASELList.forEach(parameterItem ->{
-        		if ("alliance.api.accessToken".equals(parameterItem.getParameterName())) {
-        			allianceServiceImpl.setACCESS_TOKEN(parameterItem.getParameterValue());
-        		}
-        	});
-    	} 
-    	if (resultURLList != null) {
-	    	resultURLList.forEach(parameterItem -> {
-	    		if ("alliance.api101.url".equals(parameterItem.getParameterName())) {
-	    			this.setURL_API101(parameterItem.getParameterValue());
-	    		}
-	    		if ("alliance.api102.url".equals(parameterItem.getParameterName())) {
-	    			this.setURL_API102(parameterItem.getParameterValue());
-	    		}
-	    		if ("alliance.api103.url".equals(parameterItem.getParameterName())) {
-	    			this.setURL_API103(parameterItem.getParameterValue());
-	    		}
-	    		if ("alliance.api104.url".equals(parameterItem.getParameterName())) {
-	    			this.setURL_API104(parameterItem.getParameterValue());
-	    		}
-	    		if ("alliance.api105.url".equals(parameterItem.getParameterName())) {
-	    			this.setURL_API105(parameterItem.getParameterValue());
-	    		}
-	    		if ("alliance.api106.url".equals(parameterItem.getParameterName())) {
-	    			this.setURL_API106(parameterItem.getParameterValue());
-	    		}
-	    	});
-    	}
-    	if (resultSCHList != null) {
-    		resultSCHList.forEach(parameterItem -> {
-    			if ("cron.api.disable".equals(parameterItem.getParameterName())) {
-        			this.setAPI_DISABLE(parameterItem.getParameterValue());
-        		}else {
-        			if (System.getProperty(parameterItem.getParameterName()) == null) {
+		List<ParameterVo> resultURLList = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, ApConstants.SYS_PRO_API_URL);
+		List<ParameterVo> resultBASELList = parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, ApConstants.SYS_PRO_BASE_URL);
+		if (resultBASELList != null) {
+			resultBASELList.forEach(parameterItem ->{
+				if ("alliance.api.accessToken".equals(parameterItem.getParameterName())) {
+					allianceServiceImpl.setACCESS_TOKEN(parameterItem.getParameterValue());
+				}
+			});
+		}
+		if (resultURLList != null) {
+			resultURLList.forEach(parameterItem -> {
+				if ("alliance.api101.url".equals(parameterItem.getParameterName())) {
+					this.setURL_API101(parameterItem.getParameterValue());
+				}
+				if ("alliance.api102.url".equals(parameterItem.getParameterName())) {
+					this.setURL_API102(parameterItem.getParameterValue());
+				}
+				if ("alliance.api103.url".equals(parameterItem.getParameterName())) {
+					this.setURL_API103(parameterItem.getParameterValue());
+				}
+				if ("alliance.api104.url".equals(parameterItem.getParameterName())) {
+					this.setURL_API104(parameterItem.getParameterValue());
+				}
+				if ("alliance.api105.url".equals(parameterItem.getParameterName())) {
+					this.setURL_API105(parameterItem.getParameterValue());
+				}
+				if ("alliance.api106.url".equals(parameterItem.getParameterName())) {
+					this.setURL_API106(parameterItem.getParameterValue());
+				}
+			});
+		}
+		if (resultSCHList != null) {
+			resultSCHList.forEach(parameterItem -> {
+				if ("cron.api.disable".equals(parameterItem.getParameterName())) {
+					this.setAPI_DISABLE(parameterItem.getParameterValue());
+				}else {
+					if (System.getProperty(parameterItem.getParameterName()) == null) {
 						logger.info("set parameter: {}, {}", parameterItem.getParameterName(), parameterItem.getParameterValue());
-        				System.setProperty(parameterItem.getParameterName(), parameterItem.getParameterValue());
-        			}
-        		}
+						System.setProperty(parameterItem.getParameterName(), parameterItem.getParameterValue());
+					}
+				}
             });
-    	}
+		}
 	}
 
 	@Value("${cron.api101.expression.enable: true}")
@@ -242,7 +247,7 @@ public class AllianceServiceTask {
 //			log.error(e);
 //		}
 		//testcode
-		
+
 		if("N".equals(API_DISABLE)){
 			int rtn = -1;
 			try {
@@ -267,7 +272,7 @@ public class AllianceServiceTask {
 								icvo.setCode(CODE_SUCCESS);
 								icvo.setMsg(msg);
 								icvo.setStatus(InsuranceClaimVo.STATUS_UPLOADED);
-								
+
 								//依fileName,塞好回傳的fileId-start
 								boolean fileIdSaveOK = false;
 								List<InsuranceClaimFileDataVo> targetFileDatas = icvo.getFileDatas();
@@ -290,30 +295,30 @@ public class AllianceServiceTask {
 								}
 								icvo.setFileDatas(targetFileDatas);
 								//依fileName,塞好回傳的fileId-end
-								
+
 								if(fileIdSaveOK) {
 									rtn = claimChainService.updateCaseIdByClaimSeqId(icvo);
 								}
-								
+
 								if(rtn>0) {
 									//更新INSURANCE_CLAIM
 									rtn = claimChainService.updateInsuranceAfterUploadToAlliance(icvo);
 								}
-								
+
 							}
-							
+
 						}
 					}
-				
+
 				}
-				
+
 			}catch(Exception e) {
 				log.error(e.toString());
 			}
 		}//end-if
-    	
-		
-    	log.info("End API-101 Task.");
+
+
+		log.info("End API-101 Task.");
 	}
 
 	@Value("${cron.api102.expression.enable: true}")
@@ -330,7 +335,7 @@ public class AllianceServiceTask {
 		}
 		log.info("Start API-102 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
-		
+
 		//testcode
 //		try {
 //			Map<String,String> testparams = new HashMap<>();
@@ -343,12 +348,12 @@ public class AllianceServiceTask {
 //			log.error(e);
 //		}
 		//testcode
-		
+
 		if("N".equals(API_DISABLE)){
-			
+
 			try {
 				//NOTIFY_SEQ_ID is null,STATUS!=已撤消，且傳送聯盟=Y,收到紙本FILE_RECEIVED=1
-				List<InsuranceClaimMapperVo> listIC = 
+				List<InsuranceClaimMapperVo> listIC =
 						claimChainService.getInsuranceClaimByFileReceived(InsuranceClaimMapperVo.FILE_RECEIVED_YES);
 				if(listIC!=null && listIC.size()>0) {
 					for(InsuranceClaimMapperVo vo : listIC) {
@@ -361,13 +366,13 @@ public class AllianceServiceTask {
 						unParams.put("name", "API-102上傳收到案件之紙本註記");
 						unParams.put("caseId", vo.getCaseId());
 						unParams.put("transNum", vo.getTransNum());
-						
+
 						String strResponse = allianceService.postForEntity(URL_API102, params, unParams);
-						
+
 						if(strResponse!=null) {
 							apiCode = MyJacksonUtil.readValue(strResponse, "/code");
 						}
-						
+
 						//code=0,update FILE_RECEIVED=OK
 						if("0".equals(apiCode)) {
 							vo.setFileReceived(InsuranceClaimVo.FILE_RECEIVED_OK);
@@ -379,13 +384,14 @@ public class AllianceServiceTask {
 				log.error(e.toString());
 			}
 		}//end-if
-		
-    	log.info("End API-102 Task.");
+
+		log.info("End API-102 Task.");
 
 	}
 
 	@Value("${cron.api103.expression.enable: true}")
 	public boolean api103Enable;
+
 	/**
 	 * 查詢是否收到案件之紙本
 	 */
@@ -409,10 +415,10 @@ public class AllianceServiceTask {
 //				}
 //				log.info("testfilereceived="+testfilereceived);
 				//testcode
-	
+
 				//1.以INSURANCE_CLAIM的NOTIFY_SEQ_ID is not null,caseId!=null,code=0資料call api-103，
 				List<InsuranceClaimMapperVo> vos = claimChainService.getAllianceCaseByFileReceivedNotYet();
-				
+
 				//2.update to INSURANCE_CLAIM.FILE_RECEIVED
 				if(vos!=null && vos.size()>0) {
 					for(InsuranceClaimMapperVo vo : vos) {
@@ -421,26 +427,26 @@ public class AllianceServiceTask {
 							//2.1.CALL API103,fileReceived=?
 							Map<String,String> params = new HashMap<>();
 							params.put("caseId", vo.getCaseId());
-							
+
 							//聯盟鏈歷程參數
 							Map<String,String> unParams = new HashMap<>();
 							unParams.put("name", "API-103查詢是否收到案件之紙本");
 							unParams.put("caseId", vo.getCaseId());
 							unParams.put("transNum", vo.getTransNum());
 							String strResponse = allianceService.postForEntity(URL_API103, params, unParams);
-							
+
 							if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
 								fileReceived = MyJacksonUtil.readValue(strResponse, "/data/fileReceived");
 							}
-	
+
 							//2.2.UPDATE-"1":收到,"2":沒收到
-							if(InsuranceClaimMapperVo.FILE_RECEIVED_YES.equals(fileReceived) 
+							if(InsuranceClaimMapperVo.FILE_RECEIVED_YES.equals(fileReceived)
 									|| InsuranceClaimMapperVo.FILE_RECEIVED_NO.equals(fileReceived)){//只有1 or 2是合法值
 								vo.setFileReceived(fileReceived);
 								int rtn = claimChainService.updateFileReceived(vo);
 								log.info("***Try to update INSURANCE_CLAIM.FILE_RECEIVED="+fileReceived+",CASE_ID="+vo.getCaseId()+"***");
 								log.info("***update rtn="+rtn+"***");
-								
+
 								if(InsuranceClaimMapperVo.FILE_RECEIVED_YES.equals(fileReceived)) {
 									//1.try to update TRANS_INSURANCE_CLAIM,set FILE_RECEIVED='1' by CASE_ID
 									vo.setFileReceived(InsuranceClaimMapperVo.FILE_RECEIVED_YES);
@@ -450,17 +456,17 @@ public class AllianceServiceTask {
 									//2.update successed, send mail to systemAdmin.
 								}
 							}
-							
+
 						}
 					}
 				}
-	
+
 			}catch(Exception e) {
 				log.error(e.toString());
 			}
 		}//end-if
-		
-    	log.info("End API-103 Task.");
+
+		log.info("End API-103 Task.");
 
 	}
 
@@ -477,7 +483,7 @@ public class AllianceServiceTask {
 		}
 		log.info("Start API-104 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
-		
+
 		//testcode
 //		try {
 //			Map<String,String> testparams = new HashMap<>();
@@ -490,15 +496,15 @@ public class AllianceServiceTask {
 //			log.error(e);
 //		}
 		//testcode
-		
-		
+
+
 		if("N".equals(API_DISABLE)){
-			
+
 			try {
 				//1.上傳件且上傳且未成功:NOTIFY_SEQ_ID=null and UPPER(MSG)!='SUCCESS'
 				InsuranceClaimFileDataVo vo = new InsuranceClaimFileDataVo();
 				List<InsuranceClaimFileDataVo> files = claimChainService.getFileDataToUpload(vo);
-				
+
 				//2.call api-104
 				if(files!=null &&files.size()>0) {
 					for(InsuranceClaimFileDataVo fileVo : files) {
@@ -506,7 +512,7 @@ public class AllianceServiceTask {
 							//2.1.call api-104
 							Map<String,String> params = new HashMap<>();
 							params.put("fileId", fileVo.getFileId());
-							
+
 							String strBase64 = null;
 							if(fileVo.getFileBase64()!=null ) {
 								log.info("取用自file_base64 string.");
@@ -517,13 +523,13 @@ public class AllianceServiceTask {
 								strBase64 = this.converFileToBase64Str(fileVo.getPath()+"/"+fileVo.getFileName());
 							}
 							params.put("base64", strBase64);
-							
+
 							if(strBase64!=null) {
 								log.info("strBase64.length()="+strBase64.length());
 							}else {
 								log.info("strBase64 is null.");
 							}
-							
+
 							//聯盟鏈歷程參數
 							InsuranceClaimMapperVo insVo = claimChainService.getCaseIdBySeqId(fileVo.getClaimSeqId());
 							Map<String,String> unParams = new HashMap<>();
@@ -531,32 +537,33 @@ public class AllianceServiceTask {
 							unParams.put("caseId", insVo.getCaseId());
 							unParams.put("transNum", insVo.getTransNum());
 							String strResponse = allianceService.postForEntity(URL_API104, params,unParams);
-							
+
 							//2.2.若回傳msg='SUCCESS',
 							//update FILE_STATUS='1',INSURANCE_CLAIM_FILEDATAS.MSG='SUCCESS',UPDATE_MSG_DATE=getdate()
 							if(checkLiaAPIResponseValue(strResponse,"/code","0")) {//已有檔案上傳時聯盟會擋重覆上傳
 								String msg = MyJacksonUtil.readValue(strResponse, "/msg");
 								fileVo.setMsg(msg);
 								fileVo.setFileStatus(InsuranceClaimFileDataVo.FILE_STATUS_UPLOADED);
-								
+
 								int rtn = claimChainService.updateFileStatusByFileId(fileVo);
 							}
 
 						}
 					}
 				}
-				
+
 			}catch(Exception e) {
 				log.error(e.toString());
 			}
 		}//end-if
-		
-    	log.info("End API-104 Task.");
+
+		log.info("End API-104 Task.");
 
 	}
 
 	@Value("${cron.api105.expression.enable: true}")
 	public boolean api105Enable;
+
 	/**
 	 * 查詢理賠案件
 	 */
@@ -567,7 +574,7 @@ public class AllianceServiceTask {
 		}
 		log.info("Start API-105 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
-		
+
 		//testcode
 //		try {
 //			String teststrResponse = "{\"code\": \"0\",\"msg\": \"SUCCESS\",\"data\": {\"name\": \"王大明\",\"idNo\": \"A123456789\",\"birdate\": \"19910415\",\"phone\": \"0912345678\",\"zipCode\": \"70157\",\"address\": \"台北市中正區信義路一段 21-3號\",\"mail\": \" abc@test.com.tw \",\"paymentMethod\": \"1\",\"bankCode\": \"004\",\"branchCode\": \"0107\",\"bankAccount\": \"12345678901234\",\"applicationDate\": \"20190105\",\"applicationTime\": \"1520\",\"applicationItem\": \"1\",\"job\": \"老師\",\"jobDescr\": \"工作描述\",\"accidentDate\": \"20190101\",\"accidentTime\": \"1520\",\"accidentCause\": \"1\",\"accidentLocation\": \"台北市中正區信義路一段\",\"accidentDescr\": \"遭計程車追撞\",\"policeStation\": \"臺北市政府警察局大安分局安和路派出所\",\"policeName\": \"王小明\",\"policePhone\": \"0987654321\",\"policeDate\": \"20190101\",\"policeTime\": \"1530\",\"from\": \"L01\",\"to\": [{\"companyId\": \"L02\"}, {\"companyId\": \"L03\"}],\"fileDatas\": [{\"fileId\": \"48c37063-f09a-4934-be64-127574b640c5\",\"size\": \"300\",\"type\": \"A\",\"fileName\": \"20200122121250L01-A00001-A.pdf\",\"fileStatus\": \"1\",\"path\": \"/L01/202003/wKODkASHSAiMmM5P77JdYg/\"}, {\"fileId\": \"fd2406de-3c26-45b4-8518-497f856cee52\",\"size\": \"300\",\"type\": \"B\",\"fileName\": \"20200122121250L01-A00001-B.pdf\",\"fileStatus\": \"1\",\"path\": \"/L01/202003/wKODkASHSAiMmM5P77JdYg/\"}]}}";
@@ -584,16 +591,16 @@ public class AllianceServiceTask {
 //			log.error(e);
 //		}
 		//testcode
-		
-		
+
+
 		if("N".equals(API_DISABLE)){
-			
+
 			try {
 				InsuranceClaimVo icvo = null;
 				//1.取得聯盟通知新案件資料物件
-				ArrayList<NotifyOfNewCaseVo> newCases = 
+				ArrayList<NotifyOfNewCaseVo> newCases =
 						claimChainService.getNofifyOfNewCaseByNcStatus(NotifyOfNewCaseVo.NC_STATUS_ZERO);
-				
+
 				//2.call api-105
 				if(newCases!=null && newCases.size()>0) {
 					for(NotifyOfNewCaseVo vo : newCases) {
@@ -604,21 +611,21 @@ public class AllianceServiceTask {
 							//call api-105
 							Map<String,String> params = new HashMap<>();
 							params.put("caseId", vo.getCaseId());
-							
+
 							//聯盟鏈歷程參數
 							Map<String,String> unParams = new HashMap<>();
 							unParams.put("name", "API-105查詢理賠案件");
 							unParams.put("caseId", vo.getCaseId());
 							unParams.put("transNum", null);
 							String strResponse = allianceService.postForEntity(URL_API105, params, unParams);
-							
+
 							//icvo , get data form Api105;
 							if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
 								String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
 								//log.info("dataString="+dataString);
-								
+
 								//parser "to"-start
-								ObjectMapper mapper = new ObjectMapper();  
+								ObjectMapper mapper = new ObjectMapper();
 								java.util.List<JsonNode> listNode = mapper.readTree(dataString).findPath("to").findValues("companyId");
 								List<CompanyVo> listTo = null;
 								if(listNode!=null && listNode.size()>0) {
@@ -629,7 +636,7 @@ public class AllianceServiceTask {
 										listTo.add(tempCvo);
 										//System.out.println(jn.asText());
 									}
-									
+
 								}else {
 									log.error("to/company is null or empty.");
 									//System.out.println(listNode);
@@ -642,7 +649,7 @@ public class AllianceServiceTask {
 								dataString = rootNode.toString();
 								//log.info("after remove to dataString="+dataString);
 								//parser "to"-end
-								
+
 								Object obj = MyJacksonUtil.json2Object(dataString, InsuranceClaimVo.class);
 								log.info("after MyJacksonUtil.json2Object");
 								if(obj!=null) {
@@ -660,7 +667,7 @@ public class AllianceServiceTask {
 									log.info("obj is null.");
 								}
 							}
-							
+
 							if(icvo!=null) {
 								InsuranceClaimMapperVo mapperVo = new InsuranceClaimMapperVo();
 								BeanUtils.copyProperties(icvo,mapperVo);
@@ -677,10 +684,10 @@ public class AllianceServiceTask {
 										mapperVo.setTo(str);
 									}
 								}
-								
-								
+
+
 								mapperVo.setCaseId(caseId);
-								
+
 								//將聯盟通知件seqId塞入
 								mapperVo.setNotifySeqId(nofifySeqId);
 								List<InsuranceClaimFileDataVo> listFileData = mapperVo.getFileDatas();
@@ -692,36 +699,36 @@ public class AllianceServiceTask {
 									}
 									mapperVo.setFileDatas(listFileData);
 								}
-								
+
 								//以ROCID查被保人保單,判斷是否為保戶(20210528若該ID在本公司僅為要保人視為非本公司保戶方式，不接收資料)
 								//int k = iLilipmService.getInsuredUsersByRocId(mapperVo.getIdNo());//查(要保人+被保人)保單數
 								List<String> policyNos = allianceService.getPolicyNoByID(mapperVo.getIdNo());
-							    if(policyNos!=null && policyNos.size()>0) {//保戶
+								if(policyNos!=null && policyNos.size()>0) {//保戶
 									int iRtn = claimChainService.addInsuranceCliam(mapperVo);
 									if(iRtn>0) {//如果有查詢且儲存成功
 										vo.setNcStatus(NotifyOfNewCaseVo.NC_STATUS_ONE);
 										int ncupdate = claimChainService.updateNcStatusBySeqId(vo);
 									}
-							    }else {//非保戶
+								}else {//非保戶
 									vo.setNcStatus(NotifyOfNewCaseVo.NC_STATUS_ONE);
 									vo.setMsg(NotifyOfNewCaseVo.MSG);
 									claimChainService.updateNcStatusBySeqId(vo);
 									// to do send mail /sms
-							    }//end-if
-							
+								}//end-if
+
 							}//end-if
-					
+
 						}//end-if
-						
+
 					}//end-for
-					
+
 				}//end-if
 			}catch(Exception e) {
 				log.error(e.toString());
 			}
 		}//end-if
-		
-    	log.info("End API-105 Task.");
+
+		log.info("End API-105 Task.");
 
 	}
 
@@ -738,7 +745,7 @@ public class AllianceServiceTask {
 		}
 		log.info("Start API-106 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
-		
+
 		//testcode
 //		try {
 //			Map<String,String> testparams = new HashMap<>();
@@ -761,15 +768,15 @@ public class AllianceServiceTask {
 //		}catch(Exception e) {
 //			log.error(e);
 //		}
-		
+
 		//testcode
-		
+
 		if("N".equals(API_DISABLE)){
 			try {
 				//1.聯盟件且沒有下載記錄:INSURANCE_CLAIM_FILEDATAS.NOTIFY_SEQ_ID!=null and UPPER(INSURANCE_CLAIM_FILEDATAS.MSG)!='SUCCESS'
 				InsuranceClaimFileDataVo vo = new InsuranceClaimFileDataVo();
 				List<InsuranceClaimFileDataVo> files = claimChainService.getFileDataToDownload(vo);
-				
+
 				//2.call api-106下載檔案並於本地儲存
 				if(files!=null &&files.size()>0) {
 					for(InsuranceClaimFileDataVo fileVo : files) {
@@ -777,7 +784,7 @@ public class AllianceServiceTask {
 							//2.1.call api-106
 							Map<String,String> params = new HashMap<>();
 							params.put("fileId", fileVo.getFileId());
-							
+
 							//聯盟鏈歷程參數
 							InsuranceClaimMapperVo insVo = claimChainService.getCaseIdBySeqId(fileVo.getClaimSeqId());
 							Map<String,String> unParams = new HashMap<>();
@@ -785,7 +792,7 @@ public class AllianceServiceTask {
 							unParams.put("caseId", insVo.getCaseId());
 							unParams.put("transNum", insVo.getTransNum());
 							String strResponse = allianceService.postForEntity(URL_API106, params, unParams);
-						//	String strResponse = "{   \"code\": \"0\",   \"msg\": \"success\",   \"data\": {     \"name\": \"20200122121250L01-A00001.pdf \",     \"base64\": \"Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=\"}}";
+							//	String strResponse = "{   \"code\": \"0\",   \"msg\": \"success\",   \"data\": {     \"name\": \"20200122121250L01-A00001.pdf \",     \"base64\": \"Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=\"}}";
 							//2.2.回傳的msg='SUCCESS',將base64存成本地檔案
 							//String strPath   = fileVo.getPath();//假如strPath="./",即"jboss-eap7/";否則會存在當台LINUX所在的根目錄為起始
 							String strPath = FILE_SAVE_PATH;//使用本地設定路徑
@@ -796,10 +803,10 @@ public class AllianceServiceTask {
 								strBase64 = MyJacksonUtil.readValue(strResponse, "/data/base64");
 								fileName  = MyJacksonUtil.readValue(strResponse, "/data/name");
 								msg = MyJacksonUtil.readValue(strResponse, "/msg");
-								
+
 								boolean isSaveOK = false;
 								if(strBase64!=null) {
-									/*File file = new File("C:\\Users\\chenhui\\Desktop\\UCVVV.pdf");
+                                    /*File file = new File("C:\\Users\\chenhui\\Desktop\\UCVVV.pdf");
 									byte[] fileContent = FileUtils.readFileToByteArray(file);
 									String	 base64= Base64.getEncoder().encodeToString(fileContent);
 									*/
@@ -811,16 +818,16 @@ public class AllianceServiceTask {
 								//2.3.儲存完,update INSURANCE_CLAIM_FILEDATAS.MSG='SUCCESS'
 								if(isSaveOK) {
 									//进行获取TRANS_INSURANCE_CLAIM_FILEDATAS  的ID编号
-									  claimChainService.updateFileStatusByFileId(fileVo);
+									claimChainService.updateFileStatusByFileId(fileVo);
 									int i = claimChainService.updateInsuranceClaimFileBase64(fileVo);
 									log.info("updateInsuranceClaimFileBase64 "+i +"第一次更新");
 									if (i>0) {
 										//若FILEDATAS有同FILE_ID一併更新,若更新失敗不能影響檔案內容下載
 										//  TODO 便於後續使用fileId  對 TRANS_INSURANCE_CLAIM_FILEDATAS  更新 Base64
 
-									  //目前	ESERVICE.DBO.TRANS_INSURANCE_CLAIM_FILEDATAS  中
-									  //是沒有FileId欄目檔案編號,待明日確認后,是否可以添加該欄目,
-									  //在進行修改SQL添加即可
+										//目前	ESERVICE.DBO.TRANS_INSURANCE_CLAIM_FILEDATAS  中
+										//是沒有FileId欄目檔案編號,待明日確認后,是否可以添加該欄目,
+										//在進行修改SQL添加即可
 										try {
 											String fileId = fileVo.getFileId();
 											if (fileId != null) {
@@ -841,11 +848,11 @@ public class AllianceServiceTask {
 
 							if(checkLiaAPIResponseValue(strResponse,"/code","10606")) {//error control-檔案查詢查無資料
 								msg = MyJacksonUtil.readValue(strResponse, "/msg");
-								
+
 								fileVo.setMsg(msg);
 								int rtn = claimChainService.updateFileStatusByFileId(fileVo);
 							}//end code=10606
-							
+
 						}
 					}
 				}
@@ -853,16 +860,54 @@ public class AllianceServiceTask {
 			}catch(Exception e) {
 				log.error(e.toString());
 			}
-			
-		}//end-if
-		
-    	log.info("End API-106 Task.");
 
+		}//end-if
+
+		log.info("End API-106 Task.");
+
+	}
+
+	@Value("${eservice.bxcz.login.client_id}")
+	private String clientId;
+	@Value("${eservice.bxcz.login.client_secret}")
+	private String clientSecret;
+	@Value("${eservice.bxcz.417.url}")
+	private String api417Url;
+	@Value("${cron.api417.expression.enable: true}")
+	public boolean api417Enable;
+
+	@Scheduled(cron = "${cron.api417.expression}")
+	public void callApi417() {
+		if (!api417Enable) {
+			return;
+		}
+
+		log.info("Start call api417.");
+		log.info("API_DISABLE=" + API_DISABLE);
+		List<SignRecord> fileIds = claimChainService.getNotDownloadSignFile();
+		if (CollectionUtils.isNotEmpty(fileIds)) {
+			fileIds.forEach(s -> {
+				Map<String, String> params = Maps.newHashMap();
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Access-Token", clientSecret);
+				headers.setContentType(MediaType.APPLICATION_JSON);
+				try {
+					String fileBase64 = allianceService.postForJson(api417Url, headers, params);
+					if (CollectionUtils.isNotEmpty(fileIds)) {
+						claimChainService.updateSignDownloaded(s.getActionId());
+						claimChainService.addSignFileData(s.getFileId(), clientId, fileBase64);
+					}
+				} catch (Exception e) {
+					logger.error("call api417 error: {}, {}, {}", headers, params, e);
+				}
+			});
+		}
+		log.info("End call api417.");
 	}
 
 	@Value("${cron.saveToEserviceTrans.expression.enable: true}")
 	public boolean saveToEserviceTransEnable;
-	
+
 	@Scheduled(cron = "${cron.saveToEserviceTrans.expression}")
 	public void saveToEserviceTrans() {
 		if (!saveToEserviceTransEnable) {
@@ -874,20 +919,20 @@ public class AllianceServiceTask {
 		//2.未送到eservice.trans(TRANS_NUM is null)
 		//3.首家保險公司已取得紙本註記(FILE_RECEIVED='1')
 		//4.所有附加檔案已下載完成
-		
+
 		log.info("Start saveToEserviceTrans.");
 		log.info("API_DISABLE="+API_DISABLE);
-		
+
 		if("N".equals(API_DISABLE)){
 			try {
 				List<InsuranceClaimMapperVo> listVo = claimChainService.getInsuranceClaimByHasNotifySeqIdNoTransNum();
 				if(listVo!=null && !listVo.isEmpty()) {
-					
+
 					TransInsuranceClaimVo tic = null;
 					TransAddRequest addReq = new TransAddRequest();
 					addReq.setSysId("eservice");
 					addReq.setTransType(TransTypeUtil.INSURANCE_CLAIM_PARAMETER_CODE);
-					
+
 					for(InsuranceClaimMapperVo vo : listVo) {
 						String idNo = vo.getIdNo();
 
@@ -906,10 +951,10 @@ public class AllianceServiceTask {
 								userId = "EMPTY";
 							}
 							addReq.setUserId(userId);
-							
+
 							//設定交易序號
 							String transNum = transService.getTransNum();
-							
+
 							//1.新增線上申請主檔
 //							java.util.Date toDay = new java.util.Date();
 //							TransVo transVo = new TransVo();
@@ -921,98 +966,98 @@ public class AllianceServiceTask {
 //							transVo.setCreateUser("system");
 //							transVo.setCreateDate(toDay);
 //							int rtnInsertTrans = transService.insertTrans(transVo);
-							
-							//if(rtnInsertTrans>0) {
-								//2.新增保單號碼
-							    List<String> insClaimsPlans = insuranceClaimService.getInsClaimPlan();
-							    
-							    StringBuffer policyBuff = new StringBuffer("");
-							    
-							    List<String> policyNos = allianceService.getPolicyNoByID(idNo);
-							    if(policyNos!=null && policyNos.size()>0) {
-							    	for(String policyNo : policyNos) {
-								    	log.info("AllianceServcieTask get policyNo="+policyNo);
-								    	if(policyNo!=null && StringUtils.isNotEmpty(policyNo.trim())) {
-									    		List<String> prodCodes = allianceService.getProductCodeByPolicyNo(policyNo);
-									    	for(String prodCode : prodCodes) {
-									    		log.info("AllianceServcieTask get prodCode="+prodCode);
-									    		if(insClaimsPlans.contains(prodCode)) {
-									    			policyBuff.append(policyNo).append(",");
-									    			break;
-									    		}
-									    	}
-								    	}//end-if
-							    	}//end-for
-							    }//end-if
-							    
-							    if(policyBuff!=null && policyBuff.length()>0) {//移除最後一個逗號
-							    	policyBuff.deleteCharAt(policyBuff.length() - 1);
-							    }
-							    log.info("AllianceServcieTask get policyBuff="+policyBuff.toString());
-								//此時若沒有保單號碼，故不做
-								
-								//3.新增線上申請保單理賠
-								tic = new TransInsuranceClaimVo();
-								BeanUtils.copyProperties(vo,tic);
-								tic.setTransNum(transNum);
-								tic.setUserId(userId);
-								tic.setPolicyNo(policyBuff.toString());
-								tic.setCreateDate(vo.getCreateDate());
-								
-								//3.1.塞好FILEDATAS
-								List<InsuranceClaimFileDataVo> fileDatas = claimChainService.getInsuranceClaimFileDataByClaimsSequId(tic.getClaimSeqId());
-								if(fileDatas!=null && fileDatas.size()>0) {
-									List<TransInsuranceClaimFileDataVo> transFileDatas = new ArrayList<TransInsuranceClaimFileDataVo>();
-									for(InsuranceClaimFileDataVo ivo : fileDatas) {
-										TransInsuranceClaimFileDataVo tvo = new TransInsuranceClaimFileDataVo();
-										tvo.setClaimSeqId(tic.getClaimSeqId());
-										tvo.setFileName(ivo.getFileName());
-										tvo.setFilePath(this.FILE_SAVE_PATH);
-										if("A".equals(ivo.getType())) {
-											tvo.setType("DIAGNOSIS_CERTIFICATE");
-										}else if("B".equals(ivo.getType())){
-											tvo.setType("MEDICAL_RECEIPT");
-										}else {
-											tvo.setType(ivo.getType());
-										}
-										tvo.setFileBase64(ivo.getFileBase64());
-										tvo.setFileId(ivo.getFileId());
-										transFileDatas.add(tvo);
-									}
-									tic.setFileDatas(transFileDatas);
-								}//end-if
-								
-								addReq.setTransInsuranceClaimVo(tic);
 
-								//3.2.call TransAddServiceImpl.addTransRequest()
-								TransAddResponse transAddResp = transAddService.addTransRequest(addReq);//這裡會主動先塞好TRANS Table.
-								if(transAddResp!=null) {
-									//4.更新該筆Insurance_Claim,表示已送到eservice.TRANS
-									if(transNum!=null) {
-										vo.setTransNum(transNum);
-										int rtn = claimChainService.updateInsuranceClaimTransNumByNotifySeqId(vo);
+							//if(rtnInsertTrans>0) {
+							//2.新增保單號碼
+							List<String> insClaimsPlans = insuranceClaimService.getInsClaimPlan();
+
+							StringBuffer policyBuff = new StringBuffer("");
+
+							List<String> policyNos = allianceService.getPolicyNoByID(idNo);
+							if(policyNos!=null && policyNos.size()>0) {
+								for(String policyNo : policyNos) {
+									log.info("AllianceServcieTask get policyNo="+policyNo);
+									if(policyNo!=null && StringUtils.isNotEmpty(policyNo.trim())) {
+										List<String> prodCodes = allianceService.getProductCodeByPolicyNo(policyNo);
+										for(String prodCode : prodCodes) {
+											log.info("AllianceServcieTask get prodCode="+prodCode);
+											if(insClaimsPlans.contains(prodCode)) {
+												policyBuff.append(policyNo).append(",");
+												break;
+											}
+										}
+									}//end-if
+								}//end-for
+							}//end-if
+
+							if(policyBuff!=null && policyBuff.length()>0) {//移除最後一個逗號
+								policyBuff.deleteCharAt(policyBuff.length() - 1);
+							}
+							log.info("AllianceServcieTask get policyBuff="+policyBuff.toString());
+							//此時若沒有保單號碼，故不做
+
+							//3.新增線上申請保單理賠
+							tic = new TransInsuranceClaimVo();
+							BeanUtils.copyProperties(vo,tic);
+							tic.setTransNum(transNum);
+							tic.setUserId(userId);
+							tic.setPolicyNo(policyBuff.toString());
+							tic.setCreateDate(vo.getCreateDate());
+
+							//3.1.塞好FILEDATAS
+							List<InsuranceClaimFileDataVo> fileDatas = claimChainService.getInsuranceClaimFileDataByClaimsSequId(tic.getClaimSeqId());
+							if(fileDatas!=null && fileDatas.size()>0) {
+								List<TransInsuranceClaimFileDataVo> transFileDatas = new ArrayList<TransInsuranceClaimFileDataVo>();
+								for(InsuranceClaimFileDataVo ivo : fileDatas) {
+									TransInsuranceClaimFileDataVo tvo = new TransInsuranceClaimFileDataVo();
+									tvo.setClaimSeqId(tic.getClaimSeqId());
+									tvo.setFileName(ivo.getFileName());
+									tvo.setFilePath(this.FILE_SAVE_PATH);
+									if("A".equals(ivo.getType())) {
+										tvo.setType("DIAGNOSIS_CERTIFICATE");
+									}else if("B".equals(ivo.getType())){
+										tvo.setType("MEDICAL_RECEIPT");
+									}else {
+										tvo.setType(ivo.getType());
 									}
-								
+									tvo.setFileBase64(ivo.getFileBase64());
+									tvo.setFileId(ivo.getFileId());
+									transFileDatas.add(tvo);
 								}
-								
-								/**
-								// to do send mail/sms
-								String fromCompanyId = vo.getFrom();
-								if ("".equals(policyBuff.toString()) && fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
-									Map<String, String> msgInfo = claimChainService.getMailAndSMSInfo(transNum);
-									if(null != msgInfo.get("mail")) {
-										List<String> mailTo = new ArrayList<String>();
-										mailTo.add(msgInfo.get("mail"));
-										mailService.sendMail(msgInfo.get("content"), msgInfo.get("subject"),mailTo , null, null);
-									}
-									if(null != msgInfo.get("mobile")) {
-										smsService.sendSms(msgInfo.get("mobile"), msgInfo.get("content"));
-									}
-									
+								tic.setFileDatas(transFileDatas);
+							}//end-if
+
+							addReq.setTransInsuranceClaimVo(tic);
+
+							//3.2.call TransAddServiceImpl.addTransRequest()
+							TransAddResponse transAddResp = transAddService.addTransRequest(addReq);//這裡會主動先塞好TRANS Table.
+							if(transAddResp!=null) {
+								//4.更新該筆Insurance_Claim,表示已送到eservice.TRANS
+								if(transNum!=null) {
+									vo.setTransNum(transNum);
+									int rtn = claimChainService.updateInsuranceClaimTransNumByNotifySeqId(vo);
 								}
-								**/
+
+							}
+
+							/**
+							 // to do send mail/sms
+							 String fromCompanyId = vo.getFrom();
+							 if ("".equals(policyBuff.toString()) && fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
+							 Map<String, String> msgInfo = claimChainService.getMailAndSMSInfo(transNum);
+							 if(null != msgInfo.get("mail")) {
+							 List<String> mailTo = new ArrayList<String>();
+							 mailTo.add(msgInfo.get("mail"));
+							 mailService.sendMail(msgInfo.get("content"), msgInfo.get("subject"),mailTo , null, null);
+							 }
+							 if(null != msgInfo.get("mobile")) {
+							 smsService.sendSms(msgInfo.get("mobile"), msgInfo.get("content"));
+							 }
+
+							 }
+							 **/
 							//}//if(rtnInsertTrans>0)
-							
+
 						}else {//非保戶
 							vo.setMsg("非保戶");
 							int rtn = claimChainService.updateInsuranceClaimMsg(vo);
@@ -1024,10 +1069,10 @@ public class AllianceServiceTask {
 				log.error(e);
 			}
 		}
-		
+
 		log.info("End saveToEserviceTrans.");
 	}
-	
+
 	/**
 	 * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
 	 * @param responseJsonString
@@ -1048,6 +1093,7 @@ public class AllianceServiceTask {
 		System.out.println("checkLiaAPIResponseValue,return="+b);
 		return b;
 	}
+
 	/** 20220629 by 203990  非連線問題, 上傳失敗寄送信件給管理者
 	 * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
 	 * @param responseJsonString
@@ -1064,8 +1110,7 @@ public class AllianceServiceTask {
 			String transNum = icvo.getTransNum();
 			if(checkValue.equals(code)) {//success
 				b = true;
-			}
-			else {
+			} else {
 				// 20220629 by 203990
 				// 非連線上傳失敗, 通知後台管理人員
 				Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
@@ -1100,14 +1145,14 @@ public class AllianceServiceTask {
 		System.out.println("checkLiaAPIResponseValue,return="+b);
 		return b;
 	}
-	
+
 	/**
 	 * Image base64 String to PDF
 	 * @param imgBase64Str
 	 * @return temFile
 	 */
 	private File image64ToPdf(String imgBase64Str) {
-		
+
 		File temFile = null;
 		Document document = null;
 		try{
@@ -1117,23 +1162,23 @@ public class AllianceServiceTask {
 				temFile = File.createTempFile("tmpFile", ".pdf");
 				PdfWriter.getInstance(document, new FileOutputStream(temFile));
 				document.open();
-	            byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imgBase64Str.getBytes());
-	            
-	            Image image = Image.getInstance(decoded);
-	            image.scaleToFit(500, 800);
-	            
-	            document.add(image);
-	            document.close();
+				byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imgBase64Str.getBytes());
+
+				Image image = Image.getInstance(decoded);
+				image.scaleToFit(500, 800);
+
+				document.add(image);
+				document.close();
 			}
-			
+
 			log.info("end to conver imgBase64Str to temp PDF file.");
 		}catch (Exception e) {
             e.printStackTrace();
         }
-		
+
 		return temFile;
 	}
-	
+
 	/**
 	 * 將non-PDF base64 String 轉為 PDF base64 String
 	 * @param imgBase64Str
@@ -1141,7 +1186,7 @@ public class AllianceServiceTask {
 	 */
 	private String converNonPDFBase64ToPDFBase64(String imgBase64Str) {
 		String strBase64 = null;
-		
+
 		try {
 			if(imgBase64Str==null) {
 				return null;
@@ -1154,14 +1199,14 @@ public class AllianceServiceTask {
 				strBase64 = Base64.getEncoder().encodeToString(fileContent);
 				tempFile = null;//G.C
 			}
-			
+
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return strBase64;
 	}
-	
+
 	/**
 	 * Convert File(ex:jpg,pdf) to Base64
 	 * @param filePath
@@ -1172,14 +1217,14 @@ public class AllianceServiceTask {
 		try {
 			if(filePath!=null) {
 				log.info("input filePath="+filePath);
-				
+
 				File contentFile = null;
 				if(!filePath.endsWith("pdf")) {//不是PDF檔就轉成PDF
 					contentFile = convertToPdfFile(filePath);
 				}else {
 					contentFile = new File(filePath);
 				}
-				
+
 				byte[] fileContent = FileUtils.readFileToByteArray(contentFile);
 				encodedString = Base64.getEncoder().encodeToString(fileContent);
 			}else {
@@ -1188,10 +1233,10 @@ public class AllianceServiceTask {
 		}catch(Exception e) {
 			log.error(e);
 		}
-		
+
 		return encodedString;
 	}
-	
+
 	private File convertToPdfFile(String imgFilePath){
 		log.info("***start convertToPdfFile() filePath="+imgFilePath);
 		File filePDF = null;
@@ -1204,13 +1249,13 @@ public class AllianceServiceTask {
 				java.io.FileOutputStream fos = new java.io.FileOutputStream(filePDF);
 				writer = PdfWriter.getInstance(document, fos);
 				writer.open();
-			    document.open();
-			    
-			    Image img = Image.getInstance(imgFilePath);
-			    //A4 pixel 595x842
-			    img.scaleToFit(500, 800);
-			    
-			    document.add(img);
+				document.open();
+
+				Image img = Image.getInstance(imgFilePath);
+				//A4 pixel 595x842
+				img.scaleToFit(500, 800);
+
+				document.add(img);
 			}
 		}catch(Exception e) {
 			log.error("convertToPdfFile() error:", e);
@@ -1226,16 +1271,16 @@ public class AllianceServiceTask {
 				//do nothing.
 			}
 		}
-		
+
 		if(filePDF==null) {
 			log.info("***end convertToPdfFile() output file is null.");
 		}else {
 			log.info("***end convertToPdfFile() output file is not null.fileSize="+filePDF.length());
 		}
-		
+
 		return filePDF;
 	}
-	
+
 	/**
 	 * Convert Base64 To File(ex:jpg,pdf)
 	 * @param base64EencodedString
@@ -1248,18 +1293,18 @@ public class AllianceServiceTask {
 			if(base64EencodedString!=null && outputFileName!=null) {
 				log.info("input base64EencodedString is not null.");
 				log.info("input outputFileName="+outputFileName);
-				
+
 				byte[] decodedBytes = Base64.getDecoder().decode(base64EencodedString);
 				FileUtils.writeByteArrayToFile(new File(outputFileName), decodedBytes);
 				rtn = true;
 			}else {
 				log.error("input base64EencodedString or outputFileName is null.");
 			}
-			
+
 		}catch(Exception e) {
 			log.error(e);
 		}
-		
+
 		return rtn;
 	}
 
@@ -1318,63 +1363,4 @@ public class AllianceServiceTask {
 	public void setAPI_DISABLE(String aPI_DISABLE) {
 		API_DISABLE = aPI_DISABLE;
 	}
-
-	
-	/**
-	 * test after bean copy for ArrayList
-	 * @return String
-	 * @throws Exception
-	 */
-	private String testBeanCopy() throws Exception{
-		String rtn = null;
-		InsuranceClaimMapperVo mapperVo = new InsuranceClaimMapperVo();
-		
-		InsuranceClaimVo icvo = new InsuranceClaimVo();
-		CompanyVo cvo1 = new CompanyVo();
-		cvo1.setCompanyId("L01");
-		CompanyVo cvo2 = new CompanyVo();
-		cvo2.setCompanyId("L02");
-		icvo.setTo(Arrays.asList(cvo1,cvo2));
-		
-		BeanUtils.copyProperties(icvo, mapperVo);
-		
-		System.out.println("mapperVo.getTo()="+mapperVo.getTo());
-		
-		Gson gson = new Gson();
-		String strGson = gson.toJson(mapperVo);
-		System.out.println("strGson="+strGson);
-		
-		String icvostrGson = gson.toJson(icvo);
-		System.out.println("icvostrGson="+icvostrGson);
-		return rtn;
-	}
-
-	public static void main(String[] args) throws Exception{
-		AllianceServiceTask task = new AllianceServiceTask();
-		
-		//task.callAPI101();
-		
-		//test conver to object
-//		String teststrResponse = "{\"code\": \"0\",\"msg\": \"SUCCESS\",\"data\": {\"name\": \"王大明\",\"idNo\": \"A123456789\",\"birdate\": \"19910415\",\"phone\": \"0912345678\",\"zipCode\": \"70157\",\"address\": \"台北市中正區信義路一段 21-3號\",\"mail\": \" abc@test.com.tw \",\"paymentMethod\": \"1\",\"bankCode\": \"004\",\"branchCode\": \"0107\",\"bankAccount\": \"12345678901234\",\"applicationDate\": \"20190105\",\"applicationTime\": \"1520\",\"applicationItem\": \"1\",\"job\": \"老師\",\"jobDescr\": \"工作描述\",\"accidentDate\": \"20190101\",\"accidentTime\": \"1520\",\"accidentCause\": \"1\",\"accidentLocation\": \"台北市中正區信義路一段\",\"accidentDescr\": \"遭計程車追撞\",\"policeStation\": \"臺北市政府警察局大安分局安和路派出所\",\"policeName\": \"王小明\",\"policePhone\": \"0987654321\",\"policeDate\": \"20190101\",\"policeTime\": \"1530\",\"from\": \"L01\",\"to\": [{\"companyId\": \"L02\"}, {\"companyId\": \"L03\"}],\"fileDatas\": [{\"fileId\": \"48c37063-f09a-4934-be64-127574b640c5\",\"size\": \"300\",\"type\": \"A\",\"fileName\": \"20200122121250L01-A00001-A.pdf\",\"fileStatus\": \"1\",\"path\": \"/L01/202003/wKODkASHSAiMmM5P77JdYg/\"}, {\"fileId\": \"fd2406de-3c26-45b4-8518-497f856cee52\",\"size\": \"300\",\"type\": \"B\",\"fileName\": \"20200122121250L01-A00001-B.pdf\",\"fileStatus\": \"1\",\"path\": \"/L01/202003/wKODkASHSAiMmM5P77JdYg/\"}]}}";
-//		String dataString = MyJacksonUtil.getNodeString(teststrResponse, "data");
-//		System.out.println("dataString="+dataString);
-//		Object obj = MyJacksonUtil.json2Object(dataString, InsuranceClaimVo.class);
-//		if(obj!=null) {
-//			InsuranceClaimVo testicvo = (InsuranceClaimVo)obj;
-//			Gson gson = new Gson(); 
-//			String jsonString = gson.toJson(testicvo);
-//			System.out.println("gson.toJson(testicvo)="+jsonString);
-//		}
-		
-		//test for file
-//		String str = task.converFileToBase64Str("C:\\Users\\blflo\\Downloads\\Baeldung.pdf");
-//		System.out.println("base64="+str);
-//		task.converBase64StrToFile(str, "C:\\\\Users\\\\blflo\\\\Downloads\\\\Baeldung_new.pdf");
-		
-		//test bean copy
-		//task.testBeanCopy();
-		
-		
-	}
-
 }

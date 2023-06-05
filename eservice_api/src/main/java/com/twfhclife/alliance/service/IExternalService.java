@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
+import org.springframework.http.HttpHeaders;
 
 public interface IExternalService {
 	
@@ -40,4 +41,6 @@ public interface IExternalService {
 	 * @return List<String>
 	 */
 	List<String> getProductCodeByPolicyNo(@Param("policyNo") String policyNo);
+
+	String postForJson(String api417Url, HttpHeaders headers, Map<String, String> params) throws Exception;
 }

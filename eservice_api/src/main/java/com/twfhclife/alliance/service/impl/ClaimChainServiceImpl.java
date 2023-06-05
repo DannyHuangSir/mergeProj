@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.twfhclife.eservice.auth.dao.BxczDao;
+import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -40,8 +42,6 @@ import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.generic.dao.adm.ParameterDao;
 import com.twfhclife.generic.model.UserVo;
 import com.twfhclife.generic.utils.ApConstants;
-
-import io.netty.util.internal.StringUtil;
 
 
 @Service
@@ -670,25 +670,22 @@ public class ClaimChainServiceImpl implements IClaimChainService{
 		return rtnValue;
 	}
 
-	public static void main(String[] args) {
-		PlatformTransactionManager transactionManager = null;
-		ClaimChainServiceImpl impl = new ClaimChainServiceImpl(transactionManager);
-//		//impl.getCurrentTimeString();
-//		System.out.println(impl.getNumberString(1));
-//		
-//		String fileName = "b.a.jpg";
-//		String fileTyle = fileName.substring(fileName.lastIndexOf("."),fileName.length()); 
-//		System.out.println(fileTyle);
-		
-		//test formate file name
-		String filename = "202012120304檔名.jpg";
-		String newFileName = "20200101121250"+"L01"+"-"+"DOCUMENT"+impl.getNumberString(1);
-		newFileName = newFileName + "-";
-		newFileName = newFileName + "A";
-		String fileTyle = filename.substring(filename.lastIndexOf("."),filename.length()); 
-		newFileName = newFileName + fileTyle;
-		System.out.println("newFileName="+newFileName);
-		
+	@Autowired
+	private BxczDao bxczDao;
+
+    @Override
+    public List<SignRecord> getNotDownloadSignFile() {
+        return bxczDao.getNotDownloadSignFile();
+    }
+
+	@Override
+	public int updateSignDownloaded(String actionId) {
+		return bxczDao.updateSignDownloaded(actionId);
+	}
+
+	@Override
+	public int addSignFileData(String fileId, String clientId, String fileBase64) {
+		return bxczDao.insertSignFileData(fileId, clientId, fileBase64);
 	}
 
 }
