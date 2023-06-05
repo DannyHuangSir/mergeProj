@@ -73,7 +73,7 @@
 			T.TRANS_NUM = TP.TRANS_NUM
 			AND TP.POLICY_NO = #{policyNo}
 			AND T.TRANS_TYPE = #{transType}
-			AND (T.STATUS = #{transStatus} OR T.STATUS = '1' OR T.STATUS = '5')
+			AND (T.STATUS = #{transStatus} OR T.STATUS = '1' OR T.STATUS = '5' OR T.STATUS='-1' OR T.STATUS= '41' OR T.STATUS='42')
 	</select>
 
 	<!-- 取得申請資料-->	

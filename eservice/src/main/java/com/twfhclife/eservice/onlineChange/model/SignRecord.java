@@ -11,6 +11,24 @@ public class SignRecord {
     private String verifyMsg;
     private String actionId;
     private String fileId;
+    private String idVerifyStatus;
+    private String signStatus;
+
+    public String getIdVerifyStatus() {
+        return idVerifyStatus;
+    }
+
+    public void setIdVerifyStatus(String idVerifyStatus) {
+        this.idVerifyStatus = idVerifyStatus;
+    }
+
+    public String getSignStatus() {
+        return signStatus;
+    }
+
+    public void setSignStatus(String signStatus) {
+        this.signStatus = signStatus;
+    }
 
     public Date getSignStart() {
         return signStart;

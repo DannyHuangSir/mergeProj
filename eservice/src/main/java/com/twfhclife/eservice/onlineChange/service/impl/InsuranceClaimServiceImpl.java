@@ -1182,4 +1182,9 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 	public SignRecord getSignRecord(String actionId) {
 		return bxczDao.getSignRecordByActionId(actionId);
 	}
+
+	@Override
+	public SignRecord getNewSignStatus(String transNum) {
+		return bxczDao.getNewSignStatus(transNum);
+	}
 }

@@ -135,4 +135,6 @@ public interface IInsuranceClaimService {
     int updateSignRecordStatus(String code, String msg, Bxcz415CallBackDataVo vo);
 
 	SignRecord getSignRecord(String actionId);
+
+	SignRecord getNewSignStatus(String transNum);
 }

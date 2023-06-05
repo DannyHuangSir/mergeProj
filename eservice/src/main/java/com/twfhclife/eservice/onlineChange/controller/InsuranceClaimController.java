@@ -502,6 +502,9 @@ public class InsuranceClaimController extends BaseUserDataController {
 						logger.info("user phone : {}", claimVo.getPhone());
 						messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_SMS_005, receivers, paramMap, "sms");
 
+						if (StringUtils.equals(claimVo.getSignAgree(), "Y")) {
+							return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
+						}
 					}
 //				}
 			}
@@ -510,11 +513,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 			logger.error("Unable to init from policyClaims5: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
-		if (StringUtils.equals(claimVo.getSignAgree(), "Y")) {
-			return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
-		} else {
-			return "frontstage/onlineChange/policyClaims/policyClaims-success";
-		}
+		return "frontstage/onlineChange/policyClaims/policyClaims-success";
 	}
 	
 	@RequestLog

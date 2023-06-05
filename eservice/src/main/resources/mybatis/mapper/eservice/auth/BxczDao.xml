@@ -35,4 +35,8 @@
 		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_RECORD(FILE_ID, COMPANY_ID, CONTENT_BASE64)
 		VALUES (#{fileId}, #{companyId}, #{fileBase64})
 	</insert>
+
+	<select id="getNewSignStatus" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
+		SELECT TOP 1 SIGN_STATUS signStatus, ID_VERIFY_STATUS idVerifyStatus FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = #{transNum} ORDER BY ID DESC
+	</select>
 </mapper>

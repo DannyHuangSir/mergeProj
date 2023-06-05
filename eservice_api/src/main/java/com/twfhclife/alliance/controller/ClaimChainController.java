@@ -479,7 +479,7 @@ public class ClaimChainController{
 						ret.setMsg("數位身分驗證已簽署！");
 						return ret;
 					}
-					if (StringUtils.equals(vo.getCode(), "0")) {
+					if (StringUtils.equals(vo.getCode(), "0") && Lists.newArrayList("SIGN_U_S", "SIGN_L_S").contains(vo.getData().getSignStatus())) {
 						transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
 					} else if (StringUtils.equals(vo.getCode(), "-2")) {
 						transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);

@@ -15,74 +15,7 @@
 </head>
     <body>
         <div style="text-align: center;">
-            <div class="sign-title" th:if="${idVerifyStatus} =='CASE_I'">
-                尚未身分驗證
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='MID_S'">
-                MID身分驗證完成
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='PBS_S'">
-                保險存摺身分驗證完成
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='EZ_OTP_S'">
-                便利入口驗證完成
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='EZ_OTP_F'">
-                便利入口驗證失敗
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='EZ_OTP_E'">
-                便利入口有效期限逾期
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='IDS_S'">
-                身分驗證中心驗證完成
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='IDS_F'">
-                身分驗證中心驗證失敗
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='IDS_E'">
-                身分驗證中心有效期限逾期
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='ACT_E'">
-                活動編碼有效期限逾期
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='MID_F'">
-                MID驗證失敗
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='PBS_F'">
-                保險存摺登入/註冊失敗
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='PBS_N'">
-                保險存摺分非白金會員
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='MID_S_ID_F'">
-                MID身分驗證完成身分證字號不符
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='PBS_S_ID_F'">
-                保險存摺身分驗證身分證字號不符
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='EZ_OTP_S_ID_F '">
-                便利入口驗證完成身分證字號不符
-            </div>
-            <div class="sign-title" th:if ="${idVerifyStatus} =='IDS_S_ID_F'">
-                身分驗證中心驗證完成身分證字號不符
-            </div>
-            <div class="sign-title" th:if ="${signStatus} == 'SIGN_I'">
-                尚未簽署
-            </div>
-            <div class="sign-title" th:if ="${signStatus} == 'SIGN_U_S'">
-                保戶簽署完成
-            </div>
-            <div class="sign-title" th:if ="${signStatus} == 'SIGN_L_S'">
-                公會簽署完成
-            </div>
-            <div class="sign-title" th:if ="${signStatus} == 'SIGN_U_F'">
-                保戶簽署失敗
-            </div>
-            <div class="sign-title" th:if ="${signStatus} == 'SIGN_L_F'">
-                公會簽署失敗
-            </div>
-            <div class="sign-title" th:if ="${signStatus} == 'SIGN_E'">
-                文件簽署逾期
+            <div class="sign-title" th:text="${msg}">
             </div>
             <div style="font-size: 16px;">
                 如有疑問，請先至臺銀人壽會員專區查詢或請電洽:<br/>
