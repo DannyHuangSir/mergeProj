@@ -86,6 +86,9 @@ public class LoginServiceImpl implements ILoginService {
 	@Value("${spring.profiles.active}")
 	protected String RUNNING_ENV;
 
+	@Autowired
+	private BaseRestClient baseRestClient;
+
 	/**
 	 * 內部人員類型.
 	 * 
@@ -154,10 +157,10 @@ public class LoginServiceImpl implements ILoginService {
 			}
 		}
 		
-		if(StringUtils.isBlank(BaseRestClient.getAccessKey())) {
+		if(StringUtils.isBlank(baseRestClient.getAccessKey())) {
 			try {
 				String encrypAccessKey = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "eservice_api.accessKey");
-				BaseRestClient.setAccessKey(EncryptionUtil.Decrypt(encrypAccessKey));
+				baseRestClient.setAccessKey(EncryptionUtil.Decrypt(encrypAccessKey));
 			} catch(Exception e) {
 				logger.error("Set API access key error: ", e);
 			}
