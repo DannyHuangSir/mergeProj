@@ -20,4 +20,6 @@ public interface BxczDao {
     int insertSignFileData(@Param("fileId") String fileId, @Param("companyId") String companyId, @Param("fileBase64") String fileBase64);
 
     SignRecord getNewSignStatus(@Param("transNum") String transNum);
+
+    String getSignFileByFileId(String signFileId);
 }

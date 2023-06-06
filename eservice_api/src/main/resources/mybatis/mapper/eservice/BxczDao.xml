@@ -37,6 +37,13 @@
 	</insert>
 
 	<select id="getNewSignStatus" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
-		SELECT TOP 1 SIGN_STATUS signStatus, ID_VERIFY_STATUS idVerifyStatus FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = #{transNum} ORDER BY ID DESC
+		SELECT TOP 1 SIGN_STATUS signStatus, ID_VERIFY_STATUS idVerifyStatus, SIGN_TIME signTime, ID_VERIFY_TIME idVerifyTime,
+		SIGN_DOWNLOAD signDownload, SIGN_FILEID signFileId
+		FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = #{transNum}
+		AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC
+	</select>
+
+	<select id="getSignFileByFileId" resultType="string">
+		SELECT TOP 1 CONTENT_BASE64 FROM ESERVICE.DBO.BXCZ_SIGN_FILEDATA WHERE FILE_ID = #{signFileId}
 	</select>
 </mapper>

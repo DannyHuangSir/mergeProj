@@ -137,4 +137,6 @@ public interface IInsuranceClaimService {
 	SignRecord getSignRecord(String actionId);
 
 	SignRecord getNewSignStatus(String transNum);
+
+	byte[] getSignPdf(String signFileId);
 }

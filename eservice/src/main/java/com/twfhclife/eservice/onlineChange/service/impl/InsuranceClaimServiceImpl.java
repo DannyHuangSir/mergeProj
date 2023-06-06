@@ -1187,4 +1187,10 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 	public SignRecord getNewSignStatus(String transNum) {
 		return bxczDao.getNewSignStatus(transNum);
 	}
+
+    @Override
+    public byte[] getSignPdf(String signFileId) {
+		String fileBase64 = bxczDao.getSignFileByFileId(signFileId);
+        return StringUtils.isBlank(fileBase64) ? null : Base64.getDecoder().decode(fileBase64);
+    }
 }

@@ -9,6 +9,8 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.util.SignStatusUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -32,10 +34,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.odm.OnlineChangeModel;
-import com.twfhclife.eservice.onlineChange.model.BlackListVo;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
-import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
@@ -517,13 +515,33 @@ public class InsuranceClaimController extends BaseUserDataController {
 	}
 	
 	@RequestLog
+	@PostMapping(value = "/downloadSignPdf")
+	public @ResponseBody HttpEntity<byte[]> downloadSignPdf(@RequestParam("signFileId") String signFileId) {
+		byte[] document = null;
+		HttpHeaders header = new HttpHeaders();
+		try {
+			document = insuranceClaimService.getSignPdf(signFileId);
+			if (document != null) {
+				String fileName = String.format("inline; filename=數位簽署文件-%s.pdf", DateUtil.getRocDate(new Date()));
+				header.setContentType(new MediaType("application", "pdf"));
+				header.set("Content-Disposition", new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
+				header.setContentLength(document.length);
+			}
+		} catch (Exception e) {
+			logger.error("Unable to get data from downloadPolicyClaimPDF: {}", ExceptionUtils.getStackTrace(e));
+		}
+
+		return new HttpEntity<byte[]>(document, header);
+	}
+
+	@RequestLog
 	@PostMapping(value = "/downloadPolicyClaimsPDF")
 	public @ResponseBody HttpEntity<byte[]> downloadPolicyClaimPDF(TransInsuranceClaimVo claimVo, BindingResult bindingResult) {
 		byte[] document = null;
 		HttpHeaders header = new HttpHeaders();
 		try {
 			String fileName = String.format("inline; filename=保單理賠申請書-%s.pdf", claimVo.getPolicyNo());
-			
+
 			document = insuranceClaimService.getPDF1(claimVo);
 			header.setContentType(new MediaType("application", "pdf"));
 			header.set("Content-Disposition", new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
@@ -562,6 +580,18 @@ public class InsuranceClaimController extends BaseUserDataController {
 				});
 			}
 			addAttribute("fileData", fileData);
+			SignRecord signRecord = insuranceClaimService.getNewSignStatus(transNum);
+			if (signRecord != null) {
+				Map<String, Object> signRecordMap = Maps.newHashMap();
+				signRecordMap.put("idVerifyTime", signRecord.getIdVerifyTime() != null ? DateUtil.formatDateTime(signRecord.getIdVerifyTime(), "yyyy/MM/dd HH:mm") : "");
+				signRecordMap.put("idVerifyStatus", SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), null));
+				signRecordMap.put("signTime", signRecord.getSignTime() != null ? DateUtil.formatDateTime(signRecord.getSignTime(), "yyyy/MM/dd HH:mm") : "");
+				signRecordMap.put("signStatus", SignStatusUtil.signStatusToStr(null, signRecord.getSignStatus()));
+				signRecordMap.put("signDownload", signRecord.getSignDownload());
+				signRecordMap.put("signFileId", signRecord.getSignFileId());
+				addAttribute("signRecord", signRecordMap);
+
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransInsuranceClaimDetail: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();

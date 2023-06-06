@@ -6,13 +6,32 @@ public class SignRecord {
 
     private Date signStart;
     private Date signEnd;
-
     private String verifyCode;
     private String verifyMsg;
     private String actionId;
     private String fileId;
     private String idVerifyStatus;
+    private Date idVerifyTime;
     private String signStatus;
+    private Date signTime;
+    private String signDownload;
+    private String signFileId;
+
+    public String getSignFileId() {
+        return signFileId;
+    }
+
+    public void setSignFileId(String signFileId) {
+        this.signFileId = signFileId;
+    }
+
+    public String getSignDownload() {
+        return signDownload;
+    }
+
+    public void setSignDownload(String signDownload) {
+        this.signDownload = signDownload;
+    }
 
     public String getIdVerifyStatus() {
         return idVerifyStatus;
@@ -76,5 +95,21 @@ public class SignRecord {
 
     public void setFileId(String fileId) {
         this.fileId = fileId;
+    }
+
+    public Date getIdVerifyTime() {
+        return idVerifyTime;
+    }
+
+    public void setIdVerifyTime(Date idVerifyTime) {
+        this.idVerifyTime = idVerifyTime;
+    }
+
+    public Date getSignTime() {
+        return signTime;
+    }
+
+    public void setSignTime(Date signTime) {
+        this.signTime = signTime;
     }
 }
