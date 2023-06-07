@@ -765,7 +765,7 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 	@Override
 	public int getPolicyClaimCompleted(String rocId) {
 		// TODO Auto-generated method stub
-		return onlineChangeDao.getMedicalTreatmentClaimCompleted(rocId);
+		return onlineChangeDao.getPolicyClaimCompleted(rocId);
 	}
 
 	/**

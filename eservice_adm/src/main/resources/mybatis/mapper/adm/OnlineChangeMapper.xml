@@ -165,7 +165,8 @@
 		,A.FROM_COMPANY_ID
 		,A.TO_COMPANY_ID
 		,A.SEND_ALLIANCE
-		,A.CREATE_DATE
+		,A.CREATE_DATE,
+		A.SIGN_AGREE
 	</sql>
 	<!--保單醫療-->
 	<sql id="MEDICAL_TREATMENT_CLAIM_ALL">
@@ -1747,6 +1748,7 @@
 		<result property="otherInsuClaim"  column="OTHERINSUCLAIM" />
 		<result property="accountName" column="ACCOUNTNAME" />
 		<result property="callPolice" column="CALLPOLICE" />
+		<result property="signAgree" column="SIGN_AGREE" />
 		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
 	</resultMap>
 
@@ -1823,7 +1825,7 @@
 		CLAIMS_SEQ_ID,TRANS_NUM,NAME,ID_NO,BIRDATE,PHONE,ZIP_CODE,ADDRESS,MAIL,PAYMENT_METHOD,BANK_CODE,BRANCH_CODE,BANK_ACCOUNT,
        	APPLICATION_DATE,APPLICATION_TIME,APPLICATION_ITEM,JOB,JOB_DESCR,ACCIDENT_DATE,ACCIDENT_TIME,ACCIDENT_CAUSE,
        	ACCIDENT_LOCATION,ACCIDENT_DESCR,POLICE_STATION,POLICE_NAME,POLICE_PHONE,POLICE_DATE,POLICE_TIME,FROM_COMPANY_ID,
-       	TO_COMPANY_ID,FILE_RECEIVED,SEND_ALLIANCE
+       	TO_COMPANY_ID,FILE_RECEIVED,SEND_ALLIANCE,SIGN_AGREE
 	</sql>
 
 	<sql id="Base_Medical_Column_List">
@@ -1904,7 +1906,8 @@
        			#{vo.from, jdbcType=VARCHAR},
        			#{vo.to, jdbcType=VARCHAR},
        			#{vo.fileReceived, jdbcType=VARCHAR},
-       			'Y'
+       			'Y',
+				#{vo.signAgree, jdbcType=VARCHAR}
 			)
 	</insert>
 

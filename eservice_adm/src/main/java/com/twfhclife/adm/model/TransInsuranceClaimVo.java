@@ -230,6 +230,19 @@ public class TransInsuranceClaimVo {
 	 */
 	private String sendAlliance;
 
+	/***
+	 * 是否同意數位簽署
+	 */
+	private String signAgree;
+
+	public String getSignAgree() {
+		return signAgree;
+	}
+
+	public void setSignAgree(String signAgree) {
+		this.signAgree = signAgree;
+	}
+
 	/**
 	 * 此案件的上傳檔案狀態清單
 	 */
