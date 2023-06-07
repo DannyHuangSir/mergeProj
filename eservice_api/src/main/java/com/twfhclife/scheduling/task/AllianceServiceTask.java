@@ -2,19 +2,18 @@ package com.twfhclife.scheduling.task;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.GsonBuilder;
 import com.twfhclife.alliance.model.*;
+import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -544,6 +543,10 @@ public class AllianceServiceTask {
 	@Value("${cron.api105.expression.enable: true}")
 	public boolean api105Enable;
 
+	@Autowired
+	private BxczDao bxczDao;
+
+
 	/**
 	 * 查詢理賠案件
 	 */
@@ -554,24 +557,6 @@ public class AllianceServiceTask {
 		}
 		log.info("Start API-105 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
-
-		//testcode
-//		try {
-//			String teststrResponse = "{\"code\": \"0\",\"msg\": \"SUCCESS\",\"data\": {\"name\": \"王大明\",\"idNo\": \"A123456789\",\"birdate\": \"19910415\",\"phone\": \"0912345678\",\"zipCode\": \"70157\",\"address\": \"台北市中正區信義路一段 21-3號\",\"mail\": \" abc@test.com.tw \",\"paymentMethod\": \"1\",\"bankCode\": \"004\",\"branchCode\": \"0107\",\"bankAccount\": \"12345678901234\",\"applicationDate\": \"20190105\",\"applicationTime\": \"1520\",\"applicationItem\": \"1\",\"job\": \"老師\",\"jobDescr\": \"工作描述\",\"accidentDate\": \"20190101\",\"accidentTime\": \"1520\",\"accidentCause\": \"1\",\"accidentLocation\": \"台北市中正區信義路一段\",\"accidentDescr\": \"遭計程車追撞\",\"policeStation\": \"臺北市政府警察局大安分局安和路派出所\",\"policeName\": \"王小明\",\"policePhone\": \"0987654321\",\"policeDate\": \"20190101\",\"policeTime\": \"1530\",\"from\": \"L01\",\"to\": [{\"companyId\": \"L02\"}, {\"companyId\": \"L03\"}],\"fileDatas\": [{\"fileId\": \"48c37063-f09a-4934-be64-127574b640c5\",\"size\": \"300\",\"type\": \"A\",\"fileName\": \"20200122121250L01-A00001-A.pdf\",\"fileStatus\": \"1\",\"path\": \"/L01/202003/wKODkASHSAiMmM5P77JdYg/\"}, {\"fileId\": \"fd2406de-3c26-45b4-8518-497f856cee52\",\"size\": \"300\",\"type\": \"B\",\"fileName\": \"20200122121250L01-A00001-B.pdf\",\"fileStatus\": \"1\",\"path\": \"/L01/202003/wKODkASHSAiMmM5P77JdYg/\"}]}}";
-//			String dataString = MyJacksonUtil.getNodeString(teststrResponse, "data");
-//			System.out.println("dataString="+dataString);
-//			Object obj = MyJacksonUtil.json2Object(dataString, InsuranceClaimVo.class);
-//			if(obj!=null) {
-//				InsuranceClaimVo testicvo = (InsuranceClaimVo)obj;
-//				Gson gson = new Gson(); 
-//				String jsonString = gson.toJson(testicvo);
-//				System.out.println("gson.toJson(testicvo)="+jsonString);
-//			}
-//		}catch(Exception e) {
-//			log.error(e);
-//		}
-		//testcode
-
 
 		if("N".equals(API_DISABLE)){
 
@@ -614,12 +599,10 @@ public class AllianceServiceTask {
 										CompanyVo tempCvo = new CompanyVo();
 										tempCvo.setCompanyId(jn.asText());
 										listTo.add(tempCvo);
-										//System.out.println(jn.asText());
 									}
 
 								}else {
 									log.error("to/company is null or empty.");
-									//System.out.println(listNode);
 								}
 								//remove "TO:[]"
 								ObjectMapper objectMapper = new ObjectMapper();
@@ -640,17 +623,37 @@ public class AllianceServiceTask {
 									if(listTo!=null) {
 										icvo.setTo(listTo);
 									}
-//									Gson gson = new Gson(); 
-//									String jsonString = gson.toJson(icvo);
-//									log.info("gson.toJson(testicvo)="+jsonString);
 								}else {
 									log.info("obj is null.");
 								}
 							}
 
 							if(icvo!=null) {
+
 								InsuranceClaimMapperVo mapperVo = new InsuranceClaimMapperVo();
 								BeanUtils.copyProperties(icvo,mapperVo);
+
+								if (StringUtils.isNotBlank(icvo.getActionId())) {
+									mapperVo.setSignAgree("Y");
+									Map<String, String> api416Params = Maps.newHashMap();
+									HttpHeaders headers = new HttpHeaders();
+									headers.add("Access-Token", clientSecret);
+									headers.setContentType(MediaType.APPLICATION_JSON);
+									try {
+										String api416Resp = allianceService.postApi416(api416Url, headers, api416Params);
+										String code = MyJacksonUtil.readValue(api416Resp, "/code");
+										String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
+										Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
+										SignRecord record = gson.fromJson(api416Resp, SignRecord.class);
+										bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
+									} catch (Exception e) {
+										logger.error("call api416 error: {}, {}, {}", headers, params, e);
+										throw new Exception("call api416 error: " + e);
+									}
+								} else {
+									mapperVo.setSignAgree("N");
+								}
+
 								if(icvo.getTo()!=null) {//補to物件
 									String str = "";
 									List<CompanyVo> comps= icvo.getTo();
@@ -851,6 +854,8 @@ public class AllianceServiceTask {
 	private String clientId;
 	@Value("${eservice.bxcz.login.client_secret}")
 	private String clientSecret;
+	@Value("${eservice.bxcz.416.url}")
+	private String api416Url;
 	@Value("${eservice.bxcz.417.url}")
 	private String api417Url;
 	@Value("${cron.api417.expression.enable: true}")

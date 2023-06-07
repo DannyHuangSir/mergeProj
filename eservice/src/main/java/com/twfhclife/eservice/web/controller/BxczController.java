@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -65,7 +66,14 @@ public class BxczController extends BaseController {
                 String code = HmacUtils.hmacSha256Hex(secret, "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F");
                 String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, transVo.getTransNum(), ApConstants.INSURANCE_CLAIM, encId)).getBytes())
                         + "&code=" + code;
-                insuranceClaimService.addSignBxczRecord(actionId, transVo.getTransNum(), new Date());
+                SignRecord signRecord = new SignRecord();
+                signRecord.setActionId(actionId);
+                signRecord.setActionId(actionId);
+                Calendar calendar = Calendar.getInstance();
+                signRecord.setSignStart(calendar.getTime());
+                calendar.add(Calendar.MILLISECOND, -300);
+                signRecord.setSignEnd(calendar.getTime());
+                insuranceClaimService.addSignBxczRecord(signRecord);
                 transService.updateTransStatus(transVo.getTransNum(), OnlineChangeUtil.TRANS_STATUS_PROCESS_SIGN);
                 this.setResponseObj(ResponseObj.SUCCESS, "", url);
             }

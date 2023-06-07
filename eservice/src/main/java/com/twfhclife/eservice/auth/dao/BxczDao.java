@@ -10,7 +10,7 @@ import java.util.List;
 public interface BxczDao {
     int insertBxczApiLog(@Param("actionId") String actionId, @Param("type") String type, @Param("apiCode") String apiCode, @Param("apiParam") String apiParam, @Param("apiResponse") String apiResponse);
 
-    int insertBxczSignRecord(@Param("actionId") String actionId, @Param("transNum") String transNum, @Param("date") Date date);
+    int insertBxczSignRecord(@Param("vo") SignRecord signRecord, @Param("code") String code, @Param("msg") String msg, @Param("idVerifyTime") Date idVerifyTime,  @Param("signTime") Date signTime);
 
     int updateBxczSignRecordByActionId(@Param("vo") Bxcz415CallBackDataVo vo, @Param("code") String code, @Param("msg") String msg, @Param("idVerifyTime") Date idVerifyTime,  @Param("signTime") Date signTime);
 

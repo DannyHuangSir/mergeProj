@@ -16,6 +16,15 @@ public class SignRecord {
     private Date signTime;
     private String signDownload;
     private String signFileId;
+    private String transNum;
+
+    public String getTransNum() {
+        return transNum;
+    }
+
+    public void setTransNum(String transNum) {
+        this.transNum = transNum;
+    }
 
     public String getSignFileId() {
         return signFileId;

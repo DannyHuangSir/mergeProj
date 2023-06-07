@@ -272,8 +272,17 @@ public class InsuranceClaimMapperVo {
 	 * 是否可傳送給聯盟註記(Y/N)
 	 */
 	private String sendAlliance;
-	
+
 	private Timestamp createDate;
+	private String signAgree;
+
+	public String getSignAgree() {
+		return signAgree;
+	}
+
+	public void setSignAgree(String signAgree) {
+		this.signAgree = signAgree;
+	}
 
 	/**
 	 * 此案件的上傳檔案狀態清單

@@ -390,4 +390,26 @@ public class AllianceServiceImpl implements IExternalService{
 			return null;
 		}
 	}
+
+	@Override
+	public String postApi416(String api416Url, HttpHeaders headers, Map<String, String> api416Params) throws Exception {
+		Gson gson = new Gson();
+		String json = gson.toJson(api416Params);
+		logger.info("resquest json="+json);
+		HttpEntity<String> entity = new HttpEntity<String>(json,headers);
+		ResponseEntity<String> responseEntity = restTemplate.postForEntity(api416Url, entity, String.class);
+		boolean checkResp  = this.checkResponseStatus(responseEntity);//check http status
+		boolean checkCode0 = false;
+		if(checkResp) {
+			if (responseEntity!=null && responseEntity.getBody()!=null) {
+				checkCode0 = checkLiaAPIResponseValue(responseEntity.getBody(), "/code", "0");
+			}
+		}
+		if (checkCode0 && checkResp) {
+			logger.info("call api416 resp: {}", responseEntity.getBody());
+			return responseEntity.getBody();
+		} else {
+			return null;
+		}
+	}
 }

@@ -169,7 +169,7 @@
 		INSERT INTO 
        		ESERVICE.DBO.INSURANCE_CLAIM
        		(
-       		<include refid="Base_Column_List" />
+       		<include refid="Base_Column_List" /> , SIGN_AGREE
        		)
        	VALUES
        		(
@@ -217,7 +217,8 @@
        			#{vo.to, jdbcType=VARCHAR},
        			#{vo.status, jdbcType=VARCHAR},
        			#{vo.sendAlliance, jdbcType=VARCHAR},
-       			getdate()
+       			getdate(),
+				#{vo.signAgree, jdbcType=VARCHAR}
 			)
 	</insert>
 	<select id="getInsuranceClaimFiledatasId" resultType="java.lang.Float">

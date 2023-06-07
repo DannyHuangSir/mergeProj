@@ -8,8 +8,9 @@
 	</insert>
 
 	<insert id="insertBxczSignRecord">
-		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_RECORD(ACTION_ID, TRANS_NUM, ACTION_ID_START, ACTION_ID_END, SIGN_DOWNLOAD)
-		VALUES (#{actionId}, #{transNum}, #{date}, DATEADD(second, 300, #{date}), 'N')
+		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_RECORD(TRANS_NUM, VERIFY_CODE, VERIFY_MSG, ACTION_ID, ACTION_ID_START, ACTION_ID_END, ID_VERIFY_STATUS, ID_VERIFY_TIME, ID_VERIFY_TYPE, SIGN_FILEID, SIGN_STATUS, SIGN_TIME, SIGN_DOWNLOAD)
+		VALUES (#{vo.transNum}, #{code}, #{msg}, #{vo.actionId}, #{vo.signStart}, #{vo.signEnd}, #{vo.idVerifyStatus}, #{idVerifyTime}
+		, #{vo.idVerifyType}, #{vo.signFileId}, #{vo.signStatus}, #{signTime}, 'N', )
 	</insert>
 
 	<update id="updateBxczSignRecordByActionId">

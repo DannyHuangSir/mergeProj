@@ -269,7 +269,16 @@ public class InsuranceClaimVo {
 	 * 是否可傳送給聯盟註記(Y/N)
 	 */
 	private String sendAlliance;
-	
+	private String actionId;
+
+	public String getActionId() {
+		return actionId;
+	}
+
+	public void setActionId(String actionId) {
+		this.actionId = actionId;
+	}
+
 	/**
 	 * 此案件的上傳檔案狀態清單
 	 */

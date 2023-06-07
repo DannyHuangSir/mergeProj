@@ -130,7 +130,7 @@ public interface IInsuranceClaimService {
 	 */
 	int  updateInsuranceClaimFileDataFileBase64(TransInsuranceClaimFileDataVo  transInsuranceClaimFileDataVo) throws Exception;
 
-    int addSignBxczRecord(String actionId, String transNum, Date date);
+    int addSignBxczRecord(SignRecord signRecord);
 	
     int updateSignRecordStatus(String code, String msg, Bxcz415CallBackDataVo vo);
 

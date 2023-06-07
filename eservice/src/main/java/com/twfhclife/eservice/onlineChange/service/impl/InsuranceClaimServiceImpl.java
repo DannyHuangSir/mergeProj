@@ -1153,8 +1153,8 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 	private BxczDao bxczDao;
 
     @Override
-    public int addSignBxczRecord(String actionId, String transNum, Date date) {
-        return bxczDao.insertBxczSignRecord(actionId, transNum, date);
+    public int addSignBxczRecord(SignRecord signRecord) {
+        return bxczDao.insertBxczSignRecord(signRecord,null, null, null, null);
     }
 
 	@Override
