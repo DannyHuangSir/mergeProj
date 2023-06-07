@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
 	<div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -77,15 +78,8 @@
 														<td th:text="${vo.paymentDueDate != null ? vo.paymentDueDate : '-'}"></td>
 														<td th:text="${vo.endDate != null ? vo.endDate : '-'}"></td>
 														<td class="enThin" th:text="${vo.lipiTablPrem != null ? vo.lipiTablPrem : '-'}"></td>
-														<td class="enThin">
-															<span class="mobile-span" th:switch="${vo.status != null ? vo.status : '-'}">
-																<th:block th:case="'1'">有效</th:block>
-																<th:block th:case="'2'">停效</th:block>
-																<th:block th:case="'3'">失效</th:block>
-																<th:block th:case="*">-</th:block>
-															</span>
-														</td>
-														<td th:text="${vo.status == '53' ? vo.effectiveDate : '-'}"></td>
+														<td th:text="${vo.status != null ? session.SYSTEM_PARAMETER['INDENTURE_STATUS_CATEGORY'][vo.status].parameterValue : '-'}"></td>
+														<td th:text="${vo.status == '53' ? vo.stDate : '-'}"></td>
 													</tr>
 													</tbody>
 												</table>

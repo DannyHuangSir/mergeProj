@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
 	<div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -94,6 +95,7 @@
   /*<![CDATA[*/
   var s_currency = '';
   $(function() {
+	  showLoadingModal();
     // 建立保障項目 grid
     var grid1 = new eserviceGrid();
     grid1.sGridId = '#grid1';

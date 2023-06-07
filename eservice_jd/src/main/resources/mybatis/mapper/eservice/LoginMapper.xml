@@ -14,7 +14,7 @@
 	
 	<!-- 新增登入記錄 -->
 	<insert id="addAuditLog">
-		INSERT INTO ESERVICE.DBO.AUDIT_LOG (
+		INSERT INTO ESERVICE_JD.DBO.AUDIT_LOG (
 			ID
 			,USER_ID
 			,LOGIN_DATE
@@ -22,7 +22,7 @@
 			,CLIENT_IP
 			,EUNATIONALITY
 		) VALUES (
-			(SELECT COALESCE(MAX(ID) + 1, 1) FROM ESERVICE.DBO.AUDIT_LOG),
+			(SELECT COALESCE(MAX(ID) + 1, 1) FROM ESERVICE_JD.DBO.AUDIT_LOG),
 			#{auditLogVo.userId},
 			getdate(),
 			#{auditLogVo.loginStatus},
@@ -34,7 +34,7 @@
 	<!-- 更新登出記錄 -->
 	<update id="updateLogoutDate">
 		UPDATE
-			ESERVICE.DBO.AUDIT_LOG
+			ESERVICE_JD.DBO.AUDIT_LOG
 		SET
 			LOGOUT_DATE = getdate()
 		WHERE
@@ -42,7 +42,7 @@
 				SELECT
 					MAX(ID)
 				FROM
-					ESERVICE.DBO.AUDIT_LOG
+					ESERVICE_JD.DBO.AUDIT_LOG
 				WHERE
 					LOWER(USER_ID) = LOWER(#{userId})
 			)
@@ -53,14 +53,14 @@
 		SELECT
 			MAX(LOGIN_DATE)
 		FROM
-			ESERVICE.DBO.AUDIT_LOG
+			ESERVICE_JD.DBO.AUDIT_LOG
 		WHERE
 			LOWER(USER_ID) = LOWER(#{userId})
 	</select>
 	
 	<select id="getLastAuditLog" resultMap="auditLogMap" parameterType="java.lang.String">
 		SELECT TOP (CAST(#{row} AS int)) ID, USER_ID userId, LOGIN_DATE loginDate, LOGOUT_DATE logoutDate, LOGIN_STATUS loginStatus, CLIENT_IP clientIp 
-		FROM ESERVICE.DBO.AUDIT_LOG 
+		FROM ESERVICE_JD.DBO.AUDIT_LOG 
 		WHERE USER_ID = #{userId}
 		ORDER BY ID DESC
 	</select>

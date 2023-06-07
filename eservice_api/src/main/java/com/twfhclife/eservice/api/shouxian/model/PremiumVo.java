@@ -4,6 +4,7 @@ public class PremiumVo {
 
     private String beginDate;
     private String premium;
+    private String currentYearDividend;
     private String balance;
     private String code;
     private String bonDate;
@@ -23,6 +24,10 @@ public class PremiumVo {
     public void setPremium(String premium) {
         this.premium = premium;
     }
+
+    public String getCurrentYearDividend() { return currentYearDividend; }
+
+    public void setCurrentYearDividend(String currentYearDividend) { this.currentYearDividend = currentYearDividend; }
 
     public String getBalance() {
         return balance;

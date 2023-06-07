@@ -154,3 +154,16 @@ function showSurveyDialog() {
 	$("#button-survey").click();
 	$("#button-survey").prop("disabled", true);*/		
 }
+
+function showLoadingModal() {
+	$('#loadingModal').modal('show')
+}
+
+function hideLoadingModal() {
+	$('#loadingModal').modal('hide')
+}
+
+function getPolicyInfo(actionUrl, policyNo, policyListType) {
+	showLoadingModal()
+	postPolicyListType(actionUrl,policyNo,policyListType)
+}

@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
 	<div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -55,19 +56,6 @@
 												</p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
-<!--											<div class="wht">-->
-<!--												<form class="form-inline grey wht" id="collapseSearchBar">-->
-<!--													<div class="col-sm-12 input-inline text-right">-->
-<!--														<div>-->
-<!--															<label>日期</label>-->
-<!--															<input id="startDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>-->
-<!--															<br class="hid2"/><span class="dateFix">至</span>-->
-<!--															<input id="endDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>-->
-<!--															<button id="searchBtn" type="button" class="btn-form btn-search">搜尋</button>-->
-<!--														</div>-->
-<!--													</div>-->
-<!--												</form>-->
-<!--											</div>-->
 											<div class="tb3 top0 mobile-toggle" data-toggle="true">
 												<i class="fas fa-chevron-down hid2 mobile"></i>
 												<i class="fas fa-chevron-up hid1"></i> 交易明細
@@ -120,6 +108,9 @@
 	}
 
 	$(function() {
+
+		showLoadingModal();
+
 		$('.datepicker').datepicker({
 			changeMonth: true,
 			changeYear: true,

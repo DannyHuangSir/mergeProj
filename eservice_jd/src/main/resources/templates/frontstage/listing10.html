@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
 	<div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -56,27 +57,6 @@
 												</p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
-<!--											<div class="wht">-->
-<!--												<form class="form-inline grey wht" id="collapseSearchBar">-->
-<!--													<div class="col-sm-5">-->
-<!--														<div class="selector-box">-->
-<!--															<select id="trCode" class="selector">-->
-<!--															</select>-->
-<!--														</div>-->
-<!--													</div>-->
-<!--													<div class="col-sm-7 input-inline">-->
-<!--														<div>-->
-<!--															<label>日期</label>-->
-<!--															<input id="startDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>-->
-<!--															<br class="hid2"/><span class="dateFix">至</span>-->
-<!--															<input id="endDate" type="text" class="datepicker" placeholder="YYYY/MM/DD" autocomplete="off"/>-->
-<!--															<button id="searchBtn" type="button" class="btn-form btn-search">搜尋</button>-->
-<!--															<input id="startDateHistory" type="hidden"/>-->
-<!--															<input id="endDateHistory" type="hidden"/>-->
-<!--														</div>-->
-<!--													</div>-->
-<!--												</form>-->
-<!--											</div>-->
 											<div class="tb3 top0 mobile-toggle hide" data-toggle="true">
 												<i class="fa hid2 foo-angle-down mobile"></i>
 												<i class="fa foo-angle-up hid1"></i> 交易總覽
@@ -160,11 +140,13 @@
 		</div>
 	</div>
 </div>
-<footer th:replace="fragments/footer"></footer></script>
+<footer th:replace="fragments/footer"></footer>
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	var grid1;
 	$(function() {
+
+		showLoadingModal();
 		$('.datepicker').datepicker({
 			changeMonth: true,
 			changeYear: true,

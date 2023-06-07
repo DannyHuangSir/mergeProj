@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
     <div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -71,7 +72,7 @@
 				                                    <tbody>
 				                                        <tr class="h65 noEvent" th:each="vo1: ${payments}">
 				                                            <td th:text="${vo1.payReas != null ? session.SYSTEM_PARAMETER['LIPAYF_REAS'][vo1.payReas].parameterValue : ''}"></td>
-				                                            <td th:text="${vo1.payAmount}"></td>
+				                                            <td th:text="${vo1.amountActuallyPaid}"></td>
 				                                            <td th:text="${vo1.payName}"></td>
 				                                            <td th:text="${vo1.payMethod != null ? session.SYSTEM_PARAMETER['LIPAYF_METH'][vo1.payMethod].parameterValue : ''}"></td>
 				                                            <td th:text="${vo1.bookDate}"></td>
@@ -95,7 +96,7 @@
 	</div>
 
 </div>
-<footer th:replace="fragments/footer"></footer></script>
+<footer th:replace="fragments/footer"></footer>
 </body>
 </html>
 

@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
 	<div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -52,7 +53,7 @@
 													保單號碼:<span style="margin-right: 15px;" th:text="${policyNo}"></span>
 													要保人:<span style="margin-right: 15px;" th:text="${vo.lipmName}"></span>
 													被保險人:<span style="margin-right: 15px;" th:text="${vo.lipiName}"></span>
-													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span>
+													保單幣別:<span th:text="${vo.currency != null ? ( session.SYSTEM_PARAMETER['CURRENCY'] != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue: '-' ) : '-'}"></span>
 												</p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
@@ -71,7 +72,7 @@
 														<tr class="h65 noEvent">
 															<!-- 申請方式 -->
 															<td class="text-left">
-																<th:block th:text="${vo1.applyType != null ? (session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'][vo1.applyType] != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'][vo1.applyType].parameterValue : '') : ''}"/>
+																<th:block th:text="${vo1.applyType != null ? (session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'] != null ? (session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'][vo1.applyType] != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'][vo1.applyType].parameterValue : '-' ) : '-') : '-'}"/>
 															</td>
 															<!-- 申請項目 -->
 															<td>
@@ -110,7 +111,7 @@
 		</div>
 	</div>
 </div>
-<footer th:replace="fragments/footer"></footer></script>
+<footer th:replace="fragments/footer"></footer>
 </body>
 </html>
 

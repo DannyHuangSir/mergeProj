@@ -13,6 +13,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
 	<div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -119,6 +120,7 @@
 				 })
 			})
 
+			showLoadingModal();
 			$.ajax({
 				type : 'POST',
 				dataType : "JSON",
@@ -142,8 +144,11 @@
 						$("#personalContent").html(html)
 						initChart()
 					}
+
+					hideLoadingModal();
 				},
 				error : function() {
+					hideLoadingModal();
 					openAlert('error!')
 				}
 	    	});
