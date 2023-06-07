@@ -101,7 +101,7 @@ public interface TransTypeUtil {
 	
 	/** 線上申請- 變更風險屬性 */
 	final String RISK_LEVEL_PARAMETER_CODE = "RISK_LEVEL";
-	
+	final String CHOOSE_LEVEL_PARAMETER_CODE = "CHOOSE_LEVEL";
 	/** 線上申請- 保戶基本資料更新 */
 	final String POLICY_HOLDER_PROFILE_PARAMETER_CODE = "POLICY_HOLDER_PROFILE";
 
@@ -145,5 +145,7 @@ public interface TransTypeUtil {
 	final String INVESTMENT_STATUS_OUT = "OUT";
 	/** 線上申請-未持有投資標的轉換 狀態 */
 	final String INVESTMENT_STATUS_IN = "IN";
+	
+	final String EDUCATION_LEVEL_CODE = "EDUCATION_LEVEL_001";
 
 }

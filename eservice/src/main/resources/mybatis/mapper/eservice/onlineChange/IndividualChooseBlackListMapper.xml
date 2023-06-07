@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.twfhclife.eservice.onlineChange.dao.IndividualChooseBlackListDao">
+
+	<resultMap id="IndividualChooseBlackListMap" type="com.twfhclife.eservice.onlineChange.model.IndividualChooseBlackListVo">
+		<result column="IP" property="ip" />
+		<result column="BLACK_CATEGORY" property="blackCategory" />
+		<result column="BLACK_START" property="blackStart" />
+		<result column="BLACK_END" property="blackEnd" />
+		<result column="STATUS" property="status"/>
+	</resultMap>
+
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertIndividualChooseBlackList">
+		INSERT INTO ESERVICE.DBO.INDIVIDUAL_CHOOSE_BLACK_LIST
+		(
+			IP,BLACK_CATEGORY,BLACK_START,BLACK_END,STATUS
+		)
+		VALUES
+		(
+			#{individualChooseBlackListVo.ip,jdbcType=VARCHAR},
+			#{individualChooseBlackListVo.blackCategory, jdbcType=VARCHAR},
+			#{individualChooseBlackListVo.blackStart, jdbcType=DATE},
+			#{individualChooseBlackListVo.blackEnd, jdbcType=DATE},
+			#{individualChooseBlackListVo.status, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="getIndividualChooseBlackList" resultMap="IndividualChooseBlackListMap">
+		SELECT
+			IP,BLACK_CATEGORY,BLACK_START,BLACK_END,STATUS
+		FROM
+			ESERVICE.DBO.INDIVIDUAL_CHOOSE_BLACK_LIST
+		WHERE
+			IP = #{ip}
+		AND
+			STATUS = '1'
+	</select>
+
+	<update id="updateIndividualChooseBlackList" parameterType="com.twfhclife.eservice.onlineChange.model.IndividualChooseBlackListVo">
+		update 
+			ESERVICE.DBO.INDIVIDUAL_CHOOSE_BLACK_LIST
+		SET
+			BLACK_CATEGORY = #{individualChooseBlackListVo.blackCategory, jdbcType=VARCHAR},
+			BLACK_START =#{individualChooseBlackListVo.blackStart, jdbcType=DATE},
+			BLACK_END = #{individualChooseBlackListVo.blackEnd, jdbcType=DATE}
+		WHERE 
+			IP = #{individualChooseBlackListVo.ip, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

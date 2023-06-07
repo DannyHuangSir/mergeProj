@@ -4,13 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
-import com.twfhclife.eservice.onlineChange.model.TransDepositVo;
+import com.twfhclife.eservice.onlineChange.model.IndividualChooseVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.onlineChange.service.ITransDepositService;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.service.IndividualChooseService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
@@ -22,14 +23,22 @@ import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
 import com.twfhclife.eservice.web.model.ParameterVo;
+import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
+import com.twfhclife.generic.api_client.TransCtcSelectUtilClient;
+import com.twfhclife.generic.api_model.LicohilResponse;
+import com.twfhclife.generic.api_model.LicohilVo;
+import com.twfhclife.generic.api_model.PolicyDetailRequest;
+import com.twfhclife.generic.api_model.PolicyDetailResponse;
+import com.twfhclife.generic.api_model.PolicyDetailVo;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
-import com.twfhclife.generic.util.StatuCode;
+import com.twfhclife.generic.util.ValidateUtil;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +50,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /***
  * 線上申請-未來保費投資標的與分配比例
@@ -78,6 +90,12 @@ public class TransInvestmentController extends BaseUserDataController  {
     @Autowired
     private ITransDepositService transDepositService;
 
+	@Autowired
+	private TransCtcSelectUtilClient transCtcSelectUtilClient;	
+	
+	@Autowired
+	private IndividualChooseService indivdualChooseService;
+	
     @RequestLog
     @GetMapping("/investment1")
     public String investment1(RedirectAttributes redirectAttributes) {
@@ -98,30 +116,102 @@ public class TransInvestmentController extends BaseUserDataController  {
                 return "redirect:apply1";
             }
 
-            boolean expire = riskLevelService.checkRiskLevelExpire(getUserId());
-            if (expire) {
-                redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
-                return "redirect:apply1";
-            }
+//            boolean expire = riskLevelService.checkRiskLevelExpire(getUserId());
+//            if (expire) {
+//                redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
+//                return "redirect:apply1";
+//            }
+//
+//            String userRocId = getUserRocId();
+//            String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
+//            if(StringUtils.isBlank(riskLevel)) {
+//                redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+//                return "redirect:apply1";
+//            }
 
-            String userRocId = getUserRocId();
-            String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
-            if(StringUtils.isBlank(riskLevel)) {
-                redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
-                return "redirect:apply1";
-            }
-
-            addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));
+//            addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));
             String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
                     ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_REMARKS);
             if (parameterValueByCodeConsent != null) {
                 addAttribute("transformationRemark", parameterValueByCodeConsent);
             }
-
+//            policyList = (List<PolicyListVo>) getSession(UserDataInfo.USER_ALL_POLICY_LIST);
+            String userRocId = getUserRocId();
             List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(userRocId);
+//            List<PolicyListVo> policyList =  new ArrayList<PolicyListVo>();
+//           	policyList =  (List<PolicyListVo>) getSession(UserDataInfo.USER_ALL_POLICY_LIST);
+//            if(policyList == null) {
+//				PolicyDetailRequest req = new PolicyDetailRequest();
+//				req.setRocId(userRocId);
+//				PolicyDetailResponse response = transCtcSelectUtilClient.getPolicyDataByRocId(req);
+//				if(response != null) {
+//					List<PolicyDetailVo> policyDetailList  = new ArrayList<PolicyDetailVo>();
+//					policyDetailList = response.getPolicyDetailList();
+//					policyList = loginService.mappingPolicyList(policyDetailList);
+//				}				
+//            }
             transInvestmentService.handlePolicyStatusLocked(userRocId, policyList, TransTypeUtil.INVESTMENT_PARAMETER_CODE);
             transService.handleVerifyPolicyRuleStatusLocked(policyList, TransTypeUtil.INVESTMENT_PARAMETER_CODE);
             addAttribute("policyList", policyList);
+//            List<String> policyNoList = new ArrayList<>();
+//            policyList.stream().filter(x->{
+//            	if(x.getPolicyListType().equals("1")) {
+//            		policyNoList.add(x.getPolicyNo());
+//            		return true;
+//            	}
+//				return false;            	
+//            }).collect(Collectors.toList());
+//            if(policyNoList.size() > 0) {
+           	PolicyDetailRequest request = new PolicyDetailRequest();
+    		request.setRocId(userRocId);			
+    		request.setPolicyInvestmentType(indivdualChooseService.getpolicyInvestmentType());
+			LicohilResponse response = transCtcSelectUtilClient.getLicohiByPolicyNo(request);
+			LicohilVo licohilVo = new LicohilVo();
+			if(response.getLicohilVo().size() == 0) {
+				response = transCtcSelectUtilClient.getLilipmByPolicyNo(request);
+				licohilVo = indivdualChooseService.getpolicyHaveInvestmentType(response.getLicohilVo());
+				if(licohilVo != null) {					
+					if(!insertOrUpdateForIndividual(licohilVo)) {
+					redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_1 +"<br/>" + OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_2);
+		             return "redirect:apply1";
+					}    
+				}else {
+	                redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+	                return "redirect:apply1";
+				}	           
+			}else {
+				licohilVo = indivdualChooseService.getpolicyHaveInvestmentType(response.getLicohilVo());
+	            transInvestmentService.insertOrUpdateForIndividual(licohilVo);
+				if(!insertOrUpdateForIndividual(licohilVo)) {
+					redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_1 +"<br/>" + OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_2);
+		             return "redirect:apply1";
+				}    
+			}
+            //若INDIVIDUAL.RISK_ATTR記錄為 D,未來保費投資標的與分配比例(investment1), 設定停損停利 跳提示: "經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司客服電話 0800-011-966"
+            IndividualChooseVo vo =  indivdualChooseService.getIndividualChoosData(userRocId);
+            if(vo != null) {
+            	if(indivdualChooseService.compareDate(vo.getRatingDate(), licohilVo.getRatingDate() )) {
+            		if(vo.getRiskAttr().equals("D")) {
+    					redirectAttributes.addFlashAttribute("errorMessage", "經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司客服電話 0800-011-966");
+    		             return "redirect:apply1";
+                	}
+            	}else {
+            		if(licohilVo.getInveAttr().equals("D")) {
+    					redirectAttributes.addFlashAttribute("errorMessage", "經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司客服電話 0800-011-966");
+    		             return "redirect:apply1";
+                	}
+            	}                	
+            }else {
+            	if(licohilVo.getInveAttr().equals("D")) {
+					redirectAttributes.addFlashAttribute("errorMessage", "經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司客服電話 0800-011-966");
+					return "redirect:apply1";	
+            	}
+            }    			
+//           }else {
+//        	   redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+//               return "redirect:apply1"; 
+//           }
+            
         } catch (Exception e) {
             logger.error("Unable to init from cancelContract1: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
@@ -152,31 +242,35 @@ public class TransInvestmentController extends BaseUserDataController  {
     @RequestLog
     @PostMapping("/investment3")
     public String investment3(TransInvestmentVo transInvestmentVo) {
-        String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
-                ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_REMARK1);
-        if (parameterValueByCodeConsent != null) {
-            addAttribute("transformationRemark", parameterValueByCodeConsent);
-        }
-
-        final List<String> showAccountInvts = Lists.newArrayList();
-        parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "SHOW_ACCOUNT_INVT_NOS")
-                .forEach(e -> showAccountInvts.add(e.getParameterValue()));
-
-        addAttribute("showAccountInvts", showAccountInvts);
-        addAttribute("proposer", getProposerName());
-        addAttribute("uri", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_URI));
-        String limit = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_LIMIT);
-        addAttribute("INVESTMENT_LIMIT", StringUtils.isEmpty(limit) ? Integer.MAX_VALUE : Integer.parseInt(limit));
-        UsersVo user = getUserDetail();
-        String riskLevel = riskLevelService.getUserRiskAttr(user.getRocId());
-        addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));
-        //查询已有投资标
-        String policyType = transInvestmentVo.getPolicyNo().substring(0, 2);
-        addAttribute("policyType", policyType);
-        List<InvestmentPortfolioVo> investments = transInvestmentService.getOwnInvestment(transInvestmentVo.getPolicyNo());
-        addAttribute("configs", transDepositService.getDepositConfigs());
-        addAttribute("investments", investments);
-        return "frontstage/onlineChange/investment/investment3";
+    	if(ValidateUtil.TransInvestmentIsValid(transInvestmentVo)) {
+	        String parameterValueByCodeConsent = parameterService.getParameterValueByCode(
+	                ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_REMARK1);
+	        if (parameterValueByCodeConsent != null) {
+	            addAttribute("transformationRemark", parameterValueByCodeConsent);
+	        }
+	        final List<String> showAccountInvts = Lists.newArrayList();
+	        parameterService.getParameterByCategoryCode(ApConstants.SYSTEM_ID, "SHOW_ACCOUNT_INVT_NOS")
+	                .forEach(e -> showAccountInvts.add(e.getParameterValue()));
+	
+	        addAttribute("showAccountInvts", showAccountInvts);
+	        addAttribute("proposer", getProposerName());
+	        addAttribute("uri", parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_DISTRIBUTION_URI));
+	        String limit = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_LIMIT);
+	        addAttribute("INVESTMENT_LIMIT", StringUtils.isEmpty(limit) ? Integer.MAX_VALUE : Integer.parseInt(limit));
+	        UsersVo user = getUserDetail();
+	        String riskLevel = riskLevelService.getUserRiskAttr(user.getRocId());
+	        addAttribute("riskLevel", transInvestmentService.transRiskLevelToName(riskLevel));
+	        //查询已有投资标
+	       	String	policyType = transInvestmentVo.getPolicyNo().substring(0, 2);	
+	        addAttribute("policyType", policyType);
+	        List<InvestmentPortfolioVo> investments = transInvestmentService.getOwnInvestment(transInvestmentVo.getPolicyNo());
+	        addAttribute("configs", transDepositService.getDepositConfigs());
+	        addAttribute("investments", investments);
+	        return "frontstage/onlineChange/investment/investment3";
+	    }else {
+	    	 addAttribute("transInvestmentVo", transInvestmentVo);
+	    	 return "forward:investment3";
+	    }
     }
 
     @RequestLog
@@ -224,8 +318,12 @@ public class TransInvestmentController extends BaseUserDataController  {
     @PostMapping("/getNewInvestments")
     @ResponseBody
     public ResponseEntity<ResponseObj> getNewInvestments(@RequestBody TransInvestmentVo vo) {
-        List<InvestmentPortfolioVo> investments = transInvestmentService.getNewInvestments(vo.getPolicyNo(), vo.getOwnInvestments(), getUserRocId());
-        processSuccess(investments);
+    	if(ValidateUtil.TransInvestmentIsValid(vo)) {
+            List<InvestmentPortfolioVo> investments = transInvestmentService.getNewInvestments(vo.getPolicyNo(), vo.getOwnInvestments(), getUserRocId());
+            processSuccess(investments);
+    	}else {
+            processSuccess(null);
+    	}
         return processResponseEntity();
     }
 
@@ -344,4 +442,33 @@ public class TransInvestmentController extends BaseUserDataController  {
         }
         logger.info("End send mail");
     }
+    
+	private boolean insertOrUpdateForIndividual(LicohilVo licohilVo) {
+		transInvestmentService.insertOrUpdateForIndividual(licohilVo);
+		transInvestmentService.insertOrUpdateForIndividualChoose(licohilVo);
+		IndividualChooseVo vo = indivdualChooseService.getIndividualChoosData(licohilVo.getLipmId());
+
+		if(licohilVo.getRatingDate() != null && vo != null) {
+			if(indivdualChooseService.compareDate(vo.getRatingDate(), licohilVo.getRatingDate())) {
+				 if(indivdualChooseService.checkRatingDate(vo.getRatingDate())){
+					 return false;
+				 }else {
+					 return true;
+				 }
+			}else {
+				if(indivdualChooseService.checkRatingDate(licohilVo.getRatingDate())) {
+					return false;
+				}else {
+					 return true;
+				}
+			}
+		}else if(licohilVo.getRatingDate() != null){
+			if(indivdualChooseService.checkRatingDate(licohilVo.getRatingDate())) {
+				return false;
+			}else {
+				 return true;
+			}
+		}
+		return true;
+	}
 }

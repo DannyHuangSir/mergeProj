@@ -17,6 +17,18 @@ public class QuestionVo implements Serializable {
     private String isMulti;
 
     private List<OptionVo> options = Lists.newArrayList();
+    /**
+     * 用於處李煥行提示文字
+     * 20230215新增
+     */
+    private String question2;
+    /**
+     * 用於處李煥行提示文字
+     * 20230320新增
+     */
+    private String question3;
+    
+    private String seq;
 
     public String getQuestion() {
         return question;
@@ -57,4 +69,29 @@ public class QuestionVo implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+	public String getQuestion2() {
+		return question2;
+	}
+
+	public void setQuestion2(String question2) {
+		this.question2 = question2;
+	}
+
+	public String getSeq() {
+		return seq;
+	}
+
+	public void setSeq(String seq) {
+		this.seq = seq;
+	}
+
+	public String getQuestion3() {
+		return question3;
+	}
+
+	public void setQuestion3(String question3) {
+		this.question3 = question3;
+	}
+    
 }

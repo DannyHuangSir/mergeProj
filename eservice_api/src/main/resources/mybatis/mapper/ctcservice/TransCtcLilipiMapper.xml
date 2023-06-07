@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.elife.dao.TransCtcLilipiDao">
+
+	<resultMap id="LipiDataByPolicyNoMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLilipiVo" >
+		<result column="LIPI_ID" property="lipiId"/>
+		<result column="LIPI_BIRTH" property="lipiBirth"/>
+	</resultMap>
+
+	<select id="getLipiDataByPolicyNo" resultMap="LipiDataByPolicyNoMap" parameterType="java.lang.String">
+		SELECT 
+		  LIPI_ID,LIPI_BIRTH
+		FROM 
+		  CTCMGR.LILIPI_ES_FLOWTEST 
+		WHERE  
+		  CONCAT(CONCAT(LIPI_INSU_TYPE, TO_CHAR(LIPI_INSU_GRP_NO)),LIPI_INSU_SEQ_NO) =#{policyNo}
+	</select>
+		
+</mapper>
+
+
+

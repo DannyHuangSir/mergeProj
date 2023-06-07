@@ -112,6 +112,7 @@ public class TransCertPrintController extends BaseUserDataController {
 	@PostMapping("/certificatePrint2")
 	public String certificatePrint2(TransCertPrintVo transCertPrintVo) {
 		try {
+			addSession("transCertPrintVo", transCertPrintVo); // 20230524, session記錄選擇的保單
 			addAttribute("transCertPrintVo", transCertPrintVo);
 		} catch (Exception e) {
 			logger.error("Unable to init from certificatePrint2: {}", ExceptionUtils.getStackTrace(e));
@@ -244,6 +245,8 @@ public class TransCertPrintController extends BaseUserDataController {
 	@PostMapping("/certPrintPrepare")
 	public ResponseEntity<ResponseObj> certPrintPrepare(@RequestBody(required = false) TransCertPrintVo transCertPrintVo){
 		try {
+			TransCertPrintVo transCertPrintChooseVo = (TransCertPrintVo)getSession("transCertPrintVo");
+			transCertPrintVo.setPolicyNoList(transCertPrintChooseVo.getPolicyNoList()); // 20230524, 使用步驟1 session記錄選擇的保單
 			addSession("transCertPrintVo", transCertPrintVo);
 			processSuccessMsg(null);
 		} catch(Exception e) {

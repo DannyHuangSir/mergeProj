@@ -143,5 +143,256 @@
 	 left join CTCMGR.LIPROD_ES_FLOWTEST on PROD_NO = lipm_insu_type 
 	 where lipm_id = #{lipmId} and LIPM_ST <![CDATA[ < ]]> 19
 	</select>
+
+	<resultMap id="PolicyDataByRocIdMap" type="com.twfhclife.eservice.api.elife.domain.PolicyDetailVo">
+		<result column="LIPM_INSU_NO" property="lipmInsuNo"/>
+		<result column="LIPM_INSU_TYPE" property="lipmInsuType"/>
+		<result column="LIPM_INSU_GRP_NO" property="lipmInsuGrpNo"/>
+		<result column="LIPM_INSU_SEQ_NO" property="lipmInsuSeqNo"/>
+		<result column="LIPM_AGEN_CODE" property="lipmAgenCode"/>
+		<result column="LIPM_AGEN_NA_CODE" property="lipmAgenNaCode"/>
+		<result column="LIPM_AGEN_CODE_BRANCH" property="lipmAgenCodeBranch"/>
+		<result column="LIPM_RCP_CODE" property="lipmRcpCode"/>
+		<result column="LIPM_TRED_PAAB_DATE" property="lipmTredPaabDate"/>
+		<result column="LIPM_RCP_METH_CODE" property="lipmRcpMethCode"/>
+		<result column="LIPM_ST" property="lipmSt"/>
+		<result column="LIPM_5_GP" property="lipm5Gp"/>
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate"/>
+		<result column="LIPM_ID" property="lipmId"/>
+		<result column="LIPM_NAME_1" property="lipmName1"/>
+		<result column="LIPM_NAME_2" property="lipmName2"/>
+		<result column="LIPM_ADDR" property="lipmAddr"/>
+		<result column="LIPM_ZIP_CODE" property="lipmZipCode"/>
+		<result column="LIPM_TEL_H"	property="lipmTelH"/>
+		<result column="LIPM_TEL_O"	property="lipmTelO"/>
+		<result column="LIPM_CHAR_ID" property="lipmCharId"/>
+		<result column="LIPM_CHAR_ADDR"	property="lipmCharAddr"/>
+		<result column="LIPM_CHAR_ZIP_CODE"	property="lipmCharZipCode"/>
+		<result column="LIPM_AUTO_RCP_MK" property="lipmAutoRcpMk"/>
+		<result column="LIPM_FLEX_RCP_MK" property="lipmFlexRcpMk"/>
+		<result column="LIPI_INSU_NO" property="lipiInsuNo"/>
+		<result column="LIPI_INSU_TYPE" property="lipiInsuType"/>
+		<result column="LIPI_INSU_GRP_NO" property="lipiInsuGrpNo"/>
+		<result column="LIPI_INSU_SEQ_NO" property="lipiInsuSeqNo"/>
+		<result column="LIPI_INSU_BEG_DATE"	property="lipiInsuBegDate"/>
+		<result	column="LIPI_INSU_END_DATE"	property="lipiInsuEndDate"/>
+		<result column="LIPI_GP_NO"	property="lipiGpNo"/>
+		<result column="LIPI_ID" property="lipiId"/>
+		<result column="LIPI_NAME"	property="lipiName"/>
+		<result column="LIPI_BIRTH"	property="lipiBirth"/>
+		<result column="LIPI_SEX" property="lipiSex"/>
+		<result column="LIPI_AGE" property="lipiAge"/>
+		<result	column="LIPI_PREM_YEAR"	property="lipiPremYear"/>
+		<result	column="LIPI_METH_ANNU_PAY"	property="lipiMethAnnuPay"/>
+		<result	column="LIPI_LI_RATE" property="lipiLiRate"/>
+		<result	column="LIPI_MAIN_AMT" property="lipiMainAmt"/>
+		<result	column="LIPI_TABL_PREM"	property="lipiTablPrem"/>
+		<result	column="LIPI_UN_HEAL_PREM" property="lipiUnHealPrem"/>
+		<result	column="LIPI_DANG_PREM"	property="lipiDangPrem"/>
+		<result	column="LIPI_ADD_MK" property="lipiAddMk"/>
+		<result	column="LIPI_LO_MK"	property="lipiLoMk"/>
+		<result	column="LIPI_ST" property="lipiSt"/>
+		<result	column="LIPI_ST_DATE" property="lipiStDate"/>
+		<result	column="LIPI_CANCER_QUAN" property="lipiCancerQuan"/>
+		<result	column="LIPI_HEAL_CODE"	property="lipiHealCode"/>
+		<result	column="LIPI_ADDR"	property="lipiAddr"/>
+		<result	column="POLICY_LIST_TYPE" property="policyListType"/>
+		<result	column="DRAW_DAY" property="drawDay"/>
+		<result	column="PAID_AMOUNT" property="paidAmount"/>
+		<result	column="MAIN_INSURED_NAME" property="mainInsuredName"/>
+		<result	column="SETT_CH_NAME" property="settChName"/>
+		<result	column="EXPIRED_FLAG" property="expiredFlag"/>
+		<result	column="SAME_ID_COUNT" property="sameIdCount"/>
+		<result	column="CUSTOMER_NAME" property="customerName"/>
+		<result	column="LIPI_ROCID"	property="lipiRocid"/>
+		<result	column="PAPR_PAAB_AMT"	property="paprPaabAmt"/>
+		<result	column="PROD_CURRENCY"	property="prodCurrency"/>
+		<result	column="PROD_IS_FATCA"	property="prodIsFatca"/>
+		<result	column="PROD_TYPE"	property="prodType"/>
+		<result	column="LOMS_AMT"	property="lomsAmt"/>
+		<result	column="VAL1_TYPE"	property="val1Type"/>
+		<result	column="VAL1_PAPR_AMT"	property="val1PaprAmt"/>
+		<result	column="VAL1_INSU_NO"	property="val1InsuNo"/>
+		<result	column="VAL1_RESE_AMT"	property="val1ReseAmt"/>
+		<result	column="VAL1_CANC_AMT"	property="val1CancAmt"/>
+		<result	column="MODIFYDATETIME"	property="modifydatetime"/>
+		<result column="RAT1_RATE" property="rat1Rate"/>
+		<result column="AUTR_SUB_PREM" property="autrSubPrem"/>
+		<result column="INMS_BANK_CODE" property="inmsBankCode"/>
+		<result column="INMS_BANK_BRANCH_CODE" property="inmsBankBranchCode"/>
+		<result column="INMS_ACCOUNT_NO" property="inmsAccountNo"/>
+		<result column="BNAG_BIRTH" property="bnagBirth"/>
+	</resultMap>
+	
+	<!-- 要保人+被保人 - 根據身分證號查詢  -->
+	<select id="getPolicyDataByRocId" resultMap="PolicyDataByRocIdMap" parameterType="java.lang.String">	
+		SELECT DISTINCT 
+			CONCAT(CONCAT(LIPM_INSU_TYPE, to_char(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) as LIPM_INSU_NO
+			,LIPM_INSU_TYPE,LIPM_INSU_GRP_NO,LIPM_INSU_SEQ_NO,LIPM_AGEN_CODE,LIPM_AGEN_NA_CODE
+			,LIPM_AGEN_CODE_BRANCH,LIPM_RCP_CODE,LIPM_TRED_PAAB_DATE,LIPM_RCP_METH_CODE
+			,CASE WHEN LIPI_INSU_END_DATE <![CDATA[ < ]]>  sysdate +1 THEN '50' ELSE LIPM_ST END LIPM_ST 
+			,LIPM_5_GP,LIPM_INSU_BEG_DATE,LIPM_ID,LIPM_NAME_1,LIPM_NAME_2
+			,LIPM_ADDR,LIPM_ZIP_CODE,LIPM_TEL_H,LIPM_TEL_O,LIPM_CHAR_ID
+			,LIPM_CHAR_ADDR,LIPM_CHAR_ZIP_CODE,LIPM_AUTO_RCP_MK,LIPM_FLEX_RCP_MK 
+			,CONCAT(CONCAT(LIPI_INSU_TYPE, to_char(LIPI_INSU_GRP_NO)),LIPI_INSU_SEQ_NO) as LIPI_INSU_NO
+			,LIPI_INSU_TYPE,LIPI_INSU_GRP_NO,LIPI_INSU_SEQ_NO,LIPI_INSU_BEG_DATE
+			,LIPI_INSU_END_DATE,LIPI_GP_NO,LIPI_ID,LIPI_NAME
+			,LIPI_BIRTH,LIPI_SEX,LIPI_AGE,LIPI_PREM_YEAR,LIPI_METH_ANNU_PAY
+			,LIPI_LI_RATE,LIPI_MAIN_AMT,LIPI_TABL_PREM,LIPI_UN_HEAL_PREM
+			,LIPI_DANG_PREM,LIPI_ADD_MK,LIPI_LO_MK,LIPI_ST
+			,LIPI_ST_DATE,LIPI_CANCER_QUAN,LIPI_HEAL_CODE,LIPI_ADDR	
+			, CASE WHEN LIPM_INSU_TYPE IN
+			<foreach collection="request.policyInvestmentType" item="item" index="index" open="(" separator="," close=")">
+			   '${item}'
+			 </foreach>	
+			then '1' else '2' end AS POLICY_LIST_TYPE
+			, '' AS DRAW_DAY 
+			,LIPI_TABL_PREM AS PAID_AMOUNT 
+			,LIPI_NAME AS MAIN_INSURED_NAME 
+			,REPLACE(SETT_CH_NAME , '　' , '') AS SETT_CH_NAME 
+			,case when LIPI_INSU_END_DATE is null then 'N' else CASE WHEN sysdate + 1 <![CDATA[>=]]> LIPI_INSU_END_DATE THEN 'Y' ELSE 'N' END END  AS EXPIRED_FLAG
+			,( SELECT COUNT(*) FROM CTCMGR.LILIPI_ES_FLOWTEST WHERE  
+				CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+				CONCAT(CONCAT(LIPI_INSU_TYPE, TO_CHAR(LIPI_INSU_GRP_NO)),LIPI_INSU_SEQ_NO)
+			AND LIPM_ID = LIPI_ID ) AS SAME_ID_COUNT  
+			,LIPM_NAME_1  AS CUSTOMER_NAME ,LIPI_ID AS LIPI_ROCID
+			,PAPR_PAAB_AMT
+			,PROD_CURRENCY
+			,PROD_IS_FATCA,PROD_TYPE
+			,LOMS_AMT
+			,VAL1_TYPE,VAL1_PAPR_AMT,VAL1_INSU_NO
+			,VAL1_RESE_AMT,VAL1_CANC_AMT,MODIFYDATETIME
+			,RAT1_RATE
+			,AUTR_SUB_PREM
+			,INMS_BANK_CODE	,INMS_BANK_BRANCH_CODE	,INMS_ACCOUNT_NO	
+		    ,BNAG_BIRTH
+		FROM  CTCMGR.LILIPM_ES_FLOWTEST
+		LEFT JOIN CTCMGR.LILIPI_ES_FLOWTEST
+		ON  CONCAT(CONCAT(LIPM_INSU_TYPE, to_char(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) =
+			CONCAT(CONCAT(LIPI_INSU_TYPE, to_char(LIPI_INSU_GRP_NO)),LIPI_INSU_SEQ_NO)
+		LEFT JOIN
+			CTCMGR.LIPAPR_ES_FLOWTEST
+		ON
+			CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+			CONCAT(CONCAT(PAPR_INSU_TYPE, TO_CHAR(PAPR_INSU_GRP_NO)),PAPR_INSU_SEQ_NO)
+		LEFT JOIN
+			CTCMGR.LIPROD_ES_FLOWTEST
+		ON
+			LIPM_INSU_TYPE = PROD_NO
+		LEFT JOIN
+			CTCMGR.LISETT_ES_FLOWTEST
+		ON
+			LIPM_INSU_TYPE = SETT_INSU_TYPE
+		LEFT JOIN 
+			CTCMGR.LILOMS_ES_FLOWTEST
+		ON
+			CONCAT(CONCAT(LIPM_INSU_TYPE, to_char(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+			LOMS_INSU_NO
+		LEFT JOIN
+			CTCMGR.LIVAL1_ES_FLOWTEST
+		ON
+			CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+			VAL1_INSU_NO
+		LEFT JOIN
+			CTCMGR.LIRAT1_ES_FLOWTEST
+		ON
+			CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+			RAT1_INSU_NO
+		LEFT JOIN
+			CTCMGR.LIAUTR_ES_FLOWTEST
+		ON
+			CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+			CONCAT(CONCAT(AUTR_INSU_TYPE, TO_CHAR(AUTR_INSU_GRP_NO)),AUTR_INSU_SEQ_NO) 
+		LEFT JOIN
+			CTCMGR.LIINMS_ES_FLOWTEST
+		ON
+			CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+			INMS_INSU_NO
+		LEFT JOIN
+			CTCMGR.LIBNAG_FLOWTEST
+		ON
+			CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+			CONCAT(CONCAT(bnag_insu_type, to_char(bnag_insu_grp_no)),bnag_insu_seq_no) 
+		WHERE LIPM_ID = #{request.rocId} or LIPI_ID = #{request.rocId}
+		ORDER BY LIPM_INSU_BEG_DATE DESC
+	</select>
+	
+	<resultMap id="LicohiByPolicyNoMap" type="com.twfhclife.eservice.api.elife.domain.LicohilVo">
+		<result column="LIPM_INSU_NO" property="lipmInsuNo" />
+		<result column="LIPM_NAME_1" property="lipmName1" />
+		<result column="LIPM_ID" property="lipmId" />
+		<result column="SEX" property="sex" />
+		<result column="PMDA_APPLICANT_CELLPHONE" property="pmdaApplicantCellphone" />
+		<result column="BNAG_BIRTH" property="bnagBirth" />
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate" />
+		<result column="RATING_DATE" property="ratingDate" />
+		<result column="INVE_ATTR" property="inveAttr" />
+		<result column="POLICY_LIST_TYPE" property="policyListType" />
+	</resultMap>
+	
+<!-- 	<select id="getLicohiByPolicyNo" resultMap="LicohiByPolicyNoMap" parameterType="java.lang.String"> -->
+<!-- 		select * from ( -->
+<!-- 		select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO, LIPM_NAME_1, LIPM_ID, (case when SUBSTR(LIPM_ID,2,1)='1' then 'M' else 'F' end) as sex, BNAG_BIRTH, LIPM_INSU_BEG_DATE, COHI_CHAN_DATE as RATING_DATE, COHI_INVE_ATTR as INVE_ATTR   -->
+<!-- 		from CTCMGR.LICOHI_ES_FLOWTEST -->
+<!-- 		left join CTCMGR.LILIPM_ES_FLOWTEST ON CONCAT(CONCAT(COHI_INSU_TYPE, to_char(COHI_INSU_GRP_NO)),COHI_INSU_SEQ_NO) = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) -->
+<!-- 		left join CTCMGR.LIBNAG_ES_FLOWTEST on CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) = CONCAT(CONCAT(bnag_insu_type, to_char(bnag_insu_grp_no)),bnag_insu_seq_no) -->
+<!-- 		where COHI_INVE_ATTR IS NOT NULL -->
+<!-- 		and COHI_UP_B_A = 'A' -->
+<!-- 		and CONCAT(CONCAT(COHI_INSU_TYPE, to_char(COHI_INSU_GRP_NO)),COHI_INSU_SEQ_NO) IN -->
+<!-- 		<foreach collection="policyNos" item="item" index="index" open="(" separator="," close=")"> -->
+<!-- 		   '${item}' -->
+<!-- 		 </foreach> -->
+<!-- 		order by COHI_CHAN_DATE desc) -->
+<!-- 		where rownum <![CDATA[ < ]]> 2 -->
+<!-- 	</select> -->
+	
+	<select id="getLicohiByPolicyNo" resultMap="LicohiByPolicyNoMap" parameterType="java.lang.String">
+		select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO, LIPM_NAME_1, LIPM_ID, (case when SUBSTR(LIPM_ID,2,1)='1' then 'M' else 'F' end) as sex,
+		 PMDA_APPLICANT_CELLPHONE ,BNAG_BIRTH, LIPM_INSU_BEG_DATE, COHI_CHAN_DATE as RATING_DATE, COHI_INVE_ATTR as INVE_ATTR  ,
+		 		CASE WHEN LIPM_INSU_TYPE IN
+			<foreach collection="request.policyInvestmentType" item="item" index="index" open="(" separator="," close=")">
+			   '${item}'
+			 </foreach>	
+			then '1' else '2' end AS POLICY_LIST_TYPE
+		from CTCMGR.LICOHI_ES_FLOWTEST
+		left join CTCMGR.LILIPM_ES_FLOWTEST ON CONCAT(CONCAT(COHI_INSU_TYPE, to_char(COHI_INSU_GRP_NO)),COHI_INSU_SEQ_NO) = CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no)
+		left join CTCMGR.LIPMDA_ES_FLOWTEST on CONCAT(CONCAT(COHI_INSU_TYPE, to_char(COHI_INSU_GRP_NO)),COHI_INSU_SEQ_NO) = CONCAT(CONCAT(pmda_insu_type, to_char(pmda_insu_grp_no)),pmda_insu_seq_no)		
+		left join CTCMGR.LIBNAG_ES_FLOWTEST on CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) = CONCAT(CONCAT(bnag_insu_type, to_char(bnag_insu_grp_no)),bnag_insu_seq_no)
+		where COHI_INVE_ATTR IS NOT NULL
+		and COHI_UP_B_A = 'A'
+		and CONCAT(CONCAT(COHI_INSU_TYPE, to_char(COHI_INSU_GRP_NO)),COHI_INSU_SEQ_NO) in  
+		(select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO from CTCMGR.LILIPM_ES_FLOWTEST where LIPM_ID = #{request.rocId})order by COHI_CHAN_DATE desc
+	</select>
+	
+<!-- 	<select id="getLilipmByPolicyNo" resultMap="LicohiByPolicyNoMap" parameterType="java.lang.String"> -->
+<!-- 		select * from ( -->
+<!-- 		select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO, LIPM_NAME_1, LIPM_ID, (case when SUBSTR(LIPM_ID,2,1)='1' then 'M' else 'F' end) as sex, BNAG_BIRTH, LIPM_INSU_BEG_DATE as RATING_DATE, PMDA_INVE_ATTR as INVE_ATTR -->
+<!-- 		from CTCMGR.LILIPM_ES_FLOWTEST -->
+<!-- 		left join CTCMGR.LIPMDA_ES_FLOWTEST on CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) = CONCAT(CONCAT(pmda_insu_type, to_char(pmda_insu_grp_no)),pmda_insu_seq_no) -->
+<!-- 		left join CTCMGR.LIBNAG_ES_FLOWTEST on CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) = CONCAT(CONCAT(bnag_insu_type, to_char(bnag_insu_grp_no)),bnag_insu_seq_no) -->
+<!-- 		where PMDA_INVE_ATTR is not null -->
+<!-- 		and CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) IN -->
+<!-- 		<foreach collection="policyNos" item="item" index="index" open="(" separator="," close=")"> -->
+<!-- 		   '${item}' -->
+<!-- 		 </foreach> -->
+<!-- 		order by LIPM_INSU_BEG_DATE desc) -->
+<!-- 		where rownum <![CDATA[ < ]]> 2 -->
+<!-- 	</select> -->
+	
+	<select id="getLilipmByPolicyNo" resultMap="LicohiByPolicyNoMap" parameterType="java.lang.String">
+		select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO, LIPM_NAME_1, LIPM_ID, (case when SUBSTR(LIPM_ID,2,1)='1' then 'M' else 'F' end) as sex, PMDA_APPLICANT_CELLPHONE ,BNAG_BIRTH, LIPM_INSU_BEG_DATE as RATING_DATE,
+		PMDA_INVE_ATTR as INVE_ATTR ,
+		CASE WHEN LIPM_INSU_TYPE IN
+			<foreach collection="request.policyInvestmentType" item="item" index="index" open="(" separator="," close=")">
+			   '${item}'
+			 </foreach>	
+			then '1' else '2' end AS POLICY_LIST_TYPE
+		from CTCMGR.LILIPM_ES_FLOWTEST
+		left join CTCMGR.LIPMDA_ES_FLOWTEST on CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) = CONCAT(CONCAT(pmda_insu_type, to_char(pmda_insu_grp_no)),pmda_insu_seq_no)
+		left join CTCMGR.LIBNAG_ES_FLOWTEST on CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) = CONCAT(CONCAT(bnag_insu_type, to_char(bnag_insu_grp_no)),bnag_insu_seq_no)
+		where PMDA_INVE_ATTR is not null
+		and CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) in 
+		(select CONCAT(CONCAT(lipm_insu_type, to_char(lipm_insu_grp_no)),lipm_insu_seq_no) as LIPM_INSU_NO from CTCMGR.LILIPM_ES_FLOWTEST where LIPM_ID = #{request.rocId})order by LIPM_INSU_BEG_DATE desc
+	</select>
 	
 </mapper>

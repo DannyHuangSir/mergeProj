@@ -8,4 +8,5 @@ public interface ITransCtcLibnagService {
 	
 	public List<TransCtcLibnagVo> getRevokeByLibnagForBnagInsuSeqNo(String bnagInsuSeqNo);
 
+	public List<TransCtcLibnagVo> getBirthByPolicyNo(String policyNo);
 }

@@ -1,7 +1,36 @@
 package com.twfhclife.eservice.web.service.impl;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import com.google.gson.Gson;
+import com.twfhclife.generic.api_model.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import com.twfhclife.common.util.EncryptionUtil;
+import com.twfhclife.eservice.policy.model.PolicyExtraVo;
+import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.dao.LoginDao;
 import com.twfhclife.eservice.web.dao.UserDataDao;
 import com.twfhclife.eservice.web.dao.UsersDao;
@@ -15,29 +44,14 @@ import com.twfhclife.eservice.web.service.IRegisterUserService;
 import com.twfhclife.generic.api_client.BaseRestClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.SsoClient;
-import com.twfhclife.generic.api_model.*;
 import com.twfhclife.generic.model.KeycloakUserSession;
 import com.twfhclife.generic.service.IMailService;
 import com.twfhclife.generic.service.ISendSmsService;
+import com.twfhclife.generic.service.IUnicodeService;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import com.twfhclife.keycloak.model.KeycloakUser;
 import com.twfhclife.keycloak.service.KeycloakService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * 前台登入服務.
@@ -48,10 +62,10 @@ import java.util.*;
 public class LoginServiceImpl implements ILoginService {
 
 	private static final Logger logger = LogManager.getLogger(LoginServiceImpl.class);
-
+	
 	@Autowired
 	private UserDataDao userDataDao;
-
+	
 	@Autowired
 	private LoginDao loginDao;
 
@@ -60,24 +74,27 @@ public class LoginServiceImpl implements ILoginService {
 
 	@Autowired
 	private KeycloakService keycloakService;
-
+	
 	@Autowired
 	private IParameterService parameterService;
-
+	
 	@Autowired
 	private IMailService mailService;
-
+	
 	@Autowired
 	private IRegisterUserService registerUserService;
-
+	
 	@Autowired
 	private ISendSmsService smsService;
-
+	
 	@Autowired
 	private UsersDao userDao;
-
+	
 	@Autowired
 	private MessageTemplateClient messageTemplateClient;
+	
+	@Autowired
+	private IUnicodeService unicodeService;
 
 	@Value("${keycloak.default-realm}")
 	protected String DEFAULT_REALM;
@@ -90,25 +107,20 @@ public class LoginServiceImpl implements ILoginService {
 
 	/**
 	 * 內部人員類型.
-	 *
+	 * 
 	 * <pre>
 	 * admin: 內部人員
 	 * agent: 保代人員
 	 * </pre>
 	 */
 	private static List<String> partnerTypeList = Arrays.asList(new String[] { "admin", "agent" });
-
-
-
-
+	
 	/**
 	 * 登入.
-	 *
+	 * 
 	 * @param loginRequestVo LoginRequestVo
 	 * @return 回傳登入結果
 	 */
-
-
 	@Override
 	public LoginResultVo doLogin(LoginRequestVo loginRequestVo) {
 		// 前台登入Request
@@ -179,14 +191,14 @@ public class LoginServiceImpl implements ILoginService {
 				loginResultVo.setReturnCode(returnHeader.getReturnCode());
 				loginResultVo.setReturnMsg(returnHeader.getReturnMesg());
 			}
-
+			
 			logger.info("Call sso login returnCode={}", loginResultVo.getReturnCode());
 			logger.info("Call sso login returnMsg={}", loginResultVo.getReturnMsg());
 			if (ReturnHeader.SUCCESS_CODE.equals(loginResultVo.getReturnCode()) && keycloakLoginResponse != null) {
 				String keycloakUserId = keycloakLoginResponse.getUserId();
 				String sessionState = keycloakLoginResponse.getSessionState();
 				logger.info("Find login user[{}] keycloak id={}, sessionState={}", userName, keycloakUserId, sessionState);
-
+				
 				KeycloakUser keycloakUser = keycloakService.getUser(keycloakUserId);
 				if (keycloakUser != null) {
 					logger.info("Find login keycloakUser Object={}",
@@ -212,7 +224,7 @@ public class LoginServiceImpl implements ILoginService {
 				loginResultVo.setKeycloakUser(keycloakUser);
 			}
 		}
-
+		
 		//20180424 CR16 系統登入成功/失敗發送電子郵件至要保人信箱
 		if (ApConstants.isNotice && !"dev".equals(RUNNING_ENV)) {
 			UsersVo userVo = registerUserService.getUserByAccount(userName);
@@ -221,7 +233,7 @@ public class LoginServiceImpl implements ILoginService {
 				boolean isSms = "1".equals(userVo.getSmsFlag());
 				String isSuccess = loginResultVo.getKeycloakUser() != null ? "成功" : "失敗";
 				String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
-
+				
 				HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 				String remoteAddr = req.getHeader("X-FORWARDED-FOR");
 				if (StringUtils.isEmpty(remoteAddr)) {
@@ -231,7 +243,7 @@ public class LoginServiceImpl implements ILoginService {
 				paramMap.put("LoginTime", loginTime);
 				paramMap.put("LoginStatus", isSuccess);
 				paramMap.put("ClientIP", remoteAddr);
-
+				
 				//1.不論成功或失敗皆發送電子郵件/簡訊通知保戶
 				if (userVo.getLoginFailCount() == null) {
 					userVo.setLoginFailCount(0);
@@ -240,15 +252,15 @@ public class LoginServiceImpl implements ILoginService {
 					try {
 						List<String> receivers = new ArrayList<String>();
 						receivers.add(userVo.getEmail());
-
+						
 						if (userVo.getStatus().equals("enable")) {
 							messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_MAIL-002", receivers, paramMap, "email");
 						} else if (userVo.getStatus().equals("locked")) {
 							messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_MAIL-003", receivers, paramMap, "email");
-						}
+						}					
 					} catch (Exception e) {
 						logger.error("send login notice mail error : ", e);
-					}
+					}	
 				}
 				if (isSms) {
 					try {
@@ -263,7 +275,7 @@ public class LoginServiceImpl implements ILoginService {
 						logger.error("send login notice SMS error : ", e);
 					}
 				}
-
+				
 				//2.登入失敗N次帳戶鎖定,需進線客服或臨櫃解鎖方可再次登入,且解鎖後隨機生成新密碼並於登入成功後強制變更密碼,且不可與前N次相同
 				UsersVo vo = new UsersVo();
 				vo.setUserId(userVo.getUserId());
@@ -283,13 +295,13 @@ public class LoginServiceImpl implements ILoginService {
 				}
 			}
 		}
-
+		
 		return loginResultVo;
 	}
-
+	
 	/**
 	 * 登出.
-	 *
+	 * 
 	 * @param  realm
 	 * @param  userId
 	 * @return 回傳結果
@@ -298,10 +310,10 @@ public class LoginServiceImpl implements ILoginService {
 		boolean result = ssoClient.logout(realm, userId);
 		return result;
 	}
-
+	
 	/**
 	 * 取得登入sessionId.
-	 *
+	 * 
 	 * @param keyCloakUserId KeyCloak用戶id
 	 * @return 回傳登入sessionId
 	 */
@@ -311,7 +323,7 @@ public class LoginServiceImpl implements ILoginService {
 		apiReq.setUserId(keyCloakUserId);
 		apiReq.setRealm(DEFAULT_REALM);
 		apiReq.setClientId(DEFAULT_CLIENT_ID);
-
+		
 		List<String> userSessionIdList = new ArrayList<>();
 		List<KeycloakUserSession> userSessionList = ssoClient.getUserSession(apiReq);
 		if (!CollectionUtils.isEmpty(userSessionList)) {
@@ -495,4 +507,106 @@ public class LoginServiceImpl implements ILoginService {
 			}
 		}
 	}
+
+	@Override
+	public List<PolicyListVo> mappingPolicyList(List<PolicyDetailVo> policyDetailList) {
+		List<PolicyListVo> policyList = new ArrayList<PolicyListVo>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		policyList = policyDetailList.stream().map(x->{
+			PolicyListVo vo = new PolicyListVo();
+			PolicyExtraVo policyExtraVo = new PolicyExtraVo();
+			try {
+				vo.setRocId(x.getLipiRocid());
+				vo.setPolicyNo(x.getLipmInsuNo());
+				vo.setGroupNo(x.getLipmInsuGrpNo());
+				vo.setSeqNo(x.getLipmInsuSeqNo());
+				vo.setStatus(x.getLipmSt());
+				if(StringUtils.isNotEmpty(x.getLipiInsuBegDate())) {
+					vo.setEffectiveDate(sdf.parse(x.getLipiInsuBegDate()));
+				}
+
+				if(StringUtils.isNotEmpty(x.getLipiInsuEndDate())) {
+					vo.setExpireDate(sdf.parse(x.getLipiInsuEndDate()));
+				}
+
+				if(StringUtils.isNotEmpty(x.getLipmTredPaabDate())) {
+					vo.setPaidToDate(sdf.parse(x.getLipmTredPaabDate()));
+				}
+				vo.setPaymentMethod(x.getLipmRcpMethCode());
+				vo.setPaymentMode(x.getLipmRcpCode());
+				vo.setPolicyType(x.getLipmInsuType());
+				if(StringUtils.isNotEmpty(x.getLipiMainAmt())) {
+					vo.setMainAmount(new BigDecimal(x.getLipiMainAmt()));
+				}
+				if(StringUtils.isNotEmpty(x.getLipiPremYear())) {
+					vo.setPremYear(new BigDecimal(x.getLipiPremYear()));
+				}
+				if(StringUtils.isNotEmpty(x.getPaprPaabAmt())) {
+					vo.setUnpaidAmount(new BigDecimal(x.getPaprPaabAmt()));
+				}
+				vo.setCurrency(x.getProdCurrency());
+				vo.setAgentCode(x.getLipmAgenCode());
+				vo.setAgentNaCode(x.getLipmAgenNaCode());
+				vo.setAgentCodeBranch(x.getLipmAgenCodeBranch());
+				vo.setCustomerName(x.getLipmName1());
+				vo.setCustomerNameBase64(unicodeService.convertString2Unicode(x.getLipmName1()));
+				vo.setMainInsuredName(x.getLipiName());
+				vo.setMainInsuredNameBase64(unicodeService.convertString2Unicode(x.getLipiName()));
+				if(StringUtils.isNotEmpty(x.getPaprPaabAmt())) {
+					vo.setPaidAmount(new BigDecimal(x.getPaprPaabAmt()));
+				}
+				if(StringUtils.isEmpty(x.getLipiInsuEndDate())){
+					vo.setExpiredFlag("N");
+				}else{
+					int dates = DateUtil.getDateInterval(x.getLipiInsuEndDate().substring(0,10));
+					if(365 + dates  >= 0) {
+						vo.setExpiredFlag("Y");
+					}else {
+						vo.setExpiredFlag("N");
+					}
+				}
+				vo.setProdIsFatca(x.getProdIsFatca());
+				vo.setProdType(x.getProdType());
+				vo.setProductName(x.getSettChName());
+				vo.setPolicyListType(x.getPolicyListType());
+
+				policyExtraVo.setPolicyNo(x.getLipmInsuNo());
+
+				if(StringUtils.isNotEmpty(x.getLomsAmt())) {
+					policyExtraVo.setLoanAmount(new BigDecimal(x.getLomsAmt()));
+				}
+				if(StringUtils.isNotEmpty(x.getVal1PaprAmt())) {
+					policyExtraVo.setRemainLoanValue(new BigDecimal(x.getVal1PaprAmt()));
+				}
+				if(StringUtils.isNotEmpty(x.getRat1Rate())) {
+					policyExtraVo.setRoanRate(new BigDecimal(x.getRat1Rate()));
+				}
+				if(StringUtils.isNotEmpty(x.getAutrSubPrem())) {
+					policyExtraVo.setAplAmount(new BigDecimal(x.getAutrSubPrem()));
+				}
+				policyExtraVo.setAutoRcpMk(x.getLipmAutoRcpMk());
+				policyExtraVo.setMethAnnuPay(x.getLipiMethAnnuPay());
+				policyExtraVo.setInmsBankCode(x.getInmsBankCode());
+				policyExtraVo.setInmsBankBranchCode(x.getInmsBankBranchCode());
+				policyExtraVo.setInmsAccountNo(x.getInmsAccountNo());
+				if(StringUtils.isNotEmpty(x.getVal1ReseAmt())) {
+					policyExtraVo.setVal1ReseAmt(new BigDecimal(x.getVal1ReseAmt()));
+				}
+				if(StringUtils.isNotEmpty(x.getVal1CancAmt())) {
+					policyExtraVo.setVal1CancAmt(new BigDecimal(x.getVal1CancAmt()));
+				}
+				vo.setPolicyExtraVo(policyExtraVo);
+			} catch (ParseException e) {
+				logger.info("*** LOGIN  MAPPING POLICY DATA LIST ERROR: ***" , e);
+			}
+			return vo;
+		}).collect(Collectors.toList());
+		return policyList;
+	}
+
+	@Override
+	public List<String> getpolicyInvestmentType() {
+		return loginDao.getpolicyInvestmentType();
+	}
+
 }

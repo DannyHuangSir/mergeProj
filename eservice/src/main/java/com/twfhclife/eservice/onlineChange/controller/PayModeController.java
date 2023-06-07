@@ -107,6 +107,10 @@ public class PayModeController extends BaseUserDataController {
 			if (policyList != null) {
 				List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
 						userId, TransTypeUtil.PAYMODE_PARAMETER_CODE);
+				handledPolicyList = transService.handleGlobalPolicyStatusLocked(handledPolicyList,
+						userId, TransTypeUtil.DERATE_PAID_OFF);
+				handledPolicyList = transService.handleGlobalPolicyStatusLocked(handledPolicyList,
+						userId, TransTypeUtil.ROLLOVER_PERIODICALLY);
 				transPaymodeService.handlePolicyStatusLocked(handledPolicyList);
 				transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList,
 						TransTypeUtil.PAYMODE_PARAMETER_CODE);

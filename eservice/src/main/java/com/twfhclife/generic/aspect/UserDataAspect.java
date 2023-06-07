@@ -102,10 +102,108 @@ public class UserDataAspect extends BaseUserDataController {
 					setCompleteList(userRocId);
 					setPaymentNotificationList(userRocId);
 					break;
-				}
+				case "agent":
+					// 保經代
+					// 用戶資料需從保單號碼查詢取得
+					lilipmVo = getUserDataWithRequestPolicyNo();
+					setUserDataInfo();
+					break;
+				case "admin":
+					// 內部人員
+					// 用戶資料需從保單號碼查詢取得
+					lilipmVo = getUserDataWithRequestPolicyNo();
+					setUserDataInfo();
+					if (lilipmVo != null) {
+						String qryUesrRocId = lilipmVo.getNoHiddenLipmId();
+						setNoticeBoardList(qryUesrRocId);
+						setProcessingList(qryUesrRocId);
+						setCompleteList(qryUesrRocId);
+						setPaymentNotificationList(qryUesrRocId);
+					}
+					break;
+				}	
 			}
 		}
 		return pjp.proceed();
+	}
+	
+	/**
+	 * 保經代及內部人員會根據保單號碼反查使用者.
+	 * 
+	 * @return 使用者物件
+	 */
+	private LilipmVo getUserDataWithRequestPolicyNo() {
+		LilipmVo lilipmVo = null;
+		String policyNo = getRequestPolicyNo();
+		if (!StringUtils.isEmpty(policyNo)) {
+			
+			// NOTE:需要重設null，因內部人員用保單號碼查詢資料，需要清除舊session資料
+			// 事件通知資料
+			addSession(UserDataInfo.USER_NOTICE_BOARD_LIST, null);
+			// 案件已完成資料
+			addSession(UserDataInfo.USER_COMPLETE_LIST, null);
+			// 案件申請中資料
+			addSession(UserDataInfo.USER_PROCESSING_LIST, null);
+			// 繳費通知資料
+			addSession(UserDataInfo.USER_PAYMENT_REMINDER_LIST, null);
+			// 資產與負債資料資料
+			addSession(UserDataInfo.USER_POLICY_EXTRA, null);
+			// 保障型的被保人資料
+			addSession(UserDataInfo.USER_INSURED_PRODUCT_DATA, null);
+			// 保障總覽資料
+			addSession(UserDataInfo.USER_DASHBOARD_DATA, null);
+			addSession(UserDataInfo.USER_PRODUCT_NAME_LIST, null);
+			addSession(UserDataInfo.USER_MAIN_INSURED_NAME_LIST, null);
+			addSession(UserDataInfo.USER_POLICY_NO_LIST, null);
+			addSession(UserDataInfo.USER_ALL_POLICY_LIST, null);
+			addSession(UserDataInfo.USER_INVT_POLICY_LIST, null);
+			addSession(UserDataInfo.USER_BENEFIT_POLICY_LIST, null);
+			
+			lilipmVo = lilipmService.findByPolicyNo(policyNo);
+			if (lilipmVo != null) {
+				logger.debug("Find user[{}] with policyNo: {}", lilipmVo.getLipmName1(), policyNo);
+				addSession("ADMIN_QUERY_LILIPM", lilipmVo);
+				
+				// 重新設定該保單號碼的使用者資料
+				String qryUesrRocId = lilipmVo.getNoHiddenLipmId();
+				if (!StringUtils.isEmpty(qryUesrRocId)) {
+					UsersVo usersVo = registerUserService.getUserByRocId(qryUesrRocId);
+					if (usersVo != null) {
+						usersVo.setUserName(lilipmVo.getLipmName1());
+						addSession("ADMIN_QUERY_USERS", usersVo);
+					}
+					
+					List<String> policyNos = lilipmService.getUserPolicyNos(qryUesrRocId);
+					if (policyNos != null && policyNos.size() > 0) {
+						// 使用者的保單號碼清單
+						addSession(UserDataInfo.USER_POLICY_NO_LIST, (Serializable) policyNos);
+					}
+					
+					// 使用者的保單商品名稱
+					addSession(UserDataInfo.USER_PRODUCT_NAME_LIST, (Serializable) loginService.getProductNameList(qryUesrRocId));
+					// 使用者的保單主約被保人清單
+					addSession(UserDataInfo.USER_MAIN_INSURED_NAME_LIST, (Serializable) loginService.getMainInsuredNameList(qryUesrRocId));
+					
+					// 保戶所有保單
+					String loginUserId = getLoginUser().getUsername();
+					addSession(UserDataInfo.USER_ALL_POLICY_LIST, (Serializable) getUserOnlineChangePolicyList(loginUserId, qryUesrRocId));
+					
+					PolicyListResponse policyListResponse = getPolicyListByUser(loginUserId, qryUesrRocId);
+					// 投資型保單
+					addSession(UserDataInfo.USER_INVT_POLICY_LIST, (Serializable) policyListResponse.getInvtPolicyList());
+					// 保障型保單
+					addSession(UserDataInfo.USER_BENEFIT_POLICY_LIST, (Serializable) policyListResponse.getBenefitPolicyList());
+				}
+			} else {
+				logger.debug("Unable to find user with policyNo: {}", policyNo);
+			}
+		} else {
+			Object adminQryUserObj = getSession("ADMIN_QUERY_LILIPM");
+			if (adminQryUserObj != null) {
+				lilipmVo = (LilipmVo) adminQryUserObj;
+			}
+		}
+		return lilipmVo;
 	}
 
 	/**

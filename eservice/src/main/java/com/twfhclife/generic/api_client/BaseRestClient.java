@@ -1,14 +1,20 @@
 package com.twfhclife.generic.api_client;
 
-import com.twfhclife.generic.api_model.*;
-import com.twfhclife.generic.model.KeycloakUserSession;
-import com.twfhclife.generic.util.MyJacksonUtil;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
@@ -17,14 +23,54 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.net.ssl.SSLContext;
-import java.util.*;
+import com.twfhclife.generic.api_model.ApiResponseObj;
+import com.twfhclife.generic.api_model.BenefitDetailResponse;
+import com.twfhclife.generic.api_model.DashboardResponse;
+import com.twfhclife.generic.api_model.FunctionUsageAddResponse;
+import com.twfhclife.generic.api_model.KeycloakLoginResponse;
+import com.twfhclife.generic.api_model.KeycloakUserResponse;
+import com.twfhclife.generic.api_model.LicohilResponse;
+import com.twfhclife.generic.api_model.OnlineChangePolicyListResponse;
+import com.twfhclife.generic.api_model.PolicyAcctValueResponse;
+import com.twfhclife.generic.api_model.PolicyBonusResponse;
+import com.twfhclife.generic.api_model.PolicyDataResponse;
+import com.twfhclife.generic.api_model.PolicyDetailResponse;
+import com.twfhclife.generic.api_model.PolicyDividendResponse;
+import com.twfhclife.generic.api_model.PolicyFundTransactionResponse;
+import com.twfhclife.generic.api_model.PolicyListResponse;
+import com.twfhclife.generic.api_model.PolicyLoanResponse;
+import com.twfhclife.generic.api_model.PolicyPaidResponse;
+import com.twfhclife.generic.api_model.PolicyPaymentRecordResponse;
+import com.twfhclife.generic.api_model.PolicyPremiumTransactionResponse;
+import com.twfhclife.generic.api_model.PortfolioResponse;
+import com.twfhclife.generic.api_model.RegisterUserResponse;
+import com.twfhclife.generic.api_model.TransAddResponse;
+import com.twfhclife.generic.api_model.TransCsp002DataResponse;
+import com.twfhclife.generic.api_model.TransCspApiUtilResponse;
+import com.twfhclife.generic.api_model.TransCtcLibnagResponse;
+import com.twfhclife.generic.api_model.TransCtcLilipiResponse;
+import com.twfhclife.generic.api_model.TransCtcLilipmResponse;
+import com.twfhclife.generic.api_model.TransCtcLineacResponse;
+import com.twfhclife.generic.api_model.TransCtcLipmdaResponse;
+import com.twfhclife.generic.api_model.TransCtcLiprpaResponse;
+import com.twfhclife.generic.api_model.TransCtcSelectDataAddCodeResponse;
+import com.twfhclife.generic.api_model.TransCtcSelectDataResponse;
+import com.twfhclife.generic.api_model.TransCtcSelectDetailResponse;
+import com.twfhclife.generic.api_model.TransHistoryDetailResponse;
+import com.twfhclife.generic.api_model.TransHistoryListResponse;
+import com.twfhclife.generic.api_model.UserPolicyAcctValueResponse;
+import com.twfhclife.generic.model.KeycloakUserSession;
+import com.twfhclife.generic.util.MyJacksonUtil;
 
 @Service
 public class BaseRestClient implements InitializingBean {
@@ -73,43 +119,45 @@ public class BaseRestClient implements InitializingBean {
 		map.put(FunctionUsageAddResponse.class, new ParameterizedTypeReference<ApiResponseObj<FunctionUsageAddResponse>>() {});
 		ArrayList<KeycloakUserSession> userSessionResponse = new ArrayList<KeycloakUserSession>();
 		map.put(userSessionResponse.getClass(), new ParameterizedTypeReference<ApiResponseObj<List<KeycloakUserSession>>>() { });
-		map.put(String.class, new ParameterizedTypeReference<ApiResponseObj<String>>() { });
-
+		map.put(TransCtcLipmdaResponse.class, new ParameterizedTypeReference<ApiResponseObj<TransCtcLipmdaResponse>>() {});
+		map.put(TransCtcLilipmResponse.class,  new ParameterizedTypeReference<ApiResponseObj<TransCtcLilipmResponse>>() {});
+		map.put(TransCtcLiprpaResponse.class, new ParameterizedTypeReference<ApiResponseObj<TransCtcLiprpaResponse>>() {});
+		map.put(TransCtcLineacResponse.class, new ParameterizedTypeReference<ApiResponseObj<TransCtcLineacResponse>>() {});
+		map.put(TransCtcLibnagResponse.class, new ParameterizedTypeReference<ApiResponseObj<TransCtcLibnagResponse>>() {});
+		map.put(TransCtcSelectDetailResponse.class , new ParameterizedTypeReference<ApiResponseObj<TransCtcSelectDetailResponse>>() {});
+		map.put(TransCtcSelectDataResponse.class , new ParameterizedTypeReference<ApiResponseObj<TransCtcSelectDataResponse>>() {});
+		map.put(TransCspApiUtilResponse.class , new ParameterizedTypeReference<ApiResponseObj<TransCspApiUtilResponse>>() {});
+		map.put(TransCtcSelectDataAddCodeResponse.class , new ParameterizedTypeReference<ApiResponseObj<TransCtcSelectDataAddCodeResponse>>() {});
+		map.put(TransCsp002DataResponse.class , new ParameterizedTypeReference<ApiResponseObj<TransCsp002DataResponse>>() {});
+		map.put(RegisterUserResponse.class , new ParameterizedTypeReference<ApiResponseObj<RegisterUserResponse>>() {});
+		map.put(TransCtcLilipiResponse.class , new ParameterizedTypeReference<ApiResponseObj<TransCtcLilipiResponse>>() {});
+		map.put(PolicyDetailResponse.class , new ParameterizedTypeReference<ApiResponseObj<PolicyDetailResponse>>() {});
+		map.put(LicohilResponse.class , new ParameterizedTypeReference<ApiResponseObj<LicohilResponse>>() {});
+		map.put(String.class , new ParameterizedTypeReference<ApiResponseObj<String>>() {});
 		return Collections.unmodifiableMap(map);
 	}
-
+	
 	private RestTemplate restTemplate;
 
 	@Autowired
 	public BaseRestClient() {
-//		CloseableHttpClient httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
-
-		HttpComponentsClientHttpRequestFactory requestFactory = generateHttpRequestFactory();
-//		requestFactory.setHttpClient(httpClient);
-
-		restTemplate = new RestTemplate(requestFactory);
-//		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
-//		restTemplate = restTemplateBuilder.errorHandler(new RestTemplateResponseErrorHandler()).build();
-	}
-
-	public static HttpComponentsClientHttpRequestFactory generateHttpRequestFactory() {
-
-		TrustStrategy acceptingTrustStrategy = (x509Certificates, authType) -> true;
-		SSLContext sslContext = null;
 		try {
-			sslContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			//CloseableHttpClient httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+			SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+				     SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(), 
+				        NoopHostnameVerifier.INSTANCE);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+			
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+			requestFactory.setHttpClient(httpClient);
 
-		SSLConnectionSocketFactory connectionSocketFactory = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
-
-		HttpClientBuilder httpClientBuilder = HttpClients.custom();
-		httpClientBuilder.setSSLSocketFactory(connectionSocketFactory);
-		CloseableHttpClient httpClient = httpClientBuilder.build();
-		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-		factory.setHttpClient(httpClient);
-		return factory;
+			restTemplate = new RestTemplate(requestFactory);
+			// RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
+			// restTemplate = restTemplateBuilder.errorHandler(new RestTemplateResponseErrorHandler()).build();
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			// TODO Auto-generated catch block
+			logger.debug("Create httpClient fail: {}", ExceptionUtils.getStackTrace(e));
+		}		
 	}
 
 	public HttpHeaders setHeader(Map<String, String> headerMap) {
@@ -166,7 +214,7 @@ public class BaseRestClient implements InitializingBean {
 		if (obj == null) {
 			return null;
 		}
-		return ((ApiResponseObj<T>) obj).getResult();
+ 		return ((ApiResponseObj<T>) obj).getResult();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -350,5 +398,27 @@ public class BaseRestClient implements InitializingBean {
 			return false;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public  String postApi2(String postJson, String url) {
+		logger.debug("Invoke eservice api[{}]", url);
 
+		Map<String, String> headerMap = new HashMap<>();
+		headerMap.put("Authorization", "Bearer " + this.ESERVICE_API_SECRET);
+		headerMap.put("Content-Type", "application/json;charset=UTF-8");
+
+		HttpHeaders headers = this.setHeader(headerMap);
+
+		HttpEntity<?> entity = new HttpEntity<>(postJson, headers);
+
+		ResponseEntity<String> responseEntity = restTemplate.exchange(url,
+				HttpMethod.POST, entity, String.class);
+		logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
+
+		Object obj = responseEntity.getBody();
+		if (obj == null) {
+			return null;
+		}
+		return responseEntity.getBody();
+	}
 }

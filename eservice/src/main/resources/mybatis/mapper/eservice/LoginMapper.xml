@@ -64,5 +64,9 @@
 		WHERE USER_ID = #{userId}
 		ORDER BY ID DESC
 	</select>
+	
+	<select id="getpolicyInvestmentType" resultType="java.lang.String"  >
+		SELECT v.value FROM ESERVICE_ADM.DBO.PARAMETER t CROSS APPLY STRING_SPLIT(t.PARAMETER_VALUE, ',')v WHERE t.PARAMETER_CODE = 'POLICY_INVESTMENT_TYPE'
+	</select>
 
 </mapper>

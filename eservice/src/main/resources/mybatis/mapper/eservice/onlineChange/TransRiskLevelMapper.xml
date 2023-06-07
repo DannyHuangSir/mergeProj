@@ -8,11 +8,13 @@
 		<result column="RISK_LEVEL_OLD" property="riskLevelOld"/>
 		<result column="RISK_LEVEL_NEW" property="riskLevelNew"/>
 		<result column="RISK_SCORE" property="riskScore"/>
-	<result column="ROC_ID" property="rocId"/>
+		<result column="CHOOSE" property="choose"/>
+		<result column="ROC_ID" property="rocId"/>
+		<result column="RULE_STATUS" property="ruleStatus" />
 	</resultMap>
 	
 	<sql id="Base_Column_List">
-		ID,TRANS_NUM,RISK_LEVEL_OLD,RISK_LEVEL_NEW,RISK_SCORE,ROC_ID
+		ID,TRANS_NUM,RISK_LEVEL_OLD,RISK_LEVEL_NEW,RISK_SCORE,ROC_ID,CHOOSE,RULE_STATUS
 	</sql>
 	
 	<sql id="whereClause">
@@ -53,7 +55,9 @@
 			#{transRiskLevelVo.riskLevelOld, jdbcType=VARCHAR},
 			#{transRiskLevelVo.riskLevelNew, jdbcType=VARCHAR},
 			#{transRiskLevelVo.riskScore, jdbcType=NUMERIC},
-			#{transRiskLevelVo.rocId, jdbcType=VARCHAR}
+			#{transRiskLevelVo.rocId, jdbcType=VARCHAR},
+			#{transRiskLevelVo.choose, jdbcType=VARCHAR},
+			#{transRiskLevelVo.ruleStatus, jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -76,8 +80,18 @@
 	</select>
 
 	<select id="getIndividualVoByRocId" resultType="com.twfhclife.eservice.policy.model.IndividualVo">
-		SELECT top 1 INDIVIDUAL_ID individualId, NAME name, ROC_ID rocId, SEX sex, BIRTH_DATE birthDate, RISK_ATTR riskAttr
+		SELECT top 1 INDIVIDUAL_ID individualId, NAME name, ROC_ID rocId, SEX sex, CAST(ESERVICE.DBO.FN_DEBASE64(BIRTH_DATE) as date) AS birthDate, RISK_ATTR riskAttr
 		FROM ESERVICE.DBO.INDIVIDUAL WHERE ROC_ID = #{rocId}
 	</select>
-
+	
+		<!-- 取得變更繳別查詢結果 -->
+	<select id="getTransRiskLevel" parameterType="string" resultMap="TransRiskLevelMap">
+		SELECT
+			TOP 1 <include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_RISK_LEVEL
+		where ROC_ID = #{rocId} 
+		ORDER BY ID DESC
+	</select>
+	
 </mapper>

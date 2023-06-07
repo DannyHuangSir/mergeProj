@@ -192,7 +192,7 @@ public class TransContactInfoController extends BaseUserDataController {
 			LilipmVo lilipmVo = null;
 			
 			// 根據最新保單帶出變更前的要保人聯絡資料
-			com.twfhclife.eservice.web.model.UsersVo userVo = this.getUserDetail();
+			UsersVo userVo = this.getUserDetail();
 			List<String> policyNos = transContactInfoDtlVo.getPolicyNoList();
 			//202201:保單'單筆'勾選時,只顯示該被勾選保單的現行保單資料作為預設顯示供修改
 			if (CollectionUtils.isNotEmpty(policyNos)) {

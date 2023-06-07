@@ -49,4 +49,13 @@ public interface TransRiskLevelDao {
     Date getRecentApplyTime(@Param("userId") String userId);
 
     IndividualVo getIndividualVoByRocId(@Param("rocId") String userRocId);
+    
+	/**
+	 * 變更風險屬性-查詢.
+	 * 
+	 * @param TransRiskLevelVo transRiskLevelVo
+	 * @return 回傳查詢結果
+	 */
+	TransRiskLevelVo getTransRiskLevel(@Param("rocId") String rocId);
+    
 }

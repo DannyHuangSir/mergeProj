@@ -20,4 +20,9 @@ public class TransCtcLibnagServiceImpl implements ITransCtcLibnagService {
 		return dao.getRevokeByLibnagForBnagInsuSeqNo(bnagInsuSeqNo);
 	}
 
+	@Override
+	public List<TransCtcLibnagVo> getBirthByPolicyNo(String policyNo) {
+		return dao.getBirthByPolicyNo(policyNo);
+	}
+
 }

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
+import com.twfhclife.generic.api_model.LicohilResponse;
+import com.twfhclife.generic.api_model.PolicyDetailRequest;
+import com.twfhclife.generic.api_model.PolicyDetailResponse;
 import com.twfhclife.generic.api_model.TransCtcSelectDataAddCodeResponse;
 import com.twfhclife.generic.api_model.TransCtcSelectDataResponse;
 import com.twfhclife.generic.api_model.TransCtcSelectDetailResponse;
@@ -61,5 +64,44 @@ public class TransCtcSelectUtilClient extends BaseRestClient {
 					ExceptionUtils.getStackTrace(e));
 		}
 		return transCtcSelectDataAddCodeResponse;
+	}
+	
+	public PolicyDetailResponse getPolicyDataByRocId(PolicyDetailRequest apiReq) {
+		PolicyDetailResponse policyDetailResponse = null;
+		try {
+			String url = ctcApiUtilService.getApiUrl(OnlineChangeUtil.CTC_POLICY_DATA);
+			policyDetailResponse = this.postApi(MyJacksonUtil.object2Json(apiReq), url,
+					PolicyDetailResponse.class);
+		} catch (Exception e) {
+			logger.error("Unable to get data from eservice_api[getPolicyDataByRocId]: {}",
+					ExceptionUtils.getStackTrace(e));
+		}
+		return policyDetailResponse;
+	}
+	
+	public LicohilResponse getLicohiByPolicyNo(PolicyDetailRequest apiReq) {
+		LicohilResponse licohilResponse = null;
+		try {
+			String url = ctcApiUtilService.getApiUrl(OnlineChangeUtil.CTC_INDIVIDUAL_CHOOSE_LICOHI);
+			licohilResponse = this.postApi(MyJacksonUtil.object2Json(apiReq), url,
+					LicohilResponse.class);
+		} catch (Exception e) {
+			logger.error("Unable to get data from eservice_api[getLicohiByPolicyNo]: {}",
+					ExceptionUtils.getStackTrace(e));
+		}
+		return licohilResponse;
+	}
+	
+	public LicohilResponse getLilipmByPolicyNo(PolicyDetailRequest apiReq) {
+		LicohilResponse licohilResponse = null;
+		try {
+			String url = ctcApiUtilService.getApiUrl(OnlineChangeUtil.CTC_INDIVIDUAL_CHOOSE_LILIPM);
+			licohilResponse = this.postApi(MyJacksonUtil.object2Json(apiReq), url,
+					LicohilResponse.class);
+		} catch (Exception e) {
+			logger.error("Unable to get data from eservice_api[getLilipmByPolicyNo]: {}",
+					ExceptionUtils.getStackTrace(e));
+		}
+		return licohilResponse;
 	}
 }

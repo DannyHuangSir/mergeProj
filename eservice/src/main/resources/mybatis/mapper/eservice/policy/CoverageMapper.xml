@@ -51,7 +51,7 @@
 	
 	<!-- 個人主體欄位 -->
 	<sql id="Individual_Column_List">
-		ESERVICE.DBO.FN_GETHIDDENCODE(1, I.ROC_ID, '*', 4, 5) AS ROC_ID, I.SEX, I.BIRTH_DATE
+		ESERVICE.DBO.FN_GETHIDDENCODE(1, I.ROC_ID, '*', 4, 5) AS ROC_ID, I.SEX, CAST(ESERVICE.DBO.FN_DEBASE64(I.BIRTH_DATE) as date) AS BIRTH_DATE
 	</sql>
 	
 	<sql id="whereClause">

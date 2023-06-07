@@ -37,6 +37,7 @@ import com.twfhclife.eservice.web.service.IRegisterUserService;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.MyStringUtil;
+import com.twfhclife.generic.util.ValidateCodeUtil;
 import com.twfhclife.generic.util.ValidateUtil;
 
 /**
@@ -77,6 +78,11 @@ public class RegisterUserController extends BaseController{
 			addSession(ApConstants.SYSTEM_MSG_PARAMETER, (Serializable) mapParam);
 		}
 		
+		// 設定驗證碼圖示
+		ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+		addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+		addAttribute("validateImageBase64", vcUtil.imgToBase64String());
+
 		return "frontstage/registerUser/firstUseStart";
 	}
 	
@@ -89,11 +95,51 @@ public class RegisterUserController extends BaseController{
 	@PostMapping("/register/checkRegister")
 	public ResponseEntity<ResponseObj> checkRegister(@RequestBody UsersVo user, HttpServletRequest request) {
 		logger.info("enter register checkRegister! user=" + user.getRocId());
+		/// 20221006 by 203990
+		/// 全形的資料, 新增時就會寫入? 調整後端接收到的資料寫入變半形
+		user.setRocId(ValidateUtil.ToDBC(user.getRocId()));
+		logger.info("enter register checkRegister! ToDBC user=" + user.getRocId());
 		try {
+			String message = "";
+
+			// 20230317 by 203990
+			//取得session驗證碼
+			Object validateCodeObj = getSession(ApConstants.LOGIN_VALIDATE_CODE);
+			if (validateCodeObj != null) {
+				String sessionValidateCode = (String) validateCodeObj;
+				boolean isValidateCodeOk   = StringUtils.equals(user.getValidateCode(), sessionValidateCode);
+				
+				// 驗證碼不正確直接回傳
+				logger.info("Forget Password: validateCode result={}", isValidateCodeOk);
+				if (!isValidateCodeOk) {
+					// 重設驗證碼 20230317 by 203990
+					ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+					addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
+					/*message = "驗證碼輸入錯誤，請確認驗證碼或重新寄送驗證碼。";*/
+					message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0022");
+					this.setResponseObj(ResponseObj.ERROR, message, user);
+					return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
+				}
+			}else{
+				// 重設驗證碼 20230317 by 203990
+				ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+				addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
+				/*message = "驗證碼輸入錯誤，請確認驗證碼或重新寄送驗證碼。";*/
+				message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0022");
+				this.setResponseObj(ResponseObj.ERROR, message, user);
+				return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
+			}
+
 			//檢查身分證是否已被註冊
 			String isRegister = registerUserService.checkRegister(user);
-			String message = "";
+
 			if(isRegister != null) {
+				// 重設驗證碼 20230317 by 203990
+				ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+				addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
 				if(isRegister.equals("rocid")) {
 					/*message = user.getRocId().length() == 8 ? "此統一編號已註冊" : "此身分證號已註冊";*/
 					message = user.getRocId().length() == 8 ? 
@@ -111,6 +157,10 @@ public class RegisterUserController extends BaseController{
 			List<UsersVo> uVo = registerUserService.getMailPhoneByRocid(user.getRocId());
 			//非臺銀保戶
 			if (uVo.size() == 0) {
+				// 重設驗證碼 20230317 by 203990
+				ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+				addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
 				/*message = "保戶專區會員申請僅開放本公司保戶申請，若有相關疑問請來電本公司客服專線：0800-011-966。";*/
 				message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0106");
 				this.setResponseObj(ResponseObj.SUCCESS, message, user);
@@ -130,6 +180,10 @@ public class RegisterUserController extends BaseController{
 			}
 			
 			if(StringUtils.isEmpty(user.getEmail()) && StringUtils.isEmpty(user.getMobile())) {
+				// 重設驗證碼 20230317 by 203990
+				ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+				addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
 				message = "NODATA";
 				this.setResponseObj(ResponseObj.SUCCESS, message, user);
 				return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
@@ -146,6 +200,10 @@ public class RegisterUserController extends BaseController{
 			this.setResponseObj(ResponseObj.SUCCESS, message, null);
 			
 		} catch (Exception e) {
+			// 重設驗證碼 20230317 by 203990
+			ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+			addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
 			logger.error(e.getMessage(), e);
 			this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
 		}
@@ -164,6 +222,14 @@ public class RegisterUserController extends BaseController{
 		//字太多塞不下,hardcode在firstUse1.html
 		//List<ParameterVo> terms = registerUserService.getTerms();
 		//modelMap.put("terms", terms);
+
+		// 20230317 by 203990
+		HttpSession session = request.getSession();
+		if (session.getAttribute("register_rocId") == null) {
+			logger.info("直接跳頁到firstUse1的異常操作, 導回firstUseStart");
+			return "firstUseStart";
+		}
+
 		return "frontstage/registerUser/firstUse1";
 	}
 	
@@ -176,7 +242,14 @@ public class RegisterUserController extends BaseController{
 	@GetMapping("/firstUse2")
 	public String firstUse2(HttpServletRequest request, ModelMap modelMap) {
 		logger.info("open frontstage/firstUse2.html");
+
+		// 20230317 by 203990
 		HttpSession session = request.getSession();
+		if (session.getAttribute("register_rocId") == null) {
+			logger.info("直接跳頁到firstUse2的異常操作, 導回firstUseStart");
+			return "firstUseStart";
+		}
+
 		session.setAttribute(ApConstants.USER_TERM_REGISTER, new Date());
 		return "frontstage/registerUser/firstUse2";
 	}
@@ -258,6 +331,7 @@ public class RegisterUserController extends BaseController{
 				if(userResult != null) {
 					session.setAttribute("register_mobile", userResult.getMobile());
 					session.setAttribute("register_email", userResult.getEmail());
+					session.setAttribute("register_policyNo", policyNo); // 20230317 by 203990
 				} else {
 					// 使用 rocId + policyNo 沒有找到可用連絡電話 or email, 可能輸入有誤
 				}
@@ -291,6 +365,7 @@ public class RegisterUserController extends BaseController{
 							
 							if(question.getAnswer().equals(trueAnswer)){
 								question.setResult("OK");
+								session.setAttribute("register_policyNoAns", "1"); // 20230317 by 203990
 							}else{
 								if(questionNo.equals("QUESTION5")){
 									/*question.setResult("身分證填寫錯誤！");*/
@@ -328,8 +403,16 @@ public class RegisterUserController extends BaseController{
 	 * @return
 	 */
 	@GetMapping("/firstUse3")
-	public String firstUse3(ModelMap modelMap) {
+	public String firstUse3(HttpServletRequest request, ModelMap modelMap) {
 		logger.info("open frontstage/firstUse3.html");
+
+		// 20230317 by 203990
+		HttpSession session = request.getSession();
+		if (session.getAttribute("register_policyNo") == null || session.getAttribute("register_policyNoAns") == null) {
+			logger.info("直接跳頁到firstUse3的異常操作, 導回firstUseStart");
+			return "firstUseStart";
+		}
+
 		try {
 			String email = getSessionStr("register_email");
 			String mobile = getSessionStr("register_mobile");
@@ -405,6 +488,7 @@ public class RegisterUserController extends BaseController{
 						//驗證完成 清除驗證碼session
 						addSession(authenticationVo.getAuthenticationType()+"Authentication",null);
 						addSession(authenticationVo.getAuthenticationType()+"_isChack", true);
+						session.setAttribute("register_checkAuthSuccess", "1"); // 20230317 by 203990
 					}
 				}else{
 					//已超過五分鐘
@@ -424,8 +508,16 @@ public class RegisterUserController extends BaseController{
 	}
 	
 	@GetMapping("/firstUse4")
-	public String firstUse4() {
+	public String firstUse4(HttpServletRequest request) {
 		logger.info("open frontstage/firstUse4.html");
+
+		// 20230317 by 203990
+		HttpSession session = request.getSession();
+		if (session.getAttribute("register_checkAuthSuccess") == null) {
+			logger.info("直接跳頁到firstUse4的異常操作, 導回firstUseStart");
+			return "firstUseStart";
+		}
+
 		return "frontstage/registerUser/firstUse4";
 	}
 	
@@ -456,6 +548,16 @@ public class RegisterUserController extends BaseController{
 				this.setResponseObj(ResponseObj.ERROR, message, null);
 				return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
 			}
+			
+			/// 20221004 by 203990
+			/// Begin: 因應稽核追加密碼判別
+			if (!ValidateUtil.isPwdUc(user.getPassword())) {
+				/*message = "請勿輸入連續3碼重覆或連續性之密碼！";*/
+				message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0024-2");
+				this.setResponseObj(ResponseObj.ERROR, message, null);
+				return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
+			}
+			/// End
 			
 			// 檢查是否通過驗證碼驗證，避免用偷吃步進到此頁註冊帳號
 			if(!isCheck || getSession("registerAuthentication") != null) {
@@ -520,6 +622,12 @@ public class RegisterUserController extends BaseController{
 				} else {
 					this.setResponseObj(ResponseObj.SUCCESS, message, null);
 					addSession("register_isChack", null);
+					// 20230317 by 203990
+					session.setAttribute("register_success", "1");
+					session.setAttribute("register_rocId", null);
+					session.setAttribute("register_policyNo", null);
+					session.setAttribute("register_policyNoAns", null);
+					session.setAttribute("register_checkAuthSuccess", null);
 				}
 			}
 		} catch (Exception e) {
@@ -533,8 +641,17 @@ public class RegisterUserController extends BaseController{
 	}
 	
 	@GetMapping("/firstUseSuccess")
-	public String firstUseSuccess() {
+	public String firstUseSuccess(HttpServletRequest request) {
 		logger.info("open frontstage/firstUse-success.html");
+
+		// 20230317 by 203990
+		HttpSession session = request.getSession();
+		if (session.getAttribute("register_success") == null) {
+			logger.info("直接跳頁到firstUseSuccess的異常操作, 導回firstUseStart");
+			return "firstUseStart";
+		}
+
+		session.setAttribute("register_success", null);
 		((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest().getSession().removeAttribute("register_rocId");
 		Boolean bxczLoginFlag = (Boolean) getSession("BXCZ_REGISTER_FLAG");

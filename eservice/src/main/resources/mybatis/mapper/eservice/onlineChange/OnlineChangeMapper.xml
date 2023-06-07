@@ -62,7 +62,7 @@
 			WHERE 
 				TRANS_NUM = ts.TRANS_NUM 
 			<if test="policyNo != null">
-				AND POLICY_NO = #{policyNo}
+				AND POLICY_NO = #{policyNo , jdbcType=VARCHER}
 			</if>
 			) AS POLICY_NO,
 			(
@@ -170,7 +170,7 @@
 		TP.TRANS_NUM = #{transNum}
 		AND TP.POLICY_NO = P.POLICY_NO
 		AND P.POLICY_TYPE = B.PRODUCT_CODE -->
-	SELECT 
+	SELECT DISTINCT
 		TP.POLICY_NO AS POLICYNO,
 		B.PRODUCT_NAME AS PRODUCTNAME
 	FROM ESERVICE.DBO.TRANS_POLICY TP
@@ -251,7 +251,7 @@
 	</insert>
 	
 	<select id="getAgeByPolicyNo" parameterType="java.lang.String" resultType="java.lang.String">
-		 select FLOOR(DATEDIFF(DY,LIPI_BIRTH,GETDATE())/365.25) as age,LIPI_BIRTH from ESERVICE.dbo.LILIPI where LIPI_INSU_NO = #{policyNo}
+		 select FLOOR(DATEDIFF(DY,CAST(ESERVICE.DBO.FN_DEBASE64(LIPI_BIRTH) as date),GETDATE())/365.25) as age,CAST(ESERVICE.DBO.FN_DEBASE64(LIPI_BIRTH) as date) AS LIPI_BIRTH from ESERVICE.dbo.LILIPI where LIPI_INSU_NO = #{policyNo}
 	</select>
 	
 	<select id="getCreateDateByTransNum" parameterType="java.lang.String" resultType="java.lang.String">
@@ -344,7 +344,7 @@
 	</select>
 
 	<select id="getBirdateByPolicyNo" parameterType="java.lang.String" resultType="java.lang.String">
-		select LIPI_BIRTH from ESERVICE.dbo.LILIPI where LIPI_INSU_NO = #{policyNo}
+		select CAST(ESERVICE.DBO.FN_DEBASE64(LIPI_BIRTH) as date) AS LIPI_BIRTH from ESERVICE.dbo.LILIPI where LIPI_INSU_NO = #{policyNo}
 	</select>
 
 	<select id="getPolicyClaimCompletedPolicyno" resultType="java.lang.String">

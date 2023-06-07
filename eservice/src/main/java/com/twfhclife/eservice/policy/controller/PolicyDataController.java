@@ -96,6 +96,7 @@ public class PolicyDataController extends BaseController {
 			List<BeneficiaryVo> beneficiaryList = null;	// 受益人
 			UsersVo userDetail = (UsersVo)getSession(UserDataInfo.USER_DETAIL);
 			List<LilipiVo> lilipiVoList = new ArrayList<LilipiVo>();
+			/* 20220207 by 203990 遠端取得的日期資料會少一日; 應該是api主機的jsonformat或是timezone沒設好的問題
 			// Call api 取得資料
 			PolicyDataResponse policyDataResponse = policyDataClient.getPolicyDetail(userId, policyNo);
 			// 若無資料，嘗試由內部服務取得資料
@@ -109,6 +110,7 @@ public class PolicyDataController extends BaseController {
 				agentVo = policyDataResponse.getAgentVo();
 				beneficiaryList = policyDataResponse.getBeneficiaryList();
 			} else {
+			*/
 				logger.info("Call internal service to get user[{}] policyDetail data", userId);
 				
 				CoverageVo coverageVo = new CoverageVo();
@@ -124,7 +126,7 @@ public class PolicyDataController extends BaseController {
 					agentVo = agentService.getAgent(policyVo.getAgentCode());
 				}
 				beneficiaryList = beneficiaryService.getBeneficiaryByPolicyNo(policyNo);
-			}
+			//}
 			
 			if (coverageVoList != null && coverageVoList.size() > 0) {
 				for (CoverageVo c : coverageVoList) {

@@ -267,8 +267,8 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	public ResponseEntity<ResponseObj> getPolicyClaimCompleted(@RequestBody TransMedicalTreatmentClaimVo claimVo) {
 		try {
 			String result = iMedicalTreatmentService.getPolicyClaimCompletedPolicyno(getUserRocId());
-			if (!org.springframework.util.StringUtils.isEmpty(result)
-					&& !org.springframework.util.StringUtils.isEmpty(claimVo.getPolicyNo())
+			if (!StringUtils.isEmpty(result)
+					&& !StringUtils.isEmpty(claimVo.getPolicyNo())
 					&&	!result.equals(claimVo.getPolicyNo())
 				) {
 				processError(OnlineChangMsgUtil.POLICY_STATUS_MANY_TIMES_MSG);

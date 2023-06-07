@@ -14,4 +14,19 @@
 		= #{bnagInsuSeqNo}
 	</select>
 	
+	<resultMap id="BirthByPolicyNoMap" type="com.twfhclife.eservice.api.elife.domain.TransCtcLibnagVo" >
+		<result column="BNAG_INSU_NO" property="bnagInsuNo"/>
+		<result column="BNAG_BIRTH" property="bnagBirth"/>
+	</resultMap>
+	
+	<select id="getBirthByPolicyNo" resultMap="BirthByPolicyNoMap" parameterType="java.lang.String">
+		SELECT 
+		  CONCAT(CONCAT(BNAG_INSU_TYPE, TO_CHAR(BNAG_INSU_GRP_NO)),BNAG_INSU_SEQ_NO) AS BNAG_INSU_NO,
+		  BNAG_BIRTH 
+		FROM 
+		  CTCMGR.LIBNAG_FLOWTEST 
+		WHERE
+		  CONCAT(CONCAT(BNAG_INSU_TYPE, TO_CHAR(BNAG_INSU_GRP_NO)),BNAG_INSU_SEQ_NO) = #{policyNo}
+	</select>
+	
 </mapper>

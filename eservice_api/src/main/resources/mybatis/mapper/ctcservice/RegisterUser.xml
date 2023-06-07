@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.api.elife.dao.RegisterUserDao">
+
+	
+	<resultMap id="UserMailPhoneMap" type="com.twfhclife.eservice.api.elife.domain.RegisterUserVo" >
+		<result column="ROC_ID" property="rocId"/>
+		<result column="EMAIL" property="email"/>
+		<result column="MOBILE" property="mobile"/>
+	</resultMap>
+		
+	<select id="getUserMailPhoneByRocid" resultMap="UserMailPhoneMap" parameterType="java.lang.String">
+		SELECT 
+			LIPM_ID AS ROC_ID, PMDA_APPLICANT_EMAIL AS EMAIL, PMDA_APPLICANT_CELLPHONE AS MOBILE  
+		FROM 
+			CTCMGR.LILIPM_ES_FLOWTEST
+		JOIN 
+			CTCMGR.LIPMDA_ES_FLOWTEST ON
+			CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+			CONCAT(CONCAT(PMDA_INSU_TYPE, TO_CHAR(PMDA_INSU_GRP_NO)),PMDA_INSU_SEQ_NO)
+		WHERE LIPM_ID = #{rocId}
+		UNION ALL
+		SELECT 
+			LIPI_ID AS ROC_ID, PMDA_INSURED_EMAIL AS EMAIL, PMDA_INSURED_CELLPHONE AS MOBILE 
+		FROM 
+			CTCMGR.LILIPI_ES_FLOWTEST
+		JOIN
+			CTCMGR.LIPMDA_ES_FLOWTEST ON 
+			CONCAT(CONCAT(LIPI_INSU_TYPE, TO_CHAR(LIPI_INSU_GRP_NO)),LIPI_INSU_SEQ_NO) = 
+			CONCAT(CONCAT(PMDA_INSU_TYPE, TO_CHAR(PMDA_INSU_GRP_NO)),PMDA_INSU_SEQ_NO)
+		WHERE LIPI_ID = #{rocId}
+	</select>
+	
+	<resultMap id="LilomsAmtByPolicyNoMap" type="com.twfhclife.eservice.api.elife.domain.RegisterUserVo" >
+		<result column="LOMS_INSU_NO" property="lomsInsuNo"/>
+		<result column="LOMS_AMT" property="lomsAmt"/>
+	</resultMap>
+
+	<select id="getLilomsAmtByPolicyNo" resultMap="LilomsAmtByPolicyNoMap" parameterType="java.lang.String">
+		SELECT * FROM CTCMGR.LILOMS_ES_FLOWTEST WHERE LOMS_INSU_NO = #{policyNo}
+	</select>
+		
+
+	<select id="getUserMailPhoneByRocidAndPolicyNo" resultMap="UserMailPhoneMap" parameterType="java.lang.String">
+		SELECT * FROM
+			(
+				SELECT DISTINCT  
+					LIPM_ID AS ROC_ID, PMDA_APPLICANT_EMAIL AS EMAIL, PMDA_APPLICANT_CELLPHONE AS MOBILE
+				FROM 
+					 CTCMGR.LILIPM_ES_FLOWTEST  
+				LEFT JOIN 
+					 CTCMGR.LIPMDA_ES_FLOWTEST ON
+				CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = 
+				CONCAT(CONCAT(PMDA_INSU_TYPE, TO_CHAR(PMDA_INSU_GRP_NO)),PMDA_INSU_SEQ_NO)	
+				WHERE 
+					 LIPM_ID = #{rocId}
+					 AND CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) =#{policyNo}
+			)
+		WHERE ROWNUM  <![CDATA[ < ]]> 2 
+	</select>
+	
+	<resultMap id="CheckLipmInsuNoByPolicyNoMap" type="com.twfhclife.eservice.api.elife.domain.RegisterUserVo" >
+		<result column="LIPM_INSU_NO" property="lipmInsuNo"/>
+	</resultMap>
+	
+	<select id="CheckLipmInsuNoByPolicyNo" resultMap="CheckLipmInsuNoByPolicyNoMap" parameterType="java.lang.String">
+	 	SELECT
+			CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO)  as LIPM_INSU_NO
+		FROM
+			CTCMGR.LILIPM_ES_FLOWTEST
+		where UPPER(LIPM_ID) = UPPER(#{rocId})
+			AND CONCAT(CONCAT(LIPM_INSU_TYPE, TO_CHAR(LIPM_INSU_GRP_NO)),LIPM_INSU_SEQ_NO) = #{policyNo}
+		UNION
+		SELECT
+		CONCAT(CONCAT(LIPI_INSU_TYPE, TO_CHAR(LIPI_INSU_GRP_NO)),LIPI_INSU_SEQ_NO)  as LIPI_INSU_NO
+		FROM
+			CTCMGR.LILIPI_ES_FLOWTEST
+		WHERE UPPER(LIPI_ID) =  UPPER(#{rocId})
+		AND 	CONCAT(CONCAT(LIPI_INSU_TYPE, TO_CHAR(LIPI_INSU_GRP_NO)),LIPI_INSU_SEQ_NO) = #{policyNo}
+	</select>
+</mapper>
+
+
+

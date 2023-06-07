@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.IndividualChooseIpDao">
+
+	<resultMap id="IndividualChooseIpMap" type="com.twfhclife.eservice.onlineChange.model.IndividualChooseIpVo" >
+		<result column="ID" property="id"/>
+		<result column="ROC_ID" property="rocId"/>
+		<result column="IP" property="ip"/>
+		<result column="OTP_TIME" property="otpTime"/>
+	</resultMap>
+			
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertIndividualChooseIp">
+		INSERT INTO ESERVICE.DBO.INDIVIDUAL_CHOOSE_IP
+		(
+			ROC_ID,IP,OTP_TIME
+		)
+		VALUES
+		(
+			#{individualChooseIpVo.rocId, jdbcType=VARCHAR},
+			#{individualChooseIpVo.ip, jdbcType=VARCHAR},
+			#{individualChooseIpVo.otpTime, jdbcType=DATE}
+		)
+	</insert>
+
+	<select id="getIndividualChooseIp"	resultMap="IndividualChooseIpMap">
+		SELECT
+			ID,ROC_ID,IP,OTP_TIME
+		FROM
+		ESERVICE.DBO.INDIVIDUAL_CHOOSE_IP
+		WHERE
+			IP = #{ip}
+		AND
+			OTP_TIME 
+		BETWEEN 
+			 DATEADD(minute,#{time,jdbcType=INTEGER},GETDATE())
+		AND 
+			GETDATE() 
+	</select>
+
+ </mapper>

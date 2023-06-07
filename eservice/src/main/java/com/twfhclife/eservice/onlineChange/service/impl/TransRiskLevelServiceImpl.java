@@ -21,7 +21,6 @@ import com.twfhclife.eservice.onlineChange.model.TransRiskLevelVo;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
-import com.twfhclife.eservice.policy.service.IPortfolioService;
 import com.twfhclife.eservice.web.model.TransVo;
 
 /**
@@ -148,5 +147,10 @@ public class TransRiskLevelServiceImpl implements ITransRiskLevelService {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public TransRiskLevelVo getTransRiskLevel(String rocId) {
+		return transRiskLevelDao.getTransRiskLevel(rocId);
 	}
 }

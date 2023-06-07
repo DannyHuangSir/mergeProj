@@ -11,6 +11,8 @@ import com.twfhclife.eservice.generic.annotation.EventRecordLog;
 import com.twfhclife.eservice.generic.annotation.EventRecordParam;
 import com.twfhclife.eservice.generic.annotation.SqlParam;
 import com.twfhclife.eservice.onlineChange.dao.*;
+import com.twfhclife.eservice.onlineChange.model.IndividualChooseVo;
+import com.twfhclife.eservice.onlineChange.model.IndividualVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundConversionVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
@@ -31,18 +33,19 @@ import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.generic.api_model.LicohilVo;
 import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.groovy.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,7 +82,12 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
     @Autowired
     private IParameterService parameterService;
 
-
+    @Autowired
+    private IndividualDao individualDao;
+    
+    @Autowired
+    private IndividualChooseDao individualChooseDao;
+    
     private static final Map<String, String> MSG_MAP = ImmutableMap.<String, String>builder()
             .put(INVESTMENT_PARAMETER_CODE, "未來保費投資標的與分配比例正在進行中")
             .put(INVESTMENT_CONVERSION_CODE, "已持有投資標的轉換正在進行中")
@@ -740,4 +748,45 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
         rMap.put("receivers", receivers);
         return rMap;
     }
+
+	@Override
+	public void insertOrUpdateForIndividual(LicohilVo licohilVo) {
+		try {
+		IndividualVo vo= individualDao.getIndividualData(licohilVo.getLipmId());
+		if(vo == null) {
+		vo.setRocId(licohilVo.getLipmId());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String bnagBirth = format.format(licohilVo.getBnagBirth());
+		vo.setBirthDate(bnagBirth);
+		vo.setName(licohilVo.getLipmName1());
+		vo.setSex(licohilVo.getSex());
+		vo.setRiskAttr(licohilVo.getInveAttr());
+		vo.setIndividualId(UUID.randomUUID().toString());
+			individualDao.insertIndividual(vo);
+		}else {
+			vo.setRiskAttr(licohilVo.getInveAttr());
+			individualDao.updateIndividual(vo);
+		}
+		}catch (Exception e) {
+			log.error("insertOrUpdateForIndividual Error" + e);
+		}
+	}
+
+	@Override
+	public void insertOrUpdateForIndividualChoose(LicohilVo licohilVo) {
+		try {
+			IndividualChooseVo vo = individualChooseDao.getIndividualChoosData(licohilVo.getLipmId());
+			if(vo != null) {
+				if(vo.getRatingDate().before(licohilVo.getRatingDate())) {
+					vo.setRiskAttr(licohilVo.getInveAttr());
+					vo.setSource("3");
+					vo.setEditDate(new Date());
+					vo.setRatingDate(licohilVo.getRatingDate());
+					individualChooseDao.updateIndividualChoose(vo);					
+				}
+			}
+		}catch (Exception e) {
+			log.error("insertOrUpdateForIndividualChoose Error" + e);
+		}		
+	}
 }

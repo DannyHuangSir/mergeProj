@@ -257,6 +257,8 @@ public interface OnlineChangeUtil {
 	
 	/** 契約撤銷-通知管理員 */
 	public static final String ELIFE_MAIL_038 = "ELIFE_MAIL_038";
+	/** 官網風險變更管理-Mail*/
+	public static final String ELIFE_SMS_039 = "ELIFE_SMS-039";
 	/**
 	 * 停泊賬號信息數據
 	 */
@@ -303,6 +305,32 @@ public interface OnlineChangeUtil {
 	public static final String CTC_ONLINE_TRIAL_DETAIL= "ONLINE_TRIAL_DETAIL";
 	//查詢繳清、展期保單資料
 	public static final String CTC_SELECT_DATA_ADD_CODE = "SELECT_DATA_ADD_CODE";
+	//加入會員-查詢電話、信箱
+	public static final String CTC_REGISTER_USER_MAILPHONE = "REGISTER_USER_MAILPHONE";
+	//加入會員-驗證保單是否存在
+	public static final String CTC_REGISTER_USER_CHECK_POLICYNO = "REGISTER_USER_CHECK_POLICYNO";
+	//加入會員-取得台銀保單貸款狀態
+	public static final String CTC_REGISTER_USER_LILOMS_AMT = "REGISTER_USER_LILOMS_AMT";
+	//加入會員-取得要保人出生日期
+	public static final String CTC_REGISTER_USER_BIRTH = "REGISTER_USER_BIRTH";
+	//加入會員-取得被保險人身份證與生日
+	public static final String CTC_REGISTER_USER_LIPIDATA = "REGISTER_USER_LIPIDATA";
+	//加入會員-取得更新保單對應的電話號碼
+	public static final String CTC_REGISTER_USER_USERMAILPHONE = "REGISTER_USER_USERMAILPHONE";
+	
+	public static final String EDUCATION_LEVEL_CODE= "EDUCATION_LEVEL";
+	
+	public static final String YES = "是";
+	
+	public static final String NO = "否";
+	//會員登入-取得保單資料
+	public static final String CTC_POLICY_DATA = "POLICY_DATA";
+	
+	//風險評估管理-LICOHI
+	public static final String CTC_INDIVIDUAL_CHOOSE_LICOHI = "INDIVIDUAL_CHOOSE_LICOHI";
+	//風險評估管理-LILIPM
+	public static final String CTC_INDIVIDUAL_CHOOSE_LILIPM = "INDIVIDUAL_CHOOSE_LILIPM";
+	
 	/**
 	 * 查詢CSP API功能
 	 */
@@ -312,4 +340,32 @@ public interface OnlineChangeUtil {
 	public static final String CSP_001_DETAIL= "CSP_001_DETAIL";
 	//線上試算CSP
 	public static final String CSP_002_DETAIL= "CSP_002_DETAIL";
+	
+	//風險評估	
+	public final static String EDUCATION_LEVEL = "EDUCATION_LEVEL";
+
+	public final static String INCOME = "INCOME";
+
+	public final static String CUSHION_TYPE = "CUSHION_TYPE";
+	
+	public final static String STAFF_URL = "BACKGROUND_STAFF_URL";
+	
+	public final static String STAFF_TOKEN = "BACKGROUND_STAFF_TOKEN";
+	
+	public final static String STAFF_ACCOUNT = "BACKGROUND_STAFF_ACCOUNT";
+	
+	public final static String STAFF_PDFNAME = "BACKGROUND_STAFF_PDFNAME";
+	
+	public final static String STAFF_PDFPATH = "BACKGROUND_STAFF_PDFPATH";
+	
+	public final static String LIST_COUNT = "BLACK_LIST_COUNT";
+
+	public final static String LIST_TIME = "BLACK_LIST_TIME";
+
+	public final static String RETURNCODE = "SUCCESS";
+	
+	public final static String BACKGROUND_STAFF_CODE = "BACKGROUND_STAFF";
+	
+	public final static String BLACK_LIST_CODE = "BLACK_LIST";
+
 }

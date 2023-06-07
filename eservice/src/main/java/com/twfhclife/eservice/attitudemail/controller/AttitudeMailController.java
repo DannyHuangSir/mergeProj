@@ -75,7 +75,7 @@ public class AttitudeMailController extends BaseController {
 			logger.error("Unable to init from attitudeMail: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
-		return "frontStage/attitudeMail";
+		return "frontstage/attitudeMail";
 	}
 	
 	@RequestLog

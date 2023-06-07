@@ -77,6 +77,18 @@ public class PolicyListVo extends PolicyVo {
 
 	/** 20211220 by 203990 保單是否擁有電子保單 */
 	private String pmdaEpoMk;
+	
+	private String pmdaEInfoNStatus;
+
+	private String policyListType ;
+	
+	public String getPmdaEInfoNStatus() {
+		return pmdaEInfoNStatus;
+	}
+
+	public void setPmdaEInfoNStatus(String pmdaEInfoNStatus) {
+		this.pmdaEInfoNStatus = pmdaEInfoNStatus;
+	}
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd hh:mm:ss")
 	private Date beginDate;
@@ -300,6 +312,14 @@ public class PolicyListVo extends PolicyVo {
 
 	public void setLipmFlexRcpMk(String lipmFlexRcpMk) {
 		this.lipmFlexRcpMk = lipmFlexRcpMk;
+	}
+	
+	public String getPolicyListType() {
+		return policyListType;
+	}
+
+	public void setPolicyListType(String policyListType) {
+		this.policyListType = policyListType;
 	}
 
 	@Override

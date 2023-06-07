@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.IndividualDao">
+
+	<resultMap id="IndividualMap" type="com.twfhclife.eservice.onlineChange.model.IndividualVo" >
+		<result column="INDIVIDUAL_ID" property="individualId"/>
+		<result column="NAME" property="name"/>
+		<result column="ROC_ID" property="rocId"/>
+		<result column="SEX" property="sex"/>
+		<result column="BIRTH_DATE" property="birthDate"/>
+		<result column="RISK_ATTR" property="riskAttr"/>								   
+	</resultMap>
+			
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertIndividual">
+		INSERT INTO ESERVICE.DBO.INDIVIDUAL
+		(
+			INDIVIDUAL_ID,NAME,ROC_ID,SEX,BIRTH_DATE,RISK_ATTR
+		)
+		VALUES
+		(
+			#{individualVo.individualId, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{individualVo.name, jdbcType=VARCHAR}),
+			#{individualVo.rocId, jdbcType=VARCHAR},
+			#{individualVo.sex, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{individualVo.birthDate, jdbcType=VARCHAR}),
+			#{individualVo.riskAttr, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="getIndividualData"	resultMap="IndividualMap">
+		SELECT
+			 top 1 INDIVIDUAL_ID,ESERVICE.DBO.FN_DEBASE64(NAME) as NAME
+			,ROC_ID,SEX,ESERVICE.DBO.FN_DEBASE64(BIRTH_DATE) AS BIRTH_DATE,RISK_ATTR 
+		FROM
+		ESERVICE.DBO.INDIVIDUAL
+		WHERE
+		ROC_ID = #{rocId}
+		order by INDIVIDUAL_ID desc;
+	</select>
+
+	<update id="updateIndividual" parameterType="com.twfhclife.eservice.onlineChange.model.IndividualVo">
+		update ESERVICE.DBO.INDIVIDUAL
+			SET 
+			RISK_ATTR = #{individualVo.riskAttr, jdbcType=VARCHAR}
+			WHERE ROC_ID = #{individualVo.rocId, jdbcType=VARCHAR}
+	</update>
+ </mapper>

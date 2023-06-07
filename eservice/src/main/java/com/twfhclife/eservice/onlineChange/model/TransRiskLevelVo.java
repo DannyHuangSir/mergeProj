@@ -21,6 +21,14 @@ public class TransRiskLevelVo extends AbstractOnlineChangeModelBean {
 	private String riskLevelDesc;
 
 	private String rocId;
+	
+	private String choose;
+	
+	/**
+	 * 年齡、學歷、重大醫療事故 規則
+	 * 1.符合規則但未勾選 2.符合有勾選 3.非符合規則內
+	 */
+	private String ruleStatus;
 
 	public BigDecimal getId() {
 		return this.id;
@@ -82,4 +90,21 @@ public class TransRiskLevelVo extends AbstractOnlineChangeModelBean {
 	public void setRocId(String rocId) {
 		this.rocId = rocId;
 	}
+
+	public String getChoose() {
+		return choose;
+	}
+
+	public void setChoose(String choose) {
+		this.choose = choose;
+	}
+
+	public String getRuleStatus() {
+		return ruleStatus;
+	}
+
+	public void setRuleStatus(String ruleStatus) {
+		this.ruleStatus = ruleStatus;
+	}
+		
 }
