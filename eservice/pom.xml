@@ -378,6 +378,14 @@
 						<exclude>com/twfhclife/eservice/onlineChange/service/ITransElectronicFormService.*</exclude>
 						<exclude>com/twfhclife/eservice/onlineChange/service/ITransOnlineTrialService.*</exclude>
 						<exclude>com/twfhclife/eservice/onlineChange/service/ITransRolloverPeriodicallyService.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/AttributeServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/IAttributeService.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/IndividualChooseServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/IndividualChooseService.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/TransInvestmentServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/ITransInvestmentService.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/impl/TransDepositServiceImpl.*</exclude>
+						<exclude>com/twfhclife/eservice/onlineChange/service/ITransDepositService.*</exclude>
 					</excludes>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>

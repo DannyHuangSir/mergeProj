@@ -67,7 +67,7 @@ public class BxczController extends BaseController {
                 String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, transVo.getTransNum(), ApConstants.INSURANCE_CLAIM, encId)).getBytes())
                         + "&code=" + code;
                 SignRecord signRecord = new SignRecord();
-                signRecord.setActionId(actionId);
+                signRecord.setTransNum(transVo.getTransNum());
                 signRecord.setActionId(actionId);
                 Calendar calendar = Calendar.getInstance();
                 signRecord.setSignStart(calendar.getTime());

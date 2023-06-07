@@ -12,11 +12,20 @@ public class SignRecord {
     private String fileId;
     private String idVerifyStatus;
     private Date idVerifyTime;
+    private Date idVerifyType;
     private String signStatus;
     private Date signTime;
     private String signDownload;
     private String signFileId;
     private String transNum;
+
+    public Date getIdVerifyType() {
+        return idVerifyType;
+    }
+
+    public void setIdVerifyType(Date idVerifyType) {
+        this.idVerifyType = idVerifyType;
+    }
 
     public String getTransNum() {
         return transNum;
