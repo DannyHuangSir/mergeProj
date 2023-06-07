@@ -278,7 +278,7 @@ public class SignInsuranceClaimMapperVo {
 	/**
 	 * 此案件的上傳檔案狀態清單
 	 */
-	private List<InsuranceClaimFileDataVo> fileDatas;
+	private List<SignInsuranceClaimFileDataVo> fileDatas;
 
 	private String actionId;
 	private String toaFileId;
@@ -588,11 +588,11 @@ public class SignInsuranceClaimMapperVo {
 		this.to = to;
 	}
 
-	public List<InsuranceClaimFileDataVo> getFileDatas() {
+	public List<SignInsuranceClaimFileDataVo> getFileDatas() {
 		return fileDatas;
 	}
 
-	public void setFileDatas(List<InsuranceClaimFileDataVo> fileDatas) {
+	public void setFileDatas(List<SignInsuranceClaimFileDataVo> fileDatas) {
 		this.fileDatas = fileDatas;
 	}
 
