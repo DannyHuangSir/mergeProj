@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.TransChooseLevelDao">
+
+	<resultMap id="TransChooseLevelMap" type="com.twfhclife.eservice.onlineChange.model.TransChooseLevelVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="CHOOSE_LEVEL_OLD" property="chooseLevelOld"/>
+		<result column="CHOOSE_LEVEL_NEW" property="chooseLevelNew"/>
+		<result column="CHOOSE_SCORE" property="chooseScore"/>
+		<result column="ROC_ID" property="rocId"/>
+		<result column="CHOOSE" property="choose"/>
+		<result column="RULE_STATUS" property="ruleStatus" />
+	</resultMap>
+
+	<insert id="insertTransChooseLevel" parameterType="com.twfhclife.eservice.onlineChange.model.TransChooseLevelVo" >
+		INSERT INTO ESERVICE.DBO.TRANS_CHOOSE_LEVEL
+		(
+			ID,TRANS_NUM,CHOOSE_LEVEL_OLD,CHOOSE_LEVEL_NEW,CHOOSE_SCORE,ROC_ID,CHOOSE,RULE_STATUS
+		)
+		VALUES
+		(
+			(SELECT CASE WHEN COUNT(*) = 0 THEN 0 ELSE MAX(ID) END + 1 FROM ESERVICE.DBO.TRANS_CHOOSE_LEVEL),
+			#{transChooseLevelVo.transNum, jdbcType=VARCHAR},
+			#{transChooseLevelVo.chooseLevelOld, jdbcType=VARCHAR},
+			#{transChooseLevelVo.chooseLevelNew, jdbcType=VARCHAR},
+			#{transChooseLevelVo.chooseScore, jdbcType=NUMERIC},
+			#{transChooseLevelVo.rocId, jdbcType=VARCHAR},
+			#{transChooseLevelVo.choose, jdbcType=VARCHAR},
+			#{transChooseLevelVo.ruleStatus, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="getTransChooseLevel" resultMap="TransChooseLevelMap">
+		SELECT top 1 ID,TRANS_NUM,CHOOSE_LEVEL_OLD,CHOOSE_LEVEL_NEW,CHOOSE_SCORE,ROC_ID,CHOOSE,RULE_STATUS FROM TRANS_CHOOSE_LEVEL WHERE ROC_ID =  #{rocId}
+		order by ID desc
+	</select>
+
+</mapper>

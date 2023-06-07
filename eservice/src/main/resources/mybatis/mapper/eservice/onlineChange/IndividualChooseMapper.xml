@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice.onlineChange.dao.IndividualChooseDao">
+
+	<resultMap id="IndividualChooseMap" type="com.twfhclife.eservice.onlineChange.model.IndividualChooseVo" >
+		<result column="ROC_ID" property="rocId"/>
+		<result column="NAME" property="name"/>
+		<result column="BIRTH_DATE" property="birthDate"/>
+		<result column="MOBILE" property="mobile"/>
+		<result column="EMAIL" property="email"/>
+		<result column="EDUCATION_LEVEL" property="educationLevel"/>
+		<result column="DISABILITY" property="disability"/>
+		<result column="INCOME" property="income"/>
+		<result column="CHOOSE" property="choose"/>
+		<result column="RISK_ATTR" property="riskAttr"/>
+		<result column="SOURCE" property="source"/>
+		<result column="EDIT_DATE" property="editDate"/>
+		<result column="EMPLOYEE_ID" property="employeeId"/>
+		<result column="RATING_DATE" property="ratingDate"/>										   
+	</resultMap>
+			
+	<!-- 投保證明列印-新增 -->
+	<insert id="insertIndividualChoose">
+		INSERT INTO ESERVICE.DBO.INDIVIDUAL_CHOOSE
+		(
+			ROC_ID,NAME,BIRTH_DATE,MOBILE,EMAIL,EDUCATION_LEVEL,DISABILITY,INCOME,CHOOSE,RISK_ATTR,SOURCE,EDIT_DATE,EMPLOYEE_ID,RATING_DATE
+		)
+		VALUES
+		(
+			#{individualChooseVo.rocId, jdbcType=VARCHAR},
+			ESERVICE.DBO.FN_ENBASE64(#{individualChooseVo.name, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{individualChooseVo.birthDate, jdbcType=VARCHAR}),
+			ESERVICE.DBO.FN_ENBASE64(#{individualChooseVo.mobile, jdbcType=VARCHAR}),
+			#{individualChooseVo.email, jdbcType=VARCHAR},
+			#{individualChooseVo.educationLevel, jdbcType=VARCHAR},
+			#{individualChooseVo.disability, jdbcType=VARCHAR},
+			#{individualChooseVo.income, jdbcType=VARCHAR},
+			#{individualChooseVo.choose, jdbcType=VARCHAR},
+			#{individualChooseVo.riskAttr, jdbcType=VARCHAR},
+			#{individualChooseVo.source, jdbcType=VARCHAR},
+			#{individualChooseVo.editDate, jdbcType=DATE},
+			#{individualChooseVo.employeeId, jdbcType=VARCHAR},
+			#{individualChooseVo.ratingDate, jdbcType=DATE}
+		)
+	</insert>
+
+	<select id="getIndividualChoosData"	resultMap="IndividualChooseMap">
+		SELECT
+			ROC_ID,ESERVICE.DBO.FN_DEBASE64(NAME) AS NAME,ESERVICE.DBO.FN_DEBASE64(BIRTH_DATE) AS BIRTH_DATE,ESERVICE.DBO.FN_DEBASE64(MOBILE) AS MOBILE,EMAIL,EDUCATION_LEVEL,DISABILITY,INCOME
+			,CHOOSE,RISK_ATTR,SOURCE,EDIT_DATE,EMPLOYEE_ID,RATING_DATE
+		FROM
+		ESERVICE.DBO.INDIVIDUAL_CHOOSE
+		WHERE
+		ROC_ID = #{rocId}
+	</select>
+
+	<update id="updateIndividualChoose" parameterType="com.twfhclife.eservice.onlineChange.model.IndividualChooseVo">
+		update ESERVICE.DBO.INDIVIDUAL_CHOOSE
+			SET 
+			MOBILE = ESERVICE.DBO.FN_ENBASE64(#{individualChooseVo.mobile, jdbcType=VARCHAR}) ,
+			EDUCATION_LEVEL =#{individualChooseVo.educationLevel, jdbcType=VARCHAR} ,
+			DISABILITY = #{individualChooseVo.disability, jdbcType=VARCHAR} ,
+			INCOME =#{individualChooseVo.income, jdbcType=VARCHAR} , 
+			CHOOSE =#{individualChooseVo.choose, jdbcType=VARCHAR} ,
+			RISK_ATTR = #{individualChooseVo.riskAttr, jdbcType=VARCHAR}, 
+			SOURCE = #{individualChooseVo.source, jdbcType=VARCHAR}, 
+			EDIT_DATE = #{individualChooseVo.editDate, jdbcType=DATE} ,
+			EMPLOYEE_ID = #{individualChooseVo.employeeId, jdbcType=VARCHAR} , 
+			RATING_DATE = #{individualChooseVo.ratingDate, jdbcType=DATE}
+			WHERE ROC_ID = #{individualChooseVo.rocId, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getpolicyInvestmentType" resultType="java.lang.String"  >
+		SELECT v.value FROM ESERVICE_ADM.DBO.PARAMETER t CROSS APPLY STRING_SPLIT(t.PARAMETER_VALUE, ',')v WHERE t.PARAMETER_CODE = 'POLICY_INVESTMENT_TYPE'
+	</select>
+ </mapper>

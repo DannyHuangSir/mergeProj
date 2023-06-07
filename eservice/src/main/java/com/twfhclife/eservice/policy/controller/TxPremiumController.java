@@ -1,6 +1,10 @@
 package com.twfhclife.eservice.policy.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -77,7 +81,7 @@ public class TxPremiumController extends BaseController {
 			
 			if (StringUtils.isEmpty(errorMessage)) {
 				String userId = getUserId();
-				List<FundPrdtVo> premiumTransactionList = null;
+				List<FundPrdtVo> oldPremiumTransactionList = new ArrayList<FundPrdtVo>();
 				
 				// Call api 取得資料
 				PolicyPremiumTransactionResponse policyPremiumTransactionResponse = txPremiumClient
@@ -85,12 +89,23 @@ public class TxPremiumController extends BaseController {
 				// 若無資料，嘗試由內部服務取得資料
 				if (policyPremiumTransactionResponse != null) {
 					logger.info("Get user[{}] data from eservice_api[getPolicyPremiumTransactionPageList]", userId);
-					premiumTransactionList = policyPremiumTransactionResponse.getPremiumTransactionList();
+					oldPremiumTransactionList = policyPremiumTransactionResponse.getPremiumTransactionList();
 				} else {
 					logger.info("Call internal service to get user[{}] getPolicyPremiumTransactionPageList data", userId);
-					premiumTransactionList = fundPrdtService.getFundPrdtPageList(policyNo, 
+					oldPremiumTransactionList = fundPrdtService.getFundPrdtPageList(policyNo, 
 							startDate, endDate, pageNum, defaultPageSize);
-				}
+				}				
+				DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+				List<String> dateAmtList = new ArrayList<String>();
+				List<FundPrdtVo> premiumTransactionList = oldPremiumTransactionList.stream().filter( x-> {
+					String key = dateFormat.format(x.getPrdtBookDate()) + '-'  + x.getPrdtRcpAmt().toString();
+					if(dateAmtList.contains(key)) {
+						return false;
+					}else {
+						dateAmtList.add(key);
+						return true;
+					}					
+				}).collect(Collectors.toList());				
 				processSuccess(premiumTransactionList);
 			} else {
 				processError(errorMessage);

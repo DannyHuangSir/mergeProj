@@ -29,6 +29,7 @@ import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
+import com.twfhclife.generic.util.ValidateUtil;
 
 /**
  * 投資標的淨值.
@@ -65,41 +66,45 @@ public class ProdNetValueController extends BasePolicyController {
 	@PostMapping("/listing11")
 	public String listing11(@RequestParam("policyNo") String policyNo) {
 		try {
-			PolicyVo policyVo = policyListService.findById(policyNo);
-			if (policyVo != null) {
-				String twEffectiveDate = DateUtil.getRocDate(policyVo.getEffectiveDate());
-				String twExpireDate = DateUtil.getRocDate(policyVo.getExpireDate());
-				
-				addAttribute("policyVo", policyVo);
-				addAttribute("policyStartEndDate", String.format("%s ~ %s", twEffectiveDate, twExpireDate));
-				
-				// 取得商品
-				ProductVo productVo = policyListService.findProductByPolicyNo(policyNo);
-				
-				// 取得指定年月的開賣日
-				if (productVo != null) {
-					String dateStr = DateUtil.formatDateTime(productVo.getDesiSaleDate(), DateUtil.FORMAT_WEST_DATE);
-					List<String> rocYearMenu = DateUtil.getYearOpitonByEffectDate(dateStr);
-					addAttribute("rocYearMenu", rocYearMenu);
-					addAttribute("effectDate", dateStr);
-				}
-				
-				addAttribute("portfolioList", portfolioService.getInvtOptionList(policyNo));
+			if(!ValidateUtil.isValid(policyNo)) {
+				addDefaultSystemError();
+			}else {
+				PolicyVo policyVo = policyListService.findById(policyNo);
+				if (policyVo != null) {
+					String twEffectiveDate = DateUtil.getRocDate(policyVo.getEffectiveDate());
+					String twExpireDate = DateUtil.getRocDate(policyVo.getExpireDate());
+					
+					addAttribute("policyVo", policyVo);
+					addAttribute("policyStartEndDate", String.format("%s ~ %s", twEffectiveDate, twExpireDate));
+					
+					// 取得商品
+					ProductVo productVo = policyListService.findProductByPolicyNo(policyNo);
+					
+					// 取得指定年月的開賣日
+					if (productVo != null) {
+						String dateStr = DateUtil.formatDateTime(productVo.getDesiSaleDate(), DateUtil.FORMAT_WEST_DATE);
+						List<String> rocYearMenu = DateUtil.getYearOpitonByEffectDate(dateStr);
+						addAttribute("rocYearMenu", rocYearMenu);
+						addAttribute("effectDate", dateStr);
+					}
+					
+					addAttribute("portfolioList", portfolioService.getInvtOptionList(policyNo));
 
-				Map<String, Map<String, ParameterVo>> sysParamMap = (Map<String, Map<String, ParameterVo>>) getSession(ApConstants.SYSTEM_PARAMETER);
-				Map<String, ParameterVo> currency = sysParamMap.get("CURRENCY");
-				if (policyVo.getCurrency() != null) {
-					addAttribute("currName", currency.get(policyVo.getCurrency()).getParameterValue());
+					Map<String, Map<String, ParameterVo>> sysParamMap = (Map<String, Map<String, ParameterVo>>) getSession(ApConstants.SYSTEM_PARAMETER);
+					Map<String, ParameterVo> currency = sysParamMap.get("CURRENCY");
+					if (policyVo.getCurrency() != null) {
+						addAttribute("currName", currency.get(policyVo.getCurrency()).getParameterValue());
+					}
 				}
+
+				// 要保人
+				LilipmVo lilipmVo = lilipmService.findByPolicyNo(policyNo);
+				addAttribute("lilipmVo", lilipmVo);
+				
+				// 被保人
+				LilipiVo lilipiVo = lilipiService.findByPolicyNo(policyNo);
+				addAttribute("lilipiVo", lilipiVo);
 			}
-
-			// 要保人
-			LilipmVo lilipmVo = lilipmService.findByPolicyNo(policyNo);
-			addAttribute("lilipmVo", lilipmVo);
-			
-			// 被保人
-			LilipiVo lilipiVo = lilipiService.findByPolicyNo(policyNo);
-			addAttribute("lilipiVo", lilipiVo);
 		} catch (Exception e) {
 			logger.error("Unable to get policy info from listing11: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();

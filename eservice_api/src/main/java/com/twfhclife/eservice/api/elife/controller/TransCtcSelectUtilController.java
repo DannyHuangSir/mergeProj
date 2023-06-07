@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.twfhclife.eservice.api.elife.domain.LicohilRequest;
+import com.twfhclife.eservice.api.elife.domain.LicohilResponse;
+import com.twfhclife.eservice.api.elife.domain.LicohilVo;
+import com.twfhclife.eservice.api.elife.domain.PolicyDetailRequest;
+import com.twfhclife.eservice.api.elife.domain.PolicyDetailResponse;
+import com.twfhclife.eservice.api.elife.domain.PolicyDetailVo;
 import com.twfhclife.eservice.api.elife.domain.TransCtcSelectDataAddCodeResponse;
 import com.twfhclife.eservice.api.elife.domain.TransCtcSelectDataAddCodeVo;
 import com.twfhclife.eservice.api.elife.domain.TransCtcSelectDataResponse;
@@ -93,6 +99,72 @@ public class TransCtcSelectUtilController extends BaseController{
 		} catch (Exception e) {
 			returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
 			logger.error("Unable to getTransCtcSelectUtilByLipmId: {}", ExceptionUtils.getStackTrace(e));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+		} finally {
+			apiResponseObj.setReturnHeader(returnHeader);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+	}
+	
+	@ApiRequest
+	@PostMapping(value = "/getPolicyDataByRocId", produces = { "application/json" })
+	public ResponseEntity<?> getPolicyDataByRocId(@Valid @RequestBody PolicyDetailRequest req) {
+		ApiResponseObj<PolicyDetailResponse> apiResponseObj = new ApiResponseObj<>();
+		ReturnHeader returnHeader = new ReturnHeader();
+		PolicyDetailResponse resp = new PolicyDetailResponse();
+		try {
+			List<PolicyDetailVo> respList = transCtcSelectUtilService.getPolicyDataByRocId(req);
+			resp.setPolicyDetailList(respList);
+			returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+			apiResponseObj.setReturnHeader(returnHeader);
+			apiResponseObj.setResult(resp);
+		} catch (Exception e) {
+			returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+			logger.error("Unable to getPolicyDataByRocId: {}", ExceptionUtils.getStackTrace(e));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+		} finally {
+			apiResponseObj.setReturnHeader(returnHeader);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+	}
+	
+	@ApiRequest
+	@PostMapping(value = "/getLicohiByPolicyNo", produces = { "application/json" })
+	public ResponseEntity<?> getLicohiByPolicyNo(@Valid @RequestBody PolicyDetailRequest req) {
+		ApiResponseObj<LicohilResponse> apiResponseObj = new ApiResponseObj<>();
+		ReturnHeader returnHeader = new ReturnHeader();
+		LicohilResponse resp = new LicohilResponse();
+		try {
+			List<LicohilVo> licohilVo = transCtcSelectUtilService.getLicohiByPolicyNo(req);
+			resp.setLicohilVo(licohilVo);
+			returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+			apiResponseObj.setReturnHeader(returnHeader);
+			apiResponseObj.setResult(resp);
+		} catch (Exception e) {
+			returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+			logger.error("Unable to getIindivdualDetailByPolicyNo: {}", ExceptionUtils.getStackTrace(e));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+		} finally {
+			apiResponseObj.setReturnHeader(returnHeader);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+	}
+	
+	@ApiRequest
+	@PostMapping(value = "/getLilipmByPolicyNo", produces = { "application/json" })
+	public ResponseEntity<?> getLilipmByPolicyNo(@Valid @RequestBody PolicyDetailRequest req) {
+		ApiResponseObj<LicohilResponse> apiResponseObj = new ApiResponseObj<>();
+		ReturnHeader returnHeader = new ReturnHeader();
+		LicohilResponse resp = new LicohilResponse();
+		try {
+			List<LicohilVo> licohilVo = transCtcSelectUtilService.getLilipmByPolicyNo(req);
+			resp.setLicohilVo(licohilVo);
+			returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+			apiResponseObj.setReturnHeader(returnHeader);
+			apiResponseObj.setResult(resp);
+		} catch (Exception e) {
+			returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+			logger.error("Unable to getIindivdualDetailByPolicyNo: {}", ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
 		} finally {
 			apiResponseObj.setReturnHeader(returnHeader);

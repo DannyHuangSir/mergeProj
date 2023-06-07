@@ -69,8 +69,14 @@ public class TransPaymodeServiceImpl implements ITransPaymodeService {
 					
 					String paymentMode = vo.getPaymentMode();
 					LilipmVo pmVo = lilipmDao.findByPolicyNo(vo.getPolicyNo());
-					vo.setLipmFlexRcpMk(pmVo.getLipmFlexRcpMk());
-					if ("T".equals(paymentMode) || ("A".equals(paymentMode) && "Y".equals(pmVo.getLipmFlexRcpMk()))) {
+					if(pmVo!= null) {
+						vo.setLipmFlexRcpMk(pmVo.getLipmFlexRcpMk());
+						if ("T".equals(paymentMode) || ("A".equals(paymentMode) && "Y".equals(pmVo.getLipmFlexRcpMk()))) {
+							vo.setApplyLockedFlag("Y");
+							vo.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_PAYMODE_T_NOT_ALLOW_MSG);
+							continue;
+						}						
+					}else {
 						vo.setApplyLockedFlag("Y");
 						vo.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_PAYMODE_T_NOT_ALLOW_MSG);
 						continue;

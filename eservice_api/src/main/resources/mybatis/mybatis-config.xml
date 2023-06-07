@@ -143,6 +143,8 @@
 		<mapper resource="mybatis/mapper/ctcservice/TransCtcLineacMapper.xml"/>
 		<mapper resource="mybatis/mapper/ctcservice/TransCtcLiprpaMapper.xml"/>
 		<mapper resource="mybatis/mapper/eservice/BxczDao.xml"/>
+		<mapper resource="mybatis/mapper/ctcservice/TransCtcLilipiMapper.xml"/>
+		<mapper resource="mybatis/mapper/ctcservice/RegisterUser.xml"/>
 
 	</mappers>
 </configuration>

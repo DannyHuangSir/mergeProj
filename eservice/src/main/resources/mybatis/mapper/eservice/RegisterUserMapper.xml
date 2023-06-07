@@ -28,7 +28,7 @@
 	</select>
 	
 	<select id="getBirthDateByPolicyNo" resultType="java.lang.String" parameterType="java.lang.String">
-		SELECT CONVERT(VARCHAR(10),LIPM_BIRTH,111) FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = #{policyNo}
+		SELECT CONVERT(VARCHAR(10),CAST(ESERVICE.DBO.FN_DEBASE64(LIPM_BIRTH) as date) ,111) FROM ESERVICE.DBO.LILIPM WHERE LIPM_INSU_NO = #{policyNo}
 	</select>
 	
 	<select id="getInsByProPolicyNo" resultType="com.twfhclife.eservice.web.model.InsuredVo" parameterType="java.lang.String">
@@ -36,7 +36,7 @@
       	LIPI_ID identityId,
       	PROD.PRODUCT_TYPE,
       	ESERVICE.DBO.FN_DEBASE64(LIPI_NAME) AS insuredName,
-      	LIPI_BIRTH birthday
+      	CAST(ESERVICE.DBO.FN_DEBASE64(LIPI_BIRTH) as date) AS birthday
 		FROM
 			ESERVICE.DBO.LILIPI
 		LEFT OUTER JOIN ESERVICE.DBO.PRODUCT PROD

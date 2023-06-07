@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
+import com.twfhclife.eservice.onlineChange.model.IndividualChooseVo;
 import com.twfhclife.eservice.onlineChange.model.TransDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundNotificationDtlVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundNotificationVo;
@@ -13,28 +14,37 @@ import com.twfhclife.eservice.onlineChange.service.ITransFundNotificationService
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.service.IndividualChooseService;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
-import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
+//import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
 import com.twfhclife.eservice.policy.model.NotificationPortfolioVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
+import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.api_client.FunctionUsageClient;
+import com.twfhclife.generic.api_client.TransCtcSelectUtilClient;
 import com.twfhclife.generic.api_client.TransAddClient;
 import com.twfhclife.generic.api_client.TransHistoryDetailClient;
-import com.twfhclife.generic.api_model.ReturnHeader;
-import com.twfhclife.generic.api_model.TransAddRequest;
-import com.twfhclife.generic.api_model.TransAddResponse;
+import com.twfhclife.generic.api_model.LicohilResponse;
+import com.twfhclife.generic.api_model.LicohilVo;
+import com.twfhclife.generic.api_model.PolicyDetailRequest;
+import com.twfhclife.generic.api_model.PolicyDetailResponse;
+import com.twfhclife.generic.api_model.PolicyDetailVo;
+//import com.twfhclife.generic.api_model.ReturnHeader;
+//import com.twfhclife.generic.api_model.TransAddRequest;
+//import com.twfhclife.generic.api_model.TransAddResponse;
 import com.twfhclife.generic.api_model.TransHistoryDetailResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
-import com.twfhclife.generic.util.MyJacksonUtil;
+//import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -48,8 +58,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -94,6 +109,12 @@ public class FundNotificationController extends BaseUserDataController {
 	@Autowired
 	private ITransDepositService transDepositService;
 
+	@Autowired
+	private TransCtcSelectUtilClient transCtcSelectUtilClient;
+	
+	@Autowired
+	private IndividualChooseService indivdualChooseService;
+	
 	/**
 	 * 保單清單頁面.
 	 * 
@@ -110,18 +131,18 @@ public class FundNotificationController extends BaseUserDataController {
 				return "redirect:apply1";
 			}
 
-			boolean expire = riskLevelService.checkRiskLevelExpire(getUserId());
-			if (expire) {
-				redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
-				return "redirect:apply1";
-			}
-
-			String userRocId = getUserRocId();
-			String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
-			if(StringUtils.isBlank(riskLevel)) {
-				redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
-				return "redirect:apply1";
-			}
+//			boolean expire = riskLevelService.checkRiskLevelExpire(getUserId());
+//			if (expire) {
+//				redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
+//				return "redirect:apply1";
+//			}
+//
+//			String userRocId = getUserRocId();
+//			String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
+//			if(StringUtils.isBlank(riskLevel)) {
+//				redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+//				return "redirect:apply1";
+//			}
 
 			/**
 			 * 投資型保單申請中不可繼續申請
@@ -132,10 +153,21 @@ public class FundNotificationController extends BaseUserDataController {
 				redirectAttributes.addFlashAttribute("errorMessage", msg);
 				return "redirect:apply1";
 			}
-
+			String userRocId = getUserRocId();
 			String userId = getUserId();
 			List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(userRocId);
-			
+//	           List<PolicyListVo> policyList =  new ArrayList<PolicyListVo>();
+//	           	policyList =  (List<PolicyListVo>) getSession(UserDataInfo.USER_ALL_POLICY_LIST);
+//	            if(policyList == null) {
+//					PolicyDetailRequest req = new PolicyDetailRequest();
+//					req.setRocId(userRocId);
+//					PolicyDetailResponse response = transCtcSelectUtilClient.getPolicyDataByRocId(req);
+//					if(response != null) {
+//						List<PolicyDetailVo> policyDetailList  = new ArrayList<PolicyDetailVo>();
+//						policyDetailList = response.getPolicyDetailList();
+//						policyList = loginService.mappingPolicyList(policyDetailList);
+//					}				
+//	            }
 			// 處理保單狀態是否鎖定
 			if (policyList != null) {
 				List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
@@ -144,6 +176,64 @@ public class FundNotificationController extends BaseUserDataController {
 				transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
 				addAttribute("policyList", handledPolicyList);
 			}
+//			List<String> policyNoList = new ArrayList<>();
+//            policyList.stream().filter(x->{
+//            	if(x.getPolicyListType().equals("1")) {
+//            		policyNoList.add(x.getPolicyNo());
+//            		return true;
+//            	}
+//				return false;            	
+//            }).collect(Collectors.toList());
+//            if(policyNoList.size() > 0) {
+    			PolicyDetailRequest request = new PolicyDetailRequest();
+    			request.setRocId(userRocId);			
+    			request.setPolicyInvestmentType(indivdualChooseService.getpolicyInvestmentType());
+    			LicohilResponse response = transCtcSelectUtilClient.getLicohiByPolicyNo(request);
+    			LicohilVo licohilVo = new LicohilVo();
+    			if(response.getLicohilVo().size() == 0) {
+    				response = transCtcSelectUtilClient.getLilipmByPolicyNo(request);
+    				licohilVo = indivdualChooseService.getpolicyHaveInvestmentType(response.getLicohilVo());
+    				if(licohilVo != null) {
+						if(!insertOrUpdateForIndividual(licohilVo)) {
+							redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_1 +"<br/>" + OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_2);
+				             return "redirect:apply1";
+						}    					
+    				}else {
+    	                redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+    	                return "redirect:apply1";
+    				}	           
+    			}else {
+    				 licohilVo = indivdualChooseService.getpolicyHaveInvestmentType(response.getLicohilVo());
+					if(!insertOrUpdateForIndividual(licohilVo)) {
+						redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_1 +"<br/>" + OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_2);
+			             return "redirect:apply1";
+					}    
+    			}
+                //若INDIVIDUAL.RISK_ATTR記錄為 D,未來保費投資標的與分配比例(investment1), 設定停損停利 跳提示: "經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司客服電話 0800-011-966"
+                IndividualChooseVo vo =  indivdualChooseService.getIndividualChoosData(userRocId);
+                if(vo != null) {
+                	if(indivdualChooseService.compareDate(vo.getRatingDate(), licohilVo.getRatingDate() )) {
+                		if(vo.getRiskAttr().equals("D")) {
+        					redirectAttributes.addFlashAttribute("errorMessage", "經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司客服電話 0800-011-966");
+        		             return "redirect:apply1";
+                    	}
+                	}else {
+                		if(licohilVo.getInveAttr().equals("D")) {
+        					redirectAttributes.addFlashAttribute("errorMessage", "經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司客服電話 0800-011-966");
+        		             return "redirect:apply1";
+                    	}
+                	}                	
+                }else {
+                	if(licohilVo.getInveAttr().equals("D")) {
+    					redirectAttributes.addFlashAttribute("errorMessage", "經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司客服電話 0800-011-966");
+    					return "redirect:apply1";	
+                	}
+                }    			
+//               }else {
+//            	   redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+//                   return "redirect:apply1"; 
+//               }
+
 		} catch (Exception e) {
 			logger.error("Unable to init from notification1: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
@@ -385,5 +475,34 @@ public class FundNotificationController extends BaseUserDataController {
 			}
 		}
 		return mingwen;
+	}
+	
+	private boolean insertOrUpdateForIndividual(LicohilVo licohilVo) {
+		transInvestmentService.insertOrUpdateForIndividual(licohilVo);
+		transInvestmentService.insertOrUpdateForIndividualChoose(licohilVo);
+		IndividualChooseVo vo = indivdualChooseService.getIndividualChoosData(licohilVo.getLipmId());
+
+		if(licohilVo.getRatingDate() != null && vo != null) {
+			if(indivdualChooseService.compareDate(vo.getRatingDate(), licohilVo.getRatingDate())) {
+				 if(indivdualChooseService.checkRatingDate(vo.getRatingDate())){
+					 return false;
+				 }else {
+					 return true;
+				 }
+			}else {
+				if(indivdualChooseService.checkRatingDate(licohilVo.getRatingDate())) {
+					return false;
+				}else {
+					 return true;
+				}
+			}
+		}else if(licohilVo.getRatingDate() != null){
+			if(indivdualChooseService.checkRatingDate(licohilVo.getRatingDate())) {
+				return false;
+			}else {
+				 return true;
+			}
+		}
+		return true;	
 	}
 }

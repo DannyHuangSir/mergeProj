@@ -27,6 +27,7 @@ import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.api_client.TransHistoryListClient;
 import com.twfhclife.generic.api_model.TransHistoryListResponse;
 import com.twfhclife.generic.controller.BaseController;
+import com.twfhclife.generic.service.IMailService;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import com.twfhclife.generic.util.StatuCode;
@@ -83,6 +84,9 @@ public class OnlineChangeController extends BaseController {
 
 	@Autowired
 	private MessageTemplateClient messageTemplateClient;
+
+	@Autowired
+	private IMailService mailService;
 
 	/**
 	 * 線上申請清單
@@ -302,7 +306,11 @@ public class OnlineChangeController extends BaseController {
 			TransTypeUtil.RISK_LEVEL_PARAMETER_CODE,
 			TransTypeUtil.CHANGE_PREMIUM_CODE,
 			TransTypeUtil.DEPOSIT_PARAMETER_CODE,
-			TransTypeUtil.PAYMODE_PARAMETER_CODE
+			TransTypeUtil.PAYMODE_PARAMETER_CODE,
+			TransTypeUtil.ELECTRONIC_FORM_A_CODE,
+			TransTypeUtil.ELECTRONIC_FORM_C_CODE,
+			TransTypeUtil.ROLLOVER_PERIODICALLY,
+			TransTypeUtil.DERATE_PAID_OFF
 	);
 
 	private static final Map<String, String> MSG_MAP = ImmutableMap.<String, String>builder()
@@ -380,10 +388,28 @@ public class OnlineChangeController extends BaseController {
 						transInvestmentVo.setTitle(OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE);
 						transInvestmentVo.setMessage(MSG_MAP.get(transType));
 						transInvestmentVo.setApplyDate(new Date());
-						sendConversionSMSAndEmail(transInvestmentVo, user, transType);
+						if(transType.equals(TransTypeUtil.ELECTRONIC_FORM_A_CODE) || transType.equals(TransTypeUtil.ELECTRONIC_FORM_C_CODE)||
+								transType.equals(TransTypeUtil.DERATE_PAID_OFF) || transType.equals(TransTypeUtil.ROLLOVER_PERIODICALLY)	) {
+							sendSMSAndEmailToManage(transInvestmentVo, user, transType);
+						}
+						else {
+							sendConversionSMSAndEmail(transInvestmentVo, user, transType);
+						}						
 					}
 				}
-			} else {
+			} else if (transType != null && (StringUtils.equals(transType, TransTypeUtil.LOAN_PARAMETER_CODE) || StringUtils.equals(transType, TransTypeUtil.LOAN_NEW_PARAMETER_CODE))) {
+				// 20220714 by 203990 保單貸款 新增寄送撤消通知
+				/// 參考 /eservice_mergeProj/src/main/java/com/twfhclife/eservice/onlineChange/service/impl/OnlineChangeServiceImpl.java 296~306行
+				onlineChangeService.cancelApplyTrans(transNum, hisVo);
+				//發送 郵件
+				String content = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "LOAN_MAIL_CONTENT")
+						.replace("TRANS_NUM", transNum);
+				String subject = "!!!"+OnlineChangMsgUtil.INVESTMENT_POLICY_APPLY_CANCEL_TITLE+" > "+parameterService.getParameterValueByCode("eservice", "LOAN_MAIL_SUBJECT")
+						.replace("TRANS_NUM", transNum);
+				String email = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "LOAN_MAIL_ADDR");
+				mailService.sendMail(content, subject, email, "", null);
+			}
+			else {
 				onlineChangeService.cancelApplyTrans(transNum, hisVo);
 			}
 		} catch (Exception e) {
@@ -707,6 +733,100 @@ public class OnlineChangeController extends BaseController {
 				logger.info("user mail : {}", user.getEmail());
 				messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_028, receivers, paramMap, "email");
 			}
+		} catch (Exception e) {
+			logger.error("cancel apply send email error : {}", ExceptionUtils.getStackTrace(e));
+		}
+		logger.info("End send mail");
+	}
+	
+	//發送郵件
+	public void sendSMSAndEmailToManage(TransInvestmentVo vo, UsersVo user, String transType) {
+		try {
+			Map<String, Object> mailInfo = transInvestmentService.getElectronicFormSendMailInfo();
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put("TransNum", vo.getTransNum());
+			paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+			paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+			logger.info("Trans Num : {}", vo.getTransNum());
+			logger.info("Status Name : {}", mailInfo.get("statusName"));
+			logger.info("Trans Remark : {}", mailInfo.get("transRemark"));
+			logger.info("receivers={}", mailInfo.get("receivers"));
+			logger.info("user phone : {}", user.getMobile());
+			logger.info("user mail : {}", user.getEmail());
+			// 获取保单编号
+			paramMap.put("POLICY_NO", StringUtils.isEmpty(vo.getPolicyNo()) ? " " : vo.getPolicyNo());
+			logger.info("POLICY_NO : {}", vo.getPolicyNo());
+
+			List<String> receivers = new ArrayList<String>();
+
+			String applyDate = DateUtil.formatDateTime(vo.getApplyDate(), "yyyy年MM月dd日 HH時mm分ss秒");
+			paramMap.put("DATA", applyDate);
+			// 申請狀態-申請中
+			paramMap.put("TransStatus", "已撤銷");
+
+			paramMap.put("APPLICATION_FUNCTION", vo.getAuthType());
+
+			// 發送系統管理員
+			receivers = (List) mailInfo.get("receivers");
+			// 推送管 理已接收 保單編號: [保單編號] 保戶[同意/不同意]轉送聯盟鏈
+			switch(transType) {
+				case TransTypeUtil.ROLLOVER_PERIODICALLY :
+					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_034, receivers, paramMap,"email");
+					break;
+				case TransTypeUtil.DERATE_PAID_OFF :
+					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_032, receivers, paramMap,"email");
+					break;
+				case TransTypeUtil.ELECTRONIC_FORM_A_CODE :
+					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_030, receivers, paramMap,"email");
+					break;
+				case TransTypeUtil.ELECTRONIC_FORM_C_CODE :
+					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_030, receivers, paramMap,"email");
+					break;
+				default :
+					break;
+			}
+
+
+//			if (StringUtils.equals(transType, "DEPOSIT")) {
+//				receivers.clear();// 清空
+//				Map<String, Object> depositMailInfo = transInvestmentService.getDepositMailInfo();
+//				// 發送系統管理員
+//				receivers = (List) depositMailInfo.get("receivers");
+//				// 推送管 理已接收 保單編號: [保單編號] 保戶[同意/不同意]轉送聯盟鏈
+//				messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_030, receivers, paramMap,
+//						"email");
+//			}
+
+			// 發送保戶SMS
+			// receivers = new ArrayList<String>();
+//			receivers.clear();// 清空
+//			paramMap.clear();// 清空模板參數
+			// 設置模板參數 -取消申請暫時不發信通知申請人
+//	    if(transType.equals(TransTypeUtil.ELECTRONIC_FORM_A_CODE)) {
+//       	 //設置模板參數
+//           receivers.add(user.getMobile());
+//           logger.info("user phone : {}", user.getMobile());
+//           messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_029, receivers, paramMap, "sms");
+//           //發送保戶MAIL
+//           if (user.getEmail() != null) {
+//               receivers.clear();//清空
+//               receivers.add(user.getEmail());
+//               logger.info("user mail : {}", user.getEmail());
+//               messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_029, receivers, paramMap, "email");	                
+//           }
+//       }else {
+//       	 //設置模板參數
+//           receivers.add(user.getMobile());
+//           logger.info("user phone : {}", user.getMobile());
+//           messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_036, receivers, paramMap, "sms");
+//           //發送保戶MAIL
+//           if (user.getEmail() != null) {
+//               receivers.clear();//清空
+//               receivers.add(user.getEmail());
+//               logger.info("user mail : {}", user.getEmail());
+//               messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_036, receivers, paramMap, "email");	                
+//           }
+//       }
 		} catch (Exception e) {
 			logger.error("cancel apply send email error : {}", ExceptionUtils.getStackTrace(e));
 		}

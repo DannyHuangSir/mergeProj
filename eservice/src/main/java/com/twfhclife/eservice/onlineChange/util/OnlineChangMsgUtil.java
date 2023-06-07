@@ -147,4 +147,20 @@ public interface OnlineChangMsgUtil {
 	 * 線上試算 - 錯誤訊息
 	 */
 	final String TRANS_ONLINE_TRIAL_ERROR = "請洽詢客戶服務專線0800011966。";
+	
+	final String CHANGE_PREMIUM_ERROR_MSG = "經評估您的投資屬性，不適合投保投資型保險，於本公司既有之投資型保單不得再「申請定期/不定期超額保險費」或「轉換為投資帳戶」";
+	
+	/// 20230602 by 203990, 目前暫無檢核姓名
+	//final String CHECK_SCREEN_DATA = "您的姓名或生日與保單紀錄不一致，如您有疑問，請洽詢本公司客服電話 0800-011-966";
+	final String CHECK_SCREEN_DATA = "您的生日與保單紀錄不一致，如您有疑問，請洽詢本公司客服電話 0800-011-966";
+
+	//final String CHECK_SCREEN_DATA2 = "您的姓名或手機或生日與前次填寫的紀錄不一致，如您有疑問，請洽詢本公司客服電話 0800-011-966";
+	final String CHECK_SCREEN_DATA2 = "您的手機或生日與前次填寫的紀錄不一致，如您有疑問，請洽詢本公司客服電話 0800-011-966";
+
+	/**
+	 * 風險屬性超過一年 提示訊息 
+	 * 功能 : 未來保費投資標的與分配比例, 已持有投資標的轉換, 設定停損停利點  
+	 */
+	final String INDIVDUAL_CHOOSE_ONEYEAR_MSG_1 ="因應法令，自112年4月21日起，需重新評估投資型保險商品風險屬性！";
+	final String INDIVDUAL_CHOOSE_ONEYEAR_MSG_2 ="或線上風險屬性變更已超過一年，亦需重新評估投資型保險商品風險屬性！";
 }

@@ -85,7 +85,7 @@ public class forgetPasswordController extends BaseController {
 		HttpSession session = request.getSession();	
 		try {
 			String message = "";
-			
+
 			//取得session驗證碼
 			//同一個session不可能login,forgetpw同時作，故名字用一樣即可
 			Object validateCodeObj = getSession(ApConstants.LOGIN_VALIDATE_CODE);
@@ -96,18 +96,34 @@ public class forgetPasswordController extends BaseController {
 				// 驗證碼不正確直接回傳
 				logger.info("Forget Password: validateCode result={}", isValidateCodeOk);
 				if (!isValidateCodeOk) {
+					// 重設驗證碼 20230316 by 203990
+					ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+					addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
 					/*message = "驗證碼輸入錯誤，請確認驗證碼或重新寄送驗證碼。";*/
 					message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0022");
 					this.setResponseObj(ResponseObj.ERROR, message, null);
 					return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
 				}
-			}			
+			}else{
+				// 重設驗證碼 20230316 by 203990
+				ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+				addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
+				/*message = "驗證碼輸入錯誤，請確認驗證碼或重新寄送驗證碼。";*/
+				message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0022");
+				this.setResponseObj(ResponseObj.ERROR, message, null);
+				return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
+			}
 			
 			UsersVo user = registerUserService.getUserByAccount(userVo.getUserId());
-			if(user != null){
-				
+			if(user != null){				
 				//安全機制：不允許ADMIN在此操作忘記密碼
 				if("admin".equalsIgnoreCase(user.getUserType())) {
+					// 重設驗證碼 20230316 by 203990
+					ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+					addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
 					/*message = "不允許的系統操作!";*/
 					message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0000");
 				}else {
@@ -122,9 +138,12 @@ public class forgetPasswordController extends BaseController {
 					}else{
 						session.setAttribute("forget_mobile", null);
 					}
-				}
-				
+				}				
 			}else{
+				// 重設驗證碼 20230316 by 203990
+				ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+				addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
 				/*message = "所輸入的使用者不存在!";*/
 				message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0112");
 			}
@@ -133,9 +152,14 @@ public class forgetPasswordController extends BaseController {
 			this.setResponseObj(ResponseObj.SUCCESS, message, null);
 			
 		} catch (Exception e) {
+			// 重設驗證碼 20230316 by 203990
+			ValidateCodeUtil vcUtil = new ValidateCodeUtil(101, 33, 4, 20);
+			addSession(ApConstants.LOGIN_VALIDATE_CODE, vcUtil.getCode());
+
 			logger.error(e.getMessage(), e);
 			this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
 		}
+
 		return ResponseEntity.status(HttpStatus.OK).body(this.getResponseObj());
 	}
 	
@@ -206,12 +230,17 @@ public class forgetPasswordController extends BaseController {
 			boolean isCheck = getSession("forget_isChack") != null ? (boolean) getSession("forget_isChack") : false;
 			if(isCheck && getSession("forgetAuthentication") == null){
 				if (ValidateUtil.isPwd(newPassword)) {
-						registerUserService.updatePassword(account, newPassword);
-						addSession("forget_isChack", null);
+						if (ValidateUtil.isPwdUc(newPassword)) {
+							registerUserService.updatePassword(account, newPassword);
+							addSession("forget_isChack", null);
+						} else {
+							/*message = "請勿輸入連續3碼重覆或連續性之密碼！";*/
+							message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0024-2");
+						}
 				} else {
 					/*message = "請輸入8～20碼混合之數字及英文字母和符號(須區分大小寫)！";*/
 					message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0014");
-				}
+				}				
 			}else{
 				/*message = "請完成驗證碼驗證!";*/
 				message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0101");

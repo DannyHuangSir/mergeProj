@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.twfhclife.common.util.EncryptionUtil;
 import com.twfhclife.eservice.web.model.*;
+import com.twfhclife.generic.api_client.BaseRestClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -63,47 +65,54 @@ public class LoginController extends BaseUserDataController {
 
 	@Autowired
 	private KeycloakService keycloakService;
-
+	
 	@Autowired
 	private IRegisterUserService registerUserService;
-
+	
 	@Autowired
 	private IParameterService parameterService;
-
+	
 	@Autowired
 	private ILoginService loginService;
-
+	
 	@Autowired
 	private IFuctionAuthService fuctionAuthService;
 
 	@Autowired
 	private ILilipiService lilipiService;
-
+	
 	@Autowired
 	private ILilipmService lilipmService;
-
+	
 	@Autowired
 	private IUnicodeService unicodeService;
-
+	
 	/**
 	 * 登入.
-	 *
+	 * 
 	 * @param loginRequestVo LoginRequestVo
 	 * @return
 	 */
 	@PostMapping("/doLogin")
 	public String doLogin(LoginRequestVo loginRequestVo) {
+		/// 20221003 by 203990
+		/// Begin: 算然前端不顯示FB 及 自然人憑證登入的按鈕, 但還是有測試帶入相關資料直接後送做登入的問題, 因此在此清空FB及自然人憑證帶入的相關資料確實關閉登入功能
+		loginRequestVo.setFbId("");
+		loginRequestVo.setFbAccessToken("");
+		loginRequestVo.setCardSN("");
+		loginRequestVo.setCertb64("");
+		/// End
 		KeycloakUser keycloakUser = null;
 		String loginSuccessPage = "redirect:dashboard";
 		String userId = loginRequestVo.getUserId();
 		String userType = "";
-		try {
+		try {			
 			// 取得session驗證碼
 			Object validateCodeObj = getSession(ApConstants.LOGIN_VALIDATE_CODE);
 			if (validateCodeObj != null) {
 				loginRequestVo.setSessionValidateCode((String) validateCodeObj);
 			}
-
+			
 			//SR_GDPR
 			if("".equals(StringUtils.trimToEmpty(loginRequestVo.getEuNationality()))) {
 				String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0134");
@@ -111,89 +120,89 @@ public class LoginController extends BaseUserDataController {
 				addAuditLog(userId, "0", "");
 				return "login";
 			}
-
+			
 			//decrypt pw,retset to loginRequestVo-start
 			String encryptPw = loginRequestVo.getPassword();
 			String decryptPw = decodeBase64(encryptPw);
 			loginRequestVo.setPassword(decryptPw);
-			System.out.println("decryptPw="+decryptPw);
+			//System.out.println("decryptPw="+decryptPw);
 			logger.info("decryptPw="+decryptPw);
 			//decrypt pw,retset to loginRequestVo-end
-
+			
 			LoginResultVo loginResultVo = loginService.doLogin(loginRequestVo);
 			String returnCode = loginResultVo.getReturnCode();
 			String returnMsg = loginResultVo.getReturnMsg();
 			String loginType = loginResultVo.getLoginType();
 			keycloakUser = loginResultVo.getKeycloakUser();
 			boolean verifyValidateCode = loginResultVo.isVerifyValidateCode();
-
+			
 			// 驗證是否有綁定FB、自然人憑證及驗證碼是否輸入正確
 			if("moica".contains(loginType)) {
 				loginType  = "";//disable MMOICA login
 			}
 			switch (loginType) {
-				case "fb":
-					// Facebook 登入
-					if ("NO_DATA".equals(returnCode)) {
-						addSession("fbId", loginRequestVo.getFbId());
-						addSession("email", loginRequestVo.getEmail());
-						addAttribute("noFbIdUser", true);
-						resetVerifyCode();
-						return "login";
-					}
-					if(loginResultVo.getKeycloakUser() != null) {
-						userId = loginResultVo.getKeycloakUser().getUsername();
-					}
-					break;
-				case "moica":
-					// 自然人憑證登入
-					if ("NO_DATA".equals(returnCode)) {
-						addSession("cardSn", loginRequestVo.getCardSN());
-						addAttribute("noCardSnUser", true);
-						resetVerifyCode();
-						return "login";
-					}
+			case "fb":
+				// Facebook 登入
+				if ("NO_DATA".equals(returnCode)) {
+					addSession("fbId", loginRequestVo.getFbId());
+					addSession("email", loginRequestVo.getEmail());
+					addAttribute("noFbIdUser", true);
+					resetVerifyCode();
+					return "login";
+				}
+				if(loginResultVo.getKeycloakUser() != null) {
+					userId = loginResultVo.getKeycloakUser().getUsername();
+				}
+				break;
+			case "moica":
+				// 自然人憑證登入
+				if ("NO_DATA".equals(returnCode)) {
+					addSession("cardSn", loginRequestVo.getCardSN());
+					addAttribute("noCardSnUser", true);
+					resetVerifyCode();
+					return "login";
+				}
 
-
-					//需於server side檢核
-					boolean checkMoica = false;
-					String cardSN = loginRequestVo.getCardSN();
-					String sessionCardSN  = "";
-					Object strObj = getSession("SESSION_CARDSN");
-					if(strObj!=null) {
-						sessionCardSN = (String)strObj;
-					}
-					logger.info("sessionCardSN="+sessionCardSN);
-					System.out.println("sessionCardSN="+sessionCardSN);
-
-					if(!StringUtils.isEmpty(cardSN) && !StringUtils.isEmpty(sessionCardSN)
-							&& cardSN.equals(sessionCardSN)) {
-						checkMoica = true;
-					}
-
-					if(!checkMoica) {
-						//前端值的驗證和最後傳到SERVER的不一致
-						String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0000");
-						addAttribute("errorMessage", errorMessage);
-						addAuditLog(userId, "0", "");
-						return "login";
-					}
-
-
-					if(loginResultVo.getKeycloakUser() != null) {
-						userId = loginResultVo.getKeycloakUser().getUsername();
-					}
-					break;
-				case "password":
-					// 帳號密碼登入
-					if (!verifyValidateCode) {
-						addAttribute("errorMessage", "驗證碼不正確");
-						resetVerifyCode();
-						return "login";
-					}
-					break;
+				
+				//需於server side檢核
+				boolean checkMoica = false;
+				String cardSN = loginRequestVo.getCardSN();
+				String sessionCardSN  = "";
+				Object strObj = getSession("SESSION_CARDSN");
+				if(strObj!=null) {
+					sessionCardSN = (String)strObj;
+				}
+				logger.info("sessionCardSN="+sessionCardSN);
+				//System.out.println("sessionCardSN="+sessionCardSN);
+				
+				if(!StringUtils.isEmpty(cardSN) && !StringUtils.isEmpty(sessionCardSN)
+						&& cardSN.equals(sessionCardSN)) {
+					checkMoica = true;
+				}
+				
+				if(!checkMoica) {
+					//前端值的驗證和最後傳到SERVER的不一致
+					String errorMessage = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0000");
+					addAttribute("errorMessage", errorMessage);
+					addAuditLog(userId, "0", "");
+					return "login";
+				}
+				
+				
+				if(loginResultVo.getKeycloakUser() != null) {
+					userId = loginResultVo.getKeycloakUser().getUsername();
+				}
+				break;
+			case "password":
+				// 帳號密碼登入
+				if (!verifyValidateCode) {
+					addAttribute("errorMessage", "驗證碼不正確");
+					resetVerifyCode();
+					return "login";
+				}
+				break;
 			}
-
+			
 			UsersVo userDetail = registerUserService.getUserByAccount(userId);
 			if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
 				if (userDetail != null && userDetail.getStatus().equals("locked")) {
@@ -833,13 +842,23 @@ public class LoginController extends BaseUserDataController {
 				addAttribute("errorMessage", "ActionId錯誤！");
 				return "login";
 			}
+
+			if(StringUtils.isBlank(BaseRestClient.getAccessKey())) {
+				try {
+					String encrypAccessKey = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "eservice_api.accessKey");
+					BaseRestClient.setAccessKey(EncryptionUtil.Decrypt(encrypAccessKey));
+				} catch(Exception e) {
+					logger.error("Set API access key error: ", e);
+				}
+			}
+
 			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
 			String rocId = loginService.doLoinBxcz(param.getCode(), eserviceBxczRedirectUri, param.getState());
 			if (StringUtils.isBlank(rocId)) {
 				addAttribute("errorMessage", "login error!");
 				return "login";
 			}
-			UsersVo userDetail = registerUserService.getUserByRocId(rocId);
+			UsersVo userDetail = registerUserService.getBxczUserByRocId(rocId);
 			if (userDetail == null) {
 				addSession("BXCZ_REGISTER_FLAG", true);
 				addSession("rocId", rocId);

@@ -10,4 +10,5 @@ public interface TransCtcLibnagDao {
 
 	List<TransCtcLibnagVo> getRevokeByLibnagForBnagInsuSeqNo(@Param("bnagInsuSeqNo") String bnagInsuSeqNo);
 	
+	List<TransCtcLibnagVo> getBirthByPolicyNo(@Param("policyNo") String policyNo);
 }

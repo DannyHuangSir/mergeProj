@@ -4,6 +4,8 @@ public class TransCtcLibnagVo {
 	
 	private String bnagId;
 	private String bnagRecClerk;
+	private String bnagInsuNo;
+	private String bnagBirth;
 	
 	public String getBnagId() {
 		return bnagId;
@@ -16,6 +18,18 @@ public class TransCtcLibnagVo {
 	}
 	public void setBnagRecClerk(String bnagRecClerk) {
 		this.bnagRecClerk = bnagRecClerk;
+	}
+	public String getBnagInsuNo() {
+		return bnagInsuNo;
+	}
+	public void setBnagInsuNo(String bnagInsuNo) {
+		this.bnagInsuNo = bnagInsuNo;
+	}
+	public String getBnagBirth() {
+		return bnagBirth;
+	}
+	public void setBnagBirth(String bnagBirth) {
+		this.bnagBirth = bnagBirth;
 	}
 	
 }

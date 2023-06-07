@@ -5,6 +5,7 @@ import com.twfhclife.eservice.onlineChange.model.TransChangePremiumVo;
 import com.twfhclife.eservice.onlineChange.service.ITransChangePremiumService;
 import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransPaymodeService;
+import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
@@ -17,10 +18,10 @@ import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.generic.api_client.FunctionUsageClient;
+//import com.twfhclife.generic.api_client.FunctionUsageClient;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
-import com.twfhclife.generic.api_client.TransAddClient;
-import com.twfhclife.generic.api_client.TransHistoryDetailClient;
+//import com.twfhclife.generic.api_client.TransAddClient;
+//import com.twfhclife.generic.api_client.TransHistoryDetailClient;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
@@ -51,14 +52,14 @@ public class ChangePremiumController extends BaseUserDataController  {
     @Autowired
     private ITransPaymodeService transPaymodeService;
 
-    @Autowired
-    private TransHistoryDetailClient transHistoryDetailClient;
-
-    @Autowired
-    private TransAddClient transAddClient;
-
-    @Autowired
-    private FunctionUsageClient functionUsageClient;
+//    @Autowired
+//    private TransHistoryDetailClient transHistoryDetailClient;
+//
+//    @Autowired
+//    private TransAddClient transAddClient;
+//
+//    @Autowired
+//    private FunctionUsageClient functionUsageClient;
 
     @Autowired
     private ILoginService loginService;
@@ -77,6 +78,9 @@ public class ChangePremiumController extends BaseUserDataController  {
 
     @Autowired
     private IPolicyListService policyListService;
+    
+    @Autowired
+    private ITransRiskLevelService transRiskLevelService;
 
     @RequestLog
     @GetMapping("/changePremium1")
@@ -88,7 +92,6 @@ public class ChangePremiumController extends BaseUserDataController  {
                 addSystemError(message);
                 return "redirect:apply1";
             }
-
             /**
              * 投資型保單申請中不可繼續申請
              * TRANS  status=-1,0,4
@@ -98,7 +101,11 @@ public class ChangePremiumController extends BaseUserDataController  {
                 redirectAttributes.addFlashAttribute("errorMessage", msg);
                 return "redirect:apply1";
             }
-
+            String riskAttr = transRiskLevelService.getUserRiskAttr(getUserRocId());
+            if("D".equals(riskAttr)) {
+            	redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.CHANGE_PREMIUM_ERROR_MSG);
+                return "redirect:apply1";
+            }
             String userId = getUserId();
             List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(getUserRocId());
 
@@ -249,7 +256,6 @@ public class ChangePremiumController extends BaseUserDataController  {
     @PostMapping("/getTransChangePremiumDetail")
     public String getTransChangePremiumDetail(@RequestParam("transNum") String transNum) {
         try {
-
             TransChangePremiumVo transChangePremiumVo = transChangePremiumService.getTransChangePremiumDetail(transNum);
             addAttribute("transChangePremiumDetail", transChangePremiumVo);
         } catch (Exception e) {
@@ -295,7 +301,8 @@ public class ChangePremiumController extends BaseUserDataController  {
         return mingwen;
     }
 
-    public void sendNotification(TransChangePremiumVo vo, UsersVo user) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public void sendNotification(TransChangePremiumVo vo, UsersVo user) {
         try {
             Map<String, Object> mailInfo = transInvestmentService.getSendMailInfo();
             Map<String, String> paramMap = new HashMap<String, String>();

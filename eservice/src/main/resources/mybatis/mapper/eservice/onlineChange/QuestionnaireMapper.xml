@@ -7,6 +7,7 @@
     <result column="TITLE" property="title" jdbcType="NVARCHAR" />
     <result column="IS_MULTI" property="isMulti" jdbcType="NVARCHAR" />
     <result column="QID" property="id" jdbcType="NUMERIC" />
+    <result column="QSEQ" property="seq" jdbcType="NUMERIC" />
     <collection property="options" resultMap="OptionMap"></collection>
   </resultMap>
 
@@ -14,11 +15,13 @@
     <id column="ID" property="id" jdbcType="NUMERIC" />
     <result column="ITEM" property="item" jdbcType="NVARCHAR" />
     <result column="SCORE" property="score" jdbcType="NUMERIC" />
-  <result column="EXTRA_VALUE" property="extraValue" jdbcType="NVARCHAR" />
+ 	<result column="EXTRA_VALUE" property="extraValue" jdbcType="NVARCHAR" />
+ 	<result column="RISK_FLAG" property="riskFlag" jdbcType="NVARCHAR" />
+ 	<result column="CANCEL_FLAG" property="cancelFlag" jdbcType="CHAR" />
   </resultMap>
 
   <select id="selectQuestionnaire" resultMap="QuestionnaireMap">
-    SELECT Q.ID QID, O.ID, QUESTION, TITLE, ITEM, SCORE, IS_MULTI, EXTRA_VALUE
+    SELECT Q.ID QID, O.ID, QUESTION, TITLE, ITEM, SCORE, IS_MULTI, EXTRA_VALUE , RISK_FLAG , CANCEL_FLAG ,  Q.SEQ QSEQ
     FROM ESERVICE.DBO.QUESTION Q LEFT JOIN ESERVICE.DBO.OPTIONS O ON Q.ID = O.QUESTION_ID
     WHERE #{date} &gt;= EFFECTIVE_TIME AND #{date} &lt;= STOP_TIME
     ORDER BY Q.SEQ, O.SEQ

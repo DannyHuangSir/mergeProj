@@ -11,6 +11,10 @@ public class OptionVo {
     private String item;
 
     private String extraValue;
+   
+    private String riskFlag;
+    
+    private String cancelFlag;
 
     private boolean checked = false;
 
@@ -61,4 +65,22 @@ public class OptionVo {
     public void setExtraValue(String extraValue) {
         this.extraValue = extraValue;
     }
+
+	public String getRiskFlag() {
+		return riskFlag;
+	}
+
+	public void setRiskFlag(String riskFlag) {
+		this.riskFlag = riskFlag;
+	}
+
+	public String getCancelFlag() {
+		return cancelFlag;
+	}
+
+	public void setCancelFlag(String cancelFlag) {
+		this.cancelFlag = cancelFlag;
+	}
+    
+    
 }

@@ -42,4 +42,6 @@ public interface LoginDao {
 	 * @param row
 	 */
 	public List<AuditLogVo> getLastAuditLog(@Param("userId") String userId, @Param("row") String row);
+	
+	public List<String> getpolicyInvestmentType();
 }

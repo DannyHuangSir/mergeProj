@@ -122,7 +122,7 @@
 
   <select id="selectProcessInvestment" resultType="java.lang.String">
     select TOP 1 A.TRANS_TYPE from eservice.dbo.TRANS A
-    where A.STATUS not in ('2','3','7') and A.TRANS_TYPE IN
+    where A.STATUS not in ('2','3','6','7') and A.TRANS_TYPE IN
     <foreach collection="transTypes" item="t" open="(" close=")" separator=",">
       #{t}
     </foreach>

@@ -5,28 +5,41 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.onlineChange.model.BlackListVo;
+import com.twfhclife.eservice.onlineChange.model.IndividualChooseVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundConversionVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
-import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransRiskLevelService;
+import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.service.IndividualChooseService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
+//import com.twfhclife.eservice.policy.service.IFundPrdtService;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.policy.service.IPortfolioService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
+//import com.twfhclife.eservice.web.service.IRegisterUserService;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
+import com.twfhclife.generic.api_client.TransCtcSelectUtilClient;
+import com.twfhclife.generic.api_model.LicohilResponse;
+import com.twfhclife.generic.api_model.LicohilVo;
+import com.twfhclife.generic.api_model.PolicyDetailRequest;
+import com.twfhclife.generic.api_model.PolicyDetailResponse;
+import com.twfhclife.generic.api_model.PolicyDetailVo;
 import com.twfhclife.generic.api_client.PortfolioClient;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
+import com.twfhclife.generic.util.ValidateUtil;
+
+//import com.twfhclife.generic.util.StatuCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -34,14 +47,22 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+//import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
-
 import java.text.SimpleDateFormat;
+//import sun.rmi.log.LogInputStream;
+
+//import javax.print.DocFlavor;
+//import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-
+/***
+ * 已持有投資標的轉換
+ */
 @Controller
 public class FundConversionController extends BaseUserDataController  {
     private static final Logger logger = LogManager.getLogger(FundConversionController.class);
@@ -52,7 +73,9 @@ public class FundConversionController extends BaseUserDataController  {
     @Autowired
     private ILoginService loginService;
 
-
+	@Autowired
+	private IndividualChooseService indivdualChooseService;
+	
     @Autowired
     private IPolicyListService policyListService;
 
@@ -73,6 +96,9 @@ public class FundConversionController extends BaseUserDataController  {
     private ITransService transService;
     @Autowired
     private MessageTemplateClient messageTemplateClient;
+    
+	@Autowired
+	private TransCtcSelectUtilClient transCtcSelectUtilClient;
 
     @RequestLog
     @GetMapping("/fund1")
@@ -128,23 +154,24 @@ public class FundConversionController extends BaseUserDataController  {
                 redirectAttributes.addFlashAttribute("errorMessage", msg);
                 return "redirect:apply1";
             }
-
+            
             //取得登入者證號.
             String userRocId = getUserRocId();
             UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
 
-            boolean expire = riskLevelService.checkRiskLevelExpire(userDetail.getUserId());
-            if (expire) {
-                redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
-                return "redirect:apply1";
-            }
-
-            String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
-            if(StringUtils.isBlank(riskLevel)) {
-                String message = "請先變更風險屬性！";
-                redirectAttributes.addFlashAttribute("errorMessage", message);
-                return "redirect:apply1";
-            }
+//            boolean expire = riskLevelService.checkRiskLevelExpire(userDetail.getUserId());
+//            if (expire) {
+//                redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
+//                return "redirect:apply1";
+//            }
+//
+//            
+//            String riskLevel = riskLevelService.getUserRiskAttr(userRocId);
+//            if(StringUtils.isBlank(riskLevel)) {
+//                String message = "請先變更風險屬性！";
+//                redirectAttributes.addFlashAttribute("errorMessage", message);
+//                return "redirect:apply1";
+//            }
 
 
             boolean isPartner = loginService.isPartnerRole(userDetail.getUserType());
@@ -159,10 +186,64 @@ public class FundConversionController extends BaseUserDataController  {
             //進行查詢當前保單是否已有投資標
             transInvestmentService.handleNotExistingInvestmentLock(userRocId, policyList);
 
-
-
-
-            //進行查詢當前備注條款
+//            List<PolicyListVo> policyList =  new ArrayList<PolicyListVo>();
+//           	policyList =  (List<PolicyListVo>) getSession(UserDataInfo.USER_ALL_POLICY_LIST);
+//            if(policyList == null) {
+//				PolicyDetailRequest req = new PolicyDetailRequest();
+//				req.setRocId(userRocId);
+//				PolicyDetailResponse response = transCtcSelectUtilClient.getPolicyDataByRocId(req);
+//				if(response != null) {
+//					List<PolicyDetailVo> policyDetailList  = new ArrayList<PolicyDetailVo>();
+//					policyDetailList = response.getPolicyDetailList();
+//					policyList = loginService.mappingPolicyList(policyDetailList);
+//				}				
+//            }
+//            
+//            transInvestmentService.handlePolicyStatusLocked(userRocId, policyList, TransTypeUtil.INVESTMENT_CONVERSION_CODE );
+//            transService.handleVerifyPolicyRuleStatusLocked(policyList,TransTypeUtil.INVESTMENT_CONVERSION_CODE);
+//            //進行查詢當前保單是否已有投資標
+//            transInvestmentService.handleNotExistingInvestmentLock(userRocId, policyList);
+         
+//            List<String> policyNoList = new ArrayList<>();
+//            policyList.stream().filter(x->{
+//            	if(x.getPolicyListType().equals("1")) {
+//            		policyNoList.add(x.getPolicyNo());
+//            		return true;
+//            	}
+//				return false;            	
+//            }).collect(Collectors.toList());
+//            if(policyNoList.size() > 0) {
+    			PolicyDetailRequest request = new PolicyDetailRequest();
+    			request.setRocId(userRocId);			
+    			request.setPolicyInvestmentType(indivdualChooseService.getpolicyInvestmentType());
+    			LicohilResponse response = transCtcSelectUtilClient.getLicohiByPolicyNo(request);
+    			if(response.getLicohilVo().size() == 0) {
+    				response = transCtcSelectUtilClient.getLilipmByPolicyNo(request);
+    				LicohilVo licohilVo = indivdualChooseService.getpolicyHaveInvestmentType(response.getLicohilVo());
+    				if(licohilVo != null) {
+    					if(!insertOrUpdateForIndividual(licohilVo)) {
+    						redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_1 +"<br/>" + OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_2 );
+    			             return "redirect:apply1";
+    					}
+    				}else {
+    	                redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+    	                return "redirect:apply1";
+    				}	           
+    			}else {
+    				LicohilVo licohilVo = indivdualChooseService.getpolicyHaveInvestmentType(response.getLicohilVo());
+    	            transInvestmentService.insertOrUpdateForIndividual(licohilVo);
+					if(!insertOrUpdateForIndividual(licohilVo)) {
+						redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_1 +"<br/>" + OnlineChangMsgUtil.INDIVDUAL_CHOOSE_ONEYEAR_MSG_2);
+			             return "redirect:apply1";
+					}    
+    			}
+//               }
+//        		else {
+//            	   redirectAttributes.addFlashAttribute("errorMessage", "請先變更風險屬性！");
+//                   return "redirect:apply1"; 
+//               }
+ 
+          //進行查詢當前備注條款
             String parameterValueByCode = parameterService.getParameterValueByCode(
                     ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENT_TRANSFORMATION_REMARKS);
             if (parameterValueByCode != null) {
@@ -304,8 +385,13 @@ public class FundConversionController extends BaseUserDataController  {
     @PostMapping("/getInvestmentConversionSearchItem")
     @ResponseBody
     public ResponseEntity<ResponseObj> getInvestmentSearchItem(@RequestBody TransInvestmentVo vo) {
-        Map<String, List<Map<String, String>>> map = transInvestmentService.getCompanyAndCurrencyList(vo.getPolicyNo());
-        processSuccess(map);
+    	if(ValidateUtil.TransInvestmentIsValid(vo)) {
+            Map<String, List<Map<String, String>>> map = transInvestmentService.getCompanyAndCurrencyList(vo.getPolicyNo());
+            processSuccess(map);    		
+    	}else {
+            processSuccess(null);
+    	}
+
         return processResponseEntity();
     }
 
@@ -357,7 +443,7 @@ public class FundConversionController extends BaseUserDataController  {
          try {
              // 驗證驗證碼或者密码
              String msg;
-             if (org.apache.commons.lang3.StringUtils.equals(transInvestmentVo.getAuthType(), "password")) {
+             if (StringUtils.equals(transInvestmentVo.getAuthType(), "password")) {
                  msg = checkPassword(transInvestmentVo.getUserPassword());
              } else {
                  msg = checkAuthCode("conversion", transInvestmentVo.getAuthenticationNum());
@@ -436,7 +522,8 @@ public class FundConversionController extends BaseUserDataController  {
         return mingwen;
     }
 
-    public void sendNotification(TransInvestmentVo vo, UsersVo user) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public void sendNotification(TransInvestmentVo vo, UsersVo user) {
         try {
             Map<String, Object> mailInfo = transInvestmentService.getSendMailInfo();
             Map<String, String> paramMap = new HashMap<String, String>();
@@ -493,4 +580,32 @@ public class FundConversionController extends BaseUserDataController  {
         }
         logger.info("End send mail");
     }
+    
+	private boolean insertOrUpdateForIndividual(LicohilVo licohilVo) {
+		transInvestmentService.insertOrUpdateForIndividual(licohilVo);
+		transInvestmentService.insertOrUpdateForIndividualChoose(licohilVo);
+		IndividualChooseVo vo = indivdualChooseService.getIndividualChoosData(licohilVo.getLipmId());
+		if(licohilVo.getRatingDate() != null && vo != null) {
+			if(indivdualChooseService.compareDate(vo.getRatingDate(), licohilVo.getRatingDate())) {
+				 if(indivdualChooseService.checkRatingDate(vo.getRatingDate())){
+					 return false;
+				 }else {
+					 return true;
+				 }
+			}else {
+				if(indivdualChooseService.checkRatingDate(licohilVo.getRatingDate())) {
+					return false;
+				}else {
+					 return true;
+				}
+			}
+		}else if(licohilVo.getRatingDate() != null){
+			if(indivdualChooseService.checkRatingDate(licohilVo.getRatingDate())) {
+				return false;
+			}else {
+				 return true;
+			}
+		}
+		return true;
+	}
 }

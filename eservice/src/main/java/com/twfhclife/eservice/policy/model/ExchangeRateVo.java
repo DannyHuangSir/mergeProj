@@ -4,7 +4,6 @@ import java.util.Date;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ExchangeRateVo implements Serializable {
@@ -12,7 +11,6 @@ public class ExchangeRateVo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/**  */
-	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date effectiveDate;
 	/**  */
 	private String exchangeCode;

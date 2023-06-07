@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.model.AuditLogVo;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
+import com.twfhclife.generic.api_model.PolicyDetailVo;
 import com.twfhclife.keycloak.model.KeycloakUser;
 
 /**
@@ -102,6 +104,10 @@ public interface ILoginService {
 	 * @param row
 	 */
 	public List<AuditLogVo> getLastAuditLog(String userId, String row);
+	
+	public List<PolicyListVo> mappingPolicyList(List<PolicyDetailVo> policyDetailList);
+	
+	public List<String> getpolicyInvestmentType();
 
     String doLoinBxcz(String code, String redirectUri, String state);
 

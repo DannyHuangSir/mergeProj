@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.service;
 
+import com.twfhclife.eservice.onlineChange.model.IndividualVo;
 import com.twfhclife.eservice.onlineChange.model.TransFundConversionVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentDetailVo;
 import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
@@ -7,11 +8,14 @@ import com.twfhclife.eservice.policy.model.CompareInvestmentVo;
 import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.model.UsersVo;
+import com.twfhclife.generic.api_model.LicohilVo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 public interface ITransInvestmentService {
 
@@ -95,4 +99,10 @@ public interface ITransInvestmentService {
     List<String> getChckSwiftCode()throws Exception;
 
     Map<String, Object> getDepositMailInfo();
+    
+    Map<String,Object> getElectronicFormSendMailInfo() ;
+    
+    void insertOrUpdateForIndividual(LicohilVo licohilVo);
+    
+    void insertOrUpdateForIndividualChoose(LicohilVo licohilVo);
 }
