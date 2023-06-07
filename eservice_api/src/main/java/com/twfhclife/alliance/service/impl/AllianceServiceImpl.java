@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.alliance.model.SignInsuranceClaimMapperVo;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -181,9 +182,68 @@ public class AllianceServiceImpl implements IExternalService{
 		}
 		return strRes;
 	}
-	
 
-	@Override
+    @Override
+    public String postForEntity(String url, SignInsuranceClaimMapperVo cliaimVo, String name) throws Exception {
+		String strRes = null;
+		UnionCourseVo uc = new UnionCourseVo();
+		uc.setCaseId(cliaimVo.getCaseId());
+		uc.setTransNum(cliaimVo.getTransNum());
+		uc.setType(uc.TYPE);
+		uc.setName(name);
+		uc.setCreateDate(new Date());
+
+		if(url!=null && cliaimVo!=null) {
+			ResponseEntity<String> responseEntity = null;
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Access-token", ACCESS_TOKEN);
+			headers.setContentType(MediaType.APPLICATION_JSON);
+
+			Gson gson = new Gson();
+			String json = gson.toJson(cliaimVo);
+			logger.info("resquest json="+json);
+
+			HttpEntity<String> entity = new HttpEntity<String>(json,headers);
+
+			restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+			responseEntity = restTemplate.postForEntity(url, entity, String.class);
+
+			strRes= responseEntity.getBody();
+			logger.info("responseEntity.getBody()="+strRes);
+
+			// 20220907 by 203990
+			/// add checkCode0
+			boolean checkRes  = this.checkResponseStatus(responseEntity);//check http status
+			boolean checkCode0 = false;//check response code value.
+			if(checkRes) {
+				if (responseEntity!=null && responseEntity.getBody()!=null) {
+					//String(10),0代表成功,錯誤代碼則自行定義
+					checkCode0 = checkLiaAPIResponseValue(responseEntity.getBody(), "/code", "0");
+				}
+			}
+
+			if(checkCode0 && checkRes) {
+				uc.setNcStatus(uc.NC_STATUS_S);
+			}else {
+				uc.setNcStatus(uc.NC_STATUS_F);
+			}
+
+			uc.setCompleteDate(new Date());
+			MyJacksonUtil.getNodeString(strRes, "msg");
+			uc.setMsg(getResInfo(strRes));
+			unionCourseDao.insertUnionCourseVo(uc);
+
+			if (!checkRes) {
+				return null;
+			}
+
+		}
+		return strRes;
+    }
+
+
+    @Override
 	public String postForEntity(String url, Map<String, String> params,Map<String, String> unParams) throws Exception {
 		String strRes = null;
 		UnionCourseVo uc = new UnionCourseVo();

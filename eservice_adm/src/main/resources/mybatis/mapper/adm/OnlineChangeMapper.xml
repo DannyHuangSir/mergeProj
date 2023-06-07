@@ -1856,7 +1856,7 @@
 	
 	<select id="getFileDatas" resultMap="TransInsuranceCliamFileDataResultMap" parameterType="java.lang.Float">
 		select * from ESERVICE.DBO.TRANS_INSURANCE_CLAIM_FILEDATAS
-		where CLAIMS_SEQ_ID = #{claimSeqId} and (TYPE = 'DIAGNOSIS_CERTIFICATE' OR TYPE = 'MEDICAL_RECEIPT')
+		where CLAIMS_SEQ_ID = #{claimSeqId} and TYPE IN ('DIGI_SERVICE_CONSENT_FORM', 'MEDICAL_RECEIPT', 'ACCIDENT_FORM', 'IDENTIFICATION_BENEFICIARY', 'ACCOUNT_COPY', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'Z')
 		order by CREATE_DATE desc
 	</select>
 	

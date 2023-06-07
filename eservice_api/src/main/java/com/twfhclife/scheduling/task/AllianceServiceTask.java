@@ -8,10 +8,13 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.twfhclife.alliance.model.*;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -37,12 +40,6 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.twfhclife.alliance.model.CompanyVo;
-import com.twfhclife.alliance.model.ContactInfoVo;
-import com.twfhclife.alliance.model.InsuranceClaimFileDataVo;
-import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
-import com.twfhclife.alliance.model.InsuranceClaimVo;
-import com.twfhclife.alliance.model.NotifyOfNewCaseVo;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.alliance.service.IExternalService;
 import com.twfhclife.alliance.service.impl.AllianceServiceImpl;
@@ -199,55 +196,6 @@ public class AllianceServiceTask {
 		log.info("Start API-101 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 
-		//testcode
-//		try {
-//			InsuranceClaimVo testicvo = new InsuranceClaimVo();
-//			testicvo.setName("鑫守二");
-//			testicvo.setIdNo("A1234567890");
-//			testicvo.setBirdate("19801115");
-//			testicvo.setPhone("0910000000");
-//			testicvo.setPaymentMethod("1");//匯款
-//			testicvo.setBankCode("012");
-//			testicvo.setBankAccount("00123215456487");
-//			testicvo.setApplicationDate("20210119");
-//			testicvo.setApplicationTime("1700");
-//			testicvo.setApplicationItem("1");
-//			testicvo.setAccidentDate("20201101");
-//			testicvo.setAccidentTime("1330");
-//			testicvo.setAccidentCause("1");//疾病
-//			testicvo.setFrom("L01");//臺銀
-//			
-//			List<CompanyVo> tovo = new ArrayList<CompanyVo>();
-//			CompanyVo vo1 = new CompanyVo();
-//			vo1.setCompanyId("L02");
-//			tovo.add(vo1);
-//			CompanyVo vo2 = new CompanyVo();
-//			vo2.setCompanyId("L04");
-//			tovo.add(vo2);
-//			testicvo.setTo(tovo);
-//			
-//			List<InsuranceClaimFileDataVo> fileDatas = new ArrayList<InsuranceClaimFileDataVo>();
-//			InsuranceClaimFileDataVo file1 = new InsuranceClaimFileDataVo();
-//			file1.setType("A");
-//			file1.setFileName("20200122121250L01-A00001-A.pdf");
-//			fileDatas.add(file1);
-//			InsuranceClaimFileDataVo file2 = new InsuranceClaimFileDataVo();
-//			file2.setType("B");
-//			file2.setFileName("20200122121250L01-A00001-B.pdf");
-//			fileDatas.add(file2);
-//			testicvo.setFileDatas(fileDatas);
-//			
-//			Gson gson = new Gson(); 
-//	        String json = gson.toJson(testicvo);
-//	        log.info("json="+json);
-//
-//			String strResponse = allianceService.postForEntity(URL_API101, testicvo);
-//			log.info("strResponse="+strResponse);
-//		}catch(Exception e) {
-//			log.error(e);
-//		}
-		//testcode
-
 		if("N".equals(API_DISABLE)){
 			int rtn = -1;
 			try {
@@ -257,8 +205,40 @@ public class AllianceServiceTask {
 				if(listIC!=null && !listIC.isEmpty() && listIC.size()>0) {
 					for (InsuranceClaimMapperVo icvo : listIC) {
 						if(icvo!=null) {
+							SignInsuranceClaimMapperVo newVo = new SignInsuranceClaimMapperVo();
+							BeanUtils.copyProperties(icvo, newVo);
+							SignRecord signRecord = insuranceClaimService.getNewSignStatus(icvo.getTransNum());
+							if (signRecord != null) {
+								newVo.setActionId(signRecord.getActionId());
+								newVo.setToaFileId(signRecord.getFileId());
+							}
+							if (CollectionUtils.isNotEmpty(icvo.getFileDatas())) {
+								Map<String, List<InsuranceClaimFileDataVo>> map = Maps.newHashMap();
+								icvo.getFileDatas().forEach(f -> {
+									if (map.containsKey(f.getType())) {
+										map.get(f.getType()).add(f);
+									} else {
+										map.put(f.getType(), Lists.newArrayList(f));
+									}
+								});
+								List<SignInsuranceClaimFileDataVo> list = Lists.newArrayList();
+								for (Map.Entry<String, List<InsuranceClaimFileDataVo>> entry : map.entrySet()) {
+									SignInsuranceClaimFileDataVo vo = new SignInsuranceClaimFileDataVo();
+									vo.setType(entry.getKey());
+									vo.setFileRequired(entry.getValue().size());
+									String fileNames = entry.getValue().stream().map(x -> x.getFileName()).collect(Collectors.toList()).toString();
+									vo.setFileName(fileNames.substring(1, fileNames.length() - 1));
+									list.add(vo);
+								}
+								if (CollectionUtils.isNotEmpty(list)) {
+									newVo.setFileDatas(list);
+								} else {
+									newVo.setFileDatas(Lists.newArrayList());
+								}
+							}
+
 							//3.call api-101 to upload.
-							String strResponse = allianceService.postForEntity(URL_API101, icvo, "API-101理賠申請書上傳");
+							String strResponse = allianceService.postForEntity(URL_API101, newVo, "API-101理賠申請書上傳");
 							log.info("call URL_API101,strResponse="+strResponse);
 							//3-1.get api-101 response, update caseId, fileId to db.
 							// 20220706 by 203990

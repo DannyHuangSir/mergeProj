@@ -3,6 +3,7 @@ package com.twfhclife.alliance.service;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.alliance.model.SignInsuranceClaimMapperVo;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
@@ -27,7 +28,9 @@ public interface IExternalService {
 	 * @throws Exception
 	 */
 	String postForEntity(String url,InsuranceClaimMapperVo cliaimVo, String name) throws Exception;
-	
+
+	String postForEntity(String url, SignInsuranceClaimMapperVo cliaimVo, String name) throws Exception;
+
 	/**
 	 * 
 	 * @param id
