@@ -4,23 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.twfhclife.adm.model.*;
 import org.apache.ibatis.annotations.Param;
-
-import com.twfhclife.adm.model.ContactInfoReportVo;
-import com.twfhclife.adm.model.Hospital;
-import com.twfhclife.adm.model.HospitalInsuranceCompany;
-import com.twfhclife.adm.model.InsClaimStatisticsVo;
-import com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo;
-import com.twfhclife.adm.model.MedicalTreatmentStatisticsVo;
-import com.twfhclife.adm.model.NotifyOfNewCaseMedicalVo;
-import com.twfhclife.adm.model.TransExtendAttrVo;
-import com.twfhclife.adm.model.TransInsuranceClaimVo;
-import com.twfhclife.adm.model.TransMedicalTreatmentClaimMedicalInfoVo;
-import com.twfhclife.adm.model.TransMedicalTreatmentClaimVo;
-import com.twfhclife.adm.model.TransRFEVo;
-import com.twfhclife.adm.model.TransStatusHistoryVo;
-import com.twfhclife.adm.model.TransVo;
-import com.twfhclife.adm.model.UnionCourseVo;
 
 /**
  * 報表查詢-線上申請查詢服務.
@@ -546,5 +531,6 @@ public interface IOnlineChangeService {
 	public Map<String , Object> getTransRolloverPeriodicallyMethod(TransVo transVo) throws Exception;
 	
 	public Map<String , Object> getTransContractRevocationMethod(TransVo transVo) throws Exception;
-	
+
+    SignRecord getNewSignStatus(String transNum);
 }

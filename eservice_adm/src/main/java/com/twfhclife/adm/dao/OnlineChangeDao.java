@@ -674,5 +674,6 @@ public interface OnlineChangeDao {
 	Map<String, Object> getTransRolloverPeriodicallyMethod(@Param("transVo") TransVo transVo);
 	
 	Map<String, Object> getTransContractRevocationMethod(@Param("transVo") TransVo transVo);
-	
+
+	SignRecord getNewSignStatus(@Param("transNum") String transNum);
 }

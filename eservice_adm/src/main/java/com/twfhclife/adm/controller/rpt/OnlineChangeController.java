@@ -212,7 +212,32 @@ public class OnlineChangeController extends BaseController {
 	@PostMapping("/onlineChange/getTransInsuranceClaim")
 	public String getTransInsuranceClaim(@RequestBody TransVo transVo) {
 		try {
-			addAttribute("detailData", onlineChangeService.getTransInsuranceClaim(transVo));
+			Map<String, Object> map = onlineChangeService.getTransInsuranceClaim(transVo);
+			addAttribute("detailData", map);
+			List<Map> list = (List) map.get("FileDatas");
+			Map<String, List<Map<String, Object>>> fileData = Maps.newHashMap();
+			if (CollectionUtils.isNotEmpty(list)) {
+				for (Map m : list) {
+					if (fileData.get(m.get("TYPE")) != null) {
+						fileData.get(m.get("TYPE")).add(m);
+					} else {
+						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
+					}
+				}
+			}
+			addAttribute("fileData", fileData);
+			SignRecord signRecord = onlineChangeService.getNewSignStatus(String.valueOf(map.get("TRANS_NUM")));
+			if (signRecord != null) {
+				Map<String, Object> signRecordMap = Maps.newHashMap();
+				signRecordMap.put("idVerifyTime", signRecord.getIdVerifyTime() != null ? DateUtil.formatDateTime(signRecord.getIdVerifyTime(), "yyyy/MM/dd HH:mm") : "");
+				signRecordMap.put("idVerifyStatus", SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), null));
+				signRecordMap.put("signTime", signRecord.getSignTime() != null ? DateUtil.formatDateTime(signRecord.getSignTime(), "yyyy/MM/dd HH:mm") : "");
+				signRecordMap.put("signStatus", SignStatusUtil.signStatusToStr(null, signRecord.getSignStatus()));
+				signRecordMap.put("signDownload", signRecord.getSignDownload());
+				signRecordMap.put("signFileId", signRecord.getSignFileId());
+				addAttribute("signRecord", signRecordMap);
+
+			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransInsuranceClaim: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();

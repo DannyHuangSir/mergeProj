@@ -405,8 +405,32 @@
 														</th:block>
 												</div>
 											</th:block>
-											
 										</div>
+										<div class="form-group">
+											<label class="col-xs-3">是否進行數位身份驗證及數位簽署：</label>
+											<div class="col-xs-9"><span>
+												 <th:block th:if="${detailData['SIGN_AGREE'] == 'Y'}">同意</th:block>
+                                				 <th:block th:if="${detailData['SIGN_AGREE'] == 'N'}">不同意</th:block>
+											</span></div>
+										</div>
+										<th:block th:if="${signRecord} != null">
+											<div class="form-group">
+												<label class="col-sm-4">身份驗證狀態：</label>
+												<div class="col-sm-8" th:text="${signRecord.idVerifyStatus}"> </div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4">身份驗證時間：</label>
+												<div class="col-sm-8" th:text="${signRecord.idVerifyTime}"> </div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4">數位簽署狀態：</label>
+												<div class="col-sm-8" th:text="${signRecord.signStatus}"> </div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4">數位簽署時間：</label>
+												<div class="col-sm-8" th:text="${signRecord.signTime}"> </div>
+											</div>
+										</th:block>
 									</div>
 								</div>
 								<div class="form-horizontal">
@@ -471,31 +495,38 @@
 										<i class="fa foo-angle-up hid1"></i> ^  上傳申請應備文件
 									</div>
 									<div class="mobile-toggle-panel">
-										<th:block th:if="${not #lists.isEmpty(detailData.FileDatas)}">
-											<th:block th:each="vo, rowStat : ${detailData.FileDatas}">
-												 <div class="form-group">
-													 <label class="col-sm-3">
-														<th:block th:if="${vo.TYPE_NAME != ''}">
-															<th:block th:inline="text">[[${vo.TYPE_NAME}]]：</th:block>
-														</th:block>
-														<th:block th:if="${vo.TYPE_NAME == ''}">
+										<th:block th:if="${not #lists.isEmpty(fileData)}">
+											<th:block th:each="fileDataEntry:${fileData.entrySet()}">
+												<div class="form-group">
+													<label class="col-sm-3">
+														<th:block th:if="${fileDataEntry.key == 'C'}">
 															補件：
 														</th:block>
-													 </label>
-													 <div class="col-sm-9">
-														<th:block th:text="${vo.FILE_NAME}"/>
-														<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.FILE_NAME,'.pdf')}">
-															<img th:onclick="'javascript:imgConfirm(this,\'pdf\')'" th:src="'data:image/png;base64, '+${vo.FileBase64}"  th:FILE_BASE64="${vo.FILE_BASE64}"  width="50">
+														<th:block Rth:if="${session.INSURANCE_CLAIM_UPLOADFILE != null}">
+															<th:block th:each="file : ${session.INSURANCE_CLAIM_UPLOADFILE}">
+																<th:block th:if="${fileDataEntry.key != 'C' && fileDataEntry.key eq file.value.parameterCode}">
+																	<th:block th:inline="text">[[${file.value.parameterName}]]</th:block> ：
+																</th:block>
+															</th:block>
+														</th:block>
+													</label>
+													<div class="col-sm-9">
+														<div class="col-sm-12 upload-drop-zone boardDotted">
+															<th:block th:each="vo1 : ${fileDataEntry.value}">
+																<th:block th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.pdf')}">
+																	<img th:onclick="'javascript:imgConfirm(this,\'pdf\')'" th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}"  width="50"/>
+																</th:block>
+																<th:block th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.jpg')}">
+																	<img th:onclick="'javascript:imgConfirm(this,\'png\')'"  th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}"  width="50"/>
+																</th:block>
+																<th:block th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.png')}">
+																	<img th:onclick="'javascript:imgConfirm(this,\'png\')'"  th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}"  width="50"/>
+																</th:block>
+															</th:block>
 														</div>
-														<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.FILE_NAME,'.jpg')}">
-															<img th:onclick="'javascript:imgConfirm(this,\'png\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}"  th:FILE_BASE64="${vo.FILE_BASE64}"  width="50">
-														</div>
-														<div class="col-sm-12 upload-drop-zone boardDotted" th:if="${#strings.containsIgnoreCase(vo.FILE_NAME,'.png')}">
-															<img th:onclick="'javascript:imgConfirm(this,\'png\')'"  th:src="'data:image/png;base64, '+${vo.FileBase64}"  th:FILE_BASE64="${vo.FILE_BASE64}"  width="50">
-														</div>
-													 </div>
-												 </div>
-											 </th:block>
+													</div>
+												</div>
+											</th:block>
 										</th:block>
 									 </div>
 									

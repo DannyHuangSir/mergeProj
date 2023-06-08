@@ -1777,4 +1777,9 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	public Map<String, Object> getTransContractRevocationMethod(TransVo transVo) throws Exception {
 		return onlineChangeDao.getTransContractRevocationMethod(transVo);
 	}
+
+    @Override
+    public SignRecord getNewSignStatus(String transNum) {
+        return onlineChangeDao.getNewSignStatus(transNum);
+    }
 }
