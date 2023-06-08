@@ -412,4 +412,29 @@ public class AllianceServiceImpl implements IExternalService{
 			return null;
 		}
 	}
+
+	@Override
+	public String postApi418(String urlApi108, Map<String, String> api108Params) throws Exception {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Access-token", ACCESS_TOKEN);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		Gson gson = new Gson();
+		String json = gson.toJson(api108Params);
+		logger.info("resquest json=" + json);
+		HttpEntity<String> entity = new HttpEntity<String>(json, headers);
+		ResponseEntity<String> responseEntity = restTemplate.postForEntity(urlApi108, entity, String.class);
+		boolean checkResp = this.checkResponseStatus(responseEntity);//check http status
+		boolean checkCode0 = false;
+		if (checkResp) {
+			if (responseEntity != null && responseEntity.getBody() != null) {
+				checkCode0 = checkLiaAPIResponseValue(responseEntity.getBody(), "/code", "0");
+			}
+		}
+		if (checkCode0 && checkResp) {
+			return responseEntity.getBody();
+		} else {
+			return null;
+		}
+	}
 }

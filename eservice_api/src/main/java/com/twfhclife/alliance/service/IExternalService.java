@@ -48,4 +48,6 @@ public interface IExternalService {
 	String postForJson(String api417Url, HttpHeaders headers, Map<String, String> params) throws Exception;
 
 	String postApi416(String api416Url, HttpHeaders headers, Map<String, String> api416Params) throws Exception;
+
+	String postApi418(String urlApi108, Map<String, String> api108Params) throws Exception;
 }

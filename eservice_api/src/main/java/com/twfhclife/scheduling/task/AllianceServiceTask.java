@@ -110,6 +110,7 @@ public class AllianceServiceTask {
 
 	//@Value("${alliance.api106.url}")
 	public String URL_API106;
+	public String URL_API108;
 
 	//@Value("${cron.api.disable}")
 	public String API_DISABLE;
@@ -164,6 +165,9 @@ public class AllianceServiceTask {
 				}
 				if ("alliance.api106.url".equals(parameterItem.getParameterName())) {
 					this.setURL_API106(parameterItem.getParameterValue());
+				}
+				if ("alliance.api108.url".equals(parameterItem.getParameterName())) {
+					this.setURL_API108(parameterItem.getParameterValue());
 				}
 			});
 		}
@@ -546,7 +550,6 @@ public class AllianceServiceTask {
 	@Autowired
 	private BxczDao bxczDao;
 
-
 	/**
 	 * 查詢理賠案件
 	 */
@@ -633,7 +636,7 @@ public class AllianceServiceTask {
 								InsuranceClaimMapperVo mapperVo = new InsuranceClaimMapperVo();
 								BeanUtils.copyProperties(icvo,mapperVo);
 
-								if (StringUtils.isNotBlank(icvo.getActionId())) {
+								if (StringUtils.isNotBlank(icvo.getActionId()) || StringUtils.equals("0", icvo.getActionId())) {
 									mapperVo.setSignAgree("Y");
 									Map<String, String> api416Params = Maps.newHashMap();
 									HttpHeaders headers = new HttpHeaders();
@@ -686,19 +689,37 @@ public class AllianceServiceTask {
 								//以ROCID查被保人保單,判斷是否為保戶(20210528若該ID在本公司僅為要保人視為非本公司保戶方式，不接收資料)
 								//int k = iLilipmService.getInsuredUsersByRocId(mapperVo.getIdNo());//查(要保人+被保人)保單數
 								List<String> policyNos = allianceService.getPolicyNoByID(mapperVo.getIdNo());
-								if(policyNos!=null && policyNos.size()>0) {//保戶
+								boolean inEservice = false;
+								if (policyNos != null && policyNos.size() > 0) {//保戶
 									int iRtn = claimChainService.addInsuranceCliam(mapperVo);
-									if(iRtn>0) {//如果有查詢且儲存成功
+									if (iRtn > 0) {//如果有查詢且儲存成功
 										vo.setNcStatus(NotifyOfNewCaseVo.NC_STATUS_ONE);
 										int ncupdate = claimChainService.updateNcStatusBySeqId(vo);
 									}
-								}else {//非保戶
+									inEservice = true;
+								} else {//非保戶
 									vo.setNcStatus(NotifyOfNewCaseVo.NC_STATUS_ONE);
 									vo.setMsg(NotifyOfNewCaseVo.MSG);
 									claimChainService.updateNcStatusBySeqId(vo);
 									// to do send mail /sms
-								}//end-if
-
+								}
+								try {
+									Map<String, String> api108Params = Maps.newHashMap();
+									api108Params.put("caseId", caseId);
+									if (inEservice) {
+										api108Params.put("status", "Y");
+									} else {
+										api108Params.put("status", "3");
+										api108Params.put("msg", "非本公司保戶");
+									}
+									HttpHeaders headers = new HttpHeaders();
+									headers.add("Access-Token", clientSecret);
+									headers.setContentType(MediaType.APPLICATION_JSON);
+									allianceService.postApi418(URL_API108, api108Params);
+								} catch (Exception e) {
+									logger.error("call api108 error: {}, {}", params, e);
+									throw new Exception("call api108 error: " + e);
+								}
 							}//end-if
 
 						}//end-if
@@ -1339,6 +1360,14 @@ public class AllianceServiceTask {
 
 	public void setURL_API106(String uRL_API106) {
 		URL_API106 = uRL_API106;
+	}
+
+	public String getURL_API108() {
+		return URL_API108;
+	}
+
+	public void setURL_API108(String URL_API108) {
+		this.URL_API108 = URL_API108;
 	}
 
 	public String getAPI_DISABLE() {
