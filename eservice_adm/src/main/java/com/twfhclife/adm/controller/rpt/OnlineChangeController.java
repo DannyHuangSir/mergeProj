@@ -15,18 +15,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.collect.Lists;
-import com.twfhclife.adm.model.MessagingTemplateVo;
-import com.twfhclife.adm.model.NotifyOfNewCaseMedicalVo;
-import com.twfhclife.adm.model.ParameterVo;
-import com.twfhclife.adm.model.TransClaimPaymentVo;
+import com.google.common.collect.Maps;
+import com.twfhclife.adm.model.*;
 import com.twfhclife.adm.service.IParameterService;
 
 import com.twfhclife.generic.api_client.APIAllianceTemplateClient;
 import com.twfhclife.generic.api_model.APIAllianceRequestVo;
 import com.twfhclife.generic.api_model.ApiResponseObj;
 import com.twfhclife.generic.api_model.ReturnHeader;
-import com.twfhclife.generic.util.MyJacksonUtil;
-import com.twfhclife.generic.util.ValidateUtils;
+import com.twfhclife.generic.util.*;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -56,12 +53,6 @@ import com.google.common.collect.Lists;
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.ParameterVo;
-import com.twfhclife.adm.model.TransInsuranceClaimVo;
-import com.twfhclife.adm.model.TransMedicalTreatmentClaimVo;
-import com.twfhclife.adm.model.TransRFEVo;
-import com.twfhclife.adm.model.TransStatusHistoryVo;
-import com.twfhclife.adm.model.TransVo;
-import com.twfhclife.adm.model.UnionCourseVo;
 import com.twfhclife.adm.service.IOnlineChangeService;
 import com.twfhclife.adm.service.IParameterService;
 import com.twfhclife.generic.annotation.EventRecordLog;
@@ -76,8 +67,6 @@ import com.twfhclife.generic.api_model.APIAllianceRequestVo;
 import com.twfhclife.generic.api_model.ApiResponseObj;
 import com.twfhclife.generic.api_model.ReturnHeader;
 import com.twfhclife.generic.controller.BaseController;
-import com.twfhclife.generic.util.ApConstants;
-import com.twfhclife.generic.util.EventCodeConstants;
 import com.twfhclife.generic.util.MyJacksonUtil;
 
 /**
