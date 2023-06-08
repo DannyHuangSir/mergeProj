@@ -3235,6 +3235,9 @@
 		<if test="transVo.sendToAlliance != null and transVo.sendToAlliance != ''" >
 			AND F.SEND_ALLIANCE = #{transVo.sendToAlliance}
 		</if>
+		<if test="transVo.signAgree != null and transVo.signAgree != ''" >
+			AND F.SIGN_AGREE = #{transVo.signAgree}
+		</if>
 	</sql>
 
 	<resultMap id="MedicalInfoMap" type="com.twfhclife.adm.model.TransMedicalTreatmentClaimMedicalInfoVo">
