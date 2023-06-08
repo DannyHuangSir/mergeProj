@@ -1782,4 +1782,10 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
     public SignRecord getNewSignStatus(String transNum) {
         return onlineChangeDao.getNewSignStatus(transNum);
     }
+
+    @Override
+    public byte[] getSignPdf(String signFileId) {
+		String fileBase64 = onlineChangeDao.getSignFileByFileId(signFileId);
+		return org.apache.commons.lang3.StringUtils.isBlank(fileBase64) ? null : Base64.getDecoder().decode(fileBase64);
+    }
 }

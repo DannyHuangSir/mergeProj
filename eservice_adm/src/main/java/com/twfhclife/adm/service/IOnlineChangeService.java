@@ -533,4 +533,6 @@ public interface IOnlineChangeService {
 	public Map<String , Object> getTransContractRevocationMethod(TransVo transVo) throws Exception;
 
     SignRecord getNewSignStatus(String transNum);
+
+    byte[] getSignPdf(String signFileId);
 }

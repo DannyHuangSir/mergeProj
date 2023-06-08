@@ -2,8 +2,6 @@ package com.twfhclife.scheduling.task;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,7 +35,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.alliance.service.IExternalService;
@@ -48,7 +45,6 @@ import com.twfhclife.eservice.api.elife.domain.TransAddRequest;
 import com.twfhclife.eservice.api.elife.domain.TransAddResponse;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
 
-import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice_api.service.IMessagingTemplateService;
 
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
@@ -715,7 +711,7 @@ public class AllianceServiceTask {
 									HttpHeaders headers = new HttpHeaders();
 									headers.add("Access-Token", clientSecret);
 									headers.setContentType(MediaType.APPLICATION_JSON);
-									allianceService.postApi418(URL_API108, api108Params);
+									allianceService.postApi108(URL_API108, api108Params);
 								} catch (Exception e) {
 									logger.error("call api108 error: {}, {}", params, e);
 									throw new Exception("call api108 error: " + e);

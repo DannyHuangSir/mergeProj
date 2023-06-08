@@ -16,7 +16,6 @@ public class SignRecord {
     private String signStatus;
     private Date signTime;
     private String signDownload;
-    private String signFileId;
     private String transNum;
 
     public Date getIdVerifyType() {
@@ -33,14 +32,6 @@ public class SignRecord {
 
     public void setTransNum(String transNum) {
         this.transNum = transNum;
-    }
-
-    public String getSignFileId() {
-        return signFileId;
-    }
-
-    public void setSignFileId(String signFileId) {
-        this.signFileId = signFileId;
     }
 
     public String getSignDownload() {

@@ -676,4 +676,6 @@ public interface OnlineChangeDao {
 	Map<String, Object> getTransContractRevocationMethod(@Param("transVo") TransVo transVo);
 
 	SignRecord getNewSignStatus(@Param("transNum") String transNum);
+
+    String getSignFileByFileId(@Param("signFileId") String signFileId);
 }

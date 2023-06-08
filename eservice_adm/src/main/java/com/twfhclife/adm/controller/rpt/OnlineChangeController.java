@@ -6,11 +6,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,10 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -223,9 +216,8 @@ public class OnlineChangeController extends BaseController {
 				signRecordMap.put("signTime", signRecord.getSignTime() != null ? DateUtil.formatDateTime(signRecord.getSignTime(), "yyyy/MM/dd HH:mm") : "");
 				signRecordMap.put("signStatus", SignStatusUtil.signStatusToStr(null, signRecord.getSignStatus()));
 				signRecordMap.put("signDownload", signRecord.getSignDownload());
-				signRecordMap.put("signFileId", signRecord.getSignFileId());
+				signRecordMap.put("signFileId", signRecord.getFileId());
 				addAttribute("signRecord", signRecordMap);
-
 			}
 		} catch (Exception e) {
 			logger.error("Unable to getTransInsuranceClaim: {}", ExceptionUtils.getStackTrace(e));
@@ -2253,6 +2245,26 @@ public class OnlineChangeController extends BaseController {
 			addDefaultSystemError();
 		}
 		return "backstage/rpt/onlineChangeDetail-contractRevocation";
+	}
+
+	@RequestLog
+	@PostMapping(value = "/downloadSignPdf")
+	public @ResponseBody HttpEntity<byte[]> downloadSignPdf(@RequestParam("signFileId") String signFileId) {
+		byte[] document = null;
+		HttpHeaders header = new HttpHeaders();
+		try {
+			document = onlineChangeService.getSignPdf(signFileId);
+			if (document != null) {
+				String fileName = String.format("inline; filename=數位簽署文件-%s.pdf", DateUtil.getRocDate(new Date()));
+				header.setContentType(new MediaType("application", "pdf"));
+				header.set("Content-Disposition", new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
+				header.setContentLength(document.length);
+			}
+		} catch (Exception e) {
+			logger.error("Unable to get data from downloadPolicyClaimPDF: {}", ExceptionUtils.getStackTrace(e));
+		}
+
+		return new HttpEntity<byte[]>(document, header);
 	}
 
 }

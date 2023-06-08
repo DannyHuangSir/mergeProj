@@ -414,7 +414,7 @@ public class AllianceServiceImpl implements IExternalService{
 	}
 
 	@Override
-	public String postApi418(String urlApi108, Map<String, String> api108Params) throws Exception {
+	public String postApi108(String urlApi108, Map<String, String> api108Params) throws Exception {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Access-token", ACCESS_TOKEN);
 		headers.setContentType(MediaType.APPLICATION_JSON);
