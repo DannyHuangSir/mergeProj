@@ -642,6 +642,9 @@
 		'DEPOSIT':/*[[@{/getTransDepositDetail}]]*/,
 		'CASH_PAYMENT':/*[[@{/getCashPaymentDetail}]]*/,
 		'CHANGE_PREMIUM':/*[[@{/getTransChangePremiumDetail}]]*/,
+		'CONTRACT_REVOCATION':/*[[@{/getTransContractRevocationDetail}]]*/,
+		'ROLLOVER_PERIODICALLY':/*[[@{/getTransRolloverPeriodicallyDetail}]]*/,
+		'DERATE_PAID_OFF':/*[[@{/getTransDeratePaidOffDetail}]]*/,
 	};
 	$(function(){
 		var test = window.location.pathname;
@@ -717,22 +720,25 @@
 						}else{
 						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">取消申請  <i class="fas fa-chevron-right"></i></button>';
 						}	
-					}else if(oRow.status == '4'){
+					} else if(oRow.status == '4'){
 						if(oRow.transType == 'MEDICAL_TREATMENT' && oRow.sendAlliance=='Y'){
 							botton = '<button class="btn-cancel" id="upload_'+oRow.transNum+'" onclick="addedFile('+oRow.transNum+')">補件  <i class="fas fa-chevron-right"></i></button>&nbsp;';
 						}else{
 						botton = '<button class="btn-cancel" id="upload_'+oRow.transNum+'" onclick="addedFile('+oRow.transNum+')">補件  <i class="fas fa-chevron-right"></i></button>&nbsp;'+
 						'<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>';
 						}		
-					}else if(oRow.status == '2' && oRow.endorsementStatus > 0){
+					} else if(oRow.status == '2' && oRow.endorsementStatus > 0){
 						botton = '<button class="btn-cancel" id="endorsement_'+oRow.transNum+'" onclick="downloadEndorsement(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">下載批註單  <i class="fas fa-chevron-right"></i></button>';
 					} else if (oRow.status == '41' || oRow.status == '42' ) {
 						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>' + '&nbsp;' +
 						'<button class="btn-sign" onclick="openBxczSign(&apos;'+oRow.transNum+'&apos;)">執行數位驗證</button>';
-					}
-					else if((oRow.transType == 'CONTACT_INFO' || oRow.transType == 'INVESTMENT' || oRow.transType == 'CONVERSION'
-							|| oRow.transType == 'DEPOSIT' || oRow.transType == 'CASH_PAYMENT' || oRow.transType == 'CHANGE_PREMIUM' || oRow.transType == 'RISK_LEVEL') && oRow.status == '1'){
+					} else if((oRow.transType == 'CONTACT_INFO' || oRow.transType == 'INVESTMENT' || oRow.transType == 'CONVERSION'
+							|| oRow.transType == 'DEPOSIT' || oRow.transType == 'CASH_PAYMENT' || oRow.transType == 'CHANGE_PREMIUM') && oRow.status == '1'){
 						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTransCheck(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>';
+					} else if(oRow.status == '8'){
+						if((oRow.transType == 'ELECTRONIC_FORM_A' || oRow.transType == 'ELECTRONIC_FORM_C' || oRow.transType == 'DERATE_PAID_OFF' || oRow.transType == 'ROLLOVER_PERIODICALLY' ||  oRow.transType == 'CONTRACT_REVOCATION') && oRow.status == '8' ){
+							botton = '<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">取消申請  <i class="fas fa-chevron-right"></i></button>';
+						}
 					}
 					return botton;
 				},
@@ -803,7 +809,8 @@
 		
 		$("#transTypeStr").text("申請明細-"+transTypeStr);
 
-		if (transType == 'MATURITY' || transType == 'CLAIM' || transType == 'CANCEL_CONTRACT' || transType == 'SURRENDER' || transType == 'RENEW' || transType == 'REDUCE') {
+		if (transType == 'MATURITY' || transType == 'CLAIM' || transType == 'CANCEL_CONTRACT' || transType == 'SURRENDER' || transType == 'RENEW' || transType == 'REDUCE' ||
+		transType == 'ELECTRONIC_FORM_A' || transType == 'ELECTRONIC_FORM_C') {
 			$('#transDetailDiv').html('無明細資料');
 			$('#transDetailTitle').html("申請明細-"+transTypeStr);
 			$('#transDetailDiv').show();

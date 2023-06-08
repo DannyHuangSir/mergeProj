@@ -55,14 +55,7 @@
 								<th:block th:text="${session.LOGIN_USER_ID}"/>
 							</th:block>
 							<th:block th:if="${session.USER_DETAIL != null}">
-								<span th:switch="${session.USER_DETAIL.userNameBase64} != ''"> 
-									<span th:case="${true}">
-										<img th:width="${session.USER_DETAIL.userName != null} ? ${#strings.length(session.USER_DETAIL.userName) * 20}" height="25px" th:src="|data:image/svg+xml;base64, ${session.USER_DETAIL.userNameBase64}|" />
-									</span>
-									<span th:case="${false}">
-										<th:block th:text="${session.USER_DETAIL.userName != null}  ? ${session.USER_DETAIL.userName}"/>
-									</span>
-								</span>
+								<th:block th:text="${session.USER_DETAIL.userName != null}  ? ${session.USER_DETAIL.userName.substring(0,1)+'**'}"/>
 							</th:block>
 						</th:block>
 						<th:block th:if="${loginUserType eq 'admin'}">

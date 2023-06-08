@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>變更繳別｜臺銀人壽保單網路服務</title>
+</head>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="rolloverPeriodically1">變更展期定期保險</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i>變更展期定期保險
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-6">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step3 active col-xs-6">
+						2<span class="hid1">. 資料確認</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<div class="loan1">
+					<label class="col-sm-10 col-sm-offset-2 enNormal">保單號碼： 
+						<span class="colorBlack">
+							<th:block th:text="${rolloverPeriodicallyVo.policyNo}"/>
+						</span>
+					</label>
+					<label class="col-sm-10 col-sm-offset-2 enNormal">變更前:主約保額 
+						<span class="colorBlack">
+							<th:block th:text="${rolloverPeriodicallyVo.mainAmt != null} ? ${#numbers.formatDecimal(rolloverPeriodicallyVo.mainAmt, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						</span>元、最近已繳費其次： 
+						<span class="colorBlack">
+							<th:block th:text="${rolloverPeriodicallyVo.tredPaabDate}"/>
+						</span>
+					</label>
+	
+					
+					<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+						<div class="col-sm-12 mode2select marginTop20">
+						  <label for="" class="col-sm-12 text-center" style="font-size: 20px; color: #009b30;">展延終期至：
+						  	<th:block th:text="${rolloverPeriodicallyVo.rolloverDate2}"/> 
+						  </label>
+						</div>
+						<div class="col-sm-12 mode2select marginTop20">
+						  <label for="" class="col-sm-12 text-center" style="font-size: 20px; color: #009b30;">展期保額：
+						  	<th:block th:text="${rolloverPeriodicallyVo.mainAmt != null}
+ 							? ${#numbers.formatDecimal(rolloverPeriodicallyVo.rolloverAmt, 0, 'DEFAULT', 0, 'COMMA')}"/>元 
+						  </label>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="col-md-8 col-md-offset-2 ptop30">
+					<div class="divider divider88"></div>
+					<p class="center1 gray">請輸入驗證碼以完成申請</p>
+					<th:block th:replace="fragments/sendSMS"/>
+					<div class="marginTop25"></div>
+					<div class="col-md-12 two-buttons">
+						<a href="rolloverPeriodically1">
+							<button type="button" id="deny" class="btn-signup">上一步</button>
+						</a>
+						<button type="button" id="go" class="btn-signup">確認送出</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = [[${rolloverPeriodicallyVo}]];
+		$(function() {
+			// 確認送出
+			$('#go').click(function() {
+				if ($('#InputCert1').val() == '') {
+					openAlert("請輸入驗證碼"); 
+					return false;
+				}
+				formData.authenticationNum = $('#InputCert1').val();
+				postWithFormData(/*[[@{/rolloverPeriodicallySuccess}]]*/, formData);
+			});		
+		});
+	/*]]>*/
+	</script>
+</body>
+
+</html>

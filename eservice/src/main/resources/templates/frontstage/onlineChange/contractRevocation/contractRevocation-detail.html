@@ -1,0 +1,160 @@
+<style>
+.myImg {
+	width: 240px;
+	height: 180px;
+}
+</style>
+<div class="col-sm-12" style="text-align: left;">
+	<form class="form-horizontal" role="form"
+		style="border-top: 0; line-height: 20px; padding: 20px 0;">
+		<div class="form-group">
+			<label class="col-sm-12">保單號碼： <th:block
+					th:text="${transContractRevocationDetail.lipmInsuNo}" /></label>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-12">保單名稱： <th:block
+					th:text="${transContractRevocationDetail.settChName}" /></label>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-6">要保人姓名： <th:block
+					th:text="${transContractRevocationDetail.lipmName}" /></label> <label
+				class="col-sm-6">繳款人姓名： <th:block
+					th:text="${transContractRevocationDetail.lipmName}" /></label>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-6">被保險人姓名： <th:block
+					th:text="${transContractRevocationDetail.lipiName}" /></label> <label
+				class="col-sm-6">退款幣別： <th:block
+					th:text="${transContractRevocationDetail.prodCurrency}" /></label>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-6">保單生效日： <th:block
+					th:text="${transContractRevocationDetail.lipmInsuBegDate}" /></label> <label
+				class="col-sm-6">退費金額： <th:block
+					th:text="${transContractRevocationDetail.prpaActAmt}" /></label>
+		</div>
+		<th:block th:unless="${transContractRevocationDetail.rcpTypeCodeFlag eq 'H'}">
+			<div class="grey2">		
+				<div class="check-title depo2">退回帳戶</div>
+				<div class="form-group">
+					<label class="col-sm-2">SwiftCode</label>
+					<th:block th:text="${transContractRevocationDetail.swiftCode}" />
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2">英文戶名</label>
+					<th:block th:text="${transContractRevocationDetail.englishName}" />
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2">帳戶名稱</label>
+					<div class="col-sm-8 ">
+						<th:block th:text="${transContractRevocationDetail.neacName}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2">銀行名稱</label>
+					<div class="col-sm-4">
+						<div>
+							<th:block th:text="${transContractRevocationDetail.bankName}" />
+						</div>
+					</div>
+					<label class="col-sm-2">分行名稱</label>
+					<div class="col-sm-4">
+						<div>
+							<th:block th:text="${transContractRevocationDetail.branchName}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2">帳號</label>
+					<div class="col-sm-8 ">
+						<th:block th:text="${transContractRevocationDetail.account}" />
+					</div>
+				</div>
+			</div>			
+		</th:block>
+		<th:block th:if="${transContractRevocationDetail.rcpTypeCodeFlag eq 'H'}">
+			<div style="margin-top : 15px ; margin-bottom : 15px">
+				<p class="text-ps" style="color:red">【信用卡繳費件】退回原繳費卡號。</p>	
+			</div>
+		</th:block>			
+		<div class="form-group">
+			<label class="col-sm-12">契徹原因：</label>
+			<div class="col-sm-8 ">
+				<th:block th:text="${transContractRevocationDetail.statusFlag}" />
+			</div>
+		</div>
+		<div class="form-group">
+			<th:block th:if="${transContractRevocationDetail.otherReason != null && transContractRevocationDetail.otherReason != ''}">
+				<div class="col-md-12">
+					<div class="col-sm-12">
+						<label>其他契撤原因：</label>
+					</div>
+					<div class="col-sm-1"></div>
+					<div class="col-sm-10">
+						<textarea th:text="${transContractRevocationDetail.otherReason}" rows="4"  class="otherReasonCss"style="resize: none" readonly="readonly"></textarea>
+					</div>
+				</div>
+			</th:block>
+		</div>
+		<div class="modal fade in" id="modal-container-imgConfirm" role="dialog" aria-labelledby="myModalLabel" 
+							aria-hidden="true" style="z-index: 1200;">
+							<div class="modal-dialog">
+								<div class="modal-content lock-up" style=" width : 800px">
+									<div class="modal-header">
+										<button type="button" class="close" id="closeImgOnPrint" aria-label="Close"><span aria-hidden="true">×</span></button>
+									</div>
+									<div class="modal-body clearfix center1" id="imgOnPrint" style="max-height: 600px; overflow: auto; height: 600px; ">
+									
+									</div>
+									<div class="modal-footer grey2">
+										<a href="javascript:void(0);" id="onMedicalPrint">
+										</a>
+									</div>
+								</div>
+							</div>
+				</div>
+		<div class="col-md-12">
+			<div class="col-md-6">
+				<th:block th:if="${transContractRevocationDetail.image1Tobase64 != null && transContractRevocationDetail.image1Tobase64 !=''}">
+					<label class="col-sm-12">身分證明(正面)</label>
+					<div class="text-center">
+						<img th:onclick="'javascript:imgConfirm(\''+${transContractRevocationDetail.image1Tobase64}+'\')'" 
+							th:src="${transContractRevocationDetail.image1Tobase64}"
+							class="myImg">
+					</div>
+				</th:block>
+			</div>
+			<div class="col-md-6">
+				<th:block th:if="${transContractRevocationDetail.image2Tobase64 != null && transContractRevocationDetail.image2Tobase64 !=''}">
+					<label class="col-sm-12">身分證明(背面)</label>
+					<div class="text-center">
+						<img
+							th:onclick="'javascript:imgConfirm(\''+${transContractRevocationDetail.image2Tobase64}+'\')'" 
+							th:src="${transContractRevocationDetail.image2Tobase64}"
+							class="myImg">
+					</div>
+				</th:block>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+		 function imgConfirm(obj){
+			var image = obj;
+			$('#modal-container-imgConfirm').modal({
+				show: true,
+				keyboard: false
+			});
+	    	$("#imgOnPrint").html('<img id="imgsrc" src="'+image+'")/>');
+	    	$("#onMedicalPrint").show();
+
+	    	$('.modal-backdrop').css('display','none');
+		}	
+		
+		$('#closeImgOnPrint').click(function(){
+			$('#modal-container-imgConfirm').modal('hide');
+		})
+	/*]]>*/
+	</script>

@@ -926,6 +926,7 @@
 					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? '#modal-container-locked' : ''"
 					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')} ? 'disabled'"
 					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y') or #strings.equals(vo.isLoginerFlag, 'Y')}? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					
 					<td>
 						<th:block th:switch="${choseType}">
 							<th:block th:case="${'radio'}">
@@ -1029,8 +1030,7 @@
 		</thead>
 		<tbody>
 			<th:block th:each="vo, rowStat : ${policyList}">
-				<tr style="cursor: pointer;"  data-toggle="modal"
-					>
+				<tr style="cursor: pointer;"  data-toggle="modal">
 					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
 						<th:block th:switch="${choseType}">
 							<th:block th:case="${'radio'}">
@@ -1577,5 +1577,313 @@
 			</th:block>
 		</tbody>
 	</table>
+	
+	<!-- 20220711 電子表單深通知服務開始 -->
+	<table th:fragment="table17 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90" scope="col" data-tablesaw-priority="persist"></th>
+				<th class="text-left" scope="col">保單</th>
+				<th scope="col">要保人</th>
+				<th scope="col">主被保險人</th>
+				<th scope="col">保單生效日</th>
+				<th scope="col">每期保費</th>
+				<th scope="col">繳別</th>
+				<th scope="col">開通狀態</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+				<tr style="cursor: pointer;"  data-toggle="modal">
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<div class="radio-btn">
+											<span
+												th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+												th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(\''+${vo.applyLockedMsg}+'\',this);' : 'disAgreeMsg(this);'" >
+
+		
+												<i> <input type="radio" name="chosePolicy"
+														th:value="${vo.policyNo}"
+														th:attr="disabled=${#strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}" />
+												</i>
+									
+											
+											</span>
+										</div>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div >
+									<span
+											th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y') ? '#modal-container-locked' : ''}"
+											th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'showMsg(\''+${vo.applyLockedMsg}+'\',this);' : 'disAgreeMsg(this);'"
+
+									>
+										<span
+											  th:class="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'check-box  ' : 'checkbox'"
+											  th:style="${#strings.equals(vo.applyLockedFlag, 'Y')} ? ' pointer-events: none;' : 'color:#fcfcfc'"
+										>
+										<div
+												th:class="${#strings.equals(vo.applyLockedFlag, 'Y')} ? ' checkbox' : 'plicy_no_check check-box '"
+												th:style="${#strings.equals(vo.applyLockedFlag, 'Y')} ? ' margin-top:-12px;' : 'color:#fcfcfc'"
+										>
+											<i>
+												<input type="checkbox" name="chosePolicy"
+													th:value="${vo.policyNo}"
+													th:attr="disabled=${#strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+											</i>
+										</div>
+										</span>
+									</span>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.policyNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3" th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.settChName != null}
+								? ${vo.settChName}" />
+						<p>(<th:block th:text="${vo.policyNo}"/>)</p>
+					</td>
+<!-- 					<td class="table3"> -->
+<!-- 						<th:block th:text="${vo.productName != null}  -->
+<!-- 							? ${vo.productName}" 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"/> -->
+<!-- 						<p 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">(<th:block th:text="${vo.policyNo}"/>)</p> -->
+<!-- 						<div class="action-buttons">                                    -->
+<!-- 							<a href="javascript:void(0);" class="green bigger-140 show-details-btn" title="Show Details" th:id="${'m_'+vo.policyNo}" -->
+
+<!-- 							th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y') } ? 'showSelectMsg(\''+此張保單已過投保終期+'\',this);':'javascript:getUserElectronicFormNetWorkData(\'' + ${vo.policyNo} + '\',this);'" -->
+<!-- 							> -->
+							
+<!-- 								<i class="fa fa-search gray search1"></i> -->
+<!-- 								<span>查看現行聯絡資料</span> -->
+<!-- 								<span>關閉聯絡資料顯示區</span> -->
+<!-- 							</a> -->
+<!-- 						</div> -->
+<!-- 					</td> -->
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.customerName != null} ? ${vo.customerName}"/>
+					</td>
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.mainInsuredName != null} ? ${vo.mainInsuredName}"/>
+					</td>
+					<td class="enThin" 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.effectiveDate} != null 
+						? ${#dates.format(vo.effectiveDate, 'yyyy/MM/dd')}"/> 
+					</td>		
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.paidAmount != null} 
+ 							? ${#numbers.formatDecimal(vo.paidAmount, 0, 'DEFAULT', 0, 'COMMA')}"/> 
+<!-- 							<i class="my5"><th:block th:text="${vo.currency}"/></i> -->
+					</td>
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null} 
+ 							? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>  
+					</td>
+					<td 	th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'">
+						<th:block th:text="${vo.pmdaEInfoNStatus}"/>
+					</td>
+				</tr>
+				<tr class="detail-row" th:id="${vo.policyNo}">
+					<td colspan="8" th:id="${'td_'+vo.policyNo}">
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<!-- 20220711 電子表單深通知服務結束  -->
+	<!-- 20220801 減額繳清/展期定期 開始 -->
+	<table th:fragment="table18 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90"></th>
+				<th class="text-left" >保單</th>
+				<th>保單狀態</th>
+				<th>保單生效日</th>
+				<th>保額</th>
+				<th>每期保費</th>
+				<th>繳別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+					<tr style="cursor: pointer;" th:id="${vo.lipmInsuNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y')} ? '#modal-container-locked' : ''"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')}? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+					<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<th:block th:if="${vo.applyLockedMsg != null && vo.applyLockedMsg != ''}">
+											<div class="radio-btn2">
+												<i>
+													<input type="radio" disabled/>
+												</i>
+											</div>
+										</th:block>
+										<th:block th:if="${vo.applyLockedMsg == null || vo.applyLockedMsg == ''}">
+											<div class="radio-btn">
+												<i>
+													<input type="radio" name="chosePolicy" 
+														th:value="${vo.lipmInsuNo}"
+														th:attr="disabled=${ #strings.equals(vo.applyLockedFlag,'Y')  ? 'disabled' : 'false'}"/>
+												</i>
+											</div>
+										</th:block>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.lipmInsuNo}"
+												th:attr="disabled=${#strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.lipmInsuNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<td class="table3">
+						<th:block th:text="${vo.settChName != null}
+								? ${vo.settChName}"/>
+						<p>(<th:block th:text="${vo.lipmInsuNo}"/>)</p>
+					</td>
+					<td>
+						<th:block th:text="${vo.lipmSt != null and session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.lipmSt] != null}
+								? ${#strings.replace(session.SYSTEM_PARAMETER['POLICY_STATUS'][vo.lipmSt].parameterValue, '　', '')}"/> 
+					</td>
+					<td class="enThin">
+						<th:block th:text="${vo.lipmInsuBegDate} != null
+ 								? ${#dates.format(vo.lipmInsuBegDate, 'yyyy/MM/dd')}"/> 
+					</td>
+					<td>
+						<th:block th:text="${vo.lipiMainAmt} != null
+ 								? ${#numbers.formatDecimal(vo.lipiMainAmt, 0, 'DEFAULT', 0, 'COMMA')}"/>
+						<i class="my5"><th:block th:text="${vo.prodCurrency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.lipiTablPrem != null}
+								? ${#numbers.formatDecimal(vo.lipiTablPrem, 0, 'DEFAULT', 0, 'COMMA')}"/> 
+						<i class="my5"><th:block th:text="${vo.prodCurrency}"/></i>
+					</td>
+					<td>
+						<th:block th:text="${vo.lipmRcpCode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.lipmRcpCode] != null}
+								? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.lipmRcpCode].parameterValue}"/> 
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<!-- 20220801 減額繳清/展期定期 結束 -->
+	<!-- 20220901 契約撤銷 開始-->
+	<table th:fragment="table19 (choseType)" class="tablesaw tablesaw-stack table-striped gradient2" data-tablesaw-mode="stack">
+		<thead>
+			<tr class="table2">
+				<th class="item90"></th>
+				<th class="text-left" >保單</th>
+				<th>要保險人</th>
+				<th>被保險人</th>
+				<th>保單生效日</th>
+				<th>保單簽收日</th>
+				<th>保額</th>
+				<th>幣別</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each="vo, rowStat : ${policyList}">
+					<tr style="cursor: pointer;" th:id="${vo.lipmInsuNo}" data-toggle="modal"
+					th:attr="data-target=${#strings.equals(vo.applyLockedFlag, 'Y')} ? '#modal-container-locked' : ''"
+					th:classappend="${#strings.equals(vo.applyLockedFlag, 'Y')} ? 'disabled'"
+					th:onclick="${#strings.equals(vo.applyLockedFlag, 'Y')}? 'showMsg(this);' : '$(this).find(\'input[name=chosePolicy]\')[0].click();'">
+									<td>
+						<th:block th:switch="${choseType}">
+							<th:block th:case="${'radio'}">
+								<div class="radio">
+									<label>
+										<th:block th:if="${vo.applyLockedMsg != null && vo.applyLockedMsg != ''}">
+											<div class="radio-btn2">
+												<i>
+													<input type="radio" disabled/>
+												</i>
+											</div>
+										</th:block>
+										<th:block th:if="${vo.applyLockedMsg == null || vo.applyLockedMsg == ''}">
+											<div class="radio-btn">
+												<i>
+													<input type="radio" name="chosePolicy" 
+														th:value="${vo.lipmInsuNo}"
+														th:attr="disabled=${#strings.equals(vo.applyLockedFlag,'Y')  ? 'disabled' : 'false'}"/>
+												</i>
+											</div>
+										</th:block>
+									</label>
+								</div>
+							</th:block>
+							<th:block th:case="${'checkbox'}">
+								<div class="checkbox">
+									<div class="check-box">
+										<i>
+											<input type="checkbox" name="chosePolicy" 
+												th:value="${vo.lipmInsuNo}"
+												th:attr="disabled=${#strings.equals(vo.applyLockedFlag,'Y') ? 'disabled' : 'false'}"/>
+										</i>
+									</div>
+								</div>
+							</th:block>
+						</th:block>
+						<input type="hidden" th:id="${'msg_'+vo.lipmInsuNo}" th:value="${vo.applyLockedMsg}"/>
+					</td>
+					<!-- 保單號碼 -->
+					<td class="table3">
+						<th:block th:text="${vo.settChName != null}
+								? ${vo.settChName}"/>
+						<p>(<th:block th:text="${vo.lipmInsuNo}"/>)</p>
+					</td>
+					<!-- 要保險人 -->
+					<td>
+						<th:block th:text="${vo.lipmName != null}
+									? ${vo.lipmName}"/>
+					</td>
+					<!-- 主被保險人 -->
+					<td>
+						<th:block th:text="${vo.lipiName != null}
+									? ${vo.lipiName}"/>
+					</td>
+					<!-- 保單生效日 -->
+					<td>
+						<th:block th:text="${vo.lipmInsuBegDate != null}
+									? ${vo.lipmInsuBegDate}"/>
+					</td>
+					<!-- 保單簽收日 -->
+					<td>
+						<th:block th:text="${vo.assnArriDate != null}
+									? ${vo.assnArriDate}"/>
+					</td>
+					<!-- 保額 -->
+					<td>
+						<th:block th:text="${vo.lipiMainAmt != null}
+									? ${vo.lipiMainAmt}"/>
+					</td>
+					<!-- 幣別 -->
+					<td>
+						<th:block th:text="${vo.prodCurrency != null}
+									? ${vo.prodCurrency}"/>
+					</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<!-- 20220901 契約撤銷 結束-->
 </body>
 </html>

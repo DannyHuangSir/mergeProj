@@ -69,13 +69,8 @@
 														? ${session.SYSTEM_PARAMETER['CURRENCY'][vo.policyVo.currency].parameterValue}"/>
 												</td>
 												<td>
-													<div th:switch="${vo.insuredNameBase64} != null and ${vo.insuredNameBase64} != ''"> 
-														<div th:case="${true}">
-															<img th:width="${#strings.length(vo.insuredName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.insuredNameBase64}|" />
-														</div>
-														<div th:case="${false}">
-															<th:block th:text="${vo.insuredName} != null ? ${vo.insuredName}"/>
-														</div>
+													<div> 
+														<th:block th:text="${vo.insuredName} != null ? ${vo.insuredName.substring(0,1)+'**'}"/>
 													</div>
 												</td>
 												<td>
@@ -133,13 +128,8 @@
 															<span class="mobile-span">
 																<div th:switch="${customerVo != null}"> 
 																	<div th:case="${true}">
-																		<div th:switch="${customerVo.lipmNameBase64} != null and ${customerVo.lipmNameBase64} != ''"> 
-																			<div th:case="${true}">
-																				<img th:width="${#strings.length(customerVo.lipmName1) * 20}" height="17px" th:src="|data:image/svg+xml;base64, ${customerVo.lipmNameBase64}|" />&nbsp;
-																			</div>
-																			<div th:case="${false}">
-																				<th:block th:text="${customerVo != null and customerVo.lipmName1 != null} ? ${customerVo.lipmName1}"/>&nbsp;
-																			</div>
+																		<div> 
+																			<th:block th:text="${customerVo != null and customerVo.lipmName1 != null} ? ${customerVo.lipmName1.substring(0,1)+'**'}"/>&nbsp;
 																		</div>
 																	</div>
 																</div>
@@ -245,13 +235,8 @@
 										<th:block th:if="${insuredCoverage} != null">
 											<tr class="h65 noEvent">
 												<td class="text-left">
-													<div th:switch="${insuredCoverage.lipiNameBase64} != null and ${insuredCoverage.lipiNameBase64} != ''"> 
-														<div th:case="${true}">
-															<img th:width="${#strings.length(insuredCoverage.lipiName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${insuredCoverage.lipiNameBase64}|" />
-														</div>
-														<div th:case="${false}">
-															<th:block th:text="${insuredCoverage.lipiName} != null ? ${insuredCoverage.lipiName}"/>
-														</div>
+													<div> 
+														<th:block th:text="${insuredCoverage.lipiName} != null ? ${insuredCoverage.lipiName.substring(0,1)+'**'}"/>
 													</div>
 												</td>
 												<td>
@@ -355,13 +340,8 @@
 										<th:block th:each="vo, rowStat : ${beneficiaryList}">
 											<tr class="h65" th:classappend="${rowStat.odd}? 'tr-odd-noEvent' : 'noEvent'">
 												<td class="text-left">
-													<div th:switch="${vo.beneficiaryNameBase64} != null and ${vo.beneficiaryNameBase64} != ''"> 
-														<div th:case="${true}">
-															<img th:width="${#strings.length(vo.beneficiaryName) * 20}" height="30px" th:src="|data:image/svg+xml;base64, ${vo.beneficiaryNameBase64}|" />
-														</div>
-														<div th:case="${false}">
-															<th:block th:text="${vo.beneficiaryName} != null ? ${vo.beneficiaryName}"/>
-														</div>
+													<div> 
+														<th:block th:text="${vo.beneficiaryName} != null ? ${vo.beneficiaryName.substring(0,1)+'**'}"/>
 													</div>
 												</td>
 												<td>

@@ -1,0 +1,59 @@
+<div class="col-sm-12" style="text-align: left;">
+	<form class="form-horizontal" role="form"
+		style="border-top: 0; line-height: 20px; padding: 20px 0;">
+		<div class="check-list col-sm-8 col-sm-offset-2 grey2">
+			<div class="col-sm-12">
+				<label for="" class="col-sm-12"
+					style="font-size: 20px; color: #009b30;">展延終期至： <th:block
+						th:text="${transRolloverPeriodicallyDetail.rolloverDate}" />
+				</label>
+			</div>
+			<div class="col-sm-12">
+				<label for="" class="col-sm-12"
+					style="font-size: 20px; color: #009b30;">展期保額： <th:block
+						th:text="${transRolloverPeriodicallyDetail.rolloverAmt != null}
+ 							? ${#numbers.formatDecimal(transRolloverPeriodicallyDetail.rolloverAmt, 0, 'DEFAULT', 0, 'COMMA')}" />元
+				</label>
+			</div>
+		</div>
+		<div class="modal fade in" id="modal-container-imgConfirm"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+			style="z-index: 1200;">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up" style="width: 800px">
+					<div class="modal-header">
+						<button type="button" class="close" id="closeImgOnPrint"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="modal-body clearfix center1" id="imgOnPrint"
+						style="max-height: 600px; overflow: auto; height: 600px;"></div>
+					<div class="modal-footer grey2">
+						<a href="javascript:void(0);" id="onMedicalPrint"> </a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+		 function imgConfirm(obj){
+			var image = obj;
+			$('#modal-container-imgConfirm').modal({
+				show: true,
+				keyboard: false
+			});
+	    	$("#imgOnPrint").html('<img id="imgsrc" src="'+image+'")/>');
+	    	$("#onMedicalPrint").show();
+
+	    	$('.modal-backdrop').css('display','none');
+		}	
+		
+		$('#closeImgOnPrint').click(function(){
+			$('#modal-container-imgConfirm').modal('hide');
+		})
+	/*]]>*/
+	</script>

@@ -68,8 +68,16 @@ function reSendAuthentication() {
 		},
 		success : function(response) {
 			removeLoading();
+			var msg = $('#E0010').val();
+			
+			if(msg == '' || msg == null){
+				openAlert("重新寄送完成!");
+			}else{
+				openAlert($('#E0010').val());
+			}
+			
 			//openAlert("重新寄送完成!");
-            openAlert($('#E0010').val());
+          	//openAlert($('#E0010').val());
 			//TODO： 需要重新設定時間
 			// 20210628 輸入驗證碼連續錯誤達幾次，該驗證碼即失效; 有到後台新增 系統常數(SYSTEM_CONSTANTS) AUTH_CHECK_COUNTS 值設為 5
 			// BaseController->setAuthenticationShow() 原本就有固定寫了300沒有參數化

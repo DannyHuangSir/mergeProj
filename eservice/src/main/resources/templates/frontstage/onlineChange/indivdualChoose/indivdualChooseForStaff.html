@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragments/head" />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/smoothness/jquery-ui-1.10.4.custom.min.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/ui.jqgrid.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/menu.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/scholarship_style.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/calendar.css' />
+<style>
+html, body {
+	background: #ffffff;
+	font-size: 17px;
+}
+
+td, th {
+	padding: 0px;
+	font-size: 17px;
+	font-weight: bold;
+}
+
+input, select {
+	font-size: 17px;
+}
+
+form>.form-group>label {
+	font-size: 17px;
+}
+
+.chMiddle {
+	font-size: 17px;
+}
+
+.form-control {
+	font-size: 17px;
+}
+
+.enSmall {
+	font-size: 17px;
+}
+
+button {
+	font-size: 17px;
+}
+
+.ui-datepicker {
+	width: 310px;
+}
+
+/*第一欄第一列：左上*/
+tr:first-child td:first-child{
+  border-top-left-radius: 10px;
+}
+/*第一欄最後列：左下*/
+tr:last-child td:first-child{
+  border-bottom-left-radius: 10px;
+}
+/*最後欄第一列：右上*/
+tr:first-child td:last-child{
+  border-top-right-radius: 10px;
+}
+/*最後欄第一列：右下*/
+tr:last-child td:last-child{
+  border-bottom-right-radius: 10px;
+}
+</style>
+</style>
+<title>臺銀人壽-投資型保險商品要保人風險屬性評估問卷(購買非結構型商品適用)</title>
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<center>
+		<table width="0" border="0" cellpadding="0" cellspacing="0">
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="left"><img src='img/my-logo-s.png' height="86" style="border-bottom-right-radius: 10px;"></td>
+			</tr>
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="left" style="font-weight: bold;"><h3>&nbsp;臺銀人壽-投資型保險商品要保人風險屬性評估問卷</h3></td>
+			</tr>
+			<tr valign="top">
+				<td bgcolor="#40e0d0" >&nbsp;</td>
+				<td class="survey_content">
+					<!-- ------------------CONTENT START------------------ -->
+					<table width="95%" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tbody>
+							<!-- ===== 聲明事項 START ===== -->
+							<tr>
+								<td align="left" class="text_12">&nbsp;</td>
+							</tr>
+							<tr>
+								<td align="left" class="text_12"
+									style="font-size: 15px; color: #999">親愛的用戶，您好<br>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;為保障您的權益，請依「要保人」之實際情況回答下列問題（例如未成年人擔任要保人時，問卷內容均應以未成年人之角度填寫，不得填入其法定代理人之年齡或投資經驗等資訊），本公司將依據您所提供之資訊評估您的投資風險屬性類型及合適之投資標的風險報酬等級
+								</td>
+							</tr>
+							<!-- ===== 聲明事項 END ===== -->
+							<tr>
+								<td class="text">
+									<div class="mystyle3">
+										<div class="col-md-12">
+											<form id="indivdualChooseForm"
+												class="form-horizontal no-borderBottom marginTop20"
+												role="form" method="POST">
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">員工編號
+														<span style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<input type="text" id="employeeId" name="employeeId"
+															class="col-sm-12"
+															style="padding: 6px 12px; line-height: 1em;"
+															placeholder="請輸入員工編號" maxlength="20">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">員工密碼
+														<span style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<input type="password" id="employeePassword"
+															name="employeePassword" class="col-sm-12 ; "
+															style="padding: 6px 12px; line-height: 1em;"
+															placeholder="請輸入密碼" maxlength="20"
+															autocomplete="off">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">姓名
+														<span style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<input type="text" id="name" name="name" class="col-sm-12"
+															style="padding: 6px 12px; line-height: 1em;"
+															placeholder="請輸入名稱" maxlength="20">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">身分證
+														<span style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<input type="text" id="rocId" name="rocId"
+															class="col-sm-12"
+															style="padding: 6px 12px; line-height: 1em;"
+															placeholder="請輸入身分證" maxlength="10">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">手機
+														<span style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<input type="tel" id="mobile" name="mobile"
+															class="col-sm-12"
+															style="padding: 6px 12px; line-height: 1em;"
+															onkeyup="value=value.replace(/[^\d]/g,'')"
+															placeholder="09XXXXXXXX" maxlength="10">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">出生日期
+														: <span style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<input type="text" name="birthDate" id="birthDate"
+															style="padding: 6px 12px;" class="datepicker"
+															placeholder="YYYY/MM/DD" autocomplete="off" readonly>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">教育程度<span
+														style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<div class="selector-box">
+															<select id="educationType">
+																<option th:each="vo : ${educationList}"
+																	th:value="${vo.parameterValue}"
+																	th:utext="${vo.parameterValue}"
+																	th:selected="${vo.parameterCode eq 'EDUCATION_LEVEL_003'}" />
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">近期是否有重大醫療支出、<br>高額定期醫療或長期照顧支出<span
+														style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<div class="selector-box">
+															<select id="disabilityType">
+																<option th:each="vo : ${disabilityList}"
+																	th:value="${vo.parameterValue}"
+																	th:utext="${vo.parameterValue}"
+																	th:selected="${vo.parameterCode eq 'N'}" />
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="form-group" style="display: none">
+													<label class="col-sm-5" style="text-align: right;">保人工作年收入<span
+														style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<div class="selector-box">
+															<select id="incomeType">
+																<option th:each="vo : ${incomeList}"
+																	th:value="${vo.parameterValue}"
+																	th:utext="${vo.parameterValue}"
+																	th:selected="${vo.parameterCode eq 'INCOME_002'}" />
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-5" style="text-align: right;">驗證碼<span
+														style="color: red;">*</span>：
+													</label>
+													<div class="col-sm-7">
+														<input type="text" name="validateCode" id="validateCode" autocomplete="off" placeholder="輸入驗證碼" class="form-control  float-left w70p" style="width:50%" maxlength="4" />
+														&nbsp;&nbsp;&nbsp;<img id="validateImage" th:src="'data:image/png;base64, ' + ${validateImageBase64}"  style="height:33px;cursor:pointer;" alt="點擊圖片重新讀取驗証碼"></img>													
+													</div>
+												</div>
+											</form>
+										</div>
+										<div class="mystyle3">
+											<div class="col-md-12 two-buttons">
+												<a href="http://www.twfhclife.com.tw">
+													<button type="button" id="deny" class="btn-signup">取消</button>
+												</a> 
+												<a>
+													<button type="button" id="go" class="btn-signup">下一步</button>
+												</a>
+											</div>
+										</div>
+									</div>
+						</tbody>
+					</table> <!-- ------------------CONTENT END------------------ -->
+				</td>
+				<td bgcolor="#40e0d0" >&nbsp;</td>
+			</tr>
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="center" style="font-weight: 500;	font-size: 14px;">臺銀人壽保險股份有限公司 BankTaiwan Life Insurance Co. Ltd. 客服專線 0800-011-966<br>
+				Copyright R 2015. All Rights Reserved.
+				</td>
+			</tr>
+		</table>
+	</center>
+	<div class="loading-modal"></div>
+	<th:block th:replace="fragments/script" />
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		$('#birthDate').datepicker({//日期控件
+				changeMonth : true,
+				changeYear : true,
+				maxDate : new Date(),
+				yearRange: 'c-80:c+80',
+				dateFormat : 'yy/mm/dd'
+		});
+
+		$('#rocId').change(function(){
+			var rocId = $('#rocId').val().toUpperCase();
+			$('#rocId').val(rocId);
+		});
+	
+		$('#go').click(function() {
+			var formData = {};
+			if ($('#employeeId').val() == '') {
+				openAlert('員工帳號必須輸入');
+				return false;
+			}	
+			if ($('#employeePassword').val() == '') {
+				openAlert('員工密碼必須輸入');
+				return false;
+			}	
+			if($('#name').val() == ''){
+				openAlert('姓名必須輸入');
+				return false;
+			}else{
+				formData.name = $('#name').val();
+			}
+			
+			var rocId = $('#rocId').val();
+			var ids = checkRocid(rocId);		
+			formData.rocId = rocId
+			formData.employeeId = $('#employeeId').val();
+			formData.employeePassword = $('#employeePassword').val();
+			if($('#mobile').val() == ''){
+				openAlert('聯絡電話必須輸入');
+				return false;
+			}else if($('#mobile').val().length != '10'){
+				openAlert('電話格式輸入錯誤');
+				return false;
+			}else{
+				var mobile =  $('#mobile').val();
+				if(!mobile.match(/^(09)[0-9]{8}$/)){
+					openAlert('電話格式輸入錯誤');
+					return false;
+				}
+				
+				formData.mobile = mobile;
+			}
+			if($('#birthDate').val() == ''){
+				openAlert('出生日期必輸須入');
+				return false;
+			}else{
+				formData.birthDate = $('#birthDate').val();
+			}
+			if ($('#validateCode').val() == '') {
+				openAlert('請輸入圖形驗證碼');
+				return false;
+			}
+			
+			formData.validateCode = $('#validateCode').val();			
+			formData.educationLevel = $("#educationType :selected").val();
+			formData.disability = $("#disabilityType :selected").val();
+			formData.income = $("#incomeType :selected").val();
+		
+			if(ids === true){
+				popupLoading();
+				postWithFormData(/*[[@{/indivdualChooseForStaff1}]]*/, formData);
+			}else{
+				openAlert('身分證輸入錯誤');
+				return false;
+			}
+		});
+		function checkRocid(rocId){
+			if(rocId =='' || rocId == null){
+				openAlert('身分證欄位必須輸入');
+				return false;
+			}
+			if(rocId.length != '10'){
+				openAlert('身分證欄位長度不符合規定');
+				return false;
+			}
+			if(rocId.charCodeAt(0) < 65 | rocId.charCodeAt(0) > 90){
+				openAlert('身分證欄位代號錯誤');
+				return false;
+			}
+			if(rocId.charCodeAt(1) != 49 && rocId.charCodeAt(1) != 50){
+				openAlert('身分證欄第二碼錯誤');
+				return false;
+			}
+			let seriaCode = rocId.slice(2);
+			for(let i in  seriaCode){
+				let c = seriaCode.charCodeAt(i);
+				if( c < 48 | c > 57){
+					openAlert('身分證欄位輸入錯誤');
+					return false;
+				}
+			}
+			
+			let conver = "ABCDEFGHJKLMNPQRSTUVXYWZIO" ;
+			let weights= [1,9,8,7,6,5,4,3,2,1,1];
+			
+			rocId = String(conver.indexOf(rocId[0]) +10 ) + rocId.slice(1);
+			
+			chechSum = 0;
+			for(let i = 0 ; i < rocId.length ; i++){
+				c = parseInt(rocId[i]);
+				w = weights[i];
+				chechSum += c * w;
+			}			
+			
+			if(chechSum % 10 == 0){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		var validateImageUrl = /*[[@{/getVerify}]]*/;
+		$('#validateImage').click(function() {
+			this.src = validateImageUrl + '?r=' + Math.random();
+		});
+		$('#validateImage').click();
+	});
+	
+	/*]]>*/
+	</script>
+</body>
+</html>

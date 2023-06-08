@@ -234,8 +234,6 @@
 		];
 		grid1.fnInitComplete = function() {
 			initSearchItems()
-			initNewInvestments()
-			initObserveInvestments()
 			if (grid1.rownum() == 0) {
 				/* openAlert('查無資料'); */
 				openAlert($('#E0035').val());
@@ -467,7 +465,6 @@
 				contentType : 'application/json',
 				url : /*[[@{/getInvestmentSearchItem}]]*/,
 				data : JSON.stringify({policyNo: [[${policyNo}]]}),
-				async: false,
 				success : function(response) {
 					if(response.result == "ERROR") {
 						openAlert(response.resultMsg);
@@ -475,6 +472,7 @@
 						companysItems = response.resultData.companys
 						currencysItems = response.resultData.currencys
 						currencysItems.unshift({KEY: '依基金幣別查詢', VALUE: 'ALL'})
+						initNewInvestments()
 					}
 				},
 				error : function() {
@@ -495,13 +493,13 @@
 					type : 'POST',
 					contentType : 'application/json',
 					url : /*[[@{/getSearchPortfolio}]]*/,
-					async: false,
 					data : JSON.stringify(data),
 					success : function(response) {
 						if(response.result == "ERROR") {
 							openAlert(response.resultMsg);
 						} else {
 							newInvestments = response.resultData
+							initObserveInvestments()
 						}
 					},
 					error : function() {
@@ -517,7 +515,6 @@
 					type : 'POST',
 					contentType : 'application/json',
 					url : /*[[@{/getObservePortfolio}]]*/,
-					async: false,
 					data : JSON.stringify(data),
 					success : function(response) {
 						if(response.result == "ERROR") {

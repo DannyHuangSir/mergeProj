@@ -131,6 +131,26 @@
                         <p><th:block th:text="${onlineChangeHome['WORDING_30029']}"/></p>
                     </div>
                 </a> -->
+                <a href="deratePaidOff1" id="useControl">
+                     <div class="col-sm-6 center1 gradient">
+                         <h3>減額繳清</h3>
+                         <p><th:block th:text="${onlineChangeHome['WORDING_30038']}"/></p>
+                     </div>
+                 </a>
+                <a href="rolloverPeriodically1" id="useControl">
+                     <div class="col-sm-6 center1 gradient">
+                         <h3>展期定期保險</h3>
+                         <p><th:block th:text="${onlineChangeHome['WORDING_30039']}"/></p>
+                     </div>
+                 </a>
+                 <a  href="contractRevocation1">
+                     <div class="col-sm-6 center1 gradient">
+                         <h3>契約撤銷</h3>
+                      <P> 
+                      <th:block th:text="${onlineChangeHome['WORDING_30041']}"/>
+                      </P> 
+                      </div> 
+                 </a>  
                 <div class="clearfix"></div>
             </div>
              <div th:if="${!#strings.contains(disableShowForMembers, 'investment1') or !#strings.contains(disableShowForMembers, 'fund1')
@@ -267,7 +287,8 @@
                         <p><th:block th:text="${onlineChangeHome['WORDING_30016']}"/></p>
                     </div>
                 </a>
-                <a href="policyClaims1" id="useControl" name="policyClaims" onclick="checkUsed();return false;">
+                <!--onclick="checkUsed();return false;"-->
+                <a href="policyClaims1" id="useControl" name="policyClaims">
                     <div class="col-sm-6 center1 gradient">
                         <h3>保單理賠</h3>
                         <p>本公司理賠及轉送其它公司</p>
@@ -284,7 +305,32 @@
 
                 <div class="clearfix"></div>
             </div>
-            </th:block>
+            
+            <!-- 電子錶單通知服務  開始 -->
+            <div id="electronicForm" class="apply1">
+                <div class="my1 center1 ">
+                    <i></i> 其他類別
+                </div>
+                <a  href="electronicForm1"  id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>電子表單通知服務</h3>
+                        <p>
+                        	<th:block th:text="${onlineChangeHome['WORDING_30032']}"/>
+                        </p>
+                    </div>
+                </a>	   
+                <a  href="onlineTrial1"  id="useControl">
+                    <div class="col-sm-6 center1 gradient">
+                        <h3>線上試算服務</h3>
+                        <p>
+                        	<th:block th:text="滿期金、解約金、可借額度、借款還款"/>
+                        </p>
+                    </div>
+                </a> 
+            </div>
+             <div class="clearfix"></div>
+            <!--  電子表單通知服務 結束 -->
+           </th:block>
             
             
             <!-- <div id="travelCategory" class="apply1">
@@ -410,7 +456,7 @@
         	if(canUse != 'Y'){
 	        	$('a#useControl').click(function(){
 	        		// add 當按下確認關閉 loading 動畫
-	        		/* openAlert("目前無法使用此功能，請臨櫃申請線上服務。", 'javascript:removeLoading();'); */
+	        		/* openAlert("線上申請尚未開通，請臨櫃辦理", 'javascript:removeLoading();'); */
 	        		openAlert(errorMeg, 'javascript:removeLoading();');
 	        		return false;
 	        	});

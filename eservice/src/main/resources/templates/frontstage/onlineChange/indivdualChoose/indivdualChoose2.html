@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragments/head" />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/smoothness/jquery-ui-1.10.4.custom.min.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/ui.jqgrid.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/menu.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/scholarship_style.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/calendar.css' />
+<style>
+html, body {
+    background: #ffffff;
+	font-size: 17px;
+}
+td, th {
+    padding: 0px;
+	font-size: 17px;
+	font-weight:bold; 
+}
+input, select {
+	font-size: 17px;
+}
+form > .form-group > label {
+    font-size: 17px;
+}
+.chMiddle {
+    font-size: 17px;
+}
+.form-control {
+    font-size: 17px;
+}
+.enSmall {
+    font-size: 17px;
+}
+button {
+	font-size: 17px;
+}
+input[type=checkbox] {
+	border: 1px solid #999!important;
+}
+
+/*第一欄第一列：左上*/
+tr:first-child td:first-child{
+  border-top-left-radius: 10px;
+}
+/*第一欄最後列：左下*/
+tr:last-child td:first-child{
+  border-bottom-left-radius: 10px;
+}
+/*最後欄第一列：右上*/
+tr:first-child td:last-child{
+  border-top-right-radius: 10px;
+}
+/*最後欄第一列：右下*/
+tr:last-child td:last-child{
+  border-bottom-right-radius: 10px;
+}
+</style>
+<title>臺銀人壽-投資型保險商品要保人風險屬性評估問卷(購買非結構型商品適用)</title>
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<center>
+		<table width="0" border="0" cellpadding="0" cellspacing="0">
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="left"><img src='img/my-logo-s.png' height="86" style="border-bottom-right-radius: 10px;"></td>
+			</tr>
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="left" style="font-weight: bold;"><h3>&nbsp;臺銀人壽-投資型保險商品要保人風險屬性評估問卷</h3></td>
+			</tr>
+			<tr valign="top">
+				<td bgcolor="#40e0d0" >&nbsp;</td>
+				<td class="survey_content">
+					<!-- ------------------CONTENT START------------------ -->
+					<div class="mystyle3 attribute1">
+						<h2>請填寫投資型保險商品保戶風險適性問卷</h2>
+<!-- 								<th:block th:if="${userType}"> -->
+<!-- 								<div class="col-sm-10 col-sm-offset-1"> -->
+<!-- 									<p style="color : red;">您為本公司網路服務會員，您可至本公司 <a href="https://elife.twfhclife.com.tw/eservice/login">保戶專區</a> 進行變更風險屬性操作或接續操作</p> -->
+<!-- 								</div> -->
+<!-- 								</th:block> -->
+							<div class="modal fade in" id="userStatus" role="dialog" aria-labelledby="myModalLabelIC" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-body apply2 center1 grey2">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+											<p style="color : red;">
+												您為本公司網路服務會員，您可至本公司<a href="https://elife.twfhclife.com.tw/eservice/login">保戶專區</a> 進行變更風險屬性操作或接續操作</p>
+											</p>
+												<button class="btn-login" data-dismiss="modal" aria-label="Close">確定</button>											
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade in" id="showPupStatus" role="dialog" aria-labelledby="myModalLabelIC" aria-hidden="true" data-backdrop="static">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-body apply2 center1 grey2">
+										<button type="button" class="close" aria-label="Close"><span aria-hidden="true"></span></button>
+											<p style="color : red;">
+												依法令規範及為保障您的投資權益，若您具有以下身分：年齡為65歲以上或教育程度國中畢業(含)以下或近期有重大醫療支出、高額定期醫療或長期照顧支出，本公司會將您的投資風險屬性歸類為保守型投資人。
+												惟若您確認後仍希望依照本身風險屬性評估結果，作為您的投資風險屬性類型，敬請務必勾選下列選項(若無勾選，本公司會將您的投資風險屬性歸類為保守型)<br>
+											</p>
+												<button class="btn-login" id="showPupBt" aria-label="Close">確定</button>											
+										</div>
+									</div>
+								</div>
+							</div>
+						<div class="col-sm-10 col-sm-offset-1">
+							<div class="attr1 marginTop20 chMiddle">
+								一、風險屬性評估<br>以下您所填寫之投資適性調查表，將有助於我們了解您對於投資風險承受度及適合投保之商品。
+							</div>
+							<div class="check-title">投資風險屬性 評估</div>
+							<div class="check-body grey2">
+								<th:block th:each="vo, rowStat : ${questions}">
+									<th:block th:if = "${vo.id != 1}">
+									<div class="check-list col-sm-12 " th:style="${vo.id == 2} ? 'height: 100%;' : ''">
+										<p class="marginBottom20">
+										<div class="col-sm-12">
+											<th:block th:text="${vo.seq} +.+ ${vo.question}" /><span style="color: red;"><th:block th:if="${vo.id == 2}">【可複選，以分數較高者計分】</th:block></span>
+										</div>
+										<div class="col-sm-12" style="color: red;">
+											<th:block th:text="${vo.question2}" />
+										</div>
+										<div class="col-sm-12" style="color: red;">
+											<th:block th:text="${vo.question3}" />
+										</div>
+										</p>
+										<div class="clearfix"></div>
+										<th:block th:each="vo1, rowStat1 : ${vo.options}">
+												<th:block th:if="${vo.isMulti == 'N'}">
+													<th:block th:if="${vo.id != 1}">
+													<div class="radio attr1">
+														<li style="list-style: none;">
+															<label th:for="${'options_'+vo1.id}" id="answerB-1-1" class="col-sm-8">
+															<th:block	th:if="${vo1.checked}">
+																<input th:id="${'options_'+vo1.id}" th:attr="qid=${vo1.id},quesid=${vo.id}" checked type="radio" field="question" th:name="${vo.question}"	th:value="${vo1.score}">
+															</th:block> 
+															<th:block th:if="${!vo1.checked}">
+																<input th:id="${'options_'+vo1.id}" th:attr="qid=${vo1.id},quesid=${vo.id}" type="radio" field="question" th:name="${vo.question}"	th:value="${vo1.score}">
+															</th:block>
+																<p name="itemText" th:text="${vo1.item}" />
+															</label>
+														</li>
+													</div>
+													</th:block>
+												</th:block>
+												<th:block th:if="${vo.isMulti == 'Y'}">
+													<div class="checkbox attr1">
+														<li style="list-style: none;">
+															<label th:for="${'options_'+vo1.id}" class="col-sm-8">
+															<th:block th:if="${vo1.checked}">
+																<input th:id="${'options_'+vo1.id}" th:attr="qid=${vo1.id},quesid=${vo.id}" checked type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+															</th:block>
+															<th:block th:if="${!vo1.checked}">
+																<input th:id="${'options_'+vo1.id}" th:attr="qid=${vo1.id},quesid=${vo.id}" type="checkbox" field="question" th:name="${vo.question}" th:value="${vo1.score}">
+															</th:block>
+																<p name="itemText" th:text="${vo1.item}"/>
+															</label>
+														</li>
+													</div>
+												</th:block>
+											</th:block>
+									</div>
+									</th:block>
+								</th:block>
+								<div class="clearfix"></div>
+							</div>
+							<div id="confirmNotice">
+								<div class="statement1 wht">
+									<p class="text-ps" id="remark"></p>
+									<div>
+										<p>
+											二、其他評估項目<br>
+											依法令規範及為保障您的投資權益，若您具有以下身分：年齡為65歲以上或教育程度國中畢業(含)以下或近期有重大醫療支出、高額定期醫療或長期照顧支出，本公司會將您的投資風險屬性歸類為保守型投資人。
+											惟若您確認後仍希望依照本身風險屬性評估結果，作為您的投資風險屬性類型，敬請務必勾選下列選項(若無勾選，本公司會將您的投資風險屬性歸類為保守型)<br>
+										</p>
+										<label for="readCheck">
+										<p>
+											<input style="float: left;" type="checkbox" id="readCheck" />
+											本人經審慎評估後，選擇依上述「一、風險屬性評估」之評估結果分類，且確認已充分瞭解基金投資風險，並願意承受相關投資結果。<br />
+										</p>
+										</label>
+									</div>
+								</div>
+							</div>							
+							<div class="statement1 wht">
+								<p class="text-ps" id="remark"></p>
+								<div>
+									<p style="color: green;">提醒您</p>
+									<p style="color: red;">● 投資標的轉換欲轉日之標的風險等級不得高於保戶個人風險屬性，辦理個人風險屬性設定後，恐將影響部分保單後續保全交易。</p>
+									<p style="color: red;">● 請您以要保人的角度填寫，本次所評估之投資風險屬性結果，將影響上述保單未來辦理投資標的轉換時可選擇轉入之標的。</p>
+									<p style="color: red;">● 如本公司同時受理台端變更投資風險屬性時，因應法令規範距前次評估結果未前一年者，不得重新評估，故本公司將以受理在前之資料為準，如無法判斷受理前後順序，本公司將以網站平台申請資料為準。</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-12 two-buttons">
+							<a href="indivdualChoose">
+								<button id="deny" class="btn-signup">上一步</button>
+							</a> 
+							<a>
+								<button id="go" class="btn-signup">送出</button>
+							</a>
+						</div>
+					</div> <!-- ------------------CONTENT END------------------ -->
+				</td>
+				<td bgcolor="#40e0d0" >&nbsp;</td>
+			</tr>
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="center" style="font-weight: 500;	font-size: 14px;">臺銀人壽保險股份有限公司 BankTaiwan Life Insurance Co. Ltd. 客服專線 0800-011-966<br>
+				Copyright R 2015. All Rights Reserved.
+				</td>
+			</tr>
+		</table>
+	</center>
+	<div class="loading-modal"></div>
+	<th:block th:replace="fragments/script" />
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(function() {
+		var userType = [[${individualChooseVo.usersType}]];		
+		
+		var showPup = [[${individualChooseVo.showPup}]]
+		if(showPup === true){
+			$('#showPupStatus').modal('show');
+			$('#confirmNotice').show();		
+		}else{
+			$('#confirmNotice').hide();		
+			if(userType === true){
+				$('#userStatus').modal('show');
+			}
+		}
+		
+		$('#showPupBt').click(function(){
+			$('#showPupStatus').modal('hide');	
+			if(userType === true){
+				$('#userStatus').modal('show');
+			}
+		})
+		
+		var formData = [[${individualChooseVo}]];
+		var questionIdList = [[${questionIdList}]]
+			// 確認送出
+			$('#go').click(function() {
+			/*	
+				if (!$("#readCheck").is(":checked")) {
+					openAlert('請詳細閱讀本文件內容後進行勾選')
+					return
+				}
+			*/	
+				if(showPup === true){
+					if (!$("#readCheck").is(":checked")) {
+						formData.ruleStatus = '1';
+					}else{
+						formData.ruleStatus = '2';
+					}
+				}else{
+					formData.ruleStatus = '3';
+				}
+			
+				answers = [[${individualChooseVo.answers}]];
+				quest = ["12"]; // 預設
+			    $("input[field='question']:checked").each(function(index, e){
+			    	answers.push($(e).attr("qid"))
+			    	var cont = 	$(e).attr("quesid") -1 ;
+			    	quest.push(cont.toString());
+									
+
+			    })
+				if(answers.length === 0){
+					openAlert("尚未填寫風險評估表");
+					return false;
+				}
+				formData.questions = JSON.stringify([[${questions}]])
+				formData.answers =  answers ;
+								   
+				let questionList = $(questionIdList).not(quest).toArray();
+				if(questionList.length > 0){
+					openAlert("第" + questionList + "題，尚未填寫答案，謝謝。");
+					return false;
+				}
+				postWithFormData(/*[[@{/indivdualChoose3}]]*/, formData);
+			});
+			$('#closeFrom').click(function(){
+				$('#indivdualChooseConfirm').modal('hide');
+			});
+		});	
+	
+	/*]]>*/
+	</script>
+</body>
+</html>

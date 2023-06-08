@@ -398,10 +398,6 @@
 
 			//搜索选项
 			initSearchItems()
-			//根据保单号，持有基金查询可转入基金
-			initNewInvestments()
-			//初始化保单分配比例
-			initInvestmentLimit()
 
 			//公司选项变更
 			$("body").on('change', "[name='companysItem']", function(){
@@ -493,13 +489,14 @@
 				type : 'POST',
 				contentType : 'application/json',
 				url : /*[[@{/getNewInvestments}]]*/,
-				async: false,
 				data : JSON.stringify(data),
 				success : function(response) {
 					if(response.result == "ERROR") {
 						openAlert(response.resultMsg);
 					} else {
 						newInvestments = response.resultData
+						//初始化保单分配比例
+						initInvestmentLimit()
 					}
 				},
 				error : function() {
@@ -516,7 +513,6 @@
 			contentType : 'application/json',
 			url : /*[[@{/getInvestmentSearchItem}]]*/,
 			data : JSON.stringify({policyNo: [[${transInvestmentVo.policyNo}]]}),
-			async: false,
 			success : function(response) {
 				if(response.result == "ERROR") {
 					openAlert(response.resultMsg);
@@ -524,6 +520,8 @@
 					companysItems = response.resultData.companys
 					currencysItems = response.resultData.currencys
 					currencysItems.unshift({KEY: '依基金幣別查詢', VALUE: 'ALL'})
+					//根据保单号，持有基金查询可转入基金
+					initNewInvestments()
 				}
 			},
 			error : function() {
@@ -542,7 +540,6 @@
 				type : 'POST',
 				contentType : 'application/json',
 				url : /*[[@{/investmentRatioSizeLimit}]]*/,
-				async: false,
 				data : JSON.stringify({policyNo: [[${transInvestmentVo.policyNo}]]}),
 				success : function(response) {
 					if(response.result == "ERROR") {

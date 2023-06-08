@@ -69,6 +69,16 @@
 <!--                         <input class="form-control" id="email" maxlength="100" th:value="${email}" placeholder="手機號碼或電子信箱請填入一項" data-validation="optionalRequiredOne::#mobile,#email::手機號碼或電子信箱請填入一項|mail"></input> -->
 <!--                     </div> -->
                     
+                
+                <div class="form-group" style="margin: 16px 4px 0 0;">
+					<label for="inputPassword3" class="control-label">驗證碼</label>
+					<div class="">
+						<input type="text" name="validateCode" id="validateCode" autocomplete="off" placeholder="輸入驗證碼" class="form-control  float-left w70p" style="width:50%" maxlength="4" />
+						&nbsp;&nbsp;&nbsp;
+						<img id="validateImage" th:src="'data:image/png;base64, ' + ${validateImageBase64}" style="height:33px;cursor:pointer;" alt="點擊圖片重新讀取驗証碼"></img>
+					</div>
+				</div>
+
                     <input type="hidden" id="fbId" name="fbId"  th:value="${fbId}"></input>
                     <input type="hidden" id="cardSn" name="cardSn"  th:value="${cardSn}"></input>
                     <!-- 20180830 因應內部使用暫不檢核，預設為 Enable -->
@@ -136,6 +146,18 @@
         $('div.mystyle3').validation();
         
         $('#f1go').on('click', function(e) {
+
+			if(!$('#rocId').val()){
+	    		//openAlert("請輸入身分證號碼");
+	   			openAlert($('#E0027').val());
+	    		return;
+	    	}
+
+	    	if ($('#validateCode').val() == '') {
+				//openAlert('請輸入圖形驗證碼');
+				openAlert($('#E0008').val());
+				return false;
+			}
         	
         	if(!$("div.mystyle3").valid()){
         		return;
@@ -151,6 +173,7 @@
             
             data = {
             	rocId : $("#rocId").val().toUpperCase(),
+            	validateCode : $("#validateCode").val(),
             	mobile : $("#mobile").val(),
             	email : $("#email").val(),
             	fbId : $("#fbId").val(),
@@ -160,6 +183,13 @@
             
             postJson("/eservice/register/checkRegister", data);
         });
+
+		var validateImageUrl = "/eservice/getVerify";
+		$('#validateImage').click(function() {
+			this.src = validateImageUrl + '?r=' + Math.random();
+		});
+		$('#validateImage').click();
+
     });
     
     function postJson(url, data){
@@ -175,6 +205,7 @@
 					if (response.resultMsg == "NODATA") {
 						$("#modal-container-locked").modal();
 					} else {
+						reloadValidateImage(); // 20230316 by 203990
 						openAlert(response.resultMsg);
 					}
 					return;
@@ -182,6 +213,7 @@
 				window.location.href = "/eservice/firstUse1";
 			},
 			error : function() {
+				reloadValidateImage(); // 20230316 by 203990
 				/* openAlert('系統發生錯誤!'); */
                 openAlert($('#E0018').val());
 			},
@@ -190,6 +222,12 @@
 	        }
 		});
 	}
+
+	function reloadValidateImage() {
+		$('#validateImage').click();
+	}
+
+	setInterval ("reloadValidateImage()", 60000 * 10);
 
 	/*]]>*/
     </script>

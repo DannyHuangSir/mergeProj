@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>變更風險屬性｜臺銀人壽保單網路服務</title>
+</head>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+<style>
+html, body {
+    background: #ffffff;
+	font-size: 17px;
+}
+td, th {
+    padding: 0px;
+	font-size: 17px;
+	font-weight:bold; 
+}
+input, select {
+	font-size: 17px;
+}
+form > .form-group > label {
+    font-size: 17px;
+}
+.chMiddle {
+    font-size: 17px;
+}
+.form-control {
+    font-size: 17px;
+}
+.enSmall {
+    font-size: 17px;
+}
+button {
+	font-size: 17px;
+}
+input[type=checkbox] {
+	border: 1px solid #999!important;
+}
+</style>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">變更風險屬性</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 變更風險屬性
+			</div>
+			<div class="mystyle3 attribute1">
+			<th:block th:if="${individualChooseVo.optionsType == true}">
+					<div class="score1">
+						<h2>您的風險屬性類型</h2>
+						<h1>
+							<th:block th:text="${individualChooseVo.desc}" />
+						</h1>
+							<h3>&nbsp;
+							<th:block th:text="${finishDateTime}"></th:block>
+							</h3>
+						
+					</div>
+					<th:block th:if="${notReassess != null}">
+						<div class="attr2 col-sm-10 col-sm-offset-1">
+							<th:block th:text="${notReassess}" />
+						</div>
+					</th:block>
+					<th:block th:if="${notReassess == null}">
+						<div class="attr2 col-sm-10 col-sm-offset-1">
+							為確保保險商品符合您的投資能力及風險屬性，投資風險屬性若有變更，<br />本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。
+						</div>
+					</th:block>
+				</th:block>
+ 				<th:block th:unless = "${individualChooseVo.optionsType == true}">
+ 					<div class="score1">
+						<h3>
+							<th:block th:if="${individualChooseVo.riskAttr == 'D'}">
+								經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司<br />客服電話 0800-011-966
+							</th:block>
+						</h3> 
+ 					</div>
+				</th:block> 
+<!-- 				<div class="score1">     -->
+<!-- 					<h2>您的風險屬性類型</h2> -->
+<!-- 					<h1><th:block th:text="${individualChooseVo.desc}"/></h1> -->
+<!-- 					<h3>總分：<th:block th:text="${transAnswerVo.score}"/>分</h3> -->
+<!-- 				</div> -->
+<!-- 				<div class="attr2 col-sm-6 col-sm-offset-3">為確保保險商品符合您的投資能力及風險屬性，投資風險屬性若有變更，<br/>本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。</div> -->
+				<div class="col-sm-10 col-sm-offset-1" id="analysisStatement"></div>
+<!-- 				<div class="col-md-8 col-md-offset-2"> -->
+<!-- 					<div th:replace="fragments/sendVerify"></div> -->
+<!-- 				</div> -->
+				<th:block th:if="${notReassess != null}">
+				  <div class="col-md-8 col-md-offset-2 two-buttons">
+						<a href="apply1">
+							<button id="deny" class="btn-signup">確定</button>
+						</a>
+				</div>
+				</th:block>
+				<th:block th:if="${notReassess == null}">
+				  <div class="col-md-8 col-md-offset-2 two-buttons">
+						<a href="apply1">
+							<button id="go" class="btn-signup">確定</button>
+						</a>
+				</div>
+				</th:block>
+			</div>
+
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+			$('#go').click(function(){
+				
+			})
+		/*]]>*/
+		</script>
+</body>
+
+</html>

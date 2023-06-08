@@ -382,9 +382,16 @@ else{
 		}
 		grid1.fnInitComplete = function() { 
 			if (grid1.rownum() == 0) {
-				/* openAlert('查無資料'); */
-				openAlert($('#E0035').val());
-				return false;
+				var startDate = $('#startDate').val();
+				if ($('#startDate').val() != '') {
+					/* openAlert('查無資料'); */
+					openAlert($('#E0035').val());
+					return false;
+				}else{
+					/* openAlert('兩個月內查無保費紀錄'); */
+					openAlert($('#E0135').val());
+					return false;
+				}
 			}
 		};
 		

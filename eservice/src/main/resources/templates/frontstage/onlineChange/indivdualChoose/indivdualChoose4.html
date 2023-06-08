@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragments/head" />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/smoothness/jquery-ui-1.10.4.custom.min.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/ui.jqgrid.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/menu.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/scholarship_style.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/calendar.css' />
+<style>
+html, body {
+    background: #ffffff;
+	font-size: 17px;
+}
+td, th {
+    padding: 0px;
+	font-size: 17px;
+	font-weight:bold; 
+}
+input, select {
+	font-size: 17px;
+}
+form > .form-group > label {
+    font-size: 17px;
+}
+.chMiddle {
+    font-size: 17px;
+}
+.form-control {
+    font-size: 17px;
+}
+.enSmall {
+    font-size: 17px;
+}
+button {
+	font-size: 17px;
+}
+
+/*第一欄第一列：左上*/
+tr:first-child td:first-child{
+  border-top-left-radius: 10px;
+}
+/*第一欄最後列：左下*/
+tr:last-child td:first-child{
+  border-bottom-left-radius: 10px;
+}
+/*最後欄第一列：右上*/
+tr:first-child td:last-child{
+  border-top-right-radius: 10px;
+}
+/*最後欄第一列：右下*/
+tr:last-child td:last-child{
+  border-bottom-right-radius: 10px;
+}
+</style>
+<title>臺銀人壽-投資型保險商品要保人風險屬性評估問卷(購買非結構型商品適用)</title>
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<center>
+		<table width="0" border="0" cellpadding="0" cellspacing="0">
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="left"><img src='img/my-logo-s.png' height="86" style="border-bottom-right-radius: 10px;"></td>
+			</tr>
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="left" style="font-weight: bold;"><h3>&nbsp;臺銀人壽-投資型保險商品要保人風險屬性評估問卷</h3></td>
+			</tr>
+			<tr valign="top">
+				<td bgcolor="#40e0d0" >&nbsp;</td>
+				<td class="survey_content">
+				<!-- ------------------CONTENT START------------------ -->
+			<div class="mystyle3 attribute1">
+				<th:block th:if="${individualChooseVo.optionsType == true}">
+					<div class="score1" style="margin:0px">
+						<h2>
+						<th:block th:if="${individualChooseVo.name.length() <= 2}">
+							<th:block th:text="${individualChooseVo.name.substring(0,1) + 'O'}" />
+						</th:block>
+						<th:block th:if="${individualChooseVo.name.length() > 2}">
+							<th:block th:text="${individualChooseVo.name.substring(0,individualChooseVo.name.length()-2) + 'O' + individualChooseVo.name.substring(individualChooseVo.name.length()-1)}" />
+						</th:block>
+						<th:block th:text="${'(' + individualChooseVo.rocId.substring(0,7) + '***)'}" /> 您好，您的風險屬性類型為
+						</h2>
+						<th:block th:if="${individualChooseVo.riskAttr != 'D'}">
+						<h1>
+							<th:block th:text="${individualChooseVo.desc}" />
+						</h1>
+						<h3>&nbsp;
+						<th:block th:text="${finishDateTime}"></th:block>
+						</h3>
+						</th:block>
+						<th:block th:if="${individualChooseVo.riskAttr == 'D'}">
+						<h3>
+							經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司<br />客服電話 0800-011-966
+						</h3>
+						<h3>&nbsp;
+						</h3>
+						</th:block>
+					</div>
+					<th:block th:if="${notReassess != null}">
+						<div class="attr2 col-sm-10 col-sm-offset-1" style="padding: 20px 10px 25px;">
+							<th:block th:text="${notReassess}" />
+						</div>
+					</th:block>
+					<th:block th:if="${notReassess == null}">
+						<div class="attr2 col-sm-10 col-sm-offset-1" style="padding: 20px 10px 25px;">
+							為確保保險商品符合您的投資能力及風險屬性，投資風險屬性若有變更，<br />本公司將以您最新的風險屬性作為名下所有保單日後變更的評估依據。
+						</div>
+					</th:block>
+				</th:block>
+ 				<th:block th:unless = "${individualChooseVo.optionsType == true}">
+ 					<div class="score1" style="margin:0px">
+						<h3>
+							<th:block th:if="${individualChooseVo.riskAttr == 'D'}">
+								經評估結果，投資型商品不適合您，如您需要其他商品，請洽詢本公司<br />客服電話 0800-011-966
+							</th:block>
+						</h3> 
+ 					</div>
+				</th:block> 
+			</div>
+			<div class="mystyle3 attribute1" style="margin-top:25px">
+				<div class="col-sm-12" style="text-align:center; ">
+					<span> 寄送臺銀人壽風險屬性評估結果 </span>
+				</div>
+				<div class="col-sm-12 col-md-offset-1" style="padding-top: 15px">
+					<center>
+						<table><tbody>
+							<tr style="height:42px">
+								<td style="width:20%;" align="right">
+									E-Mail1：
+								</td>
+								<td>
+									<input id="email1" style="width:30%; line-height:30px"> @mail.bot.com.tw
+								</td>
+							</tr>
+							<tr style="height:42px">
+								<td align="right">
+									E-Mail2：
+								</td>
+								<td>
+									<input id="email2" style="width:95%; line-height:30px">
+								</td>
+							</tr>
+							<tr style="height:42px">
+								<td align="right">
+									<font style="color: red;">* </font>驗證碼：
+								</td>
+								<td>
+									<input autocomplete="off" id="validateCode" maxlength="4" name="validateCode" placeholder="輸入驗證碼" type="text" style="line-height:30px; width:30%">
+									&nbsp;<img th:src="'data:image/png;base64, ' + ${validateImageBase64}"  alt="點擊圖片重新讀取驗証碼" id="validateImage" style="height:33px; cursor:pointer;">
+									&nbsp;<button id="sendEMail">寄送</button>            
+								</td>
+							</tr>
+						</tbody></table>
+					</center>
+				</div>
+				<div class="col-md-8 col-md-offset-2 two-buttons">
+				<a href="http://www.twfhclife.com.tw">
+					<button id="go" class="btn-signup" style="margin: 30px 0 25px">
+						回官網</i>
+					</button>
+				</a>
+				</div>
+			</div>
+
+				<!-- ------------------CONTENT END------------------ -->
+				</td>
+				<td bgcolor="#40e0d0" >&nbsp;</td>
+			</tr>
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="center" style="font-weight: 500;	font-size: 14px;">臺銀人壽保險股份有限公司 BankTaiwan Life Insurance Co. Ltd. 客服專線 0800-011-966<br>
+				Copyright R 2015. All Rights Reserved.
+				</td>
+			</tr>
+		</table>
+	</center>
+	<div class="loading-modal"></div>
+	<th:block th:replace="fragments/script" />
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function(){
+			var validateImageUrl = /*[[@{/getVerify}]]*/;
+			$('#validateImage').click(function() {
+				this.src = validateImageUrl + '?r=' + Math.random();
+			});
+			$('#validateImage').click();
+
+			$('#sendEMail').click(function(){
+				var formData = [[${individualChooseVo}]];
+				console.log(formData);
+			
+				var email1 = $('#email1').val();
+				var email2 = $('#email2').val();
+				var validateCode = $('#validateCode').val();
+				
+				if(email1 == '' && email2 ==''){
+					openAlert("電子信箱必須輸入一筆"); 
+					return false;
+				}
+				emailRule1 = /^\w+((-\w+)|(\.\w+))*/;
+				emailRule2 = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+ 
+				if(email1 != ''){
+					if(email1.search(emailRule1)== -1){
+					   	openAlert("E-Mail1 : 電子信箱格式錯誤"); 
+						return false;;
+					}
+					email1 = email1 + '@mail.bot.com.tw'
+				}
+
+				if(email2 != ''){
+					if(email2.search(emailRule2)== -1){
+					   	openAlert("E-Mail2 :電子信箱格式錯誤"); 
+						return false;;
+					}
+				}
+				
+				if(validateCode == ''){
+					openAlert("驗證碼尚未輸入"); 
+					return false;;
+				}
+				
+				$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				url : "/eservice/indivdualChooseSendPdfMail",
+				data : {
+					email1:email1,
+					email2:email2,
+					validateCode:validateCode,
+					rocId:formData.rocId
+				},
+				success : function(response) {
+					$('#validateImage').click();
+					removeLoading();
+					var resultMsg = response.resultMsg;
+					console.log(response);
+					if(response.result == 'SUCCESS'){
+						openAlert("信件寄送完成!");
+					}else{
+						openAlert(resultMsg);
+					}
+				},
+				error : function() {
+					removeLoading();
+					$('#validateImage').click();
+					openAlert("信件寄送失敗!");
+				}
+			});
+				
+			})
+		})
+		/*]]>*/
+	</script>
+</body>
+</html>

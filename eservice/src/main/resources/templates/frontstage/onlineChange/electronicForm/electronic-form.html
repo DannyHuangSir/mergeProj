@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>聯絡資料變更暨保全聯盟鏈｜臺銀人壽保單網路服務</title>
+</head>
+
+
+<style>
+.closehref{
+	color : gray;
+	cursir : pointer;
+	pointer-events : none;
+}
+</style>
+
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li><a href="apply1">線上申請</a> <i
+					class="fa fa-angle-right fa-lg ble"></i></li>
+				<li class="active"><a href="javascript:;">電子表單通知服務</a></li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 電子表單通知服務
+			</div>
+			<div class="mystyle3">
+				<div class="loan1">
+					<div id="electronicForm" class="apply1">
+						<div class="my1 center1 ">
+							<i></i> 電子表單通知服務
+						</div>
+						<th:block th:if=" ${electronicFormVo.electronicForm}">
+							<a href="electronicForm2">
+								<div class="col-sm-6 center1 gradient">
+									<h3>申請電子表單通知服務</h3>
+									<p>
+										<th:block
+											th:text="${session.PAGE_WORDING['WORDING_30033'].parameterValue}" />
+									</p>
+								</div>
+							</a>
+						</th:block>
+						<th:block th:unless=" ${electronicFormVo.electronicForm}">
+							<a href="electronicForm2" class='closehref'>
+								<div class="col-sm-6 center1 gradient">
+									<h3>申請電子表單通知服務</h3>
+									<p>
+										<th:block
+											th:text="${session.PAGE_WORDING['WORDING_30033'].parameterValue}" />
+									</p>
+								</div>
+							</a>
+						</th:block>
+
+						<th:block th:if=" ${electronicFormVo.isclean}">
+							<a href="electronicForm3">
+								<div class="col-sm-6 center1 gradient">
+									<h3>取消電子表單通知服務</h3>
+									<p>
+										<th:block
+											th:text="${session.PAGE_WORDING['WORDING_30034'].parameterValue}" />
+									</p>
+								</div>
+							</a>
+						</th:block>
+						<th:block th:unless="${electronicFormVo.isclean}">
+							<a href="electronicForm3" class='closehref'>
+								<div class="col-sm-6 center1 gradient">
+									<h3>取消電子表單通知服務</h3>
+									<p>
+										<th:block
+											th:text="${session.PAGE_WORDING['WORDING_30034'].parameterValue}" />
+									</p>
+								</div>
+							</a>
+						</th:block>
+					</div>
+				</div>
+			</div>
+			<div class="tb3 top0 nopd"></div>
+		</div>
+	</section>
+
+
+
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script" />
+	<script type="text/javascript">
+
+	</script>
+</body>
+</html>

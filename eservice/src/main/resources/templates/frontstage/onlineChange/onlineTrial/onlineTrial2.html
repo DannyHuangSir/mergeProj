@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:replace="fragments/head" />
+<title>變更繳別｜臺銀人壽保單網路服務</title>
+</head>
+<style>
+.row-margin-top{
+	margin-top : 15px;
+}
+</style>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+		<div th:include="/frontstage/onlineChange/modalAll :: refundErrorMessage"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li><a href="apply1">線上申請</a> <i
+					class="fa fa-angle-right fa-lg ble"></i></li>
+				<li class="active"><a href="onlineTrial1">線上試算服務</a> <i
+					class="fa fa-angle-right fa-lg ble"></i></li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i>線上試算服務-查詢畫面
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-4">2<span class="hid1">. 資料確認</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<div class="col-md-8 col-md-offset-2">
+					<div class="col-md-12 row-margin-top">
+						<div class="col-md-12">
+							<div class="col-sm-4">您的滿期金 : </div>
+							<div class="col-sm-8">
+									<th:block th:text="${transOnlineTrialVo.maturityAmt == null ? transOnlineTrialVo.maturityMsg : #numbers.formatDecimal(transOnlineTrialVo.maturityAmt, 0, 'DEFAULT', 0, 'COMMA')}" />
+									<th:block th:text="${transOnlineTrialVo.maturityAmt != null ? '元' : ''}" />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 row-margin-top">
+						<div class="col-md-12">
+							<div class="col-sm-4">您的解約金 : </div>
+							<div class="col-sm-8">
+								<th:block th:text="${transOnlineTrialVo.cancellationAmt == null ? transOnlineTrialVo.cancellationMsg :  #numbers.formatDecimal(transOnlineTrialVo.cancellationAmt, 0, 'DEFAULT', 0, 'COMMA')}" />
+								<th:block th:text="${transOnlineTrialVo.cancellationAmt != null ? '元' : ''}" />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 row-margin-top">
+						<div class="col-md-12">
+							<div class="col-sm-4">可借款額度 : </div>
+							<div class="col-sm-8">					
+								<th:block th:text="${transOnlineTrialVo.loanAmt == null ? transOnlineTrialVo.loanMsg :  #numbers.formatDecimal(transOnlineTrialVo.loanAmt, 0, 'DEFAULT', 0, 'COMMA')}" />
+								<th:block th:text="${transOnlineTrialVo.loanAmt != null ? '元' : ''}" />		
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 row-margin-top">
+						<div class="col-md-12">
+							<div class="col-sm-4">已借款需還款金額 : </div>
+							<div class="col-sm-8">
+								<th:block th:text="${transOnlineTrialVo.repaymentAmt == null ? transOnlineTrialVo.repaymentMsg :  #numbers.formatDecimal(transOnlineTrialVo.repaymentAmt, 0, 'DEFAULT', 0, 'COMMA')}" />
+								<th:block th:text="${transOnlineTrialVo.repaymentAmt != null ? '元' : ''}" />
+							</div>
+						</div>
+					</div>
+					<th:block th:unless="${transOnlineTrialVo.repaymentAmt == null}">
+						<div class="col-md-12 row-margin-top">
+							<div class="col-md-12">
+								<div class="col-sm-4">還款帳號 : </div>
+								<div class="col-sm-8">
+									<th:block th:text="${transOnlineTrialVo.refundAccount == null ?  transOnlineTrialVo.refundMsg: transOnlineTrialVo.refundAccount}" />
+									<th:block th:unless="${transOnlineTrialVo.refundAccount == null}">台灣銀行大安分行</th:block>
+								</div>
+							</div>
+						</div>
+					</th:block>
+					<div class="col-md-12 row-margin-top">
+						<div class="col-md-8" style="color : red">以上資料僅供參考,試算金額尚未扣除欠繳款項,實際金額以送件當時本公司核定之金額為準,已借款需還款金額仍視還款當日之狀況。
+						</div>
+					</div>
+				</div>
+				
+				<div class="clearfix"></div>
+				<div class="col-md-8 col-md-offset-2 ptop30">
+					<div class="marginTop25"></div>
+					<div class="col-md-12 two-buttons">
+					<a href="onlineTrial1">
+						<button type="button" id="deny" class="btn-signup">上一步</button>
+					</a>	
+					<a href="apply1">
+						<button type="button" id="go" class="btn-signup">返回首頁</button>
+					</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script" />
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
+	<script th:inline="javascript">
+	</script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			var refundErrorMessage = [[${refundErrorMessage}]]; 
+			if(refundErrorMessage != null && refundErrorMessage != ''){
+				document.getElementById("refundMsg").innerHTML = refundErrorMessage
+				$('.refundErrorMessageModal').modal("show");
+			}
+		})
+		/*]]>*/
+		</script>
+</body>
+</html>

@@ -149,10 +149,12 @@
 		$(function() {
 			// 下一步事件
 			$('#go').click(function() {
+				/* 20220824 by 203990 國別沒選, 前台申請單點Detail會有問題. 確認為原廠bug, 先改為必選.
 				if($('#countryOption').val() == "" && $('#jobSOption').val() == ""){
 					openAlert("國籍與職業分類至少需輸入一項。");
 					return false;
 				}
+				*/
 				/* if($('#hasAddressInTaiwan').val() == ""){
 					openAlert("請輸入在台有無居住地址");
 					return false;
@@ -180,15 +182,19 @@
 					}
 				}
 				 
-				if($('#areaOption').val() != "" && $('#countryOption').val() == ""){
-					openAlert("請輸入要保人國籍");
-					return false;
-				}
+				//if($('#areaOption').val() != "" || $('#countryOption').val() != ""){
+					if($('#areaOption').val() == "" || $('#countryOption').val() == ""){
+						openAlert("請輸入完整要保人國籍");
+						return false;
+					}
+				//}
 				
-				if($('#jobBOption').val() != "" && $('#jobSOption').val() == ""){
-					openAlert("請輸入完整職業分類");
-					return false;
-				}
+				//if($('#jobBOption').val() != "" || $('#jobMOption').val() != "" || $('#jobSOption').val() != ""){
+					if($('#jobBOption').val() == "" || $('#jobMOption').val() == "" || $('#jobSOption').val() == ""){
+						openAlert("請輸入完整職業分類");
+						return false;
+					}
+				//}
 
 				if($('#countryOption').val() != ""){
 					formData.country = $('#countryOption').val();

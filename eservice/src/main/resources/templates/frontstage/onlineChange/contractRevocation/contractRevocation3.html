@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:replace="fragments/head" />
+<title>變更繳別｜臺銀人壽保單網路服務</title>
+</head>
+<style>
+.myImg {
+	width: 240px;
+	height: 180px;
+}
+
+.otherReasonCss{
+width : 100%;
+}
+
+</style>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li><a href="apply1">線上申請</a> <i
+					class="fa fa-angle-right fa-lg ble"></i></li>
+				<li class="active"><a href="contractRevocation1">契約撤銷</a> <i
+					class="fa fa-angle-right fa-lg ble"></i></li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i>契約撤銷-填寫撤銷資料
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 col-xs-4">2<span class="hid1">. 填寫撤銷資料</span>
+					</li>
+					<li class="step3 active col-xs-4">3<span class="hid1">.
+							確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<div class="col-md-8 col-md-offset-2">
+					<div class="col-md-12">
+						<div class="col-md-12">
+							<div class="col-sm-2">保單號碼：</div>
+							<div class="col-sm-10">
+								<th:block th:text="${contractRevocationVo.lipmInsuNo}" />
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-12">
+							<div class="col-sm-2">保單名稱：</div>
+							<div class="col-sm-10">
+								<th:block th:text="${contractRevocationVo.settChName}" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="col-md-6">
+							<div class="col-sm-4">要保人姓名：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVo.lipmName}" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-sm-4">繳款人姓名：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVo.lipmName}" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="col-md-6">
+							<div class="col-sm-4">被保人姓名：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVo.lipiName}" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-sm-4">退費幣別：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVo.prodCurrency}" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="col-md-6">
+							<div class="col-sm-4">保單生效日：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVo.lipmInsuBegDate}" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-sm-4">退費金額：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVo.prpaActAmt}" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8 col-md-offset-2">
+					<th:block
+						th:unless="${contractRevocationVo.rcpTypeCodeFlag eq 'H'}">
+						<section id="tab_frame_print1" class="tab-frame">
+							<div class="grey2">
+								<div class="check-title depo2">退款帳戶</div>
+								<div class="check-list2 grey2">
+									<label class="col-sm-2">SwiftCode</label>
+									<div class="col-sm-8 ">
+										<th:block th:text="${contractRevocationVo.swiftCode}" />
+									</div>
+								</div>
+								<div class="check-list2 grey2">
+									<label class="col-sm-2">英文戶名</label>
+									<div class="col-sm-8 ">
+										<th:block th:text="${contractRevocationVo.englishName}" />
+									</div>
+								</div>
+								<div class="check-list2 grey2">
+									<label class="col-sm-2">帳戶名稱</label>
+									<div class="col-sm-8 ">
+										<th:block th:text="${contractRevocationVo.neacName}" />
+									</div>
+								</div>
+								<div class="check-list2 grey2">
+									<label class="col-sm-2">銀行名稱</label>
+									<div class="col-sm-4">
+										<div>
+											<th:block th:text="${contractRevocationVo.bankName}" />
+											<input type="hidden" id="bankCode" name="bankCode" />
+										</div>
+									</div>
+									<label class="col-sm-2">分行名稱</label>
+									<div class="col-sm-4">
+										<div>
+											<th:block th:text="${contractRevocationVo.branchName}" />
+											<input type="hidden" id="branchCode" name="branchCode" />
+										</div>
+									</div>
+								</div>
+								<div class="check-list2 grey2">
+									<label class="col-sm-2">帳號</label>
+									<div class="col-sm-8 ">
+										<th:block th:text="${contractRevocationVo.account}" />
+									</div>
+								</div>
+							</div>
+						</section>
+					</th:block>
+					<th:block th:if="${contractRevocationVo.rcpTypeCodeFlag eq 'H'}">
+						<div  style="margin-top : 15px ; margin-bottom : 15px">
+							<p class="text-ps" style="color: red">【信用卡繳費件】退回原繳費卡號。</p>									
+						</div>	
+					</th:block>
+				</div>
+				<div class="col-md-8 col-md-offset-2">
+					<div class="col-md-12">
+						<div class="col-sm-12">
+							<label>契撤原因：</label>
+						</div>
+						<div class="col-sm-1"></div>
+						<div class="col-sm-10">
+							<th:block th:text="${contractRevocationVo.statusFlag}" />
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8 col-md-offset-2">
+					<th:block
+						th:if="${contractRevocationVo.otherReason != null && contractRevocationVo.otherReason != ''}">
+						<div class="col-md-12">
+							<div class="col-sm-12">
+								<label>其他契撤原因：</label>
+							</div>
+							<div class="col-sm-1"></div>
+							<div class="col-sm-10">
+								<textarea th:text="${contractRevocationVo.otherReason}" rows="4" class="otherReasonCss"style="resize: none" readonly="readonly"></textarea>
+							</div>
+						</div>
+					</th:block>
+				</div>
+				<div class="col-md-8 col-md-offset-2 ptop30">
+					<div class="col-md-12">
+						<div class="col-md-6">
+							<th:block
+								th:if="${contractRevocationVo.image1Tobase64 != null && contractRevocationVo.image1Tobase64 !=''}">
+								<label class="col-sm-12">身分證明(正面)</label>
+								<div class="text-center">
+									<img th:onclick="'javascript:imgConfirm(\''+${contractRevocationVo.image1Tobase64}+'\')'"  
+										th:src="${contractRevocationVo.image1Tobase64}"
+										class="myImg">
+								</div>
+							</th:block>
+						</div>
+						<div class="col-md-6">
+							<th:block
+								th:if="${contractRevocationVo.image2Tobase64 != null && contractRevocationVo.image2Tobase64 !=''}">
+								<label class="col-sm-12">身分證明(背面)</label>
+								<div class="text-center">
+									<img th:onclick="'javascript:imgConfirm(\''+${contractRevocationVo.image2Tobase64}+'\')'" 
+										 th:src="${contractRevocationVo.image2Tobase64}"
+										class="myImg">
+								</div>
+							</th:block>
+						</div>
+					</div>
+				</div>
+				<div class="modal fade in" id="modal-container-imgConfirm" role="dialog" aria-labelledby="myModalLabel" 
+							aria-hidden="true" style="z-index: 1200;">
+							<div class="modal-dialog">
+								<div class="modal-content lock-up" style=" width : 800px"">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+									</div>
+									<div class="modal-body clearfix center1" id="imgOnPrint" style="max-height: 600px; overflow: auto; height: 600px; ">
+									
+									</div>
+									<div class="modal-footer grey2">
+										<a href="javascript:void(0);" id="onMedicalPrint">
+										</a>
+									</div>
+								</div>
+							</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="col-md-8 col-md-offset-2 ptop30">
+					<div class="divider divider88"></div>
+					<p class="center1 gray">請輸入驗證碼以完成申請</p>
+					<th:block th:replace="fragments/sendSMS" />
+					<div class="marginTop25"></div>
+					<div class="col-md-12 two-buttons">
+						<button type="button" id="deny" class="btn-signup">上一步</button>
+						<button type="button" id="go" class="btn-signup">確認送出</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script" />
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var formData = [[${contractRevocationVo}]];
+		 function imgConfirm(obj){
+			var image = obj;
+			$('#modal-container-imgConfirm').modal({
+				show: true,
+
+				keyboard: false
+			});
+	    	$("#imgOnPrint").html('<img id="imgsrc" src="'+image+'")/>');
+	    	$("#onMedicalPrint").show();
+
+	    	$('.modal-backdrop').css('display','none');
+		}	
+	
+		$(function() {
+			//上一步
+			$('#deny').click(function(){
+				postWithFormData(/*[[@{/contractRevocation2}]]*/, formData);
+			})
+			// 確認送出
+			$('#go').click(function() {
+				if ($('#InputCert1').val() == '') {
+					openAlert("請輸入驗證碼"); 
+					return false;
+				}
+				formData.authenticationNum = $('#InputCert1').val();
+				postWithFormData(/*[[@{/contractRevocationSuccess}]]*/, formData);
+			});		
+		});	
+	/*]]>*/
+	</script>
+</body>
+
+</html>

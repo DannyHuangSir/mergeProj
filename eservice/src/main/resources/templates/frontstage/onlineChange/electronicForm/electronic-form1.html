@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>聯絡資料變更暨保全聯盟鏈｜臺銀人壽保單網路服務</title>
+</head>
+<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="electronicForm1">電子表單通知服務</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:;">
+					<span th:text = "${electronicTitle}"> </span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i> 
+				<span th:text = "${electronicTitle}"> </span>
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 active col-xs-6">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step3 col-xs-6">
+						2<span class="hid1">. 資料確認</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<h2>請選擇欲設定之保單</h2>
+				<div class="loan1">
+					<table th:replace="fragments/applyPolicyList :: table17 (choseType='checkbox')"></table>
+					<div class="col-md-12 two-buttons">
+						<a href="apply1">
+							<button type="button" id="deny" class="btn-signup">取消</button>
+						</a>
+						<button type="button" id="go" class="btn-signup">下一步</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<div class="modal fade in" id="modal-container-locked" role="dialog" aria-labelledby="myModalLabel01" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content lock-up">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span  onclick="buttonClose()" aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body apply2 center1 grey2">
+                    <h3><i class="foo-unlock foo-4x orange"></i></h3> 您目前無法選取該保單
+                    <p id='errorMessage' class="marginBottom30 modal-container-locked-messsage">限保單的「要保人」才可勾選及異動聯絡資料</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+	$('#go').click(function() {
+			// 檢核是否有選一筆資料
+			if ($('input[name="chosePolicy"]:checked').val() == null) {
+				/* openAlert("請選擇一筆保單"); */
+				openAlert($('#E0038').val());
+				return false;
+			}	
+
+			var policyNoList = [];
+			$('input[name="chosePolicy"]:checked').each(function (i) {
+				policyNoList.push($(this).val());
+			});			
+
+			var titleName = [[${electronicTitle}]];
+			var formData = {};
+			formData.policyNoList = policyNoList;
+			formData.titleName = titleName; 
+			formData.electronicFormStatus = [[${electronicFormStatus}]];
+			postWithFormData(/*[[@{/electronicForm4}]]*/, formData);
+		});
+	});		
+	
+	function getUserElectronicFormNetWorkData(str,obj) {
+		console.log(str);
+	   // e.preventDefault();
+	   $('#m_'+str).toggleClass('openTextA');
+	   var trOpen = $('#'+str)[0].className;
+	   console.log(trOpen);
+	   if (trOpen.indexOf('open') == -1) {
+		    $.ajax({
+				type : 'GET',
+				contentType : 'application/json',
+				url : /*[[@{/getUserElectronicFormNetWorkData}]]*/,
+				data : {policyNo : str},
+				success : function(response) {
+					$('#td_'+str).html(response);
+					$('#'+str).addClass('open');
+				},
+				error :function() {
+						// alertMsg("更新失敗!");
+					}
+			});
+	    }else{
+			$('#'+str).removeClass('open');
+		}
+	};
+	function showSelectMsg(message,obj){
+		$('.select-modal-container-locked-messsage').text(message);
+		$('#select-modal-container-locked').modal({
+			show: true,
+			backdrop: 'static',
+			keyboard: false
+			});
+	}
+	
+	function showMsg(message,obj){
+		document.getElementById("errorMessage").innerHTML = message
+		$('#modal-container-locked').modal({
+			show: true,
+			backdrop: 'static',
+			keyboard: false
+			});
+	}
+	
+	function buttonClose(){
+		$('#modal-container-locked').css({'pointer-events':'inherit'});
+	}
+
+	/*]]>*/
+	</script>
+</body>
+</html>

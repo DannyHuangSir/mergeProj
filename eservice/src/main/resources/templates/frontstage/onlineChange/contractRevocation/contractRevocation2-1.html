@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:replace="fragments/head"/>
+	<title>變更繳別｜臺銀人壽保單網路服務</title>
+</head>
+<style>
+.progress{
+display:none;
+}
+
+.otherReasonCss{
+width : 100%;
+}
+</style>
+<body>
+	<div th:replace="fragments/header :: top"></div>
+	<header th:replace="fragments/header :: header"></header>
+	<th:block th:if="${showUserDataInfo}">
+		<div th:replace="fragments/header :: alert_mobile"></div>
+		<div th:replace="fragments/header :: alert_container"></div>
+		<div th:replace="fragments/header :: compensation_processing"></div>
+		<div th:replace="fragments/header :: compensation_incomplete"></div>
+		<div th:replace="fragments/header :: application_processing"></div>
+		<div th:replace="fragments/header :: application_complete"></div>
+		<div th:replace="fragments/header :: compensation_complete"></div>
+		<div th:replace="fragments/header :: payment_notification"></div>
+		<div th:replace="fragments/header :: payonline_template"></div>
+	</th:block>
+	<!--major 3 tabs-->
+	<div th:replace="fragments/header :: majorTabs (funId='apply1')"></div>
+	<section class="grey applyInner fullContent">
+		<div class="container bg3">
+			<ul class="breadcrumb detail1">
+				<li>
+					<a href="apply1">線上申請</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="contractRevocation1">契約撤銷</a> <i class="fa fa-angle-right fa-lg ble"></i>
+				</li>
+				<li class="active">
+					<a href="javascript:">契約撤銷資料填寫</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container bg3 box-border">
+			<div class="tb3 top0 nopd">
+				<i class="fas fa-edit"></i>契約撤銷-填寫撤銷資料
+			</div>
+			<div class="">
+				<ul class="step">
+					<li class="step1 col-xs-4">
+						1<span class="hid1">. 選擇保單</span>
+					</li>
+					<li class="step2 active col-xs-4">
+						2<span class="hid1">. 填寫撤銷資料</span>
+					</li>
+					<li class="step3 col-xs-4">
+						3<span class="hid1">. 確認資料</span>
+					</li>
+				</ul>
+			</div>
+			<div class="mystyle3">
+				<div class="col-md-8 col-md-offset-2">
+					 <div class="col-md-12">
+					 	<div class="col-md-6">
+						 	<div class="col-sm-4" >保單號碼：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVos.lipmInsuNo}" />
+							</div>
+					 	</div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6">
+							<div class="col-sm-4" >保單名稱：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVos.settChName}" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="col-md-6">
+							<div class="col-sm-4" >要保人姓名：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVos.lipmName}" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-sm-4" >繳款人姓名：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVos.lipmName}" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="col-md-6">
+							<div class="col-sm-4" >被保人姓名：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVos.lipiName}" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-sm-4" >退費幣別：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVos.prodCurrency}" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="col-md-6">
+							<div class="col-sm-4" >保單生效日：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVos.lipmInsuBegDate}" />
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="col-sm-4" >退費金額：</div>
+							<div class="col-sm-8">
+								<th:block th:text="${contractRevocationVos.prpaActAmt}" />
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="col-md-8 col-md-offset-2">
+				<section id="tab_frame_print1" class="tab-frame">
+				<div class="grey2">
+					<div class="check-title depo2">需變更帳戶</div>
+					<div class="check-list2 grey2">
+						<label  class="col-sm-2">SwiftCode</label>
+						<div class="col-sm-8" th:unless = "${contractRevocationVos.prodCurrency eq 'NTD'}">
+							<input placeholder="臺幣保單不需輸入" id="swiftCode" type="text" class="col-sm-6" maxlength="16">
+						</div>
+					</div>
+					<div class="check-list2 grey2">
+						<label  class="col-sm-2">英文戶名</label>
+						<div class="col-sm-8" th:unless = "${contractRevocationVos.prodCurrency eq 'NTD'}">
+							<input placeholder="臺幣保單不需輸入" id="englishName" type="text" class="col-sm-6" maxlength="60">
+						</div>
+					</div>
+					<div class="check-list2 grey2">
+						<label  class="col-sm-2">帳戶名稱</label>
+						<div class="col-sm-8 ">
+							<th:block id ="neacName" th:text="${contractRevocationVos.oldNeacName}"/>
+						</div>
+					</div>
+					<div class="check-list2 grey2">
+						<label class="col-sm-2">銀行名稱</label>
+						<div class="col-sm-4">
+							<div>
+								<select class="wht" id="bankOpt" name="bankOpt" data-placeholder="選擇銀行" >
+									<option value=""></option>									
+								</select>
+								<input type="hidden" id="bankCode" name="bankCode"/>
+								<input type="hidden" id="bankName" name="bankName"/>									
+							</div>
+						</div>
+						<label class="col-sm-2">分行名稱</label> 
+						<div class="col-sm-4">
+							<div>
+								<select class="selector wht" id="brancheOpt" name="brancheOpt" data-placeholder="選擇分行">
+									<option value=""></option>
+								</select>
+								<input type="hidden" id="branchCode" name="branchCode"/>
+								<input type="hidden" id="branchName" name="branchName"/>
+							</div>
+						</div>
+					</div>
+					<div class="check-list2 grey2">
+						<label  class="col-sm-2">帳號</label>
+						<div class="col-sm-8 ">
+							<input id="account" type="text" class="col-sm-6" maxlength="16">
+						</div>
+					</div> 
+				</div>
+				<p class="text-ps">帳戶名稱由系統帶出，且無法更改。</p>	
+				</section>
+			</div>
+			<div class="change1">
+					<div class="col-sm-12">
+						<label>契撤原因：</label>
+					</div>
+					<div class="col-sm-3">
+						<i>
+							<div id="needsDiv" class="check-box">
+								<i>
+									<input type="checkbox" id="needsFlag" value="0" />
+								</i>
+							</div>
+						</i>
+						<span style="cursor: pointer;">保單規劃不符需求</span>
+					</div>
+					<div class="col-sm-2">
+						<i>
+						<div id="economyDiv" class="check-box">
+							<i>
+								<input type="checkbox" id="economyFlag" value="0"/>
+							</i>
+						</div>							
+						</i>
+						<span style="cursor: pointer;">經濟因素</span>
+					</div>
+					<div class="col-sm-2">
+						<i>
+						<div id="familyDiv" class="check-box">
+							<i>
+								<input type="checkbox" id="familyFlag" value="0" />
+							</i>
+						</div>							
+						</i>
+						<span style="cursor: pointer;">家人反對</span>
+					</div>
+					<div class="col-sm-3">
+						<i>
+							<div id="cognitionDiv" class="check-box">
+								<i>
+									<input type="checkbox" id="cognitionFlag" value="0"/>
+								</i>
+							</div>
+						</i>
+						<span style="cursor: pointer;">對商品認知有誤</span>
+					</div>
+					<div class="col-sm-2">
+						<i>
+							<div id="otherDiv" class="check-box">
+								<i>
+									<input type="checkbox" id="otherFlag" value="0" />
+								</i>
+							</div>
+						</i>
+						<span  style="cursor: pointer;">其他</span>
+					</div>
+				</div>
+				<div class="change1" id="otherReasonDiv" style="display:none;">
+					<div class="col-sm-12">
+						<label>請補充說明其他契撤原因</label>
+					</div>
+					<div class="col-sm-12">
+						<textarea id="otherReason" class="otherReasonCss" style="resize: none" rows="4" ></textarea>
+					</div>
+				</div>
+				<div class="change1">
+					<div class="col-sm-12">
+						<label>上傳證明文件(非必填)</label>
+					</div>
+					<div class="mobile-toggle-panel toggle-hide">
+						<div></div>
+						<div class="form-group">
+							<div class="col-sm-6">
+								<input class="uploadfile" id="image1" name="files" type="file"
+									multiple>
+							</div>
+							<div class="col-sm-6">
+								<input class="uploadfile" id="image2" name="files" type="file"
+									multiple>
+							</div>							
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8 col-md-offset-2">
+					<div class="marginTop25"></div>
+					<div class="col-md-12 two-buttons">
+					<a href="contractRevocation1">
+						<button type="button" id="deny" class="btn-signup">上一步</button>
+					</a>
+						<button type="button" id="go" class="btn-signup">下一步</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer th:replace="fragments/footer"></footer>
+	<th:block th:replace="fragments/script"/>
+	<script th:src="@{/plugin/jquery.base64.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var formData = [[${contractRevocationVos}]];
+		
+		$("#image1").fileinput({
+					language: "zh",
+					showUpload : false, //是否顯示上傳按鈕
+					showRemove : false, //是否顯示移除按鈕
+					uploadAsync: true,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+					showCaption: false,//是否顯示文件標題
+					showPreview: true,//是否顯示預覽
+					dropZoneEnabled: true,//是否显示拖拽区域
+					browseClass: "btn btn-primary btn-lg",
+					uploadUrl: "/eservice/upLoadContractRevocationFiles", //上線時需改 /eservice/upLoadContractRevocationFiles
+					maxFileSize : 10240,
+					maxFileCount: 1,
+					enctype: 'multipart/form-data',
+					allowedFileExtensions : ["jpg", "png"], //接收的文件格式
+					showBrowse: false, //是否顯示瀏覽按鈕
+					fileType:"any",
+					browseOnZoneClick: true, //是否在典籍預覽時觸發文件瀏覽
+					dropZoneTitle: "正面",
+					dropZoneClickTitle: "<BR>上傳附件(非必填)",
+					autoReplace: true,
+					validateInitialCount: true,
+				}).on("filebatchselected", function(event, files) {										
+					$(this).fileinput("upload");
+				}).on('filebatchuploaderror', function(event, data) {
+					openAlert("上傳有誤，請重新上傳！");
+				}).on("filebatchuploadsuccess", function (event, data, previewId, index ) {
+							var  fileData = data.response;
+							formData.image1 = fileData.fileBase64;			
+				}).on("fileuploaded" , function(event ,data, previewId ,index ){
+							var  fileData = data.response;
+							console.log(fileData);
+							formData.image1 = fileData.fileBase64;
+				});	
+
+		$("#image2").fileinput({
+					language: "zh",
+					showUpload : false, //是否顯示上傳按鈕
+					showRemove : false, //是否顯示移除按鈕
+					uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+					showCaption: false,//是否顯示文件標題
+					showPreview: true,//是否顯示預覽
+					dropZoneEnabled: true,//是否显示拖拽区域
+					browseClass: "btn btn-primary btn-lg",
+					uploadUrl: "/eservice/upLoadContractRevocationFiles", //上傳位子 => 上線時需改 /eservice/upLoadContractRevocationFiles
+					maxFileSize : 10240,
+					maxFileCount: 1,
+					enctype: 'multipart/form-data',
+					allowedFileExtensions : ["jpg", "png"], //接收的文件格式
+					showBrowse: false, //是否顯示瀏覽按鈕
+					fileType:"any",
+					browseOnZoneClick: true, //是否在點擊預覽時觸發文件瀏覽
+					dropZoneTitle: "背面",
+					dropZoneClickTitle: "<BR>上傳附件(非必填)",
+					autoReplace: true,
+					validateInitialCount: true,
+				}).on("filebatchselected", function(event, files) {	
+						$(this).fileinput("upload");
+				}).on('filebatchuploaderror', function(event, data) {
+					openAlert("上傳有誤，請重新上傳！");
+				}).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+							var  fileData = data.response;
+							formData.image2 = fileData.fileBase64;
+				}).on("fileuploaded" , function(event ,data){
+							var  fileData = data.response;
+							formData.image2 = fileData.fileBase64;		
+				});	
+		
+		$(function() {			
+			$('#go').click(function() {									
+					//銀行檢核				
+					if ($('#account').val() == '') {
+						openAlert($('#E0079').val());
+						return false;
+					}
+					if (!/^\d+$/.test($('#account').val())) {
+							openAlert($('#E0053').val());
+							return false;
+					}
+					if ($('#bankCode').val() == '') {
+						openAlert($('#E0050').val());
+						return false;
+					}
+					if ($('#branchCode').val() == '') {
+						openAlert($('#E0051').val());
+						return false;
+					}
+					//				
+				formData.swiftCode = $('#swiftCode').val();
+				formData.englishName = $('#englishName').val();
+				formData.neacName = [[${contractRevocationVos.oldNeacName}]];
+				formData.account = $('#account').val();
+				formData.bankName = $('#bankName').val();
+				formData.bankCode = $('#bankCode').val();
+				formData.branchName = $('#branchName').val();
+				formData.branchCode = $('#branchCode').val();
+								
+				//檢核契徹原因
+				if($('#needsFlag').val() == '0' &&  $('#economyFlag').val() == '0' &&
+				   $('#familyFlag').val() == '0' && $('#cognitionFlag').val() == '0' &&
+				   $('#otherFlag').val() == '0'){
+				   		openAlert('契撤原因必須至少選一個');
+						return false;
+				   };				
+				 if($('#otherFlag').val() == '1'){
+				 	var otherReason = $('#otherReason').val();
+				 	if(otherReason == null || otherReason == ''){
+				 		openAlert('契撤原因其他，需填寫原因');
+						return false;
+				 	}else{
+				 		var rum = 255 -$('#otherReason').val().length;
+				 		console.log(rum);
+				 		if(rum < 0){
+				 			openAlert('其他契撤原因不得超過 255字');
+							return false;
+				 		}
+				 	}
+				 }
+				 
+				formData.needsFlag = $('#needsFlag').val();
+				formData.economyFlag = $('#economyFlag').val();
+				formData.familyFlag = $('#familyFlag').val();
+				formData.cognitionFlag = $('#cognitionFlag').val();
+				formData.otherFlag = $('#otherFlag').val();
+				formData.changeAccFlag = $('#changeAccFlag').val();
+				formData.otherReason = $('#otherReason').val();
+				postWithFormData(/*[[@{/contractRevocation3}]]*/, formData);
+			});	
+			
+			//銀行下拉選單
+			var bankUrl = /*[[@{/getBankList}]]*/;
+			var branchesUrl = /*[[@{/getBranchesList}]]*/;			
+			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+
+			//刷新下拉選單
+			$("#bankOpt").chosen({
+				allow_single_deselect:true,
+				search_contains: true
+			});
+			$("#brancheOpt").chosen({
+				allow_single_deselect:true,
+				search_contains: true
+			});
+			
+			// 點選checkbox 變更value
+			$('div.check-box').click(function() {
+				if ($(this).hasClass('checkedBox')) {
+					$(this).find('input[type=checkbox]').val('1');
+				} else {
+					$(this).find('input[type=checkbox]').val('0');
+				}
+			});
+			
+			$("#otherDiv").click(function(){
+				var otherFlag = $("#otherFlag").val();				
+				if(otherFlag == 1){
+					$('#otherReasonDiv').show();
+				}else{
+					$('#otherReason').val("");
+					$('#otherReasonDiv').hide();
+				}								
+			});
+			
+			// 取得名稱
+			$('#bankOpt').change(function() {
+				$('#bankCode').val($('#bankOpt option:selected').val());
+				$('#bankName').val($('#bankOpt option:selected').html());
+			});
+			$('#brancheOpt').change(function() {
+				if ($('#brancheOpt').val() != '') {
+					$('#branchCode').val($('#brancheOpt option:selected').val());
+					$('#branchName').val($('#brancheOpt option:selected').html());
+				} else {
+					$('#branchCode').val('');
+					$('#branchName').val('');
+				}
+			});	
+		});	
+	/*]]>*/
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragments/head" />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/smoothness/jquery-ui-1.10.4.custom.min.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/ui.jqgrid.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/menu.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/scholarship_style.css' />
+<link rel='stylesheet' type='text/css' href='https://elife.twfhclife.com.tw/invweb/resources/css/calendar.css' />
+<style>
+html, body {
+	background: #ffffff;
+	font-size: 17px;
+}
+
+td, th {
+	padding: 0px;
+	font-size: 17px;
+	font-weight: bold;
+	line-height: 150%;
+}
+
+input, select {
+	font-size: 17px;
+}
+
+form>.form-group>label {
+	font-size: 17px;
+}
+
+.chMiddle {
+	font-size: 17px;
+}
+
+.form-control {
+	font-size: 17px;
+}
+
+.enSmall {
+	font-size: 17px;
+}
+
+button {
+	font-size: 17px;
+}
+
+.ui-datepicker {
+	width: 310px;
+}
+.title{
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	font-weight: bold;
+	font-size: 22px;
+}
+
+input[type=checkbox] {
+	border: 1px solid #999!important;
+}
+
+/*第一欄第一列：左上*/
+tr:first-child td:first-child{
+  border-top-left-radius: 10px;
+}
+/*第一欄最後列：左下*/
+tr:last-child td:first-child{
+  border-bottom-left-radius: 10px;
+}
+/*最後欄第一列：右上*/
+tr:first-child td:last-child{
+  border-top-right-radius: 10px;
+}
+/*最後欄第一列：右下*/
+tr:last-child td:last-child{
+  border-bottom-right-radius: 10px;
+}
+</style>
+<title>臺銀人壽-投資型保險商品要保人風險屬性評估問卷(購買非結構型商品適用)</title>
+<script>
+	if (window.name != "noReload") {
+		window.name = "noReload";
+		location.reload();
+	} else {
+		window.name = "";
+	}
+</script>
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<center>
+		<table border="0" cellpadding="0" cellspacing="0">
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="left"><img src='img/my-logo-s.png' height="86" style="border-bottom-right-radius: 10px;"></td>
+			</tr>
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="left" style="font-weight: bold;"><h3>&nbsp;臺銀人壽-投資型保險商品要保人風險屬性評估問卷</h3></td>
+			</tr>
+			<form id="indivdualChoose0" method="post" th:action="@{/indivdualChoose0}" th:object="${individualChooseVo}">
+			<tr valign="top">
+				<td bgcolor="#40e0d0" >&nbsp;</td>
+				<td class="survey_content">
+					<!-- ------------------CONTENT START------------------ -->
+					<table width="95%" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tbody>
+							<tr>
+								<td class="text">
+									<div class="mystyle3">
+										<div class="col-md-12"></div>
+										<div class="mystyle3">
+											<div class="col-md-12 mobile-panel">
+												<div class="cert1" style="margin-bottom: 0px; font-weight: bold;">
+							                        <h2>請閱讀並同意以下條款</h2>
+							                    </div>
+							                    <div id="indivdualChooseTerm" style="height:520px; overflow-x:hidden; overflow-y:auto; border: 1px; border-style: groove;">								                       	 
+													<div class="title">
+														<P>臺銀人壽個人資料蒐集、處理、利用告知事項</P>														
+													</div>
+													<br>
+													<P>臺銀人壽保險股份有限公司(下稱本公司)依據個人資料保護法（以下稱個資法）第六條第二項、第八條第一項(如為間接蒐集之個人資料則為第九條第一項)規定，向 台端告知下列事項，請 台端詳閱：</P>
+													<P>一、蒐集之目的：</P>
+													<P>&nbsp;&nbsp;&nbsp;(一) 人身保險(００一) 。</P>
+													<P>&nbsp;&nbsp;&nbsp;(二) 其他經營合於營業登記項目或組織章程所定之業務(一八一) 。</P>
+													<P>二、蒐集之個人資料類別：</P>
+													<P>&nbsp;&nbsp;&nbsp;(一) 姓名。</P>
+													<P>&nbsp;&nbsp;&nbsp;(二) 出生年月日及身分證統一編號。</P>
+													<P>&nbsp;&nbsp;&nbsp;(三) 地址及電話等聯絡方式。</P>
+													<P>&nbsp;&nbsp;&nbsp;(四) 病歷、醫療、健康檢查。</P>
+													<P>&nbsp;&nbsp;&nbsp;(五) 其他詳如要保書等相關業務申請文件內容。</P>
+													<P>三、個人資料之來源（個人資料非由當事人提供間接蒐集之情形適用）：</P>
+													<P>&nbsp;&nbsp;&nbsp;(一) 要保人。</P>
+													<P>&nbsp;&nbsp;&nbsp;(二) 當事人之法定代理人、輔助人。</P>
+													<P>&nbsp;&nbsp;&nbsp;(三) 各醫療院所。</P>
+													<P>&nbsp;&nbsp;&nbsp;(四) 與第三人共同行銷、交互運用客戶資料、合作推廣等關係、或於本公司各項業務內所委託往來之第三人。</P>
+													<P>四、個人資料利用之期間、對象、地區、方式：</P>
+													<P>&nbsp;&nbsp;&nbsp;(一) 期間：因執行業務所必須及依法令規定應為保存之期間。</P>
+													<P>&nbsp;&nbsp;&nbsp;(二) 對象：本(分)公司及本公司海外分支機構、中華民國人壽保險商業同業公會、中華民國產物保險商業同業公會、財團法人保險事業發展中心、財團法人保險安定基金、財團法人金融消費評議中心、財團法人金融聯合徵信中心、財團法人聯合信用卡中心、台灣票據交換所、財金資訊公司、業務委外機構、合作推廣台端保險契約之保險代理人/保險經紀人、與本公司有再保業務往來之公司、依法有調查權機關或金融監理機關。</P>
+													<P>&nbsp;&nbsp;&nbsp;(三) 地區：上述對象所在之地區。</P>
+													<P>&nbsp;&nbsp;&nbsp;(四) 方式：合於法令規定之利用方式。</P>
+													<P>五、依據個資法第三條規定，台端就本公司保有 台端之個人資料得行使之權利及方式：</P>
+													<P>&nbsp;&nbsp;&nbsp;(一) 得向本公司行使之權利：</P>
+													<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.向本公司查詢、請求閱覽或請求製給複製本。</P>
+													<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.向本公司請求補充或更正。</P>
+													<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.向本公司請求停止蒐集、處理或利用及請求刪除。</P>
+													<P>&nbsp;&nbsp;&nbsp;(二) 行使權利之方式：以書面、電子郵件、傳真、電子文件。</P>
+													<P>六、台端不提供個人資料所致權益之影響（個人資料由當事人直接蒐集之情形適用）：</P>
+													<P>&nbsp;&nbsp;&nbsp;台端若未能提供相關個人資料時，本公司將可能延後或無法進行必要之審核及處理作業，因此可能婉謝承保、遲延或無法提供 台端相關服務或給付。</P>
+							                    </div>
+							                </div>
+							                <div class="col-md-12" style="margin-top: 10px">
+							                	<div class="col-md-2"></div>
+							                	<div class="col-md-8">
+													<p class="text-ps" id="remark"></p>
+													<div>
+														<label for="readPdfCheck">
+														<p>
+															<input style="float: left;" type="checkbox" id="readPdfCheck"  />
+																已詳細閱讀個人資料蒐集、處理、利用告知事項
+														</p>
+														</label>
+													</div>
+												</div>
+							                </div>											
+											<div class="col-md-12 two-buttons">
+												<a href="http://www.twfhclife.com.tw">
+													<button id="deny" class="btn-signup" style="margin-bottom: 30px">不同意</button>
+												</a>
+												<a class="gorest">
+													<button id="go" class="btn-signup" style="margin-bottom: 30px; display: none">同意</button>
+												</a>
+											</div>
+										</div>
+									</div>
+									<div>
+										<input id="readPdfType"  type="hidden"  th:field="*{readPdfType}">
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td bgcolor="#40e0d0" >&nbsp;</td>
+			</tr>
+			</form>
+			<tr valign="top" bgcolor="#40e0d0" >
+				<td colspan="4" align="center" style="font-weight: 500;	font-size: 14px;">臺銀人壽保險股份有限公司 BankTaiwan Life Insurance Co. Ltd. 客服專線 0800-011-966<br>
+				Copyright R 2015. All Rights Reserved.
+				</td>
+			</tr>
+		</table>
+	</center>
+	<div class="modal fade in" id="ipShowPupStatus" role="dialog" aria-labelledby="myModalLabelIC" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body apply2 center1 grey2">
+					<button type="button" class="close" aria-label="Close"><span aria-hidden="true"></span></button>
+						<p style="color : red; font-size: 16px">
+							<span th:text="${ipStatus}"></span>
+						</p>
+						<a href="http://www.twfhclife.com.tw">
+							<button class="btn-login" id="ipShowPupStatusBt" aria-label="Close">確定</button>			
+						</a>						
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="loading-modal"></div>
+	<th:block th:replace="fragments/script" />
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		var ipStatus = [[${ipStatus}]];
+		if(ipStatus != '' && ipStatus != null){
+			$('#ipShowPupStatus').show();
+		}
+		
+		$('#readPdfCheck').click(function(){
+			if (!$("#readPdfCheck").is(":checked")) {
+					$('#go').hide();
+				}else{
+					$('#go').show();
+				}
+		})
+		
+		$('#go').click(function() {
+			if (!$("#readPdfCheck").is(":checked")) {
+					openAlert('請詳細閱讀本文件內容後進行勾選')
+					return
+			}
+			$('#readPdfType').val(true);
+			form.submit();
+		});	
+	});
+	
+	/*]]>*/
+	</script>
+</body>
+</html>
