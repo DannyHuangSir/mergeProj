@@ -205,7 +205,7 @@ public class OptionController extends BaseController {
 	@PostMapping("/common/deptList")
 	public ResponseEntity<ResponseObj> deptList() {
 		try {
-			com.twfhclife.keycloak.model.KeycloakUser kuser = getLoginUser();
+			KeycloakUser kuser = getLoginUser();
 			String username = kuser.getUsername();
 			String keyCloakUserId = kuser.getId();//此處查詢應使用id
 			processSuccess(deptMgntService.getDeptList(keyCloakUserId, username));
