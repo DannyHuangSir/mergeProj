@@ -201,6 +201,20 @@ public class BatchUploadEZService {
 				formId = "E3000401";
 			}else if("C".equals(vo.getType())) {
 				formId = "E3000501";
+			} if("D".equals(vo.getType())) {
+				formId = "E3000601";
+			} if("E".equals(vo.getType())) {
+				formId = "E3000701";
+			} if("F".equals(vo.getType())) {
+				formId = "E3000801";
+			} if("G".equals(vo.getType())) {
+				formId = "E3000901";
+			} if("H".equals(vo.getType())) {
+				formId = "E3001001";
+			} if("I".equals(vo.getType())) {
+				formId = "E3001101";
+			} if("Z".equals(vo.getType())) {
+				formId = "E3001101";
 			}
 			indexDataVo.setFormId(formId);
 
