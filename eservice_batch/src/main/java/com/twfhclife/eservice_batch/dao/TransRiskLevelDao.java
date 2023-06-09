@@ -1,6 +1,7 @@
 package com.twfhclife.eservice_batch.dao;
 
 import com.twfhclife.eservice_batch.mapper.TransRiskLevelMapper;
+import com.twfhclife.eservice_batch.model.IndividualChooseVo;
 import com.twfhclife.eservice_batch.model.TransRiskLevelVo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,5 +61,17 @@ public class TransRiskLevelDao extends BaseDao {
 			this.release();
 		}
 		return null;
+    }
+    
+    public IndividualChooseVo getIndividualChooseByRocId(String rocId){
+    	try {
+			TransRiskLevelMapper transRiskLevelMapper = this.getSqlSession().getMapper(TransRiskLevelMapper.class);
+			return transRiskLevelMapper.getIndividualChooseByRocId(rocId);
+		} catch (Exception e) {
+			logger.error("getIndividualChooseByRocId error:", e);
+		} finally {
+			this.release();
+		}
+		return null;    	
     }
 }

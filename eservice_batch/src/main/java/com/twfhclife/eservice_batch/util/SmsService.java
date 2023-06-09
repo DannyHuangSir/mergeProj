@@ -6,6 +6,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,14 +61,14 @@ public class SmsService {
 		String endpoint = parameterDao.getParameterValueByCode(null, "SMS_ENDPOINT");
 		String user = parameterDao.getParameterValueByCode(null, "SMS_USER");
 		String pass = parameterDao.getParameterValueByCode(null, "SMS_PASS");
-		
+
 		String requestXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 				+ "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-				+ "  <soap:Body>" + "    <SendSMSwithUserData xmlns=\"http://tempuri.org/\">"
-				+ "      <Mobile>_Mobile_</Mobile>" + "      <Content>_Content_</Content>" + "      <user>_user_</user>"
-				+ "      <pass>_pass_</pass>" + "      <stoptime></stoptime>" + "      <isLong>false</isLong>"
-				+ "      <Data1></Data1>" + "      <Data2></Data2>" + "      <Data3></Data3>" + "      <Data4></Data4>"
-				+ "    </SendSMSwithUserData>" + "  </soap:Body>" + "</soap:Envelope>";
+				+ "<soap:Body><SendSMSwithUserData xmlns=\"http://tempuri.org/\">"
+				+ "<DstAddr>_Mobile_</DstAddr><text>_Content_</text><user>_user_</user>"
+				+ "<pass>_pass_</pass><stoptime></stoptime><isLong>0</isLong>"
+				+ "<Data1></Data1><Data2></Data2><Data3></Data3><Data4></Data4>"
+				+ "</SendSMSwithUserData></soap:Body></soap:Envelope>";
 
 		logger.debug("SMS_ENDPOINT=" + endpoint + ", SMS_USER=" + user + ", SMS_PASS=" + pass);
 		// 編碼
@@ -75,8 +76,6 @@ public class SmsService {
 		PostMethod post = null;
 		try {
 			encodedPass = encoder.encodeToString(pass.getBytes("UTF-8"));
-			user = "user";
-			encodedPass = "pass";
 			requestXML = requestXML.replaceAll("_Mobile_", mobile).replaceAll("_Content_", content)
 					.replaceAll("_user_", user).replaceAll("_pass_", encodedPass);
 			logger.debug("send sms requestXML:" + requestXML);

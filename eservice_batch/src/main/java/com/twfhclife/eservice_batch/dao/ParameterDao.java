@@ -48,11 +48,11 @@ public class ParameterDao extends BaseDao {
 			ParameterMapper mapper = this.getSqlSession().getMapper(ParameterMapper.class);
 			ParameterVo parameter = mapper.getParameterValueByCode(systemId, parameterCode);
 			if(parameter != null) {
-				if("Y".equals(parameter.getEncryptType())) {
-					parameterValue = EncryptionUtil.Decrypt(parameter.getParameterValue());
-				} else {
+//				if("Y".equals(parameter.getEncryptType())) {
+//					parameterValue = EncryptionUtil.Decrypt(parameter.getParameterValue());
+//				} else {
 					parameterValue = parameter.getParameterValue();
-				}
+//				}
 			}
 			logger.debug("getParameterValueByCode systemId:{}, parameterCode:{}, parameterValue:{}", systemId, parameterCode, parameterValue);
 		} catch (Exception e) {

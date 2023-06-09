@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,9 +71,9 @@ public class TransRiskLevelUtil {
                                         StringUtil.rpadBlank(transNum, 12),
                                         StringUtil.rpadBlank(policyNo, 10),
                                         systemTwDate,
-                                        systemTwDate,
-                                StringUtil.rpadBlank(vo.getRiskLevelNew(), 1),
-                                score,
+                                        getTwDate(vo.getTransNum().substring(0,8)) ,
+                                        StringUtil.rpadBlank(vo.getRiskLevelNew(), 1),
+                                        score,
                                         StringUtil.rpadBlank(vo.getRocId(), 10)
                                 );
                                 logger.info(line);
@@ -86,4 +87,9 @@ public class TransRiskLevelUtil {
             return Collections.emptyList();
         }
     }
+    
+	private String getTwDate(String date) {
+		String twYear = Integer.parseInt(date.substring(0, 4)) - 1911 + "";
+		return StringUtils.rightPad(twYear, 3, "0") + date.substring(4, 8);
+	}
 }

@@ -13,4 +13,11 @@ public interface TransPaymodeMapper {
 	public List<TransPaymodeVo> getTransPaymodeList(@Param("transPaymodeVo") TransPaymodeVo transPaymodeVo);
 	
 	public TransPaymodeVo getActiveDate(@Param("policyNo") String policyNo);
+	
+	public TransPaymodeVo getActiveDateByPolicyNo(@Param("policyNo") String policyNo);
+	
+	public String checkDateStatus(@Param("date") String date);
+	
+	public TransPaymodeVo getActiveDateByMonthEnd(@Param("policyNo") String policyNo);
+		
 }

@@ -44,7 +44,7 @@ public class IMessagingTemplateServiceImpl implements  IMessagingTemplateService
             String content = template.getMessagingContent();
             logger.info("content="+content);
             //replace ${NOW}-start
-            Map<String, String> valuesMap = new java.util.HashMap<String, String>();
+            Map<String, String> valuesMap = new HashMap<String, String>();
             valuesMap.put("NOW", getNowString());//replace ${NOW}
             StringSubstitutor sub = new StringSubstitutor(valuesMap);
             content = sub.replace(content);

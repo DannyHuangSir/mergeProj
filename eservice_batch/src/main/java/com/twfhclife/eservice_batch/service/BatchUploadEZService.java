@@ -93,7 +93,17 @@ public class BatchUploadEZService {
 		indexDataVo.setScanTypeId(EZ_INDEXDATA_SCAN_TYPE_ID);
 		indexDataVo.setBranch(EZ_INDEXDATA_BRANCH);
 		indexDataVo.setBusinessType(TransTypeUtil.getEZBusinessType(infoVo.getTransType()));
-		indexDataVo.setFormId(file.getName().toLowerCase().indexOf("endorsement") != -1 ? EZ_INDEXDATA_FORM_ID_ENDORSEMENT : EZ_INDEXDATA_FORM_ID_CHANGEINFO);
+		
+		//20221123 契撤申請結果使用 B1200301 保單網路服務變更相關文件
+		String setFormId = EZ_INDEXDATA_FORM_ID_CHANGEINFO;
+		if (file.getName().toLowerCase().indexOf("endorsement") != -1) {
+			setFormId = EZ_INDEXDATA_FORM_ID_ENDORSEMENT;
+		}
+		else if (file.getName().indexOf("contractRevocationNotice") != -1) {
+			setFormId = "B1200301";
+		}
+		indexDataVo.setFormId(setFormId);
+																	
 		indexDataVo.setInsurantId(infoVo.getLipiId());
 		indexDataVo.setPolicyNumber(infoVo.getPolicyNo());
 		indexDataVo.setApplicantId(infoVo.getLipmId());

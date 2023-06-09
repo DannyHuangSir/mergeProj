@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.Vector;
 import com.google.gson.Gson;
 import com.twfhclife.eservice_batch.dao.*;
 import com.twfhclife.eservice_batch.model.*;
+import com.twfhclife.eservice_batch.mapper.TransMapper;
 import com.twfhclife.eservice_batch.service.onlineChange.TransRiskLevelUtil;
 import com.twfhclife.eservice_batch.util.*;
 import org.apache.commons.io.FileUtils;
@@ -104,7 +106,7 @@ public class BatchDownloadService {
 			logger.info("3. There's no file retrieved ENDORSEMENT_RSP today !!! end job");
 		}
 	}
-	
+		
 	/**
 	 * 下載檔案.
 	 */
@@ -237,8 +239,10 @@ public class BatchDownloadService {
 			for (String line : applyLines) {
 				String transCode = line.substring(0, 3);
 				String transNum = line.substring(3, 15);
-				//获取保單號碼(10)
+				//保單號碼(10)
 				String insuranceNum = line.substring(15, 25);
+				//收文日(7)
+				String transDate = line.substring(25, 32);
 
 				logger.info("======================================================");
 				// 介接代碼(3),申請序號(12),保單號碼(10),收文日(7),處理結果(1),備註(100)
@@ -338,7 +342,11 @@ public class BatchDownloadService {
 							}
 						}
 					}
-
+					
+//					if("036".equals(transCode)) {
+//						resultElectronicFormSendMail(transNum);			
+//						logger.info("***end to send mail to Electronic Form***");
+//					}
 
 					if("012".equals(transCode)) {
 						// 保單價值列印還有後續處理
@@ -356,6 +364,133 @@ public class BatchDownloadService {
 						TransRiskLevelUtil.updateIndividual(transNum);
 					}
 
+					//20221123  契撤user確認不需要批註單
+					//if("036".equals(transCode) || "037".equals(transCode)) {
+					if("036".equals(transCode)) {
+						// 電子表單開通服務、契約撤銷, 建立異動PDF上傳到影像系統
+						logger.info("============================================================================");
+						logger.info(transCode + " Upload change PDF to image system");
+						// transNum
+						Map<String, List<TransEndorsementVo>> endorsementMap = this.saveOtherTransEndorsement(transNum, insuranceNum, transDate);
+						List<String> fileNameList = this.genTransEndorsementPDF(endorsementMap);
+					}
+					
+					//契約測蕭
+					if("037".equals(transCode)){
+						logger.info(transCode + " create TransContractRevocation PDF to image system");
+						try {
+						String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
+						String twYear = Integer.parseInt(today.substring(0, 4)) - 1911 + "";
+						String date = twYear + "/" + today.substring(4,6) + "/" + today.substring(6,8) ;
+						
+						String filePath = rb.getString("contract.revocation.file");
+						String detailName = rb.getString("contract.revocation.detail.name");
+						String noticeName = rb.getString("contract.revocation.notice.name");
+
+						filePath = filePath + transNum +File.separator;
+						File files = new  File(filePath);
+						if (!files.exists()) {
+							files.mkdir();
+						}			
+						TransContractRevocationDao transContractRevocationDao = new TransContractRevocationDao();
+						TransContractRevocationVo transContractRevocationVo = new TransContractRevocationVo();
+						transContractRevocationVo.setTransNum(transNum);
+						List<TransContractRevocationVo>  transContractRevocationList= transContractRevocationDao.getTransContractRevocation(transContractRevocationVo);
+						transContractRevocationVo = transContractRevocationList.get(0);
+						TransPolicyDao dao = new TransPolicyDao();
+						TransPolicyVo transPolicyVo = new TransPolicyVo();
+						transPolicyVo.setTransNum(transContractRevocationVo.getTransNum());
+						List<TransPolicyVo> transPolicyList = dao.getTransPolicyList(transPolicyVo);
+						transPolicyVo = transPolicyList.get(0);
+						ReportExportUtil pdf = new ReportExportUtil(detailName);
+						pdf.txt(transPolicyVo.getPolicyNo(), 12, 1, 138f, 697f); //保單號碼
+						pdf.txt(transContractRevocationVo.getLipmName(), 12, 1, 138f, 673f); //要保人
+						pdf.txt(transContractRevocationVo.getLipiName(), 12, 1, 346f, 673f); //被保險人
+						pdf.txt(transDate.substring(0, 3)+"/"+transDate.substring(3, 5)+"/"+transDate.substring(5, 7), 12, 1, 138f, 649f); //申請日期
+						pdf.txt(date, 12, 1, 346f, 649f); //結案日期
+						pdf.txt(transContractRevocationVo.getSettChName(), 12, 1, 138f, 627f); //主約險種
+						if(transContractRevocationVo.getRcpTypeCodeFlag().equals("H")) {
+							pdf.txt("■", 12, 1, 140f, 605f); //退費方式 - 信用卡
+						}else {
+							pdf.txt("■", 12, 1, 212f, 605f); //退費方式 - 匯款
+						}
+						pdf.txt(transContractRevocationVo.getNeacName(), 12, 1, 295f, 605f); //退費方式 - 戶名
+						pdf.txt(transContractRevocationVo.getProdCurrency(), 12, 1, 175f, 582f); //退費金額 - 幣別
+						pdf.txt(transContractRevocationVo.getPrpaActAmt(), 12, 1, 235f, 582f); //退費金額 - 金額
+						pdf.toPdf();
+						FileOutputStream fos = new FileOutputStream(new File(filePath + detailName));
+						IOUtils.write(pdf.getPdfBytes(), fos);
+						IOUtils.closeQuietly(fos);
+						logger.info(transCode + " create TransContractRevocation detailPDF End ");
+						logger.info(transCode + " create TransContractRevocation noticePDF Start ");
+						ReportExportUtil pdf1 = new ReportExportUtil(noticeName);
+						pdf1.txt(transPolicyVo.getPolicyNo(), 12, 1, 138f, 697f); //保單號碼
+						pdf1.txt(date, 12, 1, 346f, 697f); //通知日期
+						pdf1.txt(transContractRevocationVo.getLipmName(), 12, 1, 138f, 673f); //要保人
+						pdf1.txt(transContractRevocationVo.getLipiName(), 12, 1, 346f, 673f); //被保險人
+						pdf1.txt(transContractRevocationVo.getSettChName(), 12, 1, 138f, 649f); //主約險種
+						pdf1.txt(transContractRevocationVo.getAginInveArea(), 12, 1, 138f, 626f); //經覽單位
+						
+						pdf1.txt(transDate.substring(0, 3)+"/"+transDate.substring(3, 5)+"/"+transDate.substring(5, 7), 12, 1, 245f, 580f); //申請日期-年
+						
+						pdf1.toPdf();
+						FileOutputStream fos1 = new FileOutputStream(new File(filePath + noticeName));
+						IOUtils.write(pdf1.getPdfBytes(), fos1);
+						IOUtils.closeQuietly(fos1);	
+						logger.info(transCode + " create TransContractRevocation noticePDF End ");
+						File detaiFile = new File(filePath + detailName);
+						File noticFile = new File(filePath + noticeName);
+				    	List<File> listFile = new ArrayList<>();
+				    	//listFile.add(detaiFile);
+				    	listFile.add(noticFile);
+				    	
+						StringBuilder sb = new StringBuilder();
+						sb.append("<!DOCTYPE html><html lang=\"zh-Hant\"><head><meta charset=\"utf-8\"/></head><body>CONTENT</body></html>");
+						String content = sb.toString();
+						content = content.replace("CONTENT", MyStringUtil.nullToString(parameterDao.getParameterValueByCode(SYSTEM_ID, "CONTRACT_REVOCATION_MAIL_CONTENT")));
+						content = content.replace("TransNum", transNum);
+						content = content.replace("TransStatus",  successCode.indexOf(applyResult) != -1 ? "成功" : "失敗");
+						
+						String remark = " ";
+						if ("X".equals(applyResult)) {
+							remark = line.substring(34, 133); //100
+							content = content.replace("TransRemark", remark);
+						}else {
+							content = content.replace("TransRemark", " ");
+						}						
+
+						String subject = parameterDao.getParameterValueByCode(SYSTEM_ID, "CONTRACT_REVOCATION_MAIL_SUBJECT");
+				    	String mailTo = transContractRevocationVo.getEmail();
+				    	subject = subject.replace("TRANS_NUM", transNum);
+				    	
+				    	MailService mailService = new MailService();
+				    	logger.info("send TransContractRevocation pdf mail start...");
+				    	mailService.sendMailByTransContractRevocation(content, subject, Arrays.asList(mailTo), null, listFile);
+				    	
+//						String enviorment = rb.getString("running.enviorment");
+
+//						if (!"dev".equalsIgnoreCase(enviorment)) {
+							logger.info("============================================================================");
+							// 上傳批註單到影像系統
+							OnlineChangeInfoDao infoDao = new OnlineChangeInfoDao();
+							OnlineChangeInfoVo infoVo = infoDao.getOnlineChangeInfoByTransNum(transNum);
+							BatchUploadEZService batchUploadEZService = new BatchUploadEZService();
+							String token = batchUploadEZService.getEZToken();
+							boolean isSucc = false;
+							isSucc = batchUploadEZService.uploadFile("D" + transNum, "PDF", token, detaiFile, infoVo);
+							token = batchUploadEZService.getEZToken();
+							isSucc = batchUploadEZService.uploadFile("D" + transNum, "PDF", token, noticFile, infoVo);
+							if (isSucc) {
+								logger.info("上傳批註單到影像系統完成");
+							} else {
+								logger.info("上傳批註單到影像系統失敗, transNum: " + transNum);
+							}
+//						}
+						}catch (Exception e) {
+							logger.info("createTransContractRevocationPDF Error : TransContractRevocationTransNum = ", e);
+						}
+					}
+				
 				} else {
 					updateTransStatus(transNum, transType, "6"); // 6:失敗
 					logger.info("updateTransStatus: {}={}", "6","失敗");
@@ -419,11 +554,14 @@ public class BatchDownloadService {
 					}
 					if (userVo != null) {
 						if (StringUtils.isNotEmpty(userVo.getEmail())) {
-							List<String> receivers = new ArrayList<String>();
-							receivers.add(userVo.getEmail());
-							req.setMessagingReceivers(receivers);
-							req.setSendType(MessageTriggerRequestVo.SEND_TYPE_MAIL);
-							api.postMessageTemplateTrigger(req);
+							//契約撤銷已發送過一封信件 不須再發
+							if(!"037".equals(transCode)) {
+								List<String> receivers = new ArrayList<String>();
+								receivers.add(userVo.getEmail());
+								req.setMessagingReceivers(receivers);
+								req.setSendType(MessageTriggerRequestVo.SEND_TYPE_MAIL);
+								api.postMessageTemplateTrigger(req);
+							}
 						}
 						if (StringUtils.isNotEmpty(userVo.getMobile())) {
 							List<String> receivers = new ArrayList<String>();
@@ -466,6 +604,10 @@ public class BatchDownloadService {
 		list.add("032");
 		list.add("033");
 		list.add("034");
+		list.add("007");
+		list.add("008");
+		list.add("036");
+		list.add("037");
 		return list;
 	}
 
@@ -735,9 +877,9 @@ public class BatchDownloadService {
 	    	logger.debug("subject:" + subject);
 	    	logger.debug("content:" + content);
 	    	logger.debug("mailTo:" + mailTo);
-	    	java.io.File sendFile = new java.io.File(filename);
+	    	File sendFile = new File(filename);
 	    	FileUtils.writeByteArrayToFile(sendFile, pdfUtil.getPdfBytes());
-	    	List<java.io.File> listFile = new ArrayList<>();
+	    	List<File> listFile = new ArrayList<>();
 	    	listFile.add(sendFile);
 	    	MailService mailService = new MailService();
 	    	logger.info("send value_print pdf mail start...");
@@ -888,6 +1030,74 @@ public class BatchDownloadService {
 	}
 	
 	/**
+	 * 036、037儲存批註單內容
+	 * @param transNum
+	 * @return
+	 */
+	private Map<String, List<TransEndorsementVo>> saveOtherTransEndorsement(String transNum, String insuranceNum, String transDate) {
+		Map<String, List<TransEndorsementVo>> endorsementMap = null;
+		try {
+			
+			TransVo transVo = new TransVo();
+			transVo.setTransNum(transNum);
+			TransDao transDao = new TransDao();
+			transVo = transDao.findById(transVo);
+			String transType = transVo.getTransType(); // ELECTRONIC_FORM_A, ELECTRONIC_FORM_C、CONTRACT_REVOCATION
+			String content = "未開通";
+			if ("ELECTRONIC_FORM_A".equals(transType)) {
+				content = "開通";
+			}else if("CONTRACT_REVOCATION".equals(transType)) {
+				content = "成功";
+			}
+			
+			String line = "";
+			List<TransEndorsementVo> list = null;
+			
+			endorsementMap = new HashMap<String, List<TransEndorsementVo>>();
+			List<TransEndorsementVo> textList = null;
+
+			logger.info("\n");
+			logger.info("======================================================");
+			textList = new ArrayList<TransEndorsementVo>();
+			
+			line = " 保單號碼  "+insuranceNum;
+			list = this.convertText(transNum, line, 1);
+			textList.addAll(list);
+
+			line = " 茲經通知並經雙方同意本保單自 "+transDate.substring(0, 3)+"年"+transDate.substring(3, 5)+"月"+transDate.substring(5, 7)+"日起變更如下";
+			list = this.convertText(transNum, line, 2);
+			textList.addAll(list);
+			
+			if("CONTRACT_REVOCATION".equals(transType)) {
+				line = " 契約撤銷      "+content;
+				list = this.convertText(transNum, line, 3);
+				textList.addAll(list);
+			}else {
+				line = " 電子表單通知服務      "+content;
+				list = this.convertText(transNum, line, 3);
+				textList.addAll(list);
+			}
+
+			line = "           其餘並無變動特此批註  "+transDate.substring(0, 3)+"年"+transDate.substring(3, 5)+"月"+transDate.substring(5, 7)+"日";
+			list = this.convertText(transNum, line, 4);
+			textList.addAll(list);
+
+			endorsementMap.put(transNum, textList);
+			logger.info("======================================================\n\n");
+			
+			TransEndorsementDao dao = new TransEndorsementDao();
+			for (String key : endorsementMap.keySet()) {
+				List<TransEndorsementVo> inslist = endorsementMap.get(key);
+				//儲存批註單內容
+				dao.insertTransEndorsement(inslist);
+			}
+		} catch (Exception e) {
+			logger.error("saveOtherTransEndorsement error:", e);
+		}
+		return endorsementMap;
+	}
+
+	/**
 	 * 產生批註單實體檔案
 	 * @param endorsementMap
 	 */
@@ -930,6 +1140,21 @@ public class BatchDownloadService {
 					logger.info("============================================================================");
 					//上傳批註單到影像系統
 					OnlineChangeInfoVo infoVo = dao.getOnlineChangeInfoByTransNum(key);
+
+					/// 20220930 by 203990
+					/// Begin: 變更風險屬性 TRANS_POLICY表 沒有記錄 policy_no 要另外取得取得一筆保單號碼及要保人ID供影像系統記錄使用
+					if ("RISK_LEVEL".equals(infoVo.getTransType())) {
+		                TransRiskLevelVo transRiskLevelVo = new TransRiskLevelVo();
+		                transRiskLevelVo.setTransNum(key);
+		                TransRiskLevelDao transRiskLevelDao = new TransRiskLevelDao();
+		                List<TransRiskLevelVo> transRiskLevelList = transRiskLevelDao.getTransLevel(transRiskLevelVo);
+		                if (transRiskLevelList != null && transRiskLevelList.size() > 0) {
+		                	infoVo.setLipmId(transRiskLevelList.get(0).getRocId());
+		                    infoVo.setPolicyNo(transRiskLevelDao.getTop1PolicyNo(transRiskLevelList.get(0).getRocId()));
+		                }
+					}
+					/// End
+
 					BatchUploadEZService batchUploadEZService = new BatchUploadEZService();
 					String token = batchUploadEZService.getEZToken();
 					boolean isSucc = batchUploadEZService.uploadFile("D" + key, "PDF", token, file, infoVo);
@@ -965,4 +1190,38 @@ public class BatchDownloadService {
 		}
 
 	}
+	
+//	public String resultElectronicFormSendMail(String transNum) {
+//		logger.info("**In resultElectronicFormSendMail**");
+//		String resultMsg = null;
+//		try {
+//			TransElectronicFormDao dao = new  TransElectronicFormDao();
+//			TransElectronicFormVo vos = new TransElectronicFormVo();
+//			vos.setTransNum(transNum);
+//			List<TransElectronicFormVo> voList = dao.getTransElectronicForm(vos);
+//
+//			//發送保戶
+//			List<String> receivers = new ArrayList<String>();
+//			
+//			for(TransElectronicFormVo formVo : voList) {
+//				receivers.add(formVo.getEmail());
+//			}
+//
+//			MessageTriggerRequestVo vo = new MessageTriggerRequestVo();
+//			vo.setMessagingTemplateCode("ELIFE_MAIL_031");
+//			vo.setSendType("email");
+//			vo.setMessagingReceivers(receivers);
+//			vo.setSystemId("eservice_batch");
+//			logger.info("MessageTriggerRequestVo:"+vo.toString());
+//			
+//			//进行发送通信
+//			IMessagingTemplateServiceImpl iMessagingTemplateService = new IMessagingTemplateServiceImpl();
+//			resultMsg = iMessagingTemplateService.triggerMessageTemplate(vo);
+//		}catch(Exception e) {
+//			logger.info(e.toString());
+//		}
+//		
+//		logger.info("**Out resultElectronicFormSendMail**");
+//		return  resultMsg;
+//	}
 }

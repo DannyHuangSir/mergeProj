@@ -24,6 +24,7 @@ import com.twfhclife.eservice_batch.service.BatchNotificationService;
 import com.twfhclife.eservice_batch.service.BatchReport01Service;
 import com.twfhclife.eservice_batch.service.BatchReport02Service;
 import com.twfhclife.eservice_batch.service.BatchReport03Service;
+import com.twfhclife.eservice_batch.service.BatchUpdateRoadService;
 import com.twfhclife.eservice_batch.service.BatchUploadInsuranceClaimFileDataService;
 import com.twfhclife.eservice_batch.service.BatchUploadMedicalTreatmentFileDataService;
 import com.twfhclife.eservice_batch.service.BatchUploadOnlineChangeSheetService;
@@ -127,10 +128,16 @@ public class BatchMain {
 			
 			logger.info("Start running batch#6: CR17 保戶密碼到期前1個月發送電子郵件至要保人信箱");
 			//1.批次於到期前1個月通知保戶
-			service.checkNoticeUser();
+			//service.checkNoticeUser();
 			//2.到期後線上強制變更,且不可與前N次相同
-			service.clearUsersLastChgPwdDate();
+			//service.clearUsersLastChgPwdDate();
 
+			break;
+		case "61":
+			logger.info("Start running batch#61: 五年內未登入帳號提前一個月寄送通知信");
+			BatchCheckPwdExpireService batchCheckService = new BatchCheckPwdExpireService();
+			batchCheckService.getUserLastLoginOverYearsSendMail();
+			
 			break;
 		case "R01":
 			logger.info("Start running batch#R01: 報表01..");
@@ -167,6 +174,11 @@ public class BatchMain {
 			logger.info("Start running batch #medicalTreatment: Upload MedicalTreatmentClaimFileData to EZ_ACQUIRE..");
 			BatchUploadMedicalTreatmentFileDataService medicalTreatmentService = new BatchUploadMedicalTreatmentFileDataService();
 			medicalTreatmentService.process();
+			break;
+		case "roadUpdate" :
+			logger.info("Start running batch #roadUpdate: 道路名稱更新.....  ");
+			BatchUpdateRoadService roadService = new BatchUpdateRoadService();
+			roadService.updateRoad();
 			break;
 		default:
 			logger.info("Invalid BatchId: " + batchId + ", batch job stopped.");

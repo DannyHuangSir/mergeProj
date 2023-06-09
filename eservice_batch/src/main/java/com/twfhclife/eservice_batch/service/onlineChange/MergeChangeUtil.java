@@ -46,17 +46,30 @@ public class MergeChangeUtil {
 	//	014:「補發保單」: 申請值(1), 寄送地址(50)
 	//  027:「保戶基本資料更新」：國籍代碼(2),職業代碼大(2),職業代碼中(2),職業代碼小(4)
 	//  002:「年金給付」變更: 保證期間申請值(2)
-	private List<String> mergeChangeCodeList = Arrays.asList("001", "002", "003", "004", "005", "006", "009", "010", "014", "027", "029", "030", "031", "032", "033", "034");
+	/// 20221213 by 203990  舊功能介接資料是否合併調整, 001繳別變更 007展期 008減額  要判別 收文日(系統日)=生效日 才做合併
+	private List<String> mergeChangeCodeList = Arrays.asList("001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "014", "027", "029", "030", "031", "032", "033", "034");
+	private List<String> mergeChangeCodeSpecList = Arrays.asList("001", "007", "008");
 
 	public List<String> getMergePolicyNoList(String applyItemText) {
 		String[] lines = applyItemText.split("\r\n");
-		
+				
 		// 取得在合併項目的保單號碼清單
 		Set<String> policyNoSet = new LinkedHashSet<>();
 		for (String line : lines) {
 			if (!StringUtils.isEmpty(line) && line.length() > 25) {
 				if (mergeChangeCodeList.contains(line.substring(0,  3))) {
-					policyNoSet.add(line.substring(15,  25));
+					if (mergeChangeCodeSpecList.contains(line.substring(0,  3))) {
+						logger.info("mergeChangeCodeSpecList match: {}", line);
+						// 001繳別變更 007展期 008減額  要判別 收文日(系統日)=生效日 才做合併
+						if (line.substring(25,  32).equals(line.substring(32,  39))) {
+							logger.info("mergeChangeCodeSpecList line25-32: {}", line.substring(25,  32));
+							logger.info("mergeChangeCodeSpecList line32-39: {}", line.substring(32,  39));
+							policyNoSet.add(line.substring(15,  25));
+						}
+					}
+					else {
+						policyNoSet.add(line.substring(15,  25));
+					}
 				}
 			}
 		}
@@ -71,7 +84,15 @@ public class MergeChangeUtil {
 				if (!StringUtils.isEmpty(line) && line.length() > 25) {
 					if (mergeChangeCodeList.contains(line.substring(0,  3))) {
 						if (policyNo.equals(line.substring(15,  25))) {
-							cnt++;
+							if (mergeChangeCodeSpecList.contains(line.substring(0,  3))) {
+								// 001繳別變更 007展期 008減額  要判別 收文日(系統日)=生效日 才做合併
+								if (line.substring(25,  32).equals(line.substring(32,  39))) {
+									cnt++;
+								}
+							}
+							else {
+								cnt++;
+							}
 						}
 					}
 					/* 受益人一律做合併 */
@@ -189,16 +210,17 @@ public class MergeChangeUtil {
 					transMergeVo.setTransNum(transNum);
 					transMergeVo.setTransNumMerge(transNumMerge);
 					
+					/// 20221213 by 203990  舊功能介接資料是否合併調整, 001繳別變更 007展期 008減額  要判別 收文日(系統日)=生效日 才做合併
 					//2018-10-02 生效日不為當日不可合併
-//					//「繳別」變更: 申請值(1)
-//					if (line.startsWith("001") && policyNo.equals(linePolicyNo) && line.length() >= 40) {
-//						paymode = line.substring(39,  40);
-//						insertTransMerge(transMergeVo);
-//						
-//						if (!removeLineKeyList.contains(lineKey)) {
-//							removeLineKeyList.add(lineKey);
-//						}
-//					}
+					//「繳別」變更: 申請值(1)
+					if (line.startsWith("001") && policyNo.equals(linePolicyNo) && line.length() >= 40) {
+						paymode = line.substring(39,  40);
+						insertTransMerge(transMergeVo);
+						
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
 					//「年金給付」變更: 申請值(1)
 					if (line.startsWith("002") && policyNo.equals(linePolicyNo) && line.length() >= 40) {
 						annuityMethod = line.substring(39,  40);
@@ -248,26 +270,28 @@ public class MergeChangeUtil {
 						beneficiaryFlag = "Y";
 						insertTransMerge(transMergeVo);
 					}
+					/// 20221213 by 203990  舊功能介接資料是否合併調整, 001繳別變更 007展期 008減額  要判別 收文日(系統日)=生效日 才做合併
 					//2018-10-02 生效日不為當日不可合併
-//					//「展期定期」: 申請註記(1)
-//					if (line.startsWith("007") && policyNo.equals(linePolicyNo)) {
-//						renewFlag = "Y";
-//						insertTransMerge(transMergeVo);
-//						
-//						if (!removeLineKeyList.contains(lineKey)) {
-//							removeLineKeyList.add(lineKey);
-//						}
-//					}
+					//「展期定期」: 申請註記(1)
+					if (line.startsWith("007") && policyNo.equals(linePolicyNo)) {
+						renewFlag = "Y";
+						insertTransMerge(transMergeVo);
+						
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
+					/// 20221213 by 203990  舊功能介接資料是否合併調整, 001繳別變更 007展期 008減額  要判別 收文日(系統日)=生效日 才做合併
 					//2018-10-02 生效日不為當日不可合併
-//					//「減額繳清」: 申請註記(1)
-//					if (line.startsWith("008") && policyNo.equals(linePolicyNo)) {
-//						reduceFlag = "Y";
-//						insertTransMerge(transMergeVo);
-//						
-//						if (!removeLineKeyList.contains(lineKey)) {
-//							removeLineKeyList.add(lineKey);
-//						}
-//					}
+					//「減額繳清」: 申請註記(1)
+					if (line.startsWith("008") && policyNo.equals(linePolicyNo)) {
+						reduceFlag = "Y";
+						insertTransMerge(transMergeVo);
+						
+						if (!removeLineKeyList.contains(lineKey)) {
+							removeLineKeyList.add(lineKey);
+						}
+					}
 					//「減少保險金額（主約）」: 申請註記(1),欲變更金額(10)
 					if (line.startsWith("009") && policyNo.equals(linePolicyNo) && line.length() >= 51) {
 						reducePolicyFlag1 = "Y";

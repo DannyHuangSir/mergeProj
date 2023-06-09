@@ -1,5 +1,6 @@
 package com.twfhclife.eservice_batch.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -16,6 +17,7 @@ import com.twfhclife.eservice_batch.model.CommLogRequestVo;
 import com.twfhclife.eservice_batch.model.UserVo;
 import com.twfhclife.eservice_batch.util.MailService;
 import com.twfhclife.eservice_batch.util.MailTemplateUtil;
+import com.twfhclife.eservice_batch.util.SmsService;
 
 public class BatchCheckPwdExpireService {
 
@@ -27,6 +29,10 @@ public class BatchCheckPwdExpireService {
 	private static String NOTICE_MAIN_INNER_CONTENT;
 	private static String NOTICE_MAIL_SUBJECT;
 	private static String LAST_LOGIN_LIMIT_YEARS;	
+	private static String EXPIRATION_NOTICE_SUBJECT;
+	private static String EXPIRATION_NOTICE_TITLE;
+	private static String EXPIRATION_NOTICE_CONTENT;
+	private static String EXPIRATION_NOTICE_SMS_CONTENT;
 	private UserDao userDao = new UserDao();
 	private MailService mailService = new MailService();
 
@@ -38,11 +44,18 @@ public class BatchCheckPwdExpireService {
 		NOTICE_MAIN_INNER_CONTENT = rb.getString("notice_main_inner_content");
 		NOTICE_MAIL_SUBJECT = rb.getString("notice_mail_subject");
 		LAST_LOGIN_LIMIT_YEARS = rb.getString("last_login_limit_years");
+		EXPIRATION_NOTICE_SUBJECT= rb.getString("expiration_notice_subject");
+		EXPIRATION_NOTICE_TITLE  = rb.getString("expiration_notice_title");
+		EXPIRATION_NOTICE_CONTENT= rb.getString("expiration_notice_content");
+		EXPIRATION_NOTICE_SMS_CONTENT = rb.getString("expiration_notice_sms_content");
 		logger.debug(
-				"EXPIRE_LIMIT_MONTH:{}, EXPIRE_NOTICE_MONTH:{}, NOTICE_MAIL_INNER_TITLE:{}, NOTICE_MAIN_INNER_CONTENT:{}, NOTICE_MAIL_SUBJECT:{}, LAST_LOGIN_LIMIT_YEARS:{}",
+				"EXPIRE_LIMIT_MONTH:{}, EXPIRE_NOTICE_MONTH:{}, NOTICE_MAIL_INNER_TITLE:{}, NOTICE_MAIN_INNER_CONTENT:{}, NOTICE_MAIL_SUBJECT:{}, LAST_LOGIN_LIMIT_YEARS:{},"
+				+ "EXPIRATION_NOTICE_SUBJECT{}, EXPIRATION_NOTICE_TITLE{},EXPIRATION_NOTICE_CONTENT{},EXPIRATION_NOTICE_SMS_CONTENT{}",
 				EXPIRE_LIMIT_MONTH, EXPIRE_NOTICE_MONTH,
 				NOTICE_MAIL_INNER_TITLE, NOTICE_MAIN_INNER_CONTENT,
-				NOTICE_MAIL_SUBJECT, LAST_LOGIN_LIMIT_YEARS);
+				NOTICE_MAIL_SUBJECT, LAST_LOGIN_LIMIT_YEARS,
+				EXPIRATION_NOTICE_SUBJECT ,EXPIRATION_NOTICE_TITLE ,EXPIRATION_NOTICE_CONTENT,
+				EXPIRATION_NOTICE_SMS_CONTENT);
 	}
 	
 	public void checkNoticeUser() {
@@ -118,6 +131,50 @@ public class BatchCheckPwdExpireService {
 			}
 		} catch (Exception e) {
 			logger.error("checkLastLoginOverYears error: {}", ExceptionUtils.getStackTrace(e));
+		}
+	}
+	
+	public void getUserLastLoginOverYearsSendMail() {
+		try {
+			//1. get user last login date over limit years
+			List<UserVo> userList = userDao.getUserLastLoginOverYearsSendMail(LAST_LOGIN_LIMIT_YEARS , EXPIRE_NOTICE_MONTH);
+			if(userList != null && userList.size() > 0) {
+				BatchApiService apiService = new BatchApiService();
+				List<String> mailTo = new ArrayList<String>();
+				List<String> mobileTo = new ArrayList<String>();
+				for(UserVo vo : userList) {
+					if(StringUtils.isNotEmpty(vo.getEmail())) {
+						mailTo.add(vo.getEmail());	
+					}					
+					if(StringUtils.isNotEmpty(vo.getMobile())) {
+						mobileTo.add(vo.getMobile());	
+					}		
+				}
+				if(mailTo.size() > 0) {
+					String templateContent = MailTemplateUtil.getMailTempleteContent("common_template.html");
+					String cnt = templateContent.replaceFirst("\\{title\\}", EXPIRATION_NOTICE_TITLE).replaceFirst("\\{content\\}", EXPIRATION_NOTICE_CONTENT);
+					String sentCnt = cnt.replaceFirst("\\{0\\}", EXPIRE_NOTICE_MONTH);
+					logger.debug("mailTo:{}", mailTo.toString());
+					logger.debug("sentCnt:{}", sentCnt);
+					mailService.sendMail(sentCnt, EXPIRATION_NOTICE_SUBJECT, mailTo, null, null);
+					
+					// 儲存郵件簡訊發送紀錄
+					for (String addr : mailTo) {
+						apiService.postCommLogAdd(new CommLogRequestVo("eservice_batch", "email", addr, sentCnt));
+					}
+				}
+				if(mobileTo.size() > 0) {
+					SmsService SmsService = new SmsService();
+					String sentCnt = EXPIRATION_NOTICE_SMS_CONTENT.replaceFirst("\\{0\\}", EXPIRE_NOTICE_MONTH);
+					for(String mobile : mobileTo) {						
+						SmsService.sendSms(mobile, sentCnt);
+						// 儲存郵件簡訊發送紀錄
+						apiService.postCommLogAdd(new CommLogRequestVo("eservice_batch", "sms", mobile, sentCnt));
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error("getUserLastLoginOverYearsSendMail error: {}", ExceptionUtils.getStackTrace(e));
 		}
 	}
 	

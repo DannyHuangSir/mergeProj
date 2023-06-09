@@ -47,7 +47,7 @@
 	</select>
 	
 	<select id="getOnlineChangeInfoByTransNum" resultMap="OnlineChangeInfoMap">
-		SELECT
+		SELECT distinct
 			P.POLICY_NO
 			,CASE WHEN P.EXPIRE_DATE <![CDATA[ < ]]> GETDATE()+1 THEN '50' ELSE P.STATUS END STATUS <!-- 50:滿期 -->
 			,P.EFFECTIVE_DATE

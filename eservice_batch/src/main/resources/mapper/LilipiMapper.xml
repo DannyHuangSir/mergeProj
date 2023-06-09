@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.LilipiMapper">
+
+	<resultMap id="LilipiMap" type="com.twfhclife.eservice_batch.model.LilipiVo" >
+		<result column="LIPI_INSU_NO" property="lipiInsuNo"/>
+		<result column="LIPI_INSU_TYPE" property="lipiInsuType"/>
+		<result column="LIPI_INSU_GRP_NO" property="lipiInsuGrpNo"/>
+		<result column="LIPI_INSU_SEQ_NO" property="lipiInsuSeqNo"/>
+		<result column="LIPI_INSU_BEG_DATE" property="lipiInsuBegDate"/>
+		<result column="LIPI_INSU_END_DATE" property="lipiInsuEndDate"/>
+		<result column="LIPI_GP_NO" property="lipiGpNo"/>
+		<result column="LIPI_ID" property="lipiId"/>
+		<result column="LIPI_NAME" property="lipiName"/>
+		<result column="LIPI_BIRTH" property="lipiBirth"/>
+		<result column="LIPI_SEX" property="lipiSex"/>
+		<result column="LIPI_AGE" property="lipiAge"/>
+		<result column="LIPI_PREM_YEAR" property="lipiPremYear"/>
+		<result column="LIPI_METH_ANNU_PAY" property="lipiMethAnnuPay"/>
+		<result column="LIPI_LI_RATE" property="lipiLiRate"/>
+		<result column="LIPI_MAIN_AMT" property="lipiMainAmt"/>
+		<result column="LIPI_TABL_PREM" property="lipiTablPrem"/>
+		<result column="LIPI_UN_HEAL_PREM" property="lipiUnHealPrem"/>
+		<result column="LIPI_DANG_PREM" property="lipiDangPrem"/>
+		<result column="LIPI_ADD_MK" property="lipiAddMk"/>
+		<result column="LIPI_LO_MK" property="lipiLoMk"/>
+		<result column="LIPI_ST" property="lipiSt"/>
+		<result column="LIPI_ST_DATE" property="lipiStDate"/>
+		<result column="LIPI_CANCER_QUAN" property="lipiCancerQuan"/>
+		<result column="LIPI_HEAL_CODE" property="lipiHealCode"/>
+		<result column="LIPI_ADDR" property="lipiAddr"/>
+		<!-- 沒有隱碼的欄位 -->
+		<result column="NO_HIDDEN_LIPI_ID" property="noHiddenLipiId"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		LIPI_INSU_NO
+		,LIPI_INSU_TYPE
+		,LIPI_INSU_GRP_NO
+		,LIPI_INSU_SEQ_NO
+		,LIPI_INSU_BEG_DATE
+		,LIPI_INSU_END_DATE
+		,LIPI_GP_NO
+		,LIPI_ID  AS NO_HIDDEN_LIPI_ID
+		,ESERVICE.DBO.FN_GETHIDDENCODE(1, LIPI_ID, '*', 4, 5) AS LIPI_ID
+		,ESERVICE.DBO.FN_DEBASE64(LIPI_NAME) LIPI_NAME
+		,LIPI_BIRTH
+		,LIPI_SEX
+		,LIPI_AGE
+		,LIPI_PREM_YEAR
+		,LIPI_METH_ANNU_PAY
+		,LIPI_LI_RATE
+		,LIPI_MAIN_AMT
+		,LIPI_TABL_PREM
+		,LIPI_UN_HEAL_PREM
+		,LIPI_DANG_PREM
+		,LIPI_ADD_MK
+		,LIPI_LO_MK
+		,LIPI_ST
+		,LIPI_ST_DATE
+		,LIPI_CANCER_QUAN
+		,LIPI_HEAL_CODE
+		,ESERVICE.DBO.FN_DEBASE64(LIPI_ADDR) LIPI_ADDR
+	</sql>
+		
+	<!-- 被保人-根據保單號碼查詢 -->
+	<select id="findByLipiInsuNo" resultMap="LilipiMap">
+		SELECT
+		(LIPI_INSU_TYPE + CONVERT(VARCHAR,LIPI_INSU_GRP_NO) + LIPI_INSU_SEQ_NO  ) as LIPI_INSU_NO
+		,LIPI_INSU_TYPE
+		,LIPI_INSU_GRP_NO
+		,LIPI_INSU_SEQ_NO
+		,LIPI_INSU_BEG_DATE
+		,LIPI_INSU_END_DATE
+		,LIPI_GP_NO
+		,LIPI_ID  AS NO_HIDDEN_LIPI_ID
+		,ESERVICE.DBO.FN_GETHIDDENCODE(1, LIPI_ID, '*', 4, 5) AS LIPI_ID
+		,ESERVICE.DBO.FN_DEBASE64(LIPI_NAME) LIPI_NAME
+		,LIPI_BIRTH
+		,LIPI_SEX
+		,LIPI_AGE
+		,LIPI_PREM_YEAR
+		,LIPI_METH_ANNU_PAY
+		,LIPI_LI_RATE
+		,LIPI_MAIN_AMT
+		,LIPI_TABL_PREM
+		,LIPI_UN_HEAL_PREM
+		,LIPI_DANG_PREM
+		,LIPI_ADD_MK
+		,LIPI_LO_MK
+		,LIPI_ST
+		,LIPI_ST_DATE
+		,LIPI_CANCER_QUAN
+		,LIPI_HEAL_CODE
+		,ESERVICE.DBO.FN_DEBASE64(LIPI_ADDR) LIPI_ADDR
+		FROM
+			ESERVICE.DBO.LILIPI_ES
+		WHERE
+			LIPI_INSU_TYPE + CONVERT(VARCHAR,LIPI_INSU_GRP_NO) + LIPI_INSU_SEQ_NO  = #{lipiInsuNo}
+	</select>
+</mapper>

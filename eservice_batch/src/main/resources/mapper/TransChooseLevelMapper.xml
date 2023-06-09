@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransChooseLevelMapper" >
+	<resultMap id="BaseResultMap" type="com.twfhclife.eservice_batch.model.TransChooseLevelVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="CHOOSE_LEVEL_OLD" property="chooseLevelOld"/>
+		<result column="CHOOSE_LEVEL_NEW" property="chooseLevelNew"/>
+		<result column="CHOOSE_SCORE" property="chooseScore"/>
+		<result column="ROC_ID" property="rocId"/>
+		<result column="CHOOSE" property="choose"/>
+		<result column="RULE_STATUS" property="ruleStatus"/>
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		ID, TRANS_NUM, CHOOSE_LEVEL_OLD, CHOOSE_LEVEL_NEW, CHOOSE_SCORE,ROC_ID,CHOOSE,RULE_STATUS
+	</sql>
+
+	<select id="getTransChooseLevel" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/>
+		FROM  ESERVICE.dbo.TRANS_CHOOSE_LEVEL
+		WHERE TRANS_NUM = #{transNum}
+	</select>
+
+	<select id="getEffectTransChooseLevel" resultMap="BaseResultMap">
+		SELECT r.CHOOSE_LEVEL_NEW, r.ROC_ID FROM ESERVICE.dbo.TRANS_CHOOSE_LEVEL r
+		LEFT JOIN ESERVICE.dbo.TRANS t ON r.TRANS_NUM = t.TRANS_NUM
+		WHERE r.TRANS_NUM = #{transNum}
+	</select>
+
+	<update id="updateIndividual">
+		update ESERVICE.dbo.INDIVIDUAL SET RISK_ATTR = #{chooseLevelNew}
+		where ROC_ID = #{rocId}
+	</update>
+	
+	<resultMap id="IndividualChooseMap" type="com.twfhclife.eservice_batch.model.IndividualChooseVo">
+		<result column="ROC_ID" property="rocId"/>
+		<result column="NAME" property="name"/>
+		<result column="BIRTH_DATE" property="birthDate"/>
+		<result column="MOBILE" property="mobile"/>
+		<result column="EDUCATION_LEVEL" property="educationLevel"/>
+		<result column="DISABILITY" property="disability"/>
+		<result column="EMPLOYEE_ID" property="employeeId"/>
+	</resultMap>
+	<select id="getIndividualChooseByRocId" resultMap="IndividualChooseMap">
+		SELECT 
+			ROC_ID,
+			ESERVICE.DBO.FN_DEBASE64(NAME) AS NAME,
+			ESERVICE.DBO.FN_DEBASE64(BIRTH_DATE) AS BIRTH_DATE,
+			ESERVICE.DBO.FN_DEBASE64(MOBILE) AS MOBILE,
+			EDUCATION_LEVEL,
+			DISABILITY ,
+			EMPLOYEE_ID
+		FROM 
+			INDIVIDUAL_CHOOSE 
+		WHERE 
+			ROC_ID = #{rocId}
+	</select>
+</mapper>

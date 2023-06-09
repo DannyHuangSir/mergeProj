@@ -8,10 +8,12 @@
 		<result column="RISK_LEVEL_NEW" property="riskLevelNew"/>
 		<result column="RISK_SCORE" property="riskScore"/>
 		<result column="ROC_ID" property="rocId"/>
+		<result column="CHOOSE" property="choose"/>
+		<result column="RULE_STATUS" property="ruleStatus"/>
 	</resultMap>
 
 	<sql id="Base_Column_List" >
-		ID, TRANS_NUM, RISK_LEVEL_OLD, RISK_LEVEL_NEW, RISK_SCORE,ROC_ID
+		ID, TRANS_NUM, RISK_LEVEL_OLD, RISK_LEVEL_NEW, RISK_SCORE,ROC_ID,CHOOSE,RULE_STATUS
 	</sql>
 
 	<select id="getTransLevel" resultMap="BaseResultMap">
@@ -31,6 +33,32 @@
 		update ESERVICE.dbo.INDIVIDUAL SET RISK_ATTR = #{riskLevelNew}
 		where ROC_ID = #{rocId}
 	</update>
+	
+	<resultMap id="IndividualChooseMap" type="com.twfhclife.eservice_batch.model.IndividualChooseVo">
+		<result column="ROC_ID" property="rocId"/>
+		<result column="NAME" property="name"/>
+		<result column="BIRTH_DATE" property="birthDate"/>
+		<result column="MOBILE" property="mobile"/>
+		<result column="EDUCATION_LEVEL" property="educationLevel"/>
+		<result column="DISABILITY" property="disability"/>
+		<result column="EMPLOYEE_ID" property="employeeId"/>
+	</resultMap>
+	
+	<select id="getIndividualChooseByRocId" resultMap="IndividualChooseMap">
+		SELECT 
+			ROC_ID,
+			NAME,
+			BIRTH_DATE,
+			MOBILE,
+			EDUCATION_LEVEL,
+			DISABILITY,
+			EMPLOYEE_ID
+		FROM 
+			INDIVIDUAL_CHOOSE 
+		WHERE 
+			ROC_ID = #{rocId}
+	</select>
+	
 	<select id="getTop1PolicyNo" resultType="string">
 		SELECT TOP 1 P.POLICY_NO FROM
 		ESERVICE.dbo.POLICY P

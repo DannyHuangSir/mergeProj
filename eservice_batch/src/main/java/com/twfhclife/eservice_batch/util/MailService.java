@@ -56,6 +56,7 @@ public class MailService {
 		// 請設定於資料庫代碼內
 		smtpServer = parameterDao.getParameterValueByCode(null, "MAIL_SMTP_SERVER");
 		smtpServerPort = parameterDao.getParameterValueByCode(null, "SMTP_SERVER_PORT");
+//		smtpServerPort = "587"; 
 		sender = parameterDao.getParameterValueByCode(null, "MAIL_SENDER");
 		password = parameterDao.getParameterValueByCode(null, "MAIL_PASSWORD");
 		ssl = parameterDao.getParameterValueByCode(null, "MAIL_SSL");
@@ -213,6 +214,100 @@ public class MailService {
 //			mail.sendMail("此為測試信件內容!!!!", "測試信件主旨!!!", "david.yu0903@gmail.com", "", null);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * 郵件寄送
+	 * 伺服器: https://www.minwt.com/website/server/14737.html
+	 * 
+	 * @param content
+	 *            內容
+	 * @param subject
+	 *            主題
+	 * @param mailTo
+	 *            收件者
+	 * @param mailCc
+	 *            副件者
+	 * @param listFile
+	 *            附加檔案
+	 * 
+	 */
+	public void sendMailByTransContractRevocation(String content, String subject, List<String> mailTo, List<String> mailCc, List<File> listFile)
+			throws Exception {
+		logger.info("send Mail By TransContractRevocation Start");
+		// 1. 初始化properties
+		Properties properties = initProperties();
+		String sender = "" + properties.get("mail.smtp.sender"); // 郵件的發送者
+		String password = "" + properties.get("mail.smtp.password"); // 登陸郵箱的密碼
+
+		logger.info("send email,get username password,sender=" + sender + ", password=" + password);
+
+		// 2. 創建session
+		Session session = null; // 和郵箱服務器連接。
+		Authenticator authenticator = new MyAuthenticatorBean(sender, password);
+		if (properties.get("mail.smtp.host").toString().indexOf("10.7") != -1) {
+			logger.debug("********臺銀人壽環境********");
+			properties.put("mail.smtp.auth", "false");
+			//session = Session.getInstance(properties, authenticator);
+			session = Session.getInstance(properties);
+			session.setDebug(false); // 調試模式， 有必要時開啟。
+		} else {
+			logger.debug("********外部環境********");
+			properties.put("mail.smtp.auth", "true");
+			session = Session.getDefaultInstance(properties, authenticator);
+			session.setDebug(true); // 調試模式， 有必要時開啟。
+		}
+
+		// 3.創建Message
+		MimeMessage message = new MimeMessage(session);
+		message.setFrom(new InternetAddress(sender));
+		
+		// 4.設置郵件主題，
+		message.setSubject(subject, "UTF-8"); // message設置subject
+		logger.info("change Mail By TransContractRevocation Start");
+		InternetAddress from = new InternetAddress("eservice@twfhclife.com.tw");
+		from.setPersonal("臺銀人壽保戶專區");
+        message.setFrom(from);
+    	logger.info("change Mail By TransContractRevocation End");
+		// 5.設置郵件接收人員，
+//		String mailTos[] = mailTo.split(";");// message設置接收人
+		logger.info("send email,mailTos={}", mailTo);
+		for(String mail : mailTo) {
+			logger.info("send email={}", mail);
+
+			Address[] addresses_TO = InternetAddress.parse(mail);
+			message.addRecipients(Message.RecipientType.TO, addresses_TO);
+		}
+
+		// 6.設置郵件CC人員，
+		if (mailCc != null && mailCc.size() > 0) {// message設置抄送人
+			for (String mail : mailCc) {
+				Address[] addresses_CC = InternetAddress.parse(mail);
+				message.addRecipients(Message.RecipientType.CC, addresses_CC);
+			}
+		}
+
+		// 7.設置附件
+		if (listFile == null || listFile.size() == 0) {// 沒有附件
+			message.setContent(content, "text/html;charset=UTF-8");// message設置內容
+		} else {// 有附件
+			attachmentFile(message, content, listFile);
+		}
+
+		// 8.發送EMAIL
+		Transport transport = null;
+		try {
+			transport = session.getTransport("smtp");
+			transport.send(message);
+		} catch (Exception ex) {
+			logger.info("send email,connect email server error:", ex);
+			throw ex;
+		} finally {
+			logger.info("send Mail By TransContractRevocation End");
+			if (transport != null) {
+				transport.close();
+			}
 		}
 	}
 

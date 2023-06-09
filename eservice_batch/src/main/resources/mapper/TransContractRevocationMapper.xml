@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.TransContractRevocationMapper">
+
+	<resultMap id="TransContractRevocationMap" type="com.twfhclife.eservice_batch.model.TransContractRevocationVo" >
+		<result column="ID" property="id"/>
+		<result column="TRANS_NUM" property="transNum"/>
+		<result column="SETT_CH_NAME" property="settChName"/>
+		<result column="LIPM_NAME" property="lipmName"/>
+		<result column="LIPI_NAME" property="lipiName"/>
+		<result column="PROD_CURRENCY" property="prodCurrency"/>
+		<result column="LIPM_INSU_BEG_DATE" property="lipmInsuBegDate"/>
+		<result column="PRPA_ACT_AMT" property="prpaActAmt"/>
+		<result column="SWIFT_CODE" property="swiftCode"/>
+		<result column="ENGLISH_NAME" property="englishName"/>
+		<result column="NEAC_NAME" property="neacName"/>
+		<result column="BANK_CODE" property="bankCode"/>
+		<result column="BANK_NAME" property="bankName"/>
+		<result column="BRANCH_CODE" property="branchCode"/>
+		<result column="BRANCH_NAME" property="branchName"/>
+		<result column="ACCOUNT" property="account"/>
+		<result column="RCP_TYPE_CODE_FLAG" property="rcpTypeCodeFlag"/>
+		<result column="NEEDS_FLAG" property="needsFlag"/>
+		<result column="ECONOMY_FLAG" property="economyFlag"/>
+		<result column="FAMILY_FLAG" property="familyFlag"/>
+		<result column="COGNITION_FLAG" property="cognitionFlag"/>
+		<result column="OTHER_FLAG" property="otherFlag"/>
+		<result column="IMAGE1"  property="image1"/>
+		<result column="IMAGE2"  property="image2"/>
+		<result column="AGIN_INVE_AREA" property="aginInveArea" />
+		<result column="OLD_DETAILS" property="oldDetails" />		
+		<result column="EMAIL" property="email" />
+		<result column="LIPM_ID" property="lipmId" />				
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID,TRANS_NUM,SETT_CH_NAME,LIPM_NAME,LIPI_NAME,PROD_CURRENCY,LIPM_INSU_BEG_DATE,PRPA_ACT_AMT
+			,SWIFT_CODE,ENGLISH_NAME,NEAC_NAME,BANK_CODE,BANK_NAME,BRANCH_CODE,BRANCH_NAME,ACCOUNT,RCP_TYPE_CODE_FLAG
+			,NEEDS_FLAG,ECONOMY_FLAG,FAMILY_FLAG,COGNITION_FLAG,OTHER_FLAG,IMAGE1,IMAGE2,AGIN_INVE_AREA,OLD_DETAILS,EMAIL,LIPM_ID
+	</sql>
+	
+	<sql id="whereClause">
+		<where>
+			<if test="transContractRevocationVo.id != null"> AND ID = #{transContractRevocationVo.id} </if>
+			<if test="transContractRevocationVo.transNum != null and transContractRevocationVo.transNum != ''"> AND TRANS_NUM = #{transContractRevocationVo.transNum} </if>
+		</where>
+	</sql>
+	
+	<sql id="wherePkClause">
+		<where>
+			AND ID = #{transContractRevocationVo.id}
+		</where>
+	</sql>
+	
+	<select id="getTransContractRevocationList" resultMap="TransContractRevocationMap">
+		SELECT
+			*
+		FROM
+			ESERVICE.DBO.TRANS_CONTRACT_REVOCATION
+		<include refid="whereClause" />
+	</select>
+	
+	<select id="findById" resultMap="TransContractRevocationMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			ESERVICE.DBO.TRANS_CONTRACT_REVOCATION
+		<include refid="wherePkClause" />
+	</select>
+
+</mapper>
+

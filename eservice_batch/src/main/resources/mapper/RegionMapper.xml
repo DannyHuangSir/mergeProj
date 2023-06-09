@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.RegionMapper">
+	
+	<resultMap id="CityMap" type="com.twfhclife.eservice_batch.model.CityVo" >
+		<result column="ID" property="id" />
+        <result column="CITY" property="city"/>
+	</resultMap>
+	
+	<resultMap id="RegionMap" type="com.twfhclife.eservice_batch.model.RegionVo" extends="CityMap">
+		<result column="REGION_ID" property="regionId"/>
+        <result column="REGION" property="region"/>
+        <result column="CITY_ID" property="cityId"/>
+	</resultMap>
+	
+    <select id="getCityRegion" resultMap="RegionMap">
+		SELECT  
+			C.ID ,
+			C.CITY,
+			R.ID AS REGION_ID,
+			R.REGION,
+			R.CITY_ID
+		FROM CITY C join REGION R
+		ON C.ID = R.CITY_ID
+    </select>
+</mapper>

@@ -92,6 +92,31 @@ public class TransTypeUtil {
 	/** 線上申請- 保戶基本資料更新 */
 	public final static  String POLICY_HOLDER_PROFILE_PARAMETER_CODE = "POLICY_HOLDER_PROFILE";
 	
+	/** 線上申請- 變更風險屬性 */
+	public final static  String RISK_LEVEL_PARAMETER_CODE = "RISK_LEVEL";
+	/** 線上申請- 變更投資標的分配比例 */
+	public final static  String INVESTMENT_PARAMETER_CODE = "INVESTMENT";
+	/** 線上申請- 收益分配或撥回資產分配方式 */
+	public final static  String CASH_PAYMENT_PARAMETER_CODE = "CASH_PAYMENT";
+	/** 線上申請- 已持有投資標的轉換 */
+	public final static  String CONVERSION_PARAMETER_CODE = "CONVERSION";
+	/** 線上申請- 定期超額保費 */
+	public final static  String CHANGE_PREMIUM_PARAMETER_CODE = "CHANGE_PREMIUM";
+	/** 線上申請- 提領(贖回) */
+	public final static  String DEPOSIT_PARAMETER_CODE = "DEPOSIT";
+	/** 開通電子表單通知服務 - 申請 */
+	public final static String ELECTRONIC_FORM_A_CODE="ELECTRONIC_FORM_A";
+	/** 開通電子表單通知服務 - 取消 */
+	public final static String ELECTRONIC_FORM_C_CODE="ELECTRONIC_FORM_C";
+	/** 契約撤銷 */
+	public final static String CONTRACT_REVOCATION_CODE="CONTRACT_REVOCATION";
+	/** 減額繳清 */
+	public final static String DERATE_PAID_OFF_CODE="DERATE_PAID_OFF";
+	/** 展期定期保險 */
+	public final static String ROLLOVER_PERIODICALLY_CODE="ROLLOVER_PERIODICALLY";
+	/** */
+	public final static String CHOOSE_LEVEL_CODE = "CHOOSE_LEVEL";
+	
 	public static String getEZBusinessType(String transType){
 		String type = "";// NB:承保科, PS:保全科, PA:保費科, CL:給付科
 		switch(transType) {

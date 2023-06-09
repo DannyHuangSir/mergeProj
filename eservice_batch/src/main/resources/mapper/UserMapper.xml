@@ -89,6 +89,22 @@
 	]]>
 	</select>	
 	
+	<select id="getUserLastLoginOverYearsSendMail" resultMap="UserMap" parameterType="java.lang.String">
+	<![CDATA[
+		SELECT 	user_id id,  
+			ESERVICE.DBO.fn_debase64(email) email,
+			ESERVICE.DBO.fn_debase64(mobile) mobile FROM ESERVICE.DBO.users 
+			Where user_id in(
+				select t.USER_ID  from (
+				select USER_ID , max(login_date) login_date from eservice.dbo.audit_log
+				where login_status = 1
+				group by user_id
+			) t 
+			where (SELECT CONVERT(varchar , (SELECT DATEAdd(month, (12 * #{lastLoginLimitYears}) - #{lastLoginMonth}, login_date)) , 106)) = 	(SELECT CONVERT(varchar , getdate(), 106))
+		)
+	]]>
+	</select>	
+	
 	<update id="lockUserStatus" parameterType="java.lang.String">
 		UPDATE ESERVICE.DBO.USERS
 			set status = 'locked'

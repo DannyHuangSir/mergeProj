@@ -39,6 +39,9 @@ public interface UserMapper {
 	
 	public List<UserVo> getUserLastLoginOverYears(String lastLoginLimitYears);
 	
+	public List<UserVo> getUserLastLoginOverYearsSendMail(@Param("lastLoginLimitYears") String lastLoginLimitYears ,@Param("lastLoginMonth") String lastLoginMonth);
+	
+	
 	public int lockUserStatus(String userId);
 
     UserVo getMailPhoneByTransNum(@Param("transNum") String transNum);

@@ -48,7 +48,14 @@ public class TransPaymodeDao extends BaseDao {
 		String activeDate = "";
 		try {
 			TransPaymodeMapper transPaymodeMapper = this.getSqlSession().getMapper(TransPaymodeMapper.class);
-			TransPaymodeVo vo = transPaymodeMapper.getActiveDate(policyNo);
+			//取得日期
+			TransPaymodeVo vo = transPaymodeMapper.getActiveDateByPolicyNo(policyNo);
+			//判斷是否月底 0 = 否 1 = 是
+			if("0".equals(transPaymodeMapper.checkDateStatus(vo.getActiveDate()))) {
+				vo = transPaymodeMapper.getActiveDate(policyNo);
+			}else {
+				vo = transPaymodeMapper.getActiveDateByMonthEnd(policyNo);
+			}
 			if (vo != null) {
 				activeDate = vo.getActiveDate();
 			}

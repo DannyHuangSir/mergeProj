@@ -121,6 +121,19 @@ public class UserDao extends BaseDao {
 		return userList;
 	}
 	
+	public List<UserVo> getUserLastLoginOverYearsSendMail(String lastLoginLimitYears , String lastLoginMonth) {
+		List<UserVo> userList = null;
+		try {
+			UserMapper userMapper = this.getSqlSession().getMapper(UserMapper.class);
+			userList = userMapper.getUserLastLoginOverYearsSendMail(lastLoginLimitYears , lastLoginMonth);
+		} catch (Exception e) {
+			logger.error("getUserLastLoginOverYearsSendMail error:", e);
+		} finally {
+			this.release();
+		}
+		return userList;
+	}
+	
 	public int lockUserStatus(String userId) {
 		int cut = 0;
 		try {

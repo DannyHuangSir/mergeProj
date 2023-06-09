@@ -57,7 +57,36 @@
 			WHEN LIPM_RCP_CODE = 'S' THEN DATEADD(month, 6, LIPM_TRED_PAAB_DATE)
 			WHEN LIPM_RCP_CODE = 'Q' THEN DATEADD(month, 3, LIPM_TRED_PAAB_DATE)
 			WHEN LIPM_RCP_CODE = 'M' THEN DATEADD(month, 1, LIPM_TRED_PAAB_DATE)
-		    END, 112)-19110000 activeDate
+		    END, 112) -19110000 activeDate
+		FROM
+		ESERVICE.DBO.LILIPM_ES
+		WHERE LIPM_INSU_TYPE + cast(LIPM_INSU_GRP_NO as NVARCHAR(1)) + LIPM_INSU_SEQ_NO = #{policyNo}
+	</select>
+	
+	<select id="getActiveDateByPolicyNo" resultMap="TransPaymodeMap">
+		SELECT
+		   LIPM_TRED_PAAB_DATE as activeDate
+		FROM
+		ESERVICE.DBO.LILIPM_ES
+		WHERE LIPM_INSU_TYPE + cast(LIPM_INSU_GRP_NO as NVARCHAR(1)) + LIPM_INSU_SEQ_NO = #{policyNo};
+	</select>
+	
+	<select id = "checkDateStatus"  parameterType="java.lang.String" resultType="java.lang.String">
+		select datediff(mm ,#{date} ,dateadd(dd , 1, #{date}))
+	</select>
+
+	<!-- 使用 TO_NUMBER 減去 19110000 算整體民國年月日 -->
+	<select id="getActiveDateByMonthEnd" resultMap="TransPaymodeMap">
+	SELECT
+		LIPM_RCP_CODE,
+		LIPM_TRED_PAAB_DATE,
+		    convert(VARCHAR,
+			CASE
+			WHEN LIPM_RCP_CODE = 'A' THEN   DATEADD(month ,DATEDIFF(month , 1 , LIPM_TRED_PAAB_DATE) +12 , 30 )	
+			WHEN LIPM_RCP_CODE = 'S' THEN   DATEADD(month ,DATEDIFF(month , 1 , LIPM_TRED_PAAB_DATE) +6 , 30 )	
+			WHEN LIPM_RCP_CODE = 'Q' THEN   DATEADD(month ,DATEDIFF(month , 1 , LIPM_TRED_PAAB_DATE) +3 , 30 )	
+			WHEN LIPM_RCP_CODE = 'M' THEN   DATEADD(month ,DATEDIFF(month , 1 , LIPM_TRED_PAAB_DATE) +1 , 30 )
+		    END, 112) -19110000 activeDate
 		FROM
 		ESERVICE.DBO.LILIPM_ES
 		WHERE LIPM_INSU_TYPE + cast(LIPM_INSU_GRP_NO as NVARCHAR(1)) + LIPM_INSU_SEQ_NO = #{policyNo}

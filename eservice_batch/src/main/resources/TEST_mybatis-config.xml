@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- <typeAliases> <typeAlias alias="Integer" type="java.lang.Integer" /> 
+		<typeAlias alias="Long" type="java.lang.Long" /> <typeAlias alias="HashMap" 
+		type="java.util.HashMap" /> <typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap" 
+		/> <typeAlias alias="ArrayList" type="java.util.ArrayList" /> <typeAlias 
+		alias="LinkedList" type="java.util.LinkedList" /> </typeAliases> -->
+	<!-- 全域參數 -->
+	<settings>
+		<!-- 啟用或禁用快取。 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- 啟用或禁用延遲載入。當禁用時，所有關聯物件都會即時載入。 -->
+		<setting name="lazyLoadingEnabled" value="true" />
+		<!-- 當啟用時，有延遲載入屬性的物件在被調用時將會完全載入任意屬性。否則，每種屬性將會按需要載入。 -->
+		<setting name="aggressiveLazyLoading" value="true" />
+		<!-- 是否允許單條sql返回多個資料集 (取決於驅動的相容性) default:true -->
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<!-- 是否可以使用列的別名 (取決於驅動的相容性) default:true -->
+		<setting name="useColumnLabel" value="true" />
+		<!-- 允許JDBC 生成主鍵。需要驅動器支援。如果設為了true，這個設置將強制使用被生成的主鍵，有一些驅動器不相容不過仍然可以執行。 default:false -->
+		<setting name="useGeneratedKeys" value="true" />
+		<!-- 指定 MyBatis 如何自動映射 資料基表的列 NONE：不隱射 PARTIAL:部分 FULL:全部 -->
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<!-- 這是默認的執行類型 （SIMPLE: 簡單； REUSE: 執行器可能重複使用prepared statements語句；BATCH: 
+			執行器可以重複執行語句和批量更新） -->
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<!-- 使用駝峰命名法轉換欄位。 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<!-- 設置本地緩存範圍 session:就會有資料的共用 statement:語句範圍 (這樣就不會有資料的共用 ) defalut:session -->
+		<setting name="localCacheScope" value="SESSION" />
+		<!-- 設置但JDBC類型為空時,某些驅動程式 要指定值,default:OTHER，插入空值時不需要指定類型 -->
+		<setting name="jdbcTypeForNull" value="NULL" />
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+	</settings>
+	<environments default="sit">
+		<environment id="dev">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+				<property name="url" value="jdbc:sqlserver://localhost:1433;databaseName=eservice" />
+				<property name="username" value="ESERVICE" />
+				<property name="password" value="Aa123456" />
+			</dataSource>
+		</environment>
+		<environment id="sit">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+				<property name="url" value="jdbc:sqlserver://10.7.168.85:1433;databaseName=eservice" />
+				<property name="username" value="eservice" />
+				<property name="password" value="eservice" />
+			</dataSource>
+		</environment>
+		<environment id="prod">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+				<property name="url" value="jdbc:sqlserver://10.7.128.30:1433;databaseName=ESERVICE" />
+				<property name="username" value="ESERVICE" />
+				<property name="password" value="Aa123456" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<!-- 定義所有的mapper xml文件 -->
+		<mapper resource="mapper/etl.xml" />
+		<mapper resource="mapper/LilipiMapper.xml" />	
+		<mapper resource="mapper/UserMapper.xml" />
+		<mapper resource="mapper/TransMapper.xml" />
+		<mapper resource="mapper/TransPolicyMapper.xml" />
+		<mapper resource="mapper/TransPaymodeMapper.xml" />
+		<mapper resource="mapper/TransAnnuityMethodMapper.xml" />
+		<mapper resource="mapper/TransBounsMapper.xml" />
+		<mapper resource="mapper/TransRewardMapper.xml" />
+		<mapper resource="mapper/TransCushionMapper.xml" />
+		<mapper resource="mapper/TransBeneficiaryMapper.xml" />
+		<mapper resource="mapper/TransBeneficiaryDtlMapper.xml" />
+		<mapper resource="mapper/TransBeneficiaryOldMapper.xml" />
+		<mapper resource="mapper/TransReducePolicyMapper.xml" />
+		<mapper resource="mapper/TransReducePolicyDtlMapper.xml" />
+		<mapper resource="mapper/TransContactInfoMapper.xml" />
+		<mapper resource="mapper/TransContactInfoDtlMapper.xml" />
+		<mapper resource="mapper/TransContactInfoOldMapper.xml" />
+		<mapper resource="mapper/TransCreditCardDateMapper.xml" />
+		<mapper resource="mapper/TransCreditCardDateMapper.xml" />
+		<mapper resource="mapper/TransBankInfoMapper.xml" />
+		<mapper resource="mapper/TransChangeAccountMapper.xml" />
+		<mapper resource="mapper/TransResendPolicyMapper.xml" />
+		<mapper resource="mapper/TransCertPrintMapper.xml" />
+		<mapper resource="mapper/TransValuePrintMapper.xml" />
+		<mapper resource="mapper/TransMergeMapper.xml" />
+		<mapper resource="mapper/ParameterMapper.xml" />
+		<mapper resource="mapper/BusinessEventMapper.xml" />
+		<mapper resource="mapper/RoiNotificationMapper.xml" />
+		<mapper resource="mapper/TransFundNotificationDtlMapper.xml" />
+		<mapper resource="mapper/TransFundNotificationMapper.xml" />
+		<mapper resource="mapper/ReportJobMapper.xml"/>
+		<mapper resource="mapper/BusinessEventJobMapper.xml"/>
+		<mapper resource="mapper/TransEndorsementMapper.xml"/>
+		<mapper resource="mapper/OnlineChangeInfoMapper.xml"/>
+		<mapper resource="mapper/TransLoanMapper.xml" />
+		<mapper resource="mapper/TransPolicyHolderProfileMapper.xml" />
+		<mapper resource="mapper/TransInsuranceClaimFileDataMapper.xml" />
+		<mapper resource="mapper/MessageTemplateMapper.xml" />
+		<mapper resource="mapper/TransMedicalTreatmentClaimFileDatasMapper.xml" />
+		<mapper resource="mapper/TransCashPaymentMapper.xml" />
+		<mapper resource="mapper/TransDepositMapper.xml" />
+		<mapper resource="mapper/TransInvestmentMapper.xml" />
+		<mapper resource="mapper/TransFundConversionMapper.xml" />
+		<mapper resource="mapper/TransChangePremiumMapper.xml" />
+		<mapper resource="mapper/TransRiskLevelMapper.xml" />
+		<mapper resource="mapper/TransApplyItemMapper.xml" />
+		<mapper resource="mapper/TransMedicalInfoFileDataMapper.xml" />
+		<mapper resource="mapper/TransElectronicFormMapper.xml" />
+		<mapper resource="mapper/TransDeratePaidOffMapper.xml" />
+		<mapper resource="mapper/TransRolloverPeriodicallyMapper.xml" />		
+		<mapper resource="mapper/TransContractRevocationMapper.xml" />		
+		<mapper resource="mapper/RegionMapper.xml" />	
+		<mapper resource="mapper/RoadMapper.xml" />		
+		<mapper resource="mapper/TransChooseLevelMapper.xml" />
+	</mappers>
+</configuration>

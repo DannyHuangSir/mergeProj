@@ -80,8 +80,8 @@ public class BatchUploadService {
 			processList.addAll(new TransRewardUtil().appendApplyItems(txtSb, systemTwDate));         // 增值回饋金領取方式:004
 			processList.addAll(new TransCushionUtil().appendApplyItems(txtSb, systemTwDate));        // 自動墊繳選擇權:005
 			processList.addAll(new TransBeneficiaryUtil().appendApplyItems(txtSb, systemTwDate));    // 受益人 (DS05):006
-			processList.addAll(new TransRenewUtil().appendApplyItems(txtSb, systemTwDate));          // 展期定期保險:007
-			processList.addAll(new TransReduceUtil().appendApplyItems(txtSb, systemTwDate));         // 減額繳清保險:008
+			processList.addAll(new TransRolloverPeriodicallyUtil().appendApplyItems(txtSb, systemTwDate));          // 展期定期保險:007
+			processList.addAll(new TransDeratePaidOffUtil().appendApplyItems(txtSb, systemTwDate));         // 減額繳清保險:008
 			processList.addAll(new TransReducePolicyUtil().appendApplyItems(txtSb, systemTwDate));   // 減少保險金額(主約：DS01, 附約：DS04):009
 			processList.addAll(new TransContactInfoUtil().appendApplyItems(txtSb, systemTwDate));    // 聯絡資料變更 (DS01):010
 			// 設定停損停利通知? 待確認暨有程式
@@ -99,7 +99,10 @@ public class BatchUploadService {
 			processList.addAll(new TransCashPaymentUtil().appendApplyItems(txtSb, systemTwDate));// 收益分配或撥回資產分配方式:032
 			processList.addAll(new TransChangePremiumUtil().appendApplyItems(txtSb, systemTwDate, activeTwDate));// 定期定額保費變更:033
 			processList.addAll(new TransRiskLevelUtil().appendApplyItems(txtSb, systemTwDate));// 變更風險屬性:031
-
+			processList.addAll(new TransElectronicFormUtil().appendApplyItems(txtSb, systemTwDate));// 電子表單申請 : 036 
+			processList.addAll(new TransContractRevocationUtil().appendApplyItems(txtSb, systemTwDate));// 契約撤銷申請 : 037 
+			processList.addAll(new TransChooseLevelUtil().appendApplyItems(txtSb, systemTwDate));// 官網風險評估管理 : 038 
+			
 			applyItemText = txtSb.toString();
 			if (StringUtils.isEmpty(applyItemText)) {
 				// 產生空檔

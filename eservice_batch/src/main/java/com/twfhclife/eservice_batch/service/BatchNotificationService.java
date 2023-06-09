@@ -424,7 +424,7 @@ public class BatchNotificationService {
 				sb.append("￭淨值日：" + sdf.format(investmentVo.getInNetValueDate()) + "<br/>");
 				sb.append("￭單位淨值：" + investmentVo.getNetValue() + "<br/>");
 				sb.append("￭現行淨值上限：" + vo.getUpValue() + "<br/>");
-				sb.append("￭現行淨值上限：" + vo.getDownValue() + "<br/>");
+				sb.append("￭現行淨值下限：" + vo.getDownValue() + "<br/>");
 				sb.append("￭通知日期：" + sdf.format(new Date()) + "<br/>");
 				}
 			}

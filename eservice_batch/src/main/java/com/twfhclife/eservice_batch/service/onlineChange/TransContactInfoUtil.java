@@ -295,7 +295,10 @@ public class TransContactInfoUtil {
 			logger.info("------------------------當前為首家案件--------開始對比數據信息--------------------------------");
 			dtl.setTelHome(checkChangeAttribute(fromCompanyId,dtl.getTelHome(),old.getTelHome()));
 			dtl.setEmail(checkChangeAttribute(fromCompanyId,dtl.getEmail(),old.getEmail()));
-			dtl.setMobile(checkChangeAttribute(fromCompanyId,dtl.getMobile(),old.getMobile()));
+			// 20220913 by 203990
+			/// 手機為必填, 用做為必傳遞給核心以避免新舊比對後送全空值的問題
+			//dtl.setMobile(checkChangeAttribute(fromCompanyId,dtl.getMobile(),old.getMobile()));
+			dtl.setMobile(dtl.getMobile());
 			dtl.setTelOffice(checkChangeAttribute(fromCompanyId,dtl.getTelOffice(),old.getTelOffice()));
 			dtl.setAddressFull(checkChangeAttribute(fromCompanyId,dtl.getAddressFull(),old.getAddressFull()));
 			dtl.setAddressFullCharge(checkChangeAttribute(fromCompanyId,dtl.getAddressFullCharge(),old.getAddressFullCharge()));

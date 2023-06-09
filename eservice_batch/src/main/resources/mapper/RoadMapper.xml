@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.RoadMapper">
+
+	<resultMap id="RoadMap" type="com.twfhclife.eservice_batch.model.RoadVo">
+		<result column="ID" property="id"/>
+        <result column="ROAD" property="road"/>
+        <result column="REGION_ID" property="regionId"/>
+	</resultMap>
+	
+    <select id="getRoadByRegionId" resultMap="RoadMap">
+		SELECT ID,ROAD,REGION_ID FROM ROAD WHERE REGION_ID = #{regionId}
+    </select>
+    
+   	<insert id="insertRoad">
+		INSERT INTO ESERVICE.DBO.ROAD(
+			ID,ROAD,REGION_ID
+		) VALUES (
+			(SELECT MAX(ID)+1 FROM ROAD ),
+			#{road , jdbcType=VARCHAR},
+			#{regionId, jdbcType=VARCHAR}
+		)
+	</insert>
+    
+    
+</mapper>

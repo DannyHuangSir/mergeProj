@@ -1,5 +1,6 @@
 package com.twfhclife.eservice_batch.mapper;
 
+import com.twfhclife.eservice_batch.model.IndividualChooseVo;
 import com.twfhclife.eservice_batch.model.TransRiskLevelVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,4 +15,6 @@ public interface TransRiskLevelMapper {
     void updateIndividual(TransRiskLevelVo vo);
 
     String getTop1PolicyNo(@Param("rocId") String rocId);
+    
+    IndividualChooseVo getIndividualChooseByRocId(@Param("rocId") String  rocId);
 }
