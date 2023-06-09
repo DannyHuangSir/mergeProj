@@ -208,6 +208,8 @@ public interface OnlineChangeUtil {
 	public static final String MEDICAL_MAIL_035="MEDICAL_MAIL_035";
 	/**內部人員通知	轉收件通知	理賠聯盟鏈轉收申請通知*/
 	public static final String ELIFE_MAIL_026="ELIFE_MAIL_026";
+	public static final String ELIFE_MAIL_071="ELIFE_MAIL_071";
+	public static final String ELIFE_SMS_071="ELIFE_SMS_071";
 	/**已持有投資標的轉換-備註條款*/
 	public static final String INVESTMENT_TRANSFORMATION_REMARKS="INVESTMENT_TRANSFORMATION_REMARKS";
 	/**已持有投資標的轉換-同意條款*/

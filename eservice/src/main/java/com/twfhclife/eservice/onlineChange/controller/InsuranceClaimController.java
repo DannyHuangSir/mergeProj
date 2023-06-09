@@ -23,11 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -439,7 +435,6 @@ public class InsuranceClaimController extends BaseUserDataController {
 					// 設定交易序號
 					String transNum = transService.getTransNum();
 					claimVo.setTransNum(transNum);
-					addAttribute("signTransNum", transNum);
 					// 狀態歷程
 					TransStatusHistoryVo hisVo = new TransStatusHistoryVo();
 					//hisVo.setCustomerName(OnlineChangeUtil.CUSTOMER_NAME);
@@ -451,57 +446,17 @@ public class InsuranceClaimController extends BaseUserDataController {
 					hisVo.setIdentity(userDetail.getUserId());
 					addAttribute("claimVo", claimVo);
 
-
 					Map<String,Object> rMap = insuranceClaimService.insertTransInsuranceClaim(claimVo, hisVo);
 					int result = (int) rMap.get("result");
 					if (result <= 0) {
 						transAddResult = ReturnHeader.FAIL_CODE;
 					} else {
 						transAddResult = ReturnHeader.SUCCESS_CODE;
-						logger.info("start send mail");
-						Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo((String)rMap.get("status"));
-						Map<String, String> paramMap = new HashMap<String, String>();
-						paramMap.put("TransNum", claimVo.getTransNum());
-						//paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
-						//paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
-						logger.info("Trans Num : {}", claimVo.getTransNum());
-						logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
-						logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
-						logger.info("receivers={}", (List)mailInfo.get("receivers"));
-						logger.info("user phone : {}", claimVo.getPhone());
-						logger.info("user mail : {}", claimVo.getMail());
-						List<String> receivers = new ArrayList<String>();
-						
-						String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
-						paramMap.put("LoginTime", loginTime);
-						
-						//發送系統管理員
-						receivers = (List)mailInfo.get("receivers");
-						//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
-							//使用新郵件範本
-						messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_025, receivers, paramMap, "email");
-
-
-						//發送保戶MAIL
-						receivers = new ArrayList<String>();
-						receivers.add(claimVo.getMail());
-						paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
-						logger.info("user mail : {}", claimVo.getMail());
-						//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
-							//使用新郵件範本
-						messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_024, receivers, paramMap, "email");
-						logger.info("End send mail");
-
-
-						//發送保戶SMS
-						receivers = new ArrayList<String>();
-						receivers.add(claimVo.getPhone());
-						paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
-						logger.info("user phone : {}", claimVo.getPhone());
-						messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_SMS_005, receivers, paramMap, "sms");
-
 						if (StringUtils.equals(claimVo.getSignAgree(), "Y")) {
-							return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
+							return "redirect:policyClaims-wait-sign/" + transNum;
+						} else {
+							//不需要數位身份驗證，發送通知
+							sendPolicyClaimNotify(claimVo, (String) rMap.get("status"));
 						}
 					}
 //				}
@@ -512,6 +467,56 @@ public class InsuranceClaimController extends BaseUserDataController {
 			addDefaultSystemError();
 		}
 		return "frontstage/onlineChange/policyClaims/policyClaims-success";
+	}
+
+	private void sendPolicyClaimNotify(TransInsuranceClaimVo claimVo, String status) {
+		logger.info("start send mail");
+		Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo(status);
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("TransNum", claimVo.getTransNum());
+		//paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+		//paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+		logger.info("Trans Num : {}", claimVo.getTransNum());
+		logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
+		logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
+		logger.info("receivers={}", (List)mailInfo.get("receivers"));
+		logger.info("user phone : {}", claimVo.getPhone());
+		logger.info("user mail : {}", claimVo.getMail());
+		List<String> receivers = new ArrayList<String>();
+
+		String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+		paramMap.put("LoginTime", loginTime);
+
+		//發送系統管理員
+		receivers = (List)mailInfo.get("receivers");
+		//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+		//使用新郵件範本
+		messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_025, receivers, paramMap, "email");
+
+
+		//發送保戶MAIL
+		receivers = new ArrayList<String>();
+		receivers.add(claimVo.getMail());
+		paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+		logger.info("user mail : {}", claimVo.getMail());
+		//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+		//使用新郵件範本
+		messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_024, receivers, paramMap, "email");
+		logger.info("End send mail");
+
+
+		//發送保戶SMS
+		receivers = new ArrayList<String>();
+		receivers.add(claimVo.getPhone());
+		paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+		logger.info("user phone : {}", claimVo.getPhone());
+		messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_SMS_005, receivers, paramMap, "sms");
+	}
+
+	@PostMapping("/policyClaims-wait-sign/{transNum}")
+	public String policyClaimsWaitSign(@PathVariable(name = "transNum") String transNum) {
+		addAttribute("signTransNum", transNum);
+		return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
 	}
 	
 	@RequestLog
@@ -531,7 +536,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 			logger.error("Unable to get data from downloadPolicyClaimPDF: {}", ExceptionUtils.getStackTrace(e));
 		}
 
-		return new HttpEntity<byte[]>(document, header);
+		return new HttpEntity<>(document, header);
 	}
 
 	@RequestLog

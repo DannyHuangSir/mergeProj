@@ -1,13 +1,12 @@
 package com.twfhclife.alliance.controller;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.twfhclife.alliance.model.*;
+import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice.onlineChange.model.Bxcz415CallBackDataVo;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
@@ -15,8 +14,10 @@ import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.web.model.*;
+import com.twfhclife.eservice_api.service.IMessagingTemplateService;
 import com.twfhclife.generic.utils.AesUtil;
 import com.twfhclife.generic.utils.ApConstants;
+import com.twfhclife.generic.utils.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -479,12 +480,18 @@ public class ClaimChainController{
 						ret.setMsg("數位身分驗證已簽署！");
 						return ret;
 					}
-					if (StringUtils.equals(vo.getCode(), "0") && Lists.newArrayList("SIGN_U_S", "SIGN_L_S").contains(vo.getData().getSignStatus())) {
+					if (StringUtils.equals(vo.getCode(), "0")) {
+						TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
+						sendPolicyClaimNotify(claimVo, "1");
 						transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
 					} else if (StringUtils.equals(vo.getCode(), "-2")) {
 						transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+						TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
+						sendFailPolicyClaimNotify(claimVo, "數位身分驗證失敗");
 					} else if (StringUtils.equals(vo.getCode(), "-3")) {
 						transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+						TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
+						sendFailPolicyClaimNotify(claimVo, "數位簽署失敗");
 					}
 					int result = insuranceClaimService.updateSignRecordStatus(vo.getCode(), vo.getMsg(), data);
 					if (result > 0) {
@@ -503,6 +510,110 @@ public class ClaimChainController{
 		}
 		logger.info("End ClaimChainController.callAPI415().");
 		return ret;
+	}
+
+	@Autowired
+	private IMessagingTemplateService messagingTemplateService;
+
+	private void sendFailPolicyClaimNotify(TransInsuranceClaimVo claimVo, String transStatus) {
+		logger.info("start send mail");
+		Map<String, String> paramMap = Maps.newHashMap();
+		paramMap.put("TransNum", claimVo.getTransNum());
+		logger.info("Trans Num : {}", claimVo.getTransNum());
+		logger.info("user phone : {}", claimVo.getPhone());
+		logger.info("user mail : {}", claimVo.getMail());
+		List<String> receivers = new ArrayList<String>();
+
+		//發送保戶MAIL
+		receivers = new ArrayList<String>();
+		receivers.add(claimVo.getMail());
+		paramMap.put("TransStatus", transStatus);
+		String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+		paramMap.put("LoginTime", loginTime);
+		paramMap.put("TransNum", claimVo.getTransNum());
+		logger.info("user mail : {}", claimVo.getMail());
+		//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+		//使用新郵件範本
+		MessageTriggerRequestVo apiReq1 = new MessageTriggerRequestVo();
+		apiReq1.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_MAIL_071);
+		apiReq1.setSendType("email");
+		apiReq1.setMessagingReceivers(receivers);
+		apiReq1.setParameters(paramMap);
+		apiReq1.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+		messagingTemplateService.triggerMessageTemplate(apiReq1);
+		logger.info("End send mail");
+
+		//發送保戶SMS
+		receivers = new ArrayList<String>();
+		receivers.add(claimVo.getPhone());
+		logger.info("user phone : {}", claimVo.getPhone());
+		MessageTriggerRequestVo apiReq2 = new MessageTriggerRequestVo();
+		apiReq2.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_SMS_071);
+		apiReq2.setSendType("sms");
+		apiReq2.setMessagingReceivers(receivers);
+		apiReq2.setParameters(paramMap);
+		apiReq2.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+		messagingTemplateService.triggerMessageTemplate(apiReq2);
+	}
+
+	private void sendPolicyClaimNotify(TransInsuranceClaimVo claimVo, String status) {
+		logger.info("start send mail");
+		Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo(status);
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("TransNum", claimVo.getTransNum());
+		//paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+		//paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+		logger.info("Trans Num : {}", claimVo.getTransNum());
+		logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
+		logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
+		logger.info("receivers={}", (List)mailInfo.get("receivers"));
+		logger.info("user phone : {}", claimVo.getPhone());
+		logger.info("user mail : {}", claimVo.getMail());
+		List<String> receivers = new ArrayList<String>();
+
+		String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+		paramMap.put("LoginTime", loginTime);
+
+		//發送系統管理員
+		receivers = (List)mailInfo.get("receivers");
+		//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+		//使用新郵件範本
+		MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
+		apiReq.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_MAIL_025);
+		apiReq.setSendType("email");
+		apiReq.setMessagingReceivers(receivers);
+		apiReq.setParameters(paramMap);
+		apiReq.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+		messagingTemplateService.triggerMessageTemplate(apiReq);
+
+		//發送保戶MAIL
+		receivers = new ArrayList<String>();
+		receivers.add(claimVo.getMail());
+		paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+		logger.info("user mail : {}", claimVo.getMail());
+		//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+		//使用新郵件範本
+		MessageTriggerRequestVo apiReq1 = new MessageTriggerRequestVo();
+		apiReq1.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_MAIL_024);
+		apiReq1.setSendType("email");
+		apiReq1.setMessagingReceivers(receivers);
+		apiReq1.setParameters(paramMap);
+		apiReq1.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+		messagingTemplateService.triggerMessageTemplate(apiReq1);
+		logger.info("End send mail");
+
+		//發送保戶SMS
+		receivers = new ArrayList<String>();
+		receivers.add(claimVo.getPhone());
+		paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+		logger.info("user phone : {}", claimVo.getPhone());
+		MessageTriggerRequestVo apiReq2 = new MessageTriggerRequestVo();
+		apiReq2.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_SMS_005);
+		apiReq2.setSendType("sms");
+		apiReq2.setMessagingReceivers(receivers);
+		apiReq2.setParameters(paramMap);
+		apiReq2.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+		messagingTemplateService.triggerMessageTemplate(apiReq2);
 	}
 
 
