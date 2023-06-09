@@ -214,7 +214,7 @@ public class BatchUploadEZService {
 			} if("I".equals(vo.getType())) {
 				formId = "E3001101";
 			} if("Z".equals(vo.getType())) {
-				formId = "E3001101";
+				formId = "E3001102";
 			}
 			indexDataVo.setFormId(formId);
 
@@ -606,5 +606,86 @@ public class BatchUploadEZService {
 		}
 		return type;
 	}
-	
+
+	public String uploadSignFile(SignFileVo vo) throws Exception {
+		logger.debug("***Start uploadFile***");
+		String result = null;
+
+		File file = null;
+		String fileExtension = "pdf";
+		file = File.createTempFile(vo.getSignFileId(), fileExtension);
+		file = base64ToFile(file, vo.getFileBase64());
+
+		if (file != null) {
+			UploadServiceStub stub = new UploadServiceStub(EZ_ACQUIRE_ENDPOINT);
+			UploadFileDocument upploadFileDocument = UploadFileDocument.Factory.newInstance();
+			UploadFile uploadFile = upploadFileDocument.addNewUploadFile();
+
+			String token = this.getEZToken();
+
+			EZIndexDataVo indexDataVo = new EZIndexDataVo();
+
+			//ScanType永遠設PDF
+			indexDataVo.setScanTypeId("PDF");
+
+			indexDataVo.setBranch(EZ_INDEXDATA_BRANCH);
+			indexDataVo.setBusinessType("INSURANCE_CLAIM");
+
+			/**
+			 * E5000101 數位身份簽署文件
+			 */
+			String formId = "E5000101";
+
+			indexDataVo.setFormId(formId);
+
+			Gson gson = new Gson();
+			String indexData = gson.toJson(indexDataVo);
+
+			String sha1 = this.getFileSHA1(file);
+			byte[] fileContent = Files.readAllBytes(file.toPath());
+			uploadFile.setAppId(EZ_ACQUIRE_ID);
+			uploadFile.setTokenInfo(token);
+
+			uploadFile.setFileType(fileExtension.toUpperCase());
+
+			uploadFile.setFile(fileContent);
+			uploadFile.setChecksum(sha1);
+			uploadFile.setIndexData(indexData);
+			logger.debug("=== uploadFile AppId:{}, TokenInfo:{}, FileType:{}, FileName:{}, Checksum:{}, IndexData:{} ===",
+					EZ_ACQUIRE_ID, token, fileExtension.toUpperCase(), file.getName(), sha1, indexData);
+
+			UploadFileResponseDocument resp = null;
+			if (StringUtils.isEmpty(indexDataVo.getFormId())) {
+				//在很極端的狀況下，會突然無法判斷formId給影像系統
+				logger.info("indexDataVo.getFormId() is empty,don't call uploadFile() now.");
+				return null;
+			} else {
+				resp = stub.uploadFile(upploadFileDocument);
+			}
+
+			UploadFileResponse uploadFileResponse = resp.getUploadFileResponse();
+			String jsonResult = uploadFileResponse.getUploadFileResult();
+			logger.debug("###uploadFile jsonResult:{}" + jsonResult);
+
+			EZAcquireVo ezVo = gson.fromJson(jsonResult, EZAcquireVo.class);
+			logger.debug("uploadFile taskId:{}, documentId:{}, status:{}",
+					ezVo.getTaskId(), ezVo.getDocumentId(), ezVo.getStatus());
+
+			if (ezVo.getStatus().toUpperCase().startsWith("S")) {
+				ezVo.setTransNum(vo.getTransNum());
+				ezVo.setDocumentType(fileExtension.toUpperCase());
+				int cut = new TransEndorsementDao().insertTransEZ(ezVo);
+				if (cut == 0) {
+					logger.debug("insertTransEZ failed!");
+				}
+				result = ezVo.getTaskId();
+			}
+
+		} else {
+			logger.error("File is null.fileName={}", vo.getSignFileId());
+		}
+
+		logger.debug("***End uploadFile***");
+		return result;
+	}
 }

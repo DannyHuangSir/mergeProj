@@ -3,6 +3,8 @@ package com.twfhclife.eservice_batch.service;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.twfhclife.eservice_batch.dao.BxczDao;
+import com.twfhclife.eservice_batch.model.SignFileVo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -68,7 +70,48 @@ public class BatchUploadInsuranceClaimFileDataService {
 							}else {
 								logger.error("更新TRANS_INSURANCE_CLAIM_FILEDATAS.EZ_ACQUIRE_TASK_ID失敗,eztaskid="+rtnTaskId+",FD_ID="+vo.getFdId());
 							}
-							
+
+						} else {
+							logger.info("上傳聯盟保單理賠文件到影像系統失敗, transNum: " + vo.getTransNum());
+						}
+					}//end-if
+				}//end-for
+			}
+
+			//3.上傳數位簽署文件到影像系統
+			BxczDao bxczDao = new BxczDao();
+			List<SignFileVo> signFileVos = bxczDao.getSignFiles();
+
+			if (signFileVos != null && !signFileVos.isEmpty() && signFileVos.size() > 0) {
+				for (SignFileVo vo : signFileVos) {
+					//4.呼叫影像系統
+					if (!"dev".equalsIgnoreCase(enviorment)) {
+						logger.info("============================================================================");
+						logger.info(String.format( "%s. TransNum: %s", vo.getTransNum(), "開始上傳聯盟保單理賠文件..."));
+
+						//上傳申請單到影像系統
+						BatchUploadEZService batchUploadEZService = new BatchUploadEZService();
+
+						String rtnTaskId = null;
+						try {
+							rtnTaskId = batchUploadEZService.uploadSignFile(vo);
+						} catch (Exception e) {
+							logger.info(e.toString());
+						}
+
+						if (rtnTaskId != null) {
+							logger.info("上傳聯盟保單理賠文件到影像系統完成");
+
+							//3.get task_id from EZ_Acquire, update to TRANS_INSURANCE_CLAIM_FILEDATAS.EZ_ACQUIRE_TASK_ID
+							vo.setEzAcquireTaskId(rtnTaskId);
+							int updateTaskId = bxczDao.updateEzAcquireTaskId(vo);
+							logger.info("ready to update,fdId={},ezAcquireTaskId={},return={}", vo.getSignFileId(), vo.getEzAcquireTaskId(), updateTaskId);
+							if (updateTaskId > 0) {
+								logger.info("更新BXCZ_SIGN_FILEDATA.EZ_ACQUIRE_TASK_ID成功.");
+							} else {
+								logger.error("更新BXCZ_SIGN_FILEDATA.EZ_ACQUIRE_TASK_ID失敗,eztaskid=" + rtnTaskId + ",FD_ID=" + vo.getSignFileId());
+							}
+
 						} else {
 							logger.info("上傳聯盟保單理賠文件到影像系統失敗, transNum: " + vo.getTransNum());
 						}

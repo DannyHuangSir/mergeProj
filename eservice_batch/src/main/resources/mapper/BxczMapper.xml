@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.eservice_batch.mapper.BxczMapper">
+
+	<update id="updateEzAcquireTaskId">
+		update ESERVICE.dbo.BXCZ_SIGN_FILEDATA
+		set EZ_ACQUIRE_TASK_ID = #{vo.ezAcquireTaskId}
+		where FILE_ID = #{vo.signFileId}
+	</update>
+
+	<select id="getSignFiles" resultType="com.twfhclife.eservice_batch.model.SignFileVo">
+		SELECT R1.CONTENT_BASE64 fileBase64, R1.TRANS_NUM transNum, R1.FILE_ID signFileId FROM ESERVICE.DBO.BXCZ_SIGN_RECORD R INNER JOIN (
+		SELECT MAX(SIGN_TIME) SIGN_TIME,TRANS_NUM, D.CONTENT_BASE64, D.FILE_ID FROM ESERVICE.DBO.BXCZ_SIGN_RECORD R INNER JOIN ESERVICE.DBO.BXCZ_SIGN_FILEDATA D
+		ON R.SIGN_FILEID = D.FILE_ID
+		WHERE SIGN_FILEID IS NOT NULL AND SIGN_DOWNLOAD = 'Y' AND D.EZ_ACQUIRE_TASK_ID IS NULL GROUP BY TRANS_NUM, D.CONTENT_BASE64, D.FILE_ID
+		) R1 ON R.SIGN_TIME = R1.SIGN_TIME AND R.TRANS_NUM = R1.TRANS_NUM
+	</select>
+</mapper>

@@ -118,5 +118,6 @@
 		<mapper resource="mapper/RegionMapper.xml" />	
 		<mapper resource="mapper/RoadMapper.xml" />		
 		<mapper resource="mapper/TransChooseLevelMapper.xml" />
+		<mapper resource="mapper/BxczMapper.xml" />
 	</mappers>
 </configuration>
