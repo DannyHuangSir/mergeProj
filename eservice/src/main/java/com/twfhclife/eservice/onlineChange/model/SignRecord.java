@@ -9,7 +9,7 @@ public class SignRecord {
     private String verifyCode;
     private String verifyMsg;
     private String actionId;
-    private String fileId;
+    private String signFileId;
     private String idVerifyStatus;
     private Date idVerifyTime;
     private Date idVerifyType;
@@ -98,12 +98,12 @@ public class SignRecord {
         this.actionId = actionId;
     }
 
-    public String getFileId() {
-        return fileId;
+    public String getSignFileId() {
+        return signFileId;
     }
 
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
+    public void setSignFileId(String signFileId) {
+        this.signFileId = signFileId;
     }
 
     public Date getIdVerifyTime() {

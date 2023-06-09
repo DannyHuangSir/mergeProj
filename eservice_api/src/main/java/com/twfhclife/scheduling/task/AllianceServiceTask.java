@@ -209,7 +209,7 @@ public class AllianceServiceTask {
 							SignRecord signRecord = insuranceClaimService.getNewSignStatus(icvo.getTransNum());
 							if (signRecord != null) {
 								newVo.setActionId(signRecord.getActionId());
-								newVo.setToaFileId(signRecord.getFileId());
+								newVo.setToaFileId(signRecord.getSignFileId());
 							}
 							if (CollectionUtils.isNotEmpty(icvo.getFileDatas())) {
 								Map<String, List<InsuranceClaimFileDataVo>> map = Maps.newHashMap();
@@ -897,7 +897,7 @@ public class AllianceServiceTask {
 					String fileBase64 = allianceService.postForJson(api417Url, headers, params);
 					if (CollectionUtils.isNotEmpty(fileIds)) {
 						claimChainService.updateSignDownloaded(s.getActionId());
-						claimChainService.addSignFileData(s.getFileId(), clientId, fileBase64);
+						claimChainService.addSignFileData(s.getSignFileId(), clientId, fileBase64);
 					}
 				} catch (Exception e) {
 					logger.error("call api417 error: {}, {}, {}", headers, params, e);

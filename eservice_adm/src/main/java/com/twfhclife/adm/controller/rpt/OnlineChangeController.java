@@ -216,7 +216,7 @@ public class OnlineChangeController extends BaseController {
 				signRecordMap.put("signTime", signRecord.getSignTime() != null ? DateUtil.formatDateTime(signRecord.getSignTime(), "yyyy/MM/dd HH:mm") : "");
 				signRecordMap.put("signStatus", SignStatusUtil.signStatusToStr(null, signRecord.getSignStatus()));
 				signRecordMap.put("signDownload", signRecord.getSignDownload());
-				signRecordMap.put("signFileId", signRecord.getFileId());
+				signRecordMap.put("signFileId", signRecord.getSignFileId());
 				addAttribute("signRecord", signRecordMap);
 			}
 		} catch (Exception e) {
