@@ -853,6 +853,7 @@ public class LoginController extends BaseUserDataController {
 
 			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
 			String idToken = loginService.doLoinBxcz(bxczState.getActionId(), param.getCode(), eserviceBxczRedirectUri);
+			logger.info("call pbs-102 result id_token is: {}", idToken);
 			String rocId = parseIdToken(idToken);
 			if (StringUtils.isBlank(rocId)) {
 				addAttribute("errorMessage", "login error!");
