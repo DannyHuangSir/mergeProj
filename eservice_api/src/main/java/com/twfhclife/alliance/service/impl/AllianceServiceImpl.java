@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.twfhclife.alliance.model.SignInsuranceClaimMapperVo;
+import com.twfhclife.eservice.auth.dao.BxczDao;
+import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -436,5 +438,13 @@ public class AllianceServiceImpl implements IExternalService{
 		} else {
 			return null;
 		}
+	}
+
+	@Autowired
+	private BxczDao bxczDao;
+
+	@Override
+	public int addSignBxczApiRecord(BxczSignApiLog bxczSignApiLog) {
+		return bxczDao.addSignApiLog(bxczSignApiLog);
 	}
 }

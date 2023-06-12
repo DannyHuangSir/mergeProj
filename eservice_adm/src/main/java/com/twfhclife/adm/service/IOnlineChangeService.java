@@ -535,4 +535,6 @@ public interface IOnlineChangeService {
     SignRecord getNewSignStatus(String transNum);
 
     byte[] getSignPdf(String signFileId);
+
+	List<BxczSignApiLog> getSignHistoryList(BxczSignApiLog vo);
 }

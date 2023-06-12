@@ -678,4 +678,6 @@ public interface OnlineChangeDao {
 	SignRecord getNewSignStatus(@Param("transNum") String transNum);
 
     String getSignFileByFileId(@Param("signFileId") String signFileId);
+
+	List<BxczSignApiLog> getSignApiRecordByTransNum(@Param("transNum") String transNum);
 }

@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.auth.dao;
 
 import com.twfhclife.eservice.onlineChange.model.Bxcz415CallBackDataVo;
+import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,4 +23,5 @@ public interface BxczDao {
     SignRecord getNewSignStatus(@Param("transNum") String transNum);
 
     String getSignFileByFileId(String signFileId);
+    int addSignApiLog(@Param("vo") BxczSignApiLog vo);
 }

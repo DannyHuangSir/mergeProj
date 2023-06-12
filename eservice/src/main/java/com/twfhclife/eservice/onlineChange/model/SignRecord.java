@@ -17,6 +17,15 @@ public class SignRecord {
     private Date signTime;
     private String signDownload;
     private String transNum;
+    private String seNo;
+
+    public String getSeNo() {
+        return seNo;
+    }
+
+    public void setSeNo(String seNo) {
+        this.seNo = seNo;
+    }
 
     public Date getIdVerifyType() {
         return idVerifyType;

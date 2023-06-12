@@ -25,7 +25,7 @@
 	</select>
 
 	<select id="getNotDownloadSignFile" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
-		SELECT SIGN_FILEID signFileId, ACTION_ID actionId FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE SIGN_FILEID IS NOT NULL AND SIGN_DOWNLOAD = 'N'
+		SELECT SIGN_FILEID signFileId, ACTION_ID actionId, TRANS_NUM transNum FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE SIGN_FILEID IS NOT NULL AND SIGN_DOWNLOAD = 'N'
 	</select>
 
 	<update id="updateSignDownloaded">
@@ -47,4 +47,10 @@
 	<select id="getSignFileByFileId" resultType="string">
 		SELECT TOP 1 CONTENT_BASE64 FROM ESERVICE.DBO.BXCZ_SIGN_FILEDATA WHERE FILE_ID = #{signFileId}
 	</select>
+
+	<insert id="addSignApiLog" parameterType="com.twfhclife.eservice.onlineChange.model.BxczSignApiLog">
+		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_API_LOG (CALL_TYPE, API_NAME, API_RESP_CODE, API_RESP_MSG, ACTION_ID, TRANS_NUM, CALL_START_TIME, CALL_END_TIME)
+		VALUES (#{vo.apiType}, #{vo.apiName}, #{vo.apiRespCode}, #{vo.apiRespMsg}, #{vo.actionId}, #{vo.transNum}, #{vo.callStartTime}, #{vo.callEndTime})
+	</insert>
+
 </mapper>

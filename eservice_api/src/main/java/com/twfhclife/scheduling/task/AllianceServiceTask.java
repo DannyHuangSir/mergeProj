@@ -12,6 +12,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.twfhclife.alliance.model.*;
 import com.twfhclife.eservice.auth.dao.BxczDao;
+import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -639,12 +640,15 @@ public class AllianceServiceTask {
 									headers.add("Access-Token", clientSecret);
 									headers.setContentType(MediaType.APPLICATION_JSON);
 									try {
+										Date startTime = new Date();
 										String api416Resp = allianceService.postApi416(api416Url, headers, api416Params);
 										String code = MyJacksonUtil.readValue(api416Resp, "/code");
 										String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
 										Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
 										SignRecord record = gson.fromJson(api416Resp, SignRecord.class);
 										bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
+										BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "數位身分驗證/數位簽署狀態查詢", "0", "", "", record.getTransNum(), startTime, new Date());
+										bxczDao.addSignApiLog(bxczSignApiLog);
 									} catch (Exception e) {
 										logger.error("call api416 error: {}, {}, {}", headers, params, e);
 										throw new Exception("call api416 error: " + e);
@@ -894,11 +898,14 @@ public class AllianceServiceTask {
 				headers.add("Access-Token", clientSecret);
 				headers.setContentType(MediaType.APPLICATION_JSON);
 				try {
+					Date startTime = new Date();
 					String fileBase64 = allianceService.postForJson(api417Url, headers, params);
 					if (CollectionUtils.isNotEmpty(fileIds)) {
 						claimChainService.updateSignDownloaded(s.getActionId());
 						claimChainService.addSignFileData(s.getSignFileId(), clientId, fileBase64);
 					}
+					BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "下載檔案", "0", "", s.getActionId(), s.getTransNum(), startTime, new Date());
+					bxczDao.addSignApiLog(bxczSignApiLog);
 				} catch (Exception e) {
 					logger.error("call api417 error: {}, {}, {}", headers, params, e);
 				}

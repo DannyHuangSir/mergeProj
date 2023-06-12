@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.twfhclife.alliance.model.SignInsuranceClaimMapperVo;
+import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
@@ -50,4 +51,6 @@ public interface IExternalService {
 	String postApi416(String api416Url, HttpHeaders headers, Map<String, String> api416Params) throws Exception;
 
 	String postApi108(String urlApi108, Map<String, String> api108Params) throws Exception;
+
+    int addSignBxczApiRecord(BxczSignApiLog bxczSignApiLog);
 }

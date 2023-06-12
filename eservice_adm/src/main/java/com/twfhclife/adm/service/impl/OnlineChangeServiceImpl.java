@@ -1788,4 +1788,9 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		String fileBase64 = onlineChangeDao.getSignFileByFileId(signFileId);
 		return org.apache.commons.lang3.StringUtils.isBlank(fileBase64) ? null : Base64.getDecoder().decode(fileBase64);
     }
+
+    @Override
+    public List<BxczSignApiLog> getSignHistoryList(BxczSignApiLog vo) {
+        return onlineChangeDao.getSignApiRecordByTransNum(vo.getTransNum());
+    }
 }

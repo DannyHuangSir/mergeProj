@@ -534,6 +534,45 @@
 				</div>
 			</div>
 		</div>
+		<!--保險存摺歷程-->
+		<div class="modal fade in" id="modal-container-bxczSignLog" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up"  style="width: 700px;">
+					<div class="modal-header"> 保險存摺歷程
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body clearfix  grey2">
+						<div class="form-horizontal" style="border-bottom: 0;">
+							<div class="form-group">
+								<label class="col-xs-3" id="div_bxcz_app_item">申請項目：</label>
+								<div class="col-xs-9" id="bxcz_application_items"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-3">申請序號：</label>
+								<div class="col-xs-9" id="bxcz_trans_num"></div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-body clearfix grey2">
+						<table class="tablesaw" style="background: #FFFFFF;">
+							<thead>
+							<tr>
+								<th>動作類型</th>
+								<th>動作名稱</th>
+								<th>執行時間起</th>
+								<th>執行時間止</th>
+								<th>執行狀態</th>
+								<th>錯誤訊息</th>
+							</tr>
+							</thead>
+							<tbody id="sign_log_body">
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!--聯盟案件狀態歷程-->
 		<div class="modal fade in" id="modal-container-medicalOnAllianceStatusMsg" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -1930,6 +1969,7 @@
 		                }
 		            });
 			};
+
 			function viewFailure(index){
 				detail = JSON.parse($('#view_failure_'+index).html());
 				$('#modal-FailureConfirm').modal({
@@ -1940,6 +1980,17 @@
 				$('#e_code').html(detail.code);
 				$('#e_message').html(detail.msg);
 			}
+
+			function viewSignFailure(code, msg){
+				$('#modal-FailureConfirm').modal({
+					show: true,
+					backdrop: 'static',
+					keyboard: false
+				});
+				$('#e_code').html(code);
+				$('#e_message').html(msg);
+			}
+
 			function clickItems(str, TRANS_NUM) {
 				if ($("#"+str)[0].checked) {
 					var urls = {
@@ -3029,6 +3080,47 @@ function submitDnsApproved() {
 		alertMsg("請勾選已確認!");
 	}
 }
+
+	function onBxczSign(TRANS_TYPE, TRANS_NUM, CASE_ID, FROM_COMPANY_ID, str){
+				var data = {};
+				data = {transNum: TRANS_NUM};
+				$('#bxcz_trans_num').html(TRANS_NUM);
+				$('#bxcz_application_items').html($('#label_apply_item').html());
+				$('#modal-container-bxczSignLog').modal({
+						show: true,
+						backdrop: 'static',
+						keyboard: false
+					});
+			    $('#sign_log_body').html('');
+				$.ajax({
+		                type : 'POST',
+		                contentType : 'application/json',
+		                url : /*[[@{/onlineChange/signHistoryList}]]*/,
+		                data : JSON.stringify(data),
+		                success : function(response) {
+							var html = '';
+							if (response.resultData != null) {
+								response.resultData.forEach(function(item,index){
+									html += '<tr>'+
+												'<td>'+item.apiType+'</td>'+
+												'<td>'+item.apiName+'</td>'+
+												'<td>'+item.callStartTime+'</td>'+
+												'<td>'+item.callEndTime+'</td>'+
+												'<td>'+ (item.apiRespCode == '0'? '成功': '失败') +'</td>'+
+												'<td>';
+													if (item.apiRespCode != '0') {
+														html += '<button type="button" onclick="viewSignFailure(\''+item.apiRespCode+'\',\'' + item.apiRespMsg +'\')">查看</button>';
+														html += '<label hidden id="view_failure_'+index +'">'+item.apiRespMsg+'</label>';
+													}
+
+										html +=	'</td>'+
+											'</tr>';
+								});
+								$('#sign_log_body').html(html);
+							}
+		                }
+		            });
+			};
 		/*]]>*/
 		</script>
 	</body>

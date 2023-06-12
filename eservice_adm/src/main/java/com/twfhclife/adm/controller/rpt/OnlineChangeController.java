@@ -1265,6 +1265,23 @@ public class OnlineChangeController extends BaseController {
 		return processResponseEntity();
 	}
 
+	/***
+	 * 查詢數位簽署歷程
+	 * @param vo
+	 * @return
+	 */
+	@PostMapping("/onlineChange/signHistoryList")
+	public ResponseEntity<ResponseObj> signHistory(@RequestBody BxczSignApiLog vo) {
+		try {
+			List<BxczSignApiLog> results = onlineChangeService.getSignHistoryList(vo);
+			processSuccess(results);
+		} catch (Exception e) {
+			logger.error("Unable to signHistoryList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
 	/**
 	 * 查詢聯盟案件歷程
 	 *
