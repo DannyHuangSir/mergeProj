@@ -12,6 +12,16 @@ public class NoteNotifyVo implements Serializable {
     private String agentBranchM;
     private String pSalesCode;
 
+    private String branchCode;
+
+    public String getBranchCode() {
+        return branchCode;
+    }
+
+    public void setBranchCode(String branchCode) {
+        this.branchCode = branchCode;
+    }
+
     public String getPolicyNo() {
         return policyNo;
     }

@@ -86,28 +86,28 @@ public class ServiceServiceTask {
                         paramMap.put("PolicyNo", noteNotify.getPolicyNo());
                         logger.info("send 照會截止日通知: {}", paramMap);
                         messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_JD_MAIL-001", receivers, paramMap, "email");
+                    }
 
-                        if (StringUtils.isNotBlank(vo.getBranchId())) {
-                           List<UsersVo> branchLeaders = usersDao.getBranchLeaders(noteNotify.getAgentCode(), StringUtils.isBlank(noteNotify.getAgentBranchM()) ? "" : noteNotify.getAgentBranchM(), vo.getBranchId());
-                           if (CollectionUtils.isNotEmpty(branchLeaders)) {
-                               branchLeaders.stream().filter(x -> !StringUtils.equals(x.getUserId(), vo.getUserId())).forEach(i -> {
-                                   JdzqNotifyMsg branchMsg = new JdzqNotifyMsg();
-                                   branchMsg.setUsers(Lists.newArrayList(i.getUserId()));
-                                   branchMsg.setTitle("照會截止日通知");
-                                   branchMsg.setMsg(String.format("要保人%s/被保險人%s-保單號碼%s案件的照會回覆截止日期為%s，再請確認是否已回覆。", noteNotify.getAppName(), noteNotify.getInsName(), noteNotify.getPolicyNo(), noteNotify.getDueDate()));
-                                   branchMsg.setNotifyTime(new Date());
-                                   jdMsgNotifyDao.addJdNotifyMsg(branchMsg, new Date());
-                                   Map<String, String> branchMsgParamMap = new HashMap();
-                                   List<String> branchMsgReceivers = new ArrayList<>();
-                                   branchMsgReceivers.add(i.getEmail());
-                                   branchMsgParamMap.put("AppName", noteNotify.getAppName());
-                                   branchMsgParamMap.put("InsName", noteNotify.getInsName());
-                                   branchMsgParamMap.put("DueDate", noteNotify.getDueDate());
-                                   branchMsgParamMap.put("PolicyNo", noteNotify.getPolicyNo());
-                                   logger.info("send 照會截止日通知: {}", branchMsgParamMap);
-                                   messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_JD_MAIL-001", branchMsgReceivers, branchMsgParamMap, "email");
-                               });
-                           }
+                    if (StringUtils.isNotBlank(noteNotify.getBranchCode())) {
+                        List<UsersVo> branchLeaders = usersDao.getBranchLeaders(noteNotify.getAgentCode(), StringUtils.isBlank(noteNotify.getAgentBranchM()) ? "" : noteNotify.getAgentBranchM(), noteNotify.getBranchCode());
+                        if (CollectionUtils.isNotEmpty(branchLeaders)) {
+                            branchLeaders.stream().filter(x -> !StringUtils.equals(x.getUserId(), vo != null ? vo.getUserId() : null)).forEach(i -> {
+                                JdzqNotifyMsg branchMsg = new JdzqNotifyMsg();
+                                branchMsg.setUsers(Lists.newArrayList(i.getUserId()));
+                                branchMsg.setTitle("照會截止日通知");
+                                branchMsg.setMsg(String.format("要保人%s/被保險人%s-保單號碼%s案件的照會回覆截止日期為%s，再請確認是否已回覆。", noteNotify.getAppName(), noteNotify.getInsName(), noteNotify.getPolicyNo(), noteNotify.getDueDate()));
+                                branchMsg.setNotifyTime(new Date());
+                                jdMsgNotifyDao.addJdNotifyMsg(branchMsg, new Date());
+                                Map<String, String> branchMsgParamMap = new HashMap();
+                                List<String> branchMsgReceivers = new ArrayList<>();
+                                branchMsgReceivers.add(i.getEmail());
+                                branchMsgParamMap.put("AppName", noteNotify.getAppName());
+                                branchMsgParamMap.put("InsName", noteNotify.getInsName());
+                                branchMsgParamMap.put("DueDate", noteNotify.getDueDate());
+                                branchMsgParamMap.put("PolicyNo", noteNotify.getPolicyNo());
+                                logger.info("send 照會截止日通知: {}", branchMsgParamMap);
+                                messageTemplateClient.sendNoticeViaMsgTemplate("ELIFE_JD_MAIL-001", branchMsgReceivers, branchMsgParamMap, "email");
+                            });
                         }
                     }
                 } catch (Exception e) {
