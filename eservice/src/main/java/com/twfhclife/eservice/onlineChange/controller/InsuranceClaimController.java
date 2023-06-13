@@ -453,7 +453,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 					} else {
 						transAddResult = ReturnHeader.SUCCESS_CODE;
 						if (StringUtils.equals(claimVo.getSignAgree(), "Y")) {
-							return "redirect:policyClaims-wait-sign/" + transNum;
+							return "redirect:policyClaims-wait-sign?transNum=" + transNum;
 						} else {
 							//不需要數位身份驗證，發送通知
 							sendPolicyClaimNotify(claimVo, (String) rMap.get("status"));
@@ -513,8 +513,8 @@ public class InsuranceClaimController extends BaseUserDataController {
 		messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_SMS_005, receivers, paramMap, "sms");
 	}
 
-	@PostMapping("/policyClaims-wait-sign/{transNum}")
-	public String policyClaimsWaitSign(@PathVariable(name = "transNum") String transNum) {
+	@GetMapping("/policyClaims-wait-sign")
+	public String policyClaimsWaitSign(@RequestParam("transNum") String transNum) {
 		addAttribute("signTransNum", transNum);
 		return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
 	}
