@@ -185,7 +185,35 @@
 								</div>
 							</div>
 						</div>
-						
+						<div class="modal fade in" id="modal-container-print-detail" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog" style="width:750px;">
+								<div class="modal-content lock-up">
+									<div class="modal-header">申請資料
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+									</div>
+									<div class="modal-body clearfix  grey2">
+										<div class="form-horizontal" style="border-bottom: 0;">
+											<div class="form-group">
+												<label class="col-sm-3">列印下列資料：</label>
+												<div class="col-sm-9">
+													<button style="width: 80px;border: 0;padding: 5px 0;" type="button" class="bgOrange" th:onclick="'javascript:onPrint(\'' + ${detailData['TRANS_NUM']} + '\');'">列印</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="modal-body clearfix  grey2">
+										<div  id="print_detail" class="panel panel-default profile-user-info">
+
+										</div>
+									</div>
+									<div class="modal-footer grey2">
+										<a href="#" data-dismiss="modal" aria-label="Close">
+											<button type="button" class="bgGrey lock2" id="deny">關閉視窗</button>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -515,13 +543,13 @@
 													<div class="col-sm-9">
 														<div class="col-sm-12 upload-drop-zone boardDotted">
 															<th:block th:each="vo1 : ${fileDataEntry.value}">
-																<th:block th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.pdf')}">
+																<th:block th:if="${#strings.containsIgnoreCase(vo1.FILE_NAME,'.pdf')}">
 																	<img th:onclick="'javascript:imgConfirm(this,\'pdf\')'" th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}"  width="50"/>
 																</th:block>
-																<th:block th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.jpg')}">
+																<th:block th:if="${#strings.containsIgnoreCase(vo1.FILE_NAME,'.jpg')}">
 																	<img th:onclick="'javascript:imgConfirm(this,\'png\')'"  th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}"  width="50"/>
 																</th:block>
-																<th:block th:if="${#strings.containsIgnoreCase(vo1.fileOrPng,'.png')}">
+																<th:block th:if="${#strings.containsIgnoreCase(vo1.FILE_NAME,'.png')}">
 																	<img th:onclick="'javascript:imgConfirm(this,\'png\')'"  th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}"  width="50"/>
 																</th:block>
 															</th:block>
@@ -531,21 +559,16 @@
 											</th:block>
 										</th:block>
 									 </div>
-									
 								</div>
 							</div>
 						</div>
-
-					</div>			
+					</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</td>
 </tr>
-
-
 <script th:inline="javascript">
     /*<![CDATA[*/
         // var fileDatas = /*[[${detailData.FileDatas}]]*/;
@@ -578,6 +601,10 @@
 			}else{
 				alertMsg("「檔案過大無法於畫面呈現，請至影像系統查詢」");
 			}
+		}
+
+		function onPrint(transNum){
+			window.open('/eservice_adm/onlineChange/getPolicyClaimPrint?transNum=' + transNum)
 		}
 
 		function onMedicalPrint(){
