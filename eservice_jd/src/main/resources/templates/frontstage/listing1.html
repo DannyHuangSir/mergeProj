@@ -119,8 +119,9 @@
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">保單簽收日 </th>
 																	<td><b class="tablesaw-cell-label mobile-b">保單簽收日 </b> <span class="mobile-span">
-																		<th:block th:if="${vo.pmdaMail == '3' or vo.pmdaMail == '4' or vo.assnStatus == 'B'}" th:text="${vo.assnTrDate != null ? vo.assnTrDate : '-'}"></th:block>
-																		<th:block th:if="${vo.pmdaMail != '3' && vo.pmdaMail != '4' && vo.assnStatus != 'B'}">-</th:block>
+																		<th:block th:if="${vo.assnStatus == 'B' or vo.assnStatus == ''}" th:text="${(vo.assnDate != null and vo.assnDate != '') ? vo.assnDate : '-'}"></th:block>
+																		<th:block th:if="${(vo.pmdaMail == '3' or vo.pmdaMail == '4') and vo.assnStatus != 'B' and vo.assnStatus != ''}" th:text="${(vo.assnTrDate != null and vo.assnTrDate != '') ? vo.assnTrDate : '-'}"></th:block>
+																		<th:block th:if="${vo.pmdaMail != '3' and vo.pmdaMail != '4' and vo.assnStatus != 'B' and vo.assnStatus != ''}">-</th:block>
 																	</span></td>
 																</tr>
 																<tr class="noEvent">
