@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
     <div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -101,7 +102,7 @@
 				                                        <td th:text="${vo1.desc != null ? vo1.desc : '-'}"></td>
 				                                        <td th:text="${vo1.paabAmt != null ? vo1.paabAmt : '-'}"></td>
 				                                        <td th:text="${vo1.actAmt != null ? vo1.actAmt : '-'}"></td>
-														<td th:text="${vo1.paymentCode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo1.paymentCode].parameterValue : '-'}"></td>
+														<td th:text="${vo1.paymentCode != null ? session.SYSTEM_PARAMETER['PAYMENT_TYPE'][vo1.paymentCode].parameterValue : '-'}"></td>
 				                                    </tr>
 				                                </tbody>
 				                            </table>

@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
     <div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -72,7 +73,7 @@
 				                                        <tr th:each="vo1: ${premiums}" class="h65 noEvent">
 				                                            <td th:text="${vo1.beginDate}"></td>
 				                                            <td>
-				                                                <p th:text="${vo1.premium}"></p>
+				                                                <p th:text="${vo1.currentYearDividend}"></p>
 				                                            </td>
 				                                            <td>
 																<p th:text="${vo1.balance}"></p>

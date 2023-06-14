@@ -36,17 +36,17 @@ public class BaseRestClient {
 	private static final Logger logger = LogManager.getLogger(BaseRestClient.class);
 
 	@Value("${eservice_api.accessKey}")
-	protected static String ESERVICE_API_SECRET;
+	protected String ESERVICE_API_SECRET;
 
 	@Value("${wso2.accessKey}")
-	protected static String WSO2_API_KEY;
+	protected String WSO2_API_KEY;
 
-	public static String getAccessKey() {
-		return BaseRestClient.ESERVICE_API_SECRET;
+	public String getAccessKey() {
+		return ESERVICE_API_SECRET;
 	}
 	
-	public static void setAccessKey(String accessKey) {
-		BaseRestClient.ESERVICE_API_SECRET = accessKey;
+	public void setAccessKey(String accessKey) {
+		ESERVICE_API_SECRET = accessKey;
 	}
 
 	@SuppressWarnings("rawtypes")

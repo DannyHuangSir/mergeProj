@@ -229,17 +229,10 @@ public class PolicyController extends BaseController {
                 }
             }
 
-            if (StringUtils.isEmpty(startDate) && StringUtils.isEmpty(endDate)) {
-                Date d = new Date();
-                d.setYear(d.getYear() - 2);
-                startDate = DateUtil.formatDateTime(d, "yyyy/MM/dd");
-                endDate = DateUtil.formatDateTime(new Date(), "yyyy/MM/dd");
-            }
-
             if (StringUtils.isEmpty(errorMessage)) {
                 List<JdFundTransactionVo> fundTransactionList = null;
                 JdPolicyFundTransactionResponse policyFundTransactionResponse = policyService
-                        .getPolicyFundTransaction(getUserId(), policyNo, trCode, startDate, endDate, pageNum, defaultPageSize);
+                        .getPolicyFundTransaction(getUserId(), policyNo, trCode, pageNum, defaultPageSize);
                 logger.info("Get user[{}] data from eservice_api[getPolicyFundTransactionPageList]");
                 fundTransactionList = policyFundTransactionResponse.getFundTransactionList();
                 processSuccess(fundTransactionList);

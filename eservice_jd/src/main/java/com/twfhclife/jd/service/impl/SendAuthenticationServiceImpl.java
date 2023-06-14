@@ -87,39 +87,9 @@ public class SendAuthenticationServiceImpl implements ISendAuthenticationService
 		} catch(Exception e) {
 			emailErr = e.getMessage();
 		}
-		String mobileErr = "";
-		try {
-			if (mobile != null && !"".equals(mobile)) {
-				String mobileTos[] = mobile.split(";");
-				for (int i = 0; i < mobileTos.length; i++) {
-					String mobileTo = mobileTos[i];
-					if(mobileTo !=null && !mobileTo.equals("")){
-						sendSmsService.sendSms(mobileTo, content);
-						try {
-							httpUtil.postCommLogAdd(url, accessKey, new CommLogRequest(ApConstants.SYSTEM_ID, "sms", mobileTo, content));
-						} catch (Exception e) {
-							logger.error("Unable to postCommLogAdd(sms) in SendAuthenticationServiceImpl: {}", ExceptionUtils.getStackTrace(e));
-						}
-					}
-				}
-			}
-		} catch(Exception e) {
-			mobileErr = e.getMessage();
-		}
 
-
-		if(MyStringUtil.isNotNullOrEmpty(emails) && MyStringUtil.isNotNullOrEmpty(mobile)) {
-			if(MyStringUtil.isNotNullOrEmpty(emailErr) && MyStringUtil.isNotNullOrEmpty(mobileErr)) {
-				throw new RuntimeException("Send email and SMS fail.");
-			}
-		} else {
-			if(MyStringUtil.isNotNullOrEmpty(emails) && MyStringUtil.isNotNullOrEmpty(emailErr)) {
-				throw new RuntimeException("Send email fail.");
-			} else if(MyStringUtil.isNotNullOrEmpty(mobile) && MyStringUtil.isNotNullOrEmpty(mobileErr)) {
-				throw new RuntimeException("Send mobile SMS fail.");
-			} else {
-				
-			}
+		if(MyStringUtil.isNotNullOrEmpty(emails) && MyStringUtil.isNotNullOrEmpty(emailErr)) {
+			throw new RuntimeException("Send email fail.");
 		}
 		
 		return authentication;

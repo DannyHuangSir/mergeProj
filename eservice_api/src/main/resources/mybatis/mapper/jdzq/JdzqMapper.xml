@@ -215,7 +215,7 @@
     </select>
 
     <select id="getNoteSchedule" resultType="com.twfhclife.eservice.api.jdzq.model.NoteNotifyVo">
-        SELECT A.AppName, A.InsName, A.PolicyNo, B.DueDate, A.PSalesID PSalesCode, A.AgentCode, A.AgentBranchM
+        SELECT A.AppName, A.InsName, A.PolicyNo, B.DueDate, A.PSalesID PSalesCode, A.AgentCode, A.AgentBranchM, A.BranchCode
         FROM MainPolicy A
         INNER JOIN
         PolicyNote B ON A.Main_Key = B.Main_Key

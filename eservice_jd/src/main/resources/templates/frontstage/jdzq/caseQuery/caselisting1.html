@@ -36,7 +36,12 @@
 				                        </p>
 				                        <i class="foo-business_7 foo-2x hidden-xs"></i> <th:block th:text="${policyName}"></th:block>
 										<div class="dropdown pull-right r30">
-											<a class="btn-return" href="returnCase">回案件進度查詢</a>
+											<th:block th:if="${parentUrl == 'personalCaseListing1'}">
+												<a class="btn-return" href="returnDashboard">回送件列表</a>
+											</th:block>
+											<th:block th:if="${parentUrl == 'caselisting1'}">
+												<a class="btn-return" href="returnCase">回案件進度查詢</a>
+											</th:block>
 										</div>
 				                    </div>
 				                    <div class="list col-md-12">

@@ -10,6 +10,7 @@
 	<div th:replace="fragments/header :: top"></div>
 	<header th:replace="fragments/header :: header"></header>
 	<div th:replace="fragments/nav"></div>
+	<div th:replace="fragments/header :: loadingModal"></div>
 	<div class="main-panel" style="position: absolute;">
 		<div class="content">
 			<div class="page-inner">
@@ -52,7 +53,7 @@
 													保單號碼:<span style="margin-right: 15px;" th:text="${policyNo}"></span>
 													要保人:<span style="margin-right: 15px;" th:text="${vo.lipmName}"></span>
 													被保險人:<span style="margin-right: 15px;" th:text="${vo.lipiName}"></span>
-													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span>
+													保單幣別:<span th:text="${vo.currency != null ? (session.SYSTEM_PARAMETER['CURRENCY'] != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : '-')  : '-'}"></span>
 												</p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
@@ -98,11 +99,7 @@
 															<hr class="splitLine">
 															<p class="marginTop25 enSmall enSmallDate" th:text="${vo1.exchRate != null ? vo1.exchRate : '-'}"></p>
 														</td>
-														<td class="text-left table3" style="width:100px" th:switch="${vo1.trCode}">
-															<th:block th:case="'01'">現金</th:block>
-															<th:block th:case="'00'">再投資</th:block>
-															<th:block th:case="*">-</th:block>
-														</td>
+														<td class="text-left table3" style="width:100px" th:text="${ vo1.trCode != null ? ( session.SYSTEM_PARAMETER['Account_Status'] != null ? session.SYSTEM_PARAMETER['Account_Status'][vo1.trCode].parameterValue : '-' ) : '-'}"></td>
 														<td class="text-left " th:text="${#numbers.formatDecimal((vo1.units != null ? vo1.units : 0), 1,'COMMA',4,'POINT')}">
 														</td>
 														<td class="text-left " th:text="${vo1.expeNtd != null ? vo1.expeNtd : '-'}">
@@ -128,6 +125,6 @@
 	</div>
 
 </div>
-<footer th:replace="fragments/footer"></footer></script>
+<footer th:replace="fragments/footer"></footer>
 </body>
 </html>

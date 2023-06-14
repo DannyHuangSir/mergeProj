@@ -54,6 +54,7 @@ function postPolicyNo(actionUrl, policyNo) {
 
 function postPolicyListType(actionUrl, policyNo, policyListType) {
 	popupLoading();
+	showLoadingModal();
 	console.log("postPolicyListType:"+actionUrl +","+ policyNo+","+policyListType);
 	var policyForm = $('<form>');
 	$(policyForm).attr("action", actionUrl);

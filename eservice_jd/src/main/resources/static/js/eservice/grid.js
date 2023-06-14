@@ -25,6 +25,7 @@ function eserviceGrid() {
 			url: obj.sQueryUrl,
 			data : formData
 		}).done(function (response) {
+			hideLoadingModal();
 		    obj.resp = response
 			if (response.result == 'SUCCESS') {
 				$(obj.sGridId).find('tbody').eq(0).html('');
@@ -123,6 +124,7 @@ function eserviceGrid() {
 				openAlert(response.resultMsg);
 			}
 		}).fail(function (jqXHR, textStatus) {
+			hideLoadingModal();
 			// alert('error!');
 		});
 	};

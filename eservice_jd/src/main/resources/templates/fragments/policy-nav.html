@@ -3,8 +3,8 @@
 <div class="col-xs-6 col-sm-3 col-md-2 sidebar-offcanvas nopd" id="sidebar">
     <div class="list-group tog1 box-border">
         <div class="tog2">保單資訊</div>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing1')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing1} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保單基本資料</a>
-        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing11')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing11} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">保障內容與金額</a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing1')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing1} + '\',\'' + ${policyNo} + '\')'" class="list-group-item tog3">保單基本資料</a>
+        <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing11')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing11} + '\',\'' + ${policyNo} + '\')'" class="list-group-item tog3">保障內容與金額</a>
 
         <div class="tog2">一般查詢</div>
         <a class=""th:classappend="${#httpServletRequest.requestURI == (#httpServletRequest.getContextPath() + '/listing3')} ? 'active' : ''" th:href="'javascript:postPolicyListType(\'' + @{/listing3} + '\', \'' + ${policyNo} + '\')'" class="list-group-item tog3">繳費紀錄</a>

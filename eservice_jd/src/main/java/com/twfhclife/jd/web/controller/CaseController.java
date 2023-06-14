@@ -5,6 +5,7 @@ import com.twfhclife.jd.web.domain.CaseQueryVo;
 import com.twfhclife.jd.web.domain.ResponseObj;
 import com.twfhclife.jd.web.model.CaseVo;
 import com.twfhclife.jd.web.service.ICaseService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,11 @@ public class CaseController extends BaseController {
 		addAttribute("queryCase", vo == null ? new CaseQueryVo() : vo);
 		addAttribute("autoQuery", vo == null ? false : true);
 		return "frontstage/jdzq/caseQuery/case-query";
+	}
+
+	@GetMapping("/returnDashboard")
+	public String returnDashboard() {
+		return "frontstage/dashboard";
 	}
 
 	@PostMapping(value = { "/personalCaseList" })
@@ -62,14 +68,15 @@ public class CaseController extends BaseController {
 	@RequestMapping(value = { "/personalCaseListing1" })
 	public String personalCaseListing1(@RequestParam("policyNo") String policyNo) {
 		removeFromSession("queryCase");
-		return caselisting1(policyNo);
+		return caselisting1(policyNo,"personalCaseListing1");
 	}
 
 
 	@RequestMapping(value = { "/caselisting1" })
-	public String caselisting1(@RequestParam("policyNo") String policyNo) {
+	public String caselisting1(@RequestParam("policyNo") String policyNo, String parentUrl) {
 		addAttribute("policyNo", policyNo);
 		CaseVo vo = caseService.getCaseProcess(getUserId(), policyNo);
+		addAttribute("parentUrl", StringUtils.isBlank(parentUrl) ? "caselisting1" : "personalCaseListing1");
 		addAttribute("policyName", vo.getPolicyType());
 		addAttribute("vo",  vo);
 		return "frontstage/jdzq/caseQuery/caselisting1";
