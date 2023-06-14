@@ -331,6 +331,13 @@
 										</th:block>
 									</div>
 								</th:block>
+								<div class="form-group">
+									<label class="col-sm-4"><span style="color: #ff5300; font-size: 16px">*</span>是否進行數位身份驗證及數位簽署：</label>
+									<div class="col-sm-8">
+										<th:block th:if="${claimVo.signAgree eq 'Y'}">同意</th:block>
+										<th:block th:if="${claimVo.signAgree eq 'N'}">不同意</th:block>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="form-horizontal">

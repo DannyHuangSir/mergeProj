@@ -508,6 +508,19 @@
 											</article>
 										</div>
 									</div>
+									<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否進行數位身份驗證及數位簽署：</label>
+									<div class="col-sm-9">
+										<div class="radio inline">
+											<label>
+												<div class="radio-btn"><i><input type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
+											</label>
+										</div>
+										<div class="radio inline">
+											<label>
+												<div class="radio-btn"><i><input id="cancelSign" checked type="radio" name="signAgree" value="N" ></i></div>不同意
+											</label>
+										</div>
+									</div>
 									<div class="clearfix"></div>
 								</div>
 							</div>
@@ -734,6 +747,30 @@
 		</div>
 	</div>
 
+	<div class="modal fade in" id="confirmBxczModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 center1 grey2">
+					<h3>需具備保險存摺會員帳號才可進行數位身份驗證及數位簽署，是否仍繼續執行?</h3>
+					<form method="POST" id="cancelTransForm" action="cancelApplyTrans">
+						<input type="hidden" id="cancelTransType" name="transType" value=""/>
+						<input type="hidden" id="cancelTransNum" name="transNum" value=""/>
+					</form>
+					<p class="marginTop20">
+						<a href="#">
+							<button class="btn-login lock2" onclick="confirmSignAgree('N')">取消</button>
+						</a>
+						<a href="#">
+							<button class="btn-login lock2" onclick="confirmSignAgree('Y')" >確認</button>
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="itemMedicalData" name="cloneItemMedicalData" style="display: none;">
 		<hr />
@@ -1454,6 +1491,18 @@
 			let end = [Math.max(...arr1),Math.max(...arr2)];//区间的两个最大值
 			return Math.max(...start) <= Math.min(...end);//最大值里的最小值 是否 小于等于 最大值的最小值
 		}
+
+		function clickAgreeSign() {
+			$('#confirmBxczModal').modal('show')
+		}
+
+		function confirmSignAgree(sign) {
+			$('#confirmBxczModal').modal('hide')
+			if (sign == 'N') {
+				$("#cancelSign").click()
+			}
+		}
+
 	</script>
 
 </body>

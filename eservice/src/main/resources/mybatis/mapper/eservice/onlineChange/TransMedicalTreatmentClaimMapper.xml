@@ -144,7 +144,7 @@
 		INSERT INTO 
        		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
        		(
-       		<include refid="Base_Column_List" />
+       		<include refid="Base_Column_List" />, SIGN_AGREE
        		)
        	VALUES
        		(
@@ -207,7 +207,8 @@
        			#{vo.authorizationEndDate, jdbcType=VARCHAR},
        			#{vo.fromHospitalId, jdbcType=VARCHAR},
        			#{vo.toHospitalId, jdbcType=VARCHAR},
-       			#{vo.cpoa, jdbcType=VARCHAR}
+       			#{vo.cpoa, jdbcType=VARCHAR},
+       			#{vo.signAgree, jdbcType=VARCHAR}
 			)
 	</insert>
 	<select id="selectInsuranceClaimFileDataId" resultType="java.lang.Float">
