@@ -258,7 +258,7 @@ public class OnlineChangeController extends BaseController {
 			logger.error("Unable to getPolicyClaimPrint: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
-		return "backstage/rpt/onlineChange-policyClaimPrint";
+		return "backstage/rpt/onlineChangeDetail-policyClaimPrint";
 	}
 
 	/**

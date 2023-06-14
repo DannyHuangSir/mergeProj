@@ -199,7 +199,7 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 		            	fileData.setClaimSeqId(transInsuranceClaimVo.getClaimSeqId());//獲取ClaimSeqId
 						fileData.setFilePath(filepath);
 						fileData.setFileName(fileName);
-						fileData.setType("C");
+						fileData.setType("#");
 						fileData.setRfeId(rfeId);
 						fileData.setFileBase64(this.converFileToBase64Str(filepath+'/'+fileName));
 

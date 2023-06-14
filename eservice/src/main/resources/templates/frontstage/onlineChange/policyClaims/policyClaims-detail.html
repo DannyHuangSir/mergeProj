@@ -345,12 +345,12 @@
                        <th:block th:each="fileDataEntry:${fileData.entrySet()}">
                            <div class="form-group">
                                <label class="col-sm-3">
-                                   <th:block th:if="${fileDataEntry.key == 'C'}">
+                                   <th:block th:if="${fileDataEntry.key == '#'}">
                                        補件：
                                    </th:block>
                                    <th:block Rth:if="${session.INSURANCE_CLAIM_UPLOADFILE != null}">
                                        <th:block th:each="file : ${session.INSURANCE_CLAIM_UPLOADFILE}">
-                                           <th:block th:if="${fileDataEntry.key != 'C' && fileDataEntry.key eq file.value.parameterCode}">
+                                           <th:block th:if="${fileDataEntry.key != '#' && fileDataEntry.key eq file.value.parameterCode}">
                                                <th:block th:inline="text">[[${file.value.parameterName}]]</th:block> ：
                                            </th:block>
                                        </th:block>

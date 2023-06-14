@@ -1856,7 +1856,7 @@
 	
 	<select id="getFileDatas" resultMap="TransInsuranceCliamFileDataResultMap" parameterType="java.lang.Float">
 		select * from ESERVICE.DBO.TRANS_INSURANCE_CLAIM_FILEDATAS
-		where CLAIMS_SEQ_ID = #{claimSeqId} and TYPE IN ('MEDICAL_RECEIPT','DIAGNOSIS_CERTIFICATE','DIGI_SERVICE_CONSENT_FORM', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'Z')
+		where CLAIMS_SEQ_ID = #{claimSeqId} and TYPE IN ('MEDICAL_RECEIPT','DIAGNOSIS_CERTIFICATE', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'Z')
 		order by CREATE_DATE desc
 	</select>
 	
@@ -1924,8 +1924,11 @@
        				<when test="vo.type!=null and vo.type=='DIAGNOSIS_CERTIFICATE'.toString()">
        					'A',
        				</when>
+					<when test="vo.type!=null and vo.type=='MEDICAL_RECEIPT'.toString()">
+						'B',
+					</when>
        				<otherwise>
-       					'B',
+       					#{vo.type},
        				</otherwise>
        			</choose>
        			#{vo.fileName, jdbcType=VARCHAR},
