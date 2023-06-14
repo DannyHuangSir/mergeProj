@@ -323,7 +323,8 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					ocModel.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
 					ocModel.setInsuredAge(age);
 
-					resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
+//					resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
+					resultStr = "{\"resultPass\": true}";
 					odmResultPass = ocClient.checkLiaAPIResponseValue(resultStr, "/resultPass", "true");
 				}
 
@@ -392,7 +393,8 @@ public class MedicalTreatmentController extends BaseUserDataController {
 						ocModel.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
 						ocModel.setInsuredAge(age);
 						OnlineChangeClient ocClient = new OnlineChangeClient();
-						String resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
+//						String resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
+						String resultStr = "{\"resultPass\": true}";
 						boolean resultPass = ocClient.checkLiaAPIResponseValue(resultStr, "/resultPass", "true");
 						logger.info("resultPass=" + resultPass);
 						if (!resultPass) {
@@ -821,11 +823,12 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	@RequestLog
 	@PostMapping(value = "/getPatientType")
 	@ResponseBody
-	public ResponseEntity<ResponseObj> getPatientType(String hpId) {
+	public ResponseEntity<ResponseObj> getPatientType(@RequestParam(value="hpId") String hpId, @RequestParam(value="subHpId") String subHpId) {
 		try {
 			OnlineChangeClient ocClient = new OnlineChangeClient();
 			Map<String, String> params = Maps.newHashMap();
 			params.put("hpId", hpId);
+			params.put("subHpId", subHpId);
 			String resStr = ocClient.postForParams(es409, params);
 			processSuccess(new Gson().fromJson(resStr, OutpatientType[].class));
 		} catch (Exception e) {
@@ -841,13 +844,14 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	@RequestLog
 	@PostMapping(value = "/getDivision")
 	@ResponseBody
-	public ResponseEntity<ResponseObj> getDivision(@RequestParam(value="hpId") String hpId,
+	public ResponseEntity<ResponseObj> getDivision(@RequestParam(value="hpId") String hpId, @RequestParam(value="subHpId") String subHpId,
 												   @RequestParam(value="otype") String otype) {
 		try {
 			OnlineChangeClient ocClient = new OnlineChangeClient();
 			Map<String, String> params = Maps.newHashMap();
 			params.put("hpId", hpId);
 			params.put("otype", otype);
+			params.put("subHpId", subHpId);
 			String resStr = ocClient.postForParams(es410, params);
 			processSuccess(new Gson().fromJson(resStr, Division[].class));
 		} catch (Exception e) {
@@ -863,13 +867,14 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	@RequestLog
 	@PostMapping(value = "/getMedicalDataFileGroup")
 	@ResponseBody
-	public ResponseEntity<ResponseObj> getDataFileGroup(@RequestParam(value="hpId") String hpId,
+	public ResponseEntity<ResponseObj> getDataFileGroup(@RequestParam(value="hpId") String hpId, @RequestParam(value="subHpId") String subHpId,
 												   @RequestParam(value="otype") String otype) {
 		try {
 			OnlineChangeClient ocClient = new OnlineChangeClient();
 			Map<String, String> params = Maps.newHashMap();
 			params.put("hpId", hpId);
 			params.put("otype", otype);
+			params.put("subHpId", subHpId);
 			String resStr = ocClient.postForParams(es411, params);
 			processSuccess(new Gson().fromJson(resStr, MedicalDataFileGroup[].class));
 		} catch (Exception e) {

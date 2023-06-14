@@ -275,6 +275,22 @@
 											</div>
 										</th:block>
 									</div>
+									<div class="form-group">
+										<label class="col-sm-4" style="padding-right: 40px;">分院：</label>
+										<th:block th:if="${hospitalList != null}">
+											<div class="col-sm-8">
+												<th:block th:each="vo : ${hospitalList}">
+													<th:block th:if="${claimVo.toHospitalId eq vo.hpid}">
+														<th:block th:each="vo1 : ${vo.hpBranch}">
+															<th:block th:if="${claimVo.toSubHospitalId eq vo1.subHpId}">
+																<th:block th:inline="text">[[${vo1.subHpName}]]</th:block>
+															</th:block>
+														</th:block>
+													</th:block>
+												</th:block>
+											</div>
+										</th:block>
+									</div>
 								</th:block>
 								<th:block th:each="vo :${claimVo.medicalInfo}">
 									<hr style="border:1px dashed  #F2F1F1"/>

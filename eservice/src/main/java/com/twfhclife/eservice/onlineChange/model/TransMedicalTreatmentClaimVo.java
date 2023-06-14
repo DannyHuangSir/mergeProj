@@ -242,6 +242,8 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	 */
 	private String sendAlliance;
 
+	private String signAgree;
+
 	/**
 	 * 此案件的上傳檔案狀態清單
 	 */
@@ -278,6 +280,7 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	 * 轉收公司代號清單</br> 包含案件的每家轉收公司代號</br>*value  "L2,L3,L4"
 	 * */
 	private String toHospitalId;
+	private String toSubHospitalId;
 
 	//創建的時間
 	private Timestamp createDate;
@@ -301,6 +304,14 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	private List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfo = Lists.newArrayList();
 
 	private String medicalInfoList;
+
+	public String getToSubHospitalId() {
+		return toSubHospitalId;
+	}
+
+	public void setToSubHospitalId(String toSubHospitalId) {
+		this.toSubHospitalId = toSubHospitalId;
+	}
 
 	public String getEmail() {
 		return email;
@@ -962,6 +973,14 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 				", fromHospitalId='" + fromHospitalId + '\'' +
 				", toHospitalId='" + toHospitalId + '\'' +
 				'}';
+	}
+
+	public String getSignAgree() {
+		return signAgree;
+	}
+
+	public void setSignAgree(String signAgree) {
+		this.signAgree = signAgree;
 	}
 
 //	@Override

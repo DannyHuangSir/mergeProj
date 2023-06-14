@@ -387,10 +387,25 @@
 														<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>醫療單位：</label>
 														<div class="col-sm-9">
 															<div class="selector-box">
-																<select class="selector" name="toHospitalId" class="hospital" onchange="changeHospital(this)">
+																<select class="selector" id="toHospitalId" name="toHospitalId" class="hospital" onchange="changeHospital(this)">
 																	<option th:each="vo : ${hospitalList}"
 																			th:value="${vo.hpid}"
 																			th:utext="${vo.hpName}"/>
+																</select>
+															</div>
+														</div>
+														<div class="clearfix"></div>
+													</div>
+													<div class="check-list2 grey2">
+														<label class="col-sm-3">分院：</label>
+														<div class="col-sm-9">
+															<div class="selector-box">
+																<select class="selector" id="subHospitalId" name="toSubHospitalId" class="hospital" onchange="changeSubHospital()">
+																	<th:block th:if="${hospitalList != null && hospitalList.size() > 0}">
+																		<option th:each="vo : ${hospitalList.get(0).hpBranch}"
+																				th:value="${vo.subHpId}"
+																				th:utext="${vo.subHpName}"/>
+																	</th:block>
 																</select>
 															</div>
 														</div>
@@ -419,7 +434,7 @@
 															<div class="clearfix"></div>
 														</div>
 														<div class="check-list2 grey2">
-															<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>子科別：</label>
+															<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>	子科別：</label>
 															<div class="col-sm-9">
 																<div class="selector-box">
 																	<select class="selector subDivisionType">
@@ -681,7 +696,7 @@
 					<button   style="background-color: #CC7A02;" class="btn-signup" onclick="checkedPolicy()">下一步</button>
 				</div>
 			</div>
-			
+
 		</div>
 	</section>
 	<footer th:replace="fragments/footer"></footer>
@@ -834,6 +849,8 @@
 	<script th:inline="javascript">
 		var uploadFiles = /*[[${session.MEDICAL_TREATMENT_UPLOADFILE}]]*/;
 		var uploadMaxNumber = /*[[${uploadMaxNumber}]]*/;
+		var hospitalList = /*[[${hospitalList}]]*/;
+		var subHospitalMap = {}
 		if (uploadFiles != undefined && uploadFiles != null) {
 			$.each(uploadFiles,function(key,value){
 				$("#"+value.remark).fileinput({
@@ -880,6 +897,9 @@
 				});
 		}	
 	$(function(){
+		$(hospitalList).each(function(index, item){
+			subHospitalMap[item.hpid] = item.hpBranch
+		})
 	     $('#file-fr').fileinput({
 	        language: 'fr',
 	        uploadUrl: '#',
@@ -1374,7 +1394,8 @@
 				type : 'POST',
 				url : "getPatientType",
 				data : {
-					hpId: $(vm).val()
+					hpId: $(vm).val(),
+					subHpId: $("#subHospitalId").val()
 				},
 				success : function(response) {
 				    let html = ''
@@ -1401,7 +1422,8 @@
 				url : "getDivision",
 				data : {
 					hpId: hpVm.val(),
-					otype: $(vm).val()
+					otype: $(vm).val(),
+					subHpId: $("#subHospitalId").val()
 				},
 				success : function(response) {
 				    let html = ''
@@ -1440,7 +1462,8 @@
 				url : "getMedicalDataFileGroup",
 				data : {
 					hpId: hpVm.val(),
-					otype: $(vm).val()
+					otype: $(vm).val(),
+					subHpId: $("#subHospitalId").val()
 				},
 				success : function(response) {
 				    let html = ''
@@ -1479,11 +1502,23 @@
 			}
 		}
 
+		function changeSubHospital() {
+			$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
+				showPatientType($("#toHospitalId"), obj)
+			})
+		}
 		function changeHospital(vm) {
+			hpBranch = subHospitalMap[$(vm).find('option:selected').val()]
+			if (hpBranch != null) {
+				let subHtml = ''
+				$.each(hpBranch, function(inx, obj) {
+					subHtml += "<option value='" + obj.subHpId + "'>" + obj.subHpName +  "</option>"
+				})
+				$("#subHospitalId").html(subHtml)
+			}
 			$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
 				showPatientType(vm, obj)
 			})
-			$("[name='hpName']").val($(vm).find('option:selected').text())
 		}
 
 		function isIntersect(arr1,arr2){

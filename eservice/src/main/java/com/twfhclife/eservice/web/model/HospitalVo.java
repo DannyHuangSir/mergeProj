@@ -1,5 +1,7 @@
 package com.twfhclife.eservice.web.model;
 
+import com.google.common.collect.Lists;
+
 import java.util.List;
 
 /**
@@ -30,7 +32,18 @@ public class HospitalVo {
      */
     public List<Division> divisions;
 
-	public Float getId() {
+    public List<SubHospitalVo> hpBranch = Lists.newArrayList();
+
+
+    public List<SubHospitalVo> getHpBranch() {
+        return hpBranch;
+    }
+
+    public void setHpBranch(List<SubHospitalVo> hpBranch) {
+        this.hpBranch = hpBranch;
+    }
+
+    public Float getId() {
         return id;
     }
 
@@ -79,19 +92,19 @@ public class HospitalVo {
     }
     
     public OutpatientType[] getOutpatientTypes() {
-		return outpatientTypes;
-	}
+        return outpatientTypes;
+    }
 
-	public void setOutpatientTypes(OutpatientType[] outpatientTypes) {
-		this.outpatientTypes = outpatientTypes;
-	}
+    public void setOutpatientTypes(OutpatientType[] outpatientTypes) {
+        this.outpatientTypes = outpatientTypes;
+    }
 
-	public List<Division> getDivisions() {
-		return divisions;
-	}
+    public List<Division> getDivisions() {
+        return divisions;
+    }
 
-	public void setDivisions(List<Division> divisions) {
-		this.divisions = divisions;
-	}
-	
+    public void setDivisions(List<Division> divisions) {
+        this.divisions = divisions;
+    }
+
 }

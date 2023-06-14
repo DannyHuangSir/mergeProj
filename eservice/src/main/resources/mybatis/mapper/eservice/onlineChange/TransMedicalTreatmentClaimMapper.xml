@@ -58,6 +58,8 @@
 		<result property="fromHospitalId" column="FROM_HOSPITAL_ID" />
 		<result property="toHospitalId" column="TO_HOSPITAL_ID" />
 		<result property="cpoa" column="CPOA" />
+		<result property="signAgree" column="SIGN_AGREE" />
+		<result property="toSubHospitalId" column="TO_SUB_HOSPITAL_ID" />
 		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
 	</resultMap>
 	
@@ -73,6 +75,12 @@
 		<result property="hpid"  column="HP_ID" />
 		<result property="hpName"    column="HP_NAME" />
 		<result property="functionName"  column="FUNCTION_NAME" />
+		<collection property="hpBranch" resultMap="SubHospitalResultMap"></collection>
+	</resultMap>
+	<resultMap id="SubHospitalResultMap" type="com.twfhclife.eservice.onlineChange.model.SubHospital">
+		<result property="id" column="SUB_ID"/>
+		<result property="subHpId" column="SUB_HP_ID"/>
+		<result property="subHpName" column="SUB_HP_NAME"/>
 	</resultMap>
 	<resultMap id="HospitalInsuranceCompanyResultMap" type="com.twfhclife.eservice.onlineChange.model.HospitalInsuranceCompany">
 		<result property="id" column="ID" />
@@ -122,7 +130,7 @@
 			DISEASENAME,HOSPITAL,OTHERCOMPANYINSURED,OTHERINSUCOMMPANY,OTHERINSUTYPE,OTHERINSUAMOUNT,
 			OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE,
 			AUTHORIZATION_FILE_TYPE,AUTHORIZATION_START_DATE,AUTHORIZATION_END_DATE,FROM_HOSPITAL_ID,TO_HOSPITAL_ID,
-			CPOA
+			CPOA, SIGN_AGREE, TO_SUB_HOSPITAL_ID
 		from ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
 		where TRANS_NUM = #{transNum}
 		order by CREATE_DATE desc
@@ -144,7 +152,7 @@
 		INSERT INTO 
        		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
        		(
-       		<include refid="Base_Column_List" />, SIGN_AGREE
+       		<include refid="Base_Column_List" />, SIGN_AGREE, TO_SUB_HOSPITAL_ID
        		)
        	VALUES
        		(
@@ -208,7 +216,8 @@
        			#{vo.fromHospitalId, jdbcType=VARCHAR},
        			#{vo.toHospitalId, jdbcType=VARCHAR},
        			#{vo.cpoa, jdbcType=VARCHAR},
-       			#{vo.signAgree, jdbcType=VARCHAR}
+       			#{vo.signAgree, jdbcType=VARCHAR},
+       			#{vo.toSubHospitalId, jdbcType=VARCHAR}
 			)
 	</insert>
 	<select id="selectInsuranceClaimFileDataId" resultType="java.lang.Float">
@@ -266,13 +275,14 @@
 	</select>
 	<!--查詢當前功能的醫院,是API407存儲的-->
 	<select id="getHospitalList" resultMap="HospitalResultMap" parameterType="java.lang.String">
-		select  ID,HP_ID,HP_NAME,FUNCTION_NAME
-		from ESERVICE.DBO.HOSPITAL
-		where FUNCTION_NAME =#{functionName}
-	<if test="status != null and status!=''" >
-		AND STATUS=#{status}
-		</if>
-	</select>
+		select A.ID , A.HP_ID, A.HP_NAME, A.FUNCTION_NAME, B.ID SUB_ID, B.SUB_HP_NAME, B.SUB_HP_ID
+		from ESERVICE.DBO.HOSPITAL A LEFT JOIN
+			ESERVICE.DBO.SUB_HOSPITAL B ON A.ID = B.HP_ID
+		where A.FUNCTION_NAME =#{functionName}
+		<if test="status != null and status!=''" >
+			AND A.STATUS=#{status}
+			</if>
+		</select>
 	<!--查詢當前功能的保險公司,是API408存儲的-->
 	<select id="getHospitalInsuranceCompanyList" resultMap="HospitalInsuranceCompanyResultMap"  parameterType="java.lang.String">
 		select 	ID,INSURANCE_ID,INSURANCE_NAME,FUNCTION_NAME

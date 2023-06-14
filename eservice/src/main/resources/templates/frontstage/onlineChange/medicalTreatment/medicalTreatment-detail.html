@@ -246,6 +246,22 @@
                                 </th:block>
                             </div>
                         </th:block>
+                        <div class="form-group">
+                            <label class="col-sm-3" style="padding-right: 40px;">分院：</label>
+                            <th:block th:if="${hospitalList != null}">
+                                <div class="col-sm-9">
+                                    <th:block th:each="vo : ${hospitalList}">
+                                        <th:block th:if="${claimVo.toHospitalId eq vo.hpid}">
+                                            <th:block th:each="vo1 : ${vo.hpBranch}">
+                                                <th:block th:if="${claimVo.toSubHospitalId eq vo1.subHpId}">
+                                                    <th:block th:inline="text">[[${vo1.subHpName}]]</th:block>
+                                                </th:block>
+                                            </th:block>
+                                        </th:block>
+                                    </th:block>
+                                </div>
+                            </th:block>
+                        </div>
                         <th:block th:each="vo :${claimVo.medicalInfo}">
                             <hr style="border:1px dashed  #F2F1F1"/>
                             <div class="form-group">
@@ -330,6 +346,13 @@
                                 </th:block>
                             </div>
                         </th:block>
+                        <div class="form-group">
+                            <label class="col-sm-4">是否進行數位身份驗證及數位簽署：</label>
+                            <div class="col-sm-8">
+                                <th:block th:if="${claimVo.signAgree eq 'Y'}">同意</th:block>
+                                <th:block th:if="${claimVo.signAgree eq 'N'}">不同意</th:block>
+                            </div>
+                        </div>
                     </div>
                 <div class="form-horizontal">
                     <div class="tb3 mobile-toggle" data-toggle="true">
