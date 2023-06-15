@@ -881,6 +881,7 @@ public class LoginController extends BaseUserDataController {
 				loginService.noitfyUser(userId, keycloakUser);
 
 				addSession(ApConstants.KEYCLOAK_USER, keycloakUser);
+				addSession(ApConstants.LOGIN_IN_BXCZ, true);
 				addSession(ApConstants.LOGIN_USER_ID, keycloakUser.getUsername());
 
 				// 設定系統參數

@@ -95,8 +95,8 @@
 			$.ajax({
 				type : 'POST',
 				contentType : 'application/json',
-				url : 'generateBxczSignUrl',
-				data:  JSON.stringify({"transNum": [[${signTransNum}]], "type": "INSURANCE_CLAIM"),
+				url : 'generateMedicalTreatmentSignUrl',
+				data:  JSON.stringify({"transNum": [[${signTransNum}]], "type": "INSURANCE_CLAIM"}),
 				success : function(response) {
 					removeLoading()
 					if (response.result == 'SUCCESS') {

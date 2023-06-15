@@ -1,10 +1,9 @@
 package com.twfhclife.eservice.web.controller;
 
 import com.auth0.jwt.internal.org.apache.commons.codec.digest.HmacUtils;
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
-import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.util.AesUtil;
@@ -27,10 +26,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 @Controller
@@ -49,32 +46,32 @@ public class BxczController extends BaseController {
     private String secret;
 
     @Autowired
-    private IInsuranceClaimService insuranceClaimService;
+    private IBxczSignService bxczSignService;
+
     @Autowired
     private ITransService transService;
 
-    @PostMapping("/generateLipeiSignUrl")
-    public ResponseEntity<ResponseObj> generateLipeiSignUrl(@RequestBody TransVo transVo, HttpServletRequest request) {
+    @PostMapping("/generateBxczSignUrl")
+    public ResponseEntity<ResponseObj> generateBxczSignUrl(@RequestBody BxczState bxczState) {
         try {
-            if (StringUtils.isBlank(transVo.getTransNum())) {
+            if (StringUtils.isBlank(bxczState.getTransNum())) {
                 this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
             } else {
                 String actionId = UUID.randomUUID().toString().replaceAll("-", "");
-                addSession("lipeiActionId", actionId);
                 String idToken = getSessionStr("BXCZ_ID_TOKEN");
                 String encId = StringUtils.isBlank(idToken) ? "" : AesUtil.encrypt(idToken, actionId);
                 String code = HmacUtils.hmacSha256Hex(secret, "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F");
-                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, transVo.getTransNum(), ApConstants.INSURANCE_CLAIM, encId)).getBytes())
+                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, bxczState.getTransNum(), bxczState.getType(), encId)).getBytes())
                         + "&code=" + code;
                 SignRecord signRecord = new SignRecord();
-                signRecord.setTransNum(transVo.getTransNum());
+                signRecord.setTransNum(bxczState.getTransNum());
                 signRecord.setActionId(actionId);
                 Calendar calendar = Calendar.getInstance();
                 signRecord.setSignStart(calendar.getTime());
                 calendar.add(Calendar.MILLISECOND, -300);
                 signRecord.setSignEnd(calendar.getTime());
-                insuranceClaimService.addSignBxczRecord(signRecord);
-                transService.updateTransStatus(transVo.getTransNum(), OnlineChangeUtil.TRANS_STATUS_PROCESS_SIGN);
+                bxczSignService.addSignBxczRecord(signRecord);
+                transService.updateTransStatus(bxczState.getTransNum(), OnlineChangeUtil.TRANS_STATUS_PROCESS_SIGN);
                 this.setResponseObj(ResponseObj.SUCCESS, "", url);
             }
         } catch (Exception e) {
@@ -91,7 +88,7 @@ public class BxczController extends BaseController {
             if (StringUtils.isBlank(transVo.getTransNum())) {
                 this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
             } else {
-                SignRecord signRecord = insuranceClaimService.getNewSignStatus(transVo.getTransNum());
+                SignRecord signRecord = bxczSignService.getNewSignStatus(transVo.getTransNum());
                 if (signRecord != null) {
                     String msg = SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), signRecord.getSignStatus());
                     addAttribute("msg", msg);

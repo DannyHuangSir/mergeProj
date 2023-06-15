@@ -1,15 +1,14 @@
 package com.twfhclife.eservice.onlineChange.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.sun.corba.se.spi.presentation.rmi.IDLNameTranslator;
-import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.onlineChange.model.BlackListVo;
+import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
+import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
+import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
+import com.twfhclife.eservice.policy.model.PolicyListVo;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.itextpdf.text.Document;
-import com.twfhclife.eservice.policy.model.PolicyListVo;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 理賠申請書套印服務.
@@ -129,14 +128,4 @@ public interface IInsuranceClaimService {
 	 * @return
 	 */
 	int  updateInsuranceClaimFileDataFileBase64(TransInsuranceClaimFileDataVo  transInsuranceClaimFileDataVo) throws Exception;
-
-    int addSignBxczRecord(SignRecord signRecord);
-	
-    int updateSignRecordStatus(String code, String msg, Bxcz415CallBackDataVo vo);
-
-	SignRecord getSignRecord(String actionId);
-
-	SignRecord getNewSignStatus(String transNum);
-
-	byte[] getSignPdf(String signFileId);
 }

@@ -83,7 +83,8 @@ public interface ApConstants {
 	public static final String SYSTEM_ERROR_PARAMETER = "取得系統參數發生錯誤!";
 	
 	public static final String KEYCLOAK_USER = "KEYCLOAK_USER";
-	
+	public static final String LOGIN_IN_BXCZ = "LOGIN_IN_BXCZ";
+
 	/** 會員類型-一般會員 */
 	public static final String USER_TYPE_MEMBER = "member";
 	

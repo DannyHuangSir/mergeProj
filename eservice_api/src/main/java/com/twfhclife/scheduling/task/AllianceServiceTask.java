@@ -14,6 +14,7 @@ import com.twfhclife.alliance.model.*;
 import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
+import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -123,6 +124,9 @@ public class AllianceServiceTask {
 	private IInsuranceClaimService insuranceClaimService;
 
 	@Autowired
+	private IBxczSignService bxczSignService;
+
+	@Autowired
 	IMessagingTemplateService messagingTemplateService;
 
 	@Autowired
@@ -207,7 +211,7 @@ public class AllianceServiceTask {
 						if(icvo!=null) {
 							SignInsuranceClaimMapperVo newVo = new SignInsuranceClaimMapperVo();
 							BeanUtils.copyProperties(icvo, newVo);
-							SignRecord signRecord = insuranceClaimService.getNewSignStatus(icvo.getTransNum());
+							SignRecord signRecord = bxczSignService.getNewSignStatus(icvo.getTransNum());
 							if (signRecord != null) {
 								newVo.setActionId(signRecord.getActionId());
 								newVo.setToaFileId(signRecord.getSignFileId());

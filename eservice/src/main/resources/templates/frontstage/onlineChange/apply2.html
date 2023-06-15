@@ -1164,8 +1164,8 @@
 		$.ajax({
 			type : 'POST',
 			contentType : 'application/json',
-			url : 'generateLipeiSignUrl',
-			data:  JSON.stringify({"transNum": transNum}),
+			url : 'generateBxczSignUrl',
+			data:  JSON.stringify({"transNum": transNum, "type": "MEDICAL_TREATMENT"}),
 			success : function(response) {
 				removeLoading()
 				if (response.result == 'SUCCESS') {

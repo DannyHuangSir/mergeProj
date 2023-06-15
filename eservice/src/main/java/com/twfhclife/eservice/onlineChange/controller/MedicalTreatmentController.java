@@ -363,7 +363,6 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	/**
 	 * 進行驗證成年人20歲才能申請
 	 * @param claimVo
-	 * @param bindingResult
 	 * @return
 	 */
 	@RequestLog
@@ -614,48 +613,12 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					transAddResult = ReturnHeader.FAIL_CODE;
 				} else {
 					transAddResult = ReturnHeader.SUCCESS_CODE;
-					logger.info("start send mail");
-					Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo((String)rMap.get("status"));
-					Map<String, String> paramMap = new HashMap<String, String>();
-					paramMap.put("TransNum", claimVo.getTransNum());
-					//paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
-					//paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
-					logger.info("Trans Num : {}", claimVo.getTransNum());
-					logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
-					logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
-					logger.info("receivers={}", (List)mailInfo.get("receivers"));
-					logger.info("user phone : {}", claimVo.getPhone());
-					logger.info("user mail : {}", claimVo.getMail());
-					List<String> receivers = new ArrayList<String>();
-
-					String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
-					paramMap.put("LoginTime", loginTime);
-
-					//發送系統管理員
-					receivers = (List)mailInfo.get("receivers");
-					//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
-					//使用新郵件範本
-					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_MAIL_035, receivers, paramMap, "email");
-
-
-					//發送保戶MAIL
-					receivers = new ArrayList<String>();
-					receivers.add(claimVo.getMail());
-					paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
-					logger.info("user mail : {}", claimVo.getMail());
-					//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
-					//使用新郵件範本
-					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_MAIL_036, receivers, paramMap, "email");
-					logger.info("End send mail");
-
-
-					//發送保戶SMS
-					receivers = new ArrayList<String>();
-					receivers.add(claimVo.getPhone());
-					paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
-					logger.info("user phone : {}", claimVo.getPhone());
-					messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_SMS_037, receivers, paramMap, "sms");
-
+					if (org.apache.commons.lang3.StringUtils.equals(claimVo.getSignAgree(), "Y")) {
+						return "redirect:medicalTreatment-wait-sign?transNum=" + transNum;
+					} else {
+						//不需要數位身份驗證，發送通知
+						sendMedicalNotify(claimVo, (String) rMap.get("status"));
+					}
 				}
 //				}
 
@@ -664,6 +627,56 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			addDefaultSystemError();
 		}
 		return "frontstage/onlineChange/medicalTreatment/medicalTreatment-success";
+	}
+
+	@GetMapping("/medicalTreatment-wait-sign")
+	public String pmedicalTreatmentWaitSign(@RequestParam("transNum") String transNum) {
+		addAttribute("signTransNum", transNum);
+		return "frontstage/onlineChange/policyClaims/medicalTreatment-wait-sign";
+	}
+
+	private void sendMedicalNotify(TransMedicalTreatmentClaimVo claimVo, String status) {
+		logger.info("start send mail");
+		Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo(status);
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("TransNum", claimVo.getTransNum());
+		//paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+		//paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+		logger.info("Trans Num : {}", claimVo.getTransNum());
+		logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
+		logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
+		logger.info("receivers={}", (List)mailInfo.get("receivers"));
+		logger.info("user phone : {}", claimVo.getPhone());
+		logger.info("user mail : {}", claimVo.getMail());
+		List<String> receivers = new ArrayList<String>();
+
+		String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+		paramMap.put("LoginTime", loginTime);
+
+		//發送系統管理員
+		receivers = (List)mailInfo.get("receivers");
+		//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+		//使用新郵件範本
+		messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_MAIL_035, receivers, paramMap, "email");
+
+
+		//發送保戶MAIL
+		receivers = new ArrayList<String>();
+		receivers.add(claimVo.getMail());
+		paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+		logger.info("user mail : {}", claimVo.getMail());
+		//messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+		//使用新郵件範本
+		messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_MAIL_036, receivers, paramMap, "email");
+		logger.info("End send mail");
+
+
+		//發送保戶SMS
+		receivers = new ArrayList<String>();
+		receivers.add(claimVo.getPhone());
+		paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+		logger.info("user phone : {}", claimVo.getPhone());
+		messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_SMS_037, receivers, paramMap, "sms");
 	}
 
 	@RequestLog

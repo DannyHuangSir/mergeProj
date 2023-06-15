@@ -1,16 +1,37 @@
 package com.twfhclife.eservice.onlineChange.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.twfhclife.eservice.generic.annotation.RequestLog;
+import com.twfhclife.eservice.odm.OnlineChangeModel;
 import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
+import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
+import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
+import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
+import com.twfhclife.eservice.policy.model.PolicyListVo;
+import com.twfhclife.eservice.user.model.LilipiVo;
+import com.twfhclife.eservice.user.model.LilipmVo;
+import com.twfhclife.eservice.user.service.ILilipiService;
+import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.util.SignStatusUtil;
+import com.twfhclife.eservice.web.domain.ResponseObj;
+import com.twfhclife.eservice.web.model.ParameterVo;
+import com.twfhclife.eservice.web.model.UserDataInfo;
+import com.twfhclife.eservice.web.model.UsersVo;
+import com.twfhclife.eservice.web.service.ILoginService;
+import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.eservice.web.service.IRegisterUserService;
+import com.twfhclife.generic.api_client.*;
+import com.twfhclife.generic.api_model.ReturnHeader;
+import com.twfhclife.generic.api_model.TransAddRequest;
+import com.twfhclife.generic.controller.BaseUserDataController;
+import com.twfhclife.generic.util.ApConstants;
+import com.twfhclife.generic.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,37 +48,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.twfhclife.eservice.generic.annotation.RequestLog;
-import com.twfhclife.eservice.odm.OnlineChangeModel;
-import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
-import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
-import com.twfhclife.eservice.onlineChange.service.ITransService;
-import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
-import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
-import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
-import com.twfhclife.eservice.policy.model.PolicyListVo;
-import com.twfhclife.eservice.user.model.LilipiVo;
-import com.twfhclife.eservice.user.model.LilipmVo;
-import com.twfhclife.eservice.user.service.ILilipiService;
-import com.twfhclife.eservice.user.service.ILilipmService;
-import com.twfhclife.eservice.web.domain.ResponseObj;
-import com.twfhclife.eservice.web.model.ParameterVo;
-import com.twfhclife.eservice.web.model.UserDataInfo;
-import com.twfhclife.eservice.web.model.UsersVo;
-import com.twfhclife.eservice.web.service.ILoginService;
-import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.eservice.web.service.IRegisterUserService;
-import com.twfhclife.generic.api_client.FunctionUsageClient;
-import com.twfhclife.generic.api_client.MessageTemplateClient;
-import com.twfhclife.generic.api_client.OnlineChangeClient;
-import com.twfhclife.generic.api_client.TransAddClient;
-import com.twfhclife.generic.api_client.TransHistoryDetailClient;
-import com.twfhclife.generic.api_model.ReturnHeader;
-import com.twfhclife.generic.api_model.TransAddRequest;
-import com.twfhclife.generic.controller.BaseUserDataController;
-import com.twfhclife.generic.util.ApConstants;
-import com.twfhclife.generic.util.DateUtil;
+import java.util.*;
 
 /**
  * 線上申請-保單理賠申請書套印(保單為單選)
@@ -80,7 +71,9 @@ public class InsuranceClaimController extends BaseUserDataController {
 	
 	@Autowired
 	private IInsuranceClaimService insuranceClaimService;
-	
+	@Autowired
+	private IBxczSignService bxczSignService;
+
 	@Autowired
 	private FunctionUsageClient functionUsageClient;
 	
@@ -525,7 +518,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 		byte[] document = null;
 		HttpHeaders header = new HttpHeaders();
 		try {
-			document = insuranceClaimService.getSignPdf(signFileId);
+			document = bxczSignService.getSignPdf(signFileId);
 			if (document != null) {
 				String fileName = String.format("inline; filename=數位簽署文件-%s.pdf", DateUtil.getRocDate(new Date()));
 				header.setContentType(new MediaType("application", "pdf"));
@@ -585,7 +578,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 				});
 			}
 			addAttribute("fileData", fileData);
-			SignRecord signRecord = insuranceClaimService.getNewSignStatus(transNum);
+			SignRecord signRecord = bxczSignService.getNewSignStatus(transNum);
 			if (signRecord != null) {
 				Map<String, Object> signRecordMap = Maps.newHashMap();
 				signRecordMap.put("idVerifyTime", signRecord.getIdVerifyTime() != null ? DateUtil.formatDateTime(signRecord.getIdVerifyTime(), "yyyy/MM/dd HH:mm") : "");

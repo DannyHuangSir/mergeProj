@@ -1148,49 +1148,4 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		int i = transInsuranceClaimDao.updateInsuranceClaimFileDataFileBase64(transInsuranceClaimFileDataVo);
 		return i;
 	}
-
-	@Autowired
-	private BxczDao bxczDao;
-
-    @Override
-    public int addSignBxczRecord(SignRecord signRecord) {
-        return bxczDao.insertBxczSignRecord(signRecord,null, null, null, null);
-    }
-
-	@Override
-	public int updateSignRecordStatus(String code, String msg, Bxcz415CallBackDataVo vo) {
-		Date signTime = null;
-		Date verifyTime = null;
-		if (StringUtils.isNotBlank(vo.getSignTime())) {
-			try {
-				signTime = new SimpleDateFormat("yyyyMMddHHmm").parse(vo.getSignTime());
-			} catch (ParseException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		if (StringUtils.isNotBlank(vo.getIdVerifyTime())) {
-			try {
-				verifyTime = new SimpleDateFormat("yyyyMMddHHmm").parse(vo.getIdVerifyTime());
-			} catch (ParseException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return bxczDao.updateBxczSignRecordByActionId(vo, code, msg, verifyTime, signTime);
-	}
-
-	@Override
-	public SignRecord getSignRecord(String actionId) {
-		return bxczDao.getSignRecordByActionId(actionId);
-	}
-
-	@Override
-	public SignRecord getNewSignStatus(String transNum) {
-		return bxczDao.getNewSignStatus(transNum);
-	}
-
-    @Override
-    public byte[] getSignPdf(String signFileId) {
-		String fileBase64 = bxczDao.getSignFileByFileId(signFileId);
-        return StringUtils.isBlank(fileBase64) ? null : Base64.getDecoder().decode(fileBase64);
-    }
 }

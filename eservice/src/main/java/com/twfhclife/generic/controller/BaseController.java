@@ -54,11 +54,18 @@ public class BaseController extends BaseMvcController {
 			logger.info("Session not exists, User not logged in!");
 			return false;
 		}
-		
+
 		boolean isLoginTokenVaild = true;
+
+		Boolean loginInBxcz = (Boolean) getSession(ApConstants.LOGIN_IN_BXCZ);
+		if (loginInBxcz != null && loginInBxcz) {
+			return isLoginTokenVaild;
+		}
+
 		if (getClientIp().equals("0:0:0:0:0:0:0:1")) {
 			return isLoginTokenVaild;
 		}
+
 		try {
 			KeycloakLoginResponse apiResponse = null;
 			apiResponse = keycloakService.validateToken(keycloakUser.getAccessToken(),
@@ -90,7 +97,7 @@ public class BaseController extends BaseMvcController {
 				while (em.hasMoreElements()) {
 					request.getSession().removeAttribute(em.nextElement().toString());
 				}
-				
+
 				isLoginTokenVaild = false;
 			}
 		} catch (Exception e) {
