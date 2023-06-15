@@ -936,15 +936,54 @@
 				dateFormat : 'yy/mm/dd'
 			});
 
+			var dateTime = new Date()
+			dateTime = dateTime.setDate(dateTime.getDate() + 10)
+			dateTime = new Date(dateTime)
 			$("body").on("focus",".authorizationDate", function(){
 			   $(this).datepicker({//日期控件
 					changeMonth : true,
 					changeYear : true,
-					maxDate : new Date(),
+					maxDate : dateTime,
 					yearRange: 'c-80:c+80',
 					dateFormat : 'yy/mm/dd'
 				 })
 			});
+
+			$("body").on("change", "[name='startDate']", function(){
+				if ($(this).val() != null && $(this).next().next().val() != null
+					&& $(this).val() != '' && $(this).next().next().val() != '') {
+					sDate = moment($(this).val(), 'YYYY/MM/DD')
+					eDate = moment( $(this).next().next().val(), 'YYYY/MM/DD')
+					if (eDate.diff(sDate, 'days') < 0 ) {
+						openAlert("授權開始時間不能大於結束時間");
+						$(this).val('')
+						return false;
+					}
+					if (eDate.diff(sDate, 'years') > 1 ) {
+						openAlert("授權時間不能大於兩年");
+						$(this).val('')
+						return false;
+					}
+				}
+			})
+
+			$("body").on("change", "[name='endDate']", function() {
+				if ($(this).val() != null && $(this).prev().prev().val() != null
+						&& $(this).val() != '' && $(this).prev().prev().prev() != '') {
+					sDate = moment( $(this).prev().prev().val(), 'YYYY/MM/DD')
+					eDate = moment($(this).val(), 'YYYY/MM/DD')
+					if (eDate.diff(sDate, 'days') < 0 ) {
+						openAlert("授權開始時間不能大於結束時間");
+						$(this).val('')
+						return false;
+					}
+					if (eDate.diff(sDate, 'years') > 1 ) {
+						openAlert("授權時間不能大於兩年");
+						$(this).val('')
+						return false;
+					}
+				}
+			})
 
 			$("#bankOpt").chosen({
 				allow_single_deselect:true,
