@@ -82,13 +82,13 @@ public class BxczController extends BaseController {
     }
 
     @PostMapping("/getNewSignStatus")
-    public String getNewSignStatus(TransVo transVo) {
+    public String getNewSignStatus(BxczState bxczState) {
         try {
-            addAttribute("signTransNum", transVo.getTransNum());
-            if (StringUtils.isBlank(transVo.getTransNum())) {
+            addAttribute("signTransNum", bxczState.getTransNum());
+            if (StringUtils.isBlank(bxczState.getTransNum())) {
                 this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
             } else {
-                SignRecord signRecord = bxczSignService.getNewSignStatus(transVo.getTransNum());
+                SignRecord signRecord = bxczSignService.getNewSignStatus(bxczState.getTransNum());
                 if (signRecord != null) {
                     String msg = SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), signRecord.getSignStatus());
                     addAttribute("msg", msg);
@@ -100,7 +100,11 @@ public class BxczController extends BaseController {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
+        if (StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM)) {
+            return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
+        } else {
+            return "frontstage/onlineChange/medicalTreatment/medicalTreatment-wait-sign";
+        }
     }
 
 

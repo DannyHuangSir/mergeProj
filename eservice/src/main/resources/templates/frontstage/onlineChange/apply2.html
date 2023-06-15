@@ -731,7 +731,7 @@
 						botton = '<button class="btn-cancel" id="endorsement_'+oRow.transNum+'" onclick="downloadEndorsement(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;);return false;">下載批註單  <i class="fas fa-chevron-right"></i></button>';
 					} else if (oRow.status == '41' || oRow.status == '42' ) {
 						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTrans(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>' + '&nbsp;' +
-						'<button class="btn-sign" onclick="openBxczSign(&apos;'+oRow.transNum+'&apos;)">執行數位驗證</button>';
+						'<button class="btn-sign" onclick="openBxczSign(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">執行數位驗證</button>';
 					} else if((oRow.transType == 'CONTACT_INFO' || oRow.transType == 'INVESTMENT' || oRow.transType == 'CONVERSION'
 							|| oRow.transType == 'DEPOSIT' || oRow.transType == 'CASH_PAYMENT' || oRow.transType == 'CHANGE_PREMIUM') && oRow.status == '1'){
 						botton = '<button class="btn-cancel" id="sdive" onclick="cancelTransCheck(&apos;'+oRow.transNum+'&apos;,&apos;' + oRow.transType +'&apos;)">取消申請  <i class="fas fa-chevron-right"></i></button>';
@@ -1159,13 +1159,13 @@
 				return prePath;
 			}
 
-	function openBxczSign(transNum) {
+	function openBxczSign(transNum, transType) {
 		popupLoading();
 		$.ajax({
 			type : 'POST',
 			contentType : 'application/json',
 			url : 'generateBxczSignUrl',
-			data:  JSON.stringify({"transNum": transNum, "type": "MEDICAL_TREATMENT"}),
+			data:  JSON.stringify({"transNum": transNum, "type": transType}),
 			success : function(response) {
 				removeLoading()
 				if (response.result == 'SUCCESS') {

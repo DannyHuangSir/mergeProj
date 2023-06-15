@@ -81,6 +81,7 @@
 	</section>
 	<form id="signStatusForm" method="post" action="getNewSignStatus" hidden="hidden">
 		<input type="hidden" name="transNum" th:value="${signTransNum}">
+		<input type="hidden" name="type" th:value="INSURANCE_CLAIM">
 	</form>
 	<footer th:replace="fragments/footer"></footer>
 	<th:block th:replace="fragments/script"/>
@@ -96,7 +97,7 @@
 				type : 'POST',
 				contentType : 'application/json',
 				url : 'generateBxczSignUrl',
-				data:  JSON.stringify({"transNum": [[${signTransNum}]], "type": "INSURANCE_CLAIM"),
+				data:  JSON.stringify({"transNum": [[${signTransNum}]], "type": "INSURANCE_CLAIM"}),
 				success : function(response) {
 					removeLoading()
 					if (response.result == 'SUCCESS') {

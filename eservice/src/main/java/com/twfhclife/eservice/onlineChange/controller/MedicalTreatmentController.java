@@ -630,9 +630,9 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	}
 
 	@GetMapping("/medicalTreatment-wait-sign")
-	public String pmedicalTreatmentWaitSign(@RequestParam("transNum") String transNum) {
+	public String medicalTreatmenttWaitSign(@RequestParam("transNum") String transNum) {
 		addAttribute("signTransNum", transNum);
-		return "frontstage/onlineChange/policyClaims/medicalTreatment-wait-sign";
+		return "frontstage/onlineChange/medicalTreatment/medicalTreatment-wait-sign";
 	}
 
 	private void sendMedicalNotify(TransMedicalTreatmentClaimVo claimVo, String status) {

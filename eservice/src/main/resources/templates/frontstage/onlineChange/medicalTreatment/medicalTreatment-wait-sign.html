@@ -81,6 +81,7 @@
 	</section>
 	<form id="signStatusForm" method="post" action="getNewSignStatus" hidden="hidden">
 		<input type="hidden" name="transNum" th:value="${signTransNum}">
+		<input type="hidden" name="type" th:value="MEDICAL_TREATMENT">
 	</form>
 	<footer th:replace="fragments/footer"></footer>
 	<th:block th:replace="fragments/script"/>
@@ -95,8 +96,8 @@
 			$.ajax({
 				type : 'POST',
 				contentType : 'application/json',
-				url : 'generateMedicalTreatmentSignUrl',
-				data:  JSON.stringify({"transNum": [[${signTransNum}]], "type": "INSURANCE_CLAIM"}),
+				url : 'generateBxczSignUrl',
+				data:  JSON.stringify({"type": "MEDICAL_TREATMENT", "transNum": [[${signTransNum}]]}),
 				success : function(response) {
 					removeLoading()
 					if (response.result == 'SUCCESS') {
