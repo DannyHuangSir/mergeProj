@@ -3,6 +3,7 @@ package com.twfhclife.scheduling.task;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.alliance.model.*;
@@ -14,10 +15,7 @@ import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
 import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
-import com.twfhclife.eservice.onlineChange.model.MedicalTreatmentClaimFileTypeEnum;
-import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimFileDataVo;
-import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo;
-import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
+import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.*;
 import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.model.Division;
@@ -422,6 +420,9 @@ public class MedicalAllianceServiceTask {
 
     @Value("${cron.medical401.enable: true}")
     public boolean medical401Enable;
+
+    @Autowired
+    private IBxczSignService bxczSignService;
     /**
      * API-401理賠申請上傳
      */
@@ -430,7 +431,7 @@ public class MedicalAllianceServiceTask {
          if (!medical401Enable) {
              return;
          }
-         log.info("-----------Start API-401 Task.-----------");
+        log.info("-----------Start API-401 Task.-----------");
         log.info("API_DISABLE=" + API_DISABLE);
         if ("N".equals(API_DISABLE)) {
             try {
@@ -439,12 +440,18 @@ public class MedicalAllianceServiceTask {
                 //2.call api-401
                 if(listMedical!=null && !listMedical.isEmpty() && listMedical.size()>0) {
                     log.info("取得醫療申請上傳資料條數="+listMedical.size());
-                    for (MedicalTreatmentClaimVo vo : listMedical) {
+                    for (MedicalTreatmentClaimVo icvo : listMedical) {
                     	try {
-                            if(vo!=null) {
-                                vo.setMedicalInfo(iMedicalService.getMedicalTreatmentClaimApplyData(vo));
+                            if(icvo!=null) {
+                                icvo.setMedicalInfo(iMedicalService.getMedicalTreatmentClaimApplyData(icvo));
+                                SignRecord signRecord = bxczSignService.getNewSignStatus(icvo.getTransNum());
+                                if (signRecord != null) {
+                                    icvo.setActionId(signRecord.getActionId());
+                                    icvo.setCpoaFileId(signRecord.getSignFileId());
+                                }
+
                                 //3.call api-401 to upload.
-                                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API401, vo, "API-401理賠申請上傳");
+                                String strResponse = medicalExternalServiceImpl.postForEntity(URL_API401, icvo, "API-401理賠申請上傳");
                                 //String  strResponse="{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"caseId\":\"20210125153001-45c17f68e615-L01\"}}";
                                 log.info("call URL_API401,strResponse="+strResponse);
                                 
@@ -452,21 +459,21 @@ public class MedicalAllianceServiceTask {
     							// 20220708 by 203990
     							/// 非連線問題, 上傳失敗寄送信件給管理者
                                 //if(checkLiaAPIResponseValue(strResponse,"/code","0")) {
-                                if(checkLiaAPIResponseValueAndSendEmail(strResponse,"/code","0",vo)) {
+                                if(checkLiaAPIResponseValueAndSendEmail(strResponse,"/code","0",icvo)) {
                                     String caseId = MyJacksonUtil.readValue(strResponse, "/data/caseId");
                                     log.info("caseId="+caseId);
                                     String msg = MyJacksonUtil.readValue(strResponse, "/msg");
-                                    vo.setCaseId(caseId);
+                                    icvo.setCaseId(caseId);
                                     //更新TRANS_MEDICAL_TREATMENT_CLAIM  與  MEDICAL_TREATMENT_CLAIM
                                     //進行回應CaseId  與  allianceStatus
                                     //進行獲取聯盟的狀態信息
                                     String parameterValueByCode = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, CallApiCode.MEDICAL_INTERFACE_STATUS_FTPS_PQHG);
-                                    vo.setAllianceStatus(parameterValueByCode);
-                                    log.info("updateMedicalTreatmentClaimToAlliance 的參數-----="+vo);
-                                    int  i=iMedicalService.updateMedicalTreatmentClaimToAlliance(vo);
+                                    icvo.setAllianceStatus(parameterValueByCode);
+                                    log.info("updateMedicalTreatmentClaimToAlliance 的參數-----="+icvo);
+                                    int  i=iMedicalService.updateMedicalTreatmentClaimToAlliance(icvo);
                                     //進行將CASE_ID 進行回壓,便於首家案件更新狀態,執行跑403
                                     if(i>1){
-                                        claimChainService.addNotifyOfNewCaseMedicalIsPrice(vo);
+                                        claimChainService.addNotifyOfNewCaseMedicalIsPrice(icvo);
                                     }
                                 }
 

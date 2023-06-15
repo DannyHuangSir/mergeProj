@@ -551,6 +551,7 @@ public class AllianceServiceTask {
 	@Autowired
 	private BxczDao bxczDao;
 
+
 	/**
 	 * 查詢理賠案件
 	 */
@@ -645,7 +646,7 @@ public class AllianceServiceTask {
 									headers.setContentType(MediaType.APPLICATION_JSON);
 									try {
 										Date startTime = new Date();
-										String api416Resp = allianceService.postApi416(api416Url, headers, api416Params);
+										String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
 										String code = MyJacksonUtil.readValue(api416Resp, "/code");
 										String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
 										Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
@@ -719,7 +720,7 @@ public class AllianceServiceTask {
 									HttpHeaders headers = new HttpHeaders();
 									headers.add("Access-Token", clientSecret);
 									headers.setContentType(MediaType.APPLICATION_JSON);
-									allianceService.postApi108(URL_API108, api108Params);
+									bxczSignService.postApi108(URL_API108, api108Params);
 								} catch (Exception e) {
 									logger.error("call api108 error: {}, {}", params, e);
 									throw new Exception("call api108 error: " + e);
@@ -881,42 +882,6 @@ public class AllianceServiceTask {
 	private String clientSecret;
 	@Value("${eservice.bxcz.416.url}")
 	private String api416Url;
-	@Value("${eservice.bxcz.417.url}")
-	private String api417Url;
-	@Value("${cron.api417.expression.enable: true}")
-	public boolean api417Enable;
-
-	@Scheduled(cron = "${cron.api417.expression}")
-	public void callApi417() {
-		if (!api417Enable) {
-			return;
-		}
-
-		log.info("Start call api417.");
-		log.info("API_DISABLE=" + API_DISABLE);
-		List<SignRecord> fileIds = claimChainService.getNotDownloadSignFile();
-		if (CollectionUtils.isNotEmpty(fileIds)) {
-			fileIds.forEach(s -> {
-				Map<String, String> params = Maps.newHashMap();
-				HttpHeaders headers = new HttpHeaders();
-				headers.add("Access-Token", clientSecret);
-				headers.setContentType(MediaType.APPLICATION_JSON);
-				try {
-					Date startTime = new Date();
-					String fileBase64 = allianceService.postForJson(api417Url, headers, params);
-					if (CollectionUtils.isNotEmpty(fileIds)) {
-						claimChainService.updateSignDownloaded(s.getActionId());
-						claimChainService.addSignFileData(s.getSignFileId(), clientId, fileBase64);
-					}
-					BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "下載檔案", "0", "", s.getActionId(), s.getTransNum(), startTime, new Date());
-					bxczDao.addSignApiLog(bxczSignApiLog);
-				} catch (Exception e) {
-					logger.error("call api417 error: {}, {}, {}", headers, params, e);
-				}
-			});
-		}
-		log.info("End call api417.");
-	}
 
 	@Value("${cron.saveToEserviceTrans.expression.enable: true}")
 	public boolean saveToEserviceTransEnable;

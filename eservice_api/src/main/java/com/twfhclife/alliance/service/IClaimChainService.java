@@ -246,9 +246,4 @@ public interface IClaimChainService {
 	//進行將CASE_ID 進行回壓,便於首家案件更新狀態,執行跑403
     int  addNotifyOfNewCaseMedicalIsPrice(MedicalTreatmentClaimVo vo)throws Exception;
 
-	List<SignRecord> getNotDownloadSignFile();
-
-	int updateSignDownloaded(String actionId);
-
-	int addSignFileData(String fileId, String clientId, String fileBase64);
 }

@@ -46,11 +46,4 @@ public interface IExternalService {
 	 */
 	List<String> getProductCodeByPolicyNo(@Param("policyNo") String policyNo);
 
-	String postForJson(String api417Url, HttpHeaders headers, Map<String, String> params) throws Exception;
-
-	String postApi416(String api416Url, HttpHeaders headers, Map<String, String> api416Params) throws Exception;
-
-	String postApi108(String urlApi108, Map<String, String> api108Params) throws Exception;
-
-    int addSignBxczApiRecord(BxczSignApiLog bxczSignApiLog);
 }

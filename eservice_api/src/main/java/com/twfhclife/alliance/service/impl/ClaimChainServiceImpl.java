@@ -670,22 +670,4 @@ public class ClaimChainServiceImpl implements IClaimChainService{
 		return rtnValue;
 	}
 
-	@Autowired
-	private BxczDao bxczDao;
-
-    @Override
-    public List<SignRecord> getNotDownloadSignFile() {
-        return bxczDao.getNotDownloadSignFile();
-    }
-
-	@Override
-	public int updateSignDownloaded(String actionId) {
-		return bxczDao.updateSignDownloaded(actionId);
-	}
-
-	@Override
-	public int addSignFileData(String fileId, String clientId, String fileBase64) {
-		return bxczDao.insertSignFileData(fileId, clientId, fileBase64);
-	}
-
 }

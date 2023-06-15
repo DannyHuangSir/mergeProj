@@ -93,7 +93,11 @@ public class BxczController extends BaseController {
                     String msg = SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), signRecord.getSignStatus());
                     addAttribute("msg", msg);
                     if (StringUtils.equals(signRecord.getSignStatus(), "SIGN_U_S")) {
-                        return "frontstage/onlineChange/policyClaims/policyClaims-success";
+                        if (StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM)) {
+                            return "frontstage/onlineChange/policyClaims/policyClaims-success";
+                        } else {
+                            return "frontstage/onlineChange/medicalTreatment/policyClaims-success";
+                        }
                     }
                 }
             }

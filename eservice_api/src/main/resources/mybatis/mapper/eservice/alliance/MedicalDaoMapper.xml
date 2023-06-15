@@ -65,6 +65,7 @@
 		<result property="fileStatus"  column="FILE_STATUS" />
 		<result property="fileStatus"  column="CREATE_DATE" />
 		<result property="stauts"  column="STATUS" />
+		<result property="toSubHospitalId"  column="TO_SUB_HOSPITAL_ID" />
 	</resultMap>
 	<resultMap id="TransMedicalTreatmentResultMap" type="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
 		<id property="claimSeqId"  column="CLAIMS_SEQ_ID" />
@@ -484,7 +485,7 @@
 	<!-- 取得可上傳但未上傳聯盟的資料 -->
 	<select id="getMedicalTreatmentByNoCaseId" resultMap="MedicalTreatmentResultMap">
 		select top(10)
-		<include refid="MEDICAL_CLAIM_ALL"></include>
+		<include refid="MEDICAL_CLAIM_ALL"></include>, TO_SUB_HOSPITAL_ID
 		from ESERVICE.dbo.MEDICAL_TREATMENT_CLAIM
 		where  CASE_ID is null
 		and SEND_ALLIANCE='Y'

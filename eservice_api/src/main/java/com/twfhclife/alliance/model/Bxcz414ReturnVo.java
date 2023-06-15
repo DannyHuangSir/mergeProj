@@ -1,5 +1,8 @@
 package com.twfhclife.alliance.model;
 
+import com.google.common.collect.Lists;
+import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo;
+
 import java.util.List;
 
 public class Bxcz414ReturnVo {
@@ -13,16 +16,7 @@ public class Bxcz414ReturnVo {
     private String to;
     private String id_token;
     private String redirectUri;
-    private List<String> cpoaContent;
-    private String hpId;
-    private String subHpId;
-    private String medicalInfo;
-    private String seNo;
-    private String hsTime;
-    private String heTime;
-    private String otype;
-    private String depid;
-    private String dtypes;
+    private List<CoapContentVo> coapContent = Lists.newArrayList();
 
     public String getRedirectUri() {
         return redirectUri;
@@ -96,83 +90,11 @@ public class Bxcz414ReturnVo {
         this.id_token = id_token;
     }
 
-    public List<String> getCpoaContent() {
-        return cpoaContent;
+    public List<CoapContentVo> getCoapContent() {
+        return coapContent;
     }
 
-    public void setCpoaContent(List<String> cpoaContent) {
-        this.cpoaContent = cpoaContent;
-    }
-
-    public String getHpId() {
-        return hpId;
-    }
-
-    public void setHpId(String hpId) {
-        this.hpId = hpId;
-    }
-
-    public String getSubHpId() {
-        return subHpId;
-    }
-
-    public void setSubHpId(String subHpId) {
-        this.subHpId = subHpId;
-    }
-
-    public String getMedicalInfo() {
-        return medicalInfo;
-    }
-
-    public void setMedicalInfo(String medicalInfo) {
-        this.medicalInfo = medicalInfo;
-    }
-
-    public String getSeNo() {
-        return seNo;
-    }
-
-    public void setSeNo(String seNo) {
-        this.seNo = seNo;
-    }
-
-    public String getHsTime() {
-        return hsTime;
-    }
-
-    public void setHsTime(String hsTime) {
-        this.hsTime = hsTime;
-    }
-
-    public String getHeTime() {
-        return heTime;
-    }
-
-    public void setHeTime(String heTime) {
-        this.heTime = heTime;
-    }
-
-    public String getOtype() {
-        return otype;
-    }
-
-    public void setOtype(String otype) {
-        this.otype = otype;
-    }
-
-    public String getDepid() {
-        return depid;
-    }
-
-    public void setDepid(String depid) {
-        this.depid = depid;
-    }
-
-    public String getDtypes() {
-        return dtypes;
-    }
-
-    public void setDtypes(String dtypes) {
-        this.dtypes = dtypes;
+    public void setCoapContent(List<CoapContentVo> coapContent) {
+        this.coapContent = coapContent;
     }
 }

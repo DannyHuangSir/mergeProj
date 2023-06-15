@@ -3,18 +3,13 @@ package com.twfhclife.alliance.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import com.twfhclife.alliance.model.Bxcz414CallBackVo;
-import com.twfhclife.alliance.model.Bxcz414ReturnVo;
-import com.twfhclife.alliance.model.Bxcz415CallBackVo;
-import com.twfhclife.alliance.model.Bxcz415ReturnVo;
+import com.twfhclife.alliance.model.*;
 import com.twfhclife.alliance.service.IExternalService;
 import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
-import com.twfhclife.eservice.onlineChange.model.Bxcz415CallBackDataVo;
-import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
-import com.twfhclife.eservice.onlineChange.model.SignRecord;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
+import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.web.model.BxczState;
@@ -23,6 +18,7 @@ import com.twfhclife.generic.annotation.ApiRequest;
 import com.twfhclife.generic.utils.AesUtil;
 import com.twfhclife.generic.utils.ApConstants;
 import com.twfhclife.generic.utils.DateUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,7 +65,7 @@ public class BxczSignController {
 
             BxczState state = new Gson().fromJson(new String(Base64.getDecoder().decode(vo.getState())), BxczState.class);
             BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL_BACK", "活動編碼確認並索取簽屬文件相關資料", "0", "", state.getActionId(), state.getTransNum(), startTime, new Date());
-            externalService.addSignBxczApiRecord(bxczSignApiLog);
+            bxczSignService.addSignBxczApiRecord(bxczSignApiLog);
             if (StringUtils.equals(state.getType(), ApConstants.INSURANCE_CLAIM)) {
                 TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
                 if (claimVo == null) {
@@ -77,7 +73,7 @@ public class BxczSignController {
                     ret.setMsg("非本公司保戶！");
                     return ret;
                 }
-                logger.debug("api414 TransInsuranceClaimVo: ", new Gson().toJson(claimVo));
+                logger.info("api414 TransInsuranceClaimVo: ", new Gson().toJson(claimVo));
                 ret.setCode("0");
                 ret.setIdNo(claimVo.getIdNo());
                 ret.setName(claimVo.getName());
@@ -89,9 +85,35 @@ public class BxczSignController {
                 }
                 ret.setTo(claimVo.getTo());
                 ret.setRedirectUri(callBack414 + "?actionId=" + vo.getActionId());
-                ret.setCpoaContent(Lists.newArrayList(vo.getIdVerifyType()));
                 ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
-                ret.setSeNo(claimVo.getTransNum());
+                return ret;
+            } else {
+                TransMedicalTreatmentClaimVo medicalVo = medicalTreatmentService.getTransInsuranceClaimDetail(state.getTransNum());
+                if (medicalVo == null) {
+                    ret.setCode("2");
+                    ret.setMsg("非本公司保戶！");
+                    return ret;
+                }
+                logger.info("api414 TransMedicalTreatmentClaimVo: ", new Gson().toJson(medicalVo));
+                ret.setCode("0");
+                ret.setIdNo(medicalVo.getIdNo());
+                ret.setName(medicalVo.getName());
+                ret.setBirdate(medicalVo.getBirdate());
+                if (signRecord.getSignStart() != null && signRecord.getSignEnd() != null) {
+                    ret.setAcExpiredSec(String.valueOf((signRecord.getSignEnd().getTime() - System.currentTimeMillis()) / 1000));
+                } else {
+                    ret.setAcExpiredSec("0");
+                }
+                ret.setTo(medicalVo.getTo());
+                ret.setRedirectUri(callBack414 + "?actionId=" + vo.getActionId());
+                ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
+                CoapContentVo coapContent = new CoapContentVo();
+                if (CollectionUtils.isNotEmpty(medicalVo.getMedicalInfo())) {
+                    coapContent.setHpId(medicalVo.getToHospitalId());
+                    coapContent.setSubHpId(medicalVo.getToSubHospitalId());
+                    coapContent.getMedicalInfo().addAll(medicalVo.getMedicalInfo());
+                }
+                ret.setCoapContent(Lists.newArrayList(coapContent));
                 return ret;
             }
         } catch (Exception e) {
@@ -121,7 +143,7 @@ public class BxczSignController {
                 Bxcz415CallBackDataVo data = vo.getData();
                 BxczState state = new Gson().fromJson(new String(Base64.getDecoder().decode(data.getState())), BxczState.class);
                 BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL_BACK", "數位身分驗證結果/數位簽署狀態通知", vo.getCode(), vo.getMsg(), state.getActionId(), state.getTransNum(), startTime, new Date());
-                externalService.addSignBxczApiRecord(bxczSignApiLog);
+                bxczSignService.addSignBxczApiRecord(bxczSignApiLog);
                 if (StringUtils.isNotBlank(state.getTransNum())) {
                     int process = transService.checkTransInSignProcess(state.getTransNum());
                     if (process <= 0) {
@@ -129,20 +151,33 @@ public class BxczSignController {
                         ret.setMsg("數位身分驗證已簽署！");
                         return ret;
                     }
-                    if (StringUtils.equals(vo.getCode(), "0")) {
+                    int result;
+                    if (StringUtils.equals(state.getType(), ApConstants.INSURANCE_CLAIM)) {
                         TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
-                        sendPolicyClaimNotify(claimVo, "1");
-                        transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
-                    } else if (StringUtils.equals(vo.getCode(), "-2")) {
-                        transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
-                        TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
-                        sendFailPolicyClaimNotify(claimVo, "數位身分驗證失敗");
-                    } else if (StringUtils.equals(vo.getCode(), "-3")) {
-                        transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
-                        TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
-                        sendFailPolicyClaimNotify(claimVo, "數位簽署失敗");
+                        if (StringUtils.equals(vo.getCode(), "0")) {
+                            sendPolicyClaimNotify(claimVo, "1");
+                            transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                        } else if (StringUtils.equals(vo.getCode(), "-2")) {
+                            transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+                            sendFailPolicyClaimNotify(claimVo, "數位身分驗證失敗");
+                        } else if (StringUtils.equals(vo.getCode(), "-3")) {
+                            transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+                            sendFailPolicyClaimNotify(claimVo, "數位簽署失敗");
+                        }
+                    } else {
+                        TransMedicalTreatmentClaimVo claimVo = medicalTreatmentService.getTransInsuranceClaimDetail(state.getTransNum());
+                        if (StringUtils.equals(vo.getCode(), "0")) {
+                            sendMedicalNotify(claimVo, "1");
+                            transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                        } else if (StringUtils.equals(vo.getCode(), "-2")) {
+                            transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+                            sendFailMedicalNotify(claimVo, "數位身分驗證失敗");
+                        } else if (StringUtils.equals(vo.getCode(), "-3")) {
+                            transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+                            sendFailMedicalNotify(claimVo, "數位簽署失敗");
+                        }
                     }
-                    int result = bxczSignService.updateSignRecordStatus(vo.getCode(), vo.getMsg(), data);
+                    result = bxczSignService.updateSignRecordStatus(vo.getCode(), vo.getMsg(), data);
                     if (result > 0) {
                         ret.setCode("0");
                         ret.setMsg("success");
@@ -164,6 +199,8 @@ public class BxczSignController {
 
     @Autowired
     private IInsuranceClaimService insuranceClaimService;
+    @Autowired
+    private IMedicalTreatmentService medicalTreatmentService;
 
     @Autowired
     private IMessagingTemplateService messagingTemplateService;
@@ -241,6 +278,109 @@ public class BxczSignController {
         receivers = new ArrayList<String>();
         receivers.add(claimVo.getMail());
         paramMap.put("TransStatus", transStatus);
+        String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+        paramMap.put("LoginTime", loginTime);
+        paramMap.put("TransNum", claimVo.getTransNum());
+        logger.info("user mail : {}", claimVo.getMail());
+        //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+        //使用新郵件範本
+        MessageTriggerRequestVo apiReq1 = new MessageTriggerRequestVo();
+        apiReq1.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_MAIL_071);
+        apiReq1.setSendType("email");
+        apiReq1.setMessagingReceivers(receivers);
+        apiReq1.setParameters(paramMap);
+        apiReq1.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+        messagingTemplateService.triggerMessageTemplate(apiReq1);
+        logger.info("End send mail");
+
+        //發送保戶SMS
+        receivers = new ArrayList<String>();
+        receivers.add(claimVo.getPhone());
+        logger.info("user phone : {}", claimVo.getPhone());
+        MessageTriggerRequestVo apiReq2 = new MessageTriggerRequestVo();
+        apiReq2.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_SMS_071);
+        apiReq2.setSendType("sms");
+        apiReq2.setMessagingReceivers(receivers);
+        apiReq2.setParameters(paramMap);
+        apiReq2.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+        messagingTemplateService.triggerMessageTemplate(apiReq2);
+    }
+
+    private void sendMedicalNotify(TransMedicalTreatmentClaimVo claimVo, String status) {
+        logger.info("start send mail");
+        Map<String, Object> mailInfo = medicalTreatmentService.getSendMailInfo(status);
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("TransNum", claimVo.getTransNum());
+        //paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+        //paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+        logger.info("Trans Num : {}", claimVo.getTransNum());
+        logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
+        logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
+        logger.info("receivers={}", (List)mailInfo.get("receivers"));
+        logger.info("user phone : {}", claimVo.getPhone());
+        logger.info("user mail : {}", claimVo.getMail());
+        List<String> receivers = new ArrayList<String>();
+
+        String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+        paramMap.put("LoginTime", loginTime);
+
+        //發送系統管理員
+        receivers = (List)mailInfo.get("receivers");
+        //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+        //使用新郵件範本
+        MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
+        apiReq.setMessagingTemplateCode(OnlineChangeUtil.MEDICAL_MAIL_035);
+        apiReq.setSendType("email");
+        apiReq.setMessagingReceivers(receivers);
+        apiReq.setParameters(paramMap);
+        apiReq.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+        messagingTemplateService.triggerMessageTemplate(apiReq);
+
+
+        //發送保戶MAIL
+        receivers = new ArrayList<String>();
+        receivers.add(claimVo.getMail());
+        paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+        logger.info("user mail : {}", claimVo.getMail());
+        //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+        //使用新郵件範本
+        MessageTriggerRequestVo apiReq1 = new MessageTriggerRequestVo();
+        apiReq1.setMessagingTemplateCode(OnlineChangeUtil.MEDICAL_MAIL_036);
+        apiReq1.setSendType("email");
+        apiReq1.setMessagingReceivers(receivers);
+        apiReq1.setParameters(paramMap);
+        apiReq1.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+        messagingTemplateService.triggerMessageTemplate(apiReq1);
+        logger.info("End send mail");
+
+
+        //發送保戶SMS
+        receivers = new ArrayList<String>();
+        receivers.add(claimVo.getPhone());
+        paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+        logger.info("user phone : {}", claimVo.getPhone());
+        MessageTriggerRequestVo apiReq2 = new MessageTriggerRequestVo();
+        apiReq2.setMessagingTemplateCode(OnlineChangeUtil.MEDICAL_SMS_037);
+        apiReq2.setSendType("sms");
+        apiReq2.setMessagingReceivers(receivers);
+        apiReq2.setParameters(paramMap);
+        apiReq2.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+        messagingTemplateService.triggerMessageTemplate(apiReq2);
+    }
+
+    private void sendFailMedicalNotify(TransMedicalTreatmentClaimVo claimVo, String status) {
+        logger.info("start send mail");
+        Map<String, String> paramMap = Maps.newHashMap();
+        paramMap.put("TransNum", claimVo.getTransNum());
+        logger.info("Trans Num : {}", claimVo.getTransNum());
+        logger.info("user phone : {}", claimVo.getPhone());
+        logger.info("user mail : {}", claimVo.getMail());
+        List<String> receivers = new ArrayList<String>();
+
+        //發送保戶MAIL
+        receivers = new ArrayList<String>();
+        receivers.add(claimVo.getMail());
+        paramMap.put("TransStatus", status);
         String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
         paramMap.put("LoginTime", loginTime);
         paramMap.put("TransNum", claimVo.getTransNum());

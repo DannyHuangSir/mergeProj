@@ -234,6 +234,33 @@ public class MedicalTreatmentClaimVo {
 	 * *聯盟通知件:always set "N".
 	 */
 	private String sendAlliance;
+	private String actionId;
+	private String subHpId;
+	private String cpoaFileId;
+
+	public String getActionId() {
+		return actionId;
+	}
+
+	public void setActionId(String actionId) {
+		this.actionId = actionId;
+	}
+
+	public String getSubHpId() {
+		return subHpId;
+	}
+
+	public void setSubHpId(String subHpId) {
+		this.subHpId = subHpId;
+	}
+
+	public String getCpoaFileId() {
+		return cpoaFileId;
+	}
+
+	public void setCpoaFileId(String cpoaFileId) {
+		this.cpoaFileId = cpoaFileId;
+	}
 
 	/**
 	 * 此案件的上傳檔案狀態清單
@@ -251,6 +278,9 @@ public class MedicalTreatmentClaimVo {
 	private String fromHospitalId;
 	//轉收醫院代號清單</br> 包含案件的每家轉收公司代號</br>*value  "L2,L3,L4"
 	private String toHospitalId;
+
+	private String toSubHospitalId;
+
 	//聯盟狀態
 	private String allianceStatus;
 	//與醫院對接的序號
@@ -921,6 +951,14 @@ public class MedicalTreatmentClaimVo {
 
 	public void setApplyData(List<MedicalTreatmentClaimApplyDataVo> applyData) {
 		this.applyData = applyData;
+	}
+
+	public String getToSubHospitalId() {
+		return toSubHospitalId;
+	}
+
+	public void setToSubHospitalId(String toSubHospitalId) {
+		this.toSubHospitalId = toSubHospitalId;
 	}
 
 	@Override
