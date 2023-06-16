@@ -22,6 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -108,10 +109,16 @@ public class BxczSignController {
                 ret.setRedirectUri(callBack414 + "?actionId=" + vo.getActionId());
                 ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
                 CoapContentVo coapContent = new CoapContentVo();
-                if (CollectionUtils.isNotEmpty(medicalVo.getMedicalInfo())) {
-                    coapContent.setHpId(medicalVo.getToHospitalId());
-                    coapContent.setSubHpId(medicalVo.getToSubHospitalId());
-                    coapContent.getMedicalInfo().addAll(medicalVo.getMedicalInfo());
+                coapContent.setHpId(medicalVo.getToHospitalId());
+                coapContent.setSubHpId(medicalVo.getToSubHospitalId());
+                List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfoVos = medicalTreatmentService.getMedicalInfo(medicalVo.getClaimSeqId());
+                if (CollectionUtils.isNotEmpty(medicalInfoVos)) {
+                    medicalInfoVos.forEach(e -> {
+                        MedicalInfoVo infoVo = new MedicalInfoVo();
+                        BeanUtils.copyProperties(e, infoVo);
+                        infoVo.setSeNo(medicalVo.getIdNo());
+                        coapContent.getMedicalInfo().add(infoVo);
+                    });
                 }
                 ret.setCoapContent(Lists.newArrayList(coapContent));
                 return ret;

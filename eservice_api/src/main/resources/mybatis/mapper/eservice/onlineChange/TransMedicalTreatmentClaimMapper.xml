@@ -303,4 +303,20 @@
 			</foreach>
 		</if>
 	</insert>
+
+	<resultMap id="MedicalInfoMap" type="com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimMedicalInfoVo">
+		<result column="HS_TIME" property="hsTime"/>
+		<result column="HE_TIME" property="heTime"/>
+		<result column="OTYPE" property="otype"/>
+		<result column="DEPID" property="depid"/>
+		<collection property="dtypes" ofType="string">
+			<result column="DTYPE"/>
+		</collection>
+	</resultMap>
+
+	<select id="getMedicalInfoByClaimId" resultMap="MedicalInfoMap">
+		select HS_TIME, HE_TIME, OTYPE, DEP_NAME, DEPID, DTYPE FROM
+		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+		where CLAIMS_SEQ_ID = #{claimSeqId}
+	</select>
 </mapper>
