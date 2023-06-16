@@ -66,6 +66,7 @@
 		<result property="fileStatus"  column="CREATE_DATE" />
 		<result property="stauts"  column="STATUS" />
 		<result property="toSubHospitalId"  column="TO_SUB_HOSPITAL_ID" />
+		<result property="signAgree"  column="SIGN_AGREE" />
 	</resultMap>
 	<resultMap id="TransMedicalTreatmentResultMap" type="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
 		<id property="claimSeqId"  column="CLAIMS_SEQ_ID" />
@@ -589,7 +590,7 @@
 	<!--獲取到聯盟的數據信息-->
 	<select id="getMedicalTreatmentClaimVoBySeqIdNoTransNum" resultMap="MedicalTreatmentResultMap">
 		select top(10)
-		<include refid="MEDICAL_CLAIM_ALL"></include>
+		<include refid="MEDICAL_CLAIM_ALL"></include>, SIGN_AGREE, TO_SUB_HOSPITAL_ID
 		from ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
 		where CASE_ID is not null
 		and TRANS_NUM is null
@@ -665,7 +666,7 @@
 	<insert id="addMedicalTreatment" >
 		INSERT INTO  [ESERVICE].[dbo].[MEDICAL_TREATMENT_CLAIM]
 		(
-		 <include refid="ADD_MEDICAL_CLAIM_ALL"></include>
+		 <include refid="ADD_MEDICAL_CLAIM_ALL"></include> ,SIGN_AGREE ,TO_SUB_HOSPITAL_ID
 		)
 		VALUES
 		(#{medicalVo.claimSeqId}
@@ -721,6 +722,8 @@
 		,#{medicalVo.authorizationFileType}
 		,#{medicalVo.stauts}
 		,#{medicalVo.allianceStatus}
+		,#{medicalVo.signAgree}
+		,#{medicalVo.toSubHospitalId}
 			)
 	</insert>
 	<insert id="addMedicalTreatmentFileData">

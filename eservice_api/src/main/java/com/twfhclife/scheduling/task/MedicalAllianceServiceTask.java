@@ -680,30 +680,6 @@ public class MedicalAllianceServiceTask {
                                             if (StringUtils.isNotBlank(toValue) && toValue.indexOf("L01") >= 0) {
                                                 medicalVo.setAllianceStatus(allianceStatus);
                                                 vo.setCaseStatus(allianceStatus);
-                                                if (isAllNewCase && StringUtils.isNotBlank(medicalVo.getActionId()) && !StringUtils.equals("0", medicalVo.getActionId())) {
-                                                    medicalVo.setSignAgree("Y");
-                                                    Map<String, String> api416Params = Maps.newHashMap();
-                                                    HttpHeaders headers = new HttpHeaders();
-                                                    headers.add("Access-Token", clientSecret);
-                                                    headers.setContentType(MediaType.APPLICATION_JSON);
-                                                    try {
-                                                        Date startTime = new Date();
-                                                        String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
-                                                        String code = MyJacksonUtil.readValue(api416Resp, "/code");
-                                                        String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
-                                                        Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
-                                                        SignRecord record = gson.fromJson(api416Resp, SignRecord.class);
-                                                        record.setActionId(UUID.randomUUID().toString().replaceAll("-", ""));
-                                                        bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
-                                                        BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "數位身分驗證/數位簽署狀態查詢", "0", "", "", record.getTransNum(), startTime, new Date());
-                                                        bxczDao.addSignApiLog(bxczSignApiLog);
-                                                    } catch (Exception e) {
-                                                        logger.error("call api416 error: {}, {}, {}", headers, params, e);
-                                                        throw new Exception("call api416 error: " + e);
-                                                    }
-                                                } else {
-                                                    medicalVo.setSignAgree("N");
-                                                }
                                             } else {
                                                 //非傳送給台銀的案件,此案件不落地
                                                 vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);
@@ -779,12 +755,39 @@ public class MedicalAllianceServiceTask {
                                                 /**
                                                  * 存儲數據的組合
                                                  */
+
+                                                if (StringUtils.isNotBlank(medicalVo.getActionId()) && !StringUtils.equals("0", medicalVo.getActionId())) {
+                                                    medicalVo.setSignAgree("Y");
+                                                    Map<String, String> api416Params = Maps.newHashMap();
+                                                    HttpHeaders headers = new HttpHeaders();
+                                                    headers.add("Access-Token", clientSecret);
+                                                    headers.setContentType(MediaType.APPLICATION_JSON);
+                                                    try {
+                                                        Date startTime = new Date();
+                                                        String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
+                                                        String code = MyJacksonUtil.readValue(api416Resp, "/code");
+                                                        String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
+                                                        Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
+                                                        SignRecord record = gson.fromJson(api416Resp, SignRecord.class);
+                                                        record.setActionId(UUID.randomUUID().toString().replaceAll("-", ""));
+                                                        bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
+                                                        BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "數位身分驗證/數位簽署狀態查詢", "0", "", "", record.getTransNum(), startTime, new Date());
+                                                        bxczDao.addSignApiLog(bxczSignApiLog);
+                                                    } catch (Exception e) {
+                                                        logger.error("call api416 error: {}, {}, {}", headers, params, e);
+                                                        throw new Exception("call api416 error: " + e);
+                                                    }
+                                                } else {
+                                                    medicalVo.setSignAgree("N");
+                                                }
+
                                                 medicalVo.setFromCompanyId(medicalVo.getFrom());
                                                 medicalVo.setToCompanyId(medicalVo.getTo());
 //                                            medicalVo.setAuthorizationEndDate(medicalVo.getHeTime());
 //                                            medicalVo.setAuthorizationStartDate(medicalVo.getHsTime());
-//                                            medicalVo.setToHospitalId(medicalVo.getHpId());
 
+                                                medicalVo.setToHospitalId(medicalVo.getHpId());
+                                                medicalVo.setToSubHospitalId(medicalVo.getSubHpId());
                                                 medicalVo.setFileData(medicalVo.getFileData());
 
                                                 //toData
