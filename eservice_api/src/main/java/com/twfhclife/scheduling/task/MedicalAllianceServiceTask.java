@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.twfhclife.alliance.model.*;
 import com.twfhclife.alliance.service.IClaimChainService;
@@ -15,6 +16,7 @@ import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
 import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
 import com.twfhclife.eservice.api.elife.service.ITransAddService;
+import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.*;
 import com.twfhclife.eservice.user.service.ILilipmService;
@@ -44,6 +46,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -564,6 +568,15 @@ public class MedicalAllianceServiceTask {
     @Value("${cron.medical403.enable: true}")
     public boolean medical403Enable;
 
+    @Value("${eservice.bxcz.login.client_secret}")
+    private String clientSecret;
+
+    @Value("${eservice.bxcz.416.url}")
+    private String api416Url;
+
+    @Autowired
+    private BxczDao bxczDao;
+
    /**
     * API-403 查詢案件資訊
     * 1.全新案件：儲存至MEDICAL_TREAMENT_XXX
@@ -667,6 +680,30 @@ public class MedicalAllianceServiceTask {
                                             if (StringUtils.isNotBlank(toValue) && toValue.indexOf("L01") >= 0) {
                                                 medicalVo.setAllianceStatus(allianceStatus);
                                                 vo.setCaseStatus(allianceStatus);
+                                                if (isAllNewCase && StringUtils.isNotBlank(medicalVo.getActionId()) && !StringUtils.equals("0", medicalVo.getActionId())) {
+                                                    medicalVo.setSignAgree("Y");
+                                                    Map<String, String> api416Params = Maps.newHashMap();
+                                                    HttpHeaders headers = new HttpHeaders();
+                                                    headers.add("Access-Token", clientSecret);
+                                                    headers.setContentType(MediaType.APPLICATION_JSON);
+                                                    try {
+                                                        Date startTime = new Date();
+                                                        String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
+                                                        String code = MyJacksonUtil.readValue(api416Resp, "/code");
+                                                        String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
+                                                        Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
+                                                        SignRecord record = gson.fromJson(api416Resp, SignRecord.class);
+                                                        record.setActionId(UUID.randomUUID().toString().replaceAll("-", ""));
+                                                        bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
+                                                        BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "數位身分驗證/數位簽署狀態查詢", "0", "", "", record.getTransNum(), startTime, new Date());
+                                                        bxczDao.addSignApiLog(bxczSignApiLog);
+                                                    } catch (Exception e) {
+                                                        logger.error("call api416 error: {}, {}, {}", headers, params, e);
+                                                        throw new Exception("call api416 error: " + e);
+                                                    }
+                                                } else {
+                                                    medicalVo.setSignAgree("N");
+                                                }
                                             } else {
                                                 //非傳送給台銀的案件,此案件不落地
                                                 vo.setNcStatus(NotifyOfNewCaseChangeVo.NC_STATUS_ONE);

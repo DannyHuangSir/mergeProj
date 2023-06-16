@@ -8,10 +8,7 @@ import com.google.gson.Gson;
 import com.twfhclife.eservice.generic.annotation.RequestLog;
 import com.twfhclife.eservice.odm.OnlineChangeModel;
 import com.twfhclife.eservice.onlineChange.model.*;
-import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
-import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
-import com.twfhclife.eservice.onlineChange.service.IOnlineChangeService;
-import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.service.*;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
@@ -20,6 +17,7 @@ import com.twfhclife.eservice.user.model.LilipiVo;
 import com.twfhclife.eservice.user.model.LilipmVo;
 import com.twfhclife.eservice.user.service.ILilipiService;
 import com.twfhclife.eservice.user.service.ILilipmService;
+import com.twfhclife.eservice.util.SignStatusUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.Division;
 import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
@@ -720,6 +718,8 @@ public class MedicalTreatmentController extends BaseUserDataController {
 		 return processResponseEntity();
 	}
 
+	@Autowired
+	private IBxczSignService bxczSignService;
 
 	/**
 	 * 取得申請保單明細資料.
@@ -741,11 +741,23 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 			logger.error(" MedicalTreatmentController  -- TransInsuranceClaimVo is: {}", claimVo.toString());
 			//獲取保險公司明顯
-			List<Hospital>  hospitalList=	iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,null);
+			List<Hospital> hospitalList = iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, null);
 
 			//獲取醫院明顯
-			List<HospitalInsuranceCompany>  hospitalInsuranceCompanyList=	iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,null);
+			List<HospitalInsuranceCompany> hospitalInsuranceCompanyList = iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, null);
 
+			SignRecord signRecord = bxczSignService.getNewSignStatus(transNum);
+			if (signRecord != null) {
+				Map<String, Object> signRecordMap = Maps.newHashMap();
+				signRecordMap.put("idVerifyTime", signRecord.getIdVerifyTime() != null ? DateUtil.formatDateTime(signRecord.getIdVerifyTime(), "yyyy/MM/dd HH:mm") : "");
+				signRecordMap.put("idVerifyStatus", SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), null));
+				signRecordMap.put("signTime", signRecord.getSignTime() != null ? DateUtil.formatDateTime(signRecord.getSignTime(), "yyyy/MM/dd HH:mm") : "");
+				signRecordMap.put("signStatus", SignStatusUtil.signStatusToStr(null, signRecord.getSignStatus()));
+				signRecordMap.put("signDownload", signRecord.getSignDownload());
+				signRecordMap.put("signFileId", signRecord.getSignFileId());
+				addAttribute("signRecord", signRecordMap);
+
+			}
 
 			addAttribute("claimVo", claimVo);
 			addAttribute("hospitalInsuranceCompanyList", hospitalInsuranceCompanyList);

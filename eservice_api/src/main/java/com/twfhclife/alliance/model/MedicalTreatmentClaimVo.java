@@ -237,6 +237,7 @@ public class MedicalTreatmentClaimVo {
 	private String actionId;
 	private String subHpId;
 	private String cpoaFileId;
+	private String signAgree;
 
 	public String getActionId() {
 		return actionId;
@@ -244,6 +245,14 @@ public class MedicalTreatmentClaimVo {
 
 	public void setActionId(String actionId) {
 		this.actionId = actionId;
+	}
+
+	public String getSignAgree() {
+		return signAgree;
+	}
+
+	public void setSignAgree(String signAgree) {
+		this.signAgree = signAgree;
 	}
 
 	public String getSubHpId() {

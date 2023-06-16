@@ -80,7 +80,7 @@ public class BatchUploadInsuranceClaimFileDataService {
 
 			//3.上傳數位簽署文件到影像系統
 			BxczDao bxczDao = new BxczDao();
-			List<SignFileVo> signFileVos = bxczDao.getSignFiles();
+			List<SignFileVo> signFileVos = bxczDao.getInsuranceClaimSignFile();
 
 			if (signFileVos != null && !signFileVos.isEmpty() && signFileVos.size() > 0) {
 				for (SignFileVo vo : signFileVos) {

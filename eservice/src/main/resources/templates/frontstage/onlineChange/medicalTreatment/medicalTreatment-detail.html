@@ -3,6 +3,7 @@
     <div class="col-sm-9" style="text-align: left;">
         <button th:onclick="'javascript:onMedicalStatus(\'' + ${claimVo.applyItem} + '\',\'' + ${claimVo.transNum} + '\');'">狀態歷程</button>
         <button th:onclick="'javascript:viewSupplement(\'' + ${claimVo.applyItem} + '\',\'' + ${claimVo.transNum} + '\');'">補件單歷程</button>
+        <button th:if="${signRecord} != null and ${signRecord.signDownload} == 'Y'" th:onclick="'javascript:downloadSignPdf(\'' + ${signRecord.signFileId} + '\');'">數位簽署文件</button>
         <button onclick="downloadPolicyClaimsPDF()">下載紙本文件寄回檢核表</button>
     </div>
 </div>
@@ -353,6 +354,24 @@
                                 <th:block th:if="${claimVo.signAgree eq 'N'}">不同意</th:block>
                             </div>
                         </div>
+                        <th:block th:if="${signRecord} != null">
+                            <div class="form-group">
+                                <label class="col-sm-4">身份驗證狀態：</label>
+                                <div class="col-sm-8" th:text="${signRecord.idVerifyStatus}"> </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4">身份驗證時間：</label>
+                                <div class="col-sm-8" th:text="${signRecord.idVerifyTime}"> </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4">數位簽署狀態：</label>
+                                <div class="col-sm-8" th:text="${signRecord.signStatus}"> </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4">數位簽署時間：</label>
+                                <div class="col-sm-8" th:text="${signRecord.signTime}"> </div>
+                            </div>
+                        </th:block>
                     </div>
                 <div class="form-horizontal">
                     <div class="tb3 mobile-toggle" data-toggle="true">
@@ -654,5 +673,21 @@
 				}
 			});
 	};
+
+	function downloadSignPdf(signFileId) {
+        var form = document.createElement("form");
+        form.style.display = "none";
+        form.action = '/eservice/downloadSignPdf';
+        form.method = "post";
+        form.target="_blank";
+        input = document.createElement("input");
+        input.type = "hidden";
+        input.name = 'signFileId';
+        input.value = signFileId;
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
+    }
     /*]]>*/
 </script>

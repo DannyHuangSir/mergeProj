@@ -638,30 +638,6 @@ public class AllianceServiceTask {
 								InsuranceClaimMapperVo mapperVo = new InsuranceClaimMapperVo();
 								BeanUtils.copyProperties(icvo,mapperVo);
 
-								if (StringUtils.isNotBlank(icvo.getActionId()) || StringUtils.equals("0", icvo.getActionId())) {
-									mapperVo.setSignAgree("Y");
-									Map<String, String> api416Params = Maps.newHashMap();
-									HttpHeaders headers = new HttpHeaders();
-									headers.add("Access-Token", clientSecret);
-									headers.setContentType(MediaType.APPLICATION_JSON);
-									try {
-										Date startTime = new Date();
-										String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
-										String code = MyJacksonUtil.readValue(api416Resp, "/code");
-										String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
-										Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
-										SignRecord record = gson.fromJson(api416Resp, SignRecord.class);
-										bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
-										BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "數位身分驗證/數位簽署狀態查詢", "0", "", "", record.getTransNum(), startTime, new Date());
-										bxczDao.addSignApiLog(bxczSignApiLog);
-									} catch (Exception e) {
-										logger.error("call api416 error: {}, {}, {}", headers, params, e);
-										throw new Exception("call api416 error: " + e);
-									}
-								} else {
-									mapperVo.setSignAgree("N");
-								}
-
 								if(icvo.getTo()!=null) {//補to物件
 									String str = "";
 									List<CompanyVo> comps= icvo.getTo();
@@ -675,7 +651,6 @@ public class AllianceServiceTask {
 										mapperVo.setTo(str);
 									}
 								}
-
 
 								mapperVo.setCaseId(caseId);
 
@@ -696,6 +671,30 @@ public class AllianceServiceTask {
 								List<String> policyNos = allianceService.getPolicyNoByID(mapperVo.getIdNo());
 								boolean inEservice = false;
 								if (policyNos != null && policyNos.size() > 0) {//保戶
+									if (StringUtils.isNotBlank(icvo.getActionId()) && !StringUtils.equals("0", icvo.getActionId())) {
+										mapperVo.setSignAgree("Y");
+										Map<String, String> api416Params = Maps.newHashMap();
+										HttpHeaders headers = new HttpHeaders();
+										headers.add("Access-Token", clientSecret);
+										headers.setContentType(MediaType.APPLICATION_JSON);
+										try {
+											Date startTime = new Date();
+											String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
+											String code = MyJacksonUtil.readValue(api416Resp, "/code");
+											String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
+											Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
+											SignRecord record = gson.fromJson(api416Resp, SignRecord.class);
+											record.setActionId(UUID.randomUUID().toString().replaceAll("-", ""));
+											bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
+											BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "數位身分驗證/數位簽署狀態查詢", "0", "", "", record.getTransNum(), startTime, new Date());
+											bxczDao.addSignApiLog(bxczSignApiLog);
+										} catch (Exception e) {
+											logger.error("call api416 error: {}, {}, {}", headers, params, e);
+											throw new Exception("call api416 error: " + e);
+										}
+									} else {
+										mapperVo.setSignAgree("N");
+									}
 									int iRtn = claimChainService.addInsuranceCliam(mapperVo);
 									if (iRtn > 0) {//如果有查詢且儲存成功
 										vo.setNcStatus(NotifyOfNewCaseVo.NC_STATUS_ONE);
