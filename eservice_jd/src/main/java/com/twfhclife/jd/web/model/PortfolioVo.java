@@ -1,6 +1,7 @@
 package com.twfhclife.jd.web.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.twfhclife.jd.util.DateUtil;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -165,8 +166,8 @@ public class PortfolioVo implements Serializable {
 		this.netValueSell = netValueSell;
 	}
 
-	public Date getNetValueDate() {
-		return netValueDate;
+	public String getNetValueDate() {
+		return DateUtil.getRocDate(netValueDate);
 	}
 
 	public void setNetValueDate(Date netValueDate) {

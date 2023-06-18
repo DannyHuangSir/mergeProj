@@ -44,7 +44,7 @@ public class BaseRestClient {
 	public String ADM_CLIENT;
 	
 	@Value("${eservice_api.secret}")
-	public static String ESERVICE_API_SECRET;
+	public String ESERVICE_API_SECRET;
 	
 	@Value("${wso2.accessKey}")
 	public String WSO2_API_KEY;

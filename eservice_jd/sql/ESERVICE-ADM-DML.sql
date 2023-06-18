@@ -167,7 +167,40 @@ ESERVICE_ADM.dbo.FUNCTION_ITEM(
     UPDATE_USER,
     UPDATE_TIMESTAMP)
 values
-    ( (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),N'保單及照會明細報表', 'F', 'policyClaimDetail',
+    (
+    (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),
+    N'保單及照會明細報表',
+    'F',
+    'policyClaimDetail',
+	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'報表查詢' and SYS_ID = 'eservice_adm'),
+	'eservice_adm',
+	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 0),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'報表查詢' and SYS_ID = 'eservice_adm')),
+	'Y',
+    'admin',
+    GETDATE(),
+    'admin',
+    GETDATE());
+
+insert
+ESERVICE_ADM.dbo.FUNCTION_ITEM(
+    FUNCTION_ID,
+    FUNCTION_NAME,
+    FUNCTION_TYPE,
+    FUNCTION_URL,
+    PARENT_FUNC_ID,
+    SYS_ID,
+    SORT,
+    ACTIVE,
+    CREATE_USER,
+    CREATE_TIMESTAMP,
+    UPDATE_USER,
+    UPDATE_TIMESTAMP)
+values
+    (
+    (select MAX(FUNCTION_ID)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM),
+    N'經代專區使用者匯出報表',
+    'F',
+    'userDetail',
 	(select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'報表查詢' and SYS_ID = 'eservice_adm'),
 	'eservice_adm',
 	(select MAX(SORT)+1 from ESERVICE_ADM.dbo.FUNCTION_ITEM where Try_convert(numeric(38, 0),PARENT_FUNC_ID) = (select a.FUNCTION_ID  from ESERVICE_ADM.dbo.FUNCTION_ITEM a  where a.FUNCTION_NAME = N'報表查詢' and SYS_ID = 'eservice_adm')),

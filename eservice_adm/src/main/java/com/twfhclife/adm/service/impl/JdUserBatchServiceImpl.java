@@ -220,9 +220,9 @@ public class JdUserBatchServiceImpl implements IJdUserBatchService {
                         }else {
                             if (vo.getActionType().equals("ADD")) {
                                 try {
-                                    if (StringUtils.isEmpty(vo.getMobile())){
-                                        vo.setFailResult("行動電話欄位為必輸欄位，請檢查!");
-                                    }
+//                                    if (StringUtils.isEmpty(vo.getMobile())){
+//                                        vo.setFailResult("行動電話欄位為必輸欄位，請檢查!");
+//                                    }
                                     if (StringUtils.isEmpty(vo.getEmail())) {
                                         vo.setFailResult("EMAIL欄位為必輸欄位，請檢查!");
                                     }

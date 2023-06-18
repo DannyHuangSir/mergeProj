@@ -52,7 +52,7 @@ function postPolicyNo(actionUrl, policyNo) {
 	$(policyForm).submit();	
 }
 
-function postPolicyListType(actionUrl, policyNo, policyListType) {
+function postPolicyListType(actionUrl, policyNo, policyListType, parentUrl) {
 	popupLoading();
 	showLoadingModal();
 	console.log("postPolicyListType:"+actionUrl +","+ policyNo+","+policyListType);
@@ -66,6 +66,10 @@ function postPolicyListType(actionUrl, policyNo, policyListType) {
 	var inputPolicyListType = $('<input>').attr('type', 'hidden').attr('name', 'policyListType').val(policyListType);
 	$(policyForm).append($(inputPolicyListType));
 
+	if(actionUrl == 'personalCaseListing1' || actionUrl == 'caselisting1'){
+		var inputParentUrl = $('<input>').attr('type', 'hidden').attr('name', 'parentUrl').val(parentUrl);
+		$(policyForm).append($(inputParentUrl));
+	}
 	policyForm.appendTo(document.body)
 	$(policyForm).submit();	
 }

@@ -140,7 +140,7 @@
        {
        'fnRender': function(oRow) {
           return  '<span>'+
-				  (oRow != null ? westDate(oRow.netValueDate) : '-') +
+				  (oRow != null ? oRow.netValueDate : '-') +
 				  '</span><hr class="splitLine">'+
 				  (oRow != null ? showExchRateDate(oRow) : '-') ;
         },
