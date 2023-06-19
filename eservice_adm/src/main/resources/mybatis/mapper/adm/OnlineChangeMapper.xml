@@ -887,7 +887,7 @@
 <!-- 取得線上申請-保單醫療 -->
 	<select id="getMedicalTreatmentClaim" resultType="hashmap">
 		SELECT TOP 1
-		<include refid="MEDICAL_TREATMENT_CLAIM_ALL"></include>
+		<include refid="MEDICAL_TREATMENT_CLAIM_ALL"></include>, SIGN_AGREE
 		,COALESCE((SELECT
 		a1.PARAMETER_NAME
 		FROM
