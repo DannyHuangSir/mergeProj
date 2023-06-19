@@ -33,7 +33,7 @@
 	</update>
 
 	<insert id="insertSignFileData">
-		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_RECORD(FILE_ID, COMPANY_ID, CONTENT_BASE64)
+		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_FILEDATA(FILE_ID, COMPANY_ID, CONTENT_BASE64)
 		VALUES (#{fileId}, #{companyId}, #{fileBase64})
 	</insert>
 

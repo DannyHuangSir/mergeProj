@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script th:src="@{/js/jquery-3.1.0.min.js}"></script>
+    <script th:src="@{/js/jQuery.print.min.js}"></script>
+</head>
 <body class="no-skin" id="policyClaimPrint">
 <style>.profile-user-info {margin-bottom: 10px;}.profile-user-info {width: calc(100% - 24px);margin: 0 auto;}.panel {margin-bottom: 20px;background-color: #fff;border: 1px solid #ddd;border-radius: 4px;-webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);box-shadow: 0 1px 1px rgb(0 0 0 / 5%);}.panel-default>.panel-heading {color: #333;background-color: #f5f5f5;border-color: #ddd;}.panel-heading {padding: 10px 15px;border-bottom: 1px solid transparent;border-top-right-radius: 3px;border-top-left-radius: 3px;}.panel-body {padding: 15px;}.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {position: relative;min-height: 1px;}.form-horizontal .form-group {display: inline-block;width: 100%;}.form-group {margin-bottom: 10px;}.form-group>label[class*=col-] {margin-bottom: 4px;}.col-xs-4 {width: 33.333%;}.col-xs-3 {width: 25%;}.col-xs-9 {width: 75%;}table td, .detailPolicy .col-xs-8, .detailPolicy .col-xs-9 {word-wrap: break-word;word-break: break-all;}.col-xs-8 {width: 66.666%;}.col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {float: left;}.mobile-toggle {padding: 20px 0;}.colorGreen {color: #009B30 !important;}.upload-drop-zone {min-height: 50px;color: #DDDDDD;margin: auto;line-height: 50px;}.boardDotted {border: 2px dotted #009b38;}.col-xs-12 {width: 100%;}img {vertical-align: middle;}</style>
 <div class="col-xs-12 col-sm-11">
@@ -365,7 +369,10 @@
                                             <th:block th:each="vo1 : ${fileDataEntry.value}">
                                                 <th:block
                                                         th:if="${#strings.containsIgnoreCase(vo1.FILE_NAME,'.pdf')}">
-                                                    <embed type="application/pdf" th:src="'data:application/pdf;base64, '+${vo1.FILE_BASE64}"/>
+                                                    <th:block th:each="vo2 : ${vo1.pdfBase64}">
+                                                        <img style="width: 100%; height: 100%;"
+                                                             th:src="'data:image/png;base64, '+${vo2}"/>
+                                                    </th:block>
                                                 </th:block>
                                                 <th:block
                                                         th:if="${#strings.containsIgnoreCase(vo1.FILE_NAME,'.jpg')}">
@@ -389,11 +396,9 @@
         </div>
     </div>
 </div>
-<script th:src="@{/js/jquery-3.1.0.min.js}"></script>
-<script th:src="@{/js/jQuery.print.min.js}"></script>
 <script>
-    $(document).ready(function(){
-        $("#policyClaimPrint").print();
+    $(function(){
+        $("#policyClaimPrint").print()
     })
 </script>
 </body>

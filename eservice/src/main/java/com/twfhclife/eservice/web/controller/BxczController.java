@@ -68,7 +68,7 @@ public class BxczController extends BaseController {
                 signRecord.setActionId(actionId);
                 Calendar calendar = Calendar.getInstance();
                 signRecord.setSignStart(calendar.getTime());
-                calendar.add(Calendar.MILLISECOND, -300);
+                calendar.add(Calendar.MILLISECOND, 300 * 1000);
                 signRecord.setSignEnd(calendar.getTime());
                 bxczSignService.addSignBxczRecord(signRecord);
                 transService.updateTransStatus(bxczState.getTransNum(), OnlineChangeUtil.TRANS_STATUS_PROCESS_SIGN);

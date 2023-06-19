@@ -62,6 +62,7 @@ public class BxczSignServiceImpl implements IBxczSignService {
 
     @Override
     public int addSignBxczRecord(SignRecord signRecord) {
+
         return bxczDao.insertBxczSignRecord(signRecord,null, null, null, null);
     }
 
@@ -132,7 +133,7 @@ public class BxczSignServiceImpl implements IBxczSignService {
 			}
 		}
 		if (checkCode0 && checkResp) {
-			return MyJacksonUtil.readValue(responseEntity.getBody(), "/code/data/content");
+			return MyJacksonUtil.readValue(responseEntity.getBody(), "/data/content");
 		} else {
 			return null;
 		}

@@ -5,7 +5,6 @@ import com.twfhclife.eservice.api.adm.model.ParameterVo;
 import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
-import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
 import com.twfhclife.eservice.onlineChange.service.impl.BxczSignServiceImpl;
 import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.utils.ApConstants;
@@ -19,12 +18,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class BxczSignTask {
 
     Log log = LogFactory.getLog(BxczSignTask.class);

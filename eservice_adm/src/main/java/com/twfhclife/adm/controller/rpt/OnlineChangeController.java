@@ -1,13 +1,17 @@
 package com.twfhclife.adm.controller.rpt;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.collect.Lists;
@@ -24,10 +28,13 @@ import com.twfhclife.generic.util.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.io.ByteArrayResource;
@@ -240,6 +247,24 @@ public class OnlineChangeController extends BaseController {
 					} else {
 						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
 					}
+					if (StringUtils.contains(String.valueOf(m.get("FILE_NAME")), "pdf")) {
+						File f = new File("print/tmp/file/" + UUID.randomUUID() + ".pdf");
+						if (!f.getParentFile().exists()) {
+							f.getParentFile().mkdirs();
+						}
+
+						try (FileOutputStream out = new FileOutputStream(f)) {
+							IOUtils.write(Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64"))), out);
+						}
+						try (PDDocument doc = PDDocument.load(f)) {
+							List<byte[]> images = pdfBufferedImage(doc);
+							List<String> imagesBase64 = Lists.newArrayList();
+							if (CollectionUtils.isNotEmpty(images)) {
+								images.forEach(i -> imagesBase64.add(Base64.getEncoder().encodeToString(i)));
+							}
+							m.put("pdfBase64", imagesBase64);
+						}
+					}
 				}
 			}
 			addAttribute("fileData", fileData);
@@ -259,6 +284,25 @@ public class OnlineChangeController extends BaseController {
 			addDefaultSystemError();
 		}
 		return "backstage/rpt/onlineChangeDetail-policyClaimPrint";
+	}
+
+	private List<byte[]> pdfBufferedImage(PDDocument doc ) {
+		try {
+			PDFRenderer renderer = new PDFRenderer(doc);
+			int pageCount = doc.getNumberOfPages();
+			List<byte[]> pdfImgArray = Lists.newArrayList();
+			for (int i = 0; i < pageCount; i++) {
+				try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+					BufferedImage image = renderer.renderImageWithDPI(i, 144);
+					ImageIO.write(image, "png", bos);
+					pdfImgArray.add(bos.toByteArray());
+				}
+			}
+			return pdfImgArray;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
