@@ -47,11 +47,18 @@
 		<result property="fileBase64"  column="FILE_BASE64" />
 	</resultMap>
 
-<resultMap id="hospitalResultMap" type="com.twfhclife.adm.model.Hospital">
+	<resultMap id="hospitalResultMap" type="com.twfhclife.adm.model.Hospital">
 		<result property="id" column="ID" />
 		<result property="hpid"  column="HP_ID" />
 		<result property="hpName"    column="HP_NAME" />
 		<result property="functionName"  column="FUNCTION_NAME" />
+		<collection property="hpBranch" resultMap="SubHospitalResultMap"></collection>
+	</resultMap>
+
+	<resultMap id="SubHospitalResultMap" type="com.twfhclife.adm.model.SubHospital">
+		<result property="id" column="SUB_ID"/>
+		<result property="subHpId" column="SUB_HP_ID"/>
+		<result property="subHpName" column="SUB_HP_NAME"/>
 	</resultMap>
 
 <resultMap id="hospitalInsuranceCompanyResultMap" type="com.twfhclife.adm.model.HospitalInsuranceCompany">
@@ -887,7 +894,7 @@
 <!-- 取得線上申請-保單醫療 -->
 	<select id="getMedicalTreatmentClaim" resultType="hashmap">
 		SELECT TOP 1
-		<include refid="MEDICAL_TREATMENT_CLAIM_ALL"></include>, SIGN_AGREE
+		<include refid="MEDICAL_TREATMENT_CLAIM_ALL"></include>, A.SIGN_AGREE, A.TO_SUB_HOSPITAL_ID
 		,COALESCE((SELECT
 		a1.PARAMETER_NAME
 		FROM
@@ -2803,9 +2810,10 @@
 	
 	<!--查詢當前功能的醫院,是API407存儲的-->
 	<select id="getHospitalList" resultMap="hospitalResultMap" parameterType="java.lang.String">
-		select  ID,HP_ID,HP_NAME,FUNCTION_NAME
-		from ESERVICE.DBO.HOSPITAL
-		where FUNCTION_NAME =#{functionName}
+			select A.ID , A.HP_ID, A.HP_NAME, A.FUNCTION_NAME, B.ID SUB_ID, B.SUB_HP_NAME, B.SUB_HP_ID
+			from ESERVICE.DBO.HOSPITAL A LEFT JOIN
+			ESERVICE.DBO.SUB_HOSPITAL B ON A.ID = B.HP_ID
+			where A.FUNCTION_NAME =#{functionName}
 	</select>
 	<!--查詢當前功能的保險公司,是API408存儲的-->
 	<select id="getHospitalInsuranceCompanyList" resultMap="hospitalInsuranceCompanyResultMap"  parameterType="java.lang.String">

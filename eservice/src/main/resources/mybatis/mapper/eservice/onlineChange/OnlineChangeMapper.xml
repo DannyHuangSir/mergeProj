@@ -228,7 +228,7 @@
 	
 	<select id="getPolicyClaimCompleted" parameterType="java.lang.String" resultType="java.lang.Integer">
 		select count(*) from eservice.dbo.TRANS A left join eservice.dbo.TRANS_INSURANCE_CLAIM B on a.TRANS_NUM = B.TRANS_NUM 
-		where A.STATUS not in ('2','3','7','8','41','42') and A.TRANS_TYPE = 'INSURANCE_CLAIM' and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{rocId})
+		where A.STATUS not in ('2','3','7','8','43','44') and A.TRANS_TYPE = 'INSURANCE_CLAIM' and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{rocId})
 	</select>
 
 	<select id="getMedicalTreatmentClaimCompleted" parameterType="java.lang.String" resultType="java.lang.Integer">
