@@ -364,6 +364,7 @@
 						<include>**/generic/util/MathUtil*</include>
 						<include>**/generic/util/HttpUtil*</include>
 						<include>**/generic/util/DateUtil*</include>
+						<include>**/generic/util/MyJacksonUtil*</include>
 
 						<include>**/generic/annotation/*</include>
 						<!--include>**/generic/annotation/EserviceEventParam*</include-->
