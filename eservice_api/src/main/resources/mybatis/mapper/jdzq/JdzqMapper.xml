@@ -191,6 +191,8 @@
         <result property="dueDate" column="DueDate"/>
         <result property="noteVerifyMemo" column="NoteVerifyMemo"/>
         <result property="agentCode" column="agentCode"/>
+        <result property="pSalesName" column="pSalesName"/>
+        <result property="pSalesID" column="pSalesID"/>
         <collection property="noteItems" resultMap="NoteItemMap"/>
     </resultMap>
 
@@ -202,7 +204,7 @@
     <select id="getNotePdf" resultMap="notePdfMap">
         SELECT DISTINCT A.PolicyNo, A.AppName, A.InsName, A.AgentCode agentCode, P.BrokerName, A.AgentSalesName, A.AgentSalesID,
         A.AccDocNo, D.BranchDesc, F.PTypeName, D.ManageDate, D.ProcessorName, D.ExtNumber, D.DueDate, D.NoteVerifyMemo,
-        E.ItemCode, E.ContentMemo
+        E.ItemCode, E.ContentMemo, A.PSalesName , A.PSalesID
         FROM MainPolicy A
         LEFT JOIN (
             SELECT B.NOTE_KEY, B.MAIN_KEY, B.NoteStatus, B.NoteVerifyResult,

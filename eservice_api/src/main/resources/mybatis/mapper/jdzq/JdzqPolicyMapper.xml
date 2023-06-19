@@ -39,6 +39,8 @@
         <result column="PolicyFee" property="policyFee" />
         <result column="PayType" property="payType" />
         <result column="PermYear" property="permYear" />
+        <result property="pSalesName" column="pSalesName"/>
+        <result property="pSalesID" column="pSalesID"/>
         <collection property="notes" resultMap="PolicyClaimSubMap" />
     </resultMap>
 
@@ -56,7 +58,7 @@
         c.AgentCode,(select  br.BrokerName from BrokerProfile br where br.Broker_ID = c.AgentCode) AS BrokerName
         ,c.BranchCode,
         (select distinct nk.NEBK_Branch_Name from NBUDWLINEBK nk where nk.NEBK_Bank_Code = c.agentcode and nk.NEBK_Branch_Code = c.BranchCode) AS nebkBranchName,
-        c.AgentSalesID,c.AgentSalesName,(CASE c.AccUnit
+        c.AgentSalesID, (c.PSalesID+c.PSalesName) AgentSalesName,(CASE c.AccUnit
         WHEN '01' THEN N'總公司'
         WHEN '02' THEN N'高雄分公司'
         WHEN '03' THEN N'台中分公司'
