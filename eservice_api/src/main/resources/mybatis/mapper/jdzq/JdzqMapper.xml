@@ -219,7 +219,7 @@
         FROM MainPolicy A
         INNER JOIN
         PolicyNote B ON A.Main_Key = B.Main_Key
-        WHERE A.BPMCurrentTak IN ('602000S', '602500S')
+        WHERE A.BPMCurrentTak NOT IN ('602000S', '602500S')
         AND B.DueDate = FORMAT(DATEADD(day, +2, #{currDate}), 'yyyyMMdd')
     </select>
 
