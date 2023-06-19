@@ -46,13 +46,13 @@
 				                    </div>
 				                    <div class="list col-md-12">
 				                        <div class="box-border">
-				                        	<a th:onclick="'javascript:postCaseListing(\'caselisting1\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
+				                        	<a th:onclick="'javascript:postCaseListing(\'caselisting1\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\',\''  +  ${parentUrl} + '\');'">
 				                                <div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder active">案件進度</div>
 				                            </a>
-				                            <a th:onclick="'javascript:postCaseListing(\'caselisting2\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
+				                            <a th:onclick="'javascript:postCaseListing(\'caselisting2\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\',\''  +  ${parentUrl} + '\');'">
 				                                <div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder">保單資訊</div>
 				                            </a>
-				                            <a th:onclick="'javascript:postCaseListing(\'caselisting3\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\');'">
+				                            <a th:onclick="'javascript:postCaseListing(\'caselisting3\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\',\''  +  ${parentUrl} + '\');'">
 				                                <div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder ">照會內容</div>
 				                            </a>
 				
@@ -207,7 +207,7 @@
 </div>
 <footer th:replace="fragments/footer"></footer>
 <script>
-	function postCaseListing(actionUrl, policyNo, policyName) {
+	function postCaseListing(actionUrl, policyNo, policyName,parentUrl) {
 		popupLoading();
 		var policyForm = $('<form>');
 		$(policyForm).attr("action", actionUrl);
@@ -218,6 +218,10 @@
 
 		var inputpolicyName = $('<input>').attr('type', 'hidden').attr('name', 'policyName').val(policyName);
 		$(policyForm).append($(inputpolicyName));
+
+		var inputParentUrl = $('<input>').attr('type', 'hidden').attr('name', 'parentUrl').val(parentUrl);
+		$(policyForm).append($(inputParentUrl));
+
 		policyForm.appendTo(document.body)
 		$(policyForm).submit();
 	}

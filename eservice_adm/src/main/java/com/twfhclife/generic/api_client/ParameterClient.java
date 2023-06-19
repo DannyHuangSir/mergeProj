@@ -30,21 +30,21 @@ public class ParameterClient extends BaseRestClient {
 
 	@Value("${eservice_api.param-category.searches.url}")
 	private String PARAMCATE_SEARCH_URI;
-	@Value("${eservice_api.param-category.create.url}")
-	private String PARAMCATE_CREATE_URI;
-	@Value("${eservice_api.param-category.update.url}")
-	private String PARAMCATE_UPDATE_URI;
-	@Value("${eservice_api.param-category.delete.url}")
-	private String PARAMCATE_DELETE_URI;
+//	@Value("${eservice_api.param-category.create.url}")
+//	private String PARAMCATE_CREATE_URI;
+//	@Value("${eservice_api.param-category.update.url}")
+//	private String PARAMCATE_UPDATE_URI;
+//	@Value("${eservice_api.param-category.delete.url}")
+//	private String PARAMCATE_DELETE_URI;
 	
 	@Value("${eservice_api.param.searches.url}")
 	private String PARAM_SEARCH_URI;
-	@Value("${eservice_api.param.create.url}")
-	private String PARAM_CREATE_URI;
-	@Value("${eservice_api.param.update.url}")
-	private String PARAM_UPDATE_URI;
-	@Value("${eservice_api.param.delete.url}")
-	private String PARAM_DELETE_URI;
+//	@Value("${eservice_api.param.create.url}")
+//	private String PARAM_CREATE_URI;
+//	@Value("${eservice_api.param.update.url}")
+//	private String PARAM_UPDATE_URI;
+//	@Value("${eservice_api.param.delete.url}")
+//	private String PARAM_DELETE_URI;
 
 	//參數類型管理-查詢
 	public PageResponseObj<Map<String, Object>> searchParamCategory(ParamCategoryRequestVo requestBody) {

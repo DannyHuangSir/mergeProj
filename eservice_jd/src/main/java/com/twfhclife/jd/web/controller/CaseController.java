@@ -73,27 +73,29 @@ public class CaseController extends BaseController {
 
 
 	@RequestMapping(value = { "/caselisting1" })
-	public String caselisting1(@RequestParam("policyNo") String policyNo, String parentUrl) {
+	public String caselisting1(@RequestParam("policyNo") String policyNo, @RequestParam("parentUrl") String parentUrl) {
 		addAttribute("policyNo", policyNo);
 		CaseVo vo = caseService.getCaseProcess(getUserId(), policyNo);
-		addAttribute("parentUrl", StringUtils.isBlank(parentUrl) ? "caselisting1" : "personalCaseListing1");
+		addAttribute("parentUrl", StringUtils.isBlank(parentUrl) ? "caselisting1" : parentUrl);
 		addAttribute("policyName", vo.getPolicyType());
 		addAttribute("vo",  vo);
 		return "frontstage/jdzq/caseQuery/caselisting1";
 	}
 
 	@RequestMapping(value = { "/caselisting2" })
-	public String caselisting2(@RequestParam("policyNo") String policyNo, @RequestParam("policyName") String policyName) {
+	public String caselisting2(@RequestParam("policyNo") String policyNo, @RequestParam("policyName") String policyName, @RequestParam("parentUrl") String parentUrl) {
 		addAttribute("policyNo", policyNo);
 		addAttribute("policyName", policyName);
+		addAttribute("parentUrl", StringUtils.isBlank(parentUrl) ? "caselisting1" : parentUrl);
 		addAttribute("vo",  caseService.getCasePolicyInfo(getUserId(), policyNo));
 		return "frontstage/jdzq/caseQuery/caselisting2";
 	}
 
 	@RequestMapping(value = { "/caselisting3" })
-	public String caselisting3(@RequestParam("policyNo") String policyNo, @RequestParam("policyName") String policyName) {
+	public String caselisting3(@RequestParam("policyNo") String policyNo, @RequestParam("policyName") String policyName, @RequestParam("parentUrl") String parentUrl) {
 		addAttribute("policyNo", policyNo);
 		addAttribute("policyName", policyName);
+		addAttribute("parentUrl", StringUtils.isBlank(parentUrl) ? "caselisting1" : parentUrl);
 		addAttribute("list",  caseService.getNoteContent(getUserId(), policyNo));
 		return "frontstage/jdzq/caseQuery/caselisting3";
 	}

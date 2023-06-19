@@ -667,6 +667,7 @@
                 AND to_char(INPR_TRAN_DATE, 'yyyy/MM') = #{exchangeRateVo.queryMonth}
             </if>
         </where>
+        order by INPR_TRAN_DATE
     </select>
 
     <select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo">

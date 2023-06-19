@@ -30,10 +30,10 @@ public class FuncMgmtClient extends BaseRestClient {
 	private String GET_SYS_FUNCTION_URI;// = "/funcMgnt/{sysId}/getFunctions";
 	@Value("${eservice_api.func.insert.url}")
 	private String INSERT_FUNCTION_URI;// = "/funcMgnt/insertFunctions";
-	@Value("${eservice_api.func.update.url}")
-	private String UPDATE_FUNCTION_URI;// = "/funcMgnt/updateFunctions";
-	@Value("${eservice_api.func.delete.url}")
-	private String DELETE_FUNCTION_URI;// = "/funcMgnt/deleteFunctions";
+//	@Value("${eservice_api.func.update.url}")
+//	private String UPDATE_FUNCTION_URI;// = "/funcMgnt/updateFunctions";
+//	@Value("${eservice_api.func.delete.url}")
+//	private String DELETE_FUNCTION_URI;// = "/funcMgnt/deleteFunctions";
 	@Value("${eservice_api.func.function-auth.url}")
 	private String FUNCTION_AUTH_URI;// = "/user/function-auth";
 

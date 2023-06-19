@@ -166,7 +166,7 @@ public class CaseServiceImpl implements ICaseService {
         document.open();
         PdfPTable table = new PdfPTable(new float[]{100f, 100f, 100f, 100f});
 
-        table.addCell(RptUtils2.createCell("受理人員: " + pdfVo.getProcessorName(), zh, Element.ALIGN_LEFT, 2, false));
+        table.addCell(RptUtils2.createCell("核保人員: " + pdfVo.getProcessorName(), zh, Element.ALIGN_LEFT, 2, false));
         table.addCell(RptUtils2.createCell("分機：2354", zh, Element.ALIGN_LEFT, 2, false));
 
         table.addCell(RptUtils2.createBlankCell(4, false));

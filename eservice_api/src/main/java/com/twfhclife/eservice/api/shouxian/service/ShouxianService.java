@@ -272,7 +272,7 @@ public class ShouxianService {
         }
         resp.setPortfolioList(portfolioList);
         if (maxDate != null) {
-            resp.setEndDate(new SimpleDateFormat("yyyy-MM-dd").format(maxDate));
+            resp.setEndDate(DateUtil.westToTwDate(new SimpleDateFormat("yyyy-MM-dd").format(maxDate)));
         }
         return resp;
     }
