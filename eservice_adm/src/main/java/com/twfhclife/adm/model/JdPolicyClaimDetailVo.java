@@ -114,6 +114,11 @@ public class JdPolicyClaimDetailVo implements Serializable {
 
     private String lipiAge;
 
+    private String pSalesName;
+
+    private String pSalesID;
+
+
     private List<JdClaimSubDetailVo> notes = Lists.newArrayList();
 
     public List<JdClaimSubDetailVo> getNotes() {
@@ -554,5 +559,17 @@ public class JdPolicyClaimDetailVo implements Serializable {
 
     public void setNoteKey(String noteKey) {
         this.noteKey = noteKey;
+    }
+
+    public void setpSalesName(String pSalesName) { this.pSalesName = pSalesName; }
+
+    public String getpSalesName() {
+        return pSalesName;
+    }
+
+    public void setpSalesID(String pSalesID) { this.pSalesID = pSalesID; }
+
+    public String getpSalesID() {
+        return pSalesID;
     }
 }
