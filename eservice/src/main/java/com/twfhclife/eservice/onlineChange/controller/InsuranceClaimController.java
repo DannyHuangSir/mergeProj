@@ -509,6 +509,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 	@GetMapping("/policyClaims-wait-sign")
 	public String policyClaimsWaitSign(@RequestParam("transNum") String transNum) {
 		addAttribute("signTransNum", transNum);
+		addAttribute("opened", false);
 		return "frontstage/onlineChange/policyClaims/policyClaims-wait-sign";
 	}
 	

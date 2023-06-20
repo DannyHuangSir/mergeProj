@@ -619,6 +619,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	@GetMapping("/medicalTreatment-wait-sign")
 	public String medicalTreatmenttWaitSign(@RequestParam("transNum") String transNum) {
 		addAttribute("signTransNum", transNum);
+		addAttribute("opened", false);
 		return "frontstage/onlineChange/medicalTreatment/medicalTreatment-wait-sign";
 	}
 

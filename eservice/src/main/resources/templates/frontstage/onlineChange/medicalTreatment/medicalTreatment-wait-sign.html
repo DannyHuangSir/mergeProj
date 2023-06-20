@@ -82,16 +82,23 @@
 	<form id="signStatusForm" method="post" action="getNewSignStatus" hidden="hidden">
 		<input type="hidden" name="transNum" th:value="${signTransNum}">
 		<input type="hidden" name="type" th:value="MEDICAL_TREATMENT">
+		<input type="hidden" name="opened" id="opened">
 	</form>
 	<footer th:replace="fragments/footer"></footer>
 	<th:block th:replace="fragments/script"/>
 	<script th:inline="javascript">
 	/*<![CDATA[*/
+		var opened = [[${opened}]]
 		$(function() {
-			setInterval("getNewSignStatus()", 30 * 1000)
+			var msg = [[${msg}]]
+			if (opened && msg == null) {
+				popupLoading();
+				setInterval("getNewSignStatus()", 30 * 1000)
+			}
 		});
 
 		function openBxczSign() {
+			opened = true
 			popupLoading();
 			$.ajax({
 				type : 'POST',
@@ -99,9 +106,9 @@
 				url : 'generateBxczSignUrl',
 				data:  JSON.stringify({"type": "MEDICAL_TREATMENT", "transNum": [[${signTransNum}]]}),
 				success : function(response) {
-					removeLoading()
 					if (response.result == 'SUCCESS') {
 						window.open(response.resultData)
+						getNewSignStatus()
 					} else {
 						openAlert(response.resultMsg)
 					}
@@ -113,6 +120,7 @@
 		}
 
 		function getNewSignStatus() {
+			$("#opened").val(opened)
 			$("#signStatusForm").submit()
 		}
 	/*]]>*/
