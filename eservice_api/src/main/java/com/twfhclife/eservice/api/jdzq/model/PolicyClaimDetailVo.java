@@ -115,6 +115,10 @@ public class PolicyClaimDetailVo implements Serializable {
 
     private String noteKey;
 
+    private String pSalesName;
+
+    private String pSalesID;
+
     public String getNoteKey() {
         return noteKey;
     }
@@ -556,6 +560,17 @@ public class PolicyClaimDetailVo implements Serializable {
         this.lipiAge = lipiAge;
     }
 
+    public void setpSalesName(String pSalesName) { this.pSalesName = pSalesName; }
+
+    public String getpSalesName() {
+        return pSalesName;
+    }
+
+    public void setpSalesID(String pSalesID) { this.pSalesID = pSalesID; }
+
+    public String getpSalesID() {
+        return pSalesID;
+    }
 }
 
 

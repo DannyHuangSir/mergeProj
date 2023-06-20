@@ -196,10 +196,10 @@ public class CaseServiceImpl implements ICaseService {
         table.addCell(RptUtils2.createCell(pdfVo.getManageDate(), tableFont, Element.ALIGN_LEFT, 3, true));
 
         table.addCell(RptUtils2.createCell("經攬人姓名：", tableFont, Element.ALIGN_RIGHT, 1, true));
-        table.addCell(RptUtils2.createCell(pdfVo.getAgentSalesName(), tableFont, Element.ALIGN_LEFT, 1, true));
+        table.addCell(RptUtils2.createCell(pdfVo.getpSalesName(), tableFont, Element.ALIGN_LEFT, 1, true));
 
         table.addCell(RptUtils2.createCell("經攬人登錄字號：", tableFont, Element.ALIGN_RIGHT, 1, true));
-        table.addCell(RptUtils2.createCell(pdfVo.getAgentSalesID(), tableFont, Element.ALIGN_LEFT, 1, true));
+        table.addCell(RptUtils2.createCell(pdfVo.getpSalesID(), tableFont, Element.ALIGN_LEFT, 1, true));
 
         table.addCell(RptUtils2.createBlankCell(4, false));
 

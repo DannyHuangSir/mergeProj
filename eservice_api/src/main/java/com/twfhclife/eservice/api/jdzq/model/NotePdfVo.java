@@ -23,6 +23,11 @@ public class NotePdfVo implements Serializable {
 
     private String dueDate;
     private String noteVerifyMemo;
+
+    private String pSalesName;
+
+    private String pSalesID;
+
     private List<NoteItemVo> noteItems = Lists.newArrayList();
 
     public String getPolicyNo() {
@@ -151,5 +156,17 @@ public class NotePdfVo implements Serializable {
 
     public void setNoteItems(List<NoteItemVo> noteItems) {
         this.noteItems = noteItems;
+    }
+
+    public void setpSalesName(String pSalesName) { this.pSalesName = pSalesName; }
+
+    public String getpSalesName() {
+        return pSalesName;
+    }
+
+    public void setpSalesID(String pSalesID) { this.pSalesID = pSalesID; }
+
+    public String getpSalesID() {
+        return pSalesID;
     }
 }
