@@ -1,9 +1,6 @@
 package com.twfhclife.eservice.onlineChange.service;
 
-import com.twfhclife.eservice.onlineChange.model.BlackListVo;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
-import com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo;
+import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -128,4 +125,6 @@ public interface IInsuranceClaimService {
 	 * @return
 	 */
 	int  updateInsuranceClaimFileDataFileBase64(TransInsuranceClaimFileDataVo  transInsuranceClaimFileDataVo) throws Exception;
+
+    List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(String functionName, String status);
 }

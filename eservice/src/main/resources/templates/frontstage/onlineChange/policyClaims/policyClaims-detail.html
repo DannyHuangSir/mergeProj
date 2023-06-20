@@ -244,12 +244,12 @@
                                         <th:block th:if="${toItem eq 'N15'}">國泰世紀保險 </th:block>
                                     </th:block>
                                 </div> -->
-                                <th:block th:if="${session.SEND_COMPANY_ITEMS != null}">
+                                <th:block th:if="${hospitalInsuranceCompanyList!= null}">
                                     <div class="col-sm-9">
                                         <th:block th:each="from : ${#strings.arraySplit(claimVo.to, ',')}">
-                                            <th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
-                                                <th:block th:if="${from eq vo.value.parameterValue}">
-                                                    <th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+                                            <th:block th:each="vo : ${hospitalInsuranceCompanyList}">
+                                                <th:block th:if="${from eq vo.insuranceId}">
+                                                    <th:block th:inline="text">[[${vo.insuranceName}]]</th:block>
                                                 </th:block>
                                             </th:block>
                                         </th:block>

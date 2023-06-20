@@ -230,4 +230,20 @@
 		from ESERVICE.DBO.COVERAGE c join ESERVICE.DBO.PRODUCT p on c.PRODUCT_ID = p.PRODUCT_ID 
 		where POLICY_NO = #{policyNo}
 	</select>
+
+	<resultMap id="HospitalInsuranceCompanyResultMap" type="com.twfhclife.eservice.onlineChange.model.HospitalInsuranceCompany">
+		<result property="id" column="ID" />
+		<result property="insuranceId"  column="INSURANCE_ID" />
+		<result property="insuranceName"    column="INSURANCE_NAME" />
+		<result property="functionName"  column="FUNCTION_NAME" />
+	</resultMap>
+
+	<select id="getHospitalInsuranceCompanyList" resultMap="HospitalInsuranceCompanyResultMap"  parameterType="java.lang.String">
+		select 	ID,INSURANCE_ID,INSURANCE_NAME,FUNCTION_NAME
+		from ESERVICE.DBO.HOSPITAL_INSURANCE_COMPANY
+		where FUNCTION_NAME = #{functionName}
+		<if test="status != null and status!=''" >
+			AND STATUS=#{status}
+		</if>
+	</select>
 </mapper>

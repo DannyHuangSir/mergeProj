@@ -32,6 +32,7 @@ import com.twfhclife.generic.api_model.TransAddRequest;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
+import com.twfhclife.generic.util.StatuCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -49,6 +50,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 線上申請-保單理賠申請書套印(保單為單選)
@@ -336,10 +338,18 @@ public class InsuranceClaimController extends BaseUserDataController {
 				claimVo.setIdNo(lilipiVo.getNoHiddenLipiId());
 				claimVo.setBirdate(DateUtil.formatDateTime(lilipiVo.getLipiBirth(), DateUtil.FORMAT_WEST_DATE));
 			}
+
+			List<HospitalInsuranceCompany> hospitalInsuranceCompanyList = insuranceClaimService.getHospitalInsuranceCompanyList(TransTypeUtil.INSURANCE_CLAIM_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
+			List<HospitalInsuranceCompany> collect = hospitalInsuranceCompanyList.stream().filter(x -> {
+				if (x.getInsuranceId() != null && x.getInsuranceId().equals("L01")) {
+					return false;
+				}
+				return true;
+			}).collect(Collectors.toList());
+			addAttribute("hospitalInsuranceCompanyList", collect);
+
 			//获取文件上传最大值，kb单位
-		   int  uploadMaxNumber=	lilipiService.findByUploadNumber(OnlineChangeUtil.UPLOAD_MAX_NUMBER,ApConstants.SYSTEM_ID);
-
-
+			int  uploadMaxNumber= lilipiService.findByUploadNumber(OnlineChangeUtil.UPLOAD_MAX_NUMBER,ApConstants.SYSTEM_ID);
 			addAttribute("claimVo", claimVo);
 			addAttribute("uploadMaxNumber", uploadMaxNumber);
 		} catch (Exception e) {
@@ -360,6 +370,10 @@ public class InsuranceClaimController extends BaseUserDataController {
 					claimVo.setRelation_name(vo.getParameterName());
 				}
 			}
+
+			List<HospitalInsuranceCompany> hospitalInsuranceCompanyList = insuranceClaimService.getHospitalInsuranceCompanyList(TransTypeUtil.INSURANCE_CLAIM_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
+			addAttribute("hospitalInsuranceCompanyList", hospitalInsuranceCompanyList);
+
 			// 發送驗證碼
 			sendAuthCode("policyClaim");
 			addAttribute("claimVo", claimVo);
@@ -589,8 +603,10 @@ public class InsuranceClaimController extends BaseUserDataController {
 				signRecordMap.put("signDownload", signRecord.getSignDownload());
 				signRecordMap.put("signFileId", signRecord.getSignFileId());
 				addAttribute("signRecord", signRecordMap);
-
 			}
+
+			List<HospitalInsuranceCompany> hospitalInsuranceCompanyList = insuranceClaimService.getHospitalInsuranceCompanyList(TransTypeUtil.INSURANCE_CLAIM_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
+			addAttribute("hospitalInsuranceCompanyList", hospitalInsuranceCompanyList);
 		} catch (Exception e) {
 			logger.error("Unable to getTransInsuranceClaimDetail: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();

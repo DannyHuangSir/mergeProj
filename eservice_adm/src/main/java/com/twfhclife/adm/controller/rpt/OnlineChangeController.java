@@ -226,6 +226,7 @@ public class OnlineChangeController extends BaseController {
 				signRecordMap.put("signFileId", signRecord.getSignFileId());
 				addAttribute("signRecord", signRecordMap);
 			}
+			addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList("INSURANCE_CLAIM"));
 		} catch (Exception e) {
 			logger.error("Unable to getTransInsuranceClaim: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();

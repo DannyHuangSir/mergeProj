@@ -396,26 +396,13 @@
 													<div class="check-title depo2">同意轉送理賠申請至其他保險公司</div>
 													<div class="check-list2 grey2">
 														<label for="" class="col-sm-3">授權傳送其他公司</label>
-														<th:block th:if="${session.SEND_COMPANY_ITEMS != null}">
+														<th:block th:if="${hospitalInsuranceCompanyList != null}">
 															<div class="col-sm-9">
-																<th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
-																	<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
-																		<div class="check-box"><i class=""><input type="checkbox" name="toItem"  th:value="${vo.value.parameterValue}"></i></div>
-																		<th:block th:if="${vo.value.parameterName != null}">
-																			<label th:inline="text">[[${vo.value.parameterName}]]</label>
-																		</th:block>
-																		<th:block th:if="${vo.value.parameterName == null}">
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_01'}">臺灣人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_02'}">國泰人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_03'}">第一金人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_04'}">中國人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_05'}">元大人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_06'}">南山人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_07'}">全球人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_08'}">新光人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_09'}">富邦財險</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_10'}">富邦人壽</th:block>
-																			<th:block th:if="${vo.value.parameterCode == 'SEND_COMPANY_11'}">國泰世紀保險</th:block>
+																<th:block th:each="vo : ${hospitalInsuranceCompanyList}">
+																	<div class="checkbox col-sm-4" style="text-align: left;line-height: 1.7em; cursor: pointer">
+																		<div class="check-box"><i class=""><input type="checkbox" name="toItem"  th:value="${vo.insuranceId}"></i></div>
+																		<th:block th:if="${vo.insuranceName != null}">
+																			<label style="display: inline;" th:inline="text">[[${vo.insuranceName}]]</label>
 																		</th:block>
 																	</div>
 																</th:block>

@@ -68,6 +68,7 @@ public class InsClaimReportController extends BaseController {
 		List reportList = onlineChangeService.getInsClaimStatisticsReport(claimVo);
 		addAttribute("claimVo", claimVo);
 		addAttribute("reportList", reportList);
+		addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList("INSURANCE_CLAIM"));
 		return   "backstage/rpt/policyClaimsStatisticalReport3";
 	}
 	
@@ -110,6 +111,7 @@ public class InsClaimReportController extends BaseController {
 		List reportList = onlineChangeService.getInsClaimDetailReport(claimVo);
 		addAttribute("claimVo", claimVo);
 		addAttribute("reportList", reportList);
+		addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList("INSURANCE_CLAIM"));
 		return  "backstage/rpt/policyClaimsDetailReport3";
 	}
 }

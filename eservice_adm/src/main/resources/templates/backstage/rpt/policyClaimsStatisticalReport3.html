@@ -94,11 +94,11 @@
 						str.forEach(element => {
 							var data = /*[[${session.APPLICATION_ITEMS}]]*/;
 							if(column[j] == 'TO_COMPANY_ID'){
-								data = /*[[${session.SEND_COMPANY_ITEMS}]]*/;
+								data = /*[[${hospitalInsuranceCompanyList}]]*/;
 							}
 							$.each(data,function(i,item){
-								if(item.parameterValue == element){
-									strName.push(item.parameterName)
+								if(item.insuranceId == element){
+									strName.push(item.insuranceName)
 								}
 							});
 						});

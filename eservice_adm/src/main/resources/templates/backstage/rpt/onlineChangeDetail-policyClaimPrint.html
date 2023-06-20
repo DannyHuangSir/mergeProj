@@ -235,13 +235,13 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-xs-3">授權傳送公司：</label>
-                                <th:block th:if="${session.SEND_COMPANY_ITEMS != null}">
+                                <th:block th:if="${hospitalInsuranceCompanyList != null}">
                                     <div class="col-sm-9">
                                         <th:block
                                                 th:each="from : ${#strings.arraySplit(detailData['TO_COMPANY_ID'], ',')}">
-                                            <th:block th:each="vo : ${session.SEND_COMPANY_ITEMS}">
-                                                <th:block th:if="${from eq vo.value.parameterValue}">
-                                                    <th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
+                                            <th:block th:each="vo : ${hospitalInsuranceCompanyList}">
+                                                <th:block th:if="${from eq vo.insuranceId}">
+                                                    <th:block th:inline="text">[[${vo.insuranceName}]]</th:block>
                                                 </th:block>
                                             </th:block>
                                         </th:block>

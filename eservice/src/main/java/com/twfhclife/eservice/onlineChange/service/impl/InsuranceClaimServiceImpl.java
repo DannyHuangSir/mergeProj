@@ -1148,4 +1148,9 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		int i = transInsuranceClaimDao.updateInsuranceClaimFileDataFileBase64(transInsuranceClaimFileDataVo);
 		return i;
 	}
+
+    @Override
+    public List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(String functionName, String status) {
+        return transInsuranceClaimDao.getHospitalInsuranceCompanyList(functionName, status);
+    }
 }

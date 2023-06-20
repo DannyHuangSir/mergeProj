@@ -2,6 +2,7 @@ package com.twfhclife.eservice.onlineChange.dao;
 
 import java.util.List;
 
+import com.twfhclife.eservice.onlineChange.model.HospitalInsuranceCompany;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
@@ -90,4 +91,7 @@ public interface TransInsuranceClaimDao {
 	 * @return List<String>
 	 */
 	public List<String> getProductCodeByPolicyNo(String policyNo);
+
+    List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(@Param("functionName") String functionName,@Param("status")  String status);
+
 }

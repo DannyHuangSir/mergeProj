@@ -10,11 +10,15 @@ import javax.annotation.PostConstruct;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.twfhclife.alliance.model.*;
 import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
+import com.twfhclife.eservice.onlineChange.service.IHospitalInsuranceCompanyServcie;
+import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
+import com.twfhclife.generic.utils.StatuCode;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -109,6 +113,7 @@ public class AllianceServiceTask {
 	//@Value("${alliance.api106.url}")
 	public String URL_API106;
 	public String URL_API108;
+	public String URL_API109;
 
 	//@Value("${cron.api.disable}")
 	public String API_DISABLE;
@@ -169,6 +174,9 @@ public class AllianceServiceTask {
 				}
 				if ("alliance.api108.url".equals(parameterItem.getParameterName())) {
 					this.setURL_API108(parameterItem.getParameterValue());
+				}
+				if ("alliance.api109.url".equals(parameterItem.getParameterName())) {
+					this.setURL_API109(parameterItem.getParameterValue());
 				}
 			});
 		}
@@ -875,6 +883,104 @@ public class AllianceServiceTask {
 
 	}
 
+	@Value("${cron.api109.expression.enable: true}")
+	public boolean api109Enable;
+
+	@Autowired
+	private IHospitalInsuranceCompanyServcie iHospitalInsuranceCompanyServcie;
+
+	@Scheduled(cron = "${cron.api109.expression}")
+//	@Scheduled(cron = "5 * * * * *")
+	public void callAPI109() {
+		if (!api109Enable) {
+			return;
+		}
+		log.info("-----------Start API-109 Task.-----------");
+		log.info("API_DISABLE=" + API_DISABLE);
+		if ("N".equals(API_DISABLE)) {
+			try {
+				Map<String, String> params = new HashMap<>();
+				//聯盟鏈歷程參數
+				Map<String, String> unParams = new HashMap<>();
+				unParams.put("name", "API-109查詢保險公司清單");
+				unParams.put("caseId", null);
+				unParams.put("transNum", null);
+
+				String strResponse = allianceService.postForEntity(URL_API109, params, unParams);
+				//模仿返回的json數據
+//				 String strResponse = "{\"code\":\"0\", \"msg\":\"success\", \"data\":[{\"insuranceId\":\"L02\", \"insuranceName\":\"台灣人壽\"}, {\"insuranceId\":\" L04\", \"insuranceName\":\"國泰人壽\"} ] }";
+				log.info("API109-查詢保險公司清單參數  " + strResponse);
+				List<HospitalInsuranceCompanyVo> hospitalVos = new ArrayList<>();
+				if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {
+					String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+					ObjectMapper objectMapper = new ObjectMapper();
+					JsonNode rootNode = objectMapper.readTree(dataString);
+					dataString = rootNode.toString();
+					//如有時間進行格式化時間
+					//Gson builderTime = (new GsonBuilder()).setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+					List<HospitalInsuranceCompanyVo> obj = new Gson().fromJson(dataString, new TypeToken<List<HospitalInsuranceCompanyVo>>() {
+					}.getType());
+					log.info("after new Gson().fromJson.................");
+					if (obj != null) {
+						hospitalVos = (List) obj;
+					} else {
+						log.info("API109-查詢保險公司清單參數-轉換數據  obj is null.");
+					}
+
+				}
+
+				if (!org.springframework.util.CollectionUtils.isEmpty(hospitalVos)) {
+					log.info("-----API109-查詢保險公司清單參數獲取到信息,開始進行處理------" + hospitalVos);
+					//查詢本地保險公司清單
+					HospitalInsuranceCompanyVo hospitalInsuranceCompanyVo = new HospitalInsuranceCompanyVo();
+					List<HospitalInsuranceCompanyVo> hospitalVoList = iHospitalInsuranceCompanyServcie.getHospitalInsuranceCompanyVoList(hospitalInsuranceCompanyVo);
+					System.out.println(hospitalVoList.size());
+					System.out.println(hospitalVoList);
+					if (!org.springframework.util.CollectionUtils.isEmpty(hospitalVoList)) {
+						//進行修改包含舊名稱狀態為可以用
+						iHospitalInsuranceCompanyServcie.updateHospitalInsuranceCompanyVoList(hospitalVos, StatuCode.AGREE_CODE.code);
+						//進行修改不包含舊名稱狀態為不可以用
+						iHospitalInsuranceCompanyServcie.updateNotHospitalInsuranceCompanyVoIdList(hospitalVos, StatuCode.DISAGREE_CODE.code);
+						hospitalInsuranceCompanyVo.setStatus(StatuCode.AGREE_CODE.code);
+						hospitalInsuranceCompanyVo.setFunctionName(ApConstants.INSURANCE_CLAIM);
+						//刪除已經存在的數據信息
+						List<HospitalInsuranceCompanyVo> vo = iHospitalInsuranceCompanyServcie.getHospitalInsuranceCompanyVoList(hospitalInsuranceCompanyVo);
+						List<HospitalInsuranceCompanyVo> collect = hospitalVos.stream().filter(x -> {
+							for (HospitalInsuranceCompanyVo hospitalVo1 : vo) {
+								if (hospitalVo1.getInsuranceId().equals(x.getInsuranceId())) {
+									return false;
+								}
+							}
+							return true;
+						}).collect(Collectors.toList());
+						if (!org.springframework.util.CollectionUtils.isEmpty(collect)) {
+							//進行添加新的數據信息
+							for (HospitalInsuranceCompanyVo addHospitalVo : collect) {
+								addHospitalVo.setFunctionName(ApConstants.INSURANCE_CLAIM);
+								addHospitalVo.setStatus(StatuCode.AGREE_CODE.code);
+								iHospitalInsuranceCompanyServcie.insertHospitalInsuranceCompanyVo(addHospitalVo);
+							}
+						}
+					} else {
+						//進行存儲數據
+						hospitalVos.stream().forEach((x) -> {
+							x.setFunctionName(ApConstants.INSURANCE_CLAIM);
+							x.setStatus(StatuCode.AGREE_CODE.code);
+							try {
+								iHospitalInsuranceCompanyServcie.insertHospitalInsuranceCompanyVo(x);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						});
+					}
+				}
+			} catch (Exception e) {
+				log.error(e);
+			}
+			log.info("-----------End API-109 Task.-----------");
+		}
+	}
+
 	@Value("${eservice.bxcz.login.client_id}")
 	private String clientId;
 	@Value("${eservice.bxcz.login.client_secret}")
@@ -1049,6 +1155,8 @@ public class AllianceServiceTask {
 
 		log.info("End saveToEserviceTrans.");
 	}
+
+
 
 	/**
 	 * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
@@ -1283,6 +1391,14 @@ public class AllianceServiceTask {
 		}
 
 		return rtn;
+	}
+
+	public String getURL_API109() {
+		return URL_API109;
+	}
+
+	public void setURL_API109(String URL_API109) {
+		this.URL_API109 = URL_API109;
 	}
 
 	public String getURL_API101() {
