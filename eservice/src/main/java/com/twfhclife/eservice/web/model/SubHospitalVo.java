@@ -4,6 +4,16 @@ public class SubHospitalVo {
     private String subHpId;
     private String subHpName;
 
+    private String hpId;
+
+    public String getHpId() {
+        return hpId;
+    }
+
+    public void setHpId(String hpId) {
+        this.hpId = hpId;
+    }
+
     public String getSubHpId() {
         return subHpId;
     }

@@ -20,11 +20,7 @@ import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.*;
 import com.twfhclife.eservice.user.service.ILilipmService;
-import com.twfhclife.eservice.web.model.Division;
-import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
-import com.twfhclife.eservice.web.model.HospitalVo;
-import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
-import com.twfhclife.eservice.web.model.OutpatientType;
+import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice_api.service.IMessagingTemplateService;
 import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.dao.adm.ParameterDao;
@@ -1281,9 +1277,17 @@ public class MedicalAllianceServiceTask {
                     log.info("-----API407-查詢醫療醫院清單參數獲取到信息,開始進行處理------" + hospitalVos);
                     //查詢本地醫院清單
                     HospitalVo hospitalVo = new HospitalVo();
+                    List<SubHospitalVo> subHospitalVos = Lists.newArrayList();
                     List<HospitalVo> hospitalVoList = iHospitalServcie.getHospitalVoList(hospitalVo);
                     System.out.println(hospitalVoList.size());
                     System.out.println(hospitalVoList);
+                    hospitalVos.forEach(h -> {
+                        subHospitalVos.addAll(h.getHpBranch().stream().collect(ArrayList::new, (list, b) -> {
+                            b.setHpId(h.getHpId());
+                            list.add(b);
+                        }, ArrayList::addAll));
+                    });
+
                     if (!CollectionUtils.isEmpty(hospitalVoList)) {
                         //進行修改包含舊名稱狀態為可以用
                         iHospitalServcie.updateHospitalVoList(hospitalVos, StatuCode.AGREE_CODE.code);
@@ -1322,6 +1326,13 @@ public class MedicalAllianceServiceTask {
                             }
                         });
                     }
+
+                    //無分院不更新
+                    if (!CollectionUtils.isEmpty(subHospitalVos)) {
+                        iHospitalServcie.deleteAllSubHospitals();
+                        iHospitalServcie.insertSubHospitals(subHospitalVos);
+                    }
+
                 }
             } catch (Exception e) {
                 log.error(e);

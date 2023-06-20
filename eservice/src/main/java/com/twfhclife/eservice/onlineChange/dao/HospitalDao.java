@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.onlineChange.dao;
 
 import com.twfhclife.eservice.web.model.HospitalVo;
+import com.twfhclife.eservice.web.model.SubHospitalVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -54,5 +55,9 @@ public interface HospitalDao {
      * @return
      */
     String getTransStatusHistoryByRejectReason(@Param("transNum")String transNum,@Param("transStatus") String transStatusAbnormal);
+
+    int deleteAllSubHospitals();
+
+    int insertSubHospitals(@Param("vos") List<SubHospitalVo> subHospitalVos);
 
 }

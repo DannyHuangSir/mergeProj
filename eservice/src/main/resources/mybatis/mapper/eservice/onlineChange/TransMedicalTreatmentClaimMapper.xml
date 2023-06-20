@@ -277,7 +277,7 @@
 	<select id="getHospitalList" resultMap="HospitalResultMap" parameterType="java.lang.String">
 		select A.ID , A.HP_ID, A.HP_NAME, A.FUNCTION_NAME, B.ID SUB_ID, B.SUB_HP_NAME, B.SUB_HP_ID
 		from ESERVICE.DBO.HOSPITAL A LEFT JOIN
-			ESERVICE.DBO.SUB_HOSPITAL B ON A.ID = B.HP_ID
+			ESERVICE.DBO.SUB_HOSPITAL B ON A.HP_ID = B.HP_ID
 		where A.FUNCTION_NAME =#{functionName}
 		<if test="status != null and status!=''" >
 			AND A.STATUS=#{status}

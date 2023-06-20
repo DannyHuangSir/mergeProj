@@ -1,8 +1,10 @@
 package com.twfhclife.eservice.onlineChange.service;
 
 import com.twfhclife.eservice.web.model.HospitalVo;
+import com.twfhclife.eservice.web.model.SubHospitalVo;
 import com.twfhclife.eservice.web.model.TransVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -55,4 +57,7 @@ public interface IHospitalServcie {
      * @return
      */
     String getTransStatusHistoryByRejectReason(String transNum, String transStatusAbnormal);
+
+    int deleteAllSubHospitals();
+    int insertSubHospitals(List<SubHospitalVo> subHospitalVos);
 }

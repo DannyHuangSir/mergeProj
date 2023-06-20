@@ -4,6 +4,7 @@ import com.twfhclife.eservice.onlineChange.dao.HospitalDao;
 import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.service.IHospitalServcie;
 import com.twfhclife.eservice.web.model.HospitalVo;
+import com.twfhclife.eservice.web.model.SubHospitalVo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,15 @@ public class HospitalServcieImpl implements IHospitalServcie {
     public String getTransStatusHistoryByRejectReason(String transNum, String transStatusAbnormal) {
 
         return hospitalDao.getTransStatusHistoryByRejectReason(transNum,transStatusAbnormal);
+    }
+
+    @Override
+    public int deleteAllSubHospitals() {
+        return hospitalDao.deleteAllSubHospitals();
+    }
+
+    @Override
+    public int insertSubHospitals(List<SubHospitalVo> subHospitalVos) {
+        return hospitalDao.insertSubHospitals(subHospitalVos);
     }
 }

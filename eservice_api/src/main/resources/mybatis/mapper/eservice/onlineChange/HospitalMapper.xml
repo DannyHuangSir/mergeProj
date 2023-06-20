@@ -97,4 +97,16 @@
 			#{vo.hpId,jdbcType=VARCHAR}
 		</foreach>
 	</update>
+
+	<delete id="deleteAllSubHospitals">
+		delete from ESERVICE.dbo.SUB_HOSPITAL
+	</delete>
+
+	<insert id="insertSubHospitals">
+		insert into ESERVICE.dbo.SUB_HOSPITAL(SUB_HP_ID, SUB_HP_NAME, HP_ID)
+		values
+		<foreach collection="vos" item="vo" separator=",">
+			(#{vo.subHpId}, #{vo.subHpName}, #{vo.hpId})
+		</foreach>
+	</insert>
 </mapper>
