@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/head"/>
+</head>
+<body class="no-skin">
+<th:block th:replace="fragments/navbar"/>
+<div class="main-container my-save-state" id="main-container">
+    <div th:replace="fragments/sidebar :: sidebar (funId='userDetail')"></div>
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs my-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <a href="#">報表查詢</a>
+                    </li>
+                </ul><!-- /.breadcrumb -->
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        報表查詢
+                        <small>
+                            <i class="my-icon fa fa-angle-double-right"></i>
+                            經代專區使用者匯出報表
+                        </small>
+                    </h1>
+                </div>
+                <div class="">
+                    <ul class="step">
+                        <li class="step1 active col-xs-4">
+                            1<span class="hid1">. 選擇報表條件</span>
+                        </li>
+                        <li class="step2 col-xs-4">
+                            2<span class="hid1">. 選擇匯出資料欄位</span>
+                        </li>
+                        <li class="step3 col-xs-4">
+                            3<span class="hid1">. 下載開啓報表</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row" id="editDialog">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" role="form" id="form1" action="func2-2.html">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">系統帳號</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="systemAccount" placeholder="輸入欲查詢的系統帳號"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">帳號狀態</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="userAccountStatusList">
+                                        <option checked value="">請選擇帳號狀態</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">使用者名稱</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="userName" placeholder="輸入欲查詢的使用者名稱"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">業務員編號</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="salesNumber" placeholder="輸入欲查詢的業務員編號"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">通路別</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="deptSelect">
+                                        <option checked value="">請選擇通路</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">分支機構</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="branchSelect">
+                                        <option checked value="">請選擇分支機構</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">角色</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="roleNameSelect">
+                                        <option checked value="">請選擇角色</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-3 col-md-9" style="text-align: center;margin-top: 20px;">
+                                <a class="btn bgGrey" type="button" style="border: 0;margin-right: 20px;"
+                                   onclick="resetOnlineChange()">
+                                    取消
+                                </a>
+                                <a class="btn bgOrange" type="reset" style="border: 0;" onclick="searchOnlineChange()">
+                                    下一步
+                                </a>
+                            </div>
+                        </form>
+
+                        <form role="form" id="onlineChangeForm" method="post" action="/eservice_adm/userDetail/filter" >
+                            <input type="hidden" id="systemAccountOutput" name="systemAccountOutput" />
+                            <input type="hidden" id="userAccountStatusListOutput" name="userAccountStatusListOutput" />
+                            <input type="hidden" id="userNameOutput" name="userNameOutput" />
+                            <input type="hidden" id="salesNumberOutput" name="salesNumberOutput" />
+                            <input type="hidden" id="deptSelectOutput" name="deptSelectOutput" />
+                            <input type="hidden" id="branchSelectOutput" name="branchSelectOutput" />
+                            <input type="hidden" id="roleNameSelectOutput" name="roleNameSelectOutput" />
+                        </form>
+                    </div>
+                    <!--            -系統帳號(空白輸入欄位)-->
+                    <!--            -帳號狀態(下拉選項，來自parameters)-->
+                    <!--            -使用者名稱(空白輸入欄位，支援模糊查詢)-->
+                    <!--            -業務員編號(空白輸入欄位)-->
+                    <!--            -通路別(下拉選項，來自department，另一個報表已有此下拉項可參考)-->
+                    <!--            -分支機構(下拉選項，來自department，另一個報表已有此下拉項可參考，選通路要能連動分支機構)-->
+                    <!--            -角色(下拉選項，另一個報表已有此下拉項可參考，選通路要能連動分支機構)-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div th:replace="fragments/footer"></div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
+</div>
+<th:block th:replace="fragments/script"/>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(function () {
+        // 取得帳號啟用狀態的清單
+        $.ajax({
+            url: /*[[@{jd/common/userAccountStatusList}]]*/,
+            contentType: 'application/json',
+            type: "POST",
+            async: true,
+            success: function (response) {
+                if (response.result == 'SUCCESS') {
+                    if (response.resultData.length > 0) {
+                        for (var i = 0; i < response.resultData.length; i++) {
+                            var data = response.resultData[i];
+                            var chineseData = '';
+                            if (data == 'Unenabled') {
+                                chineseData = '未啟用';
+                            }
+                            if (data == 'Enabled') {
+                                chineseData = '已啟用';
+                            }
+                            if (data == 'Disabled') {
+                                chineseData = '已停用';
+                            }
+
+                            var option = "<option value='" + data + "'>" + chineseData + "</option>";
+                            $("#editDialog #userAccountStatusList").append(option);
+                        }
+                    }
+                } else {
+                    alertMsg('系統發生錯誤');
+                }
+            }
+        });
+
+        // 取得通路別清單
+        $.ajax({
+            url: /*[[@{jd/common/dept/parentList}]]*/,
+            contentType: 'application/json',
+            type: "POST",
+            async: true,
+            success: function (response) {
+                if (response.result == 'SUCCESS') {
+                    if (response.resultData.length > 0) {
+                        for (var i = 0; i < response.resultData.length; i++) {
+                            var option = "<option value='" + response.resultData[i].depId + "'>" + response.resultData[i].depName + "</option>";
+                            $("#editDialog #deptSelect").append(option);
+                        }
+                    }
+                } else {
+                    alertMsg('系統發生錯誤');
+                }
+            }
+        });
+
+        $('#deptSelect').change(function () {
+            $("#editDialog #branchSelect").empty();
+            $("#editDialog #branchSelect").append('<option checked value="">請選擇分支機構</option>');
+
+            $("#editDialog #roleNameSelect").empty();
+            $("#editDialog #roleNameSelect").append('<option checked value="">請選擇角色</option>');
+
+            if ($('#editDialog #deptSelect').val() != null && $('#editDialog #deptSelect').val() != '') {
+                var formData = {
+                    depId: $('#editDialog #deptSelect').val()
+                }
+                $.ajax({
+                    url: /*[[@{/jd/common/branchList}]]*/,
+                    contentType: 'application/json',
+                    type: "POST",
+                    async: true,
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        if (response.result == 'SUCCESS') {
+                            if (response.resultData.length > 0) {
+                                for (var i = 0; i < response.resultData.length; i++) {
+                                    var option = "<option value='" + response.resultData[i].branchId + "'>" + response.resultData[i].depName + "</option>";
+                                    $("#editDialog #branchSelect").append(option);
+                                }
+                            }
+                        } else {
+                            alertMsg('系統發生錯誤');
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url: /*[[@{/jd/common/depRoleList}]]*/,
+                    contentType: 'application/json',
+                    type: "POST",
+                    async: true,
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        console.log('depRoleList');
+                        console.log(JSON.stringify(response));
+                        if (response.result == 'SUCCESS') {
+                            if (response.resultData.length > 0) {
+                                for (var i = 0; i < response.resultData.length; i++) {
+                                    var option = "<option value='" + response.resultData[i].roleId + "'>" + response.resultData[i].roleName + "</option>";
+                                    $("#editDialog #roleNameSelect").append(option);
+                                }
+                            }
+                        } else {
+                            alertMsg('系統發生錯誤');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    function searchOnlineChange() {
+        if (($('#systemAccount').val() == null || $('#systemAccount').val() == '') &&
+            ($('#userAccountStatusList').val() == null || $('#userAccountStatusList').val() == '') &&
+            ($('#userName').val() == null || $('#userName').val() == '') &&
+            ($('#salesNumber').val() == null || $('#salesNumber').val() == '') &&
+            ($('#deptSelect').val() == null || $('#deptSelect').val() == '') &&
+            ($('#branchSelect').val() == null || $('#branchSelect').val() == '') &&
+            ($('#roleNameSelect').val() == null || $('#roleNameSelect').val() == '')) {
+            alertMsg("查詢條件至少要輸一個!")
+            return false;
+        }
+
+        $('#systemAccountOutput').val($('#systemAccount').val().trim());
+        $('#userAccountStatusListOutput').val($('#userAccountStatusList').val().trim());
+        $('#userNameOutput').val($('#userName').val().trim());
+        $('#salesNumberOutput').val($('#salesNumber').val().trim());
+        $('#deptSelectOutput').val($('#deptSelect').val().trim());
+        $('#branchSelectOutput').val($('#branchSelect').val().trim());
+        $('#roleNameSelectOutput').val($('#roleNameSelect').val().trim());
+
+        $('#onlineChangeForm').submit();
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

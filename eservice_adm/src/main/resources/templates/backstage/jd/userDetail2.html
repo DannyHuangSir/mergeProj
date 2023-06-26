@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/head"/>
+</head>
+<body class="no-skin">
+<th:block th:replace="fragments/navbar"/>
+<div class="main-container my-save-state" id="main-container">
+    <div th:replace="fragments/sidebar :: sidebar (funId='userDetail')"></div>
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs my-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="fa fa-search-plus" aria-hidden="true"></i>
+                        報表查詢
+                        <i class="my-icon fa fa-angle-double-right"></i>
+                        經代專區使用者匯出報表
+                    </li>
+                </ul><!-- /.breadcrumb -->
+            </div>
+            <div class="page-content">
+                <div class="">
+                    <ul class="step">
+                        <li class="step1  col-xs-4">
+                            1<span class="hid1">. 選擇報表條件</span>
+                        </li>
+                        <li class="step2 active col-xs-4">
+                            2<span class="hid1">. 選擇匯出資料欄位</span>
+                        </li>
+                        <li class="step3 col-xs-4">
+                            3<span class="hid1">. 下載開啓報表</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" role="form">
+                            <div id="selectTitle" class="list-select ui-draggable">
+                                <div class="list-body">
+                                    <div class="droppable">
+                                        <h4 style="line-height: 30px;">可選擇欄位</h4>
+                                        <ul class="item-box left-box  ui-sortable ui-droppable">
+                                            <li class="item ui-sortable-handle" data-id="userId">系統帳號</li>
+                                            <li class="item ui-sortable-handle" data-id="status">帳號狀態</li>
+                                            <li class="item ui-sortable-handle" data-id="roleName">系統平台角色</li>
+                                            <li class="item ui-sortable-handle" data-id="effectiveDate">帳號生效日</li>
+                                            <li class="item ui-sortable-handle" data-id="expirationDate">帳號失效日</li>
+                                            <li class="item ui-sortable-handle" data-id="depName">所屬通路</li>
+                                            <li class="item ui-sortable-handle" data-id="branchName">分支機構</li>
+                                            <li class="item ui-sortable-handle" data-id="userName">姓名</li>
+                                            <li class="item ui-sortable-handle" data-id="icID">業務員編號</li>
+                                            <li class="item ui-sortable-handle" data-id="loginSize">登錄字號</li>
+                                            <li class="item ui-sortable-handle" data-id="rocID">身份證字號</li>
+                                            <li class="item ui-sortable-handle" data-id="email">EMAIL</li>
+                                            <li class="item ui-sortable-handle" data-id="mobile">行動電話</li>
+                                            <li class="item ui-sortable-handle" data-id="createDate">帳號建立日</li>
+                                            <li class="item ui-sortable-handle" data-id="loginTime">帳號最後登入日</li>
+                                        </ul>
+                                    </div>
+                                    <div id="select-column" class="droppable">
+                                        <h4>已選擇欄位</h4>
+                                        <ul id="left-box" class="item-box right-box ui-sortable ui-droppable">
+                                            <!-- 右边框存放已选项 -->
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="text-align: center;margin-top: 20px;">
+                                <button class="btn bgGrey" id="lastStep" type="button"
+                                        style="border: 0;margin-right: 20px;">
+                                    <a th:href="@{/policyClaimDetail}" style="border: 0;">上一步</a>
+                                </button>
+                                <button class="btn bgOrange" id="go" type="reset" style="border: 0;">
+                                    下一步
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/footer"></div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
+</div>
+<th:block th:replace="fragments/script"/>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var formData = /*[[${vo}]]*/;
+    $(function () {
+        // 是否开启选项可拖动，选项可双击
+        $('#selectTitle').initList({
+            openDrag: true,
+            openDblClick: true
+        });
+    });
+
+    $('#go').click(function() {
+        formData.column = [];
+        formData.columnName = [];
+
+        $('#select-column').find('li').each(function(i,val){
+            formData.column.push(val.getAttribute('data-id'));
+            formData.columnName.push(val.innerHTML);
+        });
+
+
+        if(formData.column.length <= 0){
+            alertMsg('請選擇要導出的欄位.');
+            return;
+        }
+        console.log(JSON.stringify(formData));
+        postWithFormData(/*[[@{/userDetail/csv}]]*/, formData);
+    });
+
+    /*]]>*/
+</script>
+</body>
+</html>

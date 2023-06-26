@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/head"/>
+</head>
+<body class="no-skin">
+    <th:block th:replace="fragments/navbar"/>
+    <div class="main-container my-save-state" id="main-container">
+        <script type="text/javascript">
+            try{my.settings.loadState('main-container')}catch(e){}
+        </script>
+        <div th:replace="fragments/sidebar :: sidebar (funId='policyClaimDetail')"></div>
+        <div class="main-content">
+            <div class="main-content-inner">
+                <div class="breadcrumbs my-save-state" id="breadcrumbs">
+                    <ul class="breadcrumb">
+                        <li>
+                            <i class="fa fa-search-plus" aria-hidden="true"></i>
+                            報表查詢
+                            <i class="my-icon fa fa-angle-double-right"></i>
+                            保單及照會明細報表
+                        </li>
+                    </ul>
+                </div>
+                <div class="page-content">
+                    <div class="">
+                        <ul class="step">
+                            <li class="step1  col-xs-4">
+                                1<span class="hid1">. 選擇報表條件</span>
+                            </li>
+                            <li class="step2  col-xs-4">
+                                2<span class="hid1">. 選擇匯出資料欄位</span>
+                            </li>
+                            <li class="step3 active col-xs-4">
+                                3<span class="hid1">. 下載開啓報表</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12"  style="text-align: center;">
+                            <figure><img th:src="@{/images/check1.png}" ></figure>
+                            <h2 style="font-size: 16px;color: #CC7A00;">報表已匯出！請點擊下方按鈕進行開啓或下載！</h2>
+                            <div class="col-md-12" style="text-align: center;margin-top: 20px;">
+
+                                <a class="btn bgOrange" type="reset" style="border: 0;" onclick="downloadCSV()">
+                                    下載報表
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/footer"></div>
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+        </a>
+    </div>
+    <th:block th:replace="fragments/script"/>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var data = /*[[${reportList}]]*/;
+        var vo = /*[[${vo}]]*/;
+        var CSV = '';
+
+        $(function() {
+            var row = '';
+            var title = vo.columnName;
+            var column = vo.column;
+            for (var i = 0; i < title.length; i++) {
+                if(title[i]){
+                    row += title[i] + ',';
+                }
+            }
+            row = row.slice(0, -1);
+            CSV += row + '\r\n';
+            for (var i = 0; i < data.length; i++) {
+                var row = "";
+                for (var j = 0; j < column.length; j++) {
+                    row += '"' + (data[i][column[j]] ? data[i][column[j]] : "") + '",';
+                }
+                row.slice(0, row.length - 1);
+                CSV += row + '\r\n';
+            }
+            console.log(CSV);
+        });
+
+        function downloadCSV() {
+
+
+            if (CSV == '') {
+                alert("Invalid data");
+                return;
+            }
+            console.log(data);
+            var fileName = "經代專區使用者匯出報表";
+            var uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURI(CSV);
+            var link = document.createElement("a");
+            link.href = uri;
+
+            link.style = "visibility:hidden";
+            link.download = fileName + ".csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>

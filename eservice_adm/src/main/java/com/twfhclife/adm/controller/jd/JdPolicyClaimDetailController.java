@@ -2,13 +2,12 @@ package com.twfhclife.adm.controller.jd;
 
 import com.google.common.collect.Lists;
 import com.twfhclife.adm.domain.ResponseObj;
-import com.twfhclife.adm.model.JdClaimSubDetailVo;
-import com.twfhclife.adm.model.JdPolicyClaimDetailVo;
-import com.twfhclife.adm.model.JdPolicyClaimReqVo;
+import com.twfhclife.adm.model.*;
 import com.twfhclife.adm.service.IJdPolicyClaimDetailService;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.model.PolicyClaimDetailResponse;
+import com.twfhclife.generic.model.UserDetailResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -41,11 +40,30 @@ public class JdPolicyClaimDetailController extends BaseController {
         return  "backstage/jd/policyClaimDetail1";
     }
 
+    @GetMapping("/userDetail")
+    public String userDetail() { return "backstage/jd/userDetail"; }
+
+    @RequestLog
+    @PostMapping("/userDetail/filter")
+    public String userDetailFilter(JdUserDetailVo vo) {
+        addAttribute("vo", vo);
+        return "backstage/jd/userDetail2";
+    }
+
     @RequestLog
     @PostMapping("/policyClaimDetail/filter")
     public String policyClaimDetailFilter(JdPolicyClaimDetailVo vo) {
         addAttribute("vo", vo);
         return "backstage/jd/policyClaimDetail2";
+    }
+
+    @RequestLog
+    @PostMapping("/userDetail/csv")
+    public String userDetailCsv(JdUserDetailReqVo vo) {
+        UserDetailResponse report1 = jdPolicyClaimDetailService.getUserDetail(vo);
+        addAttribute("vo", vo);
+        addAttribute("reportList", report1 != null ? report1.getUserDetailVos() : Lists.newArrayList());
+        return "backstage/jd/userDetail3";
     }
 
 

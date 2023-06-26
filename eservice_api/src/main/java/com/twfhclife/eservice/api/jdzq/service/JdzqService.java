@@ -5,6 +5,7 @@ import com.twfhclife.eservice.api.jdzq.dao.JdzqDao;
 import com.twfhclife.eservice.api.jdzq.dao.JdzqPolicyDao;
 import com.twfhclife.eservice.api.jdzq.domain.CaseQueryRequest;
 import com.twfhclife.eservice.api.jdzq.model.*;
+import com.twfhclife.generic.dao.adm.UsersDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ public class JdzqService {
 
     @Autowired
     private JdzqPolicyDao jdzqPolicyDao;
+
+    @Autowired
+    private UsersDao usersDao;
 
     public List<CaseVo> getPersonalCaseList(CaseQueryRequest caseQuery) {
         return jdzqDao.getPersonalCaseList(caseQuery);
@@ -63,6 +67,19 @@ public class JdzqService {
             }
         }
         return jdzqPolicyDao.getPolicyClaimDetail(vo,str);
+    }
+
+    public List<UserDetailVo> getUserDetail(UserDetailReqVo vo) {
+        String str = "";
+        List<String> columns = vo.getColumn();
+        int k = columns.size();
+        for (int i = 0; i < k; i++) {
+            str += "ff." + columns.get(i);
+            if(i != k-1) {
+                str += ",";
+            }
+        }
+        return usersDao.getUserDetail(vo,str);
     }
 
     public List<CaseVo> getCaseList(CaseQueryRequest caseQuery) {
