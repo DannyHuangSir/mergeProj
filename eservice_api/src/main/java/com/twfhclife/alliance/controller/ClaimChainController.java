@@ -37,6 +37,9 @@ public class ClaimChainController {
 	
 	@Autowired
 	IParameterService parameterServiceImpl;
+
+	@Autowired
+	private MedicalTreatmentExternalServiceImpl medicalExternalServiceImpl;
 	
 	/**
 	 * API-107 通知有新案件
@@ -239,17 +242,17 @@ public class ClaimChainController {
         		Map<String, String> params = new HashMap<>();
         		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
         		
-//        		logger.info("API-409取得醫院之就診類型,request hpId=" + hospitalId);
-//        		String strResponse = medicalExternalServiceImpl.postForEntity(
-//        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api409.url"),
-//        				params,
-//        				null);
-//        		logger.info("API-409取得醫院之就診類型,回傳=" + strResponse);
+        		logger.info("API-409取得醫院之就診類型,request hpId=" + hospitalId);
+        		String strResponse = medicalExternalServiceImpl.postForEntity(
+        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api409.url"),
+        				params,
+        				null);
+        		logger.info("API-409取得醫院之就診類型,回傳=" + strResponse);
         		
         		/**
         		 * fake code for dev-start
         		 */
-        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API409_RESPONSE");
+//        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API409_RESPONSE");
         		/**
         		 * fake code for dev-end
         		 */
@@ -293,17 +296,17 @@ public class ClaimChainController {
         		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
         		params.put("otype", oType);//必填,String(50),就診類型代碼
         		
-//        		logger.info("API-410取得醫院科別清單,request=" + params.toString());
-//        		String strResponse = medicalExternalServiceImpl.postForEntity(
-//        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api410.url"),
-//        				params,
-//        				null);
-//        		logger.info("API-410取得醫院科別清單,回傳=" + strResponse);
+        		logger.info("API-410取得醫院科別清單,request=" + params.toString());
+        		String strResponse = medicalExternalServiceImpl.postForEntity(
+        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api410.url"),
+        				params,
+        				null);
+        		logger.info("API-410取得醫院科別清單,回傳=" + strResponse);
         		
         		/**
         		 * fake code for dev-start
         		 */
-        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API410_RESPONSE");
+//        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API410_RESPONSE");
         		/**
         		 * fake code for dev-end
         		 */
@@ -353,17 +356,17 @@ public class ClaimChainController {
         		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
         		params.put("otype", oType);//必填,String(50),就診類型代碼
         		
-//        		logger.info("API-411取得醫院資料群組,request=" + params.toString());
-//        		String strResponse = medicalExternalServiceImpl.postForEntity(
-//        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api411.url"),
-//        				params,
-//        				null);
-//        		logger.info("API-411取得醫院資料群組,回傳=" + strResponse);
+        		logger.info("API-411取得醫院資料群組,request=" + params.toString());
+        		String strResponse = medicalExternalServiceImpl.postForEntity(
+        				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api411.url"),
+        				params,
+        				null);
+        		logger.info("API-411取得醫院資料群組,回傳=" + strResponse);
         		
         		/**
         		 * fake code for dev-start
         		 */
-        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API411_RESPONSE");
+//        		String strResponse = parameterServiceImpl.getParameterValueByCode("eservice_api", "FAKE_API411_RESPONSE");
         		/**
         		 * fake code for dev-end
         		 */

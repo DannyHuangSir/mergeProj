@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:replace="fragments/head"/>
+</head>
+<body class="no-skin">
+<th:block th:replace="fragments/navbar"/>
+<div class="main-container my-save-state" id="main-container">
+	<script type="text/javascript">
+				try{my.settings.loadState('main-container')}catch(e){}
+			</script>
+	<div th:replace="fragments/sidebar :: sidebar (funId='loginRecord')"></div>
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="breadcrumbs my-save-state" id="breadcrumbs">
+				<ul class="breadcrumb">
+					<li>
+						<i class="fa fa-search-plus" aria-hidden="true"></i>
+						<a href="#">服務計費明細對帳管理</a>
+					</li>
+				</ul>
+			</div>
+			<div class="page-content">
+				<div class="page-header">
+					<h1>
+						服務計費明細對帳管理
+						<small>
+							<i class="my-icon fa fa-angle-double-right"></i>
+							服務計費明細對帳查詢
+						</small>
+					</h1>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<!-- PAGE CONTENT BEGINS -->
+						<form class="form-horizontal" method="post" id="loginRecordForm" role="form" action="/eservice_adm/loginRecordDetail">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">服務類型 </label>
+								<div class="col-sm-9">
+									<select class="form-control" id="loginStatus" name="loginStatus">
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="form-field-4">對帳月份</label>
+								<div class="col-sm-9">
+									<div class="input-group">
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+										<input class="form-control" type="text" id="dateRangeDate" onchange="changeEventDate()" />
+									</div>
+									<input type="hidden" id="startDate" name="startDate"/>
+									<input type="hidden" id="endDate" name="endDate"/>
+								</div>
+							</div>
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-success" type="button" onclick="$('#loginRecordForm').submit()">
+										<i class="my-icon fa fa-check bigger-110"></i>
+										查詢
+									</button>
+									&nbsp; &nbsp; &nbsp;
+									<button class="btn" type="reset">
+										<i class="my-icon fa fa-undo bigger-110"></i>
+										重新輸入
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="fragments/footer"></div>
+	<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+		<i class="my-icon fa fa-angle-double-up icon-only bigger-110"></i>
+	</a>
+</div>
+<th:block th:replace="fragments/script"/>
+<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			// 取得交易類別下拉選單
+			eserviceAdmOption.common('#loginStatus',
+					/*[[@{/common/optionList?categoryCode=AUDIT_LOG_STATUS}]]*/,
+					'請選擇系統登入狀態...',
+					'VALUE');
+
+			$('input[id=dateRangeDate]').daterangepicker({
+				'autoUpdateInput' : false,
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				maxDate : new Date(),
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel'
+				}
+			});
+
+			$('input[id=dateRangeDate]').on('apply.daterangepicker', function(ev, picker) {
+				$("#startDate").val(picker.startDate.format('YYYY-MM-DD'));
+				$("#endDate").val(picker.endDate.format('YYYY-MM-DD'));
+				$(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
+			});
+
+			$('input[id=dateRangeDate]').on('cancel.daterangepicker', function(ev, picker) {
+				$("#startDate").val("");
+				$("#endDate").val("");
+				$(this).val("");
+			});
+		});
+
+		function changeEventDate(){
+			var eventDate = $("#dateRangeDate").val();
+			$("#startDate").val(eventDate.substring(0,eventDate.indexOf("~")).trim());
+			$("#endDate").val(eventDate.substring(eventDate.indexOf("~")+1).trim());
+		}
+		/*]]>*/
+		</script>
+</body>
+</html>
