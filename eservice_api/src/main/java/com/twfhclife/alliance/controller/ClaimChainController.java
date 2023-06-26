@@ -1,12 +1,8 @@
 package com.twfhclife.alliance.controller;
 
-import com.twfhclife.alliance.domain.ClaimRequestVo;
-import com.twfhclife.alliance.domain.ClaimResponseVo;
-import com.twfhclife.alliance.domain.DnsRequestVo;
-import com.twfhclife.alliance.domain.DnsResponseVo;
+import com.twfhclife.alliance.domain.*;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.MedicalRequestVo;
-import com.twfhclife.alliance.model.Spa402RequestVo;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.alliance.service.IExternalService;
 import com.twfhclife.alliance.service.impl.AllianceServiceImpl;
@@ -18,6 +14,8 @@ import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
 import com.twfhclife.eservice.web.model.OutpatientType;
 import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.annotation.ApiRequest;
+import com.twfhclife.generic.domain.ApiResponseObj;
+import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -26,7 +26,7 @@
 		and b.TRANS_NUM=c.TRANS_NUM
 		and c.TRANS_TYPE='INSURANCE_CLAIM'
 		and c.STATUS in ('-1','0','8','2')
-		and a.TYPE in ('MEDICAL_RECEIPT','DIAGNOSIS_CERTIFICATE', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'Z')
+		and a.TYPE in ('MEDICAL_RECEIPT','DIAGNOSIS_CERTIFICATE', 'DIGI_SERVICE_CONSENT_FORM', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'Z')
 	</select><!-- STATUS='2'補送影像件用 -->
 
 	<update id="updateEzAcquireTaskId" parameterType="com.twfhclife.eservice_batch.model.TransInsuranceClaimFileDataVo">
