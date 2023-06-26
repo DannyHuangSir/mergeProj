@@ -46,4 +46,5 @@ public interface IExternalService {
 	 */
 	List<String> getProductCodeByPolicyNo(@Param("policyNo") String policyNo);
 
+	String postForEntity(String eserviceApi, Map<String, Object> params) throws Exception;
 }

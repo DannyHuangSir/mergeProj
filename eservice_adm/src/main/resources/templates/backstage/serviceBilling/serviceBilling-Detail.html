@@ -33,30 +33,44 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<!-- PAGE CONTENT BEGINS -->
-						<form class="form-horizontal" method="post" id="loginRecordForm" role="form" action="/eservice_adm/loginRecordDetail">
+						<form class="form-horizontal" method="post" id="form1" role="form">
 							<div class="form-group">
 								<label class="col-sm-3 control-label no-padding-right" for="form-field-1-1">服務類型 </label>
 								<div class="col-sm-9">
-									<select class="form-control" id="loginStatus" name="loginStatus">
+									<select class="form-control" id="loginStatus" name="serviceType">
+										<option value="">所有案件</option>
+										<option value="claim">所有理賠相關</option>
+										<option value="claimFrom">理賠案件(首家)</option>
+										<option value="claimTo">理賠案件(轉收家)</option>
+										<option value="claimFromFileScan">理賠案件(首家)惡意檔案掃描</option>
+										<option value="claimToFileScan">理賠案件(轉收家)惡意檔案掃描</option>
+										<option value="user">所有保全相關</option>
+										<option value="userFrom">保全案件(首家)</option>
+										<option value="userTo">保全案件(轉收家)</option>
+										<option value="userFromFileScan">保全案件(首家)惡意檔案掃描</option>
+										<option value="userToFileScan">保全案件(轉收家)惡意檔案掃描</option>
+										<option value="eins">所有電子保單相關</option>
+										<option value="einsComment">批註單</option>
+										<option value="ihs">所有理賠醫起通相關</option>
+										<option value="ihsFileScan">醫起通惡意檔案掃描</option>
+										<option value="ids">身份認證中心</option>
 									</select>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-3 control-label no-padding-right" for="form-field-4">對帳月份</label>
 								<div class="col-sm-9">
-									<div class="input-group">
-												<span class="input-group-addon">
-													<i class="fa fa-calendar bigger-110"></i>
-												</span>
-										<input class="form-control" type="text" id="dateRangeDate" onchange="changeEventDate()" />
+									<div class="input-group date">
+										<span class="input-group-addon">
+											<i class="fa fa-calendar bigger-110"></i>
+										</span>
+										<input type="text" id="billingDate" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
 									</div>
-									<input type="hidden" id="startDate" name="startDate"/>
-									<input type="hidden" id="endDate" name="endDate"/>
 								</div>
 							</div>
 							<div class="clearfix form-actions">
 								<div class="col-md-offset-3 col-md-9">
-									<button class="btn btn-success" type="button" onclick="$('#loginRecordForm').submit()">
+									<button id="qryBtn" class="btn btn-success" type="button">
 										<i class="my-icon fa fa-check bigger-110"></i>
 										查詢
 									</button>
@@ -68,6 +82,22 @@
 								</div>
 							</div>
 						</form>
+						<div class="hr hr-18 dotted hr-double"></div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div id="show-detail-results" hidden="true">
+									<h3 class="header smaller lighter blue">查詢結果</h3>
+									<div>
+										<div id="showMessage" class="alert alert-info">
+											<i class="my-icon fa fa-hand-o-right"></i>
+											<span id="errorMsg"></span>
+										</div>
+										<table id="grid"></table>
+										<div id="pager"></div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -79,46 +109,98 @@
 	</a>
 </div>
 <th:block th:replace="fragments/script"/>
+<script th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
 <script th:inline="javascript">
-		/*<![CDATA[*/
-		$(function() {
-			// 取得交易類別下拉選單
-			eserviceAdmOption.common('#loginStatus',
-					/*[[@{/common/optionList?categoryCode=AUDIT_LOG_STATUS}]]*/,
-					'請選擇系統登入狀態...',
-					'VALUE');
-
-			$('input[id=dateRangeDate]').daterangepicker({
-				'autoUpdateInput' : false,
-				'applyClass' : 'btn-sm btn-success',
-				'cancelClass' : 'btn-sm btn-default',
-				maxDate : new Date(),
-				format:'YYYY/MM/DD',
-				locale: {
-					applyLabel: 'Apply',
-					cancelLabel: 'Cancel'
-				}
+	/*<![CDATA[*/
+	var grid;
+	$(function() {
+		$('#billingDate').datetimepicker({
+			format : 'YYYY-MM'
+		});
+		grid = new jqGridUtil();
+		grid.id = '#grid';
+		grid.url = /*[[@{/spa401}]]*/;
+		grid.pager = '#pager';
+		grid.caption = '服務計費明細對帳查詢';
+		grid.colNames = ['Details', '服務類型', '案件編號/保單號碼', '案件編號-序號', '日期', '是否為保戶', '回報日期', '回報狀態'];
+		grid.colModel = [
+			{name:'details',index:'details'},
+			{name:'serviceType',index:'serviceType'},
+			{name:'caseNo',index:'caseNo'},
+			{name:'linkId',index:'linkId'},
+			{name:'eventTime',index:'eventTime'},
+			{name:'isEserviceUser',index:'isEserviceUser'},
+			{name:'replayDate',index:'replayStatus'},
+			{name:'replayStatus',index:'replayStatus'}
+		];
+		// 查詢
+		$('#qryBtn').click(function() {
+			grid.setPostData('serviceType', $("[name='serviceType'] option:selected").val());
+			grid.setPostData('verifyDate', $('#billingDate').val());
+			grid.setPostData('pageSize', 10);
+			grid.setPostData('pageNumber', 1);
+			// 顯示查詢結果
+			$(grid.id).jqGrid({
+				url: grid.url,
+				datatype: grid.datatype,
+				mtype: grid.mtype,
+				ajaxGridOptions: {
+					cache: false,
+					contentType: 'application/json'
+				},
+				serializeGridData: function(postData) {
+					// 由查詢物件取出放入postData
+					for (key in grid.formData) {
+						postData[key] = grid.formData[key];
+					}
+					return JSON.stringify(postData);
+				},
+				jsonReader: {
+					root: function (obj) {return obj.resultData.details; },
+					page: function (obj) {return obj.resultData.page; },
+					total: function (obj) { return obj.resultData.total; },
+					records: function (obj) { return obj.resultData.records; }
+				},
+				colNames: grid.colNames,
+				colModel: grid.colModel,
+				pager: grid.pager,
+				sortable: grid.sortable,
+				rowNum: grid.rowNum,
+				height: grid.height,
+				altRows: true,
+				rowList: grid.rowList,
+				viewrecords: grid.viewrecords,
+				caption: grid.caption,
+				loadComplete: function(response) {
+					if (response.result == 'SUCCESS') {
+						$('#showMessage').hide();
+					} else {
+						$('#errorMsg').text(response.resultMsg);
+						$('#showMessage').show();
+					}
+					// 重新設定寬度
+					var newWidth = $(grid.id).closest(".ui-jqgrid").parent().width();
+					$(grid.id).jqGrid("setGridWidth", newWidth, true);
+					updatePagerIcons();
+				},
 			});
-
-			$('input[id=dateRangeDate]').on('apply.daterangepicker', function(ev, picker) {
-				$("#startDate").val(picker.startDate.format('YYYY-MM-DD'));
-				$("#endDate").val(picker.endDate.format('YYYY-MM-DD'));
-				$(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
-			});
-
-			$('input[id=dateRangeDate]').on('cancel.daterangepicker', function(ev, picker) {
-				$("#startDate").val("");
-				$("#endDate").val("");
-				$(this).val("");
-			});
+			$('#show-detail-results').show();
 		});
 
-		function changeEventDate(){
-			var eventDate = $("#dateRangeDate").val();
-			$("#startDate").val(eventDate.substring(0,eventDate.indexOf("~")).trim());
-			$("#endDate").val(eventDate.substring(eventDate.indexOf("~")+1).trim());
-		}
-		/*]]>*/
-		</script>
+		// 重新輸入
+		$('#resetBtn').click(function() {
+			$('#form1')[0].reset();
+			$('.chosen-select').val('').trigger('chosen:updated'); // 重置下拉選單
+		});
+		eserviceAdmEvent.initChosenSelect();
+		eserviceAdmEvent.initDateRangePickerNotAutoUpdate('#dateRange');
+	});
+
+	function toEdit(messagingTemplateId) {
+		$('#editForm #messagingTemplateId').val(messagingTemplateId);
+		$('#editForm')[0].submit();
+	}
+	/*]]>*/
+</script>
 </body>
 </html>

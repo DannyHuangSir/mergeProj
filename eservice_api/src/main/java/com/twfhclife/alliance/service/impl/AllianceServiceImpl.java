@@ -310,27 +310,6 @@ public class AllianceServiceImpl implements IExternalService{
 		
 		return strRes;
 	}
-	
-	public static void main(String[] args){
-		
-		String url = "http://210.61.11.88:80/lia-api/api/ext/lia103i";
-		Map<String,String> params = new HashMap<>();
-		params.put("caseId", "20201231161500-9xCTpWe");
-		Map<String, String> unionParams = new HashMap<String, String>();
-		Gson gson = new Gson(); 
-        String json = gson.toJson(params);
-		System.out.println(json);
-		
-		try {
-			AllianceServiceImpl impl = new AllianceServiceImpl();
-			String str = impl.postForEntity(url, params, unionParams);
-			
-			System.out.println(str);
-		}catch(Exception e) {
-			System.out.println(e);
-		}
-		
-	}
 
 	public String getACCESS_TOKEN() {
 		return ACCESS_TOKEN;
@@ -366,6 +345,43 @@ public class AllianceServiceImpl implements IExternalService{
 			rtn = unionCourseDao.getProductCodeByPolicyNo(policyNo);
 		}
 		return rtn;
+	}
+
+	@Override
+	public String postForEntity(String url, Map<String, Object> params) throws Exception {
+
+		String strRes = null;
+		ResponseEntity<String> responseEntity = null;
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Access-token", ACCESS_TOKEN);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		Gson gson = new Gson();
+		String json = gson.toJson(params);
+		logger.info("resquest json="+json);
+
+		HttpEntity<String> entity = new HttpEntity<String>(json,headers);
+
+		restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+		responseEntity = restTemplate.postForEntity(url, entity, String.class);
+
+		strRes= responseEntity.getBody();
+		logger.info("responseEntity.getBody()="+strRes);
+
+		/// add checkCode0
+		boolean checkRes  = this.checkResponseStatus(responseEntity);//check http status
+		boolean checkCode0 = false;//check response code value.
+		if(checkRes) {
+			if (responseEntity!=null && responseEntity.getBody()!=null) {
+				//String(10),0代表成功,錯誤代碼則自行定義
+				checkCode0 = checkLiaAPIResponseValue(responseEntity.getBody(), "/code", "0");
+			}
+		}
+		if (!checkRes) {
+			return null;
+		}
+		return strRes;
 	}
 
 }

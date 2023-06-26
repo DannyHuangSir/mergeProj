@@ -6,7 +6,11 @@ import com.twfhclife.alliance.domain.DnsRequestVo;
 import com.twfhclife.alliance.domain.DnsResponseVo;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.MedicalRequestVo;
+import com.twfhclife.alliance.model.Spa402RequestVo;
 import com.twfhclife.alliance.service.IClaimChainService;
+import com.twfhclife.alliance.service.IExternalService;
+import com.twfhclife.alliance.service.impl.AllianceServiceImpl;
+import com.twfhclife.alliance.service.impl.ClaimChainServiceImpl;
 import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
 import com.twfhclife.eservice.web.model.Division;
 import com.twfhclife.eservice.web.model.HospitalVo;
@@ -39,8 +43,11 @@ public class ClaimChainController {
 	IParameterService parameterServiceImpl;
 
 	@Autowired
+	IExternalService externalService;
+
+	@Autowired
 	private MedicalTreatmentExternalServiceImpl medicalExternalServiceImpl;
-	
+
 	/**
 	 * API-107 通知有新案件
 	 * @return ClaimResponseVo
@@ -407,4 +414,86 @@ public class ClaimChainController {
         logger.info("-----------checkLiaAPIResponseValue-----return  ------"+b);
         return b;
     }
+
+	/**
+	 * SPA-401 明細對帳問題回報分頁查詢
+	 *
+	 * @param vo
+	 */
+	@ApiRequest
+	@RequestMapping("/spa401")
+	public ApiResponseObj<Spa401ResponseVo> callSpa401(
+			@RequestBody Spa401RequestVo vo) {
+
+		ApiResponseObj response = new ApiResponseObj();
+		ReturnHeader returnHeader = new ReturnHeader();
+		response.setReturnHeader(returnHeader);
+		logger.info("Start ClaimChainController.callSpa401().");
+		try {
+			//Request
+			Map<String, Object> params = new HashMap<>();
+			params.put("orgId", vo.getOrgId());
+			params.put("serviceType", vo.getServiceType());
+			params.put("verifyDate", vo.getVerifyDate());
+			params.put("pageNumber",vo.getPageNumber());
+			params.put("pageSize", vo.getPageSize());
+
+			logger.info("SPA-401取得明細對帳問題回報,request=" + params.toString());
+			String strResponse = externalService.postForEntity(
+					this.parameterServiceImpl.getParameterValueByCode("eservice_api", "alliance.spa401.url"),
+					params);
+			logger.info("SPA-401取得明細對帳問題回報,回傳=" + strResponse);
+			if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+				String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+				returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+				Spa401ResponseVo spa401ResponseVo = (Spa401ResponseVo) MyJacksonUtil.json2Object(dataString, Spa401ResponseVo.class);
+				response.setResult(spa401ResponseVo);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+		}
+		logger.info("End ClaimChainController.callSpa401().");
+		return response;
+	}
+
+	/**
+	 * SPA-402 明細對帳問題回報狀態更新
+	 *
+	 * @param vo
+	 */
+	@ApiRequest
+	@RequestMapping("/spa402i")
+	public MedicalDataFileGroup[] callSpa402i(@RequestBody Spa402RequestVo vo) {
+		logger.info("Start ClaimChainController.callSpa402i().");
+
+		MedicalDataFileGroup[] fileGroups = null;
+
+		try {
+			Map<String, Object> params = new HashMap<>();
+			params.put("orgId", vo.getOrgId());
+			params.put("data", vo.getData());
+			params.put("msg", vo.getMsg());
+			params.put("id", vo.getId());
+			params.put("status", vo.getStatus());
+
+			logger.info("SPA-402明細對帳問題回報狀態更新,request=" + params.toString());
+			String strResponse = externalService.postForEntity(
+					this.parameterServiceImpl.getParameterValueByCode("eservice_api", "alliance.spa402.url"),
+					params);
+			logger.info("SPA-402明細對帳問題回報狀態更新,回傳=" + strResponse);
+			if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+				String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+
+				OutpatientType outpatientTye = (OutpatientType) MyJacksonUtil.json2Object(dataString, OutpatientType.class);
+				List<MedicalDataFileGroup> listGroup = outpatientTye.getFileGroup();
+				fileGroups = listGroup.toArray(new MedicalDataFileGroup[0]);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		logger.info("End ClaimChainController.callSpa402i().");
+		return fileGroups;
+	}
 }
