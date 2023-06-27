@@ -145,6 +145,7 @@
 		<mapper resource="mybatis/mapper/eservice/BxczDao.xml"/>
 		<mapper resource="mybatis/mapper/ctcservice/TransCtcLilipiMapper.xml"/>
 		<mapper resource="mybatis/mapper/ctcservice/RegisterUser.xml"/>
+		<mapper resource="mybatis/mapper/eservice/alliance/ServiceBillingDaoMapper.xml"/>
 
 	</mappers>
 </configuration>

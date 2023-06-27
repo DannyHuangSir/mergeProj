@@ -131,23 +131,28 @@
 			{name:'caseNo',index:'caseNo'},
 			{name:'linkId',index:'linkId'},
 			{name:'eventTime',index:'eventTime'},
-			{name:'isEserviceUser',index:'isEserviceUser'},
-			{name:'replayDate',index:'replayStatus'},
+			{name:'inEservice',index:'inEservice'},
+			{name:'replayTime',index:'replayTime'},
 			{name:'replayStatus',index:'replayStatus'}
 		];
 		// 查詢
 		var oGrid
 		$('#qryBtn').click(function() {
-			grid.setPostData('serviceType', $("[name='serviceType'] option:selected").val());
-			grid.setPostData('verifyDate', $('#billingDate').val());
-			grid.setPostData('pageSize', 10);
-			grid.setPostData('pageNumber', 1);
+			if ($("#billingDate").val() == null || $("#billingDate").val() == '') {
+				alertMsg("對帳月份為必輸條件")
+				return false;
+			}
+			var newFormData = new FormData()
+			newFormData['serviceType'] = $("[name='serviceType'] option:selected").val()
+			newFormData['verifyDate'] = $('#billingDate').val();
+			newFormData['pageSize'] = 10;
+			newFormData['pageNumber'] = 1;
 			// 顯示查詢結果
 			if (oGrid) {
 				oGrid.jqGrid('clearGridData');
 				var postData = $(grid.id).jqGrid('getGridParam', 'postData');
-				for (key in grid.formData) {
-					postData[key] = grid.formData[key];
+				for (key in newFormData) {
+					postData[key] = newFormData[key];
 				}
 				postData['page'] = 1; // 重新設定第一頁
 				$(grid.id).jqGrid('setGridParam', postData).trigger("reloadGrid");
@@ -162,8 +167,8 @@
 					},
 					serializeGridData: function(postData) {
 						// 由查詢物件取出放入postData
-						for (key in grid.formData) {
-							postData[key] = grid.formData[key];
+						for (key in newFormData) {
+							postData[key] = newFormData[key];
 						}
 						return JSON.stringify(postData);
 					},
@@ -216,7 +221,17 @@
 	function showDetail(detailBtnObj, id, orgId, hospital, serviceType, caseNo, linkId, eventTime, fileSize, fee) {
 		var trObj = $(detailBtnObj).closest('tr');
 		var iObj = $(detailBtnObj).find('i');
-		var detailHtml = "<tr class=\"detail-row even open\" role=\"row\"> <td colspan=\"7\"> <div class=\"table-detail\"> <div class=\"row\" style=\"background-color: #fff; border-bottom: none\"> <div class=\"col-xs-12 col-sm-11\"> <div class=\"space visible-xs\"> </div> <div class=\"profile-user-info profile-user-info-striped\"> <div class=\"profile-info-row\"> <div class=\"profile-info-name\">回報狀態</div> <div style=\"display:inline-flex;\" class=\"profile-info-value\"><select style=\"height: 100%; width: 180px;\" class=\"form-control\" name=\"status\"> <option value=\"INIT\">資料OK</option> <option value=\"ERROR\">資料有問題</option></select>&nbsp;&nbsp;&nbsp;<button class=\"form-control\" style=\"margin:0; background: orange; color: white; height:31px;\">狀態回報更新</button></div></div> <div class=\"profile-info-row\"> <div class=\"profile-info-name\">回報錯誤訊息</div> <div class=\"profile-info-value\" style=\"position: relative;\"><span class=\"tg-list-item\"> <textarea name=\"msg\" rows=\"3\" cols=\"50\" class=\"col-sm-10\" ></textarea><label class=\"checkboxY-btn\" data-tg-off=\"ON\" data-tg-on=\"OFF\" for=\"cb2\"> </label> </span> </div> </div> </div> </div> <div id=\"202305190001\" class=\"col-xs-12 col-sm-11\"> <div class=\"panel panel-default profile-user-info\"> <div class=\"panel-heading\"> </div> <div class=\"panel-body clear1\" id=\"poliyClaimsDetail\"> <div class=\"mycigna3\"> <div class=\"col-md-12 detailPolicy\"> <div class=\"col-md-12 detailPolicy\"> <div class=\"form-horizontal\"> <div class=\"form-group\"> <label class=\"col-xs-3\">資料序號：</label> <div class=\"col-xs-9\" id=\"label_apply_item\">" + id + "</div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">公司代號：</label> <div class=\"col-xs-9\"> <span>" + orgId + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">醫院名稱：</label> <div class=\"col-xs-9\">" + hospital + "</div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">服務類型：</label> <div class=\"col-xs-9\"> <span>" + serviceType + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">案件編號/保單號碼：</label> <div class=\"col-xs-9\"> <span>" + caseNo + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">案件編號-序號：</label> <div class=\"col-xs-9\"> <span>" + linkId + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">日期：</label> <div class=\"col-xs-9\"> <span>" + eventTime + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">檔案大小：</label> <div class=\"col-xs-9\"> <span>" + fileSize + "</span> </div> </div><div class=\"form-group\"> <label class=\"col-xs-3\">費用：</label> <div class=\"col-xs-9\"> <span>" + fee + "</span> </div> </div> </div> </div> </div> </div> </div> </div> </div> </div> </div> </div> </td> </tr>"
+		var detailHtml = "<tr class=\"detail-row even open\" role=\"row\"> <td colspan=\"7\"> <div class=\"table-detail\"><form id=\"billing_form_" + id + "\">" +
+				"<input type=\"hidden\" name=\"id\" value=\"" + id + "\" />" +
+				"<input type=\"hidden\" name=\"orgId\" value=\"" + orgId + "\" />" +
+				"<input type=\"hidden\" name=\"hospital\" value=\"" + hospital + "\" />" +
+				"<input type=\"hidden\" name=\"serviceType\" value=\"" + serviceType + "\" />" +
+				"<input type=\"hidden\" name=\"caseNo\" value=\"" + caseNo + "\" />" +
+				"<input type=\"hidden\" name=\"linkId\" value=\"" + linkId + "\" />" +
+				"<input type=\"hidden\" name=\"eventTime\" value=\"" + eventTime + "\" />" +
+				"<input type=\"hidden\" name=\"fileSize\" value=\"" + fileSize + "\" />" +
+				"<input type=\"hidden\" name=\"fee\" value=\"" + fee + "\" />" +
+				"<div class=\"row\" style=\"background-color: #fff; border-bottom: none\"> <div class=\"col-xs-12 col-sm-11\"> <div class=\"space visible-xs\"> </div> <div class=\"profile-user-info profile-user-info-striped\"> <div class=\"profile-info-row\"> <div class=\"profile-info-name\">回報狀態</div> <div style=\"display:inline-flex;\" class=\"profile-info-value\"><select style=\"height: 100%; width: 180px;\" class=\"form-control\" name=\"status\"> <option value=\"INIT\">資料OK</option> <option value=\"ERROR\">資料有問題</option></select>&nbsp;&nbsp;&nbsp;<button class=\"form-control\" style=\"margin:0; background: orange; color: white; height:31px;\" onclick=\"updateBillingStatus('" + id + "')\">狀態回報更新</button></div></div> <div class=\"profile-info-row\"> <div class=\"profile-info-name\">回報錯誤訊息</div> <div class=\"profile-info-value\" style=\"position: relative;\"><span class=\"tg-list-item\"> <textarea name=\"msg\" rows=\"3\" cols=\"50\" class=\"col-sm-10\" ></textarea><label class=\"checkboxY-btn\" data-tg-off=\"ON\" data-tg-on=\"OFF\" for=\"cb2\"> </label> </span> </div></form> </div> </div> </div> <div id=\"202305190001\" class=\"col-xs-12 col-sm-11\"> <div class=\"panel panel-default profile-user-info\"> <div class=\"panel-heading\"> </div> <div class=\"panel-body clear1\" id=\"poliyClaimsDetail\"> <div class=\"mycigna3\"> <div class=\"col-md-12 detailPolicy\"> <div class=\"col-md-12 detailPolicy\"> <div class=\"form-horizontal\"> <div class=\"form-group\"> <label class=\"col-xs-3\">資料序號：</label> <div class=\"col-xs-9\" id=\"label_apply_item\">" + id + "</div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">公司代號：</label> <div class=\"col-xs-9\"> <span>" + orgId + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">醫院名稱：</label> <div class=\"col-xs-9\">" + hospital + "</div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">服務類型：</label> <div class=\"col-xs-9\"> <span>" + serviceType + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">案件編號/保單號碼：</label> <div class=\"col-xs-9\"> <span>" + caseNo + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">案件編號-序號：</label> <div class=\"col-xs-9\"> <span>" + linkId + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">日期：</label> <div class=\"col-xs-9\"> <span>" + eventTime + "</span> </div> </div> <div class=\"form-group\"> <label class=\"col-xs-3\">檔案大小：</label> <div class=\"col-xs-9\"> <span>" + fileSize + "k</span> </div> </div><div class=\"form-group\"> <label class=\"col-xs-3\">費用：</label> <div class=\"col-xs-9\"> <span>" + fee + "</span> </div> </div> </div> </div> </div> </div> </div> </div> </div> </div> </div> </div> </td> </tr>"
 		if (iObj.hasClass('fa-angle-double-down')) {
 			$(detailHtml).insertAfter(trObj);
 			iObj.removeClass('fa-angle-double-down');
@@ -230,7 +245,26 @@
 			iObj.removeClass('fa-angle-double-up');
 			iObj.addClass('fa-angle-double-down');
 		}
-		}
+	}
+
+	function updateBillingStatus(id) {
+		event.preventDefault();
+		event.stopPropagation();
+		formData = new FormData($("#billing_form_" + id)[0])
+		$.ajax({
+			url: /*[[@{spa402}]]*/,
+			type: 'POST',
+			data : formData,
+			contentType: false,
+			processData: false,
+			success: function (response) {
+				alertMsg('明細對帳問題回報狀態更新成功');
+			},
+			error: function (response) {
+				alertMsg('系統發生錯誤');
+			}
+		});
+	}
 	/*]]>*/
 </script>
 </body>

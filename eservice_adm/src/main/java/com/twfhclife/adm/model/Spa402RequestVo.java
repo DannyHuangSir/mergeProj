@@ -1,4 +1,4 @@
-package com.twfhclife.alliance.domain;
+package com.twfhclife.adm.model;
 
 public class Spa402RequestVo {
     private Long id;

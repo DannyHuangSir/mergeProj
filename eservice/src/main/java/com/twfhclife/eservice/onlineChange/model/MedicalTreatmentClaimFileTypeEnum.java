@@ -7,7 +7,7 @@ package com.twfhclife.eservice.onlineChange.model;
 public enum MedicalTreatmentClaimFileTypeEnum {
 	CertificateDiagnosis("CertificateDiagnosis","診斷證明書"),
 	Receipt("Receipt","費用明細"),
-	DischargeSummary("DischargeSummary","出院病摘"),
+	DischargeSummary("opdData","門診"),
 	MedicalImage("MedicalImage","醫學影像"),
 	Pathlogy("Pathlogy","病理檢查"),
 	Surgery("Surgery","手術資料"),

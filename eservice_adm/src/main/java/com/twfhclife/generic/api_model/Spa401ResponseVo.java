@@ -66,6 +66,33 @@ public class Spa401ResponseVo implements Serializable {
 		private String linkId;
 		private String reportState;
 		private String reportMessage;
+		private String inEservice;
+		private String replayStatus;
+		private String replayTime;
+
+		public String getReplayTime() {
+			return replayTime;
+		}
+
+		public void setReplayTime(String replayTime) {
+			this.replayTime = replayTime;
+		}
+
+		public String getReplayStatus() {
+			return replayStatus;
+		}
+
+		public void setReplayStatus(String replayStatus) {
+			this.replayStatus = replayStatus;
+		}
+
+		public String getInEservice() {
+			return inEservice;
+		}
+
+		public void setInEservice(String inEservice) {
+			this.inEservice = inEservice;
+		}
 
 		public Long getId() {
 			return id;

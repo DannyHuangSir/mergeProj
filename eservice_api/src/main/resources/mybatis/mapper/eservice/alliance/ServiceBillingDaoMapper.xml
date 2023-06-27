@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.twfhclife.alliance.dao.ServiceBillingDao">
+
+    <insert id="addServiceBillingReplay">
+        INSERT INTO
+        ESERVICE.DBO.BILLING_REPLAY_RECORD
+        (REPLAY_TIME, REPLAY_STATUS, IN_ESERVICE, ID_NO, ORG_ID, HOSPITAL, SERVICE_TYPE, CASE_NO, LINK_ID, EVENT_TIME, FILE_SIZE, FEE)
+        VALUES
+        (
+		SYSDATETIME(),
+        #{vo.status},
+        #{vo.inEservice},
+        #{vo.id},
+        #{vo.orgId},
+        #{vo.hospital},
+        #{vo.serviceType},
+        #{vo.caseNo},
+        #{vo.linkId},
+        #{vo.eventTime},
+        #{vo.fileSize},
+        #{vo.fee}
+        )
+    </insert>
+
+    <select id="getReplayStatusByIdNo" resultType="hashmap">
+        SELECT TOP 1 REPLAY_STATUS, FORMAT(REPLAY_TIME, 'yyyy-MM-dd HH:mm:ss') REPLAY_TIME FROM ESERVICE.DBO.BILLING_REPLAY_RECORD
+        WHERE ID_NO = #{id}
+        ORDER BY REPLAY_TIME DESC
+    </select>
+</mapper>

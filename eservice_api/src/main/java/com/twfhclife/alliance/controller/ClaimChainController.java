@@ -1,13 +1,15 @@
 package com.twfhclife.alliance.controller;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.twfhclife.alliance.domain.*;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.MedicalRequestVo;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.alliance.service.IExternalService;
-import com.twfhclife.alliance.service.impl.AllianceServiceImpl;
-import com.twfhclife.alliance.service.impl.ClaimChainServiceImpl;
+import com.twfhclife.alliance.service.IServiceBillingService;
 import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
+import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.model.Division;
 import com.twfhclife.eservice.web.model.HospitalVo;
 import com.twfhclife.eservice.web.model.MedicalDataFileGroup;
@@ -17,6 +19,8 @@ import com.twfhclife.generic.annotation.ApiRequest;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.utils.MyJacksonUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -413,6 +417,9 @@ public class ClaimChainController {
         return b;
     }
 
+	@Autowired
+	ILilipmService iLilipmService;
+
 	/**
 	 * SPA-401 明細對帳問題回報分頁查詢
 	 *
@@ -445,6 +452,44 @@ public class ClaimChainController {
 				String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
 				returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
 				Spa401ResponseVo spa401ResponseVo = (Spa401ResponseVo) MyJacksonUtil.json2Object(dataString, Spa401ResponseVo.class);
+				// 判斷是否為保戶
+				if (spa401ResponseVo != null && CollectionUtils.isNotEmpty(spa401ResponseVo.getDetails())) {
+					spa401ResponseVo.getDetails().forEach(d -> {
+						String rocId = null;
+						if (isClaimServiceType(vo.getServiceType())) {
+							Map<String, String> params403 = new HashMap<>();
+							params403.put("caseId", d.getCaseNo());
+							try {
+								String resp403 = medicalExternalServiceImpl.postForEntity(this.parameterServiceImpl.getParameterValueByCode("eservice_api", "medicalAlliance.api403.url"), params403, null);
+								if (checkLiaAPIResponseValue(resp403,"/code","0")) {
+									rocId = MyJacksonUtil.readValue(resp403, "/data/idNo");
+								}
+							} catch (Exception e) {
+								logger.error("call api 403 error: {}", e);
+							}
+						} else if (isMedicalServiceType(vo.getServiceType())) {
+							Map<String, String> params105 = new HashMap<>();
+							params105.put("caseId", d.getCaseNo());
+							try {
+								String resp105 = externalService.postForEntity(this.parameterServiceImpl.getParameterValueByCode("eservice_api", "alliance.api105.url"), params105, null);
+								if (checkLiaAPIResponseValue(resp105,"/code","0")) {
+									rocId = MyJacksonUtil.readValue(resp105, "/data/idNo");
+								}
+							} catch (Exception e) {
+								logger.error("call api 105 error: {}", e);
+							}
+						}
+						if (StringUtils.isNotBlank(rocId)) {
+							int countPIPM = iLilipmService.getInsuredUsersByRocId(rocId);
+							d.setInEservice(countPIPM > 0 ? "Y" : "N");
+						}
+						Map<String, Object> statusMap = serviceBillingService.getReplayStatusByIdNo(d.getId());
+						if (statusMap != null) {
+							d.setReplayStatus((String) statusMap.get("REPLAY_STATUS"));
+							d.setReplayTime((String) statusMap.get("REPLAY_TIME"));
+						}
+					});
+				}
 				response.setResult(spa401ResponseVo);
 			}
 		} catch (Exception e) {
@@ -455,43 +500,54 @@ public class ClaimChainController {
 		return response;
 	}
 
+	private static boolean isClaimServiceType(String serviceType) {
+		return Lists.newArrayList("claim", "claimFrom", "claimTo", "claimFromFileScan", "claimToFileScan").contains(serviceType);
+	}
+
+	private static boolean isMedicalServiceType(String serviceType) {
+		return Lists.newArrayList("ihs", "ihsFileScan").contains(serviceType);
+	}
+
+	@Autowired
+	private IServiceBillingService serviceBillingService;
 	/**
 	 * SPA-402 明細對帳問題回報狀態更新
 	 *
 	 * @param vo
 	 */
 	@ApiRequest
-	@RequestMapping("/spa402i")
-	public MedicalDataFileGroup[] callSpa402i(@RequestBody Spa402RequestVo vo) {
+	@RequestMapping("/spa402")
+	public ApiResponseObj<String> callSpa402i(@RequestBody Spa402RequestVo vo) {
 		logger.info("Start ClaimChainController.callSpa402i().");
-
-		MedicalDataFileGroup[] fileGroups = null;
-
+		ApiResponseObj response = new ApiResponseObj();
+		ReturnHeader returnHeader = new ReturnHeader();
+		response.setReturnHeader(returnHeader);
 		try {
+			List<Map<String, Object>> data = Lists.newArrayList();
+			Map<String, Object> dataMap = Maps.newHashMap();
+			dataMap.put("id", vo.getId());
+			dataMap.put("status", vo.getStatus());
+			dataMap.put("msg", vo.getMsg());
+			data.add(dataMap);
 			Map<String, Object> params = new HashMap<>();
 			params.put("orgId", vo.getOrgId());
-			params.put("data", vo.getData());
-			params.put("msg", vo.getMsg());
-			params.put("id", vo.getId());
-			params.put("status", vo.getStatus());
+			params.put("data", data);
 
-			logger.info("SPA-402明細對帳問題回報狀態更新,request=" + params.toString());
+			logger.info("SPA-402明細對帳問題回報狀態更新,request=" + params);
 			String strResponse = externalService.postForEntity(
 					this.parameterServiceImpl.getParameterValueByCode("eservice_api", "alliance.spa402.url"),
 					params);
 			logger.info("SPA-402明細對帳問題回報狀態更新,回傳=" + strResponse);
 			if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
-				String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
-
-				OutpatientType outpatientTye = (OutpatientType) MyJacksonUtil.json2Object(dataString, OutpatientType.class);
-				List<MedicalDataFileGroup> listGroup = outpatientTye.getFileGroup();
-				fileGroups = listGroup.toArray(new MedicalDataFileGroup[0]);
+				returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, MyJacksonUtil.getNodeString(strResponse, "msg"), "", "");
 			}
+			serviceBillingService.addServiceBillingReplay(vo);
 		} catch (Exception e) {
 			logger.error(e);
+			returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
 		}
 
 		logger.info("End ClaimChainController.callSpa402i().");
-		return fileGroups;
+		return response;
 	}
 }

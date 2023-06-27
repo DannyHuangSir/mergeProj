@@ -1,6 +1,7 @@
 package com.twfhclife.adm.controller.service_billing;
 
 import com.twfhclife.adm.domain.ResponseObj;
+import com.twfhclife.adm.model.Spa402RequestVo;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.ServiceBillingClient;
 import com.twfhclife.generic.api_model.Spa401RequestVo;
@@ -40,7 +41,7 @@ public class ServiceBillingController extends BaseController {
     @RequestLog
     @PostMapping(value = "/spa401")
     @ResponseBody
-    public ResponseEntity<ResponseObj> getDataFileGroup(@RequestBody Spa401RequestVo vo) {
+    public ResponseEntity<ResponseObj> spa401(@RequestBody Spa401RequestVo vo) {
         try {
             vo.setOrgId(companyId);
             processSuccess(serviceBillingClient.callSpa401(vo));
@@ -50,4 +51,18 @@ public class ServiceBillingController extends BaseController {
         }
         return processResponseEntity();
     }
+
+    @RequestLog
+    @PostMapping(value = "/spa402")
+    @ResponseBody
+    public ResponseEntity<ResponseObj> spa402(Spa402RequestVo vo) {
+        try {
+            processSuccessMsg(serviceBillingClient.callSpa402(vo));
+        } catch (Exception e) {
+            logger.error("Unable to ServiceBillingController  -  spa402: {}", ExceptionUtils.getStackTrace(e));
+            addDefaultSystemError();
+        }
+        return processResponseEntity();
+    }
+
 }
