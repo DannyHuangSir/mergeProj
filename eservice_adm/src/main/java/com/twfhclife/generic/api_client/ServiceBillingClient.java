@@ -26,7 +26,6 @@ public class ServiceBillingClient extends BaseRestClient {
     private String spa402url;
 
     public Spa401ResponseVo callSpa401(Spa401RequestVo params) {
-        Spa401ResponseVo spa401ResponseVo = null;
         ReturnHeader returnHeader = null;
         logger.debug("invoke callSpa401 post api: url=" + spa401url + ", requestBody=" + MyJacksonUtil.object2Json(params));
 
