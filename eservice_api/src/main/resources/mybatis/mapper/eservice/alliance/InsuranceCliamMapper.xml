@@ -40,6 +40,7 @@
 		<result property="to"            column="TO_COMPANY_ID" />
 		<result property="status"        column="STATUS" />
 		<result property="sendAlliance"  column="SEND_ALLIANCE" />
+		<result property="signAgree"  column="SIGN_AGREE" />
 		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
 	</resultMap>
 	
@@ -126,7 +127,7 @@
 	<!-- 取得可上傳但未上傳聯盟的資料 -->
 	<select id="getInsuranceClaimByNoCaseId" resultMap="InsuranceClaimResultMap">
 		select top(10) 
-		<include refid="INSURANCE_CLAIM_ALL"></include>
+		<include refid="INSURANCE_CLAIM_ALL"></include>, SIGN_AGREE
 		from ESERVICE.DBO.INSURANCE_CLAIM
 		where NOTIFY_SEQ_ID is null
 		and CASE_ID is null

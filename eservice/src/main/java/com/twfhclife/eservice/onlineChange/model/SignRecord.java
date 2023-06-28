@@ -12,7 +12,7 @@ public class SignRecord {
     private String signFileId;
     private String idVerifyStatus;
     private Date idVerifyTime;
-    private Date idVerifyType;
+    private String idVerifyType;
     private String signStatus;
     private Date signTime;
     private String signDownload;
@@ -27,11 +27,11 @@ public class SignRecord {
         this.seNo = seNo;
     }
 
-    public Date getIdVerifyType() {
+    public String getIdVerifyType() {
         return idVerifyType;
     }
 
-    public void setIdVerifyType(Date idVerifyType) {
+    public void setIdVerifyType(String idVerifyType) {
         this.idVerifyType = idVerifyType;
     }
 

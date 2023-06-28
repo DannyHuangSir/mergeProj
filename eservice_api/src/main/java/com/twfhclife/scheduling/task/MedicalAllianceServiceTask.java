@@ -567,6 +567,9 @@ public class MedicalAllianceServiceTask {
     @Value("${eservice.bxcz.login.client_secret}")
     private String clientSecret;
 
+    @Value("${eservice.bxcz.login.client_id}")
+    private String clientId;
+
     @Value("${eservice.bxcz.416.url}")
     private String api416Url;
 
@@ -759,13 +762,16 @@ public class MedicalAllianceServiceTask {
                                                     headers.add("Access-Token", clientSecret);
                                                     headers.setContentType(MediaType.APPLICATION_JSON);
                                                     try {
+                                                        String actionId = medicalVo.getActionId();
+                                                        api416Params.put("actionId", actionId);
+                                                        api416Params.put("companyId", clientId);
                                                         Date startTime = new Date();
                                                         String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
                                                         String code = MyJacksonUtil.readValue(api416Resp, "/code");
                                                         String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
                                                         Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
-                                                        SignRecord record = gson.fromJson(api416Resp, SignRecord.class);
-                                                        record.setActionId(UUID.randomUUID().toString().replaceAll("-", ""));
+                                                        SignRecord record = gson.fromJson(MyJacksonUtil.getNodeString(api416Resp, "data"), SignRecord.class);
+                                                        record.setActionId(actionId);
                                                         bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
                                                         BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "數位身分驗證/數位簽署狀態查詢", "0", "", "", record.getTransNum(), startTime, new Date());
                                                         bxczDao.addSignApiLog(bxczSignApiLog);
