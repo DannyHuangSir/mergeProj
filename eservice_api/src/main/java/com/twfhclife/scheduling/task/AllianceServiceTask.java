@@ -729,7 +729,7 @@ public class AllianceServiceTask {
 									}
 									HttpHeaders headers = new HttpHeaders();
 									headers.add("Access-Token", clientSecret);
-									headers.setContentType(MediaType.APPLICATION_JSON);
+									headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 									bxczSignService.postApi108(URL_API108, api108Params);
 								} catch (Exception e) {
 									logger.error("call api108 error: {}, {}", params, e);
