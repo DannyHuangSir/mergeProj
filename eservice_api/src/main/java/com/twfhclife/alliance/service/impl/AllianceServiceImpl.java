@@ -259,7 +259,7 @@ public class AllianceServiceImpl implements IExternalService{
 			
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Access-token", ACCESS_TOKEN);
-			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 			
 			//org.json.JSONObject jsonObj = new org.json.JSONObject(params);
 			Gson gson = new Gson(); 

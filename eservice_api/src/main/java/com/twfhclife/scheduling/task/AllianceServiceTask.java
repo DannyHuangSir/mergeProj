@@ -684,7 +684,7 @@ public class AllianceServiceTask {
 										Map<String, String> api416Params = Maps.newHashMap();
 										HttpHeaders headers = new HttpHeaders();
 										headers.add("Access-Token", clientSecret);
-										headers.setContentType(MediaType.APPLICATION_JSON);
+										headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 										try {
 											String actionId = icvo.getActionId();
 											api416Params.put("actionId", actionId);
