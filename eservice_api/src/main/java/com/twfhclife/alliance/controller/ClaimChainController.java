@@ -456,7 +456,7 @@ public class ClaimChainController {
 				if (spa401ResponseVo != null && CollectionUtils.isNotEmpty(spa401ResponseVo.getDetails())) {
 					spa401ResponseVo.getDetails().forEach(d -> {
 						String rocId = null;
-						if (isClaimServiceType(vo.getServiceType())) {
+						if (isMedicalServiceType(vo.getServiceType())) {
 							Map<String, String> params403 = new HashMap<>();
 							params403.put("caseId", d.getCaseNo());
 							try {
@@ -467,7 +467,7 @@ public class ClaimChainController {
 							} catch (Exception e) {
 								logger.error("call api 403 error: {}", e);
 							}
-						} else if (isMedicalServiceType(vo.getServiceType())) {
+						} else if (isClaimServiceType(vo.getServiceType())) {
 							Map<String, String> params105 = new HashMap<>();
 							params105.put("caseId", d.getCaseNo());
 							try {
