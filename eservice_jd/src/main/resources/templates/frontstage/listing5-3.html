@@ -53,7 +53,7 @@
 													保單號碼:<span style="margin-right: 15px;" th:text="${policyNo}"></span>
 													要保人:<span style="margin-right: 15px;" th:text="${vo.lipmName}"></span>
 													被保險人:<span style="margin-right: 15px;" th:text="${vo.lipiName}"></span>
-													保單幣別:<span th:text="${vo.currency != null ? ( session.SYSTEM_PARAMETER['CURRENCY'] != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue: '-' ) : '-'}"></span>
+													保單幣別:<span th:text="${vo.currency != null ? ( session.SYSTEM_PARAMETER['CURRENCY_JD'] != null ? session.SYSTEM_PARAMETER['CURRENCY_JD'][vo.currency].parameterValue: '-' ) : '-'}"></span>
 												</p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>

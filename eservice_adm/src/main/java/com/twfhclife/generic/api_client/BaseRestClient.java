@@ -49,7 +49,10 @@ public class BaseRestClient {
 	
 	@Value("${wso2.accessKey}")
 	public String WSO2_API_KEY;
-	
+
+	@Value("${wso2.jd.accessKey}")
+	public String WSO2_API_JD_KEY;
+
 	public RestTemplate restTemplate;
 
 	@Autowired

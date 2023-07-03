@@ -44,7 +44,7 @@ public interface ApConstants {
 	public static final String LOGIN_PROCESS_UUID = "LOGIN_PROCESS_UUID";
 	
 	/** 事件類型 */
-	final String EVENT_TYPE_PARAMETER_CATEGORY_CODE = "EVENT_TYPE";
+	final String EVENT_TYPE_PARAMETER_CATEGORY_CODE = "EVENT_TYPE_JD";
 	
 	public static final String MENU_LIST = "MENU_LIST";
 	

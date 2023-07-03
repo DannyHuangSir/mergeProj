@@ -344,7 +344,7 @@ public class EventRecordLogAspect {
 		}
 		
 		if(!containEventCode || eventNameCacheMap.isEmpty()) {
-			List<ParameterVo> paramterList = parameterDao.getParameterByCategoryCode(sysId, "EVENT_TYPE");
+			List<ParameterVo> paramterList = parameterDao.getParameterByCategoryCode(sysId, "EVENT_TYPE_JD");
 			if (paramterList != null) {
 				for (ParameterVo vo : paramterList) {
 					if (eventCode.equals(vo.getParameterValue())) {

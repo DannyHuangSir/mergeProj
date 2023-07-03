@@ -53,7 +53,7 @@
 															保單號碼:<span style="margin-right: 15px;" th:text="${policyNo}"></span>
 															要保人:<span style="margin-right: 15px;" th:text="${vo.lipmName}"></span>
 															被保險人:<span style="margin-right: 15px;" th:text="${vo.lipiName}"></span>
-															保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span>
+															保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY_JD'][vo.currency].parameterValue : ''}"></span>
 														</p>
 														<div class="insuranceID_phone" th:text="${policyNo}"></div>
 													</div>
@@ -73,11 +73,11 @@
 				                                        <td th:text="${vo.premYear != null ? vo.premYear : '-'}">
 				                                        <td th:text="${vo.lipmName != null ? vo.lipmName : '-'}"></td>
 				                                        <td th:text="${vo.lipiName != null ? vo.lipiName : '-'}"></td>
-				                                        <td th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : '-'}"></td>
-				                                        <td th:text="${vo.paymentMode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue : '-'}">年繳</td>
+				                                        <td th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY_JD'][vo.currency].parameterValue : '-'}"></td>
+				                                        <td th:text="${vo.paymentMode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE_JD'][vo.paymentMode].parameterValue : '-'}">年繳</td>
 														<td>
 															<span class="tablesaw-cell-content">
-				                                        	<th:block th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : '-'}"></th:block><br>
+				                                        	<th:block th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE_JD'][vo.paymentMethod].parameterValue : '-'}"></th:block><br>
 				                                        	<th:block th:text="${vo.bankCode != null ? vo.bankCode : '-'}"></th:block><br>
 				                                        	<th:block th:text="${vo.charAt1 != null ? vo.charAt1 : '-'}"></th:block><th:block th:text="${vo.charAt2 != null ? vo.charAt2 : '-'}"></th:block><br>
 				                                        </span>

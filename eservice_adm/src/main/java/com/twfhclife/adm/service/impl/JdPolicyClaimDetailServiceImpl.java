@@ -50,7 +50,7 @@ public class JdPolicyClaimDetailServiceImpl extends BaseRestClient implements IJ
         logger.debug("Invoke eservice api[{}]: {}", policyUrl, MyJacksonUtil.object2Json(jdPolicyClaimDetailVo));
 
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Authorization", "Bearer " + WSO2_API_KEY);
+        headerMap.put("Authorization", "Bearer " + WSO2_API_JD_KEY);
         headerMap.put("Content-Type", "application/json;charset=UTF-8");
         HttpHeaders headers = this.setHeader(headerMap);
         HttpEntity<JdPolicyClaimReqVo> entity = new HttpEntity<>(jdPolicyClaimDetailVo, headers);
@@ -73,7 +73,7 @@ public class JdPolicyClaimDetailServiceImpl extends BaseRestClient implements IJ
         logger.debug("Invoke eservice api[{}]: {}", policyUrl, MyJacksonUtil.object2Json(jdPolicyClaimDetailVo));
 
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Authorization", "Bearer " + WSO2_API_KEY);
+        headerMap.put("Authorization", "Bearer " + WSO2_API_JD_KEY);
         headerMap.put("Content-Type", "application/json;charset=UTF-8");
         HttpHeaders headers = this.setHeader(headerMap);
         HttpEntity<JdPolicyClaimDetailVo> entity = new HttpEntity<>(jdPolicyClaimDetailVo, headers);
@@ -101,7 +101,7 @@ public class JdPolicyClaimDetailServiceImpl extends BaseRestClient implements IJ
         logger.debug("Invoke eservice api[{}]: {}", userDetailUrl, MyJacksonUtil.object2Json(vo));
 
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Authorization", "Bearer " + WSO2_API_KEY);
+        headerMap.put("Authorization", "Bearer " + WSO2_API_JD_KEY);
         headerMap.put("Content-Type", "application/json;charset=UTF-8");
         HttpHeaders headers = this.setHeader(headerMap);
         HttpEntity<JdUserDetailReqVo> entity = new HttpEntity<>(vo, headers);

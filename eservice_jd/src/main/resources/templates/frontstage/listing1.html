@@ -54,7 +54,7 @@
 													保單號碼:<span style="margin-right: 15px;" th:text="${policyNo}"></span>
 													要保人:<span style="margin-right: 15px;" th:text="${vo.lipmName}"></span>
 													被保險人:<span style="margin-right: 15px;" th:text="${vo.lipiName}"></span>
-													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : '-'}"></span>
+													保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY_JD'][vo.currency].parameterValue : '-'}"></span>
 												</p>
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
@@ -76,7 +76,7 @@
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">繳費方式</th>
-																	<td><b class="tablesaw-cell-label mobile-b">繳費方式</b> <span class="mobile-span" th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue : '-'}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">繳費方式</b> <span class="mobile-span" th:text="${vo.paymentMethod != null ? session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE_JD'][vo.paymentMethod].parameterValue : '-'}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">應繳保費</th>
@@ -98,7 +98,7 @@
 																<tbody>
 																<tr class="noEvent borderTop">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">繳別</th>
-																	<td><b class="tablesaw-cell-label mobile-b">繳別</b> <span class="mobile-span" th:text="${vo.paymentMode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue : '-'}"></span></td>
+																	<td><b class="tablesaw-cell-label mobile-b">繳別</b> <span class="mobile-span" th:text="${vo.paymentMode != null ? session.SYSTEM_PARAMETER['PAYMODE_TYPE_JD'][vo.paymentMode].parameterValue : '-'}"></span></td>
 																</tr>
 																<tr class="noEvent">
 																	<th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">投保始期</th>
@@ -257,7 +257,7 @@
 													<tr th:each="vo1 : ${vo.beneficiaries}" class="h65 noEvent">
 														<td class="text-left" th:text="${vo1.lipbName != null ? vo1.lipbName : '-'}"></td>
 														<td th:text="${vo1.rela != null ? vo1.rela : '-'}"></td>
-														<td th:text="${vo1.code != null ? session.SYSTEM_PARAMETER['BENEFICIARY_TYPE'][vo1.code].parameterValue : '-'}">
+														<td th:text="${vo1.code != null ? session.SYSTEM_PARAMETER['BENEFICIARY_TYPE_JD'][vo1.code].parameterValue : '-'}">
 														</td>
 														<td th:text="${vo1.seq != null ? vo1.seq : '-'}"></td>
 													</tr>
