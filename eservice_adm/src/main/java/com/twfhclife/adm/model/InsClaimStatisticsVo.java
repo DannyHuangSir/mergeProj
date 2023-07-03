@@ -55,6 +55,15 @@ public class InsClaimStatisticsVo {
 	private List<String>  column;
 	
 	private List<String>  columnName;
+	private String applyDate;
+
+	public String getApplyDate() {
+		return applyDate;
+	}
+
+	public void setApplyDate(String applyDate) {
+		this.applyDate = applyDate;
+	}
 
 	public String getStartDate() {
 		return startDate;

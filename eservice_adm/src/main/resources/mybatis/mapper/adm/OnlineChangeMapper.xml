@@ -2325,6 +2325,9 @@
 					<if test="vo.endDate != null and vo.endDate != ''">
 						AND convert(varchar(10), A.CREATE_DATE, 120) <![CDATA[<=]]> '${vo.endDate}'
 					</if>
+					<if test="vo.applyDate != null and vo.applyDate != ''">
+						AND convert(varchar(10), A.CREATE_DATE, 112) = '${vo.applyDate}' AND B.FROM_COMPANY_ID = 'L01'
+					</if>
 				  
 				)  C
 	</select>
@@ -2657,7 +2660,6 @@
 			<foreach collection="status" item="item" index="index" open="(" separator="," close=")">
 				'${item}'
 			</foreach>
-
 		</if>
 		<if test="fileReceivedList !=null and fileReceivedList.size() &gt; 0">
 			and B.FILE_RECEIVED in
@@ -2678,6 +2680,9 @@
 		</if>
 		<if test="vo.endDate != null and vo.endDate != ''">
 			AND convert(varchar(10), A.CREATE_DATE, 120) <![CDATA[<=]]> '${vo.endDate}'
+		</if>
+		<if test="vo.applyDate != null and vo.applyDate != ''">
+			AND convert(varchar(10), A.CREATE_DATE, 112) = '${vo.applyDate}' AND B.FROM_COMPANY_ID = 'L01'
 		</if>
 
 		)  C

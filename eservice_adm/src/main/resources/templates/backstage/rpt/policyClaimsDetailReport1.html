@@ -147,7 +147,17 @@
 											</select>										
 										</div>
 									</div>
-
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-4">申請書上傳成功之日期</label>
+										<div class="col-sm-9">
+											<div class="input-group">
+												<span class="input-group-addon">
+													<i class="fa fa-calendar bigger-110"></i>
+												</span>
+												<input class="form-control" type="text" name="applyDate" id="applyDateId" />
+											</div>
+										</div>
+									</div>
 									<div class="col-md-offset-3 col-md-9" style="text-align: center;margin-top: 20px;">
 										<a class="btn bgGrey" type="button" style="border: 0;margin-right: 20px;"  onclick="resetOnlineChange()">
 											取消
@@ -172,6 +182,7 @@
 									<input type="hidden" id="fileReceivedList" name="fileReceivedList"/>
 									<input type="hidden" id="sendAllianceList" name="sendAllianceList"/>
 									<input type="hidden" id="rejectReason" name="rejectReason"/>
+									<input type="hidden" id="applyDate" name="applyDate"/>
 								</form>
 							</div><!-- /.col -->
 						</div><!-- /.row -->
@@ -207,12 +218,15 @@
 				'applyClass' : 'btn-sm btn-success',
 				'cancelClass' : 'btn-sm btn-default',
 				maxDate : new Date(),
-				format:'YYYY/MM/DD',
 				locale: {
+					format:'YYYYMMDD',
 					applyLabel: 'Apply',
 					cancelLabel: 'Cancel'
 				}
 			});
+			$("input[name='applyDate']").datepicker({
+				 dateFormat: 'yymmdd'
+			})
 			$("#fromCompanyIdSelect").bsMultiSelect();
 			$("#statusListSelect").bsMultiSelect();
 			$("#fileReceivedSelect").bsMultiSelect();
@@ -237,6 +251,7 @@
 			$("#policyNo").val($('#policyNoInp').val().trim());
 			$("#lilipiIdNo").val($('#lilipiIdNoInp').val().trim());
 			$("#lilipmIdNo").val($('#lilipmIdNoInp').val().trim());
+			$("#applyDate").val($('#applyDateId').val().trim());
 
 			var rSelect = $('#fileReceivedSelect').val();
 			if(rSelect != null){
@@ -260,6 +275,7 @@
 			$('#lilipiIdNoInp').val('');
 			$('#lilipmIdNoInp').val('');
 			$('#rejectReasonSelect').val('');
+			$('#applyDateId').val('');
 			$('.close').each(function(i,val) {
 				val.click();
 			});

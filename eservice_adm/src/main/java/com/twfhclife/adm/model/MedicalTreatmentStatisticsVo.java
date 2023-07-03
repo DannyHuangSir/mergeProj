@@ -60,6 +60,16 @@ public class MedicalTreatmentStatisticsVo {
 	
 	private List<String>  columnName;
 
+	private String applyDate;
+
+	public String getApplyDate() {
+		return applyDate;
+	}
+
+	public void setApplyDate(String applyDate) {
+		this.applyDate = applyDate;
+	}
+
 	public List<String> getAllianceStatusList() {
 		return allianceStatusList;
 	}

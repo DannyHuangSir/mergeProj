@@ -132,7 +132,7 @@ insert ESERVICE_ADM.[dbo].[FUNCTION_ITEM] VALUES (
 N'服務計費明細對帳管理',
 N'FG',
 NULL,
-(select FUNCTION_ID FROM ESERVICE_ADM.[dbo].[FUNCTION_ITEM] where FUNCTION_NAME  = N'保戶網路服務後台管理系統' AND SYS_ID = 'eservice_adm'),
+(select FUNCTION_ID FROM ESERVICE_ADM.[dbo].[FUNCTION_ITEM] where FUNCTION_NAME  = N'後臺管理系統' AND SYS_ID = 'eservice_adm'),
 'eservice_adm',
 10,
 'Y',

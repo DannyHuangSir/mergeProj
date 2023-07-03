@@ -10,11 +10,13 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.twfhclife.adm.model.*;
 import com.twfhclife.generic.util.DateFormatUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -1544,49 +1546,45 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		if (medicalInfoList != null && medicalInfoList.size() >= 1) {
 			for (TransMedicalTreatmentClaimMedicalInfoVo medicalInfo : medicalInfoList) {
 				if (medicalInfo.getDtypeList() != null && medicalInfo.getDtypeList().size() >= 1) {
+					boolean isFirst = true;
 					for (Map<String, String> map : medicalInfo.getDtypeList()) {
-						String fileBase64 = (String)map.get("fileBase64");
+						String fileBase64 = map.get("fileBase64");
 						if (fileBase64 != null && !"".equals(fileBase64)) {
 							//直接将原文件base64 转为 缩图的 base64
 							byte[] decode = Base64.getDecoder().decode(fileBase64);
 							//获取类型
 							String base64Type = this.checkBase64ImgOrPdf(decode);
+							StringBuilder sb = new StringBuilder();
 							logger.info("--------------------------------------------------PDF Base64  文件的类型="+base64Type);
-							ByteArrayInputStream input = new ByteArrayInputStream(decode);
-							ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
 							if (base64Type!=null && ("pdf".equalsIgnoreCase(base64Type))) {
-								PDDocument doc = null;
-								PDDocument newDoc = null;
-								try {
-									doc = PDDocument.load(input);
-									PDPage page = doc.getPage(0);
-									newDoc = new PDDocument();
-									newDoc.addPage(page);
-									String miniatureBase64 = this.imgBase64(newDoc, baos);
-									logger.info("--------------------------------------------------PDF Base64转换为缩图-----Base64  is  not  null");
-									map.put("fileBase64",miniatureBase64);
-									doc.close();
+								File f = new File("print/tmp/file/" + UUID.randomUUID() + ".pdf");
+								if (!f.getParentFile().exists()) {
+									f.getParentFile().mkdirs();
+								}
+								try (FileOutputStream out = new FileOutputStream(f)) {
+									IOUtils.write(decode, out);
 								} catch (Exception e) {
-									e.printStackTrace();
-								} finally {
-									if (newDoc != null) {
-										try {
-											newDoc.close();
-										} catch (IOException e) {
-											e.printStackTrace();
+									throw new RuntimeException(e);
+								}
+								try (PDDocument doc = PDDocument.load(f)) {
+									List<byte[]> images = mulPdfBufferedImage(doc);
+									if (org.apache.commons.collections.CollectionUtils.isNotEmpty(images)) {
+										for (byte[] i : images) {
+											String base64 = Base64.getEncoder().encodeToString(i);
+											if (!map.containsKey("fileBase64New")) {
+												map.put("fileBase64New", base64);
+											}
+											if (isFirst) {
+												isFirst = false;
+											} else {
+												sb.append("||");
+											}
+											sb.append(base64);
 										}
 									}
-									try {
-										baos.flush();
-										baos.close();
-										input.close();
-										if(doc!=null) {
-											doc.close();
-										}
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
+									map.put("pdfBase64", sb.toString());
+								} catch (Exception e) {
+									throw new RuntimeException(e);
 								}
 							}
 						}
@@ -1595,6 +1593,25 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			}
 		}
 		return medicalInfoList;
+	}
+
+	private List<byte[]> mulPdfBufferedImage(PDDocument doc ) {
+		try {
+			PDFRenderer renderer = new PDFRenderer(doc);
+			int pageCount = doc.getNumberOfPages();
+			List<byte[]> pdfImgArray = Lists.newArrayList();
+			for (int i = 0; i < pageCount; i++) {
+				try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+					BufferedImage image = renderer.renderImageWithDPI(i, 144);
+					ImageIO.write(image, "png", bos);
+					pdfImgArray.add(bos.toByteArray());
+				}
+			}
+			return pdfImgArray;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
