@@ -214,6 +214,27 @@ public class JdzqController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @PostMapping(value = "/jdGetUserDetail", produces = { "application/json" })
+    public ResponseEntity<?> jdGetUserDetail(@RequestBody UserDetailReqVo vo){
+        ApiResponseObj<UserDetailResponse> apiResponseObj = new ApiResponseObj<>();
+        ReturnHeader returnHeader = new ReturnHeader();
+        try {
+            List<UserDetailVo>  policyClaimDetails = jdzqService.getUserDetail(vo);
+            UserDetailResponse resp = new UserDetailResponse();
+            resp.setUserDetailVos(policyClaimDetails);
+            returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
+            apiResponseObj.setReturnHeader(returnHeader);
+            apiResponseObj.setResult(resp);
+        }catch (Exception e){
+            returnHeader.setReturnHeader(ReturnHeader.ERROR_CODE, e.getMessage(), "", "");
+            logger.error("Unable to jdGetUserDetail: {}", ExceptionUtils.getStackTrace(e));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponseObj);
+        }finally {
+            apiResponseObj.setReturnHeader(returnHeader);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
+    }
+
     @ApiRequest
     @PostMapping(value = "/getNotePdf", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(

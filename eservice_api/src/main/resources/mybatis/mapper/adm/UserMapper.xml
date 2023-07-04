@@ -149,4 +149,121 @@
 			where ue.REALM_ID=#{realm} 
 			and ua1.VALUE=#{cardSn}
 	</select>
+
+
+	<resultMap id="UserDetailVo" type="com.twfhclife.eservice.api.jdzq.model.UserDetailVo">
+		<result column="userId" property="userId" />
+		<result column="status" property="status" />
+		<result column="roleName" property="roleName" />
+		<result column="effectiveDate" property="effectiveDate" />
+		<result column="expirationDate" property="expirationDate" />
+		<result column="depName" property="depName" />
+		<result column="branchName" property="branchName" />
+		<result column="userName" property="userName" />
+		<result column="icID" property="icID" />
+		<result column="loginSize" property="loginSize" />
+		<result column="rocID" property="rocID" />
+		<result column="email" property="email" />
+		<result column="mobile" property="mobile" />
+		<result column="createDate" property="createDate" />
+		<result column="loginTime" property="loginTime" />
+	</resultMap>
+
+	<select id="getUserDetail" resultMap="UserDetailVo">
+		select
+		    ${columnItem}
+		from
+		(
+			select
+			    users.USER_ID as userId ,
+				users.STATUS as status ,
+				urr.ROLE_NAME as roleName ,
+				users.EFFECTIVE_DATE as effectiveDate ,
+				users.EXPIRATION_DATE as expirationDate ,
+				DP.DEP_NAME as depName ,
+				DP.BRANCH_NAME as branchName ,
+				users.USER_NAME as userName ,
+				users.IC_ID as icID ,
+				users.LOGIN_SIZE as loginSize ,
+				eservice.dbo.FN_DEBASE64(users.ROC_ID) as rocID ,
+				eservice.dbo.FN_DEBASE64(users.EMAIL) as email ,
+				users.MOBILE as mobile ,
+				users.CREATE_DATE as createDate ,
+				users.LOGIN_TIME as loginTime
+		 	from
+		 	    ESERVICE_JD.dbo.USERS users
+			left join (
+				select
+				    (
+				    	select
+				    	    ue.username
+						from
+						    ESERVICE_ADM.DBO.USER_ENTITY ue
+						where
+						    ue.id = UD.USER_ID
+					) USER_ID,
+					(
+						select
+						    DEP_NAME
+						from
+						    ESERVICE_JD.dbo.DEPARTMENT
+						where
+						    BRANCH_ID = UD.BRANCH_ID
+							AND PARENT_DEP = UD.DEP_ID
+					) AS BRANCH_NAME,
+					ud.dep_name as DEP_NAME,
+				    ud.DEP_ID as DEP_ID
+				from
+				    (
+						SELECT
+						    UDT.USER_ID,
+							UDT.DEP_ID,
+							DT.DEP_NAME,
+							UDT.BRANCH_ID
+						FROM
+						    ESERVICE_JD.DBO.USER_DEPARTMENT UDT
+						LEFT OUTER JOIN ESERVICE_JD.DBO.DEPARTMENT DT ON UDT.DEP_ID = DT.DEP_ID
+					) UD
+					LEFT JOIN ESERVICE_JD.dbo.DEPARTMENT D ON UD.DEP_ID = D.PARENT_DEP AND UD.BRANCH_ID = D.BRANCH_ID
+			) DP on users.user_id = dp.USER_ID
+			left join (
+				SELECT
+				    (
+						select
+						    ue.username
+						from
+						    ESERVICE_ADM.DBO.USER_ENTITY ue
+						where
+						    ue.id = UR.USER_ID
+					) USER_ID,
+					R.ROLE_NAME
+				FROM
+				    ESERVICE_ADM.DBO.USER_ROLE UR
+				LEFT JOIN ESERVICE_ADM.DBO.ROLE R ON UR.ROLE_ID = R.ROLE_ID
+			) urr on users.user_id = urr.USER_ID
+		<where>
+			<if test="vo.systemAccountOutput != null and vo.systemAccountOutput !=''" >
+				and users.user_id = '${vo.systemAccountOutput}'
+			</if>
+			<if test="vo.userAccountStatusListOutput != null and vo.userAccountStatusListOutput !=''" >
+				and users.status = '${vo.userAccountStatusListOutput}'
+			</if>
+			<if test="vo.userNameOutput != null and vo.userNameOutput !=''" >
+				and users.USER_NAME = '${vo.userNameOutput}'
+			</if>
+			<if test="vo.salesNumberOutput != null and vo.salesNumberOutput !=''" >
+				and users.IC_ID = '${vo.salesNumberOutput}'
+			</if>
+			<if test="vo.deptSelectOutput != null and vo.deptSelectOutput !=''" >
+				and DP.DEP_ID = '${vo.deptSelectOutput}'
+			</if>
+			<if test="vo.branchSelectOutput != null and vo.branchSelectOutput !=''" >
+				and DP.BRANCH_NAME = '${vo.branchSelectOutput}'
+			</if>
+			<if test="vo.roleNameSelectOutput != null and vo.roleNameSelectOutput !=''" >
+				and urr.ROLE_NAME = '${vo.roleNameSelectOutput}'
+			</if>
+		</where> ) ff
+		group by ${columnItem}
+	</select>
 </mapper>

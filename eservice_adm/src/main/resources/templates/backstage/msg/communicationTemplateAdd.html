@@ -531,7 +531,7 @@
 					eserviceAdmOption.chosenSystem("#systems", /*[[@{/common/systemList}]]*/);
 					
 					// 載入事件功能下拉選單
-					//eserviceAdmOption.chosenParameter("#eventTypes", /*[[@{/common/optionList?categoryCode=EVENT_TYPE}]]*/);
+					//eserviceAdmOption.chosenParameter("#eventTypes", /*[[@{/common/optionList?categoryCode=EVENT_TYPE_JD}]]*/);
 					getParameterOptions();
 					
 					// 取得參數代碼下拉選單
@@ -641,7 +641,7 @@
 				
 				function getParameterOptions() {
 					$.ajax({
-						url : /*[[@{/common/optionList?categoryCode=EVENT_TYPE}]]*/,
+						url : /*[[@{/common/optionList?categoryCode=EVENT_TYPE_JD}]]*/,
 						type : "POST"
 					}).done(function(data) {
 						if (data.result == 'SUCCESS') {

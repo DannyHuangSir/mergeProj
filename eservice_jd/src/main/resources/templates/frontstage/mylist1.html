@@ -107,12 +107,12 @@
 													? ${#numbers.formatDecimal(vo.premYear, 0, 'DEFAULT', 0, 'DEFAULT')}"/>
 											</td>
 											<td class="hid1 hid2" style="width:50px">
-												<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
-													? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+												<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE_JD'] != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE_JD'][vo.paymentMode] != null}
+													? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE_JD'][vo.paymentMode].parameterValue}"/>
 											</td>
 											<td class="hid1 hid2">
-												<th:block th:text="${vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
-													? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue}"/>
+												<th:block th:text="${vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE_JD'] != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE_JD'][vo.paymentMethod] != null}
+													? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE_JD'][vo.paymentMethod].parameterValue}"/>
 											</td>
 											<td class="" th:onclick="${vo.pmdaEpoMk} == 'Y' ? 'getEINPDF(\'' + ${vo.policyNo} + '\')'">
 												<th:block th:text="${vo.pmdaEpoMk} == 'Y' ? '電子保單下載':'紙本保單'"/>
@@ -211,12 +211,12 @@
 														? ${#numbers.formatDecimal(vo.premYear, 0, 'DEFAULT', 0, 'DEFAULT')}"/>
 												</td>
 												<td class="hid1 hid2" style="width:50px">
-													<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'] != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode] != null}
-														? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE'][vo.paymentMode].parameterValue}"/>
+													<th:block th:text="${vo.paymentMode != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE_JD'] != null and session.SYSTEM_PARAMETER['PAYMODE_TYPE_JD'][vo.paymentMode] != null}
+														? ${session.SYSTEM_PARAMETER['PAYMODE_TYPE_JD'][vo.paymentMode].parameterValue}"/>
 												</td>
 												<td class="hid1 hid2">
-													<th:block th:text="${vo.paymentMode != null and vo.paymentMode != 'T' and vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod] != null} 
-														? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE'][vo.paymentMethod].parameterValue} : '-'"/>
+													<th:block th:text="${vo.paymentMode != null and vo.paymentMode != 'T' and vo.paymentMethod != null and session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE_JD'][vo.paymentMethod] != null}
+														? ${session.SYSTEM_PARAMETER['PAYMENT_METHOD_TYPE_JD'][vo.paymentMethod].parameterValue} : '-'"/>
 												</td>
 												<td class="" th:onclick="${vo.pmdaEpoMk} == 'Y' ? 'getEINPDF(\'' + ${vo.policyNo} + '\')'">
 													<th:block th:text="${vo.pmdaEpoMk} == 'Y' ? '電子保單下載':'紙本保單'"/>

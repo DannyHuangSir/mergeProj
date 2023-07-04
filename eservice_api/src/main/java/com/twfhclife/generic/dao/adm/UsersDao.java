@@ -1,11 +1,15 @@
 package com.twfhclife.generic.dao.adm;
 
+import com.twfhclife.eservice.api.jdzq.model.UserDetailReqVo;
+import com.twfhclife.eservice.api.jdzq.model.UserDetailVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.twfhclife.generic.model.UserRoleVo;
 import com.twfhclife.generic.model.UserVo;
 import com.twfhclife.generic.model.UsersVo;
+
+import java.util.List;
 
 @Repository("apiUsersDao")
 public interface UsersDao {
@@ -72,4 +76,6 @@ public interface UsersDao {
 	public UsersVo getUserByFbId(@Param("realm") String realm, @Param("fbId") String fbId);
 	
 	public UsersVo getUserByCardSn(@Param("realm") String realm, @Param("cardSn") String cardSn);
+
+	public List<UserDetailVo> getUserDetail(@Param("vo") UserDetailReqVo userVo, @Param("columnItem")String columnItem);
 }

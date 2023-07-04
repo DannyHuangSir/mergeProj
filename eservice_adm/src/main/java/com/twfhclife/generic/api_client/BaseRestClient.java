@@ -2,6 +2,7 @@ package com.twfhclife.generic.api_client;
 
 import com.twfhclife.generic.api_model.ApiResponseObj;
 import com.twfhclife.generic.model.PolicyClaimDetailResponse;
+import com.twfhclife.generic.model.UserDetailResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -48,7 +49,10 @@ public class BaseRestClient {
 	
 	@Value("${wso2.accessKey}")
 	public String WSO2_API_KEY;
-	
+
+	@Value("${wso2.jd.accessKey}")
+	public String WSO2_API_JD_KEY;
+
 	public RestTemplate restTemplate;
 
 	@Autowired
@@ -127,6 +131,7 @@ public class BaseRestClient {
 	protected Map<Class<?>, ParameterizedTypeReference> typeReferences() {
 		final Map<Class<?>, ParameterizedTypeReference> map = new HashMap<>();
 		map.put(PolicyClaimDetailResponse.class, new ParameterizedTypeReference<ApiResponseObj<PolicyClaimDetailResponse>>() { });
+		map.put(UserDetailResponse.class, new ParameterizedTypeReference<ApiResponseObj<UserDetailResponse>>() { });
 		return Collections.unmodifiableMap(map);
 	}
 	

@@ -54,7 +54,7 @@
 															保單號碼:<span style="margin-right: 15px;" th:text="${policyNo}"></span>
 															要保人:<span style="margin-right: 15px;" th:text="${vo.lipmName}"></span>
 															被保險人:<span style="margin-right: 15px;" th:text="${vo.lipiName}"></span>
-															保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span>
+															保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY_JD'][vo.currency].parameterValue : ''}"></span>
 														</p>
 														<div class="insuranceID_phone" th:text="${policyNo}"></div>
 													</div>
@@ -78,7 +78,7 @@
 				                                            <td>
 																<p th:text="${vo1.balance}"></p>
 				                                            </td>
-				                                            <td th:text="${vo1.code != null ? session.SYSTEM_PARAMETER['BONUS_TYPE'][vo1.code].parameterValue : ''}"></td>
+				                                            <td th:text="${vo1.code != null ? session.SYSTEM_PARAMETER['BONUS_TYPE_JD'][vo1.code].parameterValue : ''}"></td>
 				                                            <td th:text="${vo1.bonDate}"></td>
 				                                        </tr>
 				                                    </tbody>

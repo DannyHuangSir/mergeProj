@@ -176,4 +176,8 @@ public class ParameterServiceImpl implements IParameterService {
 	public String getParameterValueByCategoryCodeAndSystemId(String systemId, String medicalAbnormalReasonMsg,String rejectReason) {
 		return parameterDao.getParameterValueByCategoryCodeAndSystemId(systemId,medicalAbnormalReasonMsg,rejectReason);
 	}
+
+	public List<String> getUserAccountStatusList() {
+		return parameterDao.getUserAccountStatusList();
+	}
 }

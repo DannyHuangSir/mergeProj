@@ -370,6 +370,18 @@ public class OptionController extends BaseController {
 	}
 
 	@RequestLog
+	@PostMapping("/jd/common/userAccountStatusList")
+	public ResponseEntity<ResponseObj> userDetail() {
+		try {
+			processSuccess(parameterService.getUserAccountStatusList());
+		} catch (Exception e) {
+			logger.error("Unable to userAccountStatusList: {}", ExceptionUtils.getStackTrace(e));
+			processSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	@RequestLog
 	@PostMapping("/jd/common/branchList")
 	public ResponseEntity<ResponseObj> jdBranchList(@RequestBody DepartmentVo vo) {
 		try {

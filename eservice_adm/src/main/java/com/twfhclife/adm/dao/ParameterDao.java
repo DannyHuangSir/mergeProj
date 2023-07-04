@@ -122,4 +122,5 @@ public interface ParameterDao {
 	 */
 	String getParameterValueByCategoryCodeAndSystemId(@Param("systemId") String systemId, @Param("medicalAbnormal") String medicalAbnormalReasonMsg,@Param("rejectReason") String rejectReason);
 
+	List<String> getUserAccountStatusList();
 }

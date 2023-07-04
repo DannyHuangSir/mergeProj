@@ -104,4 +104,6 @@ public interface IParameterService {
 	 * @return
 	 */
     String getParameterValueByCategoryCodeAndSystemId(String systemId, String medicalAbnormalReasonMsg, String  rejectReason);
+
+	List<String> getUserAccountStatusList();
 }

@@ -2,6 +2,7 @@ package com.twfhclife.adm.service;
 
 import com.twfhclife.adm.model.JdPolicyClaimDetailVo;
 import com.twfhclife.adm.model.JdPolicyClaimReqVo;
+import com.twfhclife.adm.model.JdUserDetailReqVo;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface IJdPolicyClaimDetailService {
     <T> T getPolicyTypeNameList(JdPolicyClaimDetailVo jdPolicyClaimDetailVo);
 
     <T> T getInsClaimStatisticsReport(JdPolicyClaimReqVo jdPolicyClaimDetailVo);
+
+    <T> T getUserDetail(JdUserDetailReqVo vo);
 }

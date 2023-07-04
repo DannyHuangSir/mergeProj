@@ -52,7 +52,7 @@
                                                     保單號碼:<span style="margin-right: 15px;" th:text="${policyNo}"></span>
                                                     要保人:<span style="margin-right: 15px;" th:text="${vo.lipmName}"></span>
                                                     被保險人:<span style="margin-right: 15px;" th:text="${vo.lipiName}"></span>
-                                                    保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY'][vo.currency].parameterValue : ''}"></span>
+                                                    保單幣別:<span th:text="${vo.currency != null ? session.SYSTEM_PARAMETER['CURRENCY_JD'][vo.currency].parameterValue : ''}"></span>
                                                 </p>
                                                 <div class="insuranceID_phone" th:text="${policyNo}"></div>
                                             </div>
@@ -220,7 +220,7 @@
 <script th:src="@{/plugin/highcharts/modules/exporting.js}"></script>
 <script th:inline="javascript">
   /*<![CDATA[*/
-    var paymentMap = [[${session.SYSTEM_PARAMETER.CURRENCY}]]
+    var paymentMap = [[${session.SYSTEM_PARAMETER.CURRENCY_JD}]]
 	$(function() {
 		$('#invtList').change(function() {
 			// 基金幣別

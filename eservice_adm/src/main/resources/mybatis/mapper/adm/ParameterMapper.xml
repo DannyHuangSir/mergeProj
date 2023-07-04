@@ -376,4 +376,14 @@
 		ORDER BY
 		a.SORT_NO
 	</select>
+	<select id="getUserAccountStatusList" resultType="string">
+		SELECT
+			a.PARAMETER_VALUE
+		FROM
+			ESERVICE_ADM.DBO.PARAMETER a
+		   ,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+			a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID and
+			b.category_code = 'User_Account_Status'
+	</select>
 </mapper>

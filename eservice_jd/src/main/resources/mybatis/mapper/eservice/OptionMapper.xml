@@ -28,7 +28,7 @@
 			AND a.STATUS = b.STATUS
 			AND b.STATUS = 1
 			AND b.SYSTEM_ID = 'eservice'
-			AND b.CATEGORY_CODE = 'PAYMODE_TYPE'
+			AND b.CATEGORY_CODE = 'PAYMODE_TYPE_JD'
 			ORDER BY a.SORT_NO
 	</select>
 

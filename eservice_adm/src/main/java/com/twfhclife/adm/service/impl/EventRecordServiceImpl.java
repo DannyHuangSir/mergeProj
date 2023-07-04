@@ -46,7 +46,7 @@ public class EventRecordServiceImpl implements IEventRecordService{
 			List<SystemsVo> systems = systemsDao.findAll();
 			
 			//List<BusinessEventVo> businessEvents = businessEventDao.getEventCodeName();
-			List<ParameterVo> eventTypes = parameterDao.getParameterByCategoryCode(null, "EVENT_TYPE");
+			List<ParameterVo> eventTypes = parameterDao.getParameterByCategoryCode(null, "EVENT_TYPE_JD");
 			
 			//如果之後用代碼的話--
 			List<ParameterVo> eventStatus = parameterDao.getParameterByCategoryCode(null, "EVENT_STATUS");
