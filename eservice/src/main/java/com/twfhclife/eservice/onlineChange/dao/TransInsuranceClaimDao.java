@@ -94,4 +94,5 @@ public interface TransInsuranceClaimDao {
 
     List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(@Param("functionName") String functionName,@Param("status")  String status);
 
+    int getInsuranceClaimWhetherFirst(@Param("policyNo")String policyNo, @Param("functionName")String insuranceClaimParameterCode);
 }

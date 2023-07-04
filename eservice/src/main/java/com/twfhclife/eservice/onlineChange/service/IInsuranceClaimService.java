@@ -127,4 +127,6 @@ public interface IInsuranceClaimService {
 	int  updateInsuranceClaimFileDataFileBase64(TransInsuranceClaimFileDataVo  transInsuranceClaimFileDataVo) throws Exception;
 
     List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(String functionName, String status);
+
+    Integer getInsuranceClaimWhetherFirst(String policyNo, String insuranceClaimParameterCode);
 }

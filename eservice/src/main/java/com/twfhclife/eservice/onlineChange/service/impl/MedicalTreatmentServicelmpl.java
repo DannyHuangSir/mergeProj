@@ -403,7 +403,12 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		}
 		
 		String userId = transMedicalTreatmentClaimVo.getUserId();
+
 		String status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
+		if (StringUtils.equals(transMedicalTreatmentClaimVo.getSignAgree(), "Y")) {
+			status = OnlineChangeUtil.TRANS_STATUS_WAIT_SIGN;
+		}
+
 		String mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_1;
 		// 判斷符合聯盟鏈醫起通的商品清單
 		String policyNo = transMedicalTreatmentClaimVo.getPolicyNo();

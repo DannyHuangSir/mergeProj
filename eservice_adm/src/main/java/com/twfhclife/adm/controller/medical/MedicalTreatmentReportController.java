@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +52,9 @@ public class MedicalTreatmentReportController extends BaseController {
 	 * @return
 	 */	
 	@RequestLog
-	@GetMapping("/medicalTreatmentStatistics")
-	public String onlineChange() {
+	@RequestMapping("/medicalTreatmentStatistics")
+	public String statistics(MedicalTreatmentStatisticsVo claimVo) {
+		addAttribute("claimVo", claimVo);
 		//獲取醫療資料介接案件狀態信息列表
 		List<ParameterVo> optionList = parameterService.getOptionList(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS);
 		//獲取申請狀態數據信息
@@ -81,9 +83,8 @@ public class MedicalTreatmentReportController extends BaseController {
 	 */
 	@RequestLog
 	@PostMapping("/medicalTreatmentStatistics/filter")
-	public String onlineChangeDetail(MedicalTreatmentStatisticsVo claimVo) {
+	public String statisticsFilter(MedicalTreatmentStatisticsVo claimVo) {
 		addAttribute("claimVo", claimVo);
-		
 		return   "backstage/medical/medicalTreatmentStatisticalReport2";
 	}
 	
@@ -94,7 +95,7 @@ public class MedicalTreatmentReportController extends BaseController {
 	 */
 	@RequestLog
 	@PostMapping("/medicalTreatmentStatistics/csv")
-	public String onlineChangeCSV(MedicalTreatmentStatisticsVo claimVo) {
+	public String statisticsCsv(MedicalTreatmentStatisticsVo claimVo) {
 		List reportList = onlineChangeService.getMedicalTreatmentStatisticsReport(claimVo);
 			//授權醫療保險公司名稱
 		addAttribute("csvHospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
@@ -115,8 +116,9 @@ public class MedicalTreatmentReportController extends BaseController {
 			funcId = "190",
 			systemId = ApConstants.SYSTEM_ID
 			))
-	@GetMapping("/medicalTreatmentDetail")
-	public String rptInsClaimDetail() {
+	@RequestMapping("/medicalTreatmentDetail")
+	public String rptInsClaimDetail(MedicalTreatmentStatisticsVo claimVo) {
+		addAttribute("claimVo", claimVo);
 		//獲取醫療資料介接案件狀態信息列表
 		List<ParameterVo> optionList = parameterService.getOptionList(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_INTERFACE_STATUS);
 		//獲取申請狀態數據信息

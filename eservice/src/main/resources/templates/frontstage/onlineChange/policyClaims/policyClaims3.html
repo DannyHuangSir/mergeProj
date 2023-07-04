@@ -423,12 +423,12 @@
 							<div class="col-sm-9">
 								<div class="radio inline">
 									<label>
-										<div class="radio-btn"><i><input type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
+										<div class="radio-btn" id="confirmSign"><i><input type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
 									</label>
 								</div>
 								<div class="radio inline">
 									<label>
-										<div class="radio-btn"><i><input id="cancelSign" checked type="radio" name="signAgree" value="N" ></i></div>不同意
+										<div class="radio-btn" id="cancelSign"><i><input checked type="radio" name="signAgree" onclick="confirmSignAgree('N')" value="N" ></i></div>不同意
 									</label>
 								</div>
 							</div>
@@ -604,16 +604,32 @@
 					</div>
 					<div class="modal-body apply2 center1 grey2">
 						<h3>需具備保險存摺會員帳號才可進行數位身份驗證及數位簽署，是否仍繼續執行?</h3>
-						<form method="POST" id="cancelTransForm" action="cancelApplyTrans">
-							<input type="hidden" id="cancelTransType" name="transType" value=""/>
-							<input type="hidden" id="cancelTransNum" name="transNum" value=""/>
-						</form>
 						<p class="marginTop20">
 							<a href="#">
 								<button class="btn-login lock2" onclick="confirmSignAgree('N')">取消</button>
 							</a>
 							<a href="#">
 								<button class="btn-login lock2" onclick="confirmSignAgree('Y')" >確認</button>
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade in" id="confirmNotFirst" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content lock-up">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body apply2 center1 grey2">
+						<h3>您非首次申請(保單理賠/理賠醫起通)可不必提供授權同意書，是否確定仍要進行數位驗證?</h3>
+						<p class="marginTop20">
+							<a href="#">
+								<button class="btn-login lock2" onclick="confirmSignAgree('N', true)">取消</button>
+							</a>
+							<a href="#">
+								<button class="btn-login lock2" onclick="confirmSignAgree('Y', true)" >確認</button>
 							</a>
 						</p>
 					</div>
@@ -868,6 +884,7 @@
 			});
 
 		});
+
 		function checkedNOTONGYI(){
 			$('#modal-container-NOTONGYI').modal({
 				show: true,
@@ -876,14 +893,67 @@
 				});
 		}
 
+		function checkFirstApply() {
+            let booleanFirst = true
+            let dataFirst = {policyNo: $('#policyNo').val()}
+            $.ajax({
+                type : 'POST',
+                contentType : 'application/json',
+                url : /*[[@{/getInsuranceClaimWhetherFirst}]]*/,
+                async: false,
+                data : JSON.stringify(dataFirst),
+                success : function(response) {
+                    console.log(response);
+                    if(response.resultData == 0) {
+						booleanFirst= false;
+                    }
+                },
+                error : function() {
+                    /* openAlert('系統發生錯誤!'); */
+                    booleanFirst=  false;
+                    openAlert($('#E0018').val());
+                    console.log("--2-",booleanFirst);
+                }
+            });
+            return booleanFirst;
+        }
+
 		function clickAgreeSign() {
+			event.preventDefault();
+            event.stopPropagation();
+            $("[name='signAgree']").val('N')
+            $("#confirmSign").removeClass("checkedRadio")
+            $("#cancelSign").addClass("checkedRadio")
 			$('#confirmBxczModal').modal('show')
 		}
 
-		function confirmSignAgree(sign) {
-			$('#confirmBxczModal').modal('hide')
-			if (sign == 'N') {
-				$("#cancelSign").click()
+		function confirmSignAgree(sign, doubleConfirm) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (doubleConfirm) {
+                $('#confirmNotFirst').modal('hide')
+                if (sign == 'Y') {
+                    $("[name='signAgree']").val('Y')
+                    $("#cancelSign").removeClass("checkedRadio")
+                    $("#confirmSign").addClass("checkedRadio")
+                } else {
+                    $("[name='signAgree']").val('N')
+                    $("#cancelSign").addClass("checkedRadio")
+                    $("#confirmSign").removeClass("checkedRadio")
+                }
+            } else {
+                $('#confirmBxczModal').modal('hide')
+                if (checkFirstApply()) {
+                    $('#confirmNotFirst').modal('show')
+                } else if (sign == 'Y') {
+                    $("[name='signAgree']").val('Y')
+                    $("#cancelSign").removeClass("checkedRadio")
+                    $("#confirmSign").addClass("checkedRadio")
+                } else {
+                    $("[name='signAgree']").val('N')
+                    $("#cancelSign").addClass("checkedRadio")
+                    $("#confirmSign").removeClass("checkedRadio")
+                }
 			}
 		}
 

@@ -65,7 +65,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 
 	@Autowired
 	private BankInfoDao bankInfoDao;
-	
+
 	@Autowired
 	private TransDao transDao;
 
@@ -74,32 +74,32 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 
 	@Autowired
 	private TransPolicyDao transPolicyDao;
-	
+
 	@Autowired
 	private OnlineChangeDao onlineChangeDao;
-	
+
 	@Autowired
 	private ParameterDao parameterDao;
-	
+
 	@Autowired
 	private IOptionService optionService;
-	
+
 	@Autowired
 	private IInsuranceClaimService insuranceClaimService;
-	
+
 	@Autowired
 	private IMailService mailService;
-	
+
 	@Autowired
 	private ISendSmsService smsService;
-	
+
 	@Value("${upload.file.save.path}")
 	private String FILE_SAVE_PATH;
-	
-	
+
+
 	/**
 	 * 處理保單狀態是否鎖定.
-	 * 
+	 *
 	 * @param policyList 保單清單資料
 	 */
 	@Override
@@ -107,17 +107,17 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		if (!CollectionUtils.isEmpty(policyList)) {
 			for (PolicyListVo vo : policyList) {
 //				if ("N".equals(vo.getExpiredFlag())) {
-					String status = vo.getStatus();
-					if (!StringUtils.isEmpty(status) && Integer.parseInt(status) >= 31) {
-						vo.setApplyLockedFlag("Y");
+				String status = vo.getStatus();
+				if (!StringUtils.isEmpty(status) && Integer.parseInt(status) >= 31) {
+					vo.setApplyLockedFlag("Y");
 //						vo.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_STATUS_NOT_ALLOW_MSG);
-						appendMsg(vo,OnlineChangMsgUtil.POLICY_STATUS_NOT_ALLOW_MSG);
+					appendMsg(vo,OnlineChangMsgUtil.POLICY_STATUS_NOT_ALLOW_MSG);
 //					}
 				}
 			}
 		}
 	}
-	
+
 	private void appendMsg(PolicyListVo policyListVo, String msg) {
 		// TODO Auto-generated method stub
 		if(policyListVo.getApplyLockedMsg() != null) {
@@ -128,12 +128,12 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		}else {
 			policyListVo.setApplyLockedMsg(msg);
 		}
-		
+
 	}
 
 	/**
 	 * 取得理賠申請書報表 byte[].
-	 * 
+	 *
 	 * @param claimVo ClaimVo
 	 * @return 回傳報表 byte[]
 	 */
@@ -150,8 +150,8 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 
 			// 保單號碼
 			String policyNo = claimVo.getPolicyNo();
-			rptUtils.txt(policyNo, 11, 1, 275, 754); 
-			
+			rptUtils.txt(policyNo, 11, 1, 275, 754);
+
 			// 申請項目
 			float f = (float)635.3;
 			for (String itemCode : claimVo.getApplyItemList()) {
@@ -181,10 +181,10 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 					rptUtils.txt(claimVo.getItemOther(), 10, 1, 486f, 635.3f);
 				}
 			}
-			
+
 			// 事故者資料-被保險人姓名
 			rptUtils.txt(claimVo.getName(), 11, 1, 103, 724);
-			
+
 			// 事故者資料-與主被保險人(員工)之關係
 			if ("01".equals(claimVo.getRelation())) {
 				rptUtils.txt("■", 12, 1, 279, 731);
@@ -198,7 +198,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			if ("04".equals(claimVo.getRelation())) {
 				rptUtils.txt("■", 12, 1, 279 + 47.5f, 716);
 			}
-			
+
 			// 事故者資料-身分證號碼
 			String rocId = claimVo.getIdNo();
 			if (!StringUtils.isEmpty(rocId)) {
@@ -233,7 +233,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 					rptUtils.txt(rocId.substring(9, 10), 11, 1, 102.3f + (10.7f * 9), 696);
 				}
 			}
-			
+
 			// 事故者資料-聯絡電話
 			rptUtils.txt(claimVo.getTel(), 11, 1, 275, 696);
 			// 事故者資料-出生日期
@@ -246,14 +246,14 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			rptUtils.txt(claimVo.getJob(), 11, 1, 460, 674.5f);
 			// 事故者資料-聯絡地址
 			rptUtils.txt(claimVo.getAddress(), 11, 1, 103, 653);
-			
+
 			// 疾病-診斷病名
 			rptUtils.breakTxt(claimVo.getDiseaseName(), 10, 1, 103, 603, 10);
 			// 疾病-該疾病初診日
 			rptUtils.txt(claimVo.getAccidentDate(), 10, 1, 103, 562);
 			// 疾病-曾就診之醫院
 			rptUtils.txt(claimVo.getHospital(), 10, 1, 103, 535);
-			
+
 			if (claimVo.getAccidentDate() != null) {
 				String accidentDate = claimVo.getBirdate().replaceAll(regDate, "$1$2$3");
 				// 意外-發生時間-年
@@ -262,7 +262,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				rptUtils.txt(accidentDate.substring(4, 6), 10, 1, 274.0f + (35 * 1), 603);
 				// 意外-發生時間-日
 				rptUtils.txt(accidentDate.substring(6, 8), 10, 1, 267.0f + (35 * 2), 603);
-				
+
 			}
 			// 意外-發生時間-時
 			rptUtils.txt(claimVo.getAccidentTime(), 10, 1, 257.0f + (35 * 3), 603);
@@ -276,7 +276,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			rptUtils.txt(claimVo.getPolicePhone(), 10, 1, 275, 526);
 			// 意外-事故原因及送醫經過詳情
 			rptUtils.breakTxt(claimVo.getAccidentDescr(), 9, 1, 390, 595, 20);
-			
+
 			// 被保險人是否投保別家保險公司之保險
 			if ("Y".equals(claimVo.getOtherCompanyInsured())) {
 				rptUtils.txt("■", 11, 1, 47, 483.5f);
@@ -284,7 +284,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			if ("N".equals(claimVo.getOtherCompanyInsured())) {
 				rptUtils.txt("■", 11, 1, (float) 47 + 32, 483.5f);
 			}
-			
+
 			// 公司名稱
 			rptUtils.txt(claimVo.getOtherInsuCompany(), 10, 1, 138, 490);
 			// 保險種類
@@ -298,7 +298,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			if ("N".equals(claimVo.getOtherInsuClaim())) {
 				rptUtils.txt("■", 11, 1, 468 + 32.5f, 490);
 			}
-			
+
 			// 給付方式
 			if ("1".equals(claimVo.getPaymentMethod())) {
 				rptUtils.txt("■", 12, 1, 28, 429);
@@ -306,7 +306,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			if ("2".equals(claimVo.getPaymentMethod())) {
 				rptUtils.txt("■", 12, 1, 28, 385);
 			}
-			
+
 			// 匯款帳戶
 			rptUtils.txt(claimVo.getAccountName(), 11, 1, 165, 449);
 
@@ -321,7 +321,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				// 分行名稱
 				rptUtils.txt(bankInfoVo.getBranchName(), 11, 1, 295, 429.2f);
 			}
-						
+
 			// 帳號
 			String accountNumber = claimVo.getBankAccount();
 			if (!StringUtils.isEmpty(accountNumber)) {
@@ -368,7 +368,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 					rptUtils.txt(accountNumber.substring(13, 14), 11, 1, 166.5f + (13.8f * 13), 409);
 				}
 			}
-			
+
 			// 郵遞區號
 			String postalCode = claimVo.getZipCode();
 			if (!StringUtils.isEmpty(postalCode)) {
@@ -388,7 +388,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 					rptUtils.txt(postalCode.substring(4, 5), 10, 1, 76f + (12.5f * 4), 378.6f);
 				}
 			}
-			
+
 			// 郵寄地址
 			rptUtils.txt(claimVo.getPostalAddr(), 11, 1, 135, 378.6f);
 
@@ -398,10 +398,10 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		}
 		return pdfByte;
 	}
-	
+
 	/**
 	 * 保單理賠申請-新增.
-	 * 
+	 *
 	 * @param transInsuranceClaimVo TransInsuranceClaimVo
 	 * @return 回傳影響筆數
 	 */
@@ -422,15 +422,14 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
 		} else if(StringUtils.equals("Y", transInsuranceClaimVo.getSignAgree())) {
 			status = OnlineChangeUtil.TRANS_STATUS_WAIT_SIGN;
-		}
-		else {
+		} else {
 			// 判斷聯盟件
 			if(fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
 				mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_2;
 				status = OnlineChangeUtil.TRANS_STATUS_RECEIVED;
 			}
 		}
-		
+
 		int result = 0;
 		try {
 			// 新增線上申請主檔
@@ -445,7 +444,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			transVo.setCreateDate(toDay);
 			result = transDao.insertTrans(transVo);
 			logger.info("***transDao.insertTrans() result count={}***", result);
-			
+
 			if(result>0) {
 				// 新增保單號碼
 				TransPolicyVo transPolicyVo = new TransPolicyVo();
@@ -454,7 +453,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				result = transPolicyDao.insertTransPolicy(transPolicyVo);
 				logger.info("***transPolicyDao.insertTransPolicy result count={}***", result);
 			}
-			
+
 			//處理時間
 			String regDate = "(\\d{4})-(\\d{2})-(\\d{2})";
 			String regTime = "(\\d{2})-(\\d{2})";
@@ -488,7 +487,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				temp = transInsuranceClaimVo.getPoliceTime().replaceAll(regTime, "$1$2");
 				transInsuranceClaimVo.setPoliceTime(temp);
 			}
-			
+
 //			logger.error("TransInsuranceClaimVo is: {}", transInsuranceClaimVo.toString());
 //			TransInsuranceClaimVo vo = new TransInsuranceClaimVo();
 //			vo.setApplyItem("死亡給付;殘廢給付");
@@ -508,12 +507,12 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 //			vo.setPoliceDate("20210120");
 //			vo.setPoliceTime("1122");
 			transInsuranceClaimVo.setApplicationItem("1");
-			
+
 			transInsuranceClaimVo.setClaimSeqId(transInsuranceClaimDao.getInsuranceClaimSequence());
 //			vo.setClaimSeqId(transInsuranceClaimVo.getClaimSeqId());
 			transInsuranceClaimVo.setTransNum(transNum);
 //			vo.setTransNum(transNum);
-			
+
 			if(result>0) {
 				// 新增保單理賠申請
 				result = transInsuranceClaimDao.addInsuranceClaim(transInsuranceClaimVo);
@@ -533,13 +532,13 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				filedatasSize = transInsuranceClaimVo.getFileDatas().size();
 			}
 			logger.info("***transInsuranceClaimVo.getFileDatas().size()={}***", filedatasSize);
-			
+
 			if(result>0) {
 				// 新增保單理賠申請應備文件
 				if (transInsuranceClaimVo.getFileDatas() != null && filedatasSize > 0) {
 					for (TransInsuranceClaimFileDataVo transInsuranceClaimFileDataVo : transInsuranceClaimVo.getFileDatas()) {
 						transInsuranceClaimFileDataVo.setClaimSeqId(transInsuranceClaimVo.getClaimSeqId());
-						
+
 						if(fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
 							//聯盟件
 							//do nothing.
@@ -556,18 +555,18 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 						if(transInsuranceClaimFileDataVo.getFileBase64()==null) {
 							transInsuranceClaimFileDataVo.setFileBase64("");//若為null先設為"",之後update才不會出錯.
 						}
-						
+
 						//获取文件的id编号
 						Float aFloat = transInsuranceClaimDao.selectInsuranceClaimFileDataId();
 						transInsuranceClaimFileDataVo.setFdId(aFloat);
 						logger.info("====保單理賠申請-上傳文件==============獲取檔案的ID編號=================={}", aFloat);
-						
+
 						//先insert一筆TRANS_INSURANCE_CLAIM_FILEDATAS
 						String fileBase64 = transInsuranceClaimFileDataVo.getFileBase64();
 						transInsuranceClaimFileDataVo.setFileBase64("");//insert時要先設為"",之後update才不會出錯.
 						int i = transInsuranceClaimDao.addInsuranceClaimFileData(transInsuranceClaimFileDataVo);
 						logger.info("=====保單理賠申請-上傳文件=============INSERT  InsuranceClaimFileData==================   響應行數----{}", i);
-						
+
 						//再UPDATE TRANS_INSURANCE_CLAIM_FILEDATAS的FILE_BASE64欄位
 						transInsuranceClaimFileDataVo.setFileBase64(fileBase64);
 						if (i>0) {
@@ -581,13 +580,13 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			//寫入狀態歷程
 			if(result>0) {
 				hisVo.setTransNum(transNum);
-       			hisVo.setStatus(status);
-       			if (flag) {
-       				hisVo.setRejectReason(OnlineChangeUtil.NOT_UNION_CLAIMS);	
-       			}
+				hisVo.setStatus(status);
+				if (flag) {
+					hisVo.setRejectReason(OnlineChangeUtil.NOT_UNION_CLAIMS);
+				}
 				onlineChangeDao.addTransStatusHistory(hisVo);
 			}
-			
+
 		} catch (Exception e) {
 			result = 0;
 			logger.error("Unable to init from insertTransInsuranceClaim: {}", ExceptionUtils.getStackTrace(e));
@@ -597,9 +596,9 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		rMap.put("status", status);
 		return rMap;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param transNum
 	 * @return TransInsuranceClaimVo
 	 */
@@ -627,9 +626,9 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 					}
 				}
 			}
-			
+
 			List<TransInsuranceClaimFileDataVo> transInsuranceClaimFileDataVoList = transInsuranceClaimDao.getFileDatasByClaimSeqId(transInsuranceClaimVo.getClaimSeqId());
-		/*	for (TransInsuranceClaimFileDataVo fileDataVo : transInsuranceClaimFileDataVoList) {
+        /*	for (TransInsuranceClaimFileDataVo fileDataVo : transInsuranceClaimFileDataVoList) {
 				String filePath = fileDataVo.getFilePath()+File.separator+fileDataVo.getFileName();
 				fileDataVo.setFileBase64(this.converFileToBase64Str(filePath));
 				String substring = filePath.substring(filePath.lastIndexOf("."), filePath.length());
@@ -644,7 +643,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			}*/
 			if (transInsuranceClaimFileDataVoList != null && transInsuranceClaimFileDataVoList.size() > 0) {
 				List<TransInsuranceClaimFileDataVo> transInsuranceClaimFileDataVos =
-						 this.transInsuranceClaimFileDataVoListBase64ToMiniature(transInsuranceClaimFileDataVoList);
+						this.transInsuranceClaimFileDataVoListBase64ToMiniature(transInsuranceClaimFileDataVoList);
 				transInsuranceClaimVo.setFileDatas(transInsuranceClaimFileDataVos);
 			}
 		} catch (Exception e) {
@@ -652,11 +651,11 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		}
 		return transInsuranceClaimVo;
 	}
-	
+
 	/**
 	 * 保單理賠申請-上傳申請應備文件
-	 * 
-	 * @param files 
+	 *
+	 * @param files
 	 * @return 上傳文件結果
 	 */
 	public List<TransInsuranceClaimFileDataVo> upLoadFiles(MultipartFile[] files) {
@@ -667,20 +666,20 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 //				String filepath = System.getProperty("user.dir");
 //				logger.error("filePath is: {}", filepath);
 				String filepath = FILE_SAVE_PATH;
-	        	File localFile = new File(filepath);
-	            if (!localFile.exists()) {
-	                localFile.mkdirs();
-	            }
-	            try {
+				File localFile = new File(filepath);
+				if (!localFile.exists()) {
+					localFile.mkdirs();
+				}
+				try {
 					File server_file = new File(filepath+File.separator+fileName);
 					//            	File server_file = new File(filepath+fileName);
 					logger.error("------------------------------------------------------------server_fileis: {}",server_file);
 
 					if (server_file.exists()) {
-	                    SimpleDateFormat fmdate = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-	            		fileName = fileName.split("\\.")[0]+fmdate.format(new Date())+"."+fileName.split("\\.")[1];
-	            		server_file = new File(filepath +File.separator+ fileName);
-	            	}
+						SimpleDateFormat fmdate = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+						fileName = fileName.split("\\.")[0]+fmdate.format(new Date())+"."+fileName.split("\\.")[1];
+						server_file = new File(filepath +File.separator+ fileName);
+					}
 					file.transferTo(server_file);
 					TransInsuranceClaimFileDataVo fileData = new TransInsuranceClaimFileDataVo();
 					fileData.setFilePath(filepath);
@@ -707,7 +706,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		}
 		return fileList;
 	}
-	
+
 	/**
 	 * 檢查是否進入進入黑名單
 	 * @param blackListVo
@@ -727,21 +726,21 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		// TODO Auto-generated method stub
 		return onlineChangeDao.getPolicyClaimCompleted(rocId);
 	}
-	
+
 	/**
 	 * 理賠聯盟鏈險種
 	 */
 	@Override
 	public List<String> getInsClaimPlan() {
 		// TODO Auto-generated method stub
-		 List<ParameterVo> params = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID, ApConstants.INSURANCE_CLAIM_PLAN);
-		 List<String> rlist = new ArrayList<String>();
-		 for (ParameterVo vo : params) {
-			 rlist.add(vo.getParameterValue());
+		List<ParameterVo> params = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID, ApConstants.INSURANCE_CLAIM_PLAN);
+		List<String> rlist = new ArrayList<String>();
+		for (ParameterVo vo : params) {
+			rlist.add(vo.getParameterValue());
 		}
 		return rlist;
 	}
-	
+
 	/**
 	 * 獲取年齡
 	 */
@@ -750,11 +749,11 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		// TODO Auto-generated method stub
 		return onlineChangeDao.getAgeByPolicyNo(policyNo);
 	}
-	
-	
+
+
 	/**
 	 * 取得理賠申請書報表 byte[].
-	 * 
+	 *
 	 * @param claimVo ClaimVo
 	 * @return 回傳報表 byte[]
 	 */
@@ -763,16 +762,16 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		RptUtils2 rptUtils = new RptUtils2();
 		byte[] pdf = null;
 		try {
-			 claimVo.setApplicationDate(onlineChangeDao.getCreateDateByTransNum(claimVo.getTransNum()));
-			 pdf = rptUtils.generatePDF(claimVo);
+			claimVo.setApplicationDate(onlineChangeDao.getCreateDateByTransNum(claimVo.getTransNum()));
+			pdf = rptUtils.generatePDF(claimVo);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return pdf;
 	}
-	
+
 	/**
 	 * 由Code取Value
 	 * @param parameterCode
@@ -780,7 +779,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 	 */
 	@Override
 	public String getParameterValueByCode( String systemId, String parameterCode) {
-		
+
 		return parameterDao.getParameterValueByCode(systemId, parameterCode);
 	}
 
@@ -830,12 +829,13 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				logger.info("Mail Address : " + mail);
 			}
 		}
-		
+
 		rMap.put("statusName", statusName);
 		rMap.put("transRemark", transRemark);
 		rMap.put("receivers", receivers);
 		return rMap;
 	}
+
 	/**
 	 * Convert File(ex:jpg,pdf) to Base64
 	 * @param filePath
@@ -867,7 +867,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 	@Override
 	public String converFileToBase64Miniature(String filePath) {
 		String encodedString = null;
-	/*	try {
+    /*	try {
 			if(filePath!=null) {
 				logger.info("input filePath="+filePath);
 				
@@ -880,7 +880,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			logger.error(e);
 		}
 		*/
-		
+
 		PDDocument pdDoc = null;
 		try {
 			if(filePath!=null) {
@@ -947,7 +947,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				//获取文件类型
 				String base64Type = this.checkBase64ImgOrPdf(decode);
 				logger.info("--------------------------------------------------PDF Base64 " + base64Type);
-						ByteArrayInputStream input = new ByteArrayInputStream(decode);
+				ByteArrayInputStream input = new ByteArrayInputStream(decode);
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				if (base64Type != null && !"".equals(base64Type))
 					try {
@@ -958,7 +958,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 							PDDocument doc = PDDocument.load(input);
 							String miniatureBase64 = this.imgBase64(doc, baos);
 							logger.info("--------------------------------------------------PDF Base64"+ miniatureBase64);
-									x.setFileBase64(miniatureBase64);
+							x.setFileBase64(miniatureBase64);
 							doc.close();
 						}
 					} catch (IOException e) {
@@ -1027,6 +1027,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		String base64 = Base64.getEncoder().encodeToString(bytes);
 		return  base64;
 	}
+
 	/**
 	 * 获取图片50*50的的base64数据
 	 * @param file  获取图片50*50地址
@@ -1061,7 +1062,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 	 * @return 转换为图片
 	 */
 	private BufferedImage pdfBufferedImage(PDDocument doc ) {
-	//	File file = new File(path);
+		//	File file = new File(path);
 		try {
 			//String imgPDFPath = file.getParent();
 			//int dot = file.getName().lastIndexOf('.');
@@ -1153,4 +1154,13 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
     public List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(String functionName, String status) {
         return transInsuranceClaimDao.getHospitalInsuranceCompanyList(functionName, status);
     }
+
+	@Override
+	public Integer getInsuranceClaimWhetherFirst(String policyNo, String insuranceClaimParameterCode) {
+		int i = transInsuranceClaimDao.getInsuranceClaimWhetherFirst(policyNo, insuranceClaimParameterCode);
+		if (i > 0) {
+			return 1;
+		}
+		return 0;
+	}
 }

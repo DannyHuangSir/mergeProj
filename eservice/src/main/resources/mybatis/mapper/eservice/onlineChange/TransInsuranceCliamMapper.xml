@@ -246,4 +246,12 @@
 			AND STATUS=#{status}
 		</if>
 	</select>
+
+	<select id="getInsuranceClaimWhetherFirst" resultType="int"  parameterType="java.lang.String">
+		select COUNT(*) number    from  ESERVICE.DBO.TRANS T
+		JOIN    [ESERVICE].[dbo].[TRANS_INSURANCE_CLAIM]  TMT  ON  T.TRANS_NUM=TMT.TRANS_NUM
+		JOIN    [ESERVICE].[dbo].[TRANS_INSURANCE_CLAIM_FILEDATAS]  TMTF  ON  TMT.CLAIMS_SEQ_ID=TMTF.CLAIMS_SEQ_ID
+		where
+		T.TRANS_TYPE=#{functionName}  AND  TMT.POLICYNO=#{policyNo}
+	</select>
 </mapper>

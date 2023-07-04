@@ -627,5 +627,22 @@ public class InsuranceClaimController extends BaseUserDataController {
 		List<TransInsuranceClaimFileDataVo> fileUpload = insuranceClaimService.upLoadFiles(files);
 		return fileUpload;
 	}
+
+	@RequestLog
+	@PostMapping(value = "/getInsuranceClaimWhetherFirst")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> getInsuranceClaimWhetherFirst(@RequestBody TransInsuranceClaimVo claimVo) {
+
+		Integer   investments = null;
+		try {
+			investments = insuranceClaimService.getInsuranceClaimWhetherFirst(claimVo.getPolicyNo()
+					, TransTypeUtil.INSURANCE_CLAIM_PARAMETER_CODE);
+		} catch (Exception e) {
+			logger.error("Unable to InsuranceClaimController  -  getInsuranceClaimWhetherFirst: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		processSuccess(investments);
+		return processResponseEntity();
+	}
 	
 }
