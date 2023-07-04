@@ -42,9 +42,12 @@
 								<figure><img th:src="@{/images/check1.png}" ></figure>
 								<h2 style="font-size: 16px;color: #CC7A00;">報表已匯出！請點擊下方按鈕進行開啓或下載！</h2>
 								<div class="col-md-12" style="text-align: center;margin-top: 20px;">
-									
 									<a class="btn bgOrange" type="reset" style="border: 0;" onclick="downloadCSV()">
 										下載報表
+									</a>
+									&nbsp;
+									<a class="btn bgOrange" type="reset" style="border: 0;" onclick="returnSearch()">
+										返回報表查詢
 									</a>
 								</div>
 							</div>
@@ -61,6 +64,7 @@
 		<script th:inline="javascript">
 		
 		/*<![CDATA[*/
+		var vo = /*[[${claimVo}]]*/;
 		var fileName = "保單理賠申請統計報表";
 		var CSV = '';
 		$(function() {
@@ -134,6 +138,10 @@
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
+		}
+
+		function returnSearch() {
+			postWithFormData(/*[[@{/rptInsClaimStatistics}]]*/, vo);
 		}
 		/*]]>*/
 		</script>

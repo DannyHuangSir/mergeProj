@@ -18,6 +18,7 @@ import com.twfhclife.generic.annotation.LoginCheck;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 報表查詢-保單理賠申請統計報表.
@@ -39,9 +40,10 @@ public class InsClaimReportController extends BaseController {
 	 * @return
 	 */	
 	@RequestLog
-	@GetMapping("/rptInsClaimStatistics")
-	public String onlineChange() {
-		return   "backstage/rpt/policyClaimsStatisticalReport1";
+	@RequestMapping("/rptInsClaimStatistics")
+	public String onlineChange(InsClaimStatisticsVo claimVo) {
+		addAttribute("claimVo", claimVo);
+		return "backstage/rpt/policyClaimsStatisticalReport1";
 	}
 
 	/**
@@ -53,8 +55,7 @@ public class InsClaimReportController extends BaseController {
 	@PostMapping("/rptInsClaimStatistics/filter")
 	public String onlineChangeDetail(InsClaimStatisticsVo claimVo) {
 		addAttribute("claimVo", claimVo);
-		
-		return   "backstage/rpt/policyClaimsStatisticalReport2";
+		return  "backstage/rpt/policyClaimsStatisticalReport2";
 	}
 	
 	/**
@@ -83,9 +84,9 @@ public class InsClaimReportController extends BaseController {
 			funcId = "190",
 			systemId = ApConstants.SYSTEM_ID
 			))
-	@GetMapping("/rptInsClaimDetail")
-	public String rptInsClaimDetail() {
-		
+	@RequestMapping("/rptInsClaimDetail")
+	public String rptInsClaimDetail(InsClaimStatisticsVo claimVo) {
+		addAttribute("claimVo", claimVo);
 		return  "backstage/rpt/policyClaimsDetailReport1";
 	}
 	

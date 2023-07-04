@@ -9,7 +9,7 @@
 			<script type="text/javascript">
 				try{my.settings.loadState('main-container')}catch(e){}
 			</script>
-			<div th:replace="fragments/sidebar :: sidebar (funId='onlineChange')"></div>
+			<div th:replace="fragments/sidebar :: sidebar (funId='rptInsClaimStatistics')"></div>
 			<div class="main-content">
 				<div class="main-content-inner">
 					<div class="breadcrumbs my-save-state" id="breadcrumbs">
@@ -66,8 +66,8 @@
 
 										<div class="col-sm-9">	
 											<select class="form-control"  id="fromCompanyIdSelect" name="fromCompanyId" multiple='multiple'>
-													<option value="01">臺銀人壽首家</option>
-													<option value="02">聯盟鏈轉收件</option>
+												<option th:selected="${claimVo.fromCompanyId eq '01'}" value="01">臺銀人壽首家</option>
+												<option th:selected="${claimVo.fromCompanyId eq '02'}" value="02">聯盟鏈轉收件</option>
                                               </select>
 										</div>
 									</div>
@@ -86,7 +86,7 @@
 										<div class="col-sm-9">	
 											<select class="form-control"  id="statusListSelect" multiple='multiple'>
 												 <th:block th:each="vo, rowStat : ${session.ONLINE_CHANGE_STATUS}">
-													<option th:value="${vo.value.parameterCode}" >
+													<option th:selected="${claimVo.status != null ? #strings.containsIgnoreCase(claimVo.status,vo.value.parameterCode) : false}" th:value="${vo.value.parameterCode}" >
 														<th:block th:inline="text">[[${vo.value.parameterName}]]</th:block>
 													</option>
 												</th:block>
@@ -99,7 +99,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="policyNoInp"> 保單號碼 </label>
 
 										<div class="col-sm-9">
-											<input type="text" id="policyNoInp" placeholder="輸入欲查詢的保單號碼" class="form-control" />
+											<input type="text" id="policyNoInp" th:value="${claimVo.policyNo}" placeholder="輸入欲查詢的保單號碼" class="form-control" />
 										</div>
 									</div>
 
@@ -107,24 +107,23 @@
 										<label class="col-sm-3 control-label no-padding-right" for="lilipiIdNoInp"> 被保人身分證字號 </label>
 
 										<div class="col-sm-9">
-											<input type="text" id="lilipiIdNoInp" placeholder="輸入欲查詢的身分證字號" class="form-control" />
+											<input type="text" id="lilipiIdNoInp" th:value="${claimVo.lilipiIdNo}" placeholder="輸入欲查詢的身分證字號" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="lilipmIdNoInp"> 要保人身分證字號 </label>
 
 										<div class="col-sm-9">
-											<input type="text" id="lilipmIdNoInp" placeholder="輸入欲查詢的身分證字號" class="form-control" />
+											<input type="text" id="lilipmIdNoInp" th:value="${claimVo.lilipmIdNo}" placeholder="輸入欲查詢的身分證字號" class="form-control" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="fileReceivedSelect"> 是否已紙本回收 </label>
-
 										<div class="col-sm-9">
 											<select class="form-control" id="fileReceivedSelect"  multiple='multiple'>
-												<option value="1_">是</option>
-												<option value="2_">否</option>
-												<option value="C_">待覆核中</option>
+												<option th:selected="${claimVo.fileReceivedList != null ? #strings.containsIgnoreCase(claimVo.fileReceivedList, '1') : false}" value="1_">是</option>
+												<option th:selected="${claimVo.fileReceivedList != null ? #strings.containsIgnoreCase(claimVo.fileReceivedList, '2') : false}" value="2_">否</option>
+												<option th:selected="${claimVo.fileReceivedList != null ? #strings.containsIgnoreCase(claimVo.fileReceivedList, 'C') : false}" value="C_">待覆核中</option>
 											</select>
 										</div>
 									</div>
@@ -133,15 +132,14 @@
 
 										<div class="col-sm-9">
                                             <select class="form-control" id="sendAllianceSelect"  multiple='multiple'>	
-												<option value="Y">是</option>
-												<option value="N">否</option>
-												<option value="C">待覆核中</option>
+												<option th:selected="${claimVo.sendAllianceList != null ? #strings.containsIgnoreCase(claimVo.sendAllianceList, 'Y') : false}" value="Y">是</option>
+												<option th:selected="${claimVo.sendAllianceList != null ? #strings.containsIgnoreCase(claimVo.sendAllianceList, 'N') : false}" value="N">否</option>
+												<option th:selected="${claimVo.sendAllianceList != null ? #strings.containsIgnoreCase(claimVo.sendAllianceList, 'C') : false}" value="C">待覆核中</option>
 											</select>										
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="rejectReasonSelect"> 異常件註記原因  </label>
-
 										<div class="col-sm-9">
                                             <select class="form-control" id="rejectReasonSelect">
 											</select>										
@@ -187,6 +185,7 @@
 		<script th:inline="javascript">
 		
 		/*<![CDATA[*/
+		var vo = /*[[${claimVo}]]*/;
 		$(function() {
 			// 取得線上申請狀態下拉選單
 			// eserviceAdmOption.common('#statusListSelect', 
@@ -196,17 +195,19 @@
 			// 取得線上申請項目下拉選單
 			eserviceAdmOption.common('#applyItemListSelect', 
 					/*[[@{/common/optionList?categoryCode=APPLICATION_ITEMS}]]*/, 
-					'請選擇申請項目...','VALUE');
+					'請選擇申請項目...','VALUE', initApplyItemListSelect);
 			
 			//異常件註記原因
 			eserviceAdmOption.common('#rejectReasonSelect', 
 					/*[[@{/common/optionList?categoryCode=ABNORMAL_REASON}]]*/, 
-					'請選擇原因...','VALUE');
+					'請選擇原因...','VALUE', initRejectReasonSelect);
 
 			$('input[name=date-range-picker]').daterangepicker({
 				'applyClass' : 'btn-sm btn-success',
 				'cancelClass' : 'btn-sm btn-default',
 				maxDate : new Date(),
+				startDate: vo.startDate ? vo.startDate : new Date(),
+				endDate: vo.endDate ? vo.endDate : new Date(),
 				locale: {
 					format:'YYYYMMDD',
 					applyLabel: 'Apply',
@@ -218,7 +219,23 @@
 			$("#fileReceivedSelect").bsMultiSelect();
 			$("#sendAllianceSelect").bsMultiSelect();
 		});
-	
+
+		function initRejectReasonSelect() {
+			$("#rejectReasonSelect").children().each(function(i, e) {
+				if ($(e).val() == vo.rejectReason) {
+					$(e).attr("selected", true)
+				}
+			})
+		}
+
+		function initApplyItemListSelect() {
+			$("#applyItemListSelect").children().each(function(i, e) {
+				if ($(e).val() == vo.applyItem) {
+					$(e).attr("selected", true)
+				}
+			})
+		}
+
 		function searchOnlineChange() {
 
 			$("#startDate").val($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYY-MM-DD'));

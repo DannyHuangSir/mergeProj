@@ -3,7 +3,8 @@ var eserviceAdmOption = function() {
 		$target.html('');
 		$.ajax({
 			url : url,
-			type : "POST"
+			type : "POST",
+			async: false,
 		}).done(function(data) {
 		    console.log("execute commonOptions ajax done : "  + $target.attr("id") + " url: " + url)
 			if (data.result == 'SUCCESS') {
