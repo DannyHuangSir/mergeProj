@@ -161,7 +161,7 @@
     <sql id="whereCase2">
         <where>
             <if test="vo.policyNo != null and vo.policyNo != ''">
-                AND A.NEPM_INSU_TYPE = substr(#{vo.policyNo}, 0, 2) AND A.NEPM_INSU_TYPE = substr(#{vo.policyNo}, 2, 3) AND A.NEPM_INSU_TYPE = substr(#{vo.policyNo}, 3, 10)
+                AND A.NEPM_INSU_TYPE = substr(#{vo.policyNo}, 1, 2) AND A.NEPM_INSU_GRP_NO = substr(#{vo.policyNo}, 3, 1) AND A.NEPM_INSU_SEQ_NO = substr(#{vo.policyNo}, 4, 7)
             </if>
             <if test="vo.lipmName != null and vo.lipmName != ''">
                 AND A.NEPM_NAME_1 = #{vo.lipmName}
