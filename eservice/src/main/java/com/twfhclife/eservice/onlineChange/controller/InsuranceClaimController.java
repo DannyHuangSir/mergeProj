@@ -42,6 +42,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
@@ -642,6 +643,31 @@ public class InsuranceClaimController extends BaseUserDataController {
 			addDefaultSystemError();
 		}
 		processSuccess(investments);
+		return processResponseEntity();
+	}
+
+	@RequestLog
+	@PostMapping(value = "/autoCheckedInsuranceCompany")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> autoCheckedInsuranceCompany() {
+		try {
+			UsersVo userDetail = getUserDetail();
+			LilipiVo tempLilipiVo = new LilipiVo();
+			tempLilipiVo.setLipiId(userDetail.getRocId());
+			List<LilipiVo> lilipiVoList = lilipiService.getLilipi(tempLilipiVo);
+			if (lilipiVoList != null && lilipiVoList.size() > 0) {
+				LilipiVo lilipiVo = lilipiVoList.get(0);
+				Map<String, String> map = Maps.newHashMap();
+				map.put("cidNo", lilipiVo.getLipiId());
+				map.put("cbirDate", DateUtil.formatDateTime(lilipiVo.getLipiBirth(), "yyyyMMdd"));
+				map.put("eventDate", DateUtil.formatDateTime(new Date(), "yyyyMMdd"));
+				map.put("type", "claim");
+				processSuccess(insuranceClaimService.autoCheckedCompany(map));
+			}
+		} catch (Exception e) {
+			logger.error("Unable to InsuranceClaimController  -  autoCheckedInsuranceCompany: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
 		return processResponseEntity();
 	}
 	

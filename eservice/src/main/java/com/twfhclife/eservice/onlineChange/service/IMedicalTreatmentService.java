@@ -163,4 +163,6 @@ public interface IMedicalTreatmentService {
     List<Hospital> gitChooseHospitalList(String policyNo, String userRocId)throws Exception;
 
     List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo(Float claimSeqId);
+
+	List<Map<String, Object>> autoCheckedCompany(Map<String, String> params) throws Exception;
 }

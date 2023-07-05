@@ -81,12 +81,9 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 	@Autowired
 	private IParameterService parameterSerivce;
-	@Autowired
-	private IInsuranceClaimService insuranceClaimService;
 
 	@Autowired
 	private ILilipiService lilipiService;
-
 
 	@Autowired
 	private MessageTemplateClient messageTemplateClient;
@@ -894,6 +891,31 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			processSuccess(new Gson().fromJson(resStr, MedicalDataFileGroup[].class));
 		} catch (Exception e) {
 			logger.error("Unable to MedicalTreatmentController  -  getDataFileGroup: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return processResponseEntity();
+	}
+
+	@RequestLog
+	@PostMapping(value = "/autoCheckedMedicalTreatmentCompany")
+	@ResponseBody
+	public ResponseEntity<ResponseObj> autoCheckedMedicalTreatmentCompany() {
+		try {
+			UsersVo userDetail = getUserDetail();
+			LilipiVo tempLilipiVo = new LilipiVo();
+			tempLilipiVo.setLipiId(userDetail.getRocId());
+			List<LilipiVo> lilipiVoList = lilipiService.getLilipi(tempLilipiVo);
+			if (lilipiVoList != null && lilipiVoList.size() > 0) {
+				LilipiVo lilipiVo = lilipiVoList.get(0);
+				Map<String, String> map = Maps.newHashMap();
+				map.put("cidNo", lilipiVo.getLipiId());
+				map.put("cbirDate", DateUtil.formatDateTime(lilipiVo.getLipiBirth(), "yyyyMMdd"));
+				map.put("eventDate", DateUtil.formatDateTime(new Date(), "yyyyMMdd"));
+				map.put("type", "claim");
+				processSuccess(iMedicalTreatmentService.autoCheckedCompany(map));
+			}
+		} catch (Exception e) {
+			logger.error("Unable to MedicalTreatmentController  -  autoCheckedMedicalTreatmentCompany: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();
 		}
 		return processResponseEntity();

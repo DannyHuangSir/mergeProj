@@ -1,5 +1,7 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.onlineChange.dao.*;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
@@ -12,6 +14,7 @@ import com.twfhclife.eservice.web.dao.ParameterDao;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
+import com.twfhclife.generic.api_client.OnlineChangeClient;
 import com.twfhclife.generic.service.IMailService;
 import com.twfhclife.generic.service.IOptionService;
 import com.twfhclife.generic.service.ISendSmsService;
@@ -1275,5 +1278,16 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 	public List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfo(Float claimSeqId) {
 		return transMedicalTreatmentClaimDao.getMedicalInfoByClaimId(claimSeqId);
 	}
+
+	@Value("${eservice_api.claim.select.all.url}")
+	private String claimSelectAllUrl;
+
+    @Override
+    public List<Map<String, Object>> autoCheckedCompany(Map<String, String> params) throws Exception {
+		OnlineChangeClient onlineChangeClient = new OnlineChangeClient();
+		String resp = onlineChangeClient.postForEntity(claimSelectAllUrl, params);
+		logger.info("autoCheckedCompany -> resp: {}", resp);
+		return new Gson().fromJson(resp, new TypeToken<List<HashMap>>() {}.getType());
+    }
 
 }

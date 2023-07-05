@@ -13,8 +13,12 @@ import java.util.Map;
 import java.util.logging.XMLFormatter;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
+import com.twfhclife.generic.api_client.OnlineChangeClient;
 import com.twfhclife.generic.util.DateUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.collections.CollectionUtils;
@@ -1163,4 +1167,14 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		}
 		return 0;
 	}
+
+	@Value("${eservice_api.claim.select.all.url}")
+	private String claimSelectAllUrl;
+    @Override
+    public List<Map<String, Object>> autoCheckedCompany(Map<String, String> params) throws Exception {
+		OnlineChangeClient onlineChangeClient = new OnlineChangeClient();
+		String resp = onlineChangeClient.postForEntity(claimSelectAllUrl, params);
+		logger.info("autoCheckedCompany -> resp: {}", resp);
+        return new Gson().fromJson(resp, new TypeToken<List<HashMap>>() {}.getType());
+    }
 }

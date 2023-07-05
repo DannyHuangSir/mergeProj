@@ -2,6 +2,8 @@ package com.twfhclife.alliance.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.twfhclife.alliance.domain.*;
 import com.twfhclife.alliance.model.InsuranceClaimMapperVo;
 import com.twfhclife.alliance.model.MedicalRequestVo;
@@ -549,5 +551,35 @@ public class ClaimChainController {
 
 		logger.info("End ClaimChainController.callSpa402i().");
 		return response;
+	}
+
+	/**
+	 * claimSelectAll 理賠及理賠醫起通全選規則查詢
+	 */
+	@ApiRequest
+	@PostMapping("/claimSelectAll")
+	public List<Map<String, Object>> claimSelectAll(
+			@RequestBody Map<String, Object> vo) {
+		logger.info("Start ClaimChainController.claimSelectAll().");
+
+		try {
+			logger.info("claimSelectAll理賠及理賠醫起通全選規則查詢,request=" + vo);
+			String strResponse = externalService.postForEntity(
+					this.parameterServiceImpl.getParameterValueByCode("eservice_api", "alliance.claimSelectAll.url"),
+					vo);
+			logger.info("claimSelectAll理賠及理賠醫起通全選規則查詢,回傳=" + strResponse);
+
+			if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+				String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
+				return new Gson().fromJson(MyJacksonUtil.getNodeString(dataString, "orgDatas"), new TypeToken<List<HashMap>>() {
+				}.getType());
+			}
+
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		logger.info("End ClaimChainController.claimSelectAll().");
+		return Lists.newArrayList();
 	}
 }

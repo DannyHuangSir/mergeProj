@@ -508,12 +508,15 @@
 																<div class="col-sm-9">
 																	<th:block th:each="vo : ${hospitalInsuranceCompanyList}">
 																		<div class="checkbox col-sm-4" style="text-align: left;line-height: 1.7em; cursor: pointer">
-																			<div class="check-box"><i class=""><input type="checkbox" name="toItem"  th:value="${vo.insuranceId}"></i></div>
+																			<div class="check-box" th:id="'toItem_' + ${vo.insuranceId}"><i class=""><input type="checkbox" name="toItem"  th:value="${vo.insuranceId}"></i></div>
 																			<th:block th:if="${vo.insuranceName != null}">
 																				<label style="display: inline;" th:inline="text">[[${vo.insuranceName}]]</label>
 																			</th:block>
 																		</div>
 																	</th:block>
+																</div>
+																<div class="col-sm-12 col-sm-offset-3">
+																	<button type="button" class="btn btn-login btn-xs" onclick="autoCheckedCompanys()">一鍵勾選我有投保哪些保險公司</button>
 																</div>
 															</th:block>
 															<input type="hidden" name="to" >
@@ -796,6 +799,29 @@
 						</a>
 						<a href="#">
 							<button class="btn-login lock2" onclick="confirmSignAgree('Y', true)" >確認</button>
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade in" id="confirmAutoCheckedCompany" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content lock-up">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="modal-body apply2 center1 grey2">
+					<h3>使用此功能，系統將透過「保險業通報作業資訊系統」篩選出您可能有投保符合理賠/保全聯盟鏈轉送申請的公司。
+						請注意！篩選出的建議公司清單可能會受投保時間落差、投保內容認定而不完全正確，送出前請務必再次確認，或是與您的保險公司聯繫。
+					</h3>
+					<p class="marginTop20">
+						<a href="#">
+							<button class="btn-login lock2" onclick="confirmAutoCheck('N')">取消</button>
+						</a>
+						<a href="#">
+							<button class="btn-login lock2" onclick="confirmAutoCheck('Y')" >確認</button>
 						</a>
 					</p>
 				</div>
@@ -1620,6 +1646,40 @@
 					$("#confirmSign").removeClass("checkedRadio")
 				}
 			}
+		}
+
+		function autoCheckedCompanys() {
+			$("#confirmAutoCheckedCompany").modal('show')
+		}
+
+		function confirmAutoCheck(agree) {
+			if (agree == 'Y') {
+				$.ajax({
+					type : 'POST',
+					url : /*[[@{/autoCheckedMedicalTreatmentCompany}]]*/,
+					async: false,
+					success : function(response) {
+						if (response.result = 'SUCCESS') {
+							let arr = []
+							response.resultData.forEach(i => {
+								arr.push(i.orgId)
+							})
+							$("[name='toItem']").each(function(index, item){
+								$("#toItem_" + $(item).val()).removeClass('checkedBox')
+								$(item).attr('checked', false)
+								if (arr.indexOf($(item).val()) != -1) {
+									$("#toItem_" + $(item).val()).addClass('checkedBox')
+									$(item).attr('checked', 'checked')
+								}
+							})
+						}
+					},
+					error : function() {
+						openAlert($('#E0018').val());
+					}
+				});
+			}
+			$("#confirmAutoCheckedCompany").modal('hide')
 		}
 
 	</script>

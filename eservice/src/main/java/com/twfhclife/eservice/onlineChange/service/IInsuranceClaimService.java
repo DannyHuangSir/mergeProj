@@ -129,4 +129,6 @@ public interface IInsuranceClaimService {
     List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(String functionName, String status);
 
     Integer getInsuranceClaimWhetherFirst(String policyNo, String insuranceClaimParameterCode);
+
+	List<Map<String, Object>> autoCheckedCompany(Map<String, String> params) throws Exception;
 }
