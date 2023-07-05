@@ -282,6 +282,7 @@ public class IJdICBatchServiceImpl implements IJdICBatchService {
                                                                 } else {
                                                                     DepartmentVo branchId = jdDeptMgntService.getBranchId(divDep.getDepId(), branchId1);
                                                                     if (branchId == null) {
+                                                                        logger.info("分支機構不存在，通路代碼：{}， 分支機構代碼：{}", divDep.getDepId(), branchId1);
                                                                         jdUserVo.setFailResult("分支機構代碼不存在，請檢查!");
                                                                         break;
                                                                     }
