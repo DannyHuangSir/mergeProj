@@ -408,11 +408,6 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		String userId = transMedicalTreatmentClaimVo.getUserId();
 
 		String status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
-		if (StringUtils.equals(transMedicalTreatmentClaimVo.getSignAgree(), "Y")) {
-			status = OnlineChangeUtil.TRANS_STATUS_WAIT_SIGN;
-		}
-
-		String mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_1;
 		// 判斷符合聯盟鏈醫起通的商品清單
 		String policyNo = transMedicalTreatmentClaimVo.getPolicyNo();
 		boolean flag = false;
@@ -424,14 +419,16 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 			// 判斷聯盟件
 			String fromCompanyId = transMedicalTreatmentClaimVo.getFrom();
 			if(fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
-				mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_2;
 				if(transMedicalTreatmentClaimVo.getStauts() !=null  && OnlineChangeUtil.TRANS_STATUS_ABNORMAL.equals(transMedicalTreatmentClaimVo.getStauts())){
 					status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
 				}else {
-					//status = OnlineChangeUtil.TRANS_STATUS_RECEIVED;
 					status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
 				}
 			}
+		}
+
+		if (StringUtils.equals(transMedicalTreatmentClaimVo.getSignAgree(), "Y")) {
+			status = OnlineChangeUtil.TRANS_STATUS_WAIT_SIGN;
 		}
 		
 		int result = 0;
@@ -1279,15 +1276,17 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		return transMedicalTreatmentClaimDao.getMedicalInfoByClaimId(claimSeqId);
 	}
 
-	@Value("${eservice_api.claim.select.all.url}")
-	private String claimSelectAllUrl;
-
     @Override
-    public List<Map<String, Object>> autoCheckedCompany(Map<String, String> params) throws Exception {
+    public List<Map<String, Object>> autoCheckedCompany(String url, Map<String, String> params) throws Exception {
 		OnlineChangeClient onlineChangeClient = new OnlineChangeClient();
-		String resp = onlineChangeClient.postForEntity(claimSelectAllUrl, params);
+		String resp = onlineChangeClient.postForEntity(url, params);
 		logger.info("autoCheckedCompany -> resp: {}", resp);
 		return new Gson().fromJson(resp, new TypeToken<List<HashMap>>() {}.getType());
     }
+
+	@Override
+	public int updateTransApplyDate(Float claimSeqId, Date date) {
+		return transMedicalTreatmentClaimDao.updateTransApplyDate(claimSeqId, date);
+	}
 
 }

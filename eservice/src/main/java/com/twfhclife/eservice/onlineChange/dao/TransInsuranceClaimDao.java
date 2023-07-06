@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.onlineChange.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.twfhclife.eservice.onlineChange.model.HospitalInsuranceCompany;
@@ -95,4 +96,6 @@ public interface TransInsuranceClaimDao {
     List<HospitalInsuranceCompany> getHospitalInsuranceCompanyList(@Param("functionName") String functionName,@Param("status")  String status);
 
     int getInsuranceClaimWhetherFirst(@Param("policyNo")String policyNo, @Param("functionName")String insuranceClaimParameterCode);
+
+	int updateTransApplyDate(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
 }

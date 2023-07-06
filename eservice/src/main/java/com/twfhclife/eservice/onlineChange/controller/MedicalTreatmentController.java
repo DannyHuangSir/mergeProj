@@ -896,6 +896,9 @@ public class MedicalTreatmentController extends BaseUserDataController {
 		return processResponseEntity();
 	}
 
+	@Value("${eservice_api.claim.select.all.url}")
+	private String claimSelectAllUrl;
+
 	@RequestLog
 	@PostMapping(value = "/autoCheckedMedicalTreatmentCompany")
 	@ResponseBody
@@ -912,7 +915,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				map.put("cbirDate", DateUtil.formatDateTime(lilipiVo.getLipiBirth(), "yyyyMMdd"));
 				map.put("eventDate", DateUtil.formatDateTime(new Date(), "yyyyMMdd"));
 				map.put("type", "claim");
-				processSuccess(iMedicalTreatmentService.autoCheckedCompany(map));
+				processSuccess(iMedicalTreatmentService.autoCheckedCompany(claimSelectAllUrl, map));
 			}
 		} catch (Exception e) {
 			logger.error("Unable to MedicalTreatmentController  -  autoCheckedMedicalTreatmentCompany: {}", ExceptionUtils.getStackTrace(e));

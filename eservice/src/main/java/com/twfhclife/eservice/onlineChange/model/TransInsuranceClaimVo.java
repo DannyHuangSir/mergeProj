@@ -1,6 +1,7 @@
 package com.twfhclife.eservice.onlineChange.model;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -252,6 +253,16 @@ public class TransInsuranceClaimVo extends AbstractOnlineChangeModelBean {
 	private List<String> toItem;
 	
 	private Timestamp createDate;
+
+	private Date applyDate;
+
+	public Date getApplyDate() {
+		return applyDate;
+	}
+
+	public void setApplyDate(Date applyDate) {
+		this.applyDate = applyDate;
+	}
 
 	public Float getClaimSeqId() {
 		return claimSeqId;

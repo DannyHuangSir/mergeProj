@@ -5,6 +5,7 @@ import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,4 +103,6 @@ public interface TransMedicalTreatmentClaimDao {
     int addInsuranceClaimMedicalInfo(@Param("vo") TransMedicalTreatmentClaimMedicalInfoVo vo);
 
     List<TransMedicalTreatmentClaimMedicalInfoVo> getMedicalInfoByClaimId(@Param("claimSeqId") Float claimSeqId);
+
+    int updateTransApplyDate(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
 }

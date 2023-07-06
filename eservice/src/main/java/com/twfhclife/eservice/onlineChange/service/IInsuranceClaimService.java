@@ -4,6 +4,7 @@ import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -130,5 +131,7 @@ public interface IInsuranceClaimService {
 
     Integer getInsuranceClaimWhetherFirst(String policyNo, String insuranceClaimParameterCode);
 
-	List<Map<String, Object>> autoCheckedCompany(Map<String, String> params) throws Exception;
+	List<Map<String, Object>> autoCheckedCompany(String url, Map<String, String> params) throws Exception;
+
+	int updateTransApplyDate(Float claimSeqId, Date date);
 }

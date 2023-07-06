@@ -69,7 +69,7 @@
 		JOB,JOB_DESCR,ACCIDENT_DATE,ACCIDENT_TIME,ACCIDENT_CAUSE,ACCIDENT_LOCATION,ACCIDENT_DESCR,POLICE_STATION,
 		POLICE_NAME,POLICE_PHONE,POLICE_DATE,POLICE_TIME,FROM_COMPANY_ID,TO_COMPANY_ID,SEND_ALLIANCE,APPLYITEM,POLICYNO,
 		CUSTOMERNAME,RELATION,TEL,DISEASENAME,HOSPITAL,OTHERCOMPANYINSURED,OTHERINSUCOMMPANY,OTHERINSUTYPE,OTHERINSUAMOUNT,
-		OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE,SIGN_AGREE
+		OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE
 	</sql>
 	
 	<select id="getInsuranceClaimSequence" resultType="java.lang.Float">
@@ -122,7 +122,10 @@
 		INSERT INTO 
        		ESERVICE.DBO.TRANS_INSURANCE_CLAIM
        		(
-       		<include refid="Base_Column_List" />
+       		<include refid="Base_Column_List" /> ,SIGN_AGREE
+			<if test="vo.applyDate != null">
+				,APPLY_DATE
+			</if>
        		)
        	VALUES
        		(
@@ -181,6 +184,9 @@
        			#{vo.accountName, jdbcType=VARCHAR},
        			#{vo.callPolice, jdbcType=VARCHAR},
        			#{vo.signAgree, jdbcType=VARCHAR}
+				<if test="vo.applyDate != null">
+					,#{vo.applyDate}
+				</if>
 			)
 	</insert>
 	<select id="selectInsuranceClaimFileDataId" resultType="java.lang.Float">

@@ -220,4 +220,9 @@
 		 where STATUS = 'NON' 
 		   and RFE_ID = #{rfeId}
 	</update>
+
+	<update id="updateTransApplyDate">
+		UPDATE ESERVICE.dbo.TRANS_INSURANCE_CLAIM
+		SET APPLY_DATE = #{date} WHERE CLAIMS_SEQ_ID = #{claimSeqId}
+	</update>
 </mapper>

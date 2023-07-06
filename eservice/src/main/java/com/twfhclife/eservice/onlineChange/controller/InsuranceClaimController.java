@@ -38,6 +38,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -646,6 +647,9 @@ public class InsuranceClaimController extends BaseUserDataController {
 		return processResponseEntity();
 	}
 
+	@Value("${eservice_api.claim.select.all.url}")
+	private String claimSelectAllUrl;
+
 	@RequestLog
 	@PostMapping(value = "/autoCheckedInsuranceCompany")
 	@ResponseBody
@@ -662,7 +666,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 				map.put("cbirDate", DateUtil.formatDateTime(lilipiVo.getLipiBirth(), "yyyyMMdd"));
 				map.put("eventDate", DateUtil.formatDateTime(new Date(), "yyyyMMdd"));
 				map.put("type", "claim");
-				processSuccess(insuranceClaimService.autoCheckedCompany(map));
+				processSuccess(insuranceClaimService.autoCheckedCompany(claimSelectAllUrl, map));
 			}
 		} catch (Exception e) {
 			logger.error("Unable to InsuranceClaimController  -  autoCheckedInsuranceCompany: {}", ExceptionUtils.getStackTrace(e));

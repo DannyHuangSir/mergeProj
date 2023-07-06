@@ -2,7 +2,6 @@ package com.twfhclife.eservice.onlineChange.service.impl;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -10,16 +9,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.XMLFormatter;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.*;
-import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
 import com.twfhclife.generic.api_client.OnlineChangeClient;
-import com.twfhclife.generic.util.DateUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -28,7 +23,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSeedValueMDP;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +43,6 @@ import com.twfhclife.eservice.web.dao.ParameterDao;
 import com.twfhclife.eservice.web.model.ParameterVo;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
-import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.service.IMailService;
 import com.twfhclife.generic.service.IOptionService;
 import com.twfhclife.generic.service.ISendSmsService;
@@ -414,7 +407,6 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		String transNum = transInsuranceClaimVo.getTransNum();
 		String userId = transInsuranceClaimVo.getUserId();
 		String status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
-		String mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_1;
 		String fromCompanyId = transInsuranceClaimVo.getFrom();
 		String policyNo = transInsuranceClaimVo.getPolicyNo();
 
@@ -424,14 +416,19 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			flag = true;
 			//transNum = "000000000";
 			status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
-		} else if(StringUtils.equals("Y", transInsuranceClaimVo.getSignAgree())) {
-			status = OnlineChangeUtil.TRANS_STATUS_WAIT_SIGN;
-		} else {
+		}  else {
 			// 判斷聯盟件
 			if(fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
-				mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_2;
 				status = OnlineChangeUtil.TRANS_STATUS_RECEIVED;
 			}
+		}
+
+		if(StringUtils.equals("Y", transInsuranceClaimVo.getSignAgree())) {
+			status = OnlineChangeUtil.TRANS_STATUS_WAIT_SIGN;
+		}
+
+		if (StringUtils.equals(status, OnlineChangeUtil.TRANS_STATUS_APPLYING)) {
+			transInsuranceClaimVo.setApplyDate(new Date());
 		}
 
 		int result = 0;
@@ -1168,13 +1165,16 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		return 0;
 	}
 
-	@Value("${eservice_api.claim.select.all.url}")
-	private String claimSelectAllUrl;
     @Override
-    public List<Map<String, Object>> autoCheckedCompany(Map<String, String> params) throws Exception {
+    public List<Map<String, Object>> autoCheckedCompany(String url, Map<String, String> params) throws Exception {
 		OnlineChangeClient onlineChangeClient = new OnlineChangeClient();
-		String resp = onlineChangeClient.postForEntity(claimSelectAllUrl, params);
+		String resp = onlineChangeClient.postForEntity(url, params);
 		logger.info("autoCheckedCompany -> resp: {}", resp);
         return new Gson().fromJson(resp, new TypeToken<List<HashMap>>() {}.getType());
     }
+
+	@Override
+	public int updateTransApplyDate(Float claimSeqId, Date date) {
+		return transInsuranceClaimDao.updateTransApplyDate(claimSeqId, date);
+	}
 }

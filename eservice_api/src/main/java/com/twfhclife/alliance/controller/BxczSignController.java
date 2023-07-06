@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+
 @RestController
 public class BxczSignController {
 
@@ -161,9 +162,22 @@ public class BxczSignController {
                     int result;
                     if (StringUtils.equals(state.getType(), ApConstants.INSURANCE_CLAIM)) {
                         TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
+                        String policyNo = claimVo.getPolicyNo();
+                        String status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
+                        String fromCompanyId = claimVo.getFrom();
+                        if (policyNo == null || "".equals(policyNo)) {
+                            status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
+                        } else {
+                            if (fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
+                                status = OnlineChangeUtil.TRANS_STATUS_RECEIVED;
+                            }
+                        }
                         if (StringUtils.equals(vo.getCode(), "0")) {
                             sendPolicyClaimNotify(claimVo, "1");
-                            transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                            transService.updateTransStatus(state.getTransNum(), status);
+                            if (StringUtils.equals(status, OnlineChangeUtil.TRANS_STATUS_APPLYING)) {
+                                insuranceClaimService.updateTransApplyDate(claimVo.getClaimSeqId(), new Date());
+                            }
                         } else if (StringUtils.equals(vo.getCode(), "-2")) {
                             transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
                             sendFailPolicyClaimNotify(claimVo, "數位身分驗證失敗");
@@ -172,16 +186,33 @@ public class BxczSignController {
                             sendFailPolicyClaimNotify(claimVo, "數位簽署失敗");
                         }
                     } else {
-                        TransMedicalTreatmentClaimVo claimVo = medicalTreatmentService.getTransInsuranceClaimDetail(state.getTransNum());
+                        TransMedicalTreatmentClaimVo transMedicalTreatmentClaimVo = medicalTreatmentService.getTransInsuranceClaimDetail(state.getTransNum());
+                        String policyNo = transMedicalTreatmentClaimVo.getPolicyNo();
+                        String status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
+                        if (policyNo == null || "".equals(policyNo)) {
+                            status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
+                        } else {
+                            String fromCompanyId = transMedicalTreatmentClaimVo.getFrom();
+                            if (fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
+                                if (transMedicalTreatmentClaimVo.getStauts() != null && OnlineChangeUtil.TRANS_STATUS_ABNORMAL.equals(transMedicalTreatmentClaimVo.getStauts())) {
+                                    status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
+                                } else {
+                                    status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
+                                }
+                            }
+                        }
                         if (StringUtils.equals(vo.getCode(), "0")) {
-                            sendMedicalNotify(claimVo, "1");
-                            transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                            sendMedicalNotify(transMedicalTreatmentClaimVo, "1");
+                            transService.updateTransStatus(state.getTransNum(), status);
+                            if (StringUtils.equals(status, OnlineChangeUtil.TRANS_STATUS_APPLYING)) {
+                                medicalTreatmentService.updateTransApplyDate(transMedicalTreatmentClaimVo.getClaimSeqId(), new Date());
+                            }
                         } else if (StringUtils.equals(vo.getCode(), "-2")) {
                             transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
-                            sendFailMedicalNotify(claimVo, "數位身分驗證失敗");
+                            sendFailMedicalNotify(transMedicalTreatmentClaimVo, "數位身分驗證失敗");
                         } else if (StringUtils.equals(vo.getCode(), "-3")) {
                             transService.updateTransStatus(state.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
-                            sendFailMedicalNotify(claimVo, "數位簽署失敗");
+                            sendFailMedicalNotify(transMedicalTreatmentClaimVo, "數位簽署失敗");
                         }
                     }
                     result = bxczSignService.updateSignRecordStatus(vo.getCode(), vo.getMsg(), data);
@@ -222,7 +253,7 @@ public class BxczSignController {
         logger.info("Trans Num : {}", claimVo.getTransNum());
         logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
         logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
-        logger.info("receivers={}", (List)mailInfo.get("receivers"));
+        logger.info("receivers={}", (List) mailInfo.get("receivers"));
         logger.info("user phone : {}", claimVo.getPhone());
         logger.info("user mail : {}", claimVo.getMail());
         List<String> receivers = new ArrayList<String>();
@@ -231,7 +262,7 @@ public class BxczSignController {
         paramMap.put("LoginTime", loginTime);
 
         //發送系統管理員
-        receivers = (List)mailInfo.get("receivers");
+        receivers = (List) mailInfo.get("receivers");
         //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
         //使用新郵件範本
         MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
@@ -323,7 +354,7 @@ public class BxczSignController {
         logger.info("Trans Num : {}", claimVo.getTransNum());
         logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
         logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
-        logger.info("receivers={}", (List)mailInfo.get("receivers"));
+        logger.info("receivers={}", (List) mailInfo.get("receivers"));
         logger.info("user phone : {}", claimVo.getPhone());
         logger.info("user mail : {}", claimVo.getMail());
         List<String> receivers = new ArrayList<String>();
@@ -332,7 +363,7 @@ public class BxczSignController {
         paramMap.put("LoginTime", loginTime);
 
         //發送系統管理員
-        receivers = (List)mailInfo.get("receivers");
+        receivers = (List) mailInfo.get("receivers");
         //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
         //使用新郵件範本
         MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
