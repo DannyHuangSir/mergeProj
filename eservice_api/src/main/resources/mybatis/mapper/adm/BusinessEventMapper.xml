@@ -88,7 +88,7 @@
 	</select>
 
 	<select id="getNextId" resultType="int">
-		SELECT COALESCE(MAX(BUSINESS_EVENT_ID), 0) + 1 AS AMOUNT FROM ESERVICE_ADM.DBO.BUSINESS_EVENT
+		SELECT NEXT VALUE for ESERVICE_ADM.DBO.BUSINESS_EVENT_SEQ;
 	</select>
 		
 	<!-- ========================================= UPDATE ========================================= -->
