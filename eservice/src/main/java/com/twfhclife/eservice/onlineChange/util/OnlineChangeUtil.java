@@ -210,6 +210,10 @@ public interface OnlineChangeUtil {
 	public static final String ELIFE_MAIL_026="ELIFE_MAIL_026";
 	public static final String ELIFE_MAIL_071="ELIFE_MAIL_071";
 	public static final String ELIFE_SMS_071="ELIFE_SMS_071";
+
+	public static final String ELIFE_MAIL_081="ELIFE_MAIL_081";
+	public static final String MEDICAL_MAIL_081="MEDICAL_MAIL_081";
+
 	/**已持有投資標的轉換-備註條款*/
 	public static final String INVESTMENT_TRANSFORMATION_REMARKS="INVESTMENT_TRANSFORMATION_REMARKS";
 	/**已持有投資標的轉換-同意條款*/

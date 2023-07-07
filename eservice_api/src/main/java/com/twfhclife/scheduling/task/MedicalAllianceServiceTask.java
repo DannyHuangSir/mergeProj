@@ -11,7 +11,6 @@ import com.twfhclife.alliance.model.*;
 import com.twfhclife.alliance.service.IClaimChainService;
 import com.twfhclife.alliance.service.IExternalService;
 import com.twfhclife.alliance.service.IMedicalService;
-import com.twfhclife.alliance.service.impl.MedicalServiceImpl;
 import com.twfhclife.alliance.service.impl.MedicalTreatmentExternalServiceImpl;
 import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice.api.adm.model.ParameterVo;
@@ -19,6 +18,7 @@ import com.twfhclife.eservice.api.elife.service.ITransAddService;
 import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.*;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice_api.service.IMessagingTemplateService;
@@ -26,12 +26,7 @@ import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.dao.adm.ParameterDao;
 import com.twfhclife.generic.service.MailService;
 import com.twfhclife.generic.service.SmsService;
-import com.twfhclife.generic.utils.ApConstants;
-import com.twfhclife.generic.utils.CallApiCode;
-import com.twfhclife.generic.utils.EMailTemplate;
-import com.twfhclife.generic.utils.MyJacksonUtil;
-import com.twfhclife.generic.utils.StatuCode;
-
+import com.twfhclife.generic.utils.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -1473,6 +1468,47 @@ public class MedicalAllianceServiceTask {
         }
         
         log.info("-----------End API-411 Task.-----------");
+    }
+
+    @Value("${unProcessed.trans.enable: true}")
+    public boolean unProcessedTransEnable;
+
+    @Scheduled(cron = "${medicalTreatment.unProcessed.trans.expression}")
+    public void notifyUnProcessedTrans() {
+        if (!unProcessedTransEnable) {
+            return;
+        }
+        log.info("-----------Start notifyUnProcessedTrans Task.-----------");
+        try {
+            Float lastSeqId = null;
+            Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo("1");
+            List<String> receivers = (List) mailInfo.get("receivers");
+            while((lastSeqId = doSendNotify(lastSeqId, receivers)) != null);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        log.info("-----------End notifyUnProcessedTrans Task.-----------");
+    }
+
+    private Float doSendNotify(Float lastSeqId, List<String> receivers) {
+        List<TransMedicalTreatmentClaimVo> insuranceClaimVos = iMedicalTreatmentService.getUnProcessedTrans(lastSeqId);
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(insuranceClaimVos)) {
+            for (TransMedicalTreatmentClaimVo claim : insuranceClaimVos) {
+                Map<String, String> paramMap = Maps.newHashMap();
+                paramMap.put("TransNum", claim.getTransNum());
+                MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
+                apiReq.setMessagingTemplateCode(OnlineChangeUtil.MEDICAL_MAIL_081);
+                apiReq.setSendType("email");
+                apiReq.setMessagingReceivers(receivers);
+                apiReq.setParameters(paramMap);
+                apiReq.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+                messagingTemplateService.triggerMessageTemplate(apiReq);
+                lastSeqId = claim.getClaimSeqId();
+            }
+        } else {
+            return null;
+        }
+        return lastSeqId;
     }
     
     /**

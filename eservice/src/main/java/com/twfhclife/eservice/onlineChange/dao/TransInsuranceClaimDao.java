@@ -98,4 +98,6 @@ public interface TransInsuranceClaimDao {
     int getInsuranceClaimWhetherFirst(@Param("policyNo")String policyNo, @Param("functionName")String insuranceClaimParameterCode);
 
 	int updateTransApplyDate(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
+
+    List<TransInsuranceClaimVo> getUnProcessedTrans(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
 }

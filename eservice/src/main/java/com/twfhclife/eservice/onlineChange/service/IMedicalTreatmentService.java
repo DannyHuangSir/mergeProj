@@ -168,4 +168,6 @@ public interface IMedicalTreatmentService {
 	List<Map<String, Object>> autoCheckedCompany(String url, Map<String, String> params) throws Exception;
 
 	int updateTransApplyDate(Float claimSeqId, Date date);
+
+    List<TransMedicalTreatmentClaimVo> getUnProcessedTrans(Float claimSeqId);
 }

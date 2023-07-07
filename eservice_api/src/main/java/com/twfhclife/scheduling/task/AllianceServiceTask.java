@@ -1,23 +1,45 @@
 package com.twfhclife.scheduling.task;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.twfhclife.alliance.model.*;
+import com.twfhclife.alliance.service.IClaimChainService;
+import com.twfhclife.alliance.service.IExternalService;
+import com.twfhclife.alliance.service.impl.AllianceServiceImpl;
+import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
+import com.twfhclife.eservice.api.adm.model.ParameterVo;
+import com.twfhclife.eservice.api.elife.domain.TransAddRequest;
+import com.twfhclife.eservice.api.elife.domain.TransAddResponse;
+import com.twfhclife.eservice.api.elife.service.ITransAddService;
 import com.twfhclife.eservice.auth.dao.BxczDao;
 import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
+import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
+import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
 import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
 import com.twfhclife.eservice.onlineChange.service.IHospitalInsuranceCompanyServcie;
+import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
+import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
+import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.model.HospitalInsuranceCompanyVo;
+import com.twfhclife.eservice_api.service.IMessagingTemplateService;
+import com.twfhclife.eservice_api.service.IParameterService;
+import com.twfhclife.generic.service.MailService;
+import com.twfhclife.generic.service.SmsService;
+import com.twfhclife.generic.utils.ApConstants;
+import com.twfhclife.generic.utils.EMailTemplate;
+import com.twfhclife.generic.utils.MyJacksonUtil;
 import com.twfhclife.generic.utils.StatuCode;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -35,36 +57,11 @@ import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.twfhclife.alliance.service.IClaimChainService;
-import com.twfhclife.alliance.service.IExternalService;
-import com.twfhclife.alliance.service.impl.AllianceServiceImpl;
-import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
-import com.twfhclife.eservice.api.adm.model.ParameterVo;
-import com.twfhclife.eservice.api.elife.domain.TransAddRequest;
-import com.twfhclife.eservice.api.elife.domain.TransAddResponse;
-import com.twfhclife.eservice.api.elife.service.ITransAddService;
-
-import com.twfhclife.eservice_api.service.IMessagingTemplateService;
-
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
-import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
-import com.twfhclife.eservice.onlineChange.service.ITransService;
-import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
-import com.twfhclife.eservice.user.service.ILilipmService;
-import com.twfhclife.eservice_api.service.IParameterService;
-import com.twfhclife.generic.service.MailService;
-import com.twfhclife.generic.service.SmsService;
-import com.twfhclife.generic.utils.ApConstants;
-import com.twfhclife.generic.utils.EMailTemplate;
-import com.twfhclife.generic.utils.MyJacksonUtil;
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class AllianceServiceTask {
@@ -1159,6 +1156,46 @@ public class AllianceServiceTask {
 		log.info("End saveToEserviceTrans.");
 	}
 
+	@Value("${unProcessed.trans.enable: true}")
+	public boolean unProcessedTransEnable;
+
+	@Scheduled(cron = "${policyClaim.unProcessed.trans.expression}")
+	public void notifyUnProcessedTrans() {
+		if (!unProcessedTransEnable) {
+			return;
+		}
+		log.info("-----------Start notifyUnProcessedTrans Task.-----------");
+		try {
+			Float lastSeqId = null;
+			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
+			List<String> receivers = (List) mailInfo.get("receivers");
+			while(doSendNotify(lastSeqId, receivers) != null);
+		} catch (Exception e) {
+			log.error(e);
+		}
+		log.info("-----------End notifyUnProcessedTrans Task.-----------");
+	}
+
+	private Float doSendNotify(Float lastSeqId, List<String> receivers) {
+		List<TransInsuranceClaimVo> insuranceClaimVos = insuranceClaimService.getUnProcessedTrans(lastSeqId);
+		if (CollectionUtils.isNotEmpty(insuranceClaimVos)) {
+			for (TransInsuranceClaimVo claim : insuranceClaimVos) {
+				Map<String, String> paramMap = Maps.newHashMap();
+				paramMap.put("TransNum", claim.getTransNum());
+				MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
+				apiReq.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_MAIL_081);
+				apiReq.setSendType("email");
+				apiReq.setMessagingReceivers(receivers);
+				apiReq.setParameters(paramMap);
+				apiReq.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+				messagingTemplateService.triggerMessageTemplate(apiReq);
+				lastSeqId = claim.getClaimSeqId();
+			}
+		} else {
+			return null;
+		}
+		return lastSeqId;
+	}
 
 
 	/**

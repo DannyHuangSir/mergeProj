@@ -1293,4 +1293,9 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		return transMedicalTreatmentClaimDao.updateTransApplyDate(claimSeqId, date);
 	}
 
+	@Override
+	public List<TransMedicalTreatmentClaimVo> getUnProcessedTrans(Float claimSeqId) {
+		return transMedicalTreatmentClaimDao.getUnProcessedTrans(claimSeqId, new Date());
+	}
+
 }

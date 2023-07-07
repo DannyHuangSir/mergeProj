@@ -1177,4 +1177,9 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 	public int updateTransApplyDate(Float claimSeqId, Date date) {
 		return transInsuranceClaimDao.updateTransApplyDate(claimSeqId, date);
 	}
+
+    @Override
+    public List<TransInsuranceClaimVo> getUnProcessedTrans(Float claimSeqId) {
+        return transInsuranceClaimDao.getUnProcessedTrans(claimSeqId, new Date());
+    }
 }

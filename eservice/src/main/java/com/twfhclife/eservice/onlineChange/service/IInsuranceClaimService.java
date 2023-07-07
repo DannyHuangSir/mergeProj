@@ -134,4 +134,5 @@ public interface IInsuranceClaimService {
 	List<Map<String, Object>> autoCheckedCompany(String url, Map<String, String> params) throws Exception;
 
 	int updateTransApplyDate(Float claimSeqId, Date date);
+	List<TransInsuranceClaimVo> getUnProcessedTrans(Float claimSeqId);
 }
