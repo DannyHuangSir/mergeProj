@@ -430,6 +430,10 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		if (StringUtils.equals(transMedicalTreatmentClaimVo.getSignAgree(), "Y")) {
 			status = OnlineChangeUtil.TRANS_STATUS_WAIT_SIGN;
 		}
+
+		if (StringUtils.equals(status, OnlineChangeUtil.TRANS_STATUS_APPLYING)) {
+			transMedicalTreatmentClaimVo.setApplyDate(new Date());
+		}
 		
 		int result = 0;
 		try {

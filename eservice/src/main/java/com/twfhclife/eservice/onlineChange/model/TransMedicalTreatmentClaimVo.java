@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean {
@@ -304,6 +305,17 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	private List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfo = Lists.newArrayList();
 
 	private String medicalInfoList;
+
+	private Date applyDate;
+
+	public Date getApplyDate() {
+		return applyDate;
+	}
+
+	public void setApplyDate(Date applyDate) {
+		this.applyDate = applyDate;
+	}
+
 
 	public String getToSubHospitalId() {
 		return toSubHospitalId;
