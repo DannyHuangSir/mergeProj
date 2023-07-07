@@ -185,15 +185,10 @@
 	<!--  -->
 	<select id="getInsuredUsersByRocId" resultType="java.lang.Integer" parameterType="java.lang.String">
 	 SELECT COUNT(TAB_ROC.ROC_ID) FROM (
-						 SELECT 
-							 LIPM_ID AS ROC_ID
-						  FROM ESERVICE.DBO.LILIPM WHERE LIPM_ID is not null and LIPM_ID != ''
-						  UNION all 
-						  SELECT 
-							   LIPI_ID AS ROC_ID
-						  FROM ESERVICE.DBO.LILIPI WHERE LIPI_ID is not null and LIPI_ID != ''
-					) TAB_ROC
-		    WHERE TAB_ROC.ROC_ID =  #{rocId}
+		SELECT DISTINCT LIPI_INSU_TYPE + CONVERT(VARCHAR,LIPI_INSU_GRP_NO) + LIPI_INSU_SEQ_NO AS LIPI_INSU_NO , LIPI_ID , LIPI_INSU_TYPE FROM LILIPI WHERE LIPI_ID = #{rocId}
+		UNION
+		SELECT DISTINCT LIPF_INSU_TYPE + CONVERT(VARCHAR,LIPF_INSU_GRP_NO) + LIPF_INSU_SEQ_NO AS LIPF_INSU_NO , LIPF_ID , LIPF_ADD_CODE FROM LILIPF_ES WHERE LIPF_ID = #{rocId}
+		) TAB_ROC
 	</select>
 
 </mapper>
