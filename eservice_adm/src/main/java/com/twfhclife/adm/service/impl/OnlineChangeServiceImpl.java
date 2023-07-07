@@ -1810,4 +1810,14 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
     public List<BxczSignApiLog> getSignHistoryList(BxczSignApiLog vo) {
         return onlineChangeDao.getSignApiRecordByTransNum(vo.getTransNum());
     }
+
+    @Override
+    public int updatePolicyClaimApplyDate(String transNum) {
+        return onlineChangeDao.updatePolicyClaimApplyDate(transNum, new Date());
+    }
+
+	@Override
+	public int updateMedicalTreatmentApplyDate(String transNum) {
+		return onlineChangeDao.updateMedicalTreatmentApplyDate(transNum, new Date());
+	}
 }

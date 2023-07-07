@@ -2136,13 +2136,25 @@
 				
 			}
 			// 詳細資料列印
-			function onDetail(TRANS_NUM){
+			function onDetail(TRANS_NUM, type){
 				$('#modal-container-print-detail').modal({
 					show: true,
 					backdrop: 'static', 
 					keyboard: false
 				});
 				$('#print_detail').html($('#'+TRANS_NUM).html());
+				let url = ''
+				if (type == 'claim') {
+					url = /*[[@{/onlineChange/updatePolicyClaimTransApplyDate}]]*/
+				} else {
+					url = /*[[@{/onlineChange/updateMedicalTransApplyDate}]]*/
+				}
+				$.ajax({
+					type : 'POST',
+					contentType : 'application/json',
+					url : url,
+					data : JSON.stringify({transNum: TRANS_NUM})
+				});
 			}
 
 //******************************************醫療保單聯絡資料****************************************//

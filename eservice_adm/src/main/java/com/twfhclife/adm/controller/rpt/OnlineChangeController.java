@@ -2383,8 +2383,29 @@ public class OnlineChangeController extends BaseController {
 		} catch (Exception e) {
 			logger.error("Unable to get data from downloadPolicyClaimPDF: {}", ExceptionUtils.getStackTrace(e));
 		}
-
 		return new HttpEntity<byte[]>(document, header);
+	}
+
+	@RequestLog
+	@PostMapping(value = "/onlineChange/updatePolicyClaimTransApplyDate")
+	@ResponseBody
+	public void updatePolicyClaimTransApplyDate(@RequestBody TransVo vo) {
+		try {
+			onlineChangeService.updatePolicyClaimApplyDate(vo.getTransNum());
+		} catch (Exception e) {
+			logger.error("Unable to updatePolicyClaimTransApplyDate: {}", ExceptionUtils.getStackTrace(e));
+		}
+	}
+
+	@RequestLog
+	@PostMapping(value = "/onlineChange/updateMedicalTransApplyDate")
+	@ResponseBody
+	public void updateMedicalTransApplyDate(@RequestBody TransVo vo) {
+		try {
+			onlineChangeService.updateMedicalTreatmentApplyDate(vo.getTransNum());
+		} catch (Exception e) {
+			logger.error("Unable to updateMedicalTransApplyDate: {}", ExceptionUtils.getStackTrace(e));
+		}
 	}
 
 }

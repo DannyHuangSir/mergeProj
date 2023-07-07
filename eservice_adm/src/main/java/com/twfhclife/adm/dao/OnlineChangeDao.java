@@ -1,6 +1,7 @@
 package com.twfhclife.adm.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -680,4 +681,8 @@ public interface OnlineChangeDao {
     String getSignFileByFileId(@Param("signFileId") String signFileId);
 
 	List<BxczSignApiLog> getSignApiRecordByTransNum(@Param("transNum") String transNum);
+
+    int updatePolicyClaimApplyDate(@Param("transNum") String transNum, @Param("date") Date date);
+
+	int updateMedicalTreatmentApplyDate(@Param("transNum") String transNum, @Param("date") Date date);
 }

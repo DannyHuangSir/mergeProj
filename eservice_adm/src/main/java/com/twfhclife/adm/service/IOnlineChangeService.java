@@ -537,4 +537,8 @@ public interface IOnlineChangeService {
     byte[] getSignPdf(String signFileId);
 
 	List<BxczSignApiLog> getSignHistoryList(BxczSignApiLog vo);
+
+	int updatePolicyClaimApplyDate(String transNum);
+
+	int updateMedicalTreatmentApplyDate(String transNum);
 }
