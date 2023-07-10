@@ -51,6 +51,7 @@
 		<result property="accountName" column="ACCOUNTNAME" />
 		<result property="callPolice" column="CALLPOLICE" />
 		<result property="signAgree" column="SIGN_AGREE" />
+		<result property="diagnosisDate" column="DIAGNOSISDATE" />
 		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
 	</resultMap>
 	
@@ -60,6 +61,7 @@
 		<result property="fileName"    column="FILE_NAME" />
 		<result property="filePath"  column="PATH" />
 		<result property="fileBase64"  column="FILE_BASE64" />
+		<result property="fdId"  column="FD_ID" />
 	</resultMap>
 	
 	<sql id="Base_Column_List">
@@ -100,7 +102,7 @@
 			RELATION,
 		ESERVICE.DBO.FN_DEBASE64(TEL) TEL,
 			DISEASENAME,HOSPITAL,OTHERCOMPANYINSURED,OTHERINSUCOMMPANY,OTHERINSUTYPE,OTHERINSUAMOUNT,
-			OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE, SIGN_AGREE
+			OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE, SIGN_AGREE, DIAGNOSISDATE
 		from ESERVICE.DBO.TRANS_INSURANCE_CLAIM
 		where TRANS_NUM = #{transNum}
 		order by CREATE_DATE desc
@@ -122,7 +124,7 @@
 		INSERT INTO 
        		ESERVICE.DBO.TRANS_INSURANCE_CLAIM
        		(
-       		<include refid="Base_Column_List" /> ,SIGN_AGREE
+       		<include refid="Base_Column_List" /> ,SIGN_AGREE, DIAGNOSISDATE
 			<if test="vo.applyDate != null">
 				,APPLY_DATE
 			</if>
@@ -183,7 +185,8 @@
        			#{vo.otherInsuClaim, jdbcType=VARCHAR},
        			#{vo.accountName, jdbcType=VARCHAR},
        			#{vo.callPolice, jdbcType=VARCHAR},
-       			#{vo.signAgree, jdbcType=VARCHAR}
+       			#{vo.signAgree, jdbcType=VARCHAR},
+       			#{vo.diagnosisDate}
 				<if test="vo.applyDate != null">
 					,#{vo.applyDate}
 				</if>

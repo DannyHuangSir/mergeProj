@@ -629,19 +629,6 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 			}
 
 			List<TransInsuranceClaimFileDataVo> transInsuranceClaimFileDataVoList = transInsuranceClaimDao.getFileDatasByClaimSeqId(transInsuranceClaimVo.getClaimSeqId());
-        /*	for (TransInsuranceClaimFileDataVo fileDataVo : transInsuranceClaimFileDataVoList) {
-				String filePath = fileDataVo.getFilePath()+File.separator+fileDataVo.getFileName();
-				fileDataVo.setFileBase64(this.converFileToBase64Str(filePath));
-				String substring = filePath.substring(filePath.lastIndexOf("."), filePath.length());
-				//对PDF文件进行处理
-				if(".pdf".equals(substring) || ".PDF".equals(substring)){
-					String  letName=filePath.substring(0,filePath.lastIndexOf("."))+".png";
-					fileDataVo.setFileOrPng(letName);
-				}else{
-					fileDataVo.setFileOrPng(filePath);
-				}
-
-			}*/
 			if (transInsuranceClaimFileDataVoList != null && transInsuranceClaimFileDataVoList.size() > 0) {
 				List<TransInsuranceClaimFileDataVo> transInsuranceClaimFileDataVos =
 						this.transInsuranceClaimFileDataVoListBase64ToMiniature(transInsuranceClaimFileDataVoList);
@@ -955,6 +942,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 						if ("png".equals(base64Type) || "jpg".equals(base64Type)) {
 							String miniatureBase64 = this.imgBase64(input, baos);
 							x.setFileBase64(miniatureBase64);
+							x.setOriginFileBase64(fileBase64);
 						} else {
 							PDDocument doc = PDDocument.load(input);
 							String miniatureBase64 = this.imgBase64(doc, baos);
@@ -978,6 +966,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				if (file.exists()) {
 					String fileToBase64 = this.converFiestFileToBase64Str(filePath);
 					x.setFileBase64(fileToBase64);
+					x.setOriginFileBase64(fileBase64);
 				}
 			}
 			return x;

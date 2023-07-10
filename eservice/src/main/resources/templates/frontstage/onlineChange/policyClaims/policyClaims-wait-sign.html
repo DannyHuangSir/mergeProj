@@ -62,21 +62,26 @@
 						</div>
 					</th:block>
 			</div>
+		</div>
 			<th:block th:if="${msg != null}">
 				<div class="mystyle3">
-					<div class="col-md-12 two-buttons">
+					<div class="col-md-12 three-buttons">
 						<a href="apply1">
-							<button style="margin-left: 0px;" id="deny" class="btn-signup">回線上申請首頁
+							<button style="margin-left: 0px;" class="btn-signup">回線上申請首頁
 							</button>
 						</a>
 						<a href="apply2">
-							<button style="margin-left: 0px;" id="deny" class="btn-signup">看我的申請紀錄
+							<button style="margin-left: 0px;" class="btn-signup">看我的申請紀錄
 							</button>
 						</a>
+						<th:block th:if="${signFail != null && signFail}">
+							<a href="#">
+								<button style="margin-left: 0px; background:#CC7A00;" class="btn-signup" th:onclick="'backToStep3(\'' + ${signTransNum} + '\')'">返回步驟三填寫申請資料</button>
+							</a>
+						</th:block>
 					</div>
 				</div>
 			</th:block>
-		</div>
 		</div>
 	</section>
 	<form id="signStatusForm" method="post" action="getNewSignStatus" hidden="hidden">
@@ -122,6 +127,15 @@
 		function getNewSignStatus() {
 			$("#opened").val(opened)
 			$("#signStatusForm").submit()
+		}
+
+		function backToStep3(transNum) {
+			var policyForm = $('<form>');
+			$(policyForm).attr("action", 'policyClaimBackToStep3');
+			$(policyForm).attr("method", "POST");
+			$(policyForm).append($('<input>').attr('type', 'hidden').attr('name', 'transNum').val(transNum));
+			policyForm.appendTo(document.body)
+			$(policyForm).submit();
 		}
 	/*]]>*/
 	</script>

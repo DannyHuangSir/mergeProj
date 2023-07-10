@@ -39,6 +39,8 @@
 					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_COMPLETE"/>
 					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_CANCEL"/>
 					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_FAIL"/>
+					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_FAIL_VERIFY"/>
+					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_FAIL_SIGN"/>
 					<if test="'CONTACT_INFO' == transType ">
 					AND STATUS != <include refid="ApConstantsMapper.TRANS_STATUS_ABNORMAL"/>
 					</if>

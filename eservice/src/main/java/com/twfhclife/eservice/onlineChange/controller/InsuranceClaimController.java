@@ -674,5 +674,13 @@ public class InsuranceClaimController extends BaseUserDataController {
 		}
 		return processResponseEntity();
 	}
+
+	@PostMapping("policyClaimBackToStep3")
+	@RequestLog
+	public String policyClaimBackToStep3(String transNum) {
+		TransInsuranceClaimVo vo = insuranceClaimService.getTransInsuranceClaimDetail(transNum);
+		vo.setTransNum(null);
+		return policyClaims3(vo);
+	}
 	
 }

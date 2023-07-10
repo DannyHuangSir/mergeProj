@@ -289,7 +289,7 @@ public class TransServiceImpl implements ITransService {
 
     @Override
     public int updateTransStatus(String transNum, String status) {
-        return transDao.updateTransStatus(transNum, status);
+        return transDao.updateSignTransStatus(transNum, status);
     }
 
     @Override

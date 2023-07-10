@@ -31,6 +31,15 @@ public class TransInsuranceClaimFileDataVo implements Serializable {
 	private Float rfeId;
 	
 	private String fileBase64;
+	private String originFileBase64;
+
+	public String getOriginFileBase64() {
+		return originFileBase64;
+	}
+
+	public void setOriginFileBase64(String originFileBase64) {
+		this.originFileBase64 = originFileBase64;
+	}
 
 	public String getFileId() {
 		return fileId;

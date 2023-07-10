@@ -64,7 +64,7 @@
 									<th:block th:if="${session.APPLICATION_ITEMS != null}">
 										<th:block th:each="vo : ${session.APPLICATION_ITEMS}">
 											<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
-												<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" th:value="${vo.value.parameterValue}"></i></div>
+												<div class="check-box"><i class=""><input th:attr="checked=${claimVo != null and claimVo.applyItem != null and #strings.containsIgnoreCase(claimVo.applyItem, vo.value.parameterValue)  ? true : false}" type="checkbox" name="applyItemList" th:value="${vo.value.parameterValue}"></i></div>
 												<label th:inline="text">
 													[[${vo.value.parameterName}]]
 												</label>
@@ -72,7 +72,6 @@
 										</th:block>
 									</th:block>
 									<input type="hidden" id="itemOther" name="itemOther" th:value="${claimVo.itemOther}" class="item100" style="padding: 6px 12px;line-height: 1em;" >
-								 
 								</div>
 								<input type="hidden" name="applyItem">
 								<div class="clearfix"></div>
@@ -125,17 +124,17 @@
 								<div class="clearfix"></div>
 								<label class="col-sm-3">聯絡電話：</label>
 								<div class="col-sm-9">
-									<input type="text" name="tel" id="tel" class="col-sm-9" maxlength="15" style="padding: 6px 12px;line-height: 1em;" >
+									<input type="text" th:value="${claimVo.tel}" name="tel" id="tel" class="col-sm-9" maxlength="15" style="padding: 6px 12px;line-height: 1em;" >
 								</div>
 								<div class="clearfix"></div>
 								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>行動電話：</label>
 								<div class="col-sm-9">
-									<input type="number" name="phone" id="phone" class="col-sm-9" data-validation="required|mobile" maxlength="15" style="padding: 6px 12px;line-height: 1em; ime-mode: disabled;" >
+									<input type="number" name="phone" th:value="${claimVo.phone}" id="phone" class="col-sm-9" data-validation="required|mobile" maxlength="15" style="padding: 6px 12px;line-height: 1em; ime-mode: disabled;" >
 								</div>
 								<div class="clearfix"></div>
 								<label class="col-sm-3">E-MAIL：</label>
 								<div class="col-sm-9">
-									<input type="text" name="mail" class="col-sm-9" placeholder="範例：test@gmail.com" data-validation="mail" style="padding: 6px 12px;line-height: 1em;" >
+									<input type="text" name="mail" th:value="${claimVo.mail}" class="col-sm-9" placeholder="範例：test@gmail.com" data-validation="mail" style="padding: 6px 12px;line-height: 1em;" >
 								</div>
 								<span class="col-sm-10" style="color: red;">(申請完成將以電子郵件通知，若未填寫則系統不會發送通知)</span>
 								<div class="clearfix"></div>
@@ -150,7 +149,7 @@
 										<th:block th:each="vo : ${session.RELATION_ITEMS}">
 											<div class="radio inline">
 												<label class="c_relation">
-													<div class="radio-btn"><i><input type="radio" name="relation" th:value="${vo.value.parameterValue}"></i></div>
+													<div class="radio-btn"><i><input type="radio" th:attr="checked=${claimVo != null and claimVo.relation != null and #strings.equals(claimVo.relation, vo.value.parameterValue)  ? 'checked' : false}" name="relation" th:value="${vo.value.parameterValue}"></i></div>
 													<th:block th:if="${vo.value.parameterName == null || vo.value.parameterName == ''}">
 														<label th:if="${vo.value.parameterCode == 'WORDING_POLICYCLAIM_010'}">本人</label>
 														<label th:if="${vo.value.parameterCode == 'WORDING_POLICYCLAIM_011'}">父母</label>
@@ -162,7 +161,6 @@
 															[[${vo.value.parameterName}]]
 														</label>
 													</th:block>
-													
 												</label>
 											</div>
 										</th:block>
@@ -174,12 +172,12 @@
 								<div class="col-sm-6">
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="Y" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>有
+											<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.otherCompanyInsured, 'Y')  ? 'checked' : false}" name="otherCompanyInsured" value="Y" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>有
 										</label>
 									</div>
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="N" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div>沒有
+											<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.otherCompanyInsured, 'N')  ? 'checked' : false}" name="otherCompanyInsured" value="N" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div>沒有
 										</label>
 									</div>
 								</div>
@@ -208,12 +206,12 @@
 														<div class="col-sm-9">
 															<div class="radio inline">
 																<label>
-																	<div class="radio-btn"><i><input type="radio" name="otherInsuClaim" value="Y"></i></div>是　
+																	<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.otherInsuClaim, 'Y')  ? 'checked' : false}" type="radio" name="otherInsuClaim" value="Y"></i></div>是　
 																</label>
 															</div>
 															<div class="radio inline">
 																<label>
-																	<div class="radio-btn"><i><input type="radio" name="otherInsuClaim" value="N"></i></div>否
+																	<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.otherInsuClaim, 'N')  ? 'checked' : false}"  type="radio" name="otherInsuClaim" value="N"></i></div>否
 																</label>
 															</div>
 														</div>
@@ -243,10 +241,10 @@
 											<div class="radio inline">
 												<label>
 													<th:block th:if="${vo.value.parameterCode == 'INS_ACCIDENT_01'}">
-														<div class="radio-btn"><i><input type="radio" name="accidentCause" th:value="${vo.value.parameterValue}" checked="checked" onclick="if(this.checked) $('#tab2_2').show().siblings().hide();"></i></div>
+														<div class="radio-btn"><i><input type="radio" name="accidentCause" th:value="${vo.value.parameterValue}" th:attr="checked=${#strings.equals(claimVo.accidentCause, vo.value.parameterValue)  ? 'checked' : false}" onclick="if(this.checked) $('#tab2_2').show().siblings().hide();"></i></div>
 													</th:block>
 													<th:block th:if="${vo.value.parameterCode == 'INS_ACCIDENT_02'}">
-														<div class="radio-btn"><i><input type="radio" name="accidentCause" th:value="${vo.value.parameterValue}" onclick="if(this.checked) $('#tab2_1').show().siblings().hide();"></i></div>
+														<div class="radio-btn"><i><input type="radio" name="accidentCause" th:value="${vo.value.parameterValue}" th:attr="checked=${#strings.equals(claimVo.accidentCause, vo.value.parameterValue)  ? 'checked' : false}" onclick="if(this.checked) $('#tab2_1').show().siblings().hide();"></i></div>
 													</th:block>
 													<th:block th:if="${vo.value.parameterName != null}">
 														<label th:inline="text">[[${vo.value.parameterName}]]</label>
@@ -276,9 +274,9 @@
 													<div class="check-list2 grey2">
 														<label for="" class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>發生時間</label>
 														<div class="col-sm-8" >
-															<input type="text" name="accidentDate" id="accidentDate" data-validation="date" class="col-sm-4" placeholder="輸入年月日" readonly>
+															<input type="text" name="accidentDate" id="accidentDate" th:value="${claimVo.accidentDate}" data-validation="date" class="col-sm-4" placeholder="輸入年月日" readonly>
 															<span class="col-sm-1"></span>
-															<input type="text" name="accidentTime" id="accidentTime" data-validation="time" class="col-sm-4" maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
+															<input type="text" name="accidentTime" id="accidentTime" th:value="${(claimVo != null and claimVo.accidentTime != null and claimVo.accidentTime != '') ? (#strings.substring(claimVo.accidentTime, 0, 2) + ':' + #strings.substring(claimVo.accidentTime, 2, 4)) : ''}" data-validation="time" class="col-sm-4" maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
 														</div>
 													</div>
 													<div class="check-list2 grey2">
@@ -288,7 +286,7 @@
 													<div class="check-list2 grey2">
 														<label for="" class="col-sm-3">事故原因及送醫經過詳情（請述明就診醫院名稱）</label>
 														<div class="col-sm-8">
-															<textarea class="col-sm-9" name="accidentDescr" th:value="${claimVo.accidentDescr}" ></textarea>
+															<textarea class="col-sm-9" name="accidentDescr" th:text="${claimVo.accidentDescr}"></textarea>
 														</div>
 													</div>
 													<div class="check-list2 grey2">
@@ -296,12 +294,12 @@
 														<div class="col-sm-9">
 															<div class="radio inline">
 																<label>
-																	<div class="radio-btn"><i><input type="radio" name="callPolice" value="Y"></i></div>是　
+																	<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.callPolice, 'Y')  ? 'checked' : false}" type="radio" name="callPolice" value="Y"></i></div>是　
 																</label>
 															</div>
 															<div class="radio inline">
 																<label>
-																	<div class="radio-btn"><i><input type="radio" name="callPolice" value="N"></i></div>否
+																	<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.callPolice, 'N')  ? 'checked' : false}" type="radio" name="callPolice" value="N"></i></div>否
 																</label>
 															</div>
 														</div>
@@ -321,9 +319,9 @@
 													<div class="check-list2 grey2">
 														<label for="" class="col-sm-3">報警時間</label>
 														<div class="col-sm-8">
-															<input type="text" class="col-sm-4" name="policeDate" id="policeDate"  placeholder="輸入年月日" readonly>
+															<input type="text" class="col-sm-4" th:value="${claimVo.policeDate}" name="policeDate" id="policeDate"  placeholder="輸入年月日" readonly>
 															<span class="col-sm-1"></span>
-															<input type="text" class="col-sm-4" name="policeTime" id="policeTime" data-validation="time"  maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
+															<input type="text" class="col-sm-4" th:value="${(claimVo != null and claimVo.policeTime != null and claimVo.policeTime != '') ? (#strings.substring(claimVo.policeTime, 0, 2) + ':' + #strings.substring(claimVo.policeTime, 2, 4)) : ''}" name="policeTime" id="policeTime" data-validation="time"  maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
 														</div>
 													</div>
 												</div>
@@ -373,12 +371,12 @@
 								<div class="col-sm-9">
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_2').show().siblings().hide();"></i></div>同意
+											<div class="radio-btn" ><i><input th:attr="checked=${#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_2').show().siblings().hide();"></i></div>同意
 										</label>
 									</div>
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_1').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
+											<div class="radio-btn"><i><input th:attr="checked=${!#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_1').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
 										</label>
 									</div>
 								</div>
@@ -400,7 +398,9 @@
 															<div class="col-sm-9">
 																<th:block th:each="vo : ${hospitalInsuranceCompanyList}">
 																	<div class="checkbox col-sm-4" style="text-align: left;line-height: 1.7em; cursor: pointer">
-																		<div class="check-box" th:id="'toItem_' + ${vo.insuranceId}"><i class=""><input type="checkbox" name="toItem"  th:value="${vo.insuranceId}"></i></div>
+																		<div class="check-box" th:id="'toItem_' + ${vo.insuranceId}"><i class=""><input
+																				th:attr="checked=${claimVo != null and claimVo.to != null and #strings.containsIgnoreCase(claimVo.to, vo.insuranceId)  ? true : false}"
+																				type="checkbox" name="toItem"  th:value="${vo.insuranceId}"></i></div>
 																		<th:block th:if="${vo.insuranceName != null}">
 																			<label style="display: inline;" th:inline="text">[[${vo.insuranceName}]]</label>
 																		</th:block>
@@ -426,12 +426,12 @@
 							<div class="col-sm-9">
 								<div class="radio inline">
 									<label>
-										<div class="radio-btn" id="confirmSign"><i><input type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
+										<div class="radio-btn" th:classappend="${#strings.equals(claimVo.signAgree, 'Y')} ? 'checkedRadio'" id="confirmSign"><i><input th:attr="checked=${#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
 									</label>
 								</div>
 								<div class="radio inline">
 									<label>
-										<div class="radio-btn" id="cancelSign"><i><input checked type="radio" name="signAgree" onclick="confirmSignAgree('N')" value="N" ></i></div>不同意
+										<div class="radio-btn" th:classappend="${!#strings.equals(claimVo.signAgree, 'Y')} ? 'checkedRadio'" id="cancelSign"><i><input th:attr="checked=${!#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="confirmSignAgree('N')" value="N" ></i></div>不同意
 									</label>
 								</div>
 							</div>
@@ -668,51 +668,93 @@
 		/*<![CDATA[*/
 		var uploadFiles = /*[[${session.INSURANCE_CLAIM_UPLOADFILE}]]*/;
 		var uploadMaxNumber = /*[[${uploadMaxNumber}]]*/;
-		if (uploadFiles != undefined && uploadFiles != null) {
-			$.each(uploadFiles,function(key,value){
-				$("#"+value.remark).fileinput({
-					language: "zh",
-					showUpload : false,
-					showRemove : false,
-					uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
-					showCaption: false,
-					showPreview: true,
-					dropZoneEnabled: true,//是否显示拖拽区域
-					browseClass: "btn btn-primary btn-lg",
-					uploadUrl: "/eservice/upLoadFiles",
-					maxFileSize : uploadMaxNumber,
-					maxFileCount: 10,
-					enctype: 'multipart/form-data',
-					allowedFileExtensions : ["jpg", "png","pdf"],
-					showBrowse: true,
-					fileType:"any",
-					browseOnZoneClick: true,
-					showUpload: false,
-				}).on("filebatchselected", function(event, files) {
-					$(this).fileinput("upload");
-
-				}).on('filebatchuploaderror', function(event, data) {
-					openAlert("上傳有誤，請重新上傳！");
-				}).on("filebatchuploadsuccess", function (event, data, previewId, index) {
-							var  fileData = data.response;
-							for(var i=0 ; i < fileData.length ; i++ ){
-								if(fileData[i]!=null && fileData[i].filePath!=null && fileData[i].filePath!=""  ){
-									var con  = {};
-									con['claimSeqId'] = 0;
-									con['type']= key;
-									con['fileOrPng'] = fileData[i].fileOrPng;
-									con['fileName'] = fileData[i].fileName;
-									con['filePath'] = fileData[i].filePath;
-									con['fileBase64'] = fileData[i].fileBase64;
-									cons = JSON.parse($("#"+key).val())
-									cons.push(con)
-									$("#"+key).val(JSON.stringify(cons));
-								}
-							}
-						});
-				});
-		}
 		$(function(){
+			var claimVo = [[${claimVo}]]
+			var fileMap = {}
+			var previewMap = {}
+			var fileDataMap = {}
+			if (claimVo.fileDatas != null) {
+				$(claimVo.fileDatas).each(function(index, item){
+					if (fileMap[item.type] == undefined) {
+						fileMap[item.type] = []
+						previewMap[item.type] = []
+						fileDataMap[item.type] = []
+					}
+					fileMap[item.type].push('<img src="data:image/png;base64,'+ item.originFileBase64 +'" class="kv-preview-data file-preview-image" style="width:auto;height:160px;">')
+					previewMap[item.type].push(previewConfig(item))
+					var con  = {};
+						con['claimSeqId'] = 0;
+						con['fileOrPng'] = item.fileOrPng;
+						con['fileName'] = item.fileName;
+						con['filePath'] = item.filePath;
+						con['fileBase64'] = item.fileBase64;
+					fileDataMap[item.type].push(con)
+				})
+			}
+
+			$.each(fileDataMap, function(key, value) {
+				$("#" + key).val(JSON.stringify(value))
+			})
+
+			if (uploadFiles != undefined && uploadFiles != null) {
+				$.each(uploadFiles,function(key,value){
+					$("#"+value.remark).fileinput({
+						language: "zh",
+						showUpload : false,
+						showRemove : false,
+						uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+						showCaption: false,
+						showPreview: true,
+						dropZoneEnabled: true,//是否显示拖拽区域
+						browseClass: "btn btn-primary btn-lg",
+						uploadUrl: "/eservice/upLoadFiles",
+						maxFileSize : uploadMaxNumber,
+						maxFileCount: 10,
+						enctype: 'multipart/form-data',
+						allowedFileExtensions : ["jpg", "png","pdf"],
+						showBrowse: true,
+						fileType:"any",
+						browseOnZoneClick: true,
+						showUpload: false,
+						overwriteInitial: false,
+						initialPreview: fileMap[key],
+						initialPreviewConfig: previewMap[key],
+					}).on("filebatchselected", function(event, files) {
+						$(this).fileinput("upload");
+					}).on('filebatchuploaderror', function(event, data) {
+						openAlert("上傳有誤，請重新上傳！");
+					}).on("filebatchuploadsuccess", function (event, data, previewId, index) {
+								var  fileData = data.response;
+								for(var i=0 ; i < fileData.length ; i++ ){
+									if(fileData[i]!=null && fileData[i].filePath!=null && fileData[i].filePath!=""  ){
+										var con  = {};
+										con['claimSeqId'] = 0;
+										con['type']= key;
+										con['fileOrPng'] = fileData[i].fileOrPng;
+										con['fileName'] = fileData[i].fileName;
+										con['filePath'] = fileData[i].filePath;
+										con['fileBase64'] = fileData[i].fileBase64;
+										cons = JSON.parse($("#"+key).val())
+										cons.push(con)
+										$("#"+key).val(JSON.stringify(cons));
+									}
+								}
+							});
+					$("#"+value.remark).fileinput('_initFileActions');//这行代码就是调用绑定删除事件的
+					});
+			}
+			if (claimVo.sendAlliance == 'Y') {
+				$('#tab3_2').show().siblings().hide()
+			}
+			if (claimVo.otherCompanyInsured == 'Y') {
+				$('#tab_2').show().siblings().hide()
+			}
+			if (claimVo.accidentCause == '1') {
+				$('#tab2_2').show().siblings().hide();
+			} else if (claimVo.accidentCause == '2') {
+				$('#tab2_1').show().siblings().hide();
+			}
+
 			$('#birdate').datepicker({//日期控件
 				changeMonth : true,
 				changeYear : true,
@@ -725,7 +767,7 @@
 				changeYear : true,
 				maxDate : new Date(),
 				yearRange: 'c-80:c+80',
-				dateFormat : 'yy/mm/dd'
+				dateFormat : 'yymmdd'
 			});
 			$('#diagnosisDate').datepicker({//日期控件
 				changeMonth : true,
@@ -739,7 +781,7 @@
 				changeYear : true,
 				maxDate : new Date(),
 				yearRange: 'c-80:c+80',
-				dateFormat : 'yy/mm/dd'
+				dateFormat : 'yymmdd'
 			});
 			$("#bankOpt").chosen({
 				allow_single_deselect:true,
@@ -753,11 +795,32 @@
 			var bankUrl = /*[[@{/getBankList}]]*/;
 			var branchesUrl = /*[[@{/getBranchesList}]]*/;
 			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+
+			$("#bankOpt").children().each(function(){
+				if ($(this).val() == claimVo.bankCode) {
+					eserviceOption.updateBranch('#brancheOpt', branchesUrl, $(this).val());
+					$(this).attr('selected', true);
+					$('#bankCode').val($(this).val());
+					$('#bankName').val($(this).text());
+					$("#bankOpt").trigger("chosen:updated");
+				}
+			})
+
+			$("#brancheOpt").children().each(function(){
+				if ($(this).val() == claimVo.branchCode) {
+					$(this).attr('selected', true);
+					$('#branchCode').val($(this).val());
+					$('#branchName').val($(this).text());
+					$("#brancheOpt").trigger("chosen:updated");
+				}
+			})
+
 			// 取得名稱
 			$('#bankOpt').change(function() {
 				$('#bankCode').val($('#bankOpt option:selected').val());
 				$('#bankName').val($('#bankOpt option:selected').html());
 			});
+
 			$('#brancheOpt').change(function() {
 				if ($('#brancheOpt').val() != '') {
 					$('#branchCode').val($('#brancheOpt option:selected').val());
@@ -767,6 +830,7 @@
 					$('#branchName').val('');
 				}
 			});
+
 
 			$('div.mystyle3').validation();
 	        //选择项目applyItemList
@@ -1019,6 +1083,13 @@
 				});
 			}
 			$("#confirmAutoCheckedCompany").modal('hide')
+		}
+
+		function previewConfig(file) {
+			if(file != null && file != ''){
+				var type = file.fileOrPng.substr(file.fileOrPng.lastIndexOf('.') + 1);
+				return {type: type, url: '', previewAsData: false, caption: file.fileName, key: file.fdId, size: (file.originFileBase64.length * 0.75)};
+			}
 		}
 	</script>
 

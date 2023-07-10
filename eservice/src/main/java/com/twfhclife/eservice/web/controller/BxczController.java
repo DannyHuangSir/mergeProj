@@ -92,14 +92,16 @@ public class BxczController extends BaseController {
             } else {
                 SignRecord signRecord = bxczSignService.getNewSignStatus(bxczState.getTransNum());
                 if (signRecord != null) {
-                    String msg = SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), signRecord.getSignStatus());
-                    addAttribute("msg", msg);
                     if (StringUtils.equals(signRecord.getSignStatus(), "SIGN_U_S")) {
                         if (StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM)) {
                             return "frontstage/onlineChange/policyClaims/policyClaims-success";
                         } else {
                             return "frontstage/onlineChange/medicalTreatment/policyClaims-success";
                         }
+                    } else {
+                        String msg = SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), signRecord.getSignStatus());
+                        addAttribute("msg", msg);
+                        addAttribute("signFail", true);
                     }
                 }
             }

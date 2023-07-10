@@ -118,7 +118,11 @@
 	
 	<!-- 線上申請-異常件狀態-->
 	<sql id="TRANS_STATUS_ABNORMAL">'7'</sql>
-	
+
+	<sql id="TRANS_STATUS_FAIL_VERIFY">'43'</sql>
+
+	<sql id="TRANS_STATUS_FAIL_SIGN">'44'</sql>
+
 	<!-- 線上申請-銀行名稱-->
 	<sql id="BANK_NAME_PARAMETER_CATEGORY_CODE">'BANK_NAME'</sql>
 	

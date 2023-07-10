@@ -82,7 +82,8 @@ var eserviceOption = function() {
 		$target.html('');
 		$.ajax({
 			url : url,
-			type : "POST"
+			type : "POST",
+			async: false,
 		}).done(function(data) {
 			//console.log(data);
 			if (data.result == 'SUCCESS') {
@@ -242,6 +243,10 @@ var eserviceOption = function() {
 		},
 		jobSelected : function(cityTargetId, cityUrl, selectedCity, regionTargetId, regionUrl, selectedRegion) {
 			jobSelectedOptions($(cityTargetId), cityUrl, selectedCity, $(regionTargetId), regionUrl, selectedRegion);
-		}
+		},
+		updateBranch : function(branches, branchesUrl, bankVal) {
+            emptyOptions($(branches), '請選擇');
+            commonOptionschosen($(branches), (branchesUrl + '?bankId=' + bankVal));
+        }
 	};
 }();

@@ -588,6 +588,20 @@ a.none1 {
     margin-right: 40px;
 }
 
+.three-buttons {
+    text-align: center;
+}
+
+.three-buttons .btn-signup {
+    width: 30% !important;
+    max-width: 200px !important;
+}
+
+.three-buttons .btn-signup {
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
 .btn-wide {
     width: auto !important;
     max-width: auto !important;
