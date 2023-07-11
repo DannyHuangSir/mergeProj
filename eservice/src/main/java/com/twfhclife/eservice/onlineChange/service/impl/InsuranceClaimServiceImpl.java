@@ -935,6 +935,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				x.setFileOrPng(filePath);
 			}
 			if (fileBase64 != null && fileBase64 != "") {
+				x.setOriginFileBase64(fileBase64);
 				byte[] decode = Base64.getDecoder().decode(fileBase64);
 				//获取文件类型
 				String base64Type = this.checkBase64ImgOrPdf(decode);
@@ -946,7 +947,6 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 						if ("png".equals(base64Type) || "jpg".equals(base64Type)) {
 							String miniatureBase64 = this.imgBase64(input, baos);
 							x.setFileBase64(miniatureBase64);
-							x.setOriginFileBase64(fileBase64);
 						} else {
 							PDDocument doc = PDDocument.load(input);
 							String miniatureBase64 = this.imgBase64(doc, baos);
@@ -969,8 +969,8 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 				File file = new File(filePath);
 				if (file.exists()) {
 					String fileToBase64 = this.converFiestFileToBase64Str(filePath);
+					x.setOriginFileBase64(fileToBase64);
 					x.setFileBase64(fileToBase64);
-					x.setOriginFileBase64(fileBase64);
 				}
 			}
 			return x;

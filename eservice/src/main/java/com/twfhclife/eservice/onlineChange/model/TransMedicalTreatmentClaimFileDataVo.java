@@ -34,6 +34,16 @@ public class TransMedicalTreatmentClaimFileDataVo implements Serializable {
 
 	private String fileStatus;
 
+	private String originFileBase64;
+
+	public String getOriginFileBase64() {
+		return originFileBase64;
+	}
+
+	public void setOriginFileBase64(String originFileBase64) {
+		this.originFileBase64 = originFileBase64;
+	}
+
 	public String getFileStatus() {
 		return fileStatus;
 	}

@@ -63,7 +63,7 @@
 								<th:block th:if="${session.APPLICATION_ITEMS != null}">
 									<th:block th:each="vo : ${session.APPLICATION_ITEMS}">
 										<div class="checkbox" style="float: left; margin-right: 20px;line-height: 1em; cursor: pointer">
-											<div class="check-box"><i class=""><input type="checkbox" name="applyItemList" th:value="${vo.value.parameterValue}"></i></div>
+											<div class="check-box"><i class=""><input th:attr="checked=${claimVo != null and claimVo.applyItem != null and #strings.containsIgnoreCase(claimVo.applyItem, vo.value.parameterValue)  ? true : false}" type="checkbox" name="applyItemList" th:value="${vo.value.parameterValue}"></i></div>
 											<label th:inline="text">
 												[[${vo.value.parameterName}]]
 											</label>
@@ -116,17 +116,17 @@
 								<div class="clearfix"></div>
 								<label class="col-sm-3">聯絡電話：</label>
 								<div class="col-sm-9">
-									<input type="text" name="tel" id="tel" class="col-sm-9" maxlength="15" style="padding: 6px 12px;line-height: 1em;" >
+									<input type="text" th:value="${claimVo.tel}" name="tel" id="tel" class="col-sm-9" maxlength="15" style="padding: 6px 12px;line-height: 1em;" >
 								</div>
 								<div class="clearfix"></div>
 								<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>行動電話：</label>
 								<div class="col-sm-9">
-									<input type="number" name="phone" id="phone" class="col-sm-9" data-validation="required|mobile" maxlength="15" style="padding: 6px 12px;line-height: 1em; ime-mode: disabled;" >
+									<input type="number" th:value="${claimVo.phone}" name="phone" id="phone" class="col-sm-9" data-validation="required|mobile" maxlength="15" style="padding: 6px 12px;line-height: 1em; ime-mode: disabled;" >
 								</div>
 								<div class="clearfix"></div>
 								<label class="col-sm-3">E-MAIL：</label>
 								<div class="col-sm-9">
-									<input type="text" name="mail" class="col-sm-9" placeholder="範例：test@gmail.com" data-validation="mail" style="padding: 6px 12px;line-height: 1em;" >
+									<input type="text" th:value="${claimVo.mail}" name="mail" class="col-sm-9" placeholder="範例：test@gmail.com" data-validation="mail" style="padding: 6px 12px;line-height: 1em;" >
 								</div>
 								<span class="col-sm-10" style="color: red;">(申請完成將以電子郵件通知，若未填寫則系統不會發送通知)</span>
 								<div class="clearfix"></div>
@@ -141,7 +141,7 @@
 										<th:block th:each="vo : ${session.RELATION_ITEMS}">
 											<div class="radio inline">
 												<label class="c_relation">
-													<div class="radio-btn"><i><input type="radio" name="relation" th:value="${vo.value.parameterValue}"></i></div>
+													<div class="radio-btn"><i><input type="radio" th:attr="checked=${claimVo != null and claimVo.relation != null and #strings.equals(claimVo.relation, vo.value.parameterValue)  ? 'checked' : false}" name="relation" th:value="${vo.value.parameterValue}"></i></div>
 													<th:block th:if="${vo.value.parameterName == null || vo.value.parameterName == ''}">
 														<label th:if="${vo.value.parameterCode == 'WORDING_POLICYCLAIM_010'}">本人</label>
 														<label th:if="${vo.value.parameterCode == 'WORDING_POLICYCLAIM_011'}">父母</label>
@@ -153,7 +153,6 @@
 															[[${vo.value.parameterName}]]
 														</label>
 													</th:block>
-
 												</label>
 											</div>
 										</th:block>
@@ -165,12 +164,12 @@
 								<div class="col-sm-9 col-sm-offset-3">
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="Y" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>有
+											<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.otherCompanyInsured, 'Y')  ? 'checked' : false}" name="otherCompanyInsured" value="Y" onclick="if(this.checked) $('#tab_2').show().siblings().hide();"></i></div>有
 										</label>
 									</div>
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input type="radio" name="otherCompanyInsured" value="N" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div>沒有
+											<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.otherCompanyInsured, 'N')  ? 'checked' : false}" name="otherCompanyInsured" value="N" onclick="if(this.checked) $('#tab_1').show().siblings().hide();"></i></div>沒有
 										</label>
 									</div>
 								</div>
@@ -199,12 +198,12 @@
 														<div class="col-sm-9">
 															<div class="radio inline">
 																<label>
-																	<div class="radio-btn"><i><input type="radio" name="otherInsuClaim" value="Y"></i></div>是　
+																	<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.otherInsuClaim, 'Y')  ? 'checked' : false}" name="otherInsuClaim" value="Y"></i></div>是　
 																</label>
 															</div>
 															<div class="radio inline">
 																<label>
-																	<div class="radio-btn"><i><input type="radio" name="otherInsuClaim" value="N"></i></div>否
+																	<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.otherInsuClaim, 'N')  ? 'checked' : false}" name="otherInsuClaim" value="N"></i></div>否
 																</label>
 															</div>
 														</div>
@@ -232,10 +231,10 @@
 											<div class="radio inline">
 												<label>
 													<th:block th:if="${vo.value.parameterCode == 'INS_ACCIDENT_01'}">
-														<div class="radio-btn"><i><input type="radio" name="accidentCause" th:value="${vo.value.parameterValue}" checked="checked" onclick="if(this.checked) $('#tab2_2').show().siblings().hide();"></i></div>
+														<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.accidentCause, vo.value.parameterValue)  ? 'checked' : false}" name="accidentCause" th:value="${vo.value.parameterValue}" checked="checked" onclick="if(this.checked) $('#tab2_2').show().siblings().hide();"></i></div>
 													</th:block>
 													<th:block th:if="${vo.value.parameterCode == 'INS_ACCIDENT_02'}">
-														<div class="radio-btn"><i><input type="radio" name="accidentCause" th:value="${vo.value.parameterValue}" onclick="if(this.checked) $('#tab2_1').show().siblings().hide();"></i></div>
+														<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.accidentCause, vo.value.parameterValue)  ? 'checked' : false}" name="accidentCause" th:value="${vo.value.parameterValue}" onclick="if(this.checked) $('#tab2_1').show().siblings().hide();"></i></div>
 													</th:block>
 													<th:block th:if="${vo.value.parameterName != null}">
 														<label th:inline="text">[[${vo.value.parameterName}]]</label>
@@ -258,44 +257,44 @@
 												<div class="grey2">
 													<div class="check-title depo2">意外</div>
 													<div class="check-list2 grey2">
-														<label class="col-sm-3">事故當時職業</label>
-														<div class="col-sm-8"><input type="text" name="job" th:value="${claimVo.job}" class="col-sm-9" placeholder="輸入職業"></div>
+														<label for="" class="col-sm-3">事故當時職業</label>
+														<div class="col-sm-8"><input type="text" name="job" id="job" th:value="${claimVo.job}" class="col-sm-9" placeholder="輸入職業"></div>
 													</div>
 													<div class="check-list2 grey2">
-														<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>發生時間</label>
+														<label for="" class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>發生時間</label>
 														<div class="col-sm-8" >
-															<input type="text" name="accidentDate" id="accidentDate" data-validation="date" class="col-sm-4" placeholder="輸入年月日" readonly>
+															<input type="text" name="accidentDate" id="accidentDate" th:value="${claimVo.accidentDate}" data-validation="date" class="col-sm-4" placeholder="輸入年月日" readonly>
 															<span class="col-sm-1"></span>
-															<input type="text" name="accidentTime" id="accidentTime" data-validation="time" class="col-sm-4" maxlength="5" placeholder="00:00" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
+															<input type="text" name="accidentTime" id="accidentTime" th:value="${claimVo.accidentTime}" data-validation="time" class="col-sm-4" maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
 														</div>
 													</div>
 													<div class="check-list2 grey2">
-														<label class="col-sm-3">事故地點</label>
+														<label for="" class="col-sm-3">事故地點</label>
 														<div class="col-sm-8"><input type="text" name="accidentLocation" th:value="${claimVo.accidentLocation}" class="col-sm-9" placeholder="輸入事故地點"></div>
 													</div>
 													<div class="check-list2 grey2">
-														<label class="col-sm-3">事故原因及送醫經過詳情（請述明就診醫院名稱）</label>
+														<label for="" class="col-sm-3">事故原因及送醫經過詳情（請述明就診醫院名稱）</label>
 														<div class="col-sm-8">
-															<textarea class="col-sm-9" name="accidentDescr" th:value="${claimVo.accidentDescr}" ></textarea>
+															<textarea class="col-sm-9" name="accidentDescr" th:text="${claimVo.accidentDescr}"></textarea>
 														</div>
 													</div>
 													<div class="check-list2 grey2">
-														<label class="col-sm-3">是否報警</label>
+														<label for="" class="col-sm-3">是否報警</label>
 														<div class="col-sm-9">
 															<div class="radio inline">
 																<label>
-																	<div class="radio-btn"><i><input type="radio" name="callPolice" value="Y"></i></div>是　
+																	<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.callPolice, 'Y')  ? 'checked' : false}" type="radio" name="callPolice" value="Y"></i></div>是　
 																</label>
 															</div>
 															<div class="radio inline">
 																<label>
-																	<div class="radio-btn"><i><input type="radio" name="callPolice" value="N"></i></div>否
+																	<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.callPolice, 'N')  ? 'checked' : false}" type="radio" name="callPolice" value="N"></i></div>否
 																</label>
 															</div>
 														</div>
 													</div>
 													<div class="check-list2 grey2">
-														<label class="col-sm-3">事故處理單位</label>
+														<label for="" class="col-sm-3">事故處理單位</label>
 														<div class="col-sm-8"><input type="text" name="policeStation" th:value="${claimVo.policeStation}" class="col-sm-9"></div>
 													</div>
 													<div class="check-list2 grey2">
@@ -303,15 +302,15 @@
 														<div class="col-sm-8"><input type="text" name="policeName" th:value="${claimVo.policeName}" class="col-sm-9"></div>
 													</div>
 													<div class="check-list2 grey2">
-														<label class="col-sm-3">員警電話</label>
+														<label for="" class="col-sm-3">員警電話</label>
 														<div class="col-sm-8"><input type="text" name="policePhone" th:value="${claimVo.policePhone}" class="col-sm-9"></div>
 													</div>
 													<div class="check-list2 grey2">
-														<label class="col-sm-3">報警時間</label>
+														<label for="" class="col-sm-3">報警時間</label>
 														<div class="col-sm-8">
-															<input type="text" class="col-sm-4" name="policeDate" id="policeDate"  placeholder="輸入年月日" readonly>
+															<input type="text" class="col-sm-4" th:value="${claimVo.policeDate}" name="policeDate" id="policeDate"  placeholder="輸入年月日" readonly>
 															<span class="col-sm-1"></span>
-															<input type="text" class="col-sm-4" name="policeTime" id="policeTime" data-validation="time"  maxlength="5" placeholder="00:00" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
+															<input type="text" class="col-sm-4" th:value="${claimVo.policeTime}" name="policeTime" id="policeTime" data-validation="time"  maxlength="5" placeholder="輸入時間時分" onkeyup="value=value.replace(/[^\d\:]/g,'')" onchange="value=value.replace(/[^\d\:]/g,'')">
 														</div>
 													</div>
 												</div>
@@ -361,12 +360,12 @@
 								<div class="col-sm-9">
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input type="radio" name="fromHospitalId" value="Y" onclick="if(this.checked) $('#tab3_2').show().siblings().hide();$('.authorizationTime').show()"></i></div>同意
+											<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.fromHospitalId, 'Y')  ? 'checked' : false}" name="fromHospitalId" value="Y" onclick="if(this.checked) $('#tab3_2').show().siblings().hide();$('.authorizationTime').show()"></i></div>同意
 										</label>
 									</div>
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input type="radio" name="fromHospitalId" value="N" onclick="if(this.checked) $('#tab3_1').show().siblings().hide();checkedMedical();;$('.authorizationTime').hide()"></i></div>不同意
+											<div class="radio-btn"><i><input type="radio" th:attr="checked=${!#strings.equals(claimVo.fromHospitalId, 'Y')  ? 'checked' : false}" name="fromHospitalId" value="N" onclick="if(this.checked) $('#tab3_1').show().siblings().hide();checkedMedical();;$('.authorizationTime').hide()"></i></div>不同意
 										</label>
 									</div>
 								</div>
@@ -389,6 +388,7 @@
 															<div class="selector-box">
 																<select class="selector" id="toHospitalId" name="toHospitalId" class="hospital" onchange="changeHospital(this)">
 																	<option th:each="vo : ${hospitalList}"
+																			th:selected="${claimVo.toHospitalId eq vo.hpid}"
 																			th:value="${vo.hpid}"
 																			th:utext="${vo.hpName}"/>
 																</select>
@@ -402,9 +402,21 @@
 															<div class="selector-box">
 																<select class="selector" id="subHospitalId" name="toSubHospitalId" class="hospital" onchange="changeSubHospital()">
 																	<th:block th:if="${hospitalList != null && hospitalList.size() > 0}">
-																		<option th:each="vo : ${hospitalList.get(0).hpBranch}"
-																				th:value="${vo.subHpId}"
-																				th:utext="${vo.subHpName}"/>
+																		<th:block th:if="${claimVo != null and claimVo.toHospitalId != null and claimVo.toHospitalId != ''}">
+																			<th:block th:each="vo1 : ${hospitalList}">
+																				<th:block th:if="${vo1.hpid eq claimVo.toHospitalId}">
+																					<option th:each="vo : ${vo1.hpBranch}"
+																							th:selected="${claimVo.toSubHospitalId eq vo.subHpId}"
+																							th:value="${vo.subHpId}"
+																							th:utext="${vo.subHpName}"/>
+																				</th:block>
+																			</th:block>
+																		</th:block>
+																		<th:block th:if="${claimVo == null or claimVo.toHospitalId == null or claimVo.toHospitalId == ''}">
+																			<option th:each="vo : ${hospitalList.get(0).hpBranch}"
+																					th:value="${vo.subHpId}"
+																					th:utext="${vo.subHpName}"/>
+																		</th:block>
 																	</th:block>
 																</select>
 															</div>
@@ -478,7 +490,7 @@
 									<div class="col-sm-9">
 										<div class="radio inline">
 											<label>
-												<div class="radio-btn"><i><input type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_3').show().siblings().hide();"></i></div>同意
+												<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_3').show().siblings().hide();"></i></div>同意
 											</label>
 										</div>
 										<div class="radio inline">
@@ -486,7 +498,7 @@
 											 <!-- 取消限制 -->
 											<!-- <div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_4').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
 											 -->
-											<div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" ></i></div>不同意
+											<div class="radio-btn"><i><input th:attr="checked=${!#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="N" ></i></div>不同意
 											</label>
 										</div>
 									</div>
@@ -508,7 +520,9 @@
 																<div class="col-sm-9">
 																	<th:block th:each="vo : ${hospitalInsuranceCompanyList}">
 																		<div class="checkbox col-sm-4" style="text-align: left;line-height: 1.7em; cursor: pointer">
-																			<div class="check-box" th:id="'toItem_' + ${vo.insuranceId}"><i class=""><input type="checkbox" name="toItem"  th:value="${vo.insuranceId}"></i></div>
+																			<div class="check-box" th:id="'toItem_' + ${vo.insuranceId}"><i class="">
+																				<input th:attr="checked=${claimVo != null and claimVo.to != null and #strings.containsIgnoreCase(claimVo.to, vo.insuranceId)  ? true : false}"
+																					   type="checkbox" name="toItem"  th:value="${vo.insuranceId}"></i></div>
 																			<th:block th:if="${vo.insuranceName != null}">
 																				<label style="display: inline;" th:inline="text">[[${vo.insuranceName}]]</label>
 																			</th:block>
@@ -530,12 +544,12 @@
 									<div class="col-sm-9">
 										<div class="radio inline">
 											<label>
-												<div class="radio-btn" id="confirmSign"><i><input type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
+												<div class="radio-btn" id="confirmSign"><i><input th:attr="checked=${#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
 											</label>
 										</div>
 										<div class="radio inline">
 											<label>
-												<div class="radio-btn" id="cancelSign"><i><input checked type="radio" name="signAgree" onclick="confirmSignAgree('N')" value="N" ></i></div>不同意
+												<div class="radio-btn" id="cancelSign"><i><input th:attr="checked=${!#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="confirmSignAgree('N')" value="N" ></i></div>不同意
 											</label>
 										</div>
 									</div>
@@ -893,6 +907,35 @@
 		var uploadMaxNumber = /*[[${uploadMaxNumber}]]*/;
 		var hospitalList = /*[[${hospitalList}]]*/;
 		var subHospitalMap = {}
+	$(function(){
+		var claimVo = [[${claimVo}]]
+		var fileMap = {}
+		var previewMap = {}
+		var fileDataMap = {}
+		if (claimVo.fileDatas != null) {
+			$(claimVo.fileDatas).each(function(index, item){
+				if (fileMap[item.type] == undefined) {
+					fileMap[item.type] = []
+					previewMap[item.type] = []
+					fileDataMap[item.type] = []
+				}
+				fileMap[item.type].push('<img src="data:image/png;base64,'+ item.originFileBase64 +'" class="kv-preview-data file-preview-image" style="width:auto;height:160px;">')
+				previewMap[item.type].push(previewConfig(item))
+				var con  = {};
+					con['claimSeqId'] = 0;
+					con['type'] = item.type;
+					con['fileOrPng'] = item.fileOrPng;
+					con['fileName'] = item.fileName;
+					con['filePath'] = item.filePath;
+					con['fileBase64'] = item.originFileBase64;
+				fileDataMap[item.type].push(con)
+			})
+		}
+
+		$.each(fileDataMap, function(key, value) {
+			$("#" + key).val(JSON.stringify(value).replace(/\[|]/g, '' ))
+		})
+
 		if (uploadFiles != undefined && uploadFiles != null) {
 			$.each(uploadFiles,function(key,value){
 				$("#"+value.remark).fileinput({
@@ -913,10 +956,10 @@
 					fileType:"any",
 					browseOnZoneClick: true,
 					showUpload: false,
+					initialPreview: fileMap[key],
+					initialPreviewConfig: previewMap[key],
 				}).on("filebatchselected", function(event, files) {
-
 					$(this).fileinput("upload");
-
 				}).on('filebatchuploaderror', function(event, data) {
 					openAlert("上傳有誤，請重新上傳！");
 				}).on("filebatchuploadsuccess", function (event, data, previewId, index) {
@@ -937,750 +980,809 @@
 							$("#"+key).val(JSON.stringify(cons).replace(/\[|]/g, '' ));
 						});
 				});
-		}	
-	$(function(){
-		$(hospitalList).each(function(index, item){
-			subHospitalMap[item.hpid] = item.hpBranch
-		})
-	     $('#file-fr').fileinput({
+		}
+
+	    $('#file-fr').fileinput({
 	        language: 'fr',
 	        uploadUrl: '#',
 			showCaption: false,
 			browseClass: "btn btn-primary btn-lg",
 			fileType: "any",
 	     });
-		 $('#birdate').datepicker({//日期控件
-				changeMonth : true,
-				changeYear : true,
-				maxDate : new Date(),
-				yearRange: 'c-80:c+80',
-				dateFormat : 'yy/mm/dd'
-			});
-			$('#accidentDate').datepicker({//日期控件
-				changeMonth : true,
-				changeYear : true,
-				maxDate : new Date(),
-				yearRange: 'c-80:c+80',
-				dateFormat : 'yy/mm/dd'
-			});
-			$('#diagnosisDate').datepicker({//日期控件
-				changeMonth : true,
-				changeYear : true,
-				maxDate : new Date(),
-				yearRange: 'c-80:c+80',
-				dateFormat : 'yy/mm/dd'
-			});
-			$('#policeDate').datepicker({//日期控件
-				changeMonth : true,
-				changeYear : true,
-				maxDate : new Date(),
-				yearRange: 'c-80:c+80',
-				dateFormat : 'yy/mm/dd'
-			});
 
-			var dateTime = new Date()
-			dateTime = dateTime.setDate(dateTime.getDate() + 10)
-			dateTime = new Date(dateTime)
-			$("body").on("focus",".authorizationDate", function(){
-			   $(this).datepicker({//日期控件
-					changeMonth : true,
-					changeYear : true,
-					maxDate : dateTime,
-					yearRange: 'c-80:c+80',
-					dateFormat : 'yy/mm/dd'
-				 })
-			});
+	    if (claimVo.sendAlliance == 'Y') {
+			$('#tab3_3').show().siblings().hide()
+		}
+		if (claimVo.otherCompanyInsured == 'Y') {
+			$('#tab_2').show().siblings().hide()
+		} else if (claimVo.otherCompanyInsured == 'N') {
+			$('#tab_1').show().siblings().hide()
+		}
+		if (claimVo.accidentCause == '1') {
+			$('#tab2_2').show().siblings().hide();
+		} else if (claimVo.accidentCause == '2') {
+			$('#tab2_1').show().siblings().hide();
+		}
+		if (claimVo.fromHospitalId == 'Y') {
+			$('#tab3_2').show().siblings().hide();$('.authorizationTime').show()
+		} else if (claimVo.otherCompanyInsured == 'N') {
+			$('#tab3_1').show().siblings().hide();checkedMedical();;$('.authorizationTime').hide()
+		}
 
-			$("body").on("change", "[name='startDate']", function(){
-				if ($(this).val() != null && $(this).next().next().val() != null
-					&& $(this).val() != '' && $(this).next().next().val() != '') {
-					sDate = moment($(this).val(), 'YYYY/MM/DD')
-					eDate = moment( $(this).next().next().val(), 'YYYY/MM/DD')
-					if (eDate.diff(sDate, 'days') < 0 ) {
-						openAlert("授權開始時間不能大於結束時間");
-						$(this).val('')
-						return false;
-					}
-					if (eDate.diff(sDate, 'years') > 1 ) {
-						openAlert("授權時間不能大於兩年");
-						$(this).val('')
-						return false;
-					}
-				}
-			})
-
-			$("body").on("change", "[name='endDate']", function() {
-				if ($(this).val() != null && $(this).prev().prev().val() != null
-						&& $(this).val() != '' && $(this).prev().prev().prev() != '') {
-					sDate = moment( $(this).prev().prev().val(), 'YYYY/MM/DD')
-					eDate = moment($(this).val(), 'YYYY/MM/DD')
-					if (eDate.diff(sDate, 'days') < 0 ) {
-						openAlert("授權開始時間不能大於結束時間");
-						$(this).val('')
-						return false;
-					}
-					if (eDate.diff(sDate, 'years') > 1 ) {
-						openAlert("授權時間不能大於兩年");
-						$(this).val('')
-						return false;
-					}
-				}
-			})
-
-			$("#bankOpt").chosen({
-				allow_single_deselect:true,
-				search_contains: true
-			});
-			$("#brancheOpt").chosen({
-				allow_single_deselect:true,
-				search_contains: true
-			});
-			//銀行下拉選單
-			var bankUrl = /*[[@{/getBankList}]]*/;
-			var branchesUrl = /*[[@{/getBranchesList}]]*/;
-			eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
-			// 取得名稱
-			$('#bankOpt').change(function() {
-				$('#bankCode').val($('#bankOpt option:selected').val());
-				$('#bankName').val($('#bankOpt option:selected').html());
-			});
-			$('#brancheOpt').change(function() {
-				if ($('#brancheOpt').val() != '') {
-					$('#branchCode').val($('#brancheOpt option:selected').val());
-					$('#branchName').val($('#brancheOpt option:selected').html());
-				} else {
-					$('#branchCode').val('');
-					$('#branchName').val('');
-				}
-			});
-
-			$('div.mystyle3').validation();
-				// 上一步事件
-			var formData = /*[[${claimVo}]]*/;
-			var formData = {};
-			formData.policyNo = $('#policyNo').val();
-			$('#deny').click(function() {
-				postWithFormData(/*[[@{/medicalTreatment2}]]*/, formData);
-			});
-			//確認提交下一步
-			$('#go').click(function() {
-				if(!againValidation()){
-					return  false;
-				}
-				$('#step3Form').submit();
-			});
-
-			$("body").on('click', '.check-box', function(e) {
-				e.stopPropagation();
-				/*****  Add condition @Linus_09/23 *****/
-				if(!$(this).find(':checkbox').prop("disabled")) {
-					if ($(this).hasClass('checkedBox')) {
-						$(this).find('input:checkbox').prop('checked', false);
-						$(this).delay(400).removeClass('checkedBox');
-						$(this).find('i').removeClass('checkedBox-i');
-					}
-					else {
-						$(this).find('input:checkbox').prop('checked', true);
-						$(this).delay(400).addClass('checkedBox');
-						$(this).find('i').addClass('checkedBox-i')
-					}
-				}
-			});
-
-			showPatientType($(".hospital"), $("#medicalDataId"))
+		$(hospitalList).each(function(index, item){
+			subHospitalMap[item.hpid] = item.hpBranch
 		})
-       		  //选择项目applyItemList
-			 function   againValidation(){
-				if(!$("div.mystyle3").valid()){
+
+
+		$('#birdate').datepicker({//日期控件
+			changeMonth : true,
+			changeYear : true,
+			maxDate : new Date(),
+			yearRange: 'c-80:c+80',
+			dateFormat : 'yy/mm/dd'
+		});
+		$('#accidentDate').datepicker({//日期控件
+			changeMonth : true,
+			changeYear : true,
+			maxDate : new Date(),
+			yearRange: 'c-80:c+80',
+			dateFormat : 'yy/mm/dd'
+		});
+		$('#diagnosisDate').datepicker({//日期控件
+			changeMonth : true,
+			changeYear : true,
+			maxDate : new Date(),
+			yearRange: 'c-80:c+80',
+			dateFormat : 'yy/mm/dd'
+		});
+		$('#policeDate').datepicker({//日期控件
+			changeMonth : true,
+			changeYear : true,
+			maxDate : new Date(),
+			yearRange: 'c-80:c+80',
+			dateFormat : 'yy/mm/dd'
+		});
+
+		var dateTime = new Date()
+		dateTime = dateTime.setDate(dateTime.getDate() + 10)
+		dateTime = new Date(dateTime)
+		$("body").on("focus",".authorizationDate", function(){
+		   $(this).datepicker({//日期控件
+				changeMonth : true,
+				changeYear : true,
+				maxDate : dateTime,
+				yearRange: 'c-80:c+80',
+				dateFormat : 'yy/mm/dd'
+			 })
+		});
+
+		$("body").on("change", "[name='startDate']", function(){
+			if ($(this).val() != null && $(this).next().next().val() != null
+				&& $(this).val() != '' && $(this).next().next().val() != '') {
+				sDate = moment($(this).val(), 'YYYY/MM/DD')
+				eDate = moment( $(this).next().next().val(), 'YYYY/MM/DD')
+				if (eDate.diff(sDate, 'days') < 0 ) {
+					openAlert("授權開始時間不能大於結束時間");
+					$(this).val('')
+					return false;
+				}
+				if (eDate.diff(sDate, 'years') > 1 ) {
+					openAlert("授權時間不能大於兩年");
+					$(this).val('')
+					return false;
+				}
+			}
+		})
+
+		$("body").on("change", "[name='endDate']", function() {
+			if ($(this).val() != null && $(this).prev().prev().val() != null
+					&& $(this).val() != '' && $(this).prev().prev().prev() != '') {
+				sDate = moment( $(this).prev().prev().val(), 'YYYY/MM/DD')
+				eDate = moment($(this).val(), 'YYYY/MM/DD')
+				if (eDate.diff(sDate, 'days') < 0 ) {
+					openAlert("授權開始時間不能大於結束時間");
+					$(this).val('')
+					return false;
+				}
+				if (eDate.diff(sDate, 'years') > 1 ) {
+					openAlert("授權時間不能大於兩年");
+					$(this).val('')
+					return false;
+				}
+			}
+		})
+
+		$("#bankOpt").chosen({
+			allow_single_deselect:true,
+			search_contains: true
+		});
+		$("#brancheOpt").chosen({
+			allow_single_deselect:true,
+			search_contains: true
+		});
+
+		//銀行下拉選單
+		var bankUrl = /*[[@{/getBankList}]]*/;
+		var branchesUrl = /*[[@{/getBranchesList}]]*/;
+		eserviceOption.bankBranches('#bankOpt', bankUrl, '#brancheOpt', branchesUrl);
+
+		$("#bankOpt").children().each(function(){
+			if ($(this).val() == claimVo.bankCode) {
+				eserviceOption.updateBranch('#brancheOpt', branchesUrl, $(this).val());
+				$(this).attr('selected', true);
+				$('#bankCode').val($(this).val());
+				$('#bankName').val($(this).text());
+				$("#bankOpt").trigger("chosen:updated");
+			}
+		})
+
+		$("#brancheOpt").children().each(function(){
+			if ($(this).val() == claimVo.branchCode) {
+				$(this).attr('selected', true);
+				$('#branchCode').val($(this).val());
+				$('#branchName').val($(this).text());
+				$("#brancheOpt").trigger("chosen:updated");
+			}
+		})
+
+		// 取得名稱
+		$('#bankOpt').change(function() {
+			$('#bankCode').val($('#bankOpt option:selected').val());
+			$('#bankName').val($('#bankOpt option:selected').html());
+		});
+
+		$('#brancheOpt').change(function() {
+			if ($('#brancheOpt').val() != '') {
+				$('#branchCode').val($('#brancheOpt option:selected').val());
+				$('#branchName').val($('#brancheOpt option:selected').html());
+			} else {
+				$('#branchCode').val('');
+				$('#branchName').val('');
+			}
+		});
+
+		$('div.mystyle3').validation();
+			// 上一步事件
+		var formData = /*[[${claimVo}]]*/;
+		var formData = {};
+		formData.policyNo = $('#policyNo').val();
+		$('#deny').click(function() {
+			postWithFormData(/*[[@{/medicalTreatment2}]]*/, formData);
+		});
+		//確認提交下一步
+		$('#go').click(function() {
+			if(!againValidation()){
+				return  false;
+			}
+			$('#step3Form').submit();
+		});
+
+		$("body").on('click', '.check-box', function(e) {
+			e.stopPropagation();
+			/*****  Add condition @Linus_09/23 *****/
+			if(!$(this).find(':checkbox').prop("disabled")) {
+				if ($(this).hasClass('checkedBox')) {
+					$(this).find('input:checkbox').prop('checked', false);
+					$(this).delay(400).removeClass('checkedBox');
+					$(this).find('i').removeClass('checkedBox-i');
+				}
+				else {
+					$(this).find('input:checkbox').prop('checked', true);
+					$(this).delay(400).addClass('checkedBox');
+					$(this).find('i').addClass('checkedBox-i')
+				}
+			}
+		});
+
+		showPatientType($(".hospital"), $("#medicalDataId"))
+		initPatients()
+	})
+
+	  //选择项目applyItemList
+	 function   againValidation(){
+		if(!$("div.mystyle3").valid()){
+			return false;
+		}else{
+			if($('#birdate').val() == "" || $('#birdate').val() == null){
+				openAlert("請選擇被保人生日");
+				return false;
+			}
+			var  boobirdate=true;
+				var  dataBirdate={
+					birdate:$('#birdate').val(),
+					policyNo:$('#policyNo').val()
+				};
+				//$.ajaxSetup({async: false});
+				$.ajax({
+						type : 'POST',
+						contentType : 'application/json',
+						url : '/eservice/getMedicalVerifyAge',
+						async: false,
+						data : JSON.stringify(dataBirdate),
+						success : function(response) {
+							if (response.resultMsg != null &&  response.resultMsg != '') {
+								boobirdate= false;
+								openAlert(response.resultMsg);
+							}else{
+								boobirdate= true;
+							}
+						},
+						error :function() {
+							boobirdate= false;
+							openAlert('網絡異常請稍等在試');
+						}
+					});
+				//$.ajaxSetup({async: true});
+			if(!boobirdate){
+				return 	boobirdate;
+			}
+
+
+			var objApplyItemList = $("input[name='applyItemList']"); //选择所有name="'applyItemList'"
+			//循环检测是不是被选中
+			var applyItemALL='';
+			for(var i=0; i<objApplyItemList.length; i++){
+				if(objApplyItemList[i].checked == true){
+					applyItemALL += objApplyItemList[i].value + ',';
+				}
+			}
+			//去掉最后一个逗号
+			if (applyItemALL.length > 0 && $("#itemOther").val()=='') {
+				applyItemALL = applyItemALL.substr(0,applyItemALL.length - 1);
+			}
+			if(applyItemALL == ''){
+				openAlert('請選擇申請項目');
+				return false;
+			}else{
+				$("input[name='applyItem']").val(applyItemALL+$("#itemOther").val());
+				//return true;
+			}
+			if($("input[name='address']").val() == undefined || $("input[name='address']").val() == '' ){
+					openAlert('請輸入聯絡地址');
+					return false;
+			}
+			//與主被保險人(員工)之關係
+			if($("input[name='relation']:checked").val() == undefined){
+					openAlert('請選擇與主被保險人(員工)之關係');
+					return false;
+			}
+			//校驗事故發生時間
+			if ($("input[name='accidentCause']:checked").val() == "2"){
+				if($('#accidentDate').val() =='' && $('#accidentTime').val() == ''){
+					openAlert('請輸入事故發生時間');
 					return false;
 				}else{
-					if($('#birdate').val() == "" || $('#birdate').val() == null){
-						openAlert("請選擇被保人生日");
-						return false;
-					}
-					var  boobirdate=true;
-						var  dataBirdate={
-							birdate:$('#birdate').val(),
-							policyNo:$('#policyNo').val()
-						};
-						//$.ajaxSetup({async: false});		
-						$.ajax({
-								type : 'POST',
-								contentType : 'application/json',
-								url : '/eservice/getMedicalVerifyAge',
-								async: false,
-								data : JSON.stringify(dataBirdate),
-								success : function(response) {
-									if (response.resultMsg != null &&  response.resultMsg != '') {
-										boobirdate= false;
-										openAlert(response.resultMsg);
-									}else{
-										boobirdate= true;
-									}
-								},
-								error :function() {
-									boobirdate= false;
-									openAlert('網絡異常請稍等在試');
-								}
-							});
-						//$.ajaxSetup({async: true});	
-					if(!boobirdate){
-						return 	boobirdate;
-					}
-
-
-					var objApplyItemList = $("input[name='applyItemList']"); //选择所有name="'applyItemList'"
-					//循环检测是不是被选中
-					var applyItemALL='';
-					for(var i=0; i<objApplyItemList.length; i++){
-						if(objApplyItemList[i].checked == true){
-							applyItemALL += objApplyItemList[i].value + ',';
-						}
-					}
-					//去掉最后一个逗号
-					if (applyItemALL.length > 0 && $("#itemOther").val()=='') {
-						applyItemALL = applyItemALL.substr(0,applyItemALL.length - 1);
-					}
-					if(applyItemALL == ''){
-						openAlert('請選擇申請項目');
-						return false;
-					}else{
-						$("input[name='applyItem']").val(applyItemALL+$("#itemOther").val());
-						//return true;
-					}
-					if($("input[name='address']").val() == undefined || $("input[name='address']").val() == '' ){
-							openAlert('請輸入聯絡地址');
-							return false;
-					}
-					//與主被保險人(員工)之關係
-					if($("input[name='relation']:checked").val() == undefined){
-							openAlert('請選擇與主被保險人(員工)之關係');
-							return false;
-					}			
-					//校驗事故發生時間
-					if ($("input[name='accidentCause']:checked").val() == "2"){
-						if($('#accidentDate').val() =='' && $('#accidentTime').val() == ''){
-							openAlert('請輸入事故發生時間');
-							return false;
-						}else{
-							$("input[name='accidentDate']").val($('#accidentDate').val().replace(/\//g, "\-"));
-							$("input[name='accidentTime']").val($('#accidentTime').val().replace(/\-/g, "\:"));
-							//return true;
-						}
-					}else if($("input[name='accidentCause']:checked").val() == "1"){
-						if($('#diagnosisDate').val() ==''){
-							openAlert('請輸入該疾病初診日');
-							return false;
-						}else{
-							$("input[name='accidentDate']").val($('#diagnosisDate').val().replace(/\//g, "\-"));
-							//return true;
-						}
-					}
-						//醫療單位fromHospitalId
-					if($("input[name='fromHospitalId']:checked").val() == undefined){
-							openAlert('請選擇是否傳送醫療單位');
-							return false;
-					}
-					//授權傳送醫療單位
-					if ($("input[name='fromHospitalId']:checked").val() == "Y"){
-						var isPass = true
-						var medicalInfo = []
-						var checkMap = {}
-						$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
-
-							let hsTime = $(obj).find("input[name='startDate']").val()
-							let heTime = $(obj).find("input[name='endDate']").val()
-							let otype = $(obj).find(".patientType").val()
-							let depid = $(obj).find(".divisionType").val()
-							let subDepid = $(obj).find(".subDivisionType").val()
-
-							if(hsTime ==undefined || hsTime ==''){
-								openAlert('授權時間區間,開始時間必有');
-								isPass = false;
-								return false;
-							}
-
-							if(heTime==undefined || heTime =='' ){
-								openAlert('授權時間區間,開始時間必有');
-								isPass = false;
-								return false;
-							}
-
-							let checkKey = otype + "_" + depid + "_" + subDepid
-							let intHsTime = parseInt(hsTime.replace(/\//g, ""))
-							let intHeTime = parseInt(heTime.replace(/\//g, ""))
-
-							if (intHsTime > intHeTime) {
-								openAlert('授權時間開始時間不能大於結束時間');
-								isPass = false;
-								return false;
-							}
-
-							if (checkMap[checkKey] != null) {
-								let oldHsTime = checkMap[checkKey].hsTime
-								let oldHeTime = checkMap[checkKey].heTime
-
-								if (isIntersect([intHsTime, intHeTime], [oldHsTime, oldHeTime])) {
-									openAlert("授權傳送醫療單位:第" + checkMap[checkKey].index + "項與第" + (inx + 1) +"重複，請調整。");
-									isPass = false;
-									return false;
-								}
-							}
-
-							let checkVal = {
-								index: inx + 1,
-								hsTime: intHsTime,
-								heTime: intHeTime
-							}
-							checkMap[checkKey] = checkVal
-
-							let dtypes = []
-							let dtypeList = []
-							let hasFileType = false
-							$.each($(obj).find(".dataFileGroupType [name='fileDataGroup']:checked"), function(inx, obj1) {
-								dtypes.push($(obj1).val())
-								let temp = {}
-								temp.name = $(obj1).attr("valtext")
-								temp.value = $(obj1).val()
-								dtypeList.push(temp)
-								hasFileType = true
-							})
-
-							if (!hasFileType) {
-								openAlert('授權文件類型必有');
-								isPass = false;
-								return false;
-							}
-
-							let requireList = Object.assign(fileTypeRequiredMap[$(".hospital").val() + "_" + $(obj).find(".patientType").val()])
-							$.each(requireList, function(inx, obj2) {
-								if (parseInt(obj2.require) < 1) {
-									return true;
-								}
-								let require = parseInt(obj.require)
-								let msg = ''
-								$.each(obj2.fileType, function(inx, obj3) {
-								    msg += (obj3.dname + '、')
-									if (dtypes.indexOf(obj.dtype) != -1) {
-										require--
-									}
-								})
-								if (require > 0) {
-									openAlert(msg.substr(0,msg.length - 1) + "中必須選擇" + parseInt(obj2.require) + "個");
-									isPass = false;
-									return false;
-								}
-							})
-
-							if (!isPass) {
-								return isPass;
-							}
-
-							let item = {}
-							item.seNo = inx + 1
-							item.hsTime = hsTime
-							item.heTime = heTime
-							item.otype = otype
-							item.otypeName = $(obj).find(".patientType option:selected").text()
-							item.depid = depid
-							item.depName = $(obj).find(".divisionType  option:selected").text()
-							item.subDepid = subDepid
-							item.subDepName = $(obj).find(".subDivisionType  option:selected").text()
-							item.dtypes = dtypes
-							item.dtypeListStr = JSON.stringify(dtypeList)
-							medicalInfo.push(item)
-						})
-
-						if (!isPass) {
-							return false;
-						}
-
-						$("#medicalInfo").val(JSON.stringify(medicalInfo))
-					}else {
-						checkedMedical();
-						return false;
-					}
-
-					//保险公司sendAlliance
-					if($("input[name='sendAlliance']:checked").val() == undefined){
-							openAlert('請選擇是否傳送其他保險公司');
-							return false;
-					}
-					//是否傳送其他保險公司
-					if ($("input[name='sendAlliance']:checked").val() == "Y"){
-					var toItemList = $("input[name='toItem']:checked"); //选择所有name="'toItem'"
-					if(toItemList.length == 0){
-						openAlert('請選擇授權傳送其他保險公司');
-						return false;
-					}
-					//循环检测是不是被选中
-					var toItotemALL='';
-					for(var i=0; i<toItemList.length; i++){
-						if(toItemList[i].checked == true){
-							toItotemALL += toItemList[i].value + ',';
-						}
-					}
-					//去掉最后一个逗号
-					if (toItotemALL.length > 0) {
-						toItotemALL = toItotemALL.substr(0,toItotemALL.length - 1);
-					}
-					$("input[name='to']").val(toItotemALL);
+					$("input[name='accidentDate']").val($('#accidentDate').val().replace(/\//g, "\-"));
+					$("input[name='accidentTime']").val($('#accidentTime').val().replace(/\-/g, "\:"));
+					//return true;
 				}
-
-					//校驗指定給付方式
-					if($("input[name='paymentMethod']:checked").val() == "1"){
-						if($('#accountName').val() =='' || $('#bankCode').val() =='' || $('#bankAccount').val() ==''){
-							openAlert('請輸入電匯必填欄位');
-							return false;
-						}
-						//進行判斷賬號為數字,并且最短8位、最長14位
-						var  bankAccount=	$('#bankAccount').val();
-						if (/^\d+$/.test(bankAccount)) {
-							if(bankAccount.length<8){
-								openAlert('匯款帳戶長度,最短8位');
-								return false;	
-							}
-							if(bankAccount.length>14){
-								openAlert('匯款帳戶長度,最長14位');
-								return false;	
-							}
-						}else{
-							openAlert('匯款帳戶只能數字');
-							return false;	
-						}
-					}
-
-					//生日
-					$("input[name='birdate']").val($('#birdate').val().replace(/\//g, "\-"));
-					if($('#policeDate').val() != ''){
-						$("input[name='policeDate']").val($('#policeDate').val().replace(/\//g, "\-"));
-						//return true;
-					}
-					if($('#policeTime').val() != ''){
-						$("input[name='policeTime']").val($('#policeTime').val().replace(/\-/g, "\:"));
-						//return true;
-					}
-
-					//上傳文件
-					var flag = true;
-					if (uploadFiles != undefined && uploadFiles != null) {
-						$.each(uploadFiles,function(key,value){
-							if(value.parameterValue == 'Y' && $("#"+key).val()=='') {
-								openAlert("請選擇診斷證明書!");
-								flag = false;
-								return false;
-							}
-						})
-					}
-					if(!flag){
-						return;
-					}
-					var List = [];
-					if (uploadFiles != undefined && uploadFiles != null) {
-						$.each(uploadFiles,function(key,value){
-							if ($("#"+key).val() != ''){
-								List.push(JSON.parse($("#"+key).val()));
-							}else{
-								List.push({claimSeqId: null, type: key, fileName: "", filePath: "", fileBase64: ""});
-							}
-						})
-					}
-					$('input[name="fileDataList"]').val(JSON.stringify(List));
-
-				//獲取當前保單是否有上傳文件數據
-				if(!checkFirstApply()){
-					if($("#MEDICAL_DOCUMENT_CONTENT").val()==undefined || $("#MEDICAL_DOCUMENT_CONTENT").val()==''){
-						openAlert("首次申請.請選擇上傳文件!");
-						return false;
-					}
+			}else if($("input[name='accidentCause']:checked").val() == "1"){
+				if($('#diagnosisDate').val() ==''){
+					openAlert('請輸入該疾病初診日');
+					return false;
+				}else{
+					$("input[name='accidentDate']").val($('#diagnosisDate').val().replace(/\//g, "\-"));
+					//return true;
 				}
-				return true;
-			  }
 			}
-			//提示彈窗
-			function chooseHospital(){
-				//openAlert("當前醫院已被此保單申請,還請重新選擇!");
-					$('#modal-container-chooseHospital').modal({
-					show: true,
-					backdrop: 'static',
-					keyboard: false
-				});
+				//醫療單位fromHospitalId
+			if($("input[name='fromHospitalId']:checked").val() == undefined){
+					openAlert('請選擇是否傳送醫療單位');
+					return false;
 			}
-		 function checkedMedical(){
-			$('#modal-container-Medical').modal({
-				show: true,
-				backdrop: 'static',
-				keyboard: false
-				});
-		 }
-		 function checkedNOTONGYI(){
-			$('#modal-container-NOTONGYI').modal({
-				show: true,
-				backdrop: 'static',
-				keyboard: false
-				});
-		 }
-		 function checkedPolicy(){
-			 if(!againValidation()){
-				 return  false;
-			 }
-			$('#modal-container-Policy').modal({
-				show: true,
-				backdrop: 'static',
-				keyboard: false
-			});
-		};
+			//授權傳送醫療單位
+			if ($("input[name='fromHospitalId']:checked").val() == "Y"){
+				var isPass = true
+				var medicalInfo = []
+				var checkMap = {}
+				$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
 
-		function checkFirstApply() {
-			let booleanFirst = true
-			let dataFirst = {policyNo: $('#policyNo').val()}
-			$.ajax({
-				type : 'POST',
-				contentType : 'application/json',
-				url : /*[[@{/getMedicalTreatmentWhetherFirst}]]*/,
-				async: false,
-				data : JSON.stringify(dataFirst),
-				success : function(response) {
-					console.log(response);
-					if(response.resultData == 0) {
-						booleanFirst= false;
+					let hsTime = $(obj).find("input[name='startDate']").val()
+					let heTime = $(obj).find("input[name='endDate']").val()
+					let otype = $(obj).find(".patientType").val()
+					let depid = $(obj).find(".divisionType").val()
+					let subDepid = $(obj).find(".subDivisionType").val()
+
+					if(hsTime ==undefined || hsTime ==''){
+						openAlert('授權時間區間,開始時間必有');
+						isPass = false;
+						return false;
 					}
-				},
-				error : function() {
-					/* openAlert('系統發生錯誤!'); */
-					booleanFirst=  false;
-					openAlert($('#E0018').val());
-					console.log("--2-",booleanFirst);
+
+					if(heTime==undefined || heTime =='' ){
+						openAlert('授權時間區間,開始時間必有');
+						isPass = false;
+						return false;
+					}
+
+					let checkKey = otype + "_" + depid + "_" + subDepid
+					let intHsTime = parseInt(hsTime.replace(/\//g, ""))
+					let intHeTime = parseInt(heTime.replace(/\//g, ""))
+
+					if (intHsTime > intHeTime) {
+						openAlert('授權時間開始時間不能大於結束時間');
+						isPass = false;
+						return false;
+					}
+
+					if (checkMap[checkKey] != null) {
+						let oldHsTime = checkMap[checkKey].hsTime
+						let oldHeTime = checkMap[checkKey].heTime
+
+						if (isIntersect([intHsTime, intHeTime], [oldHsTime, oldHeTime])) {
+							openAlert("授權傳送醫療單位:第" + checkMap[checkKey].index + "項與第" + (inx + 1) +"重複，請調整。");
+							isPass = false;
+							return false;
+						}
+					}
+
+					let checkVal = {
+						index: inx + 1,
+						hsTime: intHsTime,
+						heTime: intHeTime
+					}
+					checkMap[checkKey] = checkVal
+
+					let dtypes = []
+					let dtypeList = []
+					let hasFileType = false
+					$.each($(obj).find(".dataFileGroupType [name='fileDataGroup']:checked"), function(inx, obj1) {
+						dtypes.push($(obj1).val())
+						let temp = {}
+						temp.name = $(obj1).attr("valtext")
+						temp.value = $(obj1).val()
+						dtypeList.push(temp)
+						hasFileType = true
+					})
+
+					if (!hasFileType) {
+						openAlert('授權文件類型必有');
+						isPass = false;
+						return false;
+					}
+
+					let requireList = Object.assign(fileTypeRequiredMap[$(".hospital").val() + "_" + $(obj).find(".patientType").val()])
+					$.each(requireList, function(inx, obj2) {
+						if (parseInt(obj2.require) < 1) {
+							return true;
+						}
+						let require = parseInt(obj.require)
+						let msg = ''
+						$.each(obj2.fileType, function(inx, obj3) {
+							msg += (obj3.dname + '、')
+							if (dtypes.indexOf(obj.dtype) != -1) {
+								require--
+							}
+						})
+						if (require > 0) {
+							openAlert(msg.substr(0,msg.length - 1) + "中必須選擇" + parseInt(obj2.require) + "個");
+							isPass = false;
+							return false;
+						}
+					})
+
+					if (!isPass) {
+						return isPass;
+					}
+
+					let item = {}
+					item.seNo = inx + 1
+					item.hsTime = hsTime
+					item.heTime = heTime
+					item.otype = otype
+					item.otypeName = $(obj).find(".patientType option:selected").text()
+					item.depid = depid
+					item.depName = $(obj).find(".divisionType  option:selected").text()
+					item.subDepid = subDepid
+					item.subDepName = $(obj).find(".subDivisionType  option:selected").text()
+					item.dtypes = dtypes
+					item.dtypeListStr = JSON.stringify(dtypeList)
+					medicalInfo.push(item)
+				})
+
+				if (!isPass) {
+					return false;
 				}
-			});
-			return booleanFirst;
+
+				$("#medicalInfo").val(JSON.stringify(medicalInfo))
+			}else {
+				checkedMedical();
+				return false;
+			}
+
+			//保险公司sendAlliance
+			if($("input[name='sendAlliance']:checked").val() == undefined){
+					openAlert('請選擇是否傳送其他保險公司');
+					return false;
+			}
+			//是否傳送其他保險公司
+			if ($("input[name='sendAlliance']:checked").val() == "Y"){
+			var toItemList = $("input[name='toItem']:checked"); //选择所有name="'toItem'"
+			if(toItemList.length == 0){
+				openAlert('請選擇授權傳送其他保險公司');
+				return false;
+			}
+			//循环检测是不是被选中
+			var toItotemALL='';
+			for(var i=0; i<toItemList.length; i++){
+				if(toItemList[i].checked == true){
+					toItotemALL += toItemList[i].value + ',';
+				}
+			}
+			//去掉最后一个逗号
+			if (toItotemALL.length > 0) {
+				toItotemALL = toItotemALL.substr(0,toItotemALL.length - 1);
+			}
+			$("input[name='to']").val(toItotemALL);
 		}
 
-		// 2022.3.23 xianzhi
-		function addMedicalInfo() {
-			clone = $("[name='cloneItemMedicalData']").clone().show().removeAttr("name")
-			$(".medicalParent").append(clone)
-			showPatientType($(".hospital"), clone)
-		}
+			//校驗指定給付方式
+			if($("input[name='paymentMethod']:checked").val() == "1"){
+				if($('#accountName').val() =='' || $('#bankCode').val() =='' || $('#bankAccount').val() ==''){
+					openAlert('請輸入電匯必填欄位');
+					return false;
+				}
+				//進行判斷賬號為數字,并且最短8位、最長14位
+				var  bankAccount=	$('#bankAccount').val();
+				if (/^\d+$/.test(bankAccount)) {
+					if(bankAccount.length<8){
+						openAlert('匯款帳戶長度,最短8位');
+						return false;
+					}
+					if(bankAccount.length>14){
+						openAlert('匯款帳戶長度,最長14位');
+						return false;
+					}
+				}else{
+					openAlert('匯款帳戶只能數字');
+					return false;
+				}
+			}
 
-		function deleteTarget(target) {
-		    if ($(".itemMedicalData:visible").size() <= 1) {
-		    	openAlert('請至少添加一組醫療單位！');
+			//生日
+			$("input[name='birdate']").val($('#birdate').val().replace(/\//g, "\-"));
+			if($('#policeDate').val() != ''){
+				$("input[name='policeDate']").val($('#policeDate').val().replace(/\//g, "\-"));
+				//return true;
+			}
+			if($('#policeTime').val() != ''){
+				$("input[name='policeTime']").val($('#policeTime').val().replace(/\-/g, "\:"));
+				//return true;
+			}
+
+			//上傳文件
+			var flag = true;
+			if (uploadFiles != undefined && uploadFiles != null) {
+				$.each(uploadFiles,function(key,value){
+					if(value.parameterValue == 'Y' && $("#"+key).val()=='') {
+						openAlert("請選擇診斷證明書!");
+						flag = false;
+						return false;
+					}
+				})
+			}
+			if(!flag){
 				return;
-		    }
-			$(target).parent().parent().parent().remove()
-		}
-
-		function showPatientType(vm, obj) {
-			$.ajax({
-				type : 'POST',
-				url : "getPatientType",
-				data : {
-					hpId: $(vm).val(),
-					subHpId: $("#subHospitalId").val()
-				},
-				success : function(response) {
-				    let html = ''
-					if(response.result == 'SUCCESS') {
-						$.each(response.resultData, function(inx, obj) {
-							html += "<option value='" + obj.otype + "'>" + obj.oname +  "</option>"
-						})
-						let newVm = $(obj).find(".patientType")
-						$(newVm).html(html)
-						showDivision(newVm)
+			}
+			var List = [];
+			if (uploadFiles != undefined && uploadFiles != null) {
+				$.each(uploadFiles,function(key,value){
+					if ($("#"+key).val() != ''){
+						List.push(JSON.parse($("#"+key).val()));
+					}else{
+						List.push({claimSeqId: null, type: key, fileName: "", filePath: "", fileBase64: ""});
 					}
-				},
-				error : function() {
-					openAlert($('#E0011').val());
-				}
-			});
-		}
-
-		var divisionMap = {}
-		function showDivision(vm) {
-			hpVm = $(".hospital");
-			$.ajax({
-				type : 'POST',
-				url : "getDivision",
-				data : {
-					hpId: hpVm.val(),
-					otype: $(vm).val(),
-					subHpId: $("#subHospitalId").val()
-				},
-				success : function(response) {
-				    let html = ''
-				    let subHtml = ''
-					if(response.result == 'SUCCESS') {
-						let first = true
-						$.each(response.resultData, function(inx, obj) {
-							html += "<option value='" + obj.mainDepid + "'>" + obj.mainDepname +  "</option>"
-							if (first) {
-								first = false
-								$.each(obj.subDivisions, function(inx1, obj1) {
-									subHtml += "<option value='" + obj1.depid + "'>" + obj1.depname +  "</option>"
-								})
-							}
-							divisionMap[hpVm.val() + '_' + $(vm).val() + '_' + obj.mainDepid] = obj.subDivisions
-						})
-						let newVm = $(vm).parents(".itemMedicalData:first").find(".divisionType")
-						$(newVm).html(html)
-
-						let subNewVm = $(vm).parents(".itemMedicalData:first").find(".subDivisionType")
-						$(subNewVm).html(subHtml)
-						showDataFileGroup(vm)
-					}
-				},
-				error : function() {
-					openAlert($('#E0011').val());
-				}
-			});
-		}
-
-		var fileTypeRequiredMap = {}
-		function showDataFileGroup(vm) {
-			hpVm = $(".hospital");
-			$.ajax({
-				type : 'POST',
-				url : "getMedicalDataFileGroup",
-				data : {
-					hpId: hpVm.val(),
-					otype: $(vm).val(),
-					subHpId: $("#subHospitalId").val()
-				},
-				success : function(response) {
-				    let html = ''
-					if(response.result == 'SUCCESS') {
-						fileTypeRequiredMap[hpVm.val() + '_' + $(vm).val()] = response.resultData
-						$.each(response.resultData, function(inx, obj) {
-							$.each(obj.fileType, function(inx, obj){
-								html += "<div class='checkbox col-sm-3' style='line-height: 1em; cursor: pointer;padding-left:0;text-align: left;'>"
-								html += "<div class='check-box'><i class=''><input id='checkBox1' type='checkbox' valtext='" + obj.dname + "' name='fileDataGroup' value='" + obj.dtype +  "'></i></div>" + obj.dname
-								html += "</div>"
-							})
-						})
-						let newVm = $(vm).parents(".itemMedicalData:first").find(".dataFileGroupType")
-						$(newVm).html(html)
-					}
-				},
-				error : function() {
-					openAlert($('#E0011').val());
-				}
-			});
-		}
-
-		function showSubDivision(vm) {
-			let hospital = $(".hospital").val()
-			let patientType = $(vm).parents(".itemMedicalData:first").find(".patientType").val()
-			let divisionType = $(vm).val()
-			let subDivisions = divisionMap[hospital + '_' + patientType + '_' + divisionType]
-
-			if (subDivisions != null) {
-				let subHtml = ''
-				$.each(subDivisions, function(inx, obj) {
-					subHtml += "<option value='" + obj.depid + "'>" + obj.depname +  "</option>"
 				})
-				let subNewVm = $(vm).parents(".itemMedicalData:first").find(".subDivisionType")
-				$(subNewVm).html(subHtml)
+			}
+			$('input[name="fileDataList"]').val(JSON.stringify(List));
+
+		//獲取當前保單是否有上傳文件數據
+		if(!checkFirstApply()){
+			if($("#MEDICAL_DOCUMENT_CONTENT").val()==undefined || $("#MEDICAL_DOCUMENT_CONTENT").val()==''){
+				openAlert("首次申請.請選擇上傳文件!");
+				return false;
 			}
 		}
+		return true;
+	  }
+	}
+	//提示彈窗
+	function chooseHospital(){
+		//openAlert("當前醫院已被此保單申請,還請重新選擇!");
+			$('#modal-container-chooseHospital').modal({
+			show: true,
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+	 function checkedMedical(){
+		$('#modal-container-Medical').modal({
+			show: true,
+			backdrop: 'static',
+			keyboard: false
+			});
+	 }
+	 function checkedNOTONGYI(){
+		$('#modal-container-NOTONGYI').modal({
+			show: true,
+			backdrop: 'static',
+			keyboard: false
+			});
+	 }
+	 function checkedPolicy(){
+		 if(!againValidation()){
+			 return  false;
+		 }
+		$('#modal-container-Policy').modal({
+			show: true,
+			backdrop: 'static',
+			keyboard: false
+		});
+	};
 
-		function changeSubHospital() {
-			$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
-				showPatientType($("#toHospitalId"), obj)
-			})
+	function checkFirstApply() {
+		let booleanFirst = true
+		let dataFirst = {policyNo: $('#policyNo').val()}
+		$.ajax({
+			type : 'POST',
+			contentType : 'application/json',
+			url : /*[[@{/getMedicalTreatmentWhetherFirst}]]*/,
+			async: false,
+			data : JSON.stringify(dataFirst),
+			success : function(response) {
+				console.log(response);
+				if(response.resultData == 0) {
+					booleanFirst= false;
+				}
+			},
+			error : function() {
+				/* openAlert('系統發生錯誤!'); */
+				booleanFirst=  false;
+				openAlert($('#E0018').val());
+				console.log("--2-",booleanFirst);
+			}
+		});
+		return booleanFirst;
+	}
+
+	// 2022.3.23 xianzhi
+	function addMedicalInfo() {
+		clone = $("[name='cloneItemMedicalData']").clone().show().removeAttr("name")
+		$(".medicalParent").append(clone)
+		showPatientType($(".hospital"), clone)
+	}
+
+	function deleteTarget(target) {
+		if ($(".itemMedicalData:visible").size() <= 1) {
+			openAlert('請至少添加一組醫療單位！');
+			return;
 		}
-		function changeHospital(vm) {
-			hpBranch = subHospitalMap[$(vm).find('option:selected').val()]
-			if (hpBranch != null) {
+		$(target).parent().parent().parent().remove()
+	}
+
+	function showPatientType(vm, obj) {
+		$.ajax({
+			type : 'POST',
+			url : "getPatientType",
+			data : {
+				hpId: $(vm).val(),
+				subHpId: $("#subHospitalId").val()
+			},
+			success : function(response) {
+				let html = ''
+				if(response.result == 'SUCCESS') {
+					$.each(response.resultData, function(inx, obj) {
+						html += "<option value='" + obj.otype + "'>" + obj.oname +  "</option>"
+					})
+					let newVm = $(obj).find(".patientType")
+					$(newVm).html(html)
+					showDivision(newVm)
+				}
+			},
+			error : function() {
+				openAlert($('#E0011').val());
+			}
+		});
+	}
+
+	var divisionMap = {}
+	function showDivision(vm) {
+		hpVm = $(".hospital");
+		$.ajax({
+			type : 'POST',
+			url : "getDivision",
+			data : {
+				hpId: hpVm.val(),
+				otype: $(vm).val(),
+				subHpId: $("#subHospitalId").val()
+			},
+			success : function(response) {
+				let html = ''
 				let subHtml = ''
-				$.each(hpBranch, function(inx, obj) {
-					subHtml += "<option value='" + obj.subHpId + "'>" + obj.subHpName +  "</option>"
-				})
-				$("#subHospitalId").html(subHtml)
-			}
-			$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
-				showPatientType(vm, obj)
-			})
-		}
-
-		function isIntersect(arr1,arr2){
-			let start = [Math.min(...arr1),Math.min(...arr2)];//区间的两个最小值
-			let end = [Math.max(...arr1),Math.max(...arr2)];//区间的两个最大值
-			return Math.max(...start) <= Math.min(...end);//最大值里的最小值 是否 小于等于 最大值的最小值
-		}
-
-		function clickAgreeSign() {
-			event.preventDefault();
-			event.stopPropagation();
-			$("[name='signAgree']").val('N')
-			$("#confirmSign").removeClass("checkedRadio")
-			$("#cancelSign").addClass("checkedRadio")
-			$('#confirmBxczModal').modal('show')
-		}
-
-		function confirmSignAgree(sign, doubleConfirm) {
-			event.preventDefault();
-			event.stopPropagation();
-			if (doubleConfirm) {
-				$('#confirmNotFirst').modal('hide')
-				if (sign == 'Y') {
-					$("[name='signAgree']").val('Y')
-					$("#cancelSign").removeClass("checkedRadio")
-					$("#confirmSign").addClass("checkedRadio")
-				} else {
-					$("[name='signAgree']").val('N')
-					$("#cancelSign").addClass("checkedRadio")
-					$("#confirmSign").removeClass("checkedRadio")
-				}
-			} else {
-				$('#confirmBxczModal').modal('hide')
-				if (checkFirstApply()) {
-					$('#confirmNotFirst').modal('show')
-				} else if (sign == 'Y') {
-					$("[name='signAgree']").val('Y')
-					$("#cancelSign").removeClass("checkedRadio")
-					$("#confirmSign").addClass("checkedRadio")
-				} else {
-					$("[name='signAgree']").val('N')
-					$("#cancelSign").addClass("checkedRadio")
-					$("#confirmSign").removeClass("checkedRadio")
-				}
-			}
-		}
-
-		function autoCheckedCompanys() {
-			$("#confirmAutoCheckedCompany").modal('show')
-		}
-
-		function confirmAutoCheck(agree) {
-			if (agree == 'Y') {
-				$.ajax({
-					type : 'POST',
-					url : /*[[@{/autoCheckedMedicalTreatmentCompany}]]*/,
-					async: false,
-					success : function(response) {
-						if (response.result = 'SUCCESS') {
-							let arr = []
-							response.resultData.forEach(i => {
-								arr.push(i.orgId)
-							})
-							$("[name='toItem']").each(function(index, item){
-								$("#toItem_" + $(item).val()).removeClass('checkedBox')
-								$(item).attr('checked', false)
-								if (arr.indexOf($(item).val()) != -1) {
-									$("#toItem_" + $(item).val()).addClass('checkedBox')
-									$(item).attr('checked', 'checked')
-								}
+				if(response.result == 'SUCCESS') {
+					let first = true
+					$.each(response.resultData, function(inx, obj) {
+						html += "<option value='" + obj.mainDepid + "'>" + obj.mainDepname +  "</option>"
+						if (first) {
+							first = false
+							$.each(obj.subDivisions, function(inx1, obj1) {
+								subHtml += "<option value='" + obj1.depid + "'>" + obj1.depname +  "</option>"
 							})
 						}
-					},
-					error : function() {
-						openAlert($('#E0018').val());
-					}
-				});
+						divisionMap[hpVm.val() + '_' + $(vm).val() + '_' + obj.mainDepid] = obj.subDivisions
+					})
+					let newVm = $(vm).parents(".itemMedicalData:first").find(".divisionType")
+					$(newVm).html(html)
+
+					let subNewVm = $(vm).parents(".itemMedicalData:first").find(".subDivisionType")
+					$(subNewVm).html(subHtml)
+					showDataFileGroup(vm)
+				}
+			},
+			error : function() {
+				openAlert($('#E0011').val());
 			}
-			$("#confirmAutoCheckedCompany").modal('hide')
+		});
+	}
+
+	var fileTypeRequiredMap = {}
+	function showDataFileGroup(vm) {
+		hpVm = $(".hospital");
+		$.ajax({
+			type : 'POST',
+			url : "getMedicalDataFileGroup",
+			data : {
+				hpId: hpVm.val(),
+				otype: $(vm).val(),
+				subHpId: $("#subHospitalId").val()
+			},
+			success : function(response) {
+				let html = ''
+				if(response.result == 'SUCCESS') {
+					fileTypeRequiredMap[hpVm.val() + '_' + $(vm).val()] = response.resultData
+					$.each(response.resultData, function(inx, obj) {
+						$.each(obj.fileType, function(inx, obj){
+							html += "<div class='checkbox col-sm-3' style='line-height: 1em; cursor: pointer;padding-left:0;text-align: left;'>"
+							html += "<div class='check-box'><i class=''><input id='checkBox1' type='checkbox' valtext='" + obj.dname + "' name='fileDataGroup' value='" + obj.dtype +  "'></i></div>" + obj.dname
+							html += "</div>"
+						})
+					})
+					let newVm = $(vm).parents(".itemMedicalData:first").find(".dataFileGroupType")
+					$(newVm).html(html)
+				}
+			},
+			error : function() {
+				openAlert($('#E0011').val());
+			}
+		});
+	}
+
+	function showSubDivision(vm) {
+		let hospital = $(".hospital").val()
+		let patientType = $(vm).parents(".itemMedicalData:first").find(".patientType").val()
+		let divisionType = $(vm).val()
+		let subDivisions = divisionMap[hospital + '_' + patientType + '_' + divisionType]
+
+		if (subDivisions != null) {
+			let subHtml = ''
+			$.each(subDivisions, function(inx, obj) {
+				subHtml += "<option value='" + obj.depid + "'>" + obj.depname +  "</option>"
+			})
+			let subNewVm = $(vm).parents(".itemMedicalData:first").find(".subDivisionType")
+			$(subNewVm).html(subHtml)
 		}
+	}
+
+	function changeSubHospital() {
+		$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
+			showPatientType($("#toHospitalId"), obj)
+		})
+	}
+	function changeHospital(vm) {
+		hpBranch = subHospitalMap[$(vm).find('option:selected').val()]
+		if (hpBranch != null) {
+			let subHtml = ''
+			$.each(hpBranch, function(inx, obj) {
+				subHtml += "<option value='" + obj.subHpId + "'>" + obj.subHpName +  "</option>"
+			})
+			$("#subHospitalId").html(subHtml)
+		}
+		$.each($("#tab_frame_print_company .itemMedicalData"), function(inx, obj) {
+			showPatientType(vm, obj)
+		})
+	}
+
+	function isIntersect(arr1,arr2){
+		let start = [Math.min(...arr1),Math.min(...arr2)];//区间的两个最小值
+		let end = [Math.max(...arr1),Math.max(...arr2)];//区间的两个最大值
+		return Math.max(...start) <= Math.min(...end);//最大值里的最小值 是否 小于等于 最大值的最小值
+	}
+
+	function clickAgreeSign() {
+		event.preventDefault();
+		event.stopPropagation();
+		$("[name='signAgree']").val('N')
+		$("#confirmSign").removeClass("checkedRadio")
+		$("#cancelSign").addClass("checkedRadio")
+		$('#confirmBxczModal').modal('show')
+	}
+
+	function confirmSignAgree(sign, doubleConfirm) {
+		event.preventDefault();
+		event.stopPropagation();
+		if (doubleConfirm) {
+			$('#confirmNotFirst').modal('hide')
+			if (sign == 'Y') {
+				$("[name='signAgree']").val('Y')
+				$("#cancelSign").removeClass("checkedRadio")
+				$("#confirmSign").addClass("checkedRadio")
+			} else {
+				$("[name='signAgree']").val('N')
+				$("#cancelSign").addClass("checkedRadio")
+				$("#confirmSign").removeClass("checkedRadio")
+			}
+		} else {
+			$('#confirmBxczModal').modal('hide')
+			if (checkFirstApply()) {
+				$('#confirmNotFirst').modal('show')
+			} else if (sign == 'Y') {
+				$("[name='signAgree']").val('Y')
+				$("#cancelSign").removeClass("checkedRadio")
+				$("#confirmSign").addClass("checkedRadio")
+			} else {
+				$("[name='signAgree']").val('N')
+				$("#cancelSign").addClass("checkedRadio")
+				$("#confirmSign").removeClass("checkedRadio")
+			}
+		}
+	}
+
+	function autoCheckedCompanys() {
+		$("#confirmAutoCheckedCompany").modal('show')
+	}
+
+	function confirmAutoCheck(agree) {
+		if (agree == 'Y') {
+			$.ajax({
+				type : 'POST',
+				url : /*[[@{/autoCheckedMedicalTreatmentCompany}]]*/,
+				async: false,
+				success : function(response) {
+					if (response.result = 'SUCCESS') {
+						let arr = []
+						response.resultData.forEach(i => {
+							arr.push(i.orgId)
+						})
+						$("[name='toItem']").each(function(index, item){
+							$("#toItem_" + $(item).val()).removeClass('checkedBox')
+							$(item).attr('checked', false)
+							if (arr.indexOf($(item).val()) != -1) {
+								$("#toItem_" + $(item).val()).addClass('checkedBox')
+								$(item).attr('checked', 'checked')
+							}
+						})
+					}
+				},
+				error : function() {
+					openAlert($('#E0018').val());
+				}
+			});
+		}
+		$("#confirmAutoCheckedCompany").modal('hide')
+	}
+
+	function previewConfig(file) {
+		if(file != null && file != ''){
+			var type = file.fileOrPng.substr(file.fileOrPng.lastIndexOf('.') + 1);
+			return {type: type, url: '', previewAsData: false, caption: file.fileName, key: file.fdId, size: (file.originFileBase64.length * 0.75)};
+		}
+	}
+
+	function initPatients() {
+		if (claimVo != null && claimVo.medicalInfo != null) {
+
+		}
+	}
 
 	</script>
 

@@ -426,12 +426,12 @@
 							<div class="col-sm-9">
 								<div class="radio inline">
 									<label>
-										<div class="radio-btn" th:classappend="${#strings.equals(claimVo.signAgree, 'Y')} ? 'checkedRadio'" id="confirmSign"><i><input th:attr="checked=${#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
+										<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
 									</label>
 								</div>
 								<div class="radio inline">
 									<label>
-										<div class="radio-btn" th:classappend="${!#strings.equals(claimVo.signAgree, 'Y')} ? 'checkedRadio'" id="cancelSign"><i><input th:attr="checked=${!#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="confirmSignAgree('N')" value="N" ></i></div>不同意
+										<div class="radio-btn" id="cancelSign"><i><input th:attr="checked=${claimVo == null or claimVo.signAgree == null or !#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="confirmSignAgree('N')" value="N" ></i></div>不同意
 									</label>
 								</div>
 							</div>
@@ -694,7 +694,7 @@
 			}
 
 			$.each(fileDataMap, function(key, value) {
-				$("#" + key).val(JSON.stringify(value))
+				$("#" + key).val(JSON.stringify(value).replace(/\[|]/g, '' ))
 			})
 
 			if (uploadFiles != undefined && uploadFiles != null) {
@@ -744,6 +744,7 @@
 					$("#"+value.remark).fileinput('_initFileActions');//这行代码就是调用绑定删除事件的
 					});
 			}
+
 			if (claimVo.sendAlliance == 'Y') {
 				$('#tab3_2').show().siblings().hide()
 			}

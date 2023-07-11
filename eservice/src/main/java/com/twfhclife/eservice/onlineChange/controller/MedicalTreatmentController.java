@@ -404,7 +404,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 	@RequestLog
 	@PostMapping("/medicalTreatment3")
-	public String medicalTreatment3(TransMedicalTreatmentClaimVo claimVo,BindingResult bindingResult) {
+	public String medicalTreatment3(TransMedicalTreatmentClaimVo claimVo) {
 		try {
 			// 要保人
 			LilipmVo lilipmVo = lilipmService.findByPolicyNo(claimVo.getPolicyNo());
@@ -922,6 +922,18 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			addDefaultSystemError();
 		}
 		return processResponseEntity();
+	}
+
+	@PostMapping("medicalTreatmentBackToStep3")
+	@RequestLog
+	public String medicalTreatmentBackToStep3(String transNum) {
+		TransMedicalTreatmentClaimVo claimVo = iMedicalTreatmentService.getTransInsuranceClaimDetail(transNum);
+		claimVo.setTransNum(null);
+		if (claimVo != null && claimVo.getClaimSeqId() != null) {
+			List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfoVos = iMedicalTreatmentService.getMedicalInfo(claimVo.getClaimSeqId());
+			claimVo.setMedicalInfo(medicalInfoVos);
+		}
+		return medicalTreatment3(claimVo);
 	}
 
 }

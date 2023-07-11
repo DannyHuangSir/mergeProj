@@ -60,6 +60,7 @@
 		<result property="cpoa" column="CPOA" />
 		<result property="signAgree" column="SIGN_AGREE" />
 		<result property="toSubHospitalId" column="TO_SUB_HOSPITAL_ID" />
+		<result property="diagnosisDate" column="DIAGNOSISDATE" />
 		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
 	</resultMap>
 	
@@ -130,7 +131,7 @@
 			DISEASENAME,HOSPITAL,OTHERCOMPANYINSURED,OTHERINSUCOMMPANY,OTHERINSUTYPE,OTHERINSUAMOUNT,
 			OTHERINSUCLAIM,ACCOUNTNAME,CALLPOLICE,
 			AUTHORIZATION_FILE_TYPE,AUTHORIZATION_START_DATE,AUTHORIZATION_END_DATE,FROM_HOSPITAL_ID,TO_HOSPITAL_ID,
-			CPOA, SIGN_AGREE, TO_SUB_HOSPITAL_ID
+			CPOA, SIGN_AGREE, TO_SUB_HOSPITAL_ID, DIAGNOSISDATE
 		from ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
 		where TRANS_NUM = #{transNum}
 		order by CREATE_DATE desc
@@ -152,7 +153,7 @@
 		INSERT INTO 
        		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
        		(
-       		<include refid="Base_Column_List" />, SIGN_AGREE, TO_SUB_HOSPITAL_ID
+       		<include refid="Base_Column_List" />, SIGN_AGREE, TO_SUB_HOSPITAL_ID, DIAGNOSISDATE
 			<if test="vo.applyDate != null">
 				,APPLY_DATE
 			</if>
@@ -220,7 +221,8 @@
        			#{vo.toHospitalId, jdbcType=VARCHAR},
        			#{vo.cpoa, jdbcType=VARCHAR},
        			#{vo.signAgree, jdbcType=VARCHAR},
-       			#{vo.toSubHospitalId, jdbcType=VARCHAR}
+       			#{vo.toSubHospitalId, jdbcType=VARCHAR},
+				#{vo.diagnosisDate}
 				<if test="vo.applyDate != null">
 					,#{vo.applyDate}
 				</if>
