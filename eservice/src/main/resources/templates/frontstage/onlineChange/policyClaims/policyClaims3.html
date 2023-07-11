@@ -684,10 +684,11 @@
 					previewMap[item.type].push(previewConfig(item))
 					var con  = {};
 						con['claimSeqId'] = 0;
+						con['type'] = item.type;
 						con['fileOrPng'] = item.fileOrPng;
 						con['fileName'] = item.fileName;
 						con['filePath'] = item.filePath;
-						con['fileBase64'] = item.fileBase64;
+						con['fileBase64'] = item.originFileBase64;
 					fileDataMap[item.type].push(con)
 				})
 			}

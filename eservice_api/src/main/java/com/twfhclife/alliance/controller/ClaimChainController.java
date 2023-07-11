@@ -470,10 +470,10 @@ public class ClaimChainController {
 								logger.error("call api 403 error: {}", e);
 							}
 						} else if (isClaimServiceType(vo.getServiceType())) {
-							Map<String, String> params105 = new HashMap<>();
+							Map<String, Object> params105 = new HashMap<>();
 							params105.put("caseId", d.getCaseNo());
 							try {
-								String resp105 = externalService.postForEntity(this.parameterServiceImpl.getParameterValueByCode("eservice_api", "alliance.api105.url"), params105, null);
+								String resp105 = externalService.postForEntity(this.parameterServiceImpl.getParameterValueByCode("eservice_api", "alliance.api105.url"), params105);
 								if (checkLiaAPIResponseValue(resp105,"/code","0")) {
 									rocId = MyJacksonUtil.readValue(resp105, "/data/idNo");
 								}
