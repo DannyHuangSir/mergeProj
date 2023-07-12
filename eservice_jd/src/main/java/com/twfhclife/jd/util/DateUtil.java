@@ -1,5 +1,6 @@
 package com.twfhclife.jd.util;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
@@ -17,13 +18,13 @@ public class DateUtil {
 
 	/** yyyy/MM/dd. */
 	public final static String FORMAT_WEST_DATE = "yyyy/MM/dd";
-	
+
 	/** yyyyMMdd */
 	public final static String FORMAT_DATE = "yyyyMMdd";
 
 	/**
 	 * 轉換日期格式.
-	 * 
+	 *
 	 * @param date 轉換日期
 	 * @param format 格式
 	 * @return 回傳格式化日期字串
@@ -38,7 +39,7 @@ public class DateUtil {
 
 	/**
 	 * 取得民國年月日.
-	 * 
+	 *
 	 * @return 回傳民國年系統日(民國年格式 yyyyMMdd)
 	 */
 	public static String getRocDate(Date westDate) {
@@ -50,7 +51,7 @@ public class DateUtil {
 
 	/**
 	 * 西元年轉民國年
-	 * 
+	 *
 	 * @param westDate YYYY/MM/DD
 	 * @return 民國年 格式: YYY/MM/DD
 	 */
@@ -67,13 +68,18 @@ public class DateUtil {
 
 	/**
 	 * 根據商品開賣日, 取回年字串.
-	 * 
+	 *
 	 * @param effectDate 開賣日 YYYY/MM/dd
 	 * @return 回傳系統日至開賣日的民國年字串
 	 */
 	public static List<String> getYearOpitonByEffectDate(String effectDate) {
-		String sysRocYear = getRocDate(new Date()).split("/")[0];
-		String effectDateYear = westToTwDate(effectDate).split("/")[0];
+		String rocDate = getRocDate(new Date());
+		String westDate = westToTwDate(effectDate);
+		if (StringUtils.isBlank(rocDate) || StringUtils.isBlank(westDate)) {
+			return Lists.newArrayList();
+		}
+		String sysRocYear = rocDate.split("/")[0];
+		String effectDateYear = westDate.split("/")[0];
 
 		// 組出民國年(從系統日起算至開賣日的年)
 		List<String> rocYearList = new ArrayList<>();
