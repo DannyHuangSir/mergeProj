@@ -565,9 +565,12 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 						 *   因为Base64，在页面只有一页的数据(PDF)
 						 * */
 						//if(StringUtils.isEmpty(transInsuranceClaimFileDataVo.getFileBase64())) {
-							String filePath = transMedicalTreatmentClaimFileDataVo.getFilePath()+"/"+transMedicalTreatmentClaimFileDataVo.getFileName();
-						transMedicalTreatmentClaimFileDataVo.setFileBase64(this.converFileToBase64Str(filePath));
-
+						String filePath = transMedicalTreatmentClaimFileDataVo.getFilePath()+"/"+transMedicalTreatmentClaimFileDataVo.getFileName();
+						String base64 = this.converFiestFileToBase64Str(filePath);
+						// 2023.7.11 文件無法轉換為base64則使用參數中的base64
+						if (StringUtils.isNotBlank(base64)) {
+							transMedicalTreatmentClaimFileDataVo.setFileBase64(this.converFileToBase64Str(filePath));
+						}
 						logger.error("通過文件上傳的路徑地址，獲取檔案轉換為Base64為的數據:{}", transMedicalTreatmentClaimFileDataVo.getFileBase64());
 
 						//}

@@ -231,7 +231,7 @@
 											<div class="radio inline">
 												<label>
 													<th:block th:if="${vo.value.parameterCode == 'INS_ACCIDENT_01'}">
-														<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.accidentCause, vo.value.parameterValue)  ? 'checked' : false}" name="accidentCause" th:value="${vo.value.parameterValue}" checked="checked" onclick="if(this.checked) $('#tab2_2').show().siblings().hide();"></i></div>
+														<div class="radio-btn"><i><input type="radio" th:attr="checked=${claimVo == null or claimVo.accidentCause == null or #strings.equals(claimVo.accidentCause, vo.value.parameterValue)  ? 'checked' : false}" name="accidentCause" th:value="${vo.value.parameterValue}" checked="checked" onclick="if(this.checked) $('#tab2_2').show().siblings().hide();"></i></div>
 													</th:block>
 													<th:block th:if="${vo.value.parameterCode == 'INS_ACCIDENT_02'}">
 														<div class="radio-btn"><i><input type="radio" th:attr="checked=${#strings.equals(claimVo.accidentCause, vo.value.parameterValue)  ? 'checked' : false}" name="accidentCause" th:value="${vo.value.parameterValue}" onclick="if(this.checked) $('#tab2_1').show().siblings().hide();"></i></div>
@@ -908,6 +908,9 @@
 		var hospitalList = /*[[${hospitalList}]]*/;
 		var subHospitalMap = {}
 	$(function(){
+		if ([[${verifyFail}]]) {
+			openAlert("建議可將「是否進行數位身分驗證及文件簽署」欄位切換為「不同意」即可送出申請！");
+		}
 		var claimVo = [[${claimVo}]]
 		var fileMap = {}
 		var previewMap = {}
@@ -1052,15 +1055,15 @@
 				changeYear : true,
 				maxDate : dateTime,
 				yearRange: 'c-80:c+80',
-				dateFormat : 'yy/mm/dd'
+				dateFormat : 'yymmdd'
 			 })
 		});
 
 		$("body").on("change", "[name='startDate']", function(){
 			if ($(this).val() != null && $(this).next().next().val() != null
 				&& $(this).val() != '' && $(this).next().next().val() != '') {
-				sDate = moment($(this).val(), 'YYYY/MM/DD')
-				eDate = moment( $(this).next().next().val(), 'YYYY/MM/DD')
+				sDate = moment($(this).val(), 'YYYYMMDD')
+				eDate = moment($(this).next().next().val(), 'YYYYMMDD')
 				if (eDate.diff(sDate, 'days') < 0 ) {
 					openAlert("授權開始時間不能大於結束時間");
 					$(this).val('')
@@ -1077,8 +1080,8 @@
 		$("body").on("change", "[name='endDate']", function() {
 			if ($(this).val() != null && $(this).prev().prev().val() != null
 					&& $(this).val() != '' && $(this).prev().prev().prev() != '') {
-				sDate = moment( $(this).prev().prev().val(), 'YYYY/MM/DD')
-				eDate = moment($(this).val(), 'YYYY/MM/DD')
+				sDate = moment( $(this).prev().prev().val(), 'YYYYMMDD')
+				eDate = moment($(this).val(), 'YYYYMMDD')
 				if (eDate.diff(sDate, 'days') < 0 ) {
 					openAlert("授權開始時間不能大於結束時間");
 					$(this).val('')
@@ -1173,13 +1176,11 @@
 				}
 			}
 		});
-
-		showPatientType($(".hospital"), $("#medicalDataId"))
-		initPatients()
+		initPatients(claimVo)
 	})
 
 	  //选择项目applyItemList
-	 function   againValidation(){
+	 function againValidation(){
 		if(!$("div.mystyle3").valid()){
 			return false;
 		}else{
@@ -1340,7 +1341,6 @@
 						isPass = false;
 						return false;
 					}
-
 					let requireList = Object.assign(fileTypeRequiredMap[$(".hospital").val() + "_" + $(obj).find(".patientType").val()])
 					$.each(requireList, function(inx, obj2) {
 						if (parseInt(obj2.require) < 1) {
@@ -1568,6 +1568,7 @@
 				hpId: $(vm).val(),
 				subHpId: $("#subHospitalId").val()
 			},
+			async: false,
 			success : function(response) {
 				let html = ''
 				if(response.result == 'SUCCESS') {
@@ -1577,6 +1578,31 @@
 					let newVm = $(obj).find(".patientType")
 					$(newVm).html(html)
 					showDivision(newVm)
+				}
+			},
+			error : function() {
+				openAlert($('#E0011').val());
+			}
+		});
+	}
+
+	function showBackPatientType(vm, obj) {
+		$.ajax({
+			type : 'POST',
+			url : "getPatientType",
+			data : {
+				hpId: $(vm).val(),
+				subHpId: $("#subHospitalId").val()
+			},
+			async: false,
+			success : function(response) {
+				let html = ''
+				if(response.result == 'SUCCESS') {
+					$.each(response.resultData, function(inx, obj) {
+						html += "<option value='" + obj.otype + "'>" + obj.oname +  "</option>"
+					})
+					let newVm = $(obj).find(".patientType")
+					$(newVm).html(html)
 				}
 			},
 			error : function() {
@@ -1596,6 +1622,7 @@
 				otype: $(vm).val(),
 				subHpId: $("#subHospitalId").val()
 			},
+			async: false,
 			success : function(response) {
 				let html = ''
 				let subHtml = ''
@@ -1636,6 +1663,7 @@
 				otype: $(vm).val(),
 				subHpId: $("#subHospitalId").val()
 			},
+			async: false,
 			success : function(response) {
 				let html = ''
 				if(response.result == 'SUCCESS') {
@@ -1778,9 +1806,46 @@
 		}
 	}
 
-	function initPatients() {
-		if (claimVo != null && claimVo.medicalInfo != null) {
-
+	function initPatients(vo) {
+		if (vo != null && vo.medicalInfo != null && vo.medicalInfo.length > 0) {
+			$.each(vo.medicalInfo, function(index, value){
+				let clone = $("#medicalDataId")
+				if (index != 0) {
+					clone = $("[name='cloneItemMedicalData']").clone().show().removeAttr("name")
+					$(".medicalParent").append(clone)
+				}
+				showBackPatientType($(".hospital"), clone)
+				$($(".patientType").get(index)).children().each(function(){
+					if ($(this).val() == value.otype) {
+						$(this).attr("selected", "selected")
+						showDivision($(this))
+					}
+				})
+				$($(".divisionType").get(index)).children().each(function(){
+					if ($(this).val() == value.depid) {
+						$(this).attr("selected", "selected")
+					}
+				})
+				$($(".subDivisionType").get(index)).children().each(function(){
+					if ($(this).val() == value.subDepid) {
+						$(this).attr("selected", "selected")
+					}
+				})
+				$($("[name='startDate']").get(index)).val(value.hsTime)
+				$($("[name='endDate']").get(index)).val(value.heTime)
+				$($(".dataFileGroupType").get(index)).find("[name='fileDataGroup']").each(function(){
+					let fileGroup = $(this)
+					$(value.dtypeList).each(function(index, item) {
+						if (fileGroup.val() == item.value) {
+							fileGroup.attr("checked", "checked")
+							fileGroup.parent().addClass('checkedBox-i')
+							fileGroup.parent().parent().addClass('checkedBox')
+						}
+					})
+				})
+			})
+		} else {
+			showPatientType($(".hospital"), $("#medicalDataId"))
 		}
 	}
 

@@ -669,6 +669,9 @@
 		var uploadFiles = /*[[${session.INSURANCE_CLAIM_UPLOADFILE}]]*/;
 		var uploadMaxNumber = /*[[${uploadMaxNumber}]]*/;
 		$(function(){
+			if ([[${verifyFail}]]) {
+				openAlert("建議可將「是否進行數位身分驗證及文件簽署」欄位切換為「不同意」即可送出申請！");
+			}
 			var claimVo = [[${claimVo}]]
 			var fileMap = {}
 			var previewMap = {}

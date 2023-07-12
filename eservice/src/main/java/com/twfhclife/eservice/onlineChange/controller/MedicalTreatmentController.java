@@ -933,6 +933,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfoVos = iMedicalTreatmentService.getMedicalInfo(claimVo.getClaimSeqId());
 			claimVo.setMedicalInfo(medicalInfoVos);
 		}
+		addAttribute("verifyFail", true);
 		return medicalTreatment3(claimVo);
 	}
 
