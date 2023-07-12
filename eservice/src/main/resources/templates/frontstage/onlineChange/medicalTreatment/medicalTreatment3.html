@@ -1731,9 +1731,7 @@
 		event.stopPropagation();
 		$("[name='signAgree']").val('N')
 		$("#confirmSign").removeClass("checkedRadio")
-		$("#confirmSignInput").removeAttr("checked")
 		$("#cancelSign").addClass("checkedRadio")
-		$("#cancelSignInput").attr("checked", "checked")
 		$('#confirmBxczModal').modal('show')
 	}
 
@@ -1745,9 +1743,7 @@
 			if (sign == 'Y') {
 				$("[name='signAgree']").val('Y')
 				$("#cancelSign").removeClass("checkedRadio")
-				$("#cancelSignInput").removeAttr("checked")
 				$("#confirmSign").addClass("checkedRadio")
-				$("#confirmSignInput").attr("checked", "checked")
 			}
 		} else {
 			$('#confirmBxczModal').modal('hide')
@@ -1755,9 +1751,7 @@
 				$('#confirmNotFirst').modal('show')
 			} else if (sign == 'Y') {
 				$("#cancelSign").removeClass("checkedRadio")
-				$("#cancelSignInput").removeAttr("checked")
 				$("#confirmSign").addClass("checkedRadio")
-				$("#confirmSignInput").attr("checked", "checked")
 			}
 		}
 	}
