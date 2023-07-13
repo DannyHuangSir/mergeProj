@@ -61,7 +61,7 @@ public class RestApiUtil {
 		List<BasicNameValuePair> urlParameters = new ArrayList<BasicNameValuePair>();
 		if(postParams != null) {
 			for (String param : postParams.keySet()) {
-				if(postParams.get(param) != null && !"null".equals(postParams)) {
+				if(postParams.get(param) != null) {
 					urlParameters.add(new BasicNameValuePair(param, postParams.get(param).toString()));
 				}
 			}
