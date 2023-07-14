@@ -171,7 +171,7 @@ public class ShouxianService {
         map.put("FSZ2-CALC-DATE", DateUtil.getRocDate(new Date(), "yyyyMMdd"));
         map.put("FSZ2-INSU-NO", policyNo);
         map.put("FSZ2-CALC-TYPE", 3);
-
+        logger.info("解約金API request: {}", map);
         ResponseEntity<String> responseEntity = null;
 
         HttpHeaders headers = new HttpHeaders();
