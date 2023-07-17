@@ -118,15 +118,44 @@ public class JdPolicyClaimDetailVo implements Serializable {
 
     private String pSalesID;
 
+    private String noteDate;
 
-    private List<JdClaimSubDetailVo> notes = Lists.newArrayList();
+    private String dueDate;
 
-    public List<JdClaimSubDetailVo> getNotes() {
-        return notes;
+    private String contentMemo;
+
+    private String itemContent;
+
+    public String getNoteDate() {
+        return noteDate;
     }
 
-    public void setNotes(List<JdClaimSubDetailVo> notes) {
-        this.notes = notes;
+    public void setNoteDate(String noteDate) {
+        this.noteDate = noteDate;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getContentMemo() {
+        return contentMemo;
+    }
+
+    public void setContentMemo(String contentMemo) {
+        this.contentMemo = contentMemo;
+    }
+
+    public String getItemContent() {
+        return itemContent;
+    }
+
+    public void setItemContent(String itemContent) {
+        this.itemContent = itemContent;
     }
 
     public String getAgentCode() {
