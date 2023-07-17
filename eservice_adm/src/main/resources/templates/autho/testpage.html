@@ -79,7 +79,31 @@
 		var data = $('#admss').val();
 		postJson("/eservice_adm/test/getAdmResult", data);
 	}
-	
+
+	function getEserviceResult() {
+		popupLoading();
+		var data = $('#eservice').val();
+		postJson("/eservice_adm/test/getEserviceResult",data);
+	}
+
+	function getEserviceJdResult() {
+		popupLoading();
+		var data = $('#eservice_jd').val();
+		postJson("/eservice_adm/test/getEserviceJdResult",data);
+	}
+
+	function getUnderwritingResult() {
+		popupLoading();
+		var data = $('#underwriting').val();
+		postJson("/eservice_adm/test/getUnderwritingResult",data);
+	}
+
+	function getShouxianResult() {
+		popupLoading();
+		var data = $('#shouxian').val();
+		postJson("/eservice_adm/test/getShouxianResult",data);
+	}
+
 	function postJson(url, data) {
 		console.log("post url="+url+", data=" + data);
 		$.ajax({
@@ -177,6 +201,28 @@
 		<br />
 		<input value="query" type="button" onclick="getAdmResult()" />
 		<br /><br />
+		ESERVICE SQL:<br />
+		<textarea type="textarea" id="eservice" cols="120" rows="4" placeholder="請輸入..."></textarea>
+		<br />
+		<input value="query" type="button" onclick="getEserviceResult()" />
+		<br /><br />
+		ESERVICE_JD SQL:<br />
+		<textarea type="textarea" id="eservice_jd" cols="120" rows="4" placeholder="請輸入..."></textarea>
+		<br />
+		<input value="query" type="button" onclick="getEserviceJdResult()" />
+		<br /><br />
+		進件系統 SQL:<br />
+		<textarea type="textarea" id="underwriting" cols="120" rows="4" placeholder="請輸入..."></textarea>
+		<br />
+		<input value="query" type="button" onclick="getUnderwritingResult()" />
+		<br /><br />
+		壽險核心 SQL:<br />
+		<textarea type="textarea" id="shouxian" cols="120" rows="4" placeholder="請輸入..."></textarea>
+		<br />
+		<input value="query" type="button" onclick="getShouxianResult()" />
+		<br /><br />
+
+
 
 	</div>
 

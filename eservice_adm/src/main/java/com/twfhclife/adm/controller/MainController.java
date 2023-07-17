@@ -148,6 +148,79 @@ public class MainController extends BaseMvcController {
 		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
 	}
 
+
+	@PostMapping("/test/getEserviceResult")
+	public ResponseEntity<ResponseObj> getEserviceResult(@RequestBody String ss) {
+		ResponseObj responseObj = new ResponseObj();
+		List<Map<String, Object>> res = null;
+		try {
+		logger.debug("test getEserviceResult() sql: \n" + ss);
+		res = myTestService.getEserviceResult(ss);
+		logger.debug("test getEserviceResult() sql result: " + (res == null ? "null" : res.size()));
+		} catch (Exception e) {
+			responseObj.setResult("ERROR");
+			responseObj.setResultData(e.getMessage());
+			return  ResponseEntity.status(HttpStatus.OK).body(responseObj);
+		}
+		responseObj.setResult("SUCCESS");
+		responseObj.setResultData(res);
+		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
+	}
+
+	@PostMapping("/test/getEserviceJdResult")
+	public ResponseEntity<ResponseObj> getEserviceJdResult(@RequestBody String ss) {
+		ResponseObj responseObj = new ResponseObj();
+		List<Map<String, Object>> res = null;
+		try {
+		logger.debug("test getEserviceJdResult() sql: \n" + ss);
+		res = myTestService.getEserviceJdResult(ss);
+		logger.debug("test getEserviceJdResult() sql result: " + (res == null ? "null" : res.size()));
+		} catch (Exception e) {
+			responseObj.setResult("ERROR");
+			responseObj.setResultData(e.getMessage());
+			return  ResponseEntity.status(HttpStatus.OK).body(responseObj);
+		}
+		responseObj.setResult("SUCCESS");
+		responseObj.setResultData(res);
+		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
+	}
+
+	@PostMapping("/test/getUnderwritingResult")
+	public ResponseEntity<ResponseObj> getUnderwritingResult(@RequestBody String ss) {
+		ResponseObj responseObj = new ResponseObj();
+		List<Map<String, Object>> res = null;
+		try {
+		logger.debug("test getUnderwritingResult() sql: \n" + ss);
+		res = myTestService.getUnderwritingResult(ss);
+		logger.debug("test getUnderwritingResult() sql result: " + (res == null ? "null" : res.size()));
+		} catch (Exception e) {
+			responseObj.setResult("ERROR");
+			responseObj.setResultData(e.getMessage());
+			return  ResponseEntity.status(HttpStatus.OK).body(responseObj);
+		}
+		responseObj.setResult("SUCCESS");
+		responseObj.setResultData(res);
+		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
+	}
+
+	@PostMapping("/test/getShouxianResult")
+	public ResponseEntity<ResponseObj> getShouxianResult(@RequestBody String ss) {
+		ResponseObj responseObj = new ResponseObj();
+		List<Map<String, Object>> res = null;
+		try {
+		logger.debug("test getShouxianResult() sql: \n" + ss);
+		res = myTestService.getShouxianResult(ss);
+		logger.debug("test getShouxianResult() sql result: " + (res == null ? "null" : res.size()));
+		} catch (Exception e) {
+			responseObj.setResult("ERROR");
+			responseObj.setResultData(e.getMessage());
+			return  ResponseEntity.status(HttpStatus.OK).body(responseObj);
+		}
+		responseObj.setResult("SUCCESS");
+		responseObj.setResultData(res);
+		return ResponseEntity.status(HttpStatus.OK).body(responseObj);
+	}
+
 	@RequestMapping(path = "/test/logs", method = RequestMethod.GET)
 	public ResponseEntity<Resource> getEsLog(@RequestParam String sys, @RequestParam String xx) {
 		if (MyStringUtil.isNullOrEmpty(xx) || !xx.equals("oxHpuv5fmB6uWIQAlqhPOw==")) {

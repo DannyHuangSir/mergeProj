@@ -14,4 +14,9 @@ public interface IMyTestService {
 	
 	public List<Map<String, Object>> getAdmQueryResult(String script) throws Exception;
 
+	public List<Map<String, Object>> getEserviceResult(String script) throws Exception;
+	public List<Map<String, Object>> getEserviceJdResult(String script) throws Exception;
+	public List<Map<String, Object>> getUnderwritingResult(String script) throws Exception;
+	public List<Map<String, Object>> getShouxianResult(String script) throws Exception;
+
 }
