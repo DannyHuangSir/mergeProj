@@ -19,8 +19,7 @@ eserviceForm.post = function (url, formData, afterFn, beforeFn) {
 		url : url,
 		contentType: 'application/json',
 		type: "POST",
-		data:  JSON.stringify(formData),
-		async: false
+		data:  JSON.stringify(formData)
 	}).done(function(response) {
 		if (response.result == 'SUCCESS') {
 			if (afterFn) {
