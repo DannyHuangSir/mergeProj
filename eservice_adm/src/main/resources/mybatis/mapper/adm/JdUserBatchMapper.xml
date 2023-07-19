@@ -28,7 +28,7 @@
         #{jdUserVo.createUser,jdbcType=VARCHAR},
         #{jdUserVo.onlineFlag,jdbcType=VARCHAR},
         #{jdUserVo.status,jdbcType=VARCHAR},
-        #{jdUserVo.userName,jdbcType=VARCHAR},
+        ESERVICE.DBO.FN_ENBASE64(#{jdUserVo.userName,jdbcType=VARCHAR}),
         getdate(),
         #{jdUserVo.clauseFlag,jdbcType=VARCHAR},
         #{jdUserVo.serialNum,jdbcType=VARCHAR},
@@ -57,7 +57,7 @@
             <if test="jdUserVo.createUser != null and jdUserVo.createUser != ''"> CREATE_USER = #{jdUserVo.createUser },</if>
             <if test="jdUserVo.onlineFlag != null and jdUserVo.onlineFlag != ''"> ONLINE_FLAG = #{jdUserVo.onlineFlag },</if>
             <if test="jdUserVo.status != null and jdUserVo.status != ''"> STATUS = #{jdUserVo.status },</if>
-            <if test="jdUserVo.userName != null and jdUserVo.userName != ''"> USER_NAME = #{jdUserVo.userName },</if>
+            <if test="jdUserVo.userName != null and jdUserVo.userName != ''"> USER_NAME = ESERVICE.DBO.FN_ENBASE64(#{jdUserVo.userName }),</if>
             <if test="jdUserVo.clauseFlag != null and jdUserVo.clauseFlag != ''"> CLAUSE_FLAG = #{jdUserVo.clauseFlag },</if>
             <if test="jdUserVo.serialNum != null and jdUserVo.serialNum != ''"> SERIAL_NUM = #{jdUserVo.serialNum },</if>
             <if test="jdUserVo.icId != null and jdUserVo.icId != ''"> IC_ID = #{jdUserVo.icId },</if>
@@ -89,7 +89,7 @@
                      ROW_NUMBER() OVER (ORDER BY USER_ID) AS ROW_NUM
         ,A.*
                  FROM (
-                          select USER_ID,STATUS,EFFECTIVE_DATE,EXPIRATION_DATE,USER_NAME,IC_ID,LOGIN_SIZE,ESERVICE.DBO.FN_DEBASE64(ROC_ID) AS ROC_ID,ESERVICE.DBO.FN_DEBASE64(EMAIL) AS EMAIL,MOBILE
+                          select USER_ID,STATUS,EFFECTIVE_DATE,EXPIRATION_DATE,ESERVICE.DBO.FN_DEBASE64(USER_NAME) USER_NAME,IC_ID,LOGIN_SIZE,ESERVICE.DBO.FN_DEBASE64(ROC_ID) AS ROC_ID,ESERVICE.DBO.FN_DEBASE64(EMAIL) AS EMAIL,MOBILE
                           from ESERVICE_JD.dbo.USERS where USER_ID  = #{vo.userId}                      ) A
              ) B
         WHERE
