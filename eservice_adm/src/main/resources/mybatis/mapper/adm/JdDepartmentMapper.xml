@@ -255,7 +255,7 @@
         WHERE
         PARENT_DEP IS NOT NULL
         <if test="vo.depId != null and vo.depId !=''">
-            AND PARENT_DEP = (select DEP_ID from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{vo.depId})
+            AND PARENT_DEP = (select DEP_ID from ESERVICE_JD.dbo.DEPARTMENT where BRANCH_ID = #{vo.depId} AND PARENT_DEP = '0')
         </if>
         ORDER BY
         DEP_ID

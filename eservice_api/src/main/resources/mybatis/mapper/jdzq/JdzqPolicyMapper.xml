@@ -41,16 +41,11 @@
         <result column="PermYear" property="permYear" />
         <result property="pSalesName" column="pSalesName"/>
         <result property="pSalesID" column="pSalesID"/>
-        <collection property="notes" resultMap="PolicyClaimSubMap" />
-    </resultMap>
-
-    <resultMap id="PolicyClaimSubMap" type="com.twfhclife.eservice.api.jdzq.model.PolicyClaimSubDetailVo">
         <result column="ItemContent" property="itemContent" />
         <result column="ContentMemo" property="contentMemo" />
         <result column="NoteDate" property="noteDate" />
         <result column="DueDate" property="dueDate" />
     </resultMap>
-
 
     <select id="getPolicyClaimDetail" resultMap="PolicyClaimMap">
         select ${columnItem} from (

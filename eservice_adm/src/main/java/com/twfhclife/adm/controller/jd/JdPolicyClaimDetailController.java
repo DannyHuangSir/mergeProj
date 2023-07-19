@@ -71,57 +71,9 @@ public class JdPolicyClaimDetailController extends BaseController {
     @PostMapping("/policyClaimDetail/csv")
     public String policyClaimDetailCSV1(JdPolicyClaimReqVo vo) {
         PolicyClaimDetailResponse report1 = jdPolicyClaimDetailService.getInsClaimStatisticsReport(vo);
-        if (report1 != null && CollectionUtils.isNotEmpty(report1.getPolicyClaimDetailVo())) {
-            int size = computeMaxNoteSize(report1.getPolicyClaimDetailVo());
-            List<String> newColumn = Lists.newArrayList();
-            List<String> newColumnName = Lists.newArrayList();
-            List<String> lilipiColumn = Lists.newArrayList("noteDate", "dueDate", "itemContent", "contentMemo");
-            List<String> lilipiColumnName =  Lists.newArrayList("照會日期", "照會回復截止日", "照會項目", "內容補充");
-
-            report1.getPolicyClaimDetailVo().forEach(data -> {
-                int tmpSize = (size <= 0 ? 1 : size);
-                if (data.getNotes().size() < tmpSize) {
-                    IntStream.range(0, tmpSize - data.getNotes().size()).forEach(idx -> data.getNotes().add(new JdClaimSubDetailVo()));
-                }
-            });
-
-            if (size > 1) {
-                processColumns(vo, size, newColumn, newColumnName, lilipiColumn, lilipiColumnName);
-            }
-        }
-
         addAttribute("vo", vo);
         addAttribute("reportList", report1 != null ? report1.getPolicyClaimDetailVo() : Lists.newArrayList());
         return   "backstage/jd/policyClaimDetail3";
-    }
-
-    private static void processColumns(JdPolicyClaimReqVo vo, int size, List<String> newColumn, List<String> newColumnName, List<String> lilipiColumn, List<String> lilipiColumnName) {
-        vo.getColumn().forEach(c -> {
-            if (lilipiColumn.contains(c)) {
-                IntStream.range(0, size).forEach(idx -> newColumn.add(c));
-            } else {
-                newColumn.add(c);
-            }
-        });
-        vo.getColumnName().forEach(c -> {
-            if (lilipiColumnName.contains(c)) {
-                IntStream.range(0, size).forEach(idx -> newColumnName.add(c));
-            } else {
-                newColumnName.add(c);
-            }
-        });
-        vo.setColumn(newColumn);
-        vo.setColumnName(newColumnName);
-    }
-
-    private int computeMaxNoteSize(List<JdPolicyClaimDetailVo> claimDetailVos) {
-        int size = 0;
-        for (JdPolicyClaimDetailVo claimDetailVo : claimDetailVos) {
-            if (claimDetailVo.getNotes().size() > size) {
-                size = claimDetailVo.getNotes().size();
-            }
-        }
-        return size;
     }
 
     @PostMapping("/getBpmcurrenttak")

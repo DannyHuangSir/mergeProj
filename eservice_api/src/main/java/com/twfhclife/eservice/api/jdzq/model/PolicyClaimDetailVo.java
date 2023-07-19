@@ -1,7 +1,5 @@
 package com.twfhclife.eservice.api.jdzq.model;
 
-import com.google.common.collect.Lists;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -119,21 +117,52 @@ public class PolicyClaimDetailVo implements Serializable {
 
     private String pSalesID;
 
+    private String noteDate;
+
+    private String dueDate;
+
+    private String contentMemo;
+
+    private String itemContent;
+
+    public String getNoteDate() {
+        return noteDate;
+    }
+
+    public void setNoteDate(String noteDate) {
+        this.noteDate = noteDate;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getContentMemo() {
+        return contentMemo;
+    }
+
+    public void setContentMemo(String contentMemo) {
+        this.contentMemo = contentMemo;
+    }
+
+    public String getItemContent() {
+        return itemContent;
+    }
+
+    public void setItemContent(String itemContent) {
+        this.itemContent = itemContent;
+    }
+
     public String getNoteKey() {
         return noteKey;
     }
 
     public void setNoteKey(String noteKey) {
         this.noteKey = noteKey;
-    }
-    private List<PolicyClaimSubDetailVo> notes = Lists.newArrayList();
-
-    public List<PolicyClaimSubDetailVo> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(List<PolicyClaimSubDetailVo> notes) {
-        this.notes = notes;
     }
 
     public String getAgentCode() {
