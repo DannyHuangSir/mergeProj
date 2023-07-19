@@ -221,6 +221,7 @@
 		// 節點選擇function
 		treeUtil.fnNodeSelected = function(nodeData) {
 			// 設定同步
+			getParentDepList(nodeData);
 			$('#addForm #parentDepDiv').html(nodeData.target.text);
 			$('#nodeForm #parentDep').val(nodeData.target.parentDep);
 			$('#nodeForm #depId').val(nodeData.target.id);
@@ -371,6 +372,36 @@
 		// 部門管理初始化
 		$('#rootDiv').hide();
 	}
+
+	// 取得上一層部門清單
+	function getParentDepList(nodeData) {
+		var formData = {
+			parentDep : nodeData.target.parentDep
+		};
+		eserviceForm.post(/*[[@{/jdDeptMgnt/getParentDepList}]]*/, formData, function(response) {
+			if (response.result == 'SUCCESS') {
+				$('#nodeForm #parentDepDiv').html(nodeData.target.par);
+				// if (response.resultData.length <= 1) {
+				//
+				// } else {
+				// 	$('#nodeForm #parentDepDiv').html('');
+				// 	var optHtml = '';
+				// 	optHtml += '<select id="parentDepOpt" class="form-control" onchange="$(\'#nodeForm #parentDep\').val(this.value);">';
+				//
+				// 	$.each(response.resultData, function(i, obj) {
+				// 		var selected = '';
+				// 		if (obj.depId == nodeData.target.parentDep) {
+				// 			selected = 'selected="selected"';
+				// 		}
+				// 		optHtml += ('<option value="' + obj.depId + '" ' + selected + '>' + obj.depName + '</option>');
+				// 	});
+				// 	optHtml += '</select>';
+				// 	$('#nodeForm #parentDepDiv').html(optHtml);
+				// }
+			}
+		});
+	}
+	
 	/*]]>*/
 	</script>
 </html>
