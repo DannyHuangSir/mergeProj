@@ -124,7 +124,7 @@
 		INSERT INTO 
        		ESERVICE.DBO.TRANS_INSURANCE_CLAIM
        		(
-       		<include refid="Base_Column_List" /> ,SIGN_AGREE, DIAGNOSISDATE
+       		<include refid="Base_Column_List" /> ,SIGN_AGREE, SEND_CONFIRM_TIME, DIAGNOSISDATE
 			<if test="vo.applyDate != null">
 				,APPLY_DATE
 			</if>
@@ -186,6 +186,7 @@
        			#{vo.accountName, jdbcType=VARCHAR},
        			#{vo.callPolice, jdbcType=VARCHAR},
        			#{vo.signAgree, jdbcType=VARCHAR},
+				#{vo.sendConfirmTime, jdbcType=VARCHAR},
        			#{vo.diagnosisDate}
 				<if test="vo.applyDate != null">
 					,#{vo.applyDate}

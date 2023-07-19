@@ -224,6 +224,7 @@ public class TransInsuranceClaimVo extends AbstractOnlineChangeModelBean {
 	/** 是否報警*/
 	private String callPolice;
 
+
 	/**
 	 * 首家公司代號 "L"+保險公司代號，或"N"+產險公司代號。例如：L02為台灣人壽、N05為富邦產險
 	 */
@@ -255,6 +256,16 @@ public class TransInsuranceClaimVo extends AbstractOnlineChangeModelBean {
 	private Timestamp createDate;
 
 	private Date applyDate;
+
+	private String sendConfirmTime;
+
+	public String getSendConfirmTime() {
+		return sendConfirmTime;
+	}
+
+	public void setSendConfirmTime(String sendConfirmTime) {
+		this.sendConfirmTime = sendConfirmTime;
+	}
 
 	public Date getApplyDate() {
 		return applyDate;

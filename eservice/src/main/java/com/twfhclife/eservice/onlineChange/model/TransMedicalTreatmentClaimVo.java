@@ -298,6 +298,16 @@ public class TransMedicalTreatmentClaimVo extends AbstractOnlineChangeModelBean 
 	
 	private String email;
 
+	private String sendConfirmTime;
+
+	public String getSendConfirmTime() {
+		return sendConfirmTime;
+	}
+
+	public void setSendConfirmTime(String sendConfirmTime) {
+		this.sendConfirmTime = sendConfirmTime;
+	}
+
 	/**
 	 * Spec v1.5.2
 	 * 申請資料

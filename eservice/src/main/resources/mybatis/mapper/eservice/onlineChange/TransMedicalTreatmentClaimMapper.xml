@@ -153,7 +153,7 @@
 		INSERT INTO 
        		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
        		(
-       		<include refid="Base_Column_List" />, SIGN_AGREE, TO_SUB_HOSPITAL_ID, DIAGNOSISDATE
+       		<include refid="Base_Column_List" />, SIGN_AGREE, TO_SUB_HOSPITAL_ID, SEND_CONFIRM_TIME, DIAGNOSISDATE
 			<if test="vo.applyDate != null">
 				,APPLY_DATE
 			</if>
@@ -222,6 +222,7 @@
        			#{vo.cpoa, jdbcType=VARCHAR},
        			#{vo.signAgree, jdbcType=VARCHAR},
        			#{vo.toSubHospitalId, jdbcType=VARCHAR},
+       			#{vo.sendConfirmTime, jdbcType=VARCHAR},
 				#{vo.diagnosisDate}
 				<if test="vo.applyDate != null">
 					,#{vo.applyDate}

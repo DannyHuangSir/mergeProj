@@ -57,6 +57,7 @@
 				<h2>請填寫理賠申請書</h2>
 				<div class="col-md-10 col-md-offset-1">
 					<form id="step3Form" class="form-horizontal no-borderBottom marginTop20" role="form" th:action="@{/medicalTreatment4}" method="POST" enctype="multipart/form-data">
+						<input type="hidden" id="sendConfirmTime" name="sendConfirmTime">
 						<div class="form-group grey2">
 							<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>申請項目：</label>
 							<div class="col-sm-9">
@@ -827,8 +828,8 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 				</div>
 				<div class="modal-body apply2 center1 grey2">
-					<h3>使用此功能，系統將透過「保險業通報作業資訊系統」篩選出您可能有投保符合理賠/保全聯盟鏈轉送申請的公司。
-						請注意！篩選出的建議公司清單可能會受投保時間落差、投保內容認定而不完全正確，送出前請務必再次確認，或是與您的保險公司聯繫。
+					<h3>本功能将透遇下保作资系统，出您可能有投保且符合理赔/保全盟键尊送申请的公司
+						提醒您!撰後所取得保险公司名罩可能受投保落差、投保内容定而有差翼，此功能也不代表已硅可以理赔或需更保罩内容，您仍再行检祝後行删除或增加，送出前请必再次，或是奥您投保的相翻保险公司璐整。
 					</h3>
 					<p class="marginTop20">
 						<a href="#">
@@ -1750,6 +1751,7 @@
 			if (!checkFirstApply()) {
 				$('#confirmNotFirst').modal('show')
 			} else if (sign == 'Y') {
+				$("[name='signAgree']").val('Y')
 				$("#cancelSign").removeClass("checkedRadio")
 				$("#confirmSign").addClass("checkedRadio")
 			}
@@ -1762,6 +1764,7 @@
 
 	function confirmAutoCheck(agree) {
 		if (agree == 'Y') {
+			$("#sendConfirmTime").val(moment().format('YYYYMMDDHHmmss'))
 			$.ajax({
 				type : 'POST',
 				url : /*[[@{/autoCheckedMedicalTreatmentCompany}]]*/,
@@ -1774,10 +1777,10 @@
 						})
 						$("[name='toItem']").each(function(index, item){
 							$("#toItem_" + $(item).val()).removeClass('checkedBox')
-							$(item).attr('checked', false)
+							$(item).prop('checked', false)
 							if (arr.indexOf($(item).val()) != -1) {
 								$("#toItem_" + $(item).val()).addClass('checkedBox')
-								$(item).attr('checked', 'checked')
+								$(item).prop('checked', true)
 							}
 						})
 					}
@@ -1828,7 +1831,7 @@
 					let fileGroup = $(this)
 					$(value.dtypeList).each(function(index, item) {
 						if (fileGroup.val() == item.value) {
-							fileGroup.attr("checked", "checked")
+							fileGroup.prop("checked", true)
 							fileGroup.parent().addClass('checkedBox-i')
 							fileGroup.parent().parent().addClass('checkedBox')
 						}
