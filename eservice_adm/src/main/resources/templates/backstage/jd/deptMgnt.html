@@ -221,10 +221,7 @@
 		// 節點選擇function
 		treeUtil.fnNodeSelected = function(nodeData) {
 			// 設定同步
-			$.ajaxSetup({async: false});
 			getParentDepList(nodeData);
-			$.ajaxSetup({async: true});
-
 			$('#addForm #parentDepDiv').html(nodeData.target.text);
 			$('#nodeForm #parentDep').val(nodeData.target.parentDep);
 			$('#nodeForm #depId').val(nodeData.target.id);
