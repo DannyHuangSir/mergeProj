@@ -142,7 +142,6 @@ public class ShouxianService {
     public List<CancellationMoneyVo> getPolicyCancellationMoney(String policyNo) throws Exception {
         initRestTemplate();
         String strResponse = postForEntity(policyNo);
-//        String strResponse = "[{\"FSZ2-SCN-NAME\": \"FSZ2\", \"FSZ2-FUNC-CODE\": \"IN\", \"FSZ2-INSU-NO\": \"BR10000075\", \"FSZ2-CALC-DATE\": \"01111104\", \"FSZ2-CALC-TYPE\": \"2\", \"FSZ2-AMT\": \"148500\", \"FSZ2-EFFECTIVE-DATE\": \"00000000\"} ]";
         return new Gson().fromJson(strResponse, new TypeReference<List<CancellationMoneyVo>>(){}.getType());
     }
 
@@ -168,7 +167,7 @@ public class ShouxianService {
         Map<String, Object> map = Maps.newHashMap();
         map.put("FSZ2-SCN-NAME", "FSZ2");
         map.put("FSZ2-FUNC-CODE", "IN");
-        map.put("FSZ2-CALC-DATE", DateUtil.getRocDate(new Date(), "yyyyMMdd"));
+        map.put("FSZ2-CALC-DATE", DateUtil.getFourYearRocDate());
         map.put("FSZ2-INSU-NO", policyNo);
         map.put("FSZ2-CALC-TYPE", 3);
         logger.info("解約金API request: {}", map);

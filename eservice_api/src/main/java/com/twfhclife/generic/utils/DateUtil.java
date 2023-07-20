@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * 日期工具.
@@ -56,6 +57,20 @@ public class DateUtil {
 			return "";
 		}
 		return westToTwDate(formatDateTime(westDate, format));
+	}
+
+	public static String getFourYearRocDate() {
+		String rocDate = westToTwDate(formatDateTime(new Date(), "yyyyMMdd"));
+		if (StringUtils.isNotBlank(rocDate)) {
+			if (rocDate.length() < 8) {
+				StringBuilder sb = new StringBuilder();
+				IntStream.range(0, (8 - rocDate.length())).forEach(i -> sb.append("0"));
+				return sb.append(rocDate).toString();
+			} else if (rocDate.length() == 8) {
+				return rocDate;
+			}
+		}
+		return "";
 	}
 
 	/**
