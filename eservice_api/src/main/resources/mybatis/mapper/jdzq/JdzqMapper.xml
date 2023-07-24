@@ -136,7 +136,7 @@
                 and Sub_Serial = '0'
             order by ReviewTimes desc, ReviewType desc
         ) ReviewResult,
-        (SELECT TOP(1) RFeeApplyDate FROM PolicyReject WHERE MAIN_KEY = A.MAIN_KEY AND RFeeApplyDate IS NOT NULL) RFeeApplyDate
+        A.PolicyAppDate RFeeApplyDate
         FROM MainPolicy A
         LEFT JOIN (
         SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM
@@ -152,7 +152,7 @@
     <select id="getPolicyInfo" resultMap="CaseMap">
         SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.AppBirth, A.BPMCurrentTak,
         A.AccDocNo, A.PM_PRME_NEW_OLD_SW,
-        (SELECT TOP(1) PrmeNewOldSW FROM PolicyFormData WHERE MAIN_KEY = A.MAIN_KEY) PrmeNewOldSW,
+        (SELECT TOP(1) TablePrem FROM PolicyFormData WHERE MAIN_KEY = A.MAIN_KEY) PrmeNewOldSW,
         E.PTypeName PolicyType, A.StampResult, A.PayType, A.InsBirth, A.InsName, A.InsID, A.PolicyAmount, A.PolicyAmountNTD
         FROM MainPolicy A
         LEFT JOIN (
@@ -203,7 +203,7 @@
 
     <select id="getNotePdf" resultMap="notePdfMap">
         SELECT DISTINCT A.PolicyNo, A.AppName, A.InsName, A.AgentCode agentCode, P.BrokerName, A.AgentSalesName, A.AgentSalesID,
-        A.AccDocNo, D.BranchDesc, F.PTypeName, D.ManageDate, D.ProcessorName, D.ExtNumber, D.DueDate, D.NoteVerifyMemo,
+        A.AccDocNo, D.BranchDesc, F.PTypeName, D.ManageDate, D.ProcessorName, UP.ExtNumber, D.DueDate, D.NoteVerifyMemo,
         E.ItemCode, E.ContentMemo, A.PSalesName , A.PSalesID
         FROM MainPolicy A
         LEFT JOIN (
@@ -213,6 +213,7 @@
         LEFT JOIN PolicyNoteItems E ON D.Note_Key = E.Note_Key
         LEFT JOIN BrokerProfile P ON A.AgentCode = P.Broker_ID
         LEFT JOIN PolicyType F ON F.PType_Code = A.PolicyType
+        LEFT JOIN UserProfile UP ON UP.User_ID = A.Manager
         WHERE A.PolicyNo = #{policyNo} and D.Note_Key = #{noteKey}
     </select>
 
