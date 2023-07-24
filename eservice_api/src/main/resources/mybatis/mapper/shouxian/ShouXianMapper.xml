@@ -424,7 +424,7 @@
             decode(nvl(BONF_FILE_BEG_DATE,''), '', '', TO_CHAR(BONF_FILE_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) BONF_FILE_BEG_DATE,
             BONF_ACCU_BON PREMIUM,
             BONF_BON_BAL, BONF_TAKE_CODE , BONF_BON
-            FROM LIBONF WHERE
+            FROM LIBONF_ES WHERE
             BONF_INSU_TYPE ||BONF_INSU_GRP_NO ||BONF_INSU_SEQ_NO = #{policyNo}
            ]]>
     </select>
@@ -452,7 +452,7 @@
             PAHI_PAY_CODE PAYF_PAY_REAS,
             lph.PAHI_ACT_AMT
             FROM LIPAYF_ES lbf
-            LEFT JOIN LIPAHI lph ON lph.PAHI_INSU_TYPE||lph.PAHI_INSU_GRP_NO||lph.PAHI_INSU_SEQ_NO = lbf.PAYF_INSU_NO
+            LEFT JOIN LIPAHI_ES lph ON lph.PAHI_INSU_TYPE||lph.PAHI_INSU_GRP_NO||lph.PAHI_INSU_SEQ_NO = lbf.PAYF_INSU_NO
         WHERE lbf.PAYF_INSU_NO = #{policyNo} AND lph.PAHI_PAY_CODE IN ('01', '02', '96')
     </select>
 
