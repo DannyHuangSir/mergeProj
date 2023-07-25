@@ -139,10 +139,6 @@ public class ShouxianService {
 
     @Value("${csp.api.provide.esrv-fsz2.url}")
     private String url;
-
-    @Value("${csp.api.provide.esjd-usz3.url}")
-    private String usz3Url;
-
     public List<CancellationMoneyVo> getPolicyCancellationMoney(String policyNo) throws Exception {
         initRestTemplate();
         String strResponse = postForEntity(policyNo);
@@ -176,7 +172,7 @@ public class ShouxianService {
         HttpEntity<String> entity = new HttpEntity<String>(json, headers);
 
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-        responseEntity = restTemplate.postForEntity(usz3Url, entity, String.class);
+        responseEntity = restTemplate.postForEntity(url, entity, String.class);
 
         strRes = responseEntity.getBody();
         boolean checkRes = this.checkResponseStatus(responseEntity);
