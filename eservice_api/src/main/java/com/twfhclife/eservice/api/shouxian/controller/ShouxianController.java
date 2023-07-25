@@ -8,11 +8,13 @@ import com.twfhclife.eservice.api.shouxian.domain.*;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.api.shouxian.service.ShouxianService;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
+import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.service.IOptionService;
+import com.twfhclife.generic.utils.ApConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -491,6 +493,8 @@ public class ShouxianController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponseObj);
     }
 
+    @Autowired
+    private IParameterService parameterService;
 
     @PostMapping(value = "/getPolicyCancellationMoney", produces = { "application/json" })
     @EventRecordLog(value = @EventRecordParam(
@@ -507,8 +511,15 @@ public class ShouxianController extends BaseController {
         ApiResponseObj<PolicyCancellationMoneyDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
-            List<CancellationMoneyVo> cancellationMoneyVos = shouxianService.getPolicyCancellationMoney(vo.getPolicyNo());
             PolicyCancellationMoneyDataResponse resp = new PolicyCancellationMoneyDataResponse();
+            List cancellationMoneyVos;
+            String investParam = parameterService.getParameterValueByCode("eservice_jd", "JD_POLICY_INVESTMENT_TYPE");
+            if (StringUtils.contains(investParam, vo.getPolicyNo())) {
+                resp.setInvest(true);
+                cancellationMoneyVos = shouxianService.getInvestPolicyCancellationMoney(vo.getPolicyNo());
+            } else {
+                cancellationMoneyVos = shouxianService.getPolicyCancellationMoney(vo.getPolicyNo());
+            }
             resp.setCancellationMoneyVos(cancellationMoneyVos);
             resp.setPolicyVo(shouxianService.getPolicyBase(vo.getPolicyNo()));
             resp.setPolicyAmountVo(shouxianService.getPolicyAmount(vo.getPolicyNo()));

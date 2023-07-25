@@ -328,6 +328,7 @@ public class PolicyController extends BaseController {
             addAttribute("vo", resp.getPolicyVo());
             addAttribute("cancelMoneys", resp.getCancellationMoneyVos());
             addAttribute("amountVo", resp.getPolicyAmountVo() != null ? resp.getPolicyAmountVo() : new PolicyAmountVo());
+            addAttribute("isInvest", resp.getInvest());
         } catch (Exception e) {
             logger.error("Unable to get data from listing17: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();

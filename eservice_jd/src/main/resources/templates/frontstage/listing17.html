@@ -76,6 +76,9 @@
 													<tr class="table2 noEvent">
 														<th class="text-left" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">保單(帳戶)價值</th>
 														<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">預估解約金額</th>
+														<th:block th:if="${isInvest}">
+															<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">參考帳戶價值</th>
+														</th:block>
 													</tr>
 													</thead>
 													<tbody>
@@ -83,7 +86,13 @@
 														<td class="text-left">
 															<th:block th:text="${amountVo.policyVal != null} ? ${#numbers.formatDecimal(amountVo.policyVal, 0, 'DEFAULT', 4, 'POINT')} : 0 "></th:block>
 														</td>
-														<td th:text="${vo1.FSZ2_AMT}"></td>
+														<th:block th:if="${!isInvest}">
+															<td th:text="${vo1.FSZ2_AMT}"></td>
+														</th:block>
+														<th:block th:if="${isInvest}">
+															<td th:text="${vo1.USZ3-SURR}"></td>
+															<td th:text="${vo1.USZ3-RESR}"></td>
+														</th:block>
 													</tr>
 													</tbody>
 												</table>
