@@ -673,7 +673,7 @@
     <select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo">
         SELECT DISTINCT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, lir.INPR_TRAN_DATE_MAX netValueDate, lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval,
             lip.SAFP_AVG_PVAL avgPval, lin.INVT_RISK_BENE_LEVEL riskBeneLevel, lin.INVT_NO invtNo, lin.INVT_NAME invtName,
-            lip.SAFP_INSU_NO policyNo, leh.EXCH_SPEBK_PURATE exchRateBuy, lcp.clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
+            lip.SAFP_INSU_NO policyNo, leh.EXCH_SPEBK_PURATE exchRateBuy, NVL(lcp.clupExpeNtdSum, 0) clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
             FROM LISAFP_ES lip
             LEFT JOIN LIINVT_ES lin ON lip.SAFP_INVT_NO = lin.INVT_NO
             LEFT JOIN ( SELECT A.INPR_INVT_NO, B.INPR_TRAN_DATE_MAX, A.INPR_UNIT_SOLPRICE FROM LIINPR_ES A JOIN ( SELECT INPR_INVT_NO AS POLICY_NO, MAX(INPR_TRAN_DATE) INPR_TRAN_DATE_MAX FROM LIINPR_ES GROUP BY INPR_INVT_NO ) B ON A.INPR_INVT_NO = B.POLICY_NO AND A.INPR_TRAN_DATE = B.INPR_TRAN_DATE_MAX ) lir ON lir.INPR_INVT_NO = lip.SAFP_INVT_NO
