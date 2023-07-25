@@ -514,7 +514,7 @@ public class ShouxianController extends BaseController {
             PolicyCancellationMoneyDataResponse resp = new PolicyCancellationMoneyDataResponse();
             List cancellationMoneyVos;
             String investParam = parameterService.getParameterValueByCode("eservice_jd", "JD_POLICY_INVESTMENT_TYPE");
-            if (StringUtils.contains(investParam, vo.getPolicyNo())) {
+            if (StringUtils.contains(investParam, StringUtils.substring(vo.getPolicyNo(), 0, 2))) {
                 resp.setInvest(true);
                 cancellationMoneyVos = shouxianService.getInvestPolicyCancellationMoney(vo.getPolicyNo());
             } else {

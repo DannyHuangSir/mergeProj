@@ -87,11 +87,11 @@
 															<th:block th:text="${amountVo.policyVal != null} ? ${#numbers.formatDecimal(amountVo.policyVal, 0, 'DEFAULT', 4, 'POINT')} : 0 "></th:block>
 														</td>
 														<th:block th:if="${!isInvest}">
-															<td th:text="${vo1.FSZ2_AMT}"></td>
+															<td th:text="${vo1.fsz2_AMT}"></td>
 														</th:block>
 														<th:block th:if="${isInvest}">
-															<td th:text="${vo1.USZ3-SURR}"></td>
-															<td th:text="${vo1.USZ3-RESR}"></td>
+															<td th:text="${vo1.usz3_SURR}"></td>
+															<td th:text="${vo1.usz3_RESR}"></td>
 														</th:block>
 													</tr>
 													</tbody>

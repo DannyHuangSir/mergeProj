@@ -21,7 +21,7 @@ public class PolicyCancellationMoneyDataResponse {
     }
 
     public void setInvest(Boolean invest) {
-        invest = invest;
+        this.invest = invest;
     }
 
     public List getCancellationMoneyVos() {
