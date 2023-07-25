@@ -145,6 +145,44 @@ public class ShouxianService {
         return new Gson().fromJson(strResponse, new TypeReference<List<CancellationMoneyVo>>(){}.getType());
     }
 
+    public List<CancellationMoneyVo> getInvestPolicyCancellationMoney(String policyNo) throws Exception {
+        initRestTemplate();
+        String strResponse = postInvestForEntity(policyNo);
+        return new Gson().fromJson(strResponse, new TypeReference<List<InvetCancellationMoneyVo>>(){}.getType());
+    }
+
+    private String postInvestForEntity(String policyNo) throws Exception {
+        String strRes = null;
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("USZ3-SCN-NAME", "MSZ1");
+        map.put("USZ3-FUNC-CODE", "IN");
+        map.put("USZ3-INSU-NO-Q", policyNo);
+        map.put("USZ3-CALC-DATE", DateUtil.getFourYearRocDate());
+        map.put("USZ3-CALC-TYPE", 1);
+        logger.info("投資型保單帳戶價值及解約金API request: {}", map);
+        ResponseEntity<String> responseEntity = null;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + ACCESS_TOKEN);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(map);
+
+        HttpEntity<String> entity = new HttpEntity<String>(json, headers);
+
+        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        responseEntity = restTemplate.postForEntity(url, entity, String.class);
+
+        strRes = responseEntity.getBody();
+        boolean checkRes = this.checkResponseStatus(responseEntity);
+        if (checkRes) {
+            logger.info("投資型保單帳戶價值及解約金API-RESP:{}", strRes);
+            return MyJacksonUtil.readValueString(strRes, "/data/values");
+        }
+        return "";
+    }
+
     @Value("${csp.api.provide.esrv-fsz2.token}")
     public String ACCESS_TOKEN;
 
@@ -284,4 +322,5 @@ public class ShouxianService {
     public List<Map<String, String>> getPolicyTypeList() {
         return shouXianDao.selectPolicyTypeList();
     }
+
 }

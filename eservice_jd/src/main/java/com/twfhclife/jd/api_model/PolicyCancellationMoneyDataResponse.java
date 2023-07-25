@@ -9,16 +9,26 @@ import java.util.List;
 
 public class PolicyCancellationMoneyDataResponse {
 
-    private List<CancellationMoneyVo> cancellationMoneyVos = Lists.newArrayList();
+    private List cancellationMoneyVos = Lists.newArrayList();
 
     private PolicyBaseVo policyVo;
     private PolicyAmountVo policyAmountVo;
 
-    public List<CancellationMoneyVo> getCancellationMoneyVos() {
+    private Boolean invest = false;
+
+    public Boolean getInvest() {
+        return invest;
+    }
+
+    public void setInvest(Boolean invest) {
+        invest = invest;
+    }
+
+    public List getCancellationMoneyVos() {
         return cancellationMoneyVos;
     }
 
-    public void setCancellationMoneyVos(List<CancellationMoneyVo> cancellationMoneyVos) {
+    public void setCancellationMoneyVos(List cancellationMoneyVos) {
         this.cancellationMoneyVos = cancellationMoneyVos;
     }
 
