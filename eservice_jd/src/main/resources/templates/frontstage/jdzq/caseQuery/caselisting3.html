@@ -56,51 +56,54 @@
 											<a th:onclick="'javascript:postCaseListing(\'caselisting3\',\'' + ${policyNo} + '\', \'' + ${policyName} + '\',\''  +  ${parentUrl} + '\');'">
 												<div style="font-size:17px; font-weight: 600;" class="col-xs-4 folder active">照會內容</div>
 											</a>
-				                         <!-- 照會清單-->
-				                           
-				                            <div class="tb3 top0 mobile-toggle" data-toggle="true" style="font-weight: 600;">
-				                                <i class="fa hid2 foo-angle-down mobile"></i>
-				                                <i class="fa foo-angle-up hid1"></i> 照會清單
-				                            </div>
-				                            <div class="mobile-toggle-panel toggle-hide">
-				                                <table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
-				                                    <thead>
-				                                        <tr class="table2 noEvent">
-				                                            <th scope="col" class="text-left item300">序號</th>
-				                                            <th scope="col" class="item300">要保人</th>
-				                                            <th scope="col" class="item300">被保險人</th>
-				                                            <th scope="col" class="item360">照會日期</th>
-				                                            <th scope="col" class="item360">主約險種</th>
-				                                            <th scope="col" class="item300">照會狀態</th>
-				                                            <th scope="col" class="item300">照會單</th>
-				                                        </tr>
-				                                    </thead>
-				                                    <tbody>
-				                                        <tr class="h65 noEvent" th:each="vo,voStat : ${list}">
-				                                            <td class="table3" th:text="${voStat.index + 1}"></td>
-				                                            <td class="table3" th:text="${vo.appName}"></td>
-				                                            <td class="table3" th:text="${vo.insName}"></td>
-				                                            <td class="table3" th:text="${vo.printDate}"></td>
-				                                            <td class="table3" th:text="${vo.policyType}"></td>
-				                                            <td class="table3" >
+											<!-- 照會清單-->
+
+											<div class="tb3 top0 mobile-toggle" data-toggle="true" style="font-weight: 600;">
+												<i class="fa hid2 foo-angle-down mobile"></i>
+												<i class="fa foo-angle-up hid1"></i> 照會清單
+											</div>
+											<div class="mobile-toggle-panel toggle-hide">
+												<table class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
+													<thead>
+													<tr class="table2 noEvent">
+														<th scope="col" class="text-left item300">序號</th>
+														<th scope="col" class="item300">要保人</th>
+														<th scope="col" class="item300">被保險人</th>
+														<th scope="col" class="item360">照會日期</th>
+														<th scope="col" class="item360">主約險種</th>
+														<th scope="col" class="item300">照會狀態</th>
+														<th scope="col" class="item300">照會單</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr class="h65 noEvent" th:each="vo,voStat : ${list}">
+														<td class="table3" th:text="${voStat.index + 1}"></td>
+														<td class="table3" th:text="${vo.appName}"></td>
+														<td class="table3" th:text="${vo.insName}"></td>
+														<td class="table3" th:text="${vo.printDate}"></td>
+														<td class="table3" th:text="${vo.policyType}"></td>
+														<td class="table3">
+															<th:block th:if="${vo.bPMCurrentTak == '602000S' || vo.bPMCurrentTak == '602500S'}">-</th:block>
+															<th:block th:unless="${vo.bPMCurrentTak == '602000S' || vo.bPMCurrentTak == '602500S'}">
 																<th:block th:if="${vo.noteVerifyResult == '0' || vo.noteVerifyResult == 'R'}">核保中</th:block>
 																<th:block th:if="${vo.noteVerifyResult == 'V'}">照會中</th:block>
-															</td>
-				                                            <td class="table3"><i class="bi bi-journal-richtext" th:onclick="'window.open(\'notePdf?policyNo=' + ${policyNo} + '&noteKey=' + ${vo.mainKey} +  '\')'"></i></td>
-				                                        </tr>
-				                                    </tbody>
-				                                </table>
-				                            </div>
-				                        </div>
-				                        <div class="ps-area">
-				                            <p class="text-ps">※本網頁資料僅供參考，若因電腦系統作業問題致與實際資料不符，應以本公司實際資料為準；保單相關內容，亦以本公司作業規定及保單條款約定為準
-				                            </p>
-				                        </div>
-				                    </div>
-				                </div>
-				            </div>
-				        </div>
-				    </div>
+															</th:block>
+														</td>
+														<td class="table3"><i class="bi bi-journal-richtext" th:onclick="'window.open(\'notePdf?policyNo=' + ${policyNo} + '&noteKey=' + ${vo.mainKey} +  '\')'"></i></td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="ps-area">
+											<p class="text-ps">※本網頁資料僅供參考，若因電腦系統作業問題致與實際資料不符，應以本公司實際資料為準；保單相關內容，亦以本公司作業規定及保單條款約定為準
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
