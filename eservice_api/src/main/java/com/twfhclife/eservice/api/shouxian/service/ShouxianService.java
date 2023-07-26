@@ -319,7 +319,13 @@ public class ShouxianService {
     }
 
     public PolicyAmountVo getPolicyAmount(String policyNo) {
-        return shouXianDao.selectPolicyAmount(policyNo);
+        PolicyAmountVo policyAmountVo = shouXianDao.selectPolicyAmount(policyNo);
+        if (policyAmountVo == null) {
+            policyAmountVo = new PolicyAmountVo();
+        }
+        policyAmountVo.setPolicyDate(DateUtil.getRocDate(new Date()));
+        return policyAmountVo;
+
     }
 
 
