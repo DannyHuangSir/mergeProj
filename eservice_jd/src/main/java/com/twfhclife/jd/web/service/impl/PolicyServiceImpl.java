@@ -164,11 +164,12 @@ public class PolicyServiceImpl implements IPolicyService {
 
 
     @Override
-    public PortfolioResponse getPolicyNotifyPortfolio(String userId, String policyNo) {
+    public PortfolioResponse getPolicyNotifyPortfolio(String userId, String policyNo, String currency) {
         PortfolioRequest apiReq = new PortfolioRequest();
         apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
         apiReq.setUserId(userId);
         apiReq.setPolicyNo(policyNo);
+        apiReq.setCurrency(currency);
         return baseRestClient.postApi(new Gson().toJson(apiReq), notifyPortfolioUrl, PortfolioResponse.class);
     }
 
@@ -177,11 +178,12 @@ public class PolicyServiceImpl implements IPolicyService {
 
 
     @Override
-    public PortfolioResponse getPolicyRateOfReturn(String userId, String policyNo) {
+    public PortfolioResponse getPolicyRateOfReturn(String userId, String policyNo, String currency) {
         PortfolioRequest apiReq = new PortfolioRequest();
         apiReq.setSysId(ApConstants.SYSTEM_ID_JD);
         apiReq.setUserId(userId);
         apiReq.setPolicyNo(policyNo);
+        apiReq.setCurrency(currency);
         return baseRestClient.postApi(new Gson().toJson(apiReq), portfolioNewUrl, PortfolioResponse.class);
     }
 

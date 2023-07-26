@@ -23,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -298,8 +297,9 @@ public class PolicyController extends BaseController {
         try {
             addAttribute("policyNo", policyNo);
             PolicyInvtFundVo vo = policyService.getPolicyInvtFund(getUserId(), policyNo);
-            addAttribute("portfolioList", policyService.getPolicyRateOfReturn(getUserId(), policyNo).getPortfolioList());
-            addAttribute("vo", vo.getPolicy());
+            PolicyBaseVo policyBaseVo =  vo.getPolicy();
+            addAttribute("vo", policyBaseVo);
+            addAttribute("portfolioList", policyService.getPolicyRateOfReturn(getUserId(), policyNo, policyBaseVo != null ? policyBaseVo.getCurrency() : null).getPortfolioList());
             List<String> rocYearMenu = DateUtil.getYearOpitonByEffectDate("1911/01/01");
             addAttribute("rocYearMenu", rocYearMenu);
         } catch (Exception e) {
@@ -337,13 +337,13 @@ public class PolicyController extends BaseController {
     }
 
     @PostMapping("/getPortfolioList")
-    public ResponseEntity<PortfolioResponseObj> getPortfolioList(@RequestParam("policyNo") String policyNo) {
+    public ResponseEntity<PortfolioResponseObj> getPortfolioList(@RequestParam("policyNo") String policyNo, @RequestParam("currency") String currency) {
         PortfolioResponseObj responseObj = new PortfolioResponseObj();
         try {
             String userId = getUserId();
             List<PortfolioVo> portfolioList = null;
             // Call api 取得資料
-            PortfolioResponse portfolioResponse = policyService.getPolicyRateOfReturn(userId, policyNo);
+            PortfolioResponse portfolioResponse = policyService.getPolicyRateOfReturn(userId, policyNo, currency);
             if (portfolioResponse != null) {
                 logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);
                 portfolioList = portfolioResponse.getPortfolioList();
@@ -389,13 +389,13 @@ public class PolicyController extends BaseController {
     }
 
     @PostMapping("/getNotifyPortfolioList")
-    public ResponseEntity<ResponseObj> getNotifyPortfolioList(@RequestParam("policyNo") String policyNo) {
+    public ResponseEntity<ResponseObj> getNotifyPortfolioList(@RequestParam("policyNo") String policyNo, @RequestParam("currency") String currency) {
         try {
             String userId = getUserId();
             List<PortfolioVo> result = Lists.newArrayList();
 
             // Call api 取得資料
-            PortfolioResponse portfolioResponse = policyService.getPolicyNotifyPortfolio(userId, policyNo);
+            PortfolioResponse portfolioResponse = policyService.getPolicyNotifyPortfolio(userId, policyNo, currency);
             // 若無資料，嘗試由內部服務取得資料
             if (portfolioResponse != null) {
                 logger.info("Get user[{}] data from eservice_api[getPolicyloanByPolicyNo]", userId);

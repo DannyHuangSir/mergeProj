@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.twfhclife.eservice.api.elife.domain.PortfolioResponse;
 import com.twfhclife.eservice.api.shouxian.dao.ShouXianDao;
 import com.twfhclife.eservice.api.shouxian.domain.ExchangeRateRequest;
-import com.twfhclife.eservice.api.shouxian.domain.PolicyTypeListResponse;
 import com.twfhclife.eservice.api.shouxian.model.JdFundTransactionVo;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
@@ -248,7 +247,7 @@ public class ShouxianService {
         return shouXianDao.getExchangeRate(vo);
     }
 
-    public PortfolioResponse getPortfolioResp(String policyNo) {
+    public PortfolioResponse getPortfolioResp(String policyNo, String currency) {
         PortfolioResponse resp = new PortfolioResponse();
         List<PortfolioVo> portfolioList = shouXianDao.getPortfolioList(policyNo);
         Date maxDate = null;
@@ -269,6 +268,10 @@ public class ShouxianService {
 
             // 台幣時匯率為1
             if ("NTD".equals(portfolioVo.getInvtExchCurr())) {
+                exchRate = BigDecimal.valueOf(1);
+            }
+
+            if (StringUtils.equals(currency, portfolioVo.getInvtExchCurr())) {
                 exchRate = BigDecimal.valueOf(1);
             }
 
