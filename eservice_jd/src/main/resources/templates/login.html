@@ -3,6 +3,11 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <style>@media print{body{display:none}}</style>
+    <style>
+        .passwordContainer {
+            position: relative;
+        }
+    </style>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=EDGE, chrome=1"/>
     <meta http-equiv="Pragma" content="no-cache">
@@ -65,7 +70,7 @@
 	        // }
 	    };
 
-	    //close right click 
+	    //close right click
 	    document.oncontextmenu = function (event) {
 	        if (window.event) {
 	            event = window.event;
@@ -155,14 +160,17 @@
                     </div>
                     <div>
                         <label for="inputPassword3" class="control-label">密碼</label>
-                        <input type="password" id="password" name="password" placeholder="輸入英文字母須區分大小寫"
-                               class="form-control" autocomplete="off"/>
+                        <div class="passwordContainer">
+                            <input type="password" id="password" name="password" placeholder="輸入英文字母須區分大小寫"
+                                   class="form-control" autocomplete="off"/>
+                            <i onclick="seePwd(this)" style="position: absolute; top: 10px; right: 10px;" class="fa fa-eye-slash"></i>
+                        </div>
                     </div>
                     <div class="form-group" style="margin: 16px 4px 0 0;">
                         <label for="inputPassword3" class="control-label">驗證碼</label>
                         <div class="">
                             <input type="text" name="validateCode" id="validateCode" autocomplete="off"
-                                   placeholder="輸入驗證碼" class="form-control  float-left w70p" style="width:50%"
+                                   placeholder="輸入驗證碼" class="form-control float-left w70p" style="width:50%"
                                    maxlength="4"/>
                             &nbsp;&nbsp;&nbsp;<img id="validateImage"
                                                    th:src="'data:image/png;base64, ' + ${validateImageBase64}"
@@ -230,40 +238,43 @@
 			if (errorMessage != '') {
 				openAlert(errorMessage);
 			}
-			
+
 			var isOldUser = /*[[${isOldUser}]]*/;
 			isOldUser = (isOldUser == null? '': isOldUser);
 			if(isOldUser == true){
 				/* openAlert('因應系統改版以及法規規範，需要您重新檢視與同意相關使用條款與注意事項，並重新註冊與啟用您的帳號，系統將利用您的保單留存的電子郵件信箱或手機號碼進行身分驗證'
-						, "firstUseStart"); 
+						, "firstUseStart");
 				*/
 				message = $('#E0005').val();
 				openAlert(message, "firstUseStart");
 			}
-			
+
 			var noFbIdUser = /*[[${noFbIdUser}]]*/;
 			if (noFbIdUser) {
 				$('#confirmBindFbIdModal').modal();
 			}
-			
+
 			var noCardSnUser = /*[[${noCardSnUser}]]*/;
 			if (noCardSnUser) {
 				$('#confirmBindCardSnModal').modal();
 			}
-			
+
 			$('#loginBtn').click(function() {
 				if ($('#loginForm #userId').val() == '') {
 					openAlert('請輸入帳號');
 					return false;
 				}
-				
+
 				if ($('#loginForm #password').val() == '') {
 					openAlert('請輸入用戶密碼');
 					return false;
 				}else{
-					$('#loginForm #password').val($.base64.encode($('#loginForm #password').val()));
+                  $("#password").attr('type','password');
+                  $("#password").next().attr('class','ace-icon fa fa-eye');
+                  $("#password").next().attr('title','显示密码');
+				  $('#loginForm #password').val($.base64.encode($('#loginForm #password').val()));
 				}
-				
+
 				if ($('#validateCode').val() == '') {
 					openAlert('請輸入圖形驗證碼');
 					return false;
@@ -271,11 +282,11 @@
 				popupLoading();
 				$('#loginForm').submit();
 			});
-			
+
 			$('#bindFbIdBtn').click(function() {
 				$('#loginForm #userId').val("");
 				$('#loginForm #password').val("");
-				
+
 				if ($('#confirmBindFbIdModal #userId3').val() == '') {
 					openAlert('請輸入用戶名稱');
 					return false;
@@ -284,7 +295,7 @@
 					openAlert('請輸入用戶密碼');
 					return false;
 				}
-				
+
 				$('#confirmBindFbIdModal').modal('hide');
 				popupLoading();
 				$('#bindFbIdForm').submit();
@@ -295,7 +306,7 @@
 			$('#bindCardSnBtn').click(function() {
 				$('#loginForm #userId').val("");
 				$('#loginForm #password').val("");
-				
+
 				if ($('#confirmBindCardSnModal #userId2').val() == '') {
 					openAlert('請輸入用戶名稱');
 					return false;
@@ -304,23 +315,37 @@
 					openAlert('請輸入用戶密碼');
 					return false;
 				}
-				
+
 				$('#confirmBindCardSnModal').modal('hide');
 				popupLoading();
 				$('#bindCardSnForm').submit();
 			});
 			**/
-			
+
 			var validateImageUrl = /*[[@{/getVerify}]]*/;
 			$('#validateImage').click(function() {
 				this.src = validateImageUrl + '?r=' + Math.random();
 			});
 			$('#validateImage').click();
 		});
-		
+
 		function reloadValidateImage() {
 			$('#validateImage').click();
 		}
+		function seePwd(obj){
+            var pwdValue = $(obj).parent().children('input:first-child').val();//获取密码值
+            var _type = $(obj).parent().children('input:first-child').attr('type');//获取input的type类型
+            if(_type == 'password'){
+                $(obj).parent().children('input:first-child').attr('type','text');
+                $(obj).attr('class','ace-icon fa fa-eye-slash');
+                $(obj).attr('title','隐藏密码');
+            }else if(_type == 'text'){
+                $(obj).parent().children('input:first-child').attr('type','password');
+                $(obj).attr('class','ace-icon fa fa-eye');
+                $(obj).attr('title','显示密码');
+            }
+            $(obj).parent().children('input:first-child').val(pwdValue);
+        }
 
 		$('#userId').focus();
 

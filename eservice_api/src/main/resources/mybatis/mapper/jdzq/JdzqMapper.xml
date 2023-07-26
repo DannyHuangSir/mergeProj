@@ -164,9 +164,10 @@
         LEFT JOIN PolicyType E ON E.PType_Code = A.PolicyType
         WHERE A.PolicyNo = #{policyNo}
     </select>
-    
+
     <select id="getNoteContent" resultMap="CaseMap">
-        SELECT D.Note_key Main_key, D.APPName, D.InsName, D.NoteDate PrintDate, E.PTypeName PolicyType, D.NoteVerifyResult FROM MainPolicy A
+        SELECT A.BPMCurrentTak, D.Note_key Main_key, D.APPName, D.InsName, D.NoteDate PrintDate, E.PTypeName PolicyType, D.NoteVerifyResult
+        FROM MainPolicy A
         INNER JOIN (
             SELECT B.APPName, B.InsName, B.NoteDate, B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM
             PolicyNote B
