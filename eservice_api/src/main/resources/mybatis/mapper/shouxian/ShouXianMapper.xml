@@ -48,7 +48,12 @@
         AND ROW_NUM <![CDATA[<=]]> (#{vo.pageNum} * #{vo.pageSize})
         ) A
         LEFT JOIN LINEDR_ES_NONCHAR lnr ON lnr.NEDR_BANK_BRANCH = A.BNAG_S_BANK_BRANCH_CODE AND A.LIPM_AGEN_CODE = lnr.NEDR_AGEN_CODE
-        LEFT JOIN LISETT_ES lpe ON lpe.SETT_INSU_TYPE = A.LIPM_INSU_TYPE
+        LEFT JOIN (
+            SELECT DISTINCT A.SETT_INSU_TYPE, A.SETT_CH_NAME FROM
+            LISETT_ES A
+            INNER JOIN (SELECT SETT_INSU_TYPE, MAX(SETT_UP_DATE) SETT_UP_DATE FROM LISETT_ES GROUP BY SETT_INSU_TYPE) B
+            ON A.SETT_INSU_TYPE = B.SETT_INSU_TYPE AND (A.SETT_UP_DATE = B.SETT_UP_DATE OR B.SETT_UP_DATE IS NULL)
+        ) lpe ON lpe.SETT_INSU_TYPE = A.LIPM_INSU_TYPE
         LEFT JOIN LIPROD_ES lpr ON lpr.PROD_NO = A.LIPM_INSU_TYPE
     </select>
 
@@ -506,7 +511,7 @@
         decode(nvl(lcp.CLUP_F_PAY_DATE,''), '', '', to_char(lcp.CLUP_F_PAY_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official'''))  CLUP_F_PAY_DATE,
         decode(nvl(lcp.CLUP_TR_DATE,''), '', '', to_char(lcp.CLUP_TR_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
-        lip.INPD_INT_COMPU_DATE INPD_INT_COMPU_DATE
+        lip.INPD_INT_COMPU_DATE + 1 INPD_INT_COMPU_DATE
         FROM LICLUP_ES lcp
         LEFT JOIN LIINPD_ES lip ON lcp.CLUP_INVT_NO = lip.INPD_INVT_NO AND lcp.CLUP_DATE = lip.INPD_DATE
         LEFT JOIN LIINVT_ES lin ON lcp.CLUP_INVT_NO = lin.INVT_NO
@@ -532,12 +537,14 @@
             CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
             ELSE SADP_TR_UNITS
             END SADP_TR_UNITS,
-            CASE WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
-            WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
+            CASE
+                WHEN leh.EXCH_EXCH_CODE IS NOT NULL AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE THEN 1
+                WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
+                WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
             END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
             FROM LISADP_ES lsp
             LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-            LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_CURR_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
+            LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
             <where>
                 AND lsp.SADP_INSU_NO = #{policyNo}
                 <if test="trCode != null">
@@ -571,12 +578,14 @@
         CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
         ELSE SADP_TR_UNITS
         END SADP_TR_UNITS,
-        CASE WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
+        CASE
+        WHEN leh.EXCH_EXCH_CODE IS NOT NULL AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE THEN 1
+        WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
         WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
-        END FUND_VALUE, lsp.SADP_EXCH_DATE
+        END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
         FROM LISADP_ES lsp
         LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_CURR_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
+        LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">
@@ -703,6 +712,9 @@
     </select>
 
     <select id="selectPolicyTypeList" resultType="hashmap">
-        SELECT SETT_INSU_TYPE AS VALUE, SETT_CH_NAME AS KEY FROM LISETT_ES ORDER BY SETT_CH_NAME
+        SELECT DISTINCT A.SETT_INSU_TYPE AS VALUE, A.SETT_CH_NAME AS KEY FROM
+        LISETT_ES A
+        INNER JOIN (SELECT SETT_INSU_TYPE, MAX(SETT_UP_DATE) SETT_UP_DATE FROM LISETT_ES GROUP BY SETT_INSU_TYPE) B
+        ON A.SETT_INSU_TYPE = B.SETT_INSU_TYPE AND (A.SETT_UP_DATE = B.SETT_UP_DATE OR B.SETT_UP_DATE IS NULL)
     </select>
 </mapper>
