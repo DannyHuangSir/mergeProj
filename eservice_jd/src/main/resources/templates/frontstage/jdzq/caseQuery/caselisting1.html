@@ -171,15 +171,17 @@
 				                                                        <th class="hid1 hid2" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">核保結果</th>
 				                                                        <td><b class="tablesaw-cell-label mobile-b">核保結果</b>
 																			<span class="mobile-span" style="font-size:16px; font-weight: 600;" >
-																				<th:block th:if="${vo.reviewResult == 'A1'}">核保通過</th:block>
-																				<th:block th:if="${vo.reviewResult == 'C1'}">退保(撤銷要保)</th:block>
-																				<th:block th:if="${vo.reviewResult == 'D1'}">延保</th:block>
-																				<th:block th:if="${vo.reviewResult == 'N1'}">退保(照會逾期退件)</th:block>
-																				<th:block th:if="${vo.reviewResult == 'N2'}">批註說明</th:block>
-																				<th:block th:if="${vo.reviewResult == 'R1'}">拒保</th:block>
-																				<th:block th:if="${vo.reviewResult == '5'}">承保</th:block>
-																				<th:block th:if="${vo.reviewResult == '9'}">不予承保</th:block>
-																				<th:block th:if="${vo.reviewResult == null || #strings.trim(vo.reviewResult) == ''}">-</th:block>
+																				<th:block th:if="${vo.noteStatus == '601500S' or vo.noteStatus == '602000S' or vo.noteStatus == '602500S'}">
+																					<th:block th:if="${vo.reviewResult == 'A1'}">核保通過</th:block>
+																					<th:block th:if="${vo.reviewResult == 'C1'}">退保(撤銷要保)</th:block>
+																					<th:block th:if="${vo.reviewResult == 'D1'}">延保</th:block>
+																					<th:block th:if="${vo.reviewResult == 'N1'}">退保(照會逾期退件)</th:block>
+																					<th:block th:if="${vo.reviewResult == 'N2'}">批註說明</th:block>
+																					<th:block th:if="${vo.reviewResult == 'R1'}">拒保</th:block>
+																					<th:block th:if="${vo.reviewResult == '5'}">承保</th:block>
+																					<th:block th:if="${vo.reviewResult == '9'}">不予承保</th:block>
+																					<th:block th:if="${vo.reviewResult == null || #strings.trim(vo.reviewResult) == ''}">-</th:block>
+																				</th:block>
 																			</span></td>
 				                                                    </tr>
 				                                                </tbody>
