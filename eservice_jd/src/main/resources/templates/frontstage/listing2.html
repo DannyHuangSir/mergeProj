@@ -99,7 +99,7 @@
     // 建立保障項目 grid
     var grid1 = new eserviceGrid();
     grid1.sGridId = '#grid1';
-    grid1.sQueryUrl = /*[[@{/getPortfolioList?policyNo=} + ${param.policyNo[0]}]]*/;
+    grid1.sQueryUrl = /*[[@{/getPortfolioList?policyNo=} + ${policyNo} + @{&currency=} + ${vo.currency}]]*/;
     grid1.aoColumns = [
       {
         // 投資標的

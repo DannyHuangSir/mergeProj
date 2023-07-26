@@ -14,7 +14,6 @@ import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.service.IOptionService;
-import com.twfhclife.generic.utils.ApConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -445,8 +444,9 @@ public class ShouxianController extends BaseController {
         ReturnHeader returnHeader = new ReturnHeader();
         try {
             String policyNo = req.getPolicyNo();
+            String currency = req.getCurrency();
             if (!StringUtils.isEmpty(policyNo)) {
-                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo);
+                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo, currency);
                 returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
                 apiResponseObj.setReturnHeader(returnHeader);
                 apiResponseObj.setResult(resp);
@@ -477,8 +477,9 @@ public class ShouxianController extends BaseController {
         ReturnHeader returnHeader = new ReturnHeader();
         try {
             String policyNo = req.getPolicyNo();
+            String currency = req.getCurrency();
             if (!StringUtils.isEmpty(policyNo)) {
-                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo);
+                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo, currency);
                 returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
                 apiResponseObj.setReturnHeader(returnHeader);
                 apiResponseObj.setResult(resp);
@@ -576,8 +577,9 @@ public class ShouxianController extends BaseController {
         ReturnHeader returnHeader = new ReturnHeader();
         try {
             String policyNo = req.getPolicyNo();
+            String currency = req.getCurrency();
             if (!StringUtils.isEmpty(policyNo)) {
-                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo);
+                PortfolioResponse resp = shouxianService.getPortfolioResp(policyNo, currency);
                 returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
                 apiResponseObj.setReturnHeader(returnHeader);
                 apiResponseObj.setResult(resp);

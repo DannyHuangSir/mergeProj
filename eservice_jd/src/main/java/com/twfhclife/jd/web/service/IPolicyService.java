@@ -30,9 +30,9 @@ public interface IPolicyService {
 
     PolicyInvtFundVo getPolicyInvtFund(String userId, String policyNo);
 
-    PortfolioResponse getPolicyNotifyPortfolio(String userId, String policyNo);
+    PortfolioResponse getPolicyNotifyPortfolio(String userId, String policyNo, String currency);
 
-    PortfolioResponse getPolicyRateOfReturn(String userId, String policyNo);
+    PortfolioResponse getPolicyRateOfReturn(String userId, String policyNo, String currency);
 
     PolicyCancellationMoneyDataResponse getPolicyCancellationMoney(String userId, String policyNo);
 
