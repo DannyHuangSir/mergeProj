@@ -18,6 +18,16 @@ public class CaseQueryVo extends AbstractBasePolicyNoDomain {
 
     private int pageNum;
 
+    private PersonSortVo sort;
+
+    public PersonSortVo getSort() {
+        return sort;
+    }
+
+    public void setSort(PersonSortVo sort) {
+        this.sort = sort;
+    }
+
     private List<PermQueryVo> caseQuery = Lists.newArrayList();
 
     public String getLipmName() {

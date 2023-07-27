@@ -15,6 +15,7 @@ import com.twfhclife.jd.web.dao.UsersDao;
 import com.twfhclife.jd.web.domain.CaseQueryVo;
 import com.twfhclife.jd.web.domain.NotePdfVo;
 import com.twfhclife.jd.web.domain.PdfVo;
+import com.twfhclife.jd.web.domain.PersonSortVo;
 import com.twfhclife.jd.web.model.CaseVo;
 import com.twfhclife.jd.web.model.PermQueryVo;
 import com.twfhclife.jd.web.model.PolicyBaseVo;
@@ -78,7 +79,7 @@ public class CaseServiceImpl implements ICaseService {
     private String personalCaseUrl;
 
     @Override
-    public List<CaseVo> getPersonalCaseList(KeycloakUser user) {
+    public List<CaseVo> getPersonalCaseList(KeycloakUser user, PersonSortVo sort) {
         List<CaseVo> result = Lists.newArrayList();
         List<PermQueryVo> caseQuery = Lists.newArrayList();
         int role = usersDao.checkUserRole(user.getId());
@@ -104,6 +105,7 @@ public class CaseServiceImpl implements ICaseService {
             vo.setCaseQuery(caseQuery);
             vo.setUserId(user.getUsername());
             vo.setSysId(ApConstants.SYSTEM_ID);
+            vo.setSort(sort);
             PersonalCaseDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(vo), personalCaseUrl, PersonalCaseDataResponse.class);
             result.addAll(responseObj.getCaseList());
         }

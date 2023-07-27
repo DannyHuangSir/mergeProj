@@ -3,6 +3,7 @@ package com.twfhclife.eservice.api.jdzq.domain;
 import com.google.common.collect.Lists;
 import com.twfhclife.eservice.api.elife.domain.AbstractBasePolicyNoDomain;
 import com.twfhclife.eservice.api.jdzq.model.PermQueryVo;
+import com.twfhclife.eservice.api.jdzq.model.PersonSortVo;
 
 import java.util.List;
 
@@ -17,6 +18,16 @@ public class CaseQueryRequest extends AbstractBasePolicyNoDomain {
     private int pageSize = 10;
 
     private int pageNum;
+
+    private PersonSortVo sort;
+
+    public PersonSortVo getSort() {
+        return sort;
+    }
+
+    public void setSort(PersonSortVo sort) {
+        this.sort = sort;
+    }
 
     private List<PermQueryVo> caseQuery = Lists.newArrayList();
 

@@ -3,6 +3,7 @@ package com.twfhclife.jd.web.controller;
 import com.twfhclife.jd.controller.BaseController;
 import com.twfhclife.jd.web.domain.CaseQueryVo;
 import com.twfhclife.jd.web.domain.ResponseObj;
+import com.twfhclife.jd.web.domain.PersonSortVo;
 import com.twfhclife.jd.web.model.CaseVo;
 import com.twfhclife.jd.web.service.ICaseService;
 import org.apache.commons.lang3.StringUtils;
@@ -42,10 +43,10 @@ public class CaseController extends BaseController {
 
 	@PostMapping(value = { "/personalCaseList" })
 	@ResponseBody
-	public ResponseObj personalCaseList() {
+	public ResponseObj personalCaseList(@RequestBody PersonSortVo sort) {
 		ResponseObj responseObj = new ResponseObj();
 		responseObj.setResult(ResponseObj.SUCCESS);
-		responseObj.setResultData(caseService.getPersonalCaseList(getLoginUser()));
+		responseObj.setResultData(caseService.getPersonalCaseList(getLoginUser(), sort));
 		return responseObj;
 	}
 
