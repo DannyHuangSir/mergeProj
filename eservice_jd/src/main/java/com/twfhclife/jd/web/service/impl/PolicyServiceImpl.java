@@ -221,6 +221,8 @@ public class PolicyServiceImpl implements IPolicyService {
         apiReq.setQueryMonth(exchangeRateVo.getQueryMonth());
         apiReq.setExchangeCode(exchangeRateVo.getExchangeCode());
         apiReq.setQueryType(exchangeRateVo.getQueryType());
+        apiReq.setStartTime(exchangeRateVo.getStartTime());
+        apiReq.setEndTime(exchangeRateVo.getEndTime());
         return baseRestClient.postApi(new Gson().toJson(apiReq), exchangeRateUrl, ExchangeRateDataResponse.class).getExchangeRates();
     }
 

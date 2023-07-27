@@ -675,6 +675,9 @@
             <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'C'.toString()">
                 AND to_char(INPR_TRAN_DATE, 'yyyy/MM') = #{exchangeRateVo.queryMonth}
             </if>
+            <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'D'.toString()">
+                AND to_char(INPR_TRAN_DATE, 'yyyyMMdd') between #{exchangeRateVo.startTime} and #{exchangeRateVo.endTime}
+            </if>
         </where>
         order by INPR_TRAN_DATE
     </select>
