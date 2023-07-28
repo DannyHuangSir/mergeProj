@@ -353,8 +353,8 @@
 				var tBstartTime = Date.parse($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYY/MM/DD'));
 				var tBendTime = Date.parse($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYY/MM/DD'));
 				var iDays=parseInt(Math.abs(tBendTime-tBstartTime)/(24*60*60*1000));
-				if (iDays > 90){
-					alertMsg("受理日期區間請在3個月以内");
+				if (iDays > 365){
+					alertMsg("受理日期區間請在一年以内");
 					return false;
 				}else {
 					$("#tBStartTime").val($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYYMMDD'));
@@ -366,8 +366,8 @@
 				var tBstartTime1 = Date.parse($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYY/MM/DD'));
 				var tBendTime1 = Date.parse($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYY/MM/DD'));
 				var iDays1=parseInt(Math.abs(tBendTime1-tBstartTime1)/(24*60*60*1000));
-				if (iDays1 > 90){
-					alertMsg("保單生效日期區間請在3個月以内");
+				if (iDays1 > 365){
+					alertMsg("保單生效日期區間請在一年以内");
 					return false;
 				}else {
 					$("#policyActiveStartTime").val($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYYMMDD'));
