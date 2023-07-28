@@ -182,7 +182,11 @@
 																					<th:block th:if="${vo.reviewResult == '9'}">不予承保</th:block>
 																					<th:block th:if="${vo.reviewResult == null || #strings.trim(vo.reviewResult) == ''}">-</th:block>
 																				</th:block>
-																			</span></td>
+																				<th:block th:unelse="${vo.noteStatus == '601500S' or vo.noteStatus == '602000S' or vo.noteStatus == '602500S'}">
+																					-
+																				</th:block>
+																			</span>
+																		</td>
 				                                                    </tr>
 				                                                </tbody>
 				                                            </table>
