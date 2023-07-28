@@ -2,10 +2,7 @@ package com.twfhclife.adm.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -44,12 +41,12 @@ public class EventRecordServiceImpl implements IEventRecordService{
 		EventRecordVo result = null;
 		try {
 			List<SystemsVo> systems = systemsDao.findAll();
-			
+
 			//List<BusinessEventVo> businessEvents = businessEventDao.getEventCodeName();
-			List<ParameterVo> eventTypes = parameterDao.getParameterByCategoryCode(null, "EVENT_TYPE_JD");
+			List<ParameterVo> eventTypes = parameterDao.getParameterByCategoryCode(null, Arrays.asList("EVENT_TYPE_JD","EVENT_TYPE"));
 			
 			//如果之後用代碼的話--
-			List<ParameterVo> eventStatus = parameterDao.getParameterByCategoryCode(null, "EVENT_STATUS");
+			List<ParameterVo> eventStatus = parameterDao.getParameterByCategoryCode(null, Arrays.asList("EVENT_STATUS"));
 			
 			//未用代碼
 //			List<ParameterVo> eventStatus = new ArrayList<ParameterVo>();

@@ -56,7 +56,7 @@ public interface ParameterDao {
 	 * @param categoryCode 參數類別代碼
 	 * @return 回傳查詢結果
 	 */
-	List<ParameterVo> getParameterByCategoryCode(@Param("systemId") String systemId, @Param("categoryCode") String categoryCode);
+	List<ParameterVo> getParameterByCategoryCode(@Param("systemId") String systemId, @Param("categoryCode") List<String> categoryCode);
 	
 	/**
 	 * 參數維護-新增.

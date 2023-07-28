@@ -1,9 +1,6 @@
 package com.twfhclife.adm.service.impl;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +82,7 @@ public class ParameterServiceImpl implements IParameterService {
 	@RequestLog
 	@Override
 	public List<ParameterVo> getParameterByCategoryCode(String systemId, String categoryCode) {
-		return parameterDao.getParameterByCategoryCode(systemId, categoryCode);
+		return parameterDao.getParameterByCategoryCode(systemId, Arrays.asList(categoryCode));
 	}
 	
 	/**
@@ -154,7 +151,7 @@ public class ParameterServiceImpl implements IParameterService {
 		Map<String, Map<String, ParameterVo>> sysParamMap = new LinkedHashMap<>();
 		List<String> categoryCodeList = parameterDao.getSystemCategoryCode(systemId);
 		for (String categoryCode : categoryCodeList) {
-			List<ParameterVo> parameterList = parameterDao.getParameterByCategoryCode(systemId, categoryCode);
+			List<ParameterVo> parameterList = parameterDao.getParameterByCategoryCode(systemId, Arrays.asList(categoryCode));
 			if (!CollectionUtils.isEmpty(parameterList)) {
 				Map<String, ParameterVo> paramMap = new LinkedHashMap<>();
 				for (ParameterVo parameterVo : parameterList) {

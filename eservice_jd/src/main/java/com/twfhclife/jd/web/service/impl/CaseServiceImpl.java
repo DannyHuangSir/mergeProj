@@ -214,8 +214,8 @@ public class CaseServiceImpl implements ICaseService {
         table.addCell(RptUtils2.createCell("照會訊息", tableFont, Element.ALIGN_CENTER, 3, true));
         if (!CollectionUtils.isEmpty(pdfVo.getNoteItems())) {
             pdfVo.getNoteItems().forEach(item -> {
-                table.addCell(RptUtils2.createCell(item.getItemCode(), tableFont, Element.ALIGN_CENTER, 1, true));
-                table.addCell(RptUtils2.createCell(item.getItemContent(), tableFont, Element.ALIGN_CENTER, 3, true));
+                table.addCell(RptUtils2.createCell(item.getItemCode(), tableFont, Element.ALIGN_LEFT, 1, true));
+                table.addCell(RptUtils2.createCell(item.getItemContent(), tableFont, Element.ALIGN_LEFT, 3, true));
             });
         }
 

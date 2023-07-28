@@ -214,7 +214,10 @@
 			PC.PARAMETER_CATEGORY_ID = P.PARAMETER_CATEGORY_ID
 			AND PC.STATUS = P.STATUS
 			AND PC.STATUS = 1
-			AND PC.CATEGORY_CODE = #{categoryCode}
+			AND PC.CATEGORY_CODE IN
+			<foreach collection="categoryCode" item="code" index="index" open="(" close=")" separator="," >
+				#{code}
+			</foreach>
 		<if test="systemId != '' and systemId != null">
 			AND PC.SYSTEM_ID = P.SYSTEM_ID
 			AND PC.SYSTEM_ID = #{systemId}	
