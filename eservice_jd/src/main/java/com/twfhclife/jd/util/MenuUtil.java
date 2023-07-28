@@ -18,7 +18,7 @@ public class MenuUtil {
 		for (FunctionVo func : dataList) {
 			if (func.getParentFuncId().equals(rootParentFunId)) {
 				menuList.add(func);
-				logger.info("{} function item: {}", userName, func);
+//				logger.info("{} function item: {}", userName, func);
 				setSubMenuList(userName, dataList, func);
 			}
 		}

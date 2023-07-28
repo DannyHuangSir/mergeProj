@@ -176,23 +176,23 @@ public class LoginServiceImpl implements ILoginService {
 				loginResultVo.setReturnMsg(returnHeader.getReturnMesg());
 			}
 			
-			logger.info("Call sso login returnCode={}", loginResultVo.getReturnCode());
-			logger.info("Call sso login returnMsg={}", loginResultVo.getReturnMsg());
+//			logger.info("Call sso login returnCode={}", loginResultVo.getReturnCode());
+//			logger.info("Call sso login returnMsg={}", loginResultVo.getReturnMsg());
 			if (ReturnHeader.SUCCESS_CODE.equals(loginResultVo.getReturnCode()) && keycloakLoginResponse != null) {
 				String keycloakUserId = keycloakLoginResponse.getUserId();
 				String sessionState = keycloakLoginResponse.getSessionState();
-				logger.info("Find login user[{}] keycloak id={}, sessionState={}", userName, keycloakUserId, sessionState);
+//				logger.info("Find login user[{}] keycloak id={}, sessionState={}", userName, keycloakUserId, sessionState);
 				
 				KeycloakUser keycloakUser = keycloakService.getUser(keycloakUserId);
 				if (keycloakUser != null) {
-					logger.info("Find login keycloakUser Object={}", 
-							ToStringBuilder.reflectionToString(keycloakUser, ToStringStyle.MULTI_LINE_STYLE));
+//					logger.info("Find login keycloakUser Object={}",
+//							ToStringBuilder.reflectionToString(keycloakUser, ToStringStyle.MULTI_LINE_STYLE));
 					keycloakUser.setAccessToken(keycloakLoginResponse.getAccessToken());
 					keycloakUser.setRefreshToken(keycloakLoginResponse.getRefreshToken());
 					keycloakUser.setSessionState(sessionState);
 					loginResultVo.setKeycloakUser(keycloakUser);
 				} else {
-					logger.info("Unable to find keycloakUser Object with id: {}", keycloakUserId);
+//					logger.info("Unable to find keycloakUser Object with id: {}", keycloakUserId);
 				}
 			}
 		} else {
