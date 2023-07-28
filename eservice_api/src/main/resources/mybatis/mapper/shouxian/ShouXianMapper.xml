@@ -538,13 +538,13 @@
             ELSE SADP_TR_UNITS
             END SADP_TR_UNITS,
             CASE
-                WHEN leh.EXCH_EXCH_CODE IS NOT NULL AND leh.EXCH_CURR_CODE = leh.EXCH_EXCH_CODE THEN 1
+                WHEN #{currency} = lsp.SADP_EXCH_CURR THEN 1
                 WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
                 WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
             END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
             FROM LISADP_ES lsp
             LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-            LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
+            LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
             <where>
                 AND lsp.SADP_INSU_NO = #{policyNo}
                 <if test="trCode != null">
@@ -576,16 +576,16 @@
         SELECT COUNT(*) FROM (
         SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
         CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
-        ELSE SADP_TR_UNITS
+            ELSE SADP_TR_UNITS
         END SADP_TR_UNITS,
         CASE
-        WHEN leh.EXCH_EXCH_CODE IS NOT NULL AND leh.EXCH_CURR_CODE = leh.EXCH_EXCH_CODE THEN 1
+        WHEN #{currency} = lsp.SADP_EXCH_CURR THEN 1
         WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
         WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
         END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
         FROM LISADP_ES lsp
         LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
+        LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">

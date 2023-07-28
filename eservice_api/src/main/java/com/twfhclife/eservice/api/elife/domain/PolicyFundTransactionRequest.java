@@ -29,6 +29,16 @@ public class PolicyFundTransactionRequest extends AbstractBasePolicyNoDomain {
 	 */
 	private Integer pageSize;
 
+	private String currency;
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
 	public String getTransType() {
 		return transType;
 	}

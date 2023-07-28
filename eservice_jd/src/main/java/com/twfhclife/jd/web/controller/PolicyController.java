@@ -214,6 +214,7 @@ public class PolicyController extends BaseController {
     @PostMapping("/getTxLogList")
     public ResponseEntity<ResponseObj> getTxLogList(@RequestParam("policyNo") String policyNo,
                                                     @RequestParam(value = "trCode", required = false) String trCode,
+                                                    @RequestParam(value = "currency", required = false) String currency,
                                                     @RequestParam(value = "startDate", required = false) String startDate,
                                                     @RequestParam(value = "endDate", required = false) String endDate,
                                                     @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum) {
@@ -231,7 +232,7 @@ public class PolicyController extends BaseController {
             if (StringUtils.isEmpty(errorMessage)) {
                 List<JdFundTransactionVo> fundTransactionList = null;
                 JdPolicyFundTransactionResponse policyFundTransactionResponse = policyService
-                        .getPolicyFundTransaction(getUserId(), policyNo, trCode, pageNum, defaultPageSize);
+                        .getPolicyFundTransaction(getUserId(), policyNo, trCode, currency, pageNum, defaultPageSize);
                 logger.info("Get user[{}] data from eservice_api[getPolicyFundTransactionPageList]");
                 fundTransactionList = policyFundTransactionResponse.getFundTransactionList();
                 processSuccess(fundTransactionList);

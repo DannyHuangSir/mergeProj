@@ -29,6 +29,7 @@ public interface ShouXianDao {
     List<JdFundTransactionVo> getFundTransactionPageList(
             @Param("policyNo") String policyNo,
             @Param("trCode") String trCode,
+            @Param("currency") String currency,
             @Param("startDate") String startDate,
             @Param("endDate") String endDate,
             @Param("pageNum") Integer pageNum,
@@ -37,6 +38,7 @@ public interface ShouXianDao {
     int getFundTransactionTotal(
             @Param("policyNo") String policyNo,
             @Param("trCode") String trCode,
+            @Param("currency") String currency,
             @Param("startDate") String startDate,
             @Param("endDate") String endDate);
 
