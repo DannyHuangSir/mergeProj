@@ -273,6 +273,7 @@ public class ShouxianService {
 
             if (StringUtils.equals(currency, portfolioVo.getInvtExchCurr())) {
                 exchRate = BigDecimal.valueOf(1);
+                portfolioVo.setExchRateBuy(BigDecimal.valueOf(1));
             }
 
             try {
