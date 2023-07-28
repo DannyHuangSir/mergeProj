@@ -125,6 +125,7 @@ public class RptUtils2 {
         cell.setHorizontalAlignment(align);
         cell.setColspan(colspan);
         cell.setPhrase(new Phrase(value, font));
+        cell.setPaddingBottom(7f);
         if (!boderFlag) {
             cell.setBorder(0);
         }
