@@ -329,7 +329,7 @@ public class ShouxianController extends BaseController {
             Integer pageNum = req.getPageNum();
             Integer pageSize = req.getPageSize();
 
-            if (!StringUtils.isEmpty(policyNo) && !StringUtils.isNotBlank(currency)) {
+            if (!StringUtils.isEmpty(policyNo) && !StringUtils.isEmpty(currency)) {
                 int total = shouxianService.
                         getFundTransactionTotal(policyNo, transType, currency, startDate, endDate);
                 List<JdFundTransactionVo> fundTransactionList = shouxianService.
