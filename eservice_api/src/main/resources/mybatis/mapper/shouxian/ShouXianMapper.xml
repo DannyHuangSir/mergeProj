@@ -511,7 +511,7 @@
         decode(nvl(lcp.CLUP_F_PAY_DATE,''), '', '', to_char(lcp.CLUP_F_PAY_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official'''))  CLUP_F_PAY_DATE,
         decode(nvl(lcp.CLUP_TR_DATE,''), '', '', to_char(lcp.CLUP_TR_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
-        lip.INPD_INT_COMPU_DATE + 1 INPD_INT_COMPU_DATE
+        lip.INPD_BASIC_DATE INPD_INT_COMPU_DATE
         FROM LICLUP_ES lcp
         LEFT JOIN LIINPD_ES lip ON lcp.CLUP_INVT_NO = lip.INPD_INVT_NO AND lcp.CLUP_DATE = lip.INPD_DATE
         LEFT JOIN LIINVT_ES lin ON lcp.CLUP_INVT_NO = lin.INVT_NO
