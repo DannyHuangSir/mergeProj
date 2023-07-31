@@ -7,3 +7,10 @@ maxvalue 9223372036854775807
 start with 88803
 increment by 1
 no cache;
+
+create sequence SYSTEM_EVENT_SEQ
+minvalue 1
+maxvalue 9223372036854775807
+start with 88803
+increment by 1
+no cache;
