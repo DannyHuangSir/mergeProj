@@ -101,7 +101,7 @@
 		)
 		VALUES
 		(
-			(NEXT VALUE for ESERVICE_ADM.DBO.SYSTEM_EVENT_SEQ),
+			COALESCE((SELECT MAX(SYSTEM_EVENT_ID) FROM SYSTEM_EVENT), 0) + 1,
 			#{systemEventVo.businessEventId, jdbcType=NUMERIC},
 			#{systemEventVo.execDate, jdbcType=TIMESTAMP},
 			#{systemEventVo.execMethod, jdbcType=VARCHAR},
