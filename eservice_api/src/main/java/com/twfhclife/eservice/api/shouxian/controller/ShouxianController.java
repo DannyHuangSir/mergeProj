@@ -323,16 +323,17 @@ public class ShouxianController extends BaseController {
         try {
             String policyNo = req.getPolicyNo();
             String transType = req.getTransType();
+            String currency = req.getCurrency();
             String startDate = req.getStartDate();
             String endDate = req.getEndDate();
             Integer pageNum = req.getPageNum();
             Integer pageSize = req.getPageSize();
 
-            if (!StringUtils.isEmpty(policyNo)) {
+            if (!StringUtils.isEmpty(policyNo) && !StringUtils.isEmpty(currency)) {
                 int total = shouxianService.
-                        getFundTransactionTotal(policyNo, transType, startDate, endDate);
+                        getFundTransactionTotal(policyNo, transType, currency, startDate, endDate);
                 List<JdFundTransactionVo> fundTransactionList = shouxianService.
-                        getFundTransactionPageList(policyNo, transType, startDate, endDate, pageNum, pageSize);
+                        getFundTransactionPageList(policyNo, transType, currency, startDate, endDate, pageNum, pageSize);
                 for (JdFundTransactionVo fundTransactionVo : fundTransactionList) {
                     fundTransactionVo.setPageNum(req.getPageNum());
                     fundTransactionVo.setPageSize(req.getPageSize());

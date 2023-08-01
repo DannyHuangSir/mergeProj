@@ -513,7 +513,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	@Override
 	public Map<String, Object> getTransRiskLevel(TransVo transVo) {
 		Map<String, Object> map = onlineChangeDao.getTransRiskLevel(transVo);
-		List<ParameterVo> list = parameterDao.getParameterByCategoryCode("eservice", "RISK_LEVEL_TO_RR");
+		List<ParameterVo> list = parameterDao.getParameterByCategoryCode("eservice", Arrays.asList("RISK_LEVEL_TO_RR"));
 		if (!CollectionUtils.isEmpty(list)) {
 			for (ParameterVo vo : list) {
 				Object val = map.get("RISK_LEVEL_OLD");
@@ -1280,8 +1280,8 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			}
 		}
 		//進行獲取聯盟的數據信息類型
-		List<ParameterVo> parameters = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_API_ID, ApConstants.MEDICAL_TREATMENT_FEDERATION_FILE_TYPE);
-		List<ParameterVo> medicalUploadfile = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID_ESERVICE, ApConstants.MEDICAL_TREATMENT_UPLOADFILE);
+		List<ParameterVo> parameters = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_API_ID, Arrays.asList(ApConstants.MEDICAL_TREATMENT_FEDERATION_FILE_TYPE));
+		List<ParameterVo> medicalUploadfile = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID_ESERVICE, Arrays.asList(ApConstants.MEDICAL_TREATMENT_UPLOADFILE));
 
 		rMap.put("Parameters", parameters);
 		rMap.put("medicalUploadfile", medicalUploadfile);

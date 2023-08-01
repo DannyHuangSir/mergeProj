@@ -6,6 +6,31 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>送件列表｜經代專區</title>
 	<th:block th:replace="fragments/head"/>
+	<style>
+		.arrow {
+			display: inline-block;
+			vertical-align: middle;
+			width: 0;
+			height: 0;
+			margin-left: 5px;
+			opacity: 0.9;
+		}
+		.arrow.asc {
+			border-left: 5px solid transparent;
+			border-right: 5px solid transparent;
+			border-bottom: 5px solid #009b30;
+		}
+		.arrow.dsc {
+			border-left: 5px solid transparent;
+			border-right: 5px solid transparent;
+			border-top: 5px solid #009b30;
+		}
+		.arrow.none {
+			border-left: 5px solid transparent;
+			border-right: 5px solid transparent;
+			border-top: 5px solid #696969;
+		}
+	</style>
 </head>
 
 <body>
@@ -63,14 +88,14 @@
 									<table class="tablesaw tablesaw-stack">
 										<thead>
 										<tr class="table2">
-											<th class="text-left item360">保單</th>
-											<th scope="col" class="item360">要保人</th>
-											<th scope="col" class="item400">被保險人</th>
-											<th scope="col" class="item400">主約險種</th>
-											<th scope="col" class="item450">受理日期</th>
-											<th scope="col" class="item450">案件狀態</th>
-											<th scope="col" class="item450">最新照會狀態</th>
-											<th scope="col" class="item450">招攬人</th>
+											<th class="text-left item360">保單<span class="arrow none" name="policyNo"/></th>
+											<th scope="col" class="item360">要保人<span class="arrow none" name="appName"/></th>
+											<th scope="col" class="item400">被保險人<span class="arrow none" name="insName"/></th>
+											<th scope="col" class="item400">主約險種<span class="arrow none" name="policyType"/></th>
+											<th scope="col" class="item450">受理日期<span class="arrow none" name="tBSubmitDate"/></th>
+											<th scope="col" class="item450">案件狀態<span class="arrow none" name="bPMCurrentTak"/></th>
+											<th scope="col" class="item450">最新照會狀態<span class="arrow none" name="noteVerifyResult"/></th>
+											<th scope="col" class="item450">招攬人<span class="arrow none" name="pSalesName"/></th>
 										</tr>
 										</thead>
 										<tbody id="personalContent">
@@ -121,37 +146,30 @@
 			})
 
 			showLoadingModal();
-			$.ajax({
-				type : 'POST',
-				dataType : "JSON",
-				contentType : 'application/json',
-				url : /*[[@{/personalCaseList}]]*/,
-				success : function(response) {
-					if(response.result == "SUCCESS"){
-						html = ''
-						response.resultData.forEach(function(item, index){
-								html += "<tr policyNo=\"" + item.policyNo + "\" onclick=\"javascript:postPolicyListType('personalCaseListing1', '" + item.policyNo + "')\">" +
-										'<td class="table3">' + (item.policyNo ? item.policyNo : '-')  +'</td>' +
-										'<td class="table3">'+ (item.appName ? item.appName : '-') +'</td>' +
-										'<td class="table3">' + (item.insName ? item.insName : '-') +'</td>' +
-										'<td class="table3">' + (item.policyType ? item.policyType : '-') +'</td>' +
-										'<td class="table3">' + (item.tBSubmitDate ? item.tBSubmitDate : '-' ) +'</td>' +
-										'<td class="table3">' + levelStateStr(item.policyNo, item.bPMCurrentTak) +'</td>' +
-										'<td class="table3">' + noteVerifyResultStr(item.policyNo, item.noteVerifyResult, item.bPMCurrentTak) +'</td>' +
-										'<td class="table3">' + (item.pSalesName ? item.pSalesName : '-') +'</td>' +
-									'</tr>'
-							});
-						$("#personalContent").html(html)
-						initChart()
-					}
+			searchList({})
 
-					hideLoadingModal();
-				},
-				error : function() {
-					hideLoadingModal();
-					openAlert('error!')
-				}
-	    	});
+	    	$(".arrow").click(function(){
+	    		sort = 'none'
+	    		if ($(this).hasClass('dsc')) {
+	    			sort = 'dsc'
+	    		} else if ($(this).hasClass('asc')) {
+	    			sort = 'asc'
+	    		}
+	    		$(".arrow").removeClass("asc").removeClass("dsc").addClass("none")
+	    		if (sort == 'asc' || sort == 'none') {
+		    		$(this).removeClass("none").addClass("dsc")
+		    		searchList({
+		    			name: $(this).attr("name"),
+		    			sort: 'desc'
+		    		})
+	    		} else if (sort == 'dsc') {
+	    			$(this).removeClass("none").addClass("asc")
+	    			searchList({
+		    			name: $(this).attr("name"),
+		    			sort: 'asc'
+		    		})
+	    		}
+	    	})
 		})
 		var status5 = ['602000S', '602500S']
 		function noteVerifyResultStr(policyNo, status, noteStatus) {
@@ -177,7 +195,6 @@
 
 		function levelStateStr(policyNo, levelState) {
 			result = '-'
-
 			if (status1.indexOf(levelState) != -1) {
 				chart1Map[0].policyNos.push(policyNo)
 				result = '受理中'
@@ -260,6 +277,41 @@
 						}
 					}
 				});
+		}
+
+		function searchList(dataSort) {
+			$.ajax({
+				type : 'POST',
+				dataType : "JSON",
+				contentType : 'application/json',
+				data: JSON.stringify(dataSort),
+				url : /*[[@{/personalCaseList}]]*/,
+				success : function(response) {
+					if(response.result == "SUCCESS"){
+						html = ''
+						response.resultData.forEach(function(item, index){
+								html += "<tr policyNo=\"" + item.policyNo + "\" onclick=\"javascript:postPolicyListType('personalCaseListing1', '" + item.policyNo + "')\">" +
+										'<td class="table3">' + (item.policyNo ? item.policyNo : '-')  +'</td>' +
+										'<td class="table3">'+ (item.appName ? item.appName : '-') +'</td>' +
+										'<td class="table3">' + (item.insName ? item.insName : '-') +'</td>' +
+										'<td class="table3">' + (item.policyType ? item.policyType : '-') +'</td>' +
+										'<td class="table3">' + (item.tBSubmitDate ? item.tBSubmitDate : '-' ) +'</td>' +
+										'<td class="table3">' + levelStateStr(item.policyNo, item.bPMCurrentTak) +'</td>' +
+										'<td class="table3">' + noteVerifyResultStr(item.policyNo, item.noteVerifyResult, item.bPMCurrentTak) +'</td>' +
+										'<td class="table3">' + (item.pSalesName ? item.pSalesName : '-') +'</td>' +
+									'</tr>'
+							});
+						$("#personalContent").html(html)
+						initChart()
+					}
+
+					hideLoadingModal();
+				},
+				error : function() {
+					hideLoadingModal();
+					openAlert('error!')
+				}
+	    	});
 		}
 /*]]>*/
 </script>

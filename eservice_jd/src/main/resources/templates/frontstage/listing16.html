@@ -66,18 +66,18 @@
                                                             <td>
                                                                 <b class="tablesaw-cell-label mobile-b">基金名稱</b>
                                                                 <span class="mobile-span">
-												<div class="selector-box">
-													<select id="invtList" class="selector" title="請選擇基金">
-														<option value="">請選擇基金...</option>
-														<th:block th:each="portfolioVo : ${portfolioList}">
-															<option th:value="${portfolioVo.invtNo}"
-                                                                    th:attr="data-exchcurr=${portfolioVo.invtExchCurr},data-exchcurrname=${portfolioVo.currency},data-invtname=${portfolioVo.invtName},data-riskbenelevel=${portfolioVo.riskBeneLevel}">
-																<th:block th:text="${portfolioVo.invtName}"/>
-															</option>
-														</th:block>
-													</select>
-												</div>
-												</span>
+                                                                    <div class="selector-box">
+                                                                        <select id="invtList" class="selector" title="請選擇基金">
+                                                                            <option value="">請選擇基金...</option>
+                                                                            <th:block th:each="portfolioVo : ${portfolioList}">
+                                                                                <option th:value="${portfolioVo.invtNo}"
+                                                                                        th:attr="data-exchcurr=${portfolioVo.invtExchCurr},data-exchcurrname=${portfolioVo.currency},data-invtname=${portfolioVo.invtName},data-riskbenelevel=${portfolioVo.riskBeneLevel}">
+                                                                                    <th:block th:text="${portfolioVo.invtName}"/>
+                                                                                </option>
+                                                                            </th:block>
+                                                                        </select>
+                                                                    </div>
+                                                                </span>
                                                             </td>
                                                             <th class="hid1 hid2" scope="col">基金幣別</th>
                                                             <td id="invtExchCurrNameTd">
@@ -171,6 +171,27 @@
                                                                         </label>&nbsp;月
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-sm-12" style="padding-left: 0px">
+                                                                    <div class="radio">
+                                                                        <label>
+                                                                            <div class="radio-btn">
+                                                                                <i>
+                                                                                    <input type="radio"
+                                                                                           name="qryRadioType" value="D"
+                                                                                           title="指定日期"/>
+                                                                                </i>
+                                                                            </div>
+                                                                            指定日期
+                                                                        </label>
+                                                                        <label>
+                                                                           <input style="width:100px" type="text" name="startTime" />
+                                                                        </label>
+                                                                        -
+                                                                        <label>
+                                                                            <input style="width:100px" type="text" name="endTime"/>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
                                                                 <div class="col-sm-3" style="padding-left: 0px">
                                                                     <button id="searchBtn" type="button"
                                                                             class="btn-form btn-search">搜尋
@@ -222,6 +243,12 @@
   /*<![CDATA[*/
     var paymentMap = [[${session.SYSTEM_PARAMETER.CURRENCY_JD}]]
 	$(function() {
+	    $("[name='startTime'],[name='endTime']").datepicker({
+            dateFormat: 'yymmdd',
+            maxDate: new Date(),
+            changeMonth: true,
+            changeYear: true
+        });
 		$('#invtList').change(function() {
 			// 基金幣別
 			$('#invtExchCurrNameTd').html("<b class='tablesaw-cell-label mobile-b'>基金幣別</b><span class='mobile-span'>" + paymentMap[$(this).find('option:selected').data('exchcurr')].parameterValue + "</span>");
@@ -238,11 +265,17 @@
 			var exchCurr = $('#invtList').find('option:selected').val();
 			var queryType = $('div.checkedRadio input[name="qryRadioType"]').val();
 			var queryMonth = (parseInt($('#qryYear').val(), 10) + 1911) + '/' + $('#qryMonth').val();
+			if (queryType == 'D' && ($("[name='startTime']").val() == '' || $("[name='endTime']").val() == '')) {
+			    openAlert('請選擇指定日期');
+				return false;
+			}
 			var formData = {
 				exchangeCode : exchCurr,
 				queryType : queryType,
 				queryMonth : queryMonth,
-				policyNo: [[${policyNo}]]
+				policyNo: [[${policyNo}]],
+				startTime: $("[name='startTime']").val(),
+				endTime: $("[name='endTime']").val(),
 			};
 
             showLoadingModal();

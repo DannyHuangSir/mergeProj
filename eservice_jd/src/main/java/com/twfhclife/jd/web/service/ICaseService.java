@@ -3,6 +3,7 @@ package com.twfhclife.jd.web.service;
 import com.twfhclife.jd.api_model.CaseListDataResponse;
 import com.twfhclife.jd.keycloak.model.KeycloakUser;
 import com.twfhclife.jd.web.domain.CaseQueryVo;
+import com.twfhclife.jd.web.domain.PersonSortVo;
 import com.twfhclife.jd.web.model.CaseVo;
 
 import java.util.List;
@@ -18,5 +19,5 @@ public interface ICaseService {
 
     byte[] getNotePdf(String userId, String policyNo, String noteKey) throws Exception;
 
-    List<CaseVo> getPersonalCaseList(KeycloakUser loginUser);
+    List<CaseVo> getPersonalCaseList(KeycloakUser loginUser, PersonSortVo sort);
 }

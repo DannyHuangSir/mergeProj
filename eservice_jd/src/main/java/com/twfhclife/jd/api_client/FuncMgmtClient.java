@@ -35,7 +35,7 @@ public class FuncMgmtClient extends BaseRestClient {
         ReturnHeader returnHeader = null;
         String url = FUNCTION_AUTH_URI;
 
-        logger.debug("invoke getFunctions api: url=" + url + ", sysId=" + sysId + ",userId=" + userId);
+//        logger.debug("invoke getFunctions api: url=" + url + ", sysId=" + sysId + ",userId=" + userId);
         UserFuncAuthReqVo vo = new UserFuncAuthReqVo();
         vo.setSysId(sysId);
         vo.setUserId(userId);
@@ -51,7 +51,7 @@ public class FuncMgmtClient extends BaseRestClient {
         };
         ResponseEntity<ApiResponseObj<List<FunctionVo>>> responseEntity = restTemplate.exchange(url,
                 HttpMethod.POST, entity, typeRef);
-        logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
+//        logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
         if (!this.checkResponseStatus(responseEntity)) {
             return null;
         }
@@ -68,7 +68,7 @@ public class FuncMgmtClient extends BaseRestClient {
                 return null;
             }
         }
-        logger.info("getSystemFunctions result = " + returnHeader.getReturnCode());
+//        logger.info("getSystemFunctions result = " + returnHeader.getReturnCode());
         return resultList;
     }
 }

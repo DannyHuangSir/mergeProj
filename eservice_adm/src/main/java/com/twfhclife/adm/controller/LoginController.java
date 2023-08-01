@@ -131,10 +131,10 @@ public class LoginController extends BaseController {
 					keycloakUser = keycloakService.login(username, password);
 				}
 				
-				logger.info("Get keycloakUser: {}", keycloakUser);
+//				logger.info("Get keycloakUser: {}", keycloakUser);
 				
 				if (keycloakUser != null && keycloakUser.getAccessToken() != null) {
-					logger.info("{} AccessToken: {}", username, keycloakUser.getAccessToken());
+//					logger.info("{} AccessToken: {}", username, keycloakUser.getAccessToken());
 					// TODO 登入記錄及檢核
 
 					List<FunctionVo> menuList = loginService.getMenuList(username, keycloakUser.getId());

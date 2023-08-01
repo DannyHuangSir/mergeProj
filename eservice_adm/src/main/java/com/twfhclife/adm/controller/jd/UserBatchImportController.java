@@ -11,6 +11,7 @@ import com.twfhclife.generic.annotation.LoginCheck;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -88,6 +89,7 @@ public class UserBatchImportController extends BaseController {
     @RequestLog
     @GetMapping("/jdBatch/exportFile")
     public void exportFile(@RequestParam("batchId") String batchId, @RequestParam("type")Boolean type, HttpServletResponse response) throws IOException {
+        String filterBatchId = StringEscapeUtils.escapeHtml4(batchId);
         String DATE_FORMAT = "yyyyMMddHHmmss";
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         Calendar c1 = Calendar.getInstance();
@@ -101,14 +103,14 @@ public class UserBatchImportController extends BaseController {
         if (type) {
             // 處理原始檔案數據
             csvFileName = "原始檔案" + timeStr + ".xlsx";
-            batch = jdBatchPlanDao.getBatchLink(batchId);
+            batch = jdBatchPlanDao.getBatchLink(filterBatchId);
             if (batch != null) {
                 batchFile = batch.getBatchFile();
             }
         } else {
             // 處理失敗檔案數據
             csvFileName = "失敗檔案" + timeStr + ".xlsx";
-            batch = jdBatchPlanDao.getBatchFailLink(batchId);
+            batch = jdBatchPlanDao.getBatchFailLink(filterBatchId);
             if (batch != null) {
                 batchFile = batch.getFailLink();
             }

@@ -5,10 +5,7 @@ import java.lang.reflect.Method;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -224,7 +221,7 @@ public class EventRecordLogAspect {
 
 		if(!containEventCode || eventNameCacheMap.isEmpty()) {
 			List<ParameterVo> paramterList = parameterDao.getParameterByCategoryCode(ApConstants.SYSTEM_ID,
-					ApConstants.EVENT_TYPE_PARAMETER_CATEGORY_CODE);
+					Arrays.asList(ApConstants.EVENT_TYPE_PARAMETER_CATEGORY_CODE));
 			if (paramterList != null) {
 				for (ParameterVo vo : paramterList) {
 					if (eventCode.equals(vo.getParameterValue())) {

@@ -111,7 +111,7 @@ public class BaseRestClient {
 	}
 	
 	public boolean checkResponseStatus(ResponseEntity<?> responseEntity) {
-		logger.info("http status=" + responseEntity.getStatusCodeValue());
+//		logger.info("http status=" + responseEntity.getStatusCodeValue());
 		if(responseEntity.getStatusCodeValue() == HttpStatus.SC_OK) {
 			// 200 OK
 			return true;
@@ -134,5 +134,4 @@ public class BaseRestClient {
 		map.put(UserDetailResponse.class, new ParameterizedTypeReference<ApiResponseObj<UserDetailResponse>>() { });
 		return Collections.unmodifiableMap(map);
 	}
-	
 }

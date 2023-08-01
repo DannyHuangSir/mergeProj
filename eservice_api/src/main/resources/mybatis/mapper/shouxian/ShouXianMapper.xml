@@ -511,7 +511,7 @@
         decode(nvl(lcp.CLUP_F_PAY_DATE,''), '', '', to_char(lcp.CLUP_F_PAY_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official'''))  CLUP_F_PAY_DATE,
         decode(nvl(lcp.CLUP_TR_DATE,''), '', '', to_char(lcp.CLUP_TR_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
-        lip.INPD_INT_COMPU_DATE + 1 INPD_INT_COMPU_DATE
+        to_char((lip.INPD_BASIC_DATE), 'yyy/MM/dd') INPD_INT_COMPU_DATE
         FROM LICLUP_ES lcp
         LEFT JOIN LIINPD_ES lip ON lcp.CLUP_INVT_NO = lip.INPD_INVT_NO AND lcp.CLUP_DATE = lip.INPD_DATE
         LEFT JOIN LIINVT_ES lin ON lcp.CLUP_INVT_NO = lin.INVT_NO
@@ -538,13 +538,13 @@
             ELSE SADP_TR_UNITS
             END SADP_TR_UNITS,
             CASE
-                WHEN leh.EXCH_EXCH_CODE IS NOT NULL AND leh.EXCH_CURR_CODE = leh.EXCH_EXCH_CODE THEN 1
+                WHEN #{currency} = lsp.SADP_EXCH_CURR THEN 1
                 WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
                 WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
             END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
             FROM LISADP_ES lsp
             LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-            LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
+            LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
             <where>
                 AND lsp.SADP_INSU_NO = #{policyNo}
                 <if test="trCode != null">
@@ -576,16 +576,16 @@
         SELECT COUNT(*) FROM (
         SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
         CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
-        ELSE SADP_TR_UNITS
+            ELSE SADP_TR_UNITS
         END SADP_TR_UNITS,
         CASE
-        WHEN leh.EXCH_EXCH_CODE IS NOT NULL AND leh.EXCH_CURR_CODE = leh.EXCH_EXCH_CODE THEN 1
+        WHEN #{currency} = lsp.SADP_EXCH_CURR THEN 1
         WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
         WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
         END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
         FROM LISADP_ES lsp
         LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LIEXCH_ES leh ON lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
+        LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">
@@ -674,6 +674,9 @@
             </if>
             <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'C'.toString()">
                 AND to_char(INPR_TRAN_DATE, 'yyyy/MM') = #{exchangeRateVo.queryMonth}
+            </if>
+            <if test="exchangeRateVo.queryType != null and exchangeRateVo.queryType == 'D'.toString()">
+                AND to_char(INPR_TRAN_DATE, 'yyyyMMdd') between #{exchangeRateVo.startTime} and #{exchangeRateVo.endTime}
             </if>
         </where>
         order by INPR_TRAN_DATE

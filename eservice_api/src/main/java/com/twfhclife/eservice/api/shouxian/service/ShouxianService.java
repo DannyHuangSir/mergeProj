@@ -86,12 +86,12 @@ public class ShouxianService {
        return shouXianDao.getIncomeDistribution(policyNo);
     }
 
-    public List<JdFundTransactionVo> getFundTransactionPageList(String policyNo, String transType, String startDate, String endDate, Integer pageNum, Integer pageSize) {
-        return shouXianDao.getFundTransactionPageList(policyNo, transType, startDate, endDate, pageNum, pageSize);
+    public List<JdFundTransactionVo> getFundTransactionPageList(String policyNo, String transType, String currency, String startDate, String endDate, Integer pageNum, Integer pageSize) {
+        return shouXianDao.getFundTransactionPageList(policyNo, transType, currency, startDate, endDate, pageNum, pageSize);
     }
 
-    public int getFundTransactionTotal(String policyNo, String transType, String startDate, String endDate) {
-        return shouXianDao.getFundTransactionTotal(policyNo, transType, startDate, endDate);
+    public int getFundTransactionTotal(String policyNo, String transType, String currency, String startDate, String endDate) {
+        return shouXianDao.getFundTransactionTotal(policyNo, transType, currency, startDate, endDate);
     }
 
     public List<FundPrdtVo> getFundPrdtPageList(String policyNo, String startDate, String endDate, Integer pageNum, Integer pageSize) {
@@ -273,6 +273,7 @@ public class ShouxianService {
 
             if (StringUtils.equals(currency, portfolioVo.getInvtExchCurr())) {
                 exchRate = BigDecimal.valueOf(1);
+                portfolioVo.setExchRateBuy(BigDecimal.valueOf(1));
             }
 
             try {

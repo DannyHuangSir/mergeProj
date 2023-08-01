@@ -108,6 +108,9 @@
     <select id="getPersonalCaseList" resultMap="CaseMap">
        <include refid="caseSql"></include>
         AND A.BPMCurrentTak != '602500S'
+        <if test="vo.sort != null and vo.sort.name != null and vo.sort.sort != null">
+            ORDER BY ${vo.sort.name} ${vo.sort.sort}
+        </if>
     </select>
 
     <select id="getCaseList" resultMap="CaseMap">

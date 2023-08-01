@@ -124,7 +124,7 @@ public class FuncMgmtClient extends BaseRestClient {
 		String url = FUNCTION_AUTH_URI;
 //		url = "http://220.133.126.209:8084/eservice_api/user/function-auth";// TODO for test
 		
-		logger.debug("invoke getFunctions api: url=" + url + ", sysId=" + sysId +",userId="+userId);
+//		logger.debug("invoke getFunctions api: url=" + url + ", sysId=" + sysId +",userId="+userId);
 
 		UserFuncAuthReqVo vo =  new UserFuncAuthReqVo();
 		vo.setSysId(sysId);
@@ -141,7 +141,7 @@ public class FuncMgmtClient extends BaseRestClient {
 		};
 		ResponseEntity<ApiResponseObj<List<FunctionVo>>> responseEntity = restTemplate.exchange(url,
 				HttpMethod.POST, entity, typeRef);
-		logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
+//		logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
 		if (!this.checkResponseStatus(responseEntity)) {
 			return null;
 		}
@@ -158,24 +158,7 @@ public class FuncMgmtClient extends BaseRestClient {
 				return null;
 			}
 		}
-		logger.info("getSystemFunctions result = " + returnHeader.getReturnCode());
+//		logger.info("getSystemFunctions result = " + returnHeader.getReturnCode());
 		return resultList;
-	}
-	
-	public static void main(String[] args) {
-		FuncMgmtClient f = new FuncMgmtClient();
-//		f.getSystemFunctions("eservice");
-		FunctionItemVo functionVo = new FunctionItemVo();
-		functionVo.setFunctionType("FG");
-		functionVo.setFunctionName("TEST_API_CLIENT");
-		functionVo.setParentFuncId("381");
-		functionVo.setSysId("eform");
-		functionVo.setCreateUser("test");
-		functionVo.setUpdateUser("test");
-		f.addFunction(functionVo);
-		
-		
-//		List<FunctionVo> v = f.getMenuList("eservice_adm", "88319e3a-6eb4-4360-ab41-90da80740cac", true);
-//		System.out.println("size="+ v.size());
 	}
 }

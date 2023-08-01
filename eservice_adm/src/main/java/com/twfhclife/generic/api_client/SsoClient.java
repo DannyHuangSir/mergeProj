@@ -38,7 +38,7 @@ public class SsoClient extends BaseRestClient {
 		ApiResponseObj<KeycloakLoginResponse> apiResponseObj = new ApiResponseObj<KeycloakLoginResponse>();
 		ReturnHeader returnHeader = null;
 		String url = LOGIN_URI;//"http://220.133.126.209:8084/eservice_api/sso/login";//for test
-		logger.debug("invoke login post api: url="+url+", requestBody="+MyJacksonUtil.object2Json(requestBody));
+//		logger.debug("invoke login post api: url="+url+", requestBody="+MyJacksonUtil.object2Json(requestBody));
 		
 		Map<String, String> headerMap = new HashMap<>();
 		headerMap.put("Authorization", "Bearer " + new String(WSO2_API_KEY));
@@ -72,7 +72,7 @@ public class SsoClient extends BaseRestClient {
 				return null;
 			}
 		}
-		logger.info("login result = " + returnHeader.getReturnCode());
+//		logger.info("login result = " + returnHeader.getReturnCode());
 		return keycloakLoginResponse;
 	}
 
@@ -83,7 +83,7 @@ public class SsoClient extends BaseRestClient {
 		String url = LOGOUT_URI;
 		url = url.replace("{realm}", this.ADM_REALM).replace("{userId}", userId.trim());
 		// url="http://220.133.126.209:8084/eservice_api/sso/logout/twfhclife/88319e3a-6eb4-4360-ab41-90da80740cac";
-		logger.debug("invoke logout get api: url="+url);
+//		logger.debug("invoke logout get api: url="+url);
 		
 		Map<String, String> headerMap = new HashMap<>();
 		headerMap.put("Authorization", "Bearer " + new String(WSO2_API_KEY));
@@ -112,7 +112,7 @@ public class SsoClient extends BaseRestClient {
 		}
 		returnHeader = apiResponseObj.getReturnHeader();
 		if ("SUCCESS".equals(returnHeader.getReturnCode())) {
-			logger.info("logout result = " + returnHeader.getReturnCode());
+//			logger.info("logout result = " + returnHeader.getReturnCode());
 			return true;
 		} else {
 			return false;
@@ -161,19 +161,5 @@ public class SsoClient extends BaseRestClient {
 		}
 		logger.info("login result = " + returnHeader.getReturnCode());
 		return keycloakLoginResponse;
-	}
-
-	public static void main(String[] args) {
-		SsoClient sso = new SsoClient();
-		KeycloakLoginRequest req = new KeycloakLoginRequest();
-		req.setUsername("davidyu");
-		req.setRealm("twfhclife");
-		req.setPassword("12qwaszx");
-		req.setClientId("eservice_adm");
-		req.setGrantType("password");
-		KeycloakLoginResponse res = (KeycloakLoginResponse) sso.login(req);
-		System.out.println("KeycloakLoginResponse token=" + res.getAccessToken());
-		// boolean res = sso.logout("");
-		// System.out.println("KeycloakLoginResponse result=" + res);
 	}
 }

@@ -122,7 +122,7 @@ public class PolicyServiceImpl implements IPolicyService {
     private String transationHistroyUrl;
 
     @Override
-    public JdPolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String transType, int pageNum, int pageSize) {
+    public JdPolicyFundTransactionResponse getPolicyFundTransaction(String userId, String policyNo, String transType, String currency, int pageNum, int pageSize) {
         PolicyFundTransactionRequest apiReq = new PolicyFundTransactionRequest();
         apiReq.setTransType(transType);
         apiReq.setPolicyNo(policyNo);
@@ -131,6 +131,7 @@ public class PolicyServiceImpl implements IPolicyService {
         apiReq.setPageSize(pageSize);
         apiReq.setSysId(ApConstants.SYSTEM_ID);
         apiReq.setUserId(userId);
+        apiReq.setCurrency(currency);
         return baseRestClient.postApi(new Gson().toJson(apiReq), transationHistroyUrl, JdPolicyFundTransactionResponse.class);
     }
 
@@ -221,6 +222,8 @@ public class PolicyServiceImpl implements IPolicyService {
         apiReq.setQueryMonth(exchangeRateVo.getQueryMonth());
         apiReq.setExchangeCode(exchangeRateVo.getExchangeCode());
         apiReq.setQueryType(exchangeRateVo.getQueryType());
+        apiReq.setStartTime(exchangeRateVo.getStartTime());
+        apiReq.setEndTime(exchangeRateVo.getEndTime());
         return baseRestClient.postApi(new Gson().toJson(apiReq), exchangeRateUrl, ExchangeRateDataResponse.class).getExchangeRates();
     }
 

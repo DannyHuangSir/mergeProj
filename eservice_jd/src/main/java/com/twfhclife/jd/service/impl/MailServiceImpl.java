@@ -131,7 +131,7 @@ public class MailServiceImpl implements IMailService {
 		String sender = "" + properties.get("mail.smtp.sender"); // 郵件的發送者
 		String password = "" + properties.get("mail.smtp.password"); // 登陸郵箱的密碼
 
-		logger.info("send email,get username password,sender=" + sender + ", password=" + password);
+//		logger.info("send email,get username password,sender=" + sender + ", password=" + password);
 
 		// 2. 創建session
 		Session session = null; // 和郵箱服務器連接。

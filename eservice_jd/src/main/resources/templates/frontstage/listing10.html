@@ -159,7 +159,7 @@
 		// 建立交易歷史 grid
 		grid1 = new eserviceGrid();
 		grid1.sGridId = '#grid1';
-		grid1.sQueryUrl = /*[[@{/getTxLogList?policyNo=} + ${param.policyNo[0]}]]*/;
+		grid1.sQueryUrl = /*[[@{/getTxLogList?policyNo=} + ${policyNo} + @{&currency=} + ${vo.currency}]]*/;
 		grid1.sRowClass = 'h65';
 		grid1.aoColumns = [
 			{

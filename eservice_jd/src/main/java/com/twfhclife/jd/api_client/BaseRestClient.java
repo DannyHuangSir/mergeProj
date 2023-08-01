@@ -168,7 +168,7 @@ public class BaseRestClient {
 
 	@SuppressWarnings("unchecked")
 	public <T> ApiResponseObj<T> postApiResponse(String postJson, String url, Class<T> clazz) {
-		logger.debug("Invoke eservice api[{}]: {}", url, postJson);
+//		logger.debug("Invoke eservice api[{}]: {}", url, postJson);
 
 		Map<String, String> headerMap = new HashMap<>();
 		headerMap.put("Authorization", "Bearer " + this.ESERVICE_API_SECRET);
@@ -194,7 +194,7 @@ public class BaseRestClient {
 		try {
 			ResponseEntity<ApiResponseObj<T>> responseEntity = restTemplate.exchange(url,
 					HttpMethod.POST, entity, typeReferences().get(clazz));
-			logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
+//			logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
 			if (!this.checkResponseStatus(responseEntity)) {
 				return null;
 			}
@@ -222,7 +222,7 @@ public class BaseRestClient {
 
 		ResponseEntity<ApiResponseObj<?>> responseEntity = restTemplate.exchange(url,
 				HttpMethod.POST, entity, new ParameterizedTypeReference<ApiResponseObj<?>>() { });
-		logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
+//		logger.debug("API ResponseEntity=" + MyJacksonUtil.object2Json(responseEntity));
 		if (!this.checkResponseStatus(responseEntity)) {
 			return null;
 		}
@@ -335,7 +335,7 @@ public class BaseRestClient {
 	}
 
 	public boolean checkResponseStatus(ResponseEntity<?> responseEntity) {
-		logger.info("http status=" + responseEntity.getStatusCodeValue());
+//		logger.info("http status=" + responseEntity.getStatusCodeValue());
 		if(responseEntity.getStatusCodeValue() == HttpStatus.SC_OK) {
 			// 200 OK
 			return true;
