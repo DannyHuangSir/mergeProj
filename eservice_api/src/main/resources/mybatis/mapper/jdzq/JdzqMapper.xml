@@ -155,7 +155,7 @@
     <select id="getPolicyInfo" resultMap="CaseMap">
         SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.AppBirth, A.BPMCurrentTak,
         A.AccDocNo, A.PM_PRME_NEW_OLD_SW,
-        (SELECT TOP(1) TablePrem FROM PolicyFormData WHERE MAIN_KEY = A.MAIN_KEY) PrmeNewOldSW,
+        A.PolicyFeeOrg PrmeNewOldSW,
         E.PTypeName PolicyType, A.StampResult, A.PayType, A.InsBirth, A.InsName, A.InsID, A.PolicyAmount, A.PolicyAmountNTD
         FROM MainPolicy A
         LEFT JOIN (
