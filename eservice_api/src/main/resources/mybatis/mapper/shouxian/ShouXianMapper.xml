@@ -410,6 +410,7 @@
                             ON A.PRPA_INSU_TYPE = B.NEPI_INSU_TYPE AND A.PRPA_INSU_GRP_NO = B.NEPI_INSU_GRP_NO AND A.PRPA_INSU_SEQ_NO = B.NEPI_INSU_SEQ_NO
                 WHERE A.PRPA_INSU_TYPE = substr(#{policyNo}, 1, 2) AND A.PRPA_INSU_GRP_NO = substr(#{policyNo}, 3, 1) AND A.PRPA_INSU_SEQ_NO = substr(#{policyNo}, 4, 7)
                                                    ) A LEFT JOIN LIPRPK_ES_NONCHAR B ON A.PRPA_RCP_BATCH = B.PRPK_RCP_BATCH AND A.PRPA_DEAL_NO = B.PRPK_DEAL_NO
+                ORDER BY A.PRPA_RCP_DATE DESC
 
     </select>
 
