@@ -525,7 +525,7 @@ public class ClaimChainController {
 			List<Map<String, Object>> data = Lists.newArrayList();
 			Map<String, Object> dataMap = Maps.newHashMap();
 			dataMap.put("id", vo.getId());
-			dataMap.put("code", vo.getStatus());
+			dataMap.put("status", vo.getStatus());
 			dataMap.put("msg", vo.getMsg());
 			data.add(dataMap);
 			Map<String, Object> params = new HashMap<>();
