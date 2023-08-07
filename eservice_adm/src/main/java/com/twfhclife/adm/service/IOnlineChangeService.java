@@ -1,11 +1,11 @@
 package com.twfhclife.adm.service;
 
+import com.twfhclife.adm.model.*;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import com.twfhclife.adm.model.*;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * 報表查詢-線上申請查詢服務.
@@ -536,7 +536,7 @@ public interface IOnlineChangeService {
 
     byte[] getSignPdf(String signFileId);
 
-	List<BxczSignApiLog> getSignHistoryList(BxczSignApiLog vo);
+	List<BxczSignApiLog> getSignHistoryList(TransVo vo);
 
 	int updatePolicyClaimApplyDate(String transNum);
 

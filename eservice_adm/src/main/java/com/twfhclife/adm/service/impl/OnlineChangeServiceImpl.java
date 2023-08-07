@@ -1807,7 +1807,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
     }
 
     @Override
-    public List<BxczSignApiLog> getSignHistoryList(BxczSignApiLog vo) {
+    public List<BxczSignApiLog> getSignHistoryList(TransVo vo) {
         return onlineChangeDao.getSignApiRecordByTransNum(vo.getTransNum());
     }
 

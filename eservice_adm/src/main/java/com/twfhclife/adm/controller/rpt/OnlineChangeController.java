@@ -1374,7 +1374,7 @@ public class OnlineChangeController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/onlineChange/signHistoryList")
-	public ResponseEntity<ResponseObj> signHistory(@RequestBody BxczSignApiLog vo) {
+	public ResponseEntity<ResponseObj> signHistory(@RequestBody TransVo vo) {
 		try {
 			List<BxczSignApiLog> results = onlineChangeService.getSignHistoryList(vo);
 			processSuccess(results);
