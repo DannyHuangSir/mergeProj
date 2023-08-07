@@ -525,45 +525,57 @@
         <result column="SADP_TR_DATE" property="sadpTrDate"/>
         <result column="SADP_TR_CODE" property="sadpTrCode"/>
         <result column="SADP_TR_UNITS" property="sadpTrUnits"/>
-        <result column="FUND_VALUE" property="fundValue"/>
+        <result column="NET_VALUE" property="netValue"/>
         <result column="SADP_EXCH_DATE" property="sadpExchDate"/>
         <result column="SADP_EXCH_CURR" property="invtExchCurr"/>
-        <result column="FUND_VALUE" property="exchRate"/>
+        <result column="EXCH_RATE" property="exchRate"/>
     </resultMap>
 
     <select id="getFundTransactionPageList" resultMap="FundTransactionListMap">
         SELECT * FROM (
-            SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
-            CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
-            ELSE SADP_TR_UNITS
-            END SADP_TR_UNITS,
-            CASE
-                WHEN #{currency} = lsp.SADP_EXCH_CURR THEN 1
-                WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
-                WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
-            END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
-            FROM LISADP_ES lsp
-            LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-            LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
-            <where>
-                AND lsp.SADP_INSU_NO = #{policyNo}
-                <if test="trCode != null">
-                    <choose>
-                        <when test="trCode == 'INV101'">
-                            AND lsp.SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')
-                        </when>
-                        <otherwise>
-                            AND lsp.SADP_TR_CODE = #{trCode}
-                        </otherwise>
-                    </choose>
-                </if>
-                <if test="startDate != null">
-                    AND lsp.SADP_TR_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
-                </if>
-                <if test="endDate != null">
-                    AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
-                </if>
-            </where>
+        SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
+        CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
+        ELSE SADP_TR_UNITS
+        END SADP_TR_UNITS,
+        CASE
+        WHEN #{currency} = lsp.SADP_EXCH_CURR THEN 1
+        WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
+        WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
+        END EXCH_RATE,
+        (
+        CASE
+        WHEN SUBSTR(INVT_NO, 1, 2) = 'RT' THEN 1
+        ELSE
+        CASE
+        WHEN lsp.SADP_TR_TYPE = '1' THEN lpr.INPR_UNIT_PURPRICE
+        WHEN lsp.SADP_TR_TYPE = '2' THEN lpr.INPR_UNIT_SOLPRICE
+        END
+        END
+        ) AS NET_VALUE,
+        lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
+        FROM LISADP_ES lsp
+        LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
+        LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
+        LEFT JOIN LIINPR_ES lpr ON lpr.INPR_INVT_NO = lsp.SADP_INVT_NO AND lsp.SADP_TR_DATE = lpr.INPR_TRAN_DATE
+        <where>
+            AND lsp.SADP_INSU_NO = #{policyNo}
+            <if test="trCode != null">
+                <choose>
+                    <when test="trCode == 'INV101'">
+                        AND lsp.SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')
+                    </when>
+                    <otherwise>
+                        AND lsp.SADP_TR_CODE = #{trCode}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="startDate != null">
+                AND lsp.SADP_TR_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
+            </if>
+            <if test="endDate != null">
+                AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
+            </if>
+        </where>
         )
         <if test="pageNum != null and pageSize != null">
             WHERE
@@ -576,16 +588,28 @@
         SELECT COUNT(*) FROM (
         SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
         CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
-            ELSE SADP_TR_UNITS
+        ELSE SADP_TR_UNITS
         END SADP_TR_UNITS,
         CASE
         WHEN #{currency} = lsp.SADP_EXCH_CURR THEN 1
         WHEN lsp.SADP_TR_TYPE = '1' THEN leh.EXCH_SPEBK_PURATE
         WHEN lsp.SADP_TR_TYPE = '2' THEN leh.EXCH_SPEBK_SORATE
-        END FUND_VALUE, lsp.SADP_EXCH_DATE,lsp.SADP_EXCH_CURR
+        END EXCH_RATE,
+        (
+        CASE
+        WHEN SUBSTR(INVT_NO, 1, 2) = 'RT' THEN 1
+        ELSE
+        CASE
+        WHEN lsp.SADP_TR_TYPE = '1' THEN lpr.INPR_UNIT_PURPRICE
+        WHEN lsp.SADP_TR_TYPE = '2' THEN lpr.INPR_UNIT_SOLPRICE
+        END
+        END
+        ) AS NET_VALUE,
+        lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
         FROM LISADP_ES lsp
         LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
         LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
+        LEFT JOIN LIINPR_ES lpr ON lpr.INPR_INVT_NO = lsp.SADP_INVT_NO AND lsp.SADP_TR_DATE = lpr.INPR_TRAN_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">
