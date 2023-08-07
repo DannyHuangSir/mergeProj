@@ -432,6 +432,7 @@
             BONF_BON_BAL, BONF_TAKE_CODE , BONF_BON
             FROM LIBONF_ES WHERE
             BONF_INSU_TYPE ||BONF_INSU_GRP_NO ||BONF_INSU_SEQ_NO = #{policyNo}
+            ORDER BY BONF_FILE_BEG_DATE DESC
            ]]>
     </select>
 
