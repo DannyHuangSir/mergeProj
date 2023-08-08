@@ -449,7 +449,7 @@
     </resultMap>
 
     <select id="getExpireOfPayment" resultMap="ExpireOfPaymentMap">
-        SELECT lbf.PAYF_PAY_AMT,
+        SELECT DISTINCT lbf.PAYF_PAY_AMT,
             decode(nvl(lph.PAHI_DEP_I_BOOK_DATE,''), '', '', to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) PAHI_DEP_I_BOOK_DATE,
             lbf.PAYF_PAY_METH,
             lbf.PAYF_BANK,
