@@ -269,6 +269,7 @@ public class ShouxianService {
             // 台幣時匯率為1
             if ("NTD".equals(portfolioVo.getInvtExchCurr())) {
                 exchRate = BigDecimal.valueOf(1);
+                portfolioVo.setExchRateBuy(BigDecimal.valueOf(1));
             }
 
             if (StringUtils.equals(currency, portfolioVo.getInvtExchCurr())) {
