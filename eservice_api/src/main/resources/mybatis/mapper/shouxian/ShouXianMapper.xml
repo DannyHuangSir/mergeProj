@@ -485,6 +485,7 @@
         lrc.RCDC_CHAN_ITEM_1, lrc.RCDC_CHAN_ITEM_2, lrc.RCDC_CHAN_ITEM_3, lrc.RCDC_CHAN_ITEM_4, lrc.RCDC_CHAN_ITEM_5, lrc.RCDC_CHAN_ITEM_6, lrc.RCDC_CHAN_ITEM_7, lrc.RCDC_CHAN_ITEM_8, lrc.RCDC_CHAN_ITEM_9, lrc.RCDC_CHAN_ITEM_10
         FROM LIRCDC_ES lrc
         WHERE (lrc.RCDC_INSU_TYPE || lrc.RCDC_INSU_GRP_NO || lrc.RCDC_INSU_SEQ_NO) = #{policyNo}
+        ORDER BY lrc.RCDC_ACC_DATE
     </select>
 
     <resultMap id="IncomeDistributionMap" type="com.twfhclife.eservice.api.shouxian.model.IncomeDistributionVo">
