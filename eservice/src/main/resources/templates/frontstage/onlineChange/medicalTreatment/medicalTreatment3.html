@@ -499,7 +499,7 @@
 											 <!-- 取消限制 -->
 											<!-- <div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_4').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
 											 -->
-											<div class="radio-btn"><i><input th:attr="checked=${!#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="N" ></i></div>不同意
+											<div class="radio-btn"><i><input th:attr="checked=${!#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_4').show().siblings().hide(); checkedNOTONGYI();"></i></div>不同意
 											</label>
 										</div>
 									</div>
@@ -1398,24 +1398,27 @@
 			}
 			//是否傳送其他保險公司
 			if ($("input[name='sendAlliance']:checked").val() == "Y"){
-			var toItemList = $("input[name='toItem']:checked"); //选择所有name="'toItem'"
-			if(toItemList.length == 0){
-				openAlert('請選擇授權傳送其他保險公司');
+				var toItemList = $("input[name='toItem']:checked"); //选择所有name="'toItem'"
+				if(toItemList.length == 0){
+					openAlert('請選擇授權傳送其他保險公司');
+					return false;
+				}
+				//循环检测是不是被选中
+				var toItotemALL='';
+				for(var i=0; i<toItemList.length; i++){
+					if(toItemList[i].checked == true){
+						toItotemALL += toItemList[i].value + ',';
+					}
+				}
+				//去掉最后一个逗号
+				if (toItotemALL.length > 0) {
+					toItotemALL = toItotemALL.substr(0,toItotemALL.length - 1);
+				}
+				$("input[name='to']").val(toItotemALL);
+			} else {
+				checkedNOTONGYI();
 				return false;
 			}
-			//循环检测是不是被选中
-			var toItotemALL='';
-			for(var i=0; i<toItemList.length; i++){
-				if(toItemList[i].checked == true){
-					toItotemALL += toItemList[i].value + ',';
-				}
-			}
-			//去掉最后一个逗号
-			if (toItotemALL.length > 0) {
-				toItotemALL = toItotemALL.substr(0,toItotemALL.length - 1);
-			}
-			$("input[name='to']").val(toItotemALL);
-		}
 
 			//校驗指定給付方式
 			if($("input[name='paymentMethod']:checked").val() == "1"){
@@ -1798,6 +1801,14 @@
 			var type = file.fileOrPng.substr(file.fileOrPng.lastIndexOf('.') + 1);
 			return {type: type, url: '', previewAsData: false, caption: file.fileName, key: file.fdId, size: (file.originFileBase64.length * 0.75)};
 		}
+	}
+
+	function checkedNOTONGYI(){
+		$('#modal-container-NOTONGYI').modal({
+			show: true,
+			backdrop: 'static',
+			keyboard: false
+			});
 	}
 
 	function initPatients(vo) {

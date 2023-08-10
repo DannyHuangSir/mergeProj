@@ -58,11 +58,12 @@ public class BxczController extends BaseController {
             if (StringUtils.isBlank(bxczState.getTransNum())) {
                 this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
             } else {
+                String type = StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM) ? "F" : "G";
                 String actionId = UUID.randomUUID().toString().replaceAll("-", "");
                 String idToken = getSessionStr("BXCZ_ID_TOKEN");
                 String encId = StringUtils.isBlank(idToken) ? "" : AesUtil.encrypt(idToken, actionId);
                 String code = HmacUtils.hmacSha256Hex(secret, "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F");
-                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F" + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, bxczState.getTransNum(), bxczState.getType(), encId)).getBytes())
+                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=" + type + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, bxczState.getTransNum(), bxczState.getType(), encId)).getBytes())
                         + "&code=" + code;
                 SignRecord signRecord = new SignRecord();
                 signRecord.setTransNum(bxczState.getTransNum());

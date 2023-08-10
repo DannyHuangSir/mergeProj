@@ -684,7 +684,8 @@
 						previewMap[item.type] = []
 						fileDataMap[item.type] = []
 					}
-					fileMap[item.type].push('<img src="data:image/png;base64,'+ item.originFileBase64 +'" class="kv-preview-data file-preview-image" style="width:auto;height:160px;">')
+					uploadId = 'upload-' + uuid()
+					fileMap[item.type].push('<img id="' + uploadId + '" src="data:image/png;base64,'+ item.originFileBase64 +'" class="kv-preview-data file-preview-image" style="width:auto;height:160px;">')
 					previewMap[item.type].push(previewConfig(item))
 					var con  = {};
 						con['claimSeqId'] = 0;
@@ -693,6 +694,7 @@
 						con['fileName'] = item.fileName;
 						con['filePath'] = item.filePath;
 						con['fileBase64'] = item.originFileBase64;
+						con['uploadId'] = item.uploadId;
 					fileDataMap[item.type].push(con)
 				})
 			}
@@ -707,7 +709,7 @@
 						language: "zh",
 						showUpload : false,
 						showRemove : false,
-						uploadAsync: false,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
+						uploadAsync: true,//批量上传成功后再回调的话则必须设置为同步上传 false /异步上传
 						showCaption: false,
 						showPreview: true,
 						dropZoneEnabled: true,//是否显示拖拽区域
@@ -728,23 +730,31 @@
 						$(this).fileinput("upload");
 					}).on('filebatchuploaderror', function(event, data) {
 						openAlert("上傳有誤，請重新上傳！");
-					}).on("filebatchuploadsuccess", function (event, data, previewId, index) {
-								var  fileData = data.response;
-								for(var i=0 ; i < fileData.length ; i++ ){
-									if(fileData[i]!=null && fileData[i].filePath!=null && fileData[i].filePath!=""  ){
-										var con  = {};
-										con['claimSeqId'] = 0;
-										con['type']= key;
-										con['fileOrPng'] = fileData[i].fileOrPng;
-										con['fileName'] = fileData[i].fileName;
-										con['filePath'] = fileData[i].filePath;
-										con['fileBase64'] = fileData[i].fileBase64;
-										cons = JSON.parse($("#"+key).val())
-										cons.push(con)
-										$("#"+key).val(JSON.stringify(cons));
-									}
+					}).on("filesuccessremove", function(event, id, index) {
+						cons = JSON.parse($("#"+key).val()).filter(function(con){
+							return $("#" + id).find("img").attr('id') != con.uploadId
+						})
+						$("#"+key).val(JSON.stringify(cons));
+					}).on("fileuploaded", function (event, data, previewId, index) {
+							var fileData = data.response;
+							for(var i=0 ; i < fileData.length ; i++ ){
+								if(fileData[i]!=null && fileData[i].filePath!=null && fileData[i].filePath!=""  ){
+									let uploadId = 'upload-' + uuid()
+									$("#" + previewId).find("img").attr('id', uploadId)
+									var con  = {};
+									con['claimSeqId'] = 0;
+									con['type']= key;
+									con['fileOrPng'] = fileData[i].fileOrPng;
+									con['fileName'] = fileData[i].fileName;
+									con['filePath'] = fileData[i].filePath;
+									con['fileBase64'] = fileData[i].fileBase64;
+									con['uploadId'] = uploadId;
+									cons = JSON.parse($("#"+key).val())
+									cons.push(con)
+									$("#"+key).val(JSON.stringify(cons));
 								}
-							});
+							}
+						});
 					$("#"+value.remark).fileinput('_initFileActions');//这行代码就是调用绑定删除事件的
 					});
 			}
@@ -1090,6 +1100,16 @@
 				return {type: type, url: '', previewAsData: false, caption: file.fileName, key: file.fdId, size: (file.originFileBase64.length * 0.75)};
 			}
 		}
+
+		function uuid() {
+			var d = new Date().getTime();
+			var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			  var r = (d + Math.random()*16)%16 | 0;
+			  d = Math.floor(d/16);
+			  return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+			});
+			return uuid;
+		};
 	</script>
 
 </body>
