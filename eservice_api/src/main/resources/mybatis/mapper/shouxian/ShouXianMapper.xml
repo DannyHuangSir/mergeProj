@@ -427,7 +427,7 @@
         <![CDATA[
             SELECT
             decode(nvl(BONF_BON_DATE,''), '', '', TO_CHAR(BONF_BON_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) BONF_BON_DATE,
-            decode(nvl(BONF_FILE_BEG_DATE,''), '', '', TO_CHAR(BONF_FILE_BEG_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) BONF_FILE_BEG_DATE,
+            decode(nvl(BONF_FILE_END_DATE,''), '', '', TO_CHAR(BONF_FILE_END_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) BONF_FILE_BEG_DATE,
             BONF_ACCU_BON PREMIUM,
             BONF_BON_BAL, BONF_TAKE_CODE , BONF_BON
             FROM LIBONF_ES WHERE
@@ -453,12 +453,13 @@
             decode(nvl(lph.PAHI_DEP_I_BOOK_DATE,''), '', '', to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) PAHI_DEP_I_BOOK_DATE,
             lbf.PAYF_PAY_METH,
             lbf.PAYF_BANK,
-            lbf.PAYF_NAME,
+            lbp.LIPB_NAME PAYF_NAME,
             lph.PAHI_REMIT_AT,
             lph.PAHI_BANK_CODE,
             PAHI_PAY_CODE PAYF_PAY_REAS,
             lph.PAHI_ACT_AMT
             FROM LIPAYF_ES lbf
+            LEFT JOIN LILIPB_ES_NONCHAR lbp ON lbp.LIPB_INSU_TYPE||lbp.LIPB_INSU_GRP_NO||lbp.LIPB_INSU_SEQ_NO = lbf.PAYF_INSU_NO
             LEFT JOIN LIPAHI_ES lph ON lph.PAHI_INSU_TYPE||lph.PAHI_INSU_GRP_NO||lph.PAHI_INSU_SEQ_NO = lbf.PAYF_INSU_NO
         WHERE lbf.PAYF_INSU_NO = #{policyNo} AND lph.PAHI_PAY_CODE IN ('01', '02', '96')
     </select>
