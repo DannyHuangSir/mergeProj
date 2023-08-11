@@ -10,7 +10,6 @@ import com.twfhclife.eservice.util.AesUtil;
 import com.twfhclife.eservice.util.SignStatusUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.BxczState;
-import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -62,9 +61,9 @@ public class BxczController extends BaseController {
                 String actionId = UUID.randomUUID().toString().replaceAll("-", "");
                 String idToken = getSessionStr("BXCZ_ID_TOKEN");
                 String encId = StringUtils.isBlank(idToken) ? "" : AesUtil.encrypt(idToken, actionId);
-                String code = Base64.getEncoder().encodeToString(HmacUtils.hmacSha256(secret, "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=" + type));
-                String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=" + type + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, bxczState.getTransNum(), bxczState.getType(), encId)).getBytes())
-                        + "&code=" + code;
+                String params = "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=" + type + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, bxczState.getTransNum(), bxczState.getType(), encId)).getBytes());
+                String code = Base64.getEncoder().encodeToString(HmacUtils.hmacSha256(secret, params));
+                String url = bxcz413url + "?" + params + "&code=" + code;
                 SignRecord signRecord = new SignRecord();
                 signRecord.setTransNum(bxczState.getTransNum());
                 signRecord.setActionId(actionId);
