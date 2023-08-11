@@ -62,7 +62,7 @@ public class BxczController extends BaseController {
                 String actionId = UUID.randomUUID().toString().replaceAll("-", "");
                 String idToken = getSessionStr("BXCZ_ID_TOKEN");
                 String encId = StringUtils.isBlank(idToken) ? "" : AesUtil.encrypt(idToken, actionId);
-                String code = HmacUtils.hmacSha256Hex(secret, "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=F");
+                String code = Base64.getEncoder().encodeToString(HmacUtils.hmacSha256(secret, "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=" + type));
                 String url = bxcz413url + "?" + "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=" + type + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, bxczState.getTransNum(), bxczState.getType(), encId)).getBytes())
                         + "&code=" + code;
                 SignRecord signRecord = new SignRecord();
