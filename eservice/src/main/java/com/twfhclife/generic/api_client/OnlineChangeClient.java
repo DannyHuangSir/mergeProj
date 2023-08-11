@@ -7,6 +7,12 @@ import com.twfhclife.eservice.odm.OnlineChangeModel;
 import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
@@ -20,6 +26,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 public class OnlineChangeClient {
@@ -28,19 +36,18 @@ public class OnlineChangeClient {
 	
 	private RestTemplate restTemplate;
 	
-	public OnlineChangeClient() {
+	public OnlineChangeClient() throws Exception {
 		
-		// TODO: Fix the RestTemplate to be a singleton instance.
-	    restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
+		SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+				SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+				NoopHostnameVerifier.INSTANCE);
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
 
-	    // Set the request factory. 
-	    // IMPORTANT: This section I had to add for POST request. Not needed for GET
-	    restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		requestFactory.setHttpClient(httpClient);
 
-	    // Add converters
-	    // Note I use the Jackson Converter, I removed the http form converter 
-	    // because it is not needed when posting String, used for multipart forms.
-	    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		restTemplate = (this.restTemplate == null) ? new RestTemplate(requestFactory) : restTemplate;
+		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 	}
 	
 	public boolean checkResponseStatus(ResponseEntity<?> responseEntity) {
