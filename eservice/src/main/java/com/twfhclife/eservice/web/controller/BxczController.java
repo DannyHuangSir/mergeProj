@@ -63,6 +63,9 @@ public class BxczController extends BaseController {
                 String encId = StringUtils.isBlank(idToken) ? "" : AesUtil.encrypt(idToken, actionId);
                 String params = "companyId=" + companyId + "&actionId=" + actionId +"&idVerifyType=" + type + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId, bxczState.getTransNum(), bxczState.getType(), encId)).getBytes());
                 String code = Base64.getEncoder().encodeToString(HmacUtils.hmacSha256(secret, params));
+                if (StringUtils.isNotBlank(code)) {
+                    code = code.replaceAll("\\+", "-").replaceAll("/", "_").replaceAll("=", "");
+                }
                 String url = bxcz413url + "?" + params + "&code=" + code;
                 SignRecord signRecord = new SignRecord();
                 signRecord.setTransNum(bxczState.getTransNum());
@@ -114,7 +117,6 @@ public class BxczController extends BaseController {
             return "frontstage/onlineChange/medicalTreatment/medicalTreatment-wait-sign";
         }
     }
-
 
 
     @GetMapping("callBack418")
