@@ -15,6 +15,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,12 +32,17 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
-public class OnlineChangeClient {
+public class OnlineChangeClient implements InitializingBean {
 
 	private static final Logger logger = LogManager.getLogger(OnlineChangeClient.class);
 	
 	private RestTemplate restTemplate;
-	
+
+	@Value("${eservice_api.accessKey}")
+	private String accessKey;
+
+	private static String ESERVICE_API_SECRET;
+
 	public OnlineChangeClient() throws Exception {
 		
 		SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
@@ -94,6 +101,7 @@ public class OnlineChangeClient {
 			
 			HttpHeaders headers = new HttpHeaders();
 			//headers.set("Access-token", ACCESS_TOKEN);
+			headers.set("Authorization", "Bearer " + this.ESERVICE_API_SECRET);
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			
 			Gson gson = new Gson(); 
@@ -181,5 +189,8 @@ public class OnlineChangeClient {
 		}
 		return strRes;
 	}
-
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		ESERVICE_API_SECRET = accessKey;
+	}
 }
