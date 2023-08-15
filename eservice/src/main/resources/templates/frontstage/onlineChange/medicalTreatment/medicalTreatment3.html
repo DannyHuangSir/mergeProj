@@ -1061,17 +1061,23 @@
 		});
 
 		$("body").on("change", "[name='startDate']", function(){
-			if ($(this).val() != null && $(this).next().next().val() != null
-				&& $(this).val() != '' && $(this).next().next().val() != '') {
+			if ($(this).val() != null && $(this).val() != '') {
 				sDate = moment($(this).val(), 'YYYYMMDD')
-				eDate = moment($(this).next().next().val(), 'YYYYMMDD')
-				if (eDate.diff(sDate, 'days') < 0 ) {
-					openAlert("授權開始時間不能大於結束時間");
-					$(this).val('')
-					return false;
+				if ($(this).next().next().val() != null && $(this).next().next().val() != '') {
+					eDate = moment($(this).next().next().val(), 'YYYYMMDD')
+					if (eDate.diff(sDate, 'days') < 0 ) {
+						openAlert("授權開始時間不能大於結束時間");
+						$(this).val('')
+						return false;
+					}
+					if (eDate.diff(sDate, 'years') > 1 ) {
+						openAlert("授權時間不能大於兩年");
+						$(this).val('')
+						return false;
+					}
 				}
-				if (eDate.diff(sDate, 'years') > 1 ) {
-					openAlert("授權時間不能大於兩年");
+				if (sDate.diff(moment(moment().format('YYYYMMDD'), 'YYYYMMDD'), 'days') > 10 ) {
+					openAlert("授權開始時間不可超過系統日期+10天");
 					$(this).val('')
 					return false;
 				}
@@ -1079,17 +1085,23 @@
 		})
 
 		$("body").on("change", "[name='endDate']", function() {
-			if ($(this).val() != null && $(this).prev().prev().val() != null
-					&& $(this).val() != '' && $(this).prev().prev().prev() != '') {
-				sDate = moment( $(this).prev().prev().val(), 'YYYYMMDD')
+			if ($(this).val() != null && $(this).val() != '') {
 				eDate = moment($(this).val(), 'YYYYMMDD')
-				if (eDate.diff(sDate, 'days') < 0 ) {
-					openAlert("授權開始時間不能大於結束時間");
-					$(this).val('')
-					return false;
+				if ($(this).prev().prev().val() != null && $(this).prev().prev().val() != '') {
+					sDate = moment($(this).prev().prev().val(), 'YYYYMMDD')
+					if (eDate.diff(sDate, 'days') < 0 ) {
+						openAlert("授權開始時間不能大於結束時間");
+						$(this).val('')
+						return false;
+					}
+					if (eDate.diff(sDate, 'years') > 1 ) {
+						openAlert("授權時間不能大於兩年");
+						$(this).val('')
+						return false;
+					}
 				}
-				if (eDate.diff(sDate, 'years') > 1 ) {
-					openAlert("授權時間不能大於兩年");
+				if (eDate.diff(moment(moment().format('YYYYMMDD'), 'YYYYMMDD'), 'days') > 10 ) {
+					openAlert("授權結束時間不可超過系統日期+10天");
 					$(this).val('')
 					return false;
 				}
