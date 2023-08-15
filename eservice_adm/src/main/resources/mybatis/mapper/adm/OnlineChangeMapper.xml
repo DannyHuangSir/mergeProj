@@ -2071,7 +2071,8 @@
    <select id="getInsClaimStatisticsReport" resultType="hashmap" parameterType="com.twfhclife.adm.model.InsClaimStatisticsVo" statementType="STATEMENT">
    select ${columnItem},count(C.ID_NO) AS COUN from (
    
-	   select 
+	   select
+	   		S.*,
 	        CONVERT(varchar(100), A.CREATE_DATE, 120) AS CREATE_DATE,
 			(CASE B.FROM_COMPANY_ID
 						 WHEN 'L01' THEN '臺銀人壽首家'
@@ -2106,6 +2107,10 @@
 				 WHEN 'N' THEN '否'
 				 WHEN 'C' THEN '待覆核中'
 				 ELSE '' END) AS SEND_ALLIANCE,
+		   (CASE B.SIGN_AGREE
+		   WHEN 'Y' THEN '是'
+		   WHEN 'N' THEN '否'
+		   ELSE '' END) AS SIGN_AGREE,
 			COALESCE((SELECT
 						a1.PARAMETER_NAME
 					FROM
@@ -2123,6 +2128,9 @@
 		     left join (select TRANS_NUM,REJECT_REASON from ESERVICE.dbo.TRANS_STATUS_HISTORY where status = '7') D
 		     on A.TRANS_NUM = D.TRANS_NUM
 		     left join ESERVICE.dbo.LILIPM M on M.LIPM_INSU_NO = B.POLICYNO
+		     outer apply (SELECT TOP 1 SIGN_STATUS, ID_VERIFY_STATUS
+					   FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = A.TRANS_NUM
+					   AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC) S
 		where A.TRANS_TYPE = 'INSURANCE_CLAIM'     
 			<if test="vo.fromCompanyId =='01'"> 
 			  and  B.FROM_COMPANY_ID = 'L01'
@@ -2182,7 +2190,8 @@
 
 	<select id="getInsClaimDetailReport" resultType="hashmap" parameterType="com.twfhclife.adm.model.InsClaimStatisticsVo" statementType="STATEMENT">
   		 select ${columnItem} from (
-			   select 
+			   select
+					S.*,
 					CONVERT(varchar(100), A.CREATE_DATE, 120) AS CREATE_DATE,
 					(CASE B.FROM_COMPANY_ID
 						 WHEN 'L01' THEN '臺銀人壽首家'
@@ -2209,6 +2218,10 @@
 						 WHEN 'N' THEN '否'
 						 WHEN 'C' THEN '待覆核中'
 						 ELSE '' END) AS SEND_ALLIANCE,
+					(CASE B.SIGN_AGREE
+					WHEN 'Y' THEN '是'
+					WHEN 'N' THEN '否'
+					ELSE '' END) AS SIGN_AGREE,
 					B.POLICYNO,
 		ESERVICE.DBO.FN_DEBASE64(B.ID_NO) ID_NO,
 					'會員本人' AS CUSTOMERNAME,
@@ -2279,6 +2292,9 @@
 				     left join (select TRANS_NUM,REJECT_REASON from ESERVICE.dbo.TRANS_STATUS_HISTORY where status = '7') E
 		             on A.TRANS_NUM = E.TRANS_NUM
 		             left join ESERVICE.dbo.LILIPM M on M.LIPM_INSU_NO = B.POLICYNO
+					 outer apply (SELECT TOP 1 SIGN_STATUS, ID_VERIFY_STATUS, SIGN_TIME, ID_VERIFY_TIME, ACTION_ID
+					 FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = A.TRANS_NUM
+								AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC) S
 				where A.TRANS_TYPE = 'INSURANCE_CLAIM'
 					<if test="vo.fromCompanyId =='01'"> 
 					  and  B.FROM_COMPANY_ID = 'L01'
@@ -2530,6 +2546,7 @@
 	<select id="getMedicalTreatmentDetailReport" resultType="hashmap" parameterType="com.twfhclife.adm.model.MedicalTreatmentStatisticsVo" statementType="STATEMENT">
 		select ${columnItem} from (
 		select
+		S.*,
 		CONVERT(varchar(100), A.CREATE_DATE, 120) AS CREATE_DATE,
 		(CASE B.FROM_COMPANY_ID
 		WHEN 'L01' THEN '臺銀人壽首家'
@@ -2558,6 +2575,10 @@
 		WHEN 'N' THEN '否'
 		WHEN 'C' THEN '待覆核中'
 		ELSE '' END) AS SEND_ALLIANCE,
+		(CASE B.SIGN_AGREE
+		WHEN 'Y' THEN '是'
+		WHEN 'N' THEN '否'
+		ELSE '' END) AS SIGN_AGREE,
 		B.POLICYNO,
 		ESERVICE.DBO.FN_DEBASE64(B.ID_NO) ID_NO,
 		'會員本人' AS CUSTOMERNAME,
@@ -2627,11 +2648,14 @@
 		FOR
 		XML PATH('')
 		), 1, 1, '') )
-		FROM    ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS AS F
+		FROM  ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS AS F
 		GROUP BY CLAIMS_SEQ_ID) D on B.CLAIMS_SEQ_ID = D.CLAIMS_SEQ_ID
 		left join (select TRANS_NUM,REJECT_REASON from ESERVICE.dbo.TRANS_STATUS_HISTORY where status = '7') E
 		on A.TRANS_NUM = E.TRANS_NUM
 		left join ESERVICE.dbo.LILIPM M on M.LIPM_INSU_NO = B.POLICYNO
+		outer apply (SELECT TOP 1 SIGN_STATUS, ID_VERIFY_STATUS, SIGN_TIME, ID_VERIFY_TIME, ACTION_ID
+					FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = A.TRANS_NUM
+					AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC) S
 		where A.TRANS_TYPE = 'MEDICAL_TREATMENT'
 		<if test="vo.fromCompanyId =='01'">
 			and  B.FROM_COMPANY_ID = 'L01'
@@ -2702,6 +2726,7 @@
 		select ${columnItem},count(C.ID_NO) AS COUN from (
 
 		select
+		S.*,
 		CONVERT(varchar(100), A.CREATE_DATE, 120) AS CREATE_DATE,
 		(CASE B.FROM_COMPANY_ID
 		WHEN 'L01' THEN '臺銀人壽首家'
@@ -2739,6 +2764,10 @@
 		WHEN 'N' THEN '否'
 		WHEN 'C' THEN '待覆核中'
 		ELSE '' END) AS SEND_ALLIANCE,
+		(CASE B.SIGN_AGREE
+		WHEN 'Y' THEN '是'
+		WHEN 'N' THEN '否'
+		ELSE '' END) AS SIGN_AGREE,
 		D.PARAMETER_NAME  AS REJECT_REASON,
 		B.POLICYNO,
 		ESERVICE.DBO.FN_DEBASE64(B.ID_NO) ID_NO
@@ -2761,6 +2790,9 @@
 		) D
 		on A.TRANS_NUM = D.TRANS_NUM
 		left join ESERVICE.dbo.LILIPM M on M.LIPM_INSU_NO = B.POLICYNO
+		outer apply (SELECT TOP 1 SIGN_STATUS, ID_VERIFY_STATUS
+					FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = A.TRANS_NUM
+					AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC) S
 		where A.TRANS_TYPE = 'MEDICAL_TREATMENT'
 		<if test="vo.fromCompanyId =='01'">
 			and  B.FROM_COMPANY_ID = 'L01'
