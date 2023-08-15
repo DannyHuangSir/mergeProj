@@ -56,6 +56,15 @@ public class InsClaimStatisticsVo {
 	
 	private List<String>  columnName;
 	private String applyDate;
+	private String signAgree;
+
+	public String getSignAgree() {
+		return signAgree;
+	}
+
+	public void setSignAgree(String signAgree) {
+		this.signAgree = signAgree;
+	}
 
 	public String getApplyDate() {
 		return applyDate;

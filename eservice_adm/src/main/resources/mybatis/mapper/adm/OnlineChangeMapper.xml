@@ -2172,6 +2172,9 @@
 			<if test="vo.endDate != null and vo.endDate != ''">
 				AND convert(varchar(10), B.CREATE_DATE, 120) <![CDATA[<=]]> '${vo.endDate}'
 			</if>
+		   <if test="vo.signAgree != null and vo.signAgree != ''">
+			   AND B.SIGN_AGREE = '${vo.signAgree}'
+		   </if>
 		  
 		)  C
 		group by ${columnItem}
@@ -2327,6 +2330,9 @@
 					</if>
 					<if test="vo.applyDate != null and vo.applyDate != ''">
 						AND convert(varchar(10), A.CREATE_DATE, 112) = '${vo.applyDate}' AND B.FROM_COMPANY_ID = 'L01'
+					</if>
+					<if test="vo.signAgree != null and vo.signAgree != ''">
+						AND B.SIGN_AGREE = '${vo.signAgree}'
 					</if>
 				  
 				)  C
@@ -2684,6 +2690,9 @@
 		<if test="vo.applyDate != null and vo.applyDate != ''">
 			AND convert(varchar(10), A.CREATE_DATE, 112) = '${vo.applyDate}' AND B.FROM_COMPANY_ID = 'L01'
 		</if>
+		<if test="vo.signAgree != null and vo.signAgree != ''">
+			AND B.SIGN_AGREE = '${vo.signAgree}'
+		</if>
 
 		)  C
 	</select>
@@ -2807,6 +2816,9 @@
 		</if>
 		<if test="vo.endDate != null and vo.endDate != ''">
 			AND convert(varchar(10), B.CREATE_DATE, 120) <![CDATA[<=]]> '${vo.endDate}'
+		</if>
+		<if test="vo.signAgree != null and vo.signAgree != ''">
+			AND B.SIGN_AGREE = '${vo.signAgree}'
 		</if>
 
 		)  C

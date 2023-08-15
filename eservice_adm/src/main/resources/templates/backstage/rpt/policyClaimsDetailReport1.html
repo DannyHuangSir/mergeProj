@@ -133,6 +133,16 @@
 										</div>
 									</div>
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 是否進行數位身份驗證及數位簽署  </label>
+										<div class="col-sm-9">
+											<select class="form-control" id="signAgree">
+												<option value=""></option>
+												<option th:selected="${claimVo.signAgree == 'Y' ? true : false}" value="Y">是</option>
+												<option th:selected="${claimVo.signAgree == 'N' ? true : false}" value="N">否</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="rejectReasonSelect"> 異常件註記原因  </label>
 
 										<div class="col-sm-9">
@@ -175,6 +185,7 @@
 									<input type="hidden" id="fileReceivedList" name="fileReceivedList"/>
 									<input type="hidden" id="sendAllianceList" name="sendAllianceList"/>
 									<input type="hidden" id="rejectReason" name="rejectReason"/>
+									<input type="hidden" id="signAgreeSelect" name="signAgree"/>
 									<input type="hidden" id="applyDate" name="applyDate"/>
 								</form>
 							</div><!-- /.col -->
@@ -278,6 +289,7 @@
 
 			$("#sendAllianceList").val($('#sendAllianceSelect').val());
 			$("#rejectReason").val($('#rejectReasonSelect').val());
+			$("#signAgreeSelect").val($('#signAgree').val());
 			$('#onlineChangeForm').submit();
 		}
 		
@@ -289,6 +301,7 @@
 			$('#lilipiIdNoInp').val('');
 			$('#lilipmIdNoInp').val('');
 			$('#rejectReasonSelect').val('');
+			$('#signAgree').val('');
 			$('#applyDateId').val('');
 			$('.close').each(function(i,val) {
 				val.click();
