@@ -43,7 +43,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
@@ -349,6 +348,16 @@ public class InsuranceClaimController extends BaseUserDataController {
 				return true;
 			}).collect(Collectors.toList());
 			addAttribute("hospitalInsuranceCompanyList", collect);
+
+//			List<TransInsuranceClaimFileDataVo> fileDataVos = Lists.newArrayList();
+//			if (org.apache.commons.lang3.StringUtils.isNotBlank(claimVo.getFileDataList())) {
+//				List<TransInsuranceClaimFileDataVo> fileDataTemp = Arrays.asList(new Gson().fromJson(claimVo.getFileDataList(), TransInsuranceClaimFileDataVo[].class));
+//				fileDataTemp.forEach(x -> {
+//					x.setOriginFileBase64(x.getFileBase64());
+//					fileDataVos.add(x);
+//				});
+//			}
+//			claimVo.setFileDatas(fileDataVos);
 
 			//获取文件上传最大值，kb单位
 			int  uploadMaxNumber= lilipiService.findByUploadNumber(OnlineChangeUtil.UPLOAD_MAX_NUMBER,ApConstants.SYSTEM_ID);

@@ -436,6 +436,26 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				return   true;
 			}).collect(Collectors.toList());
 
+			List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfos = Lists.newArrayList();
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(claimVo.getMedicalInfoList())) {
+				List<TransMedicalTreatmentClaimMedicalInfoVo> fileDataTemp = Arrays.asList(new Gson().fromJson(claimVo.getMedicalInfoList(), TransMedicalTreatmentClaimMedicalInfoVo[].class));
+				fileDataTemp.forEach(x -> {
+					x.setDtypeList(new Gson().fromJson(x.getDtypeListStr(), List.class));
+					medicalInfos.add(x);
+				});
+			}
+			claimVo.setMedicalInfo(medicalInfos);
+
+//			List<TransMedicalTreatmentClaimFileDataVo> fileDataVos = Lists.newArrayList();
+//			if (org.apache.commons.lang3.StringUtils.isNotBlank(claimVo.getFileDataList())) {
+//				List<TransMedicalTreatmentClaimFileDataVo> fileDataTemp = Arrays.asList(new Gson().fromJson(claimVo.getFileDataList(), TransMedicalTreatmentClaimFileDataVo[].class));
+//				fileDataTemp.forEach(x -> {
+//					x.setOriginFileBase64(x.getFileBase64());
+//					fileDataVos.add(x);
+//				});
+//			}
+//			claimVo.setFileDatas(fileDataVos);
+
 			addAttribute("claimVo", claimVo);
 			addAttribute("uploadMaxNumber", uploadMaxNumber);
 			addAttribute("hospitalInsuranceCompanyList", collect);

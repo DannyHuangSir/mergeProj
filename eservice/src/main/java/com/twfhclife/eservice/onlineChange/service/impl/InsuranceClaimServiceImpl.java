@@ -689,6 +689,7 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 					}
 
 					fileData.setFileBase64(this.converFileToBase64Miniature(filepath+File.separator+fileName));
+//					fileData.setOriginFileBase64(converFileToBase64(filepath+File.separator+fileName));
 					fileList.add(fileData);
 					logger.error("MultipartFile is: {}", server_file);
 				} catch (Exception e) {
@@ -919,6 +920,22 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		}
 
 		return encodedString;
+	}
+
+
+	@Override
+	public String converFileToBase64(String filePath) {
+		try {
+			if (filePath != null) {
+				logger.info("--------------------------------------------------input filePath=" + filePath);
+				File file = new File(filePath);
+				return imgBase64(file);
+			}
+		} catch (Exception e) {
+			logger.error("input filePath is null.");
+			logger.error(e);
+		}
+		return "";
 	}
 
 	@Override

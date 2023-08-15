@@ -967,22 +967,22 @@
 				}).on('filebatchuploaderror', function(event, data) {
 					openAlert("上傳有誤，請重新上傳！");
 				}).on("filebatchuploadsuccess", function (event, data, previewId, index) {
-							var  fileData = data.response;
-							var cons = [];
-							var con  = {};
-							for(var i=0 ; i < fileData.length ; i++ ){
-								if(fileData[i]!=null && fileData[i].filePath!=null && fileData[i].filePath!=""  ){
-									con['claimSeqId'] = 0;
-									con['type']= key;
-									con['fileOrPng'] = fileData[i].fileOrPng;
-									con['fileName'] = fileData[i].fileName;
-									con['filePath'] = fileData[i].filePath;
-									con['fileBase64'] = fileData[i].fileBase64;
-									cons.push(con);
-								}
+						var  fileData = data.response;
+						var cons = [];
+						var con  = {};
+						for(var i=0 ; i < fileData.length ; i++ ){
+							if(fileData[i]!=null && fileData[i].filePath!=null && fileData[i].filePath!=""  ){
+								con['claimSeqId'] = 0;
+								con['type']= key;
+								con['fileOrPng'] = fileData[i].fileOrPng;
+								con['fileName'] = fileData[i].fileName;
+								con['filePath'] = fileData[i].filePath;
+								con['fileBase64'] = fileData[i].fileBase64;
+								cons.push(con);
 							}
-							$("#"+key).val(JSON.stringify(cons).replace(/\[|]/g, '' ));
-						});
+						}
+						$("#"+key).val(JSON.stringify(cons).replace(/\[|]/g, '' ));
+					});
 				});
 		}
 

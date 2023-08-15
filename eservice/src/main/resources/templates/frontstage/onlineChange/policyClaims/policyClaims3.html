@@ -694,7 +694,7 @@
 						con['fileName'] = item.fileName;
 						con['filePath'] = item.filePath;
 						con['fileBase64'] = item.originFileBase64;
-						con['uploadId'] = item.uploadId;
+						con['uploadId'] = uploadId;
 					fileDataMap[item.type].push(con)
 				})
 			}
@@ -731,6 +731,11 @@
 					}).on('filebatchuploaderror', function(event, data) {
 						openAlert("上傳有誤，請重新上傳！");
 					}).on("filesuccessremove", function(event, id, index) {
+						cons = JSON.parse($("#"+key).val()).filter(function(con){
+							return $("#" + id).find("img").attr('id') != con.uploadId
+						})
+						$("#"+key).val(JSON.stringify(cons));
+					}).on("filepreremove", function(event, id, index) {
 						cons = JSON.parse($("#"+key).val()).filter(function(con){
 							return $("#" + id).find("img").attr('id') != con.uploadId
 						})

@@ -452,6 +452,9 @@
 			formData.fileDataList = JSON.stringify(newFiles);
 			// 上一步事件
 			$('#deny').click(function() {
+				delete formData['createDate']
+				delete formData['applyDate']
+				delete formData['fileDatas']
 				postWithFormData(/*[[@{/policyClaims3}]]*/, formData);
 			});			
 			// 確認送出

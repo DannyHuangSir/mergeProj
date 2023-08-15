@@ -103,6 +103,8 @@ public interface IInsuranceClaimService {
 	 */
 	public String converFileToBase64Miniature(String filePath);
 
+	String converFileToBase64(String filePath);
+
 	/**
 	 * 获取Base64 文件数据，转换为缩图
 	 *    如Base64无数据，获取Path+file_name 进行转换为缩图

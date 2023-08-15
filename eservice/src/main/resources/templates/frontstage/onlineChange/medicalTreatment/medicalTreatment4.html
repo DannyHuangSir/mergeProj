@@ -505,6 +505,11 @@
 			formData.fileDataList = JSON.stringify(newFiles);
 			// 上一步事件
 			$('#deny').click(function() {
+				formData.medicalInfo = []
+				delete formData['createDate']
+				delete formData['applyDate']
+				delete formData['medicalInfo']
+				delete formData['fileDatas']
 				postWithFormData(/*[[@{/medicalTreatment3}]]*/, formData);
 			});			
 			// 確認送出
