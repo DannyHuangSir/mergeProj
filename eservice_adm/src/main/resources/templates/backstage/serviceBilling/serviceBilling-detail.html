@@ -170,13 +170,15 @@
 						for (key in newFormData) {
 							postData[key] = newFormData[key];
 						}
+						postData['serviceType'] = $("[name='serviceType'] option:selected").val()
+						postData['verifyDate'] = $('#billingDate').val();
 						return JSON.stringify(postData);
 					},
 					jsonReader: {
-						root: function (obj) {return obj.resultData.details; },
-						page: function (obj) {return obj.resultData.currentPage; },
-						total: function (obj) { return obj.resultData.totalPage; },
-						records: function (obj) { return obj.resultData.totalNum; }
+						root: function (obj) {return obj.resultData ? obj.resultData.details : []; },
+						page: function (obj) {return obj.resultData ? obj.resultData.currentPage : 1; },
+						total: function (obj) { return obj.resultData ? obj.resultData.totalPage : 1; },
+						records: function (obj) { return obj.resultData ? obj.resultData.totalNum : 1; }
 					},
 					colNames: grid.colNames,
 					colModel: grid.colModel,
