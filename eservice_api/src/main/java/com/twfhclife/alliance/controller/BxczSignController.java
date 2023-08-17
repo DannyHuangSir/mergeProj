@@ -119,13 +119,14 @@ public class BxczSignController {
                 coapContent.setHpId(medicalVo.getToHospitalId());
                 coapContent.setSubHpId(medicalVo.getToSubHospitalId());
                 List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfoVos = medicalTreatmentService.getMedicalInfo(medicalVo.getClaimSeqId());
+                long time = System.currentTimeMillis();
                 if (CollectionUtils.isNotEmpty(medicalInfoVos)) {
-                    medicalInfoVos.forEach(e -> {
+                    for (TransMedicalTreatmentClaimMedicalInfoVo e : medicalInfoVos) {
                         MedicalInfoVo infoVo = new MedicalInfoVo();
                         BeanUtils.copyProperties(e, infoVo);
-                        infoVo.setSeNo(medicalVo.getIdNo());
+                        infoVo.setSeNo(time ++ );
                         coapContent.getMedicalInfo().add(infoVo);
-                    });
+                    }
                 }
                 data.put("cpoaContent", Lists.newArrayList(coapContent));
                 ret.setData(data);
