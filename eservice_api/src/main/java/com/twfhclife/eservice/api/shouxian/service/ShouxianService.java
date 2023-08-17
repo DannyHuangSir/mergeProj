@@ -7,11 +7,10 @@ import com.google.gson.Gson;
 import com.twfhclife.eservice.api.elife.domain.PortfolioResponse;
 import com.twfhclife.eservice.api.shouxian.dao.ShouXianDao;
 import com.twfhclife.eservice.api.shouxian.domain.ExchangeRateRequest;
-import com.twfhclife.eservice.api.shouxian.model.JdFundTransactionVo;
 import com.twfhclife.eservice.api.shouxian.model.*;
 import com.twfhclife.eservice.policy.model.ExchangeRateVo;
 import com.twfhclife.eservice.policy.model.PortfolioVo;
-import com.twfhclife.generic.util.RoiRateUtil;
+import com.twfhclife.generic.util.JDRoiRateUtil;
 import com.twfhclife.generic.utils.DateUtil;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -118,18 +117,19 @@ public class ShouxianService {
     private BigDecimal[] formula1(BigDecimal netUnits, BigDecimal netValue, BigDecimal exchRate, BigDecimal ntdVal, BigDecimal accumAmt) {
         BigDecimal[] values = new BigDecimal[3];
         if (netUnits != null && netValue != null && exchRate != null && ntdVal != null && accumAmt != null) {
-            values = RoiRateUtil.formula1(netUnits, netValue, exchRate, ntdVal, accumAmt);
+            values = JDRoiRateUtil.formula1(netUnits, netValue, exchRate, ntdVal, accumAmt);
         } else {
             values = getZero();
         }
         return values;
     }
 
+
     /** 公式2: RT 貨幣帳戶: {[(帳戶金額*匯率)/平均台幣買價]-1}% */
     private BigDecimal[] formula2(BigDecimal netAmt, BigDecimal exchRate, BigDecimal ntdVal) {
         BigDecimal[] values = new BigDecimal[3];
         if (netAmt != null && exchRate != null && ntdVal != null) {
-            values = RoiRateUtil.formula2(netAmt, exchRate, ntdVal);
+            values = JDRoiRateUtil.formula2(netAmt, exchRate, ntdVal);
         } else {
             values = this.getZero();
         }
@@ -247,6 +247,7 @@ public class ShouxianService {
         return shouXianDao.getExchangeRate(vo);
     }
 
+
     public PortfolioResponse getPortfolioResp(String policyNo, String currency) {
         PortfolioResponse resp = new PortfolioResponse();
         List<PortfolioVo> portfolioList = shouXianDao.getPortfolioList(policyNo);
@@ -269,6 +270,7 @@ public class ShouxianService {
             // 台幣時匯率為1
             if ("NTD".equals(portfolioVo.getInvtExchCurr())) {
                 exchRate = BigDecimal.valueOf(1);
+                portfolioVo.setExchRateBuy(BigDecimal.valueOf(1));
             }
 
             if (StringUtils.equals(currency, portfolioVo.getInvtExchCurr())) {

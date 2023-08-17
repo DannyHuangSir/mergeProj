@@ -100,7 +100,7 @@
 															<p class="marginTop25 enSmall enSmallDate" th:text="${vo1.exchRate != null ? vo1.exchRate : '-'}"></p>
 														</td>
 														<td class="text-left table3" style="width:100px" th:text="${ vo1.trCode != null ? ( session.SYSTEM_PARAMETER['Account_Status'] != null ? session.SYSTEM_PARAMETER['Account_Status'][vo1.trCode].parameterValue : '-' ) : '-'}"></td>
-														<td class="text-left " th:text="${#numbers.formatDecimal((vo1.units != null ? vo1.units : 0), 1,'COMMA',4,'POINT')}">
+														<td class="text-left " th:text="${#numbers.formatDecimal((vo1.units != null && vo1.trCode != '01' ? vo1.units : 0), 1,'COMMA',4,'POINT')}">
 														</td>
 														<td class="text-left " th:text="${vo1.expeNtd != null ? vo1.expeNtd : '-'}">
 														</td>
