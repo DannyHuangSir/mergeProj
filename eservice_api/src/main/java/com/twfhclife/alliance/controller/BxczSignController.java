@@ -77,17 +77,21 @@ public class BxczSignController {
                 }
                 logger.info("api414 TransInsuranceClaimVo: ", new Gson().toJson(claimVo));
                 ret.setCode("0");
-                ret.setIdNo(claimVo.getIdNo());
-                ret.setName(claimVo.getName());
-                ret.setBirdate(claimVo.getBirdate());
+                ret.setMsg("success");
+                Map<String, Object> data = Maps.newHashMap();
+                data.put("idNo", claimVo.getIdNo());
+                data.put("name", claimVo.getName());
+                data.put("birdate", claimVo.getBirdate());
                 if (signRecord.getSignStart() != null && signRecord.getSignEnd() != null) {
-                    ret.setAcExpiredSec(String.valueOf((signRecord.getSignEnd().getTime() - System.currentTimeMillis()) / 1000));
+                    data.put("acExpiredSec", String.valueOf((signRecord.getSignEnd().getTime() - System.currentTimeMillis()) / 1000));
                 } else {
-                    ret.setAcExpiredSec("0");
+                    data.put("acExpiredSec", "0");
                 }
-                ret.setTo(claimVo.getTo());
-                ret.setRedirectUri(callBack414 + "?actionId=" + vo.getActionId());
-                ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
+                data.put("to", claimVo.getTo());
+                data.put("redirectUri", callBack414 + "?actionId=" + vo.getActionId());
+                data.put("id_token", StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
+                data.put("cpoaContent", Lists.newArrayList());
+                ret.setData(data);
                 return ret;
             } else {
                 TransMedicalTreatmentClaimVo medicalVo = medicalTreatmentService.getTransInsuranceClaimDetail(state.getTransNum());
@@ -98,17 +102,19 @@ public class BxczSignController {
                 }
                 logger.info("api414 TransMedicalTreatmentClaimVo: ", new Gson().toJson(medicalVo));
                 ret.setCode("0");
-                ret.setIdNo(medicalVo.getIdNo());
-                ret.setName(medicalVo.getName());
-                ret.setBirdate(medicalVo.getBirdate());
+                ret.setMsg("success");
+                Map<String, Object> data = Maps.newHashMap();
+                data.put("idNo", medicalVo.getIdNo());
+                data.put("name", medicalVo.getName());
+                data.put("birdate", medicalVo.getBirdate());
                 if (signRecord.getSignStart() != null && signRecord.getSignEnd() != null) {
-                    ret.setAcExpiredSec(String.valueOf((signRecord.getSignEnd().getTime() - System.currentTimeMillis()) / 1000));
+                    data.put("acExpiredSec", String.valueOf((signRecord.getSignEnd().getTime() - System.currentTimeMillis()) / 1000));
                 } else {
-                    ret.setAcExpiredSec("0");
+                    data.put("acExpiredSec", "0");
                 }
-                ret.setTo(medicalVo.getTo());
-                ret.setRedirectUri(callBack414 + "?actionId=" + vo.getActionId());
-                ret.setId_token(StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
+                data.put("to", medicalVo.getTo());
+                data.put("redirectUri", callBack414 + "?actionId=" + vo.getActionId());
+                data.put("id_token", StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
                 CoapContentVo coapContent = new CoapContentVo();
                 coapContent.setHpId(medicalVo.getToHospitalId());
                 coapContent.setSubHpId(medicalVo.getToSubHospitalId());
@@ -121,7 +127,8 @@ public class BxczSignController {
                         coapContent.getMedicalInfo().add(infoVo);
                     });
                 }
-                ret.setCoapContent(Lists.newArrayList(coapContent));
+                data.put("cpoaContent", Lists.newArrayList(coapContent));
+                ret.setData(data);
                 return ret;
             }
         } catch (Exception e) {
