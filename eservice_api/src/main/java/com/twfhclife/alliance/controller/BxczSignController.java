@@ -152,7 +152,7 @@ public class BxczSignController {
     public Bxcz415ReturnVo callApi415(
             @RequestBody Bxcz415CallBackVo vo) {
         Date startTime = new Date();
-        logger.info("Start BxczSignController.callApi415(). param: {}", vo);
+        logger.info("Start BxczSignController.callApi415(). param: {}", new Gson().toJson(vo));
         Bxcz415ReturnVo ret = new Bxcz415ReturnVo();
         try {
             if (vo.getData() != null && StringUtils.isNotBlank(vo.getData().getState())) {
