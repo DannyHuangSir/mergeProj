@@ -106,7 +106,7 @@ public class BxczSignController {
                 Map<String, Object> data = Maps.newHashMap();
                 data.put("idNo", medicalVo.getIdNo());
                 data.put("name", medicalVo.getName());
-                data.put("birdate", medicalVo.getBirdate());
+                data.put("birdate", StringUtils.isNotBlank(medicalVo.getBirdate()) ? medicalVo.getBirdate().replaceAll("/", "") : "");
                 if (signRecord.getSignStart() != null && signRecord.getSignEnd() != null) {
                     data.put("acExpiredSec", String.valueOf((signRecord.getSignEnd().getTime() - System.currentTimeMillis()) / 1000));
                 } else {
