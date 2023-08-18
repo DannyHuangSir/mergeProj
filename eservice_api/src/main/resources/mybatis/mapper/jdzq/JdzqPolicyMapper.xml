@@ -127,7 +127,7 @@
         WHEN 'S' THEN N'半年繳'
         WHEN 'T' THEN N'躉繳'
         ELSE '' END) AS PayType,
-        c.PermYear,pn.NoteDate,pn.DueDate,pni.ItemContent,pni.ContentMemo
+        c.PermYear,pn.ManageDate NoteDate,pn.DueDate,pni.ItemContent,pni.ContentMemo
         from MainPolicy c
         left join PolicyNote pn on c.Main_Key = pn.Main_Key
         left join PolicyNoteItems  pni on  pn.Note_Key = pni.Note_Key
