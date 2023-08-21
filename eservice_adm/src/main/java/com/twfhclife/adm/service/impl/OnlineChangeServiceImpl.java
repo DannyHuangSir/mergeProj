@@ -1549,6 +1549,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 					boolean isFirst = true;
 					for (Map<String, String> map : medicalInfo.getDtypeList()) {
 						String fileBase64 = map.get("fileBase64");
+						map.put("fileBase64New", "");
 						if (fileBase64 != null && !"".equals(fileBase64)) {
 							//直接将原文件base64 转为 缩图的 base64
 							byte[] decode = Base64.getDecoder().decode(fileBase64);
