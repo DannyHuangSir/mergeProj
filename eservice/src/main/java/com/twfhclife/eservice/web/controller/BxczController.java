@@ -57,7 +57,7 @@ public class BxczController extends BaseController {
             if (StringUtils.isBlank(bxczState.getTransNum())) {
                 this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
             } else {
-                String type = StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM) ? "F" : "G";
+                String type = StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM) ? "F" : "H";
                 String actionId = UUID.randomUUID().toString().replaceAll("-", "");
                 String idToken = getSessionStr("BXCZ_ID_TOKEN");
                 String encId = StringUtils.isBlank(idToken) ? "" : AesUtil.encrypt(idToken, actionId);
