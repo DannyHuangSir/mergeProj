@@ -210,10 +210,10 @@
 					if (emptyIfNull(oRow.sadpTrCode) == 'INV109') {
 						return '--';
 					}
-					if (oRow.fundValue == null || oRow.fundValue == 0) {
+					if (oRow.netValue == null || oRow.netValue == 0) {
 						return '--';
 					} else {
-						return showNumberPointValue(oRow.fundValue);
+						return showNumberPointValue(oRow.netValue);
 					}
 				},
 				'rwdName': '淨值'
@@ -228,10 +228,10 @@
 					}
 					if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
 						rate = '1';
-					} if (oRow.fundValue == null || oRow.fundValue == 0) {
+					} if (oRow.exchRate == null || oRow.exchRate == 0) {
 						rate = '--';
 					} else {
-						rate = showNumberPointValue(oRow.fundValue);
+						rate = showNumberPointValue(oRow.exchRate);
 					}
 					return '<span>'+oRow.sadpExchDate+'</span><hr class="splitLine">'+rate;
 				},

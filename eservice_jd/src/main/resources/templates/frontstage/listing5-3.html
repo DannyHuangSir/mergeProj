@@ -72,7 +72,7 @@
 														<tr class="h65 noEvent">
 															<!-- 申請方式 -->
 															<td class="text-left">
-																<th:block th:text="${vo1.applyType != null ? (session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'] != null ? (session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'][vo1.applyType] != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_DELIVERY_AGEN_CODE'][vo1.applyType].parameterValue : '-' ) : '-') : '-'}"/>
+																<th:block th:text="${vo1.applyType != null ? (session.SYSTEM_PARAMETER['RCDC_DELIVERY_AGEN_CODE'] != null ? (session.SYSTEM_PARAMETER['RCDC_DELIVERY_AGEN_CODE'][vo1.applyType] != null ? session.SYSTEM_PARAMETER['RCDC_DELIVERY_AGEN_CODE'][vo1.applyType].parameterValue : '-' ) : '-') : '-'}"/>
 															</td>
 															<!-- 申請項目 -->
 															<td>
@@ -93,7 +93,7 @@
 															</td>
 															<!-- 處理進度 -->
 															<td>
-																<th:block th:text="${vo1.procMk != null ? (session.SYSTEM_PARAMETER['LIRCDC_RCDC_PROC_MK_JD'][vo1.procMk] != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_PROC_MK'][vo1.procMk].parameterValue : '') : ''}"/>
+																<th:block th:text="${vo1.procMk != null ? (session.SYSTEM_PARAMETER['LIRCDC_RCDC_PROC_MK_JD'][vo1.procMk] != null ? session.SYSTEM_PARAMETER['LIRCDC_RCDC_PROC_MK_JD'][vo1.procMk].parameterValue : '') : ''}"/>
 															</td>
 														</tr>
 													</th:block>

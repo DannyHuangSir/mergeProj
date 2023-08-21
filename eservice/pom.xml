@@ -361,6 +361,7 @@
 						<include>**/eservice/web/service/impl/ParameterService*</include>
 						<include>**/generic/util/PdfUtil*</include>
 						<include>**/generic/util/RoiRateUtil*</include>
+						<include>**/generic/util/JDRoiRateUtil*</include>
 						<include>**/generic/util/MathUtil*</include>
 						<include>**/generic/util/HttpUtil*</include>
 						<include>**/generic/util/DateUtil*</include>

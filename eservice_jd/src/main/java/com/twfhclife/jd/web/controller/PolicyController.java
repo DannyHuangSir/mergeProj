@@ -187,7 +187,9 @@ public class PolicyController extends BaseController {
             BigDecimal sumUnits = BigDecimal.valueOf(0);
             for (IncomeDistributionVo incomeDistribution : vo.getIncomeDistributions()) {
                 sumAmount = sumAmount.add(incomeDistribution.getExpeNtd());
-                sumUnits = sumUnits.add(incomeDistribution.getUnits());
+                if (!StringUtils.equals(incomeDistribution.getTrCode(), "01")) {
+                    sumUnits = sumUnits.add(incomeDistribution.getUnits());
+                }
             }
             addAttribute("sumAmount", sumAmount);
             addAttribute("sumUnits", sumUnits);

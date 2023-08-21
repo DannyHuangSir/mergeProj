@@ -239,12 +239,13 @@
 </script>
 <script th:src="@{/plugin/highcharts/highcharts.js}"></script>
 <script th:src="@{/plugin/highcharts/modules/exporting.js}"></script>
+<script th:src="@{/tw/bootstrap-datepicker-tw.js}"></script>
 <script th:inline="javascript">
   /*<![CDATA[*/
     var paymentMap = [[${session.SYSTEM_PARAMETER.CURRENCY_JD}]]
 	$(function() {
 	    $("[name='startTime'],[name='endTime']").datepicker({
-            dateFormat: 'yymmdd',
+            dateFormat: 'twymmdd',
             maxDate: new Date(),
             changeMonth: true,
             changeYear: true

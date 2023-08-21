@@ -6,18 +6,18 @@ import java.util.List;
 
 public class MedicalInfoVo {
 
-    private String seNo;
+    private long seNo;
     private String hsTime;
     private String heTime;
     private String otype;
     private String depid;
     private List<String> dtypes =Lists.newArrayList();
 
-    public String getSeNo() {
+    public long getSeNo() {
         return seNo;
     }
 
-    public void setSeNo(String seNo) {
+    public void setSeNo(long seNo) {
         this.seNo = seNo;
     }
 

@@ -6,6 +6,9 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.openhtmltopdf.extend.FSSupplier;
+import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.twfhclife.jd.api_client.BaseRestClient;
 import com.twfhclife.jd.api_model.*;
 import com.twfhclife.jd.keycloak.model.KeycloakUser;
@@ -20,6 +23,8 @@ import com.twfhclife.jd.web.model.CaseVo;
 import com.twfhclife.jd.web.model.PermQueryVo;
 import com.twfhclife.jd.web.model.PolicyBaseVo;
 import com.twfhclife.jd.web.service.ICaseService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -27,11 +32,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 import java.util.List;
 
 @Service
 public class CaseServiceImpl implements ICaseService {
+    private static final Logger logger = LogManager.getLogger(CaseServiceImpl.class);
 
     @Autowired
     private UsersDao usersDao;
@@ -54,13 +60,16 @@ public class CaseServiceImpl implements ICaseService {
 
     @Value("${eservice_api.case.policy.info.url}")
     private String casePolicyInfoUrl;
+
     @Override
     public CaseVo getCasePolicyInfo(String userId, String policyNo) {
         CaseProcessDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), casePolicyInfoUrl, CaseProcessDataResponse.class);
         return responseObj.getCaseVo();
     }
+
     @Value("${eservice_api.case.note.content.url}")
     private String noteContentUrl;
+
     @Override
     public List<CaseVo> getNoteContent(String userId, String policyNo) {
         NoteContentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), noteContentUrl, NoteContentDataResponse.class);
@@ -69,9 +78,11 @@ public class CaseServiceImpl implements ICaseService {
 
     @Value("${eservice_api.note.pdf.url}")
     private String notePdfUrl;
+
     @Override
     public byte[] getNotePdf(String userId, String policyNo, String noteKey) throws Exception {
         NotePdfDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PdfVo(policyNo, noteKey, ApConstants.SYSTEM_ID, userId)), notePdfUrl, NotePdfDataResponse.class);
+//        return generatePDF2(responseObj.getNotePdf());
         return generatePDF(responseObj.getNotePdf());
     }
 
@@ -146,6 +157,176 @@ public class CaseServiceImpl implements ICaseService {
         return new CaseListDataResponse();
     }
 
+    private byte[] generatePDF2(NotePdfVo pdfVo) throws Exception {
+        Resource kaiuResource = new ClassPathResource("fonts/kaiu.ttf");
+        String kaiuFontPath = String.valueOf(kaiuResource.getFile().toURI());
+
+        StringBuilder html = new StringBuilder();
+        html.append("<html>");
+        html.append("<head>");
+        html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>");
+        html.append("<style>");
+        html.append("@font-face {");
+        html.append("font-family: kaiufont;");
+        html.append("src: url(").append(kaiuFontPath).append(");");
+        html.append("}");
+        html.append("body {");
+        html.append("font-family: kaiufont");
+        html.append("}");
+        html.append("table , th , td {");
+        html.append("border-collapse: collapse;");
+        html.append("}");
+        html.append("th , td {");
+        html.append("border: 1px solid black;");
+        html.append("width: 25%;");
+        html.append("}");
+        html.append("table {");
+        html.append("margin: 0 auto;");
+        html.append("border: none;");
+        html.append("}");
+        html.append(".text-align-right {");
+        html.append("text-align: right;");
+        html.append("}");
+        html.append(".text-align-left {");
+        html.append("text-align: left;");
+        html.append("}");
+        html.append(".text-align-center {");
+        html.append("text-align: center;");
+        html.append("}");
+        html.append(".container {");
+        html.append("margin:15px;");
+        html.append("padding: 40px;");
+        html.append("}");
+        html.append(".width-auto {");
+        html.append("width: 100%;");
+        html.append("}");
+        html.append(".col-1 {");
+        html.append("width:25%;");
+        html.append("}");
+        html.append(".col-2 {");
+        html.append("width:50%;");
+        html.append("}");
+        html.append(".col-3 {");
+        html.append("width:75%;");
+        html.append("}");
+        html.append(".col-4 {");
+        html.append("width:100%;");
+        html.append("}");
+        html.append(".no-border {");
+        html.append("border: none;");
+        html.append("}");
+        html.append("</style>");
+        html.append("</head>");
+        html.append("<body>");
+        html.append("<page class=\"A4\">");
+        html.append("<div class=\"container\">");
+        html.append("<div style=\"text-align: center;font-weight: bold;font-size: 30px;\">臺銀人壽核保照會單 </div>");
+//        html.append("<div style=\"text-align: left;font-weight: bold;margin-bottom: 20px; margin-top: 20px;\">核保人員: ").append(pdfVo.getProcessorName()).append("分機：2354").append("</div>");
+        html.append("<table class=\"width-auto\">");
+        html.append("<tr>");
+        html.append("<td class=\"col-1 text-align-left no-border\" colspan=\"2\" >核保人員: ").append(pdfVo.getProcessorName()).append("</td>");
+//        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getProcessorName()).append("</td>");
+        html.append("<td class=\"col-1 text-align-left no-border\" colspan=\"2\" >分機：").append(pdfVo.getExtNumber()).append("</td>");
+//        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getExtNumber()).append("</td>");
+        html.append("</tr>");
+        html.append("<tr>");
+        html.append("<td class=\"col-1 text-align-right\">保單號碼：</td>");
+        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getPolicyNo()).append("</td>");
+        html.append("<td class=\"col-1 text-align-right\">收件編號：</td>");
+        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getAccDocNo()).append("</td>");
+        html.append("</tr>");
+
+        html.append("<tr>");
+        html.append("<td class=\"col-1 text-align-right\">要保人：</td>");
+        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getAppName()).append("</td>");
+        html.append("<td class=\"col-1 text-align-right\">經攬單位：</td>");
+        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getAgentCode() + "-" + pdfVo.getAgentName()).append("</td>");
+        html.append("</tr>");
+
+        html.append("<tr>");
+        html.append("<td class=\"col-1 text-align-right\">被保險人：</td>");
+        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getInsName()).append("</td>");
+        html.append("<td class=\"col-1 text-align-right\">分支單位及分行：</td>");
+        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getBranchDesc()).append("</td>");
+        html.append("</tr>");
+
+        html.append("<tr>");
+        html.append("<td class=\"col-1 text-align-right\">主約險種：</td>");
+        html.append("<td class=\"col-3 text-align-left\" colspan=\"3\">").append(pdfVo.getPolicyTypeName()).append("</td>");
+        html.append("</tr>");
+
+        html.append("<tr>");
+        html.append("<td class=\"col-1 text-align-right\">照會日期：</td>");
+        html.append("<td class=\"col-3 text-align-left\" colspan=\"3\">").append(pdfVo.getManageDate()).append("</td>");
+        html.append("</tr>");
+
+        html.append("<tr>");
+        html.append("<td class=\"col-1 text-align-right\">經攬人姓名：</td>");
+        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getpSalesName()).append("</td>");
+        html.append("<td class=\"col-1 text-align-right\">經攬人登錄字號：</td>");
+        html.append("<td class=\"col-1 text-align-left\">").append(pdfVo.getpSalesID()).append("</td>");
+        html.append("</tr>");
+        html.append("</table>");
+
+        html.append("<div style=\"text-align: left;font-weight: bold;margin-bottom: 20px; margin-top: 20px;\">請儘速補齊下列事項，並於").append(pdfVo.getDueDate()).append("日前送回本公司，逾期將先行辦退，待資料補齊後再行受理。</div>");
+
+        html.append("<table class=\"width-auto\">");
+        html.append("<tr>");
+        html.append("<td class=\"col-4 text-align-left\" colspan=\"4\">照會事項：</td>");
+        html.append("</tr>");
+        html.append("<tr>");
+        html.append("<td class=\"col-1 text-align-center\">照會項目</td>");
+        html.append("<td class=\"col-3 text-align-center\" colspan=\"3\">照會訊息</td>");
+        html.append("</tr>");
+
+        if (!CollectionUtils.isEmpty(pdfVo.getNoteItems())) {
+            pdfVo.getNoteItems().forEach(item -> {
+                html.append("<tr>");
+                html.append("<td class=\"col-1 text-align-center\" >").append(item.getItemCode()).append("</td>");
+                html.append("<td class=\"col-3 text-align-left\" colspan=\"3\">").append(item.getItemContent()).append("</td>");
+                html.append("</tr>");
+            });
+        }
+
+        html.append("</table>");
+        html.append("<div class=\"text-align-left\" style=\"font-weight: bold;margin-bottom: 20px; margin-top: 20px;\">備註：</div>");
+        html.append("<div>").append(pdfVo.getNoteVerifyMemo()).append("</div>");
+        html.append("<div class=\"text-align-left\" style=\"font-weight: bold;\">請以正式收到核保照會單為回復依據。");
+        html.append("</div>");
+        html.append("</div>");
+        html.append("</page>");
+        html.append("</body>");
+        html.append("</html>");
+        File file = new File("report2.html");
+        if (file.exists()) {
+            logger.info("report2.html is exist, path: {}", file.getAbsolutePath());
+        } else {
+            logger.info("report2.html is not exist");
+            file.createNewFile();
+        }
+
+        byte[] pdfBytes;
+        try (PrintStream printStream = new PrintStream(new FileOutputStream(file), true, "utf-8");
+             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            printStream.println(html);
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+            builder.useFastMode();
+            builder.useFont(() -> {
+                try {
+                    return kaiuResource.getInputStream();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }, "kaiu", 400, BaseRendererBuilder.FontStyle.NORMAL, true);
+            builder.withFile(file);
+            builder.toStream(os);
+            builder.run();
+            pdfBytes = os.toByteArray();
+
+        }
+        return pdfBytes;
+    }
+
     private byte[] generatePDF(NotePdfVo pdfVo) throws Exception {
         Resource kaiuResource = new ClassPathResource("fonts/kaiu.ttf");
         String kaiuFontPath = kaiuResource.getFile().getPath();
@@ -169,7 +350,7 @@ public class CaseServiceImpl implements ICaseService {
         PdfPTable table = new PdfPTable(new float[]{100f, 100f, 100f, 100f});
 
         table.addCell(RptUtils2.createCell("核保人員: " + pdfVo.getProcessorName(), zh, Element.ALIGN_LEFT, 2, false));
-        table.addCell(RptUtils2.createCell("分機：2354", zh, Element.ALIGN_LEFT, 2, false));
+        table.addCell(RptUtils2.createCell("分機：" + pdfVo.getExtNumber(), zh, Element.ALIGN_LEFT, 2, false));
 
         table.addCell(RptUtils2.createBlankCell(4, false));
 
@@ -214,7 +395,7 @@ public class CaseServiceImpl implements ICaseService {
         table.addCell(RptUtils2.createCell("照會訊息", tableFont, Element.ALIGN_CENTER, 3, true));
         if (!CollectionUtils.isEmpty(pdfVo.getNoteItems())) {
             pdfVo.getNoteItems().forEach(item -> {
-                table.addCell(RptUtils2.createCell(item.getItemCode(), tableFont, Element.ALIGN_LEFT, 1, true));
+                table.addCell(RptUtils2.createCell(item.getItemCode(), tableFont, Element.ALIGN_CENTER, 1, true));
                 table.addCell(RptUtils2.createCell(item.getItemContent(), tableFont, Element.ALIGN_LEFT, 3, true));
             });
         }
