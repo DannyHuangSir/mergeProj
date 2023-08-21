@@ -464,6 +464,7 @@
 					openAlert($('#E0071').val());
 					return false;
 				}
+				delete formData['applyDate']
 				formData.authenticationNum = $('#InputCert1').val();
 				postWithFormData(/*[[@{/policyClaims5}]]*/, formData);
 			});
