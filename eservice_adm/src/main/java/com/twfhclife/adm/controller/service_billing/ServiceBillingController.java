@@ -55,7 +55,7 @@ public class ServiceBillingController extends BaseController {
     @RequestLog
     @PostMapping(value = "/spa402")
     @ResponseBody
-    public ResponseEntity<ResponseObj> spa402(Spa402RequestVo vo) {
+    public ResponseEntity<ResponseObj> spa402(@RequestBody Spa402RequestVo vo) {
         try {
             processSuccessMsg(serviceBillingClient.callSpa402(vo));
         } catch (Exception e) {

@@ -397,24 +397,24 @@ public class ClaimChainController {
 	}
 
 	/**
-     * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
-     * @param responseJsonString
-     * @param pathFieldName ex:"/code"
-     * @param checkValue ex:"0"
-     * @return boolean
-     */
-    private boolean checkLiaAPIResponseValue(String responseJsonString,String pathFieldName,String checkValue) throws Exception{
-        boolean b = false;
-        if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
-            String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);
-            logger.info("-----------checkLiaAPIResponseValue-----------"+code);
-            if(checkValue.equals(code)) {//success
-                b = true;
-            }
-        }
-        logger.info("-----------checkLiaAPIResponseValue-----return  ------"+b);
-        return b;
-    }
+	 * 檢核回傳的聯盟API jsonString中,指定欄位的指定值
+	 * @param responseJsonString
+	 * @param pathFieldName ex:"/code"
+	 * @param checkValue ex:"0"
+	 * @return boolean
+	 */
+	private boolean checkLiaAPIResponseValue(String responseJsonString,String pathFieldName,String checkValue) throws Exception{
+		boolean b = false;
+		if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
+			String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);
+			logger.info("-----------checkLiaAPIResponseValue-----------"+code);
+			if(checkValue.equals(code)) {//success
+				b = true;
+			}
+		}
+		logger.info("-----------checkLiaAPIResponseValue-----return  ------"+b);
+		return b;
+	}
 
 	@Autowired
 	ILilipmService iLilipmService;

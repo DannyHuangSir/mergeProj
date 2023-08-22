@@ -252,20 +252,25 @@
 	function updateBillingStatus(id) {
 		event.preventDefault();
 		event.stopPropagation();
-		formData = new FormData($("#billing_form_" + id)[0])
-		$.ajax({
-			url: /*[[@{spa402}]]*/,
-			type: 'POST',
-			data : formData,
-			contentType: false,
-			processData: false,
-			success: function (response) {
-				alertMsg('明細對帳問題回報狀態更新成功');
-			},
-			error: function (response) {
-				alertMsg('系統發生錯誤');
+		var formData = new FormData($("#billing_form_" + id)[0])
+		params = {}
+		for(var entry of formData.entries()) {
+			if (entry[1] != null && entry[1] != '' && entry[1] != "null" ) {
+				params[entry[0]] = entry[1]
 			}
-		});
+		}
+		$.ajax({
+            url: /*[[@{spa402}]]*/,
+            type: 'POST',
+            data : JSON.stringify(params),
+            contentType: "application/json",
+            success: function (response) {
+                alertMsg('明細對帳問題回報狀態更新成功');
+            },
+            error: function (response) {
+                alertMsg('系統發生錯誤');
+            }
+        });
 	}
 	/*]]>*/
 </script>
