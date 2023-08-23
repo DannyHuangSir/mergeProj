@@ -66,6 +66,7 @@
 		<result property="fileStatus"  column="CREATE_DATE" />
 		<result property="stauts"  column="STATUS" />
 		<result property="toSubHospitalId"  column="TO_SUB_HOSPITAL_ID" />
+		<result property="subHpId"  column="TO_SUB_HOSPITAL_ID" />
 		<result property="signAgree"  column="SIGN_AGREE" />
 	</resultMap>
 	<resultMap id="TransMedicalTreatmentResultMap" type="com.twfhclife.alliance.model.MedicalTreatmentClaimVo">
