@@ -688,23 +688,10 @@
     </select>
 
     <select id="selectPolicyAmount" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyAmountVo">
-        <![CDATA[
-        SELECT decode(nvl(POEV_EXCH_DATE,''), '', '', to_char(POEV_EXCH_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) policyDate, POEV_SAFP_UNITS * EXCH_SPEBK_PURATE * INPR_UNIT_SOLPRICE policyVal FROM
-        (Select
-        A.POEV_EXCH_DATE,
-        SUBSTR(A.POEV_INVT_NO,3,3),
-        A.POEV_INSU_NO,
-        A.POEV_SAFP_UNITS,
-        (select EXCH_SPEBK_PURATE from
-        (select EXCH_DATE, EXCH_EXCH_CODE, EXCH_SPEBK_PURATE from LIEXCH_ES where EXCH_EXCH_CODE = SUBSTR(A.POEV_INVT_NO,3,3) order by EXCH_DATE DESC)
-        WHERE ROWNUM < 2) as EXCH_SPEBK_PURATE,
-        (select INPR_UNIT_SOLPRICE from
-        (SELECT INPR_UNIT_SOLPRICE FROM LIINPR_ES WHERE INPR_INVT_NO = A.POEV_INVT_NO order by INPR_TRAN_DATE DESC)
-        WHERE ROWNUM < 2) as INPR_UNIT_SOLPRICE
-        from LIPOEV_ES A
-        where A.POEV_INSU_NO = #{policyNo} order by A.POEV_EXCH_DATE DESC)
-        WHERE ROWNUM < 2
-        ]]>
+        SELECT SUM(VAL1_RESE_AMT) policyVal
+        FROM LIVAL1_ES_FLOWTEST
+        WHERE VAL1_INSU_NO = #{policyNo}
+        GROUP BY VAL1_INSU_NO
     </select>
 
     <select id="selectPolicyTypeList" resultType="hashmap">
