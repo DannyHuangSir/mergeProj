@@ -101,6 +101,7 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
                 //進行封裝數據,進行傳輸給聯盟
                 //hpid
                 vo.setHpId(vo.getToHospitalId());
+				vo.setSubHpId(vo.getToSubHospitalId());
                 
                 StringBuffer stringBuffer = new StringBuffer();
                 stringBuffer.append("本人");
