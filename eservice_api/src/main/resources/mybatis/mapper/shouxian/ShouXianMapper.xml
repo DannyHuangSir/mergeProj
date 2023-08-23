@@ -688,10 +688,8 @@
     </select>
 
     <select id="selectPolicyAmount" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyAmountVo">
-        SELECT SUM(VAL1_RESE_AMT) policyVal
-        FROM LIVAL1_ES_FLOWTEST
-        WHERE VAL1_INSU_NO = #{policyNo}
-        GROUP BY VAL1_INSU_NO
+        SELECT SUM(VAL1_RESE_AMT) policyVal FROM
+            CTCMGR.LIVAL1_ES_FLOWTEST WHERE VAL1_INSU_NO = #{policyNo} GROUP BY VAL1_INSU_NO
     </select>
 
     <select id="selectPolicyTypeList" resultType="hashmap">
