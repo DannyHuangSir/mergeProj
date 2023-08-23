@@ -206,6 +206,7 @@
 		<result property="otherInsuClaim"  column="OTHERINSUCLAIM" />
 		<result property="accountName" column="ACCOUNTNAME" />
 		<result property="callPolice" column="CALLPOLICE" />
+		<result property="toSubHospitalId" column="TO_SUB_HOSPITAL_ID" />
 		<!-- <result property="createDate"    column="CREATE_DATE" /> -->
 	</resultMap>
 
@@ -399,6 +400,7 @@
 		,TM.FROM_HOSPITAL_ID
 		,TM.ALLIANCE_FILE_STATUS
 		,TM.RE_UPLOAD
+		,TM.TO_SUB_HOSPITAL_ID
 	</sql>
 
 	<sql id="MEDICAL_CLAIM_FILEDATA_ALL">
@@ -774,7 +776,7 @@
 		INSERT INTO
 		ESERVICE.DBO.MEDICAL_TREATMENT_CLAIM
 		(
-		<include refid="Base_Medical_Column_List" />
+		<include refid="Base_Medical_Column_List" />, TO_SUB_HOSPITAL_ID
 		)
 		VALUES
 		(
@@ -854,7 +856,8 @@
 
 		#{vo.allianceStatus,jdbcType=VARCHAR},
 		#{vo.hpUid,jdbcType=VARCHAR},
-		#{vo.cpoa,jdbcType=VARCHAR}
+		#{vo.cpoa,jdbcType=VARCHAR},
+		#{vo.toSubHospitalId,jdbcType=VARCHAR}
 		)
 	</insert>
 
