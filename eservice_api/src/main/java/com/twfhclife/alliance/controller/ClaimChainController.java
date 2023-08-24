@@ -239,7 +239,8 @@ public class ClaimChainController {
 	@ApiRequest
 	@RequestMapping("/api409")
 	public OutpatientType[] callAPI409(
-			@RequestParam(value="hpId",required=true) String hospitalId){
+			@RequestParam(value="hpId",required=true) String hospitalId,
+			@RequestParam(value="subHpId",required=true) String subHpId){
 		logger.info("Start ClaimChainController.callAPI409().");
 		
 		OutpatientType[] outpatientTypes = null;
@@ -247,10 +248,12 @@ public class ClaimChainController {
 		try {
 			if(hospitalId!=null) {
 				//Request
-        		Map<String, String> params = new HashMap<>();
-        		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
-        		
+
+				Map<String, String> params = new HashMap<>();
+				params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
+				params.put("subHpId", subHpId);//必填,String(20),分院代碼
         		logger.info("API-409取得醫院之就診類型,request hpId=" + hospitalId);
+
         		String strResponse = medicalExternalServiceImpl.postForEntity(
         				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api409.url"),
         				params,
@@ -273,6 +276,7 @@ public class ClaimChainController {
                 	}
                 }
  
+
 			}
 		}catch(Exception e) {
 			logger.error(e);
@@ -292,7 +296,8 @@ public class ClaimChainController {
 	@RequestMapping("/api410")
 	public Division[] callAPI410(
 			@RequestParam(value="hpId",required=true) String hospitalId,
-			@RequestParam(value="otype",required=true) String oType){
+			@RequestParam(value="otype",required=true) String oType,
+			@RequestParam(value="subHpId",required=true) String subHpId){
 		logger.info("Start ClaimChainController.callAPI410().");
 		
 		Division[] divisions = null;
@@ -300,10 +305,11 @@ public class ClaimChainController {
 		try {
 			if(hospitalId!=null && oType!=null) {
 				//Request
-        		Map<String, String> params = new HashMap<>();
-        		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
-        		params.put("otype", oType);//必填,String(50),就診類型代碼
-        		
+				Map<String, String> params = new HashMap<>();
+				params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
+				params.put("otype", oType);//必填,String(50),就診類型代碼
+				params.put("subHpId", subHpId);//必填,String(50),分院代碼
+				
         		logger.info("API-410取得醫院科別清單,request=" + params.toString());
         		String strResponse = medicalExternalServiceImpl.postForEntity(
         				this.parameterServiceImpl.getParameterValueByCode("eservice_api","medicalAlliance.api410.url"),
@@ -332,7 +338,6 @@ public class ClaimChainController {
                 }else {
                 	logger.info("API-410 Response code is not 0.");
                 }
-
 			}
 		}catch(Exception e) {
 			logger.error(e);
@@ -352,7 +357,8 @@ public class ClaimChainController {
 	@RequestMapping("/api411")
 	public MedicalDataFileGroup[] callAPI411(
 			@RequestParam(value="hpId",required=true) String hospitalId,
-			@RequestParam(value="otype",required=true) String oType){
+			@RequestParam(value="otype",required=true) String oType,
+			@RequestParam(value="subHpId",required=true) String subHpId){
 		logger.info("Start ClaimChainController.callAPI411().");
 		
 		MedicalDataFileGroup[] fileGroups = null;
@@ -360,9 +366,10 @@ public class ClaimChainController {
 		try {
 			if(hospitalId!=null && oType!=null) {
 				//Request
-        		Map<String, String> params = new HashMap<>();
-        		params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
-        		params.put("otype", oType);//必填,String(50),就診類型代碼
+				Map<String, String> params = new HashMap<>();
+				params.put("hpId", hospitalId);//必填,String(20),醫院之醫事機構代碼
+				params.put("otype", oType);//必填,String(50),就診類型代碼
+				params.put("subHpId", subHpId);//必填,String(50),分院代碼
         		
         		logger.info("API-411取得醫院資料群組,request=" + params.toString());
         		String strResponse = medicalExternalServiceImpl.postForEntity(
@@ -380,8 +387,8 @@ public class ClaimChainController {
         		 */
                 
         		if (checkLiaAPIResponseValue(strResponse, "/code", "0")) {//String(10),0代表成功,錯誤代碼則自行定義
+
 					String dataString = MyJacksonUtil.getNodeString(strResponse, "data");
-					
 					OutpatientType outpatientTye = (OutpatientType)MyJacksonUtil.json2Object(dataString, OutpatientType.class);
 					List<MedicalDataFileGroup> listGroup = outpatientTye.getFileGroup();
 					fileGroups = listGroup.toArray(new MedicalDataFileGroup[0]);
