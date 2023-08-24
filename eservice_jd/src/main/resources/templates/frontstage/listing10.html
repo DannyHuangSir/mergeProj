@@ -243,9 +243,9 @@
 					var totalValue = 0;
 					try {
 						if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
-							totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.fundValue, 0) * 1;
+							totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.netValue, 0) * 1;
 						} else {
-							totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.fundValue, 0) * emptyDefaultValue(oRow.exchRate, 0);
+							totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.netValue, 0) * emptyDefaultValue(oRow.exchRate, 0);
 						}
 					} catch(err) {
 						totalValue = 0;
