@@ -491,7 +491,7 @@
 									<div class="col-sm-9">
 										<div class="radio inline">
 											<label>
-												<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_3').show().siblings().hide();"></i></div>同意
+												<div class="radio-btn"><i><input th:attr="checked=${#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_3').show().siblings().hide();$('.showSignAgree').show();"></i></div>同意
 											</label>
 										</div>
 										<div class="radio inline">
@@ -499,7 +499,7 @@
 											 <!-- 取消限制 -->
 											<!-- <div class="radio-btn"><i><input type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_4').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
 											 -->
-											<div class="radio-btn"><i><input th:attr="checked=${!#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_4').show().siblings().hide(); checkedNOTONGYI();"></i></div>不同意
+											<div class="radio-btn"><i><input th:attr="checked=${!#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_4').show().siblings().hide(); checkedNOTONGYI();$('.showSignAgree').hide();"></i></div>不同意
 											</label>
 										</div>
 									</div>
@@ -541,17 +541,19 @@
 											</article>
 										</div>
 									</div>
-									<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否進行數位身份驗證及數位簽署：</label>
-									<div class="col-sm-9">
-										<div class="radio inline">
-											<label>
-												<div class="radio-btn" id="confirmSign"><i><input th:attr="checked=${#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
-											</label>
-										</div>
-										<div class="radio inline">
-											<label>
-												<div class="radio-btn" id="cancelSign"><i><input th:attr="checked=${!#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" value="N" ></i></div>不同意
-											</label>
+									<div class="showSignAgree" th:attr="style=${#strings.equals(claimVo.sendAlliance, 'Y')  ? 'display:block;' : 'display:none;'}">
+										<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否進行數位身份驗證及數位簽署：</label>
+										<div class="col-sm-9">
+											<div class="radio inline">
+												<label>
+													<div class="radio-btn" id="confirmSign"><i><input th:attr="checked=${#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" onclick="clickAgreeSign()" value="Y" ></i></div>同意
+												</label>
+											</div>
+											<div class="radio inline">
+												<label>
+													<div class="radio-btn" id="cancelSign"><i><input th:attr="checked=${!#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree" value="N" onclick="clickDisAgreeSign()"></i></div>不同意
+												</label>
+											</div>
 										</div>
 									</div>
 									<div class="clearfix"></div>
@@ -1740,6 +1742,10 @@
 		let start = [Math.min(...arr1),Math.min(...arr2)];//区间的两个最小值
 		let end = [Math.max(...arr1),Math.max(...arr2)];//区间的两个最大值
 		return Math.max(...start) <= Math.min(...end);//最大值里的最小值 是否 小于等于 最大值的最小值
+	}
+
+	function clickDisAgreeSign() {
+		$("[name='signAgree']").val('N')
 	}
 
 	function clickAgreeSign() {

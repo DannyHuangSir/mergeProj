@@ -372,12 +372,12 @@
 								<div class="col-sm-9">
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn" ><i><input th:attr="checked=${#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_2').show().siblings().hide();"></i></div>同意
+											<div class="radio-btn" ><i><input th:attr="checked=${#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="Y" onclick="if(this.checked) $('#tab3_2').show().siblings().hide(); $('.showSignAgree').show()"></i></div>同意
 										</label>
 									</div>
 									<div class="radio inline">
 										<label>
-											<div class="radio-btn"><i><input th:attr="checked=${!#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_1').show().siblings().hide();checkedNOTONGYI();"></i></div>不同意
+											<div class="radio-btn"><i><input th:attr="checked=${!#strings.equals(claimVo.sendAlliance, 'Y')  ? 'checked' : false}" type="radio" name="sendAlliance" value="N" onclick="if(this.checked) $('#tab3_1').show().siblings().hide();checkedNOTONGYI();$('.showSignAgree').hide()"></i></div>不同意
 										</label>
 									</div>
 								</div>
@@ -422,7 +422,7 @@
 								<div class="clearfix"></div>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="showSignAgree form-group" th:attr="style=${#strings.equals(claimVo.sendAlliance, 'Y')  ? 'display:block;' : 'display:none;'}" >
 							<label class="col-sm-3"><span style="color: #ff5300; font-size: 16px">*</span>是否進行數位身份驗證及數位簽署：</label>
 							<div class="col-sm-9">
 								<div class="radio inline">
@@ -432,7 +432,7 @@
 								</div>
 								<div class="radio inline">
 									<label>
-										<div class="radio-btn" id="cancelSign"><i><input id="cancelSignInput" th:attr="checked=${claimVo == null or claimVo.signAgree == null or !#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" type="radio" name="signAgree"  value="N" ></i></div>不同意
+										<div class="radio-btn" id="cancelSign"><i><input id="cancelSignInput" th:attr="checked=${claimVo == null or claimVo.signAgree == null or !#strings.equals(claimVo.signAgree, 'Y')  ? 'checked' : false}" onclick="clickDisAgreeSign()" type="radio" name="signAgree"  value="N" ></i></div>不同意
 									</label>
 								</div>
 							</div>
@@ -960,7 +960,7 @@
 				var flag = true;
 				if (uploadFiles != undefined && uploadFiles != null) {
 					$.each(uploadFiles,function(key,value){
-						if(value.parameterValue == 'Y' && $("#"+key).val()=='') {
+						if(value.parameterValue == 'Y' && ($("#"+key).val()=='' || $("#"+key).val() == '[]')) {
 							openAlert("請選擇診斷證明書!");
 							flag = false;
 							return false;
@@ -1026,6 +1026,10 @@
                 }
             });
             return booleanFirst;
+        }
+
+        function clickDisAgreeSign() {
+        	$("[name='signAgree']").val('N')
         }
 
 		function clickAgreeSign() {
