@@ -530,36 +530,38 @@
 
     <select id="getFundTransactionPageList" resultMap="FundTransactionListMap">
         SELECT * FROM (
-        SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
-        CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
-        ELSE SADP_TR_UNITS
-        END SADP_TR_UNITS,
-        lti.TRHI_EXCH_RATE EXCH_RATE,
-        lti.TRHI_INPR_RATE NET_VALUE,
-        lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
-        FROM LISADP_ES lsp
-        LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
-        <where>
-            AND lsp.SADP_INSU_NO = #{policyNo}
-            <if test="trCode != null">
-                <choose>
-                    <when test="trCode == 'INV101'">
-                        AND lsp.SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')
-                    </when>
-                    <otherwise>
-                        AND lsp.SADP_TR_CODE = #{trCode}
-                    </otherwise>
-                </choose>
-            </if>
-            <if test="startDate != null">
-                AND lsp.SADP_TR_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
-            </if>
-            <if test="endDate != null">
-                AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
-            </if>
-        </where>
-        ORDER BY lsp.SADP_TR_DATE DESC
+        SELECT rownum ROW_NUM, A.* FROM (
+            SELECT DISTINCT lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
+            CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
+            ELSE SADP_TR_UNITS
+            END SADP_TR_UNITS,
+            lti.TRHI_EXCH_RATE EXCH_RATE,
+            lti.TRHI_INPR_RATE NET_VALUE,
+            lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
+            FROM LISADP_ES lsp
+            LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
+            LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
+            <where>
+                AND lsp.SADP_INSU_NO = #{policyNo}
+                <if test="trCode != null">
+                    <choose>
+                        <when test="trCode == 'INV101'">
+                            AND lsp.SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')
+                        </when>
+                        <otherwise>
+                            AND lsp.SADP_TR_CODE = #{trCode}
+                        </otherwise>
+                    </choose>
+                </if>
+                <if test="startDate != null">
+                    AND lsp.SADP_TR_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
+                </if>
+                <if test="endDate != null">
+                    AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
+                </if>
+            </where>
+            ORDER BY lsp.SADP_TR_DATE DESC
+            ) A
         )
         <if test="pageNum != null and pageSize != null">
             WHERE
@@ -570,16 +572,16 @@
 
     <select id="getFundTransactionTotal" resultType="int">
         SELECT COUNT(*) FROM (
-        SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
-        CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
-        ELSE SADP_TR_UNITS
-        END SADP_TR_UNITS,
-        lti.TRHI_EXCH_RATE EXCH_RATE,
-        lti.TRHI_INPR_RATE NET_VALUE,
-        lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
-        FROM LISADP_ES lsp
-        LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
+        SELECT DISTINCT lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
+            CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
+            ELSE SADP_TR_UNITS
+            END SADP_TR_UNITS,
+            lti.TRHI_EXCH_RATE EXCH_RATE,
+            lti.TRHI_INPR_RATE NET_VALUE,
+            lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
+            FROM LISADP_ES lsp
+            LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
+            LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">
