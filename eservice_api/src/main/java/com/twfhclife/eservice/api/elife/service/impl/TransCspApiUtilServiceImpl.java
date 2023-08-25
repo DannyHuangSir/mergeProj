@@ -112,88 +112,68 @@ public class TransCspApiUtilServiceImpl implements ITransCspApiUtilService{
 	}
 
 	public TransOnlineTrialVo getCsp0021Detail(TransCsp002DataRequest reuqest) {
-		TransOnlineTrialVo vo = new TransOnlineTrialVo();		
-		if(reuqest.isMaturityType()) {
-			CspResultVo resultVo = getCsp002Api(reuqest , "2");
-			if(resultVo != null) {
-				if(StringUtils.isNotEmpty(resultVo.getResult())) {
-					vo.setMaturityAmt(resultVo.getResult());
-				}else {
-					if(StringUtils.isNotEmpty(resultVo.getErrorMsg())) {
-						vo.setMaturityMsg(resultVo.getErrorMsg());
-					}else {
-						vo.setMaturityMsg("查無滿期金額資料");
-					}
+		TransOnlineTrialVo vo = new TransOnlineTrialVo();
+		if (reuqest.isMaturityType()) {
+			CspResultVo resultVo = getCsp002Api(reuqest, "2");
+			if (StringUtils.isNotEmpty(resultVo.getResult())) {
+				vo.setMaturityAmt(resultVo.getResult());
+			} else {
+				if (StringUtils.isNotEmpty(resultVo.getErrorMsg())) {
+					vo.setMaturityMsg(resultVo.getErrorMsg());
+				} else {
+					vo.setMaturityMsg("查無滿期金額資料");
 				}
-			}else {
-				vo.setMaturityMsg("查無滿期金額資料");
 			}
 		}
-		
-		if(reuqest.isCancellationType()) {
-			CspResultVo resultVo = getCsp002Api(reuqest , "3");
-			if(resultVo != null) {
-				if(StringUtils.isNotEmpty(resultVo.getResult())) {
-					vo.setCancellationAmt(resultVo.getResult());
-				}else {
-					if(StringUtils.isNotEmpty(resultVo.getErrorMsg())) {
-						vo.setCancellationMsg(resultVo.getErrorMsg());
-					}else {
-						vo.setCancellationMsg("查無解約金額資料");
-					}
+
+		if (reuqest.isCancellationType()) {
+			CspResultVo resultVo = getCsp002Api(reuqest, "3");
+			if (StringUtils.isNotEmpty(resultVo.getResult())) {
+				vo.setCancellationAmt(resultVo.getResult());
+			} else {
+				if (StringUtils.isNotEmpty(resultVo.getErrorMsg())) {
+					vo.setCancellationMsg(resultVo.getErrorMsg());
+				} else {
+					vo.setCancellationMsg("查無解約金額資料");
 				}
-			}else {
-				vo.setCancellationMsg("查無解約金額資料");
 			}
 		}
-		
-		if(reuqest.isLoanType()) {
-			CspResultVo resultVo = getCsp002Api(reuqest , "4");
-			if(resultVo != null) {
-				if(StringUtils.isNotEmpty(resultVo.getResult())) {
-					vo.setLoanAmt(resultVo.getResult());
-				}else {
-					if(StringUtils.isNotEmpty(resultVo.getErrorMsg())) {
-						vo.setLoanMsg(resultVo.getErrorMsg());
-					}else {
-						vo.setLoanMsg("查無可貸金額資料");
-					}
+
+		if (reuqest.isLoanType()) {
+			CspResultVo resultVo = getCsp002Api(reuqest, "4");
+			if (StringUtils.isNotEmpty(resultVo.getResult())) {
+				vo.setLoanAmt(resultVo.getResult());
+			} else {
+				if (StringUtils.isNotEmpty(resultVo.getErrorMsg())) {
+					vo.setLoanMsg(resultVo.getErrorMsg());
+				} else {
+					vo.setLoanMsg("查無可貸金額資料");
 				}
-			}else {
-				vo.setLoanMsg("查無可貸金額資料");
 			}
 		}
-		
+
 		if (reuqest.isRepaymentType()) {
 			CspResultVo resultVo = getCsp002Api(reuqest, "5");
-			if(resultVo != null) {
-				if(StringUtils.isNotEmpty(resultVo.getResult())) {
-					vo.setRepaymentAmt(resultVo.getResult());
-					CspResultVo resultVo2 =	getCsp003Api(reuqest.getLipmInsuNo());
-					if(resultVo2 != null) {
-						if(StringUtils.isNotEmpty(resultVo2.getResult())) {
-							vo.setRefundAccount(resultVo2.getResult());
-						}else {
-							if(StringUtils.isNotEmpty(resultVo2.getErrorMsg())) {
-								vo.setRefundMsg(resultVo2.getErrorMsg());
-							}else {
-								vo.setRefundMsg("查無虛擬帳號資料");
-							}
-						}
+			if(StringUtils.isNotEmpty(resultVo.getResult())) {
+				vo.setRepaymentAmt(resultVo.getResult());
+				CspResultVo resultVo2 = getCsp003Api(reuqest.getLipmInsuNo());
+				if(StringUtils.isNotEmpty(resultVo2.getResult())) {
+					vo.setRefundAccount(resultVo2.getResult());
+				}else {
+					if(StringUtils.isNotEmpty(resultVo2.getErrorMsg())) {
+						vo.setRefundMsg(resultVo2.getErrorMsg());
 					}else {
 						vo.setRefundMsg("查無虛擬帳號資料");
 					}
-				}else {
-					if(StringUtils.isNotEmpty(resultVo.getErrorMsg())) {
-						vo.setRepaymentMsg(resultVo.getErrorMsg());
-					}else {
-						vo.setRepaymentMsg("查無還款金額資料");
-					}
 				}
 			}else {
-				vo.setRepaymentMsg("查無還款金額資料");
-			}		
-		}	
+				if(StringUtils.isNotEmpty(resultVo.getErrorMsg())) {
+					vo.setRepaymentMsg(resultVo.getErrorMsg());
+				}else {
+					vo.setRepaymentMsg("查無還款金額資料");
+				}
+			}
+		}
 		return vo;
 	}
 	

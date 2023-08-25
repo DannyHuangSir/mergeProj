@@ -120,17 +120,9 @@ public class ChangePasswordController extends BaseController {
 			//備註
 			String changePasswordSuccess = getParameterValue(ApConstants.PAGE_WORDING_CATEGORY_CODE, OnlineChangeNoteUtil.CHANGE_PD_SUCCESS_CODE);
 			SuccessMsg("changePassword", changePasswordSuccess);
-			
-			String loginUserType = getUserType();
-			if ("member".equals(loginUserType)) {
-				//userId = getUserId();
-				UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
-				userDetail.setLastChangPasswordDate(Calendar.getInstance().getTime());
-			} else {
-				//admin or agent
-				UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
-				userDetail.setLastChangPasswordDate(Calendar.getInstance().getTime());
-			}
+			//admin or agent
+			UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
+			userDetail.setLastChangPasswordDate(Calendar.getInstance().getTime());
 		} catch (Exception e) {
 			logger.error("changePasswordSuccess error! {}", e);
 		}

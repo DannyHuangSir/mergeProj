@@ -83,7 +83,9 @@ public class TransDnsServiceImpl implements ITransDnsService{
 		//寫入狀態歷程
 		if(addResult>0) {
 			hisVo.setTransNum(transNum);
-   			hisVo.setStatus(transDnsVo.getStatus());
+			if (transDnsVo != null) {
+	   			hisVo.setStatus(transDnsVo.getStatus());
+			}
 			onlineChangeDao.addTransStatusHistory(hisVo);
 		}
 		

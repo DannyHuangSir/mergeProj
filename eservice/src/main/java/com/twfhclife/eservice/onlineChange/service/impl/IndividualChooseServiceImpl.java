@@ -110,7 +110,7 @@ public class IndividualChooseServiceImpl implements IndividualChooseService {
 
 			Date bnagBirth = changeDate(licohilVo.getBnagBirth());
 			Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(individualChooseVo.getBirthDate());
-			if (bnagBirth.compareTo(birthDate) != 0) {
+			if (bnagBirth == null || birthDate == null || bnagBirth.compareTo(birthDate) != 0) {
 				return OnlineChangMsgUtil.CHECK_SCREEN_DATA;
 			}
 		} catch (Exception e) {

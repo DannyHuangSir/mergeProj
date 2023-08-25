@@ -50,9 +50,11 @@ public class UserPolicyListController extends BaseUserDataController {
 			if (policyListResponse != null) {
 				addAttribute("invtPolicyList",  policyListResponse.getInvtPolicyList());
 				addAttribute("benefitPolicyList", policyListResponse.getBenefitPolicyList());
+				logger.info(" 投資型==========policyListResponse.getInvtPolicyList(){}",  policyListResponse.getInvtPolicyList());
+				logger.info(" 保障型==========policyListResponse.getBenefitPolicyList(){}",  policyListResponse.getBenefitPolicyList());
+			} else {
+				logger.warn("mylist1 getPolicyListByUser ---> policyListResponse is null");
 			}
-			logger.info(" 投資型==========policyListResponse.getInvtPolicyList(){}",  policyListResponse.getInvtPolicyList());
-			logger.info(" 保障型==========policyListResponse.getBenefitPolicyList(){}",  policyListResponse.getBenefitPolicyList());
 		} catch (Exception e) {
 			logger.error("Unable to get data from mylist1: {}", ExceptionUtils.getStackTrace(e));
 			addDefaultSystemError();

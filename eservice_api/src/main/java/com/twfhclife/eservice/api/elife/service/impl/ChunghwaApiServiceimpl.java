@@ -86,11 +86,9 @@ public class ChunghwaApiServiceimpl implements IChunghwaApiService{
 				return list;
 			}else {
 				logger.info("=======================Get CHUNGHWA_API_URL END=========================");
-				response.close();
 				client.close();
 				return null;
 			}
-		
 		} catch (KeyManagementException e) {
 			logger.info("=======================Get CHUNGHWA_API_URL Error=========================" + e);
 			return null;

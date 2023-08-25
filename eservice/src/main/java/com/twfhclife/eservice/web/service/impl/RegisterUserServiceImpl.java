@@ -1,6 +1,8 @@
 package com.twfhclife.eservice.web.service.impl;
 
 import java.security.InvalidParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -137,12 +139,12 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 	}
 
 	@Override
-	public List<RegisterQuestionVo> getPolicyQues(String rocId, String policyNo) {
+	public List<RegisterQuestionVo> getPolicyQues(String rocId, String policyNo) throws NoSuchAlgorithmException {
 		List<RegisterQuestionVo> questions = new ArrayList<RegisterQuestionVo>();
 		List<ParameterVo> policyQuesList = parameterDao.getParameterByCategoryCode("eservice",
 				ApConstants.REGISTER_QUESTION_PARAMETER_CATEGORY_CODE);
 
-		Random rnd = new Random();
+		Random rnd = SecureRandom.getInstanceStrong();
 
 		for (int i = 0; i < 2; i++) {
 			int rndNm = rnd.nextInt(policyQuesList.size());
@@ -239,7 +241,7 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		return retMap;
 	}
 
-	public Map<String, String> getAnswer(String rocId, String policyNo, String questionNo, String questionValue) {
+	public Map<String, String> getAnswer(String rocId, String policyNo, String questionNo, String questionValue) throws NoSuchAlgorithmException {
 		Map<String, String> map = new HashMap<String, String>();
 		if (questionNo.equals("QUESTION1")) {
 			// 請問您在臺銀目前是否有保單貸款？
@@ -268,7 +270,7 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		} else if (questionNo.equals("QUESTION4")) {
 			// 請輸入被保險人XXX的出生日期？
 			List<InsuredVo> Insureds = userDao.getInsByProPolicyNo(policyNo);
-			Random rnd = new Random();
+			Random rnd = SecureRandom.getInstanceStrong();
 			InsuredVo insured = Insureds.get(rnd.nextInt(Insureds.size()));
 //			questionValue = questionValue.replace("XXX", insured.getInsuredName());
 			//名字不秀
@@ -281,7 +283,7 @@ public class RegisterUserServiceImpl implements IRegisterUserService {
 		} else if (questionNo.equals("QUESTION5")) {
 			// 請輸入被保險人XXX的身分證字號後四碼數字
 			List<InsuredVo> Insureds = userDao.getInsByProPolicyNo(policyNo);
-			Random rnd = new Random();
+			Random rnd = SecureRandom.getInstanceStrong();
 			InsuredVo insured = Insureds.get(rnd.nextInt(Insureds.size()));
 			questionValue = questionValue.replace("XXX", "");//107/08/30改為不顯示姓名
 			map.put("value", questionValue);

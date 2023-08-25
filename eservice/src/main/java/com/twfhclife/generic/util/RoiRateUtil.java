@@ -55,9 +55,11 @@ public class RoiRateUtil {
 		*/
 		values[0] = roiRate;
 		values[1] = numerator; // MathUtil.mul(netAmt, ntdVal); // 平均成本
-		values[2] = denominator;
+
+		//2023.8.25 tangx sonar bugfix values[2] allways 0
+//		values[2] = denominator;
+
 		values[2] = new BigDecimal(0);
-		
 		return values;
 	}
 

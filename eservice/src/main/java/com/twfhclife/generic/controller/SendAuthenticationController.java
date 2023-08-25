@@ -89,7 +89,7 @@ public class SendAuthenticationController extends BaseController {
 			if(mobile!=null && !"".equals(mobile.trim())){
 				mobiles.append(mobile.trim());
 			}
-			if(newMobile!=null && !"".equals(newMobile.trim())  && !mobile.equals(newMobile)){
+			if(StringUtils.isNotBlank(newMobile) && !StringUtils.equals(mobile, newMobile)){
 				if(!StringUtils.isBlank(mobile)){
 				mobiles.append(";");
 				mobiles.append(newMobile);

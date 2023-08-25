@@ -553,7 +553,7 @@ public class TravelPolicyServiceImpl implements ITravelPolicyService {
 			int a = 17;
 			int lenInsuredId = insuredId.length();
 			for (int i=0; i<lenInsuredId; i++) {
-				rptUtils.txt(insuredId.substring(i, i + 1), 11, 1, 405 + (a * i), 638);
+				rptUtils.txt(insuredId.substring(i, i + 1), 11, 1, (float) (405 + (a * i)), 638);
 			}
 			// 性別
 			if (lenInsuredId == 10) {
@@ -621,7 +621,7 @@ public class TravelPolicyServiceImpl implements ITravelPolicyService {
 			int x = 17;
 			int len = rocId.length();
 			for (int i=0; i<len; i++) {
-				rptUtils.txt(rocId.substring(i, i + 1), 11, 1, 405 + (x * i), 536);
+				rptUtils.txt(rocId.substring(i, i + 1), 11, 1, (float) (405 + (x * i)), 536);
 			}
 			// 性別
 			if (len == 10) {
@@ -707,7 +707,7 @@ public class TravelPolicyServiceImpl implements ITravelPolicyService {
 				if (beneficiary.getCountry().indexOf(" ") != -1) {
 					int length = beneficiary.getCountry().split(" ").length;
 					for (int i=0; i<length; i++) {
-						rptUtils.txt(beneficiary.getCountry().split(" ")[i], 10, 1, 382, 280-(i*9));
+						rptUtils.txt(beneficiary.getCountry().split(" ")[i], 10, 1, 382, (float)(280-(i*9)));
 					}
 				} else {
 					rptUtils.txt(beneficiary.getCountry(), 10, 1, 383, 280);

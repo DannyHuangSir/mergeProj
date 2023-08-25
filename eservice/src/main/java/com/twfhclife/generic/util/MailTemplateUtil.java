@@ -26,28 +26,36 @@ public class MailTemplateUtil {
 	 * @param file
 	 * @return
 	 */
-	public static String read(File file) throws IOException{
+	public static String read(File file) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		FileInputStream fis = null;
 		String readLine = null;
 		try {
 			fis = new FileInputStream(file);
-			if(fis.available() > 0) {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
-				while((readLine = reader.readLine()) != null) {
-					sb.append(readLine).append('\n');
-				}
-				if(reader != null) {
-					reader.close();
+			if (fis.available() > 0) {
+				BufferedReader reader = null;
+				try {
+					reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
+					while ((readLine = reader.readLine()) != null) {
+						sb.append(readLine).append('\n');
+					}
+				} catch (Exception e) {
+					logger.error("read error:", e);
+					throw e;
+				} finally {
+					if (reader != null) {
+						reader.close();
+					}
 				}
 			}
-		} catch(IOException e) {
+		} catch (IOException e) {
 			logger.error("read error:", e);
 			throw e;
 		} finally {
-			if(fis != null) {
+			if (fis != null) {
 				fis.close();
 			}
+
 		}
 		return sb.toString();
 	}

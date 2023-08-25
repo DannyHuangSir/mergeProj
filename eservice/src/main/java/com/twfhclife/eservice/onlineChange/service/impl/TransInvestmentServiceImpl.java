@@ -380,8 +380,8 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             if (ratio==null) {
                 ratio = 0;
             }
-            transFundConversionVo.setValue(new BigDecimal(number));
-            transFundConversionVo.setRatio(new BigDecimal(ratio));
+            transFundConversionVo.setValue(BigDecimal.valueOf(number));
+            transFundConversionVo.setRatio(BigDecimal.valueOf(ratio));
             transFundConversionVo.setInvestmentType(TransTypeUtil.INVESTMENT_STATUS_IN);
             transFundConversionVo.setInvtName(in.getInvtName());
             inTransFundConversionVosList.add(transFundConversionVo);
@@ -754,14 +754,16 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 		try {
 		IndividualVo vo= individualDao.getIndividualData(licohilVo.getLipmId());
 		if(vo == null) {
-		vo.setRocId(licohilVo.getLipmId());
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		String bnagBirth = format.format(licohilVo.getBnagBirth());
-		vo.setBirthDate(bnagBirth);
-		vo.setName(licohilVo.getLipmName1());
-		vo.setSex(licohilVo.getSex());
-		vo.setRiskAttr(licohilVo.getInveAttr());
-		vo.setIndividualId(UUID.randomUUID().toString());
+            //2023.8.25 tangx sonar bugfix add vo = new IndividualVo();
+            vo = new IndividualVo();
+            vo.setRocId(licohilVo.getLipmId());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String bnagBirth = format.format(licohilVo.getBnagBirth());
+            vo.setBirthDate(bnagBirth);
+            vo.setName(licohilVo.getLipmName1());
+            vo.setSex(licohilVo.getSex());
+            vo.setRiskAttr(licohilVo.getInveAttr());
+            vo.setIndividualId(UUID.randomUUID().toString());
 			individualDao.insertIndividual(vo);
 		}else {
 			vo.setRiskAttr(licohilVo.getInveAttr());

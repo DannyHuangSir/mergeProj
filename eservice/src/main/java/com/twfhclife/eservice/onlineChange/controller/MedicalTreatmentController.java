@@ -746,7 +746,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				claimVo.setMedicalInfo(medicalInfoVos);
 			}
 
-			logger.error(" MedicalTreatmentController  -- TransInsuranceClaimVo is: {}", claimVo.toString());
+			logger.error(" MedicalTreatmentController  -- TransInsuranceClaimVo is: {}", new Gson().toJson(claimVo));
 			//獲取保險公司明顯
 			List<Hospital> hospitalList = iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, null);
 

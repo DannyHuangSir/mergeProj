@@ -41,16 +41,15 @@ public class MailTemplateUtil {
 		StringBuilder sb = new StringBuilder();
 		FileInputStream fis = null;
 		String readLine = null;
+		BufferedReader reader = null;
 		try {
 			fis = new FileInputStream(file);
 			if(fis.available() > 0) {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
+				reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
 				while((readLine = reader.readLine()) != null) {
 					sb.append(readLine).append('\n');
 				}
-				if(reader != null) {
-					reader.close();
-				}
+
 			}
 		} catch(IOException e) {
 			logger.error("read error:", e);
@@ -58,6 +57,9 @@ public class MailTemplateUtil {
 		} finally {
 			if(fis != null) {
 				fis.close();
+			}
+			if(reader != null) {
+				reader.close();
 			}
 		}
 		return sb.toString();

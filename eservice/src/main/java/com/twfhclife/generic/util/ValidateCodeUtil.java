@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Random;
 
@@ -79,46 +80,52 @@ public class ValidateCodeUtil {
 		buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = buffImg.createGraphics();
 		// 生成隨機數
-		Random random = new Random();
-		// 將圖像填充為白色
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, width, height);
-		// 創建字體
-		ImgFontByte imgFont = new ImgFontByte();
-		Font font = imgFont.getFont(fontHeight);
-		g.setFont(font);
 
-		for (int i = 0; i < lineCount; i++) {
-			int xs = random.nextInt(width);
-			int ys = random.nextInt(height);
-			int xe = xs + random.nextInt(width / 8);
-			int ye = ys + random.nextInt(height / 8);
-			red = random.nextInt(255);
-			green = random.nextInt(255);
-			blue = random.nextInt(255);
-			g.setColor(new Color(red, green, blue));
-			g.drawLine(xs, ys, xe, ye);
-		}
+		try {
+			Random random = SecureRandom.getInstanceStrong();
+			// 將圖像填充為白色
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, width, height);
+			// 創建字體
+			ImgFontByte imgFont = new ImgFontByte();
+			Font font = imgFont.getFont(fontHeight);
+			g.setFont(font);
 
-		// randomCode記錄隨機產生的驗證碼
-		StringBuffer randomCode = new StringBuffer();
-		// 隨機產生codeCount個字符的驗證碼。
-		for (int i = 0; i < codeCount; i++) {
-			String strRand = String.valueOf(codeSequence[random.nextInt(codeSequence.length)]);
-			// 產生隨機的顏色值，讓輸出的每個字符的顏色值都將不同
+			for (int i = 0; i < lineCount; i++) {
+				int xs = random.nextInt(width);
+				int ys = random.nextInt(height);
+				int xe = xs + random.nextInt(width / 8);
+				int ye = ys + random.nextInt(height / 8);
+				red = random.nextInt(255);
+				green = random.nextInt(255);
+				blue = random.nextInt(255);
+				g.setColor(new Color(red, green, blue));
+				g.drawLine(xs, ys, xe, ye);
+			}
+
+			// randomCode記錄隨機產生的驗證碼
+			StringBuffer randomCode = new StringBuffer();
+			// 隨機產生codeCount個字符的驗證碼。
+			for (int i = 0; i < codeCount; i++) {
+				String strRand = String.valueOf(codeSequence[random.nextInt(codeSequence.length)]);
+				// 產生隨機的顏色值，讓輸出的每個字符的顏色值都將不同
 			/*
 			red = random.nextInt(255);
 			green = random.nextInt(255);
 			blue = random.nextInt(255);
 			g.setColor(new Color(red, green, blue));
 			*/
-			g.setColor(new Color(0, 0, 0));
-			g.drawString(strRand, (i + 1) * x, codeY);
-			// 將產生的四個隨機數組合在一起。
-			randomCode.append(strRand);
+				g.setColor(new Color(0, 0, 0));
+				g.drawString(strRand, (i + 1) * x, codeY);
+				// 將產生的四個隨機數組合在一起。
+				randomCode.append(strRand);
+			}
+			// 將四位數字的驗證碼保存到Session中。
+			code = randomCode.toString();
+		} catch (Exception e) {
+			logger.error("ValidateCodeUtil createCode error: {}" + e);
+			code = "8888";
 		}
-		// 將四位數字的驗證碼保存到Session中。
-		code = randomCode.toString();
 	}
 
 	public void write(String path) throws IOException {

@@ -996,7 +996,7 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 			} else {
 				x.setFileOrPng(filePath);
 			}
-			if (fileBase64 != null && fileBase64 != "") {
+			if (StringUtils.isNotBlank(fileBase64)) {
 				x.setOriginFileBase64(fileBase64);
 				byte[] decode = Base64.getDecoder().decode(fileBase64);
 				//获取文件类型
@@ -1027,7 +1027,7 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 							e.printStackTrace();
 						}
 					}
-			} else if (filePath != null && filePath != "") {
+			} else if (StringUtils.isNotBlank(filePath)) {
 				File file = new File(filePath);
 				if (file.exists()) {
 					String fileToBase64 = this.converFiestFileToBase64Str(filePath);

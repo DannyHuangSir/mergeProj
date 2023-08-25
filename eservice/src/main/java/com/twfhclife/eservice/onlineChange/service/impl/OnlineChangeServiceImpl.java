@@ -347,7 +347,7 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 			int defaultX = 500;
 			for (int i=0; i<list.size(); i++) {
 				TransEndorsementVo vo1 = list.get(i);
-				rptUtils.txt(vo1.getTextContent(), 12, 1, 105, defaultX - (offset * (i + 1)));
+				rptUtils.txt(vo1.getTextContent(), 12, 1, 105, (float)(defaultX - (offset * (i + 1))));
 			}
 			
 			pdfByte = rptUtils.toPdf();
@@ -365,7 +365,7 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 	@Override
 	public boolean checkFileSize(String transNum, List<MultipartFile> uploadFiles, String limitSizeStr) {
 		long totalSize = 0;
-		long limitSize = Integer.parseInt(limitSizeStr) * 1000000;
+		long limitSize = Long.parseLong(limitSizeStr) * 1000000;
 		for (MultipartFile file : uploadFiles) {
 			if (file.getSize() > limitSize) {
 				return false;

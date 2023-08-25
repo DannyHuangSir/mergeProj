@@ -1,104 +1,70 @@
 package com.twfhclife.generic.utils;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 public class AesUtil {
 
-    private static final String DEFAULT_CHARSET = "UTF-8";
-    private static final String KEY_ALGORITHM = "AES";
-    private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
+    private static final String AES = "eservice_lipei2";
+    /**
+     * 初始向量IV, 初始向量IV的长度规定为128位16个字节, 初始向量的来源为随机生成.
+     */
+    private static GCMParameterSpec gcMParameterSpec;
 
     /**
-     * 加盐内容
+     * 加密解密算法/加密模式/填充方式
      */
-    private static final String SALTPRE = "TEST";
+    private static final String CIPHER_ALGORITHM = "AES/GCM/NoPadding";
 
-    /**
-     * AES 加密操作
-     *
-     * @param content  待加密内容
-     * @param password 加密密码
-     * @return 返回Base64转码后的加密数据
-     */
-    public static String encrypt(String content, String password) throws Exception {
-        Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
-        byte[] byteContent = content.getBytes(DEFAULT_CHARSET);
-        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(password));
-        byte[] result = cipher.doFinal(byteContent);
-        return parseByte2HexStr(result);
+    static {
+        SecureRandom random = new SecureRandom();
+        byte[] bytesIV = new byte[16];
+        random.nextBytes(bytesIV);
+        gcMParameterSpec = new GCMParameterSpec(128, bytesIV);
+        java.security.Security.setProperty("crypto.policy", "unlimited");
     }
 
     /**
-     * AES 解密操作
-     *
-     * @param content
-     * @param password
-     * @return
+     * AES加密
      */
-    public static String decrypt(String content, String password) throws Exception {
-        //实例化
-        Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
-        //使用密钥初始化，设置为解密模式
-        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(password));
-        //执行操作
-        byte[] result = cipher.doFinal(parseHexStr2Byte(content));
-        return new String(result, DEFAULT_CHARSET);
-    }
-
-    /**
-     * 生成加密秘钥
-     *
-     * @return
-     */
-    private static SecretKeySpec getSecretKey(final String password) throws Exception {
-        //返回生成指定算法密钥生成器的 KeyGenerator 对象
-        KeyGenerator kg = null;
-        kg = KeyGenerator.getInstance(KEY_ALGORITHM);
-        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-        secureRandom.setSeed(password.getBytes());
-        kg.init(128, secureRandom);
-        SecretKey secretKey = kg.generateKey();
-        return new SecretKeySpec(secretKey.getEncoded(), KEY_ALGORITHM);
-    }
-
-    /**
-     * 将二进制转换成16进制
-     *
-     * @param buf
-     * @return
-     */
-    public static String parseByte2HexStr(byte buf[]) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < buf.length; i++) {
-            String hex = Integer.toHexString(buf[i] & 0xFF);
-            if (hex.length() == 1) {
-                hex = '0' + hex;
-            }
-            sb.append(hex.toUpperCase());
+    public static String decrypt(String key, String content) {
+        try {
+            SecretKey secretKey = new SecretKeySpec(key.getBytes(), AES);
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcMParameterSpec);
+            // 获取加密内容的字节数组(这里要设置为utf-8)不然内容中如果有中文和英文混合中文就会解密为乱码1
+            byte[] byteEncode = content.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            // 根据密码器的初始化方式加密
+            byte[] byteAes = cipher.doFinal(byteEncode);
+            // 将加密后的数据转换为字符串
+            return DatatypeConverter.printHexBinary(byteAes);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return sb.toString();
+        return null;
     }
 
     /**
-     * 将16进制转换为二进制
-     *
-     * @param hexStr
-     * @return
+     * AES解密
      */
-    public static byte[] parseHexStr2Byte(String hexStr) {
-        if (hexStr.length() < 1) {
-            return null;
+    public static String encrypt(String key, String content) {
+        try {
+            SecretKey secretKey = new SecretKeySpec(key.getBytes(), AES);
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+            cipher.init(javax.crypto.Cipher.DECRYPT_MODE, secretKey, gcMParameterSpec);
+            // 将加密并编码后的内容解码成字节数组
+            byte[] byteContent = DatatypeConverter.parseHexBinary(content);
+            // 解密
+            byte[] byteDecode = cipher.doFinal(byteContent);
+            return new String(byteDecode, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        byte[] result = new byte[hexStr.length() / 2];
-        for (int i = 0; i < hexStr.length() / 2; i++) {
-            int high = Integer.parseInt(hexStr.substring(i * 2, i * 2 + 1), 16);
-            int low = Integer.parseInt(hexStr.substring(i * 2 + 1, i * 2 + 2), 16);
-            result[i] = (byte) (high * 16 + low);
-        }
-        return result;
+        return null;
     }
 }
