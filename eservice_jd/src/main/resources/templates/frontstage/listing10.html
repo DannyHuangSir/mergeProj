@@ -228,7 +228,7 @@
 					}
 					if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
 						rate = '1';
-					} if (oRow.exchRate == null || oRow.exchRate == 0) {
+					} else if (oRow.exchRate == null || oRow.exchRate == 0) {
 						rate = '--';
 					} else {
 						rate = showNumberPointValue(oRow.exchRate);
