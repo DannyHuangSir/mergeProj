@@ -357,9 +357,10 @@
         <result column="PRPA_RCP_DATE" property="rcpDate"/>
         <result column="PRPA_PAAB_AMT" property="paabAmt"/>
         <result column="PRPA_ACT_AMT" property="actAmt"/>
+        <result column="PREM_YEAR" property="premYear"/>
         <result column="PRPA_RCP_CODE" property="rcpCode"/>
-        <result column="PRPA_DESC" property="desc"/>
         <result column="PRPK_RCP_TYPE_CODE" property="paymentCode"/>
+        <result column="PRPA_PREM_1" property="prpaPrem"/>
     </resultMap>
 
     <select id="getPaymentRecord" resultMap="PaymentRecordMap">
@@ -370,7 +371,7 @@
                     A.PRPA_PAAB_AMT,
                     A.PRPA_ACT_AMT,
                     A.PRPA_RCP_CODE,
-                    CONCAT('第', CONCAT(A.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN A.PRPA_RCP_CODE = N'A' THEN B.LIPI_PREM_YEAR * 1 WHEN A.PRPA_RCP_CODE = N'S' THEN B.LIPI_PREM_YEAR * 2 WHEN A.PRPA_RCP_CODE = N'Q' THEN B.LIPI_PREM_YEAR * 4 WHEN A.PRPA_RCP_CODE = N'M' THEN B.LIPI_PREM_YEAR * 12 WHEN A.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC,
+                    B.LIPI_PREM_YEAR PREM_YEAR,
                     A.PRPA_RCP_BATCH,
                     A.PRPA_DEAL_NO,
                     A.PRPA_PREM_1
@@ -384,7 +385,7 @@
                     A.PRPA_PAAB_AMT,
                     A.PRPA_ACT_AMT,
                     A.PRPA_RCP_CODE,
-                    '第0期/共0期' PRPA_DESC,
+                    0 PREM_YEAR,
                     A.PRPA_RCP_BATCH,
                     A.PRPA_DEAL_NO,
                     A.PRPA_PREM_1
@@ -397,7 +398,7 @@
                        A.PRPA_PAAB_AMT,
                        A.PRPA_ACT_AMT,
                        A.PRPA_RCP_CODE,
-                       CONCAT('第', CONCAT(A.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN A.PRPA_RCP_CODE = N'A' THEN B.NEPI_PREM_YEAR * 1 WHEN A.PRPA_RCP_CODE = N'S' THEN B.NEPI_PREM_YEAR * 2 WHEN A.PRPA_RCP_CODE = N'Q' THEN B.NEPI_PREM_YEAR * 4 WHEN A.PRPA_RCP_CODE = N'M' THEN B.NEPI_PREM_YEAR * 12 WHEN A.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC,
+                       B.NEPI_PREM_YEAR PREM_YEAR,
                        A.PRPA_RCP_BATCH,
                        A.PRPA_DEAL_NO,
                        A.PRPA_PREM_1

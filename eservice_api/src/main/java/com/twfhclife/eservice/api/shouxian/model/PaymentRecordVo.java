@@ -8,6 +8,25 @@ public class PaymentRecordVo {
     private String actAmt;
     private String rcpCode;
 
+    private Integer premYear;
+    private String prpaPrem;
+
+    public String getPrpaPrem() {
+        return prpaPrem;
+    }
+
+    public void setPrpaPrem(String prpaPrem) {
+        this.prpaPrem = prpaPrem;
+    }
+
+    public Integer getPremYear() {
+        return premYear;
+    }
+
+    public void setPremYear(Integer premYear) {
+        this.premYear = premYear;
+    }
+
     private String paymentCode;
 
     public String getRcpDate() {
