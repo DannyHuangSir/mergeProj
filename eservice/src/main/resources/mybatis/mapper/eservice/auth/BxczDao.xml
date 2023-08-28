@@ -44,6 +44,13 @@
 		AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC
 	</select>
 
+	<update id="updateSignStatus418">
+		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD
+		SET ID_VERIFY_STATUS = #{idVerifyStatus}, ID_VERIFY_TIME = SYSDATETIME(),
+		SIGN_STATUS = #{signStatus}, SIGN_TIME = SYSDATETIME()
+		WHERE ACTION_ID = #{actionId}
+	</update>
+
 	<select id="getSignFileByFileId" resultType="string">
 		SELECT TOP 1 CONTENT_BASE64 FROM ESERVICE.DBO.BXCZ_SIGN_FILEDATA WHERE FILE_ID = #{signFileId}
 	</select>
