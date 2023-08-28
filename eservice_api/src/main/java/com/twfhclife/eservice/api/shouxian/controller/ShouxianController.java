@@ -14,6 +14,7 @@ import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.domain.ApiResponseObj;
 import com.twfhclife.generic.domain.ReturnHeader;
 import com.twfhclife.generic.service.IOptionService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -162,7 +163,47 @@ public class ShouxianController extends BaseController {
                 policyBase.setBankCode(String.valueOf(filter.get(0).get("value")));
             }
             resp.setPolicyBaseVo(policyBase);
-            resp.setPaymentRecords(shouxianService.getPaymentRecord(vo.getPolicyNo()));
+            List<PaymentRecordVo> paymentRecords = shouxianService.getPaymentRecord(vo.getPolicyNo());
+            if (CollectionUtils.isNotEmpty(paymentRecords)) {
+                int period = 1;
+                String oldPeriod = null;
+                for (PaymentRecordVo paymentRecord : paymentRecords) {
+                    StringBuilder sb = new StringBuilder();
+                    if (StringUtils.isBlank(oldPeriod) || StringUtils.equals(oldPeriod, paymentRecord.getPrpaPrem())) {
+                        sb.append("第").append(period).append("期");
+                    } else {
+                        period = 1;
+                        sb.append("第").append(period).append("期");
+                    }
+                    oldPeriod = paymentRecord.getPrpaPrem();
+                    sb.append("/共");
+                    int premYear = paymentRecord.getPremYear() == null ? 0 : paymentRecord.getPremYear();
+                    switch (paymentRecord.getRcpCode()) {
+                        case "A":
+                            sb.append(premYear * 1);
+                            break;
+                        case "S":
+                            sb.append(premYear * 2);
+                            break;
+                        case "Q":
+                            sb.append(premYear * 4);
+                            break;
+                        case "M":
+                            sb.append(premYear * 12);
+                            break;
+                        case "T":
+                            sb.append(1);
+                            break;
+                        default:
+                            sb.append(0);
+                    }
+                    sb.append("期");
+                    paymentRecord.setDesc(sb.toString());
+                    period++;
+                }
+            }
+
+            resp.setPaymentRecords(paymentRecords);
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);
