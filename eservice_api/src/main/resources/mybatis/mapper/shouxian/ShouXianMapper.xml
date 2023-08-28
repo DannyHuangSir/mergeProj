@@ -357,9 +357,10 @@
         <result column="PRPA_RCP_DATE" property="rcpDate"/>
         <result column="PRPA_PAAB_AMT" property="paabAmt"/>
         <result column="PRPA_ACT_AMT" property="actAmt"/>
+        <result column="PREM_YEAR" property="premYear"/>
         <result column="PRPA_RCP_CODE" property="rcpCode"/>
-        <result column="PRPA_DESC" property="desc"/>
         <result column="PRPK_RCP_TYPE_CODE" property="paymentCode"/>
+        <result column="PRPA_PREM_1" property="prpaPrem"/>
     </resultMap>
 
     <select id="getPaymentRecord" resultMap="PaymentRecordMap">
@@ -370,7 +371,7 @@
                     A.PRPA_PAAB_AMT,
                     A.PRPA_ACT_AMT,
                     A.PRPA_RCP_CODE,
-                    CONCAT('第', CONCAT(A.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN A.PRPA_RCP_CODE = N'A' THEN B.LIPI_PREM_YEAR * 1 WHEN A.PRPA_RCP_CODE = N'S' THEN B.LIPI_PREM_YEAR * 2 WHEN A.PRPA_RCP_CODE = N'Q' THEN B.LIPI_PREM_YEAR * 4 WHEN A.PRPA_RCP_CODE = N'M' THEN B.LIPI_PREM_YEAR * 12 WHEN A.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC,
+                    B.LIPI_PREM_YEAR PREM_YEAR,
                     A.PRPA_RCP_BATCH,
                     A.PRPA_DEAL_NO,
                     A.PRPA_PREM_1
@@ -384,7 +385,7 @@
                     A.PRPA_PAAB_AMT,
                     A.PRPA_ACT_AMT,
                     A.PRPA_RCP_CODE,
-                    '第0期/共0期' PRPA_DESC,
+                    0 PREM_YEAR,
                     A.PRPA_RCP_BATCH,
                     A.PRPA_DEAL_NO,
                     A.PRPA_PREM_1
@@ -397,7 +398,7 @@
                        A.PRPA_PAAB_AMT,
                        A.PRPA_ACT_AMT,
                        A.PRPA_RCP_CODE,
-                       CONCAT('第', CONCAT(A.PRPA_TMS, CONCAT('期/共', CONCAT( CASE WHEN A.PRPA_RCP_CODE = N'A' THEN B.NEPI_PREM_YEAR * 1 WHEN A.PRPA_RCP_CODE = N'S' THEN B.NEPI_PREM_YEAR * 2 WHEN A.PRPA_RCP_CODE = N'Q' THEN B.NEPI_PREM_YEAR * 4 WHEN A.PRPA_RCP_CODE = N'M' THEN B.NEPI_PREM_YEAR * 12 WHEN A.PRPA_RCP_CODE = N'T' THEN 1 END, '期' )))) PRPA_DESC,
+                       B.NEPI_PREM_YEAR PREM_YEAR,
                        A.PRPA_RCP_BATCH,
                        A.PRPA_DEAL_NO,
                        A.PRPA_PREM_1
@@ -500,11 +501,7 @@
 
     <select id="getIncomeDistribution" resultMap="IncomeDistributionMap">
         SELECT DISTINCT lin.INVT_NAME, lin.INVT_NO, lcp.CLUP_TR_CODE,
-        CASE
-        WHEN lcp.CLUP_DEDT_INPR != 0 THEN  lcp.CLUP_EXPE_UNITS * (lcp.CLUP_INPR_RATE - lcp.CLUP_OW_UNIT_INT ) / lcp.CLUP_DEDT_INPR
-        ELSE 0
-        END AS UNITS,
-        lcp.CLUP_EXPE_NTD,
+        lcp.CLUP_NEW_UNITS UNITS,
         decode(nvl(lcp.CLUP_F_PAY_DATE,''), '', '', to_char(lcp.CLUP_F_PAY_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official'''))  CLUP_F_PAY_DATE,
         decode(nvl(lcp.CLUP_TR_DATE,''), '', '', to_char(lcp.CLUP_TR_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
@@ -530,35 +527,38 @@
 
     <select id="getFundTransactionPageList" resultMap="FundTransactionListMap">
         SELECT * FROM (
-        SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
-        CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
-        ELSE SADP_TR_UNITS
-        END SADP_TR_UNITS,
-        lti.TRHI_EXCH_RATE EXCH_RATE,
-        lti.TRHI_INPR_RATE NET_VALUE,
-        lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
-        FROM LISADP_ES lsp
-        LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
-        <where>
-            AND lsp.SADP_INSU_NO = #{policyNo}
-            <if test="trCode != null">
-                <choose>
-                    <when test="trCode == 'INV101'">
-                        AND lsp.SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')
-                    </when>
-                    <otherwise>
-                        AND lsp.SADP_TR_CODE = #{trCode}
-                    </otherwise>
-                </choose>
-            </if>
-            <if test="startDate != null">
-                AND lsp.SADP_TR_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
-            </if>
-            <if test="endDate != null">
-                AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
-            </if>
-        </where>
+        SELECT rownum ROW_NUM, A.* FROM (
+            SELECT DISTINCT lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
+            CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
+            ELSE SADP_TR_UNITS
+            END SADP_TR_UNITS,
+            lti.TRHI_EXCH_RATE EXCH_RATE,
+            lti.TRHI_INPR_RATE NET_VALUE,
+            lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
+            FROM LISADP_ES lsp
+            LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
+            LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
+            <where>
+                AND lsp.SADP_INSU_NO = #{policyNo}
+                <if test="trCode != null">
+                    <choose>
+                        <when test="trCode == 'INV101'">
+                            AND lsp.SADP_TR_CODE IN ('INV101', 'INV102', 'INV103')
+                        </when>
+                        <otherwise>
+                            AND lsp.SADP_TR_CODE = #{trCode}
+                        </otherwise>
+                    </choose>
+                </if>
+                <if test="startDate != null">
+                    AND lsp.SADP_TR_DATE <![CDATA[>=]]> to_date(#{startDate}, 'yyyy/MM/dd')
+                </if>
+                <if test="endDate != null">
+                    AND lsp.SADP_TR_DATE <![CDATA[<=]]> to_date(#{endDate}, 'yyyy/MM/dd')
+                </if>
+            </where>
+            ORDER BY lsp.SADP_TR_DATE DESC
+            ) A
         )
         <if test="pageNum != null and pageSize != null">
             WHERE
@@ -569,16 +569,16 @@
 
     <select id="getFundTransactionTotal" resultType="int">
         SELECT COUNT(*) FROM (
-        SELECT rownum ROW_NUM, lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
-        CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
-        ELSE SADP_TR_UNITS
-        END SADP_TR_UNITS,
-        lti.TRHI_EXCH_RATE EXCH_RATE,
-        lti.TRHI_INPR_RATE NET_VALUE,
-        lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
-        FROM LISADP_ES lsp
-        LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
-        LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
+        SELECT DISTINCT lsp.SADP_TR_DATE, lin.INVT_NAME, lin.INVT_NO, lsp.SADP_TR_CODE,
+            CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
+            ELSE SADP_TR_UNITS
+            END SADP_TR_UNITS,
+            lti.TRHI_EXCH_RATE EXCH_RATE,
+            lti.TRHI_INPR_RATE NET_VALUE,
+            lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
+            FROM LISADP_ES lsp
+            LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
+            LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">
@@ -688,23 +688,8 @@
     </select>
 
     <select id="selectPolicyAmount" resultType="com.twfhclife.eservice.api.shouxian.model.PolicyAmountVo">
-        <![CDATA[
-        SELECT decode(nvl(POEV_EXCH_DATE,''), '', '', to_char(POEV_EXCH_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) policyDate, POEV_SAFP_UNITS * EXCH_SPEBK_PURATE * INPR_UNIT_SOLPRICE policyVal FROM
-        (Select
-        A.POEV_EXCH_DATE,
-        SUBSTR(A.POEV_INVT_NO,3,3),
-        A.POEV_INSU_NO,
-        A.POEV_SAFP_UNITS,
-        (select EXCH_SPEBK_PURATE from
-        (select EXCH_DATE, EXCH_EXCH_CODE, EXCH_SPEBK_PURATE from LIEXCH_ES where EXCH_EXCH_CODE = SUBSTR(A.POEV_INVT_NO,3,3) order by EXCH_DATE DESC)
-        WHERE ROWNUM < 2) as EXCH_SPEBK_PURATE,
-        (select INPR_UNIT_SOLPRICE from
-        (SELECT INPR_UNIT_SOLPRICE FROM LIINPR_ES WHERE INPR_INVT_NO = A.POEV_INVT_NO order by INPR_TRAN_DATE DESC)
-        WHERE ROWNUM < 2) as INPR_UNIT_SOLPRICE
-        from LIPOEV_ES A
-        where A.POEV_INSU_NO = #{policyNo} order by A.POEV_EXCH_DATE DESC)
-        WHERE ROWNUM < 2
-        ]]>
+        SELECT SUM(VAL1_RESE_AMT) policyVal FROM
+            CTCMGR.LIVAL1_ES_FLOWTEST WHERE VAL1_INSU_NO = #{policyNo} GROUP BY VAL1_INSU_NO
     </select>
 
     <select id="selectPolicyTypeList" resultType="hashmap">
