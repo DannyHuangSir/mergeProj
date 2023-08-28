@@ -20,6 +20,13 @@
 		WHERE ACTION_ID = #{vo.actionId}
 	</update>
 
+	<update id="updateSignStatus418">
+		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD
+		SET ID_VERIFY_STATUS = #{idVerifyStatus}, ID_VERIFY_TIME = SYSDATETIME(),
+		SIGN_STATUS = #{signStatus}, SIGN_TIME = SYSDATETIME()
+		WHERE ACTION_ID = #{actionId}
+	</update>
+
 	<select id="getSignRecordByActionId" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
 		SELECT TOP 1 ACTION_ID_START signStart, ACTION_ID_END signEnd, VERIFY_CODE verifyCode, VERIFY_MSG verifyMsg FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE ACTION_ID = #{actionId}
 	</select>

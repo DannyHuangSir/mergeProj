@@ -191,7 +191,12 @@ public class BxczSignServiceImpl implements IBxczSignService {
 		return bxczDao.addSignApiLog(bxczSignApiLog);
 	}
 
-	public boolean checkLiaAPIResponseValue(String responseJsonString,String pathFieldName,String checkValue) throws Exception{
+    @Override
+    public int updateSignStatus418(String actionId, String idVerifyStatus, String signStatus) {
+        return bxczDao.updateSignStatus418(actionId, idVerifyStatus, signStatus);
+    }
+
+    public boolean checkLiaAPIResponseValue(String responseJsonString,String pathFieldName,String checkValue) throws Exception{
 		boolean b = false;
 		if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
 			String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);

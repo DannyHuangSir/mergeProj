@@ -33,4 +33,6 @@ public interface IBxczSignService {
 	String postApi108(String urlApi108, Map<String, String> api108Params) throws Exception;
 
 	int addSignBxczApiRecord(BxczSignApiLog bxczSignApiLog);
+
+    int updateSignStatus418(String actionId, String idVerifyStatus, String signStatus);
 }

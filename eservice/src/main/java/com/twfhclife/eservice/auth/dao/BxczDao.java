@@ -24,4 +24,6 @@ public interface BxczDao {
 
     String getSignFileByFileId(String signFileId);
     int addSignApiLog(@Param("vo") BxczSignApiLog vo);
+
+    int updateSignStatus418(@Param("actionId") String actionId, @Param("idVerifyStatus") String idVerifyStatus, @Param("signStatus") String signStatus);
 }

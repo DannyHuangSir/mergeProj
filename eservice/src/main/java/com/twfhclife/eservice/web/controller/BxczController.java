@@ -120,9 +120,10 @@ public class BxczController extends BaseController {
 
 
     @GetMapping("callBack418")
-    public String callBack418(String idVerifyStatus, String signStatus) {
+    public String callBack418(String actionId, String idVerifyStatus, String signStatus) {
         try {
             addAttribute("msg", SignStatusUtil.signStatusToStr(idVerifyStatus, signStatus));
+            bxczSignService.updateSignStatus418(actionId, idVerifyStatus, signStatus);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
