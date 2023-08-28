@@ -500,11 +500,7 @@
 
     <select id="getIncomeDistribution" resultMap="IncomeDistributionMap">
         SELECT DISTINCT lin.INVT_NAME, lin.INVT_NO, lcp.CLUP_TR_CODE,
-        CASE
-        WHEN lcp.CLUP_DEDT_INPR != 0 THEN  lcp.CLUP_EXPE_UNITS * (lcp.CLUP_INPR_RATE - lcp.CLUP_OW_UNIT_INT ) / lcp.CLUP_DEDT_INPR
-        ELSE 0
-        END AS UNITS,
-        lcp.CLUP_EXPE_NTD,
+        lcp.CLUP_NEW_UNITS UNITS,
         decode(nvl(lcp.CLUP_F_PAY_DATE,''), '', '', to_char(lcp.CLUP_F_PAY_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official'''))  CLUP_F_PAY_DATE,
         decode(nvl(lcp.CLUP_TR_DATE,''), '', '', to_char(lcp.CLUP_TR_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) CLUP_TR_DATE, lcp.CLUP_EXPE_CURR, lcp.CLUP_EXPE_UNITS, lcp.CLUP_INPR_RATE,
         lcp.CLUP_TR_DATE, lcp.CLUP_EXCH_RATE, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXPE_NTD, lcp.CLUP_EXCH_RATE,
