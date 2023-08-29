@@ -207,9 +207,6 @@
 				// 淨值
 				'fnRender': function(oRow) {
 					// 交易類別為基金收益投入時，不顯示淨值、匯率、合計
-					if (emptyIfNull(oRow.sadpTrCode) == 'INV109') {
-						return '--';
-					}
 					if (oRow.netValue == null || oRow.netValue == 0) {
 						return '--';
 					} else {
@@ -223,9 +220,6 @@
 				'fnRender': function(oRow) {
 					// 台幣匯率直接為1
 					var rate = '';
-					if (emptyIfNull(oRow.sadpTrCode) == 'INV109') {
-						rate = '--';
-					}
 					if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
 						rate = '1';
 					} else if (oRow.exchRate == null || oRow.exchRate == 0) {
