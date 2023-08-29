@@ -1,6 +1,7 @@
 package com.twfhclife.jd.web.controller;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.twfhclife.jd.api_model.*;
 import com.twfhclife.jd.controller.BaseController;
 import com.twfhclife.jd.util.ApConstants;
@@ -127,6 +128,7 @@ public class PolicyController extends BaseController {
         try {
             addAttribute("policyNo", policyNo);
             PolicyExpireOfPaymentDataResponse vo = policyService.getPolicyExpireOfPayment(getUserId(), policyNo);
+            logger.info("getPolicyExpireOfPayment: result: {}", new Gson().toJson(vo));
             if (vo != null && CollectionUtils.isNotEmpty(vo.getPayments())) {
                 List<Map<String, String>> bankList = optionService.getBankList();
                 for (ExpireOfPaymentVo vo1 : vo.getPayments()) {
@@ -138,6 +140,7 @@ public class PolicyController extends BaseController {
                     }
                 }
             }
+            logger.info("getPolicyExpireOfPayment: vo.getPolicyBase: {}", new Gson().toJson(vo.getPolicyBase()));
             addAttribute("vo", vo == null ? new PolicyBaseVo() : vo.getPolicyBase());
             addAttribute("payments", vo == null ? Lists.newArrayList() : vo.getPayments());
         } catch (Exception e) {
