@@ -379,6 +379,7 @@ public class ShouxianController extends BaseController {
                         getFundTransactionTotal(policyNo, transType, currency, startDate, endDate);
                 List<JdFundTransactionVo> fundTransactionList = shouxianService.
                         getFundTransactionPageList(policyNo, transType, currency, startDate, endDate, pageNum, pageSize);
+                logger.info("ShouxianController -> getPolicyTransactionHistory : {}, ", new Gson().toJson(fundTransactionList));
                 for (JdFundTransactionVo fundTransactionVo : fundTransactionList) {
                     fundTransactionVo.setPageNum(req.getPageNum());
                     fundTransactionVo.setPageSize(req.getPageSize());
