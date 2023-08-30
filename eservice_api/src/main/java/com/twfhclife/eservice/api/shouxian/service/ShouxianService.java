@@ -250,6 +250,7 @@ public class ShouxianService {
 
     public PortfolioResponse getPortfolioResp(String policyNo, String currency) {
         PortfolioResponse resp = new PortfolioResponse();
+
         List<PortfolioVo> portfolioList = shouXianDao.getPortfolioList(policyNo);
         Date maxDate = null;
         Iterator var4 = portfolioList.iterator();
@@ -320,6 +321,8 @@ public class ShouxianService {
         resp.setPortfolioList(portfolioList);
         if (maxDate != null) {
             resp.setEndDate(DateUtil.westToTwDate(new SimpleDateFormat("yyyy-MM-dd").format(maxDate)));
+        } else {
+            resp.setEndDate("-");
         }
         return resp;
     }
