@@ -308,11 +308,11 @@ public class ShouxianService {
             portfolioVo.setAcctValue(acctValue);
             portfolioVo.setAvgPval(avgPval);
 
-            if (maxDate == null && portfolioVo.getNetValueDate() != null) {
-                maxDate = portfolioVo.getNetValueDate();
-            } else if (maxDate != null && portfolioVo.getNetValueDate() != null
-                && portfolioVo.getNetValueDate().getTime() > maxDate.getTime()) {
-                maxDate = portfolioVo.getNetValueDate();
+            if (maxDate == null && portfolioVo.getExchRateDate() != null) {
+                maxDate = portfolioVo.getExchRateDate();
+            } else if (maxDate != null && portfolioVo.getExchRateDate() != null
+                && portfolioVo.getExchRateDate().getTime() > maxDate.getTime()) {
+                maxDate = portfolioVo.getExchRateDate();
             }
         }
         if (maxDate != null && maxDate.getTime() > new Date().getTime()) {

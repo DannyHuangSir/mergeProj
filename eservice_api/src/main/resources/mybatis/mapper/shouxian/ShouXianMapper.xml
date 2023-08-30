@@ -676,7 +676,7 @@
     </select>
 
     <select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo">
-        SELECT DISTINCT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, leh.EXCH_DATE netValueDate, lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval,
+        SELECT DISTINCT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, leh.EXCH_DATE exchRateDate, lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval,
         lip.SAFP_AVG_PVAL avgPval, lin.INVT_RISK_BENE_LEVEL riskBeneLevel, lin.INVT_NO invtNo, lin.INVT_NAME invtName,
         lip.SAFP_INSU_NO policyNo, leh.EXCH_TRADE_PURATE exchRateBuy, NVL(lcp.clupExpeNtdSum, 0) clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
         FROM LISAFP_ES lip
