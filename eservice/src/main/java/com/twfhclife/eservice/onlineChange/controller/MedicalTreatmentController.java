@@ -46,6 +46,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -422,29 +423,29 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			int uploadMaxNumber = lilipiService.findByUploadNumber(OnlineChangeUtil.UPLOAD_MAX_NUMBER,ApConstants.SYSTEM_ID);
 
 			//獲取醫院明顯
-		  	List<Hospital> hospitalList = iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
+			List<Hospital> hospitalList = iMedicalTreatmentService.getHospitalList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, StatuCode.AGREE_CODE.code);
 
-		  	//將當前保單已經選中的醫院資料進行排查
+			//將當前保單已經選中的醫院資料進行排查
 			//List<Hospital>  hospitalList=		iMedicalTreatmentService.gitChooseHospitalList(claimVo.getPolicyNo(),getUserRocId());
 			//獲取保險公司明顯
 			List<HospitalInsuranceCompany> hospitalInsuranceCompanyList = iMedicalTreatmentService.getHospitalInsuranceCompanyList(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE,StatuCode.AGREE_CODE.code);
 			//進行排除當前台銀人壽在UI上顯示
 			List<HospitalInsuranceCompany> collect = hospitalInsuranceCompanyList.stream().filter(x -> {
- 				if(x.getInsuranceId() !=null && x.getInsuranceId().equals("L01")){
+				if(x.getInsuranceId() !=null && x.getInsuranceId().equals("L01")){
 					return   false;
 				}
 				return   true;
 			}).collect(Collectors.toList());
 
-			List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfos = Lists.newArrayList();
-			if (org.apache.commons.lang3.StringUtils.isNotBlank(claimVo.getMedicalInfoList())) {
+			if (CollectionUtils.isEmpty(claimVo.getMedicalInfo()) && org.apache.commons.lang3.StringUtils.isNotBlank(claimVo.getMedicalInfoList())) {
+				List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfos = Lists.newArrayList();
 				List<TransMedicalTreatmentClaimMedicalInfoVo> fileDataTemp = Arrays.asList(new Gson().fromJson(claimVo.getMedicalInfoList(), TransMedicalTreatmentClaimMedicalInfoVo[].class));
 				fileDataTemp.forEach(x -> {
 					x.setDtypeList(new Gson().fromJson(x.getDtypeListStr(), List.class));
 					medicalInfos.add(x);
 				});
+				claimVo.setMedicalInfo(medicalInfos);
 			}
-			claimVo.setMedicalInfo(medicalInfos);
 
 //			List<TransMedicalTreatmentClaimFileDataVo> fileDataVos = Lists.newArrayList();
 //			if (org.apache.commons.lang3.StringUtils.isNotBlank(claimVo.getFileDataList())) {
@@ -949,6 +950,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	public String medicalTreatmentBackToStep3(String transNum) {
 		TransMedicalTreatmentClaimVo claimVo = iMedicalTreatmentService.getTransInsuranceClaimDetail(transNum);
 		claimVo.setTransNum(null);
+		claimVo.setSendAlliance("Y");
 		if (claimVo != null && claimVo.getClaimSeqId() != null) {
 			List<TransMedicalTreatmentClaimMedicalInfoVo> medicalInfoVos = iMedicalTreatmentService.getMedicalInfo(claimVo.getClaimSeqId());
 			claimVo.setMedicalInfo(medicalInfoVos);

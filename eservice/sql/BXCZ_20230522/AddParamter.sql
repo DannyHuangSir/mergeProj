@@ -57,7 +57,6 @@ VALUES((select max([MESSAGING_TEMPLATE_ID])+1 from ESERVICE_ADM.dbo.MESSAGING_TE
 ,3,N'api ',NULL,N'email',NULL,NULL,NULL,N'dynamic',N'臺銀人壽理賠申請首家件失敗通知SMS模板',N'親愛客戶您好 : 您的保單理賠申請案，申請時間 : ${LoginTime}，申請序號 :${TransNum}，案件狀態 : ${TransStatus}。如需其他服務請撥打本公司客服專線或洽各地分公司辦理，客服專線 : 0800-011-966。', getdate(),N'admin',getdate(),N'admin')
 GO
 
-
 INSERT ESERVICE_ADM.dbo.MESSAGING_PARAMETER (MESSAGING_TEMPLATE_ID,PARAMETER_ID) VALUES ((select MESSAGING_TEMPLATE_ID from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE where MESSAGING_TEMPLATE_CODE = 'ELIFE_MAIL_071'),
 		(select PARAMETER_ID from   ESERVICE_ADM.dbo.PARAMETER  where  PARAMETER_CODE='MSG_PARAM_LoginTime'));
 GO
@@ -81,6 +80,43 @@ GO
 INSERT ESERVICE_ADM.dbo.MESSAGING_PARAMETER (MESSAGING_TEMPLATE_ID,PARAMETER_ID) VALUES ((select MESSAGING_TEMPLATE_ID from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE where MESSAGING_TEMPLATE_CODE = 'ELIFE_SMS_071'),
 		(select PARAMETER_ID from  ESERVICE_ADM.dbo.PARAMETER where PARAMETER_CODE='MSG_PARAM_TransStatus'));
 GO
+
+INSERT INTO ESERVICE_ADM.[dbo].[MESSAGING_TEMPLATE]([MESSAGING_TEMPLATE_ID],[SYSTEM_ID],[MESSAGING_TEMPLATE_CODE],[MESSAGING_TEMPLATE_NAME],[STATUS],[TRIGGER_TYPE],[EVENT_TYPE],[SEND_TYPE],[SEND_TIME],[CIRCLE_TYPE],[CIRCLE_VALUE],[RECEIVER_MODE],[MESSAGING_SUBJECT],[MESSAGING_CONTENT],[CREATE_DATE],[CREATE_USER],[UPDATE_DATE],[UPDATE_USER])
+VALUES((select max([MESSAGING_TEMPLATE_ID])+1 from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE),N'eservice_api',N'MEDICAL_MAIL_039',N'【臺銀人壽醫起通申請首家件失敗通知】MAIL模板'
+,3,N'api ',NULL,N'email',NULL,NULL,NULL,N'dynamic',N'臺銀人壽醫起通申請首家件失敗通知MAIL模板',N'<table width=\"100%\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;border-spacing:0;margin:0;padding:0;width:100%\" class=\"m_-1402362586549430844background\"> <tbody> <tr> <td align=\"center\" valign=\"top\" style=\"border-collapse:collapse;border-spacing:0;margin:0;padding:0\" bgcolor=\"#F0F0F0\"> <br> <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" bgcolor=\"#FFFFFF\" width=\"560\" style=\"border-collapse:collapse;border-spacing:0;padding:0;width:inherit;max-width:560px\" class=\"m_-1402362586549430844container\"> <tbody> <tr> <td align=\"center\" valign=\"top\" style=\"border-collapse:collapse;border-spacing:0;margin:0;padding:0;padding-left:6.25%;padding-right:6.25%;width:87.5%;font-size:24px;font-weight:bold;line-height:130%;padding-top:0px;padding-bottom:15px;color:#000000;font-family:Microsoft JhengHei\" class=\"m_-1402362586549430844header\"> <a href=\"https://www.twfhclife.com.tw/\" target=\"_blank\"> <img src=\"https://elife.twfhclife.com.tw/eservice/img/my-logo.png\" class=\"CToWUd\"> </a> </td> </tr> <tr> <td align=\"center\" valign=\"top\" style=\"border-collapse:collapse;border-spacing:0;margin:0;padding:0;padding-bottom:3px;padding-left:6.25%;padding-right:6.25%;width:87.5%;font-size:18px;font-weight:600;line-height:150%;padding-top:5px;color:#000000;font-family:Microsoft JhengHei\" class=\"m_-1402362586549430844subheader\">臺銀人壽保單理賠申請失敗通知</td> </tr> <tr> <td align=\"left\" valign=\"top\" style=\"border-collapse:collapse;border-spacing:0;margin:0;padding:0;padding-left:6.25%;padding-right:6.25%;width:87.5%;font-size:16px;font-weight:400;line-height:160%;padding-top:25px;color:#000000;font-family:Microsoft JhengHei\" class=\"m_-1402362586549430844paragraph\"> 親愛的客戶您好 : <br/> 感謝您使用本公司保單網路服務，您的保單理賠申請案，申請時間 : ${LoginTime}，申請序號 : ${TransNum}，案件狀態 : ${TransStatus}。如需其他服務請撥打本公司客服專線或洽各地分公司辦理。</td> </tr> <tr> <td align=\"center\" valign=\"top\" style=\"border-collapse:collapse;border-spacing:0;margin:0;padding:0;padding-left:6.25%;padding-right:6.25%;width:87.5%;padding-top:5px\" class=\"m_-1402362586549430844line\"> <hr color=\"#E0E0E0\" align=\"center\" width=\"100%\" size=\"1\" noshade=\"\" style=\"margin:0;padding:0\"> </td> </tr> <tr> <td align=\"center\" valign=\"top\" style=\"border-collapse:collapse;border-spacing:0;margin:0;padding:0;padding-left:6.25%;padding-right:6.25%\" class=\"m_-1402362586549430844list-item\"> <table align=\"left\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"width:inherit;margin:0;padding:0;border-collapse:collapse;border-spacing:0\"> <tbody> <tr> <td align=\"left\" valign=\"top\" style=\"font-size:16px;padding-top:10px;padding-bottom:10px;padding-left:0px;color:#000000;font-family:Microsoft JhengHei\">客服專線：0800-011-966</td> </tr> </tbody> </table> </td> </tr> </tbody> </table> <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" width=\"560\" style=\"border-collapse:collapse;border-spacing:0;padding:0;width:inherit;max-width:560px\" class=\"m_-1402362586549430844wrapper\"> <tbody> <tr> <td align=\"center\" valign=\"top\" style=\"border-collapse:collapse;border-spacing:0;margin:0;padding:0;width:100%;font-size:18px;font-weight:400;line-height:150%;padding-top:20px;padding-bottom:20px;color:#999999;font-family:Microsoft JhengHei\" class=\"m_-1402362586549430844footer\">(本郵件是由系統自動寄送，請勿以此信件回覆。)</td> </tr> </tbody> </table> </td> </tr> </tbody> </table>', getdate(),N'admin',getdate(),N'admin')
+GO
+
+
+INSERT INTO ESERVICE_ADM.[dbo].[MESSAGING_TEMPLATE]([MESSAGING_TEMPLATE_ID],[SYSTEM_ID],[MESSAGING_TEMPLATE_CODE],[MESSAGING_TEMPLATE_NAME],[STATUS],[TRIGGER_TYPE],[EVENT_TYPE],[SEND_TYPE],[SEND_TIME],[CIRCLE_TYPE],[CIRCLE_VALUE],[RECEIVER_MODE],[MESSAGING_SUBJECT],[MESSAGING_CONTENT],[CREATE_DATE],[CREATE_USER],[UPDATE_DATE],[UPDATE_USER])
+VALUES((select max([MESSAGING_TEMPLATE_ID])+1 from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE),N'eservice_api',N'MEDICAL_SMS_040',N'【臺銀人壽醫起通申請首家件失敗通知】SMS模板'
+,3,N'api ',NULL,N'email',NULL,NULL,NULL,N'dynamic',N'臺銀人壽醫起通申請首家件失敗通知SMS模板',N'親愛客戶您好 : 您的醫起通申請案，申請時間 : ${LoginTime}，申請序號 :${TransNum}，案件狀態 : ${TransStatus}。如需其他服務請撥打本公司客服專線或洽各地分公司辦理，客服專線 : 0800-011-966。', getdate(),N'admin',getdate(),N'admin')
+GO
+
+
+INSERT ESERVICE_ADM.dbo.MESSAGING_PARAMETER (MESSAGING_TEMPLATE_ID,PARAMETER_ID) VALUES ((select MESSAGING_TEMPLATE_ID from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE where MESSAGING_TEMPLATE_CODE = 'MEDICAL_MAIL_039'),
+		(select PARAMETER_ID from   ESERVICE_ADM.dbo.PARAMETER  where  PARAMETER_CODE='MSG_PARAM_LoginTime'));
+GO
+
+INSERT ESERVICE_ADM.dbo.MESSAGING_PARAMETER (MESSAGING_TEMPLATE_ID,PARAMETER_ID) VALUES ((select MESSAGING_TEMPLATE_ID from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE where MESSAGING_TEMPLATE_CODE = 'MEDICAL_MAIL_039'),
+		(select PARAMETER_ID from   ESERVICE_ADM.dbo.PARAMETER where PARAMETER_CODE='MSG_PARAM_TransNum'));
+GO
+
+INSERT ESERVICE_ADM.dbo.MESSAGING_PARAMETER (MESSAGING_TEMPLATE_ID,PARAMETER_ID) VALUES ((select MESSAGING_TEMPLATE_ID from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE where MESSAGING_TEMPLATE_CODE = 'MEDICAL_MAIL_039'),
+		(select PARAMETER_ID from  ESERVICE_ADM.dbo.PARAMETER where PARAMETER_CODE='MSG_PARAM_TransStatus'));
+GO
+
+INSERT ESERVICE_ADM.dbo.MESSAGING_PARAMETER (MESSAGING_TEMPLATE_ID,PARAMETER_ID) VALUES ((select MESSAGING_TEMPLATE_ID from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE where MESSAGING_TEMPLATE_CODE = 'MEDICAL_SMS_040'),
+		(select PARAMETER_ID from   ESERVICE_ADM.dbo.PARAMETER  where  PARAMETER_CODE='MSG_PARAM_LoginTime'));
+GO
+
+INSERT ESERVICE_ADM.dbo.MESSAGING_PARAMETER (MESSAGING_TEMPLATE_ID,PARAMETER_ID) VALUES ((select MESSAGING_TEMPLATE_ID from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE where MESSAGING_TEMPLATE_CODE = 'MEDICAL_SMS_040'),
+		(select PARAMETER_ID from   ESERVICE_ADM.dbo.PARAMETER where PARAMETER_CODE='MSG_PARAM_TransNum'));
+GO
+
+INSERT ESERVICE_ADM.dbo.MESSAGING_PARAMETER (MESSAGING_TEMPLATE_ID,PARAMETER_ID) VALUES ((select MESSAGING_TEMPLATE_ID from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE where MESSAGING_TEMPLATE_CODE = 'MEDICAL_SMS_040'),
+		(select PARAMETER_ID from  ESERVICE_ADM.dbo.PARAMETER where PARAMETER_CODE='MSG_PARAM_TransStatus'));
+GO
+
 
 INSERT ESERVICE_ADM.DBO.PARAMETER (
      PARAMETER_ID, SYSTEM_ID,
@@ -278,3 +314,17 @@ VALUES (
      NULL, NULL,
      GETDATE(), N'admin', NULL, NULL)
 go
+
+
+insert into ESERVICE_ADM.dbo.PARAMETER_CATEGORY (PARAMETER_CATEGORY_ID, SYSTEM_ID, CATEGORY_CODE, CATEGORY_NAME, REMARK, STATUS, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+values ((select max(PARAMETER_CATEGORY_ID)+1 from ESERVICE_ADM.dbo.PARAMETER_CATEGORY), 'eservice', 'BXCZ_CATEGORY', '保險存摺參數', null, 1, getdate(), 'system', null, null);
+GO
+
+insert into ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+values ((select max(PARAMETER_ID)+1 from ESERVICE_ADM.dbo.PARAMETER), 'eservice', 'BXCZ_SIGN_FAIL_CODE', '保險存摺簽署失敗代碼', 'SIGN_I,SIGN_U_F,SIGN_L_F,SIGN_E', (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='BXCZ_CATEGORY'), null, null, 1, null, null, getdate(), 'system', null, null);
+
+insert into ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+values ((select max(PARAMETER_ID)+1 from ESERVICE_ADM.dbo.PARAMETER), 'eservice', 'BXCZ_VERIFY_FAIL_CODE', '保險存摺驗證失敗代碼', 'CASE_I,EZ_OTP_F,EZ_OTP_E,IDS_F,IDS_E,ACT_E,MID_F,PBS_F,MID_S_ID_F,PBS_S_ID_F,EZ_OTP_S_ID_F,IDS_S_ID_F', (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='BXCZ_CATEGORY'), null, null, 1, null, null, getdate(), 'system', null, null);
+
+insert into ESERVICE_ADM.dbo.PARAMETER (PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER)
+values ((select max(PARAMETER_ID)+1 from ESERVICE_ADM.dbo.PARAMETER), 'eservice', 'BXCZ_SIGN_SUCCESS_CODE', '保險存摺簽署成功代碼', 'SIGN_L_S', (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='BXCZ_CATEGORY'), null, null, 1, null, null, getdate(), 'system', null, null);

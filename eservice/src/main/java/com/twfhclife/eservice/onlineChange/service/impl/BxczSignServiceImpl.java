@@ -6,6 +6,7 @@ import com.twfhclife.eservice.onlineChange.model.Bxcz415CallBackDataVo;
 import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
+import com.twfhclife.eservice.web.model.SignTrans;
 import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -62,7 +63,6 @@ public class BxczSignServiceImpl implements IBxczSignService {
 
     @Override
     public int addSignBxczRecord(SignRecord signRecord) {
-
         return bxczDao.insertBxczSignRecord(signRecord,null, null, null, null);
     }
 
@@ -192,11 +192,21 @@ public class BxczSignServiceImpl implements IBxczSignService {
 	}
 
     @Override
-    public int updateSignStatus418(String actionId, String idVerifyStatus, String signStatus) {
-        return bxczDao.updateSignStatus418(actionId, idVerifyStatus, signStatus);
+    public int updateSignStatus418(String actionId, String idVerifyStatus, String signStatus, Date date) {
+        return bxczDao.updateSignStatus418(actionId, idVerifyStatus, signStatus, date);
     }
 
-    public boolean checkLiaAPIResponseValue(String responseJsonString,String pathFieldName,String checkValue) throws Exception{
+	@Override
+	public int countSignRecord(String actionId, String idVerifyStatus, String signStatus) {
+		return bxczDao.countSignRecord(actionId, idVerifyStatus, signStatus);
+	}
+
+	@Override
+	public SignTrans getSignTrans(String actionId) {
+		return bxczDao.getSignTrans(actionId);
+	}
+
+	public boolean checkLiaAPIResponseValue(String responseJsonString,String pathFieldName,String checkValue) throws Exception{
 		boolean b = false;
 		if(responseJsonString!=null && pathFieldName!=null && checkValue!=null) {
 			String code = MyJacksonUtil.readValue(responseJsonString, pathFieldName);

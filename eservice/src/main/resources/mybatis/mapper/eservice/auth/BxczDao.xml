@@ -2,61 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.twfhclife.eservice.auth.dao.BxczDao">
 
-	<insert id="insertBxczApiLog">
-		INSERT INTO ESERVICE.DBO.BXCZ_API_LOG(ACTION_ID, TYPE, API_CODE, API_PARAM, API_RESPONSE)
-		VALUES (#{actionId}, #{type}, #{apiCode}, #{apiParam}, #{apiResponse})
-	</insert>
-
 	<insert id="insertBxczSignRecord">
 		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_RECORD(TRANS_NUM, VERIFY_CODE, VERIFY_MSG, ACTION_ID, ACTION_ID_START, ACTION_ID_END, ID_VERIFY_STATUS, ID_VERIFY_TIME, ID_VERIFY_TYPE, SIGN_FILEID, SIGN_STATUS, SIGN_TIME, SIGN_DOWNLOAD)
 		VALUES (#{vo.transNum}, #{code}, #{msg}, #{vo.actionId}, #{vo.signStart}, #{vo.signEnd}, #{vo.idVerifyStatus}, #{idVerifyTime}
 		, #{vo.idVerifyType}, #{vo.signFileId}, #{vo.signStatus}, #{signTime}, 'N')
 	</insert>
 
-	<update id="updateBxczSignRecordByActionId">
-		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD
-		SET VERIFY_CODE = #{code}, VERIFY_MSG = #{msg}, ID_VERIFY_STATUS = #{vo.idVerifyStatus}, ID_VERIFY_TIME = #{idVerifyTime},
-		ID_VERIFY_TYPE = #{vo.idVerifyType}, SIGN_FILEID = #{vo.signFileId}, SIGN_STATUS = #{vo.signStatus}, SIGN_TIME = #{signTime}
-		WHERE ACTION_ID = #{vo.actionId}
-	</update>
-
-	<select id="getSignRecordByActionId" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
-		SELECT TOP 1 ACTION_ID_START signStart, ACTION_ID_END signEnd, VERIFY_CODE verifyCode, VERIFY_MSG verifyMsg FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE ACTION_ID = #{actionId}
-	</select>
-
-	<select id="getNotDownloadSignFile" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
-		SELECT SIGN_FILEID signFileId, ACTION_ID actionId, TRANS_NUM transNum FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE SIGN_FILEID IS NOT NULL AND SIGN_DOWNLOAD = 'N'
-	</select>
-
-	<update id="updateSignDownloaded">
-		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD SET SIGN_DOWNLOAD = 'Y' WHERE ACTION_ID = #{actionId}
-	</update>
-
-	<insert id="insertSignFileData">
-		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_FILEDATA(FILE_ID, COMPANY_ID, CONTENT_BASE64)
-		VALUES (#{fileId}, #{companyId}, #{fileBase64})
-	</insert>
-
 	<select id="getNewSignStatus" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
 		SELECT TOP 1 SIGN_STATUS signStatus, ID_VERIFY_STATUS idVerifyStatus, SIGN_TIME signTime, ID_VERIFY_TIME idVerifyTime,
 		SIGN_DOWNLOAD signDownload, SIGN_FILEID signFileId, ACTION_ID actionId
-		FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = #{transNum}
+		FROM ESERVICE.DBO.BXCZ_SIGN_RECORD A
+		INNER JOIN ESERVICE.DBO.TRANS B ON A.TRANS_NUM = B.TRANS_NUM AND B.STATUS NOT IN ('41', '42')
+		WHERE A.TRANS_NUM = #{transNum}
 		AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC
 	</select>
-
-	<update id="updateSignStatus418">
-		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD
-		SET ID_VERIFY_STATUS = #{idVerifyStatus}, ID_VERIFY_TIME = SYSDATETIME(),
-		SIGN_STATUS = #{signStatus}, SIGN_TIME = SYSDATETIME()
-		WHERE ACTION_ID = #{actionId}
-	</update>
 
 	<select id="getSignFileByFileId" resultType="string">
 		SELECT TOP 1 CONTENT_BASE64 FROM ESERVICE.DBO.BXCZ_SIGN_FILEDATA WHERE FILE_ID = #{signFileId}
 	</select>
 
-	<insert id="addSignApiLog" parameterType="com.twfhclife.eservice.onlineChange.model.BxczSignApiLog">
-		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_API_LOG (CALL_TYPE, API_NAME, API_RESP_CODE, API_RESP_MSG, ACTION_ID, TRANS_NUM, CALL_START_TIME, CALL_END_TIME)
-		VALUES (#{vo.apiType}, #{vo.apiName}, #{vo.apiRespCode}, #{vo.apiRespMsg}, #{vo.actionId}, #{vo.transNum}, #{vo.callStartTime}, #{vo.callEndTime})
-	</insert>
+	<update id="updateSignStatus418">
+		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD
+		SET ID_VERIFY_STATUS = #{idVerifyStatus}, ID_VERIFY_TIME = #{time},
+		SIGN_STATUS = #{signStatus}, SIGN_TIME = #{time}, CAN_UPDATE = 'N'
+		WHERE ACTION_ID = #{actionId} AND CAN_UPDATE = 'Y'
+	</update>
+
+	<select id="getSignTrans" resultType="com.twfhclife.eservice.web.model.SignTrans">
+		SELECT TOP 1 A.TRANS_TYPE transType, A.TRANS_NUM transNum FROM TRANS A INNER JOIN BXCZ_SIGN_RECORD B ON A.TRANS_NUM = B.TRANS_NUM
+		WHERE B.ACTION_ID = #{actionId} AND A.STATUS IN ('41', '42')
+	</select>
 </mapper>

@@ -689,6 +689,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 	public String policyClaimBackToStep3(String transNum) {
 		TransInsuranceClaimVo vo = insuranceClaimService.getTransInsuranceClaimDetail(transNum);
 		vo.setTransNum(null);
+		vo.setSendAlliance("Y");
 		addAttribute("verifyFail", true);
 		return policyClaims3(vo);
 	}

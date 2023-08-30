@@ -15,8 +15,11 @@
 
 	<update id="updateBxczSignRecordByActionId">
 		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD
-		SET VERIFY_CODE = #{code}, VERIFY_MSG = #{msg}, ID_VERIFY_STATUS = #{vo.idVerifyStatus}, ID_VERIFY_TIME = #{idVerifyTime},
-		ID_VERIFY_TYPE = #{vo.idVerifyType}, SIGN_FILEID = #{vo.signFileId}, SIGN_STATUS = #{vo.signStatus}, SIGN_TIME = #{signTime}
+		SET VERIFY_CODE = #{code}, VERIFY_MSG = #{msg},
+		ID_VERIFY_STATUS = CASE WHEN CAN_UPDATE = 'Y' THEN #{vo.idVerifyStatus} ELSE ID_VERIFY_STATUS END,
+		SIGN_STATUS = CASE WHEN CAN_UPDATE = 'Y' THEN #{vo.signStatus} ELSE SIGN_STATUS END,
+		ID_VERIFY_TIME = #{idVerifyTime},
+		ID_VERIFY_TYPE = #{vo.idVerifyType}, SIGN_FILEID = #{vo.signFileId}, SIGN_TIME = #{signTime}
 		WHERE ACTION_ID = #{vo.actionId}
 	</update>
 
@@ -37,13 +40,6 @@
 		VALUES (#{fileId}, #{companyId}, #{fileBase64})
 	</insert>
 
-	<select id="getNewSignStatus" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
-		SELECT TOP 1 SIGN_STATUS signStatus, ID_VERIFY_STATUS idVerifyStatus, SIGN_TIME signTime, ID_VERIFY_TIME idVerifyTime,
-		SIGN_DOWNLOAD signDownload, SIGN_FILEID signFileId, ACTION_ID actionId
-		FROM ESERVICE.DBO.BXCZ_SIGN_RECORD WHERE TRANS_NUM = #{transNum}
-		AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC
-	</select>
-
 	<select id="getSignFileByFileId" resultType="string">
 		SELECT TOP 1 CONTENT_BASE64 FROM ESERVICE.DBO.BXCZ_SIGN_FILEDATA WHERE FILE_ID = #{signFileId}
 	</select>
@@ -52,5 +48,10 @@
 		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_API_LOG (CALL_TYPE, API_NAME, API_RESP_CODE, API_RESP_MSG, ACTION_ID, TRANS_NUM, CALL_START_TIME, CALL_END_TIME)
 		VALUES (#{vo.apiType}, #{vo.apiName}, #{vo.apiRespCode}, #{vo.apiRespMsg}, #{vo.actionId}, #{vo.transNum}, #{vo.callStartTime}, #{vo.callEndTime})
 	</insert>
+
+	<select id="countSignRecord">
+		SELECT COUNT(*) FROM ESERVICE.DBO.BXCZ_SIGN_RECORD
+		WHERE (ID_VERIFY_STATUS != #{idVerifyStatus} OR SIGN_STATUS != #{signStatus}) AND CAN_UPDATE = 'Y'
+	</select>
 
 </mapper>

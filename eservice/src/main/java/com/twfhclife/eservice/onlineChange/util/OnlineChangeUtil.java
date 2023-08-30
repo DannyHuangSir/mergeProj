@@ -209,6 +209,8 @@ public interface OnlineChangeUtil {
 	/**內部人員通知	轉收件通知	理賠聯盟鏈轉收申請通知*/
 	public static final String ELIFE_MAIL_026="ELIFE_MAIL_026";
 	public static final String ELIFE_MAIL_071="ELIFE_MAIL_071";
+	public static final String MEDICAL_MAIL_039 ="MEDICAL_MAIL_039";
+	public static final String MEDICAL_SMS_040 ="MEDICAL_SMS_040";
 	public static final String ELIFE_SMS_071="ELIFE_SMS_071";
 
 	public static final String ELIFE_MAIL_081="ELIFE_MAIL_081";

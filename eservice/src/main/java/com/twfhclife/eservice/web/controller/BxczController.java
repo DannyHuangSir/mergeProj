@@ -1,17 +1,28 @@
 package com.twfhclife.eservice.web.controller;
 
 import com.auth0.jwt.internal.org.apache.commons.codec.digest.HmacUtils;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
+import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
+import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
 import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
+import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
+import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
+import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.util.AesUtil;
 import com.twfhclife.eservice.util.SignStatusUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.BxczState;
+import com.twfhclife.eservice.web.model.SignTrans;
+import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
+import com.twfhclife.generic.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,9 +37,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @EnableAutoConfiguration
@@ -95,11 +104,12 @@ public class BxczController extends BaseController {
             } else {
                 SignRecord signRecord = bxczSignService.getNewSignStatus(bxczState.getTransNum());
                 if (signRecord != null) {
-                    if (StringUtils.equals(signRecord.getSignStatus(), "SIGN_U_S")) {
+                    String statusSuccess = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "BXCZ_SIGN_SUCCESS_CODE");
+                    if (StringUtils.contains(statusSuccess, signRecord.getSignStatus())) {
                         if (StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM)) {
                             return "frontstage/onlineChange/policyClaims/policyClaims-success";
                         } else {
-                            return "frontstage/onlineChange/medicalTreatment/policyClaims-success";
+                            return "frontstage/onlineChange/medicalTreatment/medicalTreatment-success";
                         }
                     } else {
                         String msg = SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), signRecord.getSignStatus());
@@ -118,17 +128,168 @@ public class BxczController extends BaseController {
         }
     }
 
+    @Autowired
+    private IParameterService parameterService;
 
     @GetMapping("callBack418")
     public String callBack418(@RequestParam("actionId") String actionId, @RequestParam("idVerifyStatus") String idVerifyStatus, @RequestParam("signStatus") String signStatus) {
         try {
+
             logger.info("callBack418 actionId is: {}, idVerifyStatus is: {}, signStatus is: {}", actionId, idVerifyStatus, signStatus);
             addAttribute("msg", SignStatusUtil.signStatusToStr(idVerifyStatus, signStatus));
-            bxczSignService.updateSignStatus418(actionId, idVerifyStatus, signStatus);
+
+            SignTrans signTrans = bxczSignService.getSignTrans(actionId);
+
+            if (signTrans != null ) {
+                List<String> statusSuccessList = Lists.newArrayList();
+                List<String> statusVerifyFailList = Lists.newArrayList();
+                List<String> statusSignFailList = Lists.newArrayList();
+                String statusSuccess = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "BXCZ_SIGN_SUCCESS_CODE");
+                String statusVerifyFail = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "BXCZ_VERIFY_FAIL_CODE");
+                String statusSignFail = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "BXCZ_SIGN_FAIL_CODE");
+                if (StringUtils.isNotBlank(statusSuccess)) {
+                    statusSuccessList = Splitter.on(",").omitEmptyStrings().splitToList(statusSuccess);
+                }
+                if (StringUtils.isNotBlank(statusVerifyFail)) {
+                    statusVerifyFailList = Splitter.on(",").omitEmptyStrings().splitToList(statusVerifyFail);
+                }
+                if (StringUtils.isNotBlank(statusSignFail)) {
+                    statusSignFailList = Splitter.on(",").omitEmptyStrings().splitToList(statusSignFail);
+                }
+                if (StringUtils.equals(TransTypeUtil.INSURANCE_CLAIM_PARAMETER_CODE, signTrans.getTransType())) {
+                    TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(signTrans.getTransNum());
+                    if (claimVo != null) {
+                        if (statusVerifyFailList.contains(idVerifyStatus)) {
+                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+                            sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY, OnlineChangeUtil.ELIFE_MAIL_071, OnlineChangeUtil.ELIFE_SMS_071);
+                        } else if (statusSuccessList.contains(signStatus)) {
+                            sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_APPLYING, OnlineChangeUtil.ELIFE_MAIL_024, OnlineChangeUtil.ELIFE_SMS_005);
+                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                            insuranceClaimService.updateTransApplyDate(claimVo.getClaimSeqId(), new Date());
+                        } else if (statusSignFailList.contains(signStatus)) {
+                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+                            sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN, OnlineChangeUtil.ELIFE_MAIL_071, OnlineChangeUtil.ELIFE_SMS_071);
+                        }
+                    }
+                } else if (StringUtils.equals(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, signTrans.getTransType())) {
+                    TransMedicalTreatmentClaimVo claimVo = medicalTreatmentService.getTransInsuranceClaimDetail(signTrans.getTransNum());
+                    if (claimVo != null) {
+                        if (statusVerifyFailList.contains(idVerifyStatus)) {
+                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+                            sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY, OnlineChangeUtil.MEDICAL_MAIL_039, OnlineChangeUtil.MEDICAL_SMS_040);
+                        } else if (statusSuccessList.contains(signStatus)) {
+                            sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_APPLYING, OnlineChangeUtil.MEDICAL_MAIL_036, OnlineChangeUtil.MEDICAL_SMS_037);
+                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                            medicalTreatmentService.updateTransApplyDate(claimVo.getClaimSeqId(), new Date());
+                        } else if (statusSignFailList.contains(signStatus)) {
+                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+                            sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN, OnlineChangeUtil.MEDICAL_MAIL_039, OnlineChangeUtil.MEDICAL_SMS_040);
+                        }
+                    }
+                }
+                bxczSignService.updateSignStatus418(actionId, idVerifyStatus, signStatus, new Date());
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
         }
         return "frontstage/onlineChange/call-back-418";
+    }
+
+    @Autowired
+    private MessageTemplateClient messageTemplateClient;
+    @Autowired
+    private IInsuranceClaimService insuranceClaimService;
+    @Autowired
+    private IMedicalTreatmentService medicalTreatmentService;
+
+    private void sendPolicyClaimNotify(TransInsuranceClaimVo claimVo, String status, String mailTemplate, String smsTemplate) {
+        logger.info("start send mail");
+        Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo(status);
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("TransNum", claimVo.getTransNum());
+        //paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+        //paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+        logger.info("Trans Num : {}", claimVo.getTransNum());
+        logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
+        logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
+        logger.info("receivers={}", (List)mailInfo.get("receivers"));
+        logger.info("user phone : {}", claimVo.getPhone());
+        logger.info("user mail : {}", claimVo.getMail());
+        List<String> receivers = new ArrayList<String>();
+
+        String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+        paramMap.put("LoginTime", loginTime);
+
+        if (StringUtils.equals(OnlineChangeUtil.TRANS_STATUS_APPLYING, status)) {
+            //發送系統管理員
+            receivers = (List)mailInfo.get("receivers");
+            //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+            //使用新郵件範本
+            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_025, receivers, paramMap, "email");
+        }
+
+        //發送保戶MAIL
+        receivers = new ArrayList<String>();
+        receivers.add(claimVo.getMail());
+        paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+        logger.info("user mail : {}", claimVo.getMail());
+        //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+        //使用新郵件範本
+        messageTemplateClient.sendNoticeViaMsgTemplate(mailTemplate, receivers, paramMap, "email");
+        logger.info("End send mail");
+
+
+        //發送保戶SMS
+        receivers = new ArrayList<String>();
+        receivers.add(claimVo.getPhone());
+        paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+        logger.info("user phone : {}", claimVo.getPhone());
+        messageTemplateClient.sendNoticeViaMsgTemplate(smsTemplate, receivers, paramMap, "sms");
+    }
+
+    private void sendMedicalNotify(TransMedicalTreatmentClaimVo claimVo, String status, String mailTemplate, String smsTemplate) {
+        logger.info("start send mail");
+        Map<String, Object> mailInfo = medicalTreatmentService.getSendMailInfo(status);
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("TransNum", claimVo.getTransNum());
+        //paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+        //paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+        logger.info("Trans Num : {}", claimVo.getTransNum());
+        logger.info("Status Name : {}", (String) mailInfo.get("statusName"));
+        logger.info("Trans Remark : {}", (String) mailInfo.get("transRemark"));
+        logger.info("receivers={}", (List)mailInfo.get("receivers"));
+        logger.info("user phone : {}", claimVo.getPhone());
+        logger.info("user mail : {}", claimVo.getMail());
+        List<String> receivers = new ArrayList<String>();
+
+        String loginTime = DateUtil.formatDateTime(new Date(), "yyyy年MM月dd日 HH時mm分ss秒");
+        paramMap.put("LoginTime", loginTime);
+
+        if (StringUtils.equals(OnlineChangeUtil.TRANS_STATUS_APPLYING, status)) {
+            //發送系統管理員
+            receivers = (List)mailInfo.get("receivers");
+            //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+            //使用新郵件範本
+            messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.MEDICAL_MAIL_035, receivers, paramMap, "email");
+        }
+
+        //發送保戶MAIL
+        receivers = new ArrayList<String>();
+        receivers.add(claimVo.getMail());
+        paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
+        logger.info("user mail : {}", claimVo.getMail());
+        //messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_005, receivers, paramMap, "email");
+        //使用新郵件範本
+        messageTemplateClient.sendNoticeViaMsgTemplate(mailTemplate, receivers, paramMap, "email");
+        logger.info("End send mail");
+
+
+        //發送保戶SMS
+        receivers = new ArrayList<String>();
+        receivers.add(claimVo.getPhone());
+        paramMap.put("TransRemark", (String) mailInfo.get("transRemark"));
+        logger.info("user phone : {}", claimVo.getPhone());
+        messageTemplateClient.sendNoticeViaMsgTemplate(smsTemplate, receivers, paramMap, "sms");
     }
 }

@@ -323,11 +323,6 @@
 		where CLAIMS_SEQ_ID = #{claimSeqId}
 	</select>
 
-	<update id="updateTransApplyDate">
-		UPDATE ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM
-		SET APPLY_DATE = #{date} WHERE CLAIMS_SEQ_ID = #{claimSeqId}
-	</update>
-
 	<select id="getUnProcessedTrans" resultMap="TransInsuranceClaimResultMap">
 		SELECT TOP 1000 TRANS_NUM ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A
 		INNER JOIN ESERVICE.dbo.TRANS B ON A.TRANS_NUM = B.TRANS_NUM

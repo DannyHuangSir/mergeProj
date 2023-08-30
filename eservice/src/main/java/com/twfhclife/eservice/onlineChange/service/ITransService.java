@@ -83,5 +83,6 @@ public interface ITransService {
 
     int updateTransStatus(String transNum, String status);
 
-	int checkTransInSignProcess(String transNum);
+	String getTransStatus(String transNum);
+
 }

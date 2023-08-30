@@ -160,10 +160,11 @@
 	</select>
 
 	<update id="updateSignTransStatus">
-		update ESERVICE.DBO.TRANS SET STATUS = #{status} WHERE STATUS = '41' AND TRANS_NUM = #{transNum}
+		update ESERVICE.DBO.TRANS SET STATUS = #{status} WHERE STATUS IN ('41', '42') AND TRANS_NUM = #{transNum}
 	</update>
 
-	<select id="countInSignTrans" resultType="int">
-		SELECT COUNT(*) FROM ESERVICE.DBO.TRANS WHERE TRANS_NUM = #{transNum} AND STATUS IN ('41', '42')
+	<select id="getTransStatusByTransNum">
+		SELECT STATUS FROM ESERVICE.DBO.TRANS WHERE TRANS_NUM = #{transNum}
 	</select>
+
 </mapper>

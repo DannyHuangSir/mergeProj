@@ -3,6 +3,7 @@ package com.twfhclife.eservice.auth.dao;
 import com.twfhclife.eservice.onlineChange.model.Bxcz415CallBackDataVo;
 import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
+import com.twfhclife.eservice.web.model.SignTrans;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -25,5 +26,9 @@ public interface BxczDao {
     String getSignFileByFileId(String signFileId);
     int addSignApiLog(@Param("vo") BxczSignApiLog vo);
 
-    int updateSignStatus418(@Param("actionId") String actionId, @Param("idVerifyStatus") String idVerifyStatus, @Param("signStatus") String signStatus);
+    int updateSignStatus418(@Param("actionId") String actionId, @Param("idVerifyStatus") String idVerifyStatus, @Param("signStatus") String signStatus, @Param("time") Date date);
+
+    int countSignRecord(@Param("actionId") String actionId, @Param("idVerifyStatus") String idVerifyStatus, @Param("signStatus") String signStatus);
+
+    SignTrans getSignTrans(@Param("actionId") String actionId);
 }

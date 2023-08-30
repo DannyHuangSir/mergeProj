@@ -1,10 +1,10 @@
 package com.twfhclife.eservice.onlineChange.service;
 
 import com.twfhclife.eservice.onlineChange.model.*;
-import com.twfhclife.eservice.policy.model.PolicyListVo;
+import com.twfhclife.eservice.web.model.SignTrans;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,5 +34,8 @@ public interface IBxczSignService {
 
 	int addSignBxczApiRecord(BxczSignApiLog bxczSignApiLog);
 
-    int updateSignStatus418(String actionId, String idVerifyStatus, String signStatus);
+    int updateSignStatus418(String actionId, String idVerifyStatus, String signStatus, Date date);
+    int countSignRecord(String actionId, String idVerifyStatus, String signStatus);
+
+	SignTrans getSignTrans(String actionId);
 }

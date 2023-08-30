@@ -85,5 +85,5 @@ public interface TransDao {
 
     int updateSignTransStatus(@Param("transNum") String transNum, @Param("status")  String status);
 
-    int countInSignTrans(@Param("transNum") String transNum);
+    String getTransStatusByTransNum(@Param("transNum") String transNum);
 }

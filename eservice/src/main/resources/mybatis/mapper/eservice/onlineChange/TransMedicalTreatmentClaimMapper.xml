@@ -344,4 +344,9 @@
 		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
 		where CLAIMS_SEQ_ID = #{claimSeqId}
 	</select>
+
+	<update id="updateTransApplyDate">
+		UPDATE ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM
+		SET APPLY_DATE = #{date} WHERE CLAIMS_SEQ_ID = #{claimSeqId}
+	</update>
 </mapper>
