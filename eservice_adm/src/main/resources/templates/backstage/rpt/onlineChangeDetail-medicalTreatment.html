@@ -661,14 +661,14 @@
 												<label class="col-xs-3">已取回的醫療資料：</label>
 												<div class="col-xs-9">
 													<th:block th:each="vo1 : ${vo.dtypeList}">
-														<th:block th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64New != null and vo1.fileBase64New != ''}">
+														<th:block th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64 != null and vo1.fileBase64 != ''}">
 															<th:block th:text="${vo1.fileName}"/>
 														</th:block>
 													</th:block>
 													<div class="col-xs-12 upload-drop-zone boardDotted">
 														<th:block th:each="vo1 : ${vo.dtypeList}">
-															<th:block th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64New != null and vo1.fileBase64New != ''}">
-																<img th:onclick="'javascript:medicalInfoImgConfirm(\''+${vo1['fileId']}+'\')'" th:src="'data:image/png;base64, '+${vo1.fileBase64New}" width="50" th:title="${vo1.fileName}">
+															<th:block th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64 != null and vo1.fileBase64 != ''}">
+																<img th:onclick="'javascript:medicalInfoImgConfirm(\''+${vo1['fileId']}+'\')'" th:src="'data:image/png;base64, '+${vo1.fileBase64}" width="50" th:title="${vo1.fileName}">
 															</th:block>
 														</th:block>
 													</div>

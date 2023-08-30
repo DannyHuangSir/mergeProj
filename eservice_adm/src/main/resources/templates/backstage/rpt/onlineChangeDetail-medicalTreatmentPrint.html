@@ -328,14 +328,14 @@
                                     <div class="col-xs-9">
                                         <th:block th:each="vo1 : ${vo.dtypeList}">
                                             <th:block
-                                                    th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64 != null and vo1.fileBase64 != ''}">
+                                                    th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64New != null and vo1.fileBase64New != ''}">
                                                 <th:block th:text="${vo1.fileName}"/>
                                             </th:block>
                                         </th:block>
                                         <div class="col-xs-12 upload-drop-zone boardDotted">
                                             <th:block th:each="vo1 : ${vo.dtypeList}">
                                                 <th:block
-                                                        th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64 != null and vo1.fileBase64 != ''}">
+                                                        th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64New != null and vo1.fileBase64New != ''}">
                                                     <th:block th:each="vo2 : ${#strings.arraySplit(vo1.pdfBase64, '||')}">
                                                         <img style="width: 100%; height: 100%;"
                                                              th:title="${vo1.fileName}" th:src="'data:image/png;base64, '+${vo2}"/>

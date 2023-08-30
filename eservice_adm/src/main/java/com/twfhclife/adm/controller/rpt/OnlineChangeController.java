@@ -1,32 +1,19 @@
 package com.twfhclife.adm.controller.rpt;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.twfhclife.adm.domain.PageResponseObj;
+import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.*;
+import com.twfhclife.adm.service.IOnlineChangeService;
 import com.twfhclife.adm.service.IParameterService;
-
+import com.twfhclife.generic.annotation.*;
 import com.twfhclife.generic.api_client.APIAllianceTemplateClient;
 import com.twfhclife.generic.api_model.APIAllianceRequestVo;
 import com.twfhclife.generic.api_model.ApiResponseObj;
 import com.twfhclife.generic.api_model.ReturnHeader;
+import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.*;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,33 +28,17 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.ArrayUtils;
-import com.google.common.collect.Lists;
-import com.twfhclife.adm.domain.PageResponseObj;
-import com.twfhclife.adm.domain.ResponseObj;
-import com.twfhclife.adm.model.ParameterVo;
-import com.twfhclife.adm.service.IOnlineChangeService;
-import com.twfhclife.adm.service.IParameterService;
-import com.twfhclife.generic.annotation.EventRecordLog;
-import com.twfhclife.generic.annotation.EventRecordParam;
-import com.twfhclife.generic.annotation.FuncUsageParam;
-import com.twfhclife.generic.annotation.LoginCheck;
-import com.twfhclife.generic.annotation.RequestLog;
-import com.twfhclife.generic.annotation.SqlParam;
-import com.twfhclife.generic.annotation.SystemEventParam;
-import com.twfhclife.generic.api_client.APIAllianceTemplateClient;
-import com.twfhclife.generic.api_model.APIAllianceRequestVo;
-import com.twfhclife.generic.api_model.ApiResponseObj;
-import com.twfhclife.generic.api_model.ReturnHeader;
-import com.twfhclife.generic.controller.BaseController;
-import com.twfhclife.generic.util.MyJacksonUtil;
+import org.springframework.web.bind.annotation.*;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * 報表查詢-線上申請查詢.
@@ -370,6 +341,61 @@ public class OnlineChangeController extends BaseController {
 		}
 		return "backstage/rpt/onlineChangeDetail-medicalTreatment";
 	}
+
+	@GetMapping("/onlineChange/medicalTreatmentPrint")
+	public String medicalTreatmentPrint(TransVo transVo) {
+		try {
+			//授權醫療單位名稱
+			addAttribute("hospitalList", onlineChangeService.getHospitalList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
+			//授權醫療保險公司名稱
+			addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
+			Map<String, Object> detailDataMap = onlineChangeService.getMedicalTreatmentClaim(transVo);
+			addAttribute("detailData", detailDataMap);
+			if (detailDataMap.containsKey("CLAIMS_SEQ_ID")) {
+				addAttribute("medicalInfo", onlineChangeService.getMedicalInfo((Double) detailDataMap.get("CLAIMS_SEQ_ID")));
+			}
+			if (detailDataMap.containsKey("ALLIANCE_STATUS")) {
+				String code = (String) detailDataMap.get("ALLIANCE_STATUS");
+				ParameterVo parameterVo = new ParameterVo();
+				parameterVo.setParameterCode("MEDICAL_INTERFACE_STATUS_" + code);
+				parameterVo.setSystemId(ApConstants.SYSTEM_API_ID);
+				List<ParameterVo> parameterVos = parameterService.getParameter(parameterVo);
+				if (CollectionUtils.isNotEmpty(parameterVos)) {
+					addAttribute("statusStr", parameterVos.get(0).getParameterName());
+					addAttribute("status", code);
+				}
+			}
+			List<Map> list = (List) detailDataMap.get("FileDatas");
+			Map<String, List<Map<String, Object>>> fileData = Maps.newHashMap();
+			if (CollectionUtils.isNotEmpty(list)) {
+				for (Map m : list) {
+					if (fileData.get(m.get("TYPE")) != null) {
+						fileData.get(m.get("TYPE")).add(m);
+					} else {
+						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
+					}
+				}
+			}
+			addAttribute("fileData", fileData);
+			SignRecord signRecord = onlineChangeService.getNewSignStatus(String.valueOf(detailDataMap.get("TRANS_NUM")));
+			if (signRecord != null) {
+				Map<String, Object> signRecordMap = Maps.newHashMap();
+				signRecordMap.put("idVerifyTime", signRecord.getIdVerifyTime() != null ? DateUtil.formatDateTime(signRecord.getIdVerifyTime(), "yyyy/MM/dd HH:mm") : "");
+				signRecordMap.put("idVerifyStatus", SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), null));
+				signRecordMap.put("signTime", signRecord.getSignTime() != null ? DateUtil.formatDateTime(signRecord.getSignTime(), "yyyy/MM/dd HH:mm") : "");
+				signRecordMap.put("signStatus", SignStatusUtil.signStatusToStr(null, signRecord.getSignStatus()));
+				signRecordMap.put("signDownload", signRecord.getSignDownload());
+				signRecordMap.put("signFileId", signRecord.getSignFileId());
+				addAttribute("signRecord", signRecordMap);
+			}
+		} catch (Exception e) {
+			logger.error("Unable to getTransInsuranceClaim: {}", ExceptionUtils.getStackTrace(e));
+			addDefaultSystemError();
+		}
+		return "backstage/rpt/onlineChangeDetail-medicalTreatmentPrint";
+	}
+
+
 	/**
 	 * 醫療
 	 * 開啟傳送聯盟/傳送聯盟覆核.
