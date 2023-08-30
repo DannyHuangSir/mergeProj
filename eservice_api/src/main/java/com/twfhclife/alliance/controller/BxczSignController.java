@@ -118,7 +118,7 @@ public class BxczSignController {
                     data.put("acExpiredSec", "0");
                 }
                 data.put("to", medicalVo.getTo());
-                data.put("redirectUri", callBack414 + "?actionId=" + vo.getActionId());
+                data.put("redirectUri", callBack414);
                 data.put("id_token", StringUtils.isBlank(state.getId()) ? "" : AesUtil.decrypt(state.getId(), state.getActionId()));
                 CoapContentVo coapContent = new CoapContentVo();
                 coapContent.setHpId(medicalVo.getToHospitalId());
