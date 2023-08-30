@@ -17,7 +17,7 @@
 		UPDATE ESERVICE.DBO.BXCZ_SIGN_RECORD
 		SET VERIFY_CODE = #{code}, VERIFY_MSG = #{msg},
 		ID_VERIFY_STATUS = CASE WHEN CAN_UPDATE = 'Y' THEN #{vo.idVerifyStatus} ELSE ID_VERIFY_STATUS END,
-		SIGN_STATUS = CASE WHEN CAN_UPDATE = 'Y' THEN #{vo.signStatus} ELSE SIGN_STATUS END,
+		SIGN_STATUS = CASE WHEN (CAN_UPDATE = 'Y' OR #{vo.signStatus} = 'SIGN_L_S') THEN #{vo.signStatus} ELSE SIGN_STATUS END,
 		ID_VERIFY_TIME = #{idVerifyTime},
 		ID_VERIFY_TYPE = #{vo.idVerifyType}, SIGN_FILEID = #{vo.signFileId}, SIGN_TIME = #{signTime}
 		WHERE ACTION_ID = #{vo.actionId}
