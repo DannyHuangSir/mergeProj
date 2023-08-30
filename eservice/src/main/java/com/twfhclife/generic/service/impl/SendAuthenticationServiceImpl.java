@@ -1,5 +1,6 @@
 package com.twfhclife.generic.service.impl;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -47,7 +48,7 @@ public class SendAuthenticationServiceImpl implements ISendAuthenticationService
 	 */
 	@Override
 	public String sendAuthentication(String emails, String mobile) throws Exception {
-		Random rnd = new Random();
+		Random rnd = SecureRandom.getInstanceStrong();
 		String authentication = "";
 		
 		// 20210421 調整應至少6位數
