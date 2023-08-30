@@ -455,7 +455,7 @@
             FROM LIPAYF_ES lbf
             LEFT JOIN LILIPB_ES_NONCHAR lbp ON lbp.LIPB_INSU_TYPE||lbp.LIPB_INSU_GRP_NO||lbp.LIPB_INSU_SEQ_NO = lbf.PAYF_INSU_NO
             LEFT JOIN LIPAHI_ES lph ON lph.PAHI_INSU_TYPE||lph.PAHI_INSU_GRP_NO||lph.PAHI_INSU_SEQ_NO = lbf.PAYF_INSU_NO
-        WHERE lbf.PAYF_INSU_NO = #{policyNo} AND lph.PAHI_PAY_CODE IN ('01', '02', '96')
+        WHERE lbf.PAYF_INSU_NO = #{policyNo} AND lph.PAHI_PAY_CODE IN ('01', '02', '96') AND lbp.LIPB_BENI_CODE IN ('01', '03', '05')
     </select>
 
     <resultMap id="ChangeInfoMap" type="com.twfhclife.eservice.api.shouxian.model.ChangeInfoVo">
