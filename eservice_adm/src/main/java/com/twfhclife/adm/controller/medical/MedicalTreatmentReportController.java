@@ -11,6 +11,8 @@ import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.EventCodeConstants;
 
+import com.twfhclife.generic.util.SignStatusUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -97,6 +99,18 @@ public class MedicalTreatmentReportController extends BaseController {
 	@PostMapping("/medicalTreatmentStatistics/csv")
 	public String statisticsCsv(MedicalTreatmentStatisticsVo claimVo) {
 		List reportList = onlineChangeService.getMedicalTreatmentStatisticsReport(claimVo);
+		if (CollectionUtils.isNotEmpty(reportList)) {
+			reportList.forEach(x -> {
+				String signStatus = (String) ((Map)x).get("SIGN_STATUS");
+				if (StringUtils.isNotBlank(signStatus)) {
+					((Map) x).put("SIGN_STATUS", SignStatusUtil.signStatusToStr(signStatus));
+				}
+				String verifyStatus = (String) ((Map)x).get("ID_VERIFY_STATUS");
+				if (StringUtils.isNotBlank(verifyStatus)) {
+					((Map) x).put("ID_VERIFY_STATUS", SignStatusUtil.verifyStatusToStr(verifyStatus));
+				}
+			});
+		}
 			//授權醫療保險公司名稱
 		addAttribute("csvHospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
 
@@ -160,6 +174,18 @@ public class MedicalTreatmentReportController extends BaseController {
 	public String rptInsClaimDetailCSV(MedicalTreatmentStatisticsVo claimVo) {
 		//System.out.println(claimVo);
 		List reportList = onlineChangeService.getMedicalTreatmentDetailReport(claimVo);
+		if (CollectionUtils.isNotEmpty(reportList)) {
+			reportList.forEach(x -> {
+				String signStatus = (String) ((Map)x).get("SIGN_STATUS");
+				if (StringUtils.isNotBlank(signStatus)) {
+					((Map) x).put("SIGN_STATUS", SignStatusUtil.signStatusToStr(signStatus));
+				}
+				String verifyStatus = (String) ((Map)x).get("ID_VERIFY_STATUS");
+				if (StringUtils.isNotBlank(verifyStatus)) {
+					((Map) x).put("ID_VERIFY_STATUS", SignStatusUtil.verifyStatusToStr(verifyStatus));
+				}
+			});
+		}
 		//獲取醫療保險公司的名稱
 		//授權醫療單位名稱
 		addAttribute("csvHospitalList", onlineChangeService.getHospitalList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));

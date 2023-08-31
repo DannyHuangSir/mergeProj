@@ -3,6 +3,9 @@ package com.twfhclife.adm.controller.rpt;
 import java.util.List;
 import java.util.Map;
 
+import com.twfhclife.generic.util.SignStatusUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +70,18 @@ public class InsClaimReportController extends BaseController {
 	@PostMapping("/rptInsClaimStatistics/csv")
 	public String onlineChangeCSV(InsClaimStatisticsVo claimVo) {
 		List reportList = onlineChangeService.getInsClaimStatisticsReport(claimVo);
+		if (CollectionUtils.isNotEmpty(reportList)) {
+			reportList.forEach(x -> {
+				String signStatus = (String) ((Map)x).get("SIGN_STATUS");
+				if (StringUtils.isNotBlank(signStatus)) {
+					((Map) x).put("SIGN_STATUS", SignStatusUtil.signStatusToStr(signStatus));
+				}
+				String verifyStatus = (String) ((Map)x).get("ID_VERIFY_STATUS");
+				if (StringUtils.isNotBlank(verifyStatus)) {
+					((Map) x).put("ID_VERIFY_STATUS", SignStatusUtil.verifyStatusToStr(verifyStatus));
+				}
+			});
+		}
 		addAttribute("claimVo", claimVo);
 		addAttribute("reportList", reportList);
 		addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList("INSURANCE_CLAIM"));
@@ -110,6 +125,18 @@ public class InsClaimReportController extends BaseController {
 	@PostMapping("/rptInsClaimDetail/csv")
 	public String rptInsClaimDetailCSV(InsClaimStatisticsVo claimVo) {
 		List reportList = onlineChangeService.getInsClaimDetailReport(claimVo);
+		if (CollectionUtils.isNotEmpty(reportList)) {
+			reportList.forEach(x -> {
+				String signStatus = (String) ((Map)x).get("SIGN_STATUS");
+				if (StringUtils.isNotBlank(signStatus)) {
+					((Map) x).put("SIGN_STATUS", SignStatusUtil.signStatusToStr(signStatus));
+				}
+				String verifyStatus = (String) ((Map)x).get("ID_VERIFY_STATUS");
+				if (StringUtils.isNotBlank(verifyStatus)) {
+					((Map) x).put("ID_VERIFY_STATUS", SignStatusUtil.verifyStatusToStr(verifyStatus));
+				}
+			});
+		}
 		addAttribute("claimVo", claimVo);
 		addAttribute("reportList", reportList);
 		addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList("INSURANCE_CLAIM"));
