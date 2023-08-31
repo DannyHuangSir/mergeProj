@@ -537,7 +537,7 @@
 		<!--保險存摺歷程-->
 		<div class="modal fade in" id="modal-container-bxczSignLog" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
-				<div class="modal-content lock-up"  style="width: 700px;">
+				<div class="modal-content lock-up"  style="width: 1500px; left: -60%;">
 					<div class="modal-header"> 保險存摺歷程
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 					</div>
@@ -559,6 +559,7 @@
 							<tr>
 								<th>動作類型</th>
 								<th>動作名稱</th>
+								<th>ACTION ID</th>
 								<th>執行時間起</th>
 								<th>執行時間止</th>
 								<th>執行狀態</th>
@@ -3048,7 +3049,11 @@ function submitDnsApproved() {
 				var data = {};
 				data = {transNum: TRANS_NUM};
 				$('#bxcz_trans_num').html(TRANS_NUM);
-				$('#bxcz_application_items').html($('#label_apply_item').html());
+				if (TRANS_TYPE == 'INSURANCE_CLAIM') {
+					$('#bxcz_application_items').html($('#label_apply_item').html());
+				} else {
+					$('#bxcz_application_items').html($('#medical_label_apply_item').html());
+				}
 				$('#modal-container-bxczSignLog').modal({
 						show: true,
 						backdrop: 'static',
@@ -3067,6 +3072,7 @@ function submitDnsApproved() {
 									html += '<tr>'+
 												'<td>'+item.apiType+'</td>'+
 												'<td>'+item.apiName+'</td>'+
+												'<td>'+item.actionId+'</td>'+
 												'<td>'+item.callStartTime+'</td>'+
 												'<td>'+item.callEndTime+'</td>'+
 												'<td>'+ (item.apiRespCode == '0'? '成功': '失败') +'</td>'+

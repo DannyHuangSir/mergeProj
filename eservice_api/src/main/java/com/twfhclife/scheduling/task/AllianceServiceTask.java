@@ -694,7 +694,7 @@ public class AllianceServiceTask {
 											SignRecord record = gson.fromJson(MyJacksonUtil.getNodeString(api416Resp, "data"), SignRecord.class);
 											record.setActionId(actionId);
 											bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
-											BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "數位身分驗證/數位簽署狀態查詢", "0", "", "", record.getTransNum(), startTime, new Date());
+											BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "API416-數位身分驗證/數位簽署狀態查詢", "0", "", actionId, record.getTransNum(), startTime, new Date());
 											bxczDao.addSignApiLog(bxczSignApiLog);
 										} catch (Exception e) {
 											logger.error("call api416 error: {}, {}, {}", headers, params, e);

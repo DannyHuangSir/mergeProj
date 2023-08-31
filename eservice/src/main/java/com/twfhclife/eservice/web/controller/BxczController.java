@@ -4,6 +4,7 @@ import com.auth0.jwt.internal.org.apache.commons.codec.digest.HmacUtils;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
 import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
 import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
@@ -63,6 +64,7 @@ public class BxczController extends BaseController {
     @PostMapping("/generateBxczSignUrl")
     public ResponseEntity<ResponseObj> generateBxczSignUrl(@RequestBody BxczState bxczState) {
         try {
+            Date startTime = new Date();
             if (StringUtils.isBlank(bxczState.getTransNum())) {
                 this.setResponseObj(ResponseObj.ERROR, ApConstants.SYSTEM_ERROR, null);
             } else {
@@ -86,6 +88,9 @@ public class BxczController extends BaseController {
                 bxczSignService.addSignBxczRecord(signRecord);
                 transService.updateTransStatus(bxczState.getTransNum(), OnlineChangeUtil.TRANS_STATUS_PROCESS_SIGN);
                 this.setResponseObj(ResponseObj.SUCCESS, "", url);
+
+                BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "URL413-數位身分驗證頁面轉導", "0", "", actionId, bxczState.getTransNum(), startTime, new Date());
+                bxczSignService.addSignBxczApiRecord(bxczSignApiLog);
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -136,10 +141,10 @@ public class BxczController extends BaseController {
         try {
 
             logger.info("callBack418 actionId is: {}, idVerifyStatus is: {}, signStatus is: {}", actionId, idVerifyStatus, signStatus);
+            Date startTime = new Date();
             addAttribute("msg", SignStatusUtil.signStatusToStr(idVerifyStatus, signStatus));
 
             SignTrans signTrans = bxczSignService.getSignTrans(actionId);
-
             if (signTrans != null ) {
                 List<String> statusSuccessList = Lists.newArrayList();
                 List<String> statusVerifyFailList = Lists.newArrayList();
@@ -188,6 +193,8 @@ public class BxczController extends BaseController {
                     }
                 }
                 bxczSignService.updateSignStatus418(actionId, idVerifyStatus, signStatus, new Date());
+                BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL_BACK", "URL418-數位身分驗證/數位簽署結束頁面轉導", "0", "", actionId, signTrans.getTransNum(), startTime, new Date());
+                bxczSignService.addSignBxczApiRecord(bxczSignApiLog);
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

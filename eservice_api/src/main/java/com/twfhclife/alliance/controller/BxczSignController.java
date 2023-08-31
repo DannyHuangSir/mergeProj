@@ -5,19 +5,15 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.twfhclife.alliance.model.*;
 import com.twfhclife.alliance.service.IExternalService;
-import com.twfhclife.eservice.api.adm.domain.MessageTriggerRequestVo;
 import com.twfhclife.eservice.onlineChange.model.*;
 import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
 import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
 import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
 import com.twfhclife.eservice.onlineChange.service.ITransService;
-import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.web.model.BxczState;
-import com.twfhclife.eservice_api.service.IMessagingTemplateService;
 import com.twfhclife.generic.annotation.ApiRequest;
 import com.twfhclife.generic.utils.AesUtil;
 import com.twfhclife.generic.utils.ApConstants;
-import com.twfhclife.generic.utils.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +25,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class BxczSignController {
@@ -71,7 +70,7 @@ public class BxczSignController {
             }
 
             BxczState state = new Gson().fromJson(new String(Base64.getDecoder().decode(vo.getState())), BxczState.class);
-            BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL_BACK", "活動編碼確認並索取簽屬文件相關資料", "0", "", state.getActionId(), state.getTransNum(), startTime, new Date());
+            BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL_BACK", "API414-活動編碼確認並索取簽屬文件相關資料", "0", "", state.getActionId(), state.getTransNum(), startTime, new Date());
             bxczSignService.addSignBxczApiRecord(bxczSignApiLog);
             if (StringUtils.equals(state.getType(), ApConstants.INSURANCE_CLAIM)) {
                 TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(state.getTransNum());
@@ -163,7 +162,7 @@ public class BxczSignController {
             if (vo.getData() != null && StringUtils.isNotBlank(vo.getData().getState())) {
                 Bxcz415CallBackDataVo data = vo.getData();
                 BxczState state = new Gson().fromJson(new String(Base64.getDecoder().decode(data.getState())), BxczState.class);
-                BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL_BACK", "數位身分驗證結果/數位簽署狀態通知", vo.getCode(), vo.getMsg(), state.getActionId(), state.getTransNum(), startTime, new Date());
+                BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL_BACK", "API415-數位身分驗證結果/數位簽署狀態通知", vo.getCode(), vo.getMsg(), state.getActionId(), state.getTransNum(), startTime, new Date());
                 bxczSignService.addSignBxczApiRecord(bxczSignApiLog);
                 int result = bxczSignService.updateSignRecordStatus(vo.getCode(), vo.getMsg(), data);
                 if (result > 0) {

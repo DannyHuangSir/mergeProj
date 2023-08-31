@@ -104,7 +104,7 @@ public class BxczSignTask {
                             bxczSignService.updateSignDownloaded(s.getActionId());
                             bxczSignService.addSignFileData(s.getSignFileId(), clientId, fileBase64);
                         }
-                        BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "下載檔案", "0", "", s.getActionId(), s.getTransNum(), startTime, new Date());
+                        BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "API417-下載檔案", "0", "", s.getActionId(), s.getTransNum(), startTime, new Date());
                         bxczDao.addSignApiLog(bxczSignApiLog);
                     } catch (Exception e) {
                         logger.error("call api417 error: {}, {}, {}", headers, params, e);

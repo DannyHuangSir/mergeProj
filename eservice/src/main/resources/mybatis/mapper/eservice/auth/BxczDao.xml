@@ -32,4 +32,9 @@
 		SELECT TOP 1 A.TRANS_TYPE transType, A.TRANS_NUM transNum FROM TRANS A INNER JOIN BXCZ_SIGN_RECORD B ON A.TRANS_NUM = B.TRANS_NUM
 		WHERE B.ACTION_ID = #{actionId} AND A.STATUS IN ('41', '42')
 	</select>
+
+	<insert id="addSignApiLog" parameterType="com.twfhclife.eservice.onlineChange.model.BxczSignApiLog">
+		INSERT INTO ESERVICE.DBO.BXCZ_SIGN_API_LOG (CALL_TYPE, API_NAME, API_RESP_CODE, API_RESP_MSG, ACTION_ID, TRANS_NUM, CALL_START_TIME, CALL_END_TIME)
+		VALUES (#{vo.apiType}, #{vo.apiName}, #{vo.apiRespCode}, #{vo.apiRespMsg}, #{vo.actionId}, #{vo.transNum}, #{vo.callStartTime}, #{vo.callEndTime})
+	</insert>
 </mapper>
