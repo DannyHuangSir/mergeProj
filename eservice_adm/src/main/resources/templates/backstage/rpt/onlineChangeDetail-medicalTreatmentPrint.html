@@ -336,9 +336,9 @@
                                             <th:block th:each="vo1 : ${vo.dtypeList}">
                                                 <th:block
                                                         th:if="${vo1.fileName != null and vo1.fileName != '' and vo1.fileBase64New != null and vo1.fileBase64New != ''}">
-                                                    <th:block th:each="vo2 : ${#strings.arraySplit(vo1.pdfBase64, '||')}">
+                                                    <th:block th:each="vo2 : ${#strings.arraySplit(vo1.fileBase64New,'||')}">
                                                         <img style="width: 100%; height: 100%;"
-                                                             th:title="${vo1.fileName}" th:src="'data:image/png;base64, '+${vo2}"/>
+                                                             th:title="${vo1.fileName}" th:src="'data:image/png;base64,'+${vo2}"/>
                                                     </th:block>
                                                 </th:block>
                                             </th:block>

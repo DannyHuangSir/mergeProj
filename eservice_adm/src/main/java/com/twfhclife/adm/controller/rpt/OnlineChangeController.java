@@ -374,6 +374,24 @@ public class OnlineChangeController extends BaseController {
 					} else {
 						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
 					}
+					if (StringUtils.contains(String.valueOf(m.get("FILE_NAME")), "pdf")) {
+						File f = new File("print/tmp/file/" + UUID.randomUUID() + ".pdf");
+						if (!f.getParentFile().exists()) {
+							f.getParentFile().mkdirs();
+						}
+
+						try (FileOutputStream out = new FileOutputStream(f)) {
+							IOUtils.write(Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64"))), out);
+						}
+						try (PDDocument doc = PDDocument.load(f)) {
+							List<byte[]> images = pdfBufferedImage(doc);
+							List<String> imagesBase64 = Lists.newArrayList();
+							if (CollectionUtils.isNotEmpty(images)) {
+								images.forEach(i -> imagesBase64.add(Base64.getEncoder().encodeToString(i)));
+							}
+							m.put("pdfBase64", imagesBase64);
+						}
+					}
 				}
 			}
 			addAttribute("fileData", fileData);

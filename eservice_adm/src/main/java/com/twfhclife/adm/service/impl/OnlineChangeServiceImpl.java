@@ -1549,7 +1549,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 					boolean isFirst = true;
 					for (Map<String, String> map : medicalInfo.getDtypeList()) {
 						String fileBase64 = map.get("fileBase64");
-						map.put("fileBase64New", "");
+						map.put("fileBase64New", fileBase64);
 						if (fileBase64 != null && !"".equals(fileBase64)) {
 							//直接将原文件base64 转为 缩图的 base64
 							byte[] decode = Base64.getDecoder().decode(fileBase64);
@@ -1567,8 +1567,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 								} catch (Exception e) {
 									throw new RuntimeException(e);
 								}
-								try (PDDocument doc = PDDocument.load(f)) {
+								try (PDDocument doc = PDDocument.load(f); ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
 									List<byte[]> images = mulPdfBufferedImage(doc);
+									String miniatureBase64 = this.imgBase64(doc, baos);
+									logger.info("--------------------------------------------------PDF Base64转换为缩图-----Base64  is  not  null");
+									map.put("fileBase64", miniatureBase64);
 									if (org.apache.commons.collections.CollectionUtils.isNotEmpty(images)) {
 										for (byte[] i : images) {
 											String base64 = Base64.getEncoder().encodeToString(i);
@@ -1583,7 +1586,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 											sb.append(base64);
 										}
 									}
-									map.put("pdfBase64", sb.toString());
+									map.put("fileBase64New", sb.toString());
 								} catch (Exception e) {
 									throw new RuntimeException(e);
 								}
@@ -1596,7 +1599,7 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		return medicalInfoList;
 	}
 
-	private List<byte[]> mulPdfBufferedImage(PDDocument doc ) {
+	private List<byte[]> mulPdfBufferedImage(PDDocument doc) {
 		try {
 			PDFRenderer renderer = new PDFRenderer(doc);
 			int pageCount = doc.getNumberOfPages();
