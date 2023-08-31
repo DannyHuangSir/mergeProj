@@ -132,7 +132,7 @@
 		/*<![CDATA[*/
 		$(function() {
 			//TODO SSO Check
-			
+
 			var errorMessage = /*[[${errorMessage}]]*/;
 			errorMessage = (errorMessage == null ? '' : errorMessage);
 			if (errorMessage != '') {
@@ -152,12 +152,12 @@
 				//$('#loginForm').submit();
 			});
 
+			$('#validateImage').attr('src', 'getVerify?r=' + Math.random())
+
 			$('#validateImage').click(function() {
 				this.src = 'getVerify?r=' + Math.random();
 			});
 
-			
-			
 			var accessTokenCookie = getCookie("sso-token");
 			if(accessTokenCookie) {
 				console.log("accessTokenCookie="+accessTokenCookie);

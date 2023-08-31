@@ -64,7 +64,6 @@ public class LoginController extends BaseController {
 	@RequestLog
 	@RequestMapping("/login")
 	public String login(String userId) {
-		resetVerifyCode();
 		return "login";
 	}
 	
