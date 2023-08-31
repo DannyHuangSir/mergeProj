@@ -647,6 +647,7 @@
 		'DERATE_PAID_OFF':/*[[@{/getTransDeratePaidOffDetail}]]*/,
 	};
 	$(function(){
+		var myPage = 1
 		var test = window.location.pathname;
 		if(test != "/eservice/apply2"){
 			//window.location.href = "/eservice/apply2";
@@ -746,7 +747,7 @@
 			}
 		];
 		grid1.queryByPage(1);
-		
+		myPage = 1
 		// 查詢
 		$('#searchBtn').click(function() {
 			if ($('#startDate').val() != '' && $('#endDate').val() != '') {
@@ -763,10 +764,12 @@
 			grid1.setPostData('transType', $('#transType').val());
 			grid1.setPostData('policyNo', $('#policyNolist').val());
 			grid1.queryByPage(1);
+			myPage = 1
 		});
 	});
 	
 	function queryDataByPage(pageNum) {
+		myPage = pageNum
 		grid1.queryByPage(pageNum);
 	}
 
@@ -1152,35 +1155,60 @@
 		
 	}
 	function getRootPath(){
-				var strFullPath=window.document.location.href;
-				var strPath=window.document.location.pathname;
-				var pos=strFullPath.indexOf(strPath);
-				var prePath=strFullPath.substring(0,pos);
-				return prePath;
-			}
-
-	function openBxczSign(transNum, transType) {
-		popupLoading();
-		$.ajax({
-			type : 'POST',
-			contentType : 'application/json',
-			url : 'generateBxczSignUrl',
-			data:  JSON.stringify({"transNum": transNum, "type": transType}),
-			success : function(response) {
-				removeLoading()
-				if (response.result == 'SUCCESS') {
-					window.open(response.resultData)
-				} else {
-					openAlert(response.resultMsg)
-				}
-			},
-			error : function() {
-				openAlert('error!')
-			}
-		});
-		event.preventDefault();
-		event.stopPropagation();
+		var strFullPath=window.document.location.href;
+		var strPath=window.document.location.pathname;
+		var pos=strFullPath.indexOf(strPath);
+		var prePath=strFullPath.substring(0,pos);
+		return prePath;
 	}
+
+	/*]]>*/
+	</script>
+
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var interval
+		function openBxczSign(transNum, transType) {
+			popupLoading();
+			interval = setInterval("getTransStatus(" + transNum + ")", 30 * 1000)
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : 'generateBxczSignUrl',
+				data:  JSON.stringify({"transNum": transNum, "type": transType}),
+				success : function(response) {
+					if (response.result == 'SUCCESS') {
+						window.open(response.resultData)
+					} else {
+						openAlert(response.resultMsg)
+					}
+				},
+				error : function() {
+					openAlert('error!')
+				}
+			});
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		function getTransStatus(transNum) {
+			$.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				url : 'getTransStatus',
+				data:  JSON.stringify({"transNum": transNum}),
+				success : function(response) {
+					if (response.result == 'SUCCESS' && ['41', '42'].indexOf(response.result) <= -1) {
+						removeLoading()
+						clearInterval(interval)
+						queryDataByPage(myPage)
+					}
+				},
+				error : function() {
+					openAlert('error!')
+				}
+			});
+		}
 	/*]]>*/
 	</script>
 </body>

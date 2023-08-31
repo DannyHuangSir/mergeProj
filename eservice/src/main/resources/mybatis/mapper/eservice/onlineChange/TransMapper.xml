@@ -163,7 +163,7 @@
 		update ESERVICE.DBO.TRANS SET STATUS = #{status} WHERE STATUS IN ('41', '42') AND TRANS_NUM = #{transNum}
 	</update>
 
-	<select id="getTransStatusByTransNum">
+	<select id="getTransStatusByTransNum" resultType="string">
 		SELECT STATUS FROM ESERVICE.DBO.TRANS WHERE TRANS_NUM = #{transNum}
 	</select>
 

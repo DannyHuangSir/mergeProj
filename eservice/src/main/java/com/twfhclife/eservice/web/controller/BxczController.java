@@ -19,12 +19,14 @@ import com.twfhclife.eservice.util.SignStatusUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.BxczState;
 import com.twfhclife.eservice.web.model.SignTrans;
+import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -131,6 +130,19 @@ public class BxczController extends BaseController {
         } else {
             return "frontstage/onlineChange/medicalTreatment/medicalTreatment-wait-sign";
         }
+    }
+
+    @ResponseBody
+    @PostMapping("/getTransStatus")
+    public ResponseEntity<ResponseObj> getTransStatus(@RequestBody TransVo transVo) {
+        try {
+            String transStatus = transService.getTransStatus(transVo.getTransNum());
+            processSuccess(transStatus);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            processError("system error!");
+        }
+        return  processResponseEntity();
     }
 
     @Autowired

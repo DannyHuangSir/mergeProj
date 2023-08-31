@@ -10,6 +10,12 @@ import com.twfhclife.eservice.web.model.SignTrans;
 import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +28,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
@@ -41,7 +49,7 @@ public class BxczSignServiceImpl implements IBxczSignService {
 
 	private RestTemplate restTemplate;
 
-	public BxczSignServiceImpl() {
+	public BxczSignServiceImpl() throws Exception {
 
 		//Fix the RestTemplate to be a singleton instance.
 		restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
@@ -49,11 +57,19 @@ public class BxczSignServiceImpl implements IBxczSignService {
 		// Set the request factory.
 		// IMPORTANT: This section I had to add for POST request. Not needed for GET
 		int milliseconds = 20*1000;
-		HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-		httpRequestFactory.setConnectionRequestTimeout(milliseconds);
-		httpRequestFactory.setConnectTimeout(milliseconds);
-		httpRequestFactory.setReadTimeout(milliseconds);
-		restTemplate.setRequestFactory(httpRequestFactory);
+
+		SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+				SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+				NoopHostnameVerifier.INSTANCE);
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		requestFactory.setConnectionRequestTimeout(milliseconds);
+		requestFactory.setConnectTimeout(milliseconds);
+		requestFactory.setReadTimeout(milliseconds);
+		requestFactory.setHttpClient(httpClient);
+
+		restTemplate.setRequestFactory(requestFactory);
 
 		// Add converters
 		// Note I use the Jackson Converter, I removed the http form converter
