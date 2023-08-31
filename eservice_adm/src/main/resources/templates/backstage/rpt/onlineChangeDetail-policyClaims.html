@@ -160,7 +160,7 @@
 									</button>
 								</th:block>
 								<button type="button" class="bgOrange" th:onclick="'javascript:onAlliance(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CASE_ID']} + '\',\'' + ${detailData['FROM_COMPANY_ID']} + '\',\'\');'">聯盟鏈歷程</button>
-								<button type="button" class="bgOrange" th:onclick="'javascript:onBxczSign(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CASE_ID']} + '\',\'' + ${detailData['FROM_COMPANY_ID']} + '\',\'\');'">保險存摺歷程</button>
+								<button type="button" class="bgOrange" th:onclick="'javascript:onBxczSign(\'' + ${detailData['APPLYITEM']} + '\',\'' + ${detailData['TRANS_NUM']} + '\',\'' + ${detailData['CASE_ID']} + '\',\'' + ${detailData['FROM_COMPANY_ID']} + '\',\'INSURANCE_CLAIM\');'">保險存摺歷程</button>
 								<!-- <button type="button" class="bgOrange" onclick="onPrint()">詳細資料列印</button> -->
 								<button th:if="${signRecord} != null and ${signRecord.signDownload} == 'Y'" style="width: 100px;" type="button" class="bgOrange" th:onclick="'javascript:downloadSignPdf(\'' + ${signRecord.signFileId} + '\');'">數位簽署文件</button>
 								<button style="width: 100px;" type="button" class="bgOrange" th:onclick="'javascript:onDetail(\'' + ${detailData['TRANS_NUM']} + '\', \'claim\');'">詳細資料列印</button>

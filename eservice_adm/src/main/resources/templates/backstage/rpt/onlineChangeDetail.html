@@ -3049,7 +3049,7 @@ function submitDnsApproved() {
 				var data = {};
 				data = {transNum: TRANS_NUM};
 				$('#bxcz_trans_num').html(TRANS_NUM);
-				if (TRANS_TYPE == 'INSURANCE_CLAIM') {
+				if (str == 'INSURANCE_CLAIM') {
 					$('#bxcz_application_items').html($('#label_apply_item').html());
 				} else {
 					$('#bxcz_application_items').html($('#medical_label_apply_item').html());
