@@ -99,6 +99,8 @@ public class BxczSignTask {
                     headers.setContentType(MediaType.APPLICATION_JSON);
                     try {
                         Date startTime = new Date();
+                        params.put("signFileId", s.getSignFileId());
+                        params.put("companyId", clientId);
                         String fileBase64 = bxczSignService.postForJson(api417Url, headers, params);
                         if (CollectionUtils.isNotEmpty(fileIds)) {
                             bxczSignService.updateSignDownloaded(s.getActionId());
