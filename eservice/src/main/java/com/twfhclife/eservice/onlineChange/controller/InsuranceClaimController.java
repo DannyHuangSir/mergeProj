@@ -135,8 +135,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 			 */
 			int resultMedical = iMedicalTreatmentService.getPolicyClaimCompleted(getUserRocId());
 			if (resultMedical > 0) {
-//				String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
-				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.MEDICAL_TREATMENT_CLAIM_APPLYING);
+				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INSURANCE_CLAIM_APPLYING);
 				return "redirect:apply1";
 			}
 
