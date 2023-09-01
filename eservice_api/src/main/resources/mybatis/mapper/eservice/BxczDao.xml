@@ -54,4 +54,13 @@
 		WHERE (ID_VERIFY_STATUS != #{idVerifyStatus} OR SIGN_STATUS != #{signStatus}) AND CAN_UPDATE = 'Y'
 	</select>
 
+	<select id="getNewSignStatus" resultType="com.twfhclife.eservice.onlineChange.model.SignRecord">
+		SELECT TOP 1 SIGN_STATUS signStatus, ID_VERIFY_STATUS idVerifyStatus, SIGN_TIME signTime, ID_VERIFY_TIME idVerifyTime,
+		SIGN_DOWNLOAD signDownload, SIGN_FILEID signFileId, ACTION_ID actionId
+		FROM ESERVICE.DBO.BXCZ_SIGN_RECORD A
+		INNER JOIN ESERVICE.DBO.TRANS B ON A.TRANS_NUM = B.TRANS_NUM AND B.STATUS NOT IN ('41', '42')
+		WHERE A.TRANS_NUM = #{transNum}
+		AND (ID_VERIFY_TIME IS NOT NULL OR SIGN_TIME IS NOT NULL) ORDER BY SIGN_TIME DESC, ID_VERIFY_TIME DESC
+	</select>
+
 </mapper>
