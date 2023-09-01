@@ -332,7 +332,7 @@
 	<select id="getFileDataToUpload" parameterType="com.twfhclife.alliance.model.InsuranceClaimFileDataVo" resultMap="InsuranceCliamFileDataResultMap">
 		select top(10) * from ESERVICE.dbo.INSURANCE_CLAIM_FILEDATAS
 		where NOTIFY_SEQ_ID is null
-		and FILE_ID is not null
+		and FILE_ID is not null and FILE_ID != '0'
 		and (MSG is null or UPPER(MSG)!='SUCCESS')
 	</select>
 	
