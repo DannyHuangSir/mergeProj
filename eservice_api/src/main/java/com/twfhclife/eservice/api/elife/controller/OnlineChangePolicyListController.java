@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -72,7 +73,8 @@ public class OnlineChangePolicyListController extends BaseController {
 			if (!StringUtils.isEmpty(rocId)) {
 				List<PolicyListVo> userPolicyList = new ArrayList<PolicyListVo>();
 				// 判斷是否為保單理賠
-				if (req.getTypeName() != null && ApConstants.INSURANCE_CLAIM.equals(req.getTypeName())) {
+				if (req.getTypeName() != null &&
+						(ApConstants.INSURANCE_CLAIM.equals(req.getTypeName()) || ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE.equals(req.getTypeName()))) {
 					userPolicyList = policyListService.getUserPolicyListByRocId(rocId);
 				}else {
 					userPolicyList = policyListService.getUserPolicyList(rocId);
