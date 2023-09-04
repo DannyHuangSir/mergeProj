@@ -214,6 +214,7 @@ public class AllianceServiceTask {
 				if(listIC!=null && !listIC.isEmpty() && listIC.size()>0) {
 					for (InsuranceClaimMapperVo icvo : listIC) {
 						if(icvo!=null) {
+							insuranceClaimService.updateTransUploadDate(icvo.getTransNum(), new Date());
 							SignInsuranceClaimMapperVo newVo = new SignInsuranceClaimMapperVo();
 							BeanUtils.copyProperties(icvo, newVo);
 							SignRecord signRecord = bxczSignService.getNewSignStatus(icvo.getTransNum());

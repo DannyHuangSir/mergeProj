@@ -333,4 +333,11 @@
 		</if>
 		ORDER BY CLAIM_SEQ_ID
 	</select>
+
+	<update id="updateTransUploadDate">
+		UPDATE ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
+		set
+		UPLOAD_DATE = #{date}
+		where TRANS_NUM = #{transNum}
+	</update>
 </mapper>

@@ -170,4 +170,6 @@ public interface IMedicalTreatmentService {
 	int updateTransApplyDate(Float claimSeqId, Date date);
 
     List<TransMedicalTreatmentClaimVo> getUnProcessedTrans(Float claimSeqId);
+
+	int updateTransUploadDate(String transNum, Date date);
 }

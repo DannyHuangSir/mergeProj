@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimFileDataVo;
 import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
+import org.springframework.security.access.method.P;
 
 /**
  * 線上申請-保單理賠申請 Dao.
@@ -100,4 +101,6 @@ public interface TransInsuranceClaimDao {
 	int updateTransApplyDate(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
 
     List<TransInsuranceClaimVo> getUnProcessedTrans(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
+
+	int updateTransUploadDate(@Param("transNum") String transNum, @Param("date") Date date);
 }

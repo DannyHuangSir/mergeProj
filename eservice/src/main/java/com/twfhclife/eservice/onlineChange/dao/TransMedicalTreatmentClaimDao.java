@@ -107,4 +107,6 @@ public interface TransMedicalTreatmentClaimDao {
     int updateTransApplyDate(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
 
 	List<TransMedicalTreatmentClaimVo> getUnProcessedTrans(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
+
+	int updateTransUploadDate(@Param("transNum") String transNum, @Param("date") Date date);
 }

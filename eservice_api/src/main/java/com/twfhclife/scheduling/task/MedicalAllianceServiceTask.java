@@ -438,6 +438,7 @@ public class MedicalAllianceServiceTask {
                     for (MedicalTreatmentClaimVo icvo : listMedical) {
                     	try {
                             if(icvo!=null) {
+                                iMedicalTreatmentService.updateTransUploadDate(icvo.getTransNum(), new Date());
                                 icvo.setMedicalInfo(iMedicalService.getMedicalTreatmentClaimApplyData(icvo));
                                 SignRecord signRecord = bxczSignService.getNewSignStatus(icvo.getTransNum());
                                 if (signRecord != null) {
