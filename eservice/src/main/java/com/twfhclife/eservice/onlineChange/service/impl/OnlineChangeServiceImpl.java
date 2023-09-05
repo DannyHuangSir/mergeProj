@@ -406,7 +406,12 @@ public class OnlineChangeServiceImpl extends BaseServiceImpl implements IOnlineC
 		onlineChangeDao.addTransStatusHistory(hisVo);
 	}
 
-	@Override
+    @Override
+    public int addTransStatusHistory(TransStatusHistoryVo hisVo) {
+        return onlineChangeDao.addTransStatusHistory(hisVo);
+    }
+
+    @Override
 	public List<TransRFEVo> getTransRFEList(TransRFEVo vo) {
 		List<TransRFEVo> transRFEVos = onlineChangeDao.getTransRFEList(vo);
 		for (int i = 0; i < transRFEVos.size(); i++) {

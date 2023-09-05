@@ -71,74 +71,20 @@
 		$(function() {
 			// 下載申請書套印PDF
 			$('#downloadPolicyClaimsPDF').click(function() {
-				var fileDataList = "";
-				if(formData != null && formData.fileDatas != null){
-					var fileDatas = formData.fileDatas;
-					var k = fileDatas.length;
-					for(var i=0; i <  k; i++){
-						var fileTypeNames = /*[[ ${session.INSURANCE_CLAIM_UPLOADFILE}]]*/;
-						if(fileTypeNames != null){
-							$.each( fileTypeNames, function( prop, value ) {
-								if(value.parameterCode == fileDatas[i].type){
-									fileDataList += value.parameterName;
-									if(i < k-1){
-										fileDataList += ",";
-									}
-								}
-							});
-						}
-						
-					}
-				}
-					var items = "";
-					if(formData != null && formData.applyItem != null && formData.applyItem != ''){
-						var appStr = formData.applyItem.split(',');
-						var k1 = appStr.length;
-						for(var i=0; i <  k1; i++){
-							var appItemNames = /*[[ ${session.APPLICATION_ITEMS}]]*/;
-							if(appItemNames != null){
-								$.each( appItemNames, function( prop, value ) {
-									if(value.parameterValue == appStr[i]){
-										items += value.parameterName;
-										if(i < k1-1){
-											items += ",";
-										}
-									}
-								});
-							}
-
-						}
-					}
-				formData.fileDataList = fileDataList;
-				formData.applicationItem = items;
-
 				var form = document.createElement("form");
 				form.style.display = "none";
 				form.action = '/eservice/downloadPolicyClaimsPDF';
 				form.method = "post";
 				form.target="_blank";
 				document.body.appendChild(form);
-				// 动态创建input并给value赋值
-				for (var key in formData) {
-					var input = document.createElement("input");
+				var input = document.createElement("input");
 					input.type = "hidden";
-					input.name = key;
-					input.value = formData[key];
+					input.name = 'transNum';
+					input.value = formData.transNum;
 					form.appendChild(input);
-				}
 
 				form.submit();
 				form.remove();
-
-				//var url = '/eservice/downloadPolicyClaimsPDF?' + $.param(formData);
-				//url = url.replace(/%5B/g, '').replace(/%5D/g, '');
-				//window.open(url);
-				//return false;
-				// var a = document.createElement("a");
-				// var blob = new Blob([formData], {'type':"application/octet-stream"});
-				// a.href = URL.createObjectURL(blob);
-				// a.download = "理賠"+".pdf";
-				// a.click();
 			});
 		});
 	/*]]>*/

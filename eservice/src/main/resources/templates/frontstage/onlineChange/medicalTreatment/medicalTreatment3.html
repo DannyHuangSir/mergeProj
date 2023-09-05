@@ -1768,7 +1768,7 @@
 			}
 		} else {
 			$('#confirmBxczModal').modal('hide')
-			if (!checkFirstApply()) {
+			if (checkFirstApply()) {
 				$('#confirmNotFirst').modal('show')
 			} else if (sign == 'Y') {
 				$("[name='signAgree']").val('Y')

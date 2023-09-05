@@ -4,21 +4,14 @@ import com.auth0.jwt.internal.org.apache.commons.codec.digest.HmacUtils;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import com.twfhclife.eservice.onlineChange.model.BxczSignApiLog;
-import com.twfhclife.eservice.onlineChange.model.SignRecord;
-import com.twfhclife.eservice.onlineChange.model.TransInsuranceClaimVo;
-import com.twfhclife.eservice.onlineChange.model.TransMedicalTreatmentClaimVo;
-import com.twfhclife.eservice.onlineChange.service.IBxczSignService;
-import com.twfhclife.eservice.onlineChange.service.IInsuranceClaimService;
-import com.twfhclife.eservice.onlineChange.service.IMedicalTreatmentService;
-import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.model.*;
+import com.twfhclife.eservice.onlineChange.service.*;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
 import com.twfhclife.eservice.util.AesUtil;
 import com.twfhclife.eservice.util.SignStatusUtil;
 import com.twfhclife.eservice.web.domain.ResponseObj;
-import com.twfhclife.eservice.web.model.BxczState;
-import com.twfhclife.eservice.web.model.SignTrans;
+import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.api_client.MessageTemplateClient;
@@ -110,6 +103,9 @@ public class BxczController extends BaseController {
                 if (signRecord != null) {
                     String statusSuccess = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "BXCZ_SIGN_SUCCESS_CODE");
                     if (StringUtils.contains(statusSuccess, signRecord.getSignStatus())) {
+                        TransVo vo = new TransVo();
+                        vo.setTransNum(bxczState.getTransNum());
+                        addAttribute("claimVo", vo);
                         if (StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM)) {
                             return "frontstage/onlineChange/policyClaims/policyClaims-success";
                         } else {
@@ -148,6 +144,9 @@ public class BxczController extends BaseController {
     @Autowired
     private IParameterService parameterService;
 
+    @Autowired
+    private IOnlineChangeService onlineChangeService;
+
     @GetMapping("callBack418")
     public String callBack418(@RequestParam("actionId") String actionId, @RequestParam("idVerifyStatus") String idVerifyStatus, @RequestParam("signStatus") String signStatus) {
         try {
@@ -158,6 +157,13 @@ public class BxczController extends BaseController {
 
             SignTrans signTrans = bxczSignService.getSignTrans(actionId);
             if (signTrans != null ) {
+
+                TransStatusHistoryVo hisVo = new TransStatusHistoryVo();
+                UsersVo userDetail = (UsersVo) getSession(UserDataInfo.USER_DETAIL);
+                hisVo.setCustomerName(userDetail.getUserName());
+                hisVo.setIdentity(userDetail.getUserId());
+                hisVo.setTransNum(signTrans.getTransNum());
+
                 List<String> statusSuccessList = Lists.newArrayList();
                 List<String> statusVerifyFailList = Lists.newArrayList();
                 List<String> statusSignFailList = Lists.newArrayList();
@@ -173,34 +179,59 @@ public class BxczController extends BaseController {
                 if (StringUtils.isNotBlank(statusSignFail)) {
                     statusSignFailList = Splitter.on(",").omitEmptyStrings().splitToList(statusSignFail);
                 }
+
                 if (StringUtils.equals(TransTypeUtil.INSURANCE_CLAIM_PARAMETER_CODE, signTrans.getTransType())) {
                     TransInsuranceClaimVo claimVo = insuranceClaimService.getTransInsuranceClaimDetail(signTrans.getTransNum());
                     if (claimVo != null) {
                         if (statusVerifyFailList.contains(idVerifyStatus)) {
-                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
-                            sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY, OnlineChangeUtil.ELIFE_MAIL_071, OnlineChangeUtil.ELIFE_SMS_071);
+                            int result = transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+                            if (result > 0) {
+                                hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+                                onlineChangeService.addTransStatusHistory(hisVo);
+                                sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY, OnlineChangeUtil.ELIFE_MAIL_071, OnlineChangeUtil.ELIFE_SMS_071);
+                            }
                         } else if (statusSuccessList.contains(signStatus)) {
-                            sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_APPLYING, OnlineChangeUtil.ELIFE_MAIL_024, OnlineChangeUtil.ELIFE_SMS_005);
-                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
-                            insuranceClaimService.updateTransApplyDate(claimVo.getClaimSeqId(), new Date());
+                            int result = transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                            if (result > 0) {
+                                hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                                onlineChangeService.addTransStatusHistory(hisVo);
+                                sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_APPLYING, OnlineChangeUtil.ELIFE_MAIL_024, OnlineChangeUtil.ELIFE_SMS_005);
+                                insuranceClaimService.updateTransApplyDate(claimVo.getClaimSeqId(), new Date());
+                            }
                         } else if (statusSignFailList.contains(signStatus)) {
-                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
-                            sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN, OnlineChangeUtil.ELIFE_MAIL_071, OnlineChangeUtil.ELIFE_SMS_071);
+                            int result = transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+                            if (result > 0) {
+                                hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+                                onlineChangeService.addTransStatusHistory(hisVo);
+                                sendPolicyClaimNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN, OnlineChangeUtil.ELIFE_MAIL_071, OnlineChangeUtil.ELIFE_SMS_071);
+                            }
                         }
                     }
                 } else if (StringUtils.equals(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE, signTrans.getTransType())) {
                     TransMedicalTreatmentClaimVo claimVo = medicalTreatmentService.getTransInsuranceClaimDetail(signTrans.getTransNum());
                     if (claimVo != null) {
                         if (statusVerifyFailList.contains(idVerifyStatus)) {
-                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
-                            sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY, OnlineChangeUtil.MEDICAL_MAIL_039, OnlineChangeUtil.MEDICAL_SMS_040);
+                            int result = transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+                            if (result > 0) {
+                                hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY);
+                                onlineChangeService.addTransStatusHistory(hisVo);
+                                sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_VERIFY, OnlineChangeUtil.MEDICAL_MAIL_039, OnlineChangeUtil.MEDICAL_SMS_040);
+                            }
                         } else if (statusSuccessList.contains(signStatus)) {
-                            sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_APPLYING, OnlineChangeUtil.MEDICAL_MAIL_036, OnlineChangeUtil.MEDICAL_SMS_037);
-                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
-                            medicalTreatmentService.updateTransApplyDate(claimVo.getClaimSeqId(), new Date());
+                            int result = transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                            if (result > 0) {
+                                hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_APPLYING);
+                                onlineChangeService.addTransStatusHistory(hisVo);
+                                medicalTreatmentService.updateTransApplyDate(claimVo.getClaimSeqId(), new Date());
+                                sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_APPLYING, OnlineChangeUtil.MEDICAL_MAIL_036, OnlineChangeUtil.MEDICAL_SMS_037);
+                            }
                         } else if (statusSignFailList.contains(signStatus)) {
-                            transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
-                            sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN, OnlineChangeUtil.MEDICAL_MAIL_039, OnlineChangeUtil.MEDICAL_SMS_040);
+                            int result = transService.updateTransStatus(signTrans.getTransNum(), OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+                            if (result > 0) {
+                                hisVo.setStatus(OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN);
+                                onlineChangeService.addTransStatusHistory(hisVo);
+                                sendMedicalNotify(claimVo, OnlineChangeUtil.TRANS_STATUS_FAIL_SIGN, OnlineChangeUtil.MEDICAL_MAIL_039, OnlineChangeUtil.MEDICAL_SMS_040);
+                            }
                         }
                     }
                 }

@@ -82,4 +82,6 @@ public interface IOnlineChangeService {
 	String getTransMedicalTreatmentClaimBySendAlliance(String transNum);
 
 	void cancelApplyTransInvestment(String transNum, TransStatusHistoryVo hisVo);
+
+    int addTransStatusHistory(TransStatusHistoryVo hisVo);
 }
