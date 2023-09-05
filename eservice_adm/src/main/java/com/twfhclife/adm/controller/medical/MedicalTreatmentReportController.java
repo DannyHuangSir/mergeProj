@@ -1,5 +1,6 @@
 package com.twfhclife.adm.controller.medical;
 
+import com.google.common.collect.Maps;
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.*;
@@ -175,16 +176,22 @@ public class MedicalTreatmentReportController extends BaseController {
 		//System.out.println(claimVo);
 		List reportList = onlineChangeService.getMedicalTreatmentDetailReport(claimVo);
 		if (CollectionUtils.isNotEmpty(reportList)) {
-			reportList.forEach(x -> {
-				String signStatus = (String) ((Map)x).get("SIGN_STATUS");
-				if (StringUtils.isNotBlank(signStatus)) {
-					((Map) x).put("SIGN_STATUS", SignStatusUtil.signStatusToStr(signStatus));
+			for (int i = 0; i < reportList.size(); i++) {
+				Map x = (Map) reportList.get(i);
+				if (x != null) {
+					String signStatus = (String) x.get("SIGN_STATUS");
+					if (StringUtils.isNotBlank(signStatus)) {
+						x.put("SIGN_STATUS", SignStatusUtil.signStatusToStr(signStatus));
+					}
+					String verifyStatus = (String) x.get("ID_VERIFY_STATUS");
+					if (StringUtils.isNotBlank(verifyStatus)) {
+						x.put("ID_VERIFY_STATUS", SignStatusUtil.verifyStatusToStr(verifyStatus));
+					}
+				} else {
+					x = Maps.newHashMap();
+					reportList.set(i, x);
 				}
-				String verifyStatus = (String) ((Map)x).get("ID_VERIFY_STATUS");
-				if (StringUtils.isNotBlank(verifyStatus)) {
-					((Map) x).put("ID_VERIFY_STATUS", SignStatusUtil.verifyStatusToStr(verifyStatus));
-				}
-			});
+			}
 		}
 		//獲取醫療保險公司的名稱
 		//授權醫療單位名稱

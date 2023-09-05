@@ -3,6 +3,7 @@ package com.twfhclife.adm.controller.rpt;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import com.twfhclife.generic.util.SignStatusUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -126,16 +127,22 @@ public class InsClaimReportController extends BaseController {
 	public String rptInsClaimDetailCSV(InsClaimStatisticsVo claimVo) {
 		List reportList = onlineChangeService.getInsClaimDetailReport(claimVo);
 		if (CollectionUtils.isNotEmpty(reportList)) {
-			reportList.forEach(x -> {
-				String signStatus = (String) ((Map)x).get("SIGN_STATUS");
-				if (StringUtils.isNotBlank(signStatus)) {
-					((Map) x).put("SIGN_STATUS", SignStatusUtil.signStatusToStr(signStatus));
+			for (int i = 0; i < reportList.size(); i++) {
+				Map x = (Map) reportList.get(i);
+				if (x != null) {
+					String signStatus = (String) x.get("SIGN_STATUS");
+					if (StringUtils.isNotBlank(signStatus)) {
+						x.put("SIGN_STATUS", SignStatusUtil.signStatusToStr(signStatus));
+					}
+					String verifyStatus = (String) x.get("ID_VERIFY_STATUS");
+					if (StringUtils.isNotBlank(verifyStatus)) {
+						x.put("ID_VERIFY_STATUS", SignStatusUtil.verifyStatusToStr(verifyStatus));
+					}
+				} else {
+					x = Maps.newHashMap();
+					reportList.set(i, x);
 				}
-				String verifyStatus = (String) ((Map)x).get("ID_VERIFY_STATUS");
-				if (StringUtils.isNotBlank(verifyStatus)) {
-					((Map) x).put("ID_VERIFY_STATUS", SignStatusUtil.verifyStatusToStr(verifyStatus));
-				}
-			});
+			}
 		}
 		addAttribute("claimVo", claimVo);
 		addAttribute("reportList", reportList);
