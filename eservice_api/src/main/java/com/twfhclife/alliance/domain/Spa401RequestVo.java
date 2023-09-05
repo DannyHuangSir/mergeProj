@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Spa401RequestVo implements Serializable {
 
 	private String serviceType;
-	private Integer pageNumber = 0;
+	private Integer page = 0;
 	private Integer pageSize = 10;
 	private String verifyDate;
 
@@ -27,12 +27,12 @@ public class Spa401RequestVo implements Serializable {
 		this.serviceType = serviceType;
 	}
 
-	public Integer getPageNumber() {
-		return pageNumber;
+	public Integer getPage() {
+		return page;
 	}
 
-	public void setPageNumber(Integer pageNumber) {
-		this.pageNumber = pageNumber;
+	public void setPage(Integer page) {
+		this.page = page;
 	}
 
 	public Integer getPageSize() {

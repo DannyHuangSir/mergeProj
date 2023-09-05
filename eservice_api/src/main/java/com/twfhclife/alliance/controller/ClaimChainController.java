@@ -446,7 +446,7 @@ public class ClaimChainController {
 			params.put("orgId", vo.getOrgId());
 			params.put("serviceType", vo.getServiceType());
 			params.put("verifyDate", vo.getVerifyDate());
-			params.put("pageNumber",vo.getPageNumber());
+			params.put("pageNumber",vo.getPage());
 			params.put("pageSize", vo.getPageSize());
 
 			logger.info("SPA-401取得明細對帳問題回報,request=" + params.toString());
