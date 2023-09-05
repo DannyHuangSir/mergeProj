@@ -1198,7 +1198,7 @@
 				url : 'getTransStatus',
 				data:  JSON.stringify({"transNum": transNum}),
 				success : function(response) {
-					if (response.result == 'SUCCESS' && ['41', '42'].indexOf(response.result) <= -1) {
+					if (response.result == 'SUCCESS' && ['41', '42'].indexOf(response.resultData) <= -1) {
 						removeLoading()
 						clearInterval(interval)
 						queryDataByPage(myPage)
