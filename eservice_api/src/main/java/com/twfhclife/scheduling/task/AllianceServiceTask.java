@@ -235,9 +235,15 @@ public class AllianceServiceTask {
 								for (Map.Entry<String, List<InsuranceClaimFileDataVo>> entry : map.entrySet()) {
 									SignInsuranceClaimFileDataVo vo = new SignInsuranceClaimFileDataVo();
 									vo.setType(entry.getKey());
-									vo.setFileRequired(entry.getValue().size());
-									String fileNames = entry.getValue().stream().map(x -> x.getFileName()).collect(Collectors.toList()).toString();
-									vo.setFileName(fileNames.substring(1, fileNames.length() - 1));
+									StringBuilder sb = new StringBuilder();
+									if (CollectionUtils.isNotEmpty(entry.getValue())) {
+										vo.setFileRequired(entry.getValue().size());
+										entry.getValue().forEach(x -> sb.append(",").append(x.getFileName()));
+										vo.setFileName(sb.substring(1));
+									} else {
+										vo.setFileName(sb.toString());
+										vo.setFileRequired(0);
+									}
 									list.add(vo);
 								}
 								if (CollectionUtils.isNotEmpty(list)) {
