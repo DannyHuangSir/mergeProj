@@ -224,8 +224,9 @@
 	<select id="getUnProcessedTrans" resultMap="TransInsuranceClaimResultMap">
 		SELECT TOP 100 B.TRANS_NUM FROM ESERVICE.dbo.TRANS_INSURANCE_CLAIM A
 		INNER JOIN ESERVICE.dbo.TRANS B ON A.TRANS_NUM = B.TRANS_NUM
-		WHERE A.APPLY_DATE IS NOT NULL AND DATEADD(DAY, 1, A.APPLY_DATE) <![CDATA[<=]]> #{date}
-		AND B.STATUS = '-1'
+		WHERE
+		(A.APPLY_DATE IS NOT NULL AND DATEADD(DAY, 1, A.APPLY_DATE) <![CDATA[<=]]> #{date} AND B.STATUS = '-1')
+			OR (A.FROM_COMPANY_ID != 'L01' AND DATEADD(DAY, 1, A.CREATE_DATE) <![CDATA[<=]]> #{date} AND A.PRINT_DATE IS NULL)
 		<if test="claimSeqId != null">
 			AND A.CLAIMS_SEQ_ID > #{claimSeqId}
 		</if>
