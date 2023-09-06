@@ -324,14 +324,14 @@
 	</select>
 
 	<select id="getUnProcessedTrans" resultMap="TransInsuranceClaimResultMap">
-		SELECT TOP 1000 TRANS_NUM ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A
+		SELECT TOP 1000 B.TRANS_NUM FROM ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A
 		INNER JOIN ESERVICE.dbo.TRANS B ON A.TRANS_NUM = B.TRANS_NUM
-		WHERE APPLY_DATE IS NOT NULL AND DATEADD(DAY, APPLY_DATE, 1) <![CDATA[<=]]> #{date}
+		WHERE A.APPLY_DATE IS NOT NULL AND DATEADD(DAY, 1, A.APPLY_DATE) <![CDATA[<=]]> #{date}
 		AND B.STATUS = '-1'
 		<if test="claimSeqId != null">
-			AND CLAIM_SEQ_ID > #{claimSeqId}
+			AND A.CLAIMS_SEQ_ID > #{claimSeqId}
 		</if>
-		ORDER BY CLAIM_SEQ_ID
+		ORDER BY A.CLAIMS_SEQ_ID
 	</select>
 
 	<update id="updateTransUploadDate">
