@@ -447,7 +447,7 @@
         SELECT DISTINCT
             decode(nvl(lph.PAHI_DEP_I_BOOK_DATE,''), '', '', to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) PAHI_DEP_I_BOOK_DATE,
             lbf.PAYF_PAY_METH,
-            lbp.LIPB_NAME PAYF_NAME,
+            TRIM(lbp.LIPB_NAME) PAYF_NAME,
             lph.PAHI_REMIT_AT,
             lph.PAHI_BANK_CODE,
             PAHI_PAY_CODE PAYF_PAY_REAS,
