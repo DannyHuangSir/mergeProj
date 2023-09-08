@@ -220,9 +220,7 @@
 				'fnRender': function(oRow) {
 					// 台幣匯率直接為1
 					var rate = '';
-					if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
-						rate = '1';
-					} else if (oRow.exchRate == null || oRow.exchRate == 0) {
+					if (oRow.exchRate == null || oRow.exchRate == 0) {
 						rate = '--';
 					} else {
 						rate = showNumberPointValue(oRow.exchRate);
@@ -236,11 +234,7 @@
 				'fnRender': function(oRow) {
 					var totalValue = 0;
 					try {
-						if (emptyIfNull(oRow.invtExchCurr) == 'NTD') {
-							totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.netValue, 0) * 1;
-						} else {
-							totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.netValue, 0) * emptyDefaultValue(oRow.exchRate, 0);
-						}
+						totalValue = emptyDefaultValue(oRow.sadpTrUnits, 0) * emptyDefaultValue(oRow.netValue, 0) * emptyDefaultValue(oRow.exchRate, 0);
 					} catch(err) {
 						totalValue = 0;
 					}
