@@ -532,12 +532,13 @@
             CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
             ELSE SADP_TR_UNITS
             END SADP_TR_UNITS,
-            lti.TRHI_EXCH_RATE EXCH_RATE,
+            leh.EXCH_TRADE_SORATE EXCH_RATE,
             lti.TRHI_INPR_RATE NET_VALUE,
             lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
             FROM LISADP_ES lsp
             LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
             LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
+            LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
             <where>
                 AND lsp.SADP_INSU_NO = #{policyNo}
                 <if test="trCode != null">
@@ -573,12 +574,13 @@
             CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
             ELSE SADP_TR_UNITS
             END SADP_TR_UNITS,
-            lti.TRHI_EXCH_RATE EXCH_RATE,
+            leh.EXCH_TRADE_SORATE EXCH_RATE,
             lti.TRHI_INPR_RATE NET_VALUE,
             lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
             FROM LISADP_ES lsp
             LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
             LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
+            LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">

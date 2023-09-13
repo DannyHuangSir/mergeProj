@@ -33,6 +33,24 @@ public class CaseVo implements Serializable {
     private String policyAmount;
     private String prmeNewOldSW;
     private String pSalesName;
+    private String dollarUnit;
+    private String unitDesc;
+
+    public String getUnitDesc() {
+        return unitDesc;
+    }
+
+    public void setUnitDesc(String unitDesc) {
+        this.unitDesc = unitDesc;
+    }
+
+    public String getDollarUnit() {
+        return dollarUnit;
+    }
+
+    public void setDollarUnit(String dollarUnit) {
+        this.dollarUnit = dollarUnit;
+    }
 
     public String getMainKey() {
         return mainKey;
