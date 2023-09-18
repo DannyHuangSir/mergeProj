@@ -182,7 +182,7 @@
 				users.EXPIRATION_DATE as expirationDate ,
 				DP.DEP_NAME as depName ,
 				DP.BRANCH_NAME as branchName ,
-				users.USER_NAME as userName ,
+				eservice.dbo.FN_DEBASE64(users.USER_NAME) as userName ,
 				users.IC_ID as icID ,
 				users.LOGIN_SIZE as loginSize ,
 				eservice.dbo.FN_DEBASE64(users.ROC_ID) as rocID ,
