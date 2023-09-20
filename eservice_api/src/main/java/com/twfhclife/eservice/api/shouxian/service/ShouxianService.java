@@ -55,7 +55,8 @@ public class ShouxianService {
 
     public PolicyBaseVo getPolicyBase(String policyNo) {
         if (StringUtils.isNotBlank(policyNo) && policyNo.length() > 3) {
-            return shouXianDao.getBasePolicy(policyNo, policyNo.substring(0, 2), policyNo.substring(2, 3), policyNo.substring(3, policyNo.length()));
+            PolicyBaseVo basePolicy = shouXianDao.getBasePolicy(policyNo, policyNo.substring(0, 2), policyNo.substring(2, 3), policyNo.substring(3, policyNo.length()));
+            return basePolicy == null ? new PolicyBaseVo() : basePolicy;
         } else {
             return new PolicyBaseVo();
         }

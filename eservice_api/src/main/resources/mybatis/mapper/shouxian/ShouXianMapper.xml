@@ -341,7 +341,7 @@
         ON A.NEPM_INSU_TYPE = B.NEPI_INSU_TYPE AND A.NEPM_INSU_GRP_NO = B.NEPI_INSU_GRP_NO AND A.NEPM_INSU_SEQ_NO = B.NEPI_INSU_SEQ_NO
         LEFT JOIN LIBNAG_ES_NONCHAR C
         ON A.NEPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.NEPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.NEPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
-        WHERE A.NEPM_INSU_TYPE = #{policyType} AND A.NEPM_INSU_TYPE = #{policyGrpNo} AND A.NEPM_INSU_TYPE = #{policySeqNo}
+        WHERE A.NEPM_INSU_TYPE = #{policyType} AND A.NEPM_INSU_GRP_NO = #{policyGrpNo} AND A.NEPM_INSU_SEQ_NO = #{policySeqNo}
     </sql>
 
     <resultMap id="SafeGuardMap" type="com.twfhclife.eservice.api.shouxian.model.SafeGuardVo">
