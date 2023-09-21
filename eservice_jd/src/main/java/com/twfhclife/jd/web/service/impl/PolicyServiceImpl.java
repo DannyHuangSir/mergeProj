@@ -6,10 +6,13 @@ import com.twfhclife.jd.api_client.BaseRestClient;
 import com.twfhclife.jd.api_model.*;
 import com.twfhclife.jd.keycloak.model.KeycloakUser;
 import com.twfhclife.jd.util.ApConstants;
+import com.twfhclife.jd.web.controller.PolicyController;
 import com.twfhclife.jd.web.dao.JdNotifyConfigDao;
 import com.twfhclife.jd.web.dao.UsersDao;
 import com.twfhclife.jd.web.model.*;
 import com.twfhclife.jd.web.service.IPolicyService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,8 @@ import java.util.List;
 
 @Service
 public class PolicyServiceImpl implements IPolicyService {
+
+    private static final Logger logger = LogManager.getLogger(PolicyServiceImpl.class);
 
     @Value("${eservice_api.policy.list.url}")
     private String policyListUrl;
@@ -98,7 +103,9 @@ public class PolicyServiceImpl implements IPolicyService {
 
     @Override
     public PolicyExpireOfPaymentDataResponse getPolicyExpireOfPayment(String userId, String policyNo) {
-        PolicyExpireOfPaymentDataResponse responseObj = baseRestClient.postApi(new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId)), policyExpireOfPaymentUrl, PolicyExpireOfPaymentDataResponse.class);
+        String param = new Gson().toJson(new PolicyBaseVo(policyNo, ApConstants.SYSTEM_ID, userId));
+        logger.info("getPolicyExpireOfPayment: param: {}", param);
+        PolicyExpireOfPaymentDataResponse responseObj = baseRestClient.postApi(param, policyExpireOfPaymentUrl, PolicyExpireOfPaymentDataResponse.class);
         return responseObj;
     }
 

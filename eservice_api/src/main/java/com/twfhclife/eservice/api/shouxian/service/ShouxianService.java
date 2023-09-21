@@ -55,7 +55,8 @@ public class ShouxianService {
 
     public PolicyBaseVo getPolicyBase(String policyNo) {
         if (StringUtils.isNotBlank(policyNo) && policyNo.length() > 3) {
-            return shouXianDao.getBasePolicy(policyNo, policyNo.substring(0, 2), policyNo.substring(2, 3), policyNo.substring(3, policyNo.length()));
+            PolicyBaseVo basePolicy = shouXianDao.getBasePolicy(policyNo, policyNo.substring(0, 2), policyNo.substring(2, 3), policyNo.substring(3, policyNo.length()));
+            return basePolicy == null ? new PolicyBaseVo() : basePolicy;
         } else {
             return new PolicyBaseVo();
         }
@@ -250,6 +251,7 @@ public class ShouxianService {
 
     public PortfolioResponse getPortfolioResp(String policyNo, String currency) {
         PortfolioResponse resp = new PortfolioResponse();
+
         List<PortfolioVo> portfolioList = shouXianDao.getPortfolioList(policyNo);
         Date maxDate = null;
         Iterator var4 = portfolioList.iterator();
@@ -307,11 +309,11 @@ public class ShouxianService {
             portfolioVo.setAcctValue(acctValue);
             portfolioVo.setAvgPval(avgPval);
 
-            if (maxDate == null && portfolioVo.getNetValueDate() != null) {
-                maxDate = portfolioVo.getNetValueDate();
-            } else if (maxDate != null && portfolioVo.getNetValueDate() != null
-                && portfolioVo.getNetValueDate().getTime() > maxDate.getTime()) {
-                maxDate = portfolioVo.getNetValueDate();
+            if (maxDate == null && portfolioVo.getExchRateDate() != null) {
+                maxDate = portfolioVo.getExchRateDate();
+            } else if (maxDate != null && portfolioVo.getExchRateDate() != null
+                && portfolioVo.getExchRateDate().getTime() > maxDate.getTime()) {
+                maxDate = portfolioVo.getExchRateDate();
             }
         }
         if (maxDate != null && maxDate.getTime() > new Date().getTime()) {
@@ -320,6 +322,8 @@ public class ShouxianService {
         resp.setPortfolioList(portfolioList);
         if (maxDate != null) {
             resp.setEndDate(DateUtil.westToTwDate(new SimpleDateFormat("yyyy-MM-dd").format(maxDate)));
+        } else {
+            resp.setEndDate("-");
         }
         return resp;
     }

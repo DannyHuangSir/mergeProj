@@ -79,6 +79,7 @@ public class JdzqService {
                 str += ",";
             }
         }
+        vo.setRealmId("elife_jdzq");
         return usersDao.getUserDetail(vo,str);
     }
 
