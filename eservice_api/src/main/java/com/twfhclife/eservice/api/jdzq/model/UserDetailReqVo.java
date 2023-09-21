@@ -13,6 +13,7 @@ public class UserDetailReqVo implements Serializable {
     private String roleNameSelectOutput;
     private List<String> column;
     private List<String>  columnName;
+    private String realmId;
 
     public String getSystemAccountOutput() {
         return systemAccountOutput;
@@ -84,5 +85,13 @@ public class UserDetailReqVo implements Serializable {
 
     public void setColumnName(List<String> columnName) {
         this.columnName = columnName;
+    }
+
+    public String getRealmId() {
+        return this.realmId;
+    }
+
+    public void setRealmId(String realmId) {
+        this.realmId = realmId;
     }
 }
