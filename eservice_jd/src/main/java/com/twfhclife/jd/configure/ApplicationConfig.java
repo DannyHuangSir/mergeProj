@@ -14,7 +14,7 @@ import java.util.List;
 @Configuration
 public class ApplicationConfig extends WebMvcConfigurerAdapter {
 
-	@Value("#{'${nonAuthPages}'.split(',')}") 
+	@Value("#{('/demopage,' + '${nonAuthPages}').split(',')}")
 	private List<String> nonAuthPages;
 
 	@Bean

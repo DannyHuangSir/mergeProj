@@ -68,4 +68,9 @@ public class MainController extends BaseController {
 	public void bindSessionPage(String uuid) {
 		getRequest().getSession().setAttribute("SESSION_PAGE_ID", uuid);
 	}
+
+	@GetMapping("/demopage")
+	public String demopage() {
+		return "testpage";
+	}
 }

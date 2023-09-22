@@ -42,6 +42,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 				"/login-timeout"
 				,"/test/logs"
 				,"/getVerify"
+				,"/demopage"
 				//,"/testpage","/test/getResult"
 				);
 
