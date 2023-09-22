@@ -453,8 +453,8 @@
             PAHI_PAY_CODE PAYF_PAY_REAS,
             lph.PAHI_ACT_AMT
             FROM LIPAYF_ES_NONCHAR lbf
-            LEFT JOIN LILIPB_ES_NONCHAR lbp ON lbp.LIPB_INSU_TYPE = substr(lbf.PAYF_INSU_NO, 1, 2) AND lbp.LIPB_INSU_GRP_NO = substr(lbf.PAYF_INSU_NO, 3, 1) AND lbp.LIPB_INSU_SEQ_NO = substr(lbf.PAYF_INSU_NO, 4, 7)
-            LEFT JOIN LIPAHI_ES lph ON lph.PAHI_INSU_TYPE = substr(lbf.PAYF_INSU_NO, 1, 2) AND lph.PAHI_INSU_GRP_NO = substr(lbf.PAYF_INSU_NO, 3, 1) AND lph.PAHI_INSU_SEQ_NO = substr(lbf.PAYF_INSU_NO, 4, 7)
+            LEFT JOIN LILIPB_ES_NONCHAR lbp ON lbp.LIPB_INSU_TYPE = #{insuType} AND lbp.LIPB_INSU_GRP_NO = #{grpNo} AND lbp.LIPB_INSU_SEQ_NO = #{seqNo}
+            LEFT JOIN LIPAHI_ES lph ON lph.PAHI_INSU_TYPE = #{insuType} AND lph.PAHI_INSU_GRP_NO = #{grpNo} AND lph.PAHI_INSU_SEQ_NO =  #{seqNo}
         WHERE lbf.PAYF_INSU_NO = #{policyNo} AND lph.PAHI_PAY_CODE IN ('01', '02', '96') AND lbp.LIPB_BENI_CODE IN ('01', '03', '05')
     </select>
 

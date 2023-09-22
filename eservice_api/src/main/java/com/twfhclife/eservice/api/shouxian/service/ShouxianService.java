@@ -74,8 +74,8 @@ public class ShouxianService {
         return shouXianDao.getPolicyPremium(policyNo);
     }
 
-    public List<ExpireOfPaymentVo> getExpireOfPayment(String policyNo) {
-        return shouXianDao.getExpireOfPayment(policyNo);
+    public List<ExpireOfPaymentVo> getExpireOfPayment(String policyNo, String insuType, String grpNo, String seqNo) {
+        return shouXianDao.getExpireOfPayment(policyNo, insuType, grpNo, seqNo);
     }
 
     public List<ChangeInfoVo> getPolicyChangeInfo(String policyNo) {
