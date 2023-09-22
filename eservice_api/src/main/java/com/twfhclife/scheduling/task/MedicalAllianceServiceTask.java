@@ -626,7 +626,7 @@ public class MedicalAllianceServiceTask {
                                     //Gson builderTime = (new GsonBuilder()).setDateFormat("yyyy/MM/dd HH:mm:ss").create();
                                     MedicalTreatmentClaimVo medicalVo = new Gson().fromJson(dataString, new TypeToken<MedicalTreatmentClaimVo>() {
                                     }.getType());
-                                    log.info("after 20230922 new Gson().fromJson................." + medicalVo);
+                                    log.info("after new Gson().fromJson................." + medicalVo);
 
                                     if (medicalVo != null) {
                                         medicalVo.setCaseId(caseId);
