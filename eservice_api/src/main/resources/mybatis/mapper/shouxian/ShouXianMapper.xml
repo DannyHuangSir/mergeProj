@@ -341,7 +341,7 @@
         ON A.NEPM_INSU_TYPE = B.NEPI_INSU_TYPE AND A.NEPM_INSU_GRP_NO = B.NEPI_INSU_GRP_NO AND A.NEPM_INSU_SEQ_NO = B.NEPI_INSU_SEQ_NO
         LEFT JOIN LIBNAG_ES_NONCHAR C
         ON A.NEPM_INSU_TYPE = C.BNAG_INSU_TYPE AND A.NEPM_INSU_GRP_NO = C.BNAG_INSU_GRP_NO AND A.NEPM_INSU_SEQ_NO = C.BNAG_INSU_SEQ_NO
-        WHERE A.NEPM_INSU_TYPE = #{policyType} AND A.NEPM_INSU_TYPE = #{policyGrpNo} AND A.NEPM_INSU_TYPE = #{policySeqNo}
+        WHERE A.NEPM_INSU_TYPE = #{policyType} AND A.NEPM_INSU_GRP_NO = #{policyGrpNo} AND A.NEPM_INSU_SEQ_NO = #{policySeqNo}
     </sql>
 
     <resultMap id="SafeGuardMap" type="com.twfhclife.eservice.api.shouxian.model.SafeGuardVo">
@@ -447,15 +447,15 @@
         SELECT DISTINCT
             decode(nvl(lph.PAHI_DEP_I_BOOK_DATE,''), '', '', to_char(lph.PAHI_DEP_I_BOOK_DATE, 'yyy/MM/dd', 'NLS_CALENDAR= ''ROC Official''')) PAHI_DEP_I_BOOK_DATE,
             lbf.PAYF_PAY_METH,
-            lbp.LIPB_NAME PAYF_NAME,
+            TRIM(lbp.LIPB_NAME) PAYF_NAME,
             lph.PAHI_REMIT_AT,
             lph.PAHI_BANK_CODE,
             PAHI_PAY_CODE PAYF_PAY_REAS,
             lph.PAHI_ACT_AMT
-            FROM LIPAYF_ES lbf
-            LEFT JOIN LILIPB_ES_NONCHAR lbp ON lbp.LIPB_INSU_TYPE||lbp.LIPB_INSU_GRP_NO||lbp.LIPB_INSU_SEQ_NO = lbf.PAYF_INSU_NO
-            LEFT JOIN LIPAHI_ES lph ON lph.PAHI_INSU_TYPE||lph.PAHI_INSU_GRP_NO||lph.PAHI_INSU_SEQ_NO = lbf.PAYF_INSU_NO
-        WHERE lbf.PAYF_INSU_NO = #{policyNo} AND lph.PAHI_PAY_CODE IN ('01', '02', '96')
+            FROM LIPAYF_ES_NONCHAR_FLOWTEST lbf
+            LEFT JOIN LILIPB_ES_NONCHAR lbp ON lbp.LIPB_INSU_TYPE = substr(lbf.PAYF_INSU_NO, 1, 2) AND lbp.LIPB_INSU_GRP_NO = substr(lbf.PAYF_INSU_NO, 3, 1) AND lbp.LIPB_INSU_SEQ_NO = substr(lbf.PAYF_INSU_NO, 4, 7)
+            LEFT JOIN LIPAHI_ES lph ON lph.PAHI_INSU_TYPE = substr(lbf.PAYF_INSU_NO, 1, 2) AND lph.PAHI_INSU_GRP_NO = substr(lbf.PAYF_INSU_NO, 3, 1) AND lph.PAHI_INSU_SEQ_NO = substr(lbf.PAYF_INSU_NO, 4, 7)
+        WHERE lbf.PAYF_INSU_NO = #{policyNo} AND lph.PAHI_PAY_CODE IN ('01', '02', '96') AND lbp.LIPB_BENI_CODE IN ('01', '03', '05')
     </select>
 
     <resultMap id="ChangeInfoMap" type="com.twfhclife.eservice.api.shouxian.model.ChangeInfoVo">
@@ -532,12 +532,13 @@
             CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
             ELSE SADP_TR_UNITS
             END SADP_TR_UNITS,
-            lti.TRHI_EXCH_RATE EXCH_RATE,
+            leh.EXCH_TRADE_SORATE EXCH_RATE,
             lti.TRHI_INPR_RATE NET_VALUE,
             lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
             FROM LISADP_ES lsp
             LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
             LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
+            LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
             <where>
                 AND lsp.SADP_INSU_NO = #{policyNo}
                 <if test="trCode != null">
@@ -573,12 +574,13 @@
             CASE WHEN SUBSTR(lsp.SADP_NO, 1, 2) = 'RT' THEN lsp.SADP_TR_AMT
             ELSE SADP_TR_UNITS
             END SADP_TR_UNITS,
-            lti.TRHI_EXCH_RATE EXCH_RATE,
+            leh.EXCH_TRADE_SORATE EXCH_RATE,
             lti.TRHI_INPR_RATE NET_VALUE,
             lsp.SADP_EXCH_DATE, lsp.SADP_EXCH_CURR
             FROM LISADP_ES lsp
             LEFT JOIN LIINVT_ES lin ON lsp.SADP_INVT_NO  = lin.INVT_NO
             LEFT JOIN LITRHI_ES lti ON lti.TRHI_INSU_NO = lsp.SADP_INSU_NO AND lti.TRHI_INVT_NO = lsp.SADP_INVT_NO AND lti.TRHI_TR_CODE = lsp.SADP_TR_CODE AND lti.TRHI_TR_DATE = lsp.SADP_TR_DATE
+            LEFT JOIN LIEXCH_ES leh ON leh.EXCH_CURR_CODE = #{currency} AND lsp.SADP_EXCH_CURR = leh.EXCH_EXCH_CODE AND lsp.SADP_EXCH_DATE = leh.EXCH_DATE
         <where>
             AND lsp.SADP_INSU_NO = #{policyNo}
             <if test="trCode != null">
@@ -676,7 +678,7 @@
     </select>
 
     <select id="getPortfolioList" resultType="com.twfhclife.eservice.policy.model.PortfolioVo">
-        SELECT DISTINCT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, leh.EXCH_DATE netValueDate, lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval,
+        SELECT DISTINCT lir.INPR_UNIT_SOLPRICE netValueSell, lin.INVT_EXCH_CURR invtExchCurr, leh.EXCH_DATE exchRateDate, lip.SAFP_NET_UNITS safpNetUnits, lip.SAFP_ACCU_INVEST_BFEXCH ownPval,
         lip.SAFP_AVG_PVAL avgPval, lin.INVT_RISK_BENE_LEVEL riskBeneLevel, lin.INVT_NO invtNo, lin.INVT_NAME invtName,
         lip.SAFP_INSU_NO policyNo, leh.EXCH_TRADE_PURATE exchRateBuy, NVL(lcp.clupExpeNtdSum, 0) clupExpeNtdSum, lip.SAFP_NET_AMT safpNetAmt, lip.SAFP_AVG_PNTDVAL safpAvgPntdval
         FROM LISAFP_ES lip

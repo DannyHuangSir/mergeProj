@@ -57,7 +57,7 @@
 												<div class="insuranceID_phone" th:text="${policyNo}"></div>
 											</div>
 											<div class="wht">
-											<div style="padding: 20px;">計算至 <span id="endDate"></span> 止</div>
+											<div style="padding: 20px;">計算至 <span id="endDate">-</span> 止</div>
 											<div class="mobile-toggle-panel specialHeight toggle-hide">
 												<table id="grid1" class="tablesaw tablesaw-stack wht" data-tablesaw-mode="stack">
 													<thead>
@@ -140,7 +140,7 @@
        {
        'fnRender': function(oRow) {
           return  '<span>'+
-				  (oRow != null ? oRow.netValueDate : '-') +
+				  (oRow != null && oRow.exchRateDate ? twDate(oRow.exchRateDate) : '-') +
 				  '</span><hr class="splitLine">'+
 				  (oRow != null ? showExchRateDate(oRow) : '-') ;
         },

@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.api.shouxian.controller;
 
+import com.google.gson.Gson;
 import com.twfhclife.eservice.api.elife.domain.PolicyFundTransactionRequest;
 import com.twfhclife.eservice.api.elife.domain.PolicyPremiumTransactionRequest;
 import com.twfhclife.eservice.api.elife.domain.PortfolioRequest;
@@ -263,8 +264,11 @@ public class ShouxianController extends BaseController {
         ApiResponseObj<PolicyExpireOfPaymentDataResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
+            logger.info("getPolicyExpireOfPayment: param: {}", new Gson().toJson(vo));
             PolicyExpireOfPaymentDataResponse resp = new PolicyExpireOfPaymentDataResponse();
-            resp.setPolicyBase(shouxianService.getPolicyBase(vo.getPolicyNo()));
+            PolicyBaseVo policyBase = shouxianService.getPolicyBase(vo.getPolicyNo());
+            logger.info("getPolicyExpireOfPayment: policyBase: {}", new Gson().toJson(policyBase));
+            resp.setPolicyBase(policyBase);
             resp.setPayments(shouxianService.getExpireOfPayment(vo.getPolicyNo()));
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
@@ -375,6 +379,7 @@ public class ShouxianController extends BaseController {
                         getFundTransactionTotal(policyNo, transType, currency, startDate, endDate);
                 List<JdFundTransactionVo> fundTransactionList = shouxianService.
                         getFundTransactionPageList(policyNo, transType, currency, startDate, endDate, pageNum, pageSize);
+                logger.info("ShouxianController -> getPolicyTransactionHistory : {}, ", new Gson().toJson(fundTransactionList));
                 for (JdFundTransactionVo fundTransactionVo : fundTransactionList) {
                     fundTransactionVo.setPageNum(req.getPageNum());
                     fundTransactionVo.setPageSize(req.getPageSize());

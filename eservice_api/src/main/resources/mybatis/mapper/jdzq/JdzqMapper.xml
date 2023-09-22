@@ -30,6 +30,8 @@
         <result column="NoteVerifyResult" property="noteVerifyResult" />
         <result column="Main_Key" property="mainKey" />
         <result column="PSalesName" property="pSalesName" />
+        <result column="DollarUnit" property="dollarUnit" />
+        <result column="UnitDesc" property="unitDesc" />
     </resultMap>
 
     <sql id="caseSql">
@@ -156,7 +158,8 @@
         SELECT DISTINCT A.PolicyNo, A.AppName, A.AppID, A.AppBirth, A.BPMCurrentTak,
         A.AccDocNo, A.PM_PRME_NEW_OLD_SW,
         A.PolicyFeeOrg PrmeNewOldSW,
-        E.PTypeName PolicyType, A.StampResult, A.PayType, A.InsBirth, A.InsName, A.InsID, A.PolicyAmount, A.PolicyAmountNTD
+        E.PTypeName PolicyType, A.StampResult, A.PayType, A.InsBirth, A.InsName, A.InsID, A.PolicyAmount, A.PolicyAmountNTD,
+        E.DollarUnit, A.PolicyAmount, E.UnitDesc
         FROM MainPolicy A
         LEFT JOIN (
             SELECT B.NOTE_KEY, B.MAIN_KEY, B.iscancel, B.NoteStatus, B.NoteVerifyResult FROM
