@@ -122,8 +122,15 @@
                                                                         data-tablesaw-sortable-col
                                                                         data-tablesaw-priority="1">保額
                                                                     </th>
-                                                                    <td><b class="tablesaw-cell-label mobile-b">保額</b>
-                                                                        <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.PolicyAmountNTD != null && #strings.trim(vo.PolicyAmountNTD) != '' ? vo.PolicyAmountNTD : '-'}"></span></td>
+                                                                    <td>
+                                                                        <b class="tablesaw-cell-label mobile-b">保額</b>
+                                                                        <th:block th:if="${vo.dollarUnit == 'NTD'}">
+                                                                            <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.PolicyAmountNTD != null && #strings.trim(vo.PolicyAmountNTD) != '' ? vo.PolicyAmountNTD : '-'} + ' ' + ${vo.unitDesc}"></span>
+                                                                        </th:block>
+                                                                        <th:block th:if="${vo.dollarUnit != 'NTD'}">
+                                                                            <span style="font-size:16px; font-weight: 600;" class="mobile-span" th:text="${vo.PolicyAmount != null && #strings.trim(vo.PolicyAmount) != '' ? vo.PolicyAmount : '-'} + ' ' + ${vo.unitDesc}"></span>
+                                                                        </th:block>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr class="noEvent">
                                                                     <th class="hid1 hid2" scope="col"
