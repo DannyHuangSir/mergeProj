@@ -173,6 +173,7 @@ public class BxczSignServiceImpl implements IBxczSignService {
 			logger.info("call api416 resp: {}", responseEntity.getBody());
 			return responseEntity.getBody();
 		} else {
+			logger.error("call api416 error: {}", responseEntity.getBody());
 			return null;
 		}
 	}

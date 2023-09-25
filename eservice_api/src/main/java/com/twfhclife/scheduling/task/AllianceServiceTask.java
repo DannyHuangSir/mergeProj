@@ -695,14 +695,16 @@ public class AllianceServiceTask {
 											api416Params.put("companyId", clientId);
 											Date startTime = new Date();
 											String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
-											String code = MyJacksonUtil.readValue(api416Resp, "/code");
-											String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
-											Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
-											SignRecord record = gson.fromJson(MyJacksonUtil.getNodeString(api416Resp, "data"), SignRecord.class);
-											record.setActionId(actionId);
-											bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
-											BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "API416-數位身分驗證/數位簽署狀態查詢", "0", "", actionId, record.getTransNum(), startTime, new Date());
-											bxczDao.addSignApiLog(bxczSignApiLog);
+											if (StringUtils.isNotBlank(api416Resp)) {
+												String code = MyJacksonUtil.readValue(api416Resp, "/code");
+												String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
+												Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
+												SignRecord record = gson.fromJson(MyJacksonUtil.getNodeString(api416Resp, "data"), SignRecord.class);
+												record.setActionId(actionId);
+												bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
+												BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "API416-數位身分驗證/數位簽署狀態查詢", "0", "", actionId, record.getTransNum(), startTime, new Date());
+												bxczDao.addSignApiLog(bxczSignApiLog);
+											}
 										} catch (Exception e) {
 											logger.error("call api416 error: {}, {}, {}", headers, params, e);
 											throw new Exception("call api416 error: " + e);
