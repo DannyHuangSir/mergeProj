@@ -107,9 +107,9 @@ public class BxczController extends BaseController {
                         vo.setTransNum(bxczState.getTransNum());
                         addAttribute("claimVo", vo);
                         if (StringUtils.equals(bxczState.getType(), ApConstants.INSURANCE_CLAIM)) {
-                            return "frontstage/onlineChange/policyClaims/policyClaims-success";
+                            return "frontstage/onlineChange/policyClaims/policyClaims-sign-success";
                         } else {
-                            return "frontstage/onlineChange/medicalTreatment/medicalTreatment-success";
+                            return "frontstage/onlineChange/medicalTreatment/medicalTreatment-sign-success";
                         }
                     } else {
                         String msg = SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), signRecord.getSignStatus());
