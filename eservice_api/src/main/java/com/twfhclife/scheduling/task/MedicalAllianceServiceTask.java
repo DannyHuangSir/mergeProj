@@ -749,36 +749,12 @@ public class MedicalAllianceServiceTask {
 
                                         if (isAllNewCase) {
                                             if (isInsured) {
+
                                                 /**
                                                  * 存儲數據的組合
                                                  */
-
                                                 if (StringUtils.isNotBlank(medicalVo.getActionId()) && !StringUtils.equals("0", medicalVo.getActionId())) {
                                                     medicalVo.setSignAgree("Y");
-                                                    Map<String, String> api416Params = Maps.newHashMap();
-                                                    HttpHeaders headers = new HttpHeaders();
-                                                    headers.add("Access-Token", clientSecret);
-                                                    headers.setContentType(MediaType.APPLICATION_JSON);
-                                                    try {
-                                                        String actionId = medicalVo.getActionId();
-                                                        api416Params.put("actionId", actionId);
-                                                        api416Params.put("companyId", clientId);
-                                                        Date startTime = new Date();
-                                                        String api416Resp = bxczSignService.postApi416(api416Url, headers, api416Params);
-                                                        if (StringUtils.isNotBlank(api416Resp)) {
-                                                            String code = MyJacksonUtil.readValue(api416Resp, "/code");
-                                                            String msg = MyJacksonUtil.readValue(api416Resp, "/msg");
-                                                            Gson gson = new GsonBuilder().setDateFormat("yyyyMMddHHmm").create();
-                                                            SignRecord record = gson.fromJson(MyJacksonUtil.getNodeString(api416Resp, "data"), SignRecord.class);
-                                                            record.setActionId(actionId);
-                                                            bxczDao.insertBxczSignRecord(record, code, msg, record.getIdVerifyTime(), record.getSignTime());
-                                                            BxczSignApiLog bxczSignApiLog = new BxczSignApiLog("CALL", "API416-數位身分驗證/數位簽署狀態查詢", "0", "", actionId, record.getTransNum(), startTime, new Date());
-                                                            bxczDao.addSignApiLog(bxczSignApiLog);
-                                                        }
-                                                    } catch (Exception e) {
-                                                        logger.error("call api416 error: {}, {}, {}", headers, params, e);
-                                                        throw new Exception("call api416 error: " + e);
-                                                    }
                                                 } else {
                                                     medicalVo.setSignAgree("N");
                                                 }
