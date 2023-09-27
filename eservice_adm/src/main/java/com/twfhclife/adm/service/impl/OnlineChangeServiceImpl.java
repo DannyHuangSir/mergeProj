@@ -627,6 +627,9 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 								logger.error("input file is null.");
 								logger.error(e);
 							}
+						} else {
+							map.put("FileBase64", "");
+							map.put("FILE_BASE64", "");
 						}
 					}
 					newfileDatas.add(map);
