@@ -645,7 +645,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	public int updateInsuranceClaimFileReceived(TransInsuranceClaimVo vo) {
 		int rtn = -1;
 		if(vo!=null && vo.getTransNum()!=null) {
-			rtn = onlineChangeDao.updateInsuranceClaimFileReceived(vo);
+			if (org.apache.commons.lang3.StringUtils.equals(vo.getFileReceived(), "C")) {
+				rtn = onlineChangeDao.updateInsuranceClaimFileReceived(vo, new Date());
+			} else {
+				rtn = onlineChangeDao.updateInsuranceClaimFileReceived(vo, null);
+			}
 		}
 		return rtn;
 	}
@@ -663,7 +667,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	public int updateInsuranceClaimSendAlliance(TransInsuranceClaimVo vo) {
 		int rtn = -1;
 		if(vo!=null && vo.getTransNum()!=null) {
-			rtn = onlineChangeDao.updateInsuranceClaimSendAlliance(vo);
+			if (org.apache.commons.lang3.StringUtils.equals(vo.getSendAlliance(), "C")) {
+				rtn = onlineChangeDao.updateInsuranceClaimSendAlliance(vo, new Date());
+			} else {
+				rtn = onlineChangeDao.updateInsuranceClaimSendAlliance(vo, null);
+			}
 		}
 		return rtn;
 	}

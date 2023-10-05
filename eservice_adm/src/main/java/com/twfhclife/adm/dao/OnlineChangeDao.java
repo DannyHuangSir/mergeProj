@@ -404,10 +404,12 @@ public interface OnlineChangeDao {
 	
 	/**
 	 * 更新是否收到紙本
+	 *
 	 * @param vo
+	 * @param date
 	 * @return
 	 */
-	public int updateInsuranceClaimFileReceived(@Param("vo") TransInsuranceClaimVo vo);
+	public int updateInsuranceClaimFileReceived(@Param("vo") TransInsuranceClaimVo vo, @Param("date") Date date);
 	
 	/**
 	 * 更新是否收到紙本
@@ -418,10 +420,12 @@ public interface OnlineChangeDao {
 	
 	/**
 	 * 更新是否傳送聯盟鏈
+	 *
 	 * @param vo
+	 * @param date
 	 * @return
 	 */
-	public int updateInsuranceClaimSendAlliance(@Param("vo") TransInsuranceClaimVo vo);
+	public int updateInsuranceClaimSendAlliance(@Param("vo") TransInsuranceClaimVo vo, @Param("date") Date date);
 	
 	/**
 	 * 更新是否傳送聯盟鏈
