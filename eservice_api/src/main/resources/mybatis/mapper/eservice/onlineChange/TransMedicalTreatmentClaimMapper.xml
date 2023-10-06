@@ -332,6 +332,7 @@
 			AND A.CLAIMS_SEQ_ID > #{claimSeqId}
 		</if>
 		ORDER BY A.CLAIMS_SEQ_ID
+
 	</select>
 
 	<update id="updateTransUploadDate">
@@ -340,4 +341,13 @@
 		UPLOAD_DATE = #{date}
 		where TRANS_NUM = #{transNum}
 	</update>
+
+	<select id="getUnProcessedSendAlliance" resultMap="TransInsuranceClaimResultMap">
+		SELECT TOP 100 A.TRANS_NUM FROM ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM A
+		WHERE A.SEND_ALLIANCE_DATE IS NOT NULL AND DATEADD(DAY, 1, A.SEND_ALLIANCE_DATE) <![CDATA[<=]]> #{date} AND A.SEND_ALLIANCE = 'C'
+		<if test="claimSeqId != null">
+			AND A.CLAIMS_SEQ_ID > #{claimSeqId}
+		</if>
+		ORDER BY A.CLAIMS_SEQ_ID
+	</select>
 </mapper>

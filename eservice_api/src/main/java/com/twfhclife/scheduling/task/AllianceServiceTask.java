@@ -1149,7 +1149,7 @@ public class AllianceServiceTask {
 		if (!unProcessedTransEnable) {
 			return;
 		}
-		log.info("-----------Start notifyUnProcessedTrans Task.-----------");
+		log.info("-----------Start policyClaim notifyUnProcessedTrans Task.-----------");
 		try {
 			Float lastSeqId = null;
 			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
@@ -1158,7 +1158,7 @@ public class AllianceServiceTask {
 		} catch (Exception e) {
 			log.error(e);
 		}
-		log.info("-----------End notifyUnProcessedTrans Task.-----------");
+		log.info("-----------End policyClaim notifyUnProcessedTrans Task.-----------");
 	}
 
 	private Float doSendNotify(Float lastSeqId, List<String> receivers) {
@@ -1177,11 +1177,92 @@ public class AllianceServiceTask {
 				lastSeqId = claim.getClaimSeqId();
 			}
 		} else {
-			return null;
+			lastSeqId = null;
 		}
 		return lastSeqId;
 	}
 
+	@Value("${unProcessed.fileReceive.enable: true}")
+	public boolean unProcessedFileReceiveEnable;
+
+	@Scheduled(cron = "${policyClaim.unProcessed.fileReceive.expression}")
+	public void notifyUnProcessedFileReceive() {
+		if (!unProcessedFileReceiveEnable) {
+			return;
+		}
+		log.info("-----------Start policyClaim notifyUnProcessedFileReceive Task.-----------");
+		try {
+			Float lastSeqId = null;
+			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
+			List<String> receivers = (List) mailInfo.get("receivers");
+			while(doSendNotifyFileReceive(lastSeqId, receivers) != null);
+		} catch (Exception e) {
+			log.error(e);
+		}
+		log.info("-----------End policyClaim notifyUnProcessedFileReceive Task.-----------");
+	}
+
+	private Float doSendNotifyFileReceive(Float lastSeqId, List<String> receivers) {
+		List<TransInsuranceClaimVo> insuranceClaimVos = insuranceClaimService.getUnProcessedFileReceive(lastSeqId);
+		if (CollectionUtils.isNotEmpty(insuranceClaimVos)) {
+			for (TransInsuranceClaimVo claim : insuranceClaimVos) {
+				Map<String, String> paramMap = Maps.newHashMap();
+				paramMap.put("TransNum", claim.getTransNum());
+				MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
+				apiReq.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_MAIL_082);
+				apiReq.setSendType("email");
+				apiReq.setMessagingReceivers(receivers);
+				apiReq.setParameters(paramMap);
+				apiReq.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+				messagingTemplateService.triggerMessageTemplate(apiReq);
+				lastSeqId = claim.getClaimSeqId();
+			}
+		} else {
+			lastSeqId = null;
+		}
+		return lastSeqId;
+	}
+
+	@Value("${unProcessed.sendAlliance.enable: true}")
+	public boolean unProcessedSendAllianceEnable;
+
+	@Scheduled(cron = "${policyClaim.unProcessed.sendAlliance.expression}")
+	public void unProcessedSendAllianceEnable() {
+		if (!unProcessedSendAllianceEnable) {
+			return;
+		}
+		log.info("-----------Start policyClaim unProcessedSendAllianceEnable Task.-----------");
+		try {
+			Float lastSeqId = null;
+			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
+			List<String> receivers = (List) mailInfo.get("receivers");
+			while(doSendNotifySendAlliance(lastSeqId, receivers) != null);
+		} catch (Exception e) {
+			log.error(e);
+		}
+		log.info("-----------End policyClaim unProcessedSendAllianceEnable Task.-----------");
+	}
+
+	private Float doSendNotifySendAlliance(Float lastSeqId, List<String> receivers) {
+		List<TransInsuranceClaimVo> insuranceClaimVos = insuranceClaimService.getUnProcessedSendAlliance(lastSeqId);
+		if (CollectionUtils.isNotEmpty(insuranceClaimVos)) {
+			for (TransInsuranceClaimVo claim : insuranceClaimVos) {
+				Map<String, String> paramMap = Maps.newHashMap();
+				paramMap.put("TransNum", claim.getTransNum());
+				MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
+				apiReq.setMessagingTemplateCode(OnlineChangeUtil.ELIFE_MAIL_083);
+				apiReq.setSendType("email");
+				apiReq.setMessagingReceivers(receivers);
+				apiReq.setParameters(paramMap);
+				apiReq.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+				messagingTemplateService.triggerMessageTemplate(apiReq);
+				lastSeqId = claim.getClaimSeqId();
+			}
+		} else {
+			lastSeqId = null;
+		}
+		return lastSeqId;
+	}
 
 	/**
 	 * 檢核回傳的聯盟API jsonString中,指定欄位的指定值

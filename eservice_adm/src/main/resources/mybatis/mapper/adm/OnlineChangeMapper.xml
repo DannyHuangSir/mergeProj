@@ -1461,7 +1461,7 @@
 		UPDATE
 			ESERVICE.DBO.TRANS_INSURANCE_CLAIM
 		SET
-			FILE_RECEIVED = #{vo.fileReceived,jdbcType=VARCHAR},
+			FILE_RECEIVED = #{vo.fileReceived,jdbcType=VARCHAR}
 			<if test="date != null">
 				,FILE_RECEIVE_DATE = #{date}
 			</if>
@@ -1494,7 +1494,7 @@
 		SET
 			SEND_ALLIANCE = #{vo.sendAlliance,jdbcType=VARCHAR}
 			<if test="date != null">
-			,SEND_ALLIANCE_DATE = #{date}
+				,SEND_ALLIANCE_DATE = #{date}
 			</if>
 		WHERE
 			TRANS_NUM = #{vo.transNum,jdbcType=VARCHAR}
@@ -3006,6 +3006,9 @@
 		ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM
 		SET
 		SEND_ALLIANCE = #{vo.sendAlliance,jdbcType=VARCHAR}
+		<if test="date != null">
+			, SEND_ALLIANCE_DATE = #{date}
+		</if>
 		WHERE
 		TRANS_NUM = #{vo.transNum,jdbcType=VARCHAR}
 	</update>

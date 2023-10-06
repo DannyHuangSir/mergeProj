@@ -138,4 +138,6 @@ public interface IInsuranceClaimService {
 	int updateTransApplyDate(Float claimSeqId, Date date);
 	List<TransInsuranceClaimVo> getUnProcessedTrans(Float claimSeqId);
 	int updateTransUploadDate(String transNum, Date date);
+	List<TransInsuranceClaimVo> getUnProcessedFileReceive(Float claimSeqId);
+	List<TransInsuranceClaimVo> getUnProcessedSendAlliance(Float claimSeqId);
 }

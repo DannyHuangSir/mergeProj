@@ -1477,7 +1477,11 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	public int updateMedicalTreatmentSendAlliance(TransMedicalTreatmentClaimVo vo) {
 		int rtn = -1;
 		if(vo!=null && vo.getTransNum()!=null) {
-			rtn = onlineChangeDao.updateMedicalTreatmentSendAlliance(vo);
+			if (org.apache.commons.lang3.StringUtils.equals(vo.getSendAlliance(), "C")) {
+				rtn = onlineChangeDao.updateMedicalTreatmentSendAlliance(vo, new Date());
+			} else {
+				rtn = onlineChangeDao.updateMedicalTreatmentSendAlliance(vo, null);
+			}
 		}
 		return rtn;
 	}

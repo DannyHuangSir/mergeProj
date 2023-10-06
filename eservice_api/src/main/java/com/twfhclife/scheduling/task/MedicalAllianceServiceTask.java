@@ -1491,6 +1491,47 @@ public class MedicalAllianceServiceTask {
         }
         return lastSeqId;
     }
+
+    @Value("${unProcessed.sendAlliance.enable: true}")
+    public boolean unProcessedSendAllianceEnable;
+
+    @Scheduled(cron = "${medical.unProcessed.sendAlliance.expression}")
+    public void notifyUnProcessedSendAlliance() {
+        if (!unProcessedSendAllianceEnable) {
+            return;
+        }
+        log.info("-----------Start medical notifyUnProcessedTrans Task.-----------");
+        try {
+            Float lastSeqId = null;
+            Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo("1");
+            List<String> receivers = (List) mailInfo.get("receivers");
+            while((lastSeqId = doSendNotifySendAlliance(lastSeqId, receivers)) != null);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        log.info("-----------End medical notifyUnProcessedTrans Task.-----------");
+    }
+
+    private Float doSendNotifySendAlliance(Float lastSeqId, List<String> receivers) {
+        List<TransMedicalTreatmentClaimVo> insuranceClaimVos = iMedicalTreatmentService.getUnProcessedSendAlliance(lastSeqId);
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(insuranceClaimVos)) {
+            for (TransMedicalTreatmentClaimVo claim : insuranceClaimVos) {
+                Map<String, String> paramMap = Maps.newHashMap();
+                paramMap.put("TransNum", claim.getTransNum());
+                MessageTriggerRequestVo apiReq = new MessageTriggerRequestVo();
+                apiReq.setMessagingTemplateCode(OnlineChangeUtil.MEDICAL_MAIL_082);
+                apiReq.setSendType("email");
+                apiReq.setMessagingReceivers(receivers);
+                apiReq.setParameters(paramMap);
+                apiReq.setSystemId(ApConstants.SYSTEM_ID_ESERVICE);
+                messagingTemplateService.triggerMessageTemplate(apiReq);
+                lastSeqId = claim.getClaimSeqId();
+            }
+        } else {
+            return null;
+        }
+        return lastSeqId;
+    }
     
     /**
      * 檢核回傳的聯盟API jsonString中,指定欄位的指定值

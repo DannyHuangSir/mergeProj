@@ -103,4 +103,9 @@ public interface TransInsuranceClaimDao {
     List<TransInsuranceClaimVo> getUnProcessedTrans(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
 
 	int updateTransUploadDate(@Param("transNum") String transNum, @Param("date") Date date);
+
+	List<TransInsuranceClaimVo> getUnProcessedFileReceive(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
+
+	List<TransInsuranceClaimVo> getUnProcessedSendAlliance(@Param("claimSeqId") Float claimSeqId, @Param("date") Date date);
+
 }

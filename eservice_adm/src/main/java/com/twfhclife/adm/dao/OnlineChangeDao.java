@@ -642,7 +642,7 @@ public interface OnlineChangeDao {
 	//通過編號查詢醫療保單類別
 	String getMedicalTreatmentFromCompanyId(@Param("trans_num")String trans_num);
 	//更新是否傳送聯盟鏈
-	public int updateMedicalTreatmentSendAlliance(@Param("vo") TransMedicalTreatmentClaimVo vo);
+	public int updateMedicalTreatmentSendAlliance(@Param("vo") TransMedicalTreatmentClaimVo vo, @Param("date") Date date);
 	 //獲取當前保單需要推送聯盟的數據
 	List<TransMedicalTreatmentClaimVo> getTransMedicalTreatmentByTransNum(@Param("transNum") String transNum);
 	//編號

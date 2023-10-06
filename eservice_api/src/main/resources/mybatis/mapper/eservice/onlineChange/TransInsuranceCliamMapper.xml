@@ -239,4 +239,25 @@
 		UPLOAD_DATE = #{date}
 		where TRANS_NUM = #{transNum}
 	</update>
+
+	<select id="getUnProcessedFileReceive" resultMap="TransInsuranceClaimResultMap">
+		SELECT TOP 100 A.TRANS_NUM FROM ESERVICE.dbo.TRANS_INSURANCE_CLAIM A
+		WHERE
+		A.FILE_RECEIVE_DATE IS NOT NULL AND DATEADD(DAY, 1, A.FILE_RECEIVE_DATE) <![CDATA[<=]]> #{date} AND A.FILE_RECEIVED = 'C'
+		<if test="claimSeqId != null">
+			AND A.CLAIMS_SEQ_ID > #{claimSeqId}
+		</if>
+		ORDER BY A.CLAIMS_SEQ_ID
+	</select>
+
+	<select id="getUnProcessedSendAlliance" resultMap="TransInsuranceClaimResultMap">
+		SELECT TOP 100 A.TRANS_NUM FROM ESERVICE.dbo.TRANS_INSURANCE_CLAIM A
+		WHERE
+		A.SEND_ALLIANCE_DATE IS NOT NULL AND DATEADD(DAY, 1, A.SEND_ALLIANCE_DATE) <![CDATA[<=]]> #{date} AND A.SEND_ALLIANCE = 'C'
+		<if test="claimSeqId != null">
+			AND A.CLAIMS_SEQ_ID > #{claimSeqId}
+		</if>
+		ORDER BY A.CLAIMS_SEQ_ID
+	</select>
+
 </mapper>
