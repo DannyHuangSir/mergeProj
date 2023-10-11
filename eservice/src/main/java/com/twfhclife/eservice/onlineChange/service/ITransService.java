@@ -79,8 +79,6 @@ public interface ITransService {
 	
 	public Float getBatchIdSequence();
 
-    Date getLastCompleteTime(String investmentConversionCode, String userId);
-
     int updateTransStatus(String transNum, String status);
 
 	String getTransStatus(String transNum);

@@ -81,8 +81,6 @@ public interface TransDao {
 	//通過保單編號獲取申請序號
 	String isTransNum(@Param("policyNo")String policyNo);
 
-    Date getLastCompleteTime(@Param("transType") String transType, @Param("user") String userId);
-
     int updateSignTransStatus(@Param("transNum") String transNum, @Param("status")  String status);
 
     String getTransStatusByTransNum(@Param("transNum") String transNum);
