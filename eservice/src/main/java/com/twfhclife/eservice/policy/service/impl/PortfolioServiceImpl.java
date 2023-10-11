@@ -131,7 +131,7 @@ public class PortfolioServiceImpl implements IPortfolioService {
 				if ( !"NTD".equals(portfolioVo.getInsuCurr()) ) {
 					insuCurr = portfolioVo.getInsuCurr();
 					ntdExchRate = portfolioDao.getNtdExchRate(insuCurr);
-					policyAcctValueNtd = policyAcctValueNtd.add( portfolioVo.getAcctValue().multiply(ntdExchRate) );
+					policyAcctValueNtd = policyAcctValueNtd.add(portfolioVo.getAcctValue().multiply(ntdExchRate == null ? BigDecimal.valueOf(0) : ntdExchRate) );
 					//log.info("setPortfolioData vo.getPolicyNo(): {}", vo.getPolicyNo());
 					//log.info("setPortfolioData portfolioVo.getInvtNo(): {}", portfolioVo.getInvtNo());
 					//log.info("setPortfolioData portfolioVo.getInsuCurr(): {}", portfolioVo.getInsuCurr());
