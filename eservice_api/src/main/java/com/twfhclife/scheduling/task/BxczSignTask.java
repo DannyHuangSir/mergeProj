@@ -9,6 +9,7 @@ import com.twfhclife.eservice.onlineChange.service.impl.BxczSignServiceImpl;
 import com.twfhclife.eservice_api.service.IParameterService;
 import com.twfhclife.generic.utils.ApConstants;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
@@ -102,7 +103,7 @@ public class BxczSignTask {
                         params.put("signFileId", s.getSignFileId());
                         params.put("companyId", clientId);
                         String fileBase64 = bxczSignService.postForJson(api417Url, headers, params);
-                        if (CollectionUtils.isNotEmpty(fileIds)) {
+                        if (CollectionUtils.isNotEmpty(fileIds) && StringUtils.isNotBlank(fileBase64)) {
                             bxczSignService.updateSignDownloaded(s.getActionId());
                             bxczSignService.addSignFileData(s.getSignFileId(), clientId, fileBase64);
                         }
