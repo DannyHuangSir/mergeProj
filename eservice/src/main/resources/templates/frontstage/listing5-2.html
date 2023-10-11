@@ -36,7 +36,7 @@
 										<tr>
 											<th class="text-left">給付種類</th>
 											<th>實付金額</th>
-											<th>受款人</th>
+											<!--<th>受款人</th>-->
 											<th>給付方式</th>
 											<th>給付日期</th>
 										</tr>
@@ -58,12 +58,12 @@
 														: '&nbsp;'"/>
 													<i class="my5"></i><!-- <i class="my5">NTD</i>美元保單會造成誤解 -->
 												</td>
-												<td>
+												<!--<td>
 													<p>
 														<th:block th:text="${paidVo.payName != null} 
 															? ${paidVo.payName}"/>
 													</p>
-												</td>
+												</td>-->
 												<td>
 													<th:block th:text="${paidVo.payMethod != null} 
 														? ${paidVo.payMethod}"/>

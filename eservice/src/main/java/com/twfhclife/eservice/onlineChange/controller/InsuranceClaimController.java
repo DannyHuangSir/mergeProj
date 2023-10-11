@@ -129,13 +129,14 @@ public class InsuranceClaimController extends BaseUserDataController {
 				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.BACK_LIST_MSG);
 				return "redirect:apply1";
 			}
+
 			/**
 			 * 進行判斷是否有醫療保單的申請
 			 *  ps :醫療有申請,則保單理賠不可進行申請
 			 */
 			int resultMedical = iMedicalTreatmentService.getPolicyClaimCompleted(getUserRocId());
 			if (resultMedical > 0) {
-				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INSURANCE_CLAIM_APPLYING);
+				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.MEDICAL_TREATMENT_CLAIM_APPLYING);
 				return "redirect:apply1";
 			}
 
@@ -145,10 +146,10 @@ public class InsuranceClaimController extends BaseUserDataController {
 			 */
 			int result = insuranceClaimService.getPolicyClaimCompleted(getUserRocId());
 			if (result > 0) {
-//				String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
 				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INSURANCE_CLAIM_APPLYING);
-			  return "redirect:apply1";
+				return "redirect:apply1";
 			}
+
 
 			String userRocId = getUserRocId();
 			String userId = getUserId();

@@ -120,7 +120,18 @@ public class MedicalTreatmentController extends BaseUserDataController {
 				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.BACK_LIST_MSG);
 				return "redirect:apply1";
 			}
-			
+			/**
+			 * 進行判斷是否有保單理賠的申請
+			 *  ps :保單理賠有申請,則醫療不可進行申請
+			 */
+			int resultInsurance = insuranceClaimService.getPolicyClaimCompleted(getUserRocId());
+			if (resultInsurance > 0) {
+//				String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
+				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INSURANCE_CLAIM_APPLYING);
+				return "redirect:apply1";
+			}
+
+
 			/**
 			 * 3.有申請中的保單,則不可再申請
 			 * TRANS中transType=INSURANCE_TYPE,status=-1,0,4
@@ -307,8 +318,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 					ocModel.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
 					ocModel.setInsuredAge(age);
 
-//					resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
-					resultStr = "{\"resultPass\": true}";
+					resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
 					odmResultPass = ocClient.checkLiaAPIResponseValue(resultStr, "/resultPass", "true");
 				}
 
@@ -376,8 +386,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 						ocModel.setTransType(TransTypeUtil.MEDICAL_TREATMENT_PARAMETER_CODE);
 						ocModel.setInsuredAge(age);
 						OnlineChangeClient ocClient = new OnlineChangeClient();
-//						String resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
-						String resultStr = "{\"resultPass\": true}";
+						String resultStr = ocClient.postForEntity(odmCheckServcieUrl, ocModel);
 						boolean resultPass = ocClient.checkLiaAPIResponseValue(resultStr, "/resultPass", "true");
 						logger.info("resultPass=" + resultPass);
 						if (!resultPass) {

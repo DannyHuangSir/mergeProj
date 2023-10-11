@@ -230,7 +230,7 @@
 
 	<select id="getMedicalTreatmentClaimCompleted" parameterType="java.lang.String" resultType="java.lang.Integer">
 		select count(*) from eservice.dbo.TRANS A left join eservice.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B on a.TRANS_NUM = B.TRANS_NUM
-		where A.STATUS not in ('2','3','7','8') and A.TRANS_TYPE = 'MEDICAL_TREATMENT'  and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{rocId})
+		where A.STATUS not in ('2','3','7','8','43','44') and A.TRANS_TYPE = 'MEDICAL_TREATMENT'  and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{rocId})
 	</select>
 	<insert id="addTransStatusHistory" parameterType="com.twfhclife.eservice.onlineChange.model.TransStatusHistoryVo">
 		INSERT INTO 
@@ -346,7 +346,7 @@
 
 	<select id="getPolicyClaimCompletedPolicyno" resultType="java.lang.String">
 		select   TOP 1  B.POLICYNO from eservice.dbo.TRANS A left join eservice.dbo.TRANS_MEDICAL_TREATMENT_CLAIM B on a.TRANS_NUM = B.TRANS_NUM
-		where A.STATUS not in ('2','3','7','8') and A.TRANS_TYPE = 'MEDICAL_TREATMENT'
+		where A.STATUS not in ('2','3','7','8','43','44') and A.TRANS_TYPE = 'MEDICAL_TREATMENT'
 		and B.ID_NO = ESERVICE.dbo.FN_ENBASE64(#{userRocId}) ORDER BY B.CREATE_DATE  DESC
 	</select>
 	<select id="getTransMedicalTreatmentClaimBySendAlliance" resultType="java.lang.String">

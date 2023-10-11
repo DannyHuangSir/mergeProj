@@ -408,6 +408,7 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 		String userId = transMedicalTreatmentClaimVo.getUserId();
 
 		String status = OnlineChangeUtil.TRANS_STATUS_APPLYING;
+		String mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_1;
 		// 判斷符合聯盟鏈醫起通的商品清單
 		String policyNo = transMedicalTreatmentClaimVo.getPolicyNo();
 		boolean flag = false;
@@ -419,6 +420,7 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 			// 判斷聯盟件
 			String fromCompanyId = transMedicalTreatmentClaimVo.getFrom();
 			if(fromCompanyId != null && !OnlineChangeUtil.FROM_COMPANY_L01.equals(fromCompanyId)) {
+				mailInfoType = OnlineChangeUtil.MAIL_INFO_TYPE_2;
 				if(transMedicalTreatmentClaimVo.getStauts() !=null  && OnlineChangeUtil.TRANS_STATUS_ABNORMAL.equals(transMedicalTreatmentClaimVo.getStauts())){
 					status = OnlineChangeUtil.TRANS_STATUS_ABNORMAL;
 				}else {
@@ -777,7 +779,7 @@ public class MedicalTreatmentServicelmpl implements IMedicalTreatmentService {
 	@Override
 	public int getPolicyClaimCompleted(String rocId) {
 		// TODO Auto-generated method stub
-		return onlineChangeDao.getPolicyClaimCompleted(rocId);
+		return onlineChangeDao.getMedicalTreatmentClaimCompleted(rocId);
 	}
 
 	/**
