@@ -109,6 +109,7 @@ public class DashboardController extends BaseController {
 						addSession(UserDataInfo.USER_DASHBOARD_DATA, dashboardResponse);
 					}
 				} else {
+					/* 20230712 by 2033990 從api取得mark掉
 					// Call api 取得資料
 					DashboardResponse dashboardResponse = dashboardClient.getPolicyDashBoard(userId, userRocId);
 					// 若無資料，嘗試由內部服務取得資料
@@ -120,6 +121,7 @@ public class DashboardController extends BaseController {
 						policyExtraVo = dashboardResponse.getPolicyExtraVo();
 						addSession(UserDataInfo.USER_DASHBOARD_DATA, dashboardResponse);
 					} else {
+					*/
 						logger.info("Call internal service to get user[{}] dashboard data", userId);
 						
 						// 保障型保單
@@ -140,9 +142,9 @@ public class DashboardController extends BaseController {
 							}
 							
 							// 取得保障型的被保人資料
-							addAttribute("insuredProductData", insuredProductData);
+							//addAttribute("insuredProductData", insuredProductData);
 							// 保障型商品數量
-							addAttribute("benefitPolicyListSize", benefitPolicyList.size());
+							//addAttribute("benefitPolicyListSize", benefitPolicyList.size());
 							logger.debug("benefitPolicyListSize: {}", benefitPolicyList.size());
 							logger.debug("insuredProductData: {}", MyJacksonUtil.object2Json(insuredProductData));
 						}
@@ -158,12 +160,12 @@ public class DashboardController extends BaseController {
 							// 設定平均報酬率及帳戶價值資料
 							portfolioService.setPortfolioData(invtPolicyList);
 							for (PolicyListVo vo : invtPolicyList) {
-								policyAcctValueTotal = policyAcctValueTotal.add(vo.getPolicyAcctValue());
+								policyAcctValueTotal = policyAcctValueTotal.add(vo.getPolicyAcctValueNtd());
 							}
 							
 							// 設定參考合計帳戶價值合計
-							addAttribute("policyAcctValueTotal", policyAcctValueTotal);
-							addAttribute("invtPolicyList", invtPolicyList);
+							//addAttribute("policyAcctValueTotal", policyAcctValueTotal);
+							//addAttribute("invtPolicyList", invtPolicyList);
 						}
 						
 						// 取得我的資產與負債資料
@@ -173,10 +175,17 @@ public class DashboardController extends BaseController {
 							policyExtraVo = policyExtraService.getUserAllLoanData(userRocId);
 							addSession(UserDataInfo.USER_POLICY_EXTRA, policyExtraVo);
 						}
-						addAttribute("loanVo", policyExtraVo);
-					}
+						//addAttribute("loanVo", policyExtraVo);
+
+						DashboardResponse dashboardResponse = new DashboardResponse();
+						 dashboardResponse.setBenefitPolicyListSize(benefitPolicyList.size());
+						 dashboardResponse.setInvtPolicyList(invtPolicyList);
+						 dashboardResponse.setPolicyAcctValueTotal(policyAcctValueTotal);
+						 dashboardResponse.setPolicyExtraVo(policyExtraVo);
+						addSession(UserDataInfo.USER_DASHBOARD_DATA, dashboardResponse);
+					/*}*/
 				}
-				
+
 				// 取得保障型的被保人資料
 				addAttribute("insuredProductData", insuredProductData);
 				

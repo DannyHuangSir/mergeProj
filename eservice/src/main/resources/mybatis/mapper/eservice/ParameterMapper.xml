@@ -30,8 +30,7 @@
 		FROM ESERVICE_ADM.DBO.PARAMETER p
 		JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY pc ON p.PARAMETER_CATEGORY_ID = pc.PARAMETER_CATEGORY_ID
 		WHERE
-			1 = 1
-			AND p.SYSTEM_ID = pc.SYSTEM_ID
+			p.SYSTEM_ID = pc.SYSTEM_ID
 			AND p.STATUS = pc.STATUS
 			AND pc.STATUS = 1
 			AND p.SYSTEM_ID = #{systemId}
@@ -77,8 +76,7 @@
 			p.REMARK
 		from ESERVICE_ADM.DBO.PARAMETER_CATEGORY pc
 		JOIN ESERVICE_ADM.DBO.PARAMETER p ON pc.parameter_category_id = p.parameter_category_id
-		where 1 = 1
-			and pc.STATUS = p.STATUS
+		where pc.STATUS = p.STATUS
 			and pc.STATUS = 1
 			and pc.CATEGORY_CODE = #{categoryCode}
 			and pc.PARAMETER_CATEGORY_ID = p.PARAMETER_CATEGORY_ID
@@ -117,8 +115,7 @@
 		Select p.PARAMETER_NAME, p.PARAMETER_VALUE
 		From ESERVICE_ADM.DBO.PARAMETER_CATEGORY pc
 		JOIN ESERVICE_ADM.DBO.PARAMETER p ON pc.PARAMETER_CATEGORY_ID = p.PARAMETER_CATEGORY_ID
-		Where 1 = 1
-		and pc.STATUS = p.STATUS
+		Where  pc.STATUS = p.STATUS
 		and pc.STATUS = 1
 		<if test="sysId != '' or sysId != null">
 			and pc.SYSTEM_ID = p.SYSTEM_ID
@@ -174,5 +171,29 @@
 		AND a.PARAMETER_VALUE=#{reject}
 		ORDER BY
 		a.SORT_NO
+	</select>
+	
+	<select id="getpolicyInvestmentType" resultType="java.lang.String"  >
+		SELECT v.value FROM ESERVICE_ADM.DBO.PARAMETER t CROSS APPLY STRING_SPLIT(t.PARAMETER_VALUE, ',')v WHERE t.PARAMETER_CODE = 'POLICY_INVESTMENT_TYPE'
+	</select>
+	
+	<select id="getParameterByCategoryCodeParameterCode" resultType="java.lang.String">
+		SELECT
+		a.PARAMETER_NAME
+		FROM
+		ESERVICE_ADM.DBO.PARAMETER a
+		,ESERVICE_ADM.DBO.PARAMETER_CATEGORY b
+		WHERE
+		a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
+		AND a.STATUS = b.STATUS
+		AND b.STATUS = 1
+		AND a.SYSTEM_ID = b.SYSTEM_ID
+		AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
+		AND b.CATEGORY_CODE = <include refid="ApConstantsMapper.CURRENCY_PARAMETER_CATEGORY_CODE"/>
+		AND a.PARAMETER_CODE=#{parameterCode}
+	</select>
+	
+	<select id="getPaymodeCht" resultType="java.lang.String" >
+		SELECT PARAMETER_VALUE FROM ESERVICE_ADM.DBO.PARAMETER P WHERE PARAMETER_CATEGORY_ID=3 AND PARAMETER_CODE = #{parameterCode};
 	</select>
 </mapper>

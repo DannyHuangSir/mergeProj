@@ -300,6 +300,9 @@ public interface OnlineChangeUtil {
 	public static final String CTC_LIPMDA= "CTC_LIPMDA";
 	//查詢減額、展期保單	
 	public static final String CTC_LILIPM= "CTC_LILIPM";
+	//
+	public static final String CTC_LIPROD = "CTC_LIPROD";
+	public static final String CTC_LIPRVD = "CTC_LIPRVD";
 	//減額、展期保單明細
 	public static final String CTC_LILIPM_DETAIL= "CTC_LILIPM_DETAIL";
 	//查詢撤銷保單明細資料
@@ -328,8 +331,12 @@ public interface OnlineChangeUtil {
 	public static final String CTC_REGISTER_USER_LIPIDATA = "REGISTER_USER_LIPIDATA";
 	//加入會員-取得更新保單對應的電話號碼
 	public static final String CTC_REGISTER_USER_USERMAILPHONE = "REGISTER_USER_USERMAILPHONE";
+	//繳別功能
+	public static final String CTC_PAYMENT_MODE = "PAYMENT_MODE";
 	
 	public static final String EDUCATION_LEVEL_CODE= "EDUCATION_LEVEL";
+	
+	public static final String RULE_LILIPMPI_CODE  = "RULE_LILIPMPI";
 	
 	public static final String YES = "是";
 	
@@ -379,4 +386,7 @@ public interface OnlineChangeUtil {
 	
 	public final static String BLACK_LIST_CODE = "BLACK_LIST";
 
+	public final static String INVESTMENTS_DATE_CODE = "INVESTMENTS_DATE";
+
+	public final static String INVESTMENTS_FUND_CODE = "INVESTMENTS_FUNDS_CODE";
 }

@@ -46,6 +46,11 @@ public class PolicyReversalVo implements Serializable {
     /**電匯日**/
     private Date pattDate;
 
+    /** 標的代號  */
+    private String invtNo;
+
+    /** 標的名稱  */
+    private String invtName;
 
     public String getPolicyNo() {
         return policyNo;
@@ -135,6 +140,22 @@ public class PolicyReversalVo implements Serializable {
 	public void setPattDate(Date pattDate) {
 		this.pattDate = pattDate;
 	}
+
+    public String getInvtNo() {
+        return invtNo;
+    }
+
+    public void setInvtNo(String invtNo) {
+        this.invtNo = invtNo;
+    }
+
+    public String getInvtName() {
+        return invtName;
+    }
+
+    public void setInvtName(String invtName) {
+        this.invtName = invtName;
+    }
 
 	//調整欄位資料
     public void fixData(){

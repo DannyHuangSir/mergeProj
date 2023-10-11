@@ -9,9 +9,10 @@
 		<result column="USER_ID" property="userId"/>
 		<result column="STATUS" property="status"/>
 		<result column="CREATE_USER" property="createUser"/>
-		<result column="CREATE_DATE" property="createDate"></result>
+		<result column="CREATE_DATE" property="createDate"/>
 		<result column="UPDATE_USER" property="updateUser"/>
 		<result column="UPDATE_DATE" property="updateDate"/>
+		<result column="POLICY_NO"   property="policyNo" />
 	</resultMap>
 	
 	<sql id="Base_Column_List">
@@ -167,4 +168,35 @@
 		SELECT STATUS FROM ESERVICE.DBO.TRANS WHERE TRANS_NUM = #{transNum}
 	</select>
 
+	<select id="getLastCompleteTime" resultMap="TransMap" parameterType="java.lang.String" >
+		SELECT 
+			UPDATE_DATE  , B.POLICY_NO
+		FROM 
+			TRANS A 
+		LEFT JOIN TRANS_POLICY B
+		ON
+		A.TRANS_NUM = B.TRANS_NUM
+		WHERE 
+			TRANS_TYPE = #{transType}
+		AND 
+			STATUS = '2'
+		AND 
+			USER_ID = #{userId}
+		AND
+			UPDATE_DATE IS NOT NULL 
+		ORDER BY UPDATE_DATE DESC
+	</select>
+
+	 <select id="getProcessInvestment" resultMap="TransMap" parameterType="java.lang.String"> 
+  		SELECT A.TRANS_NUM ,B.POLICY_NO , A.TRANS_TYPE  FROM ESERVICE.DBO.TRANS A
+		LEFT JOIN ESERVICE.DBO.TRANS_POLICY B
+			ON
+		A.TRANS_NUM = B.TRANS_NUM
+		WHERE A.STATUS NOT IN ('2','3','6','7') 
+		AND A.TRANS_TYPE IN
+	   <foreach collection="transTypes" item="t" open="(" close=")" separator=",">
+	      #{t}
+	    </foreach>
+		AND A.USER_ID = #{userId}  	
+  </select>
 </mapper>

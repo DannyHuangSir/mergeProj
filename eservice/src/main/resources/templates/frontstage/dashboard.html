@@ -122,7 +122,7 @@
 							<i class="fas fa-chevron-down mobile hid2"></i>
 							<i class="fas fa-chart-line fa-lg hid1"></i> 投資型保單概況
 							<span class="my6 pull-right hid1">
-								<span class="hidden-xs">參考合計帳戶價值</span> 
+								<span class="hidden-xs">參考合計保單價值</span> 
 								<span class="enNormal"> NTD </span>
 								<th:block th:text="${policyAcctValueTotal != null}
 									? ${#numbers.formatDecimal(policyAcctValueTotal, 1, 'COMMA', 2, 'DEFAULT')}
@@ -136,7 +136,7 @@
 								<tr class="table2">
 									<th class="textFirst item360" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="persist">保單</th>
 									<th class="item360" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1">平均報酬率</th>
-									<th class="item360" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">參考帳戶價值</th>
+									<th class="item360" scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">參考保單價值</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -170,7 +170,7 @@
 												<i class="my5"><th:block th:text="${vo.currency} == null ? 'NTD'"/></i>
 											</th:block>
 											<th:block th:if="${vo.policyAcctValue lt 0}">
-												<span class="tablesaw-cell-content">帳價不足</span>
+												<span class="tablesaw-cell-content">保價不足</span>
 											</th:block>
 										</td>
 										<td></td>
@@ -183,7 +183,7 @@
 							<button class="btn btn-link showAllTrigger showAll">顯示全部 <span class="caret"></span></button>
 						</div>
 						<div class="col-md-12 borderBottom mobile pull-right">
-							<div class="total1"><span>參考合計帳戶價值</span>0<i class="my5">NTD</i></div>
+							<div class="total1"><span>參考合計保單價值</span>0<i class="my5">NTD</i></div>
 						</div>
 					</div>
 				</div>
@@ -212,7 +212,7 @@
 												<span class="my4 pull-right enBig"><th:block th:text="${loanVo != null and loanVo.remainLoanValue != null} ? ${#numbers.formatDecimal(loanVo.remainLoanValue, 0, 'DEFAULT', 0, 'COMMA')} : '&nbsp;'"/><i class="my5">NTD</i></span>
 											</td>
 											<td class="table4 text-left"></td>
-											<td class="table3 ">參考合計帳戶價值<span class="my4 pull-right enBig">
+											<td class="table3 ">參考合計保單價值<span class="my4 pull-right enBig">
 												<th:block th:text="${policyAcctValueTotal != null} 
 														? ${#numbers.formatDecimal(policyAcctValueTotal, 1, 'COMMA', 2, 'DEFAULT')}
 														: 0.00"/><i class="my5">NTD</i></span>

@@ -21,6 +21,7 @@ import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
 import com.twfhclife.eservice.web.model.ParameterVo;
+import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
@@ -48,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /***
  * 線上申請 - 申請保單提領(贖回)
@@ -91,11 +93,12 @@ public class TransDepositController extends BaseUserDataController {
          * 投資型保單申請中不可繼續申請
          * TRANS  status=-1,0,4
          */
-        String msg = transInvestmentService.checkHasApplying(getUserId());
-        if (StringUtils.isNotBlank(msg)) {
-            redirectAttributes.addFlashAttribute("errorMessage", msg);
-            return "redirect:apply1";
-        }
+//		  2023/09/28 USER 新增檢核機制  取消舊有檢核        
+//        String msg = transInvestmentService.checkHasApplying(getUserId());
+//        if (StringUtils.isNotBlank(msg)) {
+//            redirectAttributes.addFlashAttribute("errorMessage", msg);
+//            return "redirect:apply1";
+//        }
 
         String userRocId = getUserRocId();
         List<PolicyListVo> policyList = policyListService.getDepositList(userRocId, null);
@@ -115,6 +118,7 @@ public class TransDepositController extends BaseUserDataController {
                     getUserId(), TransTypeUtil.DEPOSIT_PARAMETER_CODE);
             transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.DEPOSIT_PARAMETER_CODE);
             transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.DEPOSIT_PARAMETER_CODE);
+            transInvestmentService.newCheckHasApplying(getUserId() , handledPolicyList);
             addAttribute("policyList", handledPolicyList);
         }
         return "frontstage/onlineChange/deposit/deposit1";

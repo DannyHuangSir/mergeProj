@@ -77,14 +77,6 @@ tr:last-child td:last-child{
 }
 </style>
 <title>臺銀人壽-投資型保險商品要保人風險屬性評估問卷(購買非結構型商品適用)</title>
-<script>
-	if (window.name != "noReload") {
-		window.name = "noReload";
-		location.reload();
-	} else {
-		window.name = "";
-	}
-</script>
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 	<center>
@@ -147,23 +139,21 @@ tr:last-child td:last-child{
 													<P>&nbsp;&nbsp;&nbsp;台端若未能提供相關個人資料時，本公司將可能延後或無法進行必要之審核及處理作業，因此可能婉謝承保、遲延或無法提供 台端相關服務或給付。</P>
 							                    </div>
 							                </div>
-							                <div class="col-md-12" style="margin-top: 10px">
+							                <div class="col-md-12" style="margin-top: 10px ; display: none" id="showCheckButton" >
 							                	<div class="col-md-2"></div>
 							                	<div class="col-md-8">
 													<p class="text-ps" id="remark"></p>
 													<div>
-														<label for="readPdfCheck">
 														<p>
 															<input style="float: left;" type="checkbox" id="readPdfCheck"  />
 																已詳細閱讀個人資料蒐集、處理、利用告知事項
 														</p>
-														</label>
 													</div>
 												</div>
 							                </div>											
 											<div class="col-md-12 two-buttons">
-												<a href="http://www.twfhclife.com.tw">
-													<button id="deny" class="btn-signup" style="margin-bottom: 30px">不同意</button>
+												<a href="https://www.twfhclife.com.tw">
+													<button id="deny" class="btn-signup" style="margin-bottom: 30px" type="button">不同意</button>
 												</a>
 												<a class="gorest">
 													<button id="go" class="btn-signup" style="margin-bottom: 30px; display: none">同意</button>
@@ -209,6 +199,7 @@ tr:last-child td:last-child{
 	<script th:inline="javascript">
 	/*<![CDATA[*/
 	$(function() {
+	
 		var ipStatus = [[${ipStatus}]];
 		if(ipStatus != '' && ipStatus != null){
 			$('#ipShowPupStatus').show();
@@ -221,7 +212,23 @@ tr:last-child td:last-child{
 					$('#go').show();
 				}
 		})
-		
+			
+		$(document).ready(function (){
+			var nScrollHight = 0; //滾動距離總長(註意不是滾動條的長度)
+			var nScrollTop = 0;   //滾動到的當前位置
+			var nDivHight = $("#indivdualChooseTerm").height();
+			$("#indivdualChooseTerm").scroll(function(){
+				var  nScrollHight = $(this)[0].scrollHeight;
+				var  nScrollTop = $(this)[0].scrollTop;
+		　　　		var paddingBottom = parseInt( $(this).css('padding-bottom') );
+				var paddingTop = parseInt( $(this).css('padding-top') );
+				if(nScrollTop +paddingBottom+paddingTop + nDivHight + 10 >= nScrollHight){
+					$("#showCheckButton").show();
+				}
+				
+				});
+			});			
+
 		$('#go').click(function() {
 			if (!$("#readPdfCheck").is(":checked")) {
 					openAlert('請詳細閱讀本文件內容後進行勾選')

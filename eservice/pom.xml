@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.twfhclife</groupId>
-	<artifactId>eservice_GoLive20220103</artifactId>
+	<artifactId>eservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>eservice</name>

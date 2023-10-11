@@ -85,4 +85,5 @@ public interface ITransService {
 
 	String getTransStatus(String transNum);
 
+	List<TransVo> getLastCompleteTime(String investmentConversionCode, String userId);
 }

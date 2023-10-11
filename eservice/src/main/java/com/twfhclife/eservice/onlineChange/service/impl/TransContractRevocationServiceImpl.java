@@ -513,6 +513,7 @@ public class TransContractRevocationServiceImpl implements ITransContractRevocat
 
 	public byte[] getPDF(ContractRevocationPDFVo vo) {
 		try {
+			byte[] appendPdfByte = null;
 			RptUtils rptUtils = new RptUtils("contractRevocation.pdf");
 			rptUtils.txt(vo.getLipmName(), 12, 1, 138, 695); // 要保人
 			rptUtils.txt(vo.getLipiName(), 12, 1, 347, 695); // 被保人
@@ -526,7 +527,16 @@ public class TransContractRevocationServiceImpl implements ITransContractRevocat
 			rptUtils.txt(String.valueOf((newDate.getYear() - 1911)), 12, 1, 235, 605); // 年
 			rptUtils.txt(String.valueOf(newDate.getMonthValue()), 12, 1, 285, 605); // 月
 			rptUtils.txt(String.valueOf(newDate.getDayOfMonth()), 12, 1, 328, 605); // 日
-			return rptUtils.toPdf();
+			byte[] pdfByte = rptUtils.toPdf();
+			if (appendPdfByte == null) {
+				appendPdfByte = pdfByte;
+			} else {
+				appendPdfByte = PdfUtil.appendPdf(appendPdfByte, pdfByte);
+			}
+//			FileOutputStream fos = new FileOutputStream(new File("D:\\ELIFE\\123.pdf"));
+//			IOUtils.write(pdfByte, fos);
+//			IOUtils.closeQuietly(fos);
+			return pdfByte;
 		} catch (IOException | DocumentException e) {
 			e.printStackTrace();
 		}
@@ -707,9 +717,9 @@ public class TransContractRevocationServiceImpl implements ITransContractRevocat
 			if (!files.exists()) {
 				files.mkdir();
 			}		
-			File sendFile = new File(filePath);
+			java.io.File sendFile = new java.io.File(filePath);
 			FileUtils.writeByteArrayToFile(sendFile, getPDF(contractRevocationPdfVo));
-			List<File> listFile = new ArrayList<>();
+			List<java.io.File> listFile = new ArrayList<>();
 			listFile.add(sendFile);
 			StringBuilder ccMailUser = new StringBuilder();
 			String ccUser =  parameterService.getParameterValueByCode(SYSTEM_ID, "CONTRACT_REVOCATION_ATTACHMENT_USER");
@@ -735,10 +745,16 @@ public class TransContractRevocationServiceImpl implements ITransContractRevocat
 	 */
 	public String converFileToBase64Miniature(String filePath) {
 		String encodedString = null;
+
+		PDDocument pdDoc = null;
 		try {
 			if (filePath != null) {
 				logger.info("--------------------------------------------------input filePath=" + filePath);
 				File file = new File(filePath);
+
+				long length = file.length();
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();// io流
+				String substring = filePath.substring(filePath.lastIndexOf("."), filePath.length());
 				// pdf获取缩略图
 				encodedString = imgBase64(file);
 				logger.error("--------------------------------------------------Thumbnails  Base64 {}", encodedString);
@@ -746,6 +762,14 @@ public class TransContractRevocationServiceImpl implements ITransContractRevocat
 		} catch (Exception e) {
 			logger.error("input filePath is null.");
 			logger.error(e);
+		} finally {
+			try {
+				if (pdDoc != null) {
+					pdDoc.close();
+				}
+			} catch (Exception e) {
+				// make sure close PDDocument
+			}
 		}
 		return encodedString;
 	}

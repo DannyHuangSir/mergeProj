@@ -29,7 +29,7 @@ public class TransStatusHistoryVo {
 	private String startDate;
 	
 	private String endDate;
-	private UsersVo usersVo;
+	private com.twfhclife.eservice.web.model.UsersVo usersVo;
 
 	public UsersVo getUsersVo() {
 		return usersVo;

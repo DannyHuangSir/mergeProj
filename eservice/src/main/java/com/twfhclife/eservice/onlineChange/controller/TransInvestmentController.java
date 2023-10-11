@@ -19,6 +19,8 @@ import com.twfhclife.eservice.policy.model.CompareInvestmentVo;
 import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
+import com.twfhclife.eservice.user.model.LilipmVo;
+import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
@@ -39,6 +41,7 @@ import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import com.twfhclife.generic.util.ValidateUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -50,6 +53,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -96,6 +102,10 @@ public class TransInvestmentController extends BaseUserDataController  {
 	@Autowired
 	private IndividualChooseService indivdualChooseService;
 	
+	
+	@Autowired
+	private ILilipmService  lilipmService;
+	
     @RequestLog
     @GetMapping("/investment1")
     public String investment1(RedirectAttributes redirectAttributes) {
@@ -110,12 +120,12 @@ public class TransInvestmentController extends BaseUserDataController  {
              * 投資型保單申請中不可繼續申請
              * TRANS  status=-1,0,4
              */
-            String msg = transInvestmentService.checkHasApplying(getUserId());
-            if (StringUtils.isNotBlank(msg)) {
-                redirectAttributes.addFlashAttribute("errorMessage", msg);
-                return "redirect:apply1";
-            }
-
+//            String msg = transInvestmentService.checkHasApplying(getUserId());
+//            if (StringUtils.isNotBlank(msg)) {
+//                redirectAttributes.addFlashAttribute("errorMessage", msg);
+//                return "redirect:apply1";
+//            }
+              
 //            boolean expire = riskLevelService.checkRiskLevelExpire(getUserId());
 //            if (expire) {
 //                redirectAttributes.addFlashAttribute("errorMessage", "距上一次線上風險屬性變更已超過一年，再請先重新執行線上風險屬性測試及變更！");
@@ -151,7 +161,9 @@ public class TransInvestmentController extends BaseUserDataController  {
 //				}				
 //            }
             transInvestmentService.handlePolicyStatusLocked(userRocId, policyList, TransTypeUtil.INVESTMENT_PARAMETER_CODE);
+            transInvestmentService.verifyPaymentMode(policyList);
             transService.handleVerifyPolicyRuleStatusLocked(policyList, TransTypeUtil.INVESTMENT_PARAMETER_CODE);
+            transInvestmentService.newCheckHasApplying(getUserId() , policyList);
             addAttribute("policyList", policyList);
 //            List<String> policyNoList = new ArrayList<>();
 //            policyList.stream().filter(x->{
@@ -320,7 +332,31 @@ public class TransInvestmentController extends BaseUserDataController  {
     public ResponseEntity<ResponseObj> getNewInvestments(@RequestBody TransInvestmentVo vo) {
     	if(ValidateUtil.TransInvestmentIsValid(vo)) {
             List<InvestmentPortfolioVo> investments = transInvestmentService.getNewInvestments(vo.getPolicyNo(), vo.getOwnInvestments(), getUserRocId());
-            processSuccess(investments);
+    	    	List<InvestmentPortfolioVo> ruleInvestments = new ArrayList<InvestmentPortfolioVo>();
+                String investmentsDate = parameterService.getParameterValueByCode(
+                        ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENTS_DATE_CODE);
+                String investmentsFundsCode = parameterService.getParameterValueByCode(
+                        ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENTS_FUND_CODE);
+                List<String> investmentsList = new ArrayList<String>(); 
+                investmentsList = Arrays.asList(investmentsFundsCode.split(","));
+    	    	LocalDate begDate = null;
+    	    	//ESERVICE
+    	    	LilipmVo pmVo = new LilipmVo();
+    	        pmVo = lilipmService.findByPolicyNo(vo.getPolicyNo());
+    	        if(pmVo != null) {
+    	        	begDate = pmVo.getLipmInsuBegDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    	        }
+    	        LocalDate sysDate = LocalDate.parse(investmentsDate);	        
+    	        if(sysDate.isEqual(begDate) || sysDate.isBefore (begDate)) {
+    	        	for(InvestmentPortfolioVo portfolioVo : investments) {
+    	        		if(!investmentsList.contains(portfolioVo.getInvtNo())) {
+    	        			ruleInvestments.add(portfolioVo);
+    	        		}
+    	        	}	
+    	        	 processSuccess(ruleInvestments);
+    	        }else {
+    	        	processSuccess(investments);
+    	        }
     	}else {
             processSuccess(null);
     	}

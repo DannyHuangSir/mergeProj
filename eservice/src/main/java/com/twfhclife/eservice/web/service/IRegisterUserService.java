@@ -1,6 +1,5 @@
 package com.twfhclife.eservice.web.service;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +28,7 @@ public interface IRegisterUserService {
 	
 	public boolean getPolicyByRocId(String policyNo, String rocId);
 	
-	public List<RegisterQuestionVo> getPolicyQues(String rocId, String policyNo) throws NoSuchAlgorithmException;
+	public List<RegisterQuestionVo> getPolicyQues(String rocId, String policyNo);
 	
 	public Map<String, String> registerUserData(UsersVo user);
 	

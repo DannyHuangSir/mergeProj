@@ -248,10 +248,12 @@
 			policyNo=investmentPortfolioVoList[0].policyNo
 		}
 		investmentPortfolioVoList.forEach(element => {
-			ownInvtNos.push({invtNo: element.invtNo})
+			if (element.number > 0) {
+				ownInvtNos.push({invtNo: element.invtNo})
+			}
 		});
-		//let data = {policyNo: policyNo, ownInvestments: ownInvtNos}
-		let data = {policyNo: policyNo}
+		let data = {policyNo: policyNo, ownInvestments: ownInvtNos}
+		//let data = {policyNo: policyNo}
 		$.ajax({
 				type : 'POST',
 				contentType : 'application/json',

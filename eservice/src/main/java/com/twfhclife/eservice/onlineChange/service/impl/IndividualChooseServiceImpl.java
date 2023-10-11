@@ -1,27 +1,18 @@
 package com.twfhclife.eservice.onlineChange.service.impl;
 
-import com.twfhclife.eservice.onlineChange.dao.*;
-import com.twfhclife.eservice.onlineChange.model.*;
-import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
-import com.twfhclife.eservice.onlineChange.service.ITransService;
-import com.twfhclife.eservice.onlineChange.service.IndividualChooseService;
-import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
-import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
-import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
-import com.twfhclife.eservice.web.dao.ParameterDao;
-import com.twfhclife.eservice.web.model.TransVo;
-import com.twfhclife.eservice.web.model.UsersVo;
-import com.twfhclife.eservice.web.service.IParameterService;
-import com.twfhclife.eservice.web.service.IRegisterUserService;
-import com.twfhclife.generic.api_client.MessageTemplateClient;
-import com.twfhclife.generic.api_client.TransCtcSelectUtilClient;
-import com.twfhclife.generic.api_model.LicohilVo;
-import com.twfhclife.generic.api_model.PolicyDetailRequest;
-import com.twfhclife.generic.api_model.PolicyDetailResponse;
-import com.twfhclife.generic.api_model.PolicyDetailVo;
-import com.twfhclife.generic.service.IMailService;
-import com.twfhclife.generic.service.ISendSmsService;
-import com.twfhclife.generic.util.RptUtils;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -30,15 +21,42 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.twfhclife.eservice.onlineChange.dao.IndividualChooseBlackListDao;
+import com.twfhclife.eservice.onlineChange.dao.IndividualChooseDao;
+import com.twfhclife.eservice.onlineChange.dao.IndividualChooseIpDao;
+import com.twfhclife.eservice.onlineChange.dao.TransChooseLevelDao;
+import com.twfhclife.eservice.onlineChange.dao.TransDao;
+import com.twfhclife.eservice.onlineChange.dao.TransRiskLevelDao;
+import com.twfhclife.eservice.onlineChange.model.IndividualChooseBlackListVo;
+import com.twfhclife.eservice.onlineChange.model.IndividualChooseIpVo;
+import com.twfhclife.eservice.onlineChange.model.IndividualChooseVo;
+import com.twfhclife.eservice.onlineChange.model.TransChooseLevelVo;
+import com.twfhclife.eservice.onlineChange.model.TransElectronicFormVo;
+import com.twfhclife.eservice.onlineChange.model.TransRiskLevelVo;
+import com.twfhclife.eservice.onlineChange.service.ITransInvestmentService;
+import com.twfhclife.eservice.onlineChange.service.ITransService;
+import com.twfhclife.eservice.onlineChange.service.IndividualChooseService;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
+import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
+import com.twfhclife.eservice.web.dao.ParameterDao;
+import com.twfhclife.eservice.web.model.ParameterVo;
+import com.twfhclife.eservice.web.model.TransVo;
+import com.twfhclife.eservice.web.model.UsersVo;
+import com.twfhclife.eservice.web.service.IParameterService;
+import com.twfhclife.eservice.web.service.IRegisterUserService;
+import com.twfhclife.generic.api_client.MessageTemplateClient;
+import com.twfhclife.generic.api_client.TransCtcSelectUtilClient;
+import com.twfhclife.generic.api_model.CommLogRequest;
+import com.twfhclife.generic.api_model.LicohilVo;
+import com.twfhclife.generic.api_model.PolicyDetailRequest;
+import com.twfhclife.generic.api_model.PolicyDetailResponse;
+import com.twfhclife.generic.api_model.PolicyDetailVo;
+import com.twfhclife.generic.service.IMailService;
+import com.twfhclife.generic.service.ISendSmsService;
+import com.twfhclife.generic.util.ApConstants;
+import com.twfhclife.generic.util.DateUtil;
+import com.twfhclife.generic.util.RptUtils;
 
 @Service
 public class IndividualChooseServiceImpl implements IndividualChooseService {
@@ -110,7 +128,7 @@ public class IndividualChooseServiceImpl implements IndividualChooseService {
 
 			Date bnagBirth = changeDate(licohilVo.getBnagBirth());
 			Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(individualChooseVo.getBirthDate());
-			if (bnagBirth == null || birthDate == null || bnagBirth.compareTo(birthDate) != 0) {
+			if (bnagBirth.compareTo(birthDate) != 0) {
 				return OnlineChangMsgUtil.CHECK_SCREEN_DATA;
 			}
 		} catch (Exception e) {

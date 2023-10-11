@@ -36,6 +36,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -87,7 +88,7 @@ public class OnlineChangeController extends BaseController {
 
 	@Autowired
 	private IMailService mailService;
-
+	
 	/**
 	 * 線上申請清單
      *
@@ -206,7 +207,9 @@ public class OnlineChangeController extends BaseController {
         try {
 			String userId = getUserId();
 			String errorMessage = "";
-			int defaultPageSize = 4;
+			
+			int defaultPageSize = Integer.valueOf(parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "APPLY2_COUNT"));
+
 			status = (StringUtils.isEmpty(status) ? null : status);
 			transType = (StringUtils.isEmpty(transType) ? null : transType);
 			policyNo = (StringUtils.isEmpty(policyNo) ? null : policyNo);

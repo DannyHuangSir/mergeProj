@@ -283,7 +283,7 @@ public class TransServiceImpl implements ITransService {
 	}
 
     @Override
-    public Date getLastCompleteTime(String transType, String userId) {
+    public List<TransVo> getLastCompleteTime(String transType, String userId) {
         return transDao.getLastCompleteTime(transType, userId);
     }
 

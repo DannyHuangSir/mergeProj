@@ -35,6 +35,8 @@ import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.IParameterService;
 import com.twfhclife.generic.api_model.LicohilVo;
 import com.twfhclife.generic.util.ApConstants;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -124,7 +126,6 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
                     continue;
                 }
                 if ("Y".equals(e.getExpiredFlag())) {
-                    e.setApplyLockedFlag("Y");
                     // 此張保單已過投保終期
                     e.setApplyLockedFlag("Y");
                     e.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_EXPIREDATE_MSG);
@@ -282,6 +283,30 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
         return null;
     }
 
+	@Override
+	public  void newCheckHasApplying(String userId , List<PolicyListVo> policyList) {
+	       String value = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, ApConstants.PROCESS_INVESTMENT_LIST);
+	        if (StringUtils.isNotBlank(value)) {
+	            List<String> transTypes = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(value);
+	            List<TransVo> transVos = transDao.getProcessInvestment(userId, transTypes);
+	            Map<String , String> map = new HashMap<String , String>();
+	            for(TransVo vo : transVos) {
+	            	map.put(vo.getPolicyNo(), vo.getTransType());
+	            }
+	            if(map.size() != 0) {
+	            	for(PolicyListVo vo : policyList) {
+	            		if(StringUtils.isEmpty(vo.getApplyLockedFlag()) || "N".equals(vo.getApplyLockedFlag())) {
+	            			String type = map.get(vo.getPolicyNo());
+		            		if(StringUtils.isNotEmpty(type)) {
+		            			vo.setApplyLockedFlag("Y");
+		            			vo.setApplyLockedMsg(MSG_MAP.get(type));
+		            		}	
+	            		}	            		
+		            }
+	            }	            
+	        }
+	}
+    
     @Override
     public void handleNotExistingInvestmentLock(String userRocId, List<PolicyListVo> policyList) throws Exception {
         if (!CollectionUtils.isEmpty(policyList)) {
@@ -765,7 +790,7 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
             vo.setRiskAttr(licohilVo.getInveAttr());
             vo.setIndividualId(UUID.randomUUID().toString());
 			individualDao.insertIndividual(vo);
-		}else {
+		} else {
 			vo.setRiskAttr(licohilVo.getInveAttr());
 			individualDao.updateIndividual(vo);
 		}
@@ -790,5 +815,61 @@ public class TransInvestmentServiceImpl implements ITransInvestmentService {
 		}catch (Exception e) {
 			log.error("insertOrUpdateForIndividualChoose Error" + e);
 		}		
+	}
+
+	@Override
+	public void verifyPaymentMode(List<PolicyListVo> policyList) {
+		for (PolicyListVo e : policyList) {
+			if (!"M".equals(e.getPaymentMode())) {
+				e.setApplyLockedFlag("Y");
+				e.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_INVESTMENT_TYPE);
+			}
+		}
+	}
+
+	@Override
+	public void checkLastCompleteTime(List<PolicyListVo> policyList, List<TransVo> transList) {
+		String limitDay = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CONVERSION_APPLY_LIMIT_DAY");
+		Map<String, TransVo> map = new HashMap<String, TransVo>();
+		if (!CollectionUtils.isEmpty(transList)) {
+			transList = transList.stream().sorted(Comparator.comparing(TransVo::getPolicyNo))
+					.collect(Collectors.toList());
+		}
+		for (TransVo vo : transList) {
+			if (map.size() == 0) {
+				map.put(vo.getPolicyNo(), vo);
+			} else {
+				if (map.get(vo.getPolicyNo()) == null) {
+					map.put(vo.getPolicyNo(), vo);
+				}
+			}
+		}
+		for (PolicyListVo vo : policyList) {
+			if (StringUtils.isEmpty(vo.getApplyLockedFlag()) || "N".equals(vo.getApplyLockedFlag())) {
+				if (map.get(vo.getPolicyNo()) != null) {
+					TransVo transVo = map.get(vo.getPolicyNo());
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(transVo.getUpdateDate());
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR, 0);
+					calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(limitDay));
+					if (calendar.getTimeInMillis() > System.currentTimeMillis()) {
+						String limitMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID,
+								"CONVERSION_APPLY_LIMIT_MSG");
+						if (StringUtils.isNotBlank(limitMsg)) {
+							limitMsg = limitMsg.replace("${time}",
+									new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
+							vo.setApplyLockedFlag("Y");
+							vo.setApplyLockedMsg(limitMsg);
+						}else {
+							vo.setApplyLockedFlag("Y");
+							vo.setApplyLockedMsg("您最近有完成此功能的申請處理！");	
+						}						
+					}
+				}
+			}
+		}
 	}
 }

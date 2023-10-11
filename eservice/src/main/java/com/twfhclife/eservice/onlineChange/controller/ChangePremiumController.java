@@ -15,6 +15,7 @@ import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
 import com.twfhclife.eservice.web.model.ParameterVo;
+import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
@@ -40,7 +41,9 @@ import sun.misc.BASE64Decoder;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+/**
+ * 定期超額保費
+ */
 @Controller
 public class ChangePremiumController extends BaseUserDataController  {
 
@@ -96,11 +99,13 @@ public class ChangePremiumController extends BaseUserDataController  {
              * 投資型保單申請中不可繼續申請
              * TRANS  status=-1,0,4
              */
-            String msg = transInvestmentService.checkHasApplying(getUserId());
-            if (StringUtils.isNotBlank(msg)) {
-                redirectAttributes.addFlashAttribute("errorMessage", msg);
-                return "redirect:apply1";
-            }
+//  		  2023/09/28 USER 新增檢核機制  取消舊有檢核               
+//            String msg = transInvestmentService.checkHasApplying(getUserId());
+//            if (StringUtils.isNotBlank(msg)) {
+//                redirectAttributes.addFlashAttribute("errorMessage", msg);
+//                return "redirect:apply1";
+//            }
+
             String riskAttr = transRiskLevelService.getUserRiskAttr(getUserRocId());
             if("D".equals(riskAttr)) {
             	redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.CHANGE_PREMIUM_ERROR_MSG);
@@ -115,6 +120,7 @@ public class ChangePremiumController extends BaseUserDataController  {
                         userId, TransTypeUtil.CHANGE_PREMIUM_CODE);
                 transInvestmentService.handlePolicyStatusLocked(getUserRocId(), handledPolicyList, TransTypeUtil.CHANGE_PREMIUM_CODE);
                 transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.CHANGE_PREMIUM_CODE);
+                transInvestmentService.newCheckHasApplying(getUserId() , handledPolicyList);
                 for (PolicyListVo vo : handledPolicyList) {
                     if (!StringUtils.equals(vo.getApplyLockedFlag(), "Y")) {
                         if (!StringUtils.equals("M", vo.getPaymentMode())) {

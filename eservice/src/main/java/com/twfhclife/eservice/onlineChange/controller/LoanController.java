@@ -171,6 +171,13 @@ public class LoanController extends BaseUserDataController {
 	@RequestLog
 	@PostMapping("/loan3")
 	public String loan3(TransLoanVo transLoanVo) {
+		// 20230721 by 203990 用戶輸入的貸款金額, 不可大於可貸款金額上限
+		PolicyExtraVo policyExtraVo = policyExtraService.findByPolicyNo(transLoanVo.getPolicyNo());
+		if ( (transLoanVo.getLoanAmount().compareTo(policyExtraVo.getRemainLoanValue()) == 1) ) {
+			addAttribute("transLoanVo", transLoanVo);
+			return "frontstage/onlineChange/loan/loan2";
+		}
+
 		try {
 			addAttribute("transLoanVo", transLoanVo);
 			Map<String, Map<String, ParameterVo>> sysParamMap = (Map<String, Map<String, ParameterVo>>) getSession(ApConstants.SYSTEM_PARAMETER);
@@ -390,6 +397,13 @@ public class LoanController extends BaseUserDataController {
 	@RequestLog
 	@PostMapping("/loanNew3")
 	public String loanNew3(TransLoanVo transLoanVo) {
+		// 20230721 by 203990 用戶輸入的貸款金額, 不可大於可貸款金額上限
+		PolicyExtraVo policyExtraVo = policyExtraService.findByPolicyNo(transLoanVo.getPolicyNo());
+		if ( (transLoanVo.getLoanAmount().compareTo(policyExtraVo.getRemainLoanValue()) == 1) ) {
+			addAttribute("transLoanVo", transLoanVo);
+			return "frontstage/onlineChange/loan/loan-new2";
+		}
+
 		try {
 			// 發送驗證碼
 			sendAuthCode(TransTypeUtil.LOAN_NEW_PARAMETER_CODE);

@@ -60,6 +60,34 @@ public class RoiRateUtil {
 //		values[2] = denominator;
 
 		values[2] = new BigDecimal(0);
+		
+		return values;
+	}
+
+	//=============================================================================================
+	
+	/** 公式3: UV 保單: {[((單位數*單位淨值*匯率) + 累積投資收益)/(平均台幣買價*總單位數)] – 1}% ; 參考帳戶價值=單位數*單位淨值*匯率 */
+	public static BigDecimal[] formula3(BigDecimal netUnits, BigDecimal netValue, BigDecimal exchRate, BigDecimal ntdVal, BigDecimal accumAmt) {
+		BigDecimal[] values = new BigDecimal[3];
+		
+		BigDecimal roiRate = null;
+		BigDecimal numerator = MathUtil.add(MathUtil.mul(netUnits, netValue, exchRate), accumAmt); // 分子
+		BigDecimal denominator = MathUtil.mul(ntdVal, netUnits); // 分母
+		
+		roiRate = denominator == new BigDecimal(0) ? new BigDecimal(0) : MathUtil.div(numerator, denominator, DEF_SCALE); 
+		roiRate = MathUtil.sub(roiRate, new BigDecimal(1));		
+		/*
+		System.out.println("公式1: {[((單位數*單位淨值*匯率)+ 累積投資收益)/(平均台幣買價*總單位數)] – 1}%");
+		System.out.println(roiRate + " = {[(" + netUnits + "*" + netValue + "*" + exchRate + ") / (" + ntdVal + "*" + netUnits + ")] – 1}%");
+		System.out.println("[分子]:" + numerator);
+		System.out.println("[分母]:" + denominator);
+		System.out.println("投資配置金額=平均成本=平均單位成本*單位數:" + ntdVal + "*" + netUnits + "=" + MathUtil.mul(ntdVal, netUnits));
+		System.out.println("--------------------------------------------------------------------------");
+		*/
+		values[0] = roiRate;
+		values[1] = MathUtil.mul(netUnits, netValue, exchRate);
+		values[2] = denominator;
+		
 		return values;
 	}
 

@@ -69,7 +69,7 @@ input[type=checkbox] {
 				<i class="fas fa-edit"></i> 變更風險屬性
 			</div>
 			<div class="mystyle3 attribute1">
-				<h2>請再次確認您已填寫的風險適性問卷</h2>
+				<h2>請填寫投資型保險商品風險屬性評估問卷</h2>
 				<div class="col-sm-10 col-sm-offset-1">
 					<div class="attr1 marginTop20 chMiddle">以下您所填寫之風險屬性評估問卷，將有助於我們了解您對於投資風險承受度及適合投保之商品。</div>
 					<div class="check-title">投資風險屬性 評估</div>
@@ -79,13 +79,20 @@ input[type=checkbox] {
 									<div class="check-list col-sm-12 " th:style="${vo.id == 2} ? 'height: 100%;' : ''">
 										<p class="marginBottom20">
 										<div class="col-sm-12">
-											<th:block th:text="${vo.seq} +.+ ${vo.question}" /><span style="color: red;"><th:block th:if="${vo.id == 2}">【可複選，以分數較高者計分】</th:block></span>
+											<th:block th:text="${vo.seq} +.+ ${vo.question}" />
 										</div>
 										<div class="col-sm-12" style="color: red;">
 											<th:block th:text="${vo.question2}" />
 										</div>
 										<div class="col-sm-12" style="color: red;">
 											<th:block th:text="${vo.question3}" />
+										</div>
+										<div>
+											<th:block th:if="${vo.id == 2}">
+											<p style="color : red;">
+												&nbsp;&nbsp;【可複選，以分數較高者計分】
+											</p>
+											</th:block>
 										</div>
 										</p>
 										<div class="clearfix"></div>
@@ -136,13 +143,21 @@ input[type=checkbox] {
 									<p class="text-ps" id="remark"></p>
 									<div>
 										<p>
-											二、其他評估項目<br>
-											依法令規範及為保障您的投資權益，若您具有以下身分：年齡為65歲以上或教育程度國中畢業(含)以下或近期有重大醫療支出、高額定期醫療或長期照顧支出，本公司會將您的投資風險屬性歸類為保守型投資人。
-											惟若您確認後仍希望依照本身風險屬性評估結果，作為您的投資風險屬性類型，敬請務必勾選下列選項(若無勾選，本公司會將您的投資風險屬性歸類為保守型)<br>
+										二、其他評估項目<br>
+											您具有以下身分：<br>
+											保險年齡為65歲以上或教育程度國中畢業(含)以下或近期有重大醫療支出、高額定期醫療或長期照顧支出，<br />
+											為保障您的投資權益，本公司會將您的投資風險屬性評估為保守型投資人。
 										</p>
 										<p>
-											<input style="float: left;" type="checkbox" id="readCheck" checked="checked" />
-											本人經審慎評估後，選擇依上述「一、風險屬性評估」之評估結果分類，且確認已充分瞭解基金投資風險，並願意承受相關投資結果。<br />
+											<input style="float: left;" type="radio" id="radio1" disabled/>
+											&nbsp;本人同意將風險屬性評估為保守型。<br />
+										</p>
+										<br />
+										<p>
+											惟若您希望依照本身風險屬性評估結果，作為您的投資風險屬性類型，<a style="color : red;">請勾選下列選項，以利確認您的意願：</a><br />
+											<input style="float: left;" type="radio" id="radio2" disabled/>
+											&nbsp;本人經審慎評估後，選擇依「風險屬性評估」之評估結果分類，<br />
+											且確認已充分瞭解投資風險，並願意承受相關投資結果。<br />
 										</p>
 									</div>
 								</div>
@@ -153,7 +168,7 @@ input[type=checkbox] {
 									<p style="color: green;">提醒您</p>
 									<p style="color: red;">● 投資標的轉換欲轉日之標的風險等級不得高於保戶個人風險屬性，辦理個人風險屬性設定後，恐將影響部分保單後續保全交易。</p>
 									<p style="color: red;">● 請您以要保人的角度填寫，本次所評估之投資風險屬性結果，將影響上述保單未來辦理投資標的轉換時可選擇轉入之標的。</p>
-									<p style="color: red;">● 如本公司同時受理台端變更投資風險屬性時，因應法令規範距前次評估結果未滿一年者，不得重新評估，故本公司將以受理在前之資料為準，如無法判斷受理前後順序，本公司將以網站平台申請資料為準。</p>
+									<p style="color: red;">● 如本公司同時受理台端變更投資風險屬性時，因應法令規範距前次評估結果未滿一年者，不得重新評估，故本公司將以受理在前之資料為準，如無法判斷受理前後順序，本公司將以較保守之風險等級認定。</p>
 								</div>
 							</div>
 					  </div>
@@ -210,27 +225,28 @@ input[type=checkbox] {
 	 $(function() {
 
 		var ruleStatus = [[${individualChooseVo.ruleStatus}]];
-	 	var showPup = [[${individualChooseVo.showPup}]]
+	 	var showPup = [[${individualChooseVo.showPup}]];
+	 	var ruleStatus = [[${individualChooseVo.ruleStatus}]];
 		if(showPup === true){
 			$('#confirmNotice').show();		
-			if(ruleStatus === '2'){
-				$('#readCheck').prop('checked' , true);
-			}else{
-				$('#readCheck').prop('checked' , false);
+			if(ruleStatus === '1'){
+			 	$("input[id='radio1']").attr("checked",true);	
+			}else if(ruleStatus === '2'){
+				$("input[id='radio2']").attr("checked",true);	
 			}
 		}else{
 			$('#confirmNotice').hide();		
 		}
-		
-		$('#deny').click(function(){
-			postWithFormData(/*[[@{/attribute1}]]*/, formData);
-		})	
 		
 		$('#showPupBt').click(function(){
 			$('#showPupStatus').modal('hide');	
 		})
 		
 		var formData = [[${individualChooseVo}]];
+		$('#deny').click(function(){
+			postWithFormData(/*[[@{/attribute1}]]*/, formData);
+		})	
+		
 		var questionIdList = [[${questionIdList}]]	 
 		
 		$('#go').click(function() {

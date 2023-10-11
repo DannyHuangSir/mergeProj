@@ -10,6 +10,8 @@
 		<result column="CLUP_NEW_UNITS" property="newUnits"/>
 		<result column="PATT_DATE" property="pattDate"/>
 		<result column="CLUP_F_PAY_DATE" property="payDate"/>
+		<result column="CLUP_INVT_NO" property="invtNo"/>
+		<result column="INVT_NAME" property="invtName"/>
 	</resultMap>
 
 
@@ -26,7 +28,7 @@
 	
 	<select id="findByPolicyNo" resultMap="PolicyReversalMap" parameterType="java.lang.String">
  	SELECT DISTINCT
-			CLUP_INSU_NO, CLUP_TR_DATE, CLUP_TR_CODE, CLUP_EXPE_NTD, CLUP_NEW_UNITS,PATT_DATE,CLUP_F_PAY_DATE
+			CLUP_INSU_NO, CLUP_TR_DATE, CLUP_TR_CODE, CLUP_EXPE_NTD, CLUP_NEW_UNITS, PATT_DATE, CLUP_F_PAY_DATE, CLUP_INVT_NO, ltrim(rtrim(INVT_NAME)) INVT_NAME
 		FROM
 			ESERVICE.DBO.LICLUP_ES 
 		LEFT JOIN ESERVICE.DBO.LIPAHI_ES 
@@ -36,9 +38,12 @@
 		LEFT JOIN ESERVICE.DBO.LIPATT_ES
 		ON	PAHI_DEP_I_BATCH  = PATT_PAY_BATCH
 		AND PAHI_BATCH_SEQ = PATT_PAY_SEQ
+		LEFT JOIN ESERVICE.DBO.POLICY_PORTFOLIO
+		ON	CLUP_INVT_NO = INVT_NO
 		WHERE
 			CLUP_INSU_NO = #{policyNo}
-		ORDER BY CLUP_TR_DATE DESC
+			AND CLUP_TR_DATE IS NOT NULL
+		ORDER BY CLUP_TR_DATE DESC, CLUP_INVT_NO
 	</select>
 	
 

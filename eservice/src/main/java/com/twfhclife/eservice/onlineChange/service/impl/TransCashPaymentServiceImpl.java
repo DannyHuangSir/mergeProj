@@ -10,12 +10,17 @@ import com.twfhclife.eservice.onlineChange.dao.TransDao;
 import com.twfhclife.eservice.onlineChange.dao.TransPolicyDao;
 import com.twfhclife.eservice.onlineChange.model.TransCashPaymentVo;
 import com.twfhclife.eservice.onlineChange.service.ITransCashPaymentService;
+import com.twfhclife.eservice.onlineChange.util.OnlineChangMsgUtil;
 import com.twfhclife.eservice.onlineChange.util.OnlineChangeUtil;
 import com.twfhclife.eservice.onlineChange.util.TransTypeUtil;
+import com.twfhclife.eservice.policy.model.PolicyListVo;
 import com.twfhclife.eservice.web.dao.ParameterDao;
 import com.twfhclife.eservice.web.model.TransPolicyVo;
 import com.twfhclife.eservice.web.model.TransVo;
+import com.twfhclife.generic.util.ApConstants;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TransCashPaymentServiceImpl implements ITransCashPaymentService {
@@ -115,4 +121,40 @@ public class TransCashPaymentServiceImpl implements ITransCashPaymentService {
     public Boolean checkHasBankInfo(String policyNo) {
         return transCashPaymentDao.countTransBankInfo(policyNo) > 0;
     }
+
+	@Override
+	public void handlePolicyStatusLocked(String userRocId, List<PolicyListVo> policyList, String parameterCode) {
+		 String INVESTMENT_TYPES = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID, parameterCode + "_INVESTMENT_TYPE");
+	        if (!CollectionUtils.isEmpty(policyList)) {
+	            for (PolicyListVo e: policyList) {
+	                if (StringUtils.equals(e.getApplyLockedFlag(), "Y")) {
+	                    continue;
+	                }
+	                if (!CollectionUtils.isEmpty(policyList)) {
+	                    for (PolicyListVo vo : policyList) {
+	                        if ("N".equals(vo.getExpiredFlag())) {
+	                            String policyType = vo.getPolicyType();
+	                            if (StringUtils.isNotBlank(INVESTMENT_TYPES) && !INVESTMENT_TYPES.contains(policyType)) {
+	                                vo.setApplyLockedFlag("Y");
+	                                vo.setApplyLockedMsg(OnlineChangMsgUtil.TRANS_CASH_PAYMENT);
+	                                continue;
+	                            }
+	                        }
+	                    }
+	                }
+	                if (StringUtils.isNotBlank(userRocId) && !StringUtils.equals(userRocId, e.getRocId())) {
+	                    e.setApplyLockedFlag("Y");
+	                    e.setApplyLockedMsg("被保人無法申請保單");
+	                    continue;
+	                }
+	                if ("Y".equals(e.getExpiredFlag())) {
+//	                    e.setApplyLockedFlag("Y");
+	                    // 此張保單已過投保終期
+	                    e.setApplyLockedFlag("Y");
+	                    e.setApplyLockedMsg(OnlineChangMsgUtil.POLICY_EXPIREDATE_MSG);
+	                    continue;
+	                }
+	            }
+	        }
+	}
 }

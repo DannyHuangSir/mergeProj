@@ -7,6 +7,7 @@ import com.twfhclife.eservice.onlineChange.model.TransInvestmentVo;
 import com.twfhclife.eservice.policy.model.CompareInvestmentVo;
 import com.twfhclife.eservice.policy.model.InvestmentPortfolioVo;
 import com.twfhclife.eservice.policy.model.PolicyListVo;
+import com.twfhclife.eservice.web.model.TransVo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.generic.api_model.LicohilVo;
 
@@ -105,4 +106,10 @@ public interface ITransInvestmentService {
     void insertOrUpdateForIndividual(LicohilVo licohilVo);
     
     void insertOrUpdateForIndividualChoose(LicohilVo licohilVo);
+    
+    void verifyPaymentMode(List<PolicyListVo> policyList);
+    
+    void newCheckHasApplying(String userId , List<PolicyListVo> policyList);
+    
+    void checkLastCompleteTime(List<PolicyListVo> policyList , List<TransVo> transList);
 }

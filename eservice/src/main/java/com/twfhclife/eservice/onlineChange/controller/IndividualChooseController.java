@@ -322,7 +322,7 @@ public class IndividualChooseController extends BaseController {
 			if(mobile!=null && !"".equals(mobile.trim())){
 				mobiles.append(mobile.trim());
 			}
-			if(StringUtils.isNotBlank(newMobile)  && !StringUtils.equals(mobile, newMobile)){
+			if(newMobile!=null && !"".equals(newMobile.trim())  && !mobile.equals(newMobile)){
 				if(!StringUtils.isBlank(mobile)){
 				mobiles.append(";");
 				mobiles.append(newMobile);
@@ -1011,9 +1011,9 @@ public class IndividualChooseController extends BaseController {
 					}
 				}
 			}
-			response.close();
 		}
-		client.close();
+		response.close();
+		client.close();	
 	}catch (Exception e) {
 		logger.error("indivdualChooseForStaff1 error: {}", ExceptionUtils.getStackTrace(e));
 		return false;

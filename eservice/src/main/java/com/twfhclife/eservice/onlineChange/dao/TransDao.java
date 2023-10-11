@@ -86,4 +86,8 @@ public interface TransDao {
     int updateSignTransStatus(@Param("transNum") String transNum, @Param("status")  String status);
 
     String getTransStatusByTransNum(@Param("transNum") String transNum);
+	
+	List<TransVo> getLastCompleteTime(@Param("transType") String transType, @Param("userId") String userId );
+	
+	List<TransVo> getProcessInvestment(@Param("userId") String userId, @Param("transTypes") List<String> transTypes);
 }

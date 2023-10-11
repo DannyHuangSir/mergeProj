@@ -4,7 +4,7 @@
             <cookie-config>
                 <path>/</path>
                 <http-only>true</http-only>
-                <secure>fasle</secure>
+                <secure>false</secure>
             </cookie-config>
         </session-config>
     </shared-session-config>

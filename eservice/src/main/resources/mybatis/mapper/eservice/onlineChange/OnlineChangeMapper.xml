@@ -108,8 +108,7 @@
 			    a.PARAMETER_VALUE
 				FROM ESERVICE_ADM.DBO.PARAMETER a
 				JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b on a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
-				WHERE 1 = 1
-					AND a.SYSTEM_ID = b.SYSTEM_ID
+				WHERE  a.SYSTEM_ID = b.SYSTEM_ID
 					AND a.STATUS = b.STATUS
 					AND b.STATUS = 1
 					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
@@ -122,8 +121,7 @@
 				FROM ESERVICE_ADM.DBO.PARAMETER a
 				JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b on a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
 				WHERE
-					1 = 1
-					AND a.SYSTEM_ID = b.SYSTEM_ID
+					a.SYSTEM_ID = b.SYSTEM_ID
 					AND a.STATUS = b.STATUS
 					AND b.STATUS = 1
 					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
@@ -137,8 +135,7 @@
 				FROM ESERVICE_ADM.DBO.PARAMETER a
 				JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b on a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
 				WHERE
-					1 = 1
-					AND a.SYSTEM_ID = b.SYSTEM_ID
+					a.SYSTEM_ID = b.SYSTEM_ID
 					AND a.STATUS = b.STATUS
 					AND b.STATUS = 1
 					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>
@@ -148,8 +145,7 @@
 			t.ENDORSEMENT_STATUS AS endorsementStatus
 		FROM
 			FUND_TRANS_DATE_TMP t
-		WHERE
-			1 = 1
+		<where>
 			<if test="policyNo != null">
 			AND t.POLICY_NO != 0
 			</if>
@@ -157,6 +153,7 @@
 			AND t.ROW_NUM <![CDATA[>=]]> ((#{pageNum} - 1) * #{pageSize}) + 1
 			AND t.ROW_NUM <![CDATA[<=]]> (#{pageNum} * #{pageSize})
 			</if>
+		</where>
 	</select>
 	
 	<!-- 取得申請項目的申請保單資訊 -->

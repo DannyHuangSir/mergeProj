@@ -26,7 +26,7 @@ public class PolicyListVo extends PolicyVo {
 	/** 平均參考報酬率(%) */
 	private BigDecimal avgRoiRate;
 	
-	/** 帳戶價值 */
+	/** 保單價值 */
 	private BigDecimal policyAcctValue;
 
 	/** 主約被保人 */
@@ -82,6 +82,9 @@ public class PolicyListVo extends PolicyVo {
 
 	private String policyListType ;
 	
+	/** 20230712 by 203990 保單NTD價值 */
+	private BigDecimal policyAcctValueNtd;
+
 	public String getPmdaEInfoNStatus() {
 		return pmdaEInfoNStatus;
 	}
@@ -108,6 +111,14 @@ public class PolicyListVo extends PolicyVo {
 
 	public void setPmdaEpoMk(String pmdaEpoMk) {
 		this.pmdaEpoMk = pmdaEpoMk;
+	}
+
+	public BigDecimal getPolicyAcctValueNtd() {
+		return policyAcctValueNtd;
+	}
+
+	public void setPolicyAcctValueNtd(BigDecimal policyAcctValueNtd) {
+		this.policyAcctValueNtd = policyAcctValueNtd;
 	}
 
 	private String lipmFlexRcpMk = "N";

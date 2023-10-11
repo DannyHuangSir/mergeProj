@@ -44,6 +44,7 @@ import com.twfhclife.generic.api_model.PolicyDetailVo;
 import com.twfhclife.generic.api_model.TransHistoryDetailResponse;
 import com.twfhclife.generic.controller.BaseUserDataController;
 import com.twfhclife.generic.util.ApConstants;
+import org.apache.commons.collections.CollectionUtils;
 //import com.twfhclife.generic.util.MyJacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -52,11 +53,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
+//import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -148,11 +150,12 @@ public class FundNotificationController extends BaseUserDataController {
 			 * 投資型保單申請中不可繼續申請
 			 * TRANS  status=-1,0,4
 			 */
-			String msg = transInvestmentService.checkHasApplying(getUserId());
-			if (StringUtils.isNotBlank(msg)) {
-				redirectAttributes.addFlashAttribute("errorMessage", msg);
-				return "redirect:apply1";
-			}
+//			  2023/09/28 USER 新增檢核機制  取消舊有檢核        
+//			String msg = transInvestmentService.checkHasApplying(getUserId());
+//			if (StringUtils.isNotBlank(msg)) {
+//				redirectAttributes.addFlashAttribute("errorMessage", msg);
+//				return "redirect:apply1";
+//			}
 			String userRocId = getUserRocId();
 			String userId = getUserId();
 			List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(userRocId);
@@ -174,6 +177,7 @@ public class FundNotificationController extends BaseUserDataController {
 						userId, TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
 				transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
 				transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.FUND_NOTIFICATION_PARAMETER_CODE);
+				//transInvestmentService.newCheckHasApplying(getUserId() , handledPolicyList);
 				addAttribute("policyList", handledPolicyList);
 			}
 //			List<String> policyNoList = new ArrayList<>();

@@ -13,6 +13,7 @@ import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.web.model.LoginRequestVo;
 import com.twfhclife.eservice.web.model.LoginResultVo;
 import com.twfhclife.eservice.web.model.ParameterVo;
+import com.twfhclife.eservice.web.model.UserDataInfo;
 import com.twfhclife.eservice.web.model.UsersVo;
 import com.twfhclife.eservice.web.service.ILoginService;
 import com.twfhclife.eservice.web.service.IParameterService;
@@ -35,6 +36,10 @@ import sun.misc.BASE64Decoder;
 
 import java.util.*;
 
+
+/**
+ *	收益分配或撥回資產分配方式
+ */
 @Controller
 public class CashPaymentController extends BaseUserDataController {
 
@@ -79,11 +84,12 @@ public class CashPaymentController extends BaseUserDataController {
              * 投資型保單申請中不可繼續申請
              * TRANS  status=-1,0,4
              */
-            String msg = transInvestmentService.checkHasApplying(getUserId());
-            if (StringUtils.isNotBlank(msg)) {
-                redirectAttributes.addFlashAttribute("errorMessage", msg);
-                return "redirect:apply1";
-            }
+//  		  2023/09/28 USER 新增檢核機制  取消舊有檢核                  
+//            String msg = transInvestmentService.checkHasApplying(getUserId());
+//            if (StringUtils.isNotBlank(msg)) {
+//                redirectAttributes.addFlashAttribute("errorMessage", msg);
+//                return "redirect:apply1";
+//            }
 
             String userRocId = getUserRocId();
             String userId = getUserId();
@@ -93,8 +99,10 @@ public class CashPaymentController extends BaseUserDataController {
             if (policyList != null) {
                 List<PolicyListVo> handledPolicyList = transService.handleGlobalPolicyStatusLocked(policyList,
                         userId, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
-                transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
+//                transInvestmentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
+                transCashPaymentService.handlePolicyStatusLocked(userRocId, handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
                 transService.handleVerifyPolicyRuleStatusLocked(handledPolicyList, TransTypeUtil.CASH_PAYMENT_PARAMETER_CODE);
+//                transInvestmentService.newCheckHasApplying(getUserId() , handledPolicyList);
                 /// 20220627 by 203990
                 /// 淑妙經理反應, 投資型保單都是A年繳和M月繳, 應都可申請; 依家維的說法, 收益分配及資產撥回 可申請的保單種類目前只限 US 就可先把限制繳別的條件拿掉
                 /*

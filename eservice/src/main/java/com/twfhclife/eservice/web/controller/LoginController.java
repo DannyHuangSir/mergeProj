@@ -733,7 +733,7 @@ public class LoginController extends BaseUserDataController {
 		//String afterEncryptCardSN = "";
 
 		try {
-			System.out.println("In setSessioinCardSN.");
+			//System.out.println("In setSessioinCardSN.");
 			logger.info("In setSessioinCardSN,cardSn="+cardSn);
 
 			if(!StringUtils.isEmpty(cardSn)) {
@@ -760,8 +760,8 @@ public class LoginController extends BaseUserDataController {
 		String afterEncryptCardSN = "";
 		try {
 			logger.info("Start to enctypt moica cardSN.");
-			System.out.println("Start to enctypt moica cardSN.");
-
+			//System.out.println("Start to enctypt moica cardSN.");
+			
 			//檢核session validate code是否仍有效
 
 

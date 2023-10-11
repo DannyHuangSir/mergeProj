@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.policy.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -24,6 +25,14 @@ public interface PortfolioDao {
 	 * @return 回傳基金下拉選單資料
 	 */
 	List<PortfolioVo> getInvtOptionList(@Param("policyNo") String policyNo);
+	
+	/**
+	 * 取得投資風險屬性.
+	 * 
+	 * @param insuCurr 幣別
+	 * @return 取得幣別對應NTD匯率
+	 */
+	BigDecimal getNtdExchRate(@Param("insuCurr") String insuCurr);
 	
 	/**
 	 * 取得投資風險屬性.

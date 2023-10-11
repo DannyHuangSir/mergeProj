@@ -78,13 +78,20 @@ input[type=checkbox] {
 									<div class="check-list col-sm-12 " th:style="${vo.id == 2} ? 'height: 100%;' : ''">
 										<p class="marginBottom20">
 										<div class="col-sm-12">
-											<th:block th:text="${vo.seq} +.+ ${vo.question}" /><span style="color: red;"><th:block th:if="${vo.id == 2}">【可複選，以分數較高者計分】</th:block></span>
+											<th:block th:text="${vo.seq} +.+ ${vo.question}" />
 										</div>
 										<div class="col-sm-12" style="color: red;">
 											<th:block th:text="${vo.question2}" />
 										</div>
 										<div class="col-sm-12" style="color: red;">
 											<th:block th:text="${vo.question3}" />
+										</div>
+										<div>
+											<th:block th:if="${vo.id == 2}">
+											<p style="color : red;">
+												&nbsp;&nbsp;【可複選】
+											</p>
+											</th:block>
 										</div>
 										</p>
 										<div class="clearfix"></div>
@@ -135,16 +142,28 @@ input[type=checkbox] {
 									<p class="text-ps" id="remark"></p>
 									<div>
 										<p>
-											二、其他評估項目<br>
-											依法令規範及為保障您的投資權益，若您具有以下身分：年齡為65歲以上或教育程度國中畢業(含)以下或近期有重大醫療支出、高額定期醫療或長期照顧支出，本公司會將您的投資風險屬性歸類為保守型投資人。
-											惟若您確認後仍希望依照本身風險屬性評估結果，作為您的投資風險屬性類型，敬請務必勾選下列選項(若無勾選，本公司會將您的投資風險屬性歸類為保守型)<br>
+										二、其他評估項目<br>
+											您具有以下身分：<br>
+											保險年齡為65歲以上或教育程度國中畢業(含)以下或近期有重大醫療支出、高額定期醫療或長期照顧支出，請勾選以下選項<br />
+											為保障您的投資權益，本公司會將您的投資風險屬性評估為保守型投資人。
 										</p>
-										<label for="readCheck">
 										<p>
-											<input style="float: left;" type="checkbox" id="readCheck" checked="checked" />
-											本人經審慎評估後，選擇依上述「一、風險屬性評估」之評估結果分類，且確認已充分瞭解基金投資風險，並願意承受相關投資結果。<br />
+											<label for="radio1">
+											<input style="float: left;" type="radio" id="radio1" />
+											&nbsp;本人同意將風險屬性評估為保守型。
+											</label>
+											<br />
 										</p>
-										</label>
+										<br />
+										<p>										
+											惟若您希望依照本身風險屬性評估結果，作為您的投資風險屬性類型，<a style="color : red;">請勾選下列選項，以利確認您的意願：</a><br />
+											<label for="radio2">
+											<input style="float: left;" type="radio" id="radio2" />
+											&nbsp;本人經審慎評估後，選擇依「風險屬性評估」之評估結果分類，<br />
+											且確認已充分瞭解投資風險，並願意承受相關投資結果。
+											</label>
+											<br />
+										</p>
 									</div>
 								</div>
 							</div>	
@@ -154,7 +173,7 @@ input[type=checkbox] {
 									<p style="color: green;">提醒您</p>
 									<p style="color: red;">● 投資標的轉換欲轉日之標的風險等級不得高於保戶個人風險屬性，辦理個人風險屬性設定後，恐將影響部分保單後續保全交易。</p>
 									<p style="color: red;">● 請您以要保人的角度填寫，本次所評估之投資風險屬性結果，將影響上述保單未來辦理投資標的轉換時可選擇轉入之標的。</p>
-									<p style="color: red;">● 如本公司同時受理台端變更投資風險屬性時，因應法令規範距前次評估結果未滿一年者，不得重新評估，故本公司將以受理在前之資料為準，如無法判斷受理前後順序，本公司將以網站平台申請資料為準。</p>
+									<p style="color: red;">● 如本公司同時受理台端變更投資風險屬性時，因應法令規範距前次評估結果未滿一年者，不得重新評估，故本公司將以受理在前之資料為準，如無法判斷受理前後順序，本公司將以較保守之風險等級認定。</p>
 								</div>
 							</div>
 					  </div>
@@ -176,15 +195,14 @@ input[type=checkbox] {
 			data-backdrop="static">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-body apply2 center1 grey2">
+					<div class="modal-body apply2 grey2">
 						<button type="button" class="close" aria-label="Close">
 							<span aria-hidden="true"></span>
 						</button>
 						<p style="color: red;">
-							依法令規範及為保障您的投資權益，若您具有以下身分：年齡為65歲以上或教育程度國中畢業(含)以下或近期有重大醫療支出、高額定期醫療或長期照顧支出，本公司會將您的投資風險屬性歸類為保守型投資人。
-							惟若您確認後仍希望依照本身風險屬性評估結果，作為您的投資風險屬性類型，敬請務必勾選下列選項(若無勾選，本公司會將您的投資風險屬性歸類為保守型)<br>
+							為保障您的投資權益，若您具有以下身分：<br />年齡為65歲以上或教育程度國中畢業(含)以下或近期有重大醫療支出、高額定期醫療或長期照顧支出，請勾選「二、其它評估項目」之選項，若無勾選本問卷無法送出。<br>
 						</p>
-						<button class="btn-login" id="showPupBt" aria-label="Close">確定</button>
+						<div class="center1"><button class="btn-login" id="showPupBt" aria-label="Close">確定</button></div>
 					</div>
 				</div>
 			</div>
@@ -195,10 +213,9 @@ input[type=checkbox] {
 	<script th:inline="javascript">
 	/*<![CDATA[*/
 	 $(function() {
-		var formData = [[${individualChooseVo}]];
-		var questionIdList = [[${questionIdList}]]
-	 
-	 	var showPup = [[${individualChooseVo.showPup}]]
+		var questionIdList = [[${questionIdList}]];
+	 	var formData = [[${individualChooseVo}]];
+	 	var showPup = [[${individualChooseVo.showPup}]];
 		if(showPup === true){
 			$('#showPupStatus').modal('show');
 			$('#confirmNotice').show();		
@@ -207,10 +224,28 @@ input[type=checkbox] {
 
 		}
 		
+		var ruleStatus = [[${individualChooseVo.ruleStatus}]];
+		if(ruleStatus === '1'){
+			 $("input[id='radio1']").attr("checked",true);	
+		}else if(ruleStatus === '2'){
+			 $("input[id='radio2']").attr("checked",true);	
+		}
+		
 		$('#showPupBt').click(function(){
 			$('#showPupStatus').modal('hide');	
 		})
-	 
+		
+		 $('#radio1').click(function(){
+	 	   $("input[id='radio2']").attr("checked",false);	
+	 	   formData.ruleStatus = '1';	    
+		})
+		
+		$('#radio2').click(function(){
+			 $("input[id='radio1']").attr("checked",false);		
+			 formData.ruleStatus = '2';
+		})
+		
+	/*	var formData = [[${individualChooseVo}]]; */
 		$('#go').click(function() {
 			/*	
 				if (!$("#readCheck").is(":checked")) {
@@ -218,17 +253,6 @@ input[type=checkbox] {
 					return
 				}
 			*/
-			
-			if(showPup === true){
-				if (!$("#readCheck").is(":checked")) {
-					formData.ruleStatus = '1';
-				}else{
-					formData.ruleStatus = '2';
-				}
-			}else{
-				formData.ruleStatus = '3';
-			}			
-				
 			answers = [[${individualChooseVo.answers}]];
 				quest = ["12"]; // 預設
 			    $("input[field='question']:checked").each(function(index, e){
@@ -248,7 +272,17 @@ input[type=checkbox] {
 			if(questionList.length > 0){
 				openAlert("第" + questionList + "題，尚未填寫答案，謝謝。");
 				return false;
-			}			
+			}	
+			
+			if(showPup === true){
+				var ruleStatus = formData.ruleStatus;
+				if(ruleStatus == '' || ruleStatus == null){
+					openAlert('其他評估項目需要勾選')
+					return
+				}
+			}else{
+				formData.ruleStatus = '3';
+			}						
 			
 			postWithFormData(/*[[@{/attribute2}]]*/, formData);
 			

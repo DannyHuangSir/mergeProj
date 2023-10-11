@@ -85,6 +85,8 @@ public interface OnlineChangMsgUtil {
 	final String INSURANCE_CLAIM_NOT_SAME = "登入者和被保人不是同一人。";
 	
 	final String CONTACT_INFO_APPLYING = "有申請中的聯絡資料變更,則不可再申請。";
+	
+	final String TRANS_CASH_PAYMENT = "此張保單無法辦理撥回方式之變更。";
 
 	/**
 	 * 保單醫起通
@@ -163,4 +165,9 @@ public interface OnlineChangMsgUtil {
 	 */
 	final String INDIVDUAL_CHOOSE_ONEYEAR_MSG_1 ="因應法令，自112年4月21日起，需重新評估投資型保險商品風險屬性！";
 	final String INDIVDUAL_CHOOSE_ONEYEAR_MSG_2 ="或線上風險屬性變更已超過一年，亦需重新評估投資型保險商品風險屬性！";
+	
+	/**
+	 * 
+	 */
+	final String POLICY_INVESTMENT_TYPE ="保單非月繳，不可申請。";
 }

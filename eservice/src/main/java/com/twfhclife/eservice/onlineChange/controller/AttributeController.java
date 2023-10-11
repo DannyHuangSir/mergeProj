@@ -58,7 +58,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+/**
+ * 線上申請-風險屬性變更
+ */
 @Controller
 public class AttributeController extends BaseUserDataController  {
 
@@ -98,7 +100,8 @@ public class AttributeController extends BaseUserDataController  {
     @RequestMapping("/attribute1")
     public String attribute1(RedirectAttributes redirectAttributes,
                              @RequestParam(name = "answers", required = false) List<String> answers,
-                             @RequestParam(name = "read", required = false, defaultValue = "false") boolean read) {
+                             @RequestParam(name = "read", required = false, defaultValue = "false") boolean read,
+                             @RequestParam(name="ruleStatus" , required = false) String ruleStatus) {
 
         if (!checkCanUseOnlineChange()) {
             String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
@@ -109,11 +112,12 @@ public class AttributeController extends BaseUserDataController  {
          * 投資型保單申請中不可繼續申請
          * TRANS  status=-1,0,4
          */
-        String msg = transInvestmentService.checkHasApplying(getUserId());
-        if (StringUtils.isNotBlank(msg)) {
-            redirectAttributes.addFlashAttribute("errorMessage", msg);
-            return "redirect:apply1";
-        }
+//		  2023/09/28 USER 新增檢核機制  取消舊有檢核        
+//        String msg = transInvestmentService.checkHasApplying(getUserId());
+//        if (StringUtils.isNotBlank(msg)) {
+//            redirectAttributes.addFlashAttribute("errorMessage", msg);
+//            return "redirect:apply1";
+//        }
         //2023-03-15修正 規則 新增 生日 + 前次評估報告
 //        List<QuestionVo> questions = attributeService.getQuestions();
 //        if (!CollectionUtils.isEmpty(questions) && !CollectionUtils.isEmpty(answers)) {
@@ -135,12 +139,16 @@ public class AttributeController extends BaseUserDataController  {
         if(answers != null   && answers.size() > 0) {
         	individualChooseVo.setAnswers(answers);
         }
-		//既有客戶
+		if(StringUtils.isNotEmpty(ruleStatus)) {
+			individualChooseVo.setRuleStatus(ruleStatus);
+		}
+        //既有客戶
 		LicohilVo vo = new LicohilVo();
 		//登入者
         UsersVo userVo = getUserDetail();
         //top 1 : 取esevice 是否有申請過風險評估
 		IndividualChooseVo oldIndividualChooseVo = indivdualChooseService.getIndividualChoosData(userVo.getRocId());
+
 		//top 2 : 取得 CTC資料
 		PolicyDetailRequest request = new PolicyDetailRequest();
 		request.setRocId(userVo.getRocId());			
@@ -691,17 +699,17 @@ public class AttributeController extends BaseUserDataController  {
 		} else {
 			individualChooseVo.setDesc(desc);
 		}
-		UsersVo user = getUserDetail();
-		String rocId = user.getRocId();
-		TransRiskLevelVo transRiskLevelVo = riskLevelService.getTransRiskLevel(rocId);
+//		UsersVo user = getUserDetail();
+//		String rocId = user.getRocId();
+//		TransRiskLevelVo transRiskLevelVo = riskLevelService.getTransRiskLevel(rocId);
 		StringBuilder sb = new StringBuilder();
 		sb.append("【完成時間(");
-		if(transRiskLevelVo != null) {
-			TransVo transVo = attributeService.findByTransNum(transRiskLevelVo.getTransNum());			
-			sb.append(transVo.getCreateDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-	    }else {
+//		if(transRiskLevelVo != null) {
+//			TransVo transVo = attributeService.findByTransNum(transRiskLevelVo.getTransNum());			
+//			sb.append(transVo.getCreateDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+//	    }else {
 			sb.append(individualChooseVo.getRatingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-		}
+//		}
 		sb.append(")，及本評估問卷結果有效期限為一年】");
 		addAttribute("finishDateTime" ,sb.toString());  
 		addAttribute("individualChooseVo", individualChooseVo);

@@ -176,7 +176,7 @@ public class TravelPolicyController extends BaseController {
 			travelPolicyTrans.setTravelPolicy(vo);
 			String message = travlpolicyService.addTravelPolicyTrans(travelPolicyTrans);
 			if(ApConstants.SUCCESS.equals(message)){
-				Map<String, String> data = new HashMap<>();
+				java.util.Map<String, String> data = new java.util.HashMap<>();
 				data.put("transNum", travelPolicyTrans.getTransNum());
 				this.setResponseObj(ResponseObj.SUCCESS, message, data);
 			}else{
@@ -269,7 +269,7 @@ public class TravelPolicyController extends BaseController {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			// 使用者選擇的旅平險內容
-			Map<String, String> map = objectMapper.readValue(requesInput, Map.class);
+			java.util.Map<String, String> map = objectMapper.readValue(requesInput, java.util.Map.class);
 			TravelPolicyVo vo = objectMapper.readValue(map.get("travelPolicy"), TravelPolicyVo.class);
 			// 追加發送 email 給指定窗口
 			StringBuffer sb = new StringBuffer();

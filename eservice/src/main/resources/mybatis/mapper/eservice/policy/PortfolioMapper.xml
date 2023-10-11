@@ -19,9 +19,7 @@
 			,PP.EXCH_RATE_DATE AS exchRateDate
 			,PP.CLUP_EXPE_NTD_SUM AS clupExpeNtdSum
 			,PP.INVT_EXCH_CURR AS invtExchCurr
-			,(
-				SELECT P.CURRENCY FROM ESERVICE.DBO.POLICY P WHERE P.POLICY_NO = PP.POLICY_NO
-			) AS insuCurr
+			,P.PROD_CURRENCY AS insuCurr
 			,(
 				SELECT
 					a.PARAMETER_NAME
@@ -41,6 +39,7 @@
 		FROM
 			ESERVICE.DBO.POLICY_PORTFOLIO PP
 		LEFT JOIN ESERVICE.DBO.FUND F ON F.FUND_CODE = PP.INVT_NO AND F.PRODUCT_NO = SUBSTRING (PP.POLICY_NO, 0, 3)
+		LEFT JOIN ESERVICE.DBO.LIPROD_ES P ON P.PROD_NO = SUBSTRING (PP.POLICY_NO, 0, 3)
 		WHERE
 			PP.POLICY_NO = #{policyNo}
 		<if test="invtNo != null">
@@ -49,6 +48,15 @@
 				#{funNo}
 			</foreach>
 		</if>
+	</select>
+
+	<!-- 20230713 -->
+	<!-- 取得幣別對應NTD匯率 -->
+	<select id="getNtdExchRate" resultType="BigDecimal" parameterType="string">
+		SELECT TOP 1 EXCH_SPEBK_PURATE 
+		FROM LIEXCH_ES
+		WHERE EXCH_EXCH_CODE = #{insuCurr}
+		ORDER BY EXCH_DATE DESC
 	</select>
 
 	<!-- 取得投資風險屬性 -->
@@ -92,8 +100,7 @@
 				FROM ESERVICE_ADM.DBO.PARAMETER a
 				JOIN ESERVICE_ADM.DBO.PARAMETER_CATEGORY b on a.PARAMETER_CATEGORY_ID = b.PARAMETER_CATEGORY_ID
 				WHERE
-					1 = 1
-					AND a.SYSTEM_ID = b.SYSTEM_ID
+					a.SYSTEM_ID = b.SYSTEM_ID
 					AND a.STATUS = b.STATUS
 					AND b.STATUS = 1
 					AND b.SYSTEM_ID = <include refid="ApConstantsMapper.ESERVICE_SYSTEM_ID"/>

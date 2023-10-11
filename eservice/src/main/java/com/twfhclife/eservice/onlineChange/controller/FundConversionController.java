@@ -21,6 +21,8 @@ import com.twfhclife.eservice.policy.model.PolicyListVo;
 //import com.twfhclife.eservice.policy.service.IFundPrdtService;
 import com.twfhclife.eservice.policy.service.IPolicyListService;
 import com.twfhclife.eservice.policy.service.IPortfolioService;
+import com.twfhclife.eservice.user.model.LilipmVo;
+import com.twfhclife.eservice.user.service.ILilipmService;
 import com.twfhclife.eservice.web.domain.ResponseObj;
 import com.twfhclife.eservice.web.model.*;
 import com.twfhclife.eservice.web.service.ILoginService;
@@ -39,6 +41,7 @@ import com.twfhclife.generic.util.ApConstants;
 import com.twfhclife.generic.util.DateUtil;
 import com.twfhclife.generic.util.ValidateUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 //import com.twfhclife.generic.util.StatuCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -51,9 +54,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sun.misc.BASE64Decoder;
-import java.text.SimpleDateFormat;
 //import sun.rmi.log.LogInputStream;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 //import javax.print.DocFlavor;
 //import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -99,6 +105,9 @@ public class FundConversionController extends BaseUserDataController  {
     
 	@Autowired
 	private TransCtcSelectUtilClient transCtcSelectUtilClient;
+	
+	@Autowired
+	private ILilipmService  lilipmService;
 
     @RequestLog
     @GetMapping("/fund1")
@@ -122,38 +131,39 @@ public class FundConversionController extends BaseUserDataController  {
                 return "redirect:apply1";
             }
 
-            String limitDay = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CONVERSION_APPLY_LIMIT_DAY");
+//            String limitDay = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CONVERSION_APPLY_LIMIT_DAY");
 
-            //申請間隔管控
-            Date completeTime = transService.getLastCompleteTime(TransTypeUtil.INVESTMENT_CONVERSION_CODE, getUserId());
-            if (completeTime != null && StringUtils.isNotBlank(limitDay) && StringUtils.isNumeric(limitDay)) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(completeTime);
-                calendar.set(Calendar.MILLISECOND, 0 );
-                calendar.set(Calendar.SECOND, 0 );
-                calendar.set(Calendar.MINUTE, 0 );
-                calendar.set(Calendar.HOUR, 0 );
-                calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(limitDay));
-                if (calendar.getTimeInMillis() > System.currentTimeMillis()) {
-                    String limitMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CONVERSION_APPLY_LIMIT_MSG");
-                    if (StringUtils.isNotBlank(limitMsg)) {
-                        limitMsg = limitMsg.replace("${time}", new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
-                        redirectAttributes.addFlashAttribute("errorMessage", limitMsg);
-                        return "redirect:apply1";
-                    }
-                    redirectAttributes.addFlashAttribute("errorMessage", "您最近有完成此功能的申請處理！");
-                    return "redirect:apply1";
-                }
-            }
-            /**
-             * 投資型保單申請中不可繼續申請
-             * TRANS  status=-1,0,4
-             */
-            String msg = transInvestmentService.checkHasApplying(getUserId());
-            if (StringUtils.isNotBlank(msg)) {
-                redirectAttributes.addFlashAttribute("errorMessage", msg);
-                return "redirect:apply1";
-            }
+//            //申請間隔管控
+//            List<TransVo> transVos = transService.getLastCompleteTime(TransTypeUtil.INVESTMENT_CONVERSION_CODE, getUserId());
+//            if (completeTime != null && StringUtils.isNotBlank(limitDay) && StringUtils.isNumeric(limitDay)) {
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(completeTime);
+//                calendar.set(Calendar.MILLISECOND, 0 );
+//                calendar.set(Calendar.SECOND, 0 );
+//                calendar.set(Calendar.MINUTE, 0 );
+//                calendar.set(Calendar.HOUR, 0 );
+//                calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(limitDay));
+//                if (calendar.getTimeInMillis() > System.currentTimeMillis()) {
+//                    String limitMsg = parameterService.getParameterValueByCode(ApConstants.SYSTEM_ID, "CONVERSION_APPLY_LIMIT_MSG");
+//                    if (StringUtils.isNotBlank(limitMsg)) {
+//                        limitMsg = limitMsg.replace("${time}", new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
+//                        redirectAttributes.addFlashAttribute("errorMessage", limitMsg);
+//                        return "redirect:apply1";
+//                    }
+//                    redirectAttributes.addFlashAttribute("errorMessage", "您最近有完成此功能的申請處理！");
+//                    return "redirect:apply1";
+//                }
+//            }
+//            /**
+//             * 投資型保單申請中不可繼續申請
+//             * TRANS  status=-1,0,4
+//             */
+//			  2023/09/28 USER 新增檢核機制  取消舊有檢核        
+//            String msg = transInvestmentService.checkHasApplying(getUserId());
+//            if (StringUtils.isNotBlank(msg)) {
+//                redirectAttributes.addFlashAttribute("errorMessage", msg);
+//                return "redirect:apply1";
+//            }
             
             //取得登入者證號.
             String userRocId = getUserRocId();
@@ -183,6 +193,10 @@ public class FundConversionController extends BaseUserDataController  {
             List<PolicyListVo> policyList = policyListService.getInvestmentPolicyList(userRocId);
             transInvestmentService.handlePolicyStatusLocked(userRocId, policyList, TransTypeUtil.INVESTMENT_CONVERSION_CODE );
             transService.handleVerifyPolicyRuleStatusLocked(policyList,TransTypeUtil.INVESTMENT_CONVERSION_CODE);
+            transInvestmentService.newCheckHasApplying(getUserId() , policyList);
+            //申請間隔管控
+            List<TransVo> transVos = transService.getLastCompleteTime(TransTypeUtil.INVESTMENT_CONVERSION_CODE, getUserId());
+            transInvestmentService.checkLastCompleteTime(policyList, transVos);
             //進行查詢當前保單是否已有投資標
             transInvestmentService.handleNotExistingInvestmentLock(userRocId, policyList);
 
@@ -401,7 +415,32 @@ public class FundConversionController extends BaseUserDataController  {
     @ResponseBody
     public ResponseEntity<ResponseObj> getNewInvestments(@RequestBody TransInvestmentVo vo) {
         List<InvestmentPortfolioVo> investments = transInvestmentService.getNewInvestments(vo.getPolicyNo(), vo.getOwnInvestments(), getUserRocId());
-        processSuccess(investments);
+	    	List<InvestmentPortfolioVo> ruleInvestments = new ArrayList<InvestmentPortfolioVo>();
+	    	String investmentsDate = parameterService.getParameterValueByCode(
+                     ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENTS_DATE_CODE);
+            String investmentsFundsCode = parameterService.getParameterValueByCode(
+                     ApConstants.SYSTEM_ID, OnlineChangeUtil.INVESTMENTS_FUND_CODE);
+            List<String> investmentsList = new ArrayList<String>(); 
+            investmentsList = Arrays.asList(investmentsFundsCode.split(","));
+	    	LocalDate begDate = null;
+	    	//ESERVICE
+	    	LilipmVo pmVo = new LilipmVo();
+	        pmVo = lilipmService.findByPolicyNo(vo.getPolicyNo());
+	        if(pmVo != null) {
+	        	begDate = pmVo.getLipmInsuBegDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	        }
+	        //檢核 保單生效日(LILIPM.LIPM_INSU_BEG_DATE) >= 20230701
+	        LocalDate sysDate = LocalDate.parse(investmentsDate);	        
+	        if(sysDate.isEqual(begDate) || sysDate.isBefore (begDate)) {
+	        	for(InvestmentPortfolioVo portfolioVo : investments) {
+	        		if(!investmentsList.contains(portfolioVo.getInvtNo())) {
+	        			ruleInvestments.add(portfolioVo);
+	        		}
+	        	}	
+		        processSuccess(ruleInvestments);
+	        } else {
+	        	processSuccess(investments);
+	        }   
         return processResponseEntity();
     }
 
@@ -443,7 +482,7 @@ public class FundConversionController extends BaseUserDataController  {
          try {
              // 驗證驗證碼或者密码
              String msg;
-             if (StringUtils.equals(transInvestmentVo.getAuthType(), "password")) {
+             if (org.apache.commons.lang3.StringUtils.equals(transInvestmentVo.getAuthType(), "password")) {
                  msg = checkPassword(transInvestmentVo.getUserPassword());
              } else {
                  msg = checkAuthCode("conversion", transInvestmentVo.getAuthenticationNum());
