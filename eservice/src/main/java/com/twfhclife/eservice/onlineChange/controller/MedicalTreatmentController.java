@@ -72,6 +72,9 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 	@Autowired
 	private IMedicalTreatmentService iMedicalTreatmentService;
+
+	@Autowired
+	private IInsuranceClaimService insuranceClaimService;
 	@Autowired
 	private ILoginService loginService;
 
