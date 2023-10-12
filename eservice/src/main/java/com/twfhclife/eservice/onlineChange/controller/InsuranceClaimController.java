@@ -322,9 +322,13 @@ public class InsuranceClaimController extends BaseUserDataController {
 		return "frontstage/onlineChange/policyClaims/policyClaims2";
 	}
 
+	@Value("${eservice_api.claim.select.enable:false}")
+	private Boolean autoSelectEnable;
+
 	@RequestLog
 	@PostMapping("/policyClaims3")
 	public String policyClaims3(TransInsuranceClaimVo claimVo) {
+		addAttribute("autoSelectEnable", autoSelectEnable);
 		try {
 			// 要保人
 			LilipmVo lilipmVo = lilipmService.findByPolicyNo(claimVo.getPolicyNo());

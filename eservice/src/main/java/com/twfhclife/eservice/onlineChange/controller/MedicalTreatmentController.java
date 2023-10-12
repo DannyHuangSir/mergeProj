@@ -399,13 +399,16 @@ public class MedicalTreatmentController extends BaseUserDataController {
 	}
 
 
-
+	@Value("${eservice_api.claim.select.enable:false}")
+	private Boolean autoSelectEnable;
 
 
 	@RequestLog
 	@PostMapping("/medicalTreatment3")
 	public String medicalTreatment3(TransMedicalTreatmentClaimVo claimVo) {
 		try {
+
+			addAttribute("autoSelectEnable", autoSelectEnable);
 			// 要保人
 			LilipmVo lilipmVo = lilipmService.findByPolicyNo(claimVo.getPolicyNo());
 			if (lilipmVo != null) {
