@@ -401,8 +401,8 @@ GO
 
 
 INSERT INTO ESERVICE_ADM.[dbo].[MESSAGING_TEMPLATE]([MESSAGING_TEMPLATE_ID],[SYSTEM_ID],[MESSAGING_TEMPLATE_CODE],[MESSAGING_TEMPLATE_NAME],[STATUS],[TRIGGER_TYPE],[EVENT_TYPE],[SEND_TYPE],[SEND_TIME],[CIRCLE_TYPE],[CIRCLE_VALUE],[RECEIVER_MODE],[MESSAGING_SUBJECT],[MESSAGING_CONTENT],[CREATE_DATE],[CREATE_USER],[UPDATE_DATE],[UPDATE_USER])
-VALUES((select max([MESSAGING_TEMPLATE_ID])+1 from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE),N'eservice_api',N'MEDICAL_MAIL_082',N'理賠醫起通申請案件_開啟傳送公會聯盟鏈未覆核通知模板'
-,3,N'api ',NULL,N'email',NULL,NULL,NULL,N'dynamic',N'理賠醫起通申請案件_開啟傳送公會聯盟鏈未覆核通知'
+VALUES((select max([MESSAGING_TEMPLATE_ID])+1 from ESERVICE_ADM.dbo.MESSAGING_TEMPLATE),N'eservice_api',N'MEDICAL_MAIL_082',N'醫起通申請案件_開啟傳送公會聯盟鏈未覆核通知模板'
+,3,N'api ',NULL,N'email',NULL,NULL,NULL,N'dynamic',N'醫起通申請案件_開啟傳送公會聯盟鏈未覆核通知'
 ,N'申請項目: ${TransNum} 案件紙本回收註記超過1日仍未被覆核，請及時處理。', getdate(),N'admin',getdate(),N'admin')
 GO
 

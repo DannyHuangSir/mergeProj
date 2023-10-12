@@ -1454,6 +1454,7 @@ public class MedicalAllianceServiceTask {
     @Value("${unProcessed.trans.enable: true}")
     public boolean unProcessedTransEnable;
 
+    // 超過一天發送mail
     @Scheduled(cron = "${medicalTreatment.unProcessed.trans.expression}")
     public void notifyUnProcessedTrans() {
         if (!unProcessedTransEnable) {

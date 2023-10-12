@@ -530,9 +530,11 @@
 																		</div>
 																	</th:block>
 																</div>
-																<div class="col-sm-12 col-sm-offset-3">
-																	<button type="button" class="btn btn-login btn-xs" onclick="autoCheckedCompanys()">一鍵勾選我有投保哪些保險公司</button>
-																</div>
+																<th:block th:if="${autoSelectEnable}">
+																	<div class="col-sm-12 col-sm-offset-3">
+																		<button type="button" class="btn btn-login btn-xs" onclick="autoCheckedCompanys()">一鍵勾選我有投保哪些保險公司</button>
+																	</div>
+																</th:block>
 															</th:block>
 															<input type="hidden" name="to" >
 														</div>
