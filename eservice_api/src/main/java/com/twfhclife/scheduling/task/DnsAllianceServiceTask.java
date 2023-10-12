@@ -674,21 +674,6 @@ public class DnsAllianceServiceTask {
 
 	public static void main(String[] args) throws Exception{
 		
-//		String strResponse = "{\"code\": \"0\",\"msg\": \"success\",\"data\": {\"dataNumber\": 2,\"content\": [{\"idno\": \"A123456789\",\"name\": \"王大明\",\"birdate\": \"0710115\",\"sex\": \"1\",\"con\": \"30\",\"condate\": \"0711115\",\"adddate\": \"11011152301\"}, {\"idno\": \"J223456789\",\"name\": \"王小明\",\"birdate\": \"0880115\",\"sex\": \"2\",\"con\": \"30\",\"condate\": \"0711215\",\"adddate\": \"11011152301\"}]}}";
-//		
-//		String strContent = MyJacksonUtil.getNodeString(strResponse, "data");
-//		if(strContent!=null) {
-//			Object obj = MyJacksonUtil.json2Object(strContent, DnsReturnVo.class);
-//			if(obj!=null) {
-//				DnsReturnVo dnsVo = (DnsReturnVo)obj;
-//				if(dnsVo!=null) {
-//					for(DnsContentVo vo : dnsVo.getContent()) {
-//						
-//					}
-//				}
-//			}
-//		}
-		
 		DnsAllianceServiceTask task = new DnsAllianceServiceTask();
 		//task.API_DNS_DISABLE = "N";
 		//task.testCallDNS201(task);
@@ -716,8 +701,8 @@ public class DnsAllianceServiceTask {
 		
 		List<DnsContentVo> content = new ArrayList<DnsContentVo>();
 		DnsContentVo c1 = new DnsContentVo();
-		c1.setIdno("A123456789");
-		c1.setName("王大明");
+		c1.setIdno("AXXXXXXXXX");
+		c1.setName("王XX");
 		c1.setBirdate("0710115");
 		c1.setSex("1");
 		c1.setCon("30");
@@ -727,7 +712,7 @@ public class DnsAllianceServiceTask {
 		
 		
 		DnsContentVo c2 = new DnsContentVo();
-		c1.setIdno("J223456789");
+		c1.setIdno("JXXXXXXXXX");
 		c1.setName("王小明");
 		c1.setBirdate("0880115");
 		c1.setSex("1");
@@ -741,7 +726,7 @@ public class DnsAllianceServiceTask {
 	}
 	
 	private String getFakeDNS201Str() {
-		String str = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"dataNumber\":2,\"content\":[{\"caseId\":\"I_20210415222401-A…6789-aaaaaa\",\"idno\":\"A123456789\",\"name\":\"王大明\",\"birdate\":\"0710115\",\"sex\":\"1\",\"con\":\"30\",\"condate\":\"0711115\",\"adddate\":\"11011152301\"},{\"caseId\":\"I_20210415222402-J…6789-aaaaaa\",\"idno\":\"J223456789\",\"name\":\"王小明\",\"birdate\":\"0880115\",\"sex\":\"2\",\"con\":\"30\",\"condate\":\"0711215\",\"adddate\":\"11011152301\"}]}}";
+		String str = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"dataNumber\":2,\"content\":[{\"caseId\":\"I_20210415222401-A…6789-aaaaaa\",\"idno\":\"AXXXXXXXXX\",\"name\":\"王XX\",\"birdate\":\"0710115\",\"sex\":\"1\",\"con\":\"30\",\"condate\":\"0711115\",\"adddate\":\"11011152301\"},{\"caseId\":\"I_20210415222402-J…6789-aaaaaa\",\"idno\":\"JXXXXXXXXX\",\"name\":\"王XX\",\"birdate\":\"0880115\",\"sex\":\"2\",\"con\":\"30\",\"condate\":\"0711215\",\"adddate\":\"11011152301\"}]}}";
 		return str;
 	}
 	

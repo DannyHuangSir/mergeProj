@@ -263,75 +263,6 @@ public class CIOAllianceServiceTask {
 		}
 		log.info("Start API-201 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
-		//testcode
-//		try {
-//			ContactInfoParameterVo paramVO = new ContactInfoParameterVo();
-//			ContactInfoCondition conVO = new ContactInfoCondition();
-//			conVO.setCidNo("A987654321");
-//			conVO.setCbirdate("19801115");  
-//			conVO.setCname("王大明");   
-//			
-//			ContactInfoContact contVO = new ContactInfoContact();
-//			contVO.setcPhone("0912345678");
-//			contVO.setcMail("abc@test.com.tw");
-//			contVO.setcAddress("台北市中正區信義路一段21-3號");
-//			
-//			paramVO.setCondition(conVO);
-//			paramVO.setContact(contVO);
-//			
-//			paramVO.setName("王大明");
-//			paramVO.setIdNo("A123456789");
-//			paramVO.setrZipCode("10048");
-//			paramVO.setrAddress("台北市中正區信義路一段21-3號");
-//			paramVO.setmZipCode("10048");
-//			paramVO.setmAddress("台北市中正區信義路一段21-3號");
-//			paramVO.setPhone("0912345678");
-//			paramVO.setHomeTel1("12345678");
-//			paramVO.setHomeTelCode1("0836");
-//			paramVO.setHomeTelExt1("12345");
-//			paramVO.setHomeTel2("12345678");
-//			paramVO.setHomeTelCode2("0836");
-//			paramVO.setHomeTelExt2("12345");
-//			paramVO.setMail("abc@test.com.tw\"");
-//			paramVO.setFrom("L01");
-//			
-//			paramVO.setAgreement("同意書內容之字串");
-//			paramVO.setLogDateTime("20200201170105");
-//			paramVO.setLogDesc1("PDCA(001)");
-//			paramVO.setSource("W");
-//			
-//			List<CompanyVo> tovo = new ArrayList<CompanyVo>();
-//			CompanyVo vo1 = new CompanyVo();
-//			vo1.setCompanyId("L02");
-//			tovo.add(vo1);
-//			CompanyVo vo2 = new CompanyVo();
-//			vo2.setCompanyId("L04");
-//			tovo.add(vo2);
-//			paramVO.setTo(tovo);
-//			
-//			List<ContactInfoFileDataVo> fileDatas = new ArrayList<ContactInfoFileDataVo>();
-//			ContactInfoFileDataVo file1 = new ContactInfoFileDataVo();
-//			file1.setType("A");
-//			file1.setFileName("20200122121250L01-A00001-A.pdf");
-//			fileDatas.add(file1);
-//			ContactInfoFileDataVo file2 = new ContactInfoFileDataVo();
-//			file2.setType("B");
-//			file2.setFileName("20200122121250L01-A00001-B.pdf");
-//			fileDatas.add(file2);
-//			paramVO.setFileDatas(fileDatas);
-//			
-//			Gson gson = new Gson(); 
-//	        String json = gson.toJson(paramVO);
-//	        log.info("json="+json);
-//
-//			String strResponse = cioService.postForEntity(URL_API201, paramVO, "API201");
-//	    String strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"caseId\":\"78688fc3-f408-4f39-bd2c-45c17f68e615-L01\",\"fileDatas\":[{\"fileId\":\"48c37063-f09a-4934-be64....\",\"fileName\":\"20200122121250L01-A00001-001.pdf\"},{\"fileId\":\"aaaa5445-f09a-4934-be64-....\",\"fileName\":\"20200122121250L01-A00001-002.pdf\"}]}}";
-//			log.info("strResponse="+strResponse);
-//		}catch(Exception e) {
-//			log.error(e);
-//		}
-		//testcode
-
 
 		if("N".equals(API_DISABLE)){
 			int rtn = -1;
@@ -679,24 +610,6 @@ public class CIOAllianceServiceTask {
 		log.info("Start API-203 Task.");
 		log.info("API_DISABLE="+API_DISABLE);
 
-		//testcode
-//		try {
-//		String strResponse = "{\"code\":\"0\",\"msg\":\"success\",\"data\":{\"condition\":{\"cidNo\":\"A122021826\",\"cbirdate\":\"19801115\",\"cname\":\"王西明\",\"crname\":\"wang ta ming\",\"cename\":\"Daming WANG\"},\"contact\":{\"cPhone\":\"0912345678\",\"cMail\":\" abc@test.com.tw \",\"cAddress\":\"台北市中正區信義路一段21-3號\"},\"name\":\"王大明\",\"idNo\":\"A122021826\",\"rZipCode\":\"10048\",\"rAddress\":\"台北市中正區信義路一段21-3號\",\"mZipCode\":\"10048\",\"mAddress\":\"台北市中正區信義路一段21-3號\",\"phone\":\"0912345678\",\"homeTel1\":\"12345678\",\"homeTelCode1\":\"0836\",\"homeTelExt1\":\"12345\",\"homeTel2\":\"12345678\",\"homeTelCode2\":\"02\",\"homeTelExt2\":\"12345\",\"mail\":\"abc@test.com.tw\",\"from\":\"L02\",\"to\":[{\"companyId\":\"L02\",\"status\":\"Y\",\"msg\":\"回報之訊息\"},{\"companyId\":\"L03\",\"status\":\"Y\",\"msg\":\"回報之訊息\"}],\"agreement\":\"同意書內容之字串\",\"logDateTime\":\"20200201170105\",\"logDesc1\":\" PDCA(001)\",\"source\":\"W\",\"fileDatas\":[{\"fileId\":\"48c37063-f09a-4934-be64-....\",\"size\":\"300\",\"fileName\":\"20200122121250L01-A00001-001.pdf\",\"fileStatus\":\"1\",\"path\":\"/L01/202003/wKODkASHSAiMmM5P77JdYg/\",\"sftpPath\":\"/D:/apps/user/receive/done/L01/202003/wKOD kASHSAiMmM5P77JdYg/\"},{\"fileId\":\"aaaaaaaa-f09a-4934-be64-....\",\"size\":\"300\",\"fileName\":\"20200122121250L01-A00001-002.pdf\",\"fileStatus\":\"1\",\"path\":\"/L01/202003/wKODkASHSAiMmM5P77JdYg/\",\"sftpPath\":\"/D:/apps/user/receive/done/L01/202003/wKOD kASHSAiMmM5P77JdYg/\"}]}}";
-//			String dataString = MyJacksonUtil.getNodeString(teststrResponse, "data");
-//			System.out.println("dataString="+dataString);
-//			Object obj = MyJacksonUtil.json2Object(dataString, ContactInfoParameterVo.class);
-//			if(obj!=null) {
-//				ContactInfoParameterVo testicvo = (ContactInfoParameterVo)obj;
-//				Gson gson = new Gson(); 
-//				String jsonString = gson.toJson(testicvo);
-//				System.out.println("gson.toJson(testicvo)="+jsonString);
-//			}
-//		}catch(Exception e) {
-//			log.error(e);
-//		}
-		//testcode
-
-
 		if("N".equals(API_DISABLE)){
 			Integer maxGoOnline = Integer.valueOf(this.getAPI_LIMIT_CODENUMBER());
 			ContactInfoParameterVo icvo = null;
@@ -752,10 +665,10 @@ public class CIOAllianceServiceTask {
 
 								//parser "to"-start
 								ObjectMapper mapper = new ObjectMapper();
-								java.util.List<JsonNode> listNode = mapper.readTree(dataString).findPath("to").findValues("companyId");
+								List<JsonNode> listNode = mapper.readTree(dataString).findPath("to").findValues("companyId");
 								List<CompanyVo> listTo = null;
 								if(listNode!=null && listNode.size()>0) {
-									listTo = new java.util.ArrayList<CompanyVo>();
+									listTo = new ArrayList<CompanyVo>();
 									for(JsonNode jn : listNode) {
 										CompanyVo tempCvo = new CompanyVo();
 										tempCvo.setCompanyId(jn.asText());
@@ -1167,8 +1080,8 @@ public class CIOAllianceServiceTask {
 								if(rtn>0) {//update base64 to TRANS_CONTACT_INFO_FILEDATAS by FILE_ID
 									//若TRANS_CONTACT_INFO_FILEDATAS有同FILE_ID一併更新,若更新失敗不能影響檔案內容下載
 									try {
-										com.twfhclife.eservice.onlineChange.model.TransContactInfoFileDataVo tciFileDataVo =
-												new com.twfhclife.eservice.onlineChange.model.TransContactInfoFileDataVo();
+										TransContactInfoFileDataVo tciFileDataVo =
+												new TransContactInfoFileDataVo();
 										tciFileDataVo.setFileId(fileVo.getFileId());
 										tciFileDataVo.setFileBase64(fileVo.getFileBase64());
 										int updateTransFileDataRtn = transContactInfoService.updateFileBase64ByFileId(tciFileDataVo);
@@ -1527,6 +1440,24 @@ public class CIOAllianceServiceTask {
 									//hometelext1
 									if(vo.getHomeTelExt1()!=null) {
 										telHome = StringUtils.join(telHome,"#",vo.getHomeTelExt1().trim());
+									}
+
+									tic.setTelHome(telHome);
+								}
+								else if (StringUtils.isNotBlank(vo.getHomeTel2())) {
+								/// 20230818 by 203990 追加判別, 聯盟件hometel1無資料而hometel2有資料, 就使用hometel2為欲修改的 住家電話
+									String telHome = null;
+									//hometelcode2
+									String hometelcode2 = vo.getHomeTelCode2();
+									if(StringUtils.isNotBlank(hometelcode2)) {
+										telHome = StringUtils.join(telHome,hometelcode2.trim());
+									}
+									//hometel2
+									telHome = StringUtils.join(telHome,vo.getHomeTel2().trim());
+
+									//hometelext2
+									if(vo.getHomeTelExt2()!=null) {
+										telHome = StringUtils.join(telHome,"#",vo.getHomeTelExt2().trim());
 									}
 
 									tic.setTelHome(telHome);
@@ -1926,28 +1857,6 @@ public class CIOAllianceServiceTask {
 
 	public static void main(String[] args) throws Exception{
 		CIOAllianceServiceTask task = new CIOAllianceServiceTask();
-
-		//task.callAPI201();
-
-		//test conver to object
-//		String teststrResponse = "{\"code\": \"0\",\"msg\": \"SUCCESS\",\"data\": {\"name\": \"王大明\",\"idNo\": \"A123456789\",\"birdate\": \"19910415\",\"phone\": \"0912345678\",\"zipCode\": \"70157\",\"address\": \"台北市中正區信義路一段 21-3號\",\"mail\": \" abc@test.com.tw \",\"paymentMethod\": \"1\",\"bankCode\": \"004\",\"branchCode\": \"0107\",\"bankAccount\": \"12345678901234\",\"applicationDate\": \"20190105\",\"applicationTime\": \"1520\",\"applicationItem\": \"1\",\"job\": \"老師\",\"jobDescr\": \"工作描述\",\"accidentDate\": \"20190101\",\"accidentTime\": \"1520\",\"accidentCause\": \"1\",\"accidentLocation\": \"台北市中正區信義路一段\",\"accidentDescr\": \"遭計程車追撞\",\"policeStation\": \"臺北市政府警察局大安分局安和路派出所\",\"policeName\": \"王小明\",\"policePhone\": \"0987654321\",\"policeDate\": \"20190101\",\"policeTime\": \"1530\",\"from\": \"L01\",\"to\": [{\"companyId\": \"L02\"}, {\"companyId\": \"L03\"}],\"fileDatas\": [{\"fileId\": \"48c37063-f09a-4934-be64-127574b640c5\",\"size\": \"300\",\"type\": \"A\",\"fileName\": \"20200122121250L01-A00001-A.pdf\",\"fileStatus\": \"1\",\"path\": \"/L01/202003/wKODkASHSAiMmM5P77JdYg/\"}, {\"fileId\": \"fd2406de-3c26-45b4-8518-497f856cee52\",\"size\": \"300\",\"type\": \"B\",\"fileName\": \"20200122121250L01-A00001-B.pdf\",\"fileStatus\": \"1\",\"path\": \"/L01/202003/wKODkASHSAiMmM5P77JdYg/\"}]}}";
-//		String dataString = MyJacksonUtil.getNodeString(teststrResponse, "data");
-//		System.out.println("dataString="+dataString);
-//		Object obj = MyJacksonUtil.json2Object(dataString, InsuranceClaimVo.class);
-//		if(obj!=null) {
-//			InsuranceClaimVo testicvo = (InsuranceClaimVo)obj;
-//			Gson gson = new Gson(); 
-//			String jsonString = gson.toJson(testicvo);
-//			System.out.println("gson.toJson(testicvo)="+jsonString);
-//		}
-
-		//test for file
-//		String str = task.converFileToBase64Str("C:\\Users\\blflo\\Downloads\\Baeldung.pdf");
-//		System.out.println("base64="+str);
-//		task.converBase64StrToFile(str, "C:\\\\Users\\\\blflo\\\\Downloads\\\\Baeldung_new.pdf");
-
-		//test bean copy
-		//task.testBeanCopy();
 
 		//test join
 		String str = null;

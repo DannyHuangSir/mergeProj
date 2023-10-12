@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.twfhclife.eservice.onlineChange.model.SignRecord;
 import org.apache.ibatis.annotations.Param;
 
 import com.twfhclife.alliance.domain.ClaimRequestVo;
@@ -245,5 +244,4 @@ public interface IClaimChainService {
 
 	//進行將CASE_ID 進行回壓,便於首家案件更新狀態,執行跑403
     int  addNotifyOfNewCaseMedicalIsPrice(MedicalTreatmentClaimVo vo)throws Exception;
-
 }

@@ -1,5 +1,7 @@
 package com.twfhclife.eservice.api.elife.domain;
 
+import java.time.LocalDate;
+
 public class PolicyDetailVo {
 	/** 要保人-保單號碼 */
 	private String lipmInsuNo;
@@ -18,7 +20,7 @@ public class PolicyDetailVo {
 	/**	要保人-繳別 */
 	private String lipmRcpCode;
 	/**	要保人-已轉繳費日 */
-	private String lipmTredPaabDate;
+	private LocalDate lipmTredPaabDate;
 	/**	要保人-繳費方法 */
 	private String lipmRcpMethCode;
 	/**	要保人-契約狀況 */
@@ -26,7 +28,7 @@ public class PolicyDetailVo {
 	/**	要保人-集體彙繳 */
 	private String lipm5Gp;
 	/**	要保人-投保日期 */
-	private String lipmInsuBegDate;
+	private LocalDate lipmInsuBegDate;
 	/**	要保人-身份證號 */
 	private String lipmId;
 	/**	要保人-名稱1 */
@@ -60,9 +62,9 @@ public class PolicyDetailVo {
 	/** 被保人-保單號碼 */
 	private String lipiInsuSeqNo;
 	/** 被保人-投保日期 */
-	private String lipiInsuBegDate;
+	private LocalDate lipiInsuBegDate;
 	/** 被保人-投保終期 */
-	private String lipiInsuEndDate;
+	private LocalDate lipiInsuEndDate;
 	/** 被保人-團體代號 */
 	private String lipiGpNo;
 	/** 被保人-身份證字號 */
@@ -96,7 +98,7 @@ public class PolicyDetailVo {
 	/** 被保人-契約狀況 */
 	private String lipiSt;
 	/** 被保人-契約狀況日期 */
-	private String lipiStDate;
+	private LocalDate lipiStDate;
 	/** 被保人-防癌投保單位 */
 	private String lipiCancerQuan;
 	/** 被保人-體檢別 */
@@ -155,6 +157,16 @@ public class PolicyDetailVo {
 	private String inmsAccountNo;
 	/** 要保人-出生日期 */
 	private String bnagBirth;
+	/** 開始發放年金年份 */
+	private int lipiYearAnnuPay;
+	
+	private String prodBaseType;
+	
+	private String lipiTredRcpTms;
+	
+	private String prodAnnuityType;
+	
+	private String nextLipmTredPaabDate;
 	
 	public String getLipmInsuNo() {
 		return lipmInsuNo;
@@ -204,10 +216,10 @@ public class PolicyDetailVo {
 	public void setLipmRcpCode(String lipmRcpCode) {
 		this.lipmRcpCode = lipmRcpCode;
 	}
-	public String getLipmTredPaabDate() {
+	public LocalDate getLipmTredPaabDate() {
 		return lipmTredPaabDate;
 	}
-	public void setLipmTredPaabDate(String lipmTredPaabDate) {
+	public void setLipmTredPaabDate(LocalDate lipmTredPaabDate) {
 		this.lipmTredPaabDate = lipmTredPaabDate;
 	}
 	public String getLipmRcpMethCode() {
@@ -228,10 +240,10 @@ public class PolicyDetailVo {
 	public void setLipm5Gp(String lipm5Gp) {
 		this.lipm5Gp = lipm5Gp;
 	}
-	public String getLipmInsuBegDate() {
+	public LocalDate getLipmInsuBegDate() {
 		return lipmInsuBegDate;
 	}
-	public void setLipmInsuBegDate(String lipmInsuBegDate) {
+	public void setLipmInsuBegDate(LocalDate lipmInsuBegDate) {
 		this.lipmInsuBegDate = lipmInsuBegDate;
 	}
 	public String getLipmId() {
@@ -330,16 +342,16 @@ public class PolicyDetailVo {
 	public void setLipiInsuSeqNo(String lipiInsuSeqNo) {
 		this.lipiInsuSeqNo = lipiInsuSeqNo;
 	}
-	public String getLipiInsuBegDate() {
+	public LocalDate getLipiInsuBegDate() {
 		return lipiInsuBegDate;
 	}
-	public void setLipiInsuBegDate(String lipiInsuBegDate) {
+	public void setLipiInsuBegDate(LocalDate lipiInsuBegDate) {
 		this.lipiInsuBegDate = lipiInsuBegDate;
 	}
-	public String getLipiInsuEndDate() {
+	public LocalDate getLipiInsuEndDate() {
 		return lipiInsuEndDate;
 	}
-	public void setLipiInsuEndDate(String lipiInsuEndDate) {
+	public void setLipiInsuEndDate(LocalDate lipiInsuEndDate) {
 		this.lipiInsuEndDate = lipiInsuEndDate;
 	}
 	public String getLipiGpNo() {
@@ -438,10 +450,10 @@ public class PolicyDetailVo {
 	public void setLipiSt(String lipiSt) {
 		this.lipiSt = lipiSt;
 	}
-	public String getLipiStDate() {
+	public LocalDate getLipiStDate() {
 		return lipiStDate;
 	}
-	public void setLipiStDate(String lipiStDate) {
+	public void setLipiStDate(LocalDate lipiStDate) {
 		this.lipiStDate = lipiStDate;
 	}
 	public String getLipiCancerQuan() {
@@ -617,6 +629,36 @@ public class PolicyDetailVo {
 	}
 	public void setBnagBirth(String bnagBirth) {
 		this.bnagBirth = bnagBirth;
-	}	
+	}
+	public String getProdBaseType() {
+		return prodBaseType;
+	}
+	public void setProdBaseType(String prodBaseType) {
+		this.prodBaseType = prodBaseType;
+	}
+	public String getLipiTredRcpTms() {
+		return lipiTredRcpTms;
+	}
+	public void setLipiTredRcpTms(String lipiTredRcpTms) {
+		this.lipiTredRcpTms = lipiTredRcpTms;
+	}
+	public String getProdAnnuityType() {
+		return prodAnnuityType;
+	}
+	public void setProdAnnuityType(String prodAnnuityType) {
+		this.prodAnnuityType = prodAnnuityType;
+	}
+	public String getNextLipmTredPaabDate() {
+		return nextLipmTredPaabDate;
+	}
+	public void setNextLipmTredPaabDate(String nextLipmTredPaabDate) {
+		this.nextLipmTredPaabDate = nextLipmTredPaabDate;
+	}
+	public int getLipiYearAnnuPay() {
+		return lipiYearAnnuPay;
+	}
+	public void setLipiYearAnnuPay(int lipiYearAnnuPay) {
+		this.lipiYearAnnuPay = lipiYearAnnuPay;
+	}
 	
 }
