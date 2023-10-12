@@ -129,19 +129,6 @@ public class MedicalTreatmentController extends BaseUserDataController {
 			 */
 			int resultInsurance = insuranceClaimService.getPolicyClaimCompleted(getUserRocId());
 			if (resultInsurance > 0) {
-//				String message = getParameterValue(ApConstants.SYSTEM_MSG_PARAMETER, "E0088");
-				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INSURANCE_CLAIM_APPLYING);
-				return "redirect:apply1";
-			}
-
-
-			/**
-			 * 3.有申請中的保單,則不可再申請
-			 * TRANS中transType=INSURANCE_TYPE,status=-1,0,4
-			 */
-
-			int result = iMedicalTreatmentService.getPolicyClaimCompleted(getUserRocId());
-			if (result > 0) {
 				redirectAttributes.addFlashAttribute("errorMessage", OnlineChangMsgUtil.INSURANCE_CLAIM_APPLYING);
 				return "redirect:apply1";
 			}
