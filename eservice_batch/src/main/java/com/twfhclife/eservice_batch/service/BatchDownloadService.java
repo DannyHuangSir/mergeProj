@@ -566,6 +566,7 @@ public class BatchDownloadService {
 						if (StringUtils.isNotEmpty(userVo.getMobile())) {
 							List<String> receivers = new ArrayList<String>();
 							receivers.add(userVo.getMobile());
+							req.setMessagingTemplateCode("ELIFE_SMS-004");
 							req.setMessagingReceivers(receivers);
 							req.setSendType(MessageTriggerRequestVo.SEND_TYPE_SMS);
 							api.postMessageTemplateTrigger(req);

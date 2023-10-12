@@ -58,7 +58,7 @@ public class TransChooseLevelUtil {
 					for(TransChooseLevelVo vo : transChooseLevelList) {
 						//介接代碼(3),申請序號(12),保戶身份證(10),收文日(系統日yyyMMdd),評估日(系統日yyyMMdd),風險屬性(1),風險評分(3),保戶身份證(10)
 						String score = String.valueOf(vo.getChooseScore());
-						score = "   ".substring(0,score.length()-1) + score;
+						score = StringUtils.leftPad(score, 3, " ");
 						String line = String.format(StringUtils.repeat("%s", 8),
 								UPLOAD_CODE,
 								StringUtil.rpadBlank(transNum, 12),
@@ -85,4 +85,5 @@ public class TransChooseLevelUtil {
 		String twYear = Integer.parseInt(date.substring(0, 4)) - 1911 + "";
 		return StringUtils.rightPad(twYear, 3, "0") + date.substring(4, 8);
 	}
+	
 }

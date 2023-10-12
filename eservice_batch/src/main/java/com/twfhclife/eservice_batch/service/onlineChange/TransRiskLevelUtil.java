@@ -65,7 +65,7 @@ public class TransRiskLevelUtil {
                             for (TransRiskLevelVo vo : list) {
                         //  介接代碼(3),申請序號(12),保單號碼(10),收文日(系統日yyyMMdd),生效日(系統日yyyMMdd),風險屬性(1),風險評分(3),保戶身份證(10)
                                 String score = String.valueOf(vo.getRiskScore());
-                        score = "   ".substring(0, score.length() - 1) + score;
+                                score = StringUtils.leftPad(score, 3, " ");
                                 String line = String.format(StringUtils.repeat("%s", 8),
                                         UPLOAD_CODE,
                                         StringUtil.rpadBlank(transNum, 12),

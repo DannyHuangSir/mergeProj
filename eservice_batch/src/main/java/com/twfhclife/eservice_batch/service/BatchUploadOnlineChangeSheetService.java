@@ -294,9 +294,9 @@ public class BatchUploadOnlineChangeSheetService {
 							float afterTop = 1062f;
 							for(String afterLine: afterChange.toString().split("\\r\\n")) {
 								if (StringUtil.countDobuleSize(afterLine) >= 80) {
-									reportUtil.txt(afterLine.substring(0, 45), 10, 1, 100f, afterTop);
+									reportUtil.txt(afterLine.substring(0, 43), 10, 1, 100f, afterTop);
 									afterTop -= high;
-									reportUtil.txt(afterLine.substring(45), 10, 1, 100f, afterTop);
+									reportUtil.txt(afterLine.substring(43), 10, 1, 100f, afterTop);
 									afterTop -= high;
 								} else {
 									reportUtil.txt(afterLine, 10, 1, 100f, afterTop);
@@ -351,6 +351,9 @@ public class BatchUploadOnlineChangeSheetService {
 								logger.info("備份失敗");
 							}
 //						}						
+					} else if ("DEPOSIT".equals(infoVo.getTransType())) {
+						// 20230724 提領贖回功能, 暫停將申請資料上傳影像系統
+						logger.info(String.format(logMessage, process++, transVo.getTransNum(), "提領贖回功能, 暫停將申請資料上傳影像系統"));
 					} else {
 						// 開始畫出 pdf
 						logger.info("============================================================================");
@@ -731,7 +734,7 @@ public class BatchUploadOnlineChangeSheetService {
 						if(vo.getRuleStatus().equals("3")) {
 							contentSubFormat = " 風險等級: %s \r\n 風險等級問題與答案 : \r\n %s ";						
 						}else {
-							contentSubFormat = " 風險等級: %s \r\n %s 同意「一、風險屬性評估」之評估結果 \r\n 風險等級問題與答案 : \r\n %s ";
+							contentSubFormat = " 風險等級: %s \r\n %s  \r\n 風險等級問題與答案 : \r\n %s ";
 						}
 						StringBuilder sb = new StringBuilder();
 						String choose = vo.getChoose();
@@ -765,7 +768,13 @@ public class BatchUploadOnlineChangeSheetService {
 						if(vo.getRuleStatus().equals("3")) {
 							after.append(String.format(contentSubFormat, vo.getRiskLevelNew(), sb.toString()));						
 						}else {
-							String ruleStatus = vo.getRuleStatus().equals("2") ? "有勾選" : "未勾選";	
+							String ruleStatus = "";
+							if(vo.getRuleStatus().equals("1")) {
+								ruleStatus ="本人同意將風險屬性評估為保守型。";
+							}else if(vo.getRuleStatus().equals("2")){
+								ruleStatus = "本人經審慎評估後，選擇依「風險屬性評估」之評估結果分類，且確認已充分瞭解投資風險，並願意承受相關投資結果。";
+							}
+//							String ruleStatus = vo.getRuleStatus().equals("2") ? "有勾選" : "未勾選";	
 							after.append(String.format(contentSubFormat, vo.getRiskLevelNew(), ruleStatus ,sb.toString()));	
 						}
 					}
@@ -1184,7 +1193,7 @@ public class BatchUploadOnlineChangeSheetService {
 					if(vo.getRuleStatus().equals("3")) {
 						contentSubFormat = " 風險等級: %s \r\n 風險等級問題與答案 : \r\n %s ";						
 					}else {
-						contentSubFormat = " 風險等級: %s \r\n %s 同意「一、風險屬性評估」之評估結果 \r\n 風險等級問題與答案 : \r\n %s ";
+						contentSubFormat = " 風險等級: %s \r\n %s  \r\n 風險等級問題與答案 : \r\n %s ";
 					}
 
 					StringBuilder sb = new StringBuilder();
@@ -1219,7 +1228,13 @@ public class BatchUploadOnlineChangeSheetService {
 					if(vo.getRuleStatus().equals("3")) {
 						after.append(String.format(contentSubFormat, vo.getChooseLevelNew(), sb.toString()));						
 					}else {
-						String ruleStatus = vo.getRuleStatus().equals("2") ? "有勾選" : "未勾選";	
+						String ruleStatus = "";
+						if(vo.getRuleStatus().equals("1")) {
+							ruleStatus ="本人同意將風險屬性評估為保守型。";
+						}else if(vo.getRuleStatus().equals("2")){
+							ruleStatus = "本人經審慎評估後，選擇依「風險屬性評估」之評估結果分類，且確認已充分瞭解投資風險，並願意承受相關投資結果。";
+						}
+//						String ruleStatus = vo.getRuleStatus().equals("2") ? "有勾選" : "未勾選";	
 						after.append(String.format(contentSubFormat, vo.getChooseLevelNew(), ruleStatus ,sb.toString()));	
 					}
 				}
