@@ -75,7 +75,11 @@
 	
 	<!-- 找出被保人有效的保單號碼 -->
 	<select id="getPolicyNoByID" resultType="java.lang.String" parameterType="java.lang.String">
-		select LIPI_INSU_NO from ESERVICE.DBO.LILIPI where LIPI_ID = #{id}
+		SELECT LIPI_INSU_NO FROM (
+			SELECT LIPI_INSU_NO FROM LILIPI WHERE LIPI_ID = #{id}
+			UNION
+			SELECT CONCAT(LIPF_INSU_TYPE, LIPF_INSU_GRP_NO, LIPF_INSU_SEQ_NO) AS LIPI_INSU_NO FROM LILIPF_ES WHERE LIPF_ID = #{id}
+		) A
 	</select>
 	
 	<!-- 依保單號碼找出商品險種 -->
