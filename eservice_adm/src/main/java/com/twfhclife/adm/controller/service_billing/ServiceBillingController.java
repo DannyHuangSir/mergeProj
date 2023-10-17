@@ -5,6 +5,7 @@ import com.twfhclife.adm.model.Spa402RequestVo;
 import com.twfhclife.generic.annotation.RequestLog;
 import com.twfhclife.generic.api_client.ServiceBillingClient;
 import com.twfhclife.generic.api_model.Spa401RequestVo;
+import com.twfhclife.generic.api_model.Spa401ResponseVo;
 import com.twfhclife.generic.controller.BaseController;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +45,14 @@ public class ServiceBillingController extends BaseController {
     public ResponseEntity<ResponseObj> spa401(@RequestBody Spa401RequestVo vo) {
         try {
             vo.setOrgId(companyId);
-            processSuccess(serviceBillingClient.callSpa401(vo));
+            //调整page从0开始
+            Integer page = vo.getPage();
+            if (page != null && page > 0) {
+                vo.setPage(page - 1);
+            }
+            Spa401ResponseVo resultData = serviceBillingClient.callSpa401(vo);
+            resultData.setCurrentPage(page);
+            processSuccess(resultData);
         } catch (Exception e) {
             logger.error("Unable to ServiceBillingController  -  spa401: {}", ExceptionUtils.getStackTrace(e));
             addDefaultSystemError();
