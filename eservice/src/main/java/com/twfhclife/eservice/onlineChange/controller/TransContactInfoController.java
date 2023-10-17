@@ -192,7 +192,7 @@ public class TransContactInfoController extends BaseUserDataController {
 			LilipmVo lilipmVo = null;
 			
 			// 根據最新保單帶出變更前的要保人聯絡資料
-			com.twfhclife.eservice.web.model.UsersVo userVo = this.getUserDetail();
+			UsersVo userVo = this.getUserDetail();
 			List<String> policyNos = transContactInfoDtlVo.getPolicyNoList();
 			//202201:保單'單筆'勾選時,只顯示該被勾選保單的現行保單資料作為預設顯示供修改
 			if (CollectionUtils.isNotEmpty(policyNos)) {
@@ -624,10 +624,16 @@ public class TransContactInfoController extends BaseUserDataController {
 						
 						//發送保戶MAIL
 						//receivers = new ArrayList<String>();
+						List<String> transNumList =new ArrayList(Arrays.asList(transNums.substring(1 , transNums.length() -1).replaceAll("\\s", "").split(",")));
+						StringBuilder message = new StringBuilder();
+						for(String st : transNumList) {
+							message.append("申請序號: ").append(st).append("<br/>");
+						}
 						if(transContactInfoDtlVo.getEmail()	!= null){
 							receivers.clear();//清空
 							receivers.add(transContactInfoDtlVo.getEmail());
 							logger.info("user mail : {}", transContactInfoDtlVo.getEmail());
+							paramMap.put("MESSAGE",message.toString());
 							if(boo){
 								messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_010, receivers, paramMap, "email");
 							}else{
@@ -642,6 +648,7 @@ public class TransContactInfoController extends BaseUserDataController {
 							receivers.clear();//清空
 							receivers.add(userDetail.getEmail());
 							logger.info("userDetail  odMail : {}", userDetail.getEmail());
+							paramMap.put("MESSAGE",message.toString());
 							if(boo){
 								messageTemplateClient.sendNoticeViaMsgTemplate(OnlineChangeUtil.ELIFE_MAIL_010, receivers, paramMap, "email");
 							}else{
