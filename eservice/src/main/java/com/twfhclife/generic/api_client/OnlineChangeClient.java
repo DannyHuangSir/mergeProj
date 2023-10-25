@@ -32,16 +32,11 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
-public class OnlineChangeClient implements InitializingBean {
+public class OnlineChangeClient {
 
 	private static final Logger logger = LogManager.getLogger(OnlineChangeClient.class);
 	
 	private RestTemplate restTemplate;
-
-	@Value("${eservice_api.accessKey}")
-	private String accessKey;
-
-	private static String ESERVICE_API_SECRET;
 
 	public OnlineChangeClient() throws Exception {
 		
@@ -101,9 +96,12 @@ public class OnlineChangeClient implements InitializingBean {
 			
 			HttpHeaders headers = new HttpHeaders();
 			//headers.set("Access-token", ACCESS_TOKEN);
-			headers.set("Authorization", "Bearer " + this.ESERVICE_API_SECRET);
+			String secret = BaseRestClient.getAccessKey();
+			if(StringUtils.isNotBlank(secret)) {
+				headers.add("Authorization", "Bearer " + secret);
+			}
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			
+
 			Gson gson = new Gson(); 
 	        String json = gson.toJson(mapVo);
 	        
@@ -188,9 +186,5 @@ public class OnlineChangeClient implements InitializingBean {
 
 		}
 		return strRes;
-	}
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		ESERVICE_API_SECRET = accessKey;
 	}
 }
