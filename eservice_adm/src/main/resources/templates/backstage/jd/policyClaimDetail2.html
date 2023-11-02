@@ -44,7 +44,7 @@
 									<div id="selectTitle" class="list-select ui-draggable">
 										
 										<div class="list-body">
-											<div class="droppable">
+											<div class="droppable" id="unSelect-column">
 												<h4 style="line-height: 30px;">可選擇欄位</h4>
 												<ul class="item-box left-box  ui-sortable ui-droppable">
 													<li class="item ui-sortable-handle" data-id="policyNo">保單號碼</li>
@@ -118,7 +118,51 @@
 		
 		/*<![CDATA[*/
 		var formData = /*[[${vo}]]*/;
+		var isGoBack = /*[[${isGoBack}]]*/;
 		$(function(){
+			if (isGoBack) {
+				formData.unSelectColumn.forEach((value, index) => {
+					$("#unSelect-column ul").append(' <li class="item ui-sortable-handle" data-id="' + value + '">' + formData.unSelectColumnName[index] + '</li>');
+				})
+				formData.selectColumn.forEach((value, index) => {
+					$("#select-column ul").append(' <li class="item ui-sortable-handle" data-id="' + value + '">' + formData.selectColumnName[index] + '</li>');
+				})
+			} else{
+				var cols = [
+					{ 'dataID':'policyNo', 'text': '保單號碼' },
+					{ 'dataID':'policyType', 'text': '險種' },
+					{ 'dataID':'policyTypeName', 'text': '險種名稱' },
+					{ 'dataID':'accDocNo', 'text': '受理編號' },
+					{ 'dataID':'tBSubmitDate', 'text': '保單認定受理日期' },
+					{ 'dataID':'caseReceviceDate', 'text': '收件日期' },
+					{ 'dataID':'policyActiveDate', 'text': '生效日' },
+					{ 'dataID':'printDate', 'text': '出單日' },
+					{ 'dataID':'agentCode', 'text': '通路別代號' },
+					{ 'dataID':'brokerName', 'text': '通路別名稱' },
+					{ 'dataID':'branchCode', 'text': '分支機構代碼' },
+					{ 'dataID':'nebkBranchName', 'text': '分支機構名稱' },
+					{ 'dataID':'agentSalesName', 'text': '招攬人' },
+					{ 'dataID':'accUnit', 'text': '核保單位' },
+					{ 'dataID':'userName', 'text': '核保員' },
+					{ 'dataID':'bpmcurrenttak', 'text': '案件狀態' },
+					{ 'dataID':'reviewResult', 'text': '核保結果' },
+					{ 'dataID':'appName', 'text': '要保人姓名' },
+					{ 'dataID':'appID', 'text': '要保人ID' },
+					{ 'dataID':'appCountry', 'text': '要保人國籍' },
+					{ 'dataID':'appPolicyAge', 'text': '要保人年齡' },
+					{ 'dataID':'insName', 'text': '被保人姓名' },
+					{ 'dataID':'insID', 'text': '被保人ID' },
+					{ 'dataID':'lipiAge', 'text': '被保人年齡' },
+					{ 'dataID':'policyAmountNTD', 'text': '保額' },
+					{ 'dataID':'policyFee', 'text': '應繳保費' },
+					{ 'dataID':'payType', 'text': '繳費別' },
+					{ 'dataID':'permYear', 'text': '繳費年期' },
+					{ 'dataID':'policyNoteContent', 'text': '照會項目內容' }
+				]
+				cols.forEach((value, index)=>{
+					$("#unSelect-column ul").append(' <li class="item ui-sortable-handle" data-id="' + value['dataID'] + '">'+ value['text'] +'</li>');
+				})
+			}
 			// 是否开启选项可拖动，选项可双击
 			$('#selectTitle').initList({
 				openDrag: true,
@@ -131,6 +175,10 @@
 		$('#go').click(function() {
 			formData.column = [];
 			formData.columnName = [];
+			formData.selectColumn = [];
+			formData.unSelectColumn = [];
+			formData.selectColumnName = [];
+			formData.unSelectColumnName = [];
 			$('#select-column').find('li').each(function(i,val){
 				var id = val.getAttribute('data-id');
 				if (id == 'policyNoteContent'){
@@ -144,7 +192,13 @@
 					formData.column.push(val.getAttribute('data-id'));
 					formData.columnName.push(val.innerHTML);
 				}
+				formData.selectColumn.push(val.getAttribute('data-id'));
+				formData.selectColumnName.push(val.innerHTML);
 			})
+			$('#unSelect-column').find('li').each(function (i, val) {
+				formData.unSelectColumn.push(val.getAttribute('data-id'));
+				formData.unSelectColumnName.push(val.innerHTML);
+			});
 			if(formData.column.length <= 0){
 				alertMsg('請選擇要導出的欄位.');
 				return;

@@ -108,14 +108,14 @@
                             </div>
                         </form>
 
-                        <form role="form" id="onlineChangeForm" method="post" action="/eservice_adm/userDetail/filter" >
-                            <input type="hidden" id="systemAccountOutput" name="systemAccountOutput" />
-                            <input type="hidden" id="userAccountStatusListOutput" name="userAccountStatusListOutput" />
-                            <input type="hidden" id="userNameOutput" name="userNameOutput" />
-                            <input type="hidden" id="salesNumberOutput" name="salesNumberOutput" />
-                            <input type="hidden" id="deptSelectOutput" name="deptSelectOutput" />
-                            <input type="hidden" id="branchSelectOutput" name="branchSelectOutput" />
-                            <input type="hidden" id="roleNameSelectOutput" name="roleNameSelectOutput" />
+                        <form role="form" id="onlineChangeForm" method="post" action="/eservice_adm/userDetail/filter">
+                            <input type="hidden" id="systemAccountOutput" name="systemAccountOutput"/>
+                            <input type="hidden" id="userAccountStatusListOutput" name="userAccountStatusListOutput"/>
+                            <input type="hidden" id="userNameOutput" name="userNameOutput"/>
+                            <input type="hidden" id="salesNumberOutput" name="salesNumberOutput"/>
+                            <input type="hidden" id="deptSelectOutput" name="deptSelectOutput"/>
+                            <input type="hidden" id="branchSelectOutput" name="branchSelectOutput"/>
+                            <input type="hidden" id="roleNameSelectOutput" name="roleNameSelectOutput"/>
                         </form>
                     </div>
                     <!--            -系統帳號(空白輸入欄位)-->
@@ -139,14 +139,17 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     $(function () {
+        // accountStatusApi = false;
+        // parentListApi = false;
         // 取得帳號啟用狀態的清單
-        $.ajax({
+        accountStatusApi = $.ajax({
             url: /*[[@{jd/common/userAccountStatusList}]]*/,
             contentType: 'application/json',
             type: "POST",
             async: true,
             success: function (response) {
                 if (response.result == 'SUCCESS') {
+                    console.log('accountStatusApiRs success')
                     if (response.resultData.length > 0) {
                         for (var i = 0; i < response.resultData.length; i++) {
                             var data = response.resultData[i];
@@ -172,13 +175,14 @@
         });
 
         // 取得通路別清單
-        $.ajax({
+        parentListApi = $.ajax({
             url: /*[[@{jd/common/dept/parentList}]]*/,
             contentType: 'application/json',
             type: "POST",
             async: true,
             success: function (response) {
                 if (response.result == 'SUCCESS') {
+                    console.log('parentListApi success')
                     if (response.resultData.length > 0) {
                         for (var i = 0; i < response.resultData.length; i++) {
                             var option = "<option value='" + response.resultData[i].depId + "'>" + response.resultData[i].depName + "</option>";
@@ -191,7 +195,52 @@
             }
         });
 
+        var isGoBack = /*[[${isGoBack}]]*/;
+        var goBackParameter = /*[[${vo}]]*/;
+
+        $.when(
+            accountStatusApi,
+            parentListApi
+        ).done(function(accountStatusApiRs,parentListApiRs){
+            console.log('isGoBack: '+ isGoBack);
+            console.log('goBackParameter: ' + JSON.stringify(goBackParameter));
+            console.log('accountStatusApiRs: ' + accountStatusApiRs)
+            console.log('parentListApiRs: ' + parentListApiRs)
+            if (isGoBack) {
+                if (goBackParameter != null) {
+                    $('#systemAccount').val(goBackParameter['systemAccountOutput']);
+                    $('#userAccountStatusList').val(goBackParameter['userAccountStatusListOutput']);
+                    $('#userName').val(goBackParameter['userNameOutput']);
+                    $('#salesNumber').val(goBackParameter['salesNumberOutput']);
+                    $('#deptSelect').val(goBackParameter['deptSelectOutput']);
+                    if ($('#editDialog #deptSelect').val() != null && $('#editDialog #deptSelect').val() != '') {
+                        var formData = {
+                            depId: $('#editDialog #deptSelect').val()
+                        }
+                        $.when(
+                            branchListApi(formData),
+                            depRoleListApi(formData)
+                        ).done(function(rs1,rs2){
+                            $('#branchSelect').val(goBackParameter['branchSelectOutput']);
+                            $('#roleNameSelect').val(goBackParameter['roleNameSelectOutput']);
+                        });
+                    }
+
+                }else {
+                    $('#systemAccount').val('');
+                    $('#userAccountStatusList').val('');
+                    $('#userName').val('');
+                    $('#salesNumber').val('');
+                    $('#deptSelect').val('');
+                    $('#branchSelect').val('');
+                    $('#roleNameSelect').val('');
+                }
+            }
+        });
+
+
         $('#deptSelect').change(function () {
+            console.log('通路別 change event: ')
             $("#editDialog #branchSelect").empty();
             $("#editDialog #branchSelect").append('<option checked value="">請選擇分支機構</option>');
 
@@ -202,50 +251,57 @@
                 var formData = {
                     depId: $('#editDialog #deptSelect').val()
                 }
-                $.ajax({
-                    url: /*[[@{/jd/common/branchList}]]*/,
-                    contentType: 'application/json',
-                    type: "POST",
-                    async: true,
-                    data: JSON.stringify(formData),
-                    success: function (response) {
-                        if (response.result == 'SUCCESS') {
-                            if (response.resultData.length > 0) {
-                                for (var i = 0; i < response.resultData.length; i++) {
-                                    var option = "<option value='" + response.resultData[i].branchId + "'>" + response.resultData[i].depName + "</option>";
-                                    $("#editDialog #branchSelect").append(option);
-                                }
-                            }
-                        } else {
-                            alertMsg('系統發生錯誤');
-                        }
-                    }
-                });
-
-                $.ajax({
-                    url: /*[[@{/jd/common/depRoleList}]]*/,
-                    contentType: 'application/json',
-                    type: "POST",
-                    async: true,
-                    data: JSON.stringify(formData),
-                    success: function (response) {
-                        console.log('depRoleList');
-                        console.log(JSON.stringify(response));
-                        if (response.result == 'SUCCESS') {
-                            if (response.resultData.length > 0) {
-                                for (var i = 0; i < response.resultData.length; i++) {
-                                    var option = "<option value='" + response.resultData[i].roleId + "'>" + response.resultData[i].roleName + "</option>";
-                                    $("#editDialog #roleNameSelect").append(option);
-                                }
-                            }
-                        } else {
-                            alertMsg('系統發生錯誤');
-                        }
-                    }
-                });
+                branchListApi(formData);
+                depRoleListApi(formData);
             }
         });
     });
+
+    function branchListApi(formData) {
+        return $.ajax({
+            url: /*[[@{/jd/common/branchList}]]*/,
+            contentType: 'application/json',
+            type: "POST",
+            async: true,
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response.result == 'SUCCESS') {
+                    if (response.resultData.length > 0) {
+                        for (var i = 0; i < response.resultData.length; i++) {
+                            var option = "<option value='" + response.resultData[i].branchId + "'>" + response.resultData[i].depName + "</option>";
+                            $("#editDialog #branchSelect").append(option);
+                        }
+                    }
+                } else {
+                    alertMsg('系統發生錯誤');
+                }
+            }
+        });
+    }
+
+    function depRoleListApi(formData) {
+        return $.ajax({
+            url: /*[[@{/jd/common/depRoleList}]]*/,
+            contentType: 'application/json',
+            type: "POST",
+            async: true,
+            data: JSON.stringify(formData),
+            success: function (response) {
+                console.log('depRoleList');
+                console.log(JSON.stringify(response));
+                if (response.result == 'SUCCESS') {
+                    if (response.resultData.length > 0) {
+                        for (var i = 0; i < response.resultData.length; i++) {
+                            var option = "<option value='" + response.resultData[i].roleId + "'>" + response.resultData[i].roleName + "</option>";
+                            $("#editDialog #roleNameSelect").append(option);
+                        }
+                    }
+                } else {
+                    alertMsg('系統發生錯誤');
+                }
+            }
+        });
+    }
 
     function searchOnlineChange() {
         if (($('#systemAccount').val() == null || $('#systemAccount').val() == '') &&

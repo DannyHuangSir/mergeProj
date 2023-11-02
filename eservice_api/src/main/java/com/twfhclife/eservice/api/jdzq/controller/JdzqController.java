@@ -1,5 +1,6 @@
 package com.twfhclife.eservice.api.jdzq.controller;
 
+import com.google.gson.Gson;
 import com.twfhclife.eservice.api.jdzq.domain.*;
 import com.twfhclife.eservice.api.jdzq.model.*;
 import com.twfhclife.eservice.api.jdzq.service.JdzqService;
@@ -290,6 +291,9 @@ public class JdzqController extends BaseController {
 
     @PostMapping(value = "/jdGetPolicyTypeNameList", produces = { "application/json" })
     public ResponseEntity<?> jdGetPolicyTypeNameList(@RequestBody PolicyClaimDetailVo vo){
+        Gson gson = new Gson();
+        String json = gson.toJson(vo);
+        logger.info("PolicyClaimDetailVo: {}", json);
         ApiResponseObj<PolicyClaimDetailResponse> apiResponseObj = new ApiResponseObj<>();
         ReturnHeader returnHeader = new ReturnHeader();
         try {
