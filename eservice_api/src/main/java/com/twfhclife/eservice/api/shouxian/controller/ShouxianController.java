@@ -269,7 +269,15 @@ public class ShouxianController extends BaseController {
             PolicyBaseVo policyBase = shouxianService.getPolicyBase(vo.getPolicyNo());
             logger.info("getPolicyExpireOfPayment: policyBase: {}", new Gson().toJson(policyBase));
             resp.setPolicyBase(policyBase);
-            resp.setPayments(shouxianService.getExpireOfPayment(vo.getPolicyNo()));
+            if (StringUtils.isNotBlank(vo.getPolicyNo()) && StringUtils.trim(vo.getPolicyNo()).length() == 10) {
+                String trimPolicyNo = StringUtils.trim(vo.getPolicyNo());
+                String insuType = trimPolicyNo.substring(0, 2);
+                String grpNo = trimPolicyNo.substring(2, 3);
+                String seqNo = trimPolicyNo.substring(3, 10);
+                resp.setPayments(shouxianService.getExpireOfPayment(trimPolicyNo, insuType, grpNo, seqNo));
+            }
+
+
             returnHeader.setReturnHeader(ReturnHeader.SUCCESS_CODE, "", "", "");
             apiResponseObj.setReturnHeader(returnHeader);
             apiResponseObj.setResult(resp);

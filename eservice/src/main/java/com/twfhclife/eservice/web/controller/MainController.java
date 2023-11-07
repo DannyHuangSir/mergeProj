@@ -80,7 +80,12 @@ public class MainController extends BaseController {
 	@GetMapping("/demo")
 	public String demo() {
 		logger.info("open frontstage/demo.html");
-		return "frontstage/demo";
+		return "fontello/demo";
+	}
+
+	@GetMapping("/demopage")
+	public String demopage() {
+		return "testpage";
 	}
 
 	@GetMapping("/policyAutopay2")
