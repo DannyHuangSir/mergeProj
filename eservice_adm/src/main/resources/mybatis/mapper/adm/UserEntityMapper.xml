@@ -112,49 +112,51 @@
 				)
 			</if>
 		</where>
-		union
-		SELECT
-		<include refid="Base_Column_List" />
-		FROM
-		ESERVICE_ADM.DBO.USER_ENTITY
-		<where>
-			<if test="userEntityVo.username != null and userEntityVo.username != ''"> AND UPPER(USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.username}),'%'))</if>
-			<if test="userEntityVo.lastName != null and userEntityVo.lastName != ''"> AND UPPER(CONCAT(LAST_NAME, FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.lastName}),'%'))</if>
-			AND REALM_ID = 'elife_jdzq'
-			<if test="userEntityVo.department != null and userEntityVo.department != ''">
-				AND ID IN (
-				SELECT
-				udd.USER_ID
-				FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udd
-				LEFT JOIN ESERVICE_ADM.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID
-				WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
-				UNION ALL
-				SELECT
-				udd.USER_ID
-				FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
-				LEFT JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID
-				WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
-				)
-			</if>
-			<if test="userEntityVo.jobTitle != null and userEntityVo.jobTitle != ''">
-				AND ID IN (
-				SELECT
-				udt.USER_ID
-				FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udt
-				LEFT JOIN ESERVICE_ADM.DBO.JOB_TITLE jt on udt.TITLE_ID=jt.TITLE_ID
-				WHERE UPPER(jt.TITLE_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.jobTitle}),'%'))
-				)
-			</if>
-			<if test="userEntityVo.roleName != null and userEntityVo.roleName != ''">
-				AND ID IN (
-				SELECT
-				urr.USER_ID
-				FROM ESERVICE_ADM.DBO.USER_ROLE urr
-				LEFT JOIN ESERVICE_ADM.DBO.ROLE rr on urr.ROLE_ID=rr.ROLE_ID
-				WHERE UPPER(rr.ROLE_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.roleName}),'%'))
-				)
-			</if>
-		</where>
+		<if test="userEntityVo.systemId == null or userEntityVo.systemId == ''.toString() or userEntityVo.systemId == 'eservice_jd'.toString()">
+			union
+			SELECT
+			<include refid="Base_Column_List" />
+			FROM
+			ESERVICE_ADM.DBO.USER_ENTITY
+			<where>
+				<if test="userEntityVo.username != null and userEntityVo.username != ''"> AND UPPER(USERNAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.username}),'%'))</if>
+				<if test="userEntityVo.lastName != null and userEntityVo.lastName != ''"> AND UPPER(CONCAT(LAST_NAME, FIRST_NAME)) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.lastName}),'%'))</if>
+				AND REALM_ID = 'elife_jdzq'
+				<if test="userEntityVo.department != null and userEntityVo.department != ''">
+					AND ID IN (
+					SELECT
+					udd.USER_ID
+					FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udd
+					LEFT JOIN ESERVICE_ADM.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID
+					WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
+					UNION ALL
+					SELECT
+					udd.USER_ID
+					FROM ESERVICE_JD.DBO.USER_DEPARTMENT udd
+					LEFT JOIN ESERVICE_JD.DBO.DEPARTMENT dd on udd.DEP_ID=dd.DEP_ID
+					WHERE UPPER(dd.DEP_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.department}),'%'))
+					)
+				</if>
+				<if test="userEntityVo.jobTitle != null and userEntityVo.jobTitle != ''">
+					AND ID IN (
+					SELECT
+					udt.USER_ID
+					FROM ESERVICE_ADM.DBO.USER_DEPARTMENT udt
+					LEFT JOIN ESERVICE_ADM.DBO.JOB_TITLE jt on udt.TITLE_ID=jt.TITLE_ID
+					WHERE UPPER(jt.TITLE_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.jobTitle}),'%'))
+					)
+				</if>
+				<if test="userEntityVo.roleName != null and userEntityVo.roleName != ''">
+					AND ID IN (
+					SELECT
+					urr.USER_ID
+					FROM ESERVICE_ADM.DBO.USER_ROLE urr
+					LEFT JOIN ESERVICE_ADM.DBO.ROLE rr on urr.ROLE_ID=rr.ROLE_ID
+					WHERE UPPER(rr.ROLE_NAME) LIKE UPPER(CONCAT(CONCAT('%', #{userEntityVo.roleName}),'%'))
+					)
+				</if>
+			</where>
+		</if>
 	</sql>
 	
 	<!-- 取得人員管理查詢結果(分頁) -->
