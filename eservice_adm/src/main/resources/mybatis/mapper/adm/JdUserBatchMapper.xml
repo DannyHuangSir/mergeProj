@@ -29,7 +29,7 @@
         #{jdUserVo.onlineFlag,jdbcType=VARCHAR},
         #{jdUserVo.status,jdbcType=VARCHAR},
         ESERVICE.DBO.FN_ENBASE64(#{jdUserVo.userName,jdbcType=VARCHAR}),
-        getdate(),
+        #{jdUserVo.loginTime},
         #{jdUserVo.clauseFlag,jdbcType=VARCHAR},
         #{jdUserVo.serialNum,jdbcType=VARCHAR},
         #{jdUserVo.icId,jdbcType=VARCHAR},
