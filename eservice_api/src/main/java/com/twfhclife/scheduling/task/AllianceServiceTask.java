@@ -1153,7 +1153,7 @@ public class AllianceServiceTask {
 		log.info("-----------Start policyClaim notifyUnProcessedTrans Task.-----------");
 		try {
 			Float lastSeqId = null;
-			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
+			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1",OnlineChangeUtil.TWFHCLIFE_NOT_PROCESSED_OVER_ONEDAY_ADM);
 			List<String> receivers = (List) mailInfo.get("receivers");
 			while(doSendNotify(lastSeqId, receivers) != null);
 		} catch (Exception e) {
@@ -1194,7 +1194,7 @@ public class AllianceServiceTask {
 		log.info("-----------Start policyClaim notifyUnProcessedFileReceive Task.-----------");
 		try {
 			Float lastSeqId = null;
-			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
+			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1",OnlineChangeUtil.TWFHCLIFE_NOT_PROCESSED_FOR_MARK_ADM);
 			List<String> receivers = (List) mailInfo.get("receivers");
 			while(doSendNotifyFileReceive(lastSeqId, receivers) != null);
 		} catch (Exception e) {
@@ -1235,7 +1235,7 @@ public class AllianceServiceTask {
 		log.info("-----------Start policyClaim unProcessedSendAllianceEnable Task.-----------");
 		try {
 			Float lastSeqId = null;
-			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
+			Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1",OnlineChangeUtil.TWFHCLIFE_NOT_PROCESSED_FOR_ALLIANCE_ADM);
 			List<String> receivers = (List) mailInfo.get("receivers");
 			while(doSendNotifySendAlliance(lastSeqId, receivers) != null);
 		} catch (Exception e) {
@@ -1305,7 +1305,7 @@ public class AllianceServiceTask {
 			} else {
 				// 20220629 by 203990
 				// 非連線上傳失敗, 通知後台管理人員
-				Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1");
+				Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo("1",OnlineChangeUtil.TWFHCLIFE_ADM);
 				//發送系統管理員
 				long timeMillis = System.currentTimeMillis();
 				List<String> receivers = new ArrayList<String>();

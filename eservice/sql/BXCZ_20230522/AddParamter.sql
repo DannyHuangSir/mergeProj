@@ -430,3 +430,120 @@ INSERT INTO  ESERVICE_ADM.[dbo].[MESSAGING_PARAMETER]
            ,(select PARAMETER_ID  FROM   ESERVICE_ADM.dbo.PARAMETER  WHERE SYSTEM_ID='eservice_api' and PARAMETER_CODE='MSG_PARAM_TRANS_NUM')
 		   )
 GO
+
+INSERT ESERVICE_ADM.dbo.PARAMETER
+    (
+	PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER
+	)
+VALUES
+   (
+   (select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER)
+	, N'eservice_adm'
+	, N'twfhclife_yqt_not_processed_over_oneday_adm'
+	, N'臺銀人壽醫起通管理人員'
+	, N'832575@twfhclife.com.tw;831239@twfhclife.com.tw;201217@twfhclife.com.tw;201263@twfhclife.com.tw;831227@twfhclife.com.tw;202165@twfhclife.com.tw'
+	, (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_DNS_API_URL')
+	, NULL
+	, NULL
+	, 1
+	, NULL
+	, NULL
+	, getdate()
+	, N'system'
+	, NULL
+	, NULL
+	)
+go
+
+INSERT ESERVICE_ADM.dbo.PARAMETER
+    (
+	PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER
+	)
+VALUES
+   (
+   (select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER)
+	, N'eservice_adm'
+	, N'twfhclife_yqt__not_processed_for_alliance_adm'
+	, N'臺銀人壽醫起通管理人員'
+	, N'832575@twfhclife.com.tw;831239@twfhclife.com.tw;201217@twfhclife.com.tw;201263@twfhclife.com.tw;831227@twfhclife.com.tw;202165@twfhclife.com.tw'
+	, (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_DNS_API_URL')
+	, NULL
+	, NULL
+	, 1
+	, NULL
+	, NULL
+	, getdate()
+	, N'system'
+	, NULL
+	, NULL
+	)
+go
+INSERT ESERVICE_ADM.dbo.PARAMETER
+    (
+	PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER
+	)
+VALUES
+   (
+   (select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER)
+	, N'eservice_adm'
+	, N'twfhclife_not_processed_over_oneday_adm'
+	, N'臺銀人壽保單理賠管理人員'
+	, N'832575@twfhclife.com.tw;831239@twfhclife.com.tw;201217@twfhclife.com.tw;201263@twfhclife.com.tw;831227@twfhclife.com.tw;202165@twfhclife.com.tw'
+	, (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_DNS_API_URL')
+	, NULL
+	, NULL
+	, 1
+	, NULL
+	, NULL
+	, getdate()
+	, N'system'
+	, NULL
+	, NULL
+	)
+go
+INSERT ESERVICE_ADM.dbo.PARAMETER
+    (
+	PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER
+	)
+VALUES
+   (
+   (select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER)
+	, N'eservice_adm'
+	, N'twfhclife_not_processed_for_alliance_adm'
+	, N'臺銀人壽保單理賠管理人員'
+	, N'832575@twfhclife.com.tw; 831239@twfhclife.com.tw;201217@twfhclife.com.tw;201263@twfhclife.com.tw;831227@twfhclife.com.tw;202165@twfhclife.com.tw'
+	, (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_DNS_API_URL')
+	, NULL
+	, NULL
+	, 1
+	, NULL
+	, NULL
+	, getdate()
+	, N'system'
+	, NULL
+	, NULL
+	)
+go
+INSERT ESERVICE_ADM.dbo.PARAMETER
+    (
+	PARAMETER_ID, SYSTEM_ID, PARAMETER_CODE, PARAMETER_NAME, PARAMETER_VALUE, PARAMETER_CATEGORY_ID, SORT_NO, REMARK, STATUS, ENCRYPT_TYPE, PARENT_PARAMETER_ID, CREATE_DATE, CREATE_USER, UPDATE_DATE, UPDATE_USER
+	)
+VALUES
+   (
+   (select max(parameter_id)+1 from ESERVICE_ADM.dbo.PARAMETER)
+	, N'eservice_adm'
+	, N'twfhclife_not_processed_for_mark_adm'
+	, N'臺銀人壽保單理賠管理人員'
+	, N'832575@twfhclife.com.tw; 831239@twfhclife.com.tw;201217@twfhclife.com.tw;201263@twfhclife.com.tw;831227@twfhclife.com.tw;202165@twfhclife.com.tw'
+	, (select PARAMETER_CATEGORY_ID from ESERVICE_ADM.dbo.PARAMETER_CATEGORY where CATEGORY_CODE='SYS_DNS_API_URL')
+	, NULL
+	, NULL
+	, 1
+	, NULL
+	, NULL
+	, getdate()
+	, N'system'
+	, NULL
+	, NULL
+	)
+go

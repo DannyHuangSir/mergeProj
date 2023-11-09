@@ -255,7 +255,7 @@ public class BxczController extends BaseController {
 
     private void sendPolicyClaimNotify(TransInsuranceClaimVo claimVo, String status, String mailTemplate, String smsTemplate) {
         logger.info("start send mail");
-        Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo(status);
+        Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo(status, OnlineChangeUtil.TWFHCLIFE_ADM);
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("TransNum", claimVo.getTransNum());
         //paramMap.put("TransStatus", (String) mailInfo.get("statusName"));
@@ -300,7 +300,7 @@ public class BxczController extends BaseController {
 
     private void sendMedicalNotify(TransMedicalTreatmentClaimVo claimVo, String status, String mailTemplate, String smsTemplate) {
         logger.info("start send mail");
-        Map<String, Object> mailInfo = medicalTreatmentService.getSendMailInfo(status);
+        Map<String, Object> mailInfo = medicalTreatmentService.getSendMailInfo(status,OnlineChangeUtil.TWFHCLIFE_YQT_ADM);
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("TransNum", claimVo.getTransNum());
         //paramMap.put("TransStatus", (String) mailInfo.get("statusName"));

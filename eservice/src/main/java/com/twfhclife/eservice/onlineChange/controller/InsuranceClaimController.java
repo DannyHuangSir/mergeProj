@@ -493,7 +493,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 
 	private void sendPolicyClaimNotify(TransInsuranceClaimVo claimVo, String status) {
 		logger.info("start send mail");
-		Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo(status);
+		Map<String, Object> mailInfo = insuranceClaimService.getSendMailInfo(status,OnlineChangeUtil.TWFHCLIFE_ADM);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("TransNum", claimVo.getTransNum());
 		//paramMap.put("TransStatus", (String) mailInfo.get("statusName"));

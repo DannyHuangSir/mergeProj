@@ -163,6 +163,13 @@ public interface OnlineChangeUtil {
 	
 	final String TWFHCLIFE_ELECTRONIC_ADM = "twfhclife_electronic_adm";
 
+	final String TWFHCLIFE_NOT_PROCESSED_OVER_ONEDAY_ADM = "twfhclife_not_processed_over_oneday_adm";
+	final String TWFHCLIFE_NOT_PROCESSED_FOR_ALLIANCE_ADM = "twfhclife_not_processed_for_alliance_adm";
+	final String TWFHCLIFE_NOT_PROCESSED_FOR_MARK_ADM = "twfhclife_not_processed_for_mark_adm";
+
+	final String TWFHCLIFE_YQT_NOT_PROCESSED_OVER_ONEDAY_ADM = "twfhclife_yqt_not_processed_over_oneday_adm";
+	final String TWFHCLIFE_YQT_NOT_PROCESSED_FOR_ALLIANCE_ADM = "twfhclife_yqt__not_processed_for_alliance_adm";
+
 	/** 系統收件人MAIL主題 */
 	final String SYS_MAIL_SUB = "SYS_MAIL_SUB";
 	

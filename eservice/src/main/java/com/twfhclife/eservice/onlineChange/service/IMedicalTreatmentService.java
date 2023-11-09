@@ -111,7 +111,7 @@ public interface IMedicalTreatmentService {
 	 */
 	public List<TransMedicalTreatmentClaimFileDataVo>  transInsuranceClaimFileDataVoListBase64ToMiniature(List<TransMedicalTreatmentClaimFileDataVo> list);
 	
-	public Map<String, Object> getSendMailInfo(String string);
+	public Map<String, Object> getSendMailInfo(String string,String parameterCode);
 	
 	/**
 	 * 依保單號碼找出險種

@@ -801,10 +801,16 @@ public class InsuranceClaimServiceImpl implements IInsuranceClaimService {
 		return encodedString;
 	}
 
-	public Map<String,Object> getSendMailInfo(String status) {
+	/**
+	 * 取得接收者的mail
+	 * @param status
+	 * @param parameterCode
+	 * @return
+	 */
+	public Map<String,Object> getSendMailInfo(String status, String parameterCode) {
 		String statusName = parameterDao.getStatusName(ApConstants.ONLINE_CHANGE_STATUS, status);
 		String transRemark = parameterDao.getStatusName(ApConstants.MESSAGING_PARAMETER, ApConstants.INSURANCE_CLAIM_TRANS_REMARK);
-		String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_ADM, OnlineChangeUtil.TWFHCLIFE_ADM);
+		String mailTo = parameterDao.getParameterValueByCode(ApConstants.SYSTEM_ID_ADM, parameterCode);
 		String[] mails = mailTo.split(";");
 		Map<String,Object> rMap = new HashMap<String,Object>();
 		List<String> receivers = new ArrayList<String>();

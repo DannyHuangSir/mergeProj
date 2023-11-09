@@ -113,7 +113,7 @@ public interface IInsuranceClaimService {
 	 */
 	public List<TransInsuranceClaimFileDataVo>  transInsuranceClaimFileDataVoListBase64ToMiniature(List<TransInsuranceClaimFileDataVo> list);
 	
-	public Map<String, Object> getSendMailInfo(String string);
+	public Map<String, Object> getSendMailInfo(String string,String parameterCode);
 	
 	/**
 	 * 依保單號碼找出險種

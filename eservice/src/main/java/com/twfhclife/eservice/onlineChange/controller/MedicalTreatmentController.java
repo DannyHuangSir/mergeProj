@@ -644,7 +644,7 @@ public class MedicalTreatmentController extends BaseUserDataController {
 
 	private void sendMedicalNotify(TransMedicalTreatmentClaimVo claimVo, String status) {
 		logger.info("start send mail");
-		Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo(status);
+		Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo(status,OnlineChangeUtil.TWFHCLIFE_YQT_ADM);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("TransNum", claimVo.getTransNum());
 		//paramMap.put("TransStatus", (String) mailInfo.get("statusName"));

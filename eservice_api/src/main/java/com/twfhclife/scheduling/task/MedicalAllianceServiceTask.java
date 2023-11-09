@@ -1463,7 +1463,7 @@ public class MedicalAllianceServiceTask {
         log.info("-----------Start notifyUnProcessedTrans Task.-----------");
         try {
             Float lastSeqId = null;
-            Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo("1");
+            Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo("1",OnlineChangeUtil.TWFHCLIFE_YQT_NOT_PROCESSED_OVER_ONEDAY_ADM);
             List<String> receivers = (List) mailInfo.get("receivers");
             while((lastSeqId = doSendNotify(lastSeqId, receivers)) != null);
         } catch (Exception e) {
@@ -1504,7 +1504,7 @@ public class MedicalAllianceServiceTask {
         log.info("-----------Start medical notifyUnProcessedTrans Task.-----------");
         try {
             Float lastSeqId = null;
-            Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo("1");
+            Map<String, Object> mailInfo = iMedicalTreatmentService.getSendMailInfo("1",OnlineChangeUtil.TWFHCLIFE_YQT_NOT_PROCESSED_FOR_ALLIANCE_ADM);
             List<String> receivers = (List) mailInfo.get("receivers");
             while((lastSeqId = doSendNotifySendAlliance(lastSeqId, receivers)) != null);
         } catch (Exception e) {
