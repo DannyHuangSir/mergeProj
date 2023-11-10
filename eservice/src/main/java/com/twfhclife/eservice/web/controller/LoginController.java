@@ -794,14 +794,16 @@ public class LoginController extends BaseUserDataController {
 	@Value("${eservice.bxcz.login.client_id}")
 	private String client_id;
 
+	@Value("${eservice.bxcz.callbackUrl}")
+	private String callbackUrl;
+
 	@PostMapping("/generateBxczLoginUrl")
 	public ResponseEntity<ResponseObj> generateBxczLoginUrl(HttpServletRequest request) {
 		try {
 			String actionId = UUID.randomUUID().toString().replaceAll("-", "");
 			addSession("actionId", actionId);
-			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
 			String url = pbs101url + "?response_type=code&scope=openid&client_id=" + client_id + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
-					+ "&nonce=" + actionId + "&redirect_uri=" + eserviceBxczRedirectUri;
+					+ "&nonce=" + actionId + "&redirect_uri=" + callbackUrl;
 			this.setResponseObj(ResponseObj.SUCCESS, "", url);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -814,9 +816,8 @@ public class LoginController extends BaseUserDataController {
 	public String autoBxczLogin(HttpServletRequest request) {
 		String actionId = UUID.randomUUID().toString().replaceAll("-", "");
 		addSession("actionId", actionId);
-		String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
 		return "redirect:" + pbs101url + "?response_type=code&scope=openid&client_id=" + client_id + "&state=" + Base64.getEncoder().encodeToString(new Gson().toJson(new BxczState(actionId)).getBytes())
-				+ "&nonce=" + actionId + "&redirect_uri=" + eserviceBxczRedirectUri;
+				+ "&nonce=" + actionId + "&redirect_uri=" + callbackUrl;
 	}
 
 	@GetMapping("/bxczDoLogin")
@@ -851,8 +852,7 @@ public class LoginController extends BaseUserDataController {
 				}
 			}
 
-			String eserviceBxczRedirectUri = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/bxczDoLogin";
-			String idToken = loginService.doLoinBxcz(bxczState.getActionId(), param.getCode(), eserviceBxczRedirectUri);
+			String idToken = loginService.doLoinBxcz(bxczState.getActionId(), param.getCode(), callbackUrl);
 			logger.info("call pbs-102 result id_token is: {}", idToken);
 			String rocId = parseIdToken(idToken);
 			if (StringUtils.isBlank(rocId)) {
