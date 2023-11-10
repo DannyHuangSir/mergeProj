@@ -2,7 +2,6 @@ package com.twfhclife.adm.controller.rpt;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.spire.pdf.PdfDocument;
 import com.twfhclife.adm.domain.PageResponseObj;
 import com.twfhclife.adm.domain.ResponseObj;
 import com.twfhclife.adm.model.*;
@@ -22,6 +21,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.icepdf.core.pobjects.Document;
+import org.icepdf.core.util.GraphicsRenderingHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.io.ByteArrayResource;
@@ -220,23 +221,20 @@ public class OnlineChangeController extends BaseController {
 						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
 					}
 					if (StringUtils.contains(String.valueOf(m.get("FILE_NAME")), "pdf")) {
-						PdfDocument document = new PdfDocument();
-						try {
-							document.loadFromBytes(Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64"))));
-							List<String> imagesBase64 = Lists.newArrayList();
-							for (int i = 0; i < document.getPages().getCount(); i++) {
-								try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-									BufferedImage image = document.saveAsImage(i);
-									ImageIO.write(image, "png", bos);
-									imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
-								}
-							}
-							m.put("pdfBase64", imagesBase64);
-						} finally {
-							if (document != null) {
-								document.close();
+						Document document = new Document();
+						byte[] fileBytes = Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64")));
+						document.setByteArray(fileBytes, 0, fileBytes.length, null);
+						List<String> imagesBase64 = Lists.newArrayList();
+						float scale = 2.5f;
+						float rotation = 0f;
+						for (int i = 0; i < document.getNumberOfPages(); i++) {
+							try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+								BufferedImage image = (BufferedImage) document.getPageImage(i, GraphicsRenderingHints.SCREEN, org.icepdf.core.pobjects.Page.BOUNDARY_CROPBOX, rotation, scale);
+								ImageIO.write(image, "png", bos);
+								imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
 							}
 						}
+						m.put("pdfBase64", imagesBase64);
 					}
 				}
 			}
@@ -376,23 +374,20 @@ public class OnlineChangeController extends BaseController {
 						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
 					}
 					if (StringUtils.contains(String.valueOf(m.get("FILE_NAME")), "pdf")) {
-						PdfDocument document = new PdfDocument();
-						try {
-							document.loadFromBytes(Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64"))));
-							List<String> imagesBase64 = Lists.newArrayList();
-							for (int i = 0; i < document.getPages().getCount(); i++) {
-								try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-									BufferedImage image = document.saveAsImage(i);
-									ImageIO.write(image, "png", bos);
-									imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
-								}
-							}
-							m.put("pdfBase64", imagesBase64);
-						} finally {
-							if (document != null) {
-								document.close();
+						Document document = new Document();
+						byte[] fileBytes = Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64")));
+						document.setByteArray(fileBytes, 0, fileBytes.length, null);
+						List<String> imagesBase64 = Lists.newArrayList();
+						float scale = 2.5f;
+						float rotation = 0f;
+						for (int i = 0; i < document.getNumberOfPages(); i++) {
+							try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+								BufferedImage image = (BufferedImage) document.getPageImage(i, GraphicsRenderingHints.SCREEN, org.icepdf.core.pobjects.Page.BOUNDARY_CROPBOX, rotation, scale);
+								ImageIO.write(image, "png", bos);
+								imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
 							}
 						}
+						m.put("pdfBase64", imagesBase64);
 					}
 				}
 			}
