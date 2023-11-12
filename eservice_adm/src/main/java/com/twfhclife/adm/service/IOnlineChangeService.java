@@ -541,4 +541,6 @@ public interface IOnlineChangeService {
 	int updatePolicyClaimApplyDate(String transNum);
 
 	int updateMedicalTreatmentApplyDate(String transNum);
+
+    TransInsuranceClaimFileDataVo getInsuranceClaimFile(Float id);
 }

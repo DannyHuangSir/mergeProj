@@ -689,4 +689,6 @@ public interface OnlineChangeDao {
     int updatePolicyClaimApplyDate(@Param("transNum") String transNum, @Param("date") Date date);
 
 	int updateMedicalTreatmentApplyDate(@Param("transNum") String transNum, @Param("date") Date date);
+
+	TransInsuranceClaimFileDataVo getInsuranceClaimFile(@Param("id") Float id);
 }

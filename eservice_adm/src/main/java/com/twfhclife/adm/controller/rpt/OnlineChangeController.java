@@ -15,14 +15,13 @@ import com.twfhclife.generic.api_model.ReturnHeader;
 import com.twfhclife.generic.controller.BaseController;
 import com.twfhclife.generic.util.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.icepdf.core.pobjects.Document;
-import org.icepdf.core.util.GraphicsRenderingHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.io.ByteArrayResource;
@@ -206,6 +205,17 @@ public class OnlineChangeController extends BaseController {
 		return "backstage/rpt/onlineChangeDetail-policyClaims";
 	}
 
+	@RequestMapping(value = "/showInsuranceClaimPdf", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> showInsuranceClaimPdf(Float id) throws IOException {
+		TransInsuranceClaimFileDataVo fileDataVo = onlineChangeService.getInsuranceClaimFile(id);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.set("Content-Disposition", "inline;filename=" + java.net.URLEncoder.encode(fileDataVo.getFileName(), "UTF-8"));
+		httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
+		return new ResponseEntity<>(Base64.getDecoder().decode(fileDataVo.getFileBase64()),
+				httpHeaders,
+				HttpStatus.CREATED);
+	}
+
 	@GetMapping("/onlineChange/getPolicyClaimPrint")
 	public String getPolicyClaimPrint(TransVo transVo) {
 		try {
@@ -221,20 +231,18 @@ public class OnlineChangeController extends BaseController {
 						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
 					}
 					if (StringUtils.contains(String.valueOf(m.get("FILE_NAME")), "pdf")) {
-						Document document = new Document();
-						byte[] fileBytes = Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64")));
-						document.setByteArray(fileBytes, 0, fileBytes.length, null);
-						List<String> imagesBase64 = Lists.newArrayList();
-						float scale = 2.5f;
-						float rotation = 0f;
-						for (int i = 0; i < document.getNumberOfPages(); i++) {
-							try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-								BufferedImage image = (BufferedImage) document.getPageImage(i, GraphicsRenderingHints.SCREEN, org.icepdf.core.pobjects.Page.BOUNDARY_CROPBOX, rotation, scale);
-								ImageIO.write(image, "png", bos);
-								imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
+						try (PDDocument document = PDDocument.load(Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64"))))) {
+							List<String> imagesBase64 = Lists.newArrayList();
+							PDFRenderer renderer = new PDFRenderer(document);
+							for (int i = 0; i < document.getNumberOfPages(); i++) {
+								try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+									BufferedImage image = renderer.renderImageWithDPI(i, 144);
+									ImageIO.write(image, "png", bos);
+									imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
+								}
 							}
+							m.put("pdfBase64", imagesBase64);
 						}
-						m.put("pdfBase64", imagesBase64);
 					}
 				}
 			}
@@ -374,20 +382,18 @@ public class OnlineChangeController extends BaseController {
 						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
 					}
 					if (StringUtils.contains(String.valueOf(m.get("FILE_NAME")), "pdf")) {
-						Document document = new Document();
-						byte[] fileBytes = Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64")));
-						document.setByteArray(fileBytes, 0, fileBytes.length, null);
-						List<String> imagesBase64 = Lists.newArrayList();
-						float scale = 2.5f;
-						float rotation = 0f;
-						for (int i = 0; i < document.getNumberOfPages(); i++) {
-							try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-								BufferedImage image = (BufferedImage) document.getPageImage(i, GraphicsRenderingHints.SCREEN, org.icepdf.core.pobjects.Page.BOUNDARY_CROPBOX, rotation, scale);
-								ImageIO.write(image, "png", bos);
-								imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
+						try (PDDocument document = PDDocument.load(Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64"))))) {
+							List<String> imagesBase64 = Lists.newArrayList();
+							PDFRenderer renderer = new PDFRenderer(document);
+							for (int i = 0; i < document.getNumberOfPages(); i++) {
+								try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+									BufferedImage image = renderer.renderImageWithDPI(i, 144);
+									ImageIO.write(image, "png", bos);
+									imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
+								}
 							}
+							m.put("pdfBase64", imagesBase64);
 						}
-						m.put("pdfBase64", imagesBase64);
 					}
 				}
 			}

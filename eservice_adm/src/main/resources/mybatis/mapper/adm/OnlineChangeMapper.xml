@@ -3410,5 +3410,10 @@
 		AND PRINT_DATE IS NULL
 	</update>
 
+	<select id="getInsuranceClaimFile" resultType="com.twfhclife.adm.model.TransInsuranceClaimFileDataVo">
+		SELECT FILE_BASE64 fileBase64, FILE_NAME fileName FROM  ESERVICE.DBO.TRANS_INSURANCE_CLAIM_FILEDATAS
+		WHERE FD_ID = #{id}
+	</select>
+
 </mapper>
 

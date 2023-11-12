@@ -1839,4 +1839,9 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 	public int updateMedicalTreatmentApplyDate(String transNum) {
 		return onlineChangeDao.updateMedicalTreatmentApplyDate(transNum, new Date());
 	}
+
+    @Override
+    public TransInsuranceClaimFileDataVo getInsuranceClaimFile(Float id) {
+		return onlineChangeDao.getInsuranceClaimFile(id);
+    }
 }

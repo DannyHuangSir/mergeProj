@@ -544,7 +544,7 @@
 														<div class="col-sm-12 upload-drop-zone boardDotted">
 															<th:block th:each="vo1 : ${fileDataEntry.value}">
 																<th:block th:if="${#strings.containsIgnoreCase(vo1.FILE_NAME,'.pdf')}">
-																	<img th:onclick="'javascript:imgConfirm(this,\'pdf\')'" th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}"  width="50"/>
+																	<img th:onclick="'javascript:imgConfirm(this,\'pdf\')'" th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}" th:FILE_ID="${vo1.FD_ID}"  width="50"/>
 																</th:block>
 																<th:block th:if="${#strings.containsIgnoreCase(vo1.FILE_NAME,'.jpg')}">
 																	<img th:onclick="'javascript:imgConfirm(this,\'png\')'"  th:src="'data:image/png;base64, '+${vo1.FileBase64}"  th:FILE_BASE64="${vo1.FILE_BASE64}"  width="50"/>
@@ -592,7 +592,7 @@
 					keyboard: false
 				});
 				if(fileOrPng=="pdf"){
-					$("#imgOnPrint").html('<iframe id="imgsrc" src="data:application/pdf;base64, '+obj.getAttribute('FILE_BASE64')+'" width="100%" height="100%"></iframe>');
+					$("#imgOnPrint").html('<iframe id="imgsrc" src="/eservice_adm/showInsuranceClaimPdf?id=' + obj.getAttribute("FILE_ID") + '" width="100%" height="100%"></iframe>');
 					$("#onMedicalPrint").hide();
 				}else{
 					$("#imgOnPrint").html('<img id="imgsrc" src="data:image/png;base64, '+obj.getAttribute('FILE_BASE64')+'" width="500" />');
