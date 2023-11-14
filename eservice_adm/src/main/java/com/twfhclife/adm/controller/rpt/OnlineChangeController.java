@@ -205,83 +205,71 @@ public class OnlineChangeController extends BaseController {
 		return "backstage/rpt/onlineChangeDetail-policyClaims";
 	}
 
-	@RequestMapping(value = "/showInsuranceClaimPdf", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> showInsuranceClaimPdf(Float id) throws IOException {
+	@RequestMapping(value = "/showInsuranceClaimFile", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> showInsuranceClaimFile(Float id) throws IOException {
 		TransInsuranceClaimFileDataVo fileDataVo = onlineChangeService.getInsuranceClaimFile(id);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.set("Content-Disposition", "inline;filename=" + java.net.URLEncoder.encode(fileDataVo.getFileName(), "UTF-8"));
-		httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
-		return new ResponseEntity<>(Base64.getDecoder().decode(fileDataVo.getFileBase64()),
+		byte[] decode = Base64.getDecoder().decode(fileDataVo.getFileBase64());
+		String type = checkBase64ImgOrPdf(decode);
+		if (StringUtils.equals("pdf", type)) {
+			httpHeaders.setContentType(MediaType.parseMediaType("application/" + checkBase64ImgOrPdf(decode)));
+		} else {
+			httpHeaders.setContentType(MediaType.parseMediaType("image/" + checkBase64ImgOrPdf(decode)));
+		}
+		return new ResponseEntity<>(decode,
 				httpHeaders,
 				HttpStatus.CREATED);
 	}
 
-	@GetMapping("/onlineChange/getPolicyClaimPrint")
-	public String getPolicyClaimPrint(TransVo transVo) {
-		try {
-			Map<String, Object> map = onlineChangeService.getTransInsuranceClaim(transVo);
-			addAttribute("detailData", map);
-			List<Map> list = (List) map.get("FileDatas");
-			Map<String, List<Map<String, Object>>> fileData = Maps.newHashMap();
-			if (CollectionUtils.isNotEmpty(list)) {
-				for (Map m : list) {
-					if (fileData.get(m.get("TYPE")) != null) {
-						fileData.get(m.get("TYPE")).add(m);
-					} else {
-						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
-					}
-					if (StringUtils.contains(String.valueOf(m.get("FILE_NAME")), "pdf")) {
-						try (PDDocument document = PDDocument.load(Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64"))))) {
-							List<String> imagesBase64 = Lists.newArrayList();
-							PDFRenderer renderer = new PDFRenderer(document);
-							for (int i = 0; i < document.getNumberOfPages(); i++) {
-								try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-									BufferedImage image = renderer.renderImageWithDPI(i, 144);
-									ImageIO.write(image, "png", bos);
-									imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
-								}
-							}
-							m.put("pdfBase64", imagesBase64);
-						}
-					}
-				}
+	@RequestMapping(value = "/showMedicalInfoFile", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> showMedicalInfoFile(Float id) throws IOException {
+		MedicalTreatmentClaimFileDataVo fileDataVo = onlineChangeService.getMedicalInfoClaimFile(id);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.set("Content-Disposition", "inline;filename=" + java.net.URLEncoder.encode(fileDataVo.getFileName(), "UTF-8"));
+		if (StringUtils.isNotBlank(fileDataVo.getFileBase64())) {
+			byte[] decode = Base64.getDecoder().decode(fileDataVo.getFileBase64());
+			String type = checkBase64ImgOrPdf(decode);
+			if (StringUtils.equals("pdf", type)) {
+				httpHeaders.setContentType(MediaType.parseMediaType("application/" + checkBase64ImgOrPdf(decode)));
+			} else {
+				httpHeaders.setContentType(MediaType.parseMediaType("image/" + checkBase64ImgOrPdf(decode)));
 			}
-			addAttribute("fileData", fileData);
-			SignRecord signRecord = onlineChangeService.getNewSignStatus(String.valueOf(map.get("TRANS_NUM")));
-			if (signRecord != null) {
-				Map<String, Object> signRecordMap = Maps.newHashMap();
-				signRecordMap.put("idVerifyTime", signRecord.getIdVerifyTime() != null ? DateUtil.formatDateTime(signRecord.getIdVerifyTime(), "yyyy/MM/dd HH:mm") : "");
-				signRecordMap.put("idVerifyStatus", SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), null));
-				signRecordMap.put("signTime", signRecord.getSignTime() != null ? DateUtil.formatDateTime(signRecord.getSignTime(), "yyyy/MM/dd HH:mm") : "");
-				signRecordMap.put("signStatus", SignStatusUtil.signStatusToStr(null, signRecord.getSignStatus()));
-				signRecordMap.put("signDownload", signRecord.getSignDownload());
-				signRecordMap.put("signFileId", signRecord.getSignFileId());
-				addAttribute("signRecord", signRecordMap);
-			}
-		} catch (Exception e) {
-			logger.error("Unable to getPolicyClaimPrint: {}", ExceptionUtils.getStackTrace(e));
-			addDefaultSystemError();
+			return new ResponseEntity<>(decode,
+					httpHeaders,
+					HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		return "backstage/rpt/onlineChangeDetail-policyClaimPrint";
 	}
 
-	private List<byte[]> pdfBufferedImage(PDDocument doc ) {
-		try {
-			PDFRenderer renderer = new PDFRenderer(doc);
-			int pageCount = doc.getNumberOfPages();
-			List<byte[]> pdfImgArray = Lists.newArrayList();
-			for (int i = 0; i < pageCount; i++) {
-				try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-					BufferedImage image = renderer.renderImageWithDPI(i, 144);
-					ImageIO.write(image, "png", bos);
-					pdfImgArray.add(bos.toByteArray());
-				}
-			}
-			return pdfImgArray;
-		} catch (IOException e) {
-			e.printStackTrace();
+	@RequestMapping(value = "/showMedicalFileData", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> showMedicalFileData(Float id) throws IOException {
+		MedicalTreatmentClaimFileDataVo fileDataVo = onlineChangeService.getMedicalInfoClaimFileData(id);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.set("Content-Disposition", "inline;filename=" + java.net.URLEncoder.encode(fileDataVo.getFileName(), "UTF-8"));
+		byte[] decode = Base64.getDecoder().decode(fileDataVo.getFileBase64());
+		String type = checkBase64ImgOrPdf(decode);
+		if (StringUtils.equals("pdf", type)) {
+			httpHeaders.setContentType(MediaType.parseMediaType("application/" + checkBase64ImgOrPdf(decode)));
+		} else {
+			httpHeaders.setContentType(MediaType.parseMediaType("image/" + checkBase64ImgOrPdf(decode)));
 		}
-		return null;
+		return new ResponseEntity<>(decode,
+				httpHeaders,
+				HttpStatus.CREATED);
+	}
+
+	private String checkBase64ImgOrPdf(byte[] b) {
+		String type = "";
+		if (35152 == ((b[0] & 0xFF) << 8 | b[1] & 0xFF)) {
+			type = "png";
+		} else if (65496 == ((b[0] & 0xFF) << 8 | b[1] & 0xFF)) {
+			type = "jpg";
+		} else {
+			type = "pdf";
+		}
+		return type;
 	}
 
 	/**
@@ -319,18 +307,6 @@ public class OnlineChangeController extends BaseController {
 					addAttribute("status", code);
 				}
 			}
-			List<Map> list = (List) detailDataMap.get("FileDatas");
-			Map<String, List<Map<String, Object>>> fileData = Maps.newHashMap();
-			if (CollectionUtils.isNotEmpty(list)) {
-				for (Map m : list) {
-					if (fileData.get(m.get("TYPE")) != null) {
-						fileData.get(m.get("TYPE")).add(m);
-					} else {
-						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
-					}
-				}
-			}
-			addAttribute("fileData", fileData);
 			SignRecord signRecord = onlineChangeService.getNewSignStatus(String.valueOf(detailDataMap.get("TRANS_NUM")));
 			if (signRecord != null) {
 				Map<String, Object> signRecordMap = Maps.newHashMap();
@@ -348,74 +324,6 @@ public class OnlineChangeController extends BaseController {
 		}
 		return "backstage/rpt/onlineChangeDetail-medicalTreatment";
 	}
-
-	@GetMapping("/onlineChange/medicalTreatmentPrint")
-	public String medicalTreatmentPrint(TransVo transVo) {
-		try {
-			//授權醫療單位名稱
-			addAttribute("hospitalList", onlineChangeService.getHospitalList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
-			//授權醫療保險公司名稱
-			addAttribute("hospitalInsuranceCompanyList", onlineChangeService.getHospitalInsuranceCompanyList(ApConstants.MEDICAL_TREATMENT_PARAMETER_CODE));
-			Map<String, Object> detailDataMap = onlineChangeService.getMedicalTreatmentClaim(transVo);
-			addAttribute("detailData", detailDataMap);
-			if (detailDataMap.containsKey("CLAIMS_SEQ_ID")) {
-				addAttribute("medicalInfo", onlineChangeService.getMedicalInfo((Double) detailDataMap.get("CLAIMS_SEQ_ID")));
-			}
-			if (detailDataMap.containsKey("ALLIANCE_STATUS")) {
-				String code = (String) detailDataMap.get("ALLIANCE_STATUS");
-				ParameterVo parameterVo = new ParameterVo();
-				parameterVo.setParameterCode("MEDICAL_INTERFACE_STATUS_" + code);
-				parameterVo.setSystemId(ApConstants.SYSTEM_API_ID);
-				List<ParameterVo> parameterVos = parameterService.getParameter(parameterVo);
-				if (CollectionUtils.isNotEmpty(parameterVos)) {
-					addAttribute("statusStr", parameterVos.get(0).getParameterName());
-					addAttribute("status", code);
-				}
-			}
-			List<Map> list = (List) detailDataMap.get("FileDatas");
-			Map<String, List<Map<String, Object>>> fileData = Maps.newHashMap();
-			if (CollectionUtils.isNotEmpty(list)) {
-				for (Map m : list) {
-					if (fileData.get(m.get("TYPE")) != null) {
-						fileData.get(m.get("TYPE")).add(m);
-					} else {
-						fileData.put(m.get("TYPE").toString(), Lists.newArrayList(m));
-					}
-					if (StringUtils.contains(String.valueOf(m.get("FILE_NAME")), "pdf")) {
-						try (PDDocument document = PDDocument.load(Base64.getDecoder().decode(String.valueOf(m.get("FILE_BASE64"))))) {
-							List<String> imagesBase64 = Lists.newArrayList();
-							PDFRenderer renderer = new PDFRenderer(document);
-							for (int i = 0; i < document.getNumberOfPages(); i++) {
-								try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-									BufferedImage image = renderer.renderImageWithDPI(i, 144);
-									ImageIO.write(image, "png", bos);
-									imagesBase64.add(Base64.getEncoder().encodeToString(bos.toByteArray()));
-								}
-							}
-							m.put("pdfBase64", imagesBase64);
-						}
-					}
-				}
-			}
-			addAttribute("fileData", fileData);
-			SignRecord signRecord = onlineChangeService.getNewSignStatus(String.valueOf(detailDataMap.get("TRANS_NUM")));
-			if (signRecord != null) {
-				Map<String, Object> signRecordMap = Maps.newHashMap();
-				signRecordMap.put("idVerifyTime", signRecord.getIdVerifyTime() != null ? DateUtil.formatDateTime(signRecord.getIdVerifyTime(), "yyyy/MM/dd HH:mm") : "");
-				signRecordMap.put("idVerifyStatus", SignStatusUtil.signStatusToStr(signRecord.getIdVerifyStatus(), null));
-				signRecordMap.put("signTime", signRecord.getSignTime() != null ? DateUtil.formatDateTime(signRecord.getSignTime(), "yyyy/MM/dd HH:mm") : "");
-				signRecordMap.put("signStatus", SignStatusUtil.signStatusToStr(null, signRecord.getSignStatus()));
-				signRecordMap.put("signDownload", signRecord.getSignDownload());
-				signRecordMap.put("signFileId", signRecord.getSignFileId());
-				addAttribute("signRecord", signRecordMap);
-			}
-		} catch (Exception e) {
-			logger.error("Unable to getTransInsuranceClaim: {}", ExceptionUtils.getStackTrace(e));
-			addDefaultSystemError();
-		}
-		return "backstage/rpt/onlineChangeDetail-medicalTreatmentPrint";
-	}
-
 
 	/**
 	 * 醫療

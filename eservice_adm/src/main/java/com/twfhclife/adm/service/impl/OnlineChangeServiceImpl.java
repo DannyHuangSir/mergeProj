@@ -1561,16 +1561,14 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 		if (medicalInfoList != null && medicalInfoList.size() >= 1) {
 			for (TransMedicalTreatmentClaimMedicalInfoVo medicalInfo : medicalInfoList) {
 				if (medicalInfo.getDtypeList() != null && medicalInfo.getDtypeList().size() >= 1) {
-					boolean isFirst = true;
 					for (Map<String, String> map : medicalInfo.getDtypeList()) {
 						String fileBase64 = map.get("fileBase64");
-						map.put("fileBase64New", fileBase64);
 						if (fileBase64 != null && !"".equals(fileBase64)) {
 							//直接将原文件base64 转为 缩图的 base64
 							byte[] decode = Base64.getDecoder().decode(fileBase64);
 							//获取类型
 							String base64Type = this.checkBase64ImgOrPdf(decode);
-							StringBuilder sb = new StringBuilder();
+							map.put("fileType", base64Type);
 							logger.info("--------------------------------------------------PDF Base64  文件的类型="+base64Type);
 							if (base64Type!=null && ("pdf".equalsIgnoreCase(base64Type))) {
 								File f = new File("print/tmp/file/" + UUID.randomUUID() + ".pdf");
@@ -1583,25 +1581,9 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 									throw new RuntimeException(e);
 								}
 								try (PDDocument doc = PDDocument.load(f); ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
-									List<byte[]> images = mulPdfBufferedImage(doc);
 									String miniatureBase64 = this.imgBase64(doc, baos);
 									logger.info("--------------------------------------------------PDF Base64转换为缩图-----Base64  is  not  null");
 									map.put("fileBase64", miniatureBase64);
-									if (org.apache.commons.collections.CollectionUtils.isNotEmpty(images)) {
-										for (byte[] i : images) {
-											String base64 = Base64.getEncoder().encodeToString(i);
-											if (!map.containsKey("fileBase64New")) {
-												map.put("fileBase64New", base64);
-											}
-											if (isFirst) {
-												isFirst = false;
-											} else {
-												sb.append("||");
-											}
-											sb.append(base64);
-										}
-									}
-									map.put("fileBase64New", sb.toString());
 								} catch (Exception e) {
 									throw new RuntimeException(e);
 								}
@@ -1612,25 +1594,6 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
 			}
 		}
 		return medicalInfoList;
-	}
-
-	private List<byte[]> mulPdfBufferedImage(PDDocument doc) {
-		try {
-			PDFRenderer renderer = new PDFRenderer(doc);
-			int pageCount = doc.getNumberOfPages();
-			List<byte[]> pdfImgArray = Lists.newArrayList();
-			for (int i = 0; i < pageCount; i++) {
-				try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-					BufferedImage image = renderer.renderImageWithDPI(i, 144);
-					ImageIO.write(image, "png", bos);
-					pdfImgArray.add(bos.toByteArray());
-				}
-			}
-			return pdfImgArray;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override
@@ -1844,4 +1807,14 @@ public class OnlineChangeServiceImpl implements IOnlineChangeService {
     public TransInsuranceClaimFileDataVo getInsuranceClaimFile(Float id) {
 		return onlineChangeDao.getInsuranceClaimFile(id);
     }
+
+    @Override
+    public MedicalTreatmentClaimFileDataVo getMedicalInfoClaimFile(Float id) {
+		return onlineChangeDao.getMedicalInfoClaimFile(id);
+    }
+
+	@Override
+	public MedicalTreatmentClaimFileDataVo getMedicalInfoClaimFileData(Float id) {
+		return onlineChangeDao.getMedicalInfoClaimFileData(id);
+	}
 }

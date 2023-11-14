@@ -3319,6 +3319,7 @@
 	</resultMap>
 
 	<resultMap id="DtypeMap" type="map">
+		<result column="MI_ID" property="miId"/>
 		<result column="DTYPE_NAME" property="name"/>
 		<result column="DTYPE" property="value"/>
 		<result column="FILE_BASE64" property="fileBase64"/>
@@ -3327,7 +3328,7 @@
 	</resultMap>
 
 	<select id="getMedicalInfoByClaimId" resultMap="MedicalInfoMap">
-		select HS_TIME, HE_TIME, OTYPE_NAME, DEP_NAME, SUB_DEP_NAME, DTYPE_NAME, DTYPE, FILE_BASE64, FILE_NAME, FILE_ID FROM
+		select  CONVERT(VARCHAR(100), MI_ID) MI_ID, HS_TIME, HE_TIME, OTYPE_NAME, DEP_NAME, SUB_DEP_NAME, DTYPE_NAME, DTYPE, FILE_BASE64, FILE_NAME, FILE_ID FROM
 		ESERVICE.dbo.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
 		where CLAIMS_SEQ_ID = #{claimSeqId}
 	</select>
@@ -3415,5 +3416,14 @@
 		WHERE FD_ID = #{id}
 	</select>
 
+	<select id="getMedicalInfoClaimFile" resultType="com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo">
+		SELECT FILE_BASE64 fileBase64, FILE_NAME fileName FROM ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_MEDICALINFO
+		WHERE MI_ID = #{id}
+	</select>
+
+	<select id="getMedicalInfoClaimFileData" resultType="com.twfhclife.adm.model.MedicalTreatmentClaimFileDataVo">
+		SELECT FILE_BASE64 fileBase64, FILE_NAME fileName FROM ESERVICE.DBO.TRANS_MEDICAL_TREATMENT_CLAIM_FILEDATAS
+		WHERE FD_ID = #{id}
+	</select>
 </mapper>
 

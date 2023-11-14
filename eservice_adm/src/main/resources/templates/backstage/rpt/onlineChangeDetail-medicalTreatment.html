@@ -242,7 +242,7 @@
 						</div>
 
 
-							
+
 								<div class="profile-info-row">
 									<div class="profile-info-name"> 執行審核 </div>
 									<div class="profile-info-value">
@@ -309,35 +309,6 @@
 										<a href="javascript:void(0);" id="onMedicalPrint">
 											<!-- <button type="button" class="bgOrange" onclick="window.open($('#imgsrc').attr('src'))" id="go">列印</button> -->
 											<button type="button" class="bgOrange" onclick="onMedicalPrint();" id="go">列印</button>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="modal fade in" id="modal-container-print-detail" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<div class="modal-dialog" style="width:750px;">
-								<div class="modal-content lock-up">
-									<div class="modal-header">申請資料
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-									</div>
-									<div class="modal-body clearfix  grey2">
-										<div class="form-horizontal" style="border-bottom: 0;">
-											<div class="form-group">
-												<label class="col-sm-3">列印下列資料：</label>
-												<div class="col-sm-9">
-													<button style="width: 80px;border: 0;padding: 5px 0;" type="button" class="bgOrange" th:onclick="'javascript:onPrint(\'' + ${detailData['TRANS_NUM']} + '\');'">列印</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="modal-body clearfix  grey2">
-										<div  id="print_detail" class="panel panel-default profile-user-info">
-
-										</div>
-									</div>
-									<div class="modal-footer grey2">
-										<a href="#" data-dismiss="modal" aria-label="Close">
-											<button type="button" class="bgGrey lock2" id="deny">關閉視窗</button>
 										</a>
 									</div>
 								</div>
@@ -868,14 +839,8 @@
 
 								</div>
 							</div>
-
-
-
-
-
 							</div>
 						</div>
-
 					</div>			
 					</div>
 				</div>
@@ -888,18 +853,27 @@
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-        // var fileDatas = /*[[${detailData.FileDatas}]]*/;
-        // if (fileDatas != null) {
-        //     for(var i=0; i < fileDatas.length ; i++){
-		// 		if (fileDatas[i].FILE_NAME.indexOf('.pdf') >= 0 || fileDatas[i].FILE_NAME.indexOf('.PDF') >= 0) {
-		// 			var A = document.createElement("a");  
-		// 			A.setAttribute("href","/images/" + fileDatas[i].FILE_NAME);
-		// 			A.setAttribute("target","_blank");
-		// 			document.body.appendChild(A);
-		// 			A.click();
-		// 		}
-		// 	}
-        // }
+         var medicalInfos = /*[[${medicalInfo}]]*/;
+		 var medicalPrintList = []
+
+         if (medicalInfos != null) {
+		 	 for(var i=0; i < medicalInfos.length ; i++){
+             	if (medicalInfos[i].dtypeList != null) {
+             		 for(var j=0; j < medicalInfos[i].dtypeList.length ; j++){
+						medicalPrintList.push(medicalInfos[i].dtypeList[j].miId)
+					}
+             	}
+		 	}
+         }
+
+         var medicalFileDatas = /*[[${detailData.FileDatas}]]*/;
+         var medicalFilePrintList = []
+         if (medicalFileDatas != null) {
+             for(var i=0; i < medicalFileDatas.length ; i++){
+				medicalFilePrintList.push(medicalFileDatas[i].FD_ID)
+		 	}
+         }
+
 		function imgConfirm(obj){
 			  $.ajaxSetup({async: false});
 				var data = {
@@ -978,6 +952,34 @@
 					alertMsg("「檔案過大無法於畫面呈現，請至影像系統查詢」");
 				}
 			});
+			}
+
+			function onPrint(){
+				let newHtml = '<html>'
+									+'<body>'
+										+'<style>'
+									+'.profile-user-info {margin-bottom: 10px;}.profile-user-info {width: calc(100% - 24px);margin: 0 auto;}.panel {margin-bottom: 20px;background-color: #fff;border: 1px solid #ddd;border-radius: 4px;-webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);box-shadow: 0 1px 1px rgb(0 0 0 / 5%);}.panel-default>.panel-heading {color: #333;background-color: #f5f5f5;border-color: #ddd;}'
+									+'.panel-heading {padding: 10px 15px;border-bottom: 1px solid transparent;border-top-right-radius: 3px;border-top-left-radius: 3px;}.panel-body {padding: 15px;}.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {position: relative;min-height: 1px;}'
+									+'.form-horizontal .form-group {display: inline-block;width: 100%;}.form-group {margin-bottom: 10px;}.form-group>label[class*=col-] {margin-bottom: 4px;}.col-xs-4 {width: 33.333%;}.col-xs-3 {width: 25%;}.col-xs-9 {width: 75%;}table td, .detailPolicy .col-xs-8, .detailPolicy .col-xs-9 {word-wrap: break-word;word-break: break-all;}.col-xs-8 {width: 66.666%;}'
+									+'.col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {float: left;}.mobile-toggle {padding: 20px 0;}.colorGreen {color: #009B30 !important;}.upload-drop-zone {min-height: 50px;color: #DDDDDD;margin: auto;line-height: 50px;}.boardDotted {border: 2px dotted #009b38;}.col-xs-12 {width: 100%;}img {vertical-align: middle;}'
+									+'</style>'
+										+ $('#print_detail').html()
+									+'</body>'
+							 +'</html>';
+				openPdfPrint()
+				let newWin= window.open('','線上申請-詳細資料列印',null);
+				newWin.document.write(newHtml);
+				newWin.document.close()
+				newWin.print()
+			}
+
+			function openPdfPrint() {
+				$(medicalPrintList).each(function(index, e){
+					window.open("/eservice_adm/showMedicalInfoFile?id=" + e, '_blank').print()
+				})
+				$(medicalFilePrintList).each(function(index, e){
+					window.open("/eservice_adm/showMedicalFileData?id=" + e, '_blank').print()
+				})
 			}
 
 			//醫院執行醫療資料介接 button事件
@@ -1176,27 +1178,6 @@
 					$.ajaxSetup({async: true});
 				}
 			});
-			function onMedicalPrint(){
-				var newHtml = '<html>'
-									+'<body>'
-										+'<style>'
-                                    +'.profile-user-info {margin-bottom: 10px;}.profile-user-info {width: calc(100% - 24px);margin: 0 auto;}.panel {margin-bottom: 20px;background-color: #fff;border: 1px solid #ddd;border-radius: 4px;-webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);box-shadow: 0 1px 1px rgb(0 0 0 / 5%);}.panel-default>.panel-heading {color: #333;background-color: #f5f5f5;border-color: #ddd;}'
-                                    +'.panel-heading {padding: 10px 15px;border-bottom: 1px solid transparent;border-top-right-radius: 3px;border-top-left-radius: 3px;}.panel-body {padding: 15px;}.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {position: relative;min-height: 1px;}'
-                                    +'.form-horizontal .form-group {display: inline-block;width: 100%;}.form-group {margin-bottom: 10px;}.form-group>label[class*=col-] {margin-bottom: 4px;}.col-xs-4 {width: 33.333%;}.col-xs-3 {width: 25%;}.col-xs-9 {width: 75%;}table td, .detailPolicy .col-xs-8, .detailPolicy .col-xs-9 {word-wrap: break-word;word-break: break-all;}.col-xs-8 {width: 66.666%;}'
-                                    +'.col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {float: left;}.mobile-toggle {padding: 20px 0;}.colorGreen {color: #009B30 !important;}.upload-drop-zone {min-height: 50px;color: #DDDDDD;margin: auto;line-height: 50px;}.boardDotted {border: 2px dotted #009b38;}.col-xs-12 {width: 100%;}img {vertical-align: middle;}'
-                                    +'</style>'
-										+ $('#imgOnPrint').html()
-									+'</body>'
-					         +'</html>';
-				// hdhtml=window.document.head.innerHTML;
-				// bdhtml=$('#print_detail').html();
-				newWin= window.open('',' 線上申請-詳細資料列印',null);
-				newWin.document.write(newHtml);
-				newWin.document.close()
-				newWin.focus();
-				newWin.print();
-                newWin.close();
-			}
 
 			function downloadSignPdf(signFileId) {
 				var form = document.createElement("form");
@@ -1212,9 +1193,6 @@
 				document.body.appendChild(form);
 				form.submit();
 				form.remove();
-			}
-			function onPrint(transNum){
-				window.open('/eservice_adm/onlineChange/medicalTreatmentPrint?transNum=' + transNum)
 			}
     /*]]>*/
 </script>
