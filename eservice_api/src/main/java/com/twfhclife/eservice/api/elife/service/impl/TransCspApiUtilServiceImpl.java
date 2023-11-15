@@ -5,6 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -50,11 +56,11 @@ public class TransCspApiUtilServiceImpl implements ITransCspApiUtilService{
 	
 
 	
-	public TransCspApiUtilServiceImpl(){
+	public TransCspApiUtilServiceImpl() throws Exception{
 		initRestTemplate();
 	}
 	
-	private void initRestTemplate() {
+	private void initRestTemplate()throws Exception {
 		restTemplate = new RestTemplate();
 		
 		int milliseconds = 20*1000;
@@ -62,6 +68,12 @@ public class TransCspApiUtilServiceImpl implements ITransCspApiUtilService{
 		httpRequestFactory.setConnectionRequestTimeout(milliseconds);
 		httpRequestFactory.setConnectTimeout(milliseconds);
 		httpRequestFactory.setReadTimeout(milliseconds);
+		SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+				SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+				NoopHostnameVerifier.INSTANCE);
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+		httpRequestFactory.setHttpClient(httpClient);
+
 	    restTemplate.setRequestFactory(httpRequestFactory);
 	    
 	    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
