@@ -10,6 +10,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +49,11 @@ public class CioServiceImpl implements ICioExternalService{
 	@Autowired
 	private UnionCourseDao unionCourseDao;
 	
-	public CioServiceImpl() {
+	public CioServiceImpl() throws Exception{
 		initRestTemplate();
 	}
 	
-	private void initRestTemplate() {
+	private void initRestTemplate() throws Exception{
 		// Fix the RestTemplate to be a singleton instance.
 		//restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
 		restTemplate = new RestTemplate();//force init.
@@ -59,6 +65,12 @@ public class CioServiceImpl implements ICioExternalService{
 		httpRequestFactory.setConnectionRequestTimeout(milliseconds);
 		httpRequestFactory.setConnectTimeout(milliseconds);
 		httpRequestFactory.setReadTimeout(milliseconds);
+
+		SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+				SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+				NoopHostnameVerifier.INSTANCE);
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+		httpRequestFactory.setHttpClient(httpClient);
 	    restTemplate.setRequestFactory(httpRequestFactory);
 
 	    // Add converters

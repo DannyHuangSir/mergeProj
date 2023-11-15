@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpStatus;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +61,7 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
 		ACCESS_TOKEN = aCCESS_TOKEN;
 	}
 	
-	public MedicalTreatmentExternalServiceImpl() {
+	public MedicalTreatmentExternalServiceImpl() throws Exception{
 		
 		//Fix the RestTemplate to be a singleton instance.
 	    restTemplate = (this.restTemplate == null) ? new RestTemplate() : restTemplate;
@@ -67,6 +73,12 @@ public class MedicalTreatmentExternalServiceImpl implements IMedicalTreatmentExt
 		httpRequestFactory.setConnectionRequestTimeout(milliseconds);
 		httpRequestFactory.setConnectTimeout(milliseconds);
 		httpRequestFactory.setReadTimeout(milliseconds);
+
+		SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+				SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+				NoopHostnameVerifier.INSTANCE);
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+		httpRequestFactory.setHttpClient(httpClient);
 	    restTemplate.setRequestFactory(httpRequestFactory);
 
 	    // Add converters

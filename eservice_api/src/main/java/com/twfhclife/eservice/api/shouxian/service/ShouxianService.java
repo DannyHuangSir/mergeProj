@@ -15,6 +15,12 @@ import com.twfhclife.generic.utils.DateUtil;
 import com.twfhclife.generic.utils.MyJacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,7 +198,7 @@ public class ShouxianService {
 
     private RestTemplate restTemplate;
 
-    private void initRestTemplate() {
+    private void initRestTemplate() throws Exception{
         restTemplate = new RestTemplate();//force init.
 
         int milliseconds = 20 * 1000;
@@ -200,6 +206,13 @@ public class ShouxianService {
         httpRequestFactory.setConnectionRequestTimeout(milliseconds);
         httpRequestFactory.setConnectTimeout(milliseconds);
         httpRequestFactory.setReadTimeout(milliseconds);
+
+        SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+                SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+                NoopHostnameVerifier.INSTANCE);
+        CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(scsf).build();
+        httpRequestFactory.setHttpClient(httpClient);
+
         restTemplate.setRequestFactory(httpRequestFactory);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     }
