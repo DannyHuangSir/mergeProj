@@ -675,7 +675,7 @@ public class InsuranceClaimController extends BaseUserDataController {
 			if (lilipiVoList != null && lilipiVoList.size() > 0) {
 				LilipiVo lilipiVo = lilipiVoList.get(0);
 				Map<String, String> map = Maps.newHashMap();
-				map.put("cidNo", lilipiVo.getLipiId());
+				map.put("cidNo", lilipiVo.getNoHiddenLipiId());
 				map.put("cbirdate", DateUtil.formatDateTime(lilipiVo.getLipiBirth(), "yyyyMMdd"));
 				map.put("eventDate", DateUtil.formatDateTime(new Date(), "yyyyMMdd"));
 				map.put("type", "claim");
