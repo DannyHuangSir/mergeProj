@@ -3,6 +3,10 @@
 
 <head>
 	<th:block th:replace="fragments/head"/>
+	<!-- Latest compiled and minified CSS -->
+	<script	th:src="@{/plugin/jquery-1.11.3.min.js}"></script>
+	<script	th:src="@{/plugin/bootstrap-select.min.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/bootstrap-select.min.css}">
 </head>
 
 <body>
@@ -61,7 +65,7 @@
 									<div class="form-group">
 										<label class="col-sm-3"> 商品名稱  </label>
 										<div class="col-sm-9">
-											<select name="prodName" class="form-control">
+											<select class="form-control selectpicker" data-live-search="true" title="請選擇商品名稱">
 												<option value=""></option>
 												<th:block th:each="policyType : ${policyTypeList}">
 													<th:block th:if="${policyType.VALUE} == ${queryPolicy.prodName}">
@@ -400,5 +404,11 @@
 		}
 /*]]>*/
 </script>
+<style>
+	.btn.dropdown-toggle.btn-default {
+		background: #ffffff !important;
+		color: #000000 !important;
+	}
+</style>
 </body>
 </html>
