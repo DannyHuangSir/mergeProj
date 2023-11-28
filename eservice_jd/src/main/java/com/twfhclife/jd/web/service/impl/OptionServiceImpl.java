@@ -4,6 +4,7 @@ import com.twfhclife.jd.api_client.BaseRestClient;
 import com.twfhclife.jd.api_model.PolicyTypeListResponse;
 import com.twfhclife.jd.util.ApConstants;
 import com.twfhclife.jd.web.dao.OptionDao;
+import com.twfhclife.jd.web.dao.UsersDao;
 import com.twfhclife.jd.web.model.DepartmentVo;
 import com.twfhclife.jd.web.service.IOptionService;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,9 @@ public class OptionServiceImpl implements IOptionService {
 
 	@Autowired
 	private OptionDao optionDao;
+
+    @Autowired
+    private UsersDao usersDao;
 
     @Override
     public List<Map<String, Object>> getLevelStates() {

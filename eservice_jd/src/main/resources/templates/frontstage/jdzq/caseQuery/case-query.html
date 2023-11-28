@@ -61,6 +61,20 @@
                                                            class="form-control"/>
                                                 </div>
                                             </div>
+                                            <th:block th:if="${role == 3  || role == 4 || role == 5} ">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3" for="parentDepSelect"> 通路別  </label>
+                                                    <div class="col-sm-9">
+                                                        <select id="parentDepSelect" class="form-control"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3" for="branchIdSelect"> 分支機構  </label>
+                                                    <div class="col-sm-9">
+                                                        <select  id="branchIdSelect" class="form-control"></select>
+                                                    </div>
+                                                </div>
+                                            </th:block>
                                         </div>
                                         <div class="col-sm-6 clearfix">
                                             <div class="form-group">
@@ -172,6 +186,48 @@
             if (autoQuery) {
                 queryDataByPage(1)
             }
+
+            var deptParentList = [[${deptParentList}]]
+            var role = [[${role}]]
+
+            if(deptParentList != null ) {
+                var optHtml = '<option value="">請選擇部門...</option>';
+                $.each(deptParentList,function(i, obj){
+                    optHtml += ('<option value="' + obj.depId + '">' + obj.depName + '</option>');
+                })
+                $('#parentDepSelect').html(optHtml);
+            }
+
+            $('#parentDepSelect').on('change', function() {
+                $("#branchIdSelect").empty();
+                $("#branchIdSelect").append('<option checked value="">請選擇分支機構</option>');
+                if ($('#parentDepSelect').val() != null && $('#parentDepSelect').val() != '') {
+                    var formData = {
+                        depId: $('#parentDepSelect').val(),
+                        role: role
+                    };
+                    $.ajax({
+                        url: /*[[@{jd/common/branchList}]]*/,
+                        contentType: 'application/json',
+                        type: "POST",
+                        async: true,
+                        data: JSON.stringify(formData),
+                        success: function (response) {
+                            if (response.result == 'SUCCESS'){
+                                if (response.resultData.length >0){
+                                    for (var i = 0; i < response.resultData.length; i++) {
+                                        var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+                                        $("#branchIdSelect").append(option);
+                                    }
+                                }
+                            }else {
+                                alertMsg('系統發生錯誤');
+                            }
+                        }
+                    });
+                }
+            });
+
 
 			$("#clearBtn").click(function(){
 			     event.preventDefault(),

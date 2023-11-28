@@ -1,10 +1,13 @@
 package com.twfhclife.jd.web.controller;
 
 import com.twfhclife.jd.controller.BaseController;
+import com.twfhclife.jd.keycloak.model.KeycloakUser;
+import com.twfhclife.jd.web.dao.UsersDao;
 import com.twfhclife.jd.web.domain.CaseQueryVo;
 import com.twfhclife.jd.web.domain.ResponseObj;
 import com.twfhclife.jd.web.domain.PersonSortVo;
 import com.twfhclife.jd.web.model.CaseVo;
+import com.twfhclife.jd.web.model.DepartmentVo;
 import com.twfhclife.jd.web.service.ICaseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +17,31 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class CaseController extends BaseController {
 
 	@Autowired
 	private ICaseService caseService;
 
+	@Autowired
+	private UsersDao usersDao;
+
 	@GetMapping("/caseQuery")
 	public String caseQuery() {
 		addAttribute("queryCase", new CaseQueryVo());
 		addAttribute("autoQuery", false);
+
+		KeycloakUser user = getLoginUser();
+		// role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員 5 平台管理人員
+		int role = usersDao.checkUserRole(user.getId());
+		addAttribute("role", role);
+
+		if(role == 3 || role == 4 || role == 5 ) {
+			List<DepartmentVo> deptParentList = usersDao.getDeptParentList(user.getId(), role);
+			addAttribute("deptParentList", deptParentList);
+		}
 		return "frontstage/jdzq/caseQuery/case-query";
 	}
 
@@ -33,6 +51,17 @@ public class CaseController extends BaseController {
 		CaseQueryVo vo = (CaseQueryVo) getSession("queryCase");
 		addAttribute("queryCase", vo == null ? new CaseQueryVo() : vo);
 		addAttribute("autoQuery", vo == null ? false : true);
+
+		KeycloakUser user = getLoginUser();
+		// role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員 5 平台管理人員
+		int role = usersDao.checkUserRole(user.getId());
+		addAttribute("role", role);
+
+		if(role == 3 || role == 4 || role == 5 ) {
+			List<DepartmentVo> deptParentList = usersDao.getDeptParentList(user.getId(), role);
+			addAttribute("deptParentList", deptParentList);
+		}
+
 		return "frontstage/jdzq/caseQuery/case-query";
 	}
 
