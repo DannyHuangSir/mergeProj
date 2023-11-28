@@ -1,5 +1,6 @@
 package com.twfhclife.jd.web.dao;
 
+import com.twfhclife.jd.web.model.DepartmentVo;
 import com.twfhclife.jd.web.model.PermQueryVo;
 import com.twfhclife.jd.web.model.UserTermVo;
 import com.twfhclife.jd.web.model.UsersVo;
@@ -49,4 +50,12 @@ public interface UsersDao {
 
 	UsersVo getUserBySaleId(@Param("saleId") String saleId, @Param("agentCode") String agentCode, @Param("agentBranchM") String agentBranchM);
 	List<UsersVo> getBranchLeaders(@Param("agentCode") String agentCode, @Param("agentBranchM") String agentBranchM, @Param("branchCode") String branchCode);
+
+	/**
+	 * 獲取通路數組
+	 * @param userId
+	 * @param role
+	 * @return
+	 */
+	List<DepartmentVo> getDeptParentList(@Param("userId") String userId, @Param("role") Integer role);
 }

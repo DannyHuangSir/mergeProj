@@ -23,7 +23,17 @@
 		<result column="LOGIN_TIME" property="loginTime"/>
 		<result column="BRANCH_ID" property="branchId"/>
 	</resultMap>
-	
+
+	<resultMap id="BaseResultMap" type="com.twfhclife.jd.web.model.DepartmentVo">
+		<result column="DEP_ID" property="depId" />
+		<result column="DEP_NAME" property="depName" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="PARENT_DEP" property="parentDep" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="MODIFY_USER" property="modifyUser" />
+		<result column="MODIFY_DATE" property="modifyDate" />
+	</resultMap>
 	<sql id="User_Column_List">
 		u.user_id,u.roc_id,ESERVICE_JD.DBO.FN_DEBASE64(u.mobile) mobile,ESERVICE_JD.DBO.FN_DEBASE64(u.email) email,u.login_fail_count,u.last_chang_password_date,
 		u.sms_flag,u.mail_flag,u.fb_id,u.moica_id,u.user_type,u.create_date,u.create_user, ESERVICE_JD.DBO.FN_DEBASE64(u.user_name) username,
@@ -203,5 +213,54 @@
 		</if>
 		AND UD.BRANCH_ID = #{branchCode}
 	</select>
+
+	<select id="getDeptParentList" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		DEP_ID
+		,DEP_NAME
+		,DESCRIPTION
+		,PARENT_DEP
+		,BRANCH_ID
+		FROM
+		ESERVICE_JD.DBO.DEPARTMENT
+		WHERE
+		PARENT_DEP IS NOT NULL AND PARENT_DEP = '0'
+		<if test="role == 3">
+            AND DEP_ID IN (
+              SELECT DEP_ID FROM ESERVICE_JD.DBO.USER_DEPARTMENT WHERE USER_ID = #{userId}
+            )
+		</if>
+		<if test="role == 4">
+			AND BRANCH_ID IN (
+				<include refid="INC1" />
+			)
+		</if>
+		ORDER BY
+		DEP_ID
+	</select>
+
+	<!--	取得IC人員負責通路-->
+	<sql id="INC1">
+		SELECT
+			DISTINCT
+			A.DEP_ID
+		FROM (
+				 SELECT DISTINCT
+					 D.BRANCH_ID DEP_ID,
+					 D.DEP_NAME depName,
+					 UD.BRANCH_ID,
+					 D1.DEP_NAME branchName
+				 FROM
+					 ESERVICE_JD.DBO.USER_IC UD
+						 INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
+						 INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D1 ON UD.DEP_ID = D1.PARENT_DEP AND UD.BRANCH_ID = D1.BRANCH_ID
+				 WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID IS NOT NULL
+				 UNION
+				 SELECT DISTINCT D.BRANCH_ID DEP_ID, D.DEP_NAME depName, '' BRANCH_ID, '' branchName FROM
+					 ESERVICE_JD.DBO.USER_IC UD
+						 INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
+				 WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID IS NULL
+			 ) A
+	</sql>
 
 </mapper>

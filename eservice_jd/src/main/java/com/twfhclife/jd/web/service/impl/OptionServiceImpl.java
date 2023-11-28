@@ -4,7 +4,9 @@ import com.twfhclife.jd.api_client.BaseRestClient;
 import com.twfhclife.jd.api_model.PolicyTypeListResponse;
 import com.twfhclife.jd.util.ApConstants;
 import com.twfhclife.jd.web.dao.OptionDao;
+import com.twfhclife.jd.web.model.DepartmentVo;
 import com.twfhclife.jd.web.service.IOptionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,5 +49,23 @@ public class OptionServiceImpl implements IOptionService {
     public List<Map<String, String>> getPolicyTypeList() {
         PolicyTypeListResponse responseObj = baseRestClient.postApi("", policyTypeListUrl, PolicyTypeListResponse.class);
         return responseObj.getPolicyTypeList();
+    }
+
+    @Override
+    public List<DepartmentVo> getBranchList(String userId, String username, DepartmentVo vo) {
+        List<DepartmentVo> roles = null;
+        if(vo.getRole() == 4 ) {
+            roles = optionDao.getICUserBranchIDByRole(userId, vo);
+        }
+
+        boolean selectAllflag = false;
+        if(roles != null &&  ( (roles.size() == 1 && StringUtils.isNotBlank(roles.get(0).getBranchId())) || roles.size() > 1 )) {
+            selectAllflag = false;
+        } else {
+            selectAllflag = true;
+        }
+
+
+        return optionDao.getBranchList(userId,vo,selectAllflag,roles);
     }
 }

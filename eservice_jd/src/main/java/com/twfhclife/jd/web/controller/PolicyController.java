@@ -4,8 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.twfhclife.jd.api_model.*;
 import com.twfhclife.jd.controller.BaseController;
+import com.twfhclife.jd.keycloak.model.KeycloakUser;
 import com.twfhclife.jd.util.ApConstants;
 import com.twfhclife.jd.util.DateUtil;
+import com.twfhclife.jd.web.dao.UsersDao;
 import com.twfhclife.jd.web.domain.PortfolioResponseObj;
 import com.twfhclife.jd.web.domain.ResponseObj;
 import com.twfhclife.jd.web.model.*;
@@ -32,11 +34,23 @@ public class PolicyController extends BaseController {
 
     private static final Logger logger = LogManager.getLogger(PolicyController.class);
 
+    @Autowired
+    private UsersDao usersDao;
     @GetMapping("/policyQuery")
     public String policyQuery() {
         addAttribute("queryPolicy", new PolicyVo());
         addAttribute("autoQuery", false);
         addAttribute("policyTypeList", optionService.getPolicyTypeList());
+        KeycloakUser user = getLoginUser();
+        // role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員 5 平台管理人員
+        int role = usersDao.checkUserRole(user.getId());
+        addAttribute("role", role);
+
+        if(role == 3 || role == 4 || role == 5 ) {
+            List<DepartmentVo> deptParentList = usersDao.getDeptParentList(user.getId(), role);
+            addAttribute("deptParentList", deptParentList);
+        }
+
         return "frontstage/jdzq/policyQuery/policy-query";
     }
 
