@@ -38,9 +38,24 @@
                         <form class="form-horizontal" role="form">
                             <div id="selectTitle" class="list-select ui-draggable">
                                 <div class="list-body">
-                                    <div class="droppable" id="unSelect-column">
+                                    <div class="droppable">
                                         <h4 style="line-height: 30px;">可選擇欄位</h4>
                                         <ul class="item-box left-box  ui-sortable ui-droppable">
+                                            <li class="item ui-sortable-handle" data-id="userId">系統帳號</li>
+                                            <li class="item ui-sortable-handle" data-id="status">帳號狀態</li>
+                                            <li class="item ui-sortable-handle" data-id="roleName">系統平台角色</li>
+                                            <li class="item ui-sortable-handle" data-id="effectiveDate">帳號生效日</li>
+                                            <li class="item ui-sortable-handle" data-id="expirationDate">帳號失效日</li>
+                                            <li class="item ui-sortable-handle" data-id="depName">所屬通路</li>
+                                            <li class="item ui-sortable-handle" data-id="branchName">分支機構</li>
+                                            <li class="item ui-sortable-handle" data-id="userName">姓名</li>
+                                            <li class="item ui-sortable-handle" data-id="icID">業務員編號</li>
+                                            <li class="item ui-sortable-handle" data-id="loginSize">登錄字號</li>
+                                            <li class="item ui-sortable-handle" data-id="rocID">身份證字號</li>
+                                            <li class="item ui-sortable-handle" data-id="email">EMAIL</li>
+                                            <li class="item ui-sortable-handle" data-id="mobile">行動電話</li>
+                                            <li class="item ui-sortable-handle" data-id="createDate">帳號建立日</li>
+                                            <li class="item ui-sortable-handle" data-id="loginTime">帳號最後登入日</li>
                                         </ul>
                                     </div>
                                     <div id="select-column" class="droppable">
@@ -55,7 +70,7 @@
                             <div class="col-md-12" style="text-align: center;margin-top: 20px;">
                                 <button class="btn bgGrey" id="lastStep" type="button"
                                         style="border: 0;margin-right: 20px;">
-                                    <a th:href="@{/userDetail}" style="border: 0;">上一步</a>
+                                    <a th:href="@{/policyClaimDetail}" style="border: 0;">上一步</a>
                                 </button>
                                 <button class="btn bgOrange" id="go" type="reset" style="border: 0;">
                                     下一步
@@ -76,68 +91,25 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var formData = /*[[${vo}]]*/;
-    var isGoBack = /*[[${isGoBack}]]*/;
     $(function () {
-        if (isGoBack) {
-            formData.unSelectColumn.forEach((value, index) => {
-                $("#unSelect-column ul").append(' <li class="item ui-sortable-handle" data-id="' + value + '">' + formData.unSelectColumnName[index] + '</li>');
-            })
-            formData.selectColumn.forEach((value, index) => {
-                $("#select-column ul").append(' <li class="item ui-sortable-handle" data-id="' + value + '">' + formData.selectColumnName[index] + '</li>');
-            })
-        } else {
-            var cols = [
-                {'dataID': 'userId', 'text': '系統帳號'},
-                {'dataID': 'status', 'text': '帳號狀態'},
-                {'dataID': 'roleName', 'text': '系統平台角色'},
-                {'dataID': 'effectiveDate', 'text': '帳號生效日'},
-                {'dataID': 'expirationDate', 'text': '帳號失效日'},
-                {'dataID': 'depName', 'text': '所屬通路'},
-                {'dataID': 'branchName', 'text': '分支機構'},
-                {'dataID': 'userName', 'text': '姓名'},
-                {'dataID': 'icID', 'text': '業務員編號'},
-                {'dataID': 'loginSize', 'text': '登錄字號'},
-                {'dataID': 'rocID', 'text': '身份證字號'},
-                {'dataID': 'email', 'text': 'EMAIL'},
-                {'dataID': 'mobile', 'text': '行動電話'},
-                {'dataID': 'createDate', 'text': '帳號建立日'},
-                {'dataID': 'loginTime', 'text': '帳號最後登入日'}
-            ]
-            cols.forEach((value, index) => {
-                console.log(value);
-                $("#unSelect-column ul").append(' <li class="item ui-sortable-handle" data-id="' + value['dataID'] + '">' + value['text'] + '</li>');
-            })
-        }
         // 是否开启选项可拖动，选项可双击
         $('#selectTitle').initList({
             openDrag: true,
             openDblClick: true
         });
-
     });
 
-    $('#go').click(function () {
+    $('#go').click(function() {
         formData.column = [];
         formData.columnName = [];
-        formData.selectColumn = [];
-        formData.unSelectColumn = [];
-        formData.selectColumnName = [];
-        formData.unSelectColumnName = [];
 
-        $('#select-column').find('li').each(function (i, val) {
+        $('#select-column').find('li').each(function(i,val){
             formData.column.push(val.getAttribute('data-id'));
             formData.columnName.push(val.innerHTML);
-            formData.selectColumn.push(val.getAttribute('data-id'));
-            formData.selectColumnName.push(val.innerHTML);
-        });
-
-        $('#unSelect-column').find('li').each(function (i, val) {
-            formData.unSelectColumn.push(val.getAttribute('data-id'));
-            formData.unSelectColumnName.push(val.innerHTML);
         });
 
 
-        if (formData.column.length <= 0) {
+        if(formData.column.length <= 0){
             alertMsg('請選擇要導出的欄位.');
             return;
         }

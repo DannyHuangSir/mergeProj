@@ -70,8 +70,7 @@ public class JdPolicyClaimDetailServiceImpl extends BaseRestClient implements IJ
     }
 
     public <T> T getPolicyTypeNameList(JdPolicyClaimDetailVo jdPolicyClaimDetailVo) {
-        logger.info("Invoke eservice api[{}]: {}", policyTypeUrl, MyJacksonUtil.object2Json(jdPolicyClaimDetailVo));
-        logger.info("Invoke eservice WSO2_API_JD_KEY: {}", WSO2_API_JD_KEY);
+        logger.debug("Invoke eservice api[{}]: {}", policyUrl, MyJacksonUtil.object2Json(jdPolicyClaimDetailVo));
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Authorization", "Bearer " + WSO2_API_JD_KEY);

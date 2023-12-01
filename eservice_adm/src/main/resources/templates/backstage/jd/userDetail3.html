@@ -45,12 +45,6 @@
                                 <a class="btn bgOrange" type="reset" style="border: 0;" onclick="downloadCSV()">
                                     下載報表
                                 </a>
-                                <a class="btn bgOrange" type="reset" style="border: 0;" onclick="returnStep1()">
-                                    返回步驟一
-                                </a>
-                                <a class="btn bgOrange" type="reset" style="border: 0;" onclick="returnStep2()">
-                                    返回步驟二
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -109,13 +103,6 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }
-
-        function returnStep1() {
-            postWithFormData(/*[[@{/returnStep1}]]*/, vo);
-        }
-        function returnStep2() {
-            postWithFormData(/*[[@{/returnStep2}]]*/, vo);
         }
         /*]]>*/
     </script>

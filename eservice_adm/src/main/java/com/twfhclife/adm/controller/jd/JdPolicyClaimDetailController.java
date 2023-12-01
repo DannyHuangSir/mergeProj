@@ -37,45 +37,16 @@ public class JdPolicyClaimDetailController extends BaseController {
 
     @GetMapping("/policyClaimDetail")
     public String rptInsClaimDetail() {
-        addAttribute("isGoBack", false);
-        return  "backstage/jd/policyClaimDetail1";
-    }
-
-    @RequestLog
-    @PostMapping("/returnPolicyClaimDetailStep1")
-    public String returnPolicyClaimDetailStep1(JdPolicyClaimReqVo vo) {
-        addAttribute("vo", vo);
-        addAttribute("isGoBack", true);
         return  "backstage/jd/policyClaimDetail1";
     }
 
     @GetMapping("/userDetail")
-    public String userDetail() {
-        addAttribute("isGoBack", false);
-        return "backstage/jd/userDetail";
-    }
-
-    @RequestLog
-    @PostMapping("/returnStep1")
-    public String returnStep1(JdUserDetailReqVo vo) {
-        addAttribute("vo", vo);
-        addAttribute("isGoBack", true);
-        return "backstage/jd/userDetail";
-    }
+    public String userDetail() { return "backstage/jd/userDetail"; }
 
     @RequestLog
     @PostMapping("/userDetail/filter")
     public String userDetailFilter(JdUserDetailVo vo) {
         addAttribute("vo", vo);
-        addAttribute("isGoBack", false);
-        return "backstage/jd/userDetail2";
-    }
-
-    @RequestLog
-    @PostMapping("/returnStep2")
-    public String returnStep2(JdUserDetailReqVo vo) {
-        addAttribute("vo", vo);
-        addAttribute("isGoBack", true);
         return "backstage/jd/userDetail2";
     }
 
@@ -83,15 +54,6 @@ public class JdPolicyClaimDetailController extends BaseController {
     @PostMapping("/policyClaimDetail/filter")
     public String policyClaimDetailFilter(JdPolicyClaimDetailVo vo) {
         addAttribute("vo", vo);
-        addAttribute("isGoBack", false);
-        return "backstage/jd/policyClaimDetail2";
-    }
-
-    @RequestLog
-    @PostMapping("/returnPolicyClaimDetailStep2")
-    public String returnPolicyClaimDetailStep2(JdPolicyClaimReqVo vo) {
-        addAttribute("vo", vo);
-        addAttribute("isGoBack", true);
         return "backstage/jd/policyClaimDetail2";
     }
 

@@ -1,7 +1,5 @@
 package com.twfhclife.adm.model;
 
-import com.google.common.collect.Lists;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -122,10 +120,6 @@ public class JdPolicyClaimReqVo implements Serializable {
     private String noteKey;
 
     private String contentMemo;
-    private List<String> selectColumn = Lists.newArrayList();
-    private List<String> unSelectColumn = Lists.newArrayList();
-    private List<String> selectColumnName = Lists.newArrayList();
-    private List<String> unSelectColumnName = Lists.newArrayList();
 
     public String getNoteDate() {
         return noteDate;
@@ -589,37 +583,5 @@ public class JdPolicyClaimReqVo implements Serializable {
     }
     public String getAgentCode() {
         return agentCode;
-    }
-
-    public List<String> getSelectColumn() {
-        return selectColumn;
-    }
-
-    public void setSelectColumn(List<String> selectColumn) {
-        this.selectColumn = selectColumn;
-    }
-
-    public List<String> getUnSelectColumn() {
-        return unSelectColumn;
-    }
-
-    public void setUnSelectColumn(List<String> unSelectColumn) {
-        this.unSelectColumn = unSelectColumn;
-    }
-
-    public List<String> getSelectColumnName() {
-        return selectColumnName;
-    }
-
-    public void setSelectColumnName(List<String> selectColumnName) {
-        this.selectColumnName = selectColumnName;
-    }
-
-    public List<String> getUnSelectColumnName() {
-        return unSelectColumnName;
-    }
-
-    public void setUnSelectColumnName(List<String> unSelectColumnName) {
-        this.unSelectColumnName = unSelectColumnName;
     }
 }

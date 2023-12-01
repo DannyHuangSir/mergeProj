@@ -218,18 +218,17 @@
 		</div>
 		<th:block th:replace="fragments/script"/>
 		<script th:inline="javascript">
-
+		
 		/*<![CDATA[*/
 		$(function() {
 
-			parentListApi = $.ajax({
+			$.ajax({
 				url: /*[[@{jd/common/dept/parentList}]]*/,
 				contentType: 'application/json',
 				type: "POST",
 				async: true,
 				success: function (response) {
 					if (response.result == 'SUCCESS'){
-						console.log('parentListApi success')
 						if (response.resultData.length >0){
 							for (var i = 0; i < response.resultData.length; i++) {
 								var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
@@ -249,11 +248,29 @@
 					var formData = {
 						depId: $('#editDialog #deptSelect').val()
 					}
-					branchByListApi(formData);
+					$.ajax({
+						url: /*[[@{/jd/common/branchByList}]]*/,
+						contentType: 'application/json',
+						type: "POST",
+						async: true,
+						data: JSON.stringify(formData),
+						success: function (response) {
+							if (response.result == 'SUCCESS'){
+								if (response.resultData.length >0){
+									for (var i = 0; i < response.resultData.length; i++) {
+										var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+										$("#editDialog #branchSelect").append(option);
+									}
+								}
+							}else {
+								alertMsg('系統發生錯誤');
+							}
+						}
+					});
 				}
 			});
 
-			getPolicyTypeNameListApi = $.ajax({
+			$.ajax({
 				url: /*[[@{/jd/getPolicyTypeNameList}]]*/,
 				contentType: 'application/json',
 				type: "POST",
@@ -274,201 +291,58 @@
 				}
 			});
 
-			var isGoBack = /*[[${isGoBack}]]*/;
-			var goBackParameter = /*[[${vo}]]*/;
-
-			$.when(parentListApi,getPolicyTypeNameListApi,getBpmcurrenttakApi()).done(function(rs1,rs2,rs3){
-				console.log('isGoBack: '+ isGoBack)
-				if(isGoBack){
-					if (goBackParameter != null) {
-						// goBackParameter['tBStartTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$2/$3/$1') + ' - ' + goBackParameter['tBEndTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$2/$3/$1')
-						// $('#id-date-range-picker-1').data('daterangepicker').startDate = goBackParameter['tBStartTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3');
-						// $('#id-date-range-picker-1').data('daterangepicker').endDate = goBackParameter['tBEndTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3');
-						// $('#id-date-range-picker-2').data('daterangepicker').startDate = goBackParameter['policyActiveStartTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3');
-						// $('#id-date-range-picker-2').data('daterangepicker').endDate = goBackParameter['policyActiveEndTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3');
-						// $('#id-date-range-picker-1').val(goBackParameter['tBStartTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3') + ' - ' + goBackParameter['tBEndTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3'));
-						// $('#id-date-range-picker-2').val(goBackParameter['policyActiveStartTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3') + ' - ' + goBackParameter['policyActiveEndTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3'));
-
-						if( goBackParameter['tBStartTime'] != null && goBackParameter['tBEndTime'] != null && goBackParameter['tBStartTime'] != '' && goBackParameter['tBEndTime'] != '' ){
-							$('input[name=date-range-picker1]').daterangepicker({
-								'applyClass' : 'btn-sm btn-success',
-								'cancelClass' : 'btn-sm btn-default',
-								maxDate : new Date(),
-								format:'YYYY/MM/DD',
-								locale: {
-									applyLabel: 'Apply',
-									cancelLabel: 'Cancel'
-								},
-								startDate: new Date(goBackParameter['tBStartTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3')),
-								endDate: new Date(goBackParameter['tBEndTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3'))
-							});
-						}else {
-							$('input[name=date-range-picker1]').daterangepicker({
-								'applyClass' : 'btn-sm btn-success',
-								'cancelClass' : 'btn-sm btn-default',
-								maxDate : new Date(),
-								format:'YYYY/MM/DD',
-								locale: {
-									applyLabel: 'Apply',
-									cancelLabel: 'Cancel'
+			$("#bpmcurrenttakSelect").click(function(){
+				$.ajax({
+					url: /*[[@{getBpmcurrenttak}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: true,
+					success: function (response) {
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].parameterCode + "'>" +  response.resultData[i].parameterName + "</option>";
+									$("#editDialog #bpmcurrenttakSelect").append(option);
 								}
-							});
-							$('input[name=date-range-picker1]').val('')
-						}
-
-						if( goBackParameter['policyActiveStartTime'] != null && goBackParameter['policyActiveEndTime'] != null && goBackParameter['policyActiveStartTime'] != '' && goBackParameter['policyActiveEndTime'] != '' ){
-							$('input[name=date-range-picker2]').daterangepicker({
-								'applyClass' : 'btn-sm btn-success',
-								'cancelClass' : 'btn-sm btn-default',
-								maxDate : new Date(),
-								format:'YYYY/MM/DD',
-								locale: {
-									applyLabel: 'Apply',
-									cancelLabel: 'Cancel'
-								},
-								startDate: new Date(goBackParameter['policyActiveStartTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3')),
-								endDate: new Date(goBackParameter['policyActiveEndTime'].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3'))
-							});
-
-						}else {
-							$('input[name=date-range-picker2]').daterangepicker({
-								'applyClass' : 'btn-sm btn-success',
-								'cancelClass' : 'btn-sm btn-default',
-								maxDate : new Date(),
-								format:'YYYY/MM/DD',
-								locale: {
-									applyLabel: 'Apply',
-									cancelLabel: 'Cancel'
-								}
-							});
-							$('input[name=date-range-picker2]').val('')
-						}
-
-						$('#deptSelect').val(goBackParameter['agentCode']);
-						if ($('#editDialog #deptSelect').val() != null && $('#editDialog #deptSelect').val() != '') {
-							var formData = {
-								depId: $('#editDialog #deptSelect').val()
 							}
-							$.when(
-									branchByListApi(formData)
-							).done(function(rs1){
-								$('#branchSelect').val(goBackParameter['branchCode']);
-							});
+						}else {
+							alertMsg('系統發生錯誤');
 						}
-						$('#pSalesCodeInp').val(goBackParameter['pSalesCode']);
-						$('#policyNoInp').val(goBackParameter['policyNo']);
-						$('#appNameInp').val(goBackParameter['appName']);
-						$('#appIDInp').val(goBackParameter['appID']);
-						$('#insNameInp').val(goBackParameter['insName']);
-						$('#insIDInp').val(goBackParameter['insID']);
-						$('#policyTypeNameSelect').val(goBackParameter['policyType']);
-						$('#noteStatusSelect').val(goBackParameter['noteStatus']);
-						$('#bpmcurrenttakSelect').val(goBackParameter['bpmcurrenttak']);
-						$('#noteVerifyResultSelect').val(goBackParameter['noteVerifyResult']);
-					}else{
-						$('#id-date-range-picker-1').val('2022');
-						$('#id-date-range-picker-2').val('2022');
-						$('#deptSelect').val('');
-						$('#branchSelect').val('');
-						$('#pSalesCodeInp').val('');
-						$('#policyNoInp').val('');
-						$('#appNameInp').val('');
-						$('#appIDInp').val('');
-						$('#insNameInp').val('');
-						$('#insIDInp').val('')
-						$('#policyTypeNameSelect').val('');
-						$('#noteStatusSelect').val('');
-						$('#bpmcurrenttakSelect').val('');
-						$('#noteVerifyResultSelect').val('');
 					}
-				} else{
-					$('input[name=date-range-picker1]').daterangepicker({
-						'applyClass' : 'btn-sm btn-success',
-						'cancelClass' : 'btn-sm btn-default',
-						maxDate : new Date(),
-						format:'YYYY/MM/DD',
-						locale: {
-							applyLabel: 'Apply',
-							cancelLabel: 'Cancel'
-						}
-					});
+				});
+			});
 
-					$('input[name=date-range-picker2]').daterangepicker({
-						'applyClass' : 'btn-sm btn-success',
-						'cancelClass' : 'btn-sm btn-default',
-						maxDate : new Date(),
-						format:'YYYY/MM/DD',
-						locale: {
-							applyLabel: 'Apply',
-							cancelLabel: 'Cancel'
-						}
-					});
-
-					$('input[name=date-range-picker1]').val('')
-					$('input[name=date-range-picker2]').val('')
+			$('input[name=date-range-picker1]').daterangepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				maxDate : new Date(),
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel'
 				}
 			});
 
-			$("#bpmcurrenttakSelect").click(function(){
-				getBpmcurrenttakApi();
+			$('input[name=date-range-picker2]').daterangepicker({
+				'applyClass' : 'btn-sm btn-success',
+				'cancelClass' : 'btn-sm btn-default',
+				maxDate : new Date(),
+				format:'YYYY/MM/DD',
+				locale: {
+					applyLabel: 'Apply',
+					cancelLabel: 'Cancel'
+				}
 			});
 
-
+			$('input[name=date-range-picker1]').val('')
+			$('input[name=date-range-picker2]').val('')
 			// $("#noteStatusSelect").bsMultiSelect();
 			// $("#noteVerifyResultSelect").bsMultiSelect();
 
 		});
 
-		function getBpmcurrenttakApi() {
-			return $.ajax({
-				url: /*[[@{getBpmcurrenttak}]]*/,
-				contentType: 'application/json',
-				type: "POST",
-				async: true,
-				success: function (response) {
-					if (response.result == 'SUCCESS'){
-						if (response.resultData.length >0){
-							for (var i = 0; i < response.resultData.length; i++) {
-								var option = "<option value='" + response.resultData[i].parameterCode + "'>" +  response.resultData[i].parameterName + "</option>";
-								$("#editDialog #bpmcurrenttakSelect").append(option);
-							}
-						}
-					}else {
-						alertMsg('系統發生錯誤');
-					}
-				}
-			});
-		}
-
-		function branchByListApi(formData) {
-			return 	$.ajax({
-				url: /*[[@{/jd/common/branchByList}]]*/,
-				contentType: 'application/json',
-				type: "POST",
-				async: true,
-				data: JSON.stringify(formData),
-				success: function (response) {
-					if (response.result == 'SUCCESS'){
-						if (response.resultData.length >0){
-							for (var i = 0; i < response.resultData.length; i++) {
-								var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
-								$("#editDialog #branchSelect").append(option);
-							}
-						}
-					}else {
-						alertMsg('系統發生錯誤');
-					}
-				}
-			});
-		}
-
 		function searchOnlineChange() {
-			console.log($('#id-date-range-picker-1').val())
-			console.log($('#id-date-range-picker-2').val())
-			console.log($('#id-date-range-picker-1').data('daterangepicker').startDate.format('YYYY/MM/DD'))
-			console.log($('#id-date-range-picker-1').data('daterangepicker').endDate.format('YYYY/MM/DD'))
-			console.log($('#id-date-range-picker-2').data('daterangepicker').startDate.format('YYYY/MM/DD'))
-			console.log($('#id-date-range-picker-2').data('daterangepicker').endDate.format('YYYY/MM/DD'))
+
 			if (($('#id-date-range-picker-1').val() == null || $('#id-date-range-picker-1').val() == '') &&
 				($('#id-date-range-picker-2').val() == null || $('#id-date-range-picker-2').val() == '')){
 				alertMsg("查詢條件「受理日期區間」及「保單生效日期區間」至少要輸一個!")
