@@ -316,8 +316,8 @@
 					"&eventName="+hasSelectData.eventName+
 					"&eventCode="+hasSelectData.eventCode+
 					"&eventStatus="+hasSelectData.eventStatus+
-					"&startDate"+hasSelectData.startDate+
-					"&endDate"+hasSelectData.endDate;
+					"&startDate="+hasSelectData.startDate+
+					"&endDate="+hasSelectData.endDate;
 				}else{
 					alert("查詢結果清單無任何資料筆數無法執行匯出，請重新查詢!");
 				}
