@@ -361,6 +361,7 @@
         <result column="PRPA_RCP_CODE" property="rcpCode"/>
         <result column="PRPK_RCP_TYPE_CODE" property="paymentCode"/>
         <result column="PRPA_PREM_1" property="prpaPrem"/>
+        <result column="PRPA_PREM_2" property="prpaPrem2"/>
     </resultMap>
 
     <select id="getPaymentRecord" resultMap="PaymentRecordMap">
@@ -374,7 +375,8 @@
                     B.LIPI_PREM_YEAR PREM_YEAR,
                     A.PRPA_RCP_BATCH,
                     A.PRPA_DEAL_NO,
-                    A.PRPA_PREM_1
+                    A.PRPA_PREM_1,
+                    A.PRPA_PREM_2
                 FROM LIPRPA_ES A
                          INNER JOIN LILIPI_ES_NONCHAR B
                                    ON A.PRPA_INSU_TYPE = B.LIPI_INSU_TYPE AND A.PRPA_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.PRPA_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
@@ -388,7 +390,8 @@
                     0 PREM_YEAR,
                     A.PRPA_RCP_BATCH,
                     A.PRPA_DEAL_NO,
-                    A.PRPA_PREM_1
+                    A.PRPA_PREM_1,
+                    A.PRPA_PREM_2
                 FROM LIPRPA_ES A
                          INNER JOIN LIMIPI_ES_NONCHAR B
                                    ON A.PRPA_INSU_TYPE = B.LIPI_INSU_TYPE AND A.PRPA_INSU_GRP_NO = B.LIPI_INSU_GRP_NO AND A.PRPA_INSU_SEQ_NO = B.LIPI_INSU_SEQ_NO
@@ -401,7 +404,8 @@
                        B.NEPI_PREM_YEAR PREM_YEAR,
                        A.PRPA_RCP_BATCH,
                        A.PRPA_DEAL_NO,
-                       A.PRPA_PREM_1
+                       A.PRPA_PREM_1,
+                       A.PRPA_PREM_2
                 FROM LIPRPA_ES A
                          INNER JOIN LINEPI_ES_NONCHAR B
                             ON A.PRPA_INSU_TYPE = B.NEPI_INSU_TYPE AND A.PRPA_INSU_GRP_NO = B.NEPI_INSU_GRP_NO AND A.PRPA_INSU_SEQ_NO = B.NEPI_INSU_SEQ_NO

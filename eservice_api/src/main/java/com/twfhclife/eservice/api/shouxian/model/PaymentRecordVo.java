@@ -10,6 +10,15 @@ public class PaymentRecordVo {
 
     private Integer premYear;
     private String prpaPrem;
+    private String prpaPrem2;
+
+    public String getPrpaPrem2() {
+        return prpaPrem2;
+    }
+
+    public void setPrpaPrem2(String prpaPrem2) {
+        this.prpaPrem2 = prpaPrem2;
+    }
 
     public String getPrpaPrem() {
         return prpaPrem;

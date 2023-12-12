@@ -159,25 +159,25 @@ public class ShouxianController extends BaseController {
             PolicyPaymentRecordDataResponse resp = new PolicyPaymentRecordDataResponse();
             PolicyBaseVo policyBase = shouxianService.getPolicyBase(vo.getPolicyNo());
             List<Map<String, Object>> filter = optionService.getBankList().stream()
-                    .filter(f -> StringUtils.equals(String.valueOf(f.get("key")),  policyBase.getBankCode())).collect(Collectors.toList());
+                    .filter(f -> StringUtils.equals(String.valueOf(f.get("key")), policyBase.getBankCode())).collect(Collectors.toList());
             if (filter.size() > 0) {
                 policyBase.setBankCode(String.valueOf(filter.get(0).get("value")));
             }
             resp.setPolicyBaseVo(policyBase);
             List<PaymentRecordVo> paymentRecords = shouxianService.getPaymentRecord(vo.getPolicyNo());
             if (CollectionUtils.isNotEmpty(paymentRecords)) {
-                int period = 1;
-                String oldPeriod = null;
+                int period = 0;
                 for (PaymentRecordVo paymentRecord : paymentRecords) {
                     StringBuilder sb = new StringBuilder();
-                    if (StringUtils.isBlank(oldPeriod) || StringUtils.equals(oldPeriod, paymentRecord.getPrpaPrem())) {
-                        sb.append("第").append(period).append("期");
+                    if(StringUtils.equals(paymentRecord.getPrpaPrem2(), "00")) {
+                        period++;
+                        sb.append("第").append(period).append("期/共");
                     } else {
-                        period = 1;
                         sb.append("第").append(period).append("期");
+                        paymentRecord.setDesc(sb.toString());
+                        continue;
                     }
-                    oldPeriod = paymentRecord.getPrpaPrem();
-                    sb.append("/共");
+
                     int premYear = paymentRecord.getPremYear() == null ? 0 : paymentRecord.getPremYear();
                     switch (paymentRecord.getRcpCode()) {
                         case "A":
@@ -200,7 +200,6 @@ public class ShouxianController extends BaseController {
                     }
                     sb.append("期");
                     paymentRecord.setDesc(sb.toString());
-                    period++;
                 }
             }
 
