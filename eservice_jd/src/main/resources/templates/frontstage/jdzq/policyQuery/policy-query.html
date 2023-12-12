@@ -65,7 +65,7 @@
 									<div class="form-group">
 										<label class="col-sm-3"> 商品名稱  </label>
 										<div class="col-sm-9">
-											<select class="form-control selectpicker" data-live-search="true" title="請選擇商品名稱">
+											<select id="codeMechineHouse" class="form-control selectpicker" data-live-search="true" title="請選擇商品名稱">
 												<option value=""></option>
 												<th:block th:each="policyType : ${policyTypeList}">
 													<th:block th:if="${policyType.VALUE} == ${queryPolicy.prodName}">
@@ -86,13 +86,13 @@
 										<div class="form-group">
 											<label class="col-sm-3" for="parentDepSelect"> 通路別  </label>
 											<div class="col-sm-9">
-												<select id="parentDepSelect" class="form-control"></select>
+												<select id="parentDepSelect" name="parentDepSelect" class="form-control"></select>
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-sm-3" for="branchIdSelect"> 分支機構  </label>
 											<div class="col-sm-9">
-												<select  id="branchIdSelect" class="form-control"></select>
+												<select  id="branchIdSelect" name="branchIdSelect" class="form-control"></select>
 											</div>
 										</div>
 									</th:block>
@@ -282,11 +282,20 @@
 		    lipmId = $("input[name='lipmId']").val()
 		    lipiName = $("input[name='lipiName']").val()
 		    lipiId = $("input[name='lipiId']").val()
-		    prodName = $("select[name='prodName'] option:selected").val()
+		    prodName = $("#codeMechineHouse").val()
+			parentDepSelect = $("select[name='parentDepSelect'] option:selected").val()
+			branchIdSelect = $("select[name='branchIdSelect'] option:selected").val()
 
-		    if ((policyNo == null || policyNo == '') &&  (lipmName == null || lipmName == '') &&
+			var role = [[${role}]]
+
+		    if (((policyNo == null || policyNo == '') &&  (lipmName == null || lipmName == '') &&
 		        (lipmId == null || lipmId == '') && (lipiName == null || lipiName == '') &&
-                (lipiId == null || lipiId == '') && (prodName == null || prodName == '')) {
+                (lipiId == null || lipiId == '') && (prodName == null || prodName == '') && (role == 3  || role == 4 || role == 5) &&
+				(parentDepSelect == null || parentDepSelect == '')) || (
+					(policyNo == null || policyNo == '') &&  (lipmName == null || lipmName == '') &&
+					(lipmId == null || lipmId == '') && (lipiName == null || lipiName == '') &&
+					(lipiId == null || lipiId == '') && (prodName == null || prodName == '') && (role != 3  && role != 4 && role != 5)
+			)) {
                  openAlert('請至少輸入一個查詢條件!')
                  return
             }
@@ -395,7 +404,7 @@
 			let policyNo1 = $("input[name='policyNo']").val()
 		    let lipmName1 = $("input[name='lipmName']").val()
 		    let lipmId1 = $("input[name='lipmId']").val()
-		    let prodName1 = $("select[name='prodName'] option:selected").val()
+		    let prodName1 = $("#codeMechineHouse").val()
 			var Insured = $('input[name=lipiName]').val();
 			var Insured_Card = $('input[name=lipiId]').val();
 			if((Insured!=="" || Insured_Card!=="") && policyNo1 == '' && lipmName1 == '' && lipmId1 == '' &&
