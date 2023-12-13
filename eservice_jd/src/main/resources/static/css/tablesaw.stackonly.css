@@ -1,7 +1,9 @@
 /*! Tablesaw - v1.0.4 - 2015-02-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
-
+.noEvent th, .noEvent td {
+  color:#000;
+}
 table.tablesaw {
   empty-cells: show;
   max-width: 100%;
@@ -38,7 +40,7 @@ table.tablesaw {
   padding-bottom: 3px;
   border-top: 1px solid #ededed;
   border-bottom: 1px solid #ededed;
-  color: #696969;
+  color: #000;
   font-size: 16px;
   font-weight: bold;
   padding-left: 26px;

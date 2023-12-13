@@ -1048,7 +1048,7 @@ span.caret {
 }
 
 .table2 {
-    color: #616161;
+    color: #000;
     font-weight: 60;
 }
 /*.tablesaw .table2 th {
@@ -1534,7 +1534,8 @@ span.tel2 {
 .detail1 a {
 	font-size: 18px;
     text-decoration: underline;
-    color: #333;
+    color: #000;
+    /*color: #333;*/
 }
 
 .breadcrumb>li+li:before {
@@ -1771,6 +1772,10 @@ a.list-group-item.tog3 {
 
 a.list-group-item.tog3 {
     border: none;
+}
+
+a.list-group-item {
+    color:#000;
 }
 
 a.list-group-item.tog3:hover {
@@ -2806,7 +2811,7 @@ li.compBLK {
     }*/
 
 td {
-    color: #666;
+    color: #000;
     font-weight: 300;
     /* IE6-9 */
 }
@@ -2917,7 +2922,8 @@ td {
     left: 85px;
     top: 8px;
     font-size: 14.5px;
-    color: #888;
+    color: #000;
+    /*color: #888;*/
     font-weight: normal;
 }
 
@@ -3357,7 +3363,8 @@ form .form-control::placeholder {
 form > .form-group > label {
     font-size: 14.5px;
     margin-bottom: 2px;
-    color: #888;
+    color: #000;
+    /*color: #888;*/
 }
 
 .form-horizontal {
@@ -4452,7 +4459,7 @@ button {
 .all-left-list .tablesaw-stack td,
 .all-left-list .tablesaw-stack th {
     text-align: left!important;
-    color: #666;
+    color: #000;
     font-weight: 600;
 }
 
@@ -9614,4 +9621,8 @@ input[type="checkbox"]:checked{
 }
 .wrapper>.main-panel>.content>.page-inner>.row #list2{
 	margin-top: -35px;
+}
+
+.n1.inlineBlock.float-left {
+    color:#000;
 }

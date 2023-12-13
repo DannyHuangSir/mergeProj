@@ -2,11 +2,11 @@
 <Configuration status="WARN" monitorInterval="30">
 	<Properties>
 		<!-- 日誌文件根目錄 -->
-		<Property name="LOG_PATH">/home/twfhclife/eservice/logs</Property>
+		<Property name="LOG_PATH">/home/twfhclife/eservice_jd/logs</Property>
 		<!-- 日誌文件備份目錄 -->
 		<Property name="lOG_ARCHIVE_PATH">${LOG_PATH}/archive</Property>
 		<!-- 日誌文件名稱 -->
-		<Property name="LOG_FILE_NAME">eservice</Property>
+		<Property name="LOG_FILE_NAME">eservice_jd</Property>
 		<!-- 日誌文件大小 -->
 		<Property name="LOG_SIZE">20 MB</Property>
 		<Property name="LOG_PATTERN">
