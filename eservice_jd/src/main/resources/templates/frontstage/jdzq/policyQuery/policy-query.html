@@ -215,12 +215,9 @@
 
 		$(function(){
 			var autoQuery = [[${autoQuery}]]
-			if (autoQuery) {
-			    onSubmit()
-			}
 
 			var deptParentList = [[${deptParentList}]]
-			var role = [[${role}]]
+			var queryPolicy = [[${queryPolicy}]]
 
 			if(deptParentList != null ) {
 				var optHtml = '<option value="">請選擇部門...</option>';
@@ -229,43 +226,60 @@
 				})
 				$('#parentDepSelect').html(optHtml);
 			}
-			$("#clearBtn").click(function(){
-			     event.preventDefault(),
-		         event.stopPropagation();
-<!--		         $.post(/*[[@{/clearPolicySearch}]]*/)-->
-		         resetAll()
-			})
 
 			$('#parentDepSelect').on('change', function() {
-				$("#branchIdSelect").empty();
-				$("#branchIdSelect").append('<option checked value="">請選擇分支機構</option>');
-				if ($('#parentDepSelect').val() != null && $('#parentDepSelect').val() != '') {
-					var formData = {
-						depId: $('#parentDepSelect').val(),
-						role: role
-					};
-					$.ajax({
-						url: /*[[@{jd/common/branchList}]]*/,
-						contentType: 'application/json',
-						type: "POST",
-						async: true,
-						data: JSON.stringify(formData),
-						success: function (response) {
-							if (response.result == 'SUCCESS'){
-								if (response.resultData.length >0){
-									for (var i = 0; i < response.resultData.length; i++) {
-										var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
-										$("#branchIdSelect").append(option);
-									}
-								}
-							}else {
-								alertMsg('系統發生錯誤');
-							}
-						}
-					});
-				}
+				getBranchList(autoQuery);
 			});
+
+			if (autoQuery) {
+				$('#parentDepSelect').val(queryPolicy.parentDep);
+				getBranchList(autoQuery);
+				onSubmit()
+			}
+
+			$("#clearBtn").click(function(){
+				event.preventDefault(),
+						event.stopPropagation();
+				<!--		         $.post(/*[[@{/clearPolicySearch}]]*/)-->
+				resetAll()
+			})
 		})
+
+		function getBranchList(autoQuery) {
+			var role = [[${role}]]
+			var queryPolicy = [[${queryPolicy}]]
+			$("#branchIdSelect").empty();
+			$("#branchIdSelect").append('<option checked value="">請選擇分支機構</option>');
+			if ($('#parentDepSelect').val() != null && $('#parentDepSelect').val() != '') {
+				var formData = {
+					depId: $('#parentDepSelect').val(),
+					role: role
+				};
+				$.ajax({
+					url: /*[[@{jd/common/branchList}]]*/,
+					contentType: 'application/json',
+					type: "POST",
+					async: false,
+					data: JSON.stringify(formData),
+					success: function (response) {
+						if (response.result == 'SUCCESS'){
+							if (response.resultData.length >0){
+								for (var i = 0; i < response.resultData.length; i++) {
+									var option = "<option value='" + response.resultData[i].branchId + "'>" +  response.resultData[i].depName + "</option>";
+									$("#branchIdSelect").append(option);
+								}
+							}
+
+							if(autoQuery){
+								$("#branchIdSelect").val(queryPolicy.branchId);
+							}
+						}else {
+							alertMsg('系統發生錯誤');
+						}
+					}
+				});
+			}
+		}
 
 		function resetAll() {
             $("#policyFormSearch").find('input[type=text],select,input[type=hidden]').each(function() {

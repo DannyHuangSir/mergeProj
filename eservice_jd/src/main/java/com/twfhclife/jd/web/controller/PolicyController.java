@@ -66,6 +66,16 @@ public class PolicyController extends BaseController {
         addAttribute("queryPolicy", vo == null ? new PolicyVo() : vo);
         addAttribute("autoQuery", vo == null ? false : true);
         addAttribute("policyTypeList", optionService.getPolicyTypeList());
+        KeycloakUser user = getLoginUser();
+        // role == 1 一般人員 2 分行主管 3 通路主管 4 IC人員 5 平台管理人員
+        int role = usersDao.checkUserRole(user.getId());
+        addAttribute("role", role);
+
+        if(role == 3 || role == 4 || role == 5 ) {
+            List<DepartmentVo> deptParentList = usersDao.getDeptParentList(user.getId(), role);
+            addAttribute("deptParentList", deptParentList);
+        }
+
         return "frontstage/jdzq/policyQuery/policy-query";
     }
 
