@@ -1,9 +1,6 @@
 package com.twfhclife.jd.web.dao;
 
-import com.twfhclife.jd.web.model.DepartmentVo;
-import com.twfhclife.jd.web.model.PermQueryVo;
-import com.twfhclife.jd.web.model.UserTermVo;
-import com.twfhclife.jd.web.model.UsersVo;
+import com.twfhclife.jd.web.model.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -44,9 +41,17 @@ public interface UsersDao {
 
 	List<PermQueryVo> getCaseQueryByUser(@Param("userId") String id);
 
-	List<PermQueryVo> getCaseQueryByIc(@Param("userId") String id);
+	List<PermQueryVo> getCaseQueryByIc(@Param("userId") String id, @Param("parentDep") String parentDep, @Param("branchId") String branchId);
 
-	List<PermQueryVo> getCaseQueryByPassageWay(@Param("userId") String id);
+	List<PermQueryVo> getCaseQueryByAdministrator(@Param("parentDep") String parentDep, @Param("branchId") String branchId);
+	/**
+	 * 搜尋保單(角色:通路主管)
+	 * branchId 為空則搜尋該通路所有分支機構
+	 * @param id
+	 * @param branchId 分支機構
+	 * @return
+	 */
+	List<PermQueryVo> getCaseQueryByPassageWay(@Param("userId") String id, @Param("branchId") String branchId);
 
 	UsersVo getUserBySaleId(@Param("saleId") String saleId, @Param("agentCode") String agentCode, @Param("agentBranchM") String agentBranchM);
 	List<UsersVo> getBranchLeaders(@Param("agentCode") String agentCode, @Param("agentBranchM") String agentBranchM, @Param("branchCode") String branchCode);

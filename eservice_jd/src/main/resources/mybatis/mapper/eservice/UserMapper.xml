@@ -148,24 +148,79 @@
 		WHERE UD.USER_ID = #{userId} AND D.BRANCH_ID IS NOT NULL
 	</select>
 
+	<select id="getCaseQueryByAdministrator" resultType="com.twfhclife.jd.web.model.PermQueryVo">
+		select
+			BRANCH_ID agentCode,
+			<choose>
+				<when test="branchId != null and branchId != ''">
+					(
+						select BRANCH_ID
+						from ESERVICE_JD.dbo.DEPARTMENT
+						where
+						    PARENT_DEP = #{parentDep} and BRANCH_ID = #{branchId}
+					) as branchCode
+				</when>
+				<otherwise>
+					'' as branchCode
+				</otherwise>
+			</choose>
+		from
+		    ESERVICE_JD.dbo.DEPARTMENT
+		where
+			DEP_ID = #{parentDep}
+	</select>
+
 	<select id="getCaseQueryByPassageWay" resultType="com.twfhclife.jd.web.model.PermQueryVo">
-		SELECT DISTINCT D.BRANCH_ID agentCode
+		SELECT DISTINCT
+		<choose>
+			<when test="branchId != null and branchId != ''">
+				(SELECT
+				d.BRANCH_ID
+				FROM
+				ESERVICE_JD.DBO.DEPARTMENT D
+				inner join ESERVICE_JD.DBO.USER_DEPARTMENT UD ON UD.DEP_ID = D.PARENT_DEP
+				WHERE UD.USER_ID = #{userId}  AND D.BRANCH_ID IS NOT NULL
+				and d.branch_id = #{branchId}) as branchCode,
+			</when>
+			<otherwise>
+				NULL as branchCode,
+			</otherwise>
+		</choose>
+		D.BRANCH_ID agentCode
 		FROM
 		ESERVICE_JD.DBO.USER_DEPARTMENT UD
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON UD.DEP_ID = D.DEP_ID
 		WHERE UD.USER_ID = #{userId} AND D.BRANCH_ID IS NOT NULL
 	</select>
-
 	<select id="getCaseQueryByIc" resultType="com.twfhclife.jd.web.model.PermQueryVo">
 		SELECT DISTINCT D.BRANCH_ID agentCode, UD.BRANCH_ID branchCode FROM
 		ESERVICE_JD.DBO.USER_IC UD
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
 		WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID IS NOT NULL
+		<if test="parentDep != null and parentDep != ''">
+			and d.DEP_ID= #{parentDep}
+		</if>
+		<if test="branchId != null and branchId != ''">
+			and ud.BRANCH_ID = #{branchId}
+		</if>
 		UNION ALL
-		SELECT DISTINCT D.BRANCH_ID agentCode, '' branchCode FROM
+		SELECT DISTINCT D.BRANCH_ID agentCode,
+		<choose>
+			<when test="branchId != null and branchId != ''"> (
+				SELECT DISTINCT D.BRANCH_ID FROM
+				ESERVICE_JD.DBO.USER_IC UD
+				INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.PARENT_DEP = UD.DEP_ID COLLATE database_default
+				WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID IS NULL and d.PARENT_DEP= #{parentDep} and d.BRANCH_ID = #{branchId}
+			) as branchCode</when>
+			<otherwise> '' branchCode</otherwise>
+		</choose>
+		FROM
 		ESERVICE_JD.DBO.USER_IC UD
 		INNER JOIN ESERVICE_JD.DBO.DEPARTMENT D ON D.DEP_ID = UD.DEP_ID COLLATE database_default
 		WHERE UD.USER_ID = #{userId} AND UD.BRANCH_ID IS NULL
+		<if test="parentDep != null and parentDep != ''">
+			and d.DEP_ID= #{parentDep}
+		</if>
 	</select>
 
 	<select id="getCaseQueryByUser" resultType="com.twfhclife.jd.web.model.PermQueryVo">

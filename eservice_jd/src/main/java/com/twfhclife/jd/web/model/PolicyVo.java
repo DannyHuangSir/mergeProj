@@ -33,6 +33,10 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
 
     private int pageNum;
 
+    private String parentDep;
+
+    private String branchId;
+
     private List<PermQueryVo> permQuery = Lists.newArrayList();
 
     public String getPolicyType() {
@@ -195,4 +199,19 @@ public class PolicyVo extends AbstractBasePolicyNoDomain {
         this.pageNum = pageNum;
     }
 
+    public String getParentDep() {
+        return parentDep;
+    }
+
+    public void setParentDep(String parentDep) {
+        this.parentDep = parentDep;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
+    }
 }

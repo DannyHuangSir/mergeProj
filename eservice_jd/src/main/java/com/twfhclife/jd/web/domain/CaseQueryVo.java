@@ -18,6 +18,10 @@ public class CaseQueryVo extends AbstractBasePolicyNoDomain {
 
     private int pageNum;
 
+    private String parentDep;
+
+    private String branchId;
+
     private PersonSortVo sort;
 
     public PersonSortVo getSort() {
@@ -92,5 +96,21 @@ public class CaseQueryVo extends AbstractBasePolicyNoDomain {
 
     public void setPageNum(int pageNum) {
         this.pageNum = pageNum;
+    }
+
+    public String getParentDep() {
+        return parentDep;
+    }
+
+    public void setParentDep(String parentDep) {
+        this.parentDep = parentDep;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
     }
 }

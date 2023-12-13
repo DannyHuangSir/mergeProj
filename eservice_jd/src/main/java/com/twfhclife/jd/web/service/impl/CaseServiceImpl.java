@@ -22,7 +22,9 @@ import com.twfhclife.jd.web.domain.PersonSortVo;
 import com.twfhclife.jd.web.model.CaseVo;
 import com.twfhclife.jd.web.model.PermQueryVo;
 import com.twfhclife.jd.web.model.PolicyBaseVo;
+import com.twfhclife.jd.web.model.PolicyVo;
 import com.twfhclife.jd.web.service.ICaseService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,10 +101,10 @@ public class CaseServiceImpl implements ICaseService {
                 caseQuery.addAll(usersDao.getCaseQueryBySupervisor(user.getId()));
                 break;
             case 3:
-                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId()));
+                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId(),""));
                 break;
             case 4:
-                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId()));
+                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId(),"",""));
                 break;
             case 5:
                 break;
@@ -133,12 +135,15 @@ public class CaseServiceImpl implements ICaseService {
                 caseQuery.addAll(usersDao.getCaseQueryBySupervisor(user.getId()));
                 break;
             case 3:
-                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId()));
+                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId(), vo.getBranchId()));
                 break;
             case 4:
-                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId()));
+                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId(),vo.getParentDep(),vo.getBranchId()));
                 break;
             case 5:
+                if(StringUtils.isNotBlank(vo.getParentDep()) || StringUtils.isNotBlank(vo.getBranchId())) {
+                    caseQuery.addAll(usersDao.getCaseQueryByAdministrator(vo.getParentDep(), vo.getBranchId()));
+                }
                 break;
             default:
                 caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));

@@ -288,7 +288,8 @@
 
 			var role = [[${role}]]
 
-		    if (((policyNo == null || policyNo == '') &&  (lipmName == null || lipmName == '') &&
+		    if ((
+				(policyNo == null || policyNo == '') &&  (lipmName == null || lipmName == '') &&
 		        (lipmId == null || lipmId == '') && (lipiName == null || lipiName == '') &&
                 (lipiId == null || lipiId == '') && (prodName == null || prodName == '') && (role == 3  || role == 4 || role == 5) &&
 				(parentDepSelect == null || parentDepSelect == '')) || (
@@ -312,6 +313,8 @@
 					lipiName: lipiName,
 					lipiId: lipiId,
 					prodName: prodName,
+					parentDep: parentDepSelect,
+					branchId: branchIdSelect,
 					stat: $("#statusCard .active").attr('val'),
 					pageNum: pageNum
 				}),

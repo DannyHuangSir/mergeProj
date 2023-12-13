@@ -11,6 +11,7 @@ import com.twfhclife.jd.web.dao.JdNotifyConfigDao;
 import com.twfhclife.jd.web.dao.UsersDao;
 import com.twfhclife.jd.web.model.*;
 import com.twfhclife.jd.web.service.IPolicyService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,15 @@ public class PolicyServiceImpl implements IPolicyService {
                 caseQuery.addAll(usersDao.getCaseQueryBySupervisor(user.getId()));
                 break;
             case 3:
-                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId()));
+                caseQuery.addAll(usersDao.getCaseQueryByPassageWay(user.getId(),vo.getBranchId()));
                 break;
             case 4:
-                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId()));
+                caseQuery.addAll(usersDao.getCaseQueryByIc(user.getId(),vo.getParentDep(), vo.getBranchId()));
                 break;
             case 5:
+                if(StringUtils.isNotBlank(vo.getParentDep()) || StringUtils.isNotBlank(vo.getBranchId())) {
+                    caseQuery.addAll(usersDao.getCaseQueryByAdministrator(vo.getParentDep(), vo.getBranchId()));
+                }
                 break;
             default:
                 caseQuery.addAll(usersDao.getCaseQueryByUser(user.getId()));
